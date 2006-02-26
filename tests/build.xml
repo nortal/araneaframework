@@ -4,12 +4,11 @@
 	<property name="src.build.dir" value="../build/classes"/>
 	<property name="tests.build.dir" value="build/classes"/>
 	<property name="tests.reports.dir" value="build/reports"/>
-
+	
 	<!--Set the classpath-->
 	<path id="classpath">
 		<fileset dir="../lib" includes="**/*.jar"/>
-		<fileset dir="../build" includes="**/*.jar"/>
-		<fileset dir="../build" includes="**/*.jar"/>
+		<fileset dir="../dist" includes="**/*.jar"/>
 	</path>
 	
 	<!-- Clean up build system results -->
