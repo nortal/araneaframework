@@ -39,7 +39,7 @@
 			<include name="**/*.jar" />
 		</fileset>
 		<fileset dir="..">
-			<include name="build/**/*.jar" />
+			<include name="dist/**/*.jar" />
 		</fileset>
 	</path>
 

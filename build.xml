@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project basedir="." default="build" name="Aranea"> 
+<project basedir="." default="build-all" name="Aranea"> 
 	<description>
 		Code build script.
 	</description>
@@ -44,7 +44,7 @@
 	<target name="build" depends="tld, jar" description="Build the code">
 	</target>
 	
-	<target name="build-all" depends="build" description="Build the code and template">
+	<target name="build-all" depends="build" description="Build the code and examples">
   	 <ant dir="template" target="build" inheritall="false"/>
   	 <ant dir="examples/main" target="build" inheritall="false"/>	
     <ant dir="examples/serviceHelloWorld" target="build" inheritall="false"/>
@@ -74,7 +74,7 @@
 		</webdoclet>
  	</target>	
 	
-	<target name="dist">
+	<target name="dist">		
     <mkdir dir="build/tmp/dist"/> 
    
     <antcall target="clean-all"/>
@@ -112,13 +112,13 @@
     <mkdir dir="build/tmp/dist/dist"/>    
      
      <copy todir="build/tmp/dist/dist">
-        <fileset dir="build">
+        <fileset dir="dist">
           <include name="*.jar"/>
         </fileset>     
      </copy>     
    
     <copy todir="build/tmp/dist">
-       <fileset dir="build">
+       <fileset dir="dist">
          <include name="doc/**/*"/>
        </fileset>     
     </copy>
@@ -156,44 +156,46 @@
 	</target>
 	
 	<target name="jar" depends="compile">
-		<jar destfile="build/aranea-core.jar">
+		<mkdir dir="dist" />
+		
+		<jar destfile="dist/aranea-core.jar">
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/*"/>
 				<include name="org/araneaframework/core/**/*"/>								
 			</fileset>
 		</jar>
 		
-		<jar destfile="build/aranea-framework.jar">
+		<jar destfile="dist/aranea-framework.jar">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/framework/**/*"/>												
 			</fileset>
 		</jar>		
 		
-		<jar destfile="build/aranea-servlet.jar">
+		<jar destfile="dist/aranea-servlet.jar">
 			<fileset dir="build/classes">							
 			  <include name="org/araneaframework/servlet/**/*"/>						
 			</fileset>
 		</jar>			
 		
-		<jar destfile="build/aranea-backend.jar">
+		<jar destfile="dist/aranea-backend.jar">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/backend/**/*"/>			
 			</fileset>
 		</jar>
 		
-		<jar destfile="build/aranea-uilib.jar">
+		<jar destfile="dist/aranea-uilib.jar">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
 		</jar>	
 		
-		<jar destfile="build/aranea-spring.jar">
+		<jar destfile="dist/aranea-spring.jar">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/ioc/spring/**/*"/>			
 			</fileset>
 		</jar>	
 		
-		<jar destfile="build/aranea-jsp.jar">
+		<jar destfile="dist/aranea-jsp.jar">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/**/*"/>			
 			</fileset>
@@ -201,7 +203,7 @@
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 		</jar>	
 		
-		<jar destfile="build/aranea.jar">
+		<jar destfile="dist/aranea.jar">
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/**/*"/>		
 			</fileset>
