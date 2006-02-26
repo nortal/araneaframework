@@ -35,7 +35,5 @@ public class RootWidget extends StandardPresentationWidget {
 		addWidget("menu", new MenuWidget(new EmptyWidget()));
 		setViewSelector("root");
 		log.debug("Root widget initialized");
-    
-    throw new RuntimeException();
 	}
 }
