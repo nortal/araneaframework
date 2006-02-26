@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="examples/main/src"/>
-	<classpathentry kind="src" path="examples/widgetQuickStart/src"/>
 	<classpathentry kind="src" path="examples/serviceHelloWorld/src"/>
 	<classpathentry kind="src" path="examples/serviceHelloName/src"/>
 	<classpathentry kind="src" path="tests/src"/>

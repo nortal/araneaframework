@@ -30,6 +30,7 @@ import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.servlet.ServletInputData;
+import org.araneaframework.servlet.ServletOutputData;
 
 /**
  * Associates this service with the HttpSession. Is a session does not exist, it is created.
@@ -90,7 +91,7 @@ public class StandardServletSessionRouterService extends BaseService {
       Relocatable.RelocatableService service = null;   
             
       if (destroySession) {       
-        sess.invalidate();        
+        sess.invalidate();                    
         return;
       }
       
