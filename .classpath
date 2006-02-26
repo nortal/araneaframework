@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="examples/main/src"/>
+	<classpathentry kind="src" path="examples/widgetQuickStart/src"/>
+	<classpathentry kind="src" path="examples/serviceHelloWorld/src"/>
+	<classpathentry kind="src" path="examples/serviceHelloName/src"/>
+	<classpathentry kind="src" path="tests/src"/>
+	<classpathentry kind="src" path="template/src"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-fileupload-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/j2ee.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta-regexp-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="lib/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="lib/mailapi.jar"/>
+	<classpathentry kind="lib" path="lib/spring.jar"/>
+	<classpathentry kind="lib" path="lib/spring-mock.jar"/>
+	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/xstream-1.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib/jstl/jstl.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/commons-el.jar"/>
+	<classpathentry kind="lib" path="lib/jstl/jaxen-full.jar"/>
+	<classpathentry kind="lib" path="lib/jstl/saxpath.jar"/>
+	<classpathentry kind="lib" path="lib/jstl/standard.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/org.mortbay.jetty.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jasper-runtime.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
