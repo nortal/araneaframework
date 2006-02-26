@@ -80,7 +80,7 @@ public class BeanListWidget extends ListWidget {
 		ColumnOrder order = null;
 		if (isOrdered) {
 			order = new SimpleColumnOrder();
-			propagateValueType(order, id);			
+			propagateValueType(order, id);
 		}
 		addBeanColumn(id, label, order, filter, control);
 	}

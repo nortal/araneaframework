@@ -18,14 +18,19 @@ package org.araneaframework.example.main.web.company;
 
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.araneaframework.backend.list.model.ListItemsData;
+import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.BaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.uilib.form.control.Control;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
@@ -37,13 +42,9 @@ import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class CompanyListWidget extends BaseWidget {
-	
 	private static final long serialVersionUID = 1L;
-	
 	protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
-	
 	private boolean editMode = false;
-	
 	private ListWidget list;
 	
 	public CompanyListWidget() {
@@ -72,9 +73,16 @@ public class CompanyListWidget extends BaseWidget {
 	}
 	
 	protected ListWidget initList() throws Exception {
+	    // Create the new list widget whose records are JavaBeans, instances of CompanyMO.
+		// CompanyMO has fields named id, name and address.
 		BeanListWidget temp = new BeanListWidget(CompanyMO.class);
+		// set the data provider for the list
 		temp.setListDataProvider(new TemplateCompanyListDataProvider());
+		// add the displayed columns to list.
+		// addBeanColumn(String id, String label, boolean isOrdered)
+		// note that # before the label means that label is treated as unlocalized and outputted as-is
 		temp.addBeanColumn("id", "#Id", false);
+		//addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
 		temp.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
 		temp.addBeanColumn("address", "#Address", true, new SimpleColumnFilter.Like(), new TextControl());
 		return temp;
@@ -123,13 +131,29 @@ public class CompanyListWidget extends BaseWidget {
 	}  
 	
 	private class TemplateCompanyListDataProvider extends MemoryBasedListDataProvider {
-		private static final long serialVersionUID = 1L;
-		
-		protected TemplateCompanyListDataProvider() {
-			super(CompanyMO.class);
+        // Overloading constructor with correct bean type.
+        protected TemplateCompanyListDataProvider() {
+            super(CompanyMO.class);
+        }
+
+        // Overloading the real data loading method. Should
+        // return java.util.List containing CompanuMO objects.
+        public List loadData() throws Exception {
+            // Here, database query is performed and all rows from COMPANY table retrieved.
+            // But you could also get the data from parsing some XML file, /dev/random etc.
+            // All that matters is that returned List really contains CompanyMO objects.
+            return getGeneralDAO().getAll(CompanyMO.class);
+        }      
+    }
+	
+	private class BackendCompanyListDataProvider extends BackendListDataProvider {
+        protected BackendCompanyListDataProvider() {
+        	// Constructor with argument useCache set to false.
+        	super(false);
+        }
+
+		protected ListItemsData getItemRange(ListQuery query) throws Exception {
+			return null;
 		}
-		public List loadData() throws Exception {		
-			return getGeneralDAO().getAll(CompanyMO.class);
-		}  	
-	}
+    }
 }

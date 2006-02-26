@@ -671,14 +671,101 @@ public void handleEventBypass() throws Exception {
                 <para>
                     TODO: forms, containing different control types. (Simple form, additions, multiselects?)
                 </para>
+                
             </sect3>
             
             <sect3>
                 <title>Lists</title>
                 <para>
-                    TODO: nothing fancy, person/company list suffices. 
-                    AJAX?
+                    Lists are tables containing rows with records &mdash;gathered from some data source. Lists also
+                    provide support for paging displays of long lists and filtering based on record field contents.
+                    Basic usage is simple:
                 </para>
+                
+                <programlisting role="java"><![CDATA[protected ListWidget initList() throws Exception {
+    // Create the new list widget whose records are JavaBeans, instances of CompanyMO
+    // CompanyMO has fields named id, name and address.
+    BeanListWidget temp = new BeanListWidget(CompanyMO.class);
+    // set the data provider for the list
+    temp.setListDataProvider(new TemplateCompanyListDataProvider());
+    // add the displayed columns to list 
+    // addBeanColumn(String id, String label, boolean isOrdered)
+    // note that # before the label means that label is treated as unlocalized and outputted as-is
+    temp.addBeanColumn("id", "#Id", false);
+    //addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
+    temp.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
+    temp.addBeanColumn("address", "#Address", true, new SimpleColumnFilter.Like(), new TextControl());
+    return temp;
+}]]></programlisting>
+                
+                <para>
+                    Our example uses <literal>BeanListWidget</literal> instead of <literal>ListWidget</literal>.
+                    Differences between the two are the same as between <literal>BeanFormWidget</literal> and <literal>FormWidget</literal>.
+                    All that is needed to create a list is adding the showed columns&mdash;to list, each column id
+                    being the JavaBeans field name.
+                </para>
+
+                <para>
+                    Additionally, one can specify whether ordering and filtering by given column should be available.
+                    <literal>SimpleColumnFilter</literal> contains different filter classes that specify how the
+                    filter conditions specified should be applied&mdash;<literal>SimpleColumnFilter.Equals</literal>, 
+                    <literal>SimpleColumnFilter.GreaterThan</literal>, 
+                    <literal>SimpleColumnFilter.LowerThan</literal>, 
+                    <literal>SimpleColumnFilter.GreaterThanOrEquals</literal>, 
+                    <literal>SimpleColumnFilter.LowerThanOrEquals</literal>, 
+                    <literal>SimpleColumnFilter.Like</literal>. Their behaviour is natural, filter application
+                    shows only those records that satisfy the filter expression.
+                </para>
+                
+                <para>
+                    For filling the list with data, some <literal>ListDataProvider</literal> must be
+                    passed to a newly created list. Aranea has two base classes that implement
+                    <literal>ListDataProvider</literal> interface&mdash;<literal>MemoryBasedListDataProvider</literal> 
+                    and <literal>BackendListDataProvider</literal>. When using memory based data provider, 
+                    all records belonging to a list are read into memory at once and paging and filtering
+                    takes also place completely in memory, whereas backend based 
+                    providers perform a query retrieving only the records that need to be shown currently (based 
+                    on paging and filtering conditions). For long lists, using <literal>BackendListDataProvider</literal>s
+                    is a must&mdash;otherwise application will quickly start using too much memory. Data provider
+                    for previous list could be like this:
+                </para>
+                
+                <programlisting role="java"><![CDATA[private class TemplateCompanyListDataProvider extends MemoryBasedListDataProvider {
+    // Overloading constructor with correct bean type.                
+    protected TemplateCompanyListDataProvider() {
+         super(CompanyMO.class);
+    }
+    // Overloading the real data loading method. Should
+    // return java.util.List containing CompanuMO objects.
+    public List loadData() throws Exception {
+        // Here, database query is performed and all rows from COMPANY table retrieved.
+        // But you could also get the data from parsing some XML file, /dev/random etc.
+        // All that matters is that returned List really contains CompanyMO objects.
+        return getGeneralDAO().getAll(CompanyMO.class);
+    }      
+}]]></programlisting>
+
+               <para>
+                    or, when using <literal>BackendListDataProvider</literal>.
+               </para>
+               
+               <programlisting role="java"><![CDATA[private class BackendCompanyListDataProvider extends BackendListDataProvider {
+    protected BackendCompanyListDataProvider() {
+        // Constructor with argument useCache set to false.
+        super(false);
+    }
+
+    // Functions as MemoryBasedListDataProvider's loadData, but takes query as an argument
+    // and returns ListItemsData instead of List. ListItemsData is just a wrapper around
+    // a List that contains an additional field, Long with total count of objects in list.
+    protected ListItemsData getItemRange(ListQuery query) throws Exception {
+        // call some method that takes a ListQuery as parameter, and returns
+    }
+}]]></programlisting>
+            <para>
+                We do not show the actual
+            </para>
+
             </sect3>
             
              <sect3>
