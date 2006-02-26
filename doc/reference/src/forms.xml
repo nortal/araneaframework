@@ -1,0 +1,249 @@
+<!--
+  Copyright 2006 Webmedia Group Ltd.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+   http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<chapter id="forms">
+	<title>Forms and Data Binding</title>
+	<sect1>
+    <title>Introduction</title>
+
+    <para>
+      One of the most common tasks in web applications is gathering user input, converting it to model objects and the validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity.
+    </para>
+
+    <para>
+      Unlike many other frameworks, in Aranea request processing, validating and data binding is not a separate part of the framework, but just another component. Specially it is widget <literal>org.araneaframework.uilib.form.FormWidget</literal> and some support widgets. In this chapter we will introduce this widgets and supporting API and show how to use and extend them.
+    </para>
+	</sect1>
+  <sect1>
+    <title>Controls</title>
+
+    <para>
+      At the core of the data binding API lies the notion of <emphasis>controls</emphasis> (<literal>org.araneaframework.uilib.form.Control</literal>). Controls are the widgets that do the actual parsing of the request parameters and correspond to the controls found in HTML forms, like textbox, textarea, selectbox, button, ... Additionally controls also do a bit of validating the submitted data, to the extend that is doubled on the client-side, thus providing the support for client-side validation. For example textbox control validates the minimum and maximum string length, since the HTML tag can do the same. Also one can ensure that a control is definitely filled in by the user by making it <emphasis>mandatory</emphasis>.
+    </para>
+
+    <para>
+      The following example shows how to create a control:
+<programlisting role="java">...
+TextControl textBox = new TextControl(new Long(10), null);
+textBox.setMandatory(true);
+textBox.setLabel("myTextBox.labelKey");
+...</programlisting>
+      This code will create a mandatory textbox with a minimal length of 10 and a localizable label key "myTextBox.labelKey" (note that all Aranea labels are localizable by default). Note also that this code does not yet put the control to work, as controls are never used without forms, which are reviewed in the next section. 
+    </para>
+
+    <para>
+      TODO: Select controls, Control table
+    </para>
+  </sect1>
+  <sect1>
+    <title>Forms API</title>
+    
+    <sect2>
+      <title>A Typical Form</title>
+
+      <para>
+        A typical form will be created and used like this:
+<programlisting role="java">...
+private BeanFormWidget myForm;
+private MyModel myModel;
+...
+protected void init() {
+  ...
+  myForm = new BeanFormWidget(MyModel.class);
+  addWidget("myForm", myForm);
+
+  myForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true);
+  myForm.addBeanElement("surname", "#Last name", new TextControl(), true);
+  myForm.addBeanElement("phone", "#Phone no", new TextControl(), true);
+  ...
+  myModel = lookupMyService().getMyModel();
+  myForm.writeBean(myModel);
+  ...
+}
+...
+</programlisting>       
+  Note that here we basically do three things:
+<variablelist spacing="compact">
+  <varlistentry>
+    <term>Create and register the form</term>
+    <listitem>The line <literal>new BeanFormWidget(MyModel.class)</literal> creates a new form widget that is associated with the <emphasis>JavaBean</emphasis> model class <literal>MyModel</literal>. The line <literal>addWidget("myForm", myForm)</literal> initializes and registers the form allowing it to function.</listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>Add form fieds</term>
+    <listitem>The line <literal>myForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true)</literal> adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (note that in the example it is escaped with a "#", which is the default way to escape non-localizable strings), a text box control with a minimal length of 3 and that is mandatory.</listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>Write JavaBean</term>
+    <listitem>The line <literal>myForm.writeBean(myModel)</literal> writes the data in the JavaBean properties to the corresponding form fields.</listitem>
+  </varlistentry>
+</variablelist>  
+Now that we have created the form we show how to process events, validate and read the request data. The following example code should be in the same widget as the previous:
+<programlisting role="java">...
+private void handleEventSave() {
+  if (myForm.convertAndValidate()) {
+   myForm.readBean(myModel);
+   ...
+   lookupMyService().saveMyModel(myModel);
+  }
+}
+...</programlisting>
+      This code will execute if an event "save" comes and will do the following:
+      <itemizedlist spacing="compact">
+        <listitem>Convert the request data to the JavaBean types and validate it according to the rules specified in controls (e.g. minimal length). Wrapping event body in <literal>if (myForm.convertAndValidate()) {...}</literal> is a generic idiom in Aranea as we believe that explicity leads to flexibility. By default the values will be just read from request without any parsing, conversion or validation and the latter will be done only after the <literal>convertAndValidate()</literal> call. This allows for example to validate only a subform or even one element, by calling only their <literal>convertAndValidate()</literal> method.</listitem>
+        <listitem>Read the <literal>myModel</literal> object from the form, filling it in with the user data. Note that the same object that was originally read from the business layer is used here and forms take care of merging the new data and preserving the old.</listitem>
+      </itemizedlist>
+      </para>
+
+      <para>
+        Note the use of the <literal>getValueByFullName()</literal> method. Form API contains several such methods (named <literal>*ByFullName()</literal>), which allow to access fields, controls and values using full dot-separated element names.
+      </para>
+
+      <para>
+        If you have a composite JavaBean (containing other JavaBeans) you may want to create a form with a similar structure. To do that you should create a subform like this:
+<programlisting role="java">...
+myForm = new BeanFormWidget(MyModel.class);
+addWidget("myForm", myForm);
+...
+FormWidget addrForm = myForm.addBeanSubForm("address");
+addrForm.addBeanElement("postalCode", "#Last name", new TextControl(), true);
+addrForm.addBeanElement("street", "#Last name", new TextControl(), true);
+...</programlisting>
+      This of course implies that <literal>MyModel</literal> has a property "address" that contains another JavaBean corresponding to the subform fields. Note that the fields will be available from the main form using a dot-separated name, e.g. <literal>String street = myForm.getValueByFullName("address.street")</literal>.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Constraints</title>
+
+      <para>
+        Though controls provide some amount of validation they are limited only to the rules that can be controlled on the client-side. To support more diverse rules Aranea has <literal>org.araneaframework.uilib.form.Constraint</literal>, that allows to put any logical and/or business validation rules. Typically constraints are used as follows:
+<programlisting role="java">...
+myForm.addBeanElement("registration", "#Registration", new DateControl(), true);
+myForm.getElement("registration").setConstraint(new AfterTodayConstraint(false));
+...</programlisting>
+      The <literal>org.araneaframework.uilib.form.constraint.AfterTodayConstraint</literal> makes sure that the date is today or later, with the boolean parameter indicating wheter today is allowed. The constraint will validate if the form or the element in question is validated (e.g. <literal>convertAndValidate()</literal> is called) and will show an error message to the user, if the constraint was not satisfied. The error message is customizable using localization and involves the label of the field being validated.
+      </para>
+
+      <para>
+        The following is a more complex example that shows how to use constraints that apply to more than one field, and how to combine constraints using logical expressions:
+<programlisting role="java">...
+searchForm = new FormWidget();
+
+//Adding form controls
+searchForm.addElement("clientFirstName", "#Client first name", 
+  new TextControl(), new StringData(), false);
+searchForm.addElement("clientLastName", "#Client last name", 
+  new TextControl(), new StringData(), false);
+
+searchForm.addElement("clientAddressTown", "#Town", 
+  new TextControl(), new StringData(), false);
+searchForm.addElement("clientAddressStreet", "#Street", 
+  new TextControl(), new StringData(), false);
+
+//First searching scenario
+AndConstraint clientNameConstraint = new AndConstraint();
+clientNameConstraint.addConstraint(
+  new NotEmptyConstraint(searchForm.getElementByFullName("clientFirstName")));
+clientNameConstraint.addConstraint(
+  new NotEmptyConstraint(searchForm.getElementByFullName("clientLastName")));
+
+//Second searching scenario
+AndConstraint clientAddressConstraint = new AndConstraint();
+clientAddressConstraint.addConstraint(
+  new NotEmptyConstraint(searchForm.getElementByFullName("clientAddressTown")));
+clientAddressConstraint.addConstraint(
+  new NotEmptyConstraint(searchForm.getElementByFullName("clientAddressStreet")));
+
+//Combining scenarios
+OrConstraint searchConstraint = new OrConstraint();    
+searchConstraint.addConstraint(clientNameConstraint);
+searchConstraint.addConstraint(clientAddressConstraint);
+
+//Setting custom error message
+searchConstraint.setCustomErrorMessage("Not enough data for search!");
+
+//Setting constraint
+searchForm.setConstraint(searchConstraint);
+
+//Putting the widget
+addWidget("searchForm", searchForm);    
+...</programlisting>
+        The example use case is a two scenario search&mdash;either both client first name and client last name fields are filled in or both town and street address fields are filled in, otherwise an error message "Not enough data for search!" is shown. The constraints will be validated when <literal>convertAndValidate()</literal> method is called on <literal>searchForm</literal>. Note that the constraint is added to the form itself, rather than to its elements&mdash;this is a typical idiom, when the constraint involves several elements.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Data</title>
+      <para>
+        The typical use of forms includes associating the form fields with JavaBean properties. However this is not always possible, since it is not feasible to make a JavaBean property for each and every form field. In such cases one may still want to use type conversion and data validation. To do that forms allow the <literal>org.araneaframework.uilib.form.Data</literal> and its subclasses (subclasses correspond to specific types) to be associated with the field:
+<programlisting role="java">...
+myForm = new BeanFormWidget(MyModel.class);
+addWidget("myForm", myForm);
+...
+myForm.addElement("numberOfChildren", "#No. of chidren", 
+  new NumberControl(), new LongData(), true);
+...</programlisting>
+      In such a case one can retrieve the data directly from the field:
+<programlisting role="java">...
+private void handleEventSave() {
+  if (myForm.convertAndValidate()) {
+    ...
+    Long numberOfChildren = myForm.getValueByFullName("numberOfChildren");
+    //Alternative:
+    //FormElement nocEl = (FormElement) myForm.getElement("numberOfChildren");
+    //numberOfChildren = nocEl.getValue();
+    ...
+  }
+}
+...</programlisting>
+      If there is no JavaBean to associate the form with <literal>org.araneaframework.uilib.form.FormWidget</literal> may be used instead of <literal>BeanFormWidget</literal>.
+      </para>
+
+      <para>
+        Note that the reason for existence of <literal>Data</literal> objects is that Java types correspond poorly to some restricted types&mdash;for instance enumerations, type encodings and collections container types (this problem is somewhat solved in Java 5, but Aranea is compatible with Java 1.3).
+      </para>
+
+    </sect2>
+    
+    <sect2>
+      <title>Converters</title>
+
+      <para>
+        
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Form JSP Tags</title>
+  </sect1>
+
+  <sect1>
+    <title>Customizing and Extending Forms</title>
+
+    <sect2>
+      <title>Custom Constraints</title>
+    </sect2>
+
+    <sect2>
+      <title>Custom Converters</title>
+    </sect2>
+    
+    <sect2>
+      <title>Custom Controls</title>
+    </sect2>
+  </sect1>
+</chapter>

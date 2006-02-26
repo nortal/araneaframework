@@ -1,0 +1,331 @@
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
+package org.araneaframework.framework.container;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import org.araneaframework.Component;
+import org.araneaframework.Environment;
+import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.OutputData;
+import org.araneaframework.Widget;
+import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.StandardWidget;
+import org.araneaframework.framework.EmptyCallStackException;
+import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.ExtendedCallContext;
+
+/**
+ * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
+ * 
+ * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ */
+public class StandardFlowContainerWidget extends StandardWidget implements FlowContext, ExtendedCallContext {
+  //*******************************************************************
+  // CONSTANTS
+  //*******************************************************************
+  /**
+   * The key used for the CallStack in the OutputData attribute set.
+   */
+  public static final String CALL_STACK_KEY = "org.araneaframework.framework.container.StandardCallStackWidget.CALL_STACK";
+  /**
+   * The key of the callable child.
+   */
+  public static final String CALLABLE_WIDGET_KEY = "callableWidget";
+  
+  private Map globalEnvironmentEntries = new HashMap();
+  private Map globalEnvEntryStacks = new HashMap();
+  
+  //*******************************************************************
+  // FIELDS
+  //*******************************************************************
+  /**
+   * The stack of all the calls.
+   */
+  protected LinkedList callStack = new LinkedList();
+  /**
+   * The top callable widget.
+   */
+  protected Widget top;
+
+  //*******************************************************************
+  // CONSTRUCTORS
+  //*******************************************************************
+  
+  /**
+   * Constructs a StandardCallStackWidget with topWidget being the first
+   * callable on the stack.
+   */
+  public StandardFlowContainerWidget(Widget topWidget) {
+    this.top = topWidget;
+  }
+  
+  public StandardFlowContainerWidget() {
+  }
+  
+  //*******************************************************************
+  // PUBLIC METHODS
+  //*******************************************************************
+  
+  public void setTop(Widget topWidget) {
+    this.top = topWidget;
+  }
+  
+  public void start(Component callable, Configurator configurator, Handler handler) throws Exception {
+    callable = decorateCallableWidget((Widget) callable);
+    CallFrame frame = makeCallFrame((Widget) callable, configurator, handler);
+    
+    if (_getChildren().get(CALLABLE_WIDGET_KEY) != null) {
+      ((Widget) getChildren().get(CALLABLE_WIDGET_KEY))._getComponent().disable();      
+      _getChildren().remove(CALLABLE_WIDGET_KEY);
+    }  
+    
+    callStack.addFirst(frame);
+    
+    addWidget(CALLABLE_WIDGET_KEY, (Widget) callable);
+
+    if (configurator != null) {
+      configurator.configure(callable);
+    }    
+  }
+  
+  public void replace(Component callable, Configurator configurator) throws Exception {
+    callable = decorateCallableWidget((Widget) callable);
+    CallFrame previousFrame = (CallFrame) callStack.removeFirst();
+    CallFrame frame = makeCallFrame((Widget) callable, configurator, previousFrame.getHandler());
+    
+    removeWidget(CALLABLE_WIDGET_KEY);
+    
+    callStack.addFirst(frame);    
+    
+    addWidget(CALLABLE_WIDGET_KEY, (Widget) callable);
+    
+    if (configurator != null) {
+      configurator.configure(callable);
+    }
+  }
+
+  public void finish(Object returnValue) throws Exception {
+    if (callStack.size() == 0)
+      throw new EmptyCallStackException();
+    
+    CallFrame previousFrame = (CallFrame) callStack.removeFirst();
+    CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
+    
+    removeWidget(CALLABLE_WIDGET_KEY);
+    if (frame != null) {
+      _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());
+      ((Component) getChildren().get(CALLABLE_WIDGET_KEY))._getComponent().enable();
+    }
+    
+    if (previousFrame.getHandler() != null) {
+      previousFrame.getHandler().onFinish(returnValue);
+    }                
+  }
+
+  public void cancel() throws Exception {
+    if (callStack.size() == 0)
+      throw new EmptyCallStackException();
+    
+    CallFrame previousFrame = (CallFrame) callStack.removeFirst();
+    CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
+    
+    removeWidget(CALLABLE_WIDGET_KEY);
+    if (frame != null) {
+      _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());    
+      ((Component) getChildren().get(CALLABLE_WIDGET_KEY))._getComponent().enable();
+    }
+    
+    if (previousFrame.getHandler() != null)
+      previousFrame.getHandler().onCancel();   
+  }
+  
+  public ExtendedCallContext.CallFrameReference getCurrentCallFrameReference() {
+  	return new CallFrameReference();
+  }
+  
+  private LinkedList getEnvEntryStack(Object entryId) {
+    LinkedList envEntryStack = (LinkedList) globalEnvEntryStacks.get(entryId);
+    
+    if (envEntryStack == null) {
+      envEntryStack = new LinkedList();
+      globalEnvEntryStacks.put(entryId, envEntryStack);
+    }
+    
+    return envEntryStack;
+  }
+  
+  public void pushGlobalEnvEntry(Object entryId, Object envEntry) throws Exception {
+    getEnvEntryStack(entryId).addFirst(envEntry);
+    
+    refreshGlobalEnvironment();
+  }
+  
+  public void popGlobalEnvEntry(Object entryId) throws Exception {
+    getEnvEntryStack(entryId).removeFirst();
+    
+    refreshGlobalEnvironment();
+  }
+  
+  public boolean isNested() throws Exception {
+    return callStack.size() != 0;
+  }
+  
+  
+  //*******************************************************************
+  // PROTECTED METHODS
+  //*******************************************************************
+  
+  protected void init() throws Exception {
+    super.init();
+    
+    if (top != null)
+      start(top, null, null);
+  }
+  
+  protected void destroy() throws Exception {
+    if (callStack.size() > 0)
+      callStack.removeFirst();
+    
+    for (Iterator i = callStack.iterator(); i.hasNext();) {
+      CallFrame frame = (CallFrame) i.next();
+      i.remove();
+      
+      frame.getWidget()._getComponent().destroy();          
+    }
+    
+    super.destroy();    
+  }
+  
+  /**
+   * Invokes render on the top frame on the stack of callframes.
+   */
+  protected void render(OutputData output) throws Exception {
+    output.pushAttribute(CALL_STACK_KEY, callStack);
+      
+    try {          
+      output.pushScope(CALLABLE_WIDGET_KEY);
+      
+      try {   
+        getWidget(CALLABLE_WIDGET_KEY)._getWidget().render(output);
+      } 
+      finally {
+        output.popScope();
+      }
+    }
+    finally {       
+      output.popAttribute(CALL_STACK_KEY);
+    }
+  }
+  
+  private void refreshGlobalEnvironment()  throws Exception {
+    globalEnvironmentEntries.clear();
+    
+    globalEnvironmentEntries.put(FlowContext.class, this);
+    globalEnvironmentEntries.put(ExtendedCallContext.class, this);    
+    
+    for (Iterator i = globalEnvEntryStacks.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+      Object entryId = entry.getKey();
+      LinkedList stack = (LinkedList) entry.getValue();
+      if (stack.size() > 0) {
+        Object envEntry = stack.getFirst();
+        globalEnvironmentEntries.put(entryId, envEntry);
+      }
+    }    
+  }
+  
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    refreshGlobalEnvironment();   
+    
+    return new StandardEnvironment(getEnvironment(), globalEnvironmentEntries);
+  }
+  
+  /**
+   * Returns a new CallFrame constructed of the callable, configurator and handler.
+   */
+  protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler handler) {
+    return new CallFrame(callable, configurator, handler);
+  }
+  
+  /**
+   * This method may be overidden to decorate the called widget. 
+   */
+  protected Widget decorateCallableWidget(Widget widget) {
+    return widget;
+  }
+  
+  //*******************************************************************
+  // PROTECTED CLASSES
+  //*******************************************************************
+  
+  protected class CallFrameReference implements ExtendedCallContext.CallFrameReference {
+  	private int currentDepth = StandardFlowContainerWidget.this.callStack.size();
+  	
+		public void reset(EnvironmentAwareCallback callback) throws Exception {
+			Iterator i = callStack.iterator();
+      while (i.hasNext() && callStack.size() > currentDepth) {
+        CallFrame frame = (CallFrame) i.next();
+        
+        _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());
+        removeWidget(CALLABLE_WIDGET_KEY);
+        
+        i.remove();
+      }
+      
+      if (callStack.size() > 0) {
+        CallFrame frame = (CallFrame) callStack.getFirst();
+        _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());
+        ((Component) getChildren().get(CALLABLE_WIDGET_KEY))._getComponent().enable();
+      }
+
+      callback.call(getChildWidgetEnvironment());
+		}  	
+  }
+  
+  /**
+   * A widget, configurator and a handler are encapsulated into one logical structure,
+   * a call frame. Class is used internally.
+   */
+  protected static class CallFrame implements Serializable {
+    Widget widget;
+    Configurator configurator;
+    Handler handler;
+    
+    protected CallFrame(Widget widget, Configurator configurator, Handler handler) {
+      this.configurator = configurator;
+      this.handler = handler;
+      this.widget = widget;
+    }
+
+    public Configurator getConfigurator() {
+      return configurator;
+    }
+
+    public Handler getHandler() {
+      return handler;
+    }
+
+    public Widget getWidget() {
+      return widget;
+    }
+  }
+}

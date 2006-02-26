@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3CR3//EN"
+                      "../../support/docbook-dtd/docbookx.dtd"
+[
+	<!ENTITY components               SYSTEM "components.xml">
+	<!ENTITY intro               SYSTEM "intro.xml">
+	<!ENTITY jsp               SYSTEM "jsp.xml">
+	<!ENTITY widgets               SYSTEM "widgets.xml">
+	<!ENTITY framework               SYSTEM "framework.xml">	
+	<!ENTITY forms               SYSTEM "forms.xml">	
+	<!ENTITY lists               SYSTEM "lists.xml">	
+	<!ENTITY javascript               SYSTEM "javascript.xml">	
+]>
+
+<!--
+  Copyright 2006 Webmedia Group Ltd.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+   http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<book lang="en">
+
+    <bookinfo>
+        <title>Aranea - Java Web Framework Construction and Integration Kit</title>
+        <titleabbrev>Aranea</titleabbrev>
+				<subtitle>Reference Manual</subtitle>
+        <releaseinfo>Version 1.0 M1 (Work In Progress)</releaseinfo>
+        <authorgroup>
+					<author>
+						<firstname>Jevgeni</firstname>
+						<surname>Kabanov</surname>
+					</author>
+          <author>
+            <firstname>Rein</firstname>
+            <surname>Raudjärv</surname>
+          </author>
+          <author>
+            <firstname>Toomas</firstname>
+            <surname>Römer</surname>
+          </author>          
+        </authorgroup>        
+    </bookinfo>
+
+    <toc/>
+    
+    &intro;
+    
+		<part id="user-manual">
+      <title>User Manual</title>
+      <partintro>
+        <title>Introduction</title>
+
+        <para>
+          The <emphasis>User Manual</emphasis> introduces the Aranea API used by application programmers omitting the framework inner workings. This part talks about widgets, custom jsp tag library used to render them, a data binding component and a database-backed listing component. One can both read this part through as a book, or find the necessary information using searching or lookup. This part is a must-read for any serious user of Aranea framework.
+        </para>
+      </partintro>
+      &widgets;
+      &jsp;    
+      &forms;
+      &lists;
+    </part>
+		<part id="system-manual">
+      <title>System Manual</title>
+      <partintro>
+        <title>Introduction</title>
+
+        <para>
+          The <emphasis>System Manual</emphasis> describes the core framework API, framework configuration and framework extension. It goes in depth describing the core framework interaction and may be not necessary for a novice user. This part is intended for system programmers, architects and other users that have to deal with debugging, extending or configuring the framework.
+        </para>
+      </partintro>
+      &components;
+      &framework;
+	    &javascript;
+    </part>
+</book>
+

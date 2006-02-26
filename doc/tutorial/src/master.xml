@@ -1,0 +1,708 @@
+<?xml version='1.0' encoding="iso-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3CR3//EN"
+                      "../../support/docbook-dtd/docbookx.dtd"
+[]>
+
+<!--
+  Copyright 2006 Webmedia Group Ltd.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+   http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<article>
+	<articleinfo>
+		<title>Aranea Tutorial</title>
+		<titleabbrev>Aranea Tutorial</titleabbrev>
+		<authorgroup>
+			<author>
+				<firstname>Taimo</firstname>
+				<surname>Peelo</surname>
+			</author>
+		</authorgroup>
+	</articleinfo>
+
+	<!-- INTRO. WHY/WHAT FOR THIS TUTORIAL IS FOR -->
+	<sect1>
+		<title>What's in tutorial?</title>
+		<para>
+			Example toy application built on Aranea framework is dissected and its 
+			workings explained. Tutorial
+			is meant as quick-dive into practical usage of Aranea. For
+			safe and successful surfacing, additional reading of Aranea
+			Reference Manual is heartily recommended. It may be helpful
+			to read quickstart documentation and examples before proceeding
+			to read this tutorial.
+		</para>
+		<para>
+			We try to present this tutorial in clear and newbie-friendly
+			way. Our goal is to provide material that would be
+			understandable on conceptual level even to people who have
+			no previous previous experience building JEE web
+			applications (with some googling for terminology, of
+			course). We are quite aware that currently our tutorial
+			falls little short of reaching that goal.
+			So please&mdash;if you have trouble understanding
+			something or have neat suggestions for improving either
+			tutorial or examples, please send your suggestions to
+			<ulink url="mailto:taimo@araneaframework.org">taimo@araneaframework.org</ulink>.
+		</para>
+	</sect1>
+	
+	<sect1>
+		<title>Running examples</title>
+		<para>
+			If using full source distribution, <literal>ant build-all</literal> in the topmost
+			distribution directory will build everything, including all that is necessary 
+			for examples. To start examples change directory to <literal>examples/</literal> 
+			any subdirectory and give command <literal>ant run-app</literal>. For main
+			example (<literal>examples/main</literal>), in-memory database should be started
+			first (otherwise some parts of it will not function). Database is started with command
+			<literal>ant run-database</literal>.
+		</para>
+		<para>
+			To test the running examples, point your browser to 
+			<ulink url="http://localhost:2000/">http://localhost:2000/</ulink>.
+		</para>
+	</sect1>
+
+	<sect1>
+		<title>Static configuration of Aranea web application.</title>
+		<para>
+			Modifications to static configuration of the Aranea examples are
+			made in the following files.
+		</para>
+		<para>
+			<itemizedlist spacing="compact">
+				<listitem>
+					<literal>war/WEB-INF/web.xml</literal> (deployment descriptor)
+				</listitem>
+				<listitem>
+					<literal>war/WEB-INF/aranea-conf.xml</literal> (Aranea configuration)
+				</listitem>
+				<listitem>
+					<literal>war/WEB-INF/hibernate.cfg.xml</literal> (object relational mapping engine config)
+				</listitem>
+				<listitem>
+					<literal>log4j.xml</literal> (logging configuration)
+				</listitem>
+			</itemizedlist>
+		</para>
+		<sect2>
+			<title>Deployment descriptor</title>
+			Deployment descriptors are a part of every JEE web
+			application and provide wide possibilities for web
+			application configuration. Standard deployment descriptor used
+			for Aranea web applications is quite basic, usually it just ties
+			StandardSpringMainServlet class to servlet name:
+
+			<programlisting role="xml"><![CDATA[<servlet>
+    <servlet-name>araneaServlet</servlet-name>
+    <display-name>'|'</display-name>
+    <servlet-class>org.araneaframework.ioc.spring.StandardSpringMainServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+</servlet>]]></programlisting>
+
+			and then maps this servlet to an URL&mdash;servlet will be executed
+			whenever an HTTP request to URL with matching pattern is
+			made. Often all requests go through one main
+			servlet&mdash;requests with different parameters will all be
+			made to the same URL (in our case <literal>/main</literal>).
+
+			<programlisting role="xml"><![CDATA[<servlet-mapping>
+    <servlet-name>araneaServlet</servlet-name>
+    <url-pattern>/main</url-pattern>
+</servlet-mapping>]]></programlisting>
+
+			Actual servicing of all requests coming in is done by Aranea.
+			Exact mechanism of that is explained in the following section.
+		</sect2>
+
+		<sect2 id="aranea-conf">
+			<title>Aranea configuration</title>
+			<para>
+				As mentioned, main servlet passes requests on to Aranea controller,
+				which static configuration is defined
+				in <literal>aranea-conf.xml</literal>&mdash;this is a Spring bean configuration
+				file, used to initialize chain (or tree) of Aranea
+				components that will be processing the incoming request.
+				Each bean configuration defines which classes are instantiated for dealing with
+				the requests and links beans with other component beans.
+				This configuration concept is known as <firstterm>dependency injection</firstterm>,
+				it allows for easy adding of new components and switching between
+				component implementations.
+			</para>
+			
+			<para>
+				First bean in the chain of request processing components defined for
+				TemplateApp is instance of <literal>StandardServletServiceAdapterComponent</literal>&mdash;
+				it translates the request and response data to suitable form for processing by Aranea and
+				then sends it forward to its child service. Child service may act as filter, router or container&mdash;
+				process request, modify the environment available to its child services (most common is putting 
+				a hook to itself into the environment under some specific key, so that its childs can invoke
+				parents methods). Last statically configured Aranea component is usually 
+				<literal>StandardFlowContainerWidget</literal>.
+			</para>
+			
+			<para>
+				Aranea static configuration is generally illustrated on diagram <xref linkend="conf-image"/>.
+				As can be seen, there are quite many services through which the request passes. Actually there are more, 
+				but on the diagram only the most important ones are shown. Default services do much useful stuff&mdash;for
+				example session routers route requests to child services tied with session associated with request 
+				(or create the new session, if needed), statistic filters measure the request time, localization 
+				filters provide the localized environment to child services, etc.
+			</para>
+			<para>
+				In the end of the chain are widgets, which also derive from services, but have 
+				additional capabilities, like updating and rendering itself. Widgets specified in 
+				Aranea configuration are yet not directly tied to user interface elements, although
+				they can output data which ends up rendered somewhere on the response page. Instead
+				they perform more general tasks&mdash;most important and visible for application programmers
+				are aforementioned <literal>StandardFlowContainerWidget</literal> which allows creation 
+				of nested processes (which we will mostly refer to as <emphasis>flows</emphasis> from
+				now on) and <literal>StandardMessagingFilterWidget</literal> that is a central place for
+				managing all kind of informational messages which are outputted to notify user of
+				invalid inputs, unsatisfied constraints and everything else imaginable.
+			</para>
+			
+			<!-- MAYBE RESIZE? caption and picture do not fit on one page in PDF -->
+			<mediaobject id="conf-image" xreflabel="Birdview of Aranea configuration">
+				<caption align="top">Birdview of Aranea configuration</caption>
+				<imageobject>
+					<imagedata 
+						fileref="images/aranea-conf.png"
+						format="PNG" 
+						align="center"/>
+				</imageobject>
+			</mediaobject>
+			
+			<para>
+				Slices of beginning and end of Aranea configuration in TemplateApp:
+				<programlisting role="xml"><![CDATA[<bean
+    id="servletServiceAdapterComponent" 
+    class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent">
+    <property name="childService" ref="criticalErrorHandler"/>
+</bean>
+  
+<bean 
+    id="criticalErrorHandler"
+    class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService" 
+    singleton="false">
+    <property name="childService" ref="readFileFilter"/>
+    <property name="exceptionHandlerFactory">
+        <bean 
+            class="org.araneaframework.templateApp.web.framework.error.TemplateCriticalErrorHandlerFactory"
+            singleton="false"/>
+    </property>
+</bean>
+
+...
+
+<bean
+    class="org.araneaframework.framework.container.StandardWidgetContainerWidget" 
+    id="widgetContainer" singleton="false">
+    <property name="childWidget" ref="viewPort"/>
+</bean>
+  
+<!-- Widgets -->  
+  
+<bean
+    class="org.araneaframework.framework.container.StandardViewPortWidget" 
+    id="viewPort" singleton="false">
+    <property name="root" ref="mainCallStack"/>
+</bean>
+
+<bean
+    class="org.araneaframework.framework.container.StandardFlowContainerWidget" 
+    id="mainCallStack" singleton="false">
+    <property name="top" ref="login"/>
+</bean>
+   
+<bean
+    class="org.araneaframework.templateApp.web.app.widget.TemplateLoginWidget" 
+    id="login" singleton="false"/>]]></programlisting>
+			</para>
+			
+			<para>
+				We will not go into more detail about the configuration components right now,
+				but explain their functionality and usage as needed.
+			</para>
+
+		</sect2>
+
+		<sect2>
+			<title>Hibernate configuration</title>
+			<para>
+				Hibernate is high-performance object-relational mapping
+				solution written in Java. It takes care of mapping database
+				tables to objects and much more. In our examples its usage is very basic -
+				just mapping database columns to fields in Data Objects 
+				(simple Java beans with getter and setter methods for private fields)&mdash;so that
+				we can easily save and retrieve objects from/to database.
+				Mappings between Java objects and database tables are generated 
+				automatically from xdoclet annotations&mdash;take a look at
+				<literal>war/WEB-INF/classes/mappings</literal>
+				directory to see what typical generated mappings look like&mdash;or any
+				classes from <literal>org.araneaframework.templateApp.business.model</literal>
+				to see samples of annotations from which mappings are generated.
+				Hibernate homepage is located at <ulink url="http://www.hibernate.org">http://www.hibernate.org</ulink>.
+			</para>
+
+			<para>
+				Some examples (especially SQL-based lists) need to use relational database to 
+				be informational. We have used capable little relational database called HSQLDB
+				for that purpose. You should start database with command <literal>ant run-database</literal>
+				before running main examples, otherwise some of them will not function correctly.
+				HSQLDB and Hibernate are
+				tied together in <literal>etc/hibernate.cfg.xml</literal> where
+				SQL dialect and database used by Hibernate are configured.
+			</para>
+		</sect2>
+
+		<sect2>
+			<title>Logging configuration</title>
+			<para>
+				Logging for all examples is configured in <literal>examples/log4j.xml</literal> 
+				file. Verbosity mode for logging statements is selected here&mdash;the level
+				of logging statements that are actually output. By default this is
+				set to <literal>DEBUG</literal> level for most packages. Just one appender
+				is defined&mdash;one that sends logging statements to standard output:
+			</para>
+
+			<para>
+			<programlisting role="xml"><![CDATA[<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+    <param name="ConversionPattern" value="%d{hh:mm:ss} %-5p&mdash;%c{1}.%M(%F:%L)&mdash;%m%n"/>
+    </layout>
+</appender>]]></programlisting>
+
+			Different packages are easily configured to have different logging verbosity levels and
+			various output destinations:
+			<programlisting role="xml"><![CDATA[<category name="org.araneaframework">
+    <priority value="DEBUG"/>
+    <appender-ref ref="CONSOLE"/>
+</category>]]></programlisting>
+			For detailed information about using log4j logging framework refer to 
+			<ulink url="http://logging.apache.org/log4j/docs/">http://logging.apache.org/log4j/docs/</ulink>
+			</para>
+		</sect2>
+
+	</sect1>
+	
+	<sect1>
+		<title>Getting TemplateApp (main example) to serve</title>
+		
+		<sect2>
+			<title>Directory structure and needed libraries</title>
+            <para>
+                TODO
+            </para>
+		</sect2>
+		
+		<sect2>
+			<title>Introduction to writing widgets</title>
+		<para>
+			The first custom widget written for main example is <literal>TemplateLoginWidget</literal>.
+			It is very simple, but gives good demonstration of stateful controller capabilities.
+			Simple login screen is built and upon receiving successful login event,
+			it replaces itself on the call stack with real application widgets (flows). After
+			session timeout, state is lost and user is once again forced to log in.
+		</para>
+
+		<para>
+			We build the login widget in its <literal>init()</literal> method.
+		</para>
+		<programlisting role="java"><![CDATA[protected void init() throws Exception {
+    /* Sets the view selector that will be used for rendering this widget. 
+     * The path to real JSP file is determined by:
+     *
+     * StandardJspFilterService field jspPath (configured in aranea-conf.xml) 
+     * + viewselector 
+     * + ".jsp" */
+    setViewSelector("login");
+
+    /* Register a global proxying eventlistener&mdash;it receives all widget events and upon 
+     * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method */
+    addGlobalEventListener(new ProxyEventListener(this));
+
+    /* Create a new FormWidget with two self-described input fields. */
+    form = new FormWidget();
+    // Add the input fields. Arguments taken by addElement():  
+    // String elementName, String labelId, Control control, Data data, boolean mandatory
+    form.addElement("username", "#User", new TextControl(), new StringData(), true);
+    form.addElement("password", "#Password", new TextControl(), new StringData(), false);
+
+    // attach created form to our widget. 
+    addWidget("loginForm", form);
+}]]></programlisting>
+
+		<para>
+			Note that when creating new form element <literal>Control</literal> that 
+			it represents and data type it contains are specified. Specifying <literal>Control</literal> is
+			always necessary, <literal>Data</literal> can be left unspecified when one has 
+			bean associated with form and uses <literal>BeanFormWidget</literal> instead of <literal>FormWidget</literal>.
+		</para>
+		
+		<para>
+			To make widget useful and interactive, we must add login event handlers to it.
+		</para>
+		
+		<programlisting role="java"><![CDATA[public void handleEventLogin() throws Exception {
+    /* convertAndValidate() fails if data found from form does not 
+     * satisfy the restrictions laid on it. If that is the case, 
+     * we ignore received event. There is only one restriction -
+     * username field must not be empty. */
+    if (form.convertAndValidate()) {
+        // find out the username supplied
+        String username = (String) form.getValueByFullName("username");
+        /* Add the message about wrong credentials to message context. 
+         * Messages will be shown to user upon exiting this event. */
+        getMsgCtx().showErrorMessage("Wrong name or password for username '" + username + "'");
+        // do nothing&mdash;don't let anyone in with this event
+    }
+}
+
+/* Successful login event&mdash;does not check supplied credentials, 
+ * promptly replaces login widget with root widget&mdash;allowing
+ * user to start work with real examples. */ 
+public void handleEventBypass() throws Exception {
+    getFlowCtx().replace(new TemplateRootWidget(), null);
+}]]></programlisting>
+
+		<para>
+			Most crucial here is understanding workings of <literal>handleEventBypass()</literal>.
+			Our widget (think of it as synonymous with "flow" for a while) replaces itself on
+			<literal>FlowContainer</literal> call stack with real application widget. It could also
+			<literal>call()</literal> the next widget but in doing that the login widget itself would
+			remain at the bottom of the call stack&mdash;which is not wanted.
+		</para>
+
+		<para>
+			You may think as flows as web pages that call and replace each other&mdash;and may return
+			control to calling page with <literal>getFlowCtx.return()</literal>.
+		</para>
+		
+		<para>
+			Finally, the JSP page that renders <literal>TemplateLoginWidget</literal>. Do not pay
+			much attention to <literal>&lt;div&gt;</literal>s and other HTML constructs -
+			important tags are with namespace <literal>ui</literal>&mdash;in our examples this
+            namespace includes both Aranea standard and template tags.
+		</para>
+		
+		<programlisting role="xml"><![CDATA[<!-- This file is located in examples/main/war/WEB-INF/jsp/login.jsp -->
+<jsp:root 
+    xmlns:jsp="http://java.sun.com/JSP/Page" 
+    xmlns:c="http://java.sun.com/jstl/core" 
+    xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2">
+    <jsp:directive.page contentType="text/html; charset=UTF-8"/>
+    
+    <!-- This tag should always be the root of any Aranea template JSP. 
+    Its main function is to allow JSP access the controller. -->
+    <ui:root>
+        <!-- This tag should be immediately under the ui:root tag for any application that uses widgets. 
+            It allows widgets to be rendered and included. -->
+        <ui:viewPort>
+            <!-- This tag should generally be the root of every widget JSP. It makes the widget view model accessible as an EL variable.
+            It can also be used to render a descendant widget in the same JSP with the current widget. 
+            In the latter case you should set the id attribute to the identifier path of the descendent 
+            widget in question. Note that all widget-related tags inside of this tag will assume that the widget in question
+            is their parent or ancestor (that is all the identifier pathes will start from it). -->
+            <ui:widgetContext>
+                <html>
+                    <head>
+                        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                        <!-- Scripts -->
+                        <jsp:include page="scripts.jsp"/>
+                        <title>Aranea Template Application Login Screen</title>
+                    </head>
+
+                    <body>
+                        <!-- This tag will render an HTML form tag along with some Aranea-specific hidden fields. 
+                        It is strongly suggested to have only one system form in the template and have it submit using 
+                        POST. This will ensure that no matter what user does no data is ever lost. -->
+                        <ui:systemForm method="POST">
+
+                            <div id="outer">
+                                <div id="middle">
+                                    <div id="inner">
+                                        <div class="login">
+                                            <div id="login-logo">
+                                                <ui:image src="gfx/logo_aranea_login.jpg"/>
+                                            </div>
+        
+                                            <div class="a">
+                                                <!-- This tag will render messages of given type if they are present in current MessageContext,
+                                                    ie message about failured login (wrong username or password). StyleClass parameter
+                                                    defines the CSS style used for message display. -->
+                                                <ui:messages styleClass="msg-error"/>
+        
+                                                <!-- This is the form we added to our TemplateLoginWidget.
+                                                    Tag makes it the current form context tag and allows accessing 
+                                                    form's subelements just by their names, no path is needed. -->
+                                                <ui:form id="loginForm">
+
+                                                    <ui:formElement id="username">
+                                                        <!-- Outputs the form element label -->
+                                                        <ui:label/>
+                                                        <!-- Outputs the input field for username -->
+                                                        <ui:textInput styleClass="usr"/>
+                                                    </ui:formElement>
+                                                    
+                                                    <ui:formElement id="password">
+                                                        <ui:label/>
+                                                        <ui:passwordInput styleClass="pwd"/>
+                                                    </ui:formElement>
+        
+                                                    <div class="clear1"><ui:nbsp/></div>
+        
+                                                    <div class="actions">
+                                                        <!-- Render buttons that will submit all systemForm data, 
+                                                            and tie them with events defined in TemplateLoginWidget.
+                                                         -->
+                                                        <ui:eventButton eventId="login" labelId="#Login"/>
+                                                        <ui:eventButton eventId="bypass" labelId="#Bypass login"/>
+                                                    </div>
+        
+                                                    <div class="clear1"><ui:nbsp/></div>
+                                                </ui:form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </ui:systemForm>
+                    
+                    </body>        
+                </html>
+            </ui:widgetContext>
+        </ui:viewPort>
+    </ui:root>
+</jsp:root>]]></programlisting>
+
+		</sect2>
+		
+		<sect2>
+			<title>Creating master page and menu</title>
+			<para>
+				Our second goal after creating a login widget is a little more complicated&mdash;creating
+				a menu widget and "master page" for it&mdash;root JSP that will be included in every page and
+				renders application menu.
+			</para>
+			<para>
+				What we need from menu is basically a ability to start widgets (flows) on demand.
+				As we already saw, this ability is not special, every widget can start other widgets.
+				However, they are not able to manipulate the call stack arbitrarily, which is
+				very much desirable in a menu. Aranea class <literal>StandardMenuWidget</literal>
+				achieves this by extending <literal>StandardFlowContainerWidget</literal>.
+			</para>
+			
+			<para>
+				Using <literal>StandardMenuWidget</literal> as a base, creating menu widget is a breeze.
+			</para>
+			
+			<programlisting role="java"><![CDATA[public class MenuWidget extends StandardMenuWidget  {
+    public MenuWidget(Widget topWidget) throws Exception {
+        super(topWidget);
+    }
+	
+    protected MenuItem buildMenu() throws Exception {
+        // the top menu
+        MenuItem result = new MenuItem();
+		
+        result.addMenuItem(null, new MenuItem("Management")); {
+            result.addMenuItem("Management", new MenuItem("Persons"));
+            result.addMenuItem("Management.Persons", new MenuItem("View", TemplatePersonChooseAndViewWidget.class));
+            result.addMenuItem("Management.Persons", new MenuItem("Add", TemplatePersonEditWidget.class));
+            
+            // ...
+            
+            result.addMenuItem("Management", new MenuItem("Contracts"));
+            result.addMenuItem("Management.Contracts", new MenuItem("View", TemplateContractChooseAndViewWidget.class));
+            result.addMenuItem("Management.Contracts", new MenuItem("Add", TemplateContractEditWidget.class));
+            result.addMenuItem("Management.Contracts", new MenuItem("Edit", TemplateContractChooseAndEditWidget.class));
+        }
+        
+        // Another way of adding menuitems is available.
+        MenuItem sampleMenu = result.addMenuItem(new MenuItem("Samples")); {
+            sampleMenu.addMenuItem(new MenuItem("Simple_Form", SimpleFormWidget.class));
+            sampleMenu.addMenuItem(new MenuItem("Simple_List", SimpleListWidget.class));
+            sampleMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
+        }
+
+        return result;
+    }
+}]]></programlisting>
+
+		<para>
+			<literal>MenuItem</literal> creation takes two parameters&mdash;localized menu label 
+			<emphasis>key</emphasis> and flow class that should be instantiated (with no argument 
+			constructor) and activated when <literal>MenuItem</literal> is selected. Those classes
+			must be <literal>Components</literal>, usually they are 
+			<literal>StandardPresentationWidget</literal>s. Instead of flow classes,
+			<literal>FlowCreator</literal>s can be used to create flows that have
+			more complex constructors.
+		</para>
+        
+        <para>
+            Created menu is added to widget view model automatically, under name "menu" and
+            will be accessible from JSP as EL (<emphasis>Expression Language</emphasis>) variable called
+            ${contextWidget.data.menu}.
+        </para>
+		
+		<para>
+            Because <literal>MenuWidget</literal> is <literal>StandardFlowContainerWidget</literal>, 
+            its <literal>render()</literal> method is fundamentally different from 
+            <literal>StandardPresentationWidget</literal>'s <literal>render()</literal> method and
+            we do not use it directly. Rather we attach it to <literal>TemplateRootWidget</literal>
+
+        
+        <programlisting role="java"><![CDATA[public class TemplateRootWidget extends StandardPresentationWidget {
+    private static final Logger log = Logger.getLogger(TemplateRootWidget.class);
+
+    protected void init() throws Exception {
+        addWidget("menu", new MenuWidget(new TemplateEmptyWidget()));
+        setViewSelector("root");
+        log.debug("Root widget initialized");
+    }
+}]]></programlisting>
+
+            and render it from <literal>TemplateRootWidget</literal>'s view selector.
+            For the sake of brevity we will strip irrelevant parts from our example
+            JSP snippets from now on.
+		</para>
+
+         <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+ ...
+    <ui:systemForm method="POST">
+
+        <!-- Renders the menu on top of the screen -->
+        <jsp:include page="/WEB-INF/jsp/mainlayout/menu.jsp"/>
+        <div class="stripe1"><ui:nbsp/></div>
+
+        <!-- Renders the menu on left side of screen -->
+        <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
+
+        <div id="content">
+            <ui:messages/>
+
+            <!-- Renders the menu widget itself. As MenuWidget is subclass
+            of StandardFlowContainerWidget, this means that actual
+            widget rendered here is whatever widget is on top of call
+            stack at the moment of rendering. -->
+            <ui:widgetInclude id="menu"/>
+        </div>
+
+        <div class="clear1"><ui:nbsp/></div>
+
+    </ui:systemForm>
+...]]></programlisting>
+        
+        <para>
+            JSP-s that render topmenu and sidemenu are quite similar. We will only present the
+            topmenu JSP here.
+            
+            <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+    <!-- WidgetContext id must be set here, because we want to render MenuWidget 
+    not TemplateRootWidget (which includes this JSP, thereby providing its own widget context) here. -->
+    <ui:widgetContext id="menu">
+        <div id="header">
+            <div class="box1">
+                <a href="#" id="logo">
+                    <ui:image src="gfx/logo_aranea_screen.jpg"/>
+                </a>
+
+                <div id="menu1">
+                    <!-- ${contextWidget.data.VariableName} allows us to access data 
+                        that was explicitly added to widget view model by the programmer
+                        with putViewData() method. -->
+                    <c:forEach items="${contextWidget.data.menu.subMenu}" var="item">
+                        <div class="item">
+                            <c:if test="${item.value.selected}">
+                                <!-- create a button that 
+                                    * has a label
+                                    * submits event called "menuSelect"
+                                    * submits label id as event parameter 
+                                    * CSS class is active, indicating that this menu item is selected currently -->
+                                <ui:eventLinkButton 
+                                    eventId="menuSelect" 
+                                    eventParam="${item.value.label}" 
+                                    labelId="${item.value.label}" 
+                                    styleClass="${activeStyle}"/>
+                            </c:if>
+
+                            <c:if test="${not item.value.selected}">
+                                <!-- same as the other button, but menu item is not selected -->
+                                <ui:eventLinkButton 
+                                    eventId="menuSelect" 
+                                    eventParam="${item.value.label}" 
+                                    labelId="${item.value.label}"/>
+                            </c:if>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </div>
+
+    </ui:widgetContext>
+...]]></programlisting>
+
+        This completes the menu system and master page, so now we can concentrate on 
+        actual programming of Aranea widgets.
+
+        </para>
+		</sect2>
+        
+        <sect2>
+            <title>Simple example widgets</title>
+            
+            <sect3>
+                <title>Forms</title>
+                <para>
+                    TODO: forms, containing different control types. (Simple form, additions, multiselects?)
+                </para>
+            </sect3>
+            
+            <sect3>
+                <title>Lists</title>
+                <para>
+                    TODO: nothing fancy, person/company list suffices. 
+                    AJAX?
+                </para>
+            </sect3>
+            
+             <sect3>
+                <title>Editable Lists</title>
+                <para>
+                    
+                </para>
+            </sect3>
+            
+            <sect3>
+                <title>Wizards</title>
+                <para>
+                    
+                </para>
+            </sect3>
+        </sect2>
+        
+        <sect2>
+            <title> Something else? </title>
+            <para>
+                MAYBE
+            </para> 
+        </sect2>
+	
+	</sect1>
+</article>
+

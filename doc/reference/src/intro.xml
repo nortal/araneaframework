@@ -1,0 +1,74 @@
+<!--
+  Copyright 2006 Webmedia Group Ltd.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+   http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<preface id="intro">
+	<title>Introduction</title>
+
+  <sect1>
+    <title>Overview</title>
+
+    <para>
+      Aranea is a <emphasis>Java Hierarchical Model-View-Controller Web Framework</emphasis> that provides a common simple approach to building the web application components, reusing custom or general GUI logic and extending the framework. The framework is assembled from a number of independent modules with well-defined responsibilities and thus can be easily reconfigured to perform new and unexpected tasks. The controller is separated into a hierarchy of components that can react to user or system events. The framework is completely view agnostic, but provides a thorough library of JSP custom tags that target building GUIs without writing a line of HTML. All components and modules are simple <emphasis>Plain Old Java</emphasis> classes without any XML mappings and thus usual Object-Oriented design techniques can be applied. Aranea manages the component field persistence automatically and inherently supports nested state.
+    </para>      
+
+    <para>
+      Aranea is logically separated in the following modules:
+      <variablelist>
+        <varlistentry>
+          <term>Aranea Core</term> 
+          <listitem>Contains the core interfaces and base implementations that define Aranea base abstractions and their contracts. Includes packages <literal>org.araneaframework</literal> and <literal>org.araneaframework.core</literal> and is packaged into <literal>aranea-core.jar</literal> .JAR file.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Aranea Framework</term>
+          <listitem>Framework module sits on top of the <emphasis>Core</emphasis> module and contains the implementation of the Aranea Web Framework that does not directly depend on any container. <emphasis>Framework</emphasis> module includes package <literal>org.araneaframework.framework</literal> and its subpackages and is packaged into <literal>aranea-framework.jar</literal> .JAR file.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Aranea Servlet</term>
+          <listitem>Servlet module extends the <emphasis>Framework</emphasis> module with services that use a Servlet container. Servlet  module includes package <literal>org.araneaframework.servlet</literal> and its subpackages and is packaged into <literal>aranea-servlet.jar</literal> .JAR file.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Aranea Spring</term>
+          <listitem>Spring module integrates Aranea with the <emphasis>Spring</emphasis> IoC container. Spring module includes package <literal>org.araneaframework.ioc.spring</literal> and its subpackages and is packaged into <literal>aranea-spring.jar</literal> .JAR file.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Aranea UiLib</term>
+          <listitem>UiLib module contains reusable GUI widgets and supporting API. UiLib module includes package <literal>org.araneaframework.uilib</literal> and its subpackages and is packaged into <literal>aranea-uilib.jar</literal> .JAR file.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Aranea JSP</term>
+          <listitem>JSP module contains a custom tag library, including tags that render <emphasis>UiLib</emphasis> widgets. JSP module includes package <literal>org.araneaframework.jsp</literal> and its subpackages and is packaged into <literal>aranea-jsp.jar</literal> .JAR file.</listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Aranea Backend</term>
+          <listitem>Backend module contains supporting classes that are to be used in the application service layer (e.g. backend list data provider helper classes). Backend module includes package <literal>org.araneaframework.backend</literal> and its subpackages and is packaged into <literal>aranea-backend.jar</literal> .JAR file.</listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+  </sect1>
+  
+  <sect1>
+    <title>Usage Scenarios</title>
+
+    TODO
+  </sect1>
+
+  <sect1>
+    <title>Organization</title>
+
+    TODO
+  </sect1>
+  
+</preface>

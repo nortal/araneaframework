@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="application.root" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    singleton="false">        
+    <property name="childService" ref="router"/>
+  </bean>  
+  <bean class="org.araneaframework.servlet.router.PathInfoServiceRouterService" id="router"
+    singleton="false">
+    <property name="defaultServiceId" value="name"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="name">
+           <bean class="org.araneaframework.example.helloname.NameService"/>
+        </entry>
+        <entry key="hello">
+           <bean class="org.araneaframework.example.helloname.HelloService"/>
+        </entry>        
+      </map>
+    </property>
+  </bean>
+	
+</beans>

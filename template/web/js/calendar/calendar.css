@@ -1,0 +1,82 @@
+/* The main calendar widget. DIV containing a table. */
+
+.calendar { position: relative; display: none; border: 2px solid #ff9203; background: #FFF; font-family: Tahoma, Arial, sans-serif; padding: 1px; }
+.calendar TABLE { border: 1px solid #FFF; }
+.calendar TD { font-size: 10px; text-align: center; vertical-align: middle; width: 24px; height: 22px; border: 1px solid #FFF; }
+
+
+/* Header part -- contains navigation buttons and day names. */
+
+	/* "<<", "<", ">", ">>" buttons have this class */
+.calendar .button { background: #f61901; color: #FFF; }
+.calendar .nav { background: #f61901; color: #FFF; font-weight: bold; }
+.calendar THEAD .title { font-weight: bold; border: 1px solid #FFF; background: #ff9203; color: #fff; }
+	/* Row <TR> containing navigation buttons */
+.calendar THEAD .headrow {}
+	/* Row <TR> containing the day names */
+.calendar THEAD .daynames {}
+	/* Cells <TD> containing the day names */
+.calendar THEAD .name { background: #d7d7d7; color: #626262; }
+	/* How a weekend day name shows in header */
+.calendar THEAD .weekend { background: #e3c3c3; }
+	/* How do the buttons in header appear when hover */
+.calendar THEAD .hilite { background: #f61901; color: #FFF; cursor: pointer; }
+	/* Active (pressed) buttons in header */
+.calendar THEAD .active { background: #ff9203; }
+
+
+/* The body part -- contains all the days in month. */
+
+	/* Cells <TD> containing month days dates */
+.calendar TBODY .day { background: #EEE; }
+.calendar TBODY .day.othermonth { color: red; }
+.calendar TBODY .day.othermonth.oweekend { color: blue; }
+.calendar table .wn { background: #d7d7d7; }
+.calendar TBODY .rowhilite TD { background: #d7d7d7; }
+.calendar TBODY .rowhilite TD.wn { background: #c6c6c6; }
+.calendar TBODY .rowhilite TD.weekend { background: #e6a8a8; }
+	/* Hovered cells <TD> */
+.calendar TBODY TD.hilite { background: #f61901 !important; color: #FFF !important; cursor: pointer; }
+	/* Active (pressed) cells <TD> */
+.calendar TBODY TD.active { background: #ff9203 !important; color: #FFF !important; }
+	/* Cell showing selected date */
+.calendar TBODY TD.selected { font-weight: bold; background: #f61901 !important; color: #FFF !important; }
+	/* Cells showing weekend days */
+.calendar TBODY TD.weekend { color: #d9261c; background: #fbf1f1; }
+	/* Cell showing today date */
+.calendar TBODY TD.today { font-weight: bold; background: #d7d7d7; }
+.calendar TBODY .disabled { color: #999; }
+	/* Empty cells (the best is to hide them) */
+.calendar TBODY .emptycell { visibility: hidden; }
+	/* Empty row (some months need less than 6 rows) */
+.calendar TBODY .emptyrow {	display: none; }
+
+
+/* The footer part -- status bar and "Close" button */
+
+	/* The <TR> in footer (only one right now) */
+.calendar TFOOT .footrow {}
+	/* Tooltip (status bar) cell <TD> */
+.calendar TFOOT .ttip { background: #eeeeee; border-top: 2px solid #FFF; }
+	/* Hover style for buttons in footer */
+.calendar TFOOT .hilite {}
+	/* Active (pressed) style for buttons in footer */
+.calendar TFOOT .active {}
+
+
+/* Combo boxes (menus that display months/years for direct selection) */
+
+.calendar .combo { position: absolute; display: none; top: 0px; left: 0px; border: 1px solid #ff9203; background: #FFF; padding: 1px; z-index: 100; font-size: 10px; width: 50px; }
+.calendar .combo .label,
+.calendar .combo .label-IEfix { text-align: center; padding: 1px; }
+.calendar .combo .label-IEfix { padding: 2px 10px; }
+* HTML .calendar .combo .label-IEfix { height: 1px; }
+.calendar .combo .active { background: #ff9203; color: #FFF; }
+.calendar .combo .hilite { background: #f61901; color: #FFF; cursor: pointer; }
+.calendar TD.time { text-align: center; background-color: #e8f0f4; }
+.calendar TD.time .hour,
+.calendar TD.time .minute,
+.calendar TD.time .ampm { text-align: center; font-weight: bold; background-color: #fff; }
+.calendar TD.time .colon { padding: 0px 2px 0px 3px; font-weight: bold; }
+.calendar TD.time SPAN.hilite { border-color: #000; background-color: #667; color: #fff; }
+.calendar TD.time SPAN.active { border-color: #f00; background-color: #000; color: #0f0; }

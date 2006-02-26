@@ -1,0 +1,328 @@
+<!--
+  Copyright 2006 Webmedia Group Ltd.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+   http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<chapter id="lists">
+	<title>Lists</title>
+	
+	<sect1>
+		<title>Introduction</title>
+		
+		<para>
+			A common task in web applications is displaying tables. This is a simple task if the tables are small and do not contain a lot of rows. The whole table can be visible at once and there is no need split the data into pages as well as provide an option to order the table by new column or display a search form that can be used to filter the data. In such cases where these features must be available, Aranea provides widget <classname>org.araneaframework.uilib.list.ListWidget</classname> and some support classes. In this chapter we will introduce these widgets and supporting API and show how to use and extend them.
+		</para>
+		<para>
+			<classname>ListWidget</classname> is used to define the list columns, the way the list can be filtered and ordered, how many items are shown per pages etc. <classname>ListWidget</classname> uses <classname>org.araneaframework.uilib.list.dataprovider.ListDataProvider</classname> to get the current list items range that also match with the current filter and order conditions. <classname>ListDataProvider</classname> can cache whole table and provide the <classname>ListWidget</classname> with the apropriate item range or fetch only the specific item range from database. Aranea provides two implementations:
+			<variablelist spacing="compact">
+			  <varlistentry>
+			    <term><classname>org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider</classname></term>
+			    <listitem>This is the memory-based solution that must be provided with the whole data at once. It does <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> and <emphasis>paging</emphasis> memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution for tables with few (&lt;100) rows.</listitem>
+			  </varlistentry>
+			  <varlistentry>
+			    <term><classname>org.araneaframework.uilib.list.dataprovider.BackendListDataProvider</classname></term>
+			    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more (&gt;500) rows.</listitem>
+			  </varlistentry>
+			</variablelist>
+		</para>
+	</sect1>
+		
+	<sect1>
+		<title>Lists API</title>
+		
+		<sect2>
+			<title>A Typical List</title>
+			
+			<para>
+				A typical list will be created used like this:
+<programlisting role="java">...
+private BeanListWidget myList;
+...
+protected void init() {
+  ...
+  myList = new BeanListWidget(MyModel.class);
+
+  myList.addBeanColumn("name", "#Name", true,
+    new SimpleColumnFilter.Like(), new TextControl());
+  myList.addBeanColumn("surname", "#Last name", true,
+    new SimpleColumnFilter.Like(), new TextControl());
+  myList.addBeanColumn("phone", "#Phone no", true,
+    new SimpleColumnFilter.Like(), new TextControl());
+  ...
+  myList.setInitialOrder("name", true);
+  myList.setListDataProvider(new MyListDataProvider());  
+  addWidget("myList", myList);
+  ...
+}
+...</programlisting>
+				Note that here we basically do following things:
+				<variablelist spacing="compact">
+					<varlistentry>
+						<term>Create the list</term>
+						<listitem>The line <literal>new BeanListWidget(MyModel.class)</literal> creates a new list widget that is associated with the <emphasis>JavaBean</emphasis> model class <literal>MyModel</literal>.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Add list columns</term>
+						<listitem>The line <literal>myList.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl())</literal> adds a column associated with the JavaBean property "name" (this is also the identifier of the column), with a label "Name", makes the column orderable, makes the column filterable by <literal>Like</literal> filter, adds a text box control for this filter.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Set the initial list order</term>
+						<listitem>The line <literal>myList.setInitialOrder("name", true)</literal> sets the list to be ordered by column "name" by default.</listitem>
+					</varlistentry>										
+					<varlistentry>
+						<term>Set the list data provider</term>
+						<listitem>The line <literal>myList.setListDataProvider(new MyListDataProvider())</literal> sets the data provider for the list.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Register the list</term>
+						<listitem>The line <literal>addWidget("myList", myList)</literal> initializes and registers the list allowing it to function.</listitem>
+					</varlistentry>															
+				</variablelist>
+				Note that adding a list column that can be used to filter the list, takes two parameters. <classname>org.araneaframework.uilib.list.structure.filter.ColumnFilter</classname> that defines the filter logic as well as <classname>Control</classname> widget that binds data from the filter <classname>org.araneaframework.uilib.form.BeanFormWidget</classname> that is associated with <classname>ListWidget</classname>. <classname>FormElement</classname> widgets that are associated with the specified <classname>Control</classname> are constrcuted with the same identifier and label as the column itself.
+			</para>
+
+			<para>
+				Now that we have created the list we show how to build a simple data provider. The following example code should be in the same widget as the previous:
+<programlisting role="java">...
+private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider {
+  protected MyMemoryBasedListDataProvider() {
+    super(MyModel.class);
+  }
+  public List loadData() throws Exception {		
+    return lookupMyService().findAllMyModel();
+  }
+}
+...</programlisting>
+				The line <literal>super(MyModel.class)</literal> associated this <classname>MemoryBasedListDataProvider</classname> with the <emphasis>JavaBean</emphasis> model class <literal>MyModel</literal>.
+				The method <literal>List loadData()</literal> implements loading all table rows and returning it as a <classname>List</classname> object.
+			</para>
+			
+			<para>
+				Later, we will also discover using <classname>org.araneaframework.uilib.list.dataprovider.BackendListDataProvider</classname>.
+			</para>
+		</sect2>
+
+		<sect2>
+			<title>Filter with multiple values</title>
+						
+			<para>
+				Basically, each list column can be associated with one <classname>ListFilter</classname> and one <classname>FormElement</classname> (with its own identifier). However, so we can describe only very simple filtering conditions. Thus each Aranea List can contain more flexible filters, which can be associated with zero or more list columns and zero or more filter values that are binded by filter <classname>FormElement</classname> widgets that have a unique identifier for each (this is also called <emphasis>FilterInfoKey</emphasis>).
+			</para>			
+
+			<para>
+				The following example discovers adding a column with filter that is associated with two <classname>FormElement</classname> widgets. That means one filter needs two values that may be entered.
+<programlisting role="java">...
+myList.addBeanColumn("birthday", "#Birthday", true);
+RangeColumnFilter birthdayFilter = new RangeColumnFilter.NonStrict("birthday");
+myList.addFilter(birthdayFilter);
+myList.addFilterFormElement(birthdayFilter.getStartFilterInfoKey(),
+  "#Birthday From", new DateControl(), new DateData());
+myList.addFilterFormElement(birthdayFilter.getEndFilterInfoKey(),
+  "#Birthday Till", new DateControl(), new DateData());
+...</programlisting>
+				Note that here we do following things:
+				<variablelist spacing="compact">
+					<varlistentry>
+						<term>Add list column</term>
+						<listitem>The line <literal>myList.addBeanColumn("birthday", "#Birthday", true)</literal> adds a column associated with the JavaBean property "birthday" (this is also the identifier of the column), with a label "#birthday" and makes the column orderable.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Construct column filter</term>
+						<listitem>The line <literal>ListFilter birthdayFilter = new RangeColumnFilter.NonStrict("birthday")</literal> constructs <literal>Non-Strict Range</literal> filter for column "birthday". Notice that now we passed the column identifier to the filter because we did not add the filter among the column itself.</listitem>
+					</varlistentry>										
+					<varlistentry>
+						<term>Add column filter</term>
+						<listitem>The line <literal>myList.addFilter(birthdayFilter)</literal> adds the constructed filter to the list.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Add filter <classname>FormElemenet</classname> widgets</term>
+						<listitem>The line <literal>list.addFilterFormElement(birthdayFilter.getStartFilterInfoKey(), "#Birthday From", new DateControl(), new DateData())</literal> takes full arguments as adding <classname>FormElement</classname> to <classname>FormWidget</classname>. Because we need to create more than one <classname>FormElement</classname> widgets here with unique identifier, we can not use JavaBean propery "birthday" here (this could result two <classname>FormElement</classname> widgets with the same identifier). Furthermore, the identifiers of <classname>FormElement</classname> widgets must be known by the filter that they are associated. Otherwise their values are not binded to the filter. Here we use default <emphasis>FilterInfoKey</emphasis> values chosen by the filter according to the column identifier. Alternatively we could choose other keys and provide them to the filter instead.</listitem>
+					</varlistentry>					
+				</variablelist>
+				Notice that each time we have more than one <classname>FormElemenet</classname> widgets associated with one filter, we can not just pass a <classname>Control</classname> widget to the <literal>addColumn</literal> method as weel as use <classname>BeanFormWidget</classname>-like methods to avoid setting <classname>Data</classname> objects.
+			</para>
+			
+			<para>
+				In addition one could add additional <classname>Constraint</classname> to this filter <classname>FormWidget</classname> as following:
+<programlisting role="java">...
+FormWidget filterForm = myList.getFilterForm();
+filterForm.setConstraint(new RangeConstraint(
+  filterForm.getElementByFullName(birthdayFilter.getStartFilterInfoKey()),
+  filterForm.getElementByFullName(birthdayFilter.getEndFilterInfoKey()),
+  true)); 
+...</programlisting>
+				This makes sure that the provided range is valid - the first value is lower than the seoncd. Additional third parameter (here <literal>true</literal>) defines whether the equals condition is also allowed.
+			</para>
+
+			<para>
+				The following example discovers adding two columns with one filter that is associated with two <classname>FormElement</classname> widgets. That means one filter needs two values that may be entered.
+<programlisting role="java">...
+myList.addBeanColumn("start", "#Start", true);
+myList.addBeanColumn("finish", "#Finish", true);
+ListFilter dateFilter =
+  new RangeInRangeFilter.ColumnRangeInValueRangeNonStrict("startDate", "endDate");
+myList.addFilter(dateFilter);
+myList.addFilterFormElement(dateFilter.getStartFilterInfoKey(), "#Start Date",
+  new DateControl(), new DateData());
+myList.addFilterFormElement(dateFilter.getEndFilterInfoKey(), "#End Date",
+  new DateControl(), new DateData());
+...</programlisting>
+				This example differs from the previous one very little. <literal>RangeInRange</literal> filter is just constructed with two column idnetifiers.
+			</para>
+		</sect2>    	
+    	
+		<sect2>
+			<title>Backend Data Provider</title>
+						
+			<para>
+				Now that we have demonstrated defining lists and also creating <classname>MemoryBasedListDataProvider</classname>, we will discover using <classname>BackendListDataProvider</classname>. The following example code should be in the same widget as constucting of the related <classname>ListWidget</classname>.
+<programlisting role="java">...
+private class MyBackendListDataProvider extends BackendListDataProvider {
+  public MyBackendListDataProvider() {
+    super(true);
+  }
+  protected ListItemsData getItemRange(ListQuery query) throws Exception {
+    return lookupMyService().findMyModel(query);
+  }
+}
+...</programlisting>
+				The line <literal>super(true)</literal> constructs <classname>BackendListDataProvider</classname> with cache enabled (only used when there are no change in <emphasis>query</emphasis>). Notice that there is no associaton with any <emphasis>JavaBean</emphasis> class here.
+				The method <literal>ListItemsData getItemRange(ListQuery query)</literal> implements loading current item range according to the range indexes and filtering and ordering conditions. <classname>org.araneaframework.backend.list.mode.ListQuery</classname> and <classname>org.araneaframework.backend.list.mode.ListItemsData</classname> may be thought as being input and output of each list data query.
+			</para>
+			
+			<para>
+				<classname>ListQuery</classname> is a simple JavaBean that holds the following properties:
+				<variablelist spacing="compact">
+					<varlistentry>
+						<term>List item range indexes</term>
+						<listitem>This is 0-based start index and items count (<classname>Long</classname> objects) that define the range. By default, lists are shown by pages. Altrough all items can be shown at once also. Then the start index is zero and items count is ommited.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Filter expression</term>
+						<listitem>This could be thought as an abstraction of previously defined bunch of <classname>ListFilter</classname> objects that are provided with the binded values from <emphasis>filter form</emphasis>. This is a basis of constructing a SQL <literal>WHERE</literal> clause later.</listitem>
+					</varlistentry>										
+					<varlistentry>
+						<term>Order expression</term>
+						<listitem>This could be thought as an abstraction of previously defined ordered columns that are provided with the current ordering condition. This is a basis of constructing a SQL <literal>ORDER BY</literal> clause later.</listitem>
+					</varlistentry>
+				</variablelist>
+				Generally, this whole object is just passed to <classname>org.araneaframework.backend.list.helper.ListSqlHelper</classname> class that is used to generate SQL statements and fetching the results from database. Latter is hold in <classname>ListItemsData</classname> object which is a simple JavaBean that holds the following properties:
+				<variablelist spacing="compact">
+					<varlistentry>
+						<term>List items range</term>
+						<listitem>Model objects that are the result of the <emphasis>query</emphasis>.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Total count</term>
+						<listitem>Total count (<classname>Long</classname> object) of the list. This is important information for navigating through the whole list. Notice that this depends only on filtering conditions.</listitem>
+					</varlistentry>
+				</variablelist>
+			</para>
+			
+			<para>
+				Notice that <classname>BackendListDataProvider</classname> actually do not depend on using databases. It just provides a simple <emphasis>query</emphasis> object and expects a simple result to be returned. Thus, you have the power to use it as you like. At the same, Aranea provides a very useful class <classname>org.araneaframework.backend.list.helper.ListSqlHelper</classname> that generate SQL statements and fetches the results from database. We strongly recommend it together with its subclasses that support different database systems. Currently <literal>Oracle</literal> and <literal>HSQL</literal> databases are supported.
+			</para>
+			
+			<para>
+				The following example discovers using an <literal>Oracle</literal>-based data providing with <classname>OracleListSqlHelper</classname> (a subclass of <classname>ListSqlHelper</classname>). The following code should be in a service class instead of previously discovered Widget:
+<programlisting role="java">public class MyService {
+  ...
+  private DataSource dataSource;
+  ...
+  public ListItemsData findMyModel(ListQuery query) throws Exception {
+    OracleListSqlHelper helper = new OracleListSqlHelper(query);
+
+    helper.setColumnMapping("name", "NAME");
+    helper.setColumnMapping("surname", "SURNMAE");
+    helper.setColumnMapping("phone", "PHONE_NO");
+
+    StringBuffer s = new StringBuffer();
+    s.append("SELECT ");
+    s.append(helper.getDatabaseFields());
+    s.append(" FROM PERSONS");
+    s.append(helper.getDatabaseFilterWith(" WHERE ", ""));
+    s.append(helper.getDatabaseOrderWith(" ORDER BY ", ""));
+
+    helper.setSqlQuery(s.toString());
+    helper.addStatementParams(helper.getDatabaseFilterParams());
+    helper.addStatementParams(helper.getDatabaseOrderParams());
+
+    ListItemsData data;
+    try {
+      helper.setDataSource(this.dataSource);
+      helper.execute();
+      data = helper.getListItemsData(MyModel.class);
+    } finally {
+      helper.close();
+    }
+    return data;
+  }
+  ...
+}</programlisting>
+				Method <literal>ListItemsData findMyModel(ListQuery query)</literal> does the following:
+				<variablelist spacing="compact">
+					<varlistentry>
+						<term>Constructs the helper</term>
+						<listitem>The line <literal>OracleListSqlHelper helper = new OracleListSqlHelper(query)</literal> constructs <classname>OracleListSqlHelper</classname> and passes it <classname>ListQuery</classname> data.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Adds column mappings</term>
+						<listitem>The line <literal>helper.setColumnMapping("name", "NAME")</literal> defines that identifier of column "name" will be converted into <literal>"NAME"</literal> when used in an SQL statement. There may be lot of differnece between JavaBean properies names and database fields names. The same database identifier (<literal>"NAME"</literal>) is used when fetching data from <classname>ResultSet</classname> by default. This could also have another identifier set by providing it as the third argument.</listitem>
+					</varlistentry>										
+					<varlistentry>
+						<term>Gets SQL substrings from the helper</term>
+						<listitem>The line <literal>helper.getDatabaseFields()</literal> returns just the comma-separated list of database column identifiers that were just defined in the mapping. This does not depend on the original set of list columns at all. The line <literal>helper.getDatabaseFilterWith(" WHERE ", "")</literal> returns the <literal>WHERE</literal> clause body with the provided prefix and suffix. It returns an empty string if there is no filter condition currently set (it does not mean there are no filters defined). Notice that we only deal with SQL strings here. As <classname>ListSqlHelper</classname> uses <classname>PreparedStatement</classname> objects to execute queries, there must be provided statement parameters in addition to the SQL string. This generally provides better perfomance of executing similair queries.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Constructs SQL query string</term>
+						<listitem><literal>StringBuffer</literal> is used to construct the whole SQL query string. Notice that the helper does not construct it totally by itself. This lends user more power for complex queries. It is very important that the constructed query is for getting all rows that match with the current filter and order conditions, but not the range conditions. <classname>ListSqlHelper</classname> always executes two queries: one for getting the items count and another for getting the items range. Generally, both of these can be easily constructed from this one provided query. This implementation depends on the database system and therefore the concrete <classname>ListSqlHelper</classname> subclass.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Gets SQL parameters from the helper</term>
+						<listitem>The line <literal>helper.getDatabaseFilterParams()</literal> returns SQL parameters of <literal>WHERE</literal> clause or empty list if there are none.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Provides the helper with the SQL query</term>
+						<listitem>The line <literal>helper.setSqlQuery(...)</literal> sets the SQL string and the line <literal>helper.addStatementParams(...)</literal> adds the query parameters (<classname>ListSqlHelper</classname> uses <classname>PreparedStatement</classname>s). Of course, the order of parameters must match with the SQL string.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Provides the helper with <classname>DataSource</classname></term>
+						<listitem>This could also be done before but not later.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Executes the queries</term>
+						<listitem>The line <literal>helper.execute()</literal> executes both range count and getting range items queries. The <classname>ResultSet</classname> of the latter is let open.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Reads the results</term>
+						<listitem>The line <literal>helper.getListItemsData(MyModel.class)</literal> iterates through <classname>ResultSet</classname> and returns the JavaBean list that holds the data. It also returns the total items count. All this is encapsulated into <classname>ListItemsData</classname> object.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Close the database connection</term>
+						<listitem>This must be always done in <literal>finally</literal> clause.</listitem>
+					</varlistentry>
+				</variablelist>
+				<classname>ListSqlHelper</classname> is designed to be flexible remaining simple to be used. Note that the query that is constucted here start with the term <literal>"SELECT"</literal>. For example, <classname>HSqlListSqlHelper</classname> must be provided with the rest of <literal>SELECT</literal> clause without passing it the term <literal>"SELECT"</literal> itself. This ensures that the items count nad items range queries are always constructed correctly.
+			</para>
+		</sect2>
+	</sect1>
+
+	<sect1>
+		<title>List JSP Tags</title>	
+	</sect1>
+
+	<sect1>
+		<title>Customizing and Extending Lists</title>
+	</sect1>
+</chapter>

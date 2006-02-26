@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <bean id="servletServiceAdapterComponent" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    singleton="false">
+
+    <property name="childService">
+      <ref bean="mainStatisticFilter" />
+    </property>
+  </bean>
+  
+  <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService" id="mainStatisticFilter" singleton="false">
+    <property name="childService">
+      <ref bean="topServiceRouter" />
+    </property>
+    <property name="namespace"><value>MAIN</value></property>
+  </bean>
+
+  <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="topServiceRouter"
+    singleton="false">
+    <property name="defaultServiceId">
+    	<value>application</value>
+    </property>
+    <property name="serviceMap">
+      <map>
+        <entry key="application">
+          <ref bean="sessionRouter" />
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.servlet.router.StandardServletSessionRouterService" id="sessionRouter" singleton="false">
+    <property name="sessionServiceFactory">
+      <ref bean="sessionServiceFactory" />
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.ioc.spring.StandardSpringServiceFactory" id="sessionServiceFactory" singleton="false">
+    <property name="beanId">
+      <idref bean="serializingAudit"/>
+    </property>
+  </bean>
+  
+  <bean class="org.araneaframework.framework.filter.StandardSerializingAuditFilterService" id="serializingAudit" singleton="false">
+    <property name="childService">
+      <ref bean="threadServiceRouter" />
+    </property>
+	  <property name="testXmlSessionPath"> 
+      <value>c:/temp</value>
+    </property>      
+  </bean> 
+
+  <bean id="threadServiceRouter" class="org.araneaframework.framework.router.StandardThreadServiceRouterService"
+    singleton="false">
+    <property name="defaultServiceId">
+    	<value>mainThread</value>
+    </property>
+    <property name="serviceMap">
+      <map>
+        <entry key="mainThread">
+          <ref bean="synchronizingFilter" />
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardSynchronizingFilterService" id="synchronizingFilter"
+    singleton="false">
+    <property name="childService">
+      <ref bean="headerFilter" />
+    </property>
+  </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardServletHttpFilterService" id="headerFilter"
+    singleton="false">
+    <property name="childService">
+      <ref bean="widgetAdapter" />
+    </property>
+  </bean>  
+
+  <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService" id="widgetAdapter"
+    singleton="false">
+    <property name="childWidget">
+      <ref bean="widgetContainer" />
+    </property>
+  </bean>
+  
+  <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="widgetContainer"
+    singleton="false">
+    <property name="childWidget">
+      <ref bean="rootWidget" />
+    </property>
+  </bean>
+  
+  <bean class="org.araneaframework.mock.widget.MockViewPortWidget" id="rootWidget" singleton="false" />
+</beans>
+

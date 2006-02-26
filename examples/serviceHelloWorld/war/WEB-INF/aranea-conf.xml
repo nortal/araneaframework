@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="application.root" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    singleton="false">
+
+    <property name="childService">
+      <bean class="org.araneaframework.example.helloworld.HelloWorldService"/>
+    </property>
+  </bean>  
+	
+</beans>

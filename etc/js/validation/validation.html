@@ -1,0 +1,253 @@
+<!-- Javascript Client-side Form Validation Utilities 
+     Sample HTML file.
+     Created: 18.05.2004
+     Author: Konstantin Tretyakov
+ -->
+<html>
+  <head>
+    <title>Javascript Client-side Form Validation Utilities</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    
+    <!-- Form validation scripts -->
+    <script type="text/javascript" src="localization.js"></script>
+    <script type="text/javascript" src="clientside-form-validation.js"></script>
+    <script type="text/javascript" src="clientside-datetime-form-validation.js"></script>
+    <script type="text/javascript" src="jwlf-jsp-ui-form-validation.js"></script>
+    <script type="text/javascript" src="jwlf-jsp-ui.js"></script>
+    
+    <!-- Override UiFormValidator.createDefault,
+         We'll use the ShowMessagesDivAction instead of the default MessageBoxAction -->
+    <script type="text/javascript">
+      UiFormValidator.createDefault = function(formName) {
+        var v = new UiFormValidator(formName, '.validationUnit', 'valid', 'invalid');
+        v.addAction(new ShowErrorMessagesDivAction('errorMessages'));
+        return v;
+      }
+   </script>
+  </head>
+  <body>
+    <div id="content">
+      <h1>Javascript Client-side Form Validation Utilities</h1>
+      <address>Author: <a href="mailto:kt@webmedia.ee">Konstantin Tretyakov</a></address>
+      <p style="margin-left: 10px;">
+        This page illustrates the usage of Javascript utilities for client-side form validation.
+        Consider taking a look at the source of this page to get an idea of how client-side
+        input element validation is to be used.
+      </p>
+      
+          
+      <div id="form">
+        <div id="errorMessages" class="errorMessages"></div>
+        
+        <br />     
+        <form name="validatedForm" action="validation.html" method="GET">
+        
+          <div id="validatedForm.textInput.validationUnit" class="valid">        
+            <div class="row">
+              <span class="label">
+                <span class="asterisk">* </span>Text input:
+              </span>
+              <span class="formelement">
+                <input type="text" name="validatedForm.textInput" value="Text Value" maxlength="30" />
+              </span>
+            </div>
+          </div>
+          
+          <div id="validatedForm.integerInput.validationUnit" class="valid">
+            <div class="row">
+              <span class="label">
+                <span class="asterisk">* </span>Integer input:
+              </span>
+              <span class="formelement">
+                <input type="text" name="validatedForm.integerInput" value="12" />
+              </span>
+            </div>
+          </div>
+          
+          <div id="validatedForm.realInput.validationUnit" class="valid">
+            <div class="row">
+              <span class="label">
+                <span class="asterisk">* </span>Real input:
+              </span>
+              <span class="formelement">
+                <input type="text" name="validatedForm.realInput" value="12.2" />
+              </span>
+            </div>
+          </div>
+
+          <div id="validatedForm.isikukoodInput.validationUnit" class="valid">
+            <div class="row">
+              <span class="label">
+                <span class="asterisk">* </span>Isikukood:
+              </span>
+              <span class="formelement">
+                <input type="text" name="validatedForm.isikukoodInput" value="" />
+              </span>
+            </div>
+          </div>
+          
+          <div id="validatedForm.emailInput.validationUnit" class="valid">
+            <div class="row">
+              <span class="label">
+                <span class="asterisk">* </span>E-mail address:
+              </span>
+              <span class="formelement">
+                <input type="text" name="validatedForm.emailInput" value="" />
+              </span>
+            </div>
+          </div>
+                
+          <div id="validatedForm.dateInput.validationUnit" class="valid">                        
+            <div class="row">
+              <span class="label"><span class="asterisk">* </span>Date input:</span>
+              <span class="formelement">
+                <input type="text" name="validatedForm.dateInput" value="12.4.2003" style="width: 8em;"/>
+              </span>
+            </div>
+          </div>
+          
+          <div id="validatedForm.timeInput.validationUnit" class="valid">
+            <div class="row">
+              <span class="label"><span class="asterisk">* </span>Time input:</span>
+              <span class="formelement">
+                <input type="text" name="validatedForm.timeInput" value="23:30" style="width: 4em;" />
+              </span>
+            </div>
+          </div>
+          
+          <div id="validatedForm.dateTimeInput.validationUnit" class="valid">
+            <div class="row">
+              <span class="label"><span class="asterisk">* </span>Datetime input:</span>
+              <span class="formelement">
+                <input type="text" name="validatedForm.dateTimeInput.time" value="" style="width: 4em;" />
+                <input type="text" name="validatedForm.dateTimeInput.date" value="" style="width: 8em;" />                
+              </span>
+            </div>
+          </div>
+          
+          <div class="row">
+            <span class="label">Checkbox:</span>
+            <span class="formelement">
+              <input type="checkbox" name="validatedForm.checkboxInput" value="checkbox" checked="checked" />
+            </span>
+          </div>
+        
+          <div id="validatedForm.selectInput.validationUnit" class="valid">
+            <div class="row">
+              <span class="label"><span class="asterisk">* </span>Select:</span>
+              <span class="formelement"> 
+                <select name="validatedForm.selectInput">
+                  <option value="" selected="selected">(choose one)</option>
+                  <optgroup label="Netscape">
+                    <option value="4.x">
+                      4.x or higher
+                    </option>
+                    <option value="5.x">
+                      5.x
+                    </option>
+                  </optgroup>
+                  <optgroup label="MSIE">
+                    <option value="IE-4.x">
+                      4.x or higher
+                    </option>
+                    <option value="IE-5.x">
+                      5.x
+                    </option>
+                  </optgroup>
+                  <option>Other</option>
+                </select>
+              </span>
+            </div>
+          </div>
+          
+          <div id="validatedForm.multiselectInput.validationUnit" class="valid">
+            <div class="row">
+              <span class="label"><span class="asterisk">* </span> Multiselect input:</span>
+              <span class="formelement">
+                <select name="validatedForm.multiselectInput" multiple="multiple" size="5">
+                  <option value="">- choose several -</option>
+                  <option value="choice1">Neo</option>
+                  <option value="choice2">Morpheus</option>
+                  <option value="choice3">Trinity</option>
+                  <option value="choice4">Agent Smith</option>
+                  <option value="choice5">Architect</option>
+                  <option value="choice6">Oracle</option>
+                  <option value="choice7">The Matrix</option>
+                </select>
+              </span>
+            </div>
+          </div>
+          
+          <div id="validatedForm.radioInput.validationUnit" class="valid">
+            <div class="row">
+              <span class="label"><span class="asterisk">* </span> Radio input:</span>
+              <span class="formelement">
+                <input name="validatedForm.radioInput" type="radio" value="radio1">Low</input>
+                <input name="validatedForm.radioInput" type="radio" value="radio2">Medium</input>
+                <input name="validatedForm.radioInput" type="radio" value="radio3">High</input>
+              </span>
+            </div>
+          </div>
+          <div id="validatedForm.textArea.validationUnit" class="valid">
+            <div class="row">
+              <span class="label"><span class="asterisk">* </span> Textarea input:</span>
+              <span class="formelement">
+                <textarea name="validatedForm.textArea" cols="25" rows="6" style="font-size: 10pt; font-face: Verdana, Arial, sans-serif;">
+  A lot of input may go here..
+  Long texts for example.
+                </textarea>
+              </span>
+            </div>
+          </div>
+                
+          <div class="space"></div>
+          <!-- TODO: List filter form validation / list form cell validation -->
+          
+
+            
+          <div class="bottom-row">
+            <span class="centered">
+              <button name="validatedForm.buttonInput" onclick="javascript: return submitForm();">
+                Submit Form
+              </button>                
+            </span>
+          </div>
+        
+        </form>
+      </div>
+    </div>
+    
+       
+          
+    <script type="text/javascript">
+      // In general there may be several forms on one page
+      // We store them all in one array
+      var validation = new Object();
+      
+      validation.validatedForm = UiFormValidator.createDefault('validatedForm');
+      
+      formValidator = validation['validatedForm'];
+      formValidator.addTextInputValidator('validatedForm.textInput', 'TextInput', 10, 30, true);
+      formValidator.addRegExpValidator('validatedForm.textArea', 'TextArea', /John/, "Field '{0}' must contain the word John", true);
+      formValidator.addIntegerValidator('validatedForm.integerInput', 'IntegerInput', -10);
+      formValidator.addRealValidator('validatedForm.realInput', 'RealInput', -1.3, 1.3);
+      formValidator.addIsikukoodValidator('validatedForm.isikukoodInput', 'Isikukood');
+      formValidator.addEmailValidator('validatedForm.emailInput', 'Email Address');
+      formValidator.addSelectValidator('validatedForm.selectInput', 'Select', true);
+      formValidator.addMultiselectValidator('validatedForm.multiselectInput', 'Multiselect', true);
+      formValidator.addRadioValidator('validatedForm.radioInput', 'Radio', true);
+      formValidator.addDateValidator('validatedForm.dateInput', 'Date', true);
+      formValidator.addTimeValidator('validatedForm.timeInput', 'Time', false);
+      formValidator.addDateTimeValidator('validatedForm.dateTimeInput', 'DateTime', true);
+      
+    </script>
+    <script type="text/javascript">
+      function submitForm(){
+        result = validation['validatedForm'].validate();
+        if (result) document.forms['validatedForm'].submit();
+        return false;
+      }
+    </script>
+  </body>
+</html>

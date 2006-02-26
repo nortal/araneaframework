@@ -1,0 +1,97 @@
+
+body {
+  margin: 1em 0px;
+  background-color: white;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 11px;
+  color: #222222;
+}
+
+h1 {
+  font-size: large;
+  color: black;
+}
+
+#content {
+  border: 1px solid black; 
+  padding: 1em 2em 2em 2em;
+  width: 500px; 
+  background-color: white;
+  margin-left: -250px;
+  position: absolute;
+  left: 50%;
+  top: 10px;
+}   
+
+#errorMessages {
+  border: 1px solid red; 
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  width: 90%; 
+  background-color: #ffcccc;
+  color: red;
+  height: 0px;
+  position: relative;
+  left: 50%;
+  margin-left: -45%;
+  visibility: hidden;
+}
+      
+
+#form {
+  width: 410px;
+  background-color: #eee;
+  border: 1px dotted #333;
+  padding: 5px;
+  position: relative;
+  left: 50%;
+  margin-left: -205px;
+}
+  
+div.row {
+  clear: both;
+  padding-top: 5px;
+}
+
+div.row span.label {
+  float: left;
+  width: 150px;
+  text-align: right;
+}
+
+div.row span.formelement {
+  float: right;
+  width: 250px;
+  text-align: left;
+}
+
+div.bottom-row  {
+  padding-top: 1ex;
+  text-align: center;
+}
+
+div.space {
+  clear: both;
+}
+
+.valid {
+}
+
+.invalid input {
+  color: red;
+}
+
+.invalid textarea {
+  color: red;
+}
+
+.invalid span.label {
+  color: red;
+} 
+
+.valid span.asterisk {
+  visibility: hidden;
+}
+    
+.invalid span.asterisk {
+  visibility: visible;
+}       

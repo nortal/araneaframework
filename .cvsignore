@@ -1,0 +1,15 @@
+bin
+build
+.project
+.classpath
+.jetproperties
+personal.build.properties
+devweb-personal.properties
+.settings
+Model Folder
+.springBeans
+copy-libs.sh
+tmp
+*.essModel
+.refactorings
+dist

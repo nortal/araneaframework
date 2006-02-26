@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <bean id="servletServiceAdapterComponent" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    singleton="false">
+    <property name="childService">
+      <ref bean="criticalErrorHandler" />
+    </property>
+  </bean>
+    
+  <bean 
+  	class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService" 
+  	id="criticalErrorHandler" singleton="false">
+    <property name="childService">
+      <ref bean="topServiceRouter" />
+    </property>
+    <property name="exceptionHandlerFactory">
+    	<bean class="org.araneaframework.template.error.TemplateCriticalErrorHandlerFactory" singleton="false"/>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="topServiceRouter"
+    singleton="false">
+    <property name="defaultServiceId">
+    	<value>application</value>
+    </property>
+    <property name="serviceMap">
+      <map>
+        <entry key="application">
+          <ref bean="threadServiceRouter" />
+        </entry>
+      </map>
+    </property>
+  </bean>
+  
+  <bean id="threadServiceRouter" class="org.araneaframework.framework.router.StandardThreadServiceRouterService"
+    singleton="false">
+    <property name="defaultServiceId">
+    	<value>mainThread</value>
+    </property>
+    <property name="serviceMap">
+      <map>
+        <entry key="mainThread">
+          <ref bean="synchronizingFilter" />
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardSynchronizingFilterService" id="synchronizingFilter"
+    singleton="false">
+    <property name="childService">
+      <ref bean="widgetAdapter" />
+    </property>
+  </bean>
+  
+   <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService" id="widgetAdapter"
+    singleton="false">
+    <property name="childWidget">
+      <ref bean="widgetContainer" />
+    </property>
+  </bean>
+  
+  <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="widgetContainer"
+    singleton="false">
+    <property name="childWidget">
+      <ref bean="rootWidget" />
+    </property>
+  </bean>
+     
+  <bean class="org.araneaframework.mock.widget.MockViewPortWidget" id="rootWidget" singleton="true" />
+</beans>
+

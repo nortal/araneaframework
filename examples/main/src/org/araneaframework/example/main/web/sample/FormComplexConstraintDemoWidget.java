@@ -1,0 +1,112 @@
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
+package org.araneaframework.example.main.web.sample;
+
+import org.apache.log4j.Logger;
+import org.araneaframework.OutputData;
+import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.framework.MessageContext;
+import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.servlet.util.ServletUtil;
+import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.constraint.AndConstraint;
+import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
+import org.araneaframework.uilib.form.constraint.OrConstraint;
+import org.araneaframework.uilib.form.control.ButtonControl;
+import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.data.StringData;
+import org.araneaframework.uilib.support.TextType;
+
+
+/**
+ * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @since {since}
+ */
+public class FormComplexConstraintDemoWidget extends BaseWidget {
+  private static final Logger log = Logger.getLogger(FormComplexConstraintDemoWidget.class);
+  private FormWidget searchForm;
+  
+  protected void init() throws Exception {
+    super.init();
+	
+	  addGlobalEventListener(new ProxyEventListener(this));
+	
+    searchForm = new FormWidget();
+
+    //Adding form controls
+    searchForm.addElement("clientFirstName", "#Client first name", new TextControl(), new StringData(), false);
+    searchForm.addElement("clientLastName", "#Client last name", new TextControl(), new StringData(), false);
+
+    searchForm.addElement("clientPersonalId", "#Client personal id", new TextControl(TextType.EST_PERSONAL_ID), new StringData(), false);
+    
+    searchForm.addElement("clientAddressTown", "#Town", new TextControl(), new StringData(), false);
+    searchForm.addElement("clientAddressStreet", "#Street", new TextControl(), new StringData(), false);
+    searchForm.addElement("clientAddressHouse", "#House", new TextControl(), new StringData(), false);       
+    
+    searchForm.addElement("search", "#Search", new ButtonControl(), null, false);
+
+    //
+    //Complex constraint
+    //
+    
+    //First searching scenario
+    AndConstraint clientNameConstraint = new AndConstraint();
+    clientNameConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientFirstName")));
+    clientNameConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientLastName")));
+    
+    //Second searching scenario
+    NotEmptyConstraint clientPersonalIdConstraint = new NotEmptyConstraint(searchForm.getElementByFullName("clientPersonalId"));
+    
+    //Third searching scenario
+    AndConstraint clientAddressConstraint = new AndConstraint();
+    clientAddressConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientAddressTown")));
+    clientAddressConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientAddressStreet")));
+    clientAddressConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientAddressHouse")));
+    
+    //Combining scenarios
+    OrConstraint searchConstraint = new OrConstraint();    
+    searchConstraint.addConstraint(clientNameConstraint);
+    searchConstraint.addConstraint(clientPersonalIdConstraint);
+    searchConstraint.addConstraint(clientAddressConstraint);
+    
+    //Setting custom error message
+    searchConstraint.setCustomErrorMessage(t("searchform.notenoughdata"));
+    
+    //Setting constraint
+    searchForm.setConstraint(searchConstraint);
+    
+    //Putting the widget
+    addWidget("searchForm", searchForm);    
+  }
+  
+  public void handleEventSearch() throws Exception {
+    if (searchForm.convertAndValidate()) {      
+      getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Search allowed!");
+    }
+  }
+  
+  public void handleEventReturn(String eventParameter) throws Exception {
+	  log.debug("Event 'return' received!");
+	  getFlowCtx().cancel();
+  }	
+  
+  protected void render(OutputData output) throws Exception {
+	  log.debug(getClass().getName() + " render called");
+	  ServletUtil.include("/WEB-INF/jsp/sample/searchForm/component.jsp", getEnvironment(), (ServletOutputData) output);
+  }  
+}

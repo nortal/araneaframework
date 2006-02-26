@@ -1,0 +1,363 @@
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
+package org.araneaframework.tests;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import junit.framework.TestCase;
+import org.apache.log4j.Logger;
+import org.araneaframework.core.StandardPath;
+import org.araneaframework.mock.MockInputData;
+import org.araneaframework.servlet.core.StandardServletInputData;
+import org.araneaframework.tests.mock.MockConfiguration;
+import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.uilib.model.data.DisplayItem;
+import org.araneaframework.uilib.widgets.events.OnClickEventListener;
+import org.araneaframework.uilib.widgets.forms.FormElement;
+import org.araneaframework.uilib.widgets.forms.FormWidget;
+import org.araneaframework.uilib.widgets.forms.constraints.ConstraintGroupHelper;
+import org.araneaframework.uilib.widgets.forms.constraints.NotEmptyConstraint;
+import org.araneaframework.uilib.widgets.forms.controls.ButtonControl;
+import org.araneaframework.uilib.widgets.forms.controls.CheckboxControl;
+import org.araneaframework.uilib.widgets.forms.controls.Control;
+import org.araneaframework.uilib.widgets.forms.controls.DateTimeControl;
+import org.araneaframework.uilib.widgets.forms.controls.SelectControl;
+import org.araneaframework.uilib.widgets.forms.controls.TextControl;
+import org.araneaframework.uilib.widgets.forms.controls.TextareaControl;
+import org.araneaframework.uilib.widgets.forms.converters.IdenticalConverter;
+import org.araneaframework.uilib.widgets.forms.converters.StringToLongConverter;
+import org.araneaframework.uilib.widgets.forms.converters.TimestampToDateConverter;
+import org.araneaframework.uilib.widgets.forms.data.BooleanData;
+import org.araneaframework.uilib.widgets.forms.data.DateData;
+import org.araneaframework.uilib.widgets.forms.data.LongData;
+import org.araneaframework.uilib.widgets.forms.data.StringData;
+import org.springframework.mock.web.MockHttpServletRequest;
+
+
+/**
+ * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * 
+ */
+public class FormTest extends TestCase {
+
+  private static Logger log = Logger.getLogger(FormTest.class);
+
+  boolean eventsWork = false;
+  
+  public FormTest(String name) {
+    super(name);
+  }
+
+  private FormWidget makeUsualForm() throws Exception {
+
+    //Creating form :-)
+    FormWidget testForm = new FormWidget();
+    testForm._getComponent().init(new MockEnviroment());
+    
+    //Adding elements to form
+    testForm.addElement("myCheckBox", "my checkbox", new CheckboxControl(), new BooleanData(), true);
+    testForm.addElement("myLongText", "my long text", new TextControl(), new LongData(), true);
+    testForm.addElement("myDateTime", "my date and time", new DateTimeControl(), new DateData(), false);
+    testForm.addElement("myButton", "my button", new ButtonControl(), null, false);
+
+    //Adding a composite element
+    FormWidget hierarchyTest = testForm.addSubForm("hierarchyTest");
+    hierarchyTest.addElement("myTextarea", "my text area", new TextareaControl(), new StringData(), true);
+
+    //Filling in select control (which is under a composite element)
+    FormElement mySelectElement = hierarchyTest.addElement("mySelect", "my drop down", new SelectControl(), new LongData(), true);
+    SelectControl mySelect = (SelectControl) mySelectElement.getControl();
+    mySelect.addItem(new DisplayItem("1", "one"));
+    mySelect.addItem(new DisplayItem("2", "two"));
+    mySelect.addItem(new DisplayItem("3", "three"));
+    mySelect.addItem(new DisplayItem("4", "four"));
+
+    return testForm;
+  }
+
+  /**
+   * Tests converter picking
+   */
+  public void testConverters() throws Exception {
+
+    FormWidget testForm = makeUsualForm();
+
+    FormWidget hierarchyTest = (FormWidget) testForm.getElement("hierarchyTest");
+
+    //Checking that converter is picked right
+    assertTrue(((FormElement) testForm.getElement("myCheckBox")).getConverter() instanceof IdenticalConverter);
+    assertTrue(((FormElement) testForm.getElement("myLongText")).getConverter() instanceof StringToLongConverter);
+    assertTrue(((FormElement) testForm.getElement("myDateTime")).getConverter() instanceof TimestampToDateConverter);
+    assertTrue(((FormElement) hierarchyTest.getElement("mySelect")).getConverter() instanceof StringToLongConverter);
+    assertTrue(((FormElement) hierarchyTest.getElement("myTextarea")).getConverter() instanceof IdenticalConverter);
+  }
+
+  /**
+   * Tests value assigning.
+   */
+  public void testValueAssigning() throws Exception {
+
+    FormWidget testForm = makeUsualForm();
+
+    FormWidget hierarchyTest = (FormWidget) testForm.getElement("hierarchyTest");
+
+    //Setting initial form data
+     ((FormElement) testForm.getElement("myCheckBox")).getData().setValue(Boolean.TRUE);
+    ((FormElement) testForm.getElement("myLongText")).getData().setValue(new Long(16));
+
+    Date now = new Date(System.currentTimeMillis());
+
+    ((FormElement) testForm.getElement("myDateTime")).getData().setValue(now);
+    ((FormElement) hierarchyTest.getElement("mySelect")).getData().setValue(new Long(12637));
+    ((FormElement) hierarchyTest.getElement("myTextarea")).getData().setValue("MIB");
+
+    //Checking that the data assigning works
+    assertTrue(((FormElement) testForm.getElement("myCheckBox")).getData().getValue().equals(Boolean.TRUE));
+    assertTrue(((FormElement) testForm.getElement("myLongText")).getData().getValue().equals(new Long(16)));
+    assertTrue(((FormElement) testForm.getElement("myDateTime")).getData().getValue().equals(now));
+    assertTrue(((FormElement) hierarchyTest.getElement("mySelect")).getData().getValue().equals(new Long(12637)));
+    assertTrue(((FormElement) hierarchyTest.getElement("myTextarea")).getData().getValue().equals("MIB"));
+  }
+
+  /**
+   * Testing reading from valid request.
+   */
+  public void testFormValidRequestReading() throws Exception {
+
+    FormWidget testForm = makeUsualForm();
+
+    FormWidget hierarchyTest = (FormWidget) testForm.getElement("hierarchyTest");
+
+    MockHttpServletRequest validRequest = new MockHttpServletRequest();
+
+    validRequest.addParameter("testForm.__present", "true");
+    validRequest.addParameter("testForm.myCheckBox", (String) null);
+    validRequest.addParameter("testForm.myLongText", "108");
+    validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
+    validRequest.addParameter("testForm.myDateTime.time", "01:01");
+    validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+
+    //Trying to read from a valid request
+    StandardServletInputData input = new StandardServletInputData(validRequest);
+    input.pushScope("testForm");
+    testForm._getWidget().update(input);
+    
+    Date reqDate = (new SimpleDateFormat("dd.MM.yyyy hh:mm")).parse("11.10.2015 01:01");
+
+    //Checking that reading from request works
+    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
+
+    assertTrue(((FormElement) testForm.getElement("myCheckBox")).getData().getValue().equals(Boolean.FALSE));
+    assertTrue(((FormElement) testForm.getElement("myLongText")).getData().getValue().equals(new Long(108)));
+    assertTrue(((FormElement) testForm.getElement("myDateTime")).getData().getValue().equals(reqDate));
+    assertTrue(((FormElement) hierarchyTest.getElement("mySelect")).getData().getValue().equals(new Long(2)));
+    assertTrue(((FormElement) hierarchyTest.getElement("myTextarea")).getData().getValue().equals("blah"));
+  }
+
+  /**
+   * Testing reading from invalid request.
+   */
+  public void testFormInvalidRequestReading() throws Exception {
+    FormWidget testForm = makeUsualForm();
+
+    MockHttpServletRequest invalidRequest = new MockHttpServletRequest();
+
+    invalidRequest.addParameter("testForm.__present", "true");
+    invalidRequest.addParameter("testForm.myCheckBox", "ksjf");
+    invalidRequest.addParameter("testForm.myDateTime.date", "HA-HA");
+    invalidRequest.addParameter("testForm.myDateTime.time", "BLAH");
+    invalidRequest.addParameter("testForm.hierarchyTest.myTextarea", "");    
+
+    //Testing that invalid requests are read right
+    StandardServletInputData input = new StandardServletInputData(invalidRequest);
+    input.pushScope("testForm");
+    testForm._getWidget().update(input);
+    
+    assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
+  }
+
+  /**
+   * Testing reading from request with a mandatory element missing.
+   */
+  public void testFormMandatoryMissingRequestReading() throws Exception {
+
+    FormWidget testForm = makeUsualForm();
+
+    MockHttpServletRequest mandatoryMissingRequest = new MockHttpServletRequest();
+
+    mandatoryMissingRequest.addParameter("testForm.__present", "true");
+    mandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
+    mandatoryMissingRequest.addParameter("testForm.myLongText", "108");
+    mandatoryMissingRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
+    mandatoryMissingRequest.addParameter("testForm.myDateTime.time", "01:01");
+    mandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+
+    //Testing that mandatory items are processed right
+    StandardServletInputData input = new StandardServletInputData(mandatoryMissingRequest);
+    input.pushScope("testForm");
+    testForm._getWidget().update(input);
+    
+    assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
+  }
+
+  /**
+   * Testing reading from request with a not mandatory element missing.
+   */
+  public void testFormNotMandatoryMissingRequestReading() throws Exception {
+
+    FormWidget testForm = makeUsualForm();
+
+    MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
+
+    notMandatoryMissingRequest.addParameter("testForm.__present", "true");
+    notMandatoryMissingRequest.addParameter("testForm.myCheckBox", (String) null);
+    notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+
+    StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
+    input.pushScope("testForm");
+    testForm._getWidget().update(input);
+    
+    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
+  }
+  
+/**
+   * Testing reading from request with a grouped constraint set.
+   */
+  public void testFormActiveGroupedConstraintInvalidates() throws Exception {
+
+    FormWidget testForm = makeUsualForm();
+
+    MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
+
+    notMandatoryMissingRequest.addParameter("testForm.__present", "true");
+    notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
+    notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
+    notMandatoryMissingRequest.addParameter("testForm.myDateTime", (String) null);
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+
+    // create helper
+    ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
+    testForm.getElement("myDateTime").setConstraint(
+        groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
+
+    StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
+    input.pushScope("testForm");
+    testForm._getWidget().update(input);
+
+    groupHelper.setActiveGroup("active");
+
+    assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());				
+  }
+  
+  /**
+   * Testing reading from request with a grouped constraint set.
+   */
+  public void testFormActiveGroupedConstraintValidates() throws Exception {
+
+    FormWidget testForm = makeUsualForm();
+
+    MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
+
+    notMandatoryMissingRequest.addParameter("testForm.__present", "true");
+    notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
+    notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");    
+    notMandatoryMissingRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
+    notMandatoryMissingRequest.addParameter("testForm.myDateTime.time", "01:01");  
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+
+    // create helper
+    ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();    
+    testForm.getElement("myDateTime").setConstraint(groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
+    
+    StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
+    input.pushScope("testForm");
+    testForm._getWidget().update(input);
+    
+    groupHelper.setActiveGroup("active");
+    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());       
+  }
+  
+  /**
+   * Testing reading from request with a grouped constraint set.
+   */
+  public void testFormInactiveGroupedConstraintValidates() throws Exception {
+
+    FormWidget testForm = makeUsualForm();
+
+    MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
+
+    notMandatoryMissingRequest.addParameter("testForm.__present", "true");
+    notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
+    notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");    
+    notMandatoryMissingRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
+    notMandatoryMissingRequest.addParameter("testForm.myDateTime.time", "01:01");  
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+
+    // create helper
+    ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();    
+    testForm.getElement("myDateTime").setConstraint(groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
+    
+    StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
+    input.pushScope("testForm");
+    testForm._getWidget().update(input);
+    
+    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());       
+  }
+	
+  /**
+   * Testing events.
+   */
+  public void testFormEventProcessing() throws Exception {
+
+    FormWidget testForm = makeUsualForm();
+
+    //Simple event
+     ((ButtonControl) ((FormElement) testForm.getElement("myButton")).getControl()).addOnClickEventListener(new TestOnClickEventHandler());
+     
+    testForm._getWidget().event(new StandardPath("myButton.onClicked"), new MockInputData());
+    
+    assertTrue("Event succeeded", eventsWork);
+  }
+
+  /**
+   * Tests helper functions that access form parts by their full name.
+   */
+  public void testFormTraversal() throws Exception {
+    FormWidget form = makeUsualForm();
+
+    assertTrue("'myCheckBox' must contain a CheckboxControl!", form.getControlByFullName("myCheckBox") instanceof CheckboxControl);
+    assertTrue("'hierarchyTest.myTextarea' must contain a TextareaControl!", form.getControlByFullName("hierarchyTest.myTextarea") instanceof TextareaControl);
+    
+    Control result = form.getControlByFullName("hierarchyTestm.yTextarea");
+    
+    assertTrue("An exception must be thrown if wrong element name is given!", result == null);
+  }
+
+  private class TestOnClickEventHandler implements OnClickEventListener {
+
+    public void onClick() {
+      log.debug("Received onClick event!");
+      eventsWork = true;
+    }
+  }
+}

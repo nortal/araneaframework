@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+  <!-- ########## ARANEA CONFIGURATION ########## -->
+
+  <bean id="application.root" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    singleton="false">
+
+    <property name="childService" ref="application.criticalErrorHandler"/>
+  </bean>
+  
+  <bean 
+    class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService" 
+    id="application.criticalErrorHandler" singleton="false">
+    <property name="childService" ref="application.readFileFilter"/>
+    <property name="exceptionHandlerFactory">
+      <bean class="org.araneaframework.template.framework.error.TemplateCriticalErrorHandlerFactory"
+            singleton="false"/>
+    </property>
+  </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardServletFileImportFilterService" id="application.readFileFilter"
+    singleton="false">
+    <property name="childService">
+      <ref bean="application.mainStatisticFilter" />
+    </property>
+  </bean>
+  
+  <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"
+        id="application.mainStatisticFilter" singleton="false">
+    <property name="childService" ref="application.topServiceRouter"/>
+    <property name="namespace" value="MAIN"/>
+  </bean>
+
+  <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="application.topServiceRouter"
+    singleton="false">
+    <property name="defaultServiceId" value="application"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="application" value-ref="application.sessionRouter"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.servlet.router.StandardServletSessionRouterService" id="application.sessionRouter"
+        singleton="false">
+    <property name="sessionServiceFactory" ref="application.sessionServiceFactory"/>
+  </bean>
+
+  <bean class="org.araneaframework.ioc.spring.StandardSpringServiceFactory" id="application.sessionServiceFactory"
+        singleton="false">
+    <property name="beanId">
+      <idref bean="session.serializingAudit"/>
+    </property>
+  </bean>
+  
+  <!-- Session scope -->
+  
+  <bean class="org.araneaframework.framework.filter.StandardSerializingAuditFilterService" id="session.serializingAudit"
+        singleton="false">
+    <property name="childService" ref="session.localizationFilter"/>
+    <!-- property name="testXmlSessionPath"> 
+      <value>c:/temp</value>
+    </property -->      
+  </bean> 
+  
+  <bean class="org.araneaframework.framework.filter.StandardLocalizationFilterService" id="session.localizationFilter" singleton="false">
+    <property name="childService" ref="session.jspConfigFilter"/>
+    <property name="resourceBundleName"><value>org.araneaframework.template.framework.resource.TemplateResourceBundle</value></property>
+    <property name="languageName"><value>en</value></property>
+  </bean>        
+
+  <bean class="org.araneaframework.servlet.filter.StandardJspFilterService" id="session.jspConfigFilter" singleton="false">
+    <property name="childService" ref="session.threadServiceRouter"/>
+    <property name="submitCharset" value="UTF-8"/>
+    <property name="jspPath" value="/WEB-INF/jsp"/>        
+    <!-- property name="uiTldPath" value="aranea-template.tld"/ -->
+  </bean>
+
+  <bean class="org.araneaframework.framework.router.StandardThreadServiceRouterService" id="session.threadServiceRouter" 
+    singleton="false">
+    <property name="defaultServiceId" value="mainThread"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="mainThread" value-ref="thread.synchronizingFilter"/>
+      </map>
+    </property>
+  </bean>
+  
+  <!-- Thread scope -->    
+
+  <bean class="org.araneaframework.framework.filter.StandardSynchronizingFilterService" id="thread.synchronizingFilter"
+    singleton="false">
+    <property name="childService" ref="thread.headerFilter"/>
+  </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardServletHttpFilterService" id="thread.headerFilter"
+    singleton="false">
+    <property name="childService" ref="thread.widgetAdapter"/>
+    <property name="requestEncoding" value="UTF-8"/>
+  </bean>
+
+  <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService" id="thread.widgetAdapter"
+    singleton="false">
+    <property name="childWidget" ref="thread.transactionFilter"/>
+  </bean>
+  
+   <!-- Framework widgets -->     
+
+  <bean class="org.araneaframework.framework.filter.StandardTransactionFilterWidget" id="thread.transactionFilter"
+    singleton="false">
+    <property name="childWidget" ref="thread.messagingFilter"/>
+  </bean>
+  
+  <bean class="org.araneaframework.framework.filter.StandardMessagingFilterWidget" id="thread.messagingFilter"
+    singleton="false">
+    <property name="childWidget" ref="thread.contexts"/>
+  </bean>
+    
+  <bean class="org.araneaframework.framework.filter.StandardContextMapFilterWidget" id="thread.contexts"
+    singleton="false">
+    <property name="childWidget" ref="thread.widgetContainer"/>
+    <property name="contexts">    
+      <map>
+        <entry key="org.araneaframework.uilib.ConfigurationContext.class">
+          <bean class="org.araneaframework.template.framework.resource.TemplateConfiguration" singleton="false"/>
+        </entry>
+      </map>      
+    </property>    
+  </bean>
+
+  <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="thread.widgetContainer"
+    singleton="false">
+    <property name="childWidget" ref="thread.viewPort"/>
+  </bean>
+
+ <!-- Application widgets -->     
+  
+   <bean class="org.araneaframework.framework.container.StandardViewPortWidget" id="thread.viewPort" singleton="false">
+     <property name="root" ref="thread.mainCallStack"/>
+   </bean>
+
+   <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="thread.mainCallStack" singleton="false">
+     <property name="top" ref="thread.login"/>
+   </bean>
+   
+  <bean class="org.araneaframework.example.main.web.LoginWidget" id="thread.login" singleton="false"/>
+	
+</beans>
