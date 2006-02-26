@@ -759,11 +759,14 @@ public void handleEventBypass() throws Exception {
     // and returns ListItemsData instead of List. ListItemsData is just a wrapper around
     // a List that contains an additional field, Long with total count of objects in list.
     protected ListItemsData getItemRange(ListQuery query) throws Exception {
-        // call some method that takes a ListQuery as parameter, and returns
+        // call some method that takes a ListQuery as parameter, and returns the
+        // data filtered as needed.
     }
 }]]></programlisting>
             <para>
-                We do not show the actual
+                Actual implementations of methods that return data for memory based or backend based lists
+                falls outside the scope of this tutorial, but fine examples can be found from reference manual
+                chapter "Lists" and examples source code.
             </para>
 
             </sect3>
