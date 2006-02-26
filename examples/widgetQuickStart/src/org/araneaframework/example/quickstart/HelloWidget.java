@@ -29,5 +29,6 @@ public class HelloWidget extends StandardPresentationWidget {
 	private static final Logger log = Logger.getLogger(HelloWidget.class);
 
 	protected void init() throws Exception {
+    setViewSelector("hello");        
 	}
 }
