@@ -215,8 +215,8 @@
 	</target>
 	
 	<target name="javadoc">
-		<mkdir dir="build/doc/javadoc/" />
-		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="build/doc/javadoc/"/>
+		<mkdir dir="dist/doc/javadoc/" />
+		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="dist/doc/javadoc/"/>
 	</target>
 	
 	<!-- Build internal documentation -->

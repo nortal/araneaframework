@@ -8,7 +8,7 @@
     <Arg>:2000</Arg>
   </Call>                                                                        
   <Call name="addWebApplication">
-    <Arg>/serviceQuickStart2</Arg>
+    <Arg>/serviceHelloName</Arg>
     <Arg>.</Arg>
   </Call>                                                                        
 </Configure>
