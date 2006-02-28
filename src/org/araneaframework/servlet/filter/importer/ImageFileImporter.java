@@ -52,6 +52,8 @@ public class ImageFileImporter extends DefaultFileImporter {
 		images.add("gfx/i12.gif");
 		images.add("gfx/i13.gif");
 		images.add("gfx/i14.gif");
+		images.add("gfx/i15.gif");
+		images.add("gfx/i16.gif");
 		
 		images.add("gfx/i37.gif");
 		images.add("gfx/i38.gif");

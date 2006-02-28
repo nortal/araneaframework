@@ -9,12 +9,9 @@
 	<ui:widgetContext>
 
 		<ui:form id="simpleForm">
+		<ui:exampleContainerHeader>Tutorial first form</ui:exampleContainerHeader>
 
  		 <ui:container>
-
-			<!-- Label -->
-		  <ui:containerLabel>Tutorial first form</ui:containerLabel>
-
 
 				<!-- Body -->
 				<ui:containerFormBody>

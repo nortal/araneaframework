@@ -281,7 +281,7 @@
 			<para>
 			<programlisting role="xml"><![CDATA[<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
     <layout class="org.apache.log4j.PatternLayout">
-    <param name="ConversionPattern" value="%d{hh:mm:ss} %-5p&mdash;%c{1}.%M(%F:%L)&mdash;%m%n"/>
+    <param name="ConversionPattern" value="%d{hh:mm:ss} %-5p-%c{1}.%M(%F:%L)-%m%n"/>
     </layout>
 </appender>]]></programlisting>
 
@@ -330,7 +330,7 @@
      * + ".jsp" */
     setViewSelector("login");
 
-    /* Register a global proxying eventlistener&mdash;it receives all widget events and upon 
+    /* Register a global proxying eventlistener - it receives all widget events and upon 
      * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method */
     addGlobalEventListener(new ProxyEventListener(this));
 
@@ -367,12 +367,12 @@
         /* Add the message about wrong credentials to message context. 
          * Messages will be shown to user upon exiting this event. */
         getMsgCtx().showErrorMessage("Wrong name or password for username '" + username + "'");
-        // do nothing&mdash;don't let anyone in with this event
+        // do nothing - don't let anyone in with this event
     }
 }
 
-/* Successful login event&mdash;does not check supplied credentials, 
- * promptly replaces login widget with root widget&mdash;allowing
+/* Successful login event - does not check supplied credentials, 
+ * promptly replaces login widget with root widget - allowing
  * user to start work with real examples. */ 
 public void handleEventBypass() throws Exception {
     getFlowCtx().replace(new TemplateRootWidget(), null);
@@ -562,9 +562,8 @@ public void handleEventBypass() throws Exception {
 		<para>
             Because <literal>MenuWidget</literal> is <literal>StandardFlowContainerWidget</literal>, 
             its <literal>render()</literal> method is fundamentally different from 
-            <literal>StandardPresentationWidget</literal>'s <literal>render()</literal> method and
-            we do not use it directly. Rather we attach it to <literal>TemplateRootWidget</literal>
-
+            <literal>StandardPresentationWidget.render()</literal> method and does not support
+            setting view selector. To use the <literal>MenuWidget</literal> we attach it to <literal>TemplateRootWidget</literal>
         
         <programlisting role="java"><![CDATA[public class TemplateRootWidget extends StandardPresentationWidget {
     private static final Logger log = Logger.getLogger(TemplateRootWidget.class);
@@ -677,7 +676,7 @@ public void handleEventBypass() throws Exception {
             <sect3>
                 <title>Lists</title>
                 <para>
-                    Lists are tables containing rows with records &mdash;gathered from some data source. Lists also
+                    Lists are tables containing rows with records gathered from some data source. Lists also
                     provide support for paging displays of long lists and filtering based on record field contents.
                     Basic usage is simple:
                 </para>
@@ -725,7 +724,7 @@ public void handleEventBypass() throws Exception {
                     all records belonging to a list are read into memory at once and paging and filtering
                     takes also place completely in memory, whereas backend based 
                     providers perform a query retrieving only the records that need to be shown currently (based 
-                    on paging and filtering conditions). For long lists, using <literal>BackendListDataProvider</literal>s
+                    on paging and filtering conditions). For long lists, using <literal>BackendListDataProvider</literal>
                     is a must&mdash;otherwise application will quickly start using too much memory. Data provider
                     for previous list could be like this:
                 </para>

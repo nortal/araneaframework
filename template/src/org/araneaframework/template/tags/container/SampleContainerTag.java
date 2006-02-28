@@ -33,7 +33,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *   body-content = "JSP"
  */
 public class SampleContainerTag extends UiBaseTag {
-	public final static String STYLE_CLASS = "template-container";
+	public final static String STYLE_CLASS = "component";
 	
 	protected String width;
 	protected String height;
@@ -75,16 +75,16 @@ public class SampleContainerTag extends UiBaseTag {
 		UiUtil.writeAttribute(out, "class", styleClass);
 		UiUtil.writeCloseStartTag(out);
 		
-		UiUtil.writeOpenStartTag(out, "table");
-		UiUtil.writeAttribute(out, "width", width);
-		UiUtil.writeAttribute(out, "height", height);
+		UiUtil.writeOpenStartTag(out, "div");
+		UiUtil.writeAttribute(out, "class", "w600");
 		UiUtil.writeCloseStartTag(out);
-
+		
 		return EVAL_BODY_INCLUDE;			
 	}		
 	
 	protected int after(Writer out) throws Exception {
-		UiUtil.writeEndTag(out, "table");
+
+		UiUtil.writeEndTag(out, "div");
 		UiUtil.writeEndTag(out, "div");
 
 		super.after(out);

@@ -5,29 +5,11 @@
 	xmlns:cui="http://araneaframework.org/tag-library/contrib"
 	version="1.2">		
 	<ui:widgetContext>
-	
-		<h2>Companies</h2>
-		
-		<p>
-			This is a list of companies. You can use a filter to search for a specific company or use
-			links below the list to navigate through pages. To choose a company just click on it's Name.
-		</p>
-		<c:if test="${contextWidget.data.allowAdd}">
-			<p>You can also add a new company (use a button below the list).</p>
-		</c:if>
-		<c:if test="${contextWidget.data.allowRemove}">
-			<p>You can also remove a company (use a link on it's row).</p>
-		</c:if>		
-		
 		<ui:list id="companyList">
 		
+			<ui:exampleContainerHeader>Companies</ui:exampleContainerHeader>
 			<ui:container>
 			
-				<!-- Header -->
-				<ui:containerHeader>
-
-				</ui:containerHeader>
-						
 				<!-- Body -->
 				<ui:containerListBody>
 					<!-- Title -->

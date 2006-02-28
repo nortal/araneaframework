@@ -34,8 +34,8 @@ import org.araneaframework.jsp.util.UiUtil;
  *   body-content = "JSP"
  */
 public class SampleContainerHeaderTag extends UiLayoutRowBaseTag {
-	public static final String STYLE_CLASS = "template-container-header";
-
+	public static final String STYLE_CLASS = "component-header";
+	
 	protected void init() {
 		super.init();
 		styleClass = SampleContainerHeaderTag.STYLE_CLASS;
