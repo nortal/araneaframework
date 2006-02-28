@@ -26,20 +26,23 @@
 								<!-- Renders the menu on top of the screen -->
 	                            <jsp:include page="/WEB-INF/jsp/mainlayout/menu.jsp"/>
                                 <div class="stripe1"><ui:nbsp/></div>
-                                <!-- Renders the menu on left side of screen -->
-                                <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
-    
-                                <div id="content">
-                                    <ui:messages/>
-                                    <!-- Renders the menu widget itself. As MenuWidget is subclass
-                                    	of StandardFlowContainerWidget, this means that actual
-                                    	widget rendered here is whatever widget is on top of call
-                                    	stack at the moment of rendering. -->
-                                    <ui:widgetInclude id="menu"/>
-                                </div>
-    
-                                <div class="clear1"><ui:nbsp/></div>
 
+                                <div id="wholder">
+	                                <!-- Renders the menu on left side of screen -->
+	                                <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
+	    
+	                                <div id="content">
+	                                    <ui:messages/>
+	                                    <!-- Renders the menu widget itself. As MenuWidget is subclass
+	                                    	of StandardFlowContainerWidget, this means that actual
+	                                    	widget rendered here is whatever widget is on top of call
+	                                    	stack at the moment of rendering. -->
+	                                    <ui:widgetInclude id="menu"/>
+	                                </div>
+	    
+	                                <div class="clear1"><ui:nbsp/></div>
+								</div>
+								
                             </ui:systemForm>
                         </div>
                         
