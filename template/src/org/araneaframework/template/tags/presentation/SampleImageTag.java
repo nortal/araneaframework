@@ -80,15 +80,13 @@ public class SampleImageTag extends UiStdImageBaseTag {
    * Map: String(image code) -> Info
    */
   protected static final Map imageInfo = new HashMap();
-  //XXX: this is very bullshite
+  //XXX: this is bullshite
   static {
     imageInfo.put("add",             new Info("gfx/ico_add3.gif",      "30",   "16"));
     imageInfo.put("old",             new Info("gfx/ico_old.gif",       "32",   "32"));
     imageInfo.put("delete",          new Info("gfx/ico_delete.gif",    "23",   "16"));
     imageInfo.put("downArrow",       new Info("gfx/dot14.gif",         "9",    "7"));
-    imageInfo.put("flag",            new Info("gfx/ico_lipuke.gif",    "12",   "12"));
-    imageInfo.put("enter",           new Info("gfx/butt_sisene.gif",   "53",   "21"));
-    imageInfo.put("view",            new Info("gfx/butt_vaata.gif",    "55",   "19"));
+    imageInfo.put("flag",            new Info("gfx/ico_flag.gif",    "12",   "12"));
     imageInfo.put("edit2",           new Info("gfx/ico_edit2.gif",     "30",   "16"));
     imageInfo.put("triangle",        new Info("gfx/dot05.gif",         "30",   "9"));
     imageInfo.put("folder",          new Info("gfx/ico_folder.gif",    "25",   "15"));
@@ -101,13 +99,10 @@ public class SampleImageTag extends UiStdImageBaseTag {
     imageInfo.put("print",           new Info("gfx/ico_print.gif",     "30",   "16"));
     imageInfo.put("back",            new Info("gfx/ico_back.gif",      null,   null));
     imageInfo.put("back2",           new Info("gfx/ico_back2.gif",     "25",   "15"));    
-    imageInfo.put("buttonChange",    new Info("gfx/butt_muuda3.gif",    null,  null));
-    imageInfo.put("buttonDelete",    new Info("gfx/butt_kustuta3.gif",  null,  null));
-    imageInfo.put("buttonTerminate", new Info("gfx/butt_l6peta.gif",   "60",   "19"));
-    imageInfo.put("buttonAdd",       new Info("gfx/butt_lisa.gif",    null,   null));
-    imageInfo.put("buttonExecute",   new Info("gfx/butt_teosta.gif",   "57",   "19"));
-    imageInfo.put("buttonOrder",     new Info("gfx/butt_telli.gif",    "49",   "19"));
-    imageInfo.put("buttonSearch",    new Info("gfx/butt_otsi.gif",     null,   null));
+    imageInfo.put("buttonChange",    new Info("gfx/butt_change3.gif",    null,  null));
+    imageInfo.put("buttonDelete",    new Info("gfx/butt_delete3.gif",  null,  null));
+    imageInfo.put("buttonAdd",       new Info("gfx/butt_add.gif",    null,   null));
+    imageInfo.put("buttonSearch",    new Info("gfx/butt_search.gif",     null,   null));
     imageInfo.put("calendar",        new Info("gfx/ico_calendar.gif",  null, null));
   }
 }
