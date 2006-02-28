@@ -21,6 +21,7 @@
 		</c:if>
 		
 		<ui:list id="personList">
+		
 			<ui:container>
 						
 				<!-- Body -->
@@ -86,7 +87,7 @@
 							</c:if>
 							
 						</ui:row>
-					</ui:listRows>				
+					</ui:listRows>
 				</ui:containerListBody>
 
 				<!-- Sequence -->

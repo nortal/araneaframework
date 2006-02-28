@@ -12,10 +12,6 @@
 		<ui:list id="list">
 		
 			<ui:container>
-			
-				<!-- Header -->
-				<ui:containerHeader>
-				</ui:containerHeader>
 						
 				<!-- Body -->
 				<ui:containerListBody>

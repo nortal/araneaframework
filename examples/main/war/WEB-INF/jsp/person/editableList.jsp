@@ -19,10 +19,6 @@
 		
 			<ui:container>
 			
-				<!-- Header -->
-				<ui:containerHeader>
-				</ui:containerHeader>
-						
 				<!-- Body -->
 				<ui:containerListBody>
 					<!-- Title -->				

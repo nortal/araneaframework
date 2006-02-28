@@ -7,7 +7,9 @@
 	<ui:widgetContext>
 		<ui:list id="companyList">
 		
-			<ui:exampleContainerHeader>Companies</ui:exampleContainerHeader>
+			<ui:componentHeader>
+				<ui:componentName>Companies</ui:componentName>
+			</ui:componentHeader>
 			<ui:container>
 			
 				<!-- Body -->

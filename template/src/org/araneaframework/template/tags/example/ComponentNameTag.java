@@ -1,6 +1,7 @@
 package org.araneaframework.template.tags.example;
 
 import java.io.Writer;
+import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -8,35 +9,34 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Taimo Peelo (taimo@webmedia.ee)
  *
  * @jsp.tag
- *   name = "exampleContainerHeader"
+ *   name = "componentName"
  *   body-content = "JSP"
  */
-public class ContainerHeader extends UiPresentationTag {
-	public final static String DEFAULT_HEADER_STYLE = "component-header";
+public class ComponentNameTag extends UiPresentationTag {
+	public final static String COMPONENT_HEADER_KEY= "example.component.header.key";
+	public final static String DEFAULT_HEADER_NAME_STYLE = "name";
 
 	protected void init() {
 		super.init();
-		styleClass = ContainerHeader.DEFAULT_HEADER_STYLE;
+		styleClass = ComponentNameTag.DEFAULT_HEADER_NAME_STYLE;
 	}
 	
 	protected int before(Writer out) throws Exception {
 		super.before(out);
+
+		// fail if no header present.
+		readAttribute(ComponentHeaderTag.COMPONENT_HEADER_KEY, PageContext.REQUEST_SCOPE);
+
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", styleClass);
 		UiUtil.writeCloseStartTag(out);
-		
-		UiUtil.writeOpenStartTag(out, "div");
-		UiUtil.writeAttribute(out, "class", "name");
-		UiUtil.writeCloseStartTag(out);
-		
+
 		return EVAL_BODY_INCLUDE;
 	}
 
 	protected int after(Writer out) throws Exception {
 		UiUtil.writeEndTag(out, "div");
-		UiUtil.writeEndTag(out, "div");
-		super.after(out);		
+		super.after(out);
 		return EVAL_PAGE;
 	}
-	
 }

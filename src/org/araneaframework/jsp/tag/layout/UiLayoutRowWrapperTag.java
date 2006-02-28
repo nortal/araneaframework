@@ -86,7 +86,6 @@ public class UiLayoutRowWrapperTag extends UiStyledWrapperTag  {
 		
 		UiLayoutRowTagInterface rowTag = (UiLayoutRowTagInterface)tag;
 		
-		if (height != null) rowTag.setHeight(height);			
-		if (styleClass != null) rowTag.setCellClass(styleClass);
+		if (height != null) rowTag.setHeight(height);
 	}
 }

@@ -9,7 +9,7 @@
 	<ui:widgetContext>
 
 		<ui:form id="simpleForm">
-		<ui:exampleContainerHeader>Tutorial first form</ui:exampleContainerHeader>
+		<ui:componentHeader><ui:componentName>Tutorial first form</ui:componentName></ui:componentHeader>
 
  		 <ui:container>
 

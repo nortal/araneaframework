@@ -6,18 +6,12 @@
 	version="1.2">
 <ui:list id="checkList">
 			<ui:formList>
+				<ui:componentHeader>
+					<ui:componentName>Checkbox demo</ui:componentName>
+				</ui:componentHeader>
+			
 				<ui:container>
-
-					<!-- Label -->
-					<ui:containerLabel>
-						Checkbox demo
-					</ui:containerLabel>
 					
-
-					<!-- Header -->
-					<ui:containerHeader>
-					</ui:containerHeader>
-
 					<!-- Body -->
 					<ui:containerListBody>
 
