@@ -18,6 +18,8 @@ package org.araneaframework.jsp.tag.layout;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+
+import org.apache.log4j.Logger;
 import org.araneaframework.jsp.tag.UiContainedTagInterface;
 import org.araneaframework.jsp.tag.UiStyledWrapperTag;
 
@@ -70,8 +72,8 @@ public class UiLayoutCellWrapperTag extends UiStyledWrapperTag {
 	 */
 	public void setHeight(String height) throws JspException {
 		this.height = height;
-	}	
-	
+	}
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -109,12 +111,12 @@ public class UiLayoutCellWrapperTag extends UiStyledWrapperTag {
 	 */
 	protected void configureTag(UiContainedTagInterface tag) throws JspException {
 		super.configureTag(tag);
-		
+
 		UiLayoutCellTagInterface cellTag = (UiLayoutCellTagInterface)tag; 
 		
 		if (width != null) cellTag.setWidth(width);
 		if (height != null) cellTag.setHeight(height);				
 		if (colSpan != null) cellTag.setColSpan(colSpan);
-		if (rowSpan != null) cellTag.setRowSpan(rowSpan);		
+		if (rowSpan != null) cellTag.setRowSpan(rowSpan);
 	}
 }
