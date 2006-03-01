@@ -43,10 +43,11 @@ public class PersonListDAO {
 
 		HSqlListSqlHelper helper = new HSqlListSqlHelper(request);
 
-		helper.setColumnMapping("id", "id");
-		helper.setColumnMapping("name", "name");
-		helper.setColumnMapping("surname", "surname");
-		helper.setColumnMapping("phone", "phone");
+		helper.setColumnMapping("id", "ID");
+		helper.setColumnMapping("name", "NAME");
+		helper.setColumnMapping("surname", "SURNAME");
+		helper.setColumnMapping("phone", "PHONE");
+		helper.setColumnMapping("birthdate", "BIRTHDATE");
 
 		StringBuffer query = new StringBuffer();
 		query.append(helper.getDatabaseFields());

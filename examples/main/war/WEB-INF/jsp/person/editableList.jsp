@@ -42,7 +42,9 @@
 							</ui:cell>
 							
 							<ui:cell>
-								<ui:dateInput id="birthdate"/>
+								<ui:dateInput id="birthdate_start"/>
+								<br/>
+								<ui:dateInput id="birthdate_end"/>
 							</ui:cell>							
 	
 							<ui:cell>

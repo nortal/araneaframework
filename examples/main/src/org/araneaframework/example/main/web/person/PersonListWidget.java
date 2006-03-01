@@ -25,9 +25,11 @@ import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
@@ -81,7 +83,12 @@ public class PersonListWidget extends BaseWidget {
 		temp.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
 		temp.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
 		temp.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("birthdate", "#Birthdate", true, new SimpleColumnFilter.Equals(), new DateControl());
+		
+		// temp.addBeanColumn("birthdate", "#Birthdate", true, new SimpleColumnFilter.Equals(), new DateControl());
+		RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
+		temp.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
+		temp.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
+		temp.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
 		return temp;
 	}
 	

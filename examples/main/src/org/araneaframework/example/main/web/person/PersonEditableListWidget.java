@@ -40,6 +40,7 @@ import org.araneaframework.uilib.list.formlist.FormRow;
 import org.araneaframework.uilib.list.formlist.FormRowHandler;
 import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
@@ -61,7 +62,12 @@ public abstract class PersonEditableListWidget extends BaseWidget {
 		list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
 		list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
 		list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
-		list.addBeanColumn("birthdate", "#Birthdate", true, new SimpleColumnFilter.Equals(), new DateControl());
+		
+		// list.addBeanColumn("birthdate", "#Birthdate", true, new SimpleColumnFilter.Equals(), new DateControl());
+		RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
+		list.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
+		list.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
+		list.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
 		
 		list.setListDataProvider(buildListDataProvider());
 		list.setFormRowHandler(buildFormRowHandler());
