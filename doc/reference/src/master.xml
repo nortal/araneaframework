@@ -31,7 +31,7 @@
 <book lang="en">
 
     <bookinfo>
-        <title>Aranea - Java Web Framework Construction and Integration Kit</title>
+        <title>Aranea&mdash;Java Web Framework Construction and Integration Kit</title>
         <titleabbrev>Aranea</titleabbrev>
 				<subtitle>Reference Manual</subtitle>
         <releaseinfo>Version 1.0 M1 (Work In Progress)</releaseinfo>

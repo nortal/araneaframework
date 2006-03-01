@@ -20,7 +20,7 @@
 
 <article>
     <articleinfo>
-        <title>Aranea - Java Web Framework Construction and Integration Kit</title>
+        <title>Aranea&mdash;Java Web Framework Construction and Integration Kit</title>
         <titleabbrev>Aranea</titleabbrev>
 				<subtitle>White Paper</subtitle>
         <authorgroup>
@@ -30,6 +30,24 @@
 					</author>
         </authorgroup>        
     </articleinfo>
+
+    <sect1>    
+      <title>Mission Statement</title>
+
+<para>The abundunce of Java web frameworks available at the moment on the
+web suggests a simple conclusion&mdash;one size does not fit all. We
+acknowledge and accept that there are a number of different approaches
+one can take while building a web application and we will try to embrace
+as many as we can.</para>
+
+<para>In addition to being a full-fledged web framework in its own right,
+Aranea provides a powerful and extremely simple component system that
+allows you to tailor the web framework fitting your needs by configuring
+the reusable modules and adding your own modules only for the missing
+features. Our goal is <emphasis>not</emphasis> to compete with good existing
+frameworks and solutions, but to serve as an integration platform that
+would allow using <emphasis>best-of-breed</emphasis> solutions together.</para>
+    </sect1>
 
     <sect1>    
       <title>Overview</title>
