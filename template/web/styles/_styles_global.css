@@ -115,6 +115,8 @@ TABLE.data TR.total-first TD { border-top: 2px solid #cbd0c3 !important; }
 
 /* Form table */
 
+/* Form table */
+
 TABLE.form { margin-bottom: 10px; width: 100%; border-top: 1px solid #e8e8e8; }
 TABLE.form TD { padding: 0; text-align: left; vertical-align: top; border-bottom: 1px solid #e8e8e8; background: url(?loadImage=gfx/i12.gif&importerType=imageFileImporter); }
 TABLE.form TD.name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; }
@@ -166,6 +168,7 @@ DIV.component { border: 1px solid #b4b4b4; border-top: none; padding: 5px; margi
 
 /* IE Fixes */
 * HTML #cont1 { height: 100%; }
+* HTML #cont1-error { height: 100%; }
 * HTML #leftcol { height: 550px; }
 * HTML #menu2 A { height: 1px; }
 * HTML #menu2 UL LI A { height: 1px; }

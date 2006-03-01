@@ -7,35 +7,38 @@ import org.araneaframework.jsp.util.UiUtil;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
- *
  * @jsp.tag
- *   name = "componentName"
+ *   name = "component"
  *   body-content = "JSP"
  */
-public class ComponentNameTag extends UiPresentationTag {
-	public final static String COMPONENT_HEADER_KEY= "example.component.header.key";
-	public final static String DEFAULT_HEADER_NAME_STYLE = "name";
+public class ComponentTag extends UiPresentationTag {
+	public final static String COMPONENT_KEY= "example.component.key";
+	public final static String DEFAULT_COMPONENT_STYLE = "component";
 
 	protected void init() {
 		super.init();
-		styleClass = ComponentNameTag.DEFAULT_HEADER_NAME_STYLE;
+		styleClass = ComponentTag.DEFAULT_COMPONENT_STYLE;
 	}
-	
+
 	protected int before(Writer out) throws Exception {
 		super.before(out);
-
-		// make sure we are inside component header and fail if no header is present.
-		// not strictly necessary, mainly for demonstration of attribute usage.
-		readAttribute(ComponentHeaderTag.COMPONENT_HEADER_KEY, PageContext.REQUEST_SCOPE);
+		
+		pushAttribute(ComponentTag.COMPONENT_KEY, this, PageContext.REQUEST_SCOPE);
 
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", styleClass);
+		UiUtil.writeCloseStartTag(out);
+		
+		// second div... maybe should be moved out
+		UiUtil.writeOpenStartTag(out, "div");
+		UiUtil.writeAttribute(out, "class", "w100p");
 		UiUtil.writeCloseStartTag(out);
 
 		return EVAL_BODY_INCLUDE;
 	}
 
 	protected int after(Writer out) throws Exception {
+		UiUtil.writeEndTag(out, "div");
 		UiUtil.writeEndTag(out, "div");
 		super.after(out);
 		return EVAL_PAGE;

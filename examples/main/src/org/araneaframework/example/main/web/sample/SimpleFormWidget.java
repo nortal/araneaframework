@@ -44,7 +44,7 @@ public class SimpleFormWidget extends BaseWidget {
   protected void init() throws Exception {
 	super.init();
 	
-	setViewSelector("sample/simpleForm/component");
+	setViewSelector("sample/simpleForm");
 
     simpleForm = new FormWidget();
     

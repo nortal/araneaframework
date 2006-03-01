@@ -76,7 +76,7 @@ public class SampleContainerTag extends UiBaseTag {
 		UiUtil.writeCloseStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "div");
-		UiUtil.writeAttribute(out, "class", "w600");
+		UiUtil.writeAttribute(out, "class", "w100p");
 		UiUtil.writeCloseStartTag(out);
 		
 		return EVAL_BODY_INCLUDE;			

@@ -20,12 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.apache.log4j.Logger;
-import org.araneaframework.OutputData;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.BaseWidget;
 import org.araneaframework.example.main.business.util.TestVO;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
@@ -41,6 +38,8 @@ public class SimpleListWidget extends BaseWidget {
 	super.init();
 	
 	addGlobalEventListener(new ProxyEventListener(this));
+	
+	setViewSelector("sample/simpleList");
 	
 	simpleList = new ListWidget();
 	simpleList.setListDataProvider(new SimpleListDataProvider());
@@ -92,9 +91,4 @@ public class SimpleListWidget extends BaseWidget {
 	  log.debug("Event 'return' received!");
 	  getFlowCtx().cancel();
   }	
-  
-  protected void render(OutputData output) throws Exception {
-	log.debug(getClass().getName() + " render called");
-	ServletUtil.include("/WEB-INF/jsp/sample/simpleList/component.jsp", getEnvironment(), (ServletOutputData) output);
-  }
 }

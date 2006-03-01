@@ -39,7 +39,7 @@ public abstract class UiStdImageBaseTag extends UiImageBaseTag {
   
   protected int before(Writer out) throws Exception {
     super.before(out);
-    writeImageLocal(out, src, width, height, alt, getStyleClass()); 
+    writeImageLocal(out, src, width, height, alt, getStyleClass(), title); 
     // Continue
     return EVAL_BODY_INCLUDE;    
   }
@@ -47,25 +47,25 @@ public abstract class UiStdImageBaseTag extends UiImageBaseTag {
   /**
    * Method to write out image with given properties and default style.
    */ 
-  public void writeImage(Writer out, String src, String width, String height) throws JspException, IOException {
-	  writeImage(out, src, width, height, null, getStyleClass());
+  public void writeImage(Writer out, String src, String width, String height, String title) throws JspException, IOException {
+	  writeImage(out, src, width, height, null, getStyleClass(), title);
   }
   
   /**
    * Static method to write out image with given properties.
    */ 
-  public static void writeImage(Writer out, String src, String width, String height, String styleClass) throws JspException, IOException {
-    writeImage(out, src,width, height, null, styleClass);
+  public static void writeImage(Writer out, String src, String width, String height, String styleClass, String title) throws JspException, IOException {
+    writeImage(out, src,width, height, null, styleClass, title);
   }
   
-  public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass) throws JspException, IOException {
-    writeImage(out, src,width, height, null, styleClass);
+  public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass,  String title) throws JspException, IOException {
+    writeImage(out, src,width, height, alt, styleClass, title);
   }
   
   /**
    * Static method to write out image with given properties.
    */ 
-  public static void writeImage(Writer out, String src, String width, String height, String alt, String styleClass) throws JspException, IOException {
+  public static void writeImage(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {
     UiUtil.writeOpenStartTag(out, "img");
     if (styleClass != null)
         UiUtil.writeAttribute(out, "class", styleClass);
@@ -74,8 +74,8 @@ public abstract class UiStdImageBaseTag extends UiImageBaseTag {
     UiUtil.writeAttribute(out, "width", width);
     UiUtil.writeAttribute(out, "height", height);
     UiUtil.writeAttribute(out, "border", 0+"");
-    if (alt != null) 
-      UiUtil.writeAttribute(out, "alt", alt);
+    UiUtil.writeAttribute(out, "alt", alt);
+    UiUtil.writeAttribute(out, "title", title);
     
     UiUtil.writeCloseStartEndTag_SS(out);
   }

@@ -42,7 +42,7 @@ public class SampleImageTag extends UiStdImageBaseTag {
    * Static method to write out image with given code with default style.
    */
   public  void writeImage(Writer out, String code) throws JspException, IOException {
-    writeImage(out, code, "aranea-image", getStyleClass());
+    writeImage(out, code, "aranea-image", getStyleClass(), null);
   }
   
   /**
@@ -55,9 +55,9 @@ public class SampleImageTag extends UiStdImageBaseTag {
     super.setCode(code);
   }
   
-	public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass) throws JspException, IOException {
+	public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {
 		String imageUrl = ImageFileImporter.getImportString(src);
-		writeImage(out, imageUrl, width, height, alt, styleClass);
+		writeImage(out, imageUrl, width, height, alt, styleClass, title);
 	}
 	
   /**
