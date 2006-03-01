@@ -59,7 +59,7 @@ public class UiImportScriptsTag extends UiImportFileTag {
 		buf.append(JsFileImporter.TYPE);
 		
 		UiUtil.writeOpenStartTag(out, "script");
-		UiUtil.writeAttribute(out, "language", "JavasScript1.2");
+		UiUtil.writeAttribute(out, "language", "JavaScript1.2");
 		UiUtil.writeAttribute(out, "type", "text/javascript");
 		UiUtil.writeAttribute(out, "src", "?"+buf.toString(), false);
 		UiUtil.writeCloseStartTag(out);
