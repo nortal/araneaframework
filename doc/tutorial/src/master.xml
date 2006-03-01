@@ -58,7 +58,7 @@
 		</para>
 	</sect1>
 	
-	<sect1>
+	<sect1 id="running-examples">
 		<title>Running examples</title>
 		<para>
 			If using full source distribution, <literal>ant build-all</literal> in the topmost
@@ -300,6 +300,23 @@
 	
 	<sect1>
 		<title>Getting TemplateApp (main example) to serve</title>
+		<para>
+			Following will describe creation of our main example (aka TemplateApp). 
+			It would be good get acquainted with it before proceeding to read further,
+			see <xref linkend="running-examples"/> for instructions on how to start examples.
+			TemplateApp's goal is to demonstrate a working Aranea web application 
+			that makes use of most often-used Aranea features.
+		</para>
+		
+		<mediaobject id="conf-image" xreflabel="templateApp-in-action">
+			<caption align="top">TemplateApp in action</caption>
+			<imageobject>
+				<imagedata 
+					fileref="images/templateApp-screen.png"
+					format="PNG" 
+					align="center"/>
+			</imageobject>
+		</mediaobject>
 		
 		<sect2>
 			<title>Directory structure and needed libraries</title>
