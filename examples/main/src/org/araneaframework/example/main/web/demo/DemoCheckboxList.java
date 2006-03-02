@@ -57,7 +57,7 @@ public class DemoCheckboxList extends BaseWidget {
 		super.init();
 
 		addGlobalEventListener(new ProxyEventListener(this));
-		setViewSelector("demo/DemoCheckboxList/main");
+		setViewSelector("demo/demoCheckboxList");
 		
 		MemoryBasedListDataProvider listDataProvider = new DemoCheckboxListDataProvider();
 

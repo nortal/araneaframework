@@ -101,7 +101,7 @@ public class PersonListWidget extends BaseWidget {
 		if (!this.editMode) {
 			throw new RuntimeException("Event 'add' shoud be called only in edit mode");
 		}
-		getFlowCtx().start(new PersonEditWidget(), null, new FlowContext.Handler() {
+		getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
 			public void onFinish(Object returnValue) throws Exception {

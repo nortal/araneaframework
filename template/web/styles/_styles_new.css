@@ -1,6 +1,8 @@
 /* containers - template application */
 /*   background: #fcfdee; */
 
+SPAN.display { padding: 6px 5px 5px 5px; text-align: left; }
+
 DIV.template-container {
 
    color: #000;

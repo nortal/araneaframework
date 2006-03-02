@@ -32,7 +32,7 @@ public class PersonChooseAndEditWidget extends BaseWidget {
     getFlowCtx().start(new PersonListWidget(true), null, new FlowContext.Handler() {
 			public void onFinish(Object returnValue) throws Exception {
 				Long id = (Long) returnValue;
-		    getFlowCtx().start(new PersonEditWidget(id), null, new PassthroughCallContextHandler(getFlowCtx()));
+		    getFlowCtx().start(new PersonAddEditWidget(id), null, new PassthroughCallContextHandler(getFlowCtx()));
       }
       public void onCancel() throws Exception {
 		    getFlowCtx().cancel();

@@ -41,18 +41,18 @@ public class DemoDisplayForm extends BaseWidget {
 		super.init();
 		
 		addGlobalEventListener(new ProxyEventListener(this));
-    setViewSelector("demo/DemoDisplayForm/main");
+		setViewSelector("demo/demoDisplayForm");
 		
 		displayForm = new FormWidget();
-
+		
 		displayForm.addElement("condDisplay", "#Condition", new DisplayControl(), new BooleanData(), false);
 		displayForm.addElement("textDisplay", "#Text", new DisplayControl(), new StringData(), false);
 		displayForm.addElement("valueDisplay", "#Value", new DisplayControl(), new LongData(), false);
-
+		
 		displayForm.setValueByFullName("condDisplay", Boolean.TRUE);
 		displayForm.setValueByFullName("textDisplay", "Test string");
 		displayForm.setValueByFullName("valueDisplay", new Long(11));
-
+		
 		addWidget("displayForm", displayForm);
 	}
 	

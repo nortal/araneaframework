@@ -36,9 +36,9 @@ import org.araneaframework.example.main.web.error.EventErrorWidget;
 import org.araneaframework.example.main.web.error.InitErrorWidget;
 import org.araneaframework.example.main.web.error.RenderErrorWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
+import org.araneaframework.example.main.web.person.PersonAddEditWidget;
 import org.araneaframework.example.main.web.person.PersonChooseAndEditWidget;
 import org.araneaframework.example.main.web.person.PersonChooseAndViewWidget;
-import org.araneaframework.example.main.web.person.PersonEditWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
@@ -78,7 +78,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		result.addMenuItem(null, new MenuItem("Management")); {
 			result.addMenuItem("Management", new MenuItem("Persons"));
 			result.addMenuItem("Management.Persons", new MenuItem("View", PersonChooseAndViewWidget.class));
-			result.addMenuItem("Management.Persons", new MenuItem("Add", PersonEditWidget.class));
+			result.addMenuItem("Management.Persons", new MenuItem("Add", PersonAddEditWidget.class));
 			result.addMenuItem("Management.Persons", new MenuItem("Edit", PersonChooseAndEditWidget.class));
 			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Memory", PersonEditableListWidget.Memory.class));
 			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Backend", PersonEditableListWidget.Backend.class));

@@ -66,15 +66,15 @@ public class DemoFormList extends BaseWidget {
 	 */
 	public void init() throws Exception {
 		super.init();
-
+		
 		addGlobalEventListener(new ProxyEventListener(this));
-    setViewSelector("demo/DemoEditableList/main");
+		setViewSelector("demo/demoEditableList");
 		
 		formList = new FormListWidget(new DemoFormRowHandler());
-
+		
 		FormListUtil.associateFormListWithMap(formList, data);
 		formList.setRows(new ArrayList(data.values()));
-
+		
 		addWidget("editableList", formList);
 	}
 	

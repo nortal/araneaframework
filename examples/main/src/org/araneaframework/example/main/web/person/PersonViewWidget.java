@@ -20,6 +20,10 @@ import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.BaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
+import org.araneaframework.uilib.form.BeanFormWidget;
+import org.araneaframework.uilib.form.control.DateControl;
+import org.araneaframework.uilib.form.control.DisplayControl;
+import org.araneaframework.uilib.form.control.TextControl;
 
 
 /**
@@ -29,31 +33,33 @@ import org.araneaframework.example.main.business.model.PersonMO;
  * @author Rein Raudjärv <reinra@ut.ee>*
  */
 public class PersonViewWidget extends BaseWidget {
-	
-	private static final Logger log = Logger.getLogger(PersonViewWidget.class);
-	
-	private Long id = null;
+	private Long personId = null;
 	
 	/**
-	 * @param id Person's Id.
+	 * @param personId Person's Id.
 	 */
 	public PersonViewWidget(Long id) {
 		super();
-		this.id = id;
+		this.personId = id;
 	}
 	
 	protected void init() throws Exception {
 		super.init();
-		log.debug("TemplatePersonViewWidget init called");
+		
 		setViewSelector("person/personView");
 		addGlobalEventListener(new ProxyEventListener(this));
 		
-		putViewData("person" , getGeneralDAO().getById(PersonMO.class, id));
+		BeanFormWidget personForm = new BeanFormWidget(PersonMO.class);
+		personForm.addBeanElement("name", "#First name", new DisplayControl(), true);
+		personForm.addBeanElement("surname", "#Last name", new DisplayControl(), false);
+		personForm.addBeanElement("phone", "#Phone no", new DisplayControl(), true);
+		personForm.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+		personForm.writeBean((PersonMO) getGeneralDAO().getById(PersonMO.class, personId));
+
+		addWidget("personForm", personForm);
 	}
 	
-
 	public void handleEventReturn(String eventParameter) throws Exception {
-		log.debug("Event 'return' received!");
 		getFlowCtx().cancel();
 	}	
 }

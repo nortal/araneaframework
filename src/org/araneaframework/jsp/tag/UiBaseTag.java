@@ -57,6 +57,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	 * @throws Exception
 	 */
 	protected int before(Writer out) throws Exception {
+		//out.write("<"+ getClass().getName() + ">\n");
 		return EVAL_BODY_INCLUDE;
 	}
 
@@ -65,6 +66,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	 * @throws Exception
 	 */
 	protected int after(Writer out) throws Exception {
+		//out.write("</"+ getClass().getName() + ">\n");
 		return EVAL_PAGE;
 	}
 

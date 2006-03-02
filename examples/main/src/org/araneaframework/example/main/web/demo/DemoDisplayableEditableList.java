@@ -71,7 +71,7 @@ public class DemoDisplayableEditableList extends BaseWidget {
 		super.init();
 
 		addGlobalEventListener(new ProxyEventListener(this));
-    setViewSelector("demo/DemoDisplayableEditableList/main");
+    setViewSelector("demo/demoDisplayableEditableList");
 		
 		editableRows = new FormListWidget(new DemoEditableRowHandler());
 

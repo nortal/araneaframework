@@ -65,9 +65,9 @@ public class DemoInMemoryEditableList extends BaseWidget {
 	 */
 	public void init() throws Exception {
 		super.init();
-
+		
 		addGlobalEventListener(new ProxyEventListener(this));
-    setViewSelector("demo/DemoInMemoryEditableList/main");		
+		setViewSelector("demo/demoInMemoryEditableList");		
 		
 		formList = new FormListWidget(new DemoEditableRowHandler());
 		inMemoryHelper = new InMemoryFormListHelper(data, formList.getFormRowHandler());
@@ -75,7 +75,7 @@ public class DemoInMemoryEditableList extends BaseWidget {
 		FormListUtil.keepFormListChangesInMemory(formList, inMemoryHelper);
 		FormListUtil.associateFormListWithMap(formList, inMemoryHelper.getCurrent());
 		formList.setRows(new ArrayList(inMemoryHelper.getCurrent().values()));
-
+		
 		addWidget("editableList", formList);
 	}
 	

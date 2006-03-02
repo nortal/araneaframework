@@ -4,7 +4,7 @@
 	xmlns:ui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 	<ui:widgetContext>
-		<ui:form id="form">
+		<ui:form id="personForm">
 
 			<ui:componentHeader>
 				<ui:componentName>
