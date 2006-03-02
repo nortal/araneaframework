@@ -38,6 +38,6 @@ public class ComponentFormTag extends UiLayoutBaseTag {
 	}
 
 	public UiLayoutRowTagInterface getRowTag(String styleClass) throws JspException {
-		return new UiStdLayoutRowTag(styleClass, null);
+		return new UiStdLayoutRowTag(styleClass, getCellClass());
 	}
 }

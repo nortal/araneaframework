@@ -39,6 +39,10 @@ public abstract class UiLayoutRowBaseTag extends UiPresentationTag implements Ui
 		this.cellClass = (String)evaluate("cellClass", cellClass, String.class);
 	}
 	
+	public String getCellClass() {
+		return cellClass;
+	}
+	
 	//
 	// Implementation
 	//

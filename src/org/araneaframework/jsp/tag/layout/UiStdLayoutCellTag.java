@@ -33,11 +33,9 @@ public class UiStdLayoutCellTag extends UiLayoutCellBaseTag {
   //
 	
 	public UiStdLayoutCellTag(String styleClass) throws JspException {
-		setStyleClass(styleClass);
+		this.styleClass = styleClass;
 	}
   
-  public UiStdLayoutCellTag() {
-  }
     
 	protected int before(Writer out) throws Exception {
 		super.before(out);

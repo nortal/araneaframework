@@ -93,28 +93,14 @@ public abstract class UiLayoutBaseTag extends UiPresentationTag implements UiLay
 		cellClass = null;		
 	}
 	
-	protected String getCellClass() {
+	public String getCellClass() {
 		return cellClass;
 	}
-
-  /**
-   * Get row style or <code>null</code>.
-   */
-  protected String getRowClass() {
-    return rowClass;
-  }
-
-  /**
-   * Get default cell style.
-   */
-  protected String getDefaultCellStyle() throws JspException {
-    return null;
-  }
-
-  /**
-   * Get default row style.
-   */
-  protected String getDefaultRowStyle() throws JspException {
-    return null;
-  }	
+	
+	/**
+	 * Get row style or <code>null</code>.
+	 */
+	public String getRowClass() {
+		return rowClass;
+	}
 }

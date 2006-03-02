@@ -75,7 +75,7 @@ public class UiLayoutRowWrapperTag extends UiStyledWrapperTag  {
 	 */
 	protected UiContainedTagInterface getTag() throws JspException {
 		UiLayoutTagInterface layout = (UiLayoutTagInterface)readAttribute(UiLayoutTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);		
-		return layout.getRowTag(styleClass); 		
+		return layout.getRowTag(layout.getRowClass());	
 	}
 	
 	/**

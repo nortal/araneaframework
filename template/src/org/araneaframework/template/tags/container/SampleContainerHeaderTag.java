@@ -63,6 +63,6 @@ public class SampleContainerHeaderTag extends UiLayoutRowBaseTag {
 	}
 	
 	public UiLayoutCellTagInterface getCellTag(String style) throws JspException {
-		return new UiStdLayoutCellTag();
+		return new UiStdLayoutCellTag(style);
 	}
 }

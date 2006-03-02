@@ -15,42 +15,33 @@
 			</ui:componentHeader>
 
 			<ui:component>
-				<ui:componentForm>
+				<ui:componentForm rowClass="cols4">
 
-					<ui:row styleClass="cols4">
+					<ui:row>
 						<ui:cell styleClass="name">
 							<ui:label id="checkbox1" />
 						</ui:cell>
 
-						<ui:cell>
+						<ui:cell styleClass="inpt">
 							<ui:formElement id="checkbox1">
 								<ui:checkbox id="checkbox1" />
 							</ui:formElement>
 						</ui:cell>
-						<ui:cell/>
-						<ui:cell/>
-					</ui:row>
 
-					<ui:row styleClass="cols4">
 						<ui:cell styleClass="name">
 							<ui:label id="textbox1" />
 						</ui:cell>
 
 						<ui:cell styleClass="inpt">
-							<ui:textInput id="textbox1" styleClass="aranea-short-text-input" />
+							<ui:textInput id="textbox1"/>
 						</ui:cell>
-						<ui:cell/>
-						<ui:cell/>
 					</ui:row>
 
-					<!-- Footer -->
-
-					<ui:containerFooter>
-						<ui:eventButton id="button1" eventId="testSimpleForm"
-							labelId="#Button" />
-					</ui:containerFooter>
-
 				</ui:componentForm>
+				
+				<ui:componentActions>
+					<ui:eventButton id="button1" eventId="testSimpleForm" labelId="#Button" />
+				</ui:componentActions>
 			</ui:component>
 
 		</ui:form>
