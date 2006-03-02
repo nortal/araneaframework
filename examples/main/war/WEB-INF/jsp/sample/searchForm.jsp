@@ -8,11 +8,12 @@
 	<!-- Component starts here -->
 	<ui:widgetContext>
 		<ui:form id="searchForm">
-			<ui:component>
-				<ui:componentHeader>
-					<ui:componentName>Tutorial search form</ui:componentName>
-				</ui:componentHeader>
 
+			<ui:componentHeader>
+				<ui:componentName>Tutorial search form</ui:componentName>
+			</ui:componentHeader>
+
+			<ui:component>
 				<!-- Body -->
 				<ui:componentForm>
 					<ui:row>
@@ -95,6 +96,7 @@
 					<ui:eventButton id="search" eventId="search" labelId="#Search"/>
 				</ui:componentActions>
 			</ui:component>
+
 		</ui:form>
 	</ui:widgetContext>
 </jsp:root>
