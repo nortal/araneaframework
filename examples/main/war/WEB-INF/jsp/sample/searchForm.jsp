@@ -8,85 +8,93 @@
 	<!-- Component starts here -->
 	<ui:widgetContext>
 		<ui:form id="searchForm">
-			<ui:container>
-			
-				<!-- Label -->
-				<ui:containerLabel>Tutorial search form</ui:containerLabel>
+			<ui:component>
+				<ui:componentHeader>
+					<ui:componentName>Tutorial search form</ui:componentName>
+				</ui:componentHeader>
 
 				<!-- Body -->
-				<ui:containerFormBody>
+				<ui:componentForm>
 					<ui:row>
 						<ui:cell colSpan="2">Client</ui:cell>
 					</ui:row>
+
 					<ui:formElement id="clientFirstName">
 						<ui:row>
-							<ui:cell styleClass="label">
+							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>
-							<ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
+
 					<ui:formElement id="clientLastName">
 						<ui:row>
-							<ui:cell styleClass="label">
+							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>
-							<ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
+
 					<ui:formElement id="clientPersonalId">
 						<ui:row>
-							<ui:cell styleClass="label">
+							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>
-							<ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
+
 					<ui:row>
 						<ui:cell colSpan="2">Address</ui:cell>
 					</ui:row>
+
 					<ui:formElement id="clientAddressTown">
 						<ui:row>
-							<ui:cell styleClass="label">
+							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>
-							<ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
+
 					<ui:formElement id="clientAddressStreet">
 						<ui:row>
-							<ui:cell styleClass="label">
+							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>
-							<ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
+
 					<ui:formElement id="clientAddressHouse">
 						<ui:row>
-							<ui:cell styleClass="label">
+							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>
-							<ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
-				</ui:containerFormBody>
+				</ui:componentForm>
+
 				<!-- Footer -->
-				<ui:containerFooter>
+				<ui:componentActions>
 					<ui:eventButton id="search" eventId="search" labelId="#Search"/>
-				</ui:containerFooter>
-			</ui:container>
+				</ui:componentActions>
+			</ui:component>
 		</ui:form>
 	</ui:widgetContext>
 </jsp:root>
