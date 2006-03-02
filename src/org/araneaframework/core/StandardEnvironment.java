@@ -24,7 +24,7 @@ import org.araneaframework.Environment;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardEnvironment implements Environment {
+public class StandardEnvironment extends BaseEnvironment {
   private Map entries;
   private Environment parentEnv;
   

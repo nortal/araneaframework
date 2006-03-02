@@ -28,9 +28,11 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardWidget;
+import org.araneaframework.framework.ContinuationManagerContext;
 import org.araneaframework.framework.EmptyCallStackException;
-import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.framework.ExtendedCallContext;
+import org.araneaframework.framework.FlowContext;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -189,6 +191,24 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     return callStack.size() != 0;
   }
   
+  public void reset(final EnvironmentAwareCallback callback) throws Exception {      
+    for (Iterator i = callStack.iterator(); i.hasNext();) {
+      CallFrame frame = (CallFrame) i.next();
+      
+      _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());
+      removeWidget(CALLABLE_WIDGET_KEY);
+    }
+    
+    callStack.clear();
+    
+    if (callback != null)
+      callback.call(getChildWidgetEnvironment());
+  }
+  
+  public void setTitle(String titleLabelId) throws Exception {    
+    ((CallFrame) callStack.getFirst()).setTitle(titleLabelId);
+  }
+  
   
   //*******************************************************************
   // PROTECTED METHODS
@@ -219,6 +239,9 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
    * Invokes render on the top frame on the stack of callframes.
    */
   protected void render(OutputData output) throws Exception {
+    //Don't render empty callstack
+    if (getCallStack().size() == 0) return; 
+    
     output.pushAttribute(CALL_STACK_KEY, callStack);
       
     try {          
@@ -273,6 +296,22 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     return widget;
   }
   
+  protected void handleException(Exception e) throws Exception {
+    if (getEnvironment().getEntry(ContinuationManagerContext.class) != null
+        && getEnvironment().getEntry(ExceptionHandlerFactory.class) != null) {
+      ContinuationManagerContext contCtx = 
+        (ContinuationManagerContext) getEnvironment().getEntry(ContinuationManagerContext.class);
+      
+      if (!contCtx.isRunning()) {
+        ExceptionHandlerFactory handlerFactory = 
+          (ExceptionHandlerFactory) getEnvironment().getEntry(ExceptionHandlerFactory.class);
+        contCtx.start(handlerFactory.buildExceptionHandler(e, getChildWidgetEnvironment()));
+      }
+    }
+    
+    throw e;
+  }
+  
   //*******************************************************************
   // PROTECTED CLASSES
   //*******************************************************************
@@ -309,6 +348,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     Widget widget;
     Configurator configurator;
     Handler handler;
+    String title;
     
     protected CallFrame(Widget widget, Configurator configurator, Handler handler) {
       this.configurator = configurator;
@@ -327,5 +367,17 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     public Widget getWidget() {
       return widget;
     }
+
+    protected String getTitle() {
+      return title;
+    }
+
+    protected void setTitle(String title) {
+      this.title = title;
+    }
+  }
+
+  protected LinkedList getCallStack() {
+    return callStack;
   }
 }

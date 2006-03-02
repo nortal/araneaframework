@@ -159,7 +159,7 @@ public class StandardServletOutputData implements ServletOutputData, MimeOutputD
   		(ContinuationManagerContext) environment.getEntry(ContinuationManagerContext.class);  
   	
 		// setting the continuation
-		continuationHandler.runContinuationOnce(new BaseService() {
+		continuationHandler.runOnce(new BaseService() {
 			protected void action(Path path, InputData input, OutputData output) throws Exception {
 				((ServletOutputData)output).getResponse().sendRedirect(url);
 			}

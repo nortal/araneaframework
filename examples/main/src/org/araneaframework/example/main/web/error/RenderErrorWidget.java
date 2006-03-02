@@ -14,24 +14,22 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.mock;
+package org.araneaframework.example.main.web.error;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.araneaframework.core.BaseEnvironment;
+import org.araneaframework.OutputData;
+import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.servlet.util.ServletUtil;
+
 
 /**
- * @author toomas
- *
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class MockEnvironment extends BaseEnvironment {
-  private Map entries = new HashMap();
-  
-  public MockEnvironment(Map map) {
-    this.entries = map;
-  }
-  
-  public Object getEntry(Object key) {
-    return entries.get(key);
+public class RenderErrorWidget extends BaseWidget {
+  protected void render(OutputData output) throws Exception {
+    ServletUtil.include("/WEB-INF/jsp/error/InitErrorWidget/main.jsp", getEnvironment(), 
+        (ServletOutputData) output);
+    
+    throw new RuntimeException("Error on render()!");
   }
 }

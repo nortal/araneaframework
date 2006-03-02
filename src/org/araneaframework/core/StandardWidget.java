@@ -179,12 +179,8 @@ public abstract class StandardWidget extends BaseWidget implements Standard.Stan
    * If path hasNextStep() routes to the correct child, 
    * otherwise calls the appropriate listener. 
    */ 
-  protected void event(Path path, InputData input) throws Exception {
-    if ( path == null ) {
-      throw new AraneaRuntimeException("Null path encountered");
-    }
-    
-    if (path.hasNext()) {
+  protected void event(Path path, InputData input) throws Exception {    
+    if (path != null && path.hasNext()) {
       Object next = path.next();
       
       Widget pWidget = (Widget)getChildren().get(next);           
@@ -356,7 +352,7 @@ public abstract class StandardWidget extends BaseWidget implements Standard.Stan
     return super.getEnvironment();
   }
   
-  public Environment getChildEnvironment() throws Exception {
+  public final Environment getChildEnvironment() throws Exception {
     return getChildWidgetEnvironment();
   }
   

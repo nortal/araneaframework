@@ -71,7 +71,7 @@
 		<!--
 			Build the aranea-template.jar
 		-->
-		<jar jarfile="dist/${build.jar.filename}" compress="on">
+		<jar jarfile="dist/${build.jar.filename}" compress="true">
 			<fileset dir="${web.dir}">
 				<include name="js/**/*js"/>
 				<include name="js/**/*css"/>

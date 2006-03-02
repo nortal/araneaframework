@@ -242,11 +242,7 @@ public abstract class StandardService extends BaseService implements Standard.St
    * appropriate listener.
    */ 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if ( path == null ) {
-      throw new AraneaRuntimeException("Null path encountered");
-    }
-    
-    if (path.hasNext()) {
+    if (path != null && path.hasNext()) {
       Object next = path.next();
       
       Service service = (Service)getChildren().get(next);

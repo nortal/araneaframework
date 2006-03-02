@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
+package org.araneaframework.core;
 
-package org.araneaframework.uilib;
-
-import java.io.Serializable;
+import org.araneaframework.Environment;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ *
  */
-public interface MenuContext extends Serializable {
-	/**
-	 * Selects (activates) the requested menu item.
-	 * @param menuItemPath
-	 */
-	public void selectMenuItem(String menuItemPath) throws Exception;
+public abstract class BaseEnvironment implements Environment {
+  public Object requireEntry(Object key) {
+    Object result = getEntry(key);
+    
+    if (result == null)
+      throw new NoSuchEnvironmentEntryException(key);
+    
+    return result;
+  }
 }

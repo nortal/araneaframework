@@ -81,7 +81,7 @@ public class StandardRelocatableServiceDecorator extends BaseService implements 
   // PROTECTED METHODS
   //*******************************************************************
   protected void init() throws Exception {
-    child._getComponent().init(new Environment() {
+    child._getComponent().init(new BaseEnvironment() {
       public Object getEntry(Object key) {
         return getEnvironment().getEntry(key);
       }

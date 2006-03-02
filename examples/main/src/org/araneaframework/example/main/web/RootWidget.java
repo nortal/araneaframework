@@ -16,7 +16,12 @@
 
 package org.araneaframework.example.main.web;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.log4j.Logger;
+import org.araneaframework.Environment;
+import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.menu.MenuWidget;
 import org.araneaframework.example.main.web.util.EmptyWidget;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
@@ -27,7 +32,7 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class RootWidget extends StandardPresentationWidget {
+public class RootWidget extends StandardPresentationWidget implements SecurityContext {
 
 	private static final Logger log = Logger.getLogger(RootWidget.class);
 
@@ -36,4 +41,18 @@ public class RootWidget extends StandardPresentationWidget {
 		setViewSelector("root");
 		log.debug("Root widget initialized");
 	}
+  
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    Map entries = new HashMap();
+    entries.put(SecurityContext.class, this);
+    return new StandardEnvironment(getEnvironment(), entries);
+  }
+
+  public boolean hasPrivilege(String privelege) {
+    return false;
+  }
+
+  public void logout() throws Exception {
+    getFlowCtx().replace(new LoginWidget(), null);
+  }
 }

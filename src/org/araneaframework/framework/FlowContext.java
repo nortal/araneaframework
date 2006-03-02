@@ -18,6 +18,7 @@ package org.araneaframework.framework;
 
 import java.io.Serializable;
 import org.araneaframework.Component;
+import org.araneaframework.EnvironmentAwareCallback;
 
 /**
  * This context provides support for flow navigation and nesting. A flow is started using 
@@ -59,6 +60,18 @@ public interface FlowContext extends Serializable {
    * Returns whether the current flow is nested, that is has a caller flow.
    */
   public boolean isNested() throws Exception;
+  
+  /**
+   * Resets all currently running flows and calls the <code>callback</code> allowing to start 
+   * new flows. Useful e.g. in a menu, when selecting a new menu item and reseting the old
+   * stack. 
+   */
+  public void reset(EnvironmentAwareCallback callback) throws Exception;
+  
+  /**
+   * Sets the flow title that can be shown to user.
+   */
+  public void setTitle(String titleLabelId) throws Exception;
   
   public void pushGlobalEnvEntry(Object entryId, Object envEntry) throws Exception;
   public void popGlobalEnvEntry(Object entryId) throws Exception;    

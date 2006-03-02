@@ -16,7 +16,11 @@
 
 package org.araneaframework.example.main.web.menu;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.company.CompanyChooseAndEditWidget;
 import org.araneaframework.example.main.web.company.CompanyChooseAndViewWidget;
 import org.araneaframework.example.main.web.company.CompanyEditWidget;
@@ -28,6 +32,9 @@ import org.araneaframework.example.main.web.demo.DemoDisplayForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
 import org.araneaframework.example.main.web.demo.DemoFormList;
 import org.araneaframework.example.main.web.demo.DemoInMemoryEditableList;
+import org.araneaframework.example.main.web.error.EventErrorWidget;
+import org.araneaframework.example.main.web.error.InitErrorWidget;
+import org.araneaframework.example.main.web.error.RenderErrorWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.person.PersonChooseAndEditWidget;
 import org.araneaframework.example.main.web.person.PersonChooseAndViewWidget;
@@ -36,16 +43,34 @@ import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
+import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.servlet.util.ServletUtil;
+import org.araneaframework.template.framework.TemplateMenuWidget;
 import org.araneaframework.uilib.core.MenuItem;
-import org.araneaframework.uilib.core.StandardMenuWidget;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class MenuWidget extends StandardMenuWidget  {
+public class MenuWidget extends TemplateMenuWidget  {
 	public MenuWidget(Widget topWidget) throws Exception {
 		super(topWidget);
 	}
+  
+  protected void init() throws Exception {
+    super.init();
+    
+    addEventListener("logout", new ProxyEventListener(this));
+    addEventListener("mainPage", new ProxyEventListener(this));
+  }
+  
+  public void handleEventLogout() throws Exception {
+    ((SecurityContext) getEnvironment().requireEntry(SecurityContext.class)).logout();
+  }
+  
+  public void handleEventMainPage() throws Exception {
+    reset(null);
+    menu.clearSelection();
+  }  
 	
 	protected MenuItem buildMenu() throws Exception {
 		MenuItem result = new MenuItem();
@@ -69,12 +94,19 @@ public class MenuWidget extends StandardMenuWidget  {
 			result.addMenuItem("Management.Contracts", new MenuItem("Edit", ContractChooseAndEditWidget.class));
 		}
 		
-        // Another way of adding menuitems is available
-        MenuItem sampleMenu = result.addMenuItem(new MenuItem("Samples")); {
-	        sampleMenu.addMenuItem(new MenuItem("Simple_Form", SimpleFormWidget.class));
-	        sampleMenu.addMenuItem(new MenuItem("Simple_List", SimpleListWidget.class));
-	        sampleMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
-        }
+    // Another way of adding menuitems is available
+    MenuItem sampleMenu = result.addMenuItem(new MenuItem("Samples")); {
+      sampleMenu.addMenuItem(new MenuItem("Simple_Form", SimpleFormWidget.class));
+      sampleMenu.addMenuItem(new MenuItem("Simple_List", SimpleListWidget.class));
+      sampleMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
+    }
+    
+    // Another way of adding menuitems is available
+    MenuItem errorMenu = result.addMenuItem(new MenuItem("Error")); {
+      errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
+      errorMenu.addMenuItem(new MenuItem("Error_on_event", EventErrorWidget.class));
+      errorMenu.addMenuItem(new MenuItem("Error_on_render", RenderErrorWidget.class));
+    }    
 		
 		result.addMenuItem(null, new MenuItem("Demos")); {
 			result.addMenuItem("Demos", new MenuItem("Display_Form", DemoDisplayForm.class));
@@ -90,4 +122,15 @@ public class MenuWidget extends StandardMenuWidget  {
 		
 		return result;
 	}
+  
+  protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
+    if (ExceptionUtils.getRootCause(e) != null) {
+      putViewData("rootStackTrace", 
+          ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
+    }        
+    putViewData("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
+    
+    ServletUtil.include("/WEB-INF/jsp/menuError.jsp", getEnvironment(), 
+        (ServletOutputData) output);
+  }
 }

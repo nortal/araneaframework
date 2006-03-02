@@ -14,24 +14,20 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.mock;
+package org.araneaframework.framework;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.araneaframework.core.BaseEnvironment;
+import java.io.Serializable;
 
 /**
- * @author toomas
- *
+ * This context is passed to a continuation started using {@link org.araneaframework.framework.ContinuationManagerContext#start(Service)} 
+ * and allows the continuation to explicitly restore control once it is finished. 
+ * 
+ * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class MockEnvironment extends BaseEnvironment {
-  private Map entries = new HashMap();
-  
-  public MockEnvironment(Map map) {
-    this.entries = map;
-  }
-  
-  public Object getEntry(Object key) {
-    return entries.get(key);
-  }
+public interface ExceptionHandlerContext extends Serializable {
+  /**
+   * Restore control and end the continuation flow.
+   */
+  public void restore() throws Exception;
 }

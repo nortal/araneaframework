@@ -5,7 +5,7 @@
 	
 	<!--Set the classpath-->
 	<path id="classpath">
-		<fileset dir="../../lib" includes="**/*.jar"/>
+		<fileset dir="../../lib" includes="**/*.jar" excludes="coverage/**/*"/>
 		<fileset dir="../.." includes="dist/aranea.jar"/>
 		<fileset dir="../.." includes="template/dist/aranea-template.jar"/>
 	</path>

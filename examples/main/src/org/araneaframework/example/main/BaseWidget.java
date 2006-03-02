@@ -33,6 +33,10 @@ public abstract class BaseWidget extends StandardPresentationWidget {
     return (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
   }
   
+  protected SecurityContext getSecCtx() {
+    return (SecurityContext) getEnvironment().getEntry(SecurityContext.class);
+  }
+  
 	public GeneralDAO getGeneralDAO() {
 		return (GeneralDAO) getBeanFactory().getBean("generalDAO");
 	}

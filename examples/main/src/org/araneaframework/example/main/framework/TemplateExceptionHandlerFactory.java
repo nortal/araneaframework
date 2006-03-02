@@ -14,24 +14,19 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.mock;
+package org.araneaframework.example.main.framework;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.araneaframework.core.BaseEnvironment;
+import org.araneaframework.Environment;
+import org.araneaframework.Service;
+import org.araneaframework.framework.ExceptionHandlerFactory;
 
 /**
- * @author toomas
- *
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class MockEnvironment extends BaseEnvironment {
-  private Map entries = new HashMap();
-  
-  public MockEnvironment(Map map) {
-    this.entries = map;
+public class TemplateExceptionHandlerFactory implements ExceptionHandlerFactory {
+
+  public Service buildExceptionHandler(Throwable e, Environment environment) {
+    return new TemplateExceptionHandler(e, environment);
   }
-  
-  public Object getEntry(Object key) {
-    return entries.get(key);
-  }
+
 }

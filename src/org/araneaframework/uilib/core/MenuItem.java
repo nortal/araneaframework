@@ -116,14 +116,6 @@ public class MenuItem implements Serializable {
 		subMenu.put(item.getLabel(), item);
 	}
 	
-	private void clearSelection() {
-		if (!selectedItems.isEmpty()) {
-			for (Iterator i = selectedItems.iterator(); i.hasNext(); )
-				((MenuItem)i.next()).setSelected(false);
-		}
-		selectedItems.clear();
-	}
-	
 	/***************************************************************************************************
 	 * PUBLIC METHODS. 
 	 ***************************************************************************************************/
@@ -188,6 +180,14 @@ public class MenuItem implements Serializable {
 
 		return resultFlow;
 	}
+  
+  public void clearSelection() {
+    if (!selectedItems.isEmpty()) {
+      for (Iterator i = selectedItems.iterator(); i.hasNext(); )
+        ((MenuItem)i.next()).setSelected(false);
+    }
+    selectedItems.clear();
+  }
 	/***************************************************************************************************
 	 * GETTERS. 
 	 ***************************************************************************************************/

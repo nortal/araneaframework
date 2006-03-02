@@ -14,24 +14,17 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.mock;
+package org.araneaframework.template.framework;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.araneaframework.core.BaseEnvironment;
+import java.io.Serializable;
 
 /**
- * @author toomas
- *
+ * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class MockEnvironment extends BaseEnvironment {
-  private Map entries = new HashMap();
-  
-  public MockEnvironment(Map map) {
-    this.entries = map;
-  }
-  
-  public Object getEntry(Object key) {
-    return entries.get(key);
-  }
+public interface TemplateMenuContext extends Serializable {
+	/**
+	 * Selects (activates) the requested menu item.
+	 * @param menuItemPath
+	 */
+	public void selectMenuItem(String menuItemPath) throws Exception;
 }

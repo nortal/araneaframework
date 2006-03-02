@@ -19,6 +19,8 @@ package org.araneaframework.framework.container;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardWidget;
+import org.araneaframework.framework.ContinuationManagerContext;
+import org.araneaframework.framework.ExceptionHandlerFactory;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -67,5 +69,21 @@ public class StandardViewPortWidget extends StandardWidget {
       output.popScope();
       output.popAttribute(VIEW_PORT_WIDGET_KEY);
     }
+  }
+  
+  protected void handleException(Exception e) throws Exception {
+    if (getEnvironment().getEntry(ContinuationManagerContext.class) != null
+        && getEnvironment().getEntry(ExceptionHandlerFactory.class) != null) {
+      ContinuationManagerContext contCtx = 
+        (ContinuationManagerContext) getEnvironment().getEntry(ContinuationManagerContext.class);
+      
+      if (!contCtx.isRunning()) {
+        ExceptionHandlerFactory handlerFactory = 
+          (ExceptionHandlerFactory) getEnvironment().getEntry(ExceptionHandlerFactory.class);
+        contCtx.start(handlerFactory.buildExceptionHandler(e, getChildWidgetEnvironment()));
+      }
+    }
+    
+    throw e;
   }
 }

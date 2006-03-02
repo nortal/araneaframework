@@ -98,8 +98,15 @@
   
   <bean class="org.araneaframework.servlet.filter.StandardServletHttpFilterService" id="thread.headerFilter"
     singleton="false">
-    <property name="childService" ref="thread.widgetAdapter"/>
+    <property name="childService" ref="thread.continuationFilter"/>
     <property name="requestEncoding" value="UTF-8"/>
+  </bean>
+  
+ <bean class="org.araneaframework.framework.filter.StandardContinuationFilterService" id="thread.continuationFilter"
+    singleton="false">
+    <property name="childService">
+      <ref bean="thread.widgetAdapter" />
+    </property>
   </bean>
 
   <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService" id="thread.widgetAdapter"
@@ -127,6 +134,9 @@
         <entry key="org.araneaframework.uilib.ConfigurationContext.class">
           <bean class="org.araneaframework.template.framework.resource.TemplateConfiguration" singleton="false"/>
         </entry>
+        <entry key="org.araneaframework.framework.ExceptionHandlerFactory.class">
+          <bean class="org.araneaframework.example.main.framework.TemplateExceptionHandlerFactory" singleton="false"/>
+        </entry>        
       </map>      
     </property>    
   </bean>

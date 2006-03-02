@@ -14,24 +14,15 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.mock;
+package org.araneaframework.example.main;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.araneaframework.core.BaseEnvironment;
+import java.io.Serializable;
 
 /**
- * @author toomas
- *
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class MockEnvironment extends BaseEnvironment {
-  private Map entries = new HashMap();
+public interface SecurityContext extends Serializable {
+  boolean hasPrivilege(String privelege);
   
-  public MockEnvironment(Map map) {
-    this.entries = map;
-  }
-  
-  public Object getEntry(Object key) {
-    return entries.get(key);
-  }
+  void logout() throws Exception;
 }

@@ -59,8 +59,8 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    AtomicResponseHelper arUtil = new AtomicResponseHelper();
-    arUtil.wrapOutput((ServletOverridableOutputData)output);
+    AtomicResponseHelper arUtil = 
+      new AtomicResponseHelper((ServletOverridableOutputData)output);
     
     try {
       childService._getService().action(path, input, output);

@@ -14,52 +14,50 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.core;
+package org.araneaframework.template.framework;
 
 import org.araneaframework.Component;
+import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.EventListener;
 import org.araneaframework.core.StandardEventListener;
-import org.araneaframework.framework.container.StandardFlowContainerWidget;
-import org.araneaframework.uilib.MenuContext;
+import org.araneaframework.framework.container.StandardExceptionHandlingFlowContainerWidget;
+import org.araneaframework.uilib.core.MenuItem;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public abstract class StandardMenuWidget extends StandardFlowContainerWidget implements MenuContext {
+public abstract class TemplateMenuWidget extends StandardExceptionHandlingFlowContainerWidget implements TemplateMenuContext {
 	public static final String MENU_VIEWDATA_KEY = "menu";
 	public static final String MENU_SELECT_EVENT_KEY = "menuSelect";
 	
-	protected MenuItem menu;
-	protected Class topWidgetClass;
+	protected MenuItem menu;  
 	
 	// CONSTRUCTOR 
-	public StandardMenuWidget(Widget topWidget) throws Exception {
+	public TemplateMenuWidget(Widget topWidget) throws Exception {
 		super(topWidget);
 		
-		topWidgetClass = topWidget.getClass();
-		
 		menu = buildMenu();
-		addEventListener(StandardMenuWidget.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
-		putViewData(StandardMenuWidget.MENU_VIEWDATA_KEY, menu);
+		addEventListener(TemplateMenuWidget.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
+		putViewData(TemplateMenuWidget.MENU_VIEWDATA_KEY, menu);
 	}
 	
 	// MENU SELECTION LISTENER
 	private class ItemSelectionHandler extends StandardEventListener {
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
-			StandardMenuWidget.this.selectMenuItem(eventParam);
+			TemplateMenuWidget.this.selectMenuItem(eventParam);
 		}
 	}
 
 	public void selectMenuItem(String menuItemPath) throws Exception {
-		Component newFlow = menu.selectMenuItem(menuItemPath);
-		if (newFlow == null)
-			replace((Component) topWidgetClass.newInstance(), null);
-		else {
-			replace((Component) topWidgetClass.newInstance(), null);
-			start(newFlow, null, null);
-		}
+		final Component newFlow = menu.selectMenuItem(menuItemPath);
+    
+    reset(new EnvironmentAwareCallback() {
+      public void call(org.araneaframework.Environment env) throws Exception {
+        if (newFlow != null)
+          start(newFlow, null, null);
+      }
+    });
 	}
 
 	/**

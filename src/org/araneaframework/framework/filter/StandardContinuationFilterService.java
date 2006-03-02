@@ -48,16 +48,16 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    AtomicResponseHelper arUtil = new AtomicResponseHelper();
-    arUtil.wrapOutput((ServletOverridableOutputData)output);
+    AtomicResponseHelper arUtil = 
+      new AtomicResponseHelper((ServletOverridableOutputData)output);
     
     try {
-      if (isContinuationRunning()) {
+      if (isRunning()) {
         log.debug("Routing request through standard continuation.");
         continuation._getService().action(path, input, output);
       }
       
-      if (!isContinuationRunning()) {
+      if (!isRunning()) {
         arUtil.rollback();
         
         Path scope = output.getScope();             
@@ -86,7 +86,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     }
   }
 
-  public void runContinuation(Service continuation) throws Exception {
+  public void start(Service continuation) throws Exception {
     this.continuation = continuation;
     
     Map entries = new HashMap();
@@ -96,26 +96,26 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     throw new AraneaRuntimeException("Continuation set!");
   }
   
-  public void restore() throws Exception {
+  public void finish() throws Exception {
     continuation._getComponent().destroy();
     continuation = null;
   }
 
-  public boolean isContinuationRunning() {
+  public boolean isRunning() {
     return continuation != null;
   }
 
-	public void runContinuationOnce(Service continuation) throws Exception {
+	public void runOnce(Service continuation) throws Exception {
 		BaseFilterService service = new BaseFilterService(continuation) {
 			protected void action(Path path, InputData input, OutputData output) throws Exception {
         childService._getService().action(path, input, output);
 				
 				ContinuationContext conCtx = 
 					(ContinuationContext) getEnvironment().getEntry(ContinuationContext.class);
-				conCtx.restore();
+				conCtx.finish();
 			}
 		};
     
-		runContinuation(service);
+		start(service);
 	}
 }

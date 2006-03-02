@@ -52,7 +52,8 @@ public class ProxyEventListener implements EventListener {
         eventHandler.invoke(eventTarget, new Object[] { eventParameter });
         return;
       } catch (NoSuchMethodException e) {/*OK*/}
-      log.warn("Was unable to deliver an event to a handler, eventId = '"+eventId + "'");
+      
+      log.warn("No listener method found", new NoSuchEventListenerException(eventId));
     }
     catch (Exception e) {
       throw new InvalidEventException((String) eventId, e);
