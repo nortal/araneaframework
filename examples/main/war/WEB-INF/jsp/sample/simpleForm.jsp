@@ -44,12 +44,11 @@
 					</ui:row>
 
 					<!-- Footer -->
-					<!-- 
+
 					<ui:containerFooter>
 						<ui:eventButton id="button1" eventId="testSimpleForm"
 							labelId="#Button" />
 					</ui:containerFooter>
-					 -->
 
 				</ui:componentForm>
 			</ui:component>

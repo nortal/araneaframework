@@ -45,7 +45,6 @@ H2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bo
 .w90p { width: 90% !important; }
 .w100p { width: 100%; }
 
-.w600 { width: 600px; }
 .w350 { width: 350px; }
 .w250 { width: 250px; }
 .w220 { width: 220px; }
@@ -112,8 +111,6 @@ TABLE.data TR.total-first TD { font-weight: bold; }
 TABLE.data TR.total TD { font-weight: bold; }
 TABLE.data TR.even TD { background: url(?loadImage=gfx/i13.gif&importerType=imageFileImporter); }
 TABLE.data TR.total-first TD { border-top: 2px solid #cbd0c3 !important; }
-
-/* Form table */
 
 /* Form table */
 
