@@ -7,18 +7,19 @@
 
 	<ui:widgetContext>
 		<ui:list id="simpleList">
-			<ui:container>
+		
+			<!-- Label -->
+			<ui:componentHeader>
+				<ui:componentName>Tutorial simple list</ui:componentName>
+	        </ui:componentHeader>
 
-				<!-- Label -->
-				<ui:containerLabel>
-	            	Tutorial simple list
-	          	</ui:containerLabel>
+			<ui:component>
 
 				<!-- Body -->
-				<ui:containerListBody>
+				<ui:componentList>
 
 					<!-- Title -->
-					<ui:listTitleRow />
+					<ui:componentListHeader/>
 
 					<!-- Body -->
 					<ui:listRows>
@@ -35,12 +36,12 @@
 						</ui:row>
 					</ui:listRows>
 
-				</ui:containerListBody>
+				</ui:componentList>
 
 				<!-- Sequence -->
 				<ui:listSequenceFooter/>
 
-			</ui:container>
+			</ui:component>
 		</ui:list>
 	</ui:widgetContext>
 

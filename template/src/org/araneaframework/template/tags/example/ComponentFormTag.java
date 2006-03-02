@@ -16,6 +16,8 @@ import org.araneaframework.jsp.util.UiUtil;
 public class ComponentFormTag extends UiLayoutBaseTag {
 	public final static String COMPONENT_FORM_STYLE_CLASS = "form";
 	
+	protected String widthClass;
+	
 	protected void init() {
 		super.init();
 		styleClass = ComponentFormTag.COMPONENT_FORM_STYLE_CLASS;
@@ -26,6 +28,9 @@ public class ComponentFormTag extends UiLayoutBaseTag {
 		
 		UiUtil.writeOpenStartTag(out, "table");
 		UiUtil.writeAttribute(out, "class", styleClass);
+		
+		UiUtil.writeAttribute(out, "width", width);
+		UiUtil.writeAttribute(out, "height", height);
 		UiUtil.writeCloseStartTag(out);
 		
 		return EVAL_BODY_INCLUDE;

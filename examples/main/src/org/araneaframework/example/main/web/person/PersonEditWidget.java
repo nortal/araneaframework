@@ -35,6 +35,7 @@ public class PersonEditWidget extends BaseWidget {
 	private static final Logger log = Logger.getLogger(PersonEditWidget.class);
 	
   private Long id = null;
+  private boolean editMode;
   
   private BeanFormWidget form; 
   
@@ -42,6 +43,7 @@ public class PersonEditWidget extends BaseWidget {
    * Constructor for adding new person. 
    */
   public PersonEditWidget() {
+	  
   }
     
   /**
@@ -50,12 +52,14 @@ public class PersonEditWidget extends BaseWidget {
    */
   public PersonEditWidget(Long id) {
   	this.id = id;
+  	editMode = true;
   }
 	
   protected void init() throws Exception {
     super.init();
 
     addGlobalEventListener(new ProxyEventListener(this));
+    putViewData("label", editMode ? "Edit person" : "Add person");
     setViewSelector(id != null ? "person/personEdit" : "person/personAdd");
     
     form = new BeanFormWidget(PersonMO.class);
