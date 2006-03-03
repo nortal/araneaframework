@@ -16,6 +16,7 @@
 
 package org.araneaframework.template.framework.resource;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 import org.araneaframework.servlet.support.FallbackResourceBundle;
 import org.araneaframework.servlet.support.StringResourceBundle;
@@ -25,6 +26,7 @@ public class TemplateResourceBundle extends FallbackResourceBundle {
 
 	public TemplateResourceBundle() throws Exception {
     addResourceBundle(new StringResourceBundle());
-    addResourceBundle(ResourceBundle.getBundle("templateResources"));
+    addResourceBundle(ResourceBundle.getBundle("resource/template", Locale.ENGLISH));
+    addResourceBundle(ResourceBundle.getBundle("resource/uilib", Locale.ENGLISH));
   }
 }

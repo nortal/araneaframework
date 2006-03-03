@@ -72,13 +72,7 @@
 			Build the aranea-template.jar
 		-->
 		<jar jarfile="dist/${build.jar.filename}" compress="true">
-			<fileset dir="${web.dir}">
-				<include name="js/**/*js"/>
-				<include name="js/**/*css"/>
-				<include name="styles/**/*css"/>
-				<include name="gfx/**/*" />				
-				<include name="*.properties" />				
-			</fileset>
+			<fileset dir="${web.dir}"/>
 			<fileset dir="build/tld" includes="**/*.tld"/>
 			<fileset dir="${build.classes.dir}" includes="**/*.class"/>
 		</jar>

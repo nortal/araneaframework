@@ -132,7 +132,7 @@
     <property name="contexts">    
       <map>
         <entry key="org.araneaframework.uilib.ConfigurationContext.class">
-          <bean class="org.araneaframework.template.framework.resource.TemplateConfiguration" singleton="false"/>
+          <bean class="org.araneaframework.uilib.core.DefaultConfiguration" singleton="false"/>
         </entry>       
       </map>      
     </property>    

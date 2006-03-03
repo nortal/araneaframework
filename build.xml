@@ -186,6 +186,7 @@
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
+      <fileset dir="etc" includes="resource/**/*"/>  
 		</jar>	
 		
 		<jar destfile="dist/aranea-spring.jar" compress="true">
@@ -206,7 +207,7 @@
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/**/*"/>		
 			</fileset>
-			<fileset dir="etc" includes="js/**/*"/>
+			<fileset dir="etc"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 		</jar>	
 		
