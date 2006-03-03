@@ -1,4 +1,4 @@
-package org.araneaframework.template.tags.example;
+package org.araneaframework.template.tags.example.component;
 
 import java.io.Writer;
 import org.araneaframework.jsp.tag.UiPresentationTag;

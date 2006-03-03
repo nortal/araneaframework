@@ -83,8 +83,7 @@
 					</ui:listRows>
 				</ui:componentList>
 
-				<!-- Sequence -->
-				<ui:listSequenceFooter/>
+				<ui:componentListFooter/>
 				
 				<ui:componentActions>
 					<c:if test="${contextWidget.data.allowAdd}">
@@ -100,12 +99,6 @@
 			This is a list of persons. You can use a filter to search for a specific person or use
 			links below the list to navigate through pages. To choose a person just click on it's First Name.
 		</p>
-		<c:if test="${contextWidget.data.allowAdd}">
-			<p>You can also add a new person (use a button below the list).</p>
-		</c:if>
-		<c:if test="${contextWidget.data.allowRemove}">
-			<p>You can also remove a person (use a link on it's row).</p>
-		</c:if>
 
 	</ui:widgetContext>
 </jsp:root>

@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jsp:root 
-	xmlns:jsp="http://java.sun.com/JSP/Page" 
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:ui="http://araneaframework.org/tag-library/template"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
 		<ui:form id="displayForm">
 
-			<ui:container>
+			<!-- Label -->
+			<ui:componentHeader>
+				<ui:componentName>Demo display form</ui:componentName>
+			</ui:componentHeader>
 
-				<!-- Label -->
-				<ui:containerLabel>
-						Demo display form
-				</ui:containerLabel>
+			<ui:component>
 
 				<!-- Body -->
-				<ui:containerFormBody>
+				<ui:componentForm>
 
 					<ui:row>
 						<ui:cell styleClass="label">
@@ -25,7 +24,7 @@
 						<ui:cell>
 							<ui:conditionalDisplay id="condDisplay">
 								<ui:conditionTrue>
-									<ui:image code="triangle"/>
+									<ui:image code="triangle" />
 								</ui:conditionTrue>
 							</ui:conditionalDisplay>
 						</ui:cell>
@@ -53,9 +52,9 @@
 						</ui:cell>
 					</ui:row>
 
-				</ui:containerFormBody>
-				
-			</ui:container>
+				</ui:componentForm>
+
+			</ui:component>
 
 		</ui:form>
 	</ui:widgetContext>

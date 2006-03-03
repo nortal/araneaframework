@@ -10,7 +10,7 @@
 			<ui:componentHeader>
 				<ui:componentName>Companies</ui:componentName>
 			</ui:componentHeader>
-			<ui:container>
+			<ui:component>
 			
 				<!-- Body -->
 				<ui:componentList>
@@ -66,9 +66,9 @@
 				</ui:componentList>
 			
 				<!-- Sequence -->
-				<ui:listSequenceFooter/>
+				<ui:componentListFooter/>
 
-			</ui:container>
+			</ui:component>
 		
 		</ui:list>
 

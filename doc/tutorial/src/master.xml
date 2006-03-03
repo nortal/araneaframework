@@ -244,7 +244,7 @@
 			<para>
 				Hibernate is high-performance object-relational mapping
 				solution written in Java. It takes care of mapping database
-				tables to objects and much more. In our examples its usage is very basic -
+				tables to objects and much more. In our examples its usage is very basic&mdash;
 				just mapping database columns to fields in Data Objects 
 				(simple Java beans with getter and setter methods for private fields)&mdash;so that
 				we can easily save and retrieve objects from/to database.

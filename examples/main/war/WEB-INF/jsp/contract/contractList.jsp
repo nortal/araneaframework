@@ -43,7 +43,7 @@
 				</ui:componentList>
 			
 				<!-- Sequence -->
-				<ui:listSequenceFooter/>
+				<ui:componentListFooter/>
 
 				<ui:componentActions>
 					<ui:eventButton eventId="add" labelId="#Add new contract" />

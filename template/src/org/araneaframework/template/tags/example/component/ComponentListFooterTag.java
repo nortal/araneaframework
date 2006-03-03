@@ -14,18 +14,18 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.template.tags.uilib.list;
+package org.araneaframework.template.tags.example.component;
 
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
 import org.araneaframework.jsp.util.UiStdScriptUtil;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.template.tags.container.SampleContainerFooterTag;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.SequenceHelper;
 
@@ -36,10 +36,10 @@ import org.araneaframework.uilib.list.SequenceHelper;
  * @author Oleg Mürk
  * 
  * @jsp.tag
- *   name = "listSequenceFooter"
- *   body-content = "JSP"
+ *   name = "componentListFooter"
+ *   body-content = "empty"
  */
-public class SampleContainerListSequenceFooterTag extends SampleContainerFooterTag {
+public class ComponentListFooterTag extends UiPresentationTag {
 	public final static String PREVIOUS_PAGE_EVENT_ID = "previousPage";
 	public final static String NEXT_PAGE_EVENT_ID = "nextPage";
 	public final static String PREVIOUS_BLOCK_EVENT_ID = "previousBlock";
@@ -70,13 +70,13 @@ public class SampleContainerListSequenceFooterTag extends SampleContainerFooterT
 	protected String nextClass = "next";
 	protected String lastClass = "last";
 	protected String showAll = "demo.showAll";
+	protected String showPartial = "demo.showPartial";
 	
 	protected String noDataStringId;
 	
 	protected void init() {
 		super.init();
 		this.noDataStringId = DEFAULT_NO_DATA_STRING_ID;
-		inTable = false;
 		styleClass = "pages";
 		numberStyleClass = "nr";
 		infoStyleClass = "info";
@@ -142,6 +142,10 @@ public class SampleContainerListSequenceFooterTag extends SampleContainerFooterT
 		long firstShown = sequenceViewModel.getPageFirstItem().longValue();
 		long lastShown = sequenceViewModel.getPageLastItem().longValue();
 		
+		UiUtil.writeOpenStartTag(out, "div");
+		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeCloseStartTag(out);
+
 		if (totalItemCount > 0 && !allItemsShown) {
 			/* FIRST, PREV */
 			UiUtil.writeOpenStartTag(out, "div");
@@ -176,43 +180,52 @@ public class SampleContainerListSequenceFooterTag extends SampleContainerFooterT
 
 			UiUtil.writeEndTag(out, "div"); // numbers
 
-			UiUtil.writeOpenStartTag(out, "div");
-			UiUtil.writeAttribute(out, "class", infoStyleClass);
-			UiUtil.writeCloseStartTag(out);
-			
-			out.write("Showing [");
-			out.write(new Long(firstShown).toString());
-			out.write("-");
-			out.write(new Long(lastShown).toString());
-			out.write("]. Total ");
-			UiUtil.writeEscaped(out, new Long(totalItemCount).toString());
-			out.write(". ");
-			
-			UiUtil.writeOpenStartTag(out, "a");
-			UiUtil.writeAttribute(out, "class", "aranea-link-button");
-			UiUtil.writeAttribute(out, "href", "javascript:");
-			
-			UiStdWidgetCallUtil.writeEventAttributeForEvent(
-					pageContext,
-					out, 
-					"onclick", 
-					systemFormId, 
-					listId, 
-					allItemsShown ? SHOW_SLICE_EVENT_ID : SHOW_ALL_EVENT_ID, 
-							null,
-							null);
-			UiUtil.writeCloseStartTag_SS(out);
-			UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, showAll));
-			UiUtil.writeEndTag_SS(out, "a");
-
-			UiUtil.writeEndTag(out, "div"); //info
+			writeInfo(out, totalItemCount, allItemsShown, firstShown, lastShown);
 		} else {
-			
-			UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, noDataStringId));
+			if (totalItemCount == 0)
+				UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, noDataStringId));
+			else if (totalItemCount != 0 && allItemsShown) {
+				writeInfo(out, totalItemCount, allItemsShown, firstShown, lastShown);
+			}
 		}
 		
+		UiUtil.writeEndTag(out, "div");
+
 		// Continue
 		return EVAL_BODY_INCLUDE;		
+	}
+
+	protected void writeInfo(Writer out, long totalItemCount, boolean allItemsShown, long firstShown, long lastShown) throws IOException, JspException {
+		UiUtil.writeOpenStartTag(out, "div");
+		UiUtil.writeAttribute(out, "class", infoStyleClass);
+		UiUtil.writeCloseStartTag(out);
+		
+		out.write("Showing [");
+		out.write(new Long(firstShown).toString());
+		out.write("-");
+		out.write(new Long(lastShown).toString());
+		out.write("]. Total ");
+		UiUtil.writeEscaped(out, new Long(totalItemCount).toString());
+		out.write(". ");
+		
+		UiUtil.writeOpenStartTag(out, "a");
+		UiUtil.writeAttribute(out, "class", "aranea-link-button");
+		UiUtil.writeAttribute(out, "href", "javascript:");
+		
+		UiStdWidgetCallUtil.writeEventAttributeForEvent(
+				pageContext,
+				out, 
+				"onclick", 
+				systemFormId, 
+				listId, 
+				allItemsShown ? SHOW_SLICE_EVENT_ID : SHOW_ALL_EVENT_ID, 
+						null,
+						null);
+		UiUtil.writeCloseStartTag_SS(out);
+		UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, allItemsShown ? showPartial : showAll));
+		UiUtil.writeEndTag_SS(out, "a");
+
+		UiUtil.writeEndTag(out, "div"); //info
 	}
 	
 	protected void writeOpenEventLink(Writer out, String eventId, String eventParam, boolean enabled, String styleClass) throws IOException, JspException {
@@ -231,7 +244,7 @@ public class SampleContainerListSequenceFooterTag extends SampleContainerFooterT
 					eventParam,
 					null);
 		else
-			UiStdScriptUtil.writeEmptyEventAttribute(out, "onclick");                     
-		UiUtil.writeCloseStartTag_SS(out);                                    
+			UiStdScriptUtil.writeEmptyEventAttribute(out, "onclick");
+		UiUtil.writeCloseStartTag_SS(out);         
 	}
 }

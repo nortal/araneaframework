@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jsp:root
-	xmlns:jsp="http://java.sun.com/JSP/Page"
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:ui="http://araneaframework.org/tag-library/template"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
-		<ui:container>
-			<ui:containerLabel>
+		<ui:componentHeader>
+			<ui:componentName>
 				editable list
-			</ui:containerLabel>
-			
-			<ui:containerListBody>
+				</ui:componentName>
+		</ui:componentHeader>
+
+		<ui:component>
+			<ui:componentList>
 				<ui:formList id="editableList">
 					<ui:formListRows>
 						<ui:row>
@@ -39,10 +40,10 @@
 								<ui:checkbox id="booleanField" />
 							</ui:cell>
 							<ui:cell>
-								<ui:textInput id="stringField" size="40"/>
+								<ui:textInput id="stringField" size="40" />
 							</ui:cell>
 							<ui:cell>
-								<ui:numberInput id="longField" size="5"/>
+								<ui:numberInput id="longField" size="5" />
 							</ui:cell>
 							<ui:cell width="0">
 								<ui:linkButton id="add" showLabel="false">
@@ -52,8 +53,8 @@
 						</ui:row>
 					</ui:formListAddForm>
 				</ui:formList>
-			</ui:containerListBody>
-			
-		</ui:container>
+			</ui:componentList>
+
+		</ui:component>
 	</ui:widgetContext>
 </jsp:root>

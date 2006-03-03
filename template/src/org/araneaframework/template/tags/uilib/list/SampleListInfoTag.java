@@ -29,6 +29,7 @@ import org.araneaframework.uilib.list.SequenceHelper;
 
 
 /**
+ * XXX: remove
  * List widget info tag.
  * 
  * @author Oleg Mürk

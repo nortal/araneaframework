@@ -74,7 +74,7 @@
 				</ui:componentList>
 			
 				<!-- Sequence -->
-				<ui:listSequenceFooter/>
+				<ui:componentListFooter/>
 
 			</ui:component>
 		

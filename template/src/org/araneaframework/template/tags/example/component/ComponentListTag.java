@@ -1,4 +1,4 @@
-package org.araneaframework.template.tags.example;
+package org.araneaframework.template.tags.example.component;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
@@ -10,29 +10,24 @@ import org.araneaframework.jsp.util.UiUtil;
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
  * @jsp.tag
- *   name = "componentForm"
+ *   name = "componentList"
  *   body-content = "JSP"
+ *   description = "Starts a container that suitable for inserting &lt;listRows&gt;"
  */
-public class ComponentFormTag extends UiLayoutBaseTag {
-	public final static String COMPONENT_FORM_STYLE_CLASS = "form";
-	
-	protected String widthClass;
+public class ComponentListTag extends UiLayoutBaseTag {
+	public final static String COMPONENT_LIST_STYLE_CLASS = "data";
 	
 	protected void init() {
 		super.init();
-		styleClass = ComponentFormTag.COMPONENT_FORM_STYLE_CLASS;
+		styleClass = ComponentListTag.COMPONENT_LIST_STYLE_CLASS;
 	}
 	
 	protected int before(Writer out) throws Exception {
 		super.before(out);
-		
 		UiUtil.writeOpenStartTag(out, "table");
-		UiUtil.writeAttribute(out, "class", styleClass);
-		
-		UiUtil.writeAttribute(out, "width", width);
-		UiUtil.writeAttribute(out, "height", height);
+		UiUtil.writeAttribute(out, "class", getStyleClass());
 		UiUtil.writeCloseStartTag(out);
-		
+
 		return EVAL_BODY_INCLUDE;
 	}
 
@@ -43,6 +38,6 @@ public class ComponentFormTag extends UiLayoutBaseTag {
 	}
 
 	public UiLayoutRowTagInterface getRowTag(String styleClass) throws JspException {
-		return new UiStdLayoutRowTag(styleClass, getCellClass());
+		return new UiStdLayoutRowTag(styleClass, null);
 	}
 }
