@@ -58,9 +58,8 @@ public class PersonAddEditWidget extends BaseWidget {
 		putViewData("label", editMode ? "Edit person" : "Add person");
 		addGlobalEventListener(new ProxyEventListener(this));
 		
-		buildPersonEditForm();
-
-		addWidget("personForm", buildPersonEditForm());
+		form = buildPersonEditForm();
+		addWidget("personForm", form);
 	}
 
 	private BeanFormWidget buildPersonEditForm() throws Exception {
