@@ -296,22 +296,6 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     return widget;
   }
   
-  protected void handleException(Exception e) throws Exception {
-    if (getEnvironment().getEntry(ContinuationManagerContext.class) != null
-        && getEnvironment().getEntry(ExceptionHandlerFactory.class) != null) {
-      ContinuationManagerContext contCtx = 
-        (ContinuationManagerContext) getEnvironment().getEntry(ContinuationManagerContext.class);
-      
-      if (!contCtx.isRunning()) {
-        ExceptionHandlerFactory handlerFactory = 
-          (ExceptionHandlerFactory) getEnvironment().getEntry(ExceptionHandlerFactory.class);
-        contCtx.start(handlerFactory.buildExceptionHandler(e, getChildWidgetEnvironment()));
-      }
-    }
-    
-    throw e;
-  }
-  
   //*******************************************************************
   // PROTECTED CLASSES
   //*******************************************************************

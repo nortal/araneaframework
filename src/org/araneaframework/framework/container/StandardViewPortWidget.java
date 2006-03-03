@@ -70,20 +70,4 @@ public class StandardViewPortWidget extends StandardWidget {
       output.popAttribute(VIEW_PORT_WIDGET_KEY);
     }
   }
-  
-  protected void handleException(Exception e) throws Exception {
-    if (getEnvironment().getEntry(ContinuationManagerContext.class) != null
-        && getEnvironment().getEntry(ExceptionHandlerFactory.class) != null) {
-      ContinuationManagerContext contCtx = 
-        (ContinuationManagerContext) getEnvironment().getEntry(ContinuationManagerContext.class);
-      
-      if (!contCtx.isRunning()) {
-        ExceptionHandlerFactory handlerFactory = 
-          (ExceptionHandlerFactory) getEnvironment().getEntry(ExceptionHandlerFactory.class);
-        contCtx.start(handlerFactory.buildExceptionHandler(e, getChildWidgetEnvironment()));
-      }
-    }
-    
-    throw e;
-  }
 }
