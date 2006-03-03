@@ -24,13 +24,12 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.BaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.uilib.form.control.Control;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
+import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
@@ -85,6 +84,7 @@ public class CompanyListWidget extends BaseWidget {
 		//addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
 		temp.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
 		temp.addBeanColumn("address", "#Address", true, new SimpleColumnFilter.Like(), new TextControl());
+		temp.addListColumn(new ListColumn("dummy"));
 		return temp;
 	}
 	

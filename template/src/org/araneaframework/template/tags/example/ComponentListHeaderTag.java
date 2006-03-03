@@ -20,7 +20,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  * @author Taimo Peelo (taimo@webmedia.ee)
  * @jsp.tag
  *   name = "componentListHeader"
- *   body-content = "JSP"
+ *   body-content = "empty"
  *   description = "Inside this tag list header should be written out." 
  */
 
@@ -110,12 +110,7 @@ public class ComponentListHeaderTag extends UiPresentationTag {
 			
 			// Write cell
 			UiUtil.writeEndTag(out, "th");
-		} 
-	}
-	
-	protected int after(Writer out) throws Exception {
+		}
 		UiUtil.writeEndTag(out, "tr");
-		super.after(out);
-		return EVAL_PAGE;
 	}
 }

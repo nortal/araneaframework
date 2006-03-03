@@ -13,13 +13,13 @@
 			<ui:container>
 			
 				<!-- Body -->
-				<ui:containerListBody>
+				<ui:componentList>
 					<!-- Title -->
-					<ui:listTitleRow/>					
+					<ui:componentListHeader/>
 					
 					<!-- Filter -->
 					<ui:listFilter>
-						<ui:row>
+						<ui:row styleClass="filter">
 							<ui:cell/>
 	
 							<ui:cell>
@@ -55,13 +55,15 @@
 							
 							<c:if test="${contextWidget.data.allowRemove}">
 								<ui:cell>
-									<ui:listRowLinkButton eventId="remove" labelId="#Remove"/>
+									<ui:listRowLinkButton eventId="remove">
+										<ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
+									</ui:listRowLinkButton>
 								</ui:cell>
 							</c:if>
 							
 						</ui:row>
 					</ui:listRows>				
-				</ui:containerListBody>
+				</ui:componentList>
 			
 				<!-- Sequence -->
 				<ui:listSequenceFooter/>

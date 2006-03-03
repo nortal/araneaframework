@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.BaseWidget;
@@ -29,6 +28,7 @@ import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
@@ -89,6 +89,10 @@ public class PersonListWidget extends BaseWidget {
 		temp.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
 		temp.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
 		temp.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
+		
+		// The dummy column without label (in list rows, some listRowLinkButton's will be written there).
+		// Needed to write out componentListHeader with correct number of columns. 
+		temp.addListColumn(new ListColumn("dummy"));
 		return temp;
 	}
 	

@@ -17,12 +17,9 @@
 package org.araneaframework.example.main.web.contract;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.example.main.BaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
 import org.araneaframework.template.framework.container.StandardWizardWidget;
 import org.araneaframework.template.framework.context.WizardContext;
 
@@ -32,9 +29,9 @@ import org.araneaframework.template.framework.context.WizardContext;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class ContractEditWidget extends BaseWidget {
+public class ContractAddEditWidget extends BaseWidget {
 	
-	private static final Logger log = Logger.getLogger(ContractEditWidget.class);
+	private static final Logger log = Logger.getLogger(ContractAddEditWidget.class);
 	
 	private Long id = null;
 	private ContractCompanyEditWidget company;
@@ -44,7 +41,7 @@ public class ContractEditWidget extends BaseWidget {
   /**
    * Constructor for adding new contract. 
    */
-	public ContractEditWidget() {
+	public ContractAddEditWidget() {
 		super();
 	}
 	
@@ -52,14 +49,14 @@ public class ContractEditWidget extends BaseWidget {
    * Constructor for editing existing contract with specified Id.
    * @param id Contract's Id.
    */
-	public ContractEditWidget(Long id) {
+	public ContractAddEditWidget(Long id) {
 		this();
 		this.id = id;
 	}
 	
   protected void init() throws Exception {
     log.debug("TemplateContractWizardWidget init called");
-    setViewSelector(id != null ? "contract/contractEdit" : "contract/contractAdd");
+    setViewSelector("contract/contractAddEdit");
     company = new ContractCompanyEditWidget();
     person = new ContractPersonEditWidget();
     notes = new ContractNotesEditWidget();
@@ -78,34 +75,28 @@ public class ContractEditWidget extends BaseWidget {
     }
     
     wizard.addEventListener(new WizardContext.EventListener() {
-			public void onGoto(Widget page) throws Exception {}    	
-			public void onSubmit() throws Exception {
-		    log.debug("Event 'save' received!");
-		    if (validate()) {
-			    ContractMO contract = id != null ? (ContractMO) getGeneralDAO().getById(ContractMO.class, id) : new ContractMO();
-			    contract.setCompany(company.getCompany());
-			    contract.setPerson(person.getPerson());
-			    contract.setNotes(notes.getNotes());
-		      if (id != null) {
-		      	getGeneralDAO().edit(contract);
-		      } else {
-		        id = getGeneralDAO().add(contract);      	      	
-		      }
-		      log.debug("Contract saved, id = " + id);
-		      getFlowCtx().finish(id);
-		    }
-			}
-			public void onCancel() throws Exception {
-		    log.debug("Event 'cancel' received!");
-		    getFlowCtx().cancel();
-			}
+    	public void onGoto(Widget page) throws Exception {}    	
+    	public void onSubmit() throws Exception {
+    		log.debug("Event 'save' received!");
+    		if (validate()) {
+    			ContractMO contract = id != null ? (ContractMO) getGeneralDAO().getById(ContractMO.class, id) : new ContractMO();
+    			contract.setCompany(company.getCompany());
+    			contract.setPerson(person.getPerson());
+    			contract.setNotes(notes.getNotes());
+    			if (id != null) {
+    				getGeneralDAO().edit(contract);
+    			} else {
+    				id = getGeneralDAO().add(contract);      	      	
+    			}
+    			log.debug("Contract saved, id = " + id);
+    			getFlowCtx().finish(id);
+    		}
+    	}
+    	public void onCancel() throws Exception {
+    		log.debug("Event 'cancel' received!");
+    		getFlowCtx().cancel();
+    	}
     });
-  }
-  
-  protected void render(OutputData output) throws Exception {
-    log.debug("TemplateContractWizardWidget renderWizard called");
-    ServletUtil.include(id != null ? "/WEB-INF/jsp/contract/contractEdit.jsp" : "/WEB-INF/jsp/contract/contractAdd.jsp",
-    		getEnvironment(), (ServletOutputData) output);
   }
   
   protected boolean validate() throws Exception {

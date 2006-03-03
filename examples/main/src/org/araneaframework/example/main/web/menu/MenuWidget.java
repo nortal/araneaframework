@@ -24,9 +24,8 @@ import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.company.CompanyChooseAndEditWidget;
 import org.araneaframework.example.main.web.company.CompanyChooseAndViewWidget;
 import org.araneaframework.example.main.web.company.CompanyEditWidget;
-import org.araneaframework.example.main.web.contract.ContractChooseAndEditWidget;
-import org.araneaframework.example.main.web.contract.ContractChooseAndViewWidget;
-import org.araneaframework.example.main.web.contract.ContractEditWidget;
+import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
+import org.araneaframework.example.main.web.contract.ContractListWidget;
 import org.araneaframework.example.main.web.demo.DemoCheckboxList;
 import org.araneaframework.example.main.web.demo.DemoDisplayForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
@@ -89,9 +88,8 @@ public class MenuWidget extends TemplateMenuWidget  {
 			result.addMenuItem("Management.Companies", new MenuItem("Edit", CompanyChooseAndEditWidget.class));
 			
 			result.addMenuItem("Management", new MenuItem("Contracts"));
-			result.addMenuItem("Management.Contracts", new MenuItem("View", ContractChooseAndViewWidget.class));
-			result.addMenuItem("Management.Contracts", new MenuItem("Add", ContractEditWidget.class));
-			result.addMenuItem("Management.Contracts", new MenuItem("Edit", ContractChooseAndEditWidget.class));
+			result.addMenuItem("Management.Contracts", new MenuItem("View_Edit", ContractListWidget.class));
+			result.addMenuItem("Management.Contracts", new MenuItem("Add", ContractAddEditWidget.class));
 		}
 		
     // Another way of adding menuitems is available

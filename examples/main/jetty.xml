@@ -15,7 +15,6 @@
   <Call name="getContext">
   	<Arg>/</Arg>
     <Call name="addServlet">
-    		<Arg>Redirect</Arg>
     		<Arg>/</Arg>
     		<Arg>org.araneaframework.example.servlets.RedirectionServlet</Arg>
 	</Call>

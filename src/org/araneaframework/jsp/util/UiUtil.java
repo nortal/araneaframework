@@ -47,7 +47,7 @@ import org.araneaframework.jsp.tag.uilib.list.UiListTag;
  */
 public class UiUtil {
 	private static final Map attributeErrorMap = new HashMap();
-	public static final String MEANINGFUL_ERR_MSG = "Meaningful error message";
+	public static final String MEANINGFUL_ERR_MSG = "Sorry, no further information at the time.";
 
 	static {
 		attributeErrorMap.put(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, MEANINGFUL_ERR_MSG);
@@ -55,35 +55,33 @@ public class UiUtil {
 		/*attributeErrorMap.put(UiEditableListTag.EDITABLE_LIST_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
 		attributeErrorMap.put(UiEditableListTag.EDITABLE_LIST_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);*/
 
-		attributeErrorMap.put(UiElementTag.KEY_REQUEST, MEANINGFUL_ERR_MSG);
+		attributeErrorMap.put(UiElementTag.KEY_REQUEST, "Expected <ui:element> tag not found from PageContext. Probably this is an attempt to use <ui:elementContent> or <ui:attribute> outside <ui:element> tag.");
 
 		attributeErrorMap.put(UiFormElementTag.ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
 		
 		attributeErrorMap.put(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);
+		attributeErrorMap.put(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, "Expected Form ViewModel not found from PageContext. Make sure list is used inside <ui:form> tag.");
 		attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiFormTag.FORM_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
+		attributeErrorMap.put(UiFormTag.FORM_ID_KEY_REQUEST, "Form ID could not be retrieved from PageContext. Make sure form is used inside <ui:form> tag.");
 		attributeErrorMap.put(UiFormTag.FORM_KEY_REQUEST, MEANINGFUL_ERR_MSG);
 		
 		attributeErrorMap.put(UiLayoutRowTagInterface.KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiLayoutTagInterface.KEY_REQUEST, "Expected to find information about layout from context.");
+		attributeErrorMap.put(UiLayoutTagInterface.KEY_REQUEST, "Expected information about layout not found from PageContext.");
 
-		attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);
+		attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, "Expected List ViewModel not found from PageContext. Make sure list is used inside <ui:list> tag.");
 		attributeErrorMap.put(UiListTag.LIST_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		
 		attributeErrorMap.put(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		
+
 		attributeErrorMap.put(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, MEANINGFUL_ERR_MSG);
 		
-		attributeErrorMap.put(UiSystemFormTag.ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
+		attributeErrorMap.put(UiSystemFormTag.ID_KEY_REQUEST,"Expected SystemForm ID not found from PageContext. Make sure your tags are surrounded by <ui:systemForm>.");
 		
 		/*attributeErrorMap.put(UiTreeNodesTag.NODE_KEY_REQUEST, MEANINGFUL_ERR_MSG);
 
 		attributeErrorMap.put(UiTreeTag.TREE_FULL_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
 		attributeErrorMap.put(UiTreeTag.TREE_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);*/
 
-		attributeErrorMap.put(UiWidgetContainer.REQUEST_CONTEXT_KEY, MEANINGFUL_ERR_MSG);
+		attributeErrorMap.put(UiWidgetContainer.REQUEST_CONTEXT_KEY, "Expected WidgetContainer not found from PageContext. Make sure your tags are surrounded by <ui:viewPort>.");
 	}
   
   /**

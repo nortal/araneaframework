@@ -7,16 +7,16 @@
 >
 	<ui:widgetContext>
 	
-		<h2>Contacts (SubBeanList)</h2>
-		
 		<ui:list id="list">
-		
-			<ui:container>
+			<ui:componentHeader>
+				<ui:componentName>Contacts (SubBeanList)</ui:componentName>
+			</ui:componentHeader>
+					
+			<ui:component>
 						
 				<!-- Body -->
-				<ui:containerListBody>
-					<!-- Title -->				
-					<ui:listTitleRow/>
+				<ui:componentList>
+					<ui:componentListHeader/>
 					
 					<!-- Filter -->
 					<ui:listFilter>
@@ -71,12 +71,12 @@
 							
 						</ui:row>
 					</ui:listRows>				
-				</ui:containerListBody>
+				</ui:componentList>
 			
 				<!-- Sequence -->
 				<ui:listSequenceFooter/>
 
-			</ui:container>
+			</ui:component>
 		
 		</ui:list>
 

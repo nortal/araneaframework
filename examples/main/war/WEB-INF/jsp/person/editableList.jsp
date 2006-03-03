@@ -17,16 +17,18 @@
 		<ui:list id="list">
 		<ui:formList>
 		
-			<ui:container>
+			<ui:componentHeader>
+				<ui:componentName>Editable person list</ui:componentName>
+			</ui:componentHeader>
+		
+			<ui:component>
 			
-				<!-- Body -->
-				<ui:containerListBody>
-					<!-- Title -->				
-					<ui:listTitleRow/>
-					
+				<ui:componentList>
+					<ui:componentListHeader/>
+
 					<!-- Filter -->
 					<ui:listFilter>
-						<ui:row>
+						<ui:row styleClass="filter">
 							<ui:cell/>
 	
 							<ui:cell>
@@ -98,8 +100,8 @@
 							</c:choose>
 
 							<ui:cell width="0">
-								<ui:linkButton id="editSave" showLabel="false"><ui:image code="buttonChange"/></ui:linkButton>
-								<ui:linkButton id="delete" showLabel="false"><ui:image code="buttonDelete"/></ui:linkButton>
+								<ui:linkButton id="editSave" showLabel="false"><ui:image code="buttonChange" alt="Edit person" title="Edit person"/></ui:linkButton>
+								<ui:linkButton id="delete" showLabel="false"><ui:image code="buttonDelete" alt="Remove person" title="Remove person"/></ui:linkButton>
 							</ui:cell>							
 						</ui:row>
 					<!-- </ui:listRows> -->
@@ -129,13 +131,14 @@
 								<ui:linkButton id="add" showLabel="false"><ui:image code="buttonAdd"/></ui:linkButton>
 							</ui:cell>
 						</ui:row>		
-					</ui:formListAddForm>					
-				</ui:containerListBody>
+					</ui:formListAddForm>
+
+				</ui:componentList>
 			
 				<!-- Sequence -->
-				<ui:listSequenceFooter/>			
+				<ui:listSequenceFooter/>
 
-			</ui:container>
+			</ui:component>
 		
 		</ui:formList>
 		</ui:list>

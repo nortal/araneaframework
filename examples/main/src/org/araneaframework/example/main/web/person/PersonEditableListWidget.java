@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
@@ -42,6 +41,7 @@ import org.araneaframework.uilib.list.formlist.FormRow;
 import org.araneaframework.uilib.list.formlist.FormRowHandler;
 import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
@@ -69,6 +69,8 @@ public abstract class PersonEditableListWidget extends BaseWidget {
 		list.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
 		list.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
 		list.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
+		
+		list.addListColumn(new ListColumn("dummy"));
 		
 		list.setListDataProvider(buildListDataProvider());
 		list.setFormRowHandler(buildFormRowHandler());
@@ -184,7 +186,6 @@ public abstract class PersonEditableListWidget extends BaseWidget {
 			form.addElement("surname", "#Last name", new TextControl(), new StringData(), true);
 			form.addElement("phone", "#Phone no", new TextControl(), new StringData(), false);
 			form.addElement("birthdate", "#Birthdate", new DateControl(), new TimestampData(), false);
-			
 		}
 	}
 }

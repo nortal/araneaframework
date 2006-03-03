@@ -19,7 +19,6 @@ package org.araneaframework.example.main.web.list;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.BaseWidget;
 import org.araneaframework.example.main.business.model.GeneralMO;
@@ -27,13 +26,11 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
 public class SimpleSubBeanListWidget extends BaseWidget {
-	
-	private static final long serialVersionUID = 1L;
-	
 	protected static final Logger log = Logger.getLogger(SimpleSubBeanListWidget.class);
 	
 	private ListWidget list;
@@ -55,12 +52,11 @@ public class SimpleSubBeanListWidget extends BaseWidget {
 		temp.addBeanColumn("name.lastname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
 		temp.addBeanColumn("address.country", "#Country", true, new SimpleColumnFilter.Like(), new TextControl());
 		temp.addBeanColumn("address.city", "#City", true, new SimpleColumnFilter.Like(), new TextControl());
+		temp.addListColumn(new ListColumn("dummy"));
 		return temp;
 	}
 	
 	private class DataProvider extends MemoryBasedListDataProvider {
-		private static final long serialVersionUID = 1L;
-		
 		protected DataProvider() {
 			super(ContactMO.class);
 		}
@@ -95,7 +91,6 @@ public class SimpleSubBeanListWidget extends BaseWidget {
 	}
 	
 	public static class ContactMO implements GeneralMO {
-		private static final long serialVersionUID = 1L;
 		private Long id;
 		private NameMO name;
 		private AddressMO address;
@@ -121,7 +116,6 @@ public class SimpleSubBeanListWidget extends BaseWidget {
 	}
 	
 	public static class NameMO implements Serializable {
-		private static final long serialVersionUID = 1L;
 		private String firstname;
 		private String lastname;
 		public String getFirstname() {
@@ -139,7 +133,6 @@ public class SimpleSubBeanListWidget extends BaseWidget {
 	}
 	
 	public static class AddressMO implements Serializable {
-		private static final long serialVersionUID = 1L;
 		private String country;
 		private String city;
 		public String getCity() {
