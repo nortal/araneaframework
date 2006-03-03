@@ -125,10 +125,10 @@ public class MenuWidget extends TemplateMenuWidget  {
   
   protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
     if (ExceptionUtils.getRootCause(e) != null) {
-      putViewData("rootStackTrace", 
+      putViewDataOnce("rootStackTrace", 
           ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
     }        
-    putViewData("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
+    putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
     
     ServletUtil.include("/WEB-INF/jsp/menuError.jsp", getEnvironment(), 
         (ServletOutputData) output);

@@ -157,6 +157,8 @@ public abstract class StandardWidget extends BaseWidget implements Standard.Stan
   }
 
   protected void update(InputData input) throws Exception {
+    viewDataOnce.clear();
+    
     handleUpdate(input);
     
     Iterator ite = (new HashMap(getChildren())).keySet().iterator();

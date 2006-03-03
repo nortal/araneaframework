@@ -3,6 +3,8 @@
 
 SPAN.display { padding: 6px 5px 5px 5px; text-align: left; }
 
+.errorLink {font-size: larger}
+
 DIV.template-container {
 
    color: #000;
