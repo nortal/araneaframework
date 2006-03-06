@@ -231,8 +231,6 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
             
     if (top != null)
       start(top, null, null);
-    
-    log.debug("Initialized flow container '" + getClass().getName() + "'");
   }
   
   protected void destroy() throws Exception {
