@@ -236,6 +236,8 @@ public abstract class StandardWidget extends BaseWidget implements Standard.Stan
     Object eventId = getEventId(input);        
     List listener = (List)eventListeners.get(eventId);  
     
+    log.debug("Delivering event '" + eventId +"' to widget '" + getClass().getName() + "'");
+    
     boolean globalListenerHandled = false;
     
     if (globalListener != null) {

@@ -272,8 +272,11 @@ public abstract class StandardService extends BaseService implements Standard.St
    * {@link NoSuchActionListenerException}.
    */
   protected void handleAction(InputData input, OutputData output) throws Exception {
-    Object actionId = getActionId(input);
+    Object actionId = getActionId(input);    
     ActionListener listener = (ActionListener)actionListeners.get(actionId);
+    
+    log.debug("Delivering action '" + actionId +"' to service '" + getClass().getName() + "'");    
+    
     if (listener != null ) {
       listener.processAction(actionId, input, output);
     }

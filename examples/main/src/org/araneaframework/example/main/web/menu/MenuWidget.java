@@ -54,6 +54,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		super(topWidget);
 	}
   
+  
   protected void init() throws Exception {
     super.init();
     

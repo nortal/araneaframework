@@ -34,7 +34,7 @@ public class StandardSessionListener implements HttpSessionListener {
   public static final Logger log = Logger.getLogger(StandardSessionListener.class);
   
   public void sessionCreated(HttpSessionEvent sessEvent) {
-    log.debug("session "+sessEvent.getSession().getId()+" created");
+    log.debug("Session '"+sessEvent.getSession().getId()+"' created");
   }
 
   public void sessionDestroyed(HttpSessionEvent sessEvent) {
@@ -45,12 +45,11 @@ public class StandardSessionListener implements HttpSessionListener {
       try {
         service._getRelocatable().overrideEnvironment(new StandardEnvironment(null, new HashMap()));
         service._getComponent().destroy();
-        log.debug("Session "+sessEvent.getSession()+" destroyed with the service "+service);
       }
       catch(Exception e) {
-        log.error(ExceptionUtils.getFullStackTrace(e));
+        log.error("Exception while destroying service in an expired session", e);
       }
     }
-    log.debug("session "+sessEvent.getSession().getId()+" destroyed");
+    log.debug("Session "+sessEvent.getSession().getId()+" destroyed");
   }
 }

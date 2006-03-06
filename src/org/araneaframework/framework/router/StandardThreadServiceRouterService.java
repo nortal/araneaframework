@@ -39,18 +39,6 @@ public class StandardThreadServiceRouterService extends BaseServiceRouterService
    */
   public static final String THREAD_SERVICE_KEY = "threadServiceId";
   
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Thread router service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Thread router service destroyed.");
-  }
-  
   protected Object getServiceId(InputData input) throws Exception {
     return input.getGlobalData().get(THREAD_SERVICE_KEY);
   }

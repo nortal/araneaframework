@@ -40,16 +40,22 @@ public class ProxyEventListener implements EventListener {
     try {
       Method eventHandler;
       // lets try to find a handle method with an empty argument
-      try {
+      try {               
 	      eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] {});
+        
+        log.debug("Calling method '" + eventHandlerName + "()' of class '" + eventTarget.getClass().getName() + "'.");       
 	      eventHandler.invoke(eventTarget, new Object[] {});
+                      
 	      return;
       } catch (NoSuchMethodException e) {/*OK*/}
       
       // lets try to find a method with a String type argument
-      try {
+      try {               
         eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] { String.class });
-        eventHandler.invoke(eventTarget, new Object[] { eventParameter });
+        
+        log.debug("Calling method '" + eventHandlerName + "(String)' of class '" + eventTarget.getClass().getName() + "'.");       
+        eventHandler.invoke(eventTarget, new Object[] { eventParameter });                
+        
         return;
       } catch (NoSuchMethodException e) {/*OK*/}
       

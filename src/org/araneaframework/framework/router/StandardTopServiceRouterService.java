@@ -38,18 +38,6 @@ public class StandardTopServiceRouterService extends BaseServiceRouterService {
    */
   public static final String TOP_SERVICE_KEY = "topServiceId";
   
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Top service router service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Top service router service destroyed.");
-  }
-  
   protected Object getServiceId(InputData input) throws Exception {
     return input.getGlobalData().get(TOP_SERVICE_KEY);
   }

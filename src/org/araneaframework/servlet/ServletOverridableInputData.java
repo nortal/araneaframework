@@ -14,12 +14,21 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.web.util;
+package org.araneaframework.servlet;
 
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import java.io.Serializable;
+import javax.servlet.http.HttpServletRequest;
 
-public class EmptyWidget extends StandardPresentationWidget {
-	protected void init() throws Exception {
-		setViewSelector("util/empty");
-	}
+/**
+ * A {@link org.araneaframework.servlet.ServletOutputData} where you can override the request
+ * and response stream.
+ * 
+ * @author "Toomas Römer" <toomas@webmedia.ee>
+ */
+public interface ServletOverridableInputData extends ServletInputData, Serializable {
+  /**
+   * Sets the request stream to request.
+   * @param request
+   */
+  public void setRequest(HttpServletRequest request);
 }

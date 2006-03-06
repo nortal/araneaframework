@@ -61,21 +61,16 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     entries.put(TransactionContext.class, this);
     
     childWidget._getComponent().init(new StandardEnvironment(getChildWidgetEnvironment(), entries));
-    
-    log.debug("Transactional filter widget initialized.");
   }
   
   protected void destroy() throws Exception {
     super.destroy();
-    
-    log.debug("Transactional filter service destroyed.");
   }
 
   // Template   
   protected void update(InputData input) throws Exception {
     consistent = isConsistent(input);
     if (isConsistent()) {
-      log.debug("Routing update(), transaction id '"+getTransactionId()+"'.");
       childWidget._getWidget().update(input); 
     }
     else {
@@ -85,7 +80,6 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   
   protected void event(Path path, InputData input) throws Exception {
     if (isConsistent()) {
-      log.debug("Routing event(), transaction id '"+getTransactionId()+"'.");
       childWidget._getWidget().event(path, input);
     } else {
       log.debug("Transaction id '"+getTransactionId()+"' not consistent for routing event().");
@@ -94,7 +88,6 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   
   protected void process() throws Exception {
     if (isConsistent()) {
-      log.debug("Routing process(), transaction id '"+getTransactionId()+"'.");
       childWidget._getWidget().process();
     }
     else {

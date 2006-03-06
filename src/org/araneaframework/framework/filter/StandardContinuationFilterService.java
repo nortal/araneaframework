@@ -53,7 +53,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     
     try {
       if (isRunning()) {
-        log.debug("Routing request through standard continuation.");
+        log.debug("Routing action to continuation");
         continuation._getService().action(path, input, output);
       }
       
@@ -64,7 +64,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
         
         try {                          
           try {
-            log.debug("Routing request through the continuation.");
+            log.debug("Routing action to child service");
             childService._getService().action(path, input, output);
           }
           finally {
@@ -77,6 +77,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
 
           arUtil.rollback();
           
+          log.debug("Routing action to continuation");          
           continuation._getService().action(null, input, output);
         }
       }

@@ -33,10 +33,10 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.servlet.ServletFileUploadOutputExtension;
+import org.araneaframework.servlet.ServletFileUploadInputExtension;
 import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.core.StandardServletFileUploadOutputExtension;
-import org.araneaframework.servlet.core.StandardServletInputData;
+import org.araneaframework.servlet.ServletOverridableInputData;
+import org.araneaframework.servlet.core.StandardServletFileUploadInputExtension;
 
 /**
  * A filter which parses a multipart request and extracts uploaded files.
@@ -45,18 +45,6 @@ import org.araneaframework.servlet.core.StandardServletInputData;
  */
 public class StandardServletFileUploadFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardServletFileUploadFilterService.class);
-
-  public void init() throws Exception {
-    super.init();
-
-    log.debug("File upload filter service initialized.");
-  }
-
-  protected void destroy() throws Exception {
-    super.destroy();
-
-    log.debug("File upload filter service destroyed.");
-  }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletRequest request = ((ServletOutputData) output).getRequest();
@@ -96,12 +84,15 @@ public class StandardServletFileUploadFilterService extends BaseFilterService {
         }
       }
       
+      log.debug("Parsed multipart request, found '" + fileItems.size() + 
+          "' file items and '" + parameterLists.size() + "' request parameters");
+      
       output.extend(
-          ServletFileUploadOutputExtension.class, 
-          new StandardServletFileUploadOutputExtension(fileItems));
+          ServletFileUploadInputExtension.class, 
+          new StandardServletFileUploadInputExtension(fileItems));
       
       request = new MultipartWrapper(request, parameterLists);
-      input = new StandardServletInputData(request);
+      ((ServletOverridableInputData) input).setRequest(request);
     }   
     
     super.action(path, input, output);

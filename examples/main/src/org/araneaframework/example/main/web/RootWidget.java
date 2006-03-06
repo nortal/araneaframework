@@ -23,7 +23,6 @@ import org.araneaframework.Environment;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.menu.MenuWidget;
-import org.araneaframework.example.main.web.util.EmptyWidget;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
@@ -37,9 +36,8 @@ public class RootWidget extends StandardPresentationWidget implements SecurityCo
 	private static final Logger log = Logger.getLogger(RootWidget.class);
 
 	protected void init() throws Exception {
-		addWidget("menu", new MenuWidget(new EmptyWidget()));
+		addWidget("menu", new MenuWidget(null));
 		setViewSelector("root");
-		log.debug("Root widget initialized");
 	}
   
   protected Environment getChildWidgetEnvironment() throws Exception {

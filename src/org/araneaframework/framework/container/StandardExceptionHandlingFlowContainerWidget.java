@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework.container;
 
+import org.apache.log4j.Logger;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -27,6 +28,8 @@ import org.araneaframework.servlet.util.AtomicResponseHelper;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public abstract class StandardExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget {
+  private static final Logger log = Logger.getLogger(StandardExceptionHandlingFlowContainerWidget.class);
+  
   protected Exception exception;  
   
   public StandardExceptionHandlingFlowContainerWidget() {
@@ -83,6 +86,8 @@ public abstract class StandardExceptionHandlingFlowContainerWidget extends Stand
     }
     catch (Exception e) {
       arUtil.rollback();
+      
+      log.error("Handling error:", e);
             
       renderExceptionHandler(output, e);
     }

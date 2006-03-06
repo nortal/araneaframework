@@ -39,18 +39,6 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
   private static final Logger log = Logger.getLogger(StandardCriticalExceptionHandlingFilterService.class);
   private ExceptionHandlerFactory factory;
   
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Exception handling filter service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Exception handling filter service destroyed.");
-  }
-  
   /**
    * Set the factory for creating the exception handling service.
    */

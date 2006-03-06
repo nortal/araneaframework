@@ -32,6 +32,7 @@ import org.araneaframework.Widget;
  * <code>WidgetInterface</code>. 
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public interface Standard extends Serializable, Composite, Viewable {
   /**

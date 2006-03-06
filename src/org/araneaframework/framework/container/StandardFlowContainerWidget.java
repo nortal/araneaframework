@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -28,9 +29,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardWidget;
-import org.araneaframework.framework.ContinuationManagerContext;
 import org.araneaframework.framework.EmptyCallStackException;
-import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.framework.ExtendedCallContext;
 import org.araneaframework.framework.FlowContext;
 
@@ -44,6 +43,8 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
+  private static final Logger log = Logger.getLogger(StandardFlowContainerWidget.class);
+  
   /**
    * The key used for the CallStack in the OutputData attribute set.
    */
@@ -51,10 +52,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   /**
    * The key of the callable child.
    */
-  public static final String CALLABLE_WIDGET_KEY = "callableWidget";
-  
-  private Map globalEnvironmentEntries = new HashMap();
-  private Map globalEnvEntryStacks = new HashMap();
+  public static final String CALLABLE_WIDGET_KEY = "callableWidget"; 
   
   //*******************************************************************
   // FIELDS
@@ -67,6 +65,9 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
    * The top callable widget.
    */
   protected Widget top;
+  
+  private Map globalEnvironmentEntries = new HashMap();
+  private Map globalEnvEntryStacks = new HashMap();
 
   //*******************************************************************
   // CONSTRUCTORS
@@ -95,6 +96,8 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     callable = decorateCallableWidget((Widget) callable);
     CallFrame frame = makeCallFrame((Widget) callable, configurator, handler);
     
+    log.debug("Starting flow '" + callable.getClass().getName() +"'");
+    
     if (_getChildren().get(CALLABLE_WIDGET_KEY) != null) {
       ((Widget) getChildren().get(CALLABLE_WIDGET_KEY))._getComponent().disable();      
       _getChildren().remove(CALLABLE_WIDGET_KEY);
@@ -114,6 +117,9 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
     CallFrame frame = makeCallFrame((Widget) callable, configurator, previousFrame.getHandler());
     
+    log.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + 
+        "' with flow '" + callable.getClass().getName() + "'");
+    
     removeWidget(CALLABLE_WIDGET_KEY);
     
     callStack.addFirst(frame);    
@@ -132,6 +138,8 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
     CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
     
+    log.debug("Finishing flow '" + previousFrame.getWidget().getClass().getName() + "'");
+    
     removeWidget(CALLABLE_WIDGET_KEY);
     if (frame != null) {
       _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());
@@ -149,6 +157,8 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
     CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
+    
+    log.debug("Cancelling flow '" + previousFrame.getWidget().getClass().getName() + "'");
     
     removeWidget(CALLABLE_WIDGET_KEY);
     if (frame != null) {
@@ -191,7 +201,9 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     return callStack.size() != 0;
   }
   
-  public void reset(final EnvironmentAwareCallback callback) throws Exception {      
+  public void reset(final EnvironmentAwareCallback callback) throws Exception {   
+    log.debug("Resetting all flows in '" + getClass().getName() + "'");
+    
     for (Iterator i = callStack.iterator(); i.hasNext();) {
       CallFrame frame = (CallFrame) i.next();
       
@@ -216,9 +228,11 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   
   protected void init() throws Exception {
     super.init();
-    
+            
     if (top != null)
       start(top, null, null);
+    
+    log.debug("Initialized flow container '" + getClass().getName() + "'");
   }
   
   protected void destroy() throws Exception {

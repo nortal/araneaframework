@@ -75,9 +75,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
     
     if (uiTldPath != null)
-      readTldMapping(); 
-    
-    log.debug("Aranea JSP configuration filter service initialized.");
+      readTldMapping();    
   }
   
   protected Environment getChildEnvironment() {

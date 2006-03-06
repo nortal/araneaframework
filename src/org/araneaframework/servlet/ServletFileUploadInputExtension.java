@@ -25,7 +25,7 @@ import org.apache.commons.fileupload.FileItem;
  * 
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public interface ServletFileUploadOutputExtension extends Serializable {
+public interface ServletFileUploadInputExtension extends Serializable {
   public FileItem getUploadedFile(String fieldName);
   public Map getUploadedFiles();
 }

@@ -64,14 +64,10 @@ public class StandardSerializingAuditFilterService extends BaseService {
 
   protected void init() throws Exception {
     child._getComponent().init(getEnvironment());
-    
-    log.debug("Serializing audit filter service initialized.");
   }
   
   protected void destroy() throws Exception {
     child._getComponent().destroy();
-    
-    log.debug("Serializing audit filter service destroyed.");
   }
   
   protected void propagate(Message message) throws Exception {
@@ -86,11 +82,14 @@ public class StandardSerializingAuditFilterService extends BaseService {
     HttpSession sess = (HttpSession) getEnvironment().getEntry(HttpSession.class);
     
     byte[] serialized = SerializationUtils.serialize(child);
-    log.debug("Session size: " + serialized.length);
+    log.debug("Serialized session size: " + serialized.length);
     
     if (testXmlSessionPath != null) {
+      String dumpPath = testXmlSessionPath + "/" + sess.getId() + ".xml";
+      log.debug("Dumping session XML to '" + dumpPath + "'");
+      
       XStream xstream = new XStream(new DomDriver());
-      PrintWriter writer = new PrintWriter(new FileWriter(testXmlSessionPath + "/" + sess.getId() + ".xml"));
+      PrintWriter writer = new PrintWriter(new FileWriter(dumpPath));
       xstream.toXML(child, writer);
       writer.close();
     }

@@ -39,17 +39,6 @@ public class StandardServletFileImportFilterService extends BaseFilterService {
   
   public static final String IMPORTER_TYPE_KEY = "importerType";
   
-	public void init() throws Exception {
-    super.init();
-    log.debug("Fileimport filter service initialized.");
-  }
-	
-  protected void destroy() throws Exception {
-    super.destroy();
-
-    log.debug("Fileimport filter service destroyed.");
-  }
-  
   protected void action(Path path, InputData input, OutputData output) throws Exception {
   	String type = (String)input.getGlobalData().get(IMPORTER_TYPE_KEY);
   	FileImporter importer = FileImportFactory.createFileImporter(type);
@@ -62,7 +51,7 @@ public class StandardServletFileImportFilterService extends BaseFilterService {
   			((ServletOutputData)output).getResponse().getOutputStream());
   	}
   	else {
-  		log.debug("No import keys present. Routing to child.");
+  		log.debug("Routing to child.");
   		childService._getService().action(path, input, output);
   	}
   }

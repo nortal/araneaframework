@@ -92,7 +92,7 @@ public abstract class BaseServiceRouterService extends BaseService {
       output.pushAttribute(getServiceKey(), currentServiceId);
       
       try {
-        log.debug("Routing request through service '"+currentServiceId+"'.");
+        log.debug("Routing action to service '"+currentServiceId+"' under router '" + getClass().getName() + "'");
         ((Service) _getChildren().get(currentServiceId))._getService().action(path, input, output);
       }
       finally {
@@ -100,7 +100,7 @@ public abstract class BaseServiceRouterService extends BaseService {
       }
     }
     else {
-      throw new NoSuchServiceException("Non-existent service " + currentServiceId);
+      throw new NoSuchServiceException("Service '" + currentServiceId +"' was not found under router '" + getClass().getName() + "'!");
     }
   }
   

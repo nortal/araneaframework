@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
@@ -33,9 +32,10 @@ import org.araneaframework.Relocatable;
 
 /**
  * The base class for all Aranea components. Base entities do not make a Composite pattern 
- * and only provide some very basic services.
+ * and only provide some very basic services (mainly syncronization and messaging service)
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public abstract class BaseComponent implements Component {
   //*******************************************************************
@@ -126,12 +126,13 @@ public abstract class BaseComponent implements Component {
       this.wait(1000);
       
       if (callCount != reentrantCallCount) {
-        log.warn("Deadlock or starvation suspected, call count=" + callCount + ", reentrant call coint=" + reentrantCallCount);
+        log.warn("Deadlock or starvation suspected, call count '" + callCount + "', reentrant call count '" + reentrantCallCount + "'");
         
         if (waitStart < System.currentTimeMillis() - 10000) {
-          //XXX can't throw this in production...
-          throw new AraneaRuntimeException("Deadlock or starvation suspected!");
-          //return;
+          log.error("Deadlock or starvation not solved in 10s, call count '" + 
+              callCount + "', reentrant call count '" + reentrantCallCount + "'", 
+              new AraneaRuntimeException("Deadlock or starvation suspected!"));
+          return;
         }
       }
     }    
@@ -267,7 +268,7 @@ public abstract class BaseComponent implements Component {
    */
   protected void _relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) throws Exception {
     if (!(parent._getComposite().getChildren().get(keyFrom) instanceof Relocatable)) {
-      throw new AraneaRuntimeException("Child "+keyFrom+" not an instance of Relocatable");
+      throw new AraneaRuntimeException("Child with key '"+keyFrom+"' of class '" + parent._getComposite().getChildren().get(keyFrom).getClass() + "' is not Relocatable");
     }
     
     Relocatable comp = (Relocatable) parent._getComposite().detach(keyFrom);

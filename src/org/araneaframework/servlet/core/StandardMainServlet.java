@@ -60,7 +60,7 @@ public abstract class StandardMainServlet extends HttpServlet {
       serviceAdapter._getComponent().init(env);
     } 
     catch (Exception e) {
-      log.error("Unable to initialize service adapter.");
+      log.error("Unable to start Aranea.", e);
       throw new ServletException(e);
     }
     

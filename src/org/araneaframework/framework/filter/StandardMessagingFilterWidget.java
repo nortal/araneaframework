@@ -57,8 +57,6 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     entries.put(MessageContext.class, this);
     
     childWidget._getComponent().init(new StandardEnvironment(getChildWidgetEnvironment(), entries));
-    
-    log.debug("Messaging filter service initialized.");
   }
   
   protected void update(InputData input) throws Exception {

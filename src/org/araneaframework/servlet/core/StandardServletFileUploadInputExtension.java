@@ -20,18 +20,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.fileupload.FileItem;
-import org.araneaframework.servlet.ServletFileUploadOutputExtension;
+import org.araneaframework.servlet.ServletFileUploadInputExtension;
 
 /**
  * A filter which parses a multipart request and extracts uploaded files.
  * 
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class StandardServletFileUploadOutputExtension implements ServletFileUploadOutputExtension {
+public class StandardServletFileUploadInputExtension implements ServletFileUploadInputExtension {
 
   private Map fileItems = new HashMap();
 
-  public StandardServletFileUploadOutputExtension(Map fileItems) {
+  public StandardServletFileUploadInputExtension(Map fileItems) {
     this.fileItems = fileItems;
   }
 

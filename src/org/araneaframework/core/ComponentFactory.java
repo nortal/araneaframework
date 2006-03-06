@@ -27,8 +27,7 @@ import org.araneaframework.Component;
  */
 public interface ComponentFactory extends Serializable {
   /**
-   * Returns a Component.
-   * @return the component
+   * Builds a Component.
    */
   public Component buildComponent();
 }

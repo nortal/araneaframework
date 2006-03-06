@@ -16,15 +16,20 @@
 
 package org.araneaframework.core;
 
+import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Message;
 import org.araneaframework.Path;
 
 public abstract class StandardRoutedMessage implements Message {
+  private static final Logger log = Logger.getLogger(StandardRoutedMessage.class);
+  
   private Path path;
+  private String destination;
   
   public StandardRoutedMessage(Path path) {
     this.path = path;
+    destination = path.toString();
   }
 
   public final void send(Object id, Component component) throws Exception {
@@ -42,8 +47,10 @@ public abstract class StandardRoutedMessage implements Message {
       
       if (path.hasNext())
         component._getComponent().propagate(this);
-      else
+      else {
+        log.debug("Delivering message routed to '" + destination + "'");
         execute(component);
+      }
     }
   }
   

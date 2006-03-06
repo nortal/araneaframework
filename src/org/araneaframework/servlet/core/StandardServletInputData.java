@@ -28,6 +28,7 @@ import org.araneaframework.core.NoCurrentOutputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.servlet.ServletInputData;
+import org.araneaframework.servlet.ServletOverridableInputData;
 
 /**
  * A ServletInputdata implementation which uses a StandardPath for determining
@@ -35,7 +36,7 @@ import org.araneaframework.servlet.ServletInputData;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardServletInputData implements ServletInputData {
+public class StandardServletInputData implements ServletOverridableInputData {
   private HttpServletRequest req;
   private StringBuffer scopeBuf = new StringBuffer();
   private Map extensions = new HashMap();
@@ -48,7 +49,15 @@ public class StandardServletInputData implements ServletInputData {
    * @param request
    */
   public StandardServletInputData(HttpServletRequest request) {
+    setRequest(request);
+  }
+  
+  public void setRequest(HttpServletRequest request) {
     req = request;
+    
+    globalData.clear();
+    scopedData.clear();
+    
     Enumeration params = req.getParameterNames();
     
     while (params.hasMoreElements()) {
