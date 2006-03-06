@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.web.menu;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.araneaframework.Component;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
@@ -34,8 +35,8 @@ import org.araneaframework.example.main.web.error.EventErrorWidget;
 import org.araneaframework.example.main.web.error.InitErrorWidget;
 import org.araneaframework.example.main.web.error.RenderErrorWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
-import org.araneaframework.example.main.web.person.PersonChooseAndEditWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
+import org.araneaframework.example.main.web.person.PersonListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
@@ -43,6 +44,7 @@ import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.util.ServletUtil;
 import org.araneaframework.template.framework.TemplateMenuWidget;
 import org.araneaframework.uilib.core.MenuItem;
+import org.araneaframework.uilib.support.FlowCreator;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -73,7 +75,12 @@ public class MenuWidget extends TemplateMenuWidget  {
 		
 		result.addMenuItem(null, new MenuItem("Management")); {
 			result.addMenuItem("Management", new MenuItem("Persons"));
-			result.addMenuItem("Management.Persons", new MenuItem("View_Add", PersonChooseAndEditWidget.class));
+			// example use of simple FlowCreator
+			result.addMenuItem("Management.Persons", new MenuItem("View_Add", new FlowCreator() {
+				public Component createFlow() {
+					return new PersonListWidget(true);
+				}
+			}));
 			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Memory", PersonEditableListWidget.Memory.class));
 			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Backend", PersonEditableListWidget.Backend.class));
 			
