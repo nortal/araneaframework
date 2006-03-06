@@ -24,9 +24,9 @@
 	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
-		<delete dir="war/WEB-INF/classes" failonerror="false"/>
-		<delete dir="war/WEB-INF/lib" failonerror="false"/>		
-    <delete dir="tmp" failonerror="false"/>    
+        <delete dir="war/WEB-INF/classes" failonerror="false"/>
+        <delete dir="war/WEB-INF/lib" failonerror="false"/>		
+        <delete dir="tmp" failonerror="false"/>
 	</target>
 	
 	<!-- Initialize the build system -->
@@ -93,6 +93,7 @@
 
 	<!-- Starts standalone server -->
 	<target name="run-app-only" description="Run in standalone container">
+		<mkdir dir="tmp/jsp" /> 
 		<java classname="org.mortbay.jetty.Server" dir="war" fork="yes">
 			<arg value="../jetty.xml"/>
 			<classpath>
