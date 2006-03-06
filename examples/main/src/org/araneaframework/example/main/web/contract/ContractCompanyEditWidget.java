@@ -53,7 +53,7 @@ public class ContractCompanyEditWidget extends BaseWidget {
   
 	public void handleEventChooseCompany(String eventParameter) throws Exception {
     log.debug("Event 'chooseCompany' received!");
-    getFlowCtx().start(new CompanyListWidget(false), null, new FlowContext.Handler() {
+    getFlowCtx().start(new CompanyListWidget(), null, new FlowContext.Handler() {
 			public void onFinish(Object returnValue) throws Exception {
 				Long id = (Long) returnValue;
 				company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);

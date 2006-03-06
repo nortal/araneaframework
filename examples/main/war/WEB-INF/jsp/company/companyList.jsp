@@ -53,13 +53,11 @@
 								<c:out value="${row.address}"/>
 							</ui:cell>
 							
-							<c:if test="${contextWidget.data.allowRemove}">
-								<ui:cell>
-									<ui:listRowLinkButton eventId="remove">
-										<ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
-									</ui:listRowLinkButton>
-								</ui:cell>
-							</c:if>
+							<ui:cell>
+								<ui:listRowLinkButton eventId="remove">
+									<ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
+								</ui:listRowLinkButton>
+							</ui:cell>
 							
 						</ui:row>
 					</ui:listRows>				
@@ -72,9 +70,7 @@
 		
 		</ui:list>
 
-		<c:if test="${contextWidget.data.allowAdd}">
-			<ui:eventButton eventId="add" labelId="#Add new person"/>
-		</c:if>
+		<ui:eventButton eventId="add" labelId="#Add new person"/>
 
 	</ui:widgetContext>
 </jsp:root>

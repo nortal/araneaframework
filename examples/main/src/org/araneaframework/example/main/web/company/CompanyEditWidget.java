@@ -55,7 +55,7 @@ public class CompanyEditWidget extends BaseWidget {
     super.init();
     setViewSelector("company/companyAddEdit");
     putViewData("formLabel", id != null ? "company.edit.form.label" : "company.add.form.label");
-    log.debug("TemplateCompanyEditWidget init called");
+    log.debug("CompanyEditWidget init called");
     addGlobalEventListener(new ProxyEventListener(this));    
     
     form = new BeanFormWidget(CompanyMO.class);
@@ -88,7 +88,7 @@ public class CompanyEditWidget extends BaseWidget {
 	}
   
 	public void handleEventCancel(String eventParameter) throws Exception {
-    log.debug("Event 'cancel' received!");
-    getFlowCtx().cancel();
+	    log.debug("Event 'cancel' received!");
+	    getFlowCtx().cancel();
 	}
 }
