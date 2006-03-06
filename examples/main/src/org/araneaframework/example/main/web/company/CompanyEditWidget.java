@@ -53,7 +53,8 @@ public class CompanyEditWidget extends BaseWidget {
 	
   protected void init() throws Exception {
     super.init();
-    setViewSelector(id != null ? "company/companyEdit" : "company/companyAdd");
+    setViewSelector("company/companyAddEdit");
+    putViewData("formLabel", id != null ? "company.edit.form.label" : "company.add.form.label");
     log.debug("TemplateCompanyEditWidget init called");
     addGlobalEventListener(new ProxyEventListener(this));    
     

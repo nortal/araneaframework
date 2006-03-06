@@ -2,13 +2,14 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:fmt="http://java.sun.com/jstl/fmt"
 	version="1.2">
 	<ui:widgetContext>
 		<ui:form id="personForm">
 
 			<ui:componentHeader>
 				<ui:componentName>
-					<c:out value="${contextWidget.data.label}"/>
+					<fmt:message key="${contextWidget.data.label}"/>
 				</ui:componentName>
 			</ui:componentHeader>
 

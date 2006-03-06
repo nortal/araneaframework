@@ -55,7 +55,7 @@ public class PersonAddEditWidget extends BaseWidget {
 
 		setViewSelector("person/personAddEdit");
 		// Set the label conditionally. Set view data is used in JSP for component header. 
-		putViewData("label", editMode ? "Edit person" : "Add person");
+		putViewData("label", editMode ? "person.edit.form.label" : "person.add.form.label");
 		addGlobalEventListener(new ProxyEventListener(this));
 		
 		form = buildPersonEditForm();

@@ -151,6 +151,45 @@ TABLE.form .small { width: 100px; }
 TABLE.form TR.cols4 .max { width: 200px; }
 TABLE.form TR.cols4 .norm { width: 150px; }
 
+/* Half width form table */
+TABLE.smallform { margin-bottom: 10px; width: 50%; border-top: 1px solid #e8e8e8; }
+TABLE.smallform TD { padding: 0; text-align: left; vertical-align: top; border-bottom: 1px solid #e8e8e8; background: url(?loadImage=gfx/i12.gif&importerType=imageFileImporter); }
+TABLE.smallform TD.name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; }
+TABLE.smallform TD.inpt { width: 35%; padding: 3px 5px 2px 5px; }
+TABLE.smallform TD.data { width: 35%; padding: 6px 5px 5px 5px; }
+TABLE.smallform TD.tbl { width: 35%; padding: 4px 5px 4px 5px; }
+TABLE.smallform TR.cols2 {}
+TABLE.smallform TR.cols2 TD.name { width: 20%; }
+TABLE.smallform TR.cols2 TD.inpt { width: 25%; }
+TABLE.smallform TR.cols2 TD.data { width: 25%; }
+TABLE.smallform INPUT,
+TABLE.smallform SELECT,
+TABLE.smallform TEXTAREA { font-size: 100%; vertical-align: middle; }
+TABLE.smallform IMG { vertical-align: middle; margin-top: -2px; }
+TABLE.smallform TR.error TD { background: url(?loadImage=gfx/i14.gif&importerType=imageFileImporter); color: #f61901; }
+TABLE.smallform TR.error TD * { color: #f61901; }
+TABLE.smallform TD.error { background: url(?loadImage=gfx/i14.gif&importerType=imageFileImporter); color: #f61901; }
+TABLE.smallform TD.error * { color: #f61901; }
+TABLE.smallform .submit { font-size: 80%; padding: 0 5px 1px 5px; overflow: visible; margin-top: -1px; cursor: pointer; }
+TABLE.smallform .limit { color: #bcc2b2; }
+TABLE.smallform .req { color: #f61901; }
+TABLE.smallform .disabled { color: #e0e0e0; background: #f5f5f5; }
+TABLE.smallform .desc { font-size: 90%; padding: 5px 0; }
+TABLE.smallform TR.subheading TD { padding: 15px 5px 5px 5px; font-weight: bold; background: none; }
+TABLE.smallform TD.noborder { border-bottom: none; }
+TABLE.smallform TABLE.smallform { margin: 0 !important; border: none; }
+TABLE.smallform TABLE.smallform TD { border-bottom: none; }
+TABLE.smallform TABLE.data { width: auto; margin: 0; }
+TABLE.smallform TABLE.data TD.inpt { width: auto !important; }
+TABLE.smallform TABLE.data TD { width: auto !important;  padding: 5px 5px 5px 6px; background: none; }
+TABLE.smallform .max { width: 550px; }
+TABLE.smallform .min { width: 40px; }
+TABLE.smallform .norm { width: 220px; }
+TABLE.smallform .small { width: 100px; }
+TABLE.smallform TR.cols4 .max { width: 200px; }
+TABLE.smallform TR.cols4 .norm { width: 150px; }
+
+
 /* Page actions */
 
 DIV.actions { text-align: right; margin: 0 0 1em 0; }

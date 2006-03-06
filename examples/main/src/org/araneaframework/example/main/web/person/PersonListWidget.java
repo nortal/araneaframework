@@ -71,9 +71,6 @@ public class PersonListWidget extends BaseWidget {
 		
 		this.list = initList();
 		addWidget("personList", this.list);
-		
-		putViewData("allowAdd", new Boolean(this.editMode));    
-		putViewData("allowRemove", new Boolean(this.editMode));
 	}
 	
 	protected ListWidget initList() throws Exception {
@@ -84,7 +81,6 @@ public class PersonListWidget extends BaseWidget {
 		temp.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
 		temp.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
 		
-		// temp.addBeanColumn("birthdate", "#Birthdate", true, new SimpleColumnFilter.Equals(), new DateControl());
 		RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
 		temp.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
 		temp.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
@@ -132,8 +128,13 @@ public class PersonListWidget extends BaseWidget {
 	public void handleEventSelect(String eventParameter) throws Exception {
 		log.debug("Event 'select' received!");
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		log.debug("Person selected with Id of " + id);
 		PersonViewWidget newFlow = new PersonViewWidget(id);
+		getFlowCtx().start(newFlow, null, null);
+	}
+	
+	public void handleEventEdit(String eventParameter) throws Exception {
+		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
+		PersonAddEditWidget newFlow = new PersonAddEditWidget(id);
 		getFlowCtx().start(newFlow, null, null);
 	}
 	
@@ -143,8 +144,6 @@ public class PersonListWidget extends BaseWidget {
 	}  
 	
 	private class TemplatePersonListDataProvider extends MemoryBasedListDataProvider {
-		private static final long serialVersionUID = 1L;
-		
 		protected TemplatePersonListDataProvider() {
 			super(PersonMO.class);
 		}

@@ -71,13 +71,14 @@
 								<fmt:formatDate value="${row.birthdate}" pattern="dd.MM.yyyy"/>
 							</ui:cell>
 
-							<c:if test="${contextWidget.data.allowRemove}">
-								<ui:cell>
-									<ui:listRowLinkButton id="delete">
-										<ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
-									</ui:listRowLinkButton>
-								</ui:cell>
-							</c:if>
+							<ui:cell>
+								<ui:listRowLinkButton eventId="edit">
+									<ui:image code="buttonChange" alt="Edit person" title="Edit person"/>
+								</ui:listRowLinkButton>
+								<ui:listRowLinkButton eventId="remove">
+									<ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
+								</ui:listRowLinkButton>
+							</ui:cell>
 							
 						</ui:row>
 					</ui:listRows>
@@ -86,9 +87,7 @@
 				<ui:componentListFooter/>
 				
 				<ui:componentActions>
-					<c:if test="${contextWidget.data.allowAdd}">
-						<ui:eventButton eventId="add" labelId="#Add new person"/>
-					</c:if>
+					<ui:eventButton eventId="add" labelId="#Add new person"/>
 				</ui:componentActions>
 
 			</ui:component>

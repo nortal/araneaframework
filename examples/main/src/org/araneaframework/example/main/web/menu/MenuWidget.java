@@ -22,7 +22,6 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.company.CompanyChooseAndEditWidget;
-import org.araneaframework.example.main.web.company.CompanyChooseAndViewWidget;
 import org.araneaframework.example.main.web.company.CompanyEditWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
@@ -35,9 +34,7 @@ import org.araneaframework.example.main.web.error.EventErrorWidget;
 import org.araneaframework.example.main.web.error.InitErrorWidget;
 import org.araneaframework.example.main.web.error.RenderErrorWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
-import org.araneaframework.example.main.web.person.PersonAddEditWidget;
 import org.araneaframework.example.main.web.person.PersonChooseAndEditWidget;
-import org.araneaframework.example.main.web.person.PersonChooseAndViewWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
@@ -76,16 +73,13 @@ public class MenuWidget extends TemplateMenuWidget  {
 		
 		result.addMenuItem(null, new MenuItem("Management")); {
 			result.addMenuItem("Management", new MenuItem("Persons"));
-			result.addMenuItem("Management.Persons", new MenuItem("View", PersonChooseAndViewWidget.class));
-			result.addMenuItem("Management.Persons", new MenuItem("Add", PersonAddEditWidget.class));
-			result.addMenuItem("Management.Persons", new MenuItem("Edit", PersonChooseAndEditWidget.class));
+			result.addMenuItem("Management.Persons", new MenuItem("View_Add", PersonChooseAndEditWidget.class));
 			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Memory", PersonEditableListWidget.Memory.class));
 			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Backend", PersonEditableListWidget.Backend.class));
 			
 			result.addMenuItem("Management", new MenuItem("Companies"));
-			result.addMenuItem("Management.Companies", new MenuItem("View", CompanyChooseAndViewWidget.class));
 			result.addMenuItem("Management.Companies", new MenuItem("Add", CompanyEditWidget.class));
-			result.addMenuItem("Management.Companies", new MenuItem("Edit", CompanyChooseAndEditWidget.class));
+			result.addMenuItem("Management.Companies", new MenuItem("View_Edit", CompanyChooseAndEditWidget.class));
 			
 			result.addMenuItem("Management", new MenuItem("Contracts"));
 			result.addMenuItem("Management.Contracts", new MenuItem("View_Edit", ContractListWidget.class));
