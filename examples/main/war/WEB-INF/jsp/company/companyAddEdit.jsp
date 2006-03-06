@@ -14,9 +14,9 @@
 		<ui:component>
 
 			<ui:form id="form">
-				<ui:componentForm styleClass="smallform">
+				<ui:componentForm>
 					<ui:formElement id="name">
-						<ui:row styleClass="cols2">
+						<ui:row styleClass="cols4">
 							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>
@@ -27,7 +27,7 @@
 					</ui:formElement>
 
 					<ui:formElement id="address">
-						<ui:row styleClass="cols2">
+						<ui:row styleClass="cols4">
 							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>
