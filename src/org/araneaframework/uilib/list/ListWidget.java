@@ -287,20 +287,15 @@ public class ListWidget extends StandardPresentationWidget {
 	 * FormWidget proxy-methods
 	 */
 	
-	public void addFilterFormElement(String id, String label, Control control, Data data) {
+	public void addFilterFormElement(String id, String label, Control control, Data data) throws Exception {
 		if (this.filterForm == null) {
 			this.filterForm = new FormWidget();
 		}
-		try {
-			this.filterForm.addElement(id, label, control, data, false);
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		
+    this.filterForm.addElement(id, label, control, data, false);
 	}
 	
-	public void addFilterFormElement(String id, Control control, Data data) {
+	public void addFilterFormElement(String id, Control control, Data data) throws Exception {
 		addFilterFormElement(id, getColumnLabel(id), control, data);
 	}
 
