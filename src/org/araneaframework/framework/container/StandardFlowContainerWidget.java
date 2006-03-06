@@ -52,7 +52,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   /**
    * The key of the callable child.
    */
-  public static final String CALLABLE_WIDGET_KEY = "callableWidget"; 
+  public static final String FLOW_KEY = "flow"; 
   
   //*******************************************************************
   // FIELDS
@@ -92,42 +92,42 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     this.top = topWidget;
   }
   
-  public void start(Component callable, Configurator configurator, Handler handler) throws Exception {
-    callable = decorateCallableWidget((Widget) callable);
-    CallFrame frame = makeCallFrame((Widget) callable, configurator, handler);
+  public void start(Component flow, Configurator configurator, Handler handler) throws Exception {
+    flow = decorateCallableWidget((Widget) flow);
+    CallFrame frame = makeCallFrame((Widget) flow, configurator, handler);
     
-    log.debug("Starting flow '" + callable.getClass().getName() +"'");
+    log.debug("Starting flow '" + flow.getClass().getName() +"'");
     
-    if (_getChildren().get(CALLABLE_WIDGET_KEY) != null) {
-      ((Widget) getChildren().get(CALLABLE_WIDGET_KEY))._getComponent().disable();      
-      _getChildren().remove(CALLABLE_WIDGET_KEY);
+    if (_getChildren().get(FLOW_KEY) != null) {
+      ((Widget) getChildren().get(FLOW_KEY))._getComponent().disable();      
+      _getChildren().remove(FLOW_KEY);
     }  
     
     callStack.addFirst(frame);
     
-    addWidget(CALLABLE_WIDGET_KEY, (Widget) callable);
+    addWidget(FLOW_KEY, (Widget) flow);
 
     if (configurator != null) {
-      configurator.configure(callable);
+      configurator.configure(flow);
     }    
   }
   
-  public void replace(Component callable, Configurator configurator) throws Exception {
-    callable = decorateCallableWidget((Widget) callable);
+  public void replace(Component flow, Configurator configurator) throws Exception {
+    flow = decorateCallableWidget((Widget) flow);
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
-    CallFrame frame = makeCallFrame((Widget) callable, configurator, previousFrame.getHandler());
+    CallFrame frame = makeCallFrame((Widget) flow, configurator, previousFrame.getHandler());
     
     log.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + 
-        "' with flow '" + callable.getClass().getName() + "'");
+        "' with flow '" + flow.getClass().getName() + "'");
     
-    removeWidget(CALLABLE_WIDGET_KEY);
+    removeWidget(FLOW_KEY);
     
     callStack.addFirst(frame);    
     
-    addWidget(CALLABLE_WIDGET_KEY, (Widget) callable);
+    addWidget(FLOW_KEY, (Widget) flow);
     
     if (configurator != null) {
-      configurator.configure(callable);
+      configurator.configure(flow);
     }
   }
 
@@ -140,10 +140,10 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     
     log.debug("Finishing flow '" + previousFrame.getWidget().getClass().getName() + "'");
     
-    removeWidget(CALLABLE_WIDGET_KEY);
+    removeWidget(FLOW_KEY);
     if (frame != null) {
-      _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());
-      ((Component) getChildren().get(CALLABLE_WIDGET_KEY))._getComponent().enable();
+      _getChildren().put(FLOW_KEY, frame.getWidget());
+      ((Component) getChildren().get(FLOW_KEY))._getComponent().enable();
     }
     
     if (previousFrame.getHandler() != null) {
@@ -160,10 +160,10 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     
     log.debug("Cancelling flow '" + previousFrame.getWidget().getClass().getName() + "'");
     
-    removeWidget(CALLABLE_WIDGET_KEY);
+    removeWidget(FLOW_KEY);
     if (frame != null) {
-      _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());    
-      ((Component) getChildren().get(CALLABLE_WIDGET_KEY))._getComponent().enable();
+      _getChildren().put(FLOW_KEY, frame.getWidget());    
+      ((Component) getChildren().get(FLOW_KEY))._getComponent().enable();
     }
     
     if (previousFrame.getHandler() != null)
@@ -207,8 +207,8 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     for (Iterator i = callStack.iterator(); i.hasNext();) {
       CallFrame frame = (CallFrame) i.next();
       
-      _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());
-      removeWidget(CALLABLE_WIDGET_KEY);
+      _getChildren().put(FLOW_KEY, frame.getWidget());
+      removeWidget(FLOW_KEY);
     }
     
     callStack.clear();
@@ -257,10 +257,10 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     output.pushAttribute(CALL_STACK_KEY, callStack);
       
     try {          
-      output.pushScope(CALLABLE_WIDGET_KEY);
+      output.pushScope(FLOW_KEY);
       
       try {   
-        getWidget(CALLABLE_WIDGET_KEY)._getWidget().render(output);
+        getWidget(FLOW_KEY)._getWidget().render(output);
       } 
       finally {
         output.popScope();
@@ -320,16 +320,16 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
       while (i.hasNext() && callStack.size() > currentDepth) {
         CallFrame frame = (CallFrame) i.next();
         
-        _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());
-        removeWidget(CALLABLE_WIDGET_KEY);
+        _getChildren().put(FLOW_KEY, frame.getWidget());
+        removeWidget(FLOW_KEY);
         
         i.remove();
       }
       
       if (callStack.size() > 0) {
         CallFrame frame = (CallFrame) callStack.getFirst();
-        _getChildren().put(CALLABLE_WIDGET_KEY, frame.getWidget());
-        ((Component) getChildren().get(CALLABLE_WIDGET_KEY))._getComponent().enable();
+        _getChildren().put(FLOW_KEY, frame.getWidget());
+        ((Component) getChildren().get(FLOW_KEY))._getComponent().enable();
       }
 
       callback.call(getChildWidgetEnvironment());
