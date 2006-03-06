@@ -2,6 +2,7 @@
 <jsp:root
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fmt="http://java.sun.com/jstl/fmt"
 	xmlns:ui="http://araneaframework.org/tag-library/template"
 	version="1.2"
 >
@@ -94,7 +95,7 @@
 									</ui:cell>
 									
 									<ui:cell>
-										<c:out value="${row.birthdate}"/>
+										<fmt:formatDate value="${row.birthdate}" pattern="dd.MM.yyyy"/>
 									</ui:cell>									
 								</c:otherwise>								
 							</c:choose>

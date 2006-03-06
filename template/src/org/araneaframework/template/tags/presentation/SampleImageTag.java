@@ -69,7 +69,7 @@ public class SampleImageTag extends UiStdImageBaseTag {
        throw new UiException("Missing image description with code '" + code + "'");
    
     String imageUrl = ImageFileImporter.getImportString(info.src);
-    writeImage(out, imageUrl, info.width, info.height, info.alt, styleClass);
+    writeImage(out, imageUrl, info.width, info.height, info.alt, styleClass, null);
   }
 
   protected Info getImageInfo(String code) {
@@ -100,7 +100,7 @@ public class SampleImageTag extends UiStdImageBaseTag {
     imageInfo.put("back",            new Info("gfx/ico_back.gif",      null,   null));
     imageInfo.put("back2",           new Info("gfx/ico_back2.gif",     "25",   "15"));    
     imageInfo.put("buttonChange",    new Info("gfx/butt_change3.gif",    null,  null));
-    imageInfo.put("buttonDelete",    new Info("gfx/butt_delete3.gif",  null,  null));
+    imageInfo.put("buttonDelete",    new Info("gfx/butt_delete2.gif",  null,  null));
     imageInfo.put("buttonAdd",       new Info("gfx/butt_add.gif",    null,   null));
     imageInfo.put("buttonSearch",    new Info("gfx/butt_search.gif",     null,   null));
     imageInfo.put("calendar",        new Info("gfx/ico_calendar.gif",  null, null));
