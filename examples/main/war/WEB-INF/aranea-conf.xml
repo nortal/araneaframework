@@ -30,15 +30,8 @@
   
   <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"
         id="application.mainStatisticFilter" singleton="false">
-    <property name="childService" ref="application.fileUploadFilter"/>
+    <property name="childService" ref="application.topServiceRouter"/>
     <property name="namespace" value="MAIN"/>
-  </bean>
-  
-  <bean class="org.araneaframework.servlet.filter.StandardServletFileUploadFilterService" id="application.fileUploadFilter"
-    singleton="false">
-    <property name="childService">
-      <ref bean="application.topServiceRouter" />
-    </property>
   </bean>
 
   <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="application.topServiceRouter"
@@ -105,8 +98,15 @@
   
   <bean class="org.araneaframework.servlet.filter.StandardServletHttpFilterService" id="thread.headerFilter"
     singleton="false">
-    <property name="childService" ref="thread.continuationFilter"/>
+    <property name="childService" ref="thread.fileUploadFilter"/>
     <property name="requestEncoding" value="UTF-8"/>
+  </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardServletFileUploadFilterService" id="thread.fileUploadFilter"
+    singleton="false">
+    <property name="childService">
+      <ref bean="thread.continuationFilter" />
+    </property>
   </bean>
   
  <bean class="org.araneaframework.framework.filter.StandardContinuationFilterService" id="thread.continuationFilter"
@@ -132,7 +132,7 @@
     singleton="false">
     <property name="childWidget" ref="thread.contexts"/>
   </bean>
-    
+
   <bean class="org.araneaframework.framework.filter.StandardContextMapFilterWidget" id="thread.contexts"
     singleton="false">
     <property name="childWidget" ref="thread.widgetContainer"/>

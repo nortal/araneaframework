@@ -22,8 +22,8 @@
                 <body>
 
                     <div id="cont1">
-                        <ui:systemForm method="POST">
-												<!-- Renders the menu on top of the screen -->
+                        <ui:systemForm method="POST" enctype="multipart/form-data">
+						<!-- Renders the menu on top of the screen -->
                          <jsp:include page="/WEB-INF/jsp/mainlayout/menu.jsp"/>
                             <div class="stripe1"><ui:nbsp/></div>
 
