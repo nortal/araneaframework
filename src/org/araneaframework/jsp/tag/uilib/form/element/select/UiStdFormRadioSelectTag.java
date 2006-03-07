@@ -97,11 +97,8 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 			
 			item.setId(id);
 			item.setValue(displayItem.getValue());
-			//item.setEvents(Boolean.toString(events));
 			item.setEvents(events ? "true" : "false");
-			//item.setValidate(Boolean.toString(validate));
 			item.setValidate(validate ? "true" : "false");
-			//item.setValidateOnEvent(Boolean.toString(validateOnEvent));
 			item.setValidateOnEvent(validateOnEvent ? "true" : "false");
 			item.setStyleClass(styleClass);
 
