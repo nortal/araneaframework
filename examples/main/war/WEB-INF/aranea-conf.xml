@@ -30,8 +30,15 @@
   
   <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"
         id="application.mainStatisticFilter" singleton="false">
-    <property name="childService" ref="application.topServiceRouter"/>
+    <property name="childService" ref="application.fileUploadFilter"/>
     <property name="namespace" value="MAIN"/>
+  </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardServletFileUploadFilterService" id="application.fileUploadFilter"
+    singleton="false">
+    <property name="childService">
+      <ref bean="application.topServiceRouter" />
+    </property>
   </bean>
 
   <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="application.topServiceRouter"

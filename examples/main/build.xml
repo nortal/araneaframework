@@ -124,7 +124,7 @@
 	<target name="run-database-manager" description="Run database manager">
 		<java classname="org.hsqldb.util.DatabaseManagerSwing" dir="data" fork="yes">
 			<classpath>
-				<pathelement location="../lib/hsqldb.jar" />
+				<pathelement location="../../lib/hsqldb/hsqldb.jar" />
 			</classpath>
 			<arg line="--user sa --url ${db.url}" />
 		</java>				

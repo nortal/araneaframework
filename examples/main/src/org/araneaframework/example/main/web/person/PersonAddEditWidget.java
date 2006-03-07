@@ -21,7 +21,6 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.TextControl;
 
 /**
