@@ -30,14 +30,13 @@
 														<div class="box1">
 															<a href="#" id="logo"><img src="gfx/logo_aranea_print.gif" alt="" /></a>
 															<div id="menu1">
-																<div class="item"></div>
+																<div class="item"><!-- ASD --></div>
 															</div>
 														</div>
 													</div>
 													<div class="stripe1"><ui:nbsp/></div>
 													<div id="wholder">
-														<div id="leftcol">
-														</div>															
+														<div id="leftcol"><!-- ASD --></div>															
 																													
 														<div id="content">
 															<ui:messages/>
