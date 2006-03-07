@@ -16,7 +16,6 @@
 
 package org.araneaframework.example.quickstart;
 
-import org.apache.log4j.Logger;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
@@ -25,10 +24,14 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
  *
  */
 public class HelloWidget extends StandardPresentationWidget {
+  private String name;
+  
+  public HelloWidget(String name) {
+    this.name = name;
+  }
 
-	private static final Logger log = Logger.getLogger(HelloWidget.class);
-
-	protected void init() throws Exception {
+  protected void init() throws Exception {
+    putViewData("name", name);    
     setViewSelector("hello");        
 	}
 }

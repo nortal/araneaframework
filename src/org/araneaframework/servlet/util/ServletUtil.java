@@ -17,6 +17,7 @@
 package org.araneaframework.servlet.util;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.servlet.ServletInputData;

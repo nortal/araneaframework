@@ -23,6 +23,6 @@
 
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>
-      <url-pattern>/</url-pattern>
+      <url-pattern>/main</url-pattern>
    </servlet-mapping>
 </web-app>

@@ -34,7 +34,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.servlet.ServletFileUploadInputExtension;
-import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOverridableInputData;
 import org.araneaframework.servlet.core.StandardServletFileUploadInputExtension;
 
@@ -47,7 +47,7 @@ public class StandardServletFileUploadFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardServletFileUploadFilterService.class);
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    HttpServletRequest request = ((ServletOutputData) output).getRequest();
+    HttpServletRequest request = ((ServletInputData) input).getRequest();
     
     if (FileUpload.isMultipartContent(request)) {
       Map fileItems = new HashMap();
