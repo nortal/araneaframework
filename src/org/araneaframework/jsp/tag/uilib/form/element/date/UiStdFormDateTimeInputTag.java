@@ -57,7 +57,7 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
    *   description = "Css class for date." 
    */
   public void setDateStyleClass(String dateCssClass) throws JspException {
-    this.dateStyleClass = (String) evaluate("dateCssClass", dateCssClass, String.class);
+    this.dateStyleClass = (String) evaluate("dateStyleClass", dateCssClass, String.class);
   }
 
   public String getTimeStyleClass() {
@@ -71,7 +71,7 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
    *   description = "Css class for time." 
    */
   public void setTimeStyleClass(String timeCssClass) throws JspException {
-    this.timeStyleClass = (String) evaluate("timeCssClass", timeCssClass, String.class);
+    this.timeStyleClass = (String) evaluate("timeStyleClass", timeCssClass, String.class);
   }
   
   //
