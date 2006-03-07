@@ -93,11 +93,5 @@
 			</ui:component>
 		
 		</ui:list>
-		
-		<p>
-			This is a list of persons. You can use a filter to search for a specific person or use
-			links below the list to navigate through pages. To choose a person just click on it's First Name.
-		</p>
-
 	</ui:widgetContext>
 </jsp:root>

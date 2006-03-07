@@ -34,6 +34,7 @@ import org.araneaframework.example.main.web.demo.DemoInMemoryEditableList;
 import org.araneaframework.example.main.web.error.EventErrorWidget;
 import org.araneaframework.example.main.web.error.InitErrorWidget;
 import org.araneaframework.example.main.web.error.RenderErrorWidget;
+import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.person.PersonListWidget;
@@ -118,6 +119,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		
 		result.addMenuItem(null, new MenuItem("Lists")); {
 			result.addMenuItem("Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
+			result.addMenuItem("Lists", new MenuItem("Multi_List", MultiListWidget.class));
 		}
 		
 		return result;

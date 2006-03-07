@@ -68,7 +68,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 		form.addBeanElement("name", "#First name", new TextControl(), true);
 		form.addBeanElement("surname", "#Last name", new TextControl(), false);
 		form.addBeanElement("phone", "#Phone no", new TextControl(), true);
-		form.addBeanElement("birthdate", "#Birthdate", new DateTimeControl(), false);
+		form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
 		
 		if (editMode) {
 			PersonMO person = (PersonMO) getGeneralDAO().getById(PersonMO.class, personId);
