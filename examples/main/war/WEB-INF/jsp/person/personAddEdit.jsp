@@ -51,7 +51,7 @@
 								<ui:label />
 							</ui:cell>
 							<ui:cell>
-								<ui:dateInput />
+								<ui:dateTimeInput />
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>

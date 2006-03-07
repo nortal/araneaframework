@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Random;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.TestVO;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
@@ -29,7 +29,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 /**
  * This is an example of component with a single list.
  */
-public class SimpleListWidget extends BaseWidget {
+public class SimpleListWidget extends TemplateBaseWidget {
   private static final Logger log = Logger.getLogger(SimpleFormWidget.class);
 
   protected ListWidget simpleList;

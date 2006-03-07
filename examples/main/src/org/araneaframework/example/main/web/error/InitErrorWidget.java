@@ -16,13 +16,13 @@
 
 package org.araneaframework.example.main.web.error;
 
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class InitErrorWidget extends BaseWidget {
+public class InitErrorWidget extends TemplateBaseWidget {
 
 	public void init() throws Exception {
 		super.init();

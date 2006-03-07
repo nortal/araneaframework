@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.GeneralMO;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
@@ -30,7 +30,7 @@ import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
-public class SimpleSubBeanListWidget extends BaseWidget {
+public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	protected static final Logger log = Logger.getLogger(SimpleSubBeanListWidget.class);
 	
 	private ListWidget list;
@@ -62,9 +62,9 @@ public class SimpleSubBeanListWidget extends BaseWidget {
 		}
 		public List loadData() throws Exception {
 			List contacts = new ArrayList(3);
-			contacts.add(contact("Jüri", "Tamm", "Estonia", "Tallinn"));
-			contacts.add(contact("Mari", "Tamm", "Estonia", "Tartu"));
-			contacts.add(contact("Jack", "Norris", "USA", "Texas"));
+			contacts.add(contact("Alice", "", "Wonderland", ""));
+			contacts.add(contact("Chuck", "Norris", "USA", "Texas"));
+			contacts.add(contact("Gudmund", "Edmundsdottir", "Iceland", ""));
 			return contacts;
 		}
 		

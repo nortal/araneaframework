@@ -17,10 +17,11 @@
 package org.araneaframework.example.main.web.person;
 
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
+import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.TextControl;
 
 /**
@@ -29,7 +30,7 @@ import org.araneaframework.uilib.form.control.TextControl;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class PersonAddEditWidget extends BaseWidget {
+public class PersonAddEditWidget extends TemplateBaseWidget {
 	private Long personId = null;
 	private boolean editMode;
 	
@@ -67,7 +68,7 @@ public class PersonAddEditWidget extends BaseWidget {
 		form.addBeanElement("name", "#First name", new TextControl(), true);
 		form.addBeanElement("surname", "#Last name", new TextControl(), false);
 		form.addBeanElement("phone", "#Phone no", new TextControl(), true);
-		form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+		form.addBeanElement("birthdate", "#Birthdate", new DateTimeControl(), false);
 		
 		if (editMode) {
 			PersonMO person = (PersonMO) getGeneralDAO().getById(PersonMO.class, personId);

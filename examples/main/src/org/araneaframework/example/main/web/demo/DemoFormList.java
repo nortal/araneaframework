@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
 import org.araneaframework.uilib.form.FormWidget;
@@ -44,7 +44,7 @@ import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormR
  *
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class DemoFormList extends BaseWidget {
+public class DemoFormList extends TemplateBaseWidget {
 	private FormListWidget formList;
 	private Map data = new LinkedHashMap();
 

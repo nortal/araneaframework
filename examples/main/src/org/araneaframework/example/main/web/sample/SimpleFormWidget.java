@@ -18,7 +18,7 @@ package org.araneaframework.example.main.web.sample;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
@@ -33,7 +33,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  */
-public class SimpleFormWidget extends BaseWidget {
+public class SimpleFormWidget extends TemplateBaseWidget {
   private static final Logger log = Logger.getLogger(SimpleFormWidget.class);
   
   private FormWidget simpleForm;

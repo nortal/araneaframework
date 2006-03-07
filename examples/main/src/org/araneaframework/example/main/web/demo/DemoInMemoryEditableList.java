@@ -19,7 +19,7 @@ package org.araneaframework.example.main.web.demo;
 import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
 import org.araneaframework.framework.MessageContext;
@@ -45,7 +45,7 @@ import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormR
  *
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class DemoInMemoryEditableList extends BaseWidget {
+public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
 	private FormListWidget formList;
 	private List data = new ArrayList();

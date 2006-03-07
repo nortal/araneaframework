@@ -19,7 +19,7 @@ package org.araneaframework.example.main.web.person;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.form.control.DateControl;
@@ -40,7 +40,7 @@ import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class PersonListWidget extends BaseWidget {
+public class PersonListWidget extends TemplateBaseWidget {
 	
 	private static final long serialVersionUID = 1L;
 

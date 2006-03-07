@@ -17,13 +17,13 @@
 package org.araneaframework.example.main.web.error;
 
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class EventErrorWidget extends BaseWidget {
+public class EventErrorWidget extends TemplateBaseWidget {
 
 	public void init() throws Exception {
 		super.init();

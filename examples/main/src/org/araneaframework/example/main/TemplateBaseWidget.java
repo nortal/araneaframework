@@ -26,8 +26,8 @@ import org.springframework.beans.factory.BeanFactory;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public abstract class BaseWidget extends StandardPresentationWidget {
-	private static final Logger log = Logger.getLogger(BaseWidget.class);
+public abstract class TemplateBaseWidget extends StandardPresentationWidget {
+  private static final Logger log = Logger.getLogger(TemplateBaseWidget.class);
 		
   protected BeanFactory getBeanFactory() {
     return (BeanFactory) getEnvironment().getEntry(BeanFactory.class);

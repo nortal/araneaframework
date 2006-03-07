@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -40,7 +40,7 @@ import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class CompanyListWidget extends BaseWidget {
+public class CompanyListWidget extends TemplateBaseWidget {
 	private static final long serialVersionUID = 1L;
 	protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
 	private ListWidget list;

@@ -18,7 +18,7 @@ package org.araneaframework.example.main.web.contract;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.Widget;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.template.framework.container.StandardWizardWidget;
 import org.araneaframework.template.framework.context.WizardContext;
@@ -29,7 +29,7 @@ import org.araneaframework.template.framework.context.WizardContext;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class ContractAddEditWidget extends BaseWidget {
+public class ContractAddEditWidget extends TemplateBaseWidget {
 	
 	private static final Logger log = Logger.getLogger(ContractAddEditWidget.class);
 	

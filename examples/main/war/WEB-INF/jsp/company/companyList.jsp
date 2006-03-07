@@ -66,11 +66,14 @@
 				<!-- Sequence -->
 				<ui:componentListFooter/>
 
+				<ui:componentActions>
+					<ui:eventButton eventId="add" labelId="#Add new company"/>
+				</ui:componentActions>
 			</ui:component>
 		
 		</ui:list>
 
-		<ui:eventButton eventId="add" labelId="#Add new person"/>
+		
 
 	</ui:widgetContext>
 </jsp:root>

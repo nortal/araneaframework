@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.PersonListDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
@@ -46,7 +46,7 @@ import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
-public abstract class PersonEditableListWidget extends BaseWidget {
+public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	
 	protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
 	

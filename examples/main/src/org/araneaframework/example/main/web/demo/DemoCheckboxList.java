@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
 import org.araneaframework.uilib.form.control.CheckboxControl;
@@ -37,7 +37,7 @@ import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormR
 /**
  * This is an example of component with a single list.
  */
-public class DemoCheckboxList extends BaseWidget {
+public class DemoCheckboxList extends TemplateBaseWidget {
 	private EditableListWidget checkList;
 	private Map data = new HashMap();
 
