@@ -27,6 +27,7 @@ import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
 import org.araneaframework.example.main.web.demo.DemoCheckboxList;
+import org.araneaframework.example.main.web.demo.DemoComplexForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
 import org.araneaframework.example.main.web.demo.DemoFileUpload;
@@ -117,6 +118,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 			result.addMenuItem("Demos", new MenuItem("Editable_checkbox_list", DemoCheckboxList.class));
 			result.addMenuItem("Demos", new MenuItem("Displayable_editable_list", DemoDisplayableEditableList.class));
 			result.addMenuItem("Demos", new MenuItem("File_Upload", DemoFileUpload.class));
+			result.addMenuItem("Demos", new MenuItem("Complex_Form", DemoComplexForm.class));
 		}
 		
 		result.addMenuItem(null, new MenuItem("Lists")); {
