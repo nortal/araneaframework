@@ -75,6 +75,8 @@ H2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bo
 .disabled { background: #EEE; }
 
 .nowrap { white-space: nowrap !important; }
+.wrap { white-space: wrap; }
+.wrap-centered { vertical-align: middle !important; text-align: center !important; }
 .nowrap TD { white-space: nowrap; }
 .hidden { display: none; }
 
@@ -117,6 +119,7 @@ TABLE.data TR.total-first TD { border-top: 2px solid #cbd0c3 !important; }
 TABLE.form { margin-bottom: 10px; width: 100%; border-top: 1px solid #e8e8e8; }
 TABLE.form TD { padding: 0; text-align: left; vertical-align: top; border-bottom: 1px solid #e8e8e8; background: url(?loadImage=gfx/i12.gif&importerType=imageFileImporter); }
 TABLE.form TD.name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; }
+TABLE.form TD.centered-name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; vertical-align: middle !important;}
 TABLE.form TD.inpt { width: 35%; padding: 3px 5px 2px 5px; }
 TABLE.form TD.data { width: 35%; padding: 6px 5px 5px 5px; }
 TABLE.form TD.tbl { width: 35%; padding: 4px 5px 4px 5px; }

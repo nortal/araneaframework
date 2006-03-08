@@ -18,49 +18,115 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.control.DisplayControl;
+import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.data.StringData;
+import org.araneaframework.uilib.form.data.StringListData;
+import org.araneaframework.uilib.support.DisplayItem;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class DemoComplexForm extends TemplateBaseWidget {
+	private static final Logger log = Logger.getLogger(DemoComplexForm.class);
+	
 	private FormWidget complexForm;
-	private SelectControl eventTypeControl;
+	private SelectControl beastSelectionControl;
+	private MultiSelectControl concreteBeastMultiSelectionControl;
 
 	protected void init() throws Exception {
 		super.init();
+
 		setViewSelector("demo/demoComplexForm");
-		
 		putViewData("formLabel", "Complex_Form");
 		
-		eventTypeControl = new SelectControl();
-		eventTypeControl.addDisplayItems(getMultiSelectItems(), "sampleValue", "sampleDisplayString");
+		beastSelectionControl = new SelectControl();
+		beastSelectionControl.addDisplayItems(getSelectItems(), "sampleValue", "sampleDisplayString");
+
+		beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
+			public void onChange() throws Exception {
+				// form must be converted before new values can be read from form
+				complexForm.convert();
+				// get the value from control
+				String selectedBeast = (String)beastSelectionControl.getRawValue();
+
+				// if no beast is selected, we remove the other elements from form 
+				// that depend directly on selection being made.
+				if (selectedBeast.equals("- choose -")) {
+					complexForm.removeElement("concreteBeastControl");
+					complexForm.removeElement("selectedBeastDesc");
+					return;
+				}
+
+				concreteBeastMultiSelectionControl = new MultiSelectControl();
+				for (Iterator i = getMultiSelectItems(selectedBeast).iterator(); i.hasNext(); ) {
+					String current = (String) i.next();
+					concreteBeastMultiSelectionControl.addItem(new DisplayItem(current, current));
+				}
+				complexForm.addElement("concreteBeastControl","#Choose " + selectedBeast, concreteBeastMultiSelectionControl, new StringListData(), false);
+				complexForm.addElement("selectedBeastDesc", "#Description", new DisplayControl(), new StringData(), false);
+				// if not dealing with beanforms, form element values are typically set this way
+				complexForm.setValueByFullName("selectedBeastDesc", new SelectItem(selectedBeast).getDescription());
+			}
+		});
 		
 		complexForm = new FormWidget();
-		complexForm.addElement("multiSelect", "#TheLabel", eventTypeControl, new StringData(), true);
+		complexForm.addElement("beastSelection", "#Nature's Beasts", beastSelectionControl, new StringData(), true);
 		
 		addWidget("complexForm", complexForm);
 	}
 	
-	private Collection getMultiSelectItems() {
+	// HELPER METHODS AND CLASSES
+	private Collection getSelectItems() {
 		List list = new ArrayList();
-		list.add(new MultiSelectItem("First choice"));
-		list.add(new MultiSelectItem("Second choice"));
-		list.add(new MultiSelectItem("Third choice"));
-		list.add(new MultiSelectItem("Fourth choice"));
+		// note that SelectItem is just an inner class and not anything special
+		list.add(new SelectItem("- choose -"));
+		list.add(new SelectItem("  Bird  "));
+		list.add(new SelectItem(" Animal "));
+		list.add(new SelectItem("  Fish  "));
+		list.add(new SelectItem(" Dragon "));
 		return list;
 	}
 	
-	public class MultiSelectItem {
+	private Collection getMultiSelectItems(String selectItem) {
+		List result = new ArrayList();
+		if (selectItem.equals("Bird")) {
+			result.add("Chicken");
+			result.add("Goose");
+			result.add("Duck");
+			result.add("Swan");
+		} else if (selectItem.equals("Animal")) {
+			result.add("Piglet");
+			result.add("Pooh");
+			result.add("Tiger");
+			result.add("Cangaroo");
+		} else if (selectItem.equals("Fish")) {
+			result.add("Willy");
+			result.add("Nemo");
+			result.add("Dory");
+			result.add("Marlin");
+		} else if (selectItem.equals("Dragon")) {
+			result.add("Smaug");
+			result.add("Chrysophylax");
+			result.add("Devon & Cornwall");
+		} 
+
+		return result;
+	}
+
+	public class SelectItem {
 		public String sampleValue;
 		public String sampleDisplayString;
 		
-		public MultiSelectItem(String value) {
-			this.sampleValue = value;
+		public SelectItem(String value) {
+			this.sampleValue = value.trim();
 			this.sampleDisplayString = "> " + value + " <";
 		}
 
@@ -78,6 +144,20 @@ public class DemoComplexForm extends TemplateBaseWidget {
 
 		public void setSampleValue(String sampleValue) {
 			this.sampleValue = sampleValue;
+		}
+		
+		public String getDescription() {
+			String result = "";
+			if (sampleValue.equals("Bird")) {
+				result = "Birds are bipedal, warm-blooded, oviparous vertebrates characterized primarily by feathers, forelimbs modified as wings, and hollow bones.";
+			} else if (sampleValue.equals("Animal")) {
+				result = "Animals are a major group of organisms, classified as the kingdom Animalia or Metazoa. In general they are multicellular, capable of locomotion and responsive to their environment, and feed by consuming other organisms. Their body plan becomes fixed as they develop, usually early on in their development as embryos, although some undergo a process of metamorphosis later on.";
+			} else if (sampleValue.equals("Fish")) {
+				result = "A fish is a poikilothermic (cold-blooded) water-dwelling vertebrate with gills.";
+			} else if (sampleValue.equals("Dragon")) {
+				result = "A dragon is a legendary creature, typically depicted as a large and powerful serpent or other reptile, with magical or spiritual qualities.";
+			}
+			return result;
 		}
 	}
 }
