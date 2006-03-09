@@ -107,7 +107,8 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		
 		String rndServiceId = RandomStringUtils.random(30, true, true);
 		ThreadContext threadContext = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
-		threadContext.addService(rndServiceId, new FileDownloaderService(selectedFile));
+		FileDownloaderService service = new FileDownloaderService(selectedFile);
+		threadContext.addService(rndServiceId, service);
 		log.debug("Created new service with threadServiceId = " + rndServiceId);
 		
 		PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);

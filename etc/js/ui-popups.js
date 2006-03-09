@@ -45,6 +45,21 @@ function currentUrl() {
 	}
 	else if (system_form_0.action) {
 		return system_form_0.action;
+	} else {
+		alert('Unable to get information about current URL. Requested popups probably cannot be processed.');
+	}
+}
+
+function debugCurrentUrl() {
+	if (document.system_form_0.action) {
+		alert('found document.system_form_0.action');
+		return document.system_form_0.action;
+	}
+	else if (system_form_0.action) {
+		alert('found system_form_0.action');
+		return system_form_0.action;
+	} else {
+		alert('Unable to get information about current URL. Requested popups probably cannot be processed.');
 	}
 }
 
@@ -65,8 +80,8 @@ function processPopups() {
 }
 
 function debugOpenPopup(popupId, properties) {
-	alert(' url is ' + currentUrl() + ' argumentprefix is ' + requestArgumentsPrefix + ' popupId is ' + popupId);
-	openPopup(popupId, properties);
+	url = currentUrl() + requestArgumentsPrefix + popupId;
+	window.open(url, popupId, properties);
 }
 
 function debugProcessPopups() {

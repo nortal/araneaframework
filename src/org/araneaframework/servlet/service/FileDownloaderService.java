@@ -35,25 +35,39 @@ public class FileDownloaderService extends BaseService {
 	
 	protected byte[] fileContent;
 	protected String contentType;
+	protected String fileName;
+	
+	protected boolean contentDispositionInline = true;
 	
 	public FileDownloaderService(FileInfo file) {
 		this.fileContent = file.readFileContent();
 		this.contentType = file.getContentType();
+		this.fileName = file.getOriginalFilename();
 	}
 	
-	public FileDownloaderService(byte[] fileContent, String contentType) {
+	public FileDownloaderService(byte[] fileContent, String contentType, String fileName) {
 		this.fileContent = fileContent;
 		this.contentType = contentType;
+		this.fileName = fileName;
+	}
+	
+	public boolean isContentDispositionInline() {
+		return contentDispositionInline;
+	}
+
+	public void setContentDispositionInline(boolean contentDispositionInline) {
+		this.contentDispositionInline = contentDispositionInline;
 	}
 
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ((ServletOutputData) output).getResponse();
-	     
+		
 	    // XXX: basically cast from long to int - might be dangerous!!
 		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(fileContent.length);
 	    byteOutputStream.write(fileContent);
 
 	    response.setContentType(contentType);
+	    response.setHeader("Content-Disposition", (contentDispositionInline ? "inline;" : "attachment;") + "filename=" + fileName);
 	    response.setContentLength(byteOutputStream.size());
 
 	    OutputStream out = response.getOutputStream();

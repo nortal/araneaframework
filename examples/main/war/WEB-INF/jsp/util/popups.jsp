@@ -8,5 +8,5 @@
 		<c:forEach var="popup" items="${outputData.attributes['popupWindows']}">
     			addPopup('<c:out value="${popup.key}"/>', '<c:out value="${popup.value}"/>');
 		</c:forEach>
-    	</script>
+    </script>
 </jsp:root>
