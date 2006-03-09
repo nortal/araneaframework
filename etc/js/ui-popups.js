@@ -70,7 +70,10 @@ function addPopup(popupId, properties) {
 
 function openPopup(popupId, properties) {
 	url = currentUrl() + requestArgumentsPrefix + popupId;
-	window.open(url, popupId, properties);
+	w = window.open(url, popupId, properties);
+	if (w) {
+		w.focus();
+	}
 }
 
 function processPopups() {

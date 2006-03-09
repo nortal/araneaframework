@@ -107,17 +107,16 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		
 		String rndServiceId = RandomStringUtils.random(30, true, true);
 		ThreadContext threadContext = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
+
 		FileDownloaderService service = new FileDownloaderService(selectedFile);
 		threadContext.addService(rndServiceId, service);
 		log.debug("Created new service with threadServiceId = " + rndServiceId);
 		
 		PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
 		PopupWindowProperties p = new PopupWindowProperties();
-		p.setWidth("200");
-		p.setHeight("200");
 		popupContext.open(rndServiceId, p);
 	}
-	
+
 	// INNER CLASSES
 	
 	private class FileListDataProvider extends MemoryBasedListDataProvider {
@@ -145,4 +144,6 @@ public class DemoFileUpload extends TemplateBaseWidget {
 			}
 		}
 	}
+	
+	
 }
