@@ -21,7 +21,7 @@ function onWindowClosingEvent() {
 	   if (window.event.clientX < 0 && window.event.clientY < 0) {
 			var closeParam = document.createElement("<input type='hidden' name='popupClose' value='true'>");
 			document.system_form_0.appendChild(closeParam);
-			araneaSubmitEvent(document.systemForm, "", "", "");
+			araneaSubmitEvent(document.system_form_0, "", "", "");
 	   }
    }
 }
