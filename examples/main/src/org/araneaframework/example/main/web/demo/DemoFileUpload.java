@@ -18,9 +18,14 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.servlet.PopupWindowContext;
+import org.araneaframework.servlet.service.FileDownloaderService;
+import org.araneaframework.servlet.support.PopupWindowProperties;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.FormWidget;
@@ -29,14 +34,23 @@ import org.araneaframework.uilib.form.control.FileUploadControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.data.FileInfoData;
 import org.araneaframework.uilib.form.data.StringData;
+import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.ListColumn;
+import org.araneaframework.uilib.list.structure.ListStructure;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.support.FileInfo;
 
 /**
+ * Demonstrates usage of file upload control.
  * @author Lauri Tulmin
+ * @author Taimo Peelo (taimo@webmedia.ee) 
  */
 public class DemoFileUpload extends TemplateBaseWidget {
-	private FormWidget editForm;
+	private static final Logger log = Logger.getLogger(DemoFileUpload.class);
+	
+	private FormWidget form;
+	private ListWidget uploadList;
 
 	private List files = new ArrayList();
 
@@ -46,7 +60,24 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		addGlobalEventListener(new ProxyEventListener(this));
 		setViewSelector("demo/demoFileUpload");
 
-		editForm = new FormWidget();
+		form = buildForm();
+		uploadList = buildList();
+
+		addWidget("uploadForm", form);
+	}
+
+	private ListWidget buildList() throws Exception {
+		ListStructure listStructure = new ListStructure();
+		listStructure.addColumn(new ListColumn("originalFilename", "#Original filename"));
+		listStructure.addColumn(new ListColumn("size", "#File size"));
+		listStructure.addColumn(new ListColumn("contentType", "#Content Type"));
+		listStructure.addColumn(new ListColumn("dummy"));
+		
+		return new ListWidget(new FileListDataProvider(), listStructure, null);
+	}
+	
+	private FormWidget buildForm() throws Exception {
+		final FormWidget result = new FormWidget();
 
 		SelectControl select = new SelectControl();
 		select.addOnChangeEventListener(new OnChangeEventListener() {
@@ -58,32 +89,59 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		select.addItem(new DisplayItem("1", "one"));
 		select.addItem(new DisplayItem("2", "two"));
 
-		editForm
-				.addElement("select", "#Select", select, new StringData(), true);
-		editForm.addElement("file", "#File", new FileUploadControl(),
+		result.addElement("select", "#Select", select, new StringData(), true);
+		result.addElement("file", "#File", new FileUploadControl(),
 				new FileInfoData(), false);
 
 		ButtonControl button = new ButtonControl();
-		button.addOnClickEventListener(new OnClickEventListener() {
-			private static final long serialVersionUID = 0L;
-
-			public void onClick() throws Exception {
-				editForm.getElementByFullName("file").convertAndValidate();
-				FileInfo fileInfo = (FileInfo) editForm
-						.getValueByFullName("file");
-				if (fileInfo != null) {
-					files.add(fileInfo.getOriginalFilename());
-					putViewData("files", files);
-					editForm.setValueByFullName("file", null);
-				}
-			}
-		});
-		editForm.addElement("upload", "#Upload file", button, null, false);
-
-		addWidget("editForm", editForm);
+		button.addOnClickEventListener(new FileUploadButtonListener());
+		result.addElement("upload", "#Upload file", button, null, false);
+		
+		return result;
 	}
 
-	public void handleEventReturn(String param) throws Exception {
-		getFlowCtx().cancel();
+	public void handleEventSelectFile(String param) throws Exception {
+		FileInfo selectedFile = (FileInfo) uploadList.getRowFromRequestId(param);
+		
+		getMessageCtx().showInfoMessage("Popup window with download content should have opened. If it did not, please loosen your popup blocker settings.");
+		
+		String rndServiceId = RandomStringUtils.random(30, true, true);
+		ThreadContext threadContext = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
+		threadContext.addService(rndServiceId, new FileDownloaderService(selectedFile));
+		log.debug("Created new service with threadServiceId = " + rndServiceId);
+		
+		PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+		PopupWindowProperties p = new PopupWindowProperties();
+		p.setWidth("200");
+		p.setHeight("200");
+		popupContext.open(rndServiceId, p);
+	}
+	
+	// INNER CLASSES
+	
+	private class FileListDataProvider extends MemoryBasedListDataProvider {
+		public FileListDataProvider() {
+			super(FileInfo.class);
+		}
+
+		public List loadData() throws Exception {
+			return files;
+		}
+	}
+	
+	private class FileUploadButtonListener implements OnClickEventListener {
+		public void onClick() throws Exception {
+			form.getElementByFullName("file").convertAndValidate();
+			FileInfo fileInfo = (FileInfo) form.getValueByFullName("file");
+			if (fileInfo != null && !fileInfo.getOriginalFilename().trim().equals("") && fileInfo.getSize() > 0)  {
+				if (files.size() == 0) {
+					DemoFileUpload.this.addWidget("uploadList", uploadList);
+				}
+				files.add(fileInfo);
+				form.setValueByFullName("file", null);
+				// refresh the list data
+				uploadList.getListDataProvider().refreshData();
+			}
+		}
 	}
 }

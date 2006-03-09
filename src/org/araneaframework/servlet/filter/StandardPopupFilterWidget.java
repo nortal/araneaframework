@@ -81,7 +81,18 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		popups.put(id, properties.toString()); 
 		popupProperties.put(id, properties);
 		
-		log.debug("Popup with identifier '" + id + "' was opened");
+		log.debug("Popup service with identifier '" + id + "' was created.");
+		return id;
+	}
+	
+	/** 
+	 * @see org.araneaframework.servlet.PopupWindowContext#open(java.lang.String, org.araneaframework.servlet.support.PopupWindowProperties)
+	 */
+	public String open(String id, PopupWindowProperties properties) {
+		popups.put(id, properties.toString());
+		popupProperties.put(id, properties);
+		
+		log.debug("Popup service with identifier '" + id + "' was registered.");
 		return id;
 	}
 	

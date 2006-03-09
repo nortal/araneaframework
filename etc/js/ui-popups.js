@@ -20,7 +20,7 @@ function onWindowClosingEvent() {
    if (window.event) {
 	   if (window.event.clientX < 0 && window.event.clientY < 0) {
 			var closeParam = document.createElement("<input type='hidden' name='popupClose' value='true'>");
-			document.systemForm.appendChild(closeParam);
+			document.system_form_0.appendChild(closeParam);
 			araneaSubmitEvent(document.systemForm, "", "", "");
 	   }
    }
@@ -40,7 +40,12 @@ var requestArgumentsPrefix = "?topServiceId=application&threadServiceId=";
 var popupProperties = new Object();
 
 function currentUrl() {
-	return systemForm.action;
+	if (document.system_form_0.action) {
+		return document.system_form_0.action;
+	}
+	else if (system_form_0.action) {
+		return system_form_0.action;
+	}
 }
 
 function addPopup(popupId, properties) {

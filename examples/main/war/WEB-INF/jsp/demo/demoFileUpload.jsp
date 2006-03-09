@@ -3,17 +3,15 @@
        xmlns:ui="http://araneaframework.org/tag-library/template" 
        xmlns:c="http://java.sun.com/jstl/core"
        xmlns:fmt="http://java.sun.com/jstl/fmt"
-       version="1.2">
+      version="1.2">
 
        <ui:widgetContext>
-               <ui:form id="editForm">
                        <!-- Label -->
                        <ui:componentHeader>
                                <ui:componentName>File upload demo</ui:componentName>
                        </ui:componentHeader>
                        <ui:component>
-
-
+                       		<ui:form id="uploadForm">
 
                                <!-- Body -->
                                <ui:componentForm>
@@ -29,21 +27,44 @@
                                                <ui:cell styleClass="name">
                                                        <ui:fileUpload id="file"/>
                                                </ui:cell>
-                                               <ui:cell styleClass="data">
-                                                       <ui:button id="upload"/>
-                                               </ui:cell>
-                                       </ui:row>
-                                       <ui:row>
-                                               <ui:cell colSpan="2">
-                                                       <c:forEach var="file" items="${contextWidget.data.files}">
-                                                               -<ui:nbsp/><c:out value="${file}"/>
-                                                               <ui:newLine/>
-                                                       </c:forEach>
-                                               </ui:cell>
+                                               <ui:formElement id="upload">
+	                                               <ui:cell styleClass="data">
+	                                                       <ui:button/>
+	                                               </ui:cell>
+	                                           </ui:formElement>
                                        </ui:row>
                                </ui:componentForm>
+                           </ui:form>
+                             
+                       <c:if test="${not empty contextWidget.children['uploadList']}">
+	                       	<ui:list id="uploadList">
+	                       		<ui:componentList>
+	                       			<ui:componentListHeader/>
+	                       			
+	                       			<ui:listRows>
+	                       				<ui:row>
+	                       					<ui:cell>
+												<ui:listRowLinkButton eventId="selectFile">
+													<c:out value="${row.originalFilename}"/>
+												</ui:listRowLinkButton>
+	                       					</ui:cell>
+	                        					<ui:cell>
+	                        						<c:out value="${row.size}"/>
+	                       					</ui:cell>
+	                       					<ui:cell>
+	                       						<c:out value="${row.contentType}"/>
+	                       					</ui:cell>
+	                       					<ui:cell>
+												
+	                       					</ui:cell>
+	                       				</ui:row>
+	                       			</ui:listRows>
+	
+	                       		</ui:componentList>
+	                       	 </ui:list>	
+                       </c:if>
 
                        </ui:component>
-               </ui:form>
+               
        </ui:widgetContext>
 </jsp:root>

@@ -135,7 +135,7 @@
 
   <bean class="org.araneaframework.framework.filter.StandardContextMapFilterWidget" id="thread.contexts"
     singleton="false">
-    <property name="childWidget" ref="thread.widgetContainer"/>
+    <property name="childWidget" ref="thread.popupFilter"/>
     <property name="contexts">    
       <map>
         <entry key="org.araneaframework.uilib.ConfigurationContext.class">
@@ -143,6 +143,11 @@
         </entry>       
       </map>      
     </property>    
+  </bean>
+  
+    <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="thread.popupFilter"
+    singleton="false">
+    <property name="childWidget" ref="thread.widgetContainer"/>
   </bean>
 
   <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="thread.widgetContainer"
