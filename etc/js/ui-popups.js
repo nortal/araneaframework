@@ -63,3 +63,14 @@ function processPopups() {
 		openPopup(popupId, popupProperties[popupId]);
 	}
 }
+
+function debugOpenPopup(popupId, properties) {
+	alert(' url is ' + currentUrl() + ' argumentprefix is ' + requestArgumentsPrefix + ' popupId is ' + popupId);
+	openPopup(popupId, properties);
+}
+
+function debugProcessPopups() {
+	for (popupId in popups) {
+		debugOpenPopup(popupId, popupProperties[popupId]);
+	}
+}
