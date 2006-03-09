@@ -33,18 +33,27 @@ import org.araneaframework.uilib.support.FileInfo;
 public class FileDownloaderService extends BaseService {
 	protected FileInfo file;
 	
+	protected byte[] fileContent;
+	protected String contentType;
+	
 	public FileDownloaderService(FileInfo file) {
-		this.file = file;
+		this.fileContent = file.readFileContent();
+		this.contentType = file.getContentType();
+	}
+	
+	public FileDownloaderService(byte[] fileContent, String contentType) {
+		this.fileContent = fileContent;
+		this.contentType = contentType;
 	}
 
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ((ServletOutputData) output).getResponse();
-	    
+	     
 	    // XXX: basically cast from long to int - might be dangerous!!
-		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(file.readFileContent().length);
-	    byteOutputStream.write(file.readFileContent());
+		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(fileContent.length);
+	    byteOutputStream.write(fileContent);
 
-	    response.setContentType(file.getContentType());
+	    response.setContentType(contentType);
 	    response.setContentLength(byteOutputStream.size());
 
 	    OutputStream out = response.getOutputStream();
