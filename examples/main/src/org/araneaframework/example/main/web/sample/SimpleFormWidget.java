@@ -23,8 +23,12 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
+import org.araneaframework.uilib.form.control.DateControl;
+import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.control.TimeControl;
 import org.araneaframework.uilib.form.data.BooleanData;
+import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.form.data.StringData;
 
 
@@ -53,6 +57,9 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
     simpleForm.addElement("textbox1", el);
     simpleForm.addElement("button1", "#Button", new ButtonControl(), null, false);
+    simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
+    simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
+    simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
     addWidget("simpleForm", simpleForm);
     
     addGlobalEventListener(new ProxyEventListener(this));
@@ -63,8 +70,11 @@ public class SimpleFormWidget extends TemplateBaseWidget {
    */
   public void handleEventTestSimpleForm() throws Exception {
     if (simpleForm.convertAndValidate()) {
-    	getMessageCtx().showInfoMessage("Checkbox1 value is: " + ((FormElement) simpleForm.getElement("checkbox1")).getData().getValue());
-    	getMessageCtx().showInfoMessage("Textbox1 value is: " + simpleForm.getValueByFullName("textbox1"));
+    	getMessageCtx().showInfoMessage("Checkbox value is: " + ((FormElement) simpleForm.getElement("checkbox1")).getData().getValue());
+    	getMessageCtx().showInfoMessage("Textbox value is: " + simpleForm.getValueByFullName("textbox1"));
+    	getMessageCtx().showInfoMessage("DateTime value is: " + simpleForm.getValueByFullName("dateTime"));
+    	getMessageCtx().showInfoMessage("Time value is: " + simpleForm.getValueByFullName("time"));
+    	getMessageCtx().showInfoMessage("Date value is: " + simpleForm.getValueByFullName("date"));
     }
   }
   

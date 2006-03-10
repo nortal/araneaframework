@@ -36,6 +36,41 @@
 							<ui:textInput id="textbox1"/>
 						</ui:cell>
 					</ui:row>
+					
+					<ui:row>
+						<ui:formElement id="dateTime">
+							<ui:cell styleClass="name">
+								<ui:label/>
+							</ui:cell>
+	
+							<ui:cell styleClass="inpt">
+								<ui:dateTimeInput />
+							</ui:cell>
+						</ui:formElement>
+						
+						<ui:formElement id="time">
+							<ui:cell styleClass="name">
+								<ui:label/>
+							</ui:cell>
+	
+							<ui:cell styleClass="inpt">
+								<ui:timeInput />
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
+					
+					<ui:row>
+						<ui:formElement id="date">
+							<ui:cell styleClass="name">
+								<ui:label/>
+							</ui:cell>
+	
+							<ui:cell styleClass="inpt">
+								<ui:dateInput />
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
+					
 
 				</ui:componentForm>
 				

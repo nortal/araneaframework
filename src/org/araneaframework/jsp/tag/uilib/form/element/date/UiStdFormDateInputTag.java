@@ -67,7 +67,7 @@ public class UiStdFormDateInputTag extends UiStdFormDateTimeInputBaseTag {
 				dateInputSize,
 				validate,
 				viewModel.isDisabled(),
-        getStyleClass(),
+				getStyleClass(),
 				accessKey,
 				viewModel);
 		//if (validate) writeValidationScript(out, viewModel);
