@@ -72,7 +72,18 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 		UiUtil.writeAttribute(out, "id", name);
 		UiUtil.writeAttribute(out, "name", name);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
-		UiUtil.writeAttribute(out, "label", localizedLabel);
+		if (showLabel && mold.equals(UiStdFormButtonTag.MOLD_INPUT)) {
+			if (accessKey != null) {
+				String escapedLabel = StringUtil
+						.escapeHtmlEntities(localizedLabel);
+				UiUtil.writeAttribute(out, "value", StringUtil
+						.underlineAccessKey(escapedLabel, accessKey));
+			} else {
+				UiUtil.writeAttribute(out, "value", localizedLabel);			
+			}
+		}
+		if (mold.equals(UiStdFormButtonTag.MOLD_BUTTON))
+			UiUtil.writeAttribute(out, "label", localizedLabel);
 		UiUtil.writeAttribute(out, "tabindex", tabindex);
 		if (events) {
 			writeEventAttribute(out);
@@ -80,7 +91,10 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 		UiUtil.writeAttributes(out, attributes);
 		if (accessKey != null)
 			UiUtil.writeAttribute(out, "accesskey", accessKey);
-		UiUtil.writeCloseStartTag_SS(out);
+		if (mold.equals(UiStdFormButtonTag.MOLD_BUTTON))
+			UiUtil.writeCloseStartTag_SS(out);			
+		if (mold.equals(UiStdFormButtonTag.MOLD_INPUT))
+			UiUtil.writeCloseStartEndTag(out);			
 
 		// Continue
 		return EVAL_BODY_INCLUDE;
@@ -88,17 +102,19 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 
 	protected int after(Writer out) throws Exception {
 
-		if (showLabel) {
-			if (accessKey != null) {
-				String escapedLabel = StringUtil
-						.escapeHtmlEntities(localizedLabel);
-				out.write(StringUtil
-						.underlineAccessKey(escapedLabel, accessKey));
-			} else {
-				UiUtil.writeEscaped(out, localizedLabel);
+		if (mold.equals(UiStdFormButtonTag.MOLD_BUTTON)) {
+			if (showLabel) {
+				if (accessKey != null) {
+					String escapedLabel = StringUtil
+							.escapeHtmlEntities(localizedLabel);
+					out.write(StringUtil
+							.underlineAccessKey(escapedLabel, accessKey));
+				} else {
+					UiUtil.writeEscaped(out, localizedLabel);
+				}
 			}
+			UiUtil.writeEndTag(out, UiStdFormButtonTag.MOLD_BUTTON);
 		}
-		UiUtil.writeEndTag(out, mold.equals(UiStdFormButtonTag.MOLD_BUTTON) ? UiStdFormButtonTag.MOLD_BUTTON : UiStdFormButtonTag.MOLD_INPUT);
 
 		// Continue
 		super.after(out);

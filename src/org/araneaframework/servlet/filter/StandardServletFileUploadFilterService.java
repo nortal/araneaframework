@@ -23,8 +23,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
@@ -55,6 +57,8 @@ public class StandardServletFileUploadFilterService extends BaseFilterService {
       
       // Create a new file upload handler
       DiskFileUpload upload = new DiskFileUpload();
+      
+//      upload.setHeaderEncoding(request.getCharacterEncoding());
 
       // Set upload parameters
       // upload.setSizeThreshold(yourMaxMemorySize);
@@ -116,10 +120,11 @@ public class StandardServletFileUploadFilterService extends BaseFilterService {
       }
     }    
     
-    private String iso2utf(String input) throws java.io.UnsupportedEncodingException {
+    private String iso2utf(String input) throws java.io.UnsupportedEncodingException {    	
+//    	return input;
       if (input != null) {
         byte[] bytes = input.getBytes("ISO-8859-1");
-        return new String(bytes, "UTF-8");    
+        return new String(bytes, "UTF-8");
       }
       else {
         return null;
