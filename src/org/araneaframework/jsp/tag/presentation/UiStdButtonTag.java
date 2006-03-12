@@ -63,6 +63,8 @@ public class UiStdButtonTag extends UiButtonBaseTag {
     super.before(out);
 
     UiUtil.writeOpenStartTag(out, mold.equals(UiStdButtonTag.MOLD_BUTTON) ? UiStdButtonTag.MOLD_BUTTON : UiStdButtonTag.MOLD_INPUT);
+	if (mold.equals(UiStdButtonTag.MOLD_INPUT))
+		UiUtil.writeAttribute(out, "type", "button");    
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", getStyleClass());
     UiUtil.writeAttribute(out, "onclick", onclick);

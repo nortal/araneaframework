@@ -20,6 +20,7 @@ import java.io.Writer;
 
 import javax.servlet.jsp.JspException;
 
+import org.araneaframework.jsp.tag.uilib.form.element.UiStdFormButtonTag;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -59,6 +60,8 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 		super.before(out);                
 		// Write button tag
 		UiUtil.writeOpenStartTag(out, mold.equals(UiStdEventButtonTag.MOLD_BUTTON) ? UiStdEventButtonTag.MOLD_BUTTON : UiStdEventButtonTag.MOLD_INPUT);
+		if (mold.equals(UiStdEventButtonTag.MOLD_INPUT))
+			UiUtil.writeAttribute(out, "type", "button");		
 		UiUtil.writeAttribute(out, "id", id);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
 		if(disabled != null) 
