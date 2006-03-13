@@ -37,7 +37,7 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 	private static final String MOLD_BUTTON = "button";
 	private static final String MOLD_INPUT = "input";
 	
-	public String mold;	
+	protected String mold;	
 	
 	protected void init() {
 		super.init();

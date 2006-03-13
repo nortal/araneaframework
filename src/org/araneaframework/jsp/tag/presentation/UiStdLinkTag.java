@@ -68,7 +68,7 @@ public class UiStdLinkTag extends UiLinkBaseTag {
 		else
 			UiUtil.writeAttribute(out, "href", "javascript:");
 		
-		UiUtil.writeCloseStartTag(out);
+		UiUtil.writeCloseStartTag_SS(out);
 		
 		// Continue
 		return EVAL_BODY_INCLUDE;

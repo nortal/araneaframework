@@ -94,7 +94,6 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 		UiUtil.writeAttributes(out, attributes);    
 		UiUtil.writeCloseStartEndTag_SS(out);
 		
-		//<a href="javascript:;"><img src="gfx/ico_calendar.gif" id="start1Date_button_id" title="Ava kalender" alt="Ava kalender" class="ico"/></a>
 		if (!disabled) {
 			UiUtil.writeOpenStartTag(out, "a");
 			UiUtil.writeAttribute(out, "href", "javascript:;");
