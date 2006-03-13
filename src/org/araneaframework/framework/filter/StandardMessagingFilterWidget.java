@@ -119,4 +119,8 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   public void showInfoMessage(String message) {
     showMessage(INFO_TYPE, message);
   }
+  
+  public void clearMessages() {
+	  messages.clear();
+  }
 }
