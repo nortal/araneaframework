@@ -98,7 +98,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 		if (!disabled) {
 			UiUtil.writeOpenStartTag(out, "a");
 			UiUtil.writeAttribute(out, "href", "javascript:;");
-			UiUtil.writeCloseStartTag(out);
+			UiUtil.writeCloseStartTag_SS(out);
 
 			String calendarImgId = id + CALENDAR_BUTTON_ID_SUFFIX;
 			UiUtil.writeOpenStartTag(out, "img");
@@ -107,9 +107,9 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			out.write("\" ");
 			UiUtil.writeAttribute(out, "id", calendarImgId);
 			UiUtil.writeAttribute(out, "class", "ico");
-			UiUtil.writeCloseStartTag(out);
+			UiUtil.writeCloseStartTag_SS(out);
 	
-			UiUtil.writeEndTag(out, "a");
+			UiUtil.writeEndTag_SS(out, "a");
 		
 			writeCalendarScript(out, id, "%d.%m.%Y");
 		}
