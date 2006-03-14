@@ -44,7 +44,7 @@
 							</ui:cell>
 	
 							<ui:cell styleClass="inpt">
-								<ui:dateTimeInput />
+								<ui:dateTimeInput validateOnEvent="true"/>
 							</ui:cell>
 						</ui:formElement>
 						
@@ -54,7 +54,7 @@
 							</ui:cell>
 	
 							<ui:cell styleClass="inpt">
-								<ui:timeInput />
+								<ui:timeInput/>
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
@@ -66,16 +66,16 @@
 							</ui:cell>
 	
 							<ui:cell styleClass="inpt">
-								<ui:dateInput />
+								<ui:dateInput/>
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
 					
-
 				</ui:componentForm>
 				
 				<ui:componentActions>
-					<ui:eventButton id="button1" eventId="testSimpleForm" labelId="#Button" />
+					<ui:formElement id="button"><ui:button validateOnEvent="true"/></ui:formElement>
+					<!--  <ui:eventButton id="button1" eventId="testSimpleForm" labelId="#Button"/>  -->
 				</ui:componentActions>
 			</ui:component>
 

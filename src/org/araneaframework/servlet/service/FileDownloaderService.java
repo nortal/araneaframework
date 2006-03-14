@@ -51,10 +51,16 @@ public class FileDownloaderService extends BaseService {
 		this.fileName = normalizeFileName(fileName);
 	}
 	
+	/**
+	 * @return false if content-disposition header is set to "attachment"
+	 */
 	public boolean isContentDispositionInline() {
 		return contentDispositionInline;
 	}
 
+	/**
+	 * Sets content-disposition header to "inline" (true) or "attachment" (false).
+	 */
 	public void setContentDispositionInline(boolean contentDispositionInline) {
 		this.contentDispositionInline = contentDispositionInline;
 	}

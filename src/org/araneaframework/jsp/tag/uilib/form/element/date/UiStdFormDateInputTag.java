@@ -70,7 +70,7 @@ public class UiStdFormDateInputTag extends UiStdFormDateTimeInputBaseTag {
 				getStyleClass(),
 				accessKey,
 				viewModel);
-		//if (validate) writeValidationScript(out, viewModel);
+		if (validate) writeValidationScript(out, viewModel);
 		
 		// Continue
 		super.after(out);

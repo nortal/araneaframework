@@ -19,6 +19,7 @@ package org.araneaframework.example.main.web.sample;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
@@ -57,11 +58,15 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
     simpleForm.addElement("textbox1", el);
     simpleForm.addElement("button1", "#Button", new ButtonControl(), null, false);
-    simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
-    simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
-    simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
-    addWidget("simpleForm", simpleForm);
+    simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), true);
+    simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), true);
+    simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), true);
+
+	ButtonControl button = new ButtonControl();
+	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm") );
+	simpleForm.addElement("button", "#Button", button, null, false);
     
+    addWidget("simpleForm", simpleForm);
     addGlobalEventListener(new ProxyEventListener(this));
   }
   
