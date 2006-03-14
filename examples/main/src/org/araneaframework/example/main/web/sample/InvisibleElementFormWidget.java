@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.StringData;
 
-public class HiddenElementFormWidget extends TemplateBaseWidget {
+public class InvisibleElementFormWidget extends TemplateBaseWidget {
   private FormWidget form;
   
   protected void init() throws Exception {
@@ -53,14 +53,7 @@ public class HiddenElementFormWidget extends TemplateBaseWidget {
   }
 
   public void handleEventShowTitle() throws Exception {
-    if (form.getElementByFullName("showTitle").convertAndValidate()) {      
-      putViewData("showTitle", form.getValueByFullName("showTitle"));
-    }
-  }
-  
-  public void handleEventSearch() throws Exception {
-    if (form.convertAndValidate()) {      
-      getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Search allowed!");
-    }
+    //It's enough to convert and validate since we'll be using the element value in JSP
+    form.getElementByFullName("showTitle").convertAndValidate();
   }
 }

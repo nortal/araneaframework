@@ -41,7 +41,7 @@ import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.person.PersonListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
-import org.araneaframework.example.main.web.sample.HiddenElementFormWidget;
+import org.araneaframework.example.main.web.sample.InvisibleElementFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
 import org.araneaframework.servlet.ServletOutputData;
@@ -103,7 +103,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem(new MenuItem("Simple_Form", SimpleFormWidget.class));
       sampleMenu.addMenuItem(new MenuItem("Simple_List", SimpleListWidget.class));
       sampleMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
-      sampleMenu.addMenuItem(new MenuItem("#Invisible element form", HiddenElementFormWidget.class));
+      sampleMenu.addMenuItem(new MenuItem("#Invisible element form", InvisibleElementFormWidget.class));
     }
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Error")); {
