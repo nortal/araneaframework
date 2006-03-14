@@ -333,6 +333,7 @@ public class FormElement extends GenericFormElement {
     private Control.ViewModel control;
     private String label;
     private boolean valid;
+    private Object value;
     
     /**
      * Takes an outer class snapshot.     
@@ -342,6 +343,7 @@ public class FormElement extends GenericFormElement {
       this.control = (Control.ViewModel) FormElement.this.getControl()._getViewable().getViewModel();
       this.label = FormElement.this.getLabel();
       this.valid = FormElement.this.isValid();
+      this.value = FormElement.this.getData() != null ? FormElement.this.getData().getValue() : null;
     }    
     
     /**
@@ -366,6 +368,10 @@ public class FormElement extends GenericFormElement {
      */
     public boolean isValid() {
       return valid;
+    }
+
+    public Object getValue() {
+      return value;
     }
   }
 }

@@ -17,12 +17,10 @@
 package org.araneaframework.servlet.util;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.filter.StandardServletFileImportFilterService;
 
 /**
  * An util for dynamically including jsp pages.

@@ -29,7 +29,6 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.support.TextType;
 
-
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * @since {since}
