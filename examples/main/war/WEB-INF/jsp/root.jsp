@@ -35,7 +35,8 @@
                              <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
  
                              <div id="content">
-                                 <ui:messages/>
+	                             <ui:messages type="info"/>
+                                 <ui:messages type="error" styleClass="msg-error"/>
                                  <!-- Renders the menu widget itself. As MenuWidget is subclass
                                  	of StandardFlowContainerWidget, this means that actual
                                  	widget rendered here is whatever widget is on top of call
@@ -44,7 +45,7 @@
                              </div>
  
                              <div class="clear1"><ui:nbsp/></div>
-														 </div>
+							</div>
 				
                         </ui:systemForm>
                     </div>
