@@ -25,7 +25,7 @@
 		<ant dir="examples/main" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloWorld" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="clean" inheritall="false"/>
-		<!--ant dir="examples/widgetQuickStart1" target="clean" inheritall="false"/ -->
+		<ant dir="examples/widgetQuickStart" target="clean" inheritall="false"/>
 	</target>
 	
 	<!-- Clean up build system results -->
@@ -48,7 +48,7 @@
 		<ant dir="examples/main" target="build" inheritall="false"/>	
 		<ant dir="examples/serviceHelloWorld" target="build" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="build" inheritall="false"/>
-		<!--ant dir="examples/widgetQuickStart1" target="build" inheritall="false"/-->
+		<ant dir="examples/widgetQuickStart" target="build" inheritall="false"/>
 	</target>
 	
 	<target name="tld-check">
@@ -194,6 +194,7 @@
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/ioc/spring/**/*"/>			
 			</fileset>
+			<fileset dir="etc" includes="spring-property-conf/**/*"/>
 		</jar>	
 		
 		<jar destfile="dist/aranea-jsp.jar" compress="true">

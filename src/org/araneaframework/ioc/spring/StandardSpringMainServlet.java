@@ -24,23 +24,23 @@ import org.araneaframework.servlet.ServletServiceAdapterComponent;
 import org.araneaframework.servlet.core.StandardMainServlet;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardSpringMainServlet extends StandardMainServlet {
   
-  public static final String DEFAULT_ARANEA_ROOT = "application.root";
+  public static final String DEFAULT_ARANEA_ROOT = "applicationRoot";
   public static final String ARANEA_ROOT_INIT_PARAMETER_NAME = "aranea-application-root";
   
-	private WebApplicationContext beanFactory;
+	protected WebApplicationContext beanFactory;
 
-	public void init(ServletConfig config) throws ServletException {
-    ContextLoader loader = new ContextLoader();    
-    beanFactory = loader.initWebApplicationContext(config.getServletContext());
-		super.init(config);
+	public void init() throws ServletException {
+    beanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());   
+    
+		super.init();
 	}
   
   protected ServletServiceAdapterComponent buildRootComponent() {

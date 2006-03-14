@@ -3,7 +3,7 @@
 
 <beans>
 
-  <bean id="application.root" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+  <bean id="applicationRoot" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
     singleton="false">        
     <property name="childService" ref="router"/>
   </bean>  

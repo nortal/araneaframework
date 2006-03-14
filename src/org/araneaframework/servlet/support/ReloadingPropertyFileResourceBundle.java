@@ -30,9 +30,9 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  * @since {since}
  */
-public class PropertyFileResourceBundle extends LocaleAwareResourceBundle {
+public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBundle {
   
-  private static Logger log = Logger.getLogger(PropertyFileResourceBundle.class);
+  private static Logger log = Logger.getLogger(ReloadingPropertyFileResourceBundle.class);
 
   protected String propertyResource = "resources";  
 
@@ -43,9 +43,9 @@ public class PropertyFileResourceBundle extends LocaleAwareResourceBundle {
   protected Map properties = new HashMap();
 
 
-  public PropertyFileResourceBundle() {}
+  public ReloadingPropertyFileResourceBundle() {}
   
-  public PropertyFileResourceBundle(String propertyResource) {
+  public ReloadingPropertyFileResourceBundle(String propertyResource) {
     this.propertyResource = propertyResource;
   }
   

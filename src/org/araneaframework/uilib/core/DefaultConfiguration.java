@@ -16,15 +16,21 @@
 
 package org.araneaframework.uilib.core;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class DefaultConfiguration implements ConfigurationContext {
-
+  private Map confEntries = new HashMap();  
+  
   public Object getEntry(String entryName) {
-    return null;
+    return confEntries.get(entryName);
   }
 
+  public void setConfEntries(Map confEntries) {
+    this.confEntries = confEntries;
+  }
 }

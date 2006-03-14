@@ -45,14 +45,12 @@ public abstract class StandardMainServlet extends HttpServlet {
   private static final Logger log = Logger.getLogger(StandardMainServlet.class);
   private ServletServiceAdapterComponent serviceAdapter;
   
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-    
+  public void init() throws ServletException {
     serviceAdapter = buildRootComponent();    
 
     Map entries = new HashMap();
-    entries.put(ServletContext.class, config.getServletContext());
-    entries.put(ServletConfig.class, config);
+    entries.put(ServletContext.class, getServletContext());
+    entries.put(ServletConfig.class, getServletConfig());
     entries.putAll(getEnvironmentEntries());
     Environment env = new StandardEnvironment(null, entries);
     
@@ -64,7 +62,7 @@ public abstract class StandardMainServlet extends HttpServlet {
       throw new ServletException(e);
     }
     
-    log.info("Aranea started");
+    log.info("Aranea started");    
   }
   
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

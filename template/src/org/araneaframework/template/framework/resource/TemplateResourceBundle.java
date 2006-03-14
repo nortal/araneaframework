@@ -25,8 +25,10 @@ import org.araneaframework.servlet.support.StringResourceBundle;
 public class TemplateResourceBundle extends FallbackResourceBundle {
 
 	public TemplateResourceBundle() throws Exception {
+    setLocale(Locale.ENGLISH);
+    
     addResourceBundle(new StringResourceBundle());
-    addResourceBundle(ResourceBundle.getBundle("resource/template", Locale.ENGLISH));
-    addResourceBundle(ResourceBundle.getBundle("resource/uilib", Locale.ENGLISH));
+    addResourceBundle(ResourceBundle.getBundle("resource/template", getLocale()));
+    addResourceBundle(ResourceBundle.getBundle("resource/uilib", getLocale()));
   }
 }

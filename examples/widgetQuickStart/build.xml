@@ -44,7 +44,7 @@
 				<exclude name="j2ee.jar" />
 				<exclude name="jetty/*jar" />				
 			</fileset>
-			<fileset dir="../../build" includes="aranea.jar"/>	
+			<fileset dir="../../dist" includes="aranea.jar"/>	
 			<fileset dir="../../template/dist" includes="aranea-template.jar"/>						
 		</copy>
 		<copy todir="war/WEB-INF/classes">

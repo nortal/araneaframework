@@ -15,6 +15,12 @@
       org.araneaframework.servlet.core.StandardSessionListener
     </listener-class>
   </listener>
+  
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
 
    <servlet>
       <servlet-name>araneaServlet</servlet-name>

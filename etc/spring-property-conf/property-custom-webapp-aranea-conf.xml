@@ -8,17 +8,7 @@
   <bean id="applicationRoot" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
     singleton="false">
 
-    <property name="childService" ref="application.criticalErrorHandler"/>
-  </bean>
-  
-  <bean 
-    class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService" 
-    id="application.criticalErrorHandler" singleton="false">
     <property name="childService" ref="application.readFileFilter"/>
-    <property name="exceptionHandlerFactory">
-      <bean class="org.araneaframework.template.framework.error.TemplateCriticalErrorHandlerFactory"
-            singleton="false"/>
-    </property>
   </bean>
   
   <bean class="org.araneaframework.servlet.filter.StandardServletFileImportFilterService" id="application.readFileFilter"
@@ -60,23 +50,19 @@
   
   <bean class="org.araneaframework.framework.filter.StandardSerializingAuditFilterService" id="session.serializingAudit"
         singleton="false">
-    <property name="childService" ref="session.localizationFilter"/>
-    <!-- property name="testXmlSessionPath"> 
-      <value>c:/temp</value>
-    </property -->      
+    <property name="childService" ref="session.localizationFilter"/>     
   </bean> 
   
   <bean class="org.araneaframework.framework.filter.StandardLocalizationFilterService" id="session.localizationFilter" singleton="false">
     <property name="childService" ref="session.jspConfigFilter"/>
-    <property name="resourceBundleName"><value>org.araneaframework.template.framework.resource.TemplateResourceBundle</value></property>
-    <property name="languageName"><value>en</value></property>
+    <property name="resourceBundleName" value="${l10n.resourceBundle}"/>
+    <property name="languageName" value="${l10n.defaultLocale}"/>
   </bean>        
 
   <bean class="org.araneaframework.servlet.filter.StandardJspFilterService" id="session.jspConfigFilter" singleton="false">
     <property name="childService" ref="session.threadServiceRouter"/>
-    <property name="submitCharset" value="UTF-8"/>
-    <property name="jspPath" value="/WEB-INF/jsp"/>        
-    <!-- property name="uiTldPath" value="aranea-template.tld"/ -->
+    <property name="submitCharset" value="${l10n.encoding}"/>
+    <property name="jspPath" value="${jsp.path}"/>        
   </bean>
 
   <bean class="org.araneaframework.framework.router.StandardThreadServiceRouterService" id="session.threadServiceRouter" 
@@ -99,7 +85,7 @@
   <bean class="org.araneaframework.servlet.filter.StandardServletHttpFilterService" id="thread.headerFilter"
     singleton="false">
     <property name="childService" ref="thread.fileUploadFilter"/>
-    <property name="requestEncoding" value="UTF-8"/>
+    <property name="requestEncoding" value="${l10n.encoding}"/>
   </bean>
   
   <bean class="org.araneaframework.servlet.filter.StandardServletFileUploadFilterService" id="thread.fileUploadFilter"
@@ -138,15 +124,15 @@
     <property name="childWidget" ref="thread.popupFilter"/>
     <property name="contexts">    
       <map>
-        <entry key="org.araneaframework.uilib.ConfigurationContext.class">
-          <bean class="org.araneaframework.uilib.core.DefaultConfiguration" singleton="false"/>
-        </entry>       
+        <entry 
+          key="org.araneaframework.uilib.ConfigurationContext.class" 
+          value-ref="${configuration}"/>   
       </map>      
     </property>    
   </bean>
   
-    <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="thread.popupFilter"
-    singleton="false">
+  <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="thread.popupFilter"
+     singleton="false">
     <property name="childWidget" ref="thread.widgetContainer"/>
   </bean>
 
@@ -162,9 +148,11 @@
    </bean>
 
    <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="thread.mainCallStack" singleton="false">
-     <property name="top" ref="thread.login"/>
+     <property name="top" ref="araneaApplicationStart"/>
    </bean>
    
-  <bean class="org.araneaframework.example.main.web.LoginWidget" id="thread.login" singleton="false"/>
+ <!-- Separate beans -->   
 	
+  <bean id="araneaDefaultConfiguration" class="org.araneaframework.uilib.core.DefaultConfiguration" singleton="false"/>
+  
 </beans>
