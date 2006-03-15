@@ -25,7 +25,7 @@ import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
-import org.araneaframework.framework.util.StandardTransactionHelper;
+import org.araneaframework.framework.util.TransactionHelper;
 
 /**
  * Filters <code>update(InputData)</code>,  <code>event(Path, InputData)</code>, 
@@ -42,7 +42,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   public static final String TRANSACTION_ID_KEY = "transactionId";
   
   private static final Logger log = Logger.getLogger(StandardTransactionFilterWidget.class);  
-  private StandardTransactionHelper transHelper;
+  private TransactionHelper transHelper;
   
   private boolean consistent = true;
   
@@ -55,7 +55,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   }
   
   protected void init() throws Exception {
-    transHelper = new StandardTransactionHelper();
+    transHelper = new TransactionHelper();
     
     Map entries = new HashMap();
     entries.put(TransactionContext.class, this);
@@ -114,7 +114,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
 
   /**
    * Returns true, if the transaction id is consistent. Current implementation uses an instance
-   * of {@link StandardTransactionHelper} for determining the consistency. Can be overridden.
+   * of {@link TransactionHelper} for determining the consistency. Can be overridden.
    */
   protected boolean isConsistent(InputData input) throws Exception {  	  	
     return getTransactionId(input) == null || transHelper.isConsistent(getTransactionId(input));

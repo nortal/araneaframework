@@ -27,16 +27,16 @@ import org.araneaframework.servlet.util.AtomicResponseHelper;
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public abstract class StandardExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget {
-  private static final Logger log = Logger.getLogger(StandardExceptionHandlingFlowContainerWidget.class);
+public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget {
+  private static final Logger log = Logger.getLogger(ExceptionHandlingFlowContainerWidget.class);
   
   protected Exception exception;  
   
-  public StandardExceptionHandlingFlowContainerWidget() {
+  public ExceptionHandlingFlowContainerWidget() {
     super();
   }
 
-  public StandardExceptionHandlingFlowContainerWidget(Widget topWidget) {
+  public ExceptionHandlingFlowContainerWidget(Widget topWidget) {
     super(topWidget);
   }
   

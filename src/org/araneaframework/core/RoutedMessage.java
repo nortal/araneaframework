@@ -21,13 +21,13 @@ import org.araneaframework.Component;
 import org.araneaframework.Message;
 import org.araneaframework.Path;
 
-public abstract class StandardRoutedMessage implements Message {
-  private static final Logger log = Logger.getLogger(StandardRoutedMessage.class);
+public abstract class RoutedMessage implements Message {
+  private static final Logger log = Logger.getLogger(RoutedMessage.class);
   
   private Path path;
   private String destination;
   
-  public StandardRoutedMessage(Path path) {
+  public RoutedMessage(Path path) {
     this.path = path;
     destination = path.toString();
   }

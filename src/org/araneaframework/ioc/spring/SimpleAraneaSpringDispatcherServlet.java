@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import org.araneaframework.servlet.ServletServiceAdapterComponent;
-import org.araneaframework.servlet.core.StandardMainServlet;
+import org.araneaframework.servlet.core.BaseAraneaDispatcherServlet;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -32,7 +32,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-public class CustomWebAppSpringMainServlet extends StandardMainServlet {
+public class SimpleAraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   public static final String ARANEA_ROOT = "applicationRoot";
   
   protected WebApplicationContext beanFactory;

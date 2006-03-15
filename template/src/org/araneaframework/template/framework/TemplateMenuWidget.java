@@ -21,13 +21,13 @@ import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEventListener;
-import org.araneaframework.framework.container.StandardExceptionHandlingFlowContainerWidget;
+import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 import org.araneaframework.uilib.core.MenuItem;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public abstract class TemplateMenuWidget extends StandardExceptionHandlingFlowContainerWidget implements TemplateMenuContext {
+public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerWidget implements TemplateMenuContext {
 	public static final String MENU_VIEWDATA_KEY = "menu";
 	public static final String MENU_SELECT_EVENT_KEY = "menuSelect";
 	

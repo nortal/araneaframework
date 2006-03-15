@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import org.araneaframework.servlet.ServletServiceAdapterComponent;
-import org.araneaframework.servlet.core.StandardMainServlet;
+import org.araneaframework.servlet.core.BaseAraneaDispatcherServlet;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
@@ -30,7 +30,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class StandardSpringMainServlet extends StandardMainServlet {
+public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   
   public static final String DEFAULT_ARANEA_ROOT = "applicationRoot";
   public static final String ARANEA_ROOT_INIT_PARAMETER_NAME = "aranea-application-root";

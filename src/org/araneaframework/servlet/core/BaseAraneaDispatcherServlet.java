@@ -41,8 +41,8 @@ import org.araneaframework.servlet.ServletServiceAdapterComponent;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public abstract class StandardMainServlet extends HttpServlet {
-  private static final Logger log = Logger.getLogger(StandardMainServlet.class);
+public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
+  private static final Logger log = Logger.getLogger(BaseAraneaDispatcherServlet.class);
   private ServletServiceAdapterComponent serviceAdapter;
   
   public void init() throws ServletException {

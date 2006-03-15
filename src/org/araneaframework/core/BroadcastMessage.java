@@ -19,7 +19,7 @@ package org.araneaframework.core;
 import org.araneaframework.Component;
 import org.araneaframework.Message;
 
-public abstract class StandardBroadcastMessage implements Message {
+public abstract class BroadcastMessage implements Message {
   public final void send(Object id, Component component) throws Exception {
     this.execute(component);
     

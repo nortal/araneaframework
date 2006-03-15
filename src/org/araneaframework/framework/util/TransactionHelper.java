@@ -25,7 +25,7 @@ import java.util.Random;
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardTransactionHelper implements Serializable {
+public class TransactionHelper implements Serializable {
   //*******************************************************************
   // FIELDS
   //*******************************************************************

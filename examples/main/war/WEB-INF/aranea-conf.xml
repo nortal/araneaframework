@@ -49,7 +49,7 @@
     <property name="sessionServiceFactory" ref="application.sessionServiceFactory"/>
   </bean>
 
-  <bean class="org.araneaframework.ioc.spring.StandardSpringServiceFactory" id="application.sessionServiceFactory"
+  <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" id="application.sessionServiceFactory"
         singleton="false">
     <property name="beanId">
       <idref bean="session.serializingAudit"/>
