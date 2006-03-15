@@ -23,9 +23,9 @@ import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.Control;
 
 
 /**

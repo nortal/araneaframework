@@ -103,7 +103,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
 	public void handleEventSelectFile(String param) throws Exception {
 		FileInfo selectedFile = (FileInfo) uploadList.getRowFromRequestId(param);
 		
-		getMessageCtx().showInfoMessage("Popup window with download content should have opened. If it did not, please loosen your popup blocker settings.");
+		getMessageCtx().showInfoMessage("Popup window with download content should have opened. If it did not, please relax your popup blocker settings.");
 		
 		String rndServiceId = RandomStringUtils.random(30, true, true);
 		ThreadContext threadContext = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);

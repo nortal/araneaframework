@@ -14,11 +14,10 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.form.constraint;
+package org.araneaframework.uilib.form;
 
 import java.util.List;
 import org.araneaframework.Environment;
-import org.araneaframework.uilib.form.FormElement;
 
 public interface Constraint {
 

@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.form.data;
+package org.araneaframework.uilib.form;
 
 import org.araneaframework.uilib.DataItemTypeViolatedException;
 
