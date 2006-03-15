@@ -16,19 +16,99 @@
 
 <chapter id="framework">
 	<title>Framework</title>
-	<sect1>
-		<title>Framework components</title>
+  <sect1>
+    <title>Overview</title>
+
+    <para>
+      Aranea framework consists of a number of independent components each performing a single well-defined function. This classes are arranged together during deployment and usually involving an IoC container (like Spring) for configuration. These components may be simple <literal>Component</literal>s, <literal>Service</literal>s or <literal>Widget</literal>s. 
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Configuration</title>
+     
     <sect2>
-      <title>Example service</title>
+      <title>Spring Configuration in a Web Application</title>
+
+      <para>
+        The most common way to configure Aranea for a web application is using Spring and <literal>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</literal>:
+      <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC 
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value> 
+      /WEB-INF/aranea-conf.xml
+    </param-value>
+  </context-param>
+
+  <listener>
+    <listener-class>
+      org.araneaframework.servlet.core.StandardSessionListener
+    </listener-class>
+  </listener>
+  
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>  
+
+   <servlet>
+      <servlet-name>araneaServlet</servlet-name>
+      <servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>araneaServlet</servlet-name>
+      <url-pattern>/main</url-pattern>
+   </servlet-mapping>
+</web-app>]]></programlisting>
+      This configuration uses Spring to load the <literal>/WEB-INF/aranea-conf.xml</literal> configuration file, one can also add other files that iconfigure different Spring beans. <literal>org.springframework.web.context.ContextLoaderListener</literal> is a Spring Servlet listener that loads the configuration. <literal>org.araneaframework.servlet.core.StandardSessionListener</literal> is an Aranea session listener that is needed for successful widget deinitialization. <literal>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</literal> expects to find a Spring bean with identifier "applicationRoot" that must be an instance of <literal>org.araneaframework.servlet.ServletServiceAdapterComponent</literal> and will be used as application root.
+      </para>
+
+      <para>
+        Following is an example of a very simple Aranea web application configuration:
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC 
+  "-//SPRING//DTD BEAN//EN" 
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <bean id="applicationRoot" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    singleton="false">        
+    <property name="childService" ref="router"/>
+  </bean>  
+  <bean class="org.araneaframework.servlet.router.PathInfoServiceRouterService" id="router"
+    singleton="false">
+    <property name="defaultServiceId" value="name"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="name">
+           <bean class="org.araneaframework.example.helloname.NameService" singleton="false"/>
+        </entry>
+        <entry key="hello">
+           <bean class="org.araneaframework.example.helloname.HelloService" singleton="false"/>
+        </entry>        
+      </map>
+    </property>
+  </bean>
+  
+</beans>]]></programlisting>
+      This configuration comes from example <literal>examples/serviceHelloName/war/WEB-INF/aranea-conf.xml</literal> and is a very simple static configuration. For a more elaborate example see <literal>examples/main/war/WEB-INF/aranea-conf.xml</literal>. Note though that even here all beans are declared to be non-singletons, which should always be the case with Aranea beans. 
+      </para>
     </sect2>
-	</sect1>
-	<sect1>
-		<title>Framework configuration</title>
-    <sect2>
-      <title>Hosting widgets</title>
-    </sect2>
-	</sect1>
-	<sect1>
-		<title>Exception handling</title>
-	</sect1>
+  </sect1>
+
+  <sect1>
+    <title>Components</title>
+  </sect1>
+
+  <sect1>
+    <title>Exception Handling</title>
+  </sect1>
 </chapter>

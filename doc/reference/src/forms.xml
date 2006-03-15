@@ -20,7 +20,7 @@
     <title>Introduction</title>
 
     <para>
-      One of the most common tasks in web applications is gathering user input, converting it to model objects and the validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity.
+      One of the most common tasks in web applications is gathering user input, converting it to model objects and then validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity.
     </para>
 
     <para>
@@ -38,14 +38,86 @@
       The following example shows how to create a control:
 <programlisting role="java">...
 TextControl textBox = new TextControl(new Long(10), null);
-textBox.setMandatory(true);
-textBox.setLabel("myTextBox.labelKey");
 ...</programlisting>
-      This code will create a mandatory textbox with a minimal length of 10 and a localizable label key "myTextBox.labelKey" (note that all Aranea labels are localizable by default). Note also that this code does not yet put the control to work, as controls are never used without forms, which are reviewed in the next section. 
+      This code will create a textbox with a minimal length of 10. Note that this code does not yet put the control to work, as controls are never used without forms, which are reviewed in the next section. 
     </para>
 
     <para>
-      TODO: Select controls, Control table
+        Follows a table of standard controls all found in <literal>org.araneaframework.uilib.form.control</literal> package:
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Control</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry><literal>TextControl</literal></entry>
+                <entry>A simple textbox control with one row of text 
+                that can constrain the inserted text minimal and maximal length.</entry>
+              </row>
+              <row>
+                <entry><literal>TextareaControl</literal></entry>
+                <entry>A multirow textbox control that can constrain the inserted text minimal and maximal length.</entry>
+              </row>
+              <row>
+                <entry><literal>NumberControl</literal></entry>
+                <entry>A textbox control that constrains the text to be integer numbers. Can also check
+                the allowed minimum and maximum limits. </entry>
+              </row>
+              <row>
+                <entry><literal>FloatControl</literal></entry>
+                <entry>A textbox control that constrains the text to be floating-point numbers. Can also check
+                the allowed minimum and maximum limits. </entry>
+              </row>
+              <row>
+                <entry><literal>TimeControl</literal></entry>
+                <entry>A time selection control that allows to choose a time of day. Supports custom formats of time input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>DateControl</literal></entry>
+                <entry>A date selection control that allows to choose a date. Supports custom formats of date input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>DateTimeControl</literal></entry>
+                <entry>A date and time selection control that allows to choose a date with a corresponding time. 
+                Supports custom formats of date and time input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>SelectControl</literal></entry>
+                <entry>A control that allows to select one of many choices (may be rendered as a dropdown list or option buttons). 
+                Ensures that the submitted value was one of the choices.</entry>
+              </row>
+              <row>
+                <entry><literal>MultiSelectControl</literal></entry>
+                <entry>A control that allows to select severl from many choices (may be rendered as a multiselect list or checkbox list). 
+                Ensures that the submitted values are a subset of the choices.</entry>
+              </row>
+              <row>
+                <entry><literal>CheckboxControl</literal></entry>
+                <entry>A control that represents a binary choice and is usually rendered as a checkbox.</entry>
+              </row>
+              <row>
+                <entry><literal>DisplayControl</literal></entry>
+                <entry>A control that can be used to render a read-only value that will not be submitted with an HTML form.</entry>
+              </row>
+              <row>
+                <entry><literal>HiddenControl</literal></entry>
+                <entry>A control that can be used to render an invisible value that will be submitted with an HTML form.</entry>
+              </row>
+              <row>
+                <entry><literal>FileUploadControl</literal></entry>
+                <entry>A control that can be used to upload files to the server.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        TODO: Select controls
     </para>
   </sect1>
   <sect1>
@@ -83,13 +155,15 @@ protected void init() {
   </varlistentry>
   <varlistentry>
     <term>Add form fieds</term>
-    <listitem>The line <literal>myForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true)</literal> adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (note that in the example it is escaped with a "#", which is the default way to escape non-localizable strings), a text box control with a minimal length of 3 and that is mandatory.</listitem>
+    <listitem>The line <literal>myForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true)</literal> adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (labels in Aranea are localizable by default and "#" escapes a non-localizable string), a text box control with a minimal length of 3 and that is mandatory.</listitem>
   </varlistentry>
   <varlistentry>
     <term>Write JavaBean</term>
     <listitem>The line <literal>myForm.writeBean(myModel)</literal> writes the data in the JavaBean properties to the corresponding form fields.</listitem>
   </varlistentry>
 </variablelist>  
+</para>
+<para>
 Now that we have created the form we show how to process events, validate and read the request data. The following example code should be in the same widget as the previous:
 <programlisting role="java">...
 private void handleEventSave() {

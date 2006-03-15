@@ -86,6 +86,29 @@
       <para>
         This tag should always be the root of any Aranea template JSP. Its main function is to allow JSP access the controller.
       </para>
+
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>outputData</entry>
+                <entry>The <literal>org.araneaframework.OutputData</literal> that represents the current response.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
     </sect2>
     
     <sect2>
@@ -495,9 +518,9 @@
     </sect2>
     
     <sect2>
-      <title><![CDATA[<ui:eventButton>]]></title>
+      <title><![CDATA[<ui:eventButton> and <ui:eventLinkButton>]]></title>
       <para>
-        This tag will render a button that when clicked will send a specified event to the the target widget with an optional <literal>String</literal> parameter.
+        This tags will render a button (or a link) that when clicked will send a specified event to the the target widget with an optional <literal>String</literal> parameter. 
       </para>
 
       <sect3>
@@ -554,7 +577,10 @@
         <title>HTML, Styles and JavaScript</title>
 
         <para>
-          This tag writes out an HTML <literal>&lt;button&gt;</literal> tag with a default CSS class of "aranea-button".
+          The <literal>eventButton</literal> tag writes out an HTML <literal>&lt;button&gt;</literal> closed tag with a default CSS class of "aranea-button".
+        </para>
+        <para>
+          The <literal>eventLinkButton</literal> tag writes out an HTML <literal>&lt;a&gt;</literal> open tag with a default CSS class of "aranea-link-button".
         </para>
       </sect3>
       
@@ -564,13 +590,17 @@
 ...
   <ui:widgetContext>
     ...
-    <ui:eventButton eventId="test" eventParam="${row.id}"/>
+    <ui:eventButton eventId="test" eventParam="${bean.id}"/>
+    <ui:eventLinkButton eventId="edit" eventParam="${bean.id}">
+      <ui:image code="edit"/>
+    </ui:eventLinkButton>
     ...
   </ui:widgetContext>
 ...]]></programlisting>      
       </sect3>
     </sect2>
-  </sect1>
+    
+     </sect1>
 
   
   <sect1>
