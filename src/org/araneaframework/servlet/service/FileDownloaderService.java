@@ -23,6 +23,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
+import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.uilib.support.FileInfo;
 
@@ -94,18 +95,20 @@ public class FileDownloaderService extends BaseService {
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ((ServletOutputData) output).getResponse();
 		
-	    // XXX: basically cast from long to int - might be dangerous!!
+	  // XXX: basically cast from long to int - might be dangerous!!
 		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(fileContent.length);
-	    byteOutputStream.write(fileContent);
+    byteOutputStream.write(fileContent);
 
-	    response.setContentType(contentType);
-	    response.setHeader("Content-Disposition", (contentDispositionInline ? "inline;" : "attachment;") + "filename=" + fileName);
-	    response.setContentLength(byteOutputStream.size());
+    response.setContentType(contentType);
+    response.setHeader("Content-Disposition", (contentDispositionInline ? "inline;" : "attachment;") + "filename=" + fileName);
+    response.setContentLength(byteOutputStream.size());
 
-	    OutputStream out = response.getOutputStream();
-	    byteOutputStream.writeTo(out);
-	    out.flush();
-
-		super.action(path, input, output);
+    OutputStream out = response.getOutputStream();
+    byteOutputStream.writeTo(out);
+    out.flush();
+      
+    //Ensure that allow to download only once...
+    ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
+    mngCtx.close(mngCtx.getCurrentId());
 	}
 }
