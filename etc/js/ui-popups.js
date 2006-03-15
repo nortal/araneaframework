@@ -50,19 +50,6 @@ function currentUrl() {
 	}
 }
 
-function debugCurrentUrl() {
-	if (document.system_form_0.action) {
-		alert('found document.system_form_0.action');
-		return document.system_form_0.action;
-	}
-	else if (system_form_0.action) {
-		alert('found system_form_0.action');
-		return system_form_0.action;
-	} else {
-		alert('Unable to get information about current URL. Requested popups probably cannot be processed.');
-	}
-}
-
 function addPopup(popupId, properties) {
 	popups[popupId] = popupId;
 	popupProperties[popupId] = properties;
@@ -79,16 +66,5 @@ function openPopup(popupId, properties) {
 function processPopups() {
 	for (popupId in popups) {
 		openPopup(popupId, popupProperties[popupId]);
-	}
-}
-
-function debugOpenPopup(popupId, properties) {
-	url = currentUrl() + requestArgumentsPrefix + popupId;
-	window.open(url, popupId, properties);
-}
-
-function debugProcessPopups() {
-	for (popupId in popups) {
-		debugOpenPopup(popupId, popupProperties[popupId]);
 	}
 }

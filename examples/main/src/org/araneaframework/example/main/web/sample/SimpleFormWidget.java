@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -34,7 +33,9 @@ import org.araneaframework.uilib.form.data.StringData;
 
 
 /**
- * Simple form component. A form with one checkbox, one textbox and a button.
+ * Simple form component. A form with one checkbox, one textbox and 
+ * three kinds of different timeinputs (DateInput, Timeinput and 
+ * DateTimeInput) and a button.
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  */
@@ -44,36 +45,54 @@ public class SimpleFormWidget extends TemplateBaseWidget {
   private FormWidget simpleForm;
   
   /**
-   * Builds the form with one checkbox, one textbox and a button.
+   * Builds the form.
    */
   protected void init() throws Exception {
 	super.init();
 	
 	setViewSelector("sample/simpleForm");
 
-    simpleForm = new FormWidget();
+    // creation of new form
+	simpleForm = new FormWidget();
     
+	// now that we have created a form, we will need to add form elements.
+	// form elements consist of four basic things - label, Control that represents
+	// form element functionality and Data holding values that form element can have.
+	// note that the first sample with FormWidget's createElement method is not the
+	// way form elements are usually added to the form, but rather emphasises the
+	// fact that everything you add to FormWidget is a FormElement.
+
+	//  createElement(String labelId, Control control, Data data, boolean mandatory)
     FormElement el = simpleForm.createElement("#Textbox", new TextControl(), new StringData(), false);
-    
-    simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
     simpleForm.addElement("textbox1", el);
+    
+    // and here we add form elements to form without the extra step taken previously. 
+    simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
     simpleForm.addElement("button1", "#Button", new ButtonControl(), null, false);
     simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), true);
     simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), true);
     simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), true);
 
-	ButtonControl button = new ButtonControl();
+	// now we construct a button, that is also Control. Reason why we cannot just add it
+    // to form is obvious, we want to add a specific listener to button before.
+    ButtonControl button = new ButtonControl();
 	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm") );
+	// add the button to form. As the button does not hold any value, Data will be null.
 	simpleForm.addElement("button", "#Button", button, null, false);
     
-    addWidget("simpleForm", simpleForm);
-    addGlobalEventListener(new ProxyEventListener(this));
+    // the usual, add the created widget to main widget.
+	addWidget("simpleForm", simpleForm);
   }
   
   /**
-   * A test action.
+   * A test action, invoked when button is pressed. It adds the values of 
+   * formelements to message context, and they end up at the top of user screen
+   * at the end of the request.
    */
   public void handleEventTestSimpleForm() throws Exception {
+    // if form is not invalid, do not try to show form element values 
+    // (error messages are added automatically to the messagecontext 
+    // though, user will not be without feedback)
     if (simpleForm.convertAndValidate()) {
     	getMessageCtx().showInfoMessage("Checkbox value is: " + ((FormElement) simpleForm.getElement("checkbox1")).getData().getValue());
     	getMessageCtx().showInfoMessage("Textbox value is: " + simpleForm.getValueByFullName("textbox1"));
@@ -82,9 +101,4 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     	getMessageCtx().showInfoMessage("Date value is: " + simpleForm.getValueByFullName("date"));
     }
   }
-  
-  public void handleEventReturn(String eventParameter) throws Exception {
-	  log.debug("Event 'return' received!");
-	  getFlowCtx().cancel();
-  }	
 }

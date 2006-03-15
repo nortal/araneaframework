@@ -67,7 +67,7 @@
 			any subdirectory and give command <literal>ant run-app</literal>. For main
 			example (<literal>examples/main</literal>), in-memory database should be started
 			first (otherwise some parts of it will not function). Database is started with command
-			<literal>ant run-database</literal>.
+			<literal>ant run-database</literal> in the <literal>examples/main</literal> directory.
 		</para>
 		<para>
 			To test the running examples, point your browser to 
@@ -84,16 +84,16 @@
 		<para>
 			<itemizedlist spacing="compact">
 				<listitem>
-					<literal>war/WEB-INF/web.xml</literal> (deployment descriptor)
+					<literal>examples/.../war/WEB-INF/web.xml</literal> (deployment descriptor)
 				</listitem>
 				<listitem>
-					<literal>war/WEB-INF/aranea-conf.xml</literal> (Aranea configuration)
+					<literal>examples/.../war/WEB-INF/aranea-conf.xml</literal> (Aranea configuration)
 				</listitem>
 				<listitem>
-					<literal>war/WEB-INF/hibernate.cfg.xml</literal> (object relational mapping engine config)
+					<literal>examples/.../war/WEB-INF/hibernate.cfg.xml</literal> (object relational mapping engine config)
 				</listitem>
 				<listitem>
-					<literal>log4j.xml</literal> (logging configuration)
+					<literal>examples/log4j.xml</literal> (logging configuration)
 				</listitem>
 			</itemizedlist>
 		</para>
@@ -116,12 +116,33 @@
 			whenever an HTTP request to URL with matching pattern is
 			made. Often all requests go through one main
 			servlet&mdash;requests with different parameters will all be
-			made to the same URL (in our case <literal>/main</literal>).
-
+			made to the same URL (in case of framework main example this is <literal>/main</literal>).
+            
 			<programlisting role="xml"><![CDATA[<servlet-mapping>
     <servlet-name>araneaServlet</servlet-name>
     <url-pattern>/main</url-pattern>
 </servlet-mapping>]]></programlisting>
+
+            In addition there is <literal>contextConfigLocation</literal> parameter, that specifies
+            Spring bean configuration files read in by Spring's
+            <literal>ContextLoaderListener</literal> and
+            Aranea specific sessionlistener that takes over some session handling functions.
+
+            <programlisting role="xml"><![CDATA[<context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value> 
+        /WEB-INF/services.xml   
+        /WEB-INF/aranea-conf.xml
+    </param-value>
+</context-param>
+
+<listener>
+    <listener-class>org.araneaframework.servlet.core.StandardSessionListener</listener-class>
+</listener>
+
+<listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+</listener>]]></programlisting>
 
 			Actual servicing of all requests coming in is done by Aranea.
 			Exact mechanism of that is explained in the following section.
@@ -685,8 +706,202 @@ public void handleEventBypass() throws Exception {
             <sect3>
                 <title>Forms</title>
                 <para>
-                    TODO: forms, containing different control types. (Simple form, additions, multiselects?)
+                    Forms allow user to enter some kind of data and transfer it to wherever application programmer chooses.
+                    Aranea represents forms by <literal>FormWidget</literal> and <literal>BeanFormWidget</literal> classes.
+                    We will look at <literal>FormWidget</literal> first, because using it requires a little less setup. In
+                    practice application programmers probably will be using <literal>BeanFormWidget</literal> most of the
+                    time&mdash;because of its convenient data binding capabilities.
                 </para>
+                
+                <sect4><title>Simple Form</title>
+                <para>
+                    Our first example is the one that can be found under Samples->Simple Form in template application.
+                    It is non-practical, demonstrating form creation and reading single values from form. We also
+                    communicate the values read in back to user to convince him/her that we are really able to read
+                    from forms.
+                </para>
+                
+                <programlisting role="java"><![CDATA[...
+
+// we hold the form as instance variable
+private FormWidget simpleForm;
+
+/**
+* Builds the form.
+*/
+protected void init() throws Exception {
+    super.init();
+
+    setViewSelector("sample/simpleForm");
+
+    // creation of new form
+    simpleForm = new FormWidget();
+
+    // now that we have created a form, we will need to add form elements.
+    // form elements consist of four basic things - label, Control that represents
+    // form element functionality and Data holding values that form element can have.
+    // note that the first sample with FormWidget's createElement method is not the
+    // way form elements are usually added to the form, but rather emphasises the
+    // fact that everything you add to FormWidget is a FormElement.
+
+    // createElement(String labelId, Control control, Data data, boolean mandatory)
+    FormElement el = simpleForm.createElement("#Textbox", new TextControl(), new StringData(), false);
+    SimpleForm.addElement("textbox1", el);
+
+    // and here we add form elements to form without the extra step taken previously. 
+    SimpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
+    SimpleForm.addElement("button1", "#Button", new ButtonControl(), null, false);
+    SimpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), true);
+    SimpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), true);
+    SimpleForm.addElement("date", "#Date", new DateControl(), new DateData(), true);
+
+    // now we construct a button, that is also Control. Reason why we cannot just add it
+    // to form is obvious, we want to add a specific listener to button before.
+    ButtonControl button = new ButtonControl();
+    button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm") );
+    // add the button to form. As the button does not hold any value, Data will be null.
+    SimpleForm.addElement("button", "#Button", button, null, false);
+
+    // the usual, add the created widget to main widget.
+    addWidget("simpleForm", simpleForm);
+}
+
+/**
+* A test action, invoked when button is pressed. It adds the values of 
+* formelements to message context, and they end up at the top of user screen
+* at the end of the request.
+*/
+public void handleEventTestSimpleForm() throws Exception {
+    // if form is not invalid, do not try to show form element values 
+    // (error messages are added automatically to the messagecontext 
+    // though, user will not be without feedback)
+    if (simpleForm.convertAndValidate()) {
+        getMessageCtx().showInfoMessage("Checkbox value is: " + ((FormElement) simpleForm.getElement("checkbox1")).getData().getValue());
+        getMessageCtx().showInfoMessage("Textbox value is: " + simpleForm.getValueByFullName("textbox1"));
+        getMessageCtx().showInfoMessage("DateTime value is: " + simpleForm.getValueByFullName("dateTime"));
+        getMessageCtx().showInfoMessage("Time value is: " + simpleForm.getValueByFullName("time"));
+        getMessageCtx().showInfoMessage("Date value is: " + simpleForm.getValueByFullName("date"));
+    }
+}
+
+...]]></programlisting>
+
+                <para>
+                    JSP used to render the previos widget looks as follows and should be quite self explaining.
+                    Pay attention to different tags are used to render controls&mdash;DateControl and &lt;ui:dateInput&gt;,
+                    TextControl and &lt;ui:textInput&gt; etc.
+                </para>
+                
+                <programlisting role="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Set the form context, the form we will be rendering here. 
+    We cannot as simply refer to form elements unless we define it here. -->
+<ui:form id="simpleForm">
+
+    <!-- Now, these are the first custom tags in template application. They do
+         nothing particularly interesting, just set up the HTML DIV element
+         containing the component header -->
+    <ui:componentHeader>
+        <ui:componentName>Tutorial first form</ui:componentName>
+    </ui:componentHeader>
+
+    <!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
+    <ui:component>
+    
+        <!-- Custom tag, but more interesting that previous tags. It derives from
+             UiLayoutBaseTag tag, it gives one ability to put row tags inside of it. 
+             Attribute rowClass defines the styleClass attribute for rows inserted under 
+             componentForm here. In HTML, this tag creates a TABLE. -->
+        <ui:componentForm rowClass="cols4">
+
+            <!-- As we can insert rows now, we just do that. -->
+            <ui:row>
+                <!-- ... we can insert cells too! As we defined componentForm rowClass 
+                    to be cols4  we should insert 4 cells here... -->
+                <ui:cell styleClass="name">
+                    <!-- label is formelement centric tag. As we are inside the form 
+                    already, we provide it with form element id and corresponding 
+                    form element label will be shown -->
+                    <ui:label id="checkbox1" />
+                </ui:cell>
+
+                <ui:cell styleClass="inpt">
+                    <!-- This is another approach to providing information about
+                        form element that tag should apply to - instead providing
+                        form element id to every single tag, tags could be enclosed
+                        inside single formElement tag.
+                     -->
+                    <ui:formElement id="checkbox1">
+                        <!-- will draw a checkbox tied to form element with id "checkbox1" -->
+                        <ui:checkbox/>
+                    </ui:formElement>
+                </ui:cell>
+
+                <ui:cell styleClass="name">
+                    <ui:label id="textbox1" />
+                </ui:cell>
+
+                <ui:cell styleClass="inpt">
+                    <!-- As "textbox1" is TextControl, we choose the corresponding tag to render it -->
+                    <ui:textInput id="textbox1" />
+                </ui:cell>
+            </ui:row>
+
+            <!-- another row, and we just keep on going until all form elements have been described. -->
+            <ui:row>
+                <ui:formElement id="dateTime">
+                    <ui:cell styleClass="name">
+                        <ui:label />
+                    </ui:cell>
+
+                    <ui:cell styleClass="inpt">
+                        <ui:dateTimeInput/>
+                    </ui:cell>
+                </ui:formElement>
+
+                <ui:formElement id="time">
+                    <ui:cell styleClass="name">
+                        <ui:label />
+                    </ui:cell>
+
+                    <ui:cell styleClass="inpt">
+                        <ui:timeInput />
+                    </ui:cell>
+                </ui:formElement>
+            </ui:row>
+
+            <ui:row>
+                <ui:formElement id="date">
+                    <ui:cell styleClass="name">
+                        <ui:label />
+                    </ui:cell>
+
+                    <ui:cell styleClass="inpt">
+                        <ui:dateInput />
+                    </ui:cell>
+                </ui:formElement>
+            </ui:row>
+
+        </ui:componentForm>
+
+        <!-- pure design tag -->
+        <ui:componentActions>
+            <ui:formElement id="button">
+                <ui:button/>
+            </ui:formElement>
+        </ui:componentActions>
+    </ui:component>
+
+</ui:form>
+]]></programlisting>
+    </sect4>
+                
+                <sect4><title>Forms continued</title>
+                    <para>
+                        TODO: forms, containing different control types. (beanform, listeners (complex form?))
+                    </para>
+                </sect4>
                 
             </sect3>
             
