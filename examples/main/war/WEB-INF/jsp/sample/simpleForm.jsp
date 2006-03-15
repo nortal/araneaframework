@@ -74,8 +74,7 @@
 				</ui:componentForm>
 				
 				<ui:componentActions>
-					<ui:formElement id="button"><ui:button validateOnEvent="true"/></ui:formElement>
-					<!--  <ui:eventButton id="button1" eventId="testSimpleForm" labelId="#Button"/>  -->
+					<ui:formElement id="button"><ui:button validateOnEvent="true" validate="true"/></ui:formElement>
 				</ui:componentActions>
 			</ui:component>
 
