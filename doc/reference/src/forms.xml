@@ -257,6 +257,8 @@ addWidget("searchForm", searchForm);
 ...</programlisting>
         The example use case is a two scenario search&mdash;either both client first name and client last name fields are filled in or both town and street address fields are filled in, otherwise an error message "Not enough data for search!" is shown. The constraints will be validated when <literal>convertAndValidate()</literal> method is called on <literal>searchForm</literal>. Note that the constraint is added to the form itself, rather than to its elements&mdash;this is a typical idiom, when the constraint involves several elements.
       </para>
+
+      TODO: a table of constraints
     </sect2>
 
     <sect2>
@@ -275,7 +277,7 @@ myForm.addElement("numberOfChildren", "#No. of chidren",
 private void handleEventSave() {
   if (myForm.convertAndValidate()) {
     ...
-    Long numberOfChildren = myForm.getValueByFullName("numberOfChildren");
+    Long numberOfChildren = (Long) myForm.getValueByFullName("numberOfChildren");
     //Alternative:
     //FormElement nocEl = (FormElement) myForm.getElement("numberOfChildren");
     //numberOfChildren = nocEl.getValue();
@@ -287,9 +289,10 @@ private void handleEventSave() {
       </para>
 
       <para>
-        Note that the reason for existence of <literal>Data</literal> objects is that Java types correspond poorly to some restricted types&mdash;for instance enumerations, type encodings and collections container types (this problem is somewhat solved in Java 5, but Aranea is compatible with Java 1.3).
+        Note that the reason for existence of <literal>Data</literal> objects is that Java types correspond poorly to some restricted types&mdash;for instance enumerations, type encodings and collections container types (this problem is somewhat solved in Java 5, but Aranea is compatible with Java 1.3).        
       </para>
 
+      TODO: a table of Data types?
     </sect2>
     
     <sect2>
