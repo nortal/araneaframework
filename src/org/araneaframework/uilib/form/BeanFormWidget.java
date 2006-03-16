@@ -16,8 +16,6 @@
 
 package org.araneaframework.uilib.form;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
