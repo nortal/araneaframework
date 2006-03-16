@@ -1116,6 +1116,12 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 
                 </sect4>
                 
+                <sect4><title>Advanced forms</title>
+                    Real world forms tend to be considerably more complex than simple examples presented before.
+                    They very often require entering differing data based on some form element values, need to
+                    be updated on-the-fly.
+                </sect4>
+                
             </sect3>
 
             <sect3>
@@ -1169,11 +1175,12 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                     all records belonging to a list are read into memory at once and paging and filtering
                     takes also place completely in memory, whereas backend based 
                     providers perform a query retrieving only the records that need to be shown currently (based 
-                    on paging and filtering conditions). For long lists, using <literal>BackendListDataProvider</literal>
+                    on paging and filtering conditions). For long lists of complex objects, using 
+                    <literal>BackendListDataProvider</literal>
                     is a must&mdash;otherwise application will quickly start using too much memory. Data provider
                     for previous list could be like this:
                 </para>
-                
+
                 <programlisting role="java"><![CDATA[private class TemplateCompanyListDataProvider extends MemoryBasedListDataProvider {
     // Overloading constructor with correct bean type.                
     protected TemplateCompanyListDataProvider() {
@@ -1216,9 +1223,136 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
             </sect3>
             
              <sect3>
-                <title>Editable Lists</title>
+                <title>Editable Lists (INCOMPLETE)</title>
                 <para>
+                    Editable lists are lists with additional capabilities&mdash;their rows (and thus objects represented by
+                    these rows) can be edited, updated, deleted and added on-the-fly. Example we present here is extracted
+                    from template application <literal>PersonEditableListWidget</literal> class. Its <literal>init()</literal>
+                    is quite like the ones we have already seen, except few curiosities that are pointed out in
+                    code comments.
                     
+                    <programlisting role="java"><![CDATA[public class PersonEditableListWidget extends TemplateBaseWidget {
+    protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
+    
+    private EditableBeanListWidget list;
+    private FormListWidget formList;
+    
+    private MemoryBasedListDataProvider dataProvider = new DataProvider();
+    
+    protected void init() throws Exception {
+        super.init();
+        
+        addGlobalEventListener(new ProxyEventListener(this));
+        setViewSelector("person/editableList");
+        
+        /* Use BeanListWidget again, and PersonMO class, already familiar from form examples */
+        list = new EditableBeanListWidget(PersonMO.class);
+        list.addBeanColumn("id", "#Id", false);
+        list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
+        list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
+        list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
+        
+        /* Set up the custom range filter for birthdate column. */
+        RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
+        list.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
+        list.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
+        list.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
+        
+        /* Dummy column which holds no data. 
+         * Added here because we want <ui:componentListHeader/> tag to draw an extra column, which 
+         * we will use as edit/delete button holders. */
+        list.addListColumn(new ListColumn("dummy"));
+        
+        /* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
+        list.setListDataProvider(buildListDataProvider());
+        /* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
+        list.setFormRowHandler(buildFormRowHandler());
+
+        /* Get the reference to FormListWidget hiding inside EditableBeanListWidget. */
+        this.formList = list.getFormList();
+        addWidget("list", list);
+    }
+
+---
+
+    /* Data provider for person list. Loads all person objects from database. */
+    private class DataProvider extends MemoryBasedListDataProvider {
+        private static final long serialVersionUID = 1L;
+        
+        protected DataProvider() {
+            super(PersonMO.class);
+        }
+        public List loadData() throws Exception {       
+            return getGeneralDAO().getAll(PersonMO.class);
+        }
+    }
+
+    protected ListDataProvider buildListDataProvider() throws Exception {
+        return dataProvider;
+    }
+
+    protected FormRowHandler buildFormRowHandler() throws Exception {
+        return new MemoryBasedListFormRowHandlerDecorator(dataProvider,
+                new PersonEditableRowHandler());
+    }
+
+    public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
+        public Object getRowKey(Object row) {
+            return ((PersonMO) row).getId();
+        }
+        
+        public void saveValidRow(FormRow editableRow) throws Exception {
+            //Reading data
+            PersonMO rowData = (PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), editableRow.getRowForm());
+            rowData.setId((Long) editableRow.getRowKey());
+            
+            //Saving data
+            getGeneralDAO().edit(rowData);
+            
+            editableRow.close();
+        }
+        
+        public void deleteRow(Object key) throws Exception {
+            //Deleting data
+            Long id = (Long) key;
+            getGeneralDAO().remove(PersonMO.class, id);
+        }
+        
+        public void addValidRow(FormWidget addForm) throws Exception {
+            PersonMO rowData = (PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), addForm);
+            getGeneralDAO().add(rowData);
+            formList.resetAddForm();
+        }
+        
+        public void initFormRow(FormRow editableRow, Object row) throws Exception {
+            editableRow.close();
+            
+            FormWidget rowForm = editableRow.getRowForm();
+            
+            addCommonFormFields(rowForm);
+            
+            FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(row));
+            FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(row));
+            
+            TemplateUiLibUtil.writeDtoToForm(row, rowForm);
+        }
+        
+        public void initAddForm(FormWidget addForm) throws Exception {
+            addCommonFormFields(addForm);
+            
+            FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+        }
+        
+        private void addCommonFormFields(FormWidget form) throws Exception {
+            form.addElement("name", "#First name", new TextControl(), new StringData(), true);
+            form.addElement("surname", "#Last name", new TextControl(), new StringData(), true);
+            form.addElement("phone", "#Phone no", new TextControl(), new StringData(), false);
+            form.addElement("birthdate", "#Birthdate", new DateControl(), new TimestampData(), false);
+        }
+    }
+
+// END OF CLASS                    
+}]]></programlisting>
                 </para>
             </sect3>
             

@@ -47,35 +47,42 @@ import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter
 
 
 public abstract class PersonEditableListWidget extends TemplateBaseWidget {
-	
 	protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
 	
 	private EditableBeanListWidget list;	
 	private FormListWidget formList;
 	
-	public void init() throws Exception {
+	protected void init() throws Exception {
 		super.init();
 		
 		addGlobalEventListener(new ProxyEventListener(this));
 		setViewSelector("person/editableList");
 		
+		/* Use BeanListWidget again, and PersonMO class, already familiar from form examples */
 		list = new EditableBeanListWidget(PersonMO.class);
 		list.addBeanColumn("id", "#Id", false);
 		list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
 		list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
 		list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
 		
+		/* Set up the custom range filter for birthdate column. */
 		RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
 		list.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
 		list.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
 		list.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
 		
+		/* Dummy column which holds no data. 
+		 * Added here because we want <ui:componentListHeader/> tag to draw an extra column, which 
+		 * we will use as edit/delete button holders. */
 		list.addListColumn(new ListColumn("dummy"));
 		
+		/* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
 		list.setListDataProvider(buildListDataProvider());
+		/* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
 		list.setFormRowHandler(buildFormRowHandler());
 
-		this.formList = list.getFormList();		
+		/* Get the reference to FormListWidget hiding inside EditableBeanListWidget. */
+		this.formList = list.getFormList();
 		addWidget("list", list);
 	}
 	
@@ -84,8 +91,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	protected abstract FormRowHandler buildFormRowHandler() throws Exception;
 	
 	public static class Memory extends PersonEditableListWidget {
-		private static final long serialVersionUID = 1L;
-		
 		private MemoryBasedListDataProvider dataProvider = new DataProvider();
 
 		protected ListDataProvider buildListDataProvider() throws Exception {
@@ -98,8 +103,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		}
 		
 		private class DataProvider extends MemoryBasedListDataProvider {
-			private static final long serialVersionUID = 1L;
-			
 			protected DataProvider() {
 				super(PersonMO.class);
 			}
@@ -110,8 +113,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	}
 	
 	public static class Backend extends PersonEditableListWidget {
-		private static final long serialVersionUID = 1L;
-		
 		protected ListDataProvider buildListDataProvider() throws Exception {
 			return new DataProvider();
 		}
@@ -121,8 +122,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		}
 		
 		private class DataProvider extends BackendListDataProvider {
-			private static final long serialVersionUID = 1L;
-			
 			protected DataProvider() {
 				super(false);
 			}
@@ -131,16 +130,23 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			}
 		}
 	}	
-	
+
+	/* Row handling functions. As this handler extends ValidOnlyIndividualFormRowHandler class,
+	 * its saveRow method does nothing: instead saveValidRow method should be implemented that
+	 * saves only these forms (rows) whose data passes validation.  
+	 */ 
 	public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-		private static final long serialVersionUID = 1L;
-		
+		// Implementation of the method that must return unique key for each row.
 		public Object getRowKey(Object row) {
 			return ((PersonMO) row).getId();
 		}
 		
+		// Implementation of method that should save rows which pass validation.
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
+			//PersonMO currentPerson = (PersonMO)
+			//editableRow.
+			editableRow.getRowForm();
 			PersonMO rowData = (PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), editableRow.getRowForm());
 			rowData.setId((Long) editableRow.getRowKey());
 			

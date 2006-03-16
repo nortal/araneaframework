@@ -82,7 +82,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 						concreteBeastMultiSelectionControl.addItem(new DisplayItem(current, current));
 					}
 					
-					// finally add both beast group description 
+					// finally add both beast group description and beast selection control to this widget.  
 					complexForm.addElement("concreteBeastControl","#Choose " + selectedBeast, concreteBeastMultiSelectionControl, new StringListData(), false);
 					complexForm.addElement("selectedBeastDesc", "#Description", new DisplayControl(), new StringData(), false);
 					// if not dealing with beanforms, form element values are typically set this way
@@ -96,7 +96,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		
 		addWidget("complexForm", complexForm);
 	}
-	
+
 	// HELPER METHODS AND CLASSES
 	private Collection getSelectItems() {
 		List list = new ArrayList();
@@ -107,7 +107,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		list.add(new SelectItem(" Dragon "));
 		return list;
 	}
-	
+
 	private Collection getMultiSelectItems(String selectItem) {
 		List result = new ArrayList();
 		if (selectItem.equals("Bird")) {
@@ -129,7 +129,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 			result.add("Smaug");
 			result.add("Chrysophylax");
 			result.add("Devon & Cornwall");
-		} 
+		}
 
 		return result;
 	}

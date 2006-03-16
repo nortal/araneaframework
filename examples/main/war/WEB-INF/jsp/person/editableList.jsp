@@ -7,14 +7,6 @@
 	version="1.2"
 >
 	<ui:widgetContext>
-	
-		<h2>Persons</h2>
-		
-		<p>
-			This is a list of persons. You can use a filter to search for a specific person or use
-			links below the list to navigate through pages. To choose a person just click on it's First Name.
-		</p>
-		
 		<ui:list id="list">
 		<ui:formList>
 		
