@@ -713,7 +713,7 @@ public void handleEventBypass() throws Exception {
                     time&mdash;because of its convenient data binding capabilities.
                 </para>
                 
-                <sect4><title>Simple Form</title>
+                <sect4><title>Simple Form (FormWidget)</title>
                 <para>
                     Our first example is the one that can be found under Samples->Simple Form in template application.
                     It demonstrates form creation and reading single values from form. We also use 
@@ -790,10 +790,10 @@ public void handleEventTestSimpleForm() throws Exception {
                     the given commentary. Pay attention to tags used to render corresponding 
                     controls&mdash;<literal>DateControl</literal> and <literal>&lt;ui:dateInput&gt;</literal>,
                     <literal>TextControl</literal> and <literal>&lt;ui:textInput&gt;</literal> etc. Aranea standard
-                    tag library typically contains more than one way for rendering any given <literal>Coform element functionality and Data holding values that form element can have.ntrol</literal>
-                    &mdash;most <literal>Controls</literal> have tags for both input and display rendering 
+                    tag library typically contains more than one way for rendering any given 
+                    <literal>Control</literal>&mdash;most <literal>Controls</literal> have tags for both input and display rendering 
                     (e.g <literal>&lt;ui:textInput&gt;</literal>, <literal>&lt;ui:textDisplay&gt;</literal>). If the need 
-                    arises, you can write your own tags to customize rendering of (standard or custom) controls.
+                    arises, you can write your own tags to customize rendering of standard (or custom) controls.
                 </para>
 
                 <programlisting role="xml"><![CDATA[
@@ -903,11 +903,12 @@ public void handleEventTestSimpleForm() throws Exception {
                 
                 <sect4><title>Simple BeanFormWidget</title>
                     <para>
-                        Next example is <literal>org.araneaframework.example.main.web.person.PersonAddEditWidget</literal> and
-                        demonstrates using <literal>BeanFormWidget</literal> to bind a data model (JavaBean with getter and setter
-                        methods for instance fields) to a form. Model bind to the form is of the <literal>PersonMO</literal> class.
-                        In actual source code, this file also contains <literal>xdoclet</literal> annotations telling Hibernate into
-                        which tables and columns the JavaBean data should be saved when request for storing JavaBean is made.
+                        Next example is <literal>org.araneaframework.example.main.web.person.PersonAddEditWidget</literal> that
+                        demonstrates <literal>BeanFormWidget</literal> usage&mdash;binding a data model (JavaBean with getter and setter
+                        methods for instance fields) to a form. Data model being bind to form is of the <literal>PersonMO</literal> class.
+                        In actual source code, <literal>PersonMO</literal> class also contains <literal>xdoclet</literal> annotations 
+                        telling Hibernate database tables and columns where JavaBean data should be saved, these annotations are removed 
+                        from tutorial sample code as they tell nothing useful about Aranea.
                     </para>
 
                     <programlisting role="java"><![CDATA[public class PersonMO implements GeneralMO {
@@ -1043,18 +1044,80 @@ public void handleEventTestSimpleForm() throws Exception {
                     examples and we will not include it here. It can be found from 
                     <literal>examples/main/war/jsp/person/personAddEdit.jsp</literal>
                 </para>
-                
+
                 <para>
                     Both <literal>FormWidgets</literal> and <literal>BeanFormWidgets</literal> may also contain
                     subforms, these can be added with <literal>addSubForm()</literal> and <literal>addBeanSubForm()</literal>
-                    methods. Also, the model object instance can have non-primitive fields, for an example refer to an
-                    <literal>org.araneaframework.example.main.web.list.SimpleSubBeanListWidget</literal>.
+                    methods. Also, the model object non-primitive JavaBean fields are accessible, e.g given model classes
+                </para>
+
+               <programlisting role="java"><![CDATA[...
+public static class NameMO implements GeneralMO {
+    private String firstname;
+    private String surname;
+    
+    public Long getFirstname() {
+        return id;
+    }
+    public void setFirstname(String name) {
+        this.firstname = name;
+    }
+
+    public String setSurname(String name) {
+        this.surname = name;
+    }
+
+    public String getSurname() {
+        return name;
+    }
+}
+               
+public static class PersonMO implements GeneralMO {
+    private Long id;
+    private NameMO name;
+    private String phone;
+    private Timestamp birthdate;
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(NameMO name) {
+        this.name = name;
+    }
+
+    // and all other getters and setters for instance fields
+    ...
+}
+
+...
+]]></programlisting>
+                
+                <para>
+                    the model class fields can be referred to as
+                </para>
+                
+                <programlisting role="java"><![CDATA[...
+BeanFormWidget form = new BeanFormWidget(PersonMO.class);
+form.addBeanElement("name.firstname", "#First name", new TextControl(), true);
+form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
+...]]></programlisting>
+
+                <para>
+                     when constructing the <literal>BeanFormWidget</literal>.
                 </para>
 
                 </sect4>
                 
             </sect3>
-            
+
             <sect3>
                 <title>Lists</title>
                 <para>
