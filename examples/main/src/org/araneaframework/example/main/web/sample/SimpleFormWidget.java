@@ -55,10 +55,10 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     // creation of new form
 	simpleForm = new FormWidget();
     
-	// now that we have created a form, we will need to add form elements.
-	// form elements consist of four basic things - label, Control that represents
+	// Now that we have created a form, we will need to add form elements.
+	// form elements consist of four basic things - label, Control that implements
 	// form element functionality and Data holding values that form element can have.
-	// note that the first sample with FormWidget's createElement method is not the
+	// Note that the first sample with FormWidget's createElement method is not the
 	// way form elements are usually added to the form, but rather emphasises the
 	// fact that everything you add to FormWidget is a FormElement.
 
@@ -69,9 +69,9 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     // and here we add form elements to form without the extra step taken previously. 
     simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
     simpleForm.addElement("button1", "#Button", new ButtonControl(), null, false);
-    simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), true);
-    simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), true);
-    simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), true);
+    simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
+    simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
+    simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.

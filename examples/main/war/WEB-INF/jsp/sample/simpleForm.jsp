@@ -98,7 +98,7 @@
 
 				</ui:componentForm>
 
-				<!-- pure design tag -->
+				<!-- template design tag -->
 				<ui:componentActions>
 					<ui:formElement id="button">
 						<ui:button/>

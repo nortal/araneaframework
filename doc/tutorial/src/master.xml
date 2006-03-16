@@ -716,9 +716,8 @@ public void handleEventBypass() throws Exception {
                 <sect4><title>Simple Form</title>
                 <para>
                     Our first example is the one that can be found under Samples->Simple Form in template application.
-                    It is non-practical, demonstrating form creation and reading single values from form. We also
-                    communicate the values read in back to user to convince him/her that we are really able to read
-                    from forms.
+                    It demonstrates form creation and reading single values from form. We also use 
+                    <literal>MessageContext</literal> to communicate input values back to web application user.
                 </para>
                 
                 <programlisting role="java"><![CDATA[...
@@ -737,10 +736,10 @@ protected void init() throws Exception {
     // creation of new form
     simpleForm = new FormWidget();
 
-    // now that we have created a form, we will need to add form elements.
-    // form elements consist of four basic things - label, Control that represents
-    // form element functionality and Data holding values that form element can have.
-    // note that the first sample with FormWidget's createElement method is not the
+    // Now that we have created a form, we will need to add form elements.
+    // Form elements consist of four basic things - label, Control that implements
+    // form element functionality, Data holding values that form element can have.
+    // Note that the first sample with FormWidget's createElement method is not the
     // way form elements are usually added to the form, but rather emphasises the
     // fact that everything you add to FormWidget is a FormElement.
 
@@ -751,9 +750,9 @@ protected void init() throws Exception {
     // and here we add form elements to form without the extra step taken previously. 
     SimpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
     SimpleForm.addElement("button1", "#Button", new ButtonControl(), null, false);
-    SimpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), true);
-    SimpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), true);
-    SimpleForm.addElement("date", "#Date", new DateControl(), new DateData(), true);
+    SimpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
+    SimpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
+    SimpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
 
     // now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
@@ -787,11 +786,16 @@ public void handleEventTestSimpleForm() throws Exception {
 ...]]></programlisting>
 
                 <para>
-                    JSP used to render the previos widget looks as follows and should be quite self explaining.
-                    Pay attention to different tags are used to render controls&mdash;DateControl and &lt;ui:dateInput&gt;,
-                    TextControl and &lt;ui:textInput&gt; etc.
+                    JSP used to render the previous widget is presented below and should be quite self explaining with
+                    the given commentary. Pay attention to tags used to render corresponding 
+                    controls&mdash;<literal>DateControl</literal> and <literal>&lt;ui:dateInput&gt;</literal>,
+                    <literal>TextControl</literal> and <literal>&lt;ui:textInput&gt;</literal> etc. Aranea standard
+                    tag library typically contains more than one way for rendering any given <literal>Coform element functionality and Data holding values that form element can have.ntrol</literal>
+                    &mdash;most <literal>Controls</literal> have tags for both input and display rendering 
+                    (e.g <literal>&lt;ui:textInput&gt;</literal>, <literal>&lt;ui:textDisplay&gt;</literal>). If the need 
+                    arises, you can write your own tags to customize rendering of (standard or custom) controls.
                 </para>
-                
+
                 <programlisting role="xml"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 
@@ -897,10 +901,156 @@ public void handleEventTestSimpleForm() throws Exception {
 ]]></programlisting>
     </sect4>
                 
-                <sect4><title>Forms continued</title>
+                <sect4><title>Simple BeanFormWidget</title>
                     <para>
-                        TODO: forms, containing different control types. (beanform, listeners (complex form?))
+                        Next example is <literal>org.araneaframework.example.main.web.person.PersonAddEditWidget</literal> and
+                        demonstrates using <literal>BeanFormWidget</literal> to bind a data model (JavaBean with getter and setter
+                        methods for instance fields) to a form. Model bind to the form is of the <literal>PersonMO</literal> class.
+                        In actual source code, this file also contains <literal>xdoclet</literal> annotations telling Hibernate into
+                        which tables and columns the JavaBean data should be saved when request for storing JavaBean is made.
                     </para>
+
+                    <programlisting role="java"><![CDATA[public class PersonMO implements GeneralMO {
+    private Long id;
+    private String name;
+    private String surname;
+    private String phone;
+    private Timestamp birthdate;
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // and all other getters and setters for instance fields
+    ...
+
+}]]></programlisting>
+                
+                <para>
+                    When you have model ready, using <literal>BeanFormWidget</literal> is almost the same as using
+                    <literal>FormWidget</literal>. Main bonus is that 
+                    specifing <literal>Data</literal> when adding <literal>FormElements</literal> to form is no longer needed
+                    as it is determined from model class. Also <literal>BeanFormWidget's</literal> 
+                    <literal>readBean()</literal> and <literal>writeBean(Object beanClass)</literal> methods allow 
+                    programmer to read/write all form fields conveniently.
+                </para>
+                
+                <programlisting role="java"><![CDATA[public class PersonAddEditWidget extends TemplateBaseWidget {
+    /* The ID field of the person data model. We don't know it before saving the object to
+       database, so we initialize it to null here. */
+    private Long personId = null;
+    // Whether the person is being edited or added
+    private boolean editMode;
+    
+    /* The form. Person data (represented by class PersonMO) will be binded to it, thus 
+       the using of the BeanFormWidget instead of FormWidget. */
+    private BeanFormWidget form;
+
+    /**
+     * Constructor for adding new person.
+     */
+    public PersonAddEditWidget() {
+    }
+
+    /**
+     * Constructor for editing existing person with specified Id.
+     * @param personId Person's Id.
+     */
+    public PersonAddEditWidget(Long id) {
+        this.personId = id;
+        editMode = true;
+    }
+    
+    protected void init() throws Exception {
+        super.init();
+
+        // Sets the view selector that will be used for rendering this widget. */ 
+        setViewSelector("person/personAddEdit");
+        // This viewdata is used in JSP to set component header (different for editing and adding). 
+        putViewData("label", editMode ? "person.edit.form.label" : "person.add.form.label");
+
+        /* Register a global proxying eventlistener - it receives all widget events and upon 
+         * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method. */
+        addGlobalEventListener(new ProxyEventListener(this));
+
+        form = buildPersonEditForm();
+        addWidget("personForm", form);
+    }
+
+    private BeanFormWidget buildPersonEditForm() throws Exception {
+        /* Create the form, specifying the class of data that is binded to this form. */
+        BeanFormWidget form = new BeanFormWidget(PersonMO.class);
+        
+        /* Adding the elements is done like in our SimpleFormWidget example, except
+         * that Data type is determined from bean class automatically and specifying
+         * it is not needed. */
+        
+        // BeanFormWidget.addBeanElement(String elementName, String labelId, Control control, boolean mandatory)
+        form.addBeanElement("name", "#First name", new TextControl(), true);
+        form.addBeanElement("surname", "#Last name", new TextControl(), false);
+        form.addBeanElement("phone", "#Phone no", new TextControl(), true);
+        form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+        
+        if (editMode) {
+            /* fetch the person with given ID from database */
+            PersonMO person = (PersonMO) getGeneralDAO().getById(PersonMO.class, personId);
+            /* and fill the form with current person data */
+            form.writeBean(person);
+        } /* otherwise we have no data and all form fields are initially left blank */
+
+        return form;
+    }
+    
+    public void handleEventSave(String eventParameter) throws Exception {
+        // if form data is found to be valid  
+        if (form.convertAndValidate()) {
+            // get the current person data (retrieved from database by getGeneralDAO() in case person already has assigned ID); 
+            PersonMO person = personId != null ? (PersonMO) getGeneralDAO().getById(PersonMO.class, personId) : new PersonMO();
+            // read the application user supplied data from form into model object.
+            person = (PersonMO) form.readBean(person);
+            
+            if (editMode) {
+                // updates person object in database
+                getGeneralDAO().edit(person);
+            } else {
+                // saves new person object to database
+                personId = getGeneralDAO().add(person);                 
+            }
+
+            /* finish current flow execution and return to calling flow, returning database ID 
+             * of added or edited person */ 
+            getFlowCtx().finish(personId);
+        } else {
+            /* Do nothing, error messages are applied to MessageContext by validating methods 
+             * so that application user receives immediate feedback about incorrectly filled
+             * form elements automatically. */
+        }
+    }
+}]]></programlisting>
+
+                <para>
+                    JSP for <literal>PersonAddEditWidget</literal> is very similar to previous form rendering JSP
+                    examples and we will not include it here. It can be found from 
+                    <literal>examples/main/war/jsp/person/personAddEdit.jsp</literal>
+                </para>
+                
+                <para>
+                    Both <literal>FormWidgets</literal> and <literal>BeanFormWidgets</literal> may also contain
+                    subforms, these can be added with <literal>addSubForm()</literal> and <literal>addBeanSubForm()</literal>
+                    methods. Also, the model object instance can have non-primitive fields, for an example refer to an
+                    <literal>org.araneaframework.example.main.web.list.SimpleSubBeanListWidget</literal>.
+                </para>
+
                 </sect4>
                 
             </sect3>
