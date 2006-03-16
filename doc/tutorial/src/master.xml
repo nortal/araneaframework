@@ -1187,7 +1187,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
          super(CompanyMO.class);
     }
     // Overloading the real data loading method. Should
-    // return java.util.List containing CompanuMO objects.
+    // return java.util.List containing CompanyMO objects.
     public List loadData() throws Exception {
         // Here, database query is performed and all rows from COMPANY table retrieved.
         // But you could also get the data from parsing some XML file, /dev/random etc.

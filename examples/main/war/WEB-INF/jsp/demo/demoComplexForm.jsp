@@ -30,29 +30,33 @@
 						</ui:formElement>
 					</ui:row>
 
-					<ui:updateRegionRows id="ajaxBeasts">
-						<!-- A way to test whether form elements are present. -->
-						<c:if test="${not empty form.elements['concreteBeastControl']}">
-							<ui:row>
-								<ui:formElement id="selectedBeastDesc">
-									<ui:cell colSpan="2" styleClass="wrap-centered" width="50%">
-										<ui:textDisplay/>
-									</ui:cell>
-								</ui:formElement>
-			
-								<ui:formElement id="concreteBeastControl">
-									<ui:cell styleClass="centered-name">
-										<ui:label />
-									</ui:cell>
-									<ui:cell>
-										<!-- Render MultiSelectControl with checkboxes. 
-										     Instead ui:multiSelect could be used ... -->
-										<ui:checkboxMultiSelect type="vertical" />
-									</ui:cell>
-								</ui:formElement>
-							</ui:row>
-						</c:if>
-					</ui:updateRegionRows>
+
+						<!-- A way to test whether form elements are present. As both selectedBeastDesc 
+							and concreteBeastControl are only added to the form if beast is selected,
+							this needs to be done here. -->
+						<ui:updateRegionRows id="ajaxBeasts">
+							<c:if test="${not empty form.elements['concreteBeastControl']}">
+								<ui:row>
+									<ui:formElement id="selectedBeastDesc">
+										<ui:cell colSpan="2" styleClass="wrap-centered" width="50%">
+											<ui:textDisplay/>
+										</ui:cell>
+									</ui:formElement>
+				
+									<ui:formElement id="concreteBeastControl">
+										<ui:cell styleClass="centered-name">
+											<ui:label />
+										</ui:cell>
+										<ui:cell>
+											<!-- Render MultiSelectControl with checkboxes. 
+											     Instead ui:multiSelect could be used ... -->
+											<ui:checkboxMultiSelect type="vertical" />
+										</ui:cell>
+									</ui:formElement>
+								</ui:row>
+							</c:if>
+						</ui:updateRegionRows>
+
 				</ui:componentForm>
 
 				<ui:componentActions>
