@@ -37,8 +37,11 @@ import org.araneaframework.uilib.support.DisplayItem;
 public class DemoComplexForm extends TemplateBaseWidget {
 	private static final Logger log = Logger.getLogger(DemoComplexForm.class);
 	
+	/* Different controls and widgets we want to be accessible all the time. */
 	private FormWidget complexForm;
+	/* SelectControl - control which provides various selections from which one can be picked. */
 	private SelectControl beastSelectionControl;
+	/* MultiSelectControl - provides various selections from which zero, one or many can be picked */
 	private MultiSelectControl concreteBeastMultiSelectionControl;
 
 	protected void init() throws Exception {
@@ -48,32 +51,43 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		putViewData("formLabel", "Complex_Form");
 		
 		beastSelectionControl = new SelectControl();
+		/* SelectControls can be added DisplayItems, one by one ... */
+		beastSelectionControl.addItem(new DisplayItem("-choose-", "-choose-"));
+		/* or collections of value objects, which must have  */
 		beastSelectionControl.addDisplayItems(getSelectItems(), "sampleValue", "sampleDisplayString");
 
 		beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
 			public void onChange() throws Exception {
-				// form must be converted before new values can be read from form
-				complexForm.convert();
-				// get the value from control
-				String selectedBeast = (String)beastSelectionControl.getRawValue();
-
-				// if no beast is selected, we remove the other elements from form 
-				// that depend directly on selection being made.
-				if (selectedBeast.equals("- choose -")) {
-					complexForm.removeElement("concreteBeastControl");
-					complexForm.removeElement("selectedBeastDesc");
-					return;
+				/* Form must be converted before new values can be read from form.
+				   As we want to be sure that entered data is valid (no random strings
+				   where numbers are expected, length and content constraints are met)
+				   we usually also validate data before using it for anything. */
+				if (complexForm.convertAndValidate()) {
+					// get the value from control
+					String selectedBeast = (String)beastSelectionControl.getRawValue();
+	
+					// if no beast is selected, we remove the other elements from form 
+					// that depend directly on selection being made - the controls
+					// providing possibily for more specific beast selection.
+					if (selectedBeast.equals("-choose-")) {
+						complexForm.removeElement("concreteBeastControl");
+						complexForm.removeElement("selectedBeastDesc");
+						return;
+					}
+	
+					// create the multiselectcontrol allowing selection of some beasts of selected type.
+					concreteBeastMultiSelectionControl = new MultiSelectControl();
+					for (Iterator i = getMultiSelectItems(selectedBeast).iterator(); i.hasNext(); ) {
+						String current = (String) i.next();
+						concreteBeastMultiSelectionControl.addItem(new DisplayItem(current, current));
+					}
+					
+					// finally add both beast group description 
+					complexForm.addElement("concreteBeastControl","#Choose " + selectedBeast, concreteBeastMultiSelectionControl, new StringListData(), false);
+					complexForm.addElement("selectedBeastDesc", "#Description", new DisplayControl(), new StringData(), false);
+					// if not dealing with beanforms, form element values are typically set this way
+					complexForm.setValueByFullName("selectedBeastDesc", new SelectItem(selectedBeast).getDescription());
 				}
-
-				concreteBeastMultiSelectionControl = new MultiSelectControl();
-				for (Iterator i = getMultiSelectItems(selectedBeast).iterator(); i.hasNext(); ) {
-					String current = (String) i.next();
-					concreteBeastMultiSelectionControl.addItem(new DisplayItem(current, current));
-				}
-				complexForm.addElement("concreteBeastControl","#Choose " + selectedBeast, concreteBeastMultiSelectionControl, new StringListData(), false);
-				complexForm.addElement("selectedBeastDesc", "#Description", new DisplayControl(), new StringData(), false);
-				// if not dealing with beanforms, form element values are typically set this way
-				complexForm.setValueByFullName("selectedBeastDesc", new SelectItem(selectedBeast).getDescription());
 			}
 		});
 		
@@ -87,7 +101,6 @@ public class DemoComplexForm extends TemplateBaseWidget {
 	private Collection getSelectItems() {
 		List list = new ArrayList();
 		// note that SelectItem is just an inner class and not anything special
-		list.add(new SelectItem("- choose -"));
 		list.add(new SelectItem("  Bird  "));
 		list.add(new SelectItem(" Animal "));
 		list.add(new SelectItem("  Fish  "));
