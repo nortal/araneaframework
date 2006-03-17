@@ -60,8 +60,6 @@
 				</ui:componentForm>
 
 				<ui:componentActions>
-					<ui:eventButton eventId="save" labelId="#Add" />
-					<ui:eventButton eventId="cancel" labelId="#Cancel" />
 				</ui:componentActions>
 			</ui:component>
 

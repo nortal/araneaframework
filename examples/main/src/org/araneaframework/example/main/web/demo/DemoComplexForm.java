@@ -18,6 +18,7 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EventListener;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -37,11 +38,12 @@ import org.araneaframework.uilib.support.DisplayItem;
 public class DemoComplexForm extends TemplateBaseWidget {
 	private static final Logger log = Logger.getLogger(DemoComplexForm.class);
 	
-	/* Different controls and widgets we want to be accessible all the time. */
+    /* Different controls and widgets we want to be accessible all the time are 
+       made instance variables by convention. */
 	private FormWidget complexForm;
-	/* SelectControl - control which provides various selections from which one can be picked. */
+	/* SelectControl - control which provides various selections from which one must be picked. */
 	private SelectControl beastSelectionControl;
-	/* MultiSelectControl - provides various selections from which zero, one or many can be picked */
+	/* MultiSelectControl - provides various selections from which zero to many can be picked */
 	private MultiSelectControl concreteBeastMultiSelectionControl;
 
 	protected void init() throws Exception {
@@ -53,9 +55,12 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		beastSelectionControl = new SelectControl();
 		/* SelectControls can be added DisplayItems, one by one ... */
 		beastSelectionControl.addItem(new DisplayItem("-choose-", "-choose-"));
-		/* or collections of value objects, which must have  */
+		/* or whole collections of value objects, which must have getters for specified value
+         * and displayString fields (here, for sampleValue and sampleDisplayString). Note that 
+         * both value and displayString must be of String class */
 		beastSelectionControl.addDisplayItems(getSelectItems(), "sampleValue", "sampleDisplayString");
 
+		/* Adds the onChange event listener to selectControl */
 		beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
 			public void onChange() throws Exception {
 				/* Form must be converted before new values can be read from form.
@@ -63,7 +68,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 				   where numbers are expected, length and content constraints are met)
 				   we usually also validate data before using it for anything. */
 				if (complexForm.convertAndValidate()) {
-					// get the value from control
+					// get the value from control (aka what beast was selected).
 					String selectedBeast = (String)beastSelectionControl.getRawValue();
 	
 					// if no beast is selected, we remove the other elements from form 

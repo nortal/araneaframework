@@ -1117,9 +1117,96 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                 </sect4>
                 
                 <sect4><title>Advanced forms</title>
-                    Real world forms tend to be considerably more complex than simple examples presented before.
-                    They very often require entering differing data based on some form element values, need to
-                    be updated on-the-fly.
+                    <para>
+                        Real world forms tend to be considerably more complex than simple examples presented before.
+                        They very often need to dynamically change and based on user inputs can look, feel and be
+                        very different. What one usually does for creating such dynamic forms is register event listeners
+                        on controls and upon receiving event removes, adds, or updates forms dynamically. Such 
+                        approach can be accomplished with HTTP requests or AJAX 
+                        (XMLHttpRequest or Msxml2.XMLHTTP and Javascript) requests. AJAX requests have gained much
+                        popularity lately because they allow running complex business logic on background and
+                        updating HTML pages without full request (over most connections this is sure way to
+                        cause some uncomfortable flicker).
+                    </para>
+                    
+                    <para>
+                        Next class we will be presenting is <literal>DemoComplexForm</literal> from our main example
+                        (<literal>Demos-&gt;Complex Form</literal>).
+                        It is not &quot;complex&quot; in the sense that it would be hard to understand,
+                        but it demonstrates concepts that can be used for creation of very sophisticated forms.
+                        Form contains a <literal>SelectControl</literal>, and depending its value different
+                        subwidgets are shown (subwidget updates are performed with AJAX requests).
+                    </para>
+                    
+                    <programlisting role="java"><![CDATA[public class DemoComplexForm extends TemplateBaseWidget {
+    /* Different controls and widgets we want to be accessible all the time are 
+       made instance variables by convention. */
+    private FormWidget complexForm;
+    /* SelectControl - control which provides various selections from which one must be picked. */
+    private SelectControl beastSelectionControl;
+    /* MultiSelectControl - provides various selections from which zero to many can be picked */
+    private MultiSelectControl concreteBeastMultiSelectionControl;
+
+    protected void init() throws Exception {
+        super.init();
+
+        setViewSelector("demo/demoComplexForm");
+        putViewData("formLabel", "Complex_Form");
+        
+        beastSelectionControl = new SelectControl();
+        /* SelectControls can be added DisplayItems, one by one ... */
+        beastSelectionControl.addItem(new DisplayItem("-choose-", "-choose-"));
+		/* or whole collections of value objects, which must have getters for specified value
+         * and displayString fields (here, for sampleValue and sampleDisplayString). Note that 
+         * both value and displayString must be of String class */
+        beastSelectionControl.addDisplayItems(getSelectItems(), "sampleValue", "sampleDisplayString");
+
+        /* Adds the onChange event listener to selectControl */
+        beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
+            public void onChange() throws Exception {
+                /* Form must be converted before new values can be read from form.
+                   As we want to be sure that entered data is valid (no random strings
+                   where numbers are expected, length and content constraints are met)
+                   we usually also validate data before using it for anything. */
+                if (complexForm.convertAndValidate()) {
+                    // get the value from control
+                    String selectedBeast = (String)beastSelectionControl.getRawValue();
+    
+                    // if no beast is selected, we remove the other elements from form 
+                    // that depend directly on selection being made - the controls
+                    // providing possibily for more specific beast selection.
+                    if (selectedBeast.equals("-choose-")) {
+                        complexForm.removeElement("concreteBeastControl");
+                        complexForm.removeElement("selectedBeastDesc");
+                        return;
+                    }
+    
+                    // create the multiselectcontrol allowing selection of some beasts of selected type.
+                    concreteBeastMultiSelectionControl = new MultiSelectControl();
+                    for (Iterator i = getMultiSelectItems(selectedBeast).iterator(); i.hasNext(); ) {
+                        String current = (String) i.next();
+                        concreteBeastMultiSelectionControl.addItem(new DisplayItem(current, current));
+                    }
+                    
+                    // finally add both beast group description and beast selection control to this widget.  
+                    complexForm.addElement("concreteBeastControl","#Choose " + selectedBeast, concreteBeastMultiSelectionControl, new StringListData(), false);
+                    complexForm.addElement("selectedBeastDesc", "#Description", new DisplayControl(), new StringData(), false);
+                    // if not dealing with beanforms, form element values are typically set this way
+                    complexForm.setValueByFullName("selectedBeastDesc", new SelectItem(selectedBeast).getDescription());
+                }
+            }
+        });
+        
+        complexForm = new FormWidget();
+        complexForm.addElement("beastSelection", "#Nature's Beasts", beastSelectionControl, new StringData(), true);
+        
+        addWidget("complexForm", complexForm);
+    }
+
+}]]></programlisting>
+                    
+                    <para>
+                    </para>
                 </sect4>
                 
             </sect3>
