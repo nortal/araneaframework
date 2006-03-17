@@ -55,8 +55,5 @@ public abstract class UiLayoutRowBaseTag extends UiPresentationTag implements Ui
 	
 	protected void init() {
 		super.init();
-		
-		height = null;
-		cellClass = null;		
 	}
 }

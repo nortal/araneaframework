@@ -31,8 +31,8 @@ public abstract class UiLayoutBaseTag extends UiPresentationTag implements UiLay
 	protected String height;
 	protected String width;
 
-	private String rowClass;
-	private String cellClass;
+	protected String rowClass;
+	protected String cellClass;
 
 	/**
 	 * @jsp.attribute

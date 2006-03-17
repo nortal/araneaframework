@@ -48,9 +48,9 @@ public class ComponentListTag extends UiLayoutBaseTag {
 			// this row is inside the list
 			long id = Long.parseLong(rowRequestId);
 			if (((id + 1) % 2) == 0)
-				return new UiStdLayoutRowTag(ComponentListTag.COMPONENT_LIST_EVEN_ROW_CLASS, null);	
+				return new UiStdLayoutRowTag(ComponentListTag.COMPONENT_LIST_EVEN_ROW_CLASS, cellClass);	
 		}
 
-		return new UiStdLayoutRowTag(styleClass, null);
+		return new UiStdLayoutRowTag(rowClass, cellClass);
 	}
 }

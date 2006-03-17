@@ -100,7 +100,8 @@ public class UiLayoutCellWrapperTag extends UiStyledWrapperTag {
 	 * Callback: get cell tag
 	 */
 	protected UiContainedTagInterface getTag() throws JspException {
-		UiLayoutRowTagInterface row = (UiLayoutRowTagInterface)readAttribute(UiLayoutRowTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);		
+		UiLayoutRowTagInterface row = (UiLayoutRowTagInterface)readAttribute(UiLayoutRowTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		//UiLayoutTagInterface layout = (UiLayoutTagInterface)readAttribute(UiLayoutTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);
 		return row.getCellTag(row.getCellClass());
 	}
 	
@@ -116,5 +117,6 @@ public class UiLayoutCellWrapperTag extends UiStyledWrapperTag {
 		if (height != null) cellTag.setHeight(height);				
 		if (colSpan != null) cellTag.setColSpan(colSpan);
 		if (rowSpan != null) cellTag.setRowSpan(rowSpan);
+		if (styleClass != null) cellTag.setStyleClass(styleClass);
 	}
 }
