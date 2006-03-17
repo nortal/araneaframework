@@ -71,9 +71,9 @@ public class DemoComplexForm extends TemplateBaseWidget {
 					// get the value from control (aka what beast was selected).
 					String selectedBeast = (String)beastSelectionControl.getRawValue();
 	
-					// if no beast is selected, we remove the other elements from form 
-					// that depend directly on selection being made - the controls
-					// providing possibily for more specific beast selection.
+                    // if no beast is selected in our select control, we remove the other 
+                    // elements from form that depend directly on selection being made - 
+                    // the controls providing possibily for more specific beast selection.
 					if (selectedBeast.equals("-choose-")) {
 						complexForm.removeElement("concreteBeastControl");
 						complexForm.removeElement("selectedBeastDesc");

@@ -706,16 +706,16 @@ public void handleEventBypass() throws Exception {
             <sect3>
                 <title>Forms</title>
                 <para>
-                    Forms allow user to enter some kind of data and transfer it to wherever application programmer chooses.
+                    Forms allow end-user to enter data and transfer it to wherever application programmer chooses.
                     Aranea represents forms by <literal>FormWidget</literal> and <literal>BeanFormWidget</literal> classes.
                     We will look at <literal>FormWidget</literal> first, because using it requires a little less setup. In
                     practice application programmers probably will be using <literal>BeanFormWidget</literal> most of the
-                    time&mdash;because of its convenient data binding capabilities.
+                    time&mdash;because of its convenient data binding (tying model objects with forms) capabilities.
                 </para>
                 
                 <sect4><title>Simple Form (FormWidget)</title>
                 <para>
-                    Our first example is the one that can be found under Samples->Simple Form in template application.
+                    Our first example is the one that can be found under <literal>Samples-&gt;Simple Form</literal> in template application.
                     It demonstrates form creation and reading single values from form. We also use 
                     <literal>MessageContext</literal> to communicate input values back to web application user.
                 </para>
@@ -943,7 +943,7 @@ public void handleEventTestSimpleForm() throws Exception {
                     specifing <literal>Data</literal> when adding <literal>FormElements</literal> to form is no longer needed
                     as it is determined from model class. Also <literal>BeanFormWidget's</literal> 
                     <literal>readBean()</literal> and <literal>writeBean(Object beanClass)</literal> methods allow 
-                    programmer to read/write all form fields conveniently.
+                    programmer to read and write all form fields conveniently.
                 </para>
                 
                 <programlisting role="java"><![CDATA[public class PersonAddEditWidget extends TemplateBaseWidget {
@@ -1119,14 +1119,14 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                 <sect4><title>Advanced forms</title>
                     <para>
                         Real world forms tend to be considerably more complex than simple examples presented before.
-                        They very often need to dynamically change and based on user inputs can look, feel and be
-                        very different. What one usually does for creating such dynamic forms is register event listeners
-                        on controls and upon receiving event removes, adds, or updates forms dynamically. Such 
-                        approach can be accomplished with HTTP requests or AJAX 
+                        They very often need to dynamically change&mdash;based on user input form functionality
+                        and content need to be changed. What one usually does for creating such dynamic forms is 
+                        register event listeners on controls and upon receiving event removes, adds, or updates 
+                        forms dynamically. This can be accomplished with pure HTTP requests or AJAX 
                         (XMLHttpRequest or Msxml2.XMLHTTP and Javascript) requests. AJAX requests have gained much
                         popularity lately because they allow running complex business logic on background and
-                        updating HTML pages without full request (over most connections this is sure way to
-                        cause some uncomfortable flicker).
+                        updating HTML pages without full request (on slower computers over slower connections 
+                        this is sure way to cause uncomfortable flicker).
                     </para>
                     
                     <para>
@@ -1172,15 +1172,15 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                     // get the value from control
                     String selectedBeast = (String)beastSelectionControl.getRawValue();
     
-                    // if no beast is selected, we remove the other elements from form 
-                    // that depend directly on selection being made - the controls
-                    // providing possibily for more specific beast selection.
+                    // if no beast is selected in our select control, we remove the other 
+                    // elements from form that depend directly on selection being made - 
+                    // the controls providing possibily for more specific beast selection.
                     if (selectedBeast.equals("-choose-")) {
                         complexForm.removeElement("concreteBeastControl");
                         complexForm.removeElement("selectedBeastDesc");
                         return;
                     }
-    
+
                     // create the multiselectcontrol allowing selection of some beasts of selected type.
                     concreteBeastMultiSelectionControl = new MultiSelectControl();
                     for (Iterator i = getMultiSelectItems(selectedBeast).iterator(); i.hasNext(); ) {
@@ -1189,7 +1189,8 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                     }
                     
                     // finally add both beast group description and beast selection control to this widget.  
-                    complexForm.addElement("concreteBeastControl","#Choose " + selectedBeast, concreteBeastMultiSelectionControl, new StringListData(), false);
+                    complexForm.addElement("concreteBeastControl","#Choose " + selectedBeast, 
+                                            concreteBeastMultiSelectionControl, new StringListData(), false);
                     complexForm.addElement("selectedBeastDesc", "#Description", new DisplayControl(), new StringData(), false);
                     // if not dealing with beanforms, form element values are typically set this way
                     complexForm.setValueByFullName("selectedBeastDesc", new SelectItem(selectedBeast).getDescription());
@@ -1206,7 +1207,95 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 }]]></programlisting>
                     
                     <para>
+                        JSP view for this file is only a little fancier than previous ones:
                     </para>
+                    
+                    <programlisting role="xml"><![CDATA[<ui:widgetContext>
+    <ui:form id="complexForm">
+
+        <ui:componentHeader>
+            <ui:componentName>
+                <!-- The label, defined in DemoComplexForm class. -->
+                <fmt:message key="${contextWidget.data.formLabel}"/>
+            </ui:componentName>
+        </ui:componentHeader>
+
+        <ui:component>
+
+            <ui:componentForm>
+                <ui:row>
+                    <ui:formElement id="beastSelection">
+                        <ui:cell width="25%"/>
+                        <ui:cell styleClass="name">
+                            <ui:label />
+                        </ui:cell>
+                        <ui:cell>
+                            <!-- Note the updateRegions attribute - it specifies the regions
+                                 that should be updated when event occurs (specifying this 
+                                 attribute also means that upon listener activation AJAX
+                                 request is made instead of ordinary HTTP request . -->
+                            <ui:select updateRegions="ajaxBeasts"/>
+                        </ui:cell>
+                        <ui:cell width="25%"/>
+                    </ui:formElement>
+                </ui:row>
+                    
+                <!-- Here we define the update region. All tags inside the update region
+                    when AJAX request which update regions include "ajaxBeasts" is made. -->
+                <ui:updateRegionRows id="ajaxBeasts">
+                    <!-- A way to test whether form elements are present. As both selectedBeastDesc 
+                        and concreteBeastControl are only added to the form if beast is selected,
+                        this needs to be done here. -->
+                    <c:if test="${not empty form.elements['concreteBeastControl']}">
+                        <ui:row>
+                            <ui:formElement id="selectedBeastDesc">
+                                <ui:cell colSpan="2" styleClass="wrap-centered" width="50%">
+                                    <ui:textDisplay/>
+                                </ui:cell>
+                            </ui:formElement>
+        
+                            <ui:formElement id="concreteBeastControl">
+                                <ui:cell styleClass="centered-name">
+                                    <ui:label />
+                                </ui:cell>
+                                <ui:cell>
+                                    <!-- Render MultiSelectControl with checkboxes. 
+                                         Instead ui:multiSelect could be used ... -->
+                                    <ui:checkboxMultiSelect type="vertical" />
+                                </ui:cell>
+                            </ui:formElement>
+                        </ui:row>
+                    </c:if>
+                </ui:updateRegionRows>
+
+            </ui:componentForm>
+
+        </ui:component>
+
+    </ui:form>
+
+</ui:widgetContext>
+]]></programlisting>
+
+                <para>
+                    There are some things to note here&mdash;firstly, if &lt;ui:select&gt; attribute referring to it 
+                    update regions is removed (and &lt;ui:updateRegionRows&gt; tag also) this example functions just
+                    like the one given here, only smoothness of page update is lost. Secondly, &lt;ui:updateRegionRows&gt;
+                    must to be outside the &lt;c:if&gt; tag, because it writes out some HTML tags identifying the update
+                    region, and if these are not found region update will not succeed.
+                </para>
+                
+                <para>
+                    Finally, &lt;c:if test="${not empty form.elements['concreteBeastControl']}"&gt; is not as
+                    complicated as it may seem at first. "form" refers to
+                    the current form ("complexForm") <literal>ViewModel</literal> that is accessible from JSP&mdash; its 
+                    exact class being <literal>FormWidget.ViewModel</literal> which has <literal>getElements()</literal>
+                    method that returns <literal>java.util.Map</literal>. Square brackets (['concreteBeastControl']) 
+                    containing element name are just the EL (Expression Language) way of accessing map elements. All 
+                    widgets make their <literal>ViewModels</literal> accessible from JSP-s under different names, these 
+                    can be used for building effective conditional branchings and alike. Names under which 
+                    <literal>ViewModels</literal> can be accessed are not documented at the moment, but will be soon.
+                </para>
                 </sect4>
                 
             </sect3>
@@ -1443,12 +1532,6 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                 </para>
             </sect3>
             
-            <sect3>
-                <title>Wizards</title>
-                <para>
-                    
-                </para>
-            </sect3>
         </sect2>
         
         <sect2>
