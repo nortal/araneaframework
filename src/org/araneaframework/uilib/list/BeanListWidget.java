@@ -30,7 +30,7 @@ public class BeanListWidget extends ListWidget {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Class beanClass;
+	protected Class beanClass;
 	
 	public BeanListWidget(Class beanClass) {
 		super();

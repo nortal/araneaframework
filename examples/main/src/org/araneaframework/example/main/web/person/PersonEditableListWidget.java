@@ -24,7 +24,7 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.PersonListDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
-import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
+import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -35,8 +35,8 @@ import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.list.formlist.FormListUtil;
-import org.araneaframework.uilib.list.formlist.FormListWidget;
 import org.araneaframework.uilib.list.formlist.FormRow;
 import org.araneaframework.uilib.list.formlist.FormRowHandler;
 import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
@@ -50,7 +50,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
 	
 	private EditableBeanListWidget list;	
-	private FormListWidget formList;
+	private BeanFormListWidget formList;
 	
 	protected void init() throws Exception {
 		super.init();
@@ -144,10 +144,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		// Implementation of method that should save rows which pass validation.
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
-			//PersonMO currentPerson = (PersonMO)
-			//editableRow.
-			editableRow.getRowForm();
-			PersonMO rowData = (PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), editableRow.getRowForm());
+			PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new PersonMO());
+				//(PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), editableRow.getRowForm());
 			rowData.setId((Long) editableRow.getRowKey());
 			
 			//Saving data
@@ -163,7 +161,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		}
 		
 		public void addValidRow(FormWidget addForm) throws Exception {
-			PersonMO rowData = (PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), addForm);
+			PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
+				//(PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), addForm);
 			getGeneralDAO().add(rowData);
 			formList.resetAddForm();
 		}
@@ -171,27 +170,31 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		public void initFormRow(FormRow editableRow, Object row) throws Exception {
 			editableRow.close();
 			
-			FormWidget rowForm = editableRow.getRowForm();
+			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
 			
 			addCommonFormFields(rowForm);
 			
 			FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(row));
 			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(row));
 			
-			TemplateUiLibUtil.writeDtoToForm(row, rowForm);
+			rowForm.writeBean(row);
 		}
 		
 		public void initAddForm(FormWidget addForm) throws Exception {
-			addCommonFormFields(addForm);
-			
+			addCommonFormFields((BeanFormWidget)addForm);
+			//((BeanFormWidget)addForm).writeBean(new PersonMO());
+
 			FormListUtil.addAddButtonToAddForm("#", formList, addForm);
 		}
 		
-		private void addCommonFormFields(FormWidget form) throws Exception {
-			form.addElement("name", "#First name", new TextControl(), new StringData(), true);
-			form.addElement("surname", "#Last name", new TextControl(), new StringData(), true);
-			form.addElement("phone", "#Phone no", new TextControl(), new StringData(), false);
-			form.addElement("birthdate", "#Birthdate", new DateControl(), new TimestampData(), false);
+		private void addCommonFormFields(BeanFormWidget form) throws Exception {
+
+			form.addBeanElement("name", "#First name", new TextControl(), true);
+			form.addBeanElement("surname", "#Last name", new TextControl(),  true);
+			form.addBeanElement("phone", "#Phone no", new TextControl(), false);
+			form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
 		}
+		
+		
 	}
 }
