@@ -329,7 +329,7 @@
 			that makes use of most often-used Aranea features.
 		</para>
 		
-		<mediaobject id="conf-image" xreflabel="templateApp-in-action">
+		<mediaobject id="templateAppInAction" xreflabel="templateApp-in-action">
 			<caption align="top">TemplateApp in action</caption>
 			<imageobject>
 				<imagedata 
@@ -425,7 +425,7 @@ public void handleEventBypass() throws Exception {
 		</para>
 
 		<para>
-			You may think as flows as web pages that call and replace each other&mdash;and may return
+			You may think of flows as web pages that call and replace each other&mdash;and may return
 			control to calling page with <literal>getFlowCtx.return()</literal>.
 		</para>
 		
