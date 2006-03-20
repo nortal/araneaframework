@@ -29,8 +29,6 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.DateData;
-import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.form.data.TimestampData;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
@@ -162,7 +160,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		public void addValidRow(FormWidget addForm) throws Exception {
 			PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
-				//(PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), addForm);
 			getGeneralDAO().add(rowData);
 			formList.resetAddForm();
 		}

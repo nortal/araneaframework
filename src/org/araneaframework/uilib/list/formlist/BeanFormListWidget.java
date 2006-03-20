@@ -53,7 +53,7 @@ public class BeanFormListWidget extends BaseFormListWidget {
 	 * Creates and adds an editable row from a usual row object.
 	 */
 	protected void addFormRow(Object newRow) throws Exception {
-		BeanFormWidget rowForm = new BeanFormWidget(beanClass);
+		BeanFormWidget rowForm = (BeanFormWidget)buildAddForm();
 		String rowFormId = "rowForm" + rowFormCounter++;
 		FormRow newEditableRow = new FormRow(formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
 		
@@ -63,29 +63,7 @@ public class BeanFormListWidget extends BaseFormListWidget {
 		formRows.put(formRowHandler.getRowKey(newRow), newEditableRow);
 	}
 	
-	/**
-	 * Adds row from given form.
-	 * @param addForm add form.
-	 */
-	public void addRow(BeanFormWidget addForm) throws Exception {
-		formRowHandler.addRow(addForm);
-	}
-	
 	protected FormWidget buildAddForm() throws Exception {
 		return new BeanFormWidget(beanClass);
-	}
-	
-	/// REMOVE FOLLOWING????
-	
-	/**
-	 * Overrride Adds row from given form.
-	 * @param addForm add form.
-	 */
-	public void addRow(FormWidget addForm) throws Exception {
-		if (addForm instanceof BeanFormWidget)
-			this.addRow((BeanFormWidget)addForm);
-		else {
-			throw new Exception("ANgry test exception");
-		}
 	}
 }

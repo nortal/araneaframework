@@ -45,7 +45,7 @@ public class FormListWidget extends BaseFormListWidget {
 	}
 	
 	protected void addFormRow(Object newRow) throws Exception {
-		FormWidget rowForm = new FormWidget();
+		FormWidget rowForm = buildAddForm();
 		String rowFormId = "rowForm" + rowFormCounter++;
 		FormRow newEditableRow = new FormRow(formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
 		
