@@ -672,7 +672,7 @@
       <para>
          Presentation tags (tags extending <literal>UiPresentationTag</literal> or implementing 
          <literal>UiStyledTagInterface</literal>)
-         have attribute <literal>styleClass</literal> that specifies the CSS style class used when
+         have attribute <literal>styleClass</literal> that specifies the CSS style class used for
          rendering the tag. When <literal>styleClass</literal> attribute for tag is not specified, 
          some default style bundled with Aranea is used; or in some cases no HTML 
          <literal>class</literal> attribute is output at all&mdash;allowing 
@@ -684,15 +684,16 @@
         <literal>&lt;ui:layout&gt;</literal> tag and other layout tags that extend <literal>UiStdLayoutBaseTag</literal>
         or <literal>UiLayoutBaseTag</literal> have attributes <literal>rowClass</literal> and <literal>cellClass</literal>
         that specify the default styles for <literal>&lt;ui:row&gt;</literal> and <literal>&lt;ui:cell&gt;</literal> tags
-        used within the layout. These can be overriden with these tags own <literal>styleClass</literal> attribute though.
+        used within the layout. These can be overriden with row and cell own <literal>styleClass</literal> attribute.
         In general, goal has been to construct the tags in such way that applying only one CSS style to them would suffice.
       </para>
 
       <para>
         To actually use new style(s) for some tag one often can just write a new CSS style 
-        (ie "somestyle background: #ffc; color: #900; text-decoration: none;")&mdash;apply it and be done with it.
-        For more complicated tags, one may need to take a quick peek at tag source code, see what HTML tags are
-        output from there and design their styles accordingly. Usually, that should not be necessary.
+        (ie "somestyle { background: #ffc; color: #900; text-decoration: none; }")&mdash;apply that
+        and be done with it.
+        For more complicated tags, one may need to take a quick peek at tag source code to see what HTML tags are
+        output and design their styles accordingly. Most of the time that should not be necessary.
       </para>
       
       <para>
@@ -705,7 +706,7 @@
 }]]></programlisting>
     
         <para>
-            needless to say, first method is very much preferred because creating custom tags just for changing default
+            needless to say, first method is very much preferred because creating custom tags just for changing
             tag styles is quite pointless.
         </para>
         
@@ -730,32 +731,27 @@
               <row>
                 <entry>Attribute</entry>
                 <entry>Required</entry>
-                <entry>Description</entry>
-                <entry>Applicable to</entry>
+                <entry>Applicable to:</entry>
               </row>
             </thead>
             <tbody>
               <row>
                 <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
                 <entry>CSS class applied to tag.</entry>
                 <entry>Presentation tags.</entry>
               </row>
               <row>
                 <entry>rowClass</entry>
-                <entry><emphasis>no</emphasis></entry>
                 <entry>CSS class applied to rows inside the tag.</entry>
                 <entry>Layout tags.</entry>
               </row>
               <row>
                 <entry>cellClass</entry>
-                <entry><emphasis>no</emphasis></entry>
                 <entry>CSS class applied to cells inside the tag.</entry>
                 <entry>Layout tags, row tags.</entry>
               </row>
               <row>
                 <entry>mold</entry>
-                <entry><emphasis>no</emphasis></entry>
                 <entry>Defines the mold used for rendering the tag.</entry>
                 <entry>basicButton, eventButton, button</entry>
               </row>              
