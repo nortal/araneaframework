@@ -56,9 +56,10 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		addGlobalEventListener(new ProxyEventListener(this));
 		setViewSelector("person/editableList");
 		
-		/* Use BeanListWidget again, and PersonMO class, already familiar from form examples */
+		/* PersonMO class is already familiar from form examples. */
 		list = new EditableBeanListWidget(PersonMO.class);
 		list.addBeanColumn("id", "#Id", false);
+		/* Filtering by fields other than ID is enabled. */
 		list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
 		list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
 		list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
@@ -96,6 +97,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		}
 
 		protected FormRowHandler buildFormRowHandler() throws Exception {
+	        /* Implementation of FormRowHandler that also calls dataprovider's
+	         * data refresh methods when list editing events occur. */
 			return new MemoryBasedListFormRowHandlerDecorator(dataProvider,
 					new PersonEditableRowHandler());
 		}
@@ -131,67 +134,75 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 
 	/* Row handling functions. As this handler extends ValidOnlyIndividualFormRowHandler class,
 	 * its saveRow method does nothing: instead saveValidRow method should be implemented that
-	 * saves only these forms (rows) whose data passes validation.  
+	 * saves only these forms (rows) which data passes validation.  
 	 */ 
 	public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-		// Implementation of the method that must return unique key for each row.
-		public Object getRowKey(Object row) {
-			return ((PersonMO) row).getId();
+		/* Implementation of the method that must return unique key for each row
+		 * in editable list. As we hold database objects (PersonMO-s) in this list, 
+		 * it is natural to use synthetic ID field for a key.*/ 
+		public Object getRowKey(Object rowData) {
+			return ((PersonMO) rowData).getId();
 		}
 		
-		// Implementation of method that should save rows which pass validation.
+		// Implementation of method that should save EDITED rows which data passes validation.
 		public void saveValidRow(FormRow editableRow) throws Exception {
-			//Reading data
+			/* Reads data from form. FormRow.getFormRow() method returns the widget that is 
+			 * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
+			 * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
+			 * we can cast the return type accordingly. */
 			PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new PersonMO());
-				//(PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), editableRow.getRowForm());
 			rowData.setId((Long) editableRow.getRowKey());
 			
-			//Saving data
+			// Save modified object.
 			getGeneralDAO().edit(rowData);
 			
+			// Set the row closed (for further editing, it must be opened again). 
 			editableRow.close();
 		}
 		
 		public void deleteRow(Object key) throws Exception {
-			//Deleting data
 			Long id = (Long) key;
 			getGeneralDAO().remove(PersonMO.class, id);
 		}
 		
+		// Implementation of method that should save ADDED rows which data passes validation.
 		public void addValidRow(FormWidget addForm) throws Exception {
 			PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
 			getGeneralDAO().add(rowData);
 			formList.resetAddForm();
 		}
 		
-		public void initFormRow(FormRow editableRow, Object row) throws Exception {
+		// Called to initialize each row in editable list.
+		public void initFormRow(FormRow editableRow, Object rowData) throws Exception {
+			// Set initial status of list rows to closed - they cannot be edited before opened.
 			editableRow.close();
 			
+			// Get the rowForm (widget holding row object data). 
 			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
-			
+			// See below.
 			addCommonFormFields(rowForm);
-			
-			FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(row));
-			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(row));
-			
-			rowForm.writeBean(row);
+			/* A button that opens row for editing upon receiving onClick event.
+			 * Activating button in already opened row saves the row data. */
+			FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
+			/* A button that deletes this row and its data (calls deleteRow()). */
+			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
+
+			rowForm.writeBean(rowData);
 		}
 		
+		// Called to initialize a blank row meant for adding new records.
 		public void initAddForm(FormWidget addForm) throws Exception {
 			addCommonFormFields((BeanFormWidget)addForm);
-			//((BeanFormWidget)addForm).writeBean(new PersonMO());
-
+			// Button that saves the content of the new record (calls addValidRow()). 
 			FormListUtil.addAddButtonToAddForm("#", formList, addForm);
 		}
 		
+		// Adds PersonMO bean fields to given BeanFormWidget.
 		private void addCommonFormFields(BeanFormWidget form) throws Exception {
-
 			form.addBeanElement("name", "#First name", new TextControl(), true);
 			form.addBeanElement("surname", "#Last name", new TextControl(),  true);
 			form.addBeanElement("phone", "#Phone no", new TextControl(), false);
 			form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
 		}
-		
-		
 	}
 }

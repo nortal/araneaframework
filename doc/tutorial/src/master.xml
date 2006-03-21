@@ -1411,8 +1411,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
     protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
     
     private EditableBeanListWidget list;
-    private FormListWidget formList;
-    
+    private BeanFormListWidget formList;
     private MemoryBasedListDataProvider dataProvider = new DataProvider();
     
     protected void init() throws Exception {
@@ -1421,9 +1420,10 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
         addGlobalEventListener(new ProxyEventListener(this));
         setViewSelector("person/editableList");
         
-        /* Use BeanListWidget again, and PersonMO class, already familiar from form examples */
+        /* PersonMO class is already familiar from form examples. */
         list = new EditableBeanListWidget(PersonMO.class);
         list.addBeanColumn("id", "#Id", false);
+        /* Filtering by fields other than ID is enabled. */
         list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
         list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
         list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
@@ -1441,7 +1441,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
         
         /* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
         list.setListDataProvider(buildListDataProvider());
-        /* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
+        /* Now, this is new. Set FormRowHandler class that will handle the different row operations. See below. */
         list.setFormRowHandler(buildFormRowHandler());
 
         /* Get the reference to FormListWidget hiding inside EditableBeanListWidget. */
@@ -1449,12 +1449,8 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
         addWidget("list", list);
     }
 
----
-
     /* Data provider for person list. Loads all person objects from database. */
     private class DataProvider extends MemoryBasedListDataProvider {
-        private static final long serialVersionUID = 1L;
-        
         protected DataProvider() {
             super(PersonMO.class);
         }
@@ -1468,66 +1464,85 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
     }
 
     protected FormRowHandler buildFormRowHandler() throws Exception {
+        /* Implementation of FormRowHandler that also calls dataprovider's
+         * data refresh methods when list editing events occur. */
         return new MemoryBasedListFormRowHandlerDecorator(dataProvider,
                 new PersonEditableRowHandler());
     }
 
+    /* Row handling functions. As this handler extends ValidOnlyIndividualFormRowHandler class,
+     * its saveRow method does nothing: instead saveValidRow method should be implemented that
+     * saves only these forms (rows) which data passes validation.  
+     */ 
     public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-        public Object getRowKey(Object row) {
-            return ((PersonMO) row).getId();
+        /* Implementation of the method that must return unique key for each row
+         * in editable list. As we hold database objects (PersonMO-s) in this list, 
+         * it is natural to use synthetic ID field for a key.*/ 
+        public Object getRowKey(Object rowData) {
+            return ((PersonMO) rowData).getId();
         }
         
+        // Implementation of method that should save EDITED rows which data passes validation.
         public void saveValidRow(FormRow editableRow) throws Exception {
-            //Reading data
-            PersonMO rowData = (PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), editableRow.getRowForm());
+            /* Reads data from form. FormRow.getFormRow() method returns the widget that is 
+             * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
+             * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
+             * we can cast the return type accordingly. */
+            PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new PersonMO());
             rowData.setId((Long) editableRow.getRowKey());
             
-            //Saving data
+            // Save modified object.
             getGeneralDAO().edit(rowData);
             
+            // Set the row closed (for further editing, it must be opened again). 
             editableRow.close();
         }
         
         public void deleteRow(Object key) throws Exception {
-            //Deleting data
             Long id = (Long) key;
             getGeneralDAO().remove(PersonMO.class, id);
         }
         
+        // Implementation of method that should save ADDED rows which data passes validation.
         public void addValidRow(FormWidget addForm) throws Exception {
-            PersonMO rowData = (PersonMO) TemplateUiLibUtil.readDtoFromForm(new PersonMO(), addForm);
+            PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
             getGeneralDAO().add(rowData);
             formList.resetAddForm();
         }
         
-        public void initFormRow(FormRow editableRow, Object row) throws Exception {
+        // Called to initialize each row in editable list.
+        public void initFormRow(FormRow editableRow, Object rowData) throws Exception {
+            // Set initial status of list rows to closed - they cannot be edited before opened.
             editableRow.close();
             
-            FormWidget rowForm = editableRow.getRowForm();
-            
+            // Get the rowForm (widget holding row object data). 
+            BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
+            // See below.
             addCommonFormFields(rowForm);
-            
-            FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(row));
-            FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(row));
-            
-            TemplateUiLibUtil.writeDtoToForm(row, rowForm);
+            /* A button that opens row for editing upon receiving onClick event.
+             * Activating button in already opened row saves the row data. */
+            FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
+            /* A button that deletes this row and its data (calls deleteRow()). */
+            FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
+
+            rowForm.writeBean(rowData);
         }
         
+        // Called to initialize a blank row meant for adding new records.
         public void initAddForm(FormWidget addForm) throws Exception {
-            addCommonFormFields(addForm);
-            
+            addCommonFormFields((BeanFormWidget)addForm);
+            // Button that saves the content of the new record (calls addValidRow()). 
             FormListUtil.addAddButtonToAddForm("#", formList, addForm);
         }
         
-        private void addCommonFormFields(FormWidget form) throws Exception {
-            form.addElement("name", "#First name", new TextControl(), new StringData(), true);
-            form.addElement("surname", "#Last name", new TextControl(), new StringData(), true);
-            form.addElement("phone", "#Phone no", new TextControl(), new StringData(), false);
-            form.addElement("birthdate", "#Birthdate", new DateControl(), new TimestampData(), false);
+        // Adds PersonMO bean fields to given BeanFormWidget.
+        private void addCommonFormFields(BeanFormWidget form) throws Exception {
+            form.addBeanElement("name", "#First name", new TextControl(), true);
+            form.addBeanElement("surname", "#Last name", new TextControl(),  true);
+            form.addBeanElement("phone", "#Phone no", new TextControl(), false);
+            form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
         }
     }
-
-// END OF CLASS                    
 }]]></programlisting>
                 </para>
             </sect3>
