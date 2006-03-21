@@ -38,6 +38,7 @@ import org.araneaframework.uilib.form.FormWidget;
            <ul>
              <li><i>formElement</i> - UiLib form element view model.
              <li><i>formElementId</i> - UiLib form element id.
+             <li><i>formElementValue</i> - UiLib form element value.
            </ul> "
  */
 public class UiFormElementTag extends UiBaseTag {

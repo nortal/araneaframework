@@ -35,11 +35,11 @@ org.araneaframework.jsp.tag.presentation.UiStdLinkTag link
 org.araneaframework.jsp.tag.presentation.UiStdMessagesTag messages [TP] [DONE]
 org.araneaframework.jsp.tag.presentation.UiStdStyleTag style
 org.araneaframework.jsp.tag.uilib.UiWidgetTag widget [DONE]
-org.araneaframework.jsp.tag.uilib.form.UiFormElementTag formElement [TP]
+org.araneaframework.jsp.tag.uilib.form.UiFormElementTag formElement [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.UiFormEnterKeyboardHandlerTag formEnterKeyboardHandler [TP]
 org.araneaframework.jsp.tag.uilib.form.UiFormEscapeKeyboardHandlerTag formEscapeKeyboardHandler [TP]
 org.araneaframework.jsp.tag.uilib.form.UiFormKeyboardHandlerTag formKeyboardHandler [TP]
-org.araneaframework.jsp.tag.uilib.form.UiFormTag form [TP]
+org.araneaframework.jsp.tag.uilib.form.UiFormTag form [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.UiStdFormElementLabelTag label
 org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleLabelTag simpleLabel
 org.araneaframework.jsp.tag.uilib.form.element.UiStdAutomaticTagFormElementTag automaticFormElement
