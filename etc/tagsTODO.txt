@@ -7,14 +7,14 @@ org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag keyboardHandler
 org.araneaframework.jsp.tag.basic.UiOnLoadEventTag onLoadEvent [TP]
 org.araneaframework.jsp.tag.basic.UiServerSideKeyboardHandlerTag eventKeyboardHandler
 org.araneaframework.jsp.tag.context.UiWidgetContextTag widgetContext DONE
-org.araneaframework.jsp.tag.entity.UiAcuteEntityTag acute
-org.araneaframework.jsp.tag.entity.UiCopyEntityTag copyright
-org.araneaframework.jsp.tag.entity.UiEntityTag entity
-org.araneaframework.jsp.tag.entity.UiGtEntityTag gt
-org.araneaframework.jsp.tag.entity.UiLaquoEntityTag laquo
-org.araneaframework.jsp.tag.entity.UiLtEntityTag lt
-org.araneaframework.jsp.tag.entity.UiNbspEntityTag nbsp
-org.araneaframework.jsp.tag.entity.UiRaquoEntityTag raquo
+org.araneaframework.jsp.tag.entity.UiAcuteEntityTag acute 															[TR]
+org.araneaframework.jsp.tag.entity.UiCopyEntityTag copyright														[TR]
+org.araneaframework.jsp.tag.entity.UiEntityTag entity																		[TR]
+org.araneaframework.jsp.tag.entity.UiGtEntityTag gt																			[TR]
+org.araneaframework.jsp.tag.entity.UiLaquoEntityTag laquo																[TR]
+org.araneaframework.jsp.tag.entity.UiLtEntityTag lt																			[TR]	
+org.araneaframework.jsp.tag.entity.UiNbspEntityTag nbsp																	[TR]
+org.araneaframework.jsp.tag.entity.UiRaquoEntityTag raquo																[TR]
 org.araneaframework.jsp.tag.fileimport.UiImportScriptsTag importScripts [TR] DONE
 org.araneaframework.jsp.tag.fileimport.UiImportStylesTag importStyles   [TR] DONE
 org.araneaframework.jsp.tag.form.UiAraneaSystemFormTag systemForm
