@@ -67,7 +67,7 @@
             <ui:systemForm method="POST">
               <h1>Aranea Template Application</h1>
               
-              <ui:messages/>      
+              <ui:messages/>
 
               <ui:widgetInclude id="root"/>
             </ui:systemForm>
@@ -605,8 +605,6 @@
   
   <sect1>
     <title>Putting Widgets to Work with JSP</title>
-
-    TODO: example of Java widget working with JSP
   </sect1>
   
   <sect1>
@@ -670,6 +668,113 @@
 
   <sect1>
     <title>Customizing Tag Styles</title>
+
+      <para>
+         Presentation tags (tags extending <literal>UiPresentationTag</literal> or implementing 
+         <literal>UiStyledTagInterface</literal>)
+         have attribute <literal>styleClass</literal> that specifies the CSS style class used when
+         rendering the tag. When <literal>styleClass</literal> attribute for tag is not specified, 
+         some default style bundled with Aranea is used; or in some cases no HTML 
+         <literal>class</literal> attribute is output at all&mdash;allowing 
+         cascading styles from some parent (HTML) tag to take over the presentation.
+      </para>
+
+      <para>
+        Some tags may have more than one attributes for defining tag style. For example 
+        <literal>&lt;ui:layout&gt;</literal> tag and other layout tags that extend <literal>UiStdLayoutBaseTag</literal>
+        or <literal>UiLayoutBaseTag</literal> have attributes <literal>rowClass</literal> and <literal>cellClass</literal>
+        that specify the default styles for <literal>&lt;ui:row&gt;</literal> and <literal>&lt;ui:cell&gt;</literal> tags
+        used within the layout. These can be overriden with these tags own <literal>styleClass</literal> attribute though.
+        In general, goal has been to construct the tags in such way that applying only one CSS style to them would suffice.
+      </para>
+
+      <para>
+        To actually use new style(s) for some tag one often can just write a new CSS style 
+        (ie "somestyle background: #ffc; color: #900; text-decoration: none;")&mdash;apply it and be done with it.
+        For more complicated tags, one may need to take a quick peek at tag source code, see what HTML tags are
+        output from there and design their styles accordingly. Usually, that should not be necessary.
+      </para>
+      
+      <para>
+        Changing default tag styles can be done in two ways&mdash;modifying CSS files or extending the tag one wants to
+        customize and overwriting the tags <literal>init()</literal> method like this:
+      </para>
+      <programlisting role="java"><![CDATA[protected void init() {
+    super.init();
+    styleClass = "some-wanted-style";
+}]]></programlisting>
+    
+        <para>
+            needless to say, first method is very much preferred because creating custom tags just for changing default
+            tag styles is quite pointless.
+        </para>
+        
+        <para>
+            Currently there are also very few tags that have <literal>mold</literal> attributes. 
+            <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>) is one of those&mdash;its mold
+            should have value <literal>"input"</literal> or <literal>"button"</literal> (default). It specifies whether
+            the HTML button should be rendered with <literal>&lt;input type = button ... &gt;</literal> or 
+            <literal>&lt;button ... &gt;</literal> tags. In the future, number of tags having mold attribute will
+            most probably increase (they might be used to get rid of multiple tags for rendering different types 
+            of multiselects&mdash;allowing one to specify that with mold).
+        </para>
+      
+      <sect3>
+        <title>Attributes defining tag styles</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+                <entry>Applicable to</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class applied to tag.</entry>
+                <entry>Presentation tags.</entry>
+              </row>
+              <row>
+                <entry>rowClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class applied to rows inside the tag.</entry>
+                <entry>Layout tags.</entry>
+              </row>
+              <row>
+                <entry>cellClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class applied to cells inside the tag.</entry>
+                <entry>Layout tags, row tags.</entry>
+              </row>
+              <row>
+                <entry>mold</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Defines the mold used for rendering the tag.</entry>
+                <entry>basicButton, eventButton, button</entry>
+              </row>              
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect2>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+<ui:messages type="info"/>
+<ui:messages type="error" styleClass="custom-error-message-class"/>
+<ui:messages/>
+...]]></programlisting> 
+      </sect3>
+
+    
 
     TODO: Styles and such...
   </sect1>
