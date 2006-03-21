@@ -764,19 +764,6 @@
         </informaltable>
       </sect3>
       
-      <sect2>
-        <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-...
-<ui:messages type="info"/>
-<ui:messages type="error" styleClass="custom-error-message-class"/>
-<ui:messages/>
-...]]></programlisting> 
-      </sect3>
-
-    
-
-    TODO: Styles and such...
   </sect1>
   
   <sect1>
