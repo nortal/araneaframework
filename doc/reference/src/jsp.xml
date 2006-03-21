@@ -692,7 +692,7 @@
 
       <para>
         To actually use new style(s) for some tag one often can just write a new CSS style 
-        (ie "somestyle { background: #ffc; color: #900; text-decoration: none; }")&mdash;apply that
+        (ie <literal>"somestyle { background: #ffc; color: #900; text-decoration: none; }"</literal>)&mdash;apply that
         and be done with it.
         For more complicated tags, one may need to take a quick peek at tag source code to see what HTML tags are
         output and design their styles accordingly. Most of the time that should not be necessary.
@@ -713,13 +713,14 @@
         </para>
         
         <para>
-            Currently there are also very few tags that have <literal>mold</literal> attributes. 
-            <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>) is one of those&mdash;its mold
-            should have value <literal>"input"</literal> or <literal>"button"</literal> (default). It specifies whether
-            the HTML button should be rendered with <literal>&lt;input type = button ... &gt;</literal> or 
-            <literal>&lt;button ... &gt;</literal> tags. In the future, number of tags having mold attribute will
-            most probably increase (they might be used to get rid of multiple tags for rendering different types 
-            of multiselects&mdash;allowing one to specify that with mold).
+        		There is also a <literal>mold</literal> attribute; in current tag libarary there are very few tags
+            supporting this attribute. One of those is
+            <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>)&mdash;its mold
+            should have value <literal>"input"</literal> or <literal>"button"</literal> (default) and it specifies whether
+            the button should be rendered in HTML with <literal>&lt;input type=button ... &gt;</literal> or 
+            <literal>&lt;button ... &gt;</literal> tag. In the future, number of JSP tags having mold attribute will
+            probably increase (this can be used to get rid of multiple JSP tags for rendering different types 
+            of (multi)selects, inputs and displays).
         </para>
       
       <sect3>
@@ -755,7 +756,7 @@
               <row>
                 <entry>mold</entry>
                 <entry>Defines the mold used for rendering the tag.</entry>
-                <entry>basicButton, eventButton, button</entry>
+                <entry><literal>&lt;ui:basicButton&gt;</literal>, <literal>&lt;ui:eventButton&gt;</literal>, <literal>&lt;ui:button&gt;</literal>.</entry>
               </row>              
             </tbody>
           </tgroup>
