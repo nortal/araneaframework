@@ -306,6 +306,75 @@ private void handleEventSave() {
 
   <sect1>
     <title>Form JSP Tags</title>
+
+      <!--  UI:FORM -->
+      <sect2>
+      <title><![CDATA[<ui:form>]]></title>
+      <para>
+           Creates the context for form with specified id. Form elements can be referred to with their short IDs inside 
+           <literal>&lt;ui:form&gt;</literal>.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>ID of form (<literal>FormWidget</literal>).</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>form</entry>
+                <entry>View model (<literal>FormWidget.ViewModel</literal>) of this form.</entry>
+              </row>
+              <row>
+                <entry>formId</entry>
+                <entry>Id of this form.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+...]]></programlisting> 
+      </sect3>
+
+    </sect2>       
+    
   </sect1>
 
   <sect1>
