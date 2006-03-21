@@ -61,15 +61,15 @@ laquo
 layout
 link
 linkButton
-list
-listDisplay
-listFilter
-listInfo
-listOrderRow
-listRowButton
-listRowLinkButton
-listRows
-listTitleRow
+list              [RR]
+listDisplay       [RR]
+listFilter        [RR]
+listInfo          [RR]
+listOrderRow      [RR]
+listRowButton     [RR]
+listRowLinkButton [RR]
+listRows          [RR]
+listTitleRow      [RR]
 lt
 messages [TP] DONE
 multiSelect
