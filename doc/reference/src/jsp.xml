@@ -512,15 +512,15 @@
   
   <sect1>
     <title>Event-producing Tags</title>
-    <sect2>
-      <title><literal>updateRegions</literal> and <literal>globalUpdateRegions</literal> Attributes</title>
-      TODO
+    <sect2 id="updateRegionAttributes">
+      <title><literal>updateRegions</literal> and <literal>globalUpdateRegions</literal> Attributes</title>$
+
     </sect2>
     
     <sect2>
       <title><![CDATA[<ui:eventButton> and <ui:eventLinkButton>]]></title>
       <para>
-        This tags will render a button (or a link) that when clicked will send a specified event to the the target widget with an optional <literal>String</literal> parameter. 
+        These tags will render a button (or a link) that when clicked will send a specified event to the the target widget with an optional <literal>String</literal> parameter. 
       </para>
 
       <sect3>
@@ -611,6 +611,52 @@
   
   <sect1>
     <title>Layout Tags</title>
+    
+    <sect2>
+      <title><![CDATA[<ui:updateRegion> and <ui:updateRegionRows>]]></title>
+        <para>
+           These two tags define the update regions in the output that can be updated
+           via AJAX requests. The update regions chosen to be updated is controlled via
+           all the different event tags that take the <literal>updateRegion</literal>
+           attribute. See <xref linkend="updateRegionAttributes" />
+        </para>
+        
+        <para>
+          The <![CDATA[<ui:updateRegion>]]> should be used in most of the cases to
+          define a region. The
+          <![CDATA[<ui:updateRegionRows]]> is for defining a region which contains
+          HTML table rows.
+        </para>
+
+        <sect3>
+           <informaltable frame="all">
+             <tgroup cols="3">
+               <colspec colwidth="2*"/>
+               <colspec colwidth="1*"/>
+               <colspec colwidth="4*"/>
+               <thead>
+                 <row>
+                   <entry>Attribute</entry>
+                   <entry>Required</entry>
+                   <entry>Description</entry>
+                 </row>
+               </thead>
+               <tbody>
+                 <row>
+                   <entry>id</entry>
+                   <entry><emphasis>no</emphasis></entry>
+                   <entry>.</entry>
+                 </row>
+                 <row>
+                   <entry>globalId</entry>
+                   <entry><emphasis>no</emphasis></entry>
+                   <entry>.</entry>
+                 </row>
+               </tbody>
+             </tgroup>
+           </informaltable>
+         </sect3>
+    </sect2>
   </sect1>
   
   <sect1>
