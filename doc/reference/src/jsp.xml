@@ -724,9 +724,9 @@
         <title>Attributes defining tag styles</title>
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
             <thead>
               <row>
                 <entry>Attribute</entry>
