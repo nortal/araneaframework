@@ -6,7 +6,7 @@
 	<ui:widgetContext>
 		<ui:componentHeader>
 			<ui:componentName>
-				editable list
+				Editable list
 				</ui:componentName>
 		</ui:componentHeader>
 

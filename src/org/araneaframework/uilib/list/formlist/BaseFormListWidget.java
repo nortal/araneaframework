@@ -117,7 +117,7 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 		addWidget("addForm", addForm);		
 	}
 	
-	/** Used to build and right instance of FormWidget that belongs to list. */
+	/** Used to build instance of FormWidget belonging to this list. */
 	protected abstract FormWidget buildAddForm() throws Exception;
 	
 	protected void handleProcess() throws Exception {
