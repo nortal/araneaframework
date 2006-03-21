@@ -24,7 +24,6 @@ import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.list.EditableListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 import org.araneaframework.uilib.list.formlist.adapters.InMemoryFormRowHandlerDecorator;
-import org.araneaframework.uilib.list.formlist.adapters.MapFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
 
 /**
@@ -148,22 +147,6 @@ public class FormListUtil {
 	
 	/**
 	 * Decorates the current {@link FormRowHandler}
-	 * propagating all changes to the specified data <code>Map</code> making them visible 
-	 * in the {@link FormListWidget}. 
-	 * 
-	 * @param editableRows editable rows widget.
-	 * @param data data <code>Map</code>.
-	 */
-	public static void associateFormListWithMap(FormListWidget editableRows, Map data) {
-		editableRows.setFormRowHandler(
-				new MapFormRowHandlerDecorator(
-					data, 
-					editableRows, 
-					editableRows.getFormRowHandler()));
-	}
-	
-	/**
-	 * Decorates the current {@link FormRowHandler}
 	 * propagating all changes to the specified {@link MemoryBasedListDataProvider} making them 
 	 * visible in the {@link EditableListWidget}. 
 	 * 
@@ -186,7 +169,7 @@ public class FormListUtil {
 	 * @param inMemoryEditableListHelper helper that manages editable list rows in memory.
 	 */	
 	public static void keepFormListChangesInMemory(
-			FormListWidget editableRows,
+			BaseFormListWidget editableRows,
 			InMemoryFormListHelper inMemoryEditableListHelper) {
 		editableRows.setFormRowHandler(
 						new InMemoryFormRowHandlerDecorator(

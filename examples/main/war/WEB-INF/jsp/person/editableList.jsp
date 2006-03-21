@@ -49,7 +49,6 @@
 					</ui:listFilter>					
 					
 					<ui:formListRows>
-					<!-- <ui:listRows> -->
 						<ui:row>
 							<ui:cell>
 								<c:out value="${row.id}"/>
@@ -97,12 +96,11 @@
 								<ui:linkButton id="delete" showLabel="false"><ui:image code="buttonDelete" alt="Remove person" title="Remove person"/></ui:linkButton>
 							</ui:cell>							
 						</ui:row>
-					<!-- </ui:listRows> -->
 					</ui:formListRows>
 				
 					<ui:formListAddForm>
 						<ui:row>
-							<ui:cell />
+							<ui:cell/>
 						
 							<ui:cell styleClass="center">
 								<ui:textInput id="name"/>

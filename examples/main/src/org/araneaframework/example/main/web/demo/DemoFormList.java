@@ -33,6 +33,7 @@ import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.list.formlist.FormListUtil;
 import org.araneaframework.uilib.list.formlist.FormListWidget;
 import org.araneaframework.uilib.list.formlist.FormRow;
+import org.araneaframework.uilib.list.formlist.adapters.MapFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 
 
@@ -72,7 +73,11 @@ public class DemoFormList extends TemplateBaseWidget {
 		
 		formList = new FormListWidget(new DemoFormRowHandler());
 		
-		FormListUtil.associateFormListWithMap(formList, data);
+		formList.setFormRowHandler(
+				new MapFormRowHandlerDecorator(
+					data, 
+					formList, 
+					formList.getFormRowHandler()));
 		formList.setRows(new ArrayList(data.values()));
 		
 		addWidget("editableList", formList);
