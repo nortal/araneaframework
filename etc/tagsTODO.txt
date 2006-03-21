@@ -102,8 +102,8 @@ textareaDisplay
 timeInput
 timeInputDisplay
 titleCell
-updateRegion
-updateRegionRows
+updateRegion       [TR]  DONE
+updateRegionRows   [TR]  DONE
 valueDisplay
 viewPort DONE
 widget DONE

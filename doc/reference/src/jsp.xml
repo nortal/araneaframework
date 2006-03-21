@@ -643,12 +643,14 @@
                  <row>
                    <entry>id</entry>
                    <entry><emphasis>no</emphasis></entry>
-                   <entry>.</entry>
+                   <entry>The id of the region. Will be used to reference the region when POST'ing a form.</entry>
                  </row>
                  <row>
                    <entry>globalId</entry>
                    <entry><emphasis>no</emphasis></entry>
-                   <entry>.</entry>
+                   <entry>When not using the <literal>globalId</literal>, the full id will be formed by concatenating the context widget id
+						 with the specified <literal>id</literal>. If for a reason you would want to avoid that, then you specify the id with
+						 the <literal>globalId</literal> attribute.</entry>
                  </row>
                </tbody>
              </tgroup>
