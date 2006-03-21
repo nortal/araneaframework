@@ -31,9 +31,9 @@ dateTimeInputDisplay
 element
 elementContent
 entity
-eventButton
+eventButton DONE
 eventKeyboardHandler
-eventLinkButton
+eventLinkButton DONE
 fileUpload
 filterButton
 filterButton
@@ -52,8 +52,8 @@ globalWidgetInclude
 gt
 hiddenInput
 image
-importScripts
-importStyles
+importScripts [TR] DONE
+importStyles  [TR] DONE
 italic
 keyboardHandler
 label
@@ -71,14 +71,14 @@ listRowLinkButton
 listRows
 listTitleRow
 lt
-messages
+messages [TP] DONE
 multiSelect
 multiSelectDisplay
 nbsp
 newLine
 numberInput
 numberInputDisplay
-onLoadEvent
+onLoadEvent [TP]
 passwordInput
 path
 pathItem
@@ -86,14 +86,14 @@ radioSelect
 radioSelectItem
 radioSelectItemLabel
 raquo
-root
+root DONE
 row
 rowSeparator
 select
 selectDisplay
 simpleLabel
 style
-systemForm
+systemForm DONE
 textDisplay
 textInput
 textInputDisplay
@@ -105,10 +105,10 @@ titleCell
 updateRegion
 updateRegionRows
 valueDisplay
-viewPort
-widget
-widgetContext
-widgetInclude
+viewPort DONE
+widget DONE
+widgetContext DONE
+widgetInclude DONE
 wizard
 wizardBody
 wizardFooter
