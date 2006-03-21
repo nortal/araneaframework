@@ -1550,9 +1550,9 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
         </sect2>
         
         <sect2>
-            <title> Something else? </title>
+            <title>Something else? </title>
             <para>
-                MAYBE
+                MOST PROBABLY. ASK.
             </para> 
         </sect2>
 	
