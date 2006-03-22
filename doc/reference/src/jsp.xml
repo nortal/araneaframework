@@ -299,6 +299,18 @@
 
     </sect2>       
   </sect1>
+
+  <sect1>
+    <title>Basic Tags</title>
+
+      <sect2>
+       <title><![CDATA[<ui:bold>]]></title>
+       <para>
+         Acts as the HTML &lt;b&gt; tag.
+       </para>
+      </sect2>
+
+  </sect1>
   
   <sect1>
     <title>Widget Tags</title>
@@ -763,22 +775,23 @@
   
   <sect1>
     <title>Presentation Tags</title>
-		For convience Aranea provides abstraction over the the standard
-		HTML presentation tags.
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:bold>]]></title>
-		<para>
-			Acts as the HTML &lt;b&gt; tag.
-		</para>
-	 </sect2>
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:font>]]></title>
-		<para>
-			Acts as <emphasis>&lt;font&gt;</emphasis> HTML tag.	
-		</para>
-		<para>
+      For convience Aranea provides abstraction over the the standard
+      HTML presentation tags.
+   
+   <sect2>
+    <title><![CDATA[<ui:bold>]]></title>
+     <para>
+       Acts as the HTML &lt;b&gt; tag.
+     </para>
+   </sect2>
+
+   <sect2>
+    <title><![CDATA[<ui:font>]]></title>
+      <para>
+        Acts as <emphasis>&lt;font&gt;</emphasis> HTML tag.	
+      </para>
+      
+      <para>
         <informaltable frame="all">
           <tgroup cols="3">
             <colspec colwidth="1*"/>
