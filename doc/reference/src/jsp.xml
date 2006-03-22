@@ -763,6 +763,247 @@
   
   <sect1>
     <title>Presentation Tags</title>
+		For convience Aranea provides abstraction over the the standard
+		HTML presentation tags.
+	 
+	 <sect2>
+	 	<title><![CDATA[<ui:bold>]]></title>
+		<para>
+			Acts as the HTML &lt;b&gt; tag.
+		</para>
+	 </sect2>
+	 
+	 <sect2>
+	 	<title><![CDATA[<ui:font>]]></title>
+		<para>
+			Acts as <emphasis>&lt;font&gt;</emphasis> HTML tag.	
+		</para>
+		<para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>face</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The font face of the font.</entry>
+              </row>
+              <row>
+                <entry>color</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The color of the font.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+		</para>
+	 </sect2>
+	 
+	 <sect2>
+	 	<title><![CDATA[<ui:italic>]]></title>
+		<para>
+			Acts as <emphasis>&lt;i&gt;</emphasis> HTML tag.
+		</para>
+	 </sect2>
+	 
+	 <sect2>
+	 	<title><![CDATA[<ui:style>]]></title>
+		<para>
+			Sets a CSS class for the content, acts as a <emphasis>&lt;span&gt;</emphasis> HTML tag with the <emphasis>class</emphasis> atribute set.
+		</para>
+		
+    <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class for tag.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+		</para>
+	 </sect2>
+	 
+	 <sect2>
+	 	<title><![CDATA[<ui:newline>]]></title>
+		<para>
+      Puts a visual new line into resulting text.
+		</para>
+	 </sect2>
+
+	 <sect2>
+	 	<title><![CDATA[<ui:basicButton>]]></title>
+		<para>
+      Represents an HTML form button.
+		</para>
+    <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>mold</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.</entry>
+              </row>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Button id, allows to access button from JavaScript.</entry>
+              </row>
+              <row>
+                <entry>labelId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Id of button label.</entry>
+              </row>
+              <row>
+                <entry>onclick</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry><literal>onClick</literal> Javascript action.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class for tag.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+		</para>
+	 </sect2>
+	 
+	 <sect2>
+	 	<title><![CDATA[<ui:basicLinkButton>]]></title>
+		<para>
+      Represents a link with an onClick JavaScript action.
+		</para>
+
+    <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Button id, allows to access button from JavaScript.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Id of button label.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry><literal>onClick</literal> Javascript action.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class for tag.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+		</para>
+	 </sect2>
+	 
+	 <sect2>
+	 	<title><![CDATA[<ui:link>]]></title>
+		<para>
+      Usual HTML link, acts as a <emphasis>&lt;a&gt;</emphasis> HTML tag.
+		</para>
+    
+    <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>disabledCssClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class for disabled link.</entry>
+              </row>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Link id, allows to access link from JavaScript.</entry>
+              </row>
+              <row>
+                <entry>href</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Link target URL.</entry>
+              </row>
+              <row>
+                <entry>target</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Link target, same as <emphasis>&lt;a&gt;</emphasis> HTML tag <emphasis>target</emphasis> attribute.</entry>
+              </row>
+              <row>
+                <entry>disabled</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Controls whether the link is disabled, disabled link doesn't link anywhere.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class for tag.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+		</para>
+	 </sect2>
   </sect1>
   
   <sect1>

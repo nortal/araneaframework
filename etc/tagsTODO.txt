@@ -23,17 +23,17 @@ org.araneaframework.jsp.tag.include.UiWidgetIncludeTag widgetInclude DONE
 org.araneaframework.jsp.tag.layout.UiLayoutCellWrapperTag cell
 org.araneaframework.jsp.tag.layout.UiLayoutRowWrapperTag row
 org.araneaframework.jsp.tag.layout.UiStdLayoutTag layout
-org.araneaframework.jsp.tag.presentation.UiBoldTag bold
-org.araneaframework.jsp.tag.presentation.UiFontTag font
-org.araneaframework.jsp.tag.presentation.UiItalicTag italic
-org.araneaframework.jsp.tag.presentation.UiNewLineTag newLine
-org.araneaframework.jsp.tag.presentation.UiStdButtonTag basicButton
+org.araneaframework.jsp.tag.presentation.UiBoldTag bold 																[TR]	DONE
+org.araneaframework.jsp.tag.presentation.UiFontTag font 																[TR]	DONE
+org.araneaframework.jsp.tag.presentation.UiItalicTag italic 														[TR]	DONE
+org.araneaframework.jsp.tag.presentation.UiNewLineTag newLine 													[TR]	DONE
+org.araneaframework.jsp.tag.presentation.UiStdButtonTag basicButton 										[TR]	DONE
 org.araneaframework.jsp.tag.presentation.UiStdEventButtonTag eventButton											DONE
 org.araneaframework.jsp.tag.presentation.UiStdEventLinkButtonTag eventLinkButton							DONE
-org.araneaframework.jsp.tag.presentation.UiStdLinkButtonTag basicLinkButton
-org.araneaframework.jsp.tag.presentation.UiStdLinkTag link
+org.araneaframework.jsp.tag.presentation.UiStdLinkButtonTag basicLinkButton 						[TR]  DONE
+org.araneaframework.jsp.tag.presentation.UiStdLinkTag link 															[TR]	DONE
 org.araneaframework.jsp.tag.presentation.UiStdMessagesTag messages [TP] [DONE]
-org.araneaframework.jsp.tag.presentation.UiStdStyleTag style
+org.araneaframework.jsp.tag.presentation.UiStdStyleTag style 														[TR]	DONE
 org.araneaframework.jsp.tag.uilib.UiWidgetTag widget [DONE]
 org.araneaframework.jsp.tag.uilib.form.UiFormElementTag formElement [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.UiFormEnterKeyboardHandlerTag formEnterKeyboardHandler [TP]
