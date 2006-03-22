@@ -36,9 +36,9 @@ org.araneaframework.jsp.tag.presentation.UiStdMessagesTag messages [TP] [DONE]
 org.araneaframework.jsp.tag.presentation.UiStdStyleTag style 														[TR]	DONE
 org.araneaframework.jsp.tag.uilib.UiWidgetTag widget [DONE]
 org.araneaframework.jsp.tag.uilib.form.UiFormElementTag formElement [TP] DONE
-org.araneaframework.jsp.tag.uilib.form.UiFormEnterKeyboardHandlerTag formEnterKeyboardHandler [TP]
-org.araneaframework.jsp.tag.uilib.form.UiFormEscapeKeyboardHandlerTag formEscapeKeyboardHandler [TP]
-org.araneaframework.jsp.tag.uilib.form.UiFormKeyboardHandlerTag formKeyboardHandler [TP]
+org.araneaframework.jsp.tag.uilib.form.UiFormEnterKeyboardHandlerTag formEnterKeyboardHandler [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.UiFormEscapeKeyboardHandlerTag formEscapeKeyboardHandler [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.UiFormKeyboardHandlerTag formKeyboardHandler [TP] DONE 
 org.araneaframework.jsp.tag.uilib.form.UiFormTag form [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.UiStdFormElementLabelTag label [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleLabelTag simpleLabel [TP] DONE

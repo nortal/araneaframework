@@ -374,7 +374,7 @@ private void handleEventSave() {
               <row>
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>CSS class applied to rendered element.</entry>
+                <entry>CSS class applied HTML tag(s) that are used for rendering element.</entry>
               </row>              
             </tbody>
           </tgroup>
@@ -569,11 +569,6 @@ private void handleEventSave() {
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Indicates whether colon is shown after the label. Default is <literal>true</literal>.</entry>
               </row>
-              <row>
-                <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>CSS class applied to rendered form element label.</entry>
-              </row>              
             </tbody>
           </tgroup>
         </informaltable>
@@ -637,11 +632,6 @@ private void handleEventSave() {
                 <entry><emphasis>no</emphasis></entry>
                 <entry>ID of the form element for which the label is created.</entry>
               </row>              
-              <row>
-                <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>CSS class applied to rendered label.</entry>
-              </row>              
             </tbody>
           </tgroup>
         </informaltable>
@@ -698,48 +688,6 @@ private void handleEventSave() {
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Allowed values are <literal>button</literal> and <literal>input</literal>&mdash;the corresponding HTML tag will be used to render the button. Default is button.</entry>
               </row>
-              <row>
-                <entry>id</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>ID of the button.</entry>
-              </row>
-              <row>
-                <entry>validate</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Whether the element will be validated on the client-side when the form is <emphasis>submitted</emphasis> (by default <literal>true</literal>).</entry>
-              </row>
-              <row>
-                <entry>validateOnEvent</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Whether the form will be validated on the client-side when the element generates an event (by default <literal>false</literal>).</entry>
-              </row>
-              <row>
-                <entry>tabindex</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>HTML tabindex for the element.</entry>
-              </row>
-              <row>
-                <entry>events</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Whether button will send events that are registered by server-side, <literal>true</literal> by default.</entry>
-              </row>
-              <row>
-                <entry>updateRegions</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>
-                    Comma separated list of update regions that should be updated upon button receiving event.
-                </entry>
-              </row>
-              <row>
-                <entry>globalUpdateRegions</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Comma separated list of global update regions that should be updated upon button receiving event.</entry>
-              </row>
-              <row>
-                <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>CSS class applied to rendered button.</entry>
-              </row>              
             </tbody>
           </tgroup>
         </informaltable>
@@ -754,6 +702,136 @@ private void handleEventSave() {
       </sect3>
     </sect2>
     
+          <!-- formKeyboardHandler -->
+        <sect2>
+      <title><![CDATA[<ui:formKeyboardHandler>]]></title>
+      <para>
+        Registers a simple keyboard handler. Invokes a <literal>uiRegisterKeyboardHandler</literal> javascript.
+        This is basically the same stuff as &lt;ui:keyboardHandler&gt; with a few modifications.
+        
+        There is no <literal>scope</literal> attribute. Instead, the tag assumes that it is located
+        inside a form, and takes the full id of that form as its scope.
+        
+        As an alternative to specifying the <literal>handler</literal> attribute, you may
+        specify a form element and a javascript event to invoke on that element.
+        You specify the element by its id relative to the surrounding form.
+        The event is given as a name of the javascript function to be invoked on the element.
+        For example, if you specify the element as "someButton", and event as "click", then
+        when the required keyboard event occures, the following javascript will be executed:
+      </para>
+              <programlisting role="javascript"><![CDATA[
+        var el = document.getElementById("<form-id>.someButton");
+        el.click();]]></programlisting>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. 
+                    Example: <literal>function(event, elementId) { alert(elementId); } </literal>
+                    Either handler or elementId/event pair should be specified, not both.
+                </entry>
+              </row>
+              <row>
+                <entry>subscope</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                      Specifies form element which is the scope of this handler.
+                      By default the "scope" (as in <literal>&lt;ui:keyboardHandlerTag&gt;</literal>) of this keyboard handler
+                      is the form inside which the handler is defined. By specifying this, scope of certain element may be narrowed.
+                      For example if the handler is defined inside form "myForm", and subscope is specified as "myelement",
+                      the scope of the handler will be "myForm.myelement", not the default "myForm". The handler will therefore be active 
+                      only for the element 'someElement'".
+                </entry>
+              </row>
+              <row>
+                <entry>elementId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    Sets the (relative) <literal>id</literal> of the element whose javascript event should be invoked. 
+                    The <literal>id</literal> is relative with respect to the surrounding form. Instead of this attribute, element's 
+                    full id may be set using the <literal>fullElementId</literal> attribute, but only one of those attributes 
+                    should be set at once.
+                </entry>
+              </row>
+              <row>
+                <entry>fullElementId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    Sets the full <literal>id</literal> of the element whose javascript event should be invoked. 
+                </entry>
+              </row>
+              <row>
+                <entry>event</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    Set the javascript event that should be invoked when keypress is detected&mdash;"click" and "focus" 
+                    are safe for most controls.
+                    If target element (the one given by <literal>elementId</literal>) is a selectbox "select" may be used.
+                    For more, javascript reference should be consulted. This attribute is not foolproof and invalid javascript 
+                    may be produced when it is not used cautiously.
+                </entry>
+              </row>
+              <row>
+                <entry>keyCode</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    Keycode to which the event must be triggered. Either keyCode or key must be specified, but not both.
+                </entry>
+              </row>
+              <row>
+                <entry>key</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                   Key to which the event must be triggered, accepts key "aliases" instead of codes.
+                   Accepted aliases include <literal>F1..F12, RETURN, ENTER, BACKSPACE, ESCAPE, TAB, SHIFT, CONTROL, SPACE</literal>.
+                </entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="loginForm">
+    <ui:eventButton id="btnLogin" eventId="login" labelId="button.login.enter"/>
+    <ui:formKeyboardHandler fullElementId="btnLogin" key="enter"/>
+</ui:form>]]></programlisting> 
+      </sect3>
+    </sect2>
+    
+     <!-- formEnterKeyboardHandler -->
+    <sect2>
+      <title><![CDATA[<ui:formEnterKeyboardHandler>]]></title>
+      <para>
+        Same as <literal>&lt;ui:formKeyboardHandlerTag&gt;</literal> except <literal>key</literal> is already set to <literal>enter</literal>.
+      </para>
+    </sect2>
+    
+    <!-- formEscapeKeyboardHandler -->
+    <sect2>
+      <title><![CDATA[<ui:formEscapeKeyboardHandler>]]></title>
+      <para>
+        Same as <literal>&lt;ui:formKeyboardHandlerTag&gt;</literal> except <literal>key</literal> is already set to <literal>escape</literal>.
+      </para>
+    </sect2>
     
   </sect1>
 
