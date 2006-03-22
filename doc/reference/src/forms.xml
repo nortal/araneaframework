@@ -306,12 +306,87 @@ private void handleEventSave() {
 
   <sect1>
     <title>Form JSP Tags</title>
-
+    
+        Form JSP tags can be divided into two categories&mdash; tags providing <emphasis>contexts</emphasis> 
+        (&lt;ui:form&gt;, &lt;ui:formElement&gt;) and
+        tags for <emphasis>rendering</emphasis> form elements containing different controls. We will 
+        first describe the attributes that are common to
+        all form element rendering tags; then proceed to explain <emphasis>context</emphasis> tags 
+        and different form element <emphasis>rendering</emphasis> tags with their
+        unique attributes.
+        
+      <sect2>
+      <title>Common attributes for form element rendering tags.</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no/yes</emphasis></entry>
+                <entry>Id of form element to be rendered. 
+                  If not specified, it is usually taken from current form element context 
+                  (<xref linkend="uiFormElementTag">&lt;ui:formElement&gt;</xref>). For few tags, it is required.
+                 </entry>
+              </row>
+              <row>
+                <entry>events</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Whether element will send events that are registered by server-side, <literal>true</literal> by default.</entry>
+              </row>
+              <row>
+                <entry>validate</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Whether the element will be validated on the client-side when the form is <emphasis>submitted</emphasis> (by default <literal>true</literal>).</entry>
+              </row>
+              <row>
+                <entry>validateOnEvent</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Whether the form will be validated on the client-side when <emphasis>element generates an event</emphasis> (by default <literal>false</literal>)</entry>
+              </row>
+              <row>
+                <entry>tabindex</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>HTML tabindex for the element.</entry>
+              </row>
+              <row>
+                <entry>updateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Comma separated list of update regions that should be updated upon button receiving event. This attribute is only
+                    needed when using AJAX features&mdash; ordinary HTTP requests always update whole page.
+                </entry>
+              </row>
+              <row>
+                <entry>globalUpdateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Comma separated list of global update regions that should be updated upon button receiving event. 
+                This attribute is only needed when using AJAX features&mdash; ordinary HTTP requests always update whole page.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class applied to rendered element.</entry>
+              </row>              
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect2>
+        
+        
       <!--  UI:FORM -->
       <sect2>
       <title><![CDATA[<ui:form>]]></title>
       <para>
-      	   Specifies form context for inner tags.
+      	   Specifies form context for inner tags. Form view model and id are made accessible to inner tags as EL variables.
       </para>
       
       <sect3>
@@ -380,9 +455,10 @@ private void handleEventSave() {
       
         <!--  UI:FORMELEMENT -->
       <sect2>
-      <title><![CDATA[<ui:formElement>]]></title>
+      <title id="uiFormElementTag">&lt;ui:formElement&gt;</title>
       <para>
-      	   Specifies form element context for inner tags. Must be surrounded by &lt;ui:form&gt; tag.
+      	   Specifies form element context for inner tags. Must be surrounded by &lt;ui:form&gt; tag. Form element 
+           view moded, id and value are made accessible to inner tags as EL variables.
       </para>
 
       <sect3>
