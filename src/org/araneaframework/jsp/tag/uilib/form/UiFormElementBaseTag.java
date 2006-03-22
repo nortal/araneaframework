@@ -117,7 +117,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Element tabindex."
+	 *   description = "HTML tabindex for the element."
 	 */	
 	public void setTabindex(String tabindex) throws JspException {
 		this.tabindex = (String)evaluateNotNull("tabindex", tabindex, String.class);

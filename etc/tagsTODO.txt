@@ -43,7 +43,7 @@ org.araneaframework.jsp.tag.uilib.form.UiFormTag form [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.UiStdFormElementLabelTag label [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleLabelTag simpleLabel [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.UiStdAutomaticTagFormElementTag automaticFormElement
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormButtonTag button [TP]
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormButtonTag button [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxDisplayTag checkboxDisplay [TP]
 org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxTag checkbox [TP]
 org.araneaframework.jsp.tag.uilib.form.element.UiStdFormFileUploadTag fileUpload [TP]
