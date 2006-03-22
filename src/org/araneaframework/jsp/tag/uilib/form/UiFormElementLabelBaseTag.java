@@ -84,7 +84,7 @@ public class UiFormElementLabelBaseTag extends UiPresentationTag {
 	 *   required = "false"
 	 *   description = "Whether a colon (":") is draw after the label." 
 	 */
-	public void setShowColumn(String showColon) throws JspException {
+	public void setShowColon(String showColon) throws JspException {
 		this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
 	}
 	

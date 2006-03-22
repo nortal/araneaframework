@@ -454,9 +454,143 @@ private void handleEventSave() {
     </ui:formElement>
 </ui:form>]]></programlisting> 
       </sect3>
+       </sect2>
+      
+      <!-- LABEL -->
+        <sect2>
+      <title><![CDATA[<ui:label>]]></title>
+      <para>
+          Renders localizable label bound to form element.
+      </para>
+      <para>
+        HTML
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Id of form element which label should be rendered. If left unspecified, form element id from form element context is used.</entry>
+              </row>
+              <row>
+                <entry>showMandatory</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether mandatory (required) form element label is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal></entry>
+              </row>
+              <row>
+                <entry>showColon</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether colon is shown after the label. Default is <literal>true</literal>.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class applied to rendered form element label.</entry>
+              </row>              
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="loginForm">
+    <ui:row>
+        <ui:formElement id="username">
+            <ui:cell>
+                <ui:label/>
+            </ui:cell>
+        </ui:formElement>
+    </ui:row>
+</ui:form>]]></programlisting> 
+      </sect3>
+    </sect2>
+    
+    
+          <!-- SIMPLELABEL -->
+        <sect2>
+      <title><![CDATA[<ui:simpleLabel>]]></title>
+      <para>
+          Renders localizable label with &lt;span&gt; and &lt;label&gt; tags.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>labelId</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>ID of label to render.</entry>
+              </row>
+              <row>
+                <entry>showMandatory</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether label is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>false</literal></entry>
+              </row>
+              <row>
+                <entry>showColon</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether colon is shown after the label. Default is <literal>true</literal>.</entry>
+              </row>
+              <row>
+                <entry>for</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>ID of the form element for which the label is created.</entry>
+              </row>              
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class applied to rendered label.</entry>
+              </row>              
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="loginForm">
+    <ui:row>
+        <ui:formElement id="username">
+            <ui:cell>
+                <ui:label/>
+            </ui:cell>
+        </ui:formElement>
+    </ui:row>
+</ui:form>]]></programlisting> 
+      </sect3>
       
 
     </sect2>       
+    
     
   </sect1>
 

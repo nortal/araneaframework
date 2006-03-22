@@ -22,7 +22,6 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerBaseTag;
 import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag;
-import org.araneaframework.jsp.util.StringUtil;
 
 
 /**
