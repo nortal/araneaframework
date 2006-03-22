@@ -602,6 +602,108 @@
     
      </sect1>
 
+  <sect1>
+    <title>HTML entity Tags</title>
+      <para>
+      Html entites can be inserted by using the predefined entity tags or using the
+      <![CDATA[<ui:entity>]]> for entities that have not been defined by Aranea JSP library.
+      </para>
+
+      <para>
+        The <literal>entity</literal> tag accepts a attribute <literal>code</literal> which is
+        used as &amp;<literal>code</literal>; to get the HTML entity.
+      </para>
+        
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>code</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>HTML entity code, e.g. <emphasis>nbsp</emphasis> or <emphasis>#012</emphasis>.</entry>
+              </row>
+              
+              <row>
+                <entry>count</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Number of times to repeat the entity.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      
+      <sect2>
+
+        <title>Predefined entity tags</title>
+        <para>
+          The following predefined entities also accept the <literal>count</literal>
+          attribute. It defines the number of times to repeat the entity.
+        </para>
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Tag</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry><![CDATA[<ui:acute>]]></entry>
+                <entry>HTML <literal>&amp;acute;</literal> entity.</entry>
+              </row>
+              
+              <row>
+                <entry><![CDATA[<ui:copyright>]]></entry>
+                <entry>HTML <literal>&amp;copyright;</literal> entity.</entry>
+              </row>
+              
+              <row>
+                <entry><![CDATA[<ui:gt>]]></entry>
+                <entry>HTML <literal>&amp;gt;</literal> entity.</entry>
+              </row>
+              
+              <row>
+                <entry><![CDATA[<ui:laquo>]]></entry>
+                <entry>HTML <literal>&amp;laquo;</literal> entity.</entry>
+              </row>
+              
+              <row>
+                <entry><![CDATA[<ui:lt>]]></entry>
+                <entry>HTML <literal>&amp;lt;</literal> entity.</entry>
+              </row>
+              
+              <row>
+                <entry><![CDATA[<ui:nbsp>]]></entry>
+                <entry>HTML <literal>&amp;nbsp;</literal> entity.</entry>
+              </row>
+              
+              <row>
+                <entry><![CDATA[<ui:raquo>]]></entry>
+                <entry>HTML <literal>&amp;raquo;</literal> entity.</entry>
+              </row>
+              
+              <row>
+                <entry><![CDATA[<ui:acute>]]></entry>
+                <entry>HTML <literal>&amp;acute;</literal> entity.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+    </sect2>
+  </sect1>
   
   <sect1>
     <title>Putting Widgets to Work with JSP</title>
