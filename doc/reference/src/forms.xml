@@ -316,7 +316,7 @@ private void handleEventSave() {
         unique attributes.
         
       <sect2>
-      <title>Common attributes for form element rendering tags.</title>
+      <title>Common attributes for all form element rendering tags.</title>
         <informaltable frame="all">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
@@ -380,8 +380,7 @@ private void handleEventSave() {
           </tgroup>
         </informaltable>
       </sect2>
-        
-        
+
       <!--  UI:FORM -->
       <sect2>
       <title><![CDATA[<ui:form>]]></title>
@@ -691,6 +690,7 @@ private void handleEventSave() {
             </tbody>
           </tgroup>
         </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis>
       </sect3>
 
       <sect3>
@@ -719,9 +719,8 @@ private void handleEventSave() {
         For example, if you specify the element as "someButton", and event as "click", then
         when the required keyboard event occures, the following javascript will be executed:
       </para>
-              <programlisting role="javascript"><![CDATA[
-        var el = document.getElementById("<form-id>.someButton");
-        el.click();]]></programlisting>
+<programlisting role="javascript"><![CDATA[var el = document.getElementById("<form-id>.someButton");
+el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
@@ -832,6 +831,71 @@ private void handleEventSave() {
         Same as <literal>&lt;ui:formKeyboardHandlerTag&gt;</literal> except <literal>key</literal> is already set to <literal>escape</literal>.
       </para>
     </sect2>
+    
+    <!-- hiddeninput -->
+      <sect2>
+          <title><![CDATA[<ui:hiddenInput>]]></title>
+          <para>
+               Represents a "hidden" input element that is mapped to <literal>HiddenControl</literal>. It is rendered in HTML with
+               <literal>&lt;input type="hidden" ...&gt;</literal> tag.
+          </para>
+      
+        <sect3>
+        <title>Attributes</title>
+                <emphasis>Has all common form element rendering attributes.</emphasis> 
+                As rendered tag is not visible to end-user they are mostly pointless, however.
+        </sect3>
+      </sect2>
+      
+          
+      <!-- checkbox, checkboxdisplay -->
+      <sect2>
+      <title><![CDATA[<ui:checkbox>]]></title>
+      <para>
+          Form checkbox <emphasis>input</emphasis> field, represents <literal>CheckboxControl</literal>. By default <literal>styleClass="aranea-checkbox"</literal>.
+          Rendered in HTML with <literal>&lt;input type="checkbox" ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+          <sect2>
+      <title><![CDATA[<ui:checkboxDisplay>]]></title>
+      <para>
+          Form checkbox <emphasis>display</emphasis> field, represents <literal>CheckboxControl</literal>. By default <literal>styleClass="aranea-checkbox-display"</literal>.
+          Rendered in HTML inside <literal>&lt;span&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
     
   </sect1>
 

@@ -44,10 +44,10 @@ org.araneaframework.jsp.tag.uilib.form.UiStdFormElementLabelTag label [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleLabelTag simpleLabel [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.UiStdAutomaticTagFormElementTag automaticFormElement [JK]
 org.araneaframework.jsp.tag.uilib.form.element.UiStdFormButtonTag button [TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxDisplayTag checkboxDisplay [TP]
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxTag checkbox [TP]
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxDisplayTag checkboxDisplay [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxTag checkbox [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.UiStdFormFileUploadTag fileUpload [TP]
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormHiddenInputTag hiddenInput [TP]
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormHiddenInputTag hiddenInput [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.UiStdFormLinkButtonTag linkButton  [TP]
 org.araneaframework.jsp.tag.uilib.form.element.date.UiStdFormDateInputDisplayTag dateInputDisplay  [TP]
 org.araneaframework.jsp.tag.uilib.form.element.date.UiStdFormDateInputTag dateInput [TP]
