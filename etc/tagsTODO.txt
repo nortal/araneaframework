@@ -1,11 +1,11 @@
 org.araneaframework.jsp.tag.aranea.UiAraneaRootTag root 	        [DONE]
 org.araneaframework.jsp.tag.aranea.UiAraneaViewPortTag viewPort [DONE]
-org.araneaframework.jsp.tag.basic.UiAttributeTag attribute
-org.araneaframework.jsp.tag.basic.UiElementContentTag elementContent
-org.araneaframework.jsp.tag.basic.UiElementTag element
-org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag keyboardHandler
+org.araneaframework.jsp.tag.basic.UiAttributeTag attribute															[TR]	DONE
+org.araneaframework.jsp.tag.basic.UiElementContentTag elementContent										[TR]	DONE
+org.araneaframework.jsp.tag.basic.UiElementTag element																	[TR]	DONE
+org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag keyboardHandler									[TR]	DONE
 org.araneaframework.jsp.tag.basic.UiOnLoadEventTag onLoadEvent 													[TP]
-org.araneaframework.jsp.tag.basic.UiServerSideKeyboardHandlerTag eventKeyboardHandler
+org.araneaframework.jsp.tag.basic.UiServerSideKeyboardHandlerTag eventKeyboardHandler		[TR]	DONE
 org.araneaframework.jsp.tag.context.UiWidgetContextTag widgetContext 												 DONE
 org.araneaframework.jsp.tag.entity.UiAcuteEntityTag acute 															[TR] DONE
 org.araneaframework.jsp.tag.entity.UiCopyEntityTag copyright														[TR] DONE
