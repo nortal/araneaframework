@@ -37,7 +37,7 @@ public class UiStdFormDateInputTag extends UiStdFormDateTimeInputBaseTag {
 	
 	protected void init() {
 		super.init();
-		styleClass = "date";
+		styleClass = "aranea-date";
 	}
 	
 	//

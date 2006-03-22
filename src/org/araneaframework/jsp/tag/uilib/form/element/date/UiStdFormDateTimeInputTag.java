@@ -23,8 +23,8 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
 	protected void init() {
 		super.init();
 		
-		timeStyleClass = "aranea-time-input";
-		dateStyleClass = "aranea-date-input";
+		timeStyleClass = "aranea-time";
+		dateStyleClass = "aranea-date";
 	}
 
 	public String getDateStyleClass() {

@@ -896,6 +896,145 @@ el.click();]]></programlisting>
       </sect3>
     </sect2>
     
+    <!-- fileupload -->
+    <sect2>
+      <title><![CDATA[<ui:fileUpload>]]></title>
+      <para>
+           Form file upload field, represents <literal>FileUploadControl</literal>.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+<ui:form id="uploadForm">
+   <ui:row>
+       <ui:cell styleClass="name">
+           <ui:fileUpload id="file"/>
+       </ui:cell>
+   </ui:row>
+</ui:form>
+...]]></programlisting> 
+      </sect3>
+    </sect2>
+    
+    <!-- dateinput -->
+    
+        <sect2>
+      <title><![CDATA[<ui:dateInput>]]></title>
+      <para>
+           Form date input field, represents <literal>DateControl</literal>. Default <literal>styleClass="aranea-date"</literal>. 
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+     <!-- timeinput -->
+    
+     <sect2>
+      <title><![CDATA[<ui:timeInput>]]></title>
+      <para>
+           Form time input field, represents <literal>TimeControl</literal>. Default <literal>styleClass="aranea-time"</literal>.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+     <sect2>
+      <title><![CDATA[<ui:dateTimeInput>]]></title>
+      <para>
+           Form input field for both date and time, represents <literal>DateTimeControl</literal>.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+              <row>
+                <entry>dateStyleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry><emphasis>styleClass</emphasis> for date. Default is "aranea-date".</entry>
+              </row>
+              <row>
+                <entry>timeStyleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry><emphasis>styleClass</emphasis> for time. Default is "aranea-time".</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+
     
   </sect1>
 
