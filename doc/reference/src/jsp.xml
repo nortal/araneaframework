@@ -304,12 +304,189 @@
     <title>Basic Tags</title>
 
       <sect2>
-       <title><![CDATA[<ui:bold>]]></title>
+       <title><![CDATA[<ui:attribute>]]></title>
        <para>
-         Acts as the HTML &lt;b&gt; tag.
+         Defines an attribute of the containing element.
+       </para>
+      
+      <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>name</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>Attribute name.</entry>
+              </row>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>Attribute value.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
        </para>
       </sect2>
+      
+      <sect2>
+       <title><![CDATA[<ui:elementContent>]]></title>
+       <para>
+         Defines an HTML element content, meaning the body of the HTML element where text and other tags go.
+       </para>
+      </sect2>
+      
+      <sect2>
+       <title><![CDATA[<ui:element>]]></title>
+       <para>
+        Defines an HTML element.
+       </para>
+      
+         <para>
+           <informaltable frame="all">
+             <tgroup cols="3">
+               <colspec colwidth="1*"/>
+               <colspec colwidth="2*"/>
+               <colspec colwidth="2*"/>
+               <thead>
+                 <row>
+                   <entry>Attribute</entry>
+                   <entry>Required</entry>
+                   <entry>Applicable to:</entry>
+                 </row>
+               </thead>
+               <tbody>
+                 <row>
+                   <entry>name</entry>
+                   <entry><emphasis>no</emphasis></entry>
+                   <entry>HTML element name.</entry>
+                 </row>
+               </tbody>
+             </tgroup>
+           </informaltable>
+        </para>
+      </sect2>
+      
+      <sect2 id="keyboardHandlerTag">
+       <title><![CDATA[<ui:keyboardHandler>]]></title>
+       <para>
+         Registers a simple javascript keyboard handler.
+       </para>
 
+       <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired.
+                        Example: <programlisting role="javascript">function(event, elementId) { alert(elementId); }</programlisting> 
+                </entry>
+              </row>
+              <row>
+                <entry>keyCode</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</entry>
+              </row>
+              <row>
+                <entry>key</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        
+       </para>
+      </sect2>
+      
+      <sect2>
+       <title><![CDATA[<ui:eventKeyboardHandler>]]></title>
+       <para>
+        Registers a 'server-side' keyboard handler that sends an event to the specified widget.
+       </para>
+       
+       <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>scope</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry></entry>
+              </row>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry></entry>
+              </row>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry></entry>
+              </row>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry></entry>
+              </row>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry></entry>
+              </row>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry></entry>
+              </row>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry></entry>
+              </row>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        
+       </para>
+      </sect2>
   </sect1>
   
   <sect1>
@@ -818,7 +995,7 @@
             </tbody>
           </tgroup>
         </informaltable>
-		</para>
+    </para>
 	 </sect2>
 	 
 	 <sect2>
