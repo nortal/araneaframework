@@ -88,5 +88,5 @@ org.araneaframework.jsp.tag.uilib.list.UiStdListRowLinkButtonTag listRowLinkButt
 org.araneaframework.jsp.tag.uilib.list.formlist.UiFormListAddFormTag formListAddForm  [TP]
 org.araneaframework.jsp.tag.uilib.list.formlist.UiFormListRowsTag formListRows				[TP]
 org.araneaframework.jsp.tag.uilib.list.formlist.UiFormListTag formList								[TP]
-org.araneaframework.jsp.tag.updateRegion.UiUpdateRegionCommonTag updateRegion   [TR] DONE
-org.araneaframework.jsp.tag.updateRegion.UiUpdateRegionRowsTag updateRegionRows [TR] DONE
+org.araneaframework.jsp.tag.updateRegion.UiUpdateRegionCommonTag updateRegion   			[TR] DONE
+org.araneaframework.jsp.tag.updateRegion.UiUpdateRegionRowsTag updateRegionRows 			[TR] DONE
