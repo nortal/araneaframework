@@ -919,7 +919,58 @@
     <title>Layout Tags</title>
 	 
 	 <sect2>
-	 	<title><![CDATA[<ui:cell>]]></title>
+	 	<title><![CDATA[<ui:layout>]]></title>
+		<para>
+			Represents a layout. Layouts allow to describe the way content will be placed on the page.
+		</para>
+		
+    <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>width</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Layout width.</entry>
+              </row>
+              <row>
+                <entry>height</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Layout height.</entry>
+              </row>
+              <row>
+                <entry>rowClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Default style of rows in this layout.</entry>
+              </row>
+              <row>
+                <entry>cellClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Default style of cells in this layout.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class for tag.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+		</para>
+	 </sect2>
+	 
+	 <sect2>
+	 	<title><![CDATA[<ui:row>]]></title>
 		<para>
 			Sets a CSS class for the content, acts as a <emphasis>&lt;span&gt;</emphasis> HTML tag with the <emphasis>class</emphasis> atribute set.
 		</para>
@@ -943,6 +994,48 @@
                 <entry><emphasis>no</emphasis></entry>
                 <entry>CSS class for tag.</entry>
               </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+		</para>
+	 </sect2>
+	 
+	 <sect2>
+	 	<title><![CDATA[<ui:cell>]]></title>
+		<para>
+			Represents a row in layout.
+		</para>
+		
+    <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>height</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Row height.</entry>
+              </row> 
+              
+              <row>
+                <entry>cellClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Default style of cells in this row.</entry>
+              </row> 
+              <row>
+                <entry>height</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Cell css class, defines the way the cell will be rendered.</entry>
+              </row> 
             </tbody>
           </tgroup>
         </informaltable>
