@@ -60,7 +60,7 @@ org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormConditionTrueTag
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormConditionalDisplayTag conditionalDisplay [TP]
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormListDisplayTag listDisplay [RR] 
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormTextDisplayTag textDisplay [TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormValueDisplayTag valueDisplay [TP]
+org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormValueDisplayTag valueDisplay [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormCheckboxMultiSelectItemLabelTag checkboxMultiSelectItemLabel [TP]
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormCheckboxMultiSelectItemTag checkboxMultiSelectItem [TP]
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormCheckboxMultiSelectTag checkboxMultiSelect [TP]
@@ -73,13 +73,13 @@ org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormSelectDisplayTag 
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormSelectTag select [TP]
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormFloatInputDisplayTag floatInputDisplay [TP]
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormFloatInputTag floatInput [TP]
-org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormNumberInputDisplayTag numberInputDisplay [TP]
-org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormNumberInputTag numberInput [TP]
+org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormNumberInputDisplayTag numberInputDisplay [TP] DONE 
+org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormNumberInputTag numberInput [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormPasswordInputTag passwordInput [TP]
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextInputDisplayTag textInputDisplay [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextInputTag textInput [TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextareaDisplayTag textareaDisplay [TP]
-org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextareaTag textarea [TP]
+org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextareaDisplayTag textareaDisplay [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextareaTag textarea [TP] DONE
 org.araneaframework.jsp.tag.uilib.list.UiListFilterTag listFilter [RR]
 org.araneaframework.jsp.tag.uilib.list.UiListRowsTag listRows [RR]
 org.araneaframework.jsp.tag.uilib.list.UiListTag list [RR]

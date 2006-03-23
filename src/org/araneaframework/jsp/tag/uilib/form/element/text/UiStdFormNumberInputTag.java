@@ -35,6 +35,13 @@ import org.araneaframework.uilib.form.control.NumberControl;
  *   description = "Form number input field, represents UiLib "NumberControl"."
  */
 public class UiStdFormNumberInputTag extends UiStdFormTextInputBaseTag {
+	
+	protected void init() {
+		super.init();
+		size = null;
+		styleClass = "aranea-number";
+		onChangePrecondition = "return true;";
+	}
         
   //
   // Implementation

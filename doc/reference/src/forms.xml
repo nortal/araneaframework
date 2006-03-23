@@ -886,6 +886,63 @@ el.click();]]></programlisting>
         </sect3>
       </sect2>
       
+      <!-- numberinput, numberdisplay -->
+        <sect2>
+              <title><![CDATA[<ui:numberInput>]]></title>
+              <para>
+                  Form number input field, represents <literal>NumberControl</literal>.
+                  It is rendered in HTML with <literal>&lt;input type="text" ...&gt;</literal> tag. 
+                  Default <literal>styleClass="aranea-number"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <informaltable frame="all">
+                  <tgroup cols="3">
+                    <colspec colwidth="2*"/>
+                    <colspec colwidth="1*"/>
+                    <colspec colwidth="4*"/>
+                    <thead>
+                      <row>
+                        <entry>Attribute</entry>
+                        <entry>Required</entry>
+                        <entry>Description</entry>
+                      </row>
+                    </thead>
+                    <tbody>
+                      <row>
+                        <entry>size</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Maximum length of accepted text (in characters).</entry>
+                      </row>
+                      <row>
+                        <entry>onChangePrecondition</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                      </row>
+                    </tbody>
+                  </tgroup>
+                </informaltable>
+                 <emphasis>Also has all common form element rendering attributes.</emphasis> 
+            </sect3>
+       </sect2>
+          
+        <sect2>
+              <title><![CDATA[<ui:numberInputDisplay>]]></title>
+              <para>
+                  Form number display field, represents <literal>NumberControl</literal>.
+                  It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
+                  Default <literal>styleClass="aranea-number-display"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+            </sect3>
+        </sect2>
+
+      
+    <!-- textDisplay -->
     <sect2>
           <title><![CDATA[<ui:textDisplay>]]></title>
           <para>
@@ -898,8 +955,95 @@ el.click();]]></programlisting>
             <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
         </sect3>
       </sect2>
-
-    
+      
+    <!-- value display -->  
+     <sect2>
+      <title><![CDATA[<ui:valueDisplay>]]></title>
+      <para>
+          Puts form element value in page scope variable, represents <literal>DisplayControl</literal>.
+          It does not output any HTML.
+      </para>
+  
+    <sect3>
+    <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>var</entry>
+                <entry><emphasis>true</emphasis></entry>
+                <entry>Name of the page-scoped EL variable that will be assigned element value.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has standard <literal>id</literal> attribute.</emphasis> 
+    </sect3>
+  </sect2>
+  
+   <!-- textarea, textareadisplay -->  
+     <sect2>
+      <title><![CDATA[<ui:textarea>]]></title>
+      <para>
+          Form text input area, represents <literal>TextareaControl</literal>.
+          It is rendered in HTML with <literal>&lt;textarea ...&gt;</literal> tag. Default <literal>styleClass="aranea-textarea"</literal>.
+      </para>
+  
+    <sect3>
+    <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>cols</entry>
+                <entry><emphasis>true</emphasis></entry>
+                <entry>Number of visible columns in textarea.</entry>
+              </row>
+              <row>
+                <entry>rows</entry>
+                <entry><emphasis>true</emphasis></entry>
+                <entry>Number of visible rows in textarea.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis>
+    </sect3>
+  </sect2>
+  
+       <sect2>
+      <title><![CDATA[<ui:textareaDisplay>]]></title>
+      <para>
+          Form text display area, represents <literal>TextareaControl</literal>.
+          It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag. Default <literal>styleClass="aranea-textarea-display"</literal>.
+      </para>
+  
+    <sect3>
+    <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+    </sect3>
+  </sect2>
+     
     
     <!-- hiddeninput -->
       <sect2>
