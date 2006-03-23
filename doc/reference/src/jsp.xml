@@ -15,7 +15,7 @@
 -->
 
 <chapter id="jsp">
-	<title>JSP and Custom Tags</title>
+   <title>JSP and Custom Tags</title>
   
   <sect1>
     <title>Aranea Standard Tag Library</title>
@@ -121,20 +121,20 @@
     <sect2>
       <title><![CDATA[<ui:importScripts>]]></title>
       <para>
-			Aranea comes bundled with javascript. Javascript is used to to do event calls (submits), client side validation, AJAX, use a htmleditor,
-			calendar, etc. One way for
-			using these javascript libraries would be to extract them from the corresponding jar's (aranea-presentation.jar and aranea-template.jar)
-			and copy them to a location that your webapp can read from and then using the html capabilities (<![CDATA[<script>]]> tag) to read them in. 
-			
-			The <![CDATA[<ui:importScripts>]]> tag automates this process. When using with no parameters it includes all the javascript files from the
-			aranea-presentation.jar. 
-		</para>
-		<para>
-			<![CDATA[<ui:importScripts>]]> depends on the filter <emphasis>StandardServletFileImportFilterService</emphasis> being set. The filter provides
-			the functionality of reading files from the jars on the server.
+         Aranea comes bundled with javascript. Javascript is used to to do event calls (submits), client side validation, AJAX, use a htmleditor,
+         calendar, etc. One way for
+         using these javascript libraries would be to extract them from the corresponding jar's (aranea-presentation.jar and aranea-template.jar)
+         and copy them to a location that your webapp can read from and then using the html capabilities (<![CDATA[<script>]]> tag) to read them in. 
+         
+         The <![CDATA[<ui:importScripts>]]> tag automates this process. When using with no parameters it includes all the javascript files from the
+         aranea-presentation.jar. 
+      </para>
+      <para>
+         <![CDATA[<ui:importScripts>]]> depends on the filter <emphasis>StandardServletFileImportFilterService</emphasis> being set. The filter provides
+         the functionality of reading files from the jars on the server.
       </para>
       
-		<sect3>
+      <sect3>
         <title>Attributes</title>
         <informaltable frame="all">
           <tgroup cols="3">
@@ -168,17 +168,17 @@
     <sect2>
       <title><![CDATA[<ui:importStyles>]]></title>
       <para>
-			Aranea comes bundled with css files to provide custom look for different predefined components (the template app, calendar, htmleditor, etc.).
-			Just as with javascript, to use them one would have to extract them from the jars and use them just like any other css file would be used.
-			To automate this process with aranea css files one can use the <![CDATA[<ui:importStyles>]]> tag to include the css files 
-			<emphasis>automatically</emphasis>.
-		</para>
-		<para>
-			<![CDATA[<ui:importStyles>]]> depends on the filter <emphasis>StandardServletFileImportFilterService</emphasis> being set. The filter provides
-			the functionality of reading files from the jars on the server.
+         Aranea comes bundled with css files to provide custom look for different predefined components (the template app, calendar, htmleditor, etc.).
+         Just as with javascript, to use them one would have to extract them from the jars and use them just like any other css file would be used.
+         To automate this process with aranea css files one can use the <![CDATA[<ui:importStyles>]]> tag to include the css files 
+         <emphasis>automatically</emphasis>.
+      </para>
+      <para>
+         <![CDATA[<ui:importStyles>]]> depends on the filter <emphasis>StandardServletFileImportFilterService</emphasis> being set. The filter provides
+         the functionality of reading files from the jars on the server.
       </para>
       
-		<sect3>
+      <sect3>
         <title>Attributes</title>
         <informaltable frame="all">
           <tgroup cols="3">
@@ -917,13 +917,13 @@
   
   <sect1>
     <title>Layout Tags</title>
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:layout>]]></title>
-		<para>
-			Represents a layout. Layouts allow to describe the way content will be placed on the page.
-		</para>
-		
+    
+    <sect2>
+      <title><![CDATA[<ui:layout>]]></title>
+      <para>
+         Represents a layout. Layouts allow to describe the way content will be placed on the page.
+      </para>
+      
     <para>
         <informaltable frame="all">
           <tgroup cols="3">
@@ -966,15 +966,15 @@
             </tbody>
           </tgroup>
         </informaltable>
-		</para>
-	 </sect2>
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:row>]]></title>
-		<para>
-			Sets a CSS class for the content, acts as a <emphasis>&lt;span&gt;</emphasis> HTML tag with the <emphasis>class</emphasis> atribute set.
-		</para>
-		
+      </para>
+    </sect2>
+    
+    <sect2>
+      <title><![CDATA[<ui:row>]]></title>
+      <para>
+         Represents a row in layout.
+      </para>
+      
     <para>
         <informaltable frame="all">
           <tgroup cols="3">
@@ -990,22 +990,32 @@
             </thead>
             <tbody>
               <row>
+                <entry>height</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Row height.</entry>
+              </row>
+              <row>
+                <entry>cellClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Default style of cells in this row..</entry>
+              </row>
+              <row>
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>CSS class for tag.</entry>
+                <entry>Cell css class, defines the way the cell will be rendered.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
-		</para>
-	 </sect2>
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:cell>]]></title>
-		<para>
-			Represents a row in layout.
-		</para>
-		
+      </para>
+    </sect2>
+    
+    <sect2>
+      <title><![CDATA[<ui:cell>]]></title>
+      <para>
+         Represents a cell in layout.
+      </para>
+      
     <para>
         <informaltable frame="all">
           <tgroup cols="3">
@@ -1027,20 +1037,31 @@
               </row> 
               
               <row>
-                <entry>cellClass</entry>
+                <entry>width</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Default style of cells in this row.</entry>
+                <entry>Row width.</entry>
+              </row> 
+              
+              <row>
+                <entry>colSpan</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Cell colspan, same as in HTML.</entry>
               </row> 
               <row>
-                <entry>height</entry>
+                <entry>rowSpan</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Cell rowspan, same as in HTML.</entry>
+              </row> 
+              <row>
+                <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Cell css class, defines the way the cell will be rendered.</entry>
               </row> 
             </tbody>
           </tgroup>
         </informaltable>
-		</para>
-	 </sect2>
+      </para>
+    </sect2>
     
     <sect2>
       <title><![CDATA[<ui:updateRegion> and <ui:updateRegionRows>]]></title>
@@ -1081,8 +1102,8 @@
                    <entry>globalId</entry>
                    <entry><emphasis>no</emphasis></entry>
                    <entry>When not using the <literal>globalId</literal>, the full id will be formed by concatenating the context widget id
-						 with the specified <literal>id</literal>. If for a reason you would want to avoid that, then you specify the id with
-						 the <literal>globalId</literal> attribute.</entry>
+                   with the specified <literal>id</literal>. If for a reason you would want to avoid that, then you specify the id with
+                   the <literal>globalId</literal> attribute.</entry>
                  </row>
                </tbody>
              </tgroup>
@@ -1106,7 +1127,7 @@
    <sect2>
     <title><![CDATA[<ui:font>]]></title>
       <para>
-        Acts as <emphasis>&lt;font&gt;</emphasis> HTML tag.	
+        Acts as <emphasis>&lt;font&gt;</emphasis> HTML tag. 
       </para>
       
       <para>
@@ -1137,21 +1158,21 @@
           </tgroup>
         </informaltable>
     </para>
-	 </sect2>
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:italic>]]></title>
-		<para>
-			Acts as <emphasis>&lt;i&gt;</emphasis> HTML tag.
-		</para>
-	 </sect2>
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:style>]]></title>
-		<para>
-			Sets a CSS class for the content, acts as a <emphasis>&lt;span&gt;</emphasis> HTML tag with the <emphasis>class</emphasis> atribute set.
-		</para>
-		
+    </sect2>
+    
+    <sect2>
+      <title><![CDATA[<ui:italic>]]></title>
+      <para>
+         Acts as <emphasis>&lt;i&gt;</emphasis> HTML tag.
+      </para>
+    </sect2>
+    
+    <sect2>
+      <title><![CDATA[<ui:style>]]></title>
+      <para>
+         Sets a CSS class for the content, acts as a <emphasis>&lt;span&gt;</emphasis> HTML tag with the <emphasis>class</emphasis> atribute set.
+      </para>
+      
     <para>
         <informaltable frame="all">
           <tgroup cols="3">
@@ -1174,21 +1195,21 @@
             </tbody>
           </tgroup>
         </informaltable>
-		</para>
-	 </sect2>
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:newline>]]></title>
-		<para>
+      </para>
+    </sect2>
+    
+    <sect2>
+      <title><![CDATA[<ui:newline>]]></title>
+      <para>
       Puts a visual new line into resulting text.
-		</para>
-	 </sect2>
+      </para>
+    </sect2>
 
-	 <sect2>
-	 	<title><![CDATA[<ui:basicButton>]]></title>
-		<para>
+    <sect2>
+      <title><![CDATA[<ui:basicButton>]]></title>
+      <para>
       Represents an HTML form button.
-		</para>
+      </para>
     <para>
         <informaltable frame="all">
           <tgroup cols="3">
@@ -1231,14 +1252,14 @@
             </tbody>
           </tgroup>
         </informaltable>
-		</para>
-	 </sect2>
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:basicLinkButton>]]></title>
-		<para>
+      </para>
+    </sect2>
+    
+    <sect2>
+      <title><![CDATA[<ui:basicLinkButton>]]></title>
+      <para>
       Represents a link with an onClick JavaScript action.
-		</para>
+      </para>
 
     <para>
         <informaltable frame="all">
@@ -1277,14 +1298,14 @@
             </tbody>
           </tgroup>
         </informaltable>
-		</para>
-	 </sect2>
-	 
-	 <sect2>
-	 	<title><![CDATA[<ui:link>]]></title>
-		<para>
+      </para>
+    </sect2>
+    
+    <sect2>
+      <title><![CDATA[<ui:link>]]></title>
+      <para>
       Usual HTML link, acts as a <emphasis>&lt;a&gt;</emphasis> HTML tag.
-		</para>
+      </para>
     
     <para>
         <informaltable frame="all">
@@ -1333,8 +1354,8 @@
             </tbody>
           </tgroup>
         </informaltable>
-		</para>
-	 </sect2>
+      </para>
+    </sect2>
   </sect1>
   
   <sect1>
@@ -1387,7 +1408,7 @@
         </para>
         
         <para>
-        		There is also a <literal>mold</literal> attribute; in current tag libarary there are very few tags
+            There is also a <literal>mold</literal> attribute; in current tag libarary there are very few tags
             supporting this attribute. One of those is
             <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>)&mdash;its mold
             should have value <literal>"input"</literal> or <literal>"button"</literal> (default) and it specifies whether
