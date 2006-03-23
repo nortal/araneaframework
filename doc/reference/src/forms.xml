@@ -560,7 +560,7 @@ private void handleEventSave() {
               <row>
                 <entry>showMandatory</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Indicates whether mandatory (required) form element label is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal></entry>
+                <entry>Indicates whether mandatory input fields label is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal></entry>
               </row>
               <row>
                 <entry>showColon</entry>
@@ -1466,8 +1466,152 @@ el.click();]]></programlisting>
       </sect3>
     </sect2>
     
-
     
+        <!-- SELECTDISPLAY -->
+      <sect2>
+      <title><![CDATA[<ui:select>]]></title>
+      <para>
+          Form select display field, represents <literal>SelectControl</literal>. Default <literal>styleClass="aranea-select-display"</literal>,
+          rendered with HTML <literal>&lt;span ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    <!-- RADIOSELECT -->
+    <sect2>
+      <title><![CDATA[<ui:radioSelect>]]></title>
+      <para>
+          Starts form radioselect buttons field, represents <literal>SelectControl</literal>. 
+          Default <literal>styleClass="aranea-radioselect"</literal>. It takes care of rendering all its elements; internally using
+          &lt;ui:radioSelectItemLabel&gt; and &lt;ui:radioSelectItem&gt; tags.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>type</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The way the radio buttons will be rendered - can be either <emphasis>vertical</emphasis> or <emphasis>horizontal</emphasis>. By default "horizontal".</entry>
+              </row>
+              <row>
+                <entry>labelBefore</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that controls whether label is before or after each radio button, <literal>false</literal> by default.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+        <!-- RADIOSELECTITEM -->
+    <sect2>
+      <title><![CDATA[<ui:radioSelectItem>]]></title>
+      <para>
+          Form radio button, represents one item from <literal>SelectControl</literal>.
+          Default <literal>styleClass="aranea-radio"</literal>. It will be rendered with HTML <literal>&lt;input type="radio" ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The value of this radio button that will be submitted with form if this radio button is selected.</entry>
+              </row>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    <!-- RADIOSELECTITEMLABEL -->
+    <sect2>
+      <title><![CDATA[<ui:radioSelectItemLabel>]]></title>
+      <para>
+          Form radio button label, represents label of one item from <literal>SelectControl</literal>.
+           It will be rendered with HTML <literal>&lt;span ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Select item value.</entry>
+              </row>
+              <row>
+                <entry>showMandatory</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether label for mandatory input is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal>.</entry>
+              </row>
+              <row>
+                <entry>showColon</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether colon is shown between the label and value. Default is <literal>true</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    
+    
+    
+    
+
   </sect1>
 
   <sect1>

@@ -44,6 +44,7 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 		super.init();
 		setHasElementContextSpan(false);
 		type = "horizontal";
+		styleClass = "aranea-radioselect";
 		labelBefore = false;
 	}
 	
@@ -55,7 +56,7 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "The way the radio buttons will be rendered - can be either "vertical" or "horizontal". By default "horizontal"." 
+	 *   description = "The way the radio buttons will be rendered - can be either vertical or horizontal. By default horizontal." 
 	 */ 
 	public void setType(String type) throws JspException {
 		this.type = (String)evaluate("type", type, String.class);

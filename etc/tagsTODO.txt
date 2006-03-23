@@ -43,12 +43,12 @@ org.araneaframework.jsp.tag.uilib.form.UiFormTag form 																					[TP] 
 org.araneaframework.jsp.tag.uilib.form.UiStdFormElementLabelTag label 													[TP] 	DONE
 org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleLabelTag simpleLabel											[TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.UiStdAutomaticTagFormElementTag automaticFormElement [JK]
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormButtonTag button 												[TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxDisplayTag checkboxDisplay 			[TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxTag checkbox 										[TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormFileUploadTag fileUpload 								[TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormHiddenInputTag hiddenInput 							[TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.UiStdFormLinkButtonTag linkButton  [TP]
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormButtonTag button [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxDisplayTag checkboxDisplay [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormCheckboxTag checkbox [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormFileUploadTag fileUpload [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormHiddenInputTag hiddenInput [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.UiStdFormLinkButtonTag linkButton  [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.date.UiStdFormDateInputDisplayTag dateInputDisplay  [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.date.UiStdFormDateInputTag dateInput 						[TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.date.UiStdFormDateTimeInputDisplayTag dateTimeInputDisplay [TP] DONE
@@ -66,16 +66,16 @@ org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormCheckboxMultiSele
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormCheckboxMultiSelectTag checkboxMultiSelect [TP]
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormMultiSelectDisplayTag multiSelectDisplay [TP]
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormMultiSelectTag multiSelect [TP]
-org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormRadioSelectItemLabelTag radioSelectItemLabel [TP]
-org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormRadioSelectItemTag radioSelectItem [TP]
-org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormRadioSelectTag radioSelect [TP]
-org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormSelectDisplayTag selectDisplay [TP]
-org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormSelectTag select [TP]
-org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormFloatInputDisplayTag floatInputDisplay [TP]
-org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormFloatInputTag floatInput [TP]
+org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormRadioSelectItemLabelTag radioSelectItemLabel [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormRadioSelectItemTag radioSelectItem [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormRadioSelectTag radioSelect [TP] DONE DONE
+org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormSelectDisplayTag selectDisplay [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormSelectTag select [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormFloatInputDisplayTag floatInputDisplay [TP] DONE
+org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormFloatInputTag floatInput [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormNumberInputDisplayTag numberInputDisplay [TP] DONE 
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormNumberInputTag numberInput [TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormPasswordInputTag passwordInput [TP]
+org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormPasswordInputTag passwordInput [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextInputDisplayTag textInputDisplay [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextInputTag textInput [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextareaDisplayTag textareaDisplay [TP] DONE
