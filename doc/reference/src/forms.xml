@@ -873,7 +873,7 @@ el.click();]]></programlisting>
       </sect2>
       
     <sect2>
-          <title><![CDATA[<ui:textDisplay>]]></title>
+          <title><![CDATA[<ui:textInputDisplay>]]></title>
           <para>
 	          Form text display field, represents <literal>TextControl</literal>.
               It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
@@ -886,6 +886,19 @@ el.click();]]></programlisting>
         </sect3>
       </sect2>
       
+    <sect2>
+          <title><![CDATA[<ui:textDisplay>]]></title>
+          <para>
+              Form text display field, represents <literal>DisplayControl</literal>, displays element value as <literal>String</literal>.
+              It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
+          </para>
+      
+        <sect3>
+        <title>Attributes</title>
+            <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+        </sect3>
+      </sect2>
+
     
     
     <!-- hiddeninput -->

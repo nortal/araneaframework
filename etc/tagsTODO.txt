@@ -59,7 +59,7 @@ org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormConditionFalseTa
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormConditionTrueTag conditionTrue [TP]
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormConditionalDisplayTag conditionalDisplay [TP]
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormListDisplayTag listDisplay [RR] 
-org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormTextDisplayTag textDisplay [TP]
+org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormTextDisplayTag textDisplay [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormValueDisplayTag valueDisplay [TP]
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormCheckboxMultiSelectItemLabelTag checkboxMultiSelectItemLabel [TP]
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormCheckboxMultiSelectItemTag checkboxMultiSelectItem [TP]
