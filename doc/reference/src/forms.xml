@@ -700,6 +700,48 @@ private void handleEventSave() {
 </ui:form>]]></programlisting> 
       </sect3>
     </sect2>
+
+
+      <!-- LINKBUTTOn -->
+        <sect2>
+      <title><![CDATA[<ui:linkButton>]]></title>
+      <para>
+          Renders HTML link that represents <literal>ButtonControl</literal>. HTML &lt;a href="javascript:" ... &gt; tag will
+          be used for rendering. Default <literal>styleClass="aranea-link"</literal>.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>showLabel</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether button label is shown.Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal></entry>
+              </row>
+              <row>
+                <entry>onClickPrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis>
+      </sect3>
+    </sect2>
+
     
           <!-- formKeyboardHandler -->
         <sect2>
@@ -940,6 +982,103 @@ el.click();]]></programlisting>
                 <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
             </sect3>
         </sect2>
+        
+      <!-- floatinput, floatinputdisplay -->
+        <sect2>
+              <title><![CDATA[<ui:floatInput>]]></title>
+              <para>
+                  Form floating-point number input field, represents <literal>FloatControl</literal>.
+                  It is rendered in HTML with <literal>&lt;input type="text" ...&gt;</literal> tag. 
+                  Default <literal>styleClass="aranea-float"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <informaltable frame="all">
+                  <tgroup cols="3">
+                    <colspec colwidth="2*"/>
+                    <colspec colwidth="1*"/>
+                    <colspec colwidth="4*"/>
+                    <thead>
+                      <row>
+                        <entry>Attribute</entry>
+                        <entry>Required</entry>
+                        <entry>Description</entry>
+                      </row>
+                    </thead>
+                    <tbody>
+                      <row>
+                        <entry>size</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Maximum length of accepted floating-point number (in characters).</entry>
+                      </row>
+                      <row>
+                        <entry>onChangePrecondition</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                      </row>
+                    </tbody>
+                  </tgroup>
+                </informaltable>
+                 <emphasis>Also has all common form element rendering attributes.</emphasis> 
+            </sect3>
+       </sect2>
+          
+        <sect2>
+              <title><![CDATA[<ui:floatInputDisplay>]]></title>
+              <para>
+                  Form floating-point number display field, represents <literal>FloatControl</literal>.
+                  It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
+                  Default <literal>styleClass="aranea-float-display"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+            </sect3>
+        </sect2>
+        
+      <!-- passwordinput -->
+        <sect2>
+              <title><![CDATA[<ui:passwordInput>]]></title>
+              <para>
+                  Form number input field, represents <literal>TextControl</literal>.
+                  It is rendered in HTML with <literal>&lt;input type="password" ...&gt;</literal> tag. 
+                  Default <literal>styleClass="aranea-text"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <informaltable frame="all">
+                  <tgroup cols="3">
+                    <colspec colwidth="2*"/>
+                    <colspec colwidth="1*"/>
+                    <colspec colwidth="4*"/>
+                    <thead>
+                      <row>
+                        <entry>Attribute</entry>
+                        <entry>Required</entry>
+                        <entry>Description</entry>
+                      </row>
+                    </thead>
+                    <tbody>
+                      <row>
+                        <entry>size</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Maximum length of password (in characters).</entry>
+                      </row>
+                      <row>
+                        <entry>onChangePrecondition</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                      </row>
+                    </tbody>
+                  </tgroup>
+                </informaltable>
+                 <emphasis>Also has all common form element rendering attributes.</emphasis> 
+            </sect3>
+       </sect2>
+
 
       
     <!-- textDisplay -->
@@ -1285,6 +1424,48 @@ el.click();]]></programlisting>
         <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
       </sect3>
     </sect2>
+    
+    
+    <!-- SELECT -->
+         <sect2>
+      <title><![CDATA[<ui:select>]]></title>
+      <para>
+          Form dropdown list input field, represents <literal>SelectControl</literal>. Default <literal>styleClass="aranea-select"</literal>,
+          rendered with HTML <literal>&lt;select ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+              <row>
+                <entry>size</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Number of select elements visible at once.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
 
     
   </sect1>
