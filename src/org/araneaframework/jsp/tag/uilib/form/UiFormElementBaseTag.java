@@ -87,7 +87,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Whether the element will send the events that are registered by server-side (by default "true")."
+	 *   description = "Whether the element will send the events that are registered by server-side (by default 'true')."
 	 */	
 	public void setEvents(String events) throws JspException {
 		this.events = ((Boolean)evaluateNotNull("events", events, Boolean.class)).booleanValue(); 
@@ -97,7 +97,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Whether the element will be validated on the client-side when the form is submitted (by default "true")."
+	 *   description = "Whether the element will be validated on the client-side when the form is submitted (by default 'true')."
 	 */	
 	public void setValidate(String validate) throws JspException {
 		this.validate = ((Boolean)evaluateNotNull("validate", validate, Boolean.class)).booleanValue(); 
