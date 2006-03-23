@@ -312,8 +312,7 @@ private void handleEventSave() {
         tags for <emphasis>rendering</emphasis> form elements containing different controls. We will 
         first describe the attributes that are common to
         all form element rendering tags; then proceed to explain <emphasis>context</emphasis> tags 
-        and different form element <emphasis>rendering</emphasis> tags with their
-        unique attributes.
+        and different form element rendering tags with their unique attributes.
         
       <sect2>
       <title>Common attributes for all form element rendering tags.</title>
@@ -832,18 +831,75 @@ el.click();]]></programlisting>
       </para>
     </sect2>
     
+    	
+    <!--  textinput,textdisplay -->
+    <sect2>
+          <title><![CDATA[<ui:textInput>]]></title>
+          <para>
+	          Form text input field, represents <literal>TextControl</literal>.
+              It is rendered in HTML with <literal>&lt;input type="text" ...&gt;</literal> tag. Default <literal>styleClass="aranea-text"</literal>.
+          </para>
+      
+        <sect3>
+        <title>Attributes</title>
+	        <informaltable frame="all">
+	          <tgroup cols="3">
+	            <colspec colwidth="2*"/>
+	            <colspec colwidth="1*"/>
+	            <colspec colwidth="4*"/>
+	            <thead>
+	              <row>
+	                <entry>Attribute</entry>
+	                <entry>Required</entry>
+	                <entry>Description</entry>
+	              </row>
+	            </thead>
+	            <tbody>
+	              <row>
+	                <entry>size</entry>
+	                <entry><emphasis>no</emphasis></entry>
+	                <entry>Maximum length of accepted text (in characters).</entry>
+	              </row>
+	              <row>
+	                <entry>onChangePrecondition</entry>
+	                <entry><emphasis>no</emphasis></entry>
+	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+	              </row>
+	            </tbody>
+	          </tgroup>
+	        </informaltable>
+             <emphasis>Also has all common form element rendering attributes.</emphasis> 
+        </sect3>
+      </sect2>
+      
+    <sect2>
+          <title><![CDATA[<ui:textDisplay>]]></title>
+          <para>
+	          Form text display field, represents <literal>TextControl</literal>.
+              It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
+              Default <literal>styleClass="aranea-text-display"</literal>.
+          </para>
+      
+        <sect3>
+        <title>Attributes</title>
+	        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+        </sect3>
+      </sect2>
+      
+    
+    
     <!-- hiddeninput -->
       <sect2>
           <title><![CDATA[<ui:hiddenInput>]]></title>
           <para>
-               Represents a "hidden" input element that is mapped to <literal>HiddenControl</literal>. It is rendered in HTML with
+               Represents a "hidden" form input element&mdash;<literal>HiddenControl</literal>. It is rendered in HTML with
                <literal>&lt;input type="hidden" ...&gt;</literal> tag.
           </para>
       
         <sect3>
         <title>Attributes</title>
                 <emphasis>Has all common form element rendering attributes.</emphasis> 
-                As rendered tag is not visible to end-user they are mostly pointless, however.
+                However, rendered tag is not visible to end-user, thus using any attributes is mostly pointless.
         </sect3>
       </sect2>
       
@@ -874,7 +930,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
               </row>
             </tbody>
           </tgroup>
@@ -948,7 +1004,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
               </row>
             </tbody>
           </tgroup>
@@ -956,6 +1012,19 @@ el.click();]]></programlisting>
         <emphasis>Also has all common form element rendering attributes.</emphasis> 
       </sect3>
     </sect2>
+    
+        <sect2>
+      <title><![CDATA[<ui:dateInputDisplay>]]></title>
+      <para>
+           Form date display field, represents <literal>DateControl</literal>. Default <literal>styleClass="aranea-date-display"</literal>. 
+      </para>
+      
+       <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+
     
      <!-- timeinput -->
     
@@ -983,7 +1052,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
               </row>
             </tbody>
           </tgroup>
@@ -991,6 +1060,19 @@ el.click();]]></programlisting>
         <emphasis>Also has all common form element rendering attributes.</emphasis> 
       </sect3>
     </sect2>
+    
+            <sect2>
+      <title><![CDATA[<ui:timeInputDisplay>]]></title>
+      <para>
+           Form time display field, represents <literal>TimeControl</literal>. Default <literal>styleClass="aranea-time-display"</literal>. 
+      </para>
+      
+       <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
     
      <sect2>
       <title><![CDATA[<ui:dateTimeInput>]]></title>
@@ -1016,7 +1098,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
               </row>
               <row>
                 <entry>dateStyleClass</entry>
@@ -1032,6 +1114,18 @@ el.click();]]></programlisting>
           </tgroup>
         </informaltable>
         <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+     <sect2>
+      <title><![CDATA[<ui:dateTimeInputDisplay>]]></title>
+      <para>
+           Form display field for both date and time, represents <literal>TimeControl</literal>. Default <literal>styleClass="aranea-datetime-display"</literal>. 
+      </para>
+      
+       <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
       </sect3>
     </sect2>
 

@@ -270,7 +270,7 @@
 				(simple Java beans with getter and setter methods for private fields)&mdash;so that
 				we can easily save and retrieve objects from/to database.
 				Mappings between Java objects and database tables are generated 
-				automatically from xdoclet annotations&mdash;take a look at
+				automatically from <ulink url="http://xdoclet.sourceforge.net">xdoclet</ulink> annotations&mdash;take a look at
 				<literal>war/WEB-INF/classes/mappings</literal>
 				directory to see what typical generated mappings look like&mdash;or any
 				classes from <literal>org.araneaframework.templateApp.business.model</literal>
@@ -418,7 +418,7 @@ public void handleEventBypass() throws Exception {
 
 		<para>
 			Most crucial here is understanding workings of <literal>handleEventBypass()</literal>.
-			Our widget (think of it as synonymous with "flow" for a while) replaces itself on
+			Our widget (synonymous with <emphasis>flow</emphasis> here) replaces itself on
 			<literal>FlowContainer</literal> call stack with real application widget. It could also
 			<literal>call()</literal> the next widget but in doing that the login widget itself would
 			remain at the bottom of the call stack&mdash;which is not wanted.
@@ -426,13 +426,13 @@ public void handleEventBypass() throws Exception {
 
 		<para>
 			You may think of flows as web pages that call and replace each other&mdash;and may return
-			control to calling page with <literal>getFlowCtx.return()</literal>.
+			control to calling flow with <literal>getFlowCtx.return()</literal>.
 		</para>
 		
 		<para>
 			Finally, the JSP page that renders <literal>TemplateLoginWidget</literal>. Do not pay
-			much attention to <literal>&lt;div&gt;</literal>s and other HTML constructs -
-			important tags are with namespace <literal>ui</literal>&mdash;in our examples this
+			much attention to <emphasis>&lt;div&gt;</emphasis>s and other HTML constructs -
+			important tags are preceded by namespace <literal>ui</literal>&mdash;in our examples this
             namespace includes both Aranea standard and template tags.
 		</para>
 		
@@ -907,7 +907,7 @@ public void handleEventTestSimpleForm() throws Exception {
                         demonstrates <literal>BeanFormWidget</literal> usage&mdash;binding a data model (JavaBean with getter and setter
                         methods for instance fields) to a form. Data model being bind to form is of the <literal>PersonMO</literal> class.
                         In actual source code, <literal>PersonMO</literal> class also contains <literal>xdoclet</literal> annotations 
-                        telling Hibernate database tables and columns where JavaBean data should be saved, these annotations are removed 
+                        telling Hibernate database tables and columns where JavaBean data should be saved, these are removed 
                         from tutorial sample code as they tell nothing useful about Aranea.
                     </para>
 
@@ -953,8 +953,8 @@ public void handleEventTestSimpleForm() throws Exception {
     // Whether the person is being edited or added
     private boolean editMode;
     
-    /* The form. Person data (represented by class PersonMO) will be binded to it, thus 
-       the using of the BeanFormWidget instead of FormWidget. */
+	/* The form. Person data (represented by class PersonMO) will be binded to it, thus 
+	   usage of BeanFormWidget instead of FormWidget. */
     private BeanFormWidget form;
 
     /**
@@ -1119,23 +1119,23 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                 <sect4><title>Advanced forms</title>
                     <para>
                         Real world forms tend to be considerably more complex than simple examples presented before.
-                        They very often need to dynamically change&mdash;based on user input form functionality
-                        and content need to be changed. What one usually does for creating such dynamic forms is 
-                        register event listeners on controls and upon receiving event removes, adds, or updates 
+                        They very often need to dynamically change&mdash;based on user input(s) form functionality
+                        and content need to be altered. What one usually does for creating such dynamic forms is 
+                        registering event listeners on controls and upon receiving event(s) updates 
                         forms dynamically. This can be accomplished with pure HTTP requests or AJAX 
-                        (XMLHttpRequest or Msxml2.XMLHTTP and Javascript) requests. AJAX requests have gained much
+                        (XMLHttpRequest or Msxml2.XMLHTTP) requests. AJAX requests have gained much
                         popularity lately because they allow running complex business logic on background and
-                        updating HTML pages without full request (on slower computers over slower connections 
+                        updating HTML pages without full HTTP request (on older computers over slower connections 
                         this is sure way to cause uncomfortable flicker).
                     </para>
-                    
+
                     <para>
                         Next class we will be presenting is <literal>DemoComplexForm</literal> from our main example
-                        (<literal>Demos-&gt;Complex Form</literal>).
+                        (<emphasis>Demos-&gt;Complex Form</emphasis>).
                         It is not &quot;complex&quot; in the sense that it would be hard to understand,
                         but it demonstrates concepts that can be used for creation of very sophisticated forms.
-                        Form contains a <literal>SelectControl</literal>, and depending its value different
-                        subwidgets are shown (subwidget updates are performed with AJAX requests).
+                        The form contains a <literal>SelectControl</literal>, depending on selected value 
+                        different subwidgets are shown (subwidget updates are performed with AJAX requests).
                     </para>
                     
                     <programlisting role="java"><![CDATA[public class DemoComplexForm extends TemplateBaseWidget {
@@ -1278,23 +1278,26 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 ]]></programlisting>
 
                 <para>
-                    There are some things to note here&mdash;firstly, if &lt;ui:select&gt; attribute referring to it 
-                    update regions is removed (and &lt;ui:updateRegionRows&gt; tag also) this example functions just
-                    like the one given here, only smoothness of page update is lost. Secondly, &lt;ui:updateRegionRows&gt;
-                    must to be outside the &lt;c:if&gt; tag, because it writes out some HTML tags identifying the update
+                    There are some things to note here&mdash;if <literal>&lt;ui:select&gt;</literal> attribute referring to its 
+                    update regions is removed (and <literal>&lt;ui:updateRegionRows&gt;</literal> tags also) this example functions just
+                    like before, only smoothness of page update is lost. Secondly, <literal>&lt;ui:updateRegionRows&gt;</literal>
+                    must be placed outside of <literal>&lt;c:if&gt;</literal> tag, because it writes out some HTML tags identifying the update
                     region, and if these are not found region update will not succeed.
+                    &mdash;it writes out some HTML tags that identify the region where updates take place and these tags are not
+                    found, response cannot be rendered.
                 </para>
                 
                 <para>
-                    Finally, &lt;c:if test="${not empty form.elements['concreteBeastControl']}"&gt; is not as
-                    complicated as it may seem at first. "form" refers to
-                    the current form ("complexForm") <literal>ViewModel</literal> that is accessible from JSP&mdash; its 
+                    Finally, expression <literal>&lt;c:if test="${not empty form.elements['concreteBeastControl']}"&gt;</literal> is not as
+                    obscure as it may seem at first. "form" refers to
+                    the current form ("complexForm") <emphasis>ViewModel</emphasis> that is accessible from JSP&mdash; its 
                     exact class being <literal>FormWidget.ViewModel</literal> which has <literal>getElements()</literal>
                     method that returns <literal>java.util.Map</literal>. Square brackets (['concreteBeastControl']) 
                     containing element name are just the EL (Expression Language) way of accessing map elements. All 
-                    widgets make their <literal>ViewModels</literal> accessible from JSP-s under different names, these 
+                    widgets make their <emphasis>ViewModels</emphasis> accessible from JSP-s under different names, these 
                     can be used for building effective conditional branchings and alike. Names under which 
-                    <literal>ViewModels</literal> can be accessed are not documented at the moment, but will be soon.
+                    <literal>ViewModels</literal> and more interesting JSP variables can be accessed are documented in
+                    reference manual JSP sections.
                 </para>
                 </sect4>
                 
@@ -1303,9 +1306,9 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
             <sect3>
                 <title>Lists</title>
                 <para>
-                    Lists are tables containing rows with records gathered from some data source. Lists also
-                    provide support for paging displays of long lists and filtering based on record field contents.
-                    Basic usage is simple:
+                    Lists are tables containing rows with records gathered from some data source. They 
+                    provide support for paged displays of long lists and filtering shown records
+                    based on their field values. Basic usage is quite simple:
                 </para>
                 
                 <programlisting role="java"><![CDATA[protected ListWidget initList() throws Exception {
@@ -1327,8 +1330,8 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                 <para>
                     Our example uses <literal>BeanListWidget</literal> instead of <literal>ListWidget</literal>.
                     Differences between the two are the same as between <literal>BeanFormWidget</literal> and <literal>FormWidget</literal>.
-                    All that is needed to create a list is adding the showed columns&mdash;to list, each column id
-                    being the JavaBeans field name.
+                    All that is needed to create a list is adding showed columns to list, supplying each column with 
+                    <emphasis>id</emphasis> that is also the name of JavaBean field.
                 </para>
 
                 <para>
@@ -1404,7 +1407,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                     Editable lists are lists with additional capabilities&mdash;their rows (and thus objects represented by
                     these rows) can be edited, updated, deleted and added on-the-fly. Example we present here is extracted
                     from template application <literal>PersonEditableListWidget</literal> class. Its <literal>init()</literal>
-                    is quite like the ones we have already seen, except few curiosities that are pointed out in
+                    method resembles those that we have already seen, except few curiosities that are pointed out in
                     code comments.
                     
                     <programlisting role="java"><![CDATA[public class PersonEditableListWidget extends TemplateBaseWidget {
@@ -1552,7 +1555,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
         <sect2>
             <title>Something else? </title>
             <para>
-                SURE. ASK!
+                Sure. Ask!
             </para> 
         </sect2>
 	

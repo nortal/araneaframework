@@ -37,7 +37,7 @@ public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 
 	protected void init() {
 		super.init();
-		styleClass = "aranea-checkbox-input";
+		styleClass = "aranea-checkbox";
 	}
 	
 	/**

@@ -37,7 +37,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 	private boolean editMode;
 	
 	/* The form. Person data (represented by class PersonMO) will be binded to it, thus 
-	   the using of the BeanFormWidget instead of FormWidget. */
+	   usage of BeanFormWidget instead of FormWidget. */
 	private BeanFormWidget form;
 
 	/**
