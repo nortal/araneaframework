@@ -1469,7 +1469,7 @@ el.click();]]></programlisting>
     
         <!-- SELECTDISPLAY -->
       <sect2>
-      <title><![CDATA[<ui:select>]]></title>
+      <title><![CDATA[<ui:selectDisplay>]]></title>
       <para>
           Form select display field, represents <literal>SelectControl</literal>. Default <literal>styleClass="aranea-select-display"</literal>,
           rendered with HTML <literal>&lt;span ...&gt;</literal> tag.
@@ -1481,11 +1481,82 @@ el.click();]]></programlisting>
       </sect3>
     </sect2>
     
+    <!-- MULTISELECT -->
+         <sect2>
+      <title><![CDATA[<ui:multiSelect>]]></title>
+      <para>
+          Form list input field, represents <literal>MultiSelectControl</literal>. Default <literal>styleClass="aranea-multi-select"</literal>,
+          rendered with HTML <literal>&lt;select multiple="true" ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>size</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Vertical size, number of options displayed at once.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    
+        <!-- MULTISELECTDISPLAY -->
+      <sect2>
+      <title><![CDATA[<ui:multiSelectDisplay>]]></title>
+      <para>
+          Form multiselect display field, represents <literal>MultiSelectControl</literal>. Default <literal>styleClass="aranea-multi-select-display"</literal>,
+          rendered with HTML <literal>&lt;span ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>separator</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The separator between list items, can be any string or '\n' for newline. Default is ', ').</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
     <!-- RADIOSELECT -->
     <sect2>
       <title><![CDATA[<ui:radioSelect>]]></title>
       <para>
-          Starts form radioselect buttons field, represents <literal>SelectControl</literal>. 
+          Form radioselect buttons field, represents <literal>SelectControl</literal>. 
           Default <literal>styleClass="aranea-radioselect"</literal>. It takes care of rendering all its elements; internally using
           &lt;ui:radioSelectItemLabel&gt; and &lt;ui:radioSelectItem&gt; tags.
       </para>
@@ -1607,10 +1678,398 @@ el.click();]]></programlisting>
       </sect3>
     </sect2>
     
+     <!-- checkboxMultiSelect -->
+    <sect2>
+      <title><![CDATA[<ui:checkboxMultiSelect>]]></title>
+      <para>
+          Form multiselect checkbox field, represents <literal>MultiSelectControl</literal>. 
+          It takes care of rendering all its elements; internally using
+          &lt;ui:checkboxMultiSelectItemLabel&gt; and &lt;ui:checkboxMultiSelectItem&gt; tags.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>type</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The way the checkboxes will be rendered - can be either <emphasis>vertical</emphasis> or <emphasis>horizontal</emphasis>. Default is <emphasis>horizontal</emphasis>.</entry>
+              </row>
+              <row>
+                <entry>labelBefore</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that controls whether label is before or after each cehckbox, <literal>false</literal> by default.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+        <!-- checkboxMultiSelectItem -->
+    <sect2>
+      <title><![CDATA[<ui:checkboxMultiSelectItem>]]></title>
+      <para>
+          Form radio button, represents one item from <literal>MultiSelectControl</literal>.
+          Default <literal>styleClass="aranea-multi-checkbox"</literal>. It will be rendered with HTML <literal>&lt;input type="checkbox" ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The value of this checkbox that will be submitted with form if this checkbox is selected.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    <!-- checkboxMultiSelectItemLabel -->
+    <sect2>
+      <title><![CDATA[<ui:checkboxMultiSelectItemLabel>]]></title>
+      <para>
+          Form checkbox label, represents label of one item from <literal>MultiSelectControl</literal>.
+          It will be rendered with HTML <literal>&lt;span ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Select item value.</entry>
+              </row>
+              <row>
+                <entry>showMandatory</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether label for mandatory input is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal>.</entry>
+              </row>
+              <row>
+                <entry>showColon</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether colon is shown between the label and value. Default is <literal>true</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
     
     
+     <!-- conditionalDisplay -->
+    <sect2>
+      <title><![CDATA[<ui:conditionalDisplay>]]></title>
+      <para>
+          Depending whether form element boolean value is <emphasis>true</emphasis> or <emphasis>false</emphasis> display one or other content, 
+          represents <literal>DisplayControl</literal>. <literal>&lt;ui:conditionFalse&gt;</literal> and
+          <literal>&lt;ui:conditionFalse&gt;</literal> tags must be used inside this tag to define alternative contents.
+          This tag itself is not rendered.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal>attribute.</emphasis> 
+      </sect3>
+    </sect2>
     
+     <!-- conditionFalse -->
+    <sect2>
+      <title><![CDATA[<ui:conditionFalse>]]></title>
+      <para>
+          The content of this tag will be displayed when form element of surrounding <literal>&lt;ui:conditionalDisplay&gt;</literal> was
+          <literal>false</literal>. Tag has no attributes.
+      </para>
+    </sect2>
     
+     <!-- conditionTrue -->
+    <sect2>
+      <title><![CDATA[<ui:conditionTrue>]]></title>
+      <para>
+          The content of this tag will be displayed when form element of surrounding <literal>&lt;ui:conditionalDisplay&gt;</literal> was
+          <literal>true</literal>. Tag has no attributes.
+      </para>
+    </sect2>    
+    
+    <!-- FORMLIST  -->
+    
+    <sect2>
+      <title><![CDATA[<ui:formList>]]></title>
+      <para>
+            Formlist is a list of forms, an editable list. This tag specifies editable list context for its inner tags.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Id of editable list. When not specified, attempt is made to construct it from existing list context&mdash;it this does not succeed, tag fails.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>formList</entry>
+                <entry>Editable list view model.</entry>
+                <entry><literal>FormListWidget.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>formListId</entry>
+                <entry>Editable list id.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+    <ui:formList>
+       ...
+    </ui:formList>
+</ui:list>]]></programlisting> 
+      </sect3>
+      </sect2>
+
+    <!-- FORMLISTROWS  -->
+    
+    <sect2>
+      <title><![CDATA[<ui:formListRows>]]></title>
+      <para>
+           Iterating tag that gives access to each row and row form on the editable list current page.
+           The editable row is accessible as "editableRow" variable.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>var</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Name of variable that represents individual row (by default "row").</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>formRow</entry>
+                <entry>Current editable list row view model.</entry>
+                <entry><literal>FormRow.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>row (unless changed with <emphasis>var</emphasis> attribute.</entry>
+                <entry>Object held in current row.</entry>
+                <entry><literal>Object</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+    <ui:formList>
+        <ui:formListRows>
+           ...
+        </ui:formListRows>
+    </ui:formList>
+</ui:list>]]></programlisting> 
+      </sect3>
+      </sect2>
+      
+   <sect2>
+      <title><![CDATA[<ui:formListAddForm>]]></title>
+      <para>
+            Allows for adding new forms (rows) to editable list.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Editable list id. Searched from context, if not specified.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>form</entry>
+                <entry>View model of form.</entry>
+                <entry><literal>FormWidget.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>formId</entry>
+                <entry>Id of form.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:formListAddForm>
+    <ui:row>
+        <ui:cell>
+        	<ui:textInput id="name"/>
+        </ui:cell>
+        
+        <ui:cell>
+        	<ui:textInput id="surname"/>
+        </ui:cell>
+        
+        <ui:cell>
+        	<ui:textInput id="phone"/>
+        </ui:cell>
+        
+        <ui:cell>
+        	<ui:dateInput id="birthdate"/>
+        </ui:cell>							
+    </ui:row>		
+</ui:formListAddForm>]]></programlisting> 
+      </sect3>
+      </sect2>
 
   </sect1>
 
