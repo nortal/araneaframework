@@ -1123,6 +1123,13 @@
        Acts as the HTML &lt;b&gt; tag.
      </para>
    </sect2>
+    
+    <sect2>
+      <title><![CDATA[<ui:italic>]]></title>
+      <para>
+         Acts as <emphasis>&lt;i&gt;</emphasis> HTML tag.
+      </para>
+    </sect2>
 
    <sect2>
     <title><![CDATA[<ui:font>]]></title>
@@ -1158,13 +1165,6 @@
           </tgroup>
         </informaltable>
     </para>
-    </sect2>
-    
-    <sect2>
-      <title><![CDATA[<ui:italic>]]></title>
-      <para>
-         Acts as <emphasis>&lt;i&gt;</emphasis> HTML tag.
-      </para>
     </sect2>
     
     <sect2>
