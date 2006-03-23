@@ -806,12 +806,57 @@
       </sect3>
     </sect2>
     
+      <!--  ONLOADEVENT -->
+
+    <sect2>
+      <title><![CDATA[<ui:onLoadEvent>]]></title>
+      <para>
+        This tag will register events that are executed when HTML page body has completely loaded and body tag has
+        attribute <literal>onload="processLoadEvents()"</literal>. This tag can be used multiple times, all specified events
+        will be added to event queue and executed in order of addition.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>event</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Event to register.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+    <ui:onLoadEvent event="activateFlashLights();"/>
+    <ui:onLoadEvent event="changeMenuBackGroundColor();"/>
+...]]></programlisting>
+      </sect3>
+    </sect2>
+      
      </sect1>
 
   <sect1>
     <title>HTML entity Tags</title>
       <para>
-      Html entites can be inserted by using the predefined entity tags or using the
+      Html entities can be inserted by using the predefined entity tags or using the
       <![CDATA[<ui:entity>]]> for entities that have not been defined by Aranea JSP library.
       </para>
 
