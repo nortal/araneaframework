@@ -92,7 +92,15 @@
 							</c:choose>
 
 							<ui:cell width="0">
-								<ui:linkButton id="editSave" showLabel="false"><ui:image code="buttonChange" alt="Edit person" title="Edit person"/></ui:linkButton>
+								<c:choose>
+									<c:when test="${formRow.open}">
+										<c:set var="altEditText" value="Save person"/>
+									</c:when>
+									<c:otherwise>
+										<c:set var="altEditText" value="Edit person"/>
+									</c:otherwise>
+								</c:choose>
+								<ui:linkButton id="editSave" showLabel="false"><ui:image code="buttonChange" alt="${altEditText}" title="${altEditText}"/></ui:linkButton>
 								<ui:linkButton id="delete" showLabel="false"><ui:image code="buttonDelete" alt="Remove person" title="Remove person"/></ui:linkButton>
 							</ui:cell>							
 						</ui:row>
