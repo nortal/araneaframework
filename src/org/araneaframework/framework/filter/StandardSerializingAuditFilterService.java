@@ -31,6 +31,7 @@ import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;
+import org.araneaframework.framework.FilterService;
 
 /**
  * Serializes the the session during the request routing. This
@@ -43,7 +44,7 @@ import org.araneaframework.core.StandardRelocatableServiceDecorator;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class StandardSerializingAuditFilterService extends BaseService {
+public class StandardSerializingAuditFilterService extends BaseService implements FilterService {
   private static final Logger log = Logger.getLogger(StandardSerializingAuditFilterService.class);
   
   private Relocatable.RelocatableService child;

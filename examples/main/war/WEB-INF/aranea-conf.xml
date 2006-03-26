@@ -3,48 +3,39 @@
 
 <beans>
 
+	<import resource="aranea-filters.xml"/>
+
   <!-- ########## ARANEA CONFIGURATION ########## -->
 
   <bean id="applicationRoot" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
     singleton="false">
 
-    <property name="childService" ref="application.criticalErrorHandler"/>
+    <property name="childService" ref="araneaApplicationFilters"/>
   </bean>
   
-  <bean 
-    class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService" 
-    id="application.criticalErrorHandler" singleton="false">
-    <property name="childService" ref="application.readFileFilter"/>
-    <property name="exceptionHandlerFactory">
-      <bean class="org.araneaframework.template.framework.error.TemplateCriticalErrorHandlerFactory"
-            singleton="false"/>
-    </property>
-  </bean>
-  
-  <bean class="org.araneaframework.servlet.filter.StandardServletFileImportFilterService" id="application.readFileFilter"
-    singleton="false">
-    <property name="childService">
-      <ref bean="application.mainStatisticFilter" />
-    </property>
-  </bean>
-  
-  <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"
-        id="application.mainStatisticFilter" singleton="false">
-    <property name="childService" ref="application.topServiceRouter"/>
-    <property name="namespace" value="MAIN"/>
-  </bean>
+	<bean id="araneaApplicationFilters" singleton="false"
+		class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
+		<property name="childService" ref="araneaTopServiceRouter"/>
+		<property name="filterChain">			
+			<list>
+				<ref bean="araneaCriticalErrorHandler"/>
+				<ref bean="araneaReadFileFilter"/>
+				<ref bean="araneaMainStatisticFilter"/>
+			</list>
+		</property>
+	</bean>  
 
-  <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="application.topServiceRouter"
+  <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="araneaTopServiceRouter"
     singleton="false">
     <property name="defaultServiceId" value="application"/>
     <property name="serviceMap">
       <map>
-        <entry key="application" value-ref="application.sessionRouter"/>
+        <entry key="application" value-ref="araneaSessionRouter"/>
       </map>
     </property>
   </bean>
 
-  <bean class="org.araneaframework.servlet.router.StandardServletSessionRouterService" id="application.sessionRouter"
+  <bean class="org.araneaframework.servlet.router.StandardServletSessionRouterService" id="araneaSessionRouter"
         singleton="false">
     <property name="sessionServiceFactory" ref="application.sessionServiceFactory"/>
   </bean>
@@ -52,105 +43,71 @@
   <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" id="application.sessionServiceFactory"
         singleton="false">
     <property name="beanId">
-      <idref bean="session.serializingAudit"/>
+      <idref bean="araneaSessionFilters"/>
     </property>
   </bean>
-  
+    
   <!-- Session scope -->
   
-  <bean class="org.araneaframework.framework.filter.StandardSerializingAuditFilterService" id="session.serializingAudit"
-        singleton="false">
-    <property name="childService" ref="session.localizationFilter"/>
-    <!-- property name="testXmlSessionPath"> 
-      <value>c:/temp</value>
-    </property -->      
-  </bean> 
+  <bean id="araneaSessionFilters" singleton="false"
+		class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
+		<property name="childService" ref="araneaThreadServiceRouter"/>
+		<property name="filterChain">			
+			<list>
+				<ref bean="araneaSerializingAudit"/>
+				<ref bean="araneaLocalizationFilter"/>
+				<ref bean="araneaJspConfigFilter"/>
+			</list>
+		</property>
+	</bean>  
   
-  <bean class="org.araneaframework.framework.filter.StandardLocalizationFilterService" id="session.localizationFilter" singleton="false">
-    <property name="childService" ref="session.jspConfigFilter"/>
-    <property name="resourceBundleName"><value>org.araneaframework.template.framework.resource.TemplateResourceBundle</value></property>
-    <property name="languageName"><value>en</value></property>
-  </bean>        
 
-  <bean class="org.araneaframework.servlet.filter.StandardJspFilterService" id="session.jspConfigFilter" singleton="false">
-    <property name="childService" ref="session.threadServiceRouter"/>
-    <property name="submitCharset" value="UTF-8"/>
-    <property name="jspPath" value="/WEB-INF/jsp"/>        
-    <!-- property name="uiTldPath" value="aranea-template.tld"/ -->
-  </bean>
-
-  <bean class="org.araneaframework.framework.router.StandardThreadServiceRouterService" id="session.threadServiceRouter" 
-    singleton="false">
+  <bean class="org.araneaframework.framework.router.StandardThreadServiceRouterService" 
+  	id="araneaThreadServiceRouter" singleton="false">
     <property name="defaultServiceId" value="mainThread"/>
     <property name="serviceMap">
       <map>
-        <entry key="mainThread" value-ref="thread.synchronizingFilter"/>
+        <entry key="mainThread" value-ref="araneaThreadFilters"/>
       </map>
     </property>
   </bean>
   
   <!-- Thread scope -->    
+  
+  <bean id="araneaThreadFilters" singleton="false"
+		class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
+		<property name="childService" ref="araneaWidgetAdapter"/>
+		<property name="filterChain">			
+			<list>
+				<ref bean="araneaSynchronizingFilter"/>
+				<ref bean="araneaHeaderFilter"/>
+				<ref bean="araneaFileUploadFilter"/>
+				<ref bean="araneaContinuationFilter"/>
+			</list>
+		</property>
+	</bean>  
 
-  <bean class="org.araneaframework.framework.filter.StandardSynchronizingFilterService" id="thread.synchronizingFilter"
+  <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService" id="araneaWidgetAdapter"
     singleton="false">
-    <property name="childService" ref="thread.headerFilter"/>
-  </bean>
-  
-  <bean class="org.araneaframework.servlet.filter.StandardServletHttpFilterService" id="thread.headerFilter"
-    singleton="false">
-    <property name="childService" ref="thread.fileUploadFilter"/>
-    <property name="requestEncoding" value="UTF-8"/>
-  </bean>
-  
-  <bean class="org.araneaframework.servlet.filter.StandardServletFileUploadFilterService" id="thread.fileUploadFilter"
-    singleton="false">
-    <property name="childService">
-      <ref bean="thread.continuationFilter" />
-    </property>
-  </bean>
-  
- <bean class="org.araneaframework.framework.filter.StandardContinuationFilterService" id="thread.continuationFilter"
-    singleton="false">
-    <property name="childService">
-      <ref bean="thread.widgetAdapter" />
-    </property>
-  </bean>
-
-  <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService" id="thread.widgetAdapter"
-    singleton="false">
-    <property name="childWidget" ref="thread.transactionFilter"/>
+    <property name="childWidget" ref="araneaWidgetFilters"/>
   </bean>
   
    <!-- Framework widgets -->     
+   
+  <bean id="araneaWidgetFilters" singleton="false"
+		class="org.araneaframework.framework.filter.StandardWidgetFilterChainFilterWidget">
+		<property name="childWidget" ref="araneaWidgetContainer"/>
+		<property name="filterChain">			
+			<list>
+				<ref bean="araneaTransactionFilter"/>
+				<ref bean="araneaMessagingFilter"/>
+				<ref bean="araneaContexts"/>
+				<ref bean="araneaPopupFilter"/>
+			</list>
+		</property>
+	</bean>  
 
-  <bean class="org.araneaframework.framework.filter.StandardTransactionFilterWidget" id="thread.transactionFilter"
-    singleton="false">
-    <property name="childWidget" ref="thread.messagingFilter"/>
-  </bean>
-  
-  <bean class="org.araneaframework.framework.filter.StandardMessagingFilterWidget" id="thread.messagingFilter"
-    singleton="false">
-    <property name="childWidget" ref="thread.contexts"/>
-  </bean>
-
-  <bean class="org.araneaframework.framework.filter.StandardContextMapFilterWidget" id="thread.contexts"
-    singleton="false">
-    <property name="childWidget" ref="thread.popupFilter"/>
-    <property name="contexts">    
-      <map>
-        <entry key="org.araneaframework.uilib.ConfigurationContext.class">
-          <bean class="org.araneaframework.uilib.core.DefaultConfiguration" singleton="false"/>
-        </entry>       
-      </map>      
-    </property>    
-  </bean>
-  
-    <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="thread.popupFilter"
-    singleton="false">
-    <property name="childWidget" ref="thread.widgetContainer"/>
-  </bean>
-
-  <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="thread.widgetContainer"
+  <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="araneaWidgetContainer"
     singleton="false">
     <property name="childWidget" ref="thread.viewPort"/>
   </bean>
@@ -165,6 +122,6 @@
      <property name="top" ref="thread.login"/>
    </bean>
    
-  <bean class="org.araneaframework.example.main.web.LoginWidget" id="thread.login" singleton="false"/>
-	
+  <bean class="org.araneaframework.example.main.web.LoginWidget" id="thread.login" singleton="false"/>  
+ 
 </beans>

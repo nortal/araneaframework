@@ -23,6 +23,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
+import org.araneaframework.framework.FilterService;
 
 /**
  * A filter service is a Service which filters requests to its child service. A filter 
@@ -40,7 +41,7 @@ import org.araneaframework.core.BaseService;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class BaseFilterService extends BaseService {
+public class BaseFilterService extends BaseService implements FilterService{
   protected Service childService;
   
   public BaseFilterService() {}

@@ -62,7 +62,7 @@ public class StandardPresentationWidget extends StandardWidget {
     if (viewSelector == null)
       throw new RuntimeException("Widget '" + getClass().getName() + "' does not have a view selector!"); 
     
-    JspContext jspCtx = (JspContext) getEnvironment().getEntry(JspContext.class);
+    JspContext jspCtx = (JspContext) getEnvironment().requireEntry(JspContext.class);
     
     String jsp = jspCtx.getJspPath() + "/" + viewSelector + ".jsp";
     ServletUtil.include(jsp, getEnvironment(), (ServletOutputData) output);
