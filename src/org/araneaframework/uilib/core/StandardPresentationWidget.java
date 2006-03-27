@@ -16,7 +16,10 @@
 
 package org.araneaframework.uilib.core;
 
+import org.araneaframework.Component;
+import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
+import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
@@ -66,5 +69,17 @@ public class StandardPresentationWidget extends StandardWidget {
     
     String jsp = jspCtx.getJspPath() + "/" + viewSelector + ".jsp";
     ServletUtil.include(jsp, getEnvironment(), (ServletOutputData) output);
+  }
+  
+  public Component.Interface _getComponent() {
+    return new ComponentImpl();
+  }
+  
+  protected class ComponentImpl extends StandardWidget.ComponentImpl {
+    public synchronized void init(Environment env) throws Exception {
+      super.init(env);
+      
+      addGlobalEventListener(new ProxyEventListener(this));
+    }
   }
 }

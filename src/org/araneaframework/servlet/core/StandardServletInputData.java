@@ -27,7 +27,6 @@ import org.araneaframework.core.EmptyPathStackException;
 import org.araneaframework.core.NoCurrentOutputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOverridableInputData;
 
 /**

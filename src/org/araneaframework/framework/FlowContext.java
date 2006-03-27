@@ -68,15 +68,6 @@ public interface FlowContext extends Serializable {
    */
   public void reset(EnvironmentAwareCallback callback) throws Exception;
   
-  /**
-   * Sets the flow title that can be shown to user.
-   */
-  public void setTitle(String titleLabelId) throws Exception;
-  
-  public void pushGlobalEnvEntry(Object entryId, Object envEntry) throws Exception;
-  public void popGlobalEnvEntry(Object entryId) throws Exception;    
-  
-    
   public interface Handler extends Serializable {
     public void onFinish(Object returnValue) throws Exception;   
     public void onCancel() throws Exception;
