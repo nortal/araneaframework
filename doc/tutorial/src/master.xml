@@ -364,64 +364,29 @@
 		<sect2>
 			<title>Directory structure and needed libraries</title>
             <para>
-                Full-blown aranea webapp needs at least the access to following libraries.
+                Aranea webapp needs (at least) access to following libraries.
+            </para>
+            
+            <itemizedlist mark="opencircle">
+                <listitem><para>aranea.jar</para></listitem>
+                <listitem><para>commons-collections.jar</para></listitem>
+                <listitem><para>commons-el.jar</para></listitem>
+                <listitem><para>commons-fileupload.jar</para></listitem>
+                <listitem><para>commons-lang.jar</para></listitem>
+                <listitem><para>commons-logging.jar</para></listitem>
+                <listitem><para>j2ee.jar</para></listitem>
+                <listitem><para>jakarta-oro.jar</para></listitem>
+                <listitem><para>jakarta-regexp.jar</para></listitem>                                        
+                <listitem><para>jstl.jar</para></listitem>
+                <listitem><para>spring.jar</para></listitem>
+                <listitem><para>standard.jar</para></listitem>
+                <listitem><para>xstream.jar</para></listitem>
+            </itemizedlist>
 
-                <variablelist spacing="compact">
-                  <varlistentry>
-                    <term>aranea.jar</term>
-                    <listitem>This is the memory-based solution that must be provided with the whole data at once. It does <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> and <emphasis>paging</emphasis> memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution for tables with few (typically less than 100) rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>commons-collections.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>commons-el.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>commons-fileupload.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>commons-lang.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>commons-logging.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>j2ee.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>jakarta-oro.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>jakarta-regexp.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>jstl.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>spring.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>standard.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                  <varlistentry>
-                    <term>xstream.jar</term>
-                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-                  </varlistentry>
-                </variablelist>
-                
-                These are usually put under webapp's <literal>WEB-INF/lib/</literal> directory.
+            <para>
+               These are usually put under webapp's <literal>WEB-INF/lib/</literal> directory.
+               Aranea main example also needs <literal>aranea-template.jar</literal> (and various
+               third-party libraries) to function.
             </para>
 		</sect2>
 		
