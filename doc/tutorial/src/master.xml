@@ -1618,9 +1618,9 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 }]]></programlisting>
 
 			<para>
-				Editable list definition does not differ much from ordinary list definition&mdash;setting
-				the <literal>FormRowHandler</literal> is the only news about list construction. 
-				Rowhandlers themselves are not complex, some callback method purposes can be confusing at first&mdash;
+				As seen, defining editable lists does not differ much from defining ordinary lists&mdash;setting
+				the <literal>FormRowHandler</literal> is the only new procedure.
+				Rowhandlers themselves are not complex but some callback method purposes can be confused&mdash;
 				one must be well-acquainted with row-handling interfaces before implementing them.
 			</para>
 
