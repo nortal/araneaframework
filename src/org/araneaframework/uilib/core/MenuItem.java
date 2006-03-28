@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import org.araneaframework.Component;
+import org.araneaframework.Widget;
 import org.araneaframework.uilib.support.FlowCreator;
 
 /**
@@ -156,11 +157,11 @@ public class MenuItem implements Serializable {
 	 * @return instance of flow that should be started after activating given selection.
 	 * @throws Exception if menuPath is invalid or creation of flow fails.
 	 */
-	public Component selectMenuItem(String menuPath) throws Exception {
+	public Widget selectMenuItem(String menuPath) throws Exception {
 		clearSelection();
 
 		MenuItem menu = this;
-		Component resultFlow = null;
+    Widget resultFlow = null;
 		
 		try {
 			for (StringTokenizer st = new StringTokenizer(menuPath, MENU_PATH_SEPARATOR); st.hasMoreTokens(); ) {
@@ -170,7 +171,7 @@ public class MenuItem implements Serializable {
 			}
 
 			if (menu.flowClass != null)
-				resultFlow = (Component) menu.flowClass.newInstance();
+				resultFlow = (Widget) menu.flowClass.newInstance();
 			else if (menu.flowCreator != null)
 				resultFlow = menu.flowCreator.createFlow();
 		} catch (Exception e) {

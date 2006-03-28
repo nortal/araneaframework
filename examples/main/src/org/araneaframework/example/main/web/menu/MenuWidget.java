@@ -82,7 +82,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 			result.addMenuItem("Management", new MenuItem("Persons"));
 			// example use of simple FlowCreator
 			result.addMenuItem("Management.Persons", new MenuItem("View_Add", new FlowCreator() {
-				public Component createFlow() {
+				public Widget createFlow() {
 					return new PersonListWidget(true);
 				}
 			}));

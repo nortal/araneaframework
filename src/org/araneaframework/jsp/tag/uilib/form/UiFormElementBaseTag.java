@@ -284,7 +284,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		// All events are sent to a handler called "uiHandleKeypress(event, formElementId)"
 		// We use the "keydown" event, not keypress, because this allows to
 		// catch F2 in IE.
-		UiUtil.writeAttribute(out, "onkeydown", "uiHandleKeypress(event, '" + elementName +"');");
+		UiUtil.writeAttribute(out, "onkeydown", "return uiHandleKeypress(event, '" + elementName +"');");
 		UiUtil.writeCloseStartTag(out);
 		
 		UiUtil.writeStartTag(out, "script");

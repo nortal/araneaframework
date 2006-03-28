@@ -65,9 +65,6 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
    * The top callable widget.
    */
   protected Widget top;
-  
-  private Map globalEnvironmentEntries = new HashMap();
-  private Map globalEnvEntryStacks = new HashMap();
 
   //*******************************************************************
   // CONSTRUCTORS
@@ -92,7 +89,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     this.top = topWidget;
   }
   
-  public void start(Component flow, Configurator configurator, Handler handler) throws Exception {
+  public void start(Widget flow, Configurator configurator, Handler handler) throws Exception {
     flow = decorateCallableWidget((Widget) flow);
     CallFrame frame = makeCallFrame((Widget) flow, configurator, handler);
     
@@ -112,7 +109,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     }    
   }
   
-  public void replace(Component flow, Configurator configurator) throws Exception {
+  public void replace(Widget flow, Configurator configurator) throws Exception {
     flow = decorateCallableWidget((Widget) flow);
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
     CallFrame frame = makeCallFrame((Widget) flow, configurator, previousFrame.getHandler());
@@ -172,29 +169,6 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   
   public ExtendedCallContext.CallFrameReference getCurrentCallFrameReference() {
   	return new CallFrameReference();
-  }
-  
-  private LinkedList getEnvEntryStack(Object entryId) {
-    LinkedList envEntryStack = (LinkedList) globalEnvEntryStacks.get(entryId);
-    
-    if (envEntryStack == null) {
-      envEntryStack = new LinkedList();
-      globalEnvEntryStacks.put(entryId, envEntryStack);
-    }
-    
-    return envEntryStack;
-  }
-  
-  public void pushGlobalEnvEntry(Object entryId, Object envEntry) throws Exception {
-    getEnvEntryStack(entryId).addFirst(envEntry);
-    
-    refreshGlobalEnvironment();
-  }
-  
-  public void popGlobalEnvEntry(Object entryId) throws Exception {
-    getEnvEntryStack(entryId).removeFirst();
-    
-    refreshGlobalEnvironment();
   }
   
   public boolean isNested() throws Exception {
@@ -271,27 +245,12 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     }
   }
   
-  private void refreshGlobalEnvironment()  throws Exception {
-    globalEnvironmentEntries.clear();
-    
-    globalEnvironmentEntries.put(FlowContext.class, this);
-    globalEnvironmentEntries.put(ExtendedCallContext.class, this);    
-    
-    for (Iterator i = globalEnvEntryStacks.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      Object entryId = entry.getKey();
-      LinkedList stack = (LinkedList) entry.getValue();
-      if (stack.size() > 0) {
-        Object envEntry = stack.getFirst();
-        globalEnvironmentEntries.put(entryId, envEntry);
-      }
-    }    
-  }
-  
   protected Environment getChildWidgetEnvironment() throws Exception {
-    refreshGlobalEnvironment();   
+    Map entries = new HashMap();
+    entries.put(FlowContext.class, this);
+    entries.put(ExtendedCallContext.class, this); 
     
-    return new StandardEnvironment(getEnvironment(), globalEnvironmentEntries);
+    return new StandardEnvironment(getEnvironment(), entries);
   }
   
   /**

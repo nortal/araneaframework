@@ -19,6 +19,7 @@ package org.araneaframework.framework;
 import java.io.Serializable;
 import org.araneaframework.Component;
 import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.Widget;
 
 /**
  * This context provides support for flow navigation and nesting. A flow is started using 
@@ -35,13 +36,13 @@ public interface FlowContext extends Serializable {
    * untils subflow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification,
    * when the subflow ends execution.
    */
-  public void start(Component flow, Configurator configurator, Handler handler) throws Exception;
+  public void start(Widget flow, Configurator configurator, Handler handler) throws Exception;
 
   /**
    * Destroys the current flow and starts a new one. When the new flow will end execution it will return control
    * to the caller of the current flow (if there is one). 
    */
-  public void replace(Component flow, Configurator configurator) throws Exception;
+  public void replace(Widget flow, Configurator configurator) throws Exception;
 
   /**
    * Finisheds the current flow passing control back to the calling flow. Optionally may return some value that 
@@ -74,6 +75,6 @@ public interface FlowContext extends Serializable {
   }
   
   public interface Configurator extends Serializable {
-    public void configure(Component comp) throws Exception;
+    public void configure(Widget comp) throws Exception;
   }
 }

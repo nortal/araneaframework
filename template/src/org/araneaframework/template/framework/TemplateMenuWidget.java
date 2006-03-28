@@ -50,7 +50,7 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
 	}
 
 	public void selectMenuItem(String menuItemPath) throws Exception {
-		final Component newFlow = menu.selectMenuItem(menuItemPath);
+		final Widget newFlow = menu.selectMenuItem(menuItemPath);
     
     reset(new EnvironmentAwareCallback() {
       public void call(org.araneaframework.Environment env) throws Exception {
