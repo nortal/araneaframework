@@ -244,7 +244,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
     OracleListSqlHelper helper = new OracleListSqlHelper(query);
 
     helper.setColumnMapping("name", "NAME");
-    helper.setColumnMapping("surname", "SURNMAE");
+    helper.setColumnMapping("surname", "SURNAME");
     helper.setColumnMapping("phone", "PHONE_NO");
 
     StringBuffer s = new StringBuffer();
