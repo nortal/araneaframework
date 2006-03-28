@@ -1624,7 +1624,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 				one must be well-acquainted with row-handling interfaces before implementing them.
 			</para>
 
-		        <table frame="all">
+		        <table frame="all" align="center">
 		        	<title><literal>FormRowHandler</literal> interface</title>
 		          <tgroup cols="2">
 		            <colspec colwidth="2*"/>
@@ -1678,7 +1678,91 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 		            </tbody>
 		          </tgroup>
 		        </table>
+                
+                <para>
+                    JSP for editable list does not need as much work as writing custom rowhandlers.
+                    instead of <literal>&lt;ui:list&gt;</literal> tag 
+                    <literal>&lt;ui:formList&gt;</literal> should be used (in our example both are used).
+                    <literal>&lt;ui:listRows&gt;</literal> is replaced by <literal>&lt;ui:formListRows&gt;</literal>
+                    and object adding form is rendered inside <literal>&lt;ui:formListAddForm&gt;</literal>.
+                </para>
+                
+                <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+... 
+<!-- See examples/main/war/WEB-INF/jsp/editableList.jsp for complete file. -->
+<!-- Start the list context ... -->
+<ui:list id="list">
+  <!-- and continue with announcement that this list is editable -->
+  <ui:formList>
+  ...
+    <!-- List filter for editable list is exactly 
+         the same as filter for ordinary lists -->
+    <ui:listFilter>
+      <!-- rows -->
+      ...
+    </ui:listFilter>
+    
+    <!-- Editable list rows. This tag usage is similar to ui:listRows;
+         but it makes available some extra variables -->
+    <ui:formListRows>
+      <ui:row>
 
+        <ui:cell>
+          <!-- Default variable name for accessing the row object is "row" as in
+               ordinary lists. This could have been changed by specifying "var" 
+               attribute for ui:formListRows tag. -->
+          <c:out value="${row.id}"/>
+        </ui:cell>
+
+        ...
+        <!-- other cells -->
+        ...
+        
+        <!-- finally, button column -->
+        <ui:cell width="0">
+          <c:choose>
+            <!-- formRow variable is of class FormRow.ViewModel.
+                 It holds the properties of form used to present current row object.
+                 Depending on formRow's current status, change button 
+                 *(opens the formRow for editing) or *(saves the formRow 
+                 already opened). Button title is set accordingly also be set 
+                 accordingly. -->
+            <c:when test="${formRow.open}">
+              <c:set var="altEditText" value="Save person"/>
+            </c:when>
+            <c:otherwise>
+              <c:set var="altEditText" value="Edit person"/>
+            </c:otherwise>
+          </c:choose>
+
+          <!-- EditSave event is produced by buttons created with 
+               FormListUtil.addEditSaveButtonToRowForm() -->
+          <ui:linkButton id="editSave" showLabel="false">
+            <ui:image code="buttonChange" alt="${altEditText}" title="${altEditText}"/>
+          </ui:linkButton>
+           <!-- Delete event is produced by buttons created with 
+                FormListUtil.addDeleteButtonToRowForm() -->
+          <ui:linkButton id="delete" showLabel="false">
+            <ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
+          </ui:linkButton>
+        </ui:cell>
+        
+      </ui:row>
+    </ui:formListRows>
+
+    <!-- Finally the empty form for addition of new objects. -->
+    <ui:formListAddForm>
+      <ui:row>
+        ...
+        <!-- columns -->
+        ...
+      </ui:row>
+    </ui:formListAddForm>
+  ...
+  </ui:formList>
+</ui:list>
+...
+]]></programlisting>
                 
             </sect3>
             

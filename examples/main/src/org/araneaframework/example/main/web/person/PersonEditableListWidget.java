@@ -98,7 +98,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		protected ListDataProvider buildListDataProvider() throws Exception {
 			return dataProvider;
 		}
-
+		
 		protected FormRowHandler buildFormRowHandler() throws Exception {
 	        /* Implementation of FormRowHandler that also calls dataprovider's
 	         * data refresh methods when list editing events occur. */

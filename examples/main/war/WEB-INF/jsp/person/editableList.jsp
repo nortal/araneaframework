@@ -6,7 +6,9 @@
 	xmlns:ui="http://araneaframework.org/tag-library/template"
 	version="1.2"
 >
-  <!-- Main example's person editable list JSP. -->
+  <!-- Main example's person editable list JSP -
+       examples/main/war/WEB-INF/jsp/editableList.jsp
+  -->
   <ui:widgetContext>
 
     <!-- Start the list context ... -->
@@ -66,7 +68,7 @@
                   </ui:cell>
 
                   <c:choose>
-                    <!-- formRow variable is from class FormRow.ViewModel.
+                    <!-- formRow variable is of class FormRow.ViewModel.
                          It holds the properties of form used to present current row object. -->
                     <c:when test="${formRow.open}">
                       <!-- When formRow is "open", render the fields as inputs. -->
@@ -120,13 +122,21 @@
                       </c:otherwise>
                     </c:choose>
 
-                    <ui:linkButton id="editSave" showLabel="false"><ui:image code="buttonChange" alt="${altEditText}" title="${altEditText}"/>
-                    <ui:linkButton id="delete" showLabel="false"><ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
+                    <!-- EditSave event is produced by buttons created with 
+                         FormListUtil.addEditSaveButtonToRowForm() -->
+                    <ui:linkButton id="editSave" showLabel="false">
+                      <ui:image code="buttonChange" alt="${altEditText}" title="${altEditText}"/>
+                    </ui:linkButton>
+                    <!-- Delete event is produced by buttons created with 
+                         FormListUtil.addDeleteButtonToRowForm() -->
+                    <ui:linkButton id="delete" showLabel="false">
+                      <ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
+                    </ui:linkButton>
                   </ui:cell>
                 </ui:row>
               </ui:formListRows>
 			
-            <!-- Finally the empty form meant for addition of new objects. -->
+            <!-- Finally the empty form for addition of new objects. -->
             <ui:formListAddForm>
               <ui:row>
                 <ui:cell/>
@@ -148,7 +158,7 @@
                 </ui:cell>							
 
                 <ui:cell width="0">
-                  <ui:linkButton id="add" showLabel="false"><ui:image code="buttonAdd"/>
+                  <ui:linkButton id="add" showLabel="false"><ui:image code="buttonAdd"/></ui:linkButton>
                 </ui:cell>
               </ui:row>
             </ui:formListAddForm>
