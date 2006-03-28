@@ -13,7 +13,6 @@
 		<ui:importStyles file="js/calendar/calendar.css" media="screen" />
 
 		<ui:importScripts/>
-		<ui:importScripts file="js/aa.js"/>
 		<ui:importScripts file="js/calendar/calendar.js"/>
 		<ui:importScripts file="js/calendar/calendar-en.js"/>
 		<ui:importScripts file="js/calendar/calendar-setup.js"/>

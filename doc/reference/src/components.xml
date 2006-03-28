@@ -114,7 +114,7 @@
     </para>
 
     <para>
-      Aranea provides a base implementation of the <literal>Component</literal> &mdash; <literal>org.araneaframework.core.BaseComponent</literal>. This implementation mainly enforces contracts (including lifecycle and some basic synchronization). A base class for application development <literal>org.araneaframework.core.StandardComponent</literal> is also available and is described in <xref linkend="standard-component"/>.
+      Aranea provides a base implementation of the <literal>Component</literal> &mdash; <literal>org.araneaframework.core.BaseComponent</literal>. This implementation mainly enforces contracts (including lifecycle and some basic synchronization). A base class for application development <literal>org.araneaframework.core.StandardComponent</literal> is also available.
     </para>
 		
     <sect2>
@@ -383,7 +383,7 @@ myEvent.send(null, rootComponent);
           <varlistentry>
             <term>Self-rendering</term>
             <listitem>
-              In the most basic situation the widget will just use <literal>OutputData</literal> for rendering by casting it into e.g. <literal>ServletOutputData</literal> (see <xref linkend="???"/>). In such a case the widget will just write out markup and return from the <literal>render()</literal> method optionally rendering children as well. The data for rendering will be drawn from the widget fields as well as (possibly) <literal>OutputData</literal> attributes.
+              In the most basic situation the widget will just use <literal>OutputData</literal> for rendering by casting it into e.g. <literal>ServletOutputData</literal>. In such a case the widget will just write out markup and return from the <literal>render()</literal> method optionally rendering children as well. The data for rendering will be drawn from the widget fields as well as (possibly) <literal>OutputData</literal> attributes.
             </listitem>
           </varlistentry>
           <varlistentry>

@@ -19,7 +19,7 @@ package org.araneaframework.tests.servlet.router;
 import junit.framework.TestCase;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
-import org.araneaframework.ioc.spring.StandardSpringServiceFactory;
+import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.mock.core.MockEventfulBaseService;
 import org.araneaframework.servlet.core.StandardServletInputData;
@@ -47,7 +47,7 @@ public class StandardServletSessionRouterServiceTests extends TestCase {
   public void setUp() throws Exception {
     service = new StandardServletSessionRouterService();
     child = new MockEventfulBaseService();
-    StandardSpringServiceFactory factory = new StandardSpringServiceFactory() {
+    ServiceFactory factory = new ServiceFactory() {
       public Service buildService() {
         return child;
       }

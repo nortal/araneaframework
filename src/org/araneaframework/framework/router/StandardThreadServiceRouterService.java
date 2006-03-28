@@ -39,18 +39,6 @@ public class StandardThreadServiceRouterService extends BaseServiceRouterService
    */
   public static final String THREAD_SERVICE_KEY = "threadServiceId";
   
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Thread router service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Thread router service destroyed.");
-  }
-  
   protected Object getServiceId(InputData input) throws Exception {
     return input.getGlobalData().get(THREAD_SERVICE_KEY);
   }
@@ -58,7 +46,7 @@ public class StandardThreadServiceRouterService extends BaseServiceRouterService
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
     Map entries = new HashMap();    
     entries.put(ThreadContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
   
   private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements ThreadContext {

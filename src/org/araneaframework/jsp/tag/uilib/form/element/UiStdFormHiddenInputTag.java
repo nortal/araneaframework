@@ -30,7 +30,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  * @jsp.tag
  *   name = "hiddenInput"
  *   body-content = "JSP"
- *   description = "Represents a "hidden" html input element mapped to an UiLib HiddenStringValueControl."
+ *   description = "Represents a "hidden" html input element mapped to an UiLib HiddenControl."
  */
 public class UiStdFormHiddenInputTag extends UiFormElementBaseTag {
    

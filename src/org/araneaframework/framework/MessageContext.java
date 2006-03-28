@@ -60,4 +60,9 @@ public interface MessageContext extends Serializable {
    * Shows an informative message of type {@link #INFO_TYPE}.
    */
   public void showInfoMessage(String message);
+  
+  /**
+   * Removes all messages currently present in this MessageContext.  
+   */
+  public void clearMessages();
 }

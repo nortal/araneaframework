@@ -24,7 +24,6 @@ import java.util.Set;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
-import org.araneaframework.uilib.form.constraint.Constraint;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ErrorUtil;
 

@@ -17,17 +17,14 @@
 package org.araneaframework.example.main.web.contract;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.araneaframework.OutputData;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.ListColumn;
 
 
 /**
@@ -37,25 +34,12 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class ContractListWidget extends BaseWidget {
-	
-	private static final long serialVersionUID = 1L;
-	
+public class ContractListWidget extends TemplateBaseWidget {
 	protected static final Logger log = Logger.getLogger(ContractListWidget.class);
-	
-	private boolean editMode = false;
 	
 	private ListWidget list;
 	
 	public ContractListWidget() {
-		super();
-	}
-	
-	/**
-	 * @param editMode whether to allow add or remove persons.
-	 */
-	public ContractListWidget(boolean editMode) {
-		this.editMode = editMode;
 	}
 	
 	protected void init() throws Exception {
@@ -66,9 +50,6 @@ public class ContractListWidget extends BaseWidget {
 		
 		this.list = initList();
 		addWidget("contractList", this.list);
-		
-		putViewData("allowAdd", new Boolean(editMode));    
-		putViewData("allowRemove", new Boolean(editMode));
 	}
 	
 	protected ListWidget initList() throws Exception {
@@ -78,6 +59,7 @@ public class ContractListWidget extends BaseWidget {
 		temp.addListColumn("company", "#Company");
 		temp.addListColumn("person", "#Person");
 		temp.addListColumn("notes", "#Notes");
+		temp.addListColumn(new ListColumn("dummy"));
 		return temp;
 	}
 	
@@ -87,45 +69,38 @@ public class ContractListWidget extends BaseWidget {
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
 		log.debug("Event 'add' received!");
-		if (!editMode) {
-			throw new RuntimeException("Event 'add' shoud be called only in edit mode");
-		}
-		getFlowCtx().start(new ContractEditWidget(), null, new FlowContext.Handler() {
-			public void onFinish(Object returnValue) throws Exception {
-				log.debug("Contract added with Id of " + returnValue + " sucessfully");    
-				refreshList();
-			}
-			public void onCancel() throws Exception {
-			}
-		});
+		getFlowCtx().start(new ContractAddEditWidget(), 
+				null, 
+				new FlowContext.Handler() {
+					public void onFinish(Object returnValue) throws Exception {
+						log.debug("Contract added with Id of " + returnValue + " sucessfully");    
+						refreshList();
+					}
+					public void onCancel() throws Exception {
+					}
+				}
+		);
 	}
 	
 	public void handleEventRemove(String eventParameter) throws Exception {
 		log.debug("Event 'remove' received!");
-		if (!editMode) {
-			throw new RuntimeException("Event 'remove' shoud be called only in edit mode");
-		}
 		Long id = ((ContractMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		getGeneralDAO().remove(ContractMO.class, id);
 		refreshList();
 		log.debug("Contract with Id of " + id + " removed sucessfully");
 	}
 	
-	public void handleEventSelect(String eventParameter) throws Exception {
-		log.debug("Event 'select' received!");
+	public void handleEventEdit(String eventParameter) throws Exception {
 		Long id = ((ContractMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		log.debug("Contract selected with Id of " + id);
-		getFlowCtx().finish(id);
+		getFlowCtx().start(new ContractAddEditWidget(id), null, null);
 	}
 	
 	public void handleEventCancel(String eventParameter) throws Exception {
 		log.debug("Event 'cancel' received!");
 		getFlowCtx().cancel();
-	}  
+	}
 	
 	private class TemplateContractListDataProvider extends MemoryBasedListDataProvider {
-		private static final long serialVersionUID = 1L;
-		
 		protected TemplateContractListDataProvider() {
 			super(ContractMO.class);
 		}

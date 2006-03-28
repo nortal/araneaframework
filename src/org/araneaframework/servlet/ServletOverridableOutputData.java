@@ -31,10 +31,4 @@ public interface ServletOverridableOutputData extends ServletOutputData, Seriali
    * Sets the response stream to response.
    */
   public void setResponse(HttpServletResponse response);
-  
-  /**
-   * Sets the request stream to request.
-   * @param request
-   */
-  public void setRequest(HttpServletRequest request);
 }

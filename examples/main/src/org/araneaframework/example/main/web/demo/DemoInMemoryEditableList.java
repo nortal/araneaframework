@@ -19,10 +19,10 @@ package org.araneaframework.example.main.web.demo;
 import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
-import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.NumberControl;
@@ -30,10 +30,11 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.LongData;
 import org.araneaframework.uilib.form.data.StringData;
+import org.araneaframework.uilib.list.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.list.formlist.FormListUtil;
-import org.araneaframework.uilib.list.formlist.FormListWidget;
 import org.araneaframework.uilib.list.formlist.FormRow;
 import org.araneaframework.uilib.list.formlist.InMemoryFormListHelper;
+import org.araneaframework.uilib.list.formlist.adapters.MapFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 
 
@@ -45,9 +46,9 @@ import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormR
  *
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class DemoInMemoryEditableList extends BaseWidget {
+public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
-	private FormListWidget formList;
+	private BeanFormListWidget formList;
 	private List data = new ArrayList();
 	
 	private InMemoryFormListHelper inMemoryHelper;
@@ -65,17 +66,21 @@ public class DemoInMemoryEditableList extends BaseWidget {
 	 */
 	public void init() throws Exception {
 		super.init();
-
-		addGlobalEventListener(new ProxyEventListener(this));
-    setViewSelector("demo/DemoInMemoryEditableList/main");		
 		
-		formList = new FormListWidget(new DemoEditableRowHandler());
+		addGlobalEventListener(new ProxyEventListener(this));
+		setViewSelector("demo/demoInMemoryEditableList");		
+		
+		formList = new BeanFormListWidget(new DemoEditableRowHandler(), DataDTO.class);
 		inMemoryHelper = new InMemoryFormListHelper(data, formList.getFormRowHandler());
 		
 		FormListUtil.keepFormListChangesInMemory(formList, inMemoryHelper);
-		FormListUtil.associateFormListWithMap(formList, inMemoryHelper.getCurrent());
+		formList.setFormRowHandler(
+				new MapFormRowHandlerDecorator(
+					inMemoryHelper.getCurrent(), 
+					formList, 
+					formList.getFormRowHandler()));
 		formList.setRows(new ArrayList(inMemoryHelper.getCurrent().values()));
-
+		
 		addWidget("editableList", formList);
 	}
 	
@@ -108,7 +113,7 @@ public class DemoInMemoryEditableList extends BaseWidget {
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
-			DataDTO rowData = (DataDTO) TemplateUiLibUtil.readDtoFromForm(editableRow.getRow(), editableRow.getRowForm());
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new DataDTO()); 
 
 			//Saving data
 			inMemoryHelper.update(editableRow.getRowKey(), rowData);
@@ -121,21 +126,21 @@ public class DemoInMemoryEditableList extends BaseWidget {
 		}
 
 		public void addValidRow(FormWidget addForm) throws Exception {
-			DataDTO rowData = (DataDTO) TemplateUiLibUtil.readDtoFromForm(new DataDTO(), addForm);
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).readBean(new DataDTO()); 
 
 			inMemoryHelper.add(rowData);
 		}
 
 		public void initFormRow(FormRow editableRow, Object row)
 		                     throws Exception {
-			FormWidget rowForm = editableRow.getRowForm();
+			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
 
 			addCommonFormFields(rowForm);
 
 			FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getRowKey());
 			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getRowKey());
 
-			TemplateUiLibUtil.writeDtoToForm(row, rowForm);			
+			rowForm.writeBean(row);
 			editableRow.getRowForm().markBaseState();
 		}
 

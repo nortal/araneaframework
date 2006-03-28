@@ -55,7 +55,7 @@ public class UiStdFormSelectTag extends UiFormElementBaseTag {
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "" 
+	 *   description = "Number of select elements visible at once." 
 	 */
 	public void setSize(String size) throws JspException {
 		this.size = (Long)evaluate("size", size, Long.class);

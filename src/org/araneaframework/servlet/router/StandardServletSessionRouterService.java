@@ -30,6 +30,7 @@ import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.servlet.ServletInputData;
+import org.araneaframework.servlet.ServletOutputData;
 
 /**
  * Associates this service with the HttpSession. Is a session does not exist, it is created.
@@ -59,18 +60,6 @@ public class StandardServletSessionRouterService extends BaseService {
     serviceFactory = factory;
   }
 
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Session router service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Session router service destroyed.");
-  }
-
   /**
    * Routes an action to the service in the session. If the service does not exist,
    * it is created.
@@ -85,12 +74,12 @@ public class StandardServletSessionRouterService extends BaseService {
     map.put(HttpSession.class, sess);
     Environment newEnv = new StandardEnvironment(getEnvironment(), map);
     
-    //XXX Must synchronize differently!!!
+    //XXX Should we synchronize on session?
     synchronized (sess) {
       Relocatable.RelocatableService service = null;   
             
       if (destroySession) {       
-        sess.invalidate();        
+        sess.invalidate();                    
         return;
       }
       
@@ -103,7 +92,7 @@ public class StandardServletSessionRouterService extends BaseService {
       else {
         service = (Relocatable.RelocatableService) sess.getAttribute(SESSION_SERVICE_KEY);
         service._getRelocatable().overrideEnvironment(newEnv);
-        log.debug("Using HTTP session '"+sess.getId()+"'");
+        log.debug("Reusing HTTP session '"+sess.getId()+"'");
       }
       
       try {
