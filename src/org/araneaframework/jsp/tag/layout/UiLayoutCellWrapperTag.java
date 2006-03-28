@@ -70,8 +70,8 @@ public class UiLayoutCellWrapperTag extends UiStyledWrapperTag {
 	 */
 	public void setHeight(String height) throws JspException {
 		this.height = height;
-	}	
-	
+	}
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -100,8 +100,9 @@ public class UiLayoutCellWrapperTag extends UiStyledWrapperTag {
 	 * Callback: get cell tag
 	 */
 	protected UiContainedTagInterface getTag() throws JspException {
-		UiLayoutRowTagInterface row = (UiLayoutRowTagInterface)readAttribute(UiLayoutRowTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);		
-		return row.getCellTag(styleClass);
+		UiLayoutRowTagInterface row = (UiLayoutRowTagInterface)readAttribute(UiLayoutRowTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		//UiLayoutTagInterface layout = (UiLayoutTagInterface)readAttribute(UiLayoutTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		return row.getCellTag(row.getCellClass());
 	}
 	
 	/**
@@ -109,12 +110,13 @@ public class UiLayoutCellWrapperTag extends UiStyledWrapperTag {
 	 */
 	protected void configureTag(UiContainedTagInterface tag) throws JspException {
 		super.configureTag(tag);
-		
+
 		UiLayoutCellTagInterface cellTag = (UiLayoutCellTagInterface)tag; 
 		
 		if (width != null) cellTag.setWidth(width);
 		if (height != null) cellTag.setHeight(height);				
 		if (colSpan != null) cellTag.setColSpan(colSpan);
-		if (rowSpan != null) cellTag.setRowSpan(rowSpan);		
+		if (rowSpan != null) cellTag.setRowSpan(rowSpan);
+		if (styleClass != null) cellTag.setStyleClass(styleClass);
 	}
 }

@@ -80,14 +80,13 @@ public class UiWidgetContextTag extends UiBaseTag {
 
     return EVAL_BODY_INCLUDE;
   }
-
-  protected int after(Writer out) throws Exception {
-    for (int i = 0; i < pathLength; i++)
-      output.popScope();
-
-    super.after(out);
-    return EVAL_PAGE;
-  }
+  
+  public void doFinally() {
+	for (int i = 0; i < pathLength; i++)
+		output.popScope();
+	    
+	super.doFinally();
+}
 
   protected void init() {
     super.init();

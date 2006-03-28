@@ -23,9 +23,9 @@ import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.Control;
 
 
 /**
@@ -84,7 +84,7 @@ public class UiFormElementLabelBaseTag extends UiPresentationTag {
 	 *   required = "false"
 	 *   description = "Whether a colon (":") is draw after the label." 
 	 */
-	public void setShowColumn(String showColon) throws JspException {
+	public void setShowColon(String showColon) throws JspException {
 		this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
 	}
 	

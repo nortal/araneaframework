@@ -145,10 +145,18 @@ public abstract class ListSqlHelper {
 	// * PUBLIC METHODS
 	// *********************************************************************
 	
+	public ResultSetColumnReader getResultSetReader() {
+		return this.resultSetReader;
+	}
+
+	public void setResultSetReader(ResultSetColumnReader resultSetReader) {
+		this.resultSetReader = resultSetReader;
+	}
+	
 	/*
 	 * Database mapping and converters.
 	 */
-	
+
 	/**
 	 * Sets the converter between the filtering-ordering values in
 	 * <code>Expressions</code> and values in <code>SqlExpressions</code>.

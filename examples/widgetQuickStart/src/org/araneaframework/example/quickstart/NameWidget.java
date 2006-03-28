@@ -26,19 +26,24 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author Jevgeni kabanov (ekabanov@webmedia.ee)
  */
 public class NameWidget extends StandardPresentationWidget {
-
+  private FormWidget nameForm;
+  
+  
 	protected void init() throws Exception {
     setViewSelector("name");
     
     addGlobalEventListener(new ProxyEventListener(this));
     
-    FormWidget nameForm = new FormWidget();
+    nameForm = new FormWidget();
     nameForm.addElement("name", "#Name", 
         new TextControl(), new StringData(), true);
     addWidget("nameForm", nameForm);
 	}
   
   public void handleEventHello() throws Exception {
-    getFlowCtx().replace(new HelloWidget(), null);
+    if (nameForm.convertAndValidate()) {
+      String name = (String) nameForm.getValueByFullName("name");
+      getFlowCtx().replace(new HelloWidget(name), null);
+    }
   }  
 }

@@ -1,0 +1,22 @@
+Logging for all examples is configured in examples/log4j.xml file. Verbosity
+mode for logging statements is selected here—the level of logging statements
+that are actually output. By default this is set to DEBUG level for most
+packages. Just one appender is defined—one that sends logging statements to 
+standard output:
+
+<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+  <layout class="org.apache.log4j.PatternLayout">
+    <param name="ConversionPattern" value="%d{hh:mm:ss} %-5p-%c{1}.%M(%F:%L)-%m%n"/>
+  </layout>
+</appender>
+
+Different packages are easily configured to have different logging verbosity
+levels and various output destinations:
+
+<category name="org.araneaframework">
+  <priority value="DEBUG"/>
+  <appender-ref ref="CONSOLE"/>
+</category>
+
+For detailed information about using log4j logging framework refer to 
+http://logging.apache.org/log4j/docs/

@@ -22,8 +22,8 @@ tested with the following containers:
 
 Release contents:
  * "src" contains the Java source files for the framework
- * "etc" contains the accompanying
- * "tests" constains the unit tests of the framework
+ * "etc" contains the accompanying configuration files
+ * "tests" contains the unit tests of the framework
  * "template" template library for the examples
  * "examples" examples of using the framework
  * "doc" documentation of the project
@@ -51,7 +51,7 @@ The "dist" directory contains the following jar files for use in applications:
 DOCUMENTATION
 
 Documentation can be found in the "doc" directory.
-	doc/whitepaper is a whitepaper on the Aranea Web Framework
+	doc/white-paper is a whitepaper on the Aranea Web Framework
 	doc/tutorial is a tutorial using the Aranea Web Framework
 	doc/reference includes the reference manual.
 	doc/javadoc includes the javadoc
