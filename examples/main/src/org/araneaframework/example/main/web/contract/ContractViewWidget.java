@@ -18,7 +18,7 @@ package org.araneaframework.example.main.web.contract;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.example.main.web.company.CompanyViewWidget;
 import org.araneaframework.example.main.web.person.PersonViewWidget;
@@ -29,7 +29,7 @@ import org.araneaframework.example.main.web.person.PersonViewWidget;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class ContractViewWidget extends BaseWidget {
+public class ContractViewWidget extends TemplateBaseWidget {
 
 	private static final Logger log = Logger
 			.getLogger(ContractViewWidget.class);

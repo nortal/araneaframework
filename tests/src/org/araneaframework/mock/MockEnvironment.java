@@ -18,14 +18,13 @@ package org.araneaframework.mock;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.araneaframework.Environment;
+import org.araneaframework.core.BaseEnvironment;
 
 /**
  * @author toomas
  *
  */
-public class MockEnvironment implements Environment {
+public class MockEnvironment extends BaseEnvironment {
   private Map entries = new HashMap();
   
   public MockEnvironment(Map map) {

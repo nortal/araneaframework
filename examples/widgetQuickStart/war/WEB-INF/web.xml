@@ -14,15 +14,21 @@
       org.araneaframework.servlet.core.StandardSessionListener
     </listener-class>
   </listener>
-
+  
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
+   
    <servlet>
       <servlet-name>araneaServlet</servlet-name>
-     	<servlet-class>org.araneaframework.ioc.spring.StandardSpringMainServlet</servlet-class>
+     	<servlet-class>org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
    </servlet>
 
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>
-      <url-pattern>/</url-pattern>
+      <url-pattern>/main</url-pattern>
    </servlet-mapping>
 </web-app>

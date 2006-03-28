@@ -5,9 +5,9 @@
 	
 	<!--Set the classpath-->
 	<path id="classpath">
-		<fileset dir="../../lib" includes="**/*.jar"/>
-		<fileset dir="../.." includes="build/aranea.jar"/>
-		<fileset dir="../.." includes="template/dist/aranea-template.jar"/>
+    <fileset dir="../../lib" includes="**/*.jar" excludes="cobertura//**/*"/>
+    <fileset dir="../.." includes="dist/aranea.jar"/>
+    <fileset dir="../.." includes="template/dist/aranea-template.jar"/>
 	</path>
 	
 	<!--Set the Jetty classpath-->
@@ -44,7 +44,7 @@
 				<exclude name="j2ee.jar" />
 				<exclude name="jetty/*jar" />				
 			</fileset>
-			<fileset dir="../../build" includes="aranea.jar"/>	
+			<fileset dir="../../dist" includes="aranea.jar"/>	
 			<fileset dir="../../template/dist" includes="aranea-template.jar"/>						
 		</copy>
 		<copy todir="war/WEB-INF/classes">

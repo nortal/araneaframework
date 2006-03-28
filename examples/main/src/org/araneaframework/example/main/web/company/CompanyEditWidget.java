@@ -18,7 +18,7 @@ package org.araneaframework.example.main.web.company;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -29,7 +29,7 @@ import org.araneaframework.uilib.form.control.TextControl;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class CompanyEditWidget extends BaseWidget {
+public class CompanyEditWidget extends TemplateBaseWidget {
 	
 	private static final Logger log = Logger.getLogger(CompanyEditWidget.class);
 	
@@ -53,8 +53,9 @@ public class CompanyEditWidget extends BaseWidget {
 	
   protected void init() throws Exception {
     super.init();
-    setViewSelector(id != null ? "company/companyEdit" : "company/companyAdd");
-    log.debug("TemplateCompanyEditWidget init called");
+    setViewSelector("company/companyAddEdit");
+    putViewData("formLabel", id != null ? "company.edit.form.label" : "company.add.form.label");
+    log.debug("CompanyEditWidget init called");
     addGlobalEventListener(new ProxyEventListener(this));    
     
     form = new BeanFormWidget(CompanyMO.class);
@@ -87,7 +88,7 @@ public class CompanyEditWidget extends BaseWidget {
 	}
   
 	public void handleEventCancel(String eventParameter) throws Exception {
-    log.debug("Event 'cancel' received!");
-    getFlowCtx().cancel();
+	    log.debug("Event 'cancel' received!");
+	    getFlowCtx().cancel();
 	}
 }

@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
-import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
+import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.NumberControl;
@@ -30,9 +30,10 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.LongData;
 import org.araneaframework.uilib.form.data.StringData;
+import org.araneaframework.uilib.list.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.list.formlist.FormListUtil;
-import org.araneaframework.uilib.list.formlist.FormListWidget;
 import org.araneaframework.uilib.list.formlist.FormRow;
+import org.araneaframework.uilib.list.formlist.adapters.MapFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 
 
@@ -44,8 +45,8 @@ import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormR
  *
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class DemoFormList extends BaseWidget {
-	private FormListWidget formList;
+public class DemoFormList extends TemplateBaseWidget {
+	private BeanFormListWidget formList;
 	private Map data = new LinkedHashMap();
 
 	//Plays the role of a sequence
@@ -66,15 +67,19 @@ public class DemoFormList extends BaseWidget {
 	 */
 	public void init() throws Exception {
 		super.init();
-
-		addGlobalEventListener(new ProxyEventListener(this));
-    setViewSelector("demo/DemoEditableList/main");
 		
-		formList = new FormListWidget(new DemoFormRowHandler());
+		addGlobalEventListener(new ProxyEventListener(this));
+		setViewSelector("demo/demoEditableList");
+		
+		formList = new BeanFormListWidget(new DemoFormRowHandler(), DataDTO.class);
 
-		FormListUtil.associateFormListWithMap(formList, data);
+		formList.setFormRowHandler(
+				new MapFormRowHandlerDecorator(
+					data, 
+					formList, 
+					formList.getFormRowHandler()));
 		formList.setRows(new ArrayList(data.values()));
-
+		
 		addWidget("editableList", formList);
 	}
 	
@@ -89,7 +94,7 @@ public class DemoFormList extends BaseWidget {
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
-			DataDTO rowData = (DataDTO) TemplateUiLibUtil.readDtoFromForm(new DataDTO(), editableRow.getRowForm());
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new DataDTO()); 
 			rowData.setId((Long) editableRow.getRowKey());
 
 			//Saving data
@@ -104,7 +109,7 @@ public class DemoFormList extends BaseWidget {
 		public void addValidRow(FormWidget addForm) throws Exception {
 			lastId = new Long(lastId.longValue() + 1);
 
-			DataDTO rowData = (DataDTO) TemplateUiLibUtil.readDtoFromForm(new DataDTO(), addForm);
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).readBean(new DataDTO());
 			rowData.setId(lastId);
 
 			data.put(lastId, rowData);
@@ -112,14 +117,14 @@ public class DemoFormList extends BaseWidget {
 
 		public void initFormRow(FormRow editableRow, Object row)
 		                     throws Exception {
-			FormWidget rowForm = editableRow.getRowForm();
+			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
 
 			addCommonFormFields(rowForm);
 
 			FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, getRowKey(row));
 			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(row));
 
-			TemplateUiLibUtil.writeDtoToForm(row, rowForm);
+			rowForm.writeBean(row);
 		}
 
 		public void initAddForm(FormWidget addForm) throws Exception {

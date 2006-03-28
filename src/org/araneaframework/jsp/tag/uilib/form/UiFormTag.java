@@ -61,8 +61,7 @@ public class UiFormTag extends UiWidgetTag {
 		pushAttribute(FORM_FULL_ID_KEY_REQUEST, fullId, PageContext.REQUEST_SCOPE);
 		pushAttribute(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel, PageContext.REQUEST_SCOPE);
 		pushAttribute(FORM_KEY_REQUEST, widget, PageContext.REQUEST_SCOPE);
-        
-    UiUtil.writeHiddenInputElement(out, scopedFullId + ".__present", "true");        
+   
 		writeJavascript(out);
 	
 		// Continue

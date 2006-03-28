@@ -28,11 +28,11 @@
 			<variablelist spacing="compact">
 			  <varlistentry>
 			    <term><classname>org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider</classname></term>
-			    <listitem>This is the memory-based solution that must be provided with the whole data at once. It does <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> and <emphasis>paging</emphasis> memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution for tables with few (&lt;100) rows.</listitem>
+			    <listitem>This is the memory-based solution that must be provided with the whole data at once. It does <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> and <emphasis>paging</emphasis> memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution for tables with few (typically less than 100) rows.</listitem>
 			  </varlistentry>
 			  <varlistentry>
 			    <term><classname>org.araneaframework.uilib.list.dataprovider.BackendListDataProvider</classname></term>
-			    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more (&gt;500) rows.</listitem>
+			    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
 			  </varlistentry>
 			</variablelist>
 		</para>
