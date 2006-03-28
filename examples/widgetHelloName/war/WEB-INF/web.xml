@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value> 
+			/WEB-INF/aranea-conf.xml
+		</param-value>
+	</context-param>
+
+	<listener>
+    <listener-class>
+      org.araneaframework.servlet.core.StandardSessionListener
+    </listener-class>
+  </listener>
+  
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
+   
+   <servlet>
+      <servlet-name>araneaServlet</servlet-name>
+     	<servlet-class>org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>araneaServlet</servlet-name>
+      <url-pattern>/main</url-pattern>
+   </servlet-mapping>
+</web-app>

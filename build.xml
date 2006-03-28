@@ -232,4 +232,111 @@
 	<target name="run-tests" depends="init, build" description="Run the junit tests">
 		<ant target="run-tests" dir="tests"/>
 	</target>
+	
+	<property name="devweb.xml" value="devweb-build.xml"/>
+
+	<!-- Most probably you'll want to copy the following targets to your own project's buildscript -->
+
+	<target name="edit" description="Switches to a change in order to start editing it">
+		<ant antfile="${devweb.xml}" target="edit_change" inheritAll="false"/>
+	</target>
+
+	<target name="edit_module" description="Retrieves a module in order to start editing it">
+		<ant antfile="${devweb.xml}" target="edit_module" inheritAll="false"/>
+	</target>
+
+	<target name="update_base" description="Updates base version of current change">
+		<ant antfile="${devweb.xml}" target="update" inheritAll="false"/>
+	</target>
+
+	<target name="update_base_continue" description="Continues updating base version of current change">
+		<ant antfile="${devweb.xml}" target="update_continue" inheritAll="false"/>
+	</target>
+
+	<target name="update_base_cancel" description="Cancels updating base version of current change">
+		<ant antfile="${devweb.xml}" target="update_cancel" inheritAll="false"/>
+	</target>
+
+	<target name="update" description="Updates files from CVS (checks if the change is in an appropriate state)">
+
+		<ant antfile="${devweb.xml}" target="refresh" inheritAll="false"/>
+	</target>
+
+	<target name="update_all" description="Updates files from CVS, including non-editable modules">
+		<ant antfile="${devweb.xml}" target="refresh_all" inheritAll="false"/>
+	</target>
+
+	<target name="commit" description="Commits files to CVS (checks if th change is in an appropriate state)">
+		<ant antfile="${devweb.xml}" target="commit" inheritAll="false"/>
+	</target>
+
+	<target name="end_edit" description="Finishes editing of current change, enlists it for reviewing">
+		<ant antfile="${devweb.xml}" target="refresh" inheritAll="false"/> <!-- Optional: update local files (recommended) -->
+
+		<!-- Any project-specific preconditions for ending development should be inserted HERE -->
+
+		<ant antfile="${devweb.xml}" target="commit_change" inheritAll="false"/>
+	</target>
+
+	<target name="integrate" description="Starts integration build of a change">
+		<ant antfile="${devweb.xml}" target="integrate" inheritAll="false"/>
+	</target>
+
+	<target name="integrate_continue" description="Continues integration of a change">
+		<ant antfile="${devweb.xml}" target="integrate_continue" inheritAll="false"/>
+	</target>
+
+	<target name="integrate_cancel" description="Cancels integration of a change">
+		<ant antfile="${devweb.xml}" target="integrate_cancel" inheritAll="false"/>
+	</target>
+
+	<target name="integrate_step" description="Continues integration of a change from step entered by integrator">
+		<ant antfile="${devweb.xml}" target="integrate_step" inheritAll="false"/>
+	</target>
+
+	<target name="upload_diff" description="Uploads diff without ending change to review the changes">
+		<ant antfile="${devweb.xml}" target="upload_diff" inheritAll="false"/>
+	</target>
+
+	<!-- End of targets to copy -->
+
+	<!-- You might also want these: -->
+	<target name="change_auth_token" description="Generates new DevWeb authentication code">
+		<ant antfile="${devweb.xml}" target="change_auth_token" inheritAll="false"/>
+	</target>
+
+	<target name="devweb_upgrade" description="Upgrades DevWeb script to current server version">
+		<ant antfile="${devweb.xml}" target="upgrade" inheritAll="false"/>
+	</target>
+
+	<target name="test_checkout" description="Tests local CVS checkout control files for inconsistencies">
+		<ant antfile="${devweb.xml}" target="test_checkout" inheritAll="false"/>
+	</target>
+
+	<target name="sync_main" description="Synchronizes repository MAIN branch and latest version">
+		<ant antfile="${devweb.xml}" target="sync_main" inheritAll="false"/>
+	</target>
+
+	<target name="sync_main_continue" description="Continues synchronizing repository MAIN branch and latest version">
+		<ant antfile="${devweb.xml}" target="sync_main_continue" inheritAll="false"/>
+	</target>
+
+	<target name="checkout_version" description="Checks out a version from repository">
+		<ant antfile="${devweb.xml}" target="checkout_version" inheritAll="false">
+			<!-- You may specify target directory by uncommenting next line (default is ".."):
+			<property name="checkout_version.dir" location=".." />
+			-->
+		</ant>
+
+	</target>
+
+	<target name="checkout_change" description="Checks out a change from repository">
+		<ant antfile="${devweb.xml}" target="checkout_change" inheritAll="false">
+			<!-- You may specify target directory by uncommenting next line (default is ".."):
+			<property name="checkout_change.dir" location=".." />
+			-->
+		</ant>
+	</target>
+
+
 </project>
