@@ -47,7 +47,10 @@ import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter
 public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
 	
-	private EditableBeanListWidget list;	
+	/* Editable list. */ 
+	private EditableBeanListWidget list;
+	/* Actual holder of editable list rows (resides inside EditableBeanListWidget).
+       Look inside init() method to see where it comes from. */ 
 	private BeanFormListWidget formList;
 	
 	protected void init() throws Exception {
@@ -80,7 +83,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		/* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
 		list.setFormRowHandler(buildFormRowHandler());
 
-		/* Get the reference to FormListWidget hiding inside EditableBeanListWidget. */
+		/* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
 		this.formList = list.getFormList();
 		addWidget("list", list);
 	}
@@ -169,6 +172,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		public void addValidRow(FormWidget addForm) throws Exception {
 			PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
 			getGeneralDAO().add(rowData);
+			// this callback must be made here!
 			formList.resetAddForm();
 		}
 		
@@ -177,7 +181,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			// Set initial status of list rows to closed - they cannot be edited before opened.
 			editableRow.close();
 			
-			// Get the rowForm (widget holding row object data). 
+			// Get the rowForm (this is the formwidget holding row object data). 
 			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
 			// See below.
 			addCommonFormFields(rowForm);

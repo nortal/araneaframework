@@ -1455,7 +1455,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
             </sect3>
             
              <sect3>
-                <title>Editable Lists (INCOMPLETE)</title>
+                <title>Editable Lists</title>
 
                   <mediaobject id="person-editable-list-image" xreflabel="personEditableList">
                    	<imageobject>
@@ -1464,20 +1464,24 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 						format="PNG" 
 						align="center"/>
 					</imageobject>
-					<caption align="top">Editable list.</caption>
+					<caption align="top">Editable list example.</caption>
  				  </mediaobject>          
                 
                 <para>
-                    Editable lists are lists with additional capabilities&mdash;their rows (and thus objects represented by
-                    these rows) can be edited, updated, deleted and added on-the-fly. Example we present here is extracted
+                		Editable lists are <emphasis>lists of forms</emphasis>&mdash;their rows (and thus objects represented by
+                    these rows) can be edited, updated, deleted and added on-the-fly. Presented example is extracted
                     from template application <literal>PersonEditableListWidget</literal> class. Its <literal>init()</literal>
                     method resembles those that we have already seen, except few curiosities that are pointed out in
                     code comments.
-                    
+				</para>
+
                     <programlisting role="java"><![CDATA[public class PersonEditableListWidget extends TemplateBaseWidget {
   protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
   
+  /* Editable list. */
   private EditableBeanListWidget list;
+  /* Actual holder of editable list rows (resides inside EditableBeanListWidget).
+     Look inside init() method to see where it comes from. */ 
   private BeanFormListWidget formList;
   private MemoryBasedListDataProvider dataProvider = new DataProvider();
   
@@ -1511,7 +1515,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
     /* Now, this is new. Set FormRowHandler class that will handle the different row operations. See below. */
     list.setFormRowHandler(buildFormRowHandler());
 
-    /* Get the reference to FormListWidget hiding inside EditableBeanListWidget. */
+    /* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
     this.formList = list.getFormList();
     addWidget("list", list);
   }
@@ -1574,6 +1578,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
     public void addValidRow(FormWidget addForm) throws Exception {
       PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
       getGeneralDAO().add(rowData);
+      // this callback must be made here!
       formList.resetAddForm();
     }
     
@@ -1582,7 +1587,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
       // Set initial status of list rows to closed - they cannot be edited before opened.
       editableRow.close();
       
-      // Get the rowForm (widget holding row object data). 
+      // Get the rowForm (this is the formwidget holding row object data). 
       BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
       // See below.
       addCommonFormFields(rowForm);
@@ -1611,7 +1616,70 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
     }
   }
 }]]></programlisting>
-                </para>
+
+			<para>
+				Editable list definition does not differ much from ordinary list definition&mdash;setting
+				the <literal>FormRowHandler</literal> is the only news about list construction. 
+				Rowhandlers themselves are not complex, some callback method purposes can be confusing at first&mdash;
+				one must be well-acquainted with row-handling interfaces before implementing them.
+			</para>
+
+		        <table frame="all">
+		        	<title><literal>FormRowHandler</literal> interface</title>
+		          <tgroup cols="2">
+		            <colspec colwidth="2*"/>
+		            <colspec colwidth="5*"/>
+		            <thead>
+		              <row>
+		                <entry>Method</entry>
+		                <entry>Purpose</entry>
+		              </row>
+		            </thead>
+		            <tbody>
+		              <row>
+		                <entry><literal>getRowKey(Object row)</literal></entry>
+		                <entry>Should return the key that uniquely identifies given object among other same type objects.</entry>
+		              </row>
+		              <row>
+		                <entry><literal>initFormRow(FormRow formRow, Object row)</literal></entry>
+		                <entry>
+		                Should initialize the editable row by building the form inside the <literal>formRow</literal> and setting the 
+		                	correct open/close status. Called once for each object(<literal>row</literal>) that should be showed in the list.</entry>
+		              </row>
+		              <row>
+		                <entry><literal>initAddForm(FormWidget addForm)</literal></entry>
+		                <entry>
+			                Should initialize the form that will be used to add new rows. Usually modifies the supplied form 
+			                as calling <literal>initFormRow</literal> with empty <literal>row</literal> parameter would
+			                alter form inside <literal>formRow</literal>&mdash;but here the object's
+			                unique identifier is not required.
+						</entry>
+		              </row>
+		              <row>
+		                <entry><literal>addRow(FormWidget addForm)</literal></entry>
+		                <entry>
+		                		Called when a new row (object) should be added. Data of the new
+		                		object should be read from the supplied form.
+						</entry>
+		              </row>
+		              <row>
+		                <entry><literal>saveRows(Map &lt;Object rowKey, EditableRow formRow&gt; formRows)</literal></entry>
+		                <entry>Called when specified list rows should be saved.</entry>
+		              </row>
+		              <row>
+		                <entry><literal>deleteRows(Set rowKeys)</literal></entry>
+		                <entry>Called when the rows (objects) identified by the supplied set of keys should be deleted.</entry>
+		              </row>
+		              <row>
+		                <entry><literal>openOrCloseRow(FormRow formRow)</literal></entry>
+		                <entry>Called upon closing or opening of the formRow.</entry>
+		              </row>
+		
+		            </tbody>
+		          </tgroup>
+		        </table>
+
+                
             </sect3>
             
         </sect2>
