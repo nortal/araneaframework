@@ -272,58 +272,19 @@
 
 		<sect2>
 			<title>Hibernate configuration</title>
-			<para>
-				Hibernate is high-performance object-relational mapping
-				solution written in Java. It takes care of mapping database
-				tables to objects and much more. In our examples its usage is very basic&mdash;
-				just mapping database columns to fields in Data Objects 
-				(simple Java beans with getter and setter methods for private fields)&mdash;so that
-				we can easily save and retrieve objects from/to database.
-				Mappings between Java objects and database tables are generated 
-				automatically from <ulink url="http://xdoclet.sourceforge.net">xdoclet</ulink> annotations&mdash;take a look at
-				<literal>war/WEB-INF/classes/mappings</literal>
-				directory to see what typical generated mappings look like&mdash;or any
-				classes from <literal>org.araneaframework.templateApp.business.model</literal>
-				to see samples of annotations from which mappings are generated.
-				Hibernate homepage is located at <ulink url="http://www.hibernate.org">http://www.hibernate.org</ulink>.
-			</para>
-
-			<para>
-				Some examples (especially SQL-based lists) need to use relational database to 
-				be informational. We have used capable little relational database called HSQLDB
-				for that purpose. You should start database with command <literal>ant run-database</literal>
-				before running main examples, otherwise some of them will not function correctly.
-				HSQLDB and Hibernate are
-				tied together in <literal>etc/hibernate.cfg.xml</literal> where
-				SQL dialect and database used by Hibernate are configured.
-			</para>
+            <para>
+              Main example uses <ulink url="http://www.hibernate.org">Hibernate</ulink> for database access.
+              See <literal>examples/main/README.hibernate</literal> for details (these are not needed
+              for understanding this tutorial).
+            </para>
 		</sect2>
 
 		<sect2>
 			<title>Logging configuration</title>
 			<para>
 				Logging for all examples is configured in <literal>examples/log4j.xml</literal> 
-				file. Verbosity mode for logging statements is selected here&mdash;the level
-				of logging statements that are actually output. By default this is
-				set to <literal>DEBUG</literal> level for most packages. Just one appender
-				is defined&mdash;one that sends logging statements to standard output:
-			</para>
-
-			<para>
-			<programlisting role="xml"><![CDATA[<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-  <layout class="org.apache.log4j.PatternLayout">
-    <param name="ConversionPattern" value="%d{hh:mm:ss} %-5p-%c{1}.%M(%F:%L)-%m%n"/>
-  </layout>
-</appender>]]></programlisting>
-
-			Different packages are easily configured to have different logging verbosity levels and
-			various output destinations:
-			<programlisting role="xml"><![CDATA[<category name="org.araneaframework">
-  <priority value="DEBUG"/>
-  <appender-ref ref="CONSOLE"/>
-</category>]]></programlisting>
-			For detailed information about using log4j logging framework refer to 
-			<ulink url="http://logging.apache.org/log4j/docs/">http://logging.apache.org/log4j/docs/</ulink>
+				file. See <literal>examples/main/README.log4j</literal>  for details (not
+                needed for understanding this tutorial).
 			</para>
 		</sect2>
 

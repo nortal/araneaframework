@@ -44,7 +44,7 @@ public class LoginWidget extends TemplateBaseWidget {
 		
 		/* Register a global proxying eventlistener - it receives all widget events and upon 
 		 * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method */
-		addGlobalEventListener(new ProxyEventListener(this));
+	    addGlobalEventListener(new ProxyEventListener(this));
 
 		/* Create a new FormWidget with two self-described input fields. */
 		form = new FormWidget();
