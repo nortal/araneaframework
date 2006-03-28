@@ -163,8 +163,8 @@
 			<para>
 				As mentioned, main servlet passes requests on to Aranea controller,
 				which static configuration is defined
-				in <literal>aranea-conf.xml</literal>&mdash;this is a Spring bean configuration
-				file, used to initialize chain (or tree) of Aranea
+				in <literal>aranea-conf.xml</literal>&mdash;this is a <ulink url="http://www.springframework.org/">Spring</ulink> 
+                bean configuration file, used to initialize chain (or tree) of Aranea
 				components that will be processing the incoming request.
 				Each bean configuration defines which classes are instantiated for dealing with
 				the requests and links beans with other component beans.
@@ -198,7 +198,7 @@
 				Aranea configuration are yet not directly tied to user interface elements, although
 				they can output data which ends up rendered somewhere on the response page. Instead
 				they perform more general tasks&mdash;most important and visible for application programmers
-				is aforementioned <literal>StandardFlowContainerWidget</literal> which allows creation 
+				are aforementioned <literal>StandardFlowContainerWidget</literal> which allows creation 
 				of nested processes (which we will mostly refer to as <emphasis>flows</emphasis> from
 				now on) and <literal>StandardMessagingFilterWidget</literal> that is a central place for
 				managing all kind of informational messages which are outputted to notify user of
@@ -261,6 +261,85 @@
 <bean
   class="org.araneaframework.templateApp.web.app.widget.TemplateLoginWidget" 
   id="login" singleton="false"/>]]></programlisting>
+  
+             <programlisting role="xml"><![CDATA[<beans>
+  <import resource="aranea-filters.xml"/>
+
+  <!-- ########## ARANEA CONFIGURATION ########## -->
+
+  <bean 
+    id="applicationRoot" 
+    class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    singleton="false">
+    <property name="childService" ref="araneaApplicationFilters"/>
+  </bean>
+  
+  <bean 
+    id="araneaApplicationFilters" 
+    singleton="false"
+    class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
+    <property name="childService" ref="araneaTopServiceRouter"/>
+    <property name="filterChain">
+      <list>
+        <ref bean="araneaCriticalErrorHandler"/>
+        <ref bean="araneaReadFileFilter"/>
+        <ref bean="araneaMainStatisticFilter"/>
+      </list>
+    </property>
+  </bean>
+
+  <bean
+    id="araneaTopServiceRouter"
+    class="org.araneaframework.framework.router.StandardTopServiceRouterService" 
+    singleton="false">
+    <property name="defaultServiceId" value="application"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="application" value-ref="araneaSessionRouter"/>
+      </map>
+    </property>
+  </bean>
+
+  ...
+    
+  <!-- Session scope beans-->
+
+  <!-- Thread scope beans-->    
+  
+   <!-- Framework widgets -->     
+   
+  <bean id="araneaWidgetFilters" singleton="false"
+        class="org.araneaframework.framework.filter.StandardWidgetFilterChainFilterWidget">
+        <property name="childWidget" ref="araneaWidgetContainer"/>
+        <property name="filterChain">           
+            <list>
+                <ref bean="araneaTransactionFilter"/>
+                <ref bean="araneaMessagingFilter"/>
+                <ref bean="araneaContexts"/>
+                <ref bean="araneaPopupFilter"/>
+            </list>
+        </property>
+    </bean>  
+
+  <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="araneaWidgetContainer"
+    singleton="false">
+    <property name="childWidget" ref="thread.viewPort"/>
+  </bean>
+
+ <!-- Application widgets -->     
+  
+   <bean class="org.araneaframework.framework.container.StandardViewPortWidget" id="thread.viewPort" singleton="false">
+     <property name="root" ref="thread.mainCallStack"/>
+   </bean>
+
+   <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="thread.mainCallStack" singleton="false">
+     <property name="top" ref="thread.login"/>
+   </bean>
+   
+  <bean class="org.araneaframework.example.main.web.LoginWidget" id="thread.login" singleton="false"/>  
+ 
+</beans>]]></programlisting>
+  
 			</para>
 			
 			<para>
