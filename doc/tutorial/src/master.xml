@@ -312,8 +312,11 @@
 			</para>
 			
 			<para>
+                Note that many of the referenced
+                beans are predefined in the imported <literal>aranea-filters.xml</literal>.
 				We will not go into more detail about the configuration components right now,
-				but explain their functionality and usage as needed.
+				but explain their functionality and usage as needed. Thorough overview 
+                of configuration components is given in the reference manual.
 			</para>
 
 		</sect2>
