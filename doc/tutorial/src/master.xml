@@ -218,51 +218,8 @@
 			
 			<para>
 				Slices of beginning and end of Aranea configuration in TemplateApp:
-				<programlisting role="xml"><![CDATA[<bean
-  id="servletServiceAdapterComponent" 
-  class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent">
-  <property name="childService" ref="criticalErrorHandler"/>
-</bean>
-  
-<bean 
-  id="criticalErrorHandler"
-  class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService" 
-  singleton="false">
-  <property name="childService" ref="readFileFilter"/>
-  <property name="exceptionHandlerFactory">
-    <bean 
-      class="org.araneaframework.templateApp.web.framework.error.TemplateCriticalErrorHandlerFactory"
-      singleton="false"/>
-  </property>
-</bean>
-
-...
-
-<bean
-  class="org.araneaframework.framework.container.StandardWidgetContainerWidget" 
-  id="widgetContainer" singleton="false">
-  <property name="childWidget" ref="viewPort"/>
-</bean>
-  
-<!-- Widgets -->  
-  
-<bean
-  class="org.araneaframework.framework.container.StandardViewPortWidget" 
-  id="viewPort" singleton="false">
-  <property name="root" ref="mainCallStack"/>
-</bean>
-
-<bean
-  class="org.araneaframework.framework.container.StandardFlowContainerWidget" 
-  id="mainCallStack" singleton="false">
-  <property name="top" ref="login"/>
-</bean>
-   
-<bean
-  class="org.araneaframework.templateApp.web.app.widget.TemplateLoginWidget" 
-  id="login" singleton="false"/>]]></programlisting>
-  
              <programlisting role="xml"><![CDATA[<beans>
+
   <import resource="aranea-filters.xml"/>
 
   <!-- ########## ARANEA CONFIGURATION ########## -->
@@ -306,38 +263,50 @@
 
   <!-- Thread scope beans-->    
   
-   <!-- Framework widgets -->     
+  <!-- Framework widgets -->
+  
+  ...
    
-  <bean id="araneaWidgetFilters" singleton="false"
-        class="org.araneaframework.framework.filter.StandardWidgetFilterChainFilterWidget">
-        <property name="childWidget" ref="araneaWidgetContainer"/>
-        <property name="filterChain">           
-            <list>
-                <ref bean="araneaTransactionFilter"/>
-                <ref bean="araneaMessagingFilter"/>
-                <ref bean="araneaContexts"/>
-                <ref bean="araneaPopupFilter"/>
-            </list>
-        </property>
+  <bean 
+    id="araneaWidgetFilters" 
+    singleton="false"
+    class="org.araneaframework.framework.filter.StandardWidgetFilterChainFilterWidget">
+    <property name="childWidget" ref="araneaWidgetContainer"/>
+    <property name="filterChain">           
+      <list>
+        <ref bean="araneaTransactionFilter"/>
+        <ref bean="araneaMessagingFilter"/>
+        <ref bean="araneaContexts"/>
+        <ref bean="araneaPopupFilter"/>
+      </list>
+    </property>
     </bean>  
 
-  <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="araneaWidgetContainer"
+  <bean 
+    id="araneaWidgetContainer"
+    class="org.araneaframework.framework.container.StandardWidgetContainerWidget" 
     singleton="false">
     <property name="childWidget" ref="thread.viewPort"/>
   </bean>
 
- <!-- Application widgets -->     
+  <!-- Application widgets -->     
   
-   <bean class="org.araneaframework.framework.container.StandardViewPortWidget" id="thread.viewPort" singleton="false">
+   <bean 
+     id="thread.viewPort"
+     class="org.araneaframework.framework.container.StandardViewPortWidget"
+     singleton="false">
      <property name="root" ref="thread.mainCallStack"/>
    </bean>
 
-   <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="thread.mainCallStack" singleton="false">
+   <bean 
+     id="thread.mainCallStack"
+     class="org.araneaframework.framework.container.StandardFlowContainerWidget"
+     singleton="false">
      <property name="top" ref="thread.login"/>
    </bean>
-   
-  <bean class="org.araneaframework.example.main.web.LoginWidget" id="thread.login" singleton="false"/>  
- 
+
+  <!-- <bean class="..." id="thread.login" singleton="false"/> -->
+
 </beans>]]></programlisting>
   
 			</para>
@@ -395,7 +364,64 @@
 		<sect2>
 			<title>Directory structure and needed libraries</title>
             <para>
-                TODO
+                Full-blown aranea webapp needs at least the access to following libraries.
+
+                <variablelist spacing="compact">
+                  <varlistentry>
+                    <term>aranea.jar</term>
+                    <listitem>This is the memory-based solution that must be provided with the whole data at once. It does <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> and <emphasis>paging</emphasis> memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution for tables with few (typically less than 100) rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>commons-collections.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>commons-el.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>commons-fileupload.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>commons-lang.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>commons-logging.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>j2ee.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>jakarta-oro.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>jakarta-regexp.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>jstl.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>spring.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>standard.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                  <varlistentry>
+                    <term>xstream.jar</term>
+                    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
+                  </varlistentry>
+                </variablelist>
+                
+                These are usually put under webapp's <literal>WEB-INF/lib/</literal> directory.
             </para>
 		</sect2>
 		
