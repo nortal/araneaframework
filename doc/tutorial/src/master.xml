@@ -198,7 +198,7 @@
 				Aranea configuration are yet not directly tied to user interface elements, although
 				they can output data which ends up rendered somewhere on the response page. Instead
 				they perform more general tasks&mdash;most important and visible for application programmers
-				are aforementioned <literal>StandardFlowContainerWidget</literal> which allows creation 
+				is aforementioned <literal>StandardFlowContainerWidget</literal> which allows creation 
 				of nested processes (which we will mostly refer to as <emphasis>flows</emphasis> from
 				now on) and <literal>StandardMessagingFilterWidget</literal> that is a central place for
 				managing all kind of informational messages which are outputted to notify user of
