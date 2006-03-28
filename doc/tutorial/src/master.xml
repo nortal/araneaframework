@@ -28,6 +28,10 @@
 				<firstname>Taimo</firstname>
 				<surname>Peelo</surname>
 			</author>
+			<author>
+				<firstname>Jevgeni</firstname>
+				<surname>Kabanov</surname>
+			</author>
 		</authorgroup>
 	</articleinfo>
 
@@ -57,7 +61,6 @@
 			<ulink url="mailto:team@araneaframework.org?subject=Comments on Aranea tutorial">team@araneaframework.org</ulink>.
 		</para>
 	</sect1>
-  
   <sect1 id="hello-world">
     <title>Hello World</title>
     
@@ -197,19 +200,97 @@
   </ui:root>  
 </jsp:root>]]></programlisting>
     </figure>
+    
+    <para>
+      Finally we will need to deploy the example as a web application. Aranea uses Spring for configuration, so we will also have to start its listener as shown on <xref linkend="example-web-xml"/>
+    </para>
+    
+    <figure id="example-hello-jsp">    
+      <title>/WEB-INF/web.xml</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC 
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <context-param>
+    <!-- Spring configuration file name -->
+    <param-name>contextConfigLocation</param-name>
+    <param-value> 
+      /WEB-INF/aranea-conf.xml
+    </param-value>
+  </context-param>
+  
+  <!-- Aranea session cleanup listener -->
+  <listener>
+    <listener-class>
+      org.araneaframework.servlet.core.StandardSessionListener
+    </listener-class>
+  </listener>
+  
+  <!-- Spring loader listener -->
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
+   
+  <!-- Aranea dispatcher servlet -->
+   <servlet>
+      <servlet-name>araneaServlet</servlet-name>
+      <servlet-class>org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   
+   <!-- Aranea dispatcher servlet mapping -->
+   <servlet-mapping>
+      <servlet-name>araneaServlet</servlet-name>
+      <url-pattern>/main</url-pattern>
+   </servlet-mapping>
+</web-app>]]></programlisting>
+    </figure>
+
+    <para>
+      Finally we will also need the Aranea Spring configuration file, which in this case will only set the application root widget as hown on <xref linkend="example-spring-conf"/>.
+    </para>
+    
+    <figure id="example-spring-conf">    
+      <title>/WEB-INF/aranea-conf.xml</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC 
+  "-//SPRING//DTD BEAN//EN" 
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <!-- 
+    The application root widget.
+   -->
+  <bean id="araneaApplicationStart" 
+    class="example.NameFlow"  
+    singleton="false"/> 
+</beans>
+]]></programlisting>
+    </figure>
   </sect1>
-	
+  
 	<sect1 id="running-examples">
-		<title>Running examples</title>
+		<title>Running Examples</title>
+    <para>
+      The rest of the tutorial will deal with the example applications found in <literal>examples</literal>
+      directory in the Aranea distribution. We will especially examine the full application example
+      found in <literal>exmaples/main</literal> directory.
+    </para>
+
 		<para>
-			If using full source distribution, <literal>ant build-all</literal> in the topmost
+			When using full source distribution, <literal>ant build-all</literal> in the topmost
 			distribution directory will build everything, including all that is necessary 
 			for examples. To start examples change directory to <literal>examples/</literal> 
 			any subdirectory and give command <literal>ant run-app</literal>. For main
-			example (<literal>examples/main</literal>), in-memory database should be started
+			example (<literal>examples/main</literal>), embedded in-memory database should be started
 			first (otherwise some parts of it will not function). Database is started with command
 			<literal>ant run-database</literal> in the <literal>examples/main</literal> directory.
 		</para>
+
 		<para>
 			To test the running examples, point your browser to 
 			<ulink url="http://localhost:2000/">http://localhost:2000/</ulink>.
@@ -217,7 +298,7 @@
 	</sect1>
 
 	<sect1>
-		<title>Static configuration of Aranea web application.</title>
+		<title>Configuring Aranea Web Applications</title>
 		<para>
 			Modifications to static configuration of the Aranea examples are
 			made in the following files.
@@ -234,7 +315,7 @@
 		</para>
 
 		<sect2>
-			<title>Deployment descriptor</title>
+			<title>Deployment Descriptor</title>
 			<para>
 				Deployment descriptors are a part of every JEE web
 				application and provide wide possibilities for web
@@ -463,24 +544,14 @@
               for understanding this tutorial).
             </para>
 		</sect2>
-
-		<sect2>
-			<title>Logging configuration</title>
-			<para>
-				Logging for all examples is configured in <literal>examples/log4j.xml</literal> 
-				file. See <literal>examples/main/README.log4j</literal>  for details (not
-                needed for understanding this tutorial).
-			</para>
-		</sect2>
-
 	</sect1>
 	
 	<sect1>
-		<title>Getting TemplateApp (main example) to serve</title>
+		<title>Main Example</title>
 		<para>
 			Following will describe creation of our main example (aka TemplateApp). 
-			It would be good get acquainted with it before proceeding to read further,
-			see <xref linkend="running-examples"/> for instructions on how to start examples.
+			It would be good to get acquainted with it before proceeding further
+			(see <xref linkend="running-examples"/> for instructions on how to get examples to run).
 			TemplateApp's goal is to demonstrate a working Aranea web application 
 			that makes use of most often-used Aranea features.
 		</para>
@@ -501,29 +572,33 @@
 		<sect2>
 			<title>Directory structure and needed libraries</title>
             <para>
-                Aranea webapp needs (at least) access to following libraries.
-            </para>
+
+                Aranea webapp depends (at least) on the following libraries:
+              <itemizedlist spacing="compact">
+                  <listitem><literal>aranea.jar</literal></listitem>
+                  <listitem><literal>commons-collections.jar</literal></listitem>
+                  <listitem><literal>commons-el.jar</literal></listitem>
+                  <listitem><literal>commons-lang.jar</literal></listitem>
+                  <listitem><literal>commons-logging.jar</literal></listitem>
+                  <listitem><literal>j2ee.jar</literal></listitem>
+                  <listitem><literal>jstl.jar</literal></listitem>
+                  <listitem><literal>spring.jar</literal></listitem>
+                  <listitem><literal>standard.jar</literal></listitem>
+              </itemizedlist>
+              The following libraries are needed for specific features only:
+              <itemizedlist spacing="compact">
+                  <listitem><literal>commons-fileupload.jar</literal>&mdash;for file uploading</listitem>
+                  <listitem><literal>jakarta-regexp.jar</literal>&mdash;for in memory lists</listitem>                                        
+                  <listitem><literal>xstream.jar</literal>&mdash;for serializing session to XML</listitem>
+              </itemizedlist>
             
-            <itemizedlist mark="opencircle">
-                <listitem><para>aranea.jar</para></listitem>
-                <listitem><para>commons-collections.jar</para></listitem>
-                <listitem><para>commons-el.jar</para></listitem>
-                <listitem><para>commons-fileupload.jar</para></listitem>
-                <listitem><para>commons-lang.jar</para></listitem>
-                <listitem><para>commons-logging.jar</para></listitem>
-                <listitem><para>j2ee.jar</para></listitem>
-                <listitem><para>jakarta-oro.jar</para></listitem>
-                <listitem><para>jakarta-regexp.jar</para></listitem>                                        
-                <listitem><para>jstl.jar</para></listitem>
-                <listitem><para>spring.jar</para></listitem>
-                <listitem><para>standard.jar</para></listitem>
-                <listitem><para>xstream.jar</para></listitem>
-            </itemizedlist>
+            </para>
 
             <para>
                These are usually put under webapp's <literal>WEB-INF/lib/</literal> directory.
                Aranea main example also needs <literal>aranea-template.jar</literal> (and various
                third-party libraries) to function.
+
             </para>
 		</sect2>
 		
@@ -531,7 +606,7 @@
 			<title>Introduction to writing widgets</title>
 		<para>
 			The first custom widget written for main example is <literal>TemplateLoginWidget</literal>.
-			It is very simple, but gives good demonstration of stateful controller capabilities.
+			It is very simple, but gives a good demonstration of stateful controller capabilities.
 			Simple login screen is built and upon receiving successful login event,
 			it replaces itself on the call stack with real application widgets (flows). After
 			session timeout state is lost and user is once again forced to log in.
