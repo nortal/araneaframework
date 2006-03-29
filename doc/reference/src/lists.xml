@@ -319,7 +319,266 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 	</sect1>
 
 	<sect1>
-		<title>List JSP Tags</title>	
+		<title>List JSP Tags</title>
+        <!-- LIST -->
+        <sect2>
+            <title><![CDATA[<ui:list>]]></title>
+        </sect2>
+        
+        <sect2>
+            <title><![CDATA[<ui:listFilter>]]></title>
+        </sect2>        
+        
+        <sect2>
+            <title><![CDATA[<ui:listRows>]]></title>
+        </sect2>
+
+        <sect2>
+            <title><![CDATA[<ui:listRowButton>]]></title>
+        </sect2> 
+        
+        <sect2>
+            <title><![CDATA[<ui:listRowLinkButton>]]></title>
+        </sect2> 
+        
+        <!-- FORMLIST  -->
+    
+    <sect2>
+      <title><![CDATA[<ui:formList>]]></title>
+      <para>
+            Formlist is a list of forms, an editable list. This tag specifies editable list context for its inner tags.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Id of editable list. When not specified, attempt is made to construct it from existing list context&mdash;it this does not succeed, tag fails.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>formList</entry>
+                <entry>Editable list view model.</entry>
+                <entry><literal>FormListWidget.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>formListId</entry>
+                <entry>Editable list id.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+    <ui:formList>
+       ...
+    </ui:formList>
+</ui:list>]]></programlisting> 
+      </sect3>
+      </sect2>
+
+    <!-- FORMLISTROWS  -->
+    
+    <sect2>
+      <title><![CDATA[<ui:formListRows>]]></title>
+      <para>
+           Iterating tag that gives access to each row and row form on the editable list current page.
+           The editable row is accessible as "editableRow" variable.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>var</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Name of variable that represents individual row (by default "row").</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>formRow</entry>
+                <entry>Current editable list row view model.</entry>
+                <entry><literal>FormRow.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>row (unless changed with <emphasis>var</emphasis> attribute.</entry>
+                <entry>Object held in current row.</entry>
+                <entry><literal>Object</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+    <ui:formList>
+        <ui:formListRows>
+           ...
+        </ui:formListRows>
+    </ui:formList>
+</ui:list>]]></programlisting> 
+      </sect3>
+      </sect2>
+      
+   <sect2>
+      <title><![CDATA[<ui:formListAddForm>]]></title>
+      <para>
+            Allows for adding new forms (rows) to editable list.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Editable list id. Searched from context, if not specified.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>form</entry>
+                <entry>View model of form.</entry>
+                <entry><literal>FormWidget.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>formId</entry>
+                <entry>Id of form.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:formListAddForm>
+    <ui:row>
+        <ui:cell>
+            <ui:textInput id="name"/>
+        </ui:cell>
+        
+        <ui:cell>
+            <ui:textInput id="surname"/>
+        </ui:cell>
+        
+        <ui:cell>
+            <ui:textInput id="phone"/>
+        </ui:cell>
+        
+        <ui:cell>
+            <ui:dateInput id="birthdate"/>
+        </ui:cell>                          
+    </ui:row>       
+</ui:formListAddForm>]]></programlisting> 
+      </sect3>
+      </sect2>
+        
+        
 	</sect1>
 
 	<sect1>

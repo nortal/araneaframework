@@ -58,7 +58,7 @@ org.araneaframework.jsp.tag.uilib.form.element.date.UiStdFormTimeInputTag timeIn
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormConditionFalseTag conditionFalse [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormConditionTrueTag conditionTrue [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormConditionalDisplayTag conditionalDisplay [TP] DONE
-org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormListDisplayTag listDisplay [RR] 
+org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormListDisplayTag listDisplay [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormTextDisplayTag textDisplay [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.display.UiStdFormValueDisplayTag valueDisplay [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.select.UiStdFormCheckboxMultiSelectItemLabelTag checkboxMultiSelectItemLabel [TP] DONE
@@ -80,11 +80,11 @@ org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextInputDisplayTag
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextInputTag textInput [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextareaDisplayTag textareaDisplay [TP] DONE
 org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormTextareaTag textarea [TP] DONE
-org.araneaframework.jsp.tag.uilib.list.UiListFilterTag listFilter [RR]
-org.araneaframework.jsp.tag.uilib.list.UiListRowsTag listRows [RR]
-org.araneaframework.jsp.tag.uilib.list.UiListTag list [RR]
-org.araneaframework.jsp.tag.uilib.list.UiStdListRowButtonTag listRowButton [RR]
-org.araneaframework.jsp.tag.uilib.list.UiStdListRowLinkButtonTag listRowLinkButton [RR]
+org.araneaframework.jsp.tag.uilib.list.UiListFilterTag listFilter [TP]
+org.araneaframework.jsp.tag.uilib.list.UiListRowsTag listRows [TP]
+org.araneaframework.jsp.tag.uilib.list.UiListTag list [TP]
+org.araneaframework.jsp.tag.uilib.list.UiStdListRowButtonTag listRowButton [TP]
+org.araneaframework.jsp.tag.uilib.list.UiStdListRowLinkButtonTag listRowLinkButton [TP]
 org.araneaframework.jsp.tag.uilib.list.formlist.UiFormListAddFormTag formListAddForm  [TP] DONE
 org.araneaframework.jsp.tag.uilib.list.formlist.UiFormListRowsTag formListRows				[TP] DONE
 org.araneaframework.jsp.tag.uilib.list.formlist.UiFormListTag formList								[TP] DONE
