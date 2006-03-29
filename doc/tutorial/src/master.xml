@@ -524,8 +524,8 @@
 			The first custom widget written for main example is <literal>LoginWidget</literal>.
 			It is very simple, but gives a good demonstration of stateful controller capabilities.
 			Simple login screen is built and upon receiving successful login event,
-			it replaces itself on the call stack with real application widgets (flows). After
-			session timeout state is lost and user is once again forced to log in.
+			it replaces itself on the call stack with real application widget (flow). After
+			session timeout state is lost and the user is once again forced to log in.
 		</para>
 
 		<para>
@@ -567,6 +567,13 @@
 		</para>
 		
 		<para>
+		  Note also that the line <literal>addWidget("loginForm", form)</literal>. Here we add another widget (in this case
+		  the <literal>form</literal>) as our widget child, associating it with a particular identifier "loginForm". This 
+		  will allow the child widget to process request and receive user events, and the identifier can be used for 
+		  finding the child widget, when it should be rendered.
+		</para>
+		
+		<para>
 			To make widget useful and interactive, we must add login event handlers to it.
 		</para>
 		
@@ -593,14 +600,17 @@ public void handleEventBypass() throws Exception {
 }]]></programlisting>
 
 		<para>
-			Most crucial here is understanding workings of <literal>handleEventBypass()</literal>.
-			Our widget (synonymous with <emphasis>flow</emphasis> here) replaces itself on
-			<literal>FlowContainer</literal> call stack with real application widget. It could also
-			<literal>start()</literal> the next widget but in doing that the login widget itself would
-			remain at the bottom of the call stack&mdash;which is not wanted.
+			Most important here is to understand the <literal>handleEventBypass()</literal>.
+			Our widget (which is running as a <emphasis>flow</emphasis> here) replaces itself
+      with another widget.
 		</para>
 
 		<para>
+      Flows are a way of navigating in Aranea. A widget running as a flow can replace itself with another widget,
+      but it can also start a nested flow by creating a new widget instance and calling <literal>getFlowCtx().start()</literal>. Usually we will use the words "widget" and "flow" interchangeably, when widget is running as a flow.
+    </para>
+    
+    <para>
 			You may think of flows as web pages that call and replace each other&mdash;and may return
 			control to calling flow with <literal>getFlowCtx.finish()</literal>.
 		</para>
@@ -656,11 +666,11 @@ public void handleEventBypass() throws Exception {
 
                       <div class="a">
                         <!-- This tag will render messages of given type if they are present in current MessageContext,
-                            ie message about failured login (wrong username or password). StyleClass parameter
+                            ie message about failured login (wrong username or password). "styleClass" attribute
                             defines the CSS style used for message display. -->
                         <ui:messages styleClass="msg-error"/>
 
-                        <!-- This is the form we added to our TemplateLoginWidget.
+                        <!-- This is the form we added to our LoginWidget.
                             Tag makes it the current form context tag and allows accessing 
                             form's subelements just by their names, no path is needed. -->
                         <ui:form id="loginForm">
@@ -681,7 +691,7 @@ public void handleEventBypass() throws Exception {
 
                           <div class="actions">
                             <!-- Render buttons that will submit all systemForm data, 
-                                and tie them with events defined in TemplateLoginWidget. -->
+                                and tie them with events defined in LoginWidget. -->
                             <ui:eventButton eventId="login" labelId="#Login"/>
                             <ui:eventButton eventId="bypass" labelId="#Bypass login"/>
                           </div>
@@ -713,15 +723,11 @@ public void handleEventBypass() throws Exception {
 				renders application menu.
 			</para>
 			<para>
-				What we need from menu is basically a ability to start widgets (flows) on demand.
+				What we need from the menu is basically the ability to start widgets (flows) on demand.
 				As we already saw, this ability is not special, every widget can start other widgets.
-				However, they are not able to manipulate the call stack arbitrarily, which is
-				very much desirable in a menu. Aranea class <literal>StandardMenuWidget</literal>
-				achieves this by extending <literal>StandardFlowContainerWidget</literal>.
-			</para>
-			
-			<para>
-				Using <literal>StandardMenuWidget</literal> as a base, creating menu widget is a breeze.
+        However menu should not become inactive, which means that it should itself run as a flow
+        container, not just a flow.
+				Using <literal>StandardMenuWidget</literal> as a base, creating menu widget is fairly simple:
 			</para>
 			
 			<programlisting role="java"><![CDATA[public class MenuWidget extends StandardMenuWidget  {
@@ -758,11 +764,10 @@ public void handleEventBypass() throws Exception {
 }]]></programlisting>
 
 		<para>
-			<literal>MenuItem</literal> creation takes two parameters&mdash;localized menu label 
+			<literal>MenuItem</literal> creation takes two parameters&mdash;localizable menu label 
 			<emphasis>key</emphasis> and flow class that should be instantiated (with no argument 
 			constructor) and activated when <literal>MenuItem</literal> is selected. Those classes
-			must be <literal>Components</literal>, usually they are 
-			<literal>StandardPresentationWidget</literal>s. Instead of flow classes,
+			must be <literal>Widgets</literal>. Instead of flow classes,
 			<literal>FlowCreator</literal>s can be used to create flows that have
 			more complex constructors.
 		</para>
@@ -774,11 +779,9 @@ public void handleEventBypass() throws Exception {
         </para>
 		
 		<para>
-            Because <literal>MenuWidget</literal> is <literal>StandardFlowContainerWidget</literal>, 
-            its <literal>render()</literal> method is fundamentally different from 
-            <literal>StandardPresentationWidget.render()</literal> method and does not support
-            setting view selector. To use the <literal>MenuWidget</literal> we attach it to <literal>TemplateRootWidget</literal>
-        
+        Now that we have a menu we can proceed to the root widget that will host it. Note that menu is
+        just another widget and since we want it to run independently (not as a flow) the simplest thing to do 
+        is to add it as a child to the root widget.
         <programlisting role="java"><![CDATA[public class RootWidget extends StandardPresentationWidget {
   protected void init() throws Exception {
     addWidget("menu", new MenuWidget(null));
@@ -786,9 +789,10 @@ public void handleEventBypass() throws Exception {
   }
 }]]></programlisting>
 
-            and render it from <literal>TemplateRootWidget</literal>'s view selector.
-            For the sake of brevity we will strip irrelevant parts from our example
-            JSP snippets from now on.
+            and render it from <literal>RootWidget</literal> JSP.         
+          Since menu is a flow container, including it as a widget will by default render the current active flow. 
+          This means that to actually render the clickable menu we will have to include a separate JSP.
+            For the sake of brevity we will strip irrelevant parts from our example JSP snippets from now on.
 		</para>
 
          <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -805,10 +809,10 @@ public void handleEventBypass() throws Exception {
     <div id="content">
       <ui:messages/>
 
-      <!-- Renders the menu widget itself. As MenuWidget is subclass
-      of StandardFlowContainerWidget, this means that actual
-      widget rendered here is whatever widget is on top of call
-      stack at the moment of rendering. -->
+      <!-- Renders the menu widget itself. 
+        As MenuWidget is a flow container, 
+        this means that the actual
+        widget rendered here is the current active flow. -->
       <ui:widgetInclude id="menu"/>
     </div>
 
@@ -818,13 +822,14 @@ public void handleEventBypass() throws Exception {
 ...]]></programlisting>
         
         <para>
-            JSP-s that render topmenu and sidemenu are quite similar. We will only present the
+            JSP-s that render top menu and side menu are quite similar. We will only present the
             topmenu JSP here.
             
             <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 ...
-  <!-- WidgetContext id must be set here, because we want to render MenuWidget 
-  not TemplateRootWidget (which includes this JSP, thereby providing its own widget context) here. -->
+  <!-- Widget identifier must be set here, because we want to render MenuWidget, 
+  not RootWidget (which includes this JSP, thereby providing its own widget context) here. 
+  As you remember menu widget child identifier was "menu" -->
   <ui:widgetContext id="menu">
     <div id="header">
       <div class="box1">
