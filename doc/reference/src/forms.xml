@@ -682,7 +682,7 @@ private void handleEventSave() {
                 <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
               </row>
               <row>
-                <entry>mold</entry>
+                <entry>renderMode</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Allowed values are <literal>button</literal> and <literal>input</literal>&mdash;the corresponding HTML tag will be used to render the button. Default is button.</entry>
               </row>

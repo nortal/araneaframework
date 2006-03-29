@@ -1270,7 +1270,7 @@
             </thead>
             <tbody>
               <row>
-                <entry>mold</entry>
+                <entry>renderMode</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.</entry>
               </row>
@@ -1453,12 +1453,12 @@
         </para>
         
         <para>
-            There is also a <literal>mold</literal> attribute; in current tag libarary there are very few tags
+            There is also a <literal>renderMode</literal> attribute; in current tag libarary there are very few tags
             supporting this attribute. One of those is
-            <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>)&mdash;its mold
+            <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>)&mdash;its renderMode
             should have value <literal>"input"</literal> or <literal>"button"</literal> (default) and it specifies whether
             the button should be rendered in HTML with <literal>&lt;input type=button ... &gt;</literal> or 
-            <literal>&lt;button ... &gt;</literal> tag. In the future, number of JSP tags having mold attribute will
+            <literal>&lt;button ... &gt;</literal> tag. In the future, number of JSP tags having renderMode attribute will
             probably increase (this can be used to get rid of multiple JSP tags for rendering different types 
             of (multi)selects, inputs and displays).
         </para>
@@ -1494,8 +1494,8 @@
                 <entry>Layout tags, row tags.</entry>
               </row>
               <row>
-                <entry>mold</entry>
-                <entry>Defines the mold used for rendering the tag.</entry>
+                <entry>renderMode</entry>
+                <entry>Defines the renderMode used for rendering the tag.</entry>
                 <entry><literal>&lt;ui:basicButton&gt;</literal>, <literal>&lt;ui:eventButton&gt;</literal>, <literal>&lt;ui:button&gt;</literal>.</entry>
               </row>              
             </tbody>
