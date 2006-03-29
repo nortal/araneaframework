@@ -203,7 +203,10 @@
     </figure>
     
     <para>
-      Finally we will need to deploy the example as a web application. Aranea uses Spring for configuration, so we will also have to start its listener as shown on <xref linkend="example-web-xml"/>
+      Finally we will need to deploy the example as a web application. Aranea uses 
+      <ulink url="http://www.springframework.org/">Spring</ulink> 
+      for configuration, so we will also have to start its listener as 
+      shown on <xref linkend="example-web-xml"/>
     </para>
     
     <figure id="example-web-xml">    
@@ -252,7 +255,8 @@
     </figure>
 
     <para>
-      Finally we will also need the Aranea Spring configuration file, which in this case will only set the application root widget as hown on <xref linkend="example-spring-conf"/>.
+      Finally we need the Aranea Spring configuration file, which in this case will only set the application root widget as 
+      shown on <xref linkend="example-spring-conf"/>.
     </para>
     
     <figure id="example-spring-conf">    
