@@ -48,7 +48,7 @@ Meaningful messages for JSP missing attribute exceptions.
 The encoding problems in StandardServletFileUploadFilterService were fixed.
 List bug fixes.
 Updates and fixes to example application.
-... and countless bug fixes.
+... and countless other bug fixes.
 
 *********************
 Documentation changes
