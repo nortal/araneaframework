@@ -513,7 +513,7 @@
             </para>
 
             <para>
-                Aranea main example uses <ulink href="http://www.hibernate.org">Hibernate</ulink> for accessing the database and <ulink href="http://logging.apache.org/log4j/docs/">Log4J</ulink> for logging. This tutorial omits the details of their configuration and usage.
+                Aranea main example uses <ulink url="http://www.hibernate.org">Hibernate</ulink> for accessing the database and <ulink url="http://logging.apache.org/log4j/docs/">Log4J</ulink> for logging. This tutorial omits the details of their configuration and usage.
             </para>
 
 		</sect2>
