@@ -96,9 +96,6 @@ public abstract class RangeColumnFilter extends ComparableType implements Column
 		if (this.endFilterInfoKey == null) {
 			throw new RuntimeException("End FilterInfo key must be provided"); 
 		}
-		if (this.startFilterInfoKey.equals(this.endFilterInfoKey)) {
-			throw new RuntimeException("Start and End FilterInfo keys must be different"); 
-		}
 	}
 	
 	public Expression buildExpression(Map filterInfo) {
