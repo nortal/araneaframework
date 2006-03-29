@@ -44,7 +44,6 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
     log.debug("TemplateContractPersonWidget init called");
     setViewSelector("contract/contractPersonEdit");
-    addGlobalEventListener(new ProxyEventListener(this));
   }
   
   protected void process() {

@@ -369,6 +369,10 @@ public abstract class StandardWidget extends BaseWidget implements Standard.Stan
   public void addGlobalEventListener(EventListener eventListener) {
     this.globalListener = eventListener;
   }
+  
+  public void clearGlobalEventListener() {
+    this.globalListener = null;
+  }
 
   /**
    * Adds an EventListener to this Widget with an eventId. Multiple listeners

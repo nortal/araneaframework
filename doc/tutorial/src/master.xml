@@ -129,7 +129,7 @@
   <ui:root>
     <ui:viewPort> 
       <head>
-        <ui:importScripts includeTemplate="true"/>
+        <ui:importScripts/>
             
         <title>Hello World!</title>
       </head>     
@@ -188,7 +188,7 @@
     <ui:viewPort> 
       <ui:widgetContext>
         <head>
-          <ui:importScripts includeTemplate="true"/>
+          <ui:importScripts/>
               
           <title>Hello World!</title>
         </head>     
@@ -279,7 +279,7 @@
     <para>
       The rest of the tutorial will deal with the example applications found in <literal>examples</literal>
       directory in the Aranea distribution. We will especially examine the full application example
-      found in <literal>exmaples/main</literal> directory.
+      found in <literal>examples/main</literal> directory.
     </para>
 
 		<para>
@@ -300,53 +300,23 @@
 
 	<sect1>
 		<title>Configuring Aranea Web Applications</title>
-		<para>
-			Modifications to static configuration of the Aranea examples are
-			made in the following files.
-		</para>
-		<para>
-			<itemizedlist spacing="compact">
-				<listitem>
-					<literal>examples/.../war/WEB-INF/web.xml</literal> (deployment descriptor)
-				</listitem>
-				<listitem>
-					<literal>examples/.../war/WEB-INF/aranea-conf.xml</literal> (Aranea configuration)
-				</listitem>
-			</itemizedlist>
-		</para>
-
-		<sect2>
-			<title>Deployment Descriptor</title>
 			<para>
 				Deployment descriptors are a part of every JEE web
-				application and provide wide possibilities for web
-				application configuration. Standard deployment descriptor used
-				for Aranea web applications is quite basic, usually it just ties
-				StandardSpringMainServlet class to servlet name:
-			</para>
-
+				application. Standard deployment descriptor used
+				for Aranea web applications is quite basic, usually it just defines one Aranea dispatcher servlet
+        and maps it to a particular URL path:
+				 class to servlet name:
 			<programlisting role="xml"><![CDATA[<servlet>
   <servlet-name>araneaServlet</servlet-name>
   <servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
   <load-on-startup>1</load-on-startup>
-</servlet>]]></programlisting>
+</servlet>
 
-			
-			<para>
-				and then maps this servlet to an URL&mdash;servlet will be executed
-				whenever an HTTP request to URL with matching pattern is
-				made. Often all requests go through one main
-				servlet&mdash;requests with different parameters will all be
-				made to the same URL (in case of framework main example this is <literal>/main</literal>).
-			</para>
-            
-			<programlisting role="xml"><![CDATA[<servlet-mapping>
+<servlet-mapping>
   <servlet-name>araneaServlet</servlet-name>
   <url-pattern>/main</url-pattern>
 </servlet-mapping>]]></programlisting>
-
-			<para>
-	            In addition there is <literal>contextConfigLocation</literal> parameter, that specifies
+				in case of framework main example this is <literal>/main</literal>. 	            In addition there is <literal>contextConfigLocation</literal> parameter, that specifies
 	            Spring bean configuration files read in by Spring's
 	            <literal>ContextLoaderListener</literal> and
 	            Aranea specific sessionlistener that takes over some session handling functions.
@@ -369,71 +339,21 @@
 </listener>]]></programlisting>
 
 			<para>
-				Actual servicing of all requests coming in is done by Aranea.
-				Exact mechanism of that is explained in the following section.
-			</para>
-		</sect2>
-
-		<sect2 id="aranea-conf">
-			<title>Aranea configuration</title>
-			<para>
-				As mentioned, main servlet passes requests on to Aranea controller,
-				which static configuration is defined
-				in <literal>aranea-conf.xml</literal>&mdash;this is a <ulink url="http://www.springframework.org/">Spring</ulink> 
-                bean configuration file, used to initialize chain (or tree) of Aranea
-				components that will be processing the incoming request.
-				Each bean configuration defines which classes are instantiated for dealing with
-				the requests and links beans with other component beans.
-				This configuration concept is known as <firstterm>dependency injection</firstterm>,
-				it allows for easy adding of new components and switching between
-				component implementations.
+         Note that we are using 
+        <literal>AraneaSpringDispatcherServlet</literal> not the simpler <literal>SimpleAraneaSpringDispatcherServlet</literal> used in 
+        "Hello World!" example. This means that we will also have to define the full Aranea configuration.
 			</para>
 			
-			<para>
-				First bean in the chain of request processing components defined for
-				TemplateApp is instance of <literal>StandardServletServiceAdapterComponent</literal>&mdash;
-				it translates the request and response data to suitable form for processing by Aranea and
-				then sends it forward to its child service. Child service may act as filter, router or container&mdash;
-				process request, modify the environment available to its child services (most common is putting 
-				a hook to itself into the environment under some specific key, so that its childs can invoke
-				parents methods). Last statically configured Aranea component is usually 
-				<literal>StandardFlowContainerWidget</literal>.
+      <para>
+        The difference is that while in simple configuration we have to define only the starting widget of the application, in the full 
+        configuration we put the framework together from independent POJOs using Spring dependency injection. The approach is illustrated on 
+        <xref linkend="full-spring-conf"/>, where some parts of this configuration are shown. Note that in the case of the main example 
+        the simple configuration would be enough, but we wanted to illustrate the need to extend it, which will surely appear in any
+        sufficiently complex application.
 			</para>
-			
-			<para>
-				Aranea static configuration is generally illustrated on diagram <xref linkend="conf-image"/>.
-				As can be seen, there are quite many services through which the request passes. Actually there are more, 
-				but on the diagram only the most important ones are shown. Default services do much useful stuff&mdash;for
-				example session routers route requests to child services tied with session associated with request 
-				(or create the new session, if needed), statistic filters measure the time spent in request execution, 
-				localization filters provide the localized environment to child services, etc.
-			</para>
-			<para>
-				In the end of the chain are widgets, which also derive from services, but have 
-				additional capabilities, like updating and rendering itself. Widgets specified in 
-				Aranea configuration are yet not directly tied to user interface elements, although
-				they can output data which ends up rendered somewhere on the response page. Instead
-				they perform more general tasks&mdash;most important and visible for application programmers
-				are aforementioned <literal>StandardFlowContainerWidget</literal> which allows creation 
-				of nested processes (which we will mostly refer to as <emphasis>flows</emphasis> from
-				now on) and <literal>StandardMessagingFilterWidget</literal> that is a central place for
-				managing all kind of informational messages which are outputted to notify user of
-				invalid inputs, unsatisfied constraints and everything else imaginable.
-			</para>
-			
-			<!-- MAYBE RESIZE? caption and picture do not fit on one page in PDF -->
-			<mediaobject id="conf-image" xreflabel="Birdview of Aranea configuration">
-				<imageobject>
-					<imagedata 
-						fileref="images/aranea-conf.png"
-						format="PNG" 
-						align="center"/>
-				</imageobject>
-				<caption align="top">Birdview of Aranea configuration</caption>
-			</mediaobject>
-			
-			<para>
-				Slices of beginning and end of Aranea configuration in TemplateApp:
+      
+    <figure id="full-spring-conf">    
+      <title>/WEB-INF/aranea-conf.xml</title>
              <programlisting role="xml"><![CDATA[<beans>
 
   <import resource="aranea-filters.xml"/>
@@ -524,9 +444,8 @@
   <!-- <bean class="..." id="thread.login" singleton="false"/> -->
 
 </beans>]]></programlisting>
+  </figure>
   
-			</para>
-			
 			<para>
                 Note that many of the referenced
                 beans are predefined in the imported <literal>aranea-filters.xml</literal>.
@@ -534,23 +453,12 @@
 				but explain their functionality and usage as needed. Thorough overview 
                 of configuration components is given in the reference manual.
 			</para>
-
-		</sect2>
-
-		<sect2>
-			<title>Hibernate configuration</title>
-            <para>
-              Main example uses <ulink url="http://www.hibernate.org">Hibernate</ulink> for database access.
-              See <literal>examples/main/README.hibernate</literal> for details (these are not needed
-              for understanding this tutorial).
-            </para>
-		</sect2>
 	</sect1>
 	
 	<sect1>
 		<title>Main Example</title>
 		<para>
-			Following will describe creation of our main example (aka TemplateApp). 
+			Following will describe creation of our main example. 
 			It would be good to get acquainted with it before proceeding further
 			(see <xref linkend="running-examples"/> for instructions on how to get examples to run).
 			TemplateApp's goal is to demonstrate a working Aranea web application 
@@ -571,10 +479,10 @@
 		</ulink>
 		
 		<sect2>
-			<title>Directory structure and needed libraries</title>
+			<title>Dependencies</title>
             <para>
 
-                Aranea webapp depends (at least) on the following libraries:
+              Aranea webapp depends (at least) on the following libraries:
               <itemizedlist spacing="compact">
                   <listitem><literal>aranea.jar</literal></listitem>
                   <listitem><literal>commons-collections.jar</literal></listitem>
@@ -583,7 +491,7 @@
                   <listitem><literal>commons-logging.jar</literal></listitem>
                   <listitem><literal>j2ee.jar</literal></listitem>
                   <listitem><literal>jstl.jar</literal></listitem>
-                  <listitem><literal>spring.jar</literal></listitem>
+                  <listitem><literal>spring.jar</literal> (for configuration and Spring integration)</listitem>
                   <listitem><literal>standard.jar</literal></listitem>
               </itemizedlist>
               The following libraries are needed for specific features only:
@@ -592,21 +500,24 @@
                   <listitem><literal>jakarta-regexp.jar</literal>&mdash;for in memory lists</listitem>                                        
                   <listitem><literal>xstream.jar</literal>&mdash;for serializing session to XML</listitem>
               </itemizedlist>
-            
             </para>
 
             <para>
                These are usually put under webapp's <literal>WEB-INF/lib/</literal> directory.
                Aranea main example also needs <literal>aranea-template.jar</literal> (and various
                third-party libraries) to function.
-
             </para>
+
+            <para>
+                Aranea main example uses <ulink href="http://www.hibernate.org">Hibernate</ulink> for accessing the database and <ulink href="http://logging.apache.org/log4j/docs/">Log4J</ulink> for logging. This tutorial omits the details of their configuration and usage.
+            </para>
+
 		</sect2>
 		
 		<sect2>
 			<title>Introduction to writing widgets</title>
 		<para>
-			The first custom widget written for main example is <literal>TemplateLoginWidget</literal>.
+			The first custom widget written for main example is <literal>LoginWidget</literal>.
 			It is very simple, but gives a good demonstration of stateful controller capabilities.
 			Simple login screen is built and upon receiving successful login event,
 			it replaces itself on the call stack with real application widgets (flows). After
@@ -626,7 +537,11 @@
   setViewSelector("login");
 
   /* Register a global proxying eventlistener - it receives all widget events and upon 
-   * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method */
+   * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method 
+   * 
+   * This listener is added by default in super class and is only shown here for
+   * illustrative purposes. It can also be overridden on need.
+   */   
   addGlobalEventListener(new ProxyEventListener(this));
 
   /* Create a new FormWidget with two self-described input fields. */
@@ -677,17 +592,17 @@ public void handleEventBypass() throws Exception {
 			Most crucial here is understanding workings of <literal>handleEventBypass()</literal>.
 			Our widget (synonymous with <emphasis>flow</emphasis> here) replaces itself on
 			<literal>FlowContainer</literal> call stack with real application widget. It could also
-			<literal>call()</literal> the next widget but in doing that the login widget itself would
+			<literal>start()</literal> the next widget but in doing that the login widget itself would
 			remain at the bottom of the call stack&mdash;which is not wanted.
 		</para>
 
 		<para>
 			You may think of flows as web pages that call and replace each other&mdash;and may return
-			control to calling flow with <literal>getFlowCtx.return()</literal>.
+			control to calling flow with <literal>getFlowCtx.finish()</literal>.
 		</para>
 		
 		<para>
-			Finally, the JSP page that renders <literal>TemplateLoginWidget</literal>. Do not pay
+			Finally, the JSP page that renders <literal>LoginWidget</literal>. Do not pay
 			much attention to <emphasis>&lt;div&gt;</emphasis>s and other HTML constructs -
 			important tags are preceded by namespace <literal>ui</literal>&mdash;in our examples this
             namespace includes both Aranea standard and template tags.
@@ -860,13 +775,10 @@ public void handleEventBypass() throws Exception {
             <literal>StandardPresentationWidget.render()</literal> method and does not support
             setting view selector. To use the <literal>MenuWidget</literal> we attach it to <literal>TemplateRootWidget</literal>
         
-        <programlisting role="java"><![CDATA[public class TemplateRootWidget extends StandardPresentationWidget {
-  private static final Logger log = Logger.getLogger(TemplateRootWidget.class);
-
+        <programlisting role="java"><![CDATA[public class RootWidget extends StandardPresentationWidget {
   protected void init() throws Exception {
-    addWidget("menu", new MenuWidget(new TemplateEmptyWidget()));
+    addWidget("menu", new MenuWidget(null));
     setViewSelector("root");
-    log.debug("Root widget initialized");
   }
 }]]></programlisting>
 

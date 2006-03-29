@@ -61,8 +61,7 @@ public class UiUtil {
 		
 		attributeErrorMap.put(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
 		attributeErrorMap.put(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
-		attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
-		attributeErrorMap.put(UiFormTag.FORM_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
+		attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");		
 		attributeErrorMap.put(UiFormTag.FORM_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
 		
 		attributeErrorMap.put(UiLayoutRowTagInterface.KEY_REQUEST, "<ui:row> tag expected, but not found! Make sure all of you cells are used inside row tags.");

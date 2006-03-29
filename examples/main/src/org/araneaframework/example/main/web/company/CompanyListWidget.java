@@ -53,8 +53,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
 		super.init();
 		setViewSelector("company/companyList");
 		log.debug("TemplateCompanyListWidget init called");    
-		addGlobalEventListener(new ProxyEventListener(this));
-		
+
 		this.list = initList();
 		addWidget("companyList", this.list);
 	}

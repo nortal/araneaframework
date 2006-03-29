@@ -36,9 +36,7 @@ public class SimpleListWidget extends TemplateBaseWidget {
     
   protected void init() throws Exception {
 	super.init();
-	
-	addGlobalEventListener(new ProxyEventListener(this));
-	
+
 	setViewSelector("sample/simpleList");
 	
 	simpleList = new ListWidget();

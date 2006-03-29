@@ -34,7 +34,6 @@ import org.araneaframework.uilib.form.FormWidget;
  * @author Oleg Mürk
  */
 public class UiFormElementLabelBaseTag extends UiPresentationTag {
-	protected String formId;
 	protected FormWidget.ViewModel formViewModel;
 	
 	protected FormElement.ViewModel formElementViewModel;
@@ -110,7 +109,6 @@ public class UiFormElementLabelBaseTag extends UiPresentationTag {
 		super.before(out);
 		
 		// Get form data		
-		formId = (String)readAttribute(UiFormTag.FORM_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 		formViewModel = (FormWidget.ViewModel)readAttribute(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 		FormWidget form = 
 			(FormWidget)UiUtil.readAttribute(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);

@@ -16,7 +16,6 @@
 
 package example;
 
-import org.araneaframework.example.quickstart.HelloWidget;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**

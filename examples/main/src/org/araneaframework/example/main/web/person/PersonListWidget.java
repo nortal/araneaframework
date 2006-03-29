@@ -66,9 +66,6 @@ public class PersonListWidget extends TemplateBaseWidget {
 		super.init();
 		setViewSelector("person/personList");
 		
-		log.debug("TemplatePersonListWidget init called");    
-		addGlobalEventListener(new ProxyEventListener(this));
-		
 		this.list = initList();
 		addWidget("personList", this.list);
 	}

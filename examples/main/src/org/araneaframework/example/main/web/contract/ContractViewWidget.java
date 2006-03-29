@@ -51,8 +51,7 @@ public class ContractViewWidget extends TemplateBaseWidget {
 		super.init();
 		log.debug("TemplateContractViewWidget init called");
 		setViewSelector("contract/contractView");
-		addGlobalEventListener(new ProxyEventListener(this));
-
+    
 		contract = (ContractMO) getGeneralDAO().getById(ContractMO.class, id);
 		putViewData("contract", contract);
 	}

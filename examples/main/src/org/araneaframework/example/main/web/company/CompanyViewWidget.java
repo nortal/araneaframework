@@ -46,8 +46,7 @@ public class CompanyViewWidget extends TemplateBaseWidget {
     super.init();
     setViewSelector("company/companyView");
     log.debug("TemplateCompanyViewWidget init called");
-    addGlobalEventListener(new ProxyEventListener(this));
-    
+
     putViewData("company" , getGeneralDAO().getById(CompanyMO.class, id));
   }
   

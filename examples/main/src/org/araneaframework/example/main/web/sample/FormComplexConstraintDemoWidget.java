@@ -39,8 +39,6 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
   
   protected void init() throws Exception {
     super.init();
-	
-	  addGlobalEventListener(new ProxyEventListener(this));
 	  
 	setViewSelector("sample/searchForm");
 	

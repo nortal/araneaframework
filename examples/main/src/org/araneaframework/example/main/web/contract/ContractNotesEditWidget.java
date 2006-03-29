@@ -51,8 +51,7 @@ public class ContractNotesEditWidget extends TemplateBaseWidget {
     super.init();
     setViewSelector("contract/contractNotesEdit");
     log.debug("TemplateContractNotesEditWidget init called");
-    addGlobalEventListener(new ProxyEventListener(this));    
-    
+
     form = new FormWidget();
     form.addElement("notes", "#Notes", new TextControl(), new StringData(), true);
     addWidget("form", form);

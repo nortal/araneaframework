@@ -63,10 +63,6 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 		// This viewdata is used in JSP to set component header (different for editing and adding). 
 		putViewData("label", editMode ? "person.edit.form.label" : "person.add.form.label");
 
-	    /* Register a global proxying eventlistener - it receives all widget events and upon 
-	     * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method. */
-		addGlobalEventListener(new ProxyEventListener(this));
-
 		form = buildPersonEditForm();
 		addWidget("personForm", form);
 	}

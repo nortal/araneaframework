@@ -45,8 +45,7 @@ public class PersonViewWidget extends TemplateBaseWidget {
 		super.init();
 		
 		setViewSelector("person/personView");
-		addGlobalEventListener(new ProxyEventListener(this));
-		
+
 		BeanFormWidget personForm = new BeanFormWidget(PersonMO.class);
 		personForm.addBeanElement("name", "#First name", new DisplayControl(), true);
 		personForm.addBeanElement("surname", "#Last name", new DisplayControl(), false);

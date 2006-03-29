@@ -71,7 +71,6 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
 	public void init() throws Exception {
 		super.init();
 
-		addGlobalEventListener(new ProxyEventListener(this));
     setViewSelector("demo/demoDisplayableEditableList");
 		
 		editableRows = new BeanFormListWidget(new DemoEditableRowHandler(), DataDTO.class);
