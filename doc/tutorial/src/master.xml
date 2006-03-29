@@ -37,37 +37,38 @@
 
 	<!-- INTRO. WHY/WHAT FOR THIS TUTORIAL IS FOR -->
 	<sect1>
-		<title>What's in the tutorial?</title>
+		<title>What's in tutorial?</title>
 		<para>
-      We start from a hello world example and proceed to dissecting an example toy application 
-      built using Aranea framework. Tutorial
-			is meant as a quick-dive into practical usage of Aranea. For
-			safe and successful resurfacing, additional reading of Aranea
-			Reference Manual is heartily recommended. For more theoretically inclined
-      it might also be useful to read the technical paper, which briefly describes 
-      Aranea innerworkings.
+           We start from a hello world example and proceed to dissecting toy application 
+           built on Aranea framework. Tutorial
+        	is meant as quick-dive into practical usage of Aranea. For
+			safe and successful surfacing, additional reading of Aranea
+			Reference Manual is heartily recommended. More theoretically inclined readers
+              might also want to take a look at the technical paper, which briefly describes 
+              inner workings of Aranea.
 		</para>
 		<para>
-			We try to present this tutorial in as clear and beginner-friendly
+			We try to present this tutorial in as clear and as beginner-friendly
 			way as possible. Our goal is to present material that would be
-			understandable on conceptual level even to people, who have
-			no previous previous experience building JEE web
+			understandable on conceptual level, even to people who have
+			no previous experience building JEE web
 			applications (with some googling for terminology, of
 			course). 
     </para>
     <para>
-			This tutorial is a work that will always need improvement, so if you have comments, suggestions or critique,
-      you are very welcome to send it to this e-mail:
+			This tutorial is a work that will always need improvement&mdash;comments, suggestions and critique
+            should be sent to
 			<ulink url="mailto:team@araneaframework.org?subject=Comments on Aranea tutorial">team@araneaframework.org</ulink>.
 		</para>
 	</sect1>
+
   <sect1 id="hello-world">
     <title>Hello World</title>
     
     <para>
       We start with an example that became classical in computer literature for learning new languages and technologies&mdash;"Hello World!". 
-      Our variant of "Hello World!" will first display a form, where you can insert you name (shown on <xref linkend="example-name"/>) and after clicking 
-      the button will display a greeting (shown on <xref linkend="example-hello"/>).
+      Our variant of "Hello World!" will display a form where one can insert his name (shown on <xref linkend="example-name"/>) and after 
+      clicking the button personalized greeting is displayed (shown on <xref linkend="example-hello"/>).
     </para>
     
     <figure id="example-name">    
@@ -205,7 +206,7 @@
       Finally we will need to deploy the example as a web application. Aranea uses Spring for configuration, so we will also have to start its listener as shown on <xref linkend="example-web-xml"/>
     </para>
     
-    <figure id="example-hello-jsp">    
+    <figure id="example-web-xml">    
       <title>/WEB-INF/web.xml</title>
 <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC 
