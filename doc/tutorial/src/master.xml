@@ -41,7 +41,7 @@
 		<para>
       We start from a hello world example and proceed to dissecting an example toy application 
       built using Aranea framework. Tutorial
-			is meant as quick-dive into practical usage of Aranea. For
+			is meant as a quick-dive into practical usage of Aranea. For
 			safe and successful resurfacing, additional reading of Aranea
 			Reference Manual is heartily recommended. For more theoretically inclined
       it might also be useful to read the technical paper, which briefly describes 
@@ -2013,7 +2013,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 	</sect1>
 
     <sect1>
-        <title>Something else? </title>
+        <title>Anything else?</title>
         <para>
             Sure. Ask!
         </para> 
