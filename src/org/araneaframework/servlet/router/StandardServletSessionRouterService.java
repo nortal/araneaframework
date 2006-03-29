@@ -18,7 +18,9 @@ package org.araneaframework.servlet.router;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -30,7 +32,6 @@ import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.servlet.ServletInputData;
-import org.araneaframework.servlet.ServletOutputData;
 
 /**
  * Associates this service with the HttpSession. Is a session does not exist, it is created.

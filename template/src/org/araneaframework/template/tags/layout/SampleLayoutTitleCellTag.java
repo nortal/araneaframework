@@ -17,8 +17,9 @@
 package org.araneaframework.template.tags.layout;
 
 import java.io.Writer;
+
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.tag.UiPresentationTag;
+
 import org.araneaframework.jsp.tag.layout.UiLayoutCellWrapperTag;
 import org.araneaframework.jsp.util.UiUtil;
 

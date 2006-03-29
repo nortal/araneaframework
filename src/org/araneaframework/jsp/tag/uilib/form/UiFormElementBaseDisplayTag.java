@@ -17,8 +17,10 @@
 package org.araneaframework.jsp.tag.uilib.form;				
 
 import java.io.Writer;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.tag.UiPresentationTag;
@@ -27,7 +29,6 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.Control.ViewModel;
 
 
 /**
