@@ -1367,7 +1367,7 @@
             </thead>
             <tbody>
               <row>
-                <entry>disabledCssClass</entry>
+                <entry>disabledStyleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>CSS class for disabled link.</entry>
               </row>
