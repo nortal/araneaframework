@@ -238,23 +238,21 @@ public abstract class StandardWidget extends BaseWidget implements Standard.Stan
     
     log.debug("Delivering event '" + eventId +"' to widget '" + getClass().getName() + "'");
     
-    boolean globalListenerHandled = false;
-    
-    if (globalListener != null) {
-      globalListener.processEvent(eventId, input);
-      globalListenerHandled = true;
-    }
-    
-    if (listener != null ) {
+    if (listener != null && listener.size() > 0) {
       Iterator ite = (new ArrayList(listener)).iterator();
       while(ite.hasNext()) {
         ((EventListener)ite.next()).processEvent(eventId, input);
       }
-    }
-    else if (!globalListenerHandled){
-      log.warn("No listener found", new NoSuchEventListenerException(eventId));
+      
       return;
     }
+    
+    if (globalListener != null) {
+      globalListener.processEvent(eventId, input);
+      return;
+    }
+    
+    log.warn("No listener found", new NoSuchEventListenerException(eventId));
   }
   
   /**

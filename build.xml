@@ -73,69 +73,6 @@
 		</webdoclet>
 	</target>	
 	
-	<target name="dist">		
-		<mkdir dir="build/tmp/dist"/>
-
-		<antcall target="clean-all"/>
-		<ant dir="doc/reference" target="clean" inheritall="false"/>
-		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
-		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
-		<mkdir dir="dist"/>
-
-		<copy todir="build/tmp/dist">
-			<fileset dir=".">
-				<include name="src/**/*"/>
-				<include name="tests/**/*"/>
-				<include name="etc/**/*"/>
-				<include name="examples/**/*"/>
-				<include name="template/**/*"/>
-				<include name="tests/**/*"/>
-				<include name="lib/**/*"/>
-				<include name="build.xml"/>
-				<include name="LICENSE"/>
-				<include name="NOTICE"/>
-				<include name="README"/>
-
-				<exclude name="CVS/**/*"/>
-				<exclude name="**/*lck"/>
-			</fileset>     
-		</copy> 
-
-		<antcall target="build-all"/>
-		<ant dir="doc/reference" target="clean" inheritall="false"/>
-		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
-		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
-			
-		<antcall target="doc"/>
-    
-		<mkdir dir="build/tmp/dist/dist"/>    
-
-		<copy todir="build/tmp/dist/dist">
-			<fileset dir="dist">
-				<include name="*.jar"/>
-			</fileset>     
-		</copy>     
-
-		<copy todir="build/tmp/dist">
-			<fileset dir="dist">
-				<include name="doc/**/*"/>
-			</fileset>     
-		</copy>
-		
-		<mkdir dir="build/tmp/dist/template/dist"/>
-		
-		<copy todir="build/tmp/dist/template/dist">
-			<fileset dir="template/dist">
-				<include name="*"/>
-			</fileset>     
-		</copy>
-		
-		<property name="distname" value="araneaframework-${araneaframework.version}"/>
-		<zip destfile="dist/${distname}.zip">
-				<zipfileset dir="build/tmp/dist" prefix="${distname}"/>
-		</zip>
-	</target>
-	
 	<target name="compile" depends="init">
 		<mkdir dir="build/classes" />
 		
@@ -202,6 +139,7 @@
 				<include name="org/araneaframework/jsp/**/*"/>			
 			</fileset>
 			<fileset dir="etc" includes="js/**/*"/>
+			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 		</jar>	
 		
@@ -221,6 +159,15 @@
 		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="dist/doc/javadoc/"/>
 	</target>
 	
+	<target name="javadoc-zip">
+		<mkdir dir="dist/doc/javadoc/" />
+		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="dist/doc/javadoc/"/>
+		
+		<zip destfile="dist/doc/javadoc.zip">
+				<zipfileset dir="dist/doc/javadoc" prefix="javadoc"/>
+		</zip>
+	</target>
+	
 	<!-- Build internal documentation -->
 	<target name="doc" depends="init, javadoc" description="Build internal documentation">
 		<ant target="build" dir="doc/reference" />
@@ -231,6 +178,70 @@
 	<!-- test the system -->
 	<target name="run-tests" depends="init, build" description="Run the junit tests">
 		<ant target="run-tests" dir="tests"/>
+	</target>
+	
+	<target name="dist" description="Builds downloadable distribution.">		
+		<mkdir dir="build/tmp/dist"/>
+
+		<antcall target="clean-all"/>
+		<ant dir="doc/reference" target="clean" inheritall="false"/>
+		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
+		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
+		<mkdir dir="dist"/>
+
+		<copy todir="build/tmp/dist">
+			<fileset dir=".">
+				<include name="src/**/*"/>
+				<include name="tests/**/*"/>
+				<include name="etc/**/*"/>
+				<include name="examples/**/*"/>
+				<include name="template/**/*"/>
+				<include name="tests/**/*"/>
+				<include name="lib/**/*"/>
+				<include name="build.xml"/>
+				<include name="License.txt"/>
+				<include name="Notice.txt"/>
+				<include name="Readme.txt"/>
+				<include name="Changelog.txt"/>
+
+				<exclude name="CVS/**/*"/>
+				<exclude name="**/*lck"/>
+			</fileset>     
+		</copy> 
+
+		<antcall target="build-all"/>
+		<ant dir="doc/reference" target="clean" inheritall="false"/>
+		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
+		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
+			
+		<antcall target="doc"/>
+    
+		<mkdir dir="build/tmp/dist/dist"/>    
+
+		<copy todir="build/tmp/dist/dist">
+			<fileset dir="dist">
+				<include name="*.jar"/>
+			</fileset>     
+		</copy>     
+
+		<copy todir="build/tmp/dist">
+			<fileset dir="dist">
+				<include name="doc/**/*"/>
+			</fileset>     
+		</copy>
+		
+		<mkdir dir="build/tmp/dist/template/dist"/>
+		
+		<copy todir="build/tmp/dist/template/dist">
+			<fileset dir="template/dist">
+				<include name="*"/>
+			</fileset>     
+		</copy>
+		
+		<property name="distname" value="araneaframework-${araneaframework.version}"/>
+		<zip destfile="dist/${distname}.zip">
+				<zipfileset dir="build/tmp/dist" prefix="${distname}"/>
+		</zip>
 	</target>
 	
 	<property name="devweb.xml" value="devweb-build.xml"/>

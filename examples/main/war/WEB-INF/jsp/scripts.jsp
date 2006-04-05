@@ -10,10 +10,7 @@
 		<ui:importStyles file="styles/_styles_new.css" media="screen" />
 		<ui:importStyles file="styles/_styles_screen.css" media="screen"/>
 		<ui:importStyles file="styles/_styles_print.css" media="print" />
-		<ui:importStyles file="js/calendar/calendar.css" media="screen" />
+		<ui:importStyles file="css/calendar/calendar.css" media="screen" />
 
 		<ui:importScripts/>
-		<ui:importScripts file="js/calendar/calendar.js"/>
-		<ui:importScripts file="js/calendar/calendar-en.js"/>
-		<ui:importScripts file="js/calendar/calendar-setup.js"/>
 </jsp:root>

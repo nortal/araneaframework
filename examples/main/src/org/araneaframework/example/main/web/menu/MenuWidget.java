@@ -90,7 +90,6 @@ public class MenuWidget extends TemplateMenuWidget  {
 			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Backend", PersonEditableListWidget.Backend.class));
 			
 			result.addMenuItem("Management", new MenuItem("Companies"));
-			result.addMenuItem("Management.Companies", new MenuItem("Add", CompanyEditWidget.class));
 			result.addMenuItem("Management.Companies", new MenuItem("View_Edit", CompanyListWidget.class));
 			
 			result.addMenuItem("Management", new MenuItem("Contracts"));

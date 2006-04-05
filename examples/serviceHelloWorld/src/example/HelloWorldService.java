@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.helloworld;
+package example;
 
 import java.io.OutputStreamWriter;
 import java.io.Writer;

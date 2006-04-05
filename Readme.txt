@@ -1,5 +1,5 @@
 ***************************************************
-* THE ARANEA FRAMEWORK, release 1.0 M1 (Feb 2006) *
+* THE ARANEA FRAMEWORK, release 1.0 M2 (Mar 2006) *
 *        http://www.araneaframework.org/          *
 ***************************************************
 
@@ -48,6 +48,9 @@ The "dist" directory contains the following jar files for use in applications:
  * aranea-backend.jar
  	Supporting classes for use in the application service layer.
 
+ * aranea-uilib.jar
+    Reusable user interface widgets.
+
 DOCUMENTATION
 
 Documentation can be found in the "doc" directory.
@@ -55,3 +58,10 @@ Documentation can be found in the "doc" directory.
 	doc/tutorial is a tutorial using the Aranea Web Framework
 	doc/reference includes the reference manual.
 	doc/javadoc includes the javadoc
+
+KNOWN ISSUES
+ 
+ * Date ranged filters don't function properly with timestamps. Check task 47.
+   http://changelogic.araneaframework.org/index.php?event=Show_task&task_id=47&project_id=1
+
+ 

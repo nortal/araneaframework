@@ -14,17 +14,19 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.helloname;
+package example;
 
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
+import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.util.ServletUtil;
 
-public class NameService extends BaseService {
-  protected void action(Path path, InputData input, OutputData output) throws Exception {        
-    ServletUtil.include("/WEB-INF/name.jsp", getEnvironment(), (ServletOutputData) output);
+public class HelloService extends BaseService {
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    ServletUtil.publishModel(((ServletInputData) input), "helloName", input.getGlobalData().get("name"));    
+    ServletUtil.include("/WEB-INF/hello.jsp", getEnvironment(), (ServletOutputData) output);
   }
 }

@@ -10,5 +10,16 @@
   <Call name="addWebApplication">
     <Arg>/serviceHelloWorld</Arg>
     <Arg>.</Arg>
-  </Call>                                                                        
+  </Call>        
+  <Call name="getContext">
+    <Arg>/</Arg>
+    <Call name="addServlet">
+        <Arg>/</Arg>
+        <Arg>org.araneaframework.template.framework.RedirectionServlet</Arg>
+        <Call name="setInitParameter">
+          <Arg>webapp-root</Arg>
+          <Arg>serviceHelloWorld/main</Arg>
+        </Call>
+    </Call>
+  </Call>                                                                       
 </Configure>

@@ -19,7 +19,7 @@
 	<sect1>
 		<title>Introduction</title>
     <para>
-		  Aranea framework and component model are very simple and implemented purely in Plain Old Java. There are no XML mappings, code generation or bytecode enhancement. The whole component model consists mainly of four interfaces: <classname>org.araneaframework.Component</classname>, <classname>org.araneaframework.Service</classname>, <classname>org.araneaframework.Widget</classname> and <classname>org.araneaframework.Environment</classname> and some conventions regarding their usage and implementation.     
+		  Aranea framework and component model are very simple and implemented purely in Plain Old Java. There are no XML mappings, code generation or bytecode enhancement. The whole component model consists mainly of five interfaces: <classname>org.araneaframework.Component</classname>, <classname>org.araneaframework.Service</classname>, <classname>org.araneaframework.Widget</classname>, <classname>org.araneaframework.Environment</classname>, <classname>org.araneaframework.Message</classname> and some conventions regarding their usage and implementation.     
     </para>
 
     <para>

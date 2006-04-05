@@ -456,7 +456,7 @@ private void handleEventSave() {
       <title id="uiFormElementTag">&lt;ui:formElement&gt;</title>
       <para>
       	   Specifies form element context for inner tags. Must be surrounded by &lt;ui:form&gt; tag. Form element 
-           view moded, id and value are made accessible to inner tags as EL variables.
+           view model, id and value are made accessible to inner tags as EL variables.
       </para>
 
       <sect3>
@@ -912,6 +912,18 @@ el.click();]]></programlisting>
 	        </informaltable>
              <emphasis>Also has all common form element rendering attributes.</emphasis> 
         </sect3>
+        
+              <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="someForm">
+  <ui:formElement id="firstField">
+     <!-- Renders input field binded to form's firstField element -->
+     <ui:textInput/>
+  </ui:formElement>
+</ui:form>]]></programlisting> 
+      </sect3>
+        
       </sect2>
       
     <sect2>
@@ -926,6 +938,18 @@ el.click();]]></programlisting>
         <title>Attributes</title>
 	        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
         </sect3>
+
+              <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="someForm">
+  <ui:formElement id="firstField">
+     <!-- Renders display field for form's firstField element -->
+     <ui:textInputDisplay/>
+  </ui:formElement>
+</ui:form>]]></programlisting> 
+      </sect3>
+
       </sect2>
       
       <!-- numberinput, numberdisplay -->
@@ -1168,6 +1192,19 @@ el.click();]]></programlisting>
         </informaltable>
         <emphasis>Has all common form element rendering attributes.</emphasis>
     </sect3>
+    
+       <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="someForm">
+  <ui:formElement id="longLongText">
+    <ui:cell>
+      <ui:textarea rows="15" cols="150"/>
+    </ui:cell>
+  </ui:formElement>
+</ui:form>]]></programlisting> 
+      </sect3>
+    
   </sect2>
   
        <sect2>
@@ -1812,7 +1849,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <emphasis>Has standard <literal>id</literal>attribute.</emphasis> 
+        <emphasis>Has standard <literal>id</literal> attribute.</emphasis> 
       </sect3>
     </sect2>
     
@@ -1832,6 +1869,22 @@ el.click();]]></programlisting>
           The content of this tag will be displayed when form element of surrounding <literal>&lt;ui:conditionalDisplay&gt;</literal> was
           <literal>true</literal>. Tag has no attributes.
       </para>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="someForm">
+  <ui:conditionalDisplay id="isActive">
+    <ui:conditionTrue>
+      <img src="red_flag.png"/>
+    </ui:conditionTrue>
+    <ui:conditionFalse>
+      <img src="green_flag.png"/>
+    </ui:conditionFalse>
+  </ui:conditionalDisplay>
+</ui:form>]]></programlisting>
+      </sect3>
+      
     </sect2>    
     
 

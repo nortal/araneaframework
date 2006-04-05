@@ -8,6 +8,6 @@
     The application root widget.
    -->
   <bean id="araneaApplicationStart" 
-    class="example.NameFlow"  
+    class="example.NameWidget"  
     singleton="false"/>	
 </beans>

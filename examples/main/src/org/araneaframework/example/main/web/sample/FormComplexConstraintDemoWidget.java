@@ -81,7 +81,7 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
     searchConstraint.addConstraint(clientAddressConstraint);
     
     //Setting custom error message
-    searchConstraint.setCustomErrorMessage(t("searchform.notenoughdata"));
+    searchConstraint.setCustomErrorMessage("Not enough data! Please fill in either client first and lastname or client personal id or client town, street and number");
     
     //Setting constraint
     searchForm.setConstraint(searchConstraint);

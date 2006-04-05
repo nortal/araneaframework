@@ -15,28 +15,29 @@
 
 			<ui:component>
 				<!-- Body -->
-				<ui:componentForm>
-					<ui:row>
-						<ui:cell colSpan="2">Client</ui:cell>
-					</ui:row>
-					
+				<ui:componentForm>					
 					<ui:formElement id="showTitle">
 						<ui:row>
-							<ui:cell>
+							<ui:cell styleClass="name">
+								<ui:simpleLabel labelId="#Client"/>
+							</ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:checkbox/>
-							</ui:cell>		
-							<c:if test="${formElementValue}">													
-								<ui:cell styleClass="name">
+							</ui:cell>			
+							<ui:cell styleClass="name">
+								<c:if test="${formElementValue}">				
 									<ui:label id="title"/>
-								</ui:cell>
-								<ui:cell styleClass="inpt">
+								</c:if>
+							</ui:cell>
+							<ui:cell styleClass="inpt">
+								<c:if test="${formElementValue}">				
 									<ui:textInput id="title"/>
-								</ui:cell>								
-							</c:if>
+								</c:if>																	
+							</ui:cell>															
 						</ui:row>
 					</ui:formElement>
 
-					<ui:formElement id="firstName">
+					<ui:formElement id="firstName">					
 						<ui:row>
 							<ui:cell styleClass="name">
 								<ui:label />
@@ -44,6 +45,7 @@
 							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
+							<ui:cell colSpan="2"/>
 						</ui:row>
 					</ui:formElement>
 
@@ -55,6 +57,7 @@
 							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
+							<ui:cell colSpan="2"/>			
 						</ui:row>
 					</ui:formElement>
 				</ui:componentForm>

@@ -86,7 +86,7 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
     			if (id != null) {
     				getGeneralDAO().edit(contract);
     			} else {
-    				id = getGeneralDAO().add(contract);      	      	
+    				id = getGeneralDAO().add(contract);
     			}
     			log.debug("Contract saved, id = " + id);
     			getFlowCtx().finish(id);

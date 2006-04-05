@@ -54,6 +54,9 @@
 							</ui:cell>
 							
 							<ui:cell>
+								<ui:listRowLinkButton eventId="edit">
+									<ui:image code="buttonChange" alt="Edit company" title="Edit company"/>
+								</ui:listRowLinkButton>
 								<ui:listRowLinkButton eventId="remove">
 									<ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
 								</ui:listRowLinkButton>
