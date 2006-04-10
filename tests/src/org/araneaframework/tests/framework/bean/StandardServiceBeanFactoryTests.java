@@ -18,7 +18,7 @@ package org.araneaframework.tests.framework.bean;
 
 import junit.framework.TestCase;
 import org.araneaframework.Service;
-import org.araneaframework.ioc.spring.StandardSpringServiceFactory;
+import org.araneaframework.ioc.spring.SpringServiceFactory;
 import org.araneaframework.mock.core.MockEventfulStandardService;
 
 /**
@@ -26,11 +26,11 @@ import org.araneaframework.mock.core.MockEventfulStandardService;
  *
  */
 public class StandardServiceBeanFactoryTests extends TestCase {
-  private StandardSpringServiceFactory factory;
+  private SpringServiceFactory factory;
   private MockBeanFactory beanFactory;
   
   public void setUp() throws Exception {
-    factory = new StandardSpringServiceFactory();
+    factory = new SpringServiceFactory();
     beanFactory = new MockBeanFactory();
     
     factory.setBeanFactory(beanFactory);

@@ -18,7 +18,7 @@ package org.araneaframework.example.main.web.company;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 
 
@@ -28,7 +28,7 @@ import org.araneaframework.example.main.business.model.CompanyMO;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>*
  */
-public class CompanyViewWidget extends BaseWidget {
+public class CompanyViewWidget extends TemplateBaseWidget {
 	
 	private static final Logger log = Logger.getLogger(CompanyViewWidget.class);
 	
@@ -46,8 +46,7 @@ public class CompanyViewWidget extends BaseWidget {
     super.init();
     setViewSelector("company/companyView");
     log.debug("TemplateCompanyViewWidget init called");
-    addGlobalEventListener(new ProxyEventListener(this));
-    
+
     putViewData("company" , getGeneralDAO().getById(CompanyMO.class, id));
   }
   

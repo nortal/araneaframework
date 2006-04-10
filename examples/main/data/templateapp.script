@@ -6,10 +6,10 @@ CREATE USER SA PASSWORD ""
 GRANT DBA TO SA
 SET WRITE_DELAY 20
 SET SCHEMA PUBLIC
-INSERT INTO PERSON VALUES(1,'Frodo','Baggins','Very far away',NULL)
+INSERT INTO PERSON VALUES(1,'Frodo','Baggins','Very far away','2006-03-01 00:00:00.0')
 INSERT INTO PERSON VALUES(2,'Harry','Potter','Hogwarts',NULL)
 INSERT INTO PERSON VALUES(3,'Luke','Skywalker','Enterprise',NULL)
-INSERT INTO PERSON VALUES(4,'Jack','Ripper','Prison',NULL)
+INSERT INTO PERSON VALUES(4,'Jack','Ripper','Prison','2006-03-07 00:00:00.0')
 INSERT INTO PERSON VALUES(5,'Malcolm','Reynolds','Firefly',NULL)
 INSERT INTO PERSON VALUES(6,'Buffy','Summers','Sunnydale',NULL)
 INSERT INTO PERSON VALUES(7,'Robert','McCall','Los Angeles',NULL)
@@ -20,7 +20,7 @@ INSERT INTO PERSON VALUES(11,'Chuck','Norris','Ranch',NULL)
 INSERT INTO PERSON VALUES(12,'Rupert','Giles','UK',NULL)
 INSERT INTO PERSON VALUES(13,'Gandalf','the Gray','at the top of the fir tree',NULL)
 INSERT INTO PERSON VALUES(14,'River','Tam','112',NULL)
-INSERT INTO PERSON VALUES(15,'Max','Payne','LOST',NULL)
+INSERT INTO PERSON VALUES(15,'Max','Payne','LOST','2006-03-01 12:30:40.200000000')
 INSERT INTO COMPANY VALUES(1,'Webmedia','Tartu, Estonia, Raatuse 20')
 INSERT INTO COMPANY VALUES(2,'Sauron''s Chocolate Factory','Mordor')
 INSERT INTO COMPANY VALUES(3,'Blue Sun Corporation','Ariel')

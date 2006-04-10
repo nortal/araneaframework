@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
+
 import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseTag;
 
 /**

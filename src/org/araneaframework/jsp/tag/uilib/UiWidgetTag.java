@@ -39,14 +39,9 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
            Makes available following page scope variables: 
            <ul>
              <li><i>widget</i> - UiLib widget view model.
-             <li><i>widgetId</i> - UiLib widget id.
            </ul> "
  */
 public class UiWidgetTag extends UiBaseTag {
-	/**
-	 * Widget identifier as passed to tag through "id" attribute.
-	 */
-	public final static String ID_KEY_REQUEST = "widgetId";	
 	/**
 	 * Widget full dot-separated identifier starting from container (e.g. component).
 	 */
@@ -103,7 +98,6 @@ public class UiWidgetTag extends UiBaseTag {
         scopedFullId = container.scopeWidgetFullId(pageContext, fullId);
 		
 		// Set variables
-		pushAttribute(ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);
 		pushAttribute(FULL_ID_KEY_REQUEST, fullId, PageContext.REQUEST_SCOPE);
 		pushAttribute(SCOPED_FULL_ID_KEY_REQUEST, scopedFullId, PageContext.REQUEST_SCOPE);		
 		pushAttribute(VIEW_MODEL_KEY_REQUEST, viewModel, PageContext.REQUEST_SCOPE);

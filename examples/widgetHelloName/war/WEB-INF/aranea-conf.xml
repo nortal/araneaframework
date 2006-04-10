@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC 
+  "-//SPRING//DTD BEAN//EN" 
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <!-- 
+    The application root widget.
+   -->
+  <bean id="araneaApplicationStart" 
+    class="example.NameWidget"  
+    singleton="false"/>	
+</beans>

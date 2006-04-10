@@ -31,8 +31,11 @@ public interface UiLayoutTagInterface extends UiStyledTagInterface {
 	public void setWidth(String width) throws JspException;
 	public void setHeight(String height) throws JspException;
 
-	public void setRowClass(String styleClass) throws JspException;
-	public void setCellClass(String styleClass) throws JspException;	
+	public void setRowClass(String rowClass) throws JspException;
+	public String getRowClass() throws JspException;
+	
+	public void setCellClass(String cellClass) throws JspException;
+	public String getCellClass() throws JspException;
 	
 	public UiLayoutRowTagInterface getRowTag(String styleClass) throws JspException;
 }

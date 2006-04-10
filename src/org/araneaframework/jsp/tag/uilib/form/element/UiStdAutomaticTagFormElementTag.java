@@ -31,9 +31,9 @@ import org.araneaframework.jsp.tag.uilib.form.UiFormElementTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.Control;
 
 
 /**

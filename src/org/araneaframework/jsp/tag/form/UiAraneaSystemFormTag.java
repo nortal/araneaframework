@@ -44,7 +44,7 @@ import org.araneaframework.servlet.filter.StandardJspFilterService;
  */
 public class UiAraneaSystemFormTag extends UiSystemFormTag {  
   private OutputData output;
-  private StandardJspFilterService.Configuration config;
+  private StandardJspFilterService.JspConfiguration config;
   
   protected List formHiddenAttribs = new ArrayList();
   {
@@ -64,7 +64,7 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
           StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
     
     config = 
-      (StandardJspFilterService.Configuration) output.getAttribute(
+      (StandardJspFilterService.JspConfiguration) output.getAttribute(
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
     
     super.before(out);

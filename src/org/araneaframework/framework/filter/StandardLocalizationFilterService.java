@@ -45,7 +45,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
    * language name in {@link Locale}.
    */
   public void setLanguageName(String languageName) {
-    this.currentLocale = new Locale(languageName);
+    setLocale(new Locale(languageName));
   }
   
   /**
@@ -61,6 +61,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   }
 
   public void setLocale(Locale currentLocale) {
+    log.debug("Current locale switched to:" + currentLocale);
     this.currentLocale = currentLocale;
   }
   
@@ -73,8 +74,6 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     entries.put(LocalizationContext.class, this);
     
     childService._getComponent().init(new StandardEnvironment(getChildEnvironment(), entries));
-    
-    log.debug("Synchronizing filter service initialized.");
   }
   
   /** 
