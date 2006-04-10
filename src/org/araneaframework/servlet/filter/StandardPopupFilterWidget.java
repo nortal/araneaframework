@@ -47,16 +47,20 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 	public static final String POPUPS_CLOSE_KEY = "popupClose";
 	
 	/** Maps of popups where keys are service IDs(==popup IDs) and values popup window attributes. */ 
-	private Map popups = new HashMap();
+	protected Map popups = new HashMap();
 	
 	/** Holds properties for all types of popupwindows */
-	private Map popupProperties = new HashMap();
+	protected Map popupProperties = new HashMap();
 	
 	private String topBean;
 	
 	/** Sets the name of Spring bean which instance will be created as new session thread. */
 	public void setTopBean(String topBean) {
 		this.topBean = topBean;
+	}
+	
+	public String getTopBean() {
+		return topBean;
 	}
 	
 	protected void init() throws Exception {
