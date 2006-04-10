@@ -30,12 +30,12 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
 public interface PopupWindowContext extends Serializable {
 	/**
 	 * Method for registering a new service server-side, meant to open in popup window on client side.
-	 * @param id - prefix for service id that will be associated with created window.
+	 * @param idPrefix - prefix for service id that will be associated with created window.
 	 * @param properties - properties specifying behaviour and appearance of creatable popup window. 
-	 * @param startMessage - message sent to newly created service.
-	 * @return id of created service (thread).
+	 * @param startMessage - message sent to newly created service (thread).
+	 * @return full ID of created service (thread).
 	 */
-	public String open(String id, PopupWindowProperties properties, Message startMessage) throws Exception;
+	public String open(String idPrefix, PopupWindowProperties properties, Message startMessage) throws Exception;
 	
 	/** 
 	 * Method for registering already created service with given thread ID as popup.

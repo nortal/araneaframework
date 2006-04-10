@@ -72,26 +72,26 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 	/** 
 	 * @see org.araneaframework.servlet.PopupWindowContext#open(java.lang.String, org.araneaframework.servlet.support.PopupWindowProperties, org.araneaframework.Message)
 	 */
-	public String open(String id, PopupWindowProperties properties, Message startMessage) throws Exception {
+	public String open(String idPrefix, PopupWindowProperties properties, Message startMessage) throws Exception {
 		ThreadContext currentThreadCtx = ((ThreadContext)getEnvironment().getEntry(ThreadContext.class));
 		
 		// append random suffix for requested service id
 		String rndString = RandomStringUtils.random(8, false, true);
-		id = (id != null) ? new StringBuffer(id).append(rndString).toString() : rndString;
+		idPrefix = (idPrefix != null) ? new StringBuffer(idPrefix).append(rndString).toString() : rndString;
 		
 		BeanFactory factory = (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
 		Service service = (Service) factory.getBean(topBean);
-		currentThreadCtx.addService(id, service);
+		currentThreadCtx.addService(idPrefix, service);
 		
 		if (startMessage != null)
 			startMessage.send(null, service);
 		
 		//add new, not yet opened popup to popup and popup properties maps
-		popups.put(id, properties.toString()); 
-		popupProperties.put(id, properties);
+		popups.put(idPrefix, properties.toString()); 
+		popupProperties.put(idPrefix, properties);
 		
-		log.debug("Popup service with identifier '" + id + "' was created.");
-		return id;
+		log.debug("Popup service with identifier '" + idPrefix + "' was created.");
+		return idPrefix;
 	}
 	
 	/** 
