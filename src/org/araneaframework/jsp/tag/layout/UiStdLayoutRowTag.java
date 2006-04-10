@@ -58,7 +58,7 @@ public class UiStdLayoutRowTag extends UiLayoutRowBaseTag {
 		return EVAL_PAGE;     
 	}
 	
-	public UiLayoutCellTagInterface getCellTag(String style) throws JspException {
-		return new UiStdLayoutCellTag();
+	public UiLayoutCellTagInterface getCellTag(String styleClass) throws JspException {
+		return new UiStdLayoutCellTag(styleClass);
 	} 
 }

@@ -33,9 +33,17 @@ public interface PopupWindowContext extends Serializable {
 	 * @param id - prefix for service id that will be associated with created window.
 	 * @param properties - properties specifying behaviour and appearance of creatable popup window. 
 	 * @param startMessage - message sent to newly created service.
-	 * @return service id that was created.  
+	 * @return id of created service (thread).
 	 */
 	public String open(String id, PopupWindowProperties properties, Message startMessage) throws Exception;
+	
+	/** 
+	 * Method for registering already created service with given thread ID as popup.
+	 * @param id service (thread) ID
+	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
+	 * @return given thread ID.
+	 */
+	public String open(String id, PopupWindowProperties properties) throws Exception;
 
 	/**
 	 * Closes the server side service (serving client side popup).

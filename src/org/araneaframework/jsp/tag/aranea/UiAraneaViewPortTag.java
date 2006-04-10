@@ -40,8 +40,8 @@ public class UiAraneaViewPortTag extends UiBaseTag {
           StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
     StandardViewPortWidget rootWidget = 
       (StandardViewPortWidget) output.getAttribute(StandardViewPortWidget.VIEW_PORT_WIDGET_KEY);
-    StandardJspFilterService.Configuration config = 
-      (StandardJspFilterService.Configuration) output.getAttribute(
+    StandardJspFilterService.JspConfiguration config = 
+      (StandardJspFilterService.JspConfiguration) output.getAttribute(
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
 
     pushAttribute(

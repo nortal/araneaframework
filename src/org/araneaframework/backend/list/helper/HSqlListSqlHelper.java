@@ -17,8 +17,7 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
-import org.araneaframework.backend.list.memorybased.ComparatorExpression;
-import org.araneaframework.backend.list.memorybased.Expression;
+
 import org.araneaframework.backend.list.model.ListQuery;
 
 

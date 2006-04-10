@@ -36,7 +36,10 @@ public abstract class ValidOnlyIndividualFormRowHandler extends ValidOnlyFormRow
 		for (Iterator i = keys.iterator(); i.hasNext(); )
 			deleteRow(i.next());
 	}
-  public final void saveRow(FormRow formRow) throws Exception  {}
+	
+	//XXX: why is this FINAL method even here? seems not needed by any interfaces!
+	// it should probably be removed or at least throw UnsupportedOperationException or similar!
+    public final void saveRow(FormRow formRow) throws Exception  {}
   
 	public void saveValidRow(FormRow formRow) throws Exception  {}
 	public void deleteRow(Object key) throws Exception {}
