@@ -959,7 +959,20 @@
   <sect1>
     <title>Putting Widgets to Work with JSP</title>
     <para>
-      Widgets may work with JSP...
+      Now we have defined enough JSP tags to render our example widget (see <xref linkend="widgets-example-widget"/>):
+      <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2">
+  <ui:widgetContext>
+    <h3>Test widget</h3>
+    
+    Data field: <c:out value="${contextWidget.data.myData.field}"/>
+    <ui:eventButton labelId="#Test" eventId="test"/>      
+  </ui:widgetContext>
+</jsp:root>]]></programlisting>
+    We can use just usual JSTL Core library tags to access the widget data, as long as the <literal><![CDATA[<ui:widgetContext>]]></literal> is present via the <literal>contextWidget.data</literal> EL variable.
     </para>
   </sect1>
   

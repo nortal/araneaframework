@@ -126,7 +126,7 @@
 			<classpath>
 				<pathelement location="../../lib/hsqldb/hsqldb.jar" />
 			</classpath>
-			<arg line="--user sa --url ${db.url}" />
+      <arg line="--user sa --url jdbc:hsqldb:hsql://localhost/templateapp" />
 		</java>				
 	</target>
 </project>
