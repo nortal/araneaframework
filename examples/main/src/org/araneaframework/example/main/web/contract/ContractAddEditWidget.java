@@ -25,7 +25,7 @@ import org.araneaframework.template.framework.context.WizardContext;
 
 /**
  * This widget is for adding new and editing existing contracts.
- * It retruns the Id of stored contract or cancels current call. 
+ * It returns the Id of stored contract or cancels current call. 
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
