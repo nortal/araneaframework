@@ -28,9 +28,7 @@ import org.araneaframework.framework.FlowContext;
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class ContractCompanyEditWidget extends TemplateBaseWidget {
-	
 	private static final Logger log = Logger.getLogger(ContractCompanyEditWidget.class);
-	
 	private CompanyMO company = null;
 
   public CompanyMO getCompany() {
@@ -51,16 +49,16 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
     putViewData("company", company);
   }
   
-	public void handleEventChooseCompany(String eventParameter) throws Exception {
-    log.debug("Event 'chooseCompany' received!");
-    getFlowCtx().start(new CompanyListWidget(), null, new FlowContext.Handler() {
-			public void onFinish(Object returnValue) throws Exception {
-				Long id = (Long) returnValue;
-				company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);
-				log.debug("Company with id of " + id + " set to this contract");
-      }
-      public void onCancel() throws Exception {
-      }
-    });
-	}
+  public void handleEventChooseCompany(String eventParameter) throws Exception {
+	  log.debug("Event 'chooseCompany' received!");
+	  getFlowCtx().start(new CompanyListWidget(false), null, new FlowContext.Handler() {
+		  public void onFinish(Object returnValue) throws Exception {
+			  Long id = (Long) returnValue;
+			  company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);
+			  log.debug("Company with id of " + id + " set to this contract");
+		  }
+		  public void onCancel() throws Exception {
+		  }
+	  });
+  }
 }

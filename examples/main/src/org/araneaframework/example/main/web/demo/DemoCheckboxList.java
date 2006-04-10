@@ -55,7 +55,6 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 	public void init() throws Exception {
 		super.init();
 
-		addGlobalEventListener(new ProxyEventListener(this));
 		setViewSelector("demo/demoCheckboxList");
 		
 		MemoryBasedListDataProvider listDataProvider = new DemoCheckboxListDataProvider();

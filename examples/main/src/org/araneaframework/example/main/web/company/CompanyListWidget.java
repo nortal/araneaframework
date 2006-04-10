@@ -44,17 +44,22 @@ public class CompanyListWidget extends TemplateBaseWidget {
 	private static final long serialVersionUID = 1L;
 	protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
 	private ListWidget list;
+	private boolean editMode = true;
 	
 	public CompanyListWidget() {
 		super();
+	}
+
+	public CompanyListWidget(boolean editMode) {
+		super();
+		this.editMode = editMode;
 	}
 	
 	protected void init() throws Exception {
 		super.init();
 		setViewSelector("company/companyList");
 		log.debug("TemplateCompanyListWidget init called");    
-		addGlobalEventListener(new ProxyEventListener(this));
-		
+
 		this.list = initList();
 		addWidget("companyList", this.list);
 	}
@@ -104,6 +109,16 @@ public class CompanyListWidget extends TemplateBaseWidget {
 	
 	public void handleEventSelect(String eventParameter) throws Exception {
 		log.debug("Event 'select' received!");
+		Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
+		log.debug("Company selected with Id of " + id);
+		if (editMode)
+			getFlowCtx().start(new CompanyEditWidget(id), null, null);
+		else
+			getFlowCtx().finish(id);
+	}
+	
+	public void handleEventEdit(String eventParameter) throws Exception {
+		log.debug("Event 'edit' received!");
 		Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		log.debug("Company selected with Id of " + id);
 		getFlowCtx().start(new CompanyEditWidget(id), null, null);

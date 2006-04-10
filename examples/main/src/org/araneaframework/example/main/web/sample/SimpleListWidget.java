@@ -19,12 +19,17 @@ package org.araneaframework.example.main.web.sample;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.collections.comparators.BooleanComparator;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.TestVO;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.ListOrder;
+import org.araneaframework.uilib.list.structure.order.SimpleColumnOrder;
+import org.araneaframework.uilib.list.util.comparator.StringComparator;
 
 /**
  * This is an example of component with a single list.
@@ -36,9 +41,7 @@ public class SimpleListWidget extends TemplateBaseWidget {
     
   protected void init() throws Exception {
 	super.init();
-	
-	addGlobalEventListener(new ProxyEventListener(this));
-	
+
 	setViewSelector("sample/simpleList");
 	
 	simpleList = new ListWidget();

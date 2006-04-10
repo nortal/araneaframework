@@ -40,7 +40,6 @@ public class DemoDisplayForm extends TemplateBaseWidget {
 	public void init() throws Exception {
 		super.init();
 		
-		addGlobalEventListener(new ProxyEventListener(this));
 		setViewSelector("demo/demoDisplayForm");
 		
 		displayForm = new FormWidget();

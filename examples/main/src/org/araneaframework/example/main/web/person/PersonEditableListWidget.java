@@ -56,7 +56,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
 		super.init();
 		
-		addGlobalEventListener(new ProxyEventListener(this));
 		setViewSelector("person/editableList");
 		
 		/* PersonMO class is already familiar from form examples. */

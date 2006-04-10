@@ -13,10 +13,10 @@
     <property name="serviceMap">
       <map>
         <entry key="name">
-           <bean class="org.araneaframework.example.helloname.NameService" singleton="false"/>
+           <bean class="example.NameService" singleton="false"/>
         </entry>
         <entry key="hello">
-           <bean class="org.araneaframework.example.helloname.HelloService" singleton="false"/>
+           <bean class="example.HelloService" singleton="false"/>
         </entry>        
       </map>
     </property>

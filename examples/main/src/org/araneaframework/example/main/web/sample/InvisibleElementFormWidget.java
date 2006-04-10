@@ -16,9 +16,7 @@
 
 package org.araneaframework.example.main.web.sample;
 
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.event.ProxyOnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
@@ -31,9 +29,7 @@ public class InvisibleElementFormWidget extends TemplateBaseWidget {
   
   protected void init() throws Exception {
     super.init();
-  
-    addGlobalEventListener(new ProxyEventListener(this));
-    
+
     setViewSelector("sample/invisibleElementForm");
   
     form = new FormWidget();

@@ -67,8 +67,7 @@ public class DemoFormList extends TemplateBaseWidget {
 	 */
 	public void init() throws Exception {
 		super.init();
-		
-		addGlobalEventListener(new ProxyEventListener(this));
+
 		setViewSelector("demo/demoEditableList");
 		
 		formList = new BeanFormListWidget(new DemoFormRowHandler(), DataDTO.class);

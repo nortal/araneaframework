@@ -121,7 +121,7 @@
     <sect2>
       <title><![CDATA[<ui:importScripts>]]></title>
       <para>
-         Aranea comes bundled with javascript. Javascript is used to to do event calls (submits), client side validation, AJAX, use a htmleditor,
+         Aranea comes bundled with standard javascript functions, used to do event calls (submits), client side validation, AJAX, provide htmleditor,
          calendar, etc. One way for
          using these javascript libraries would be to extract them from the corresponding jar's (aranea-presentation.jar and aranea-template.jar)
          and copy them to a location that your webapp can read from and then using the html capabilities (<![CDATA[<script>]]> tag) to read them in. 
@@ -312,14 +312,14 @@
       <para>
         <informaltable frame="all">
           <tgroup cols="3">
+            <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="4*"/>
             <thead>
               <row>
                 <entry>Attribute</entry>
                 <entry>Required</entry>
-                <entry>Applicable to:</entry>
+                <entry>Description</entry>
               </row>
             </thead>
             <tbody>
@@ -355,14 +355,14 @@
          <para>
            <informaltable frame="all">
              <tgroup cols="3">
-               <colspec colwidth="1*"/>
-               <colspec colwidth="2*"/>
-               <colspec colwidth="2*"/>
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
                <thead>
                  <row>
                    <entry>Attribute</entry>
                    <entry>Required</entry>
-                   <entry>Applicable to:</entry>
+                   <entry>Description</entry>
                  </row>
                </thead>
                <tbody>
@@ -386,14 +386,14 @@
        <para>
         <informaltable frame="all">
           <tgroup cols="3">
+            <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="4*"/>
             <thead>
               <row>
                 <entry>Attribute</entry>
                 <entry>Required</entry>
-                <entry>Applicable to:</entry>
+                <entry>Description</entry>
               </row>
             </thead>
             <tbody>
@@ -447,14 +447,14 @@
        <para>
         <informaltable frame="all">
           <tgroup cols="3">
+            <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="4*"/>
             <thead>
               <row>
                 <entry>Attribute</entry>
                 <entry>Required</entry>
-                <entry>Applicable to:</entry>
+                <entry>Description</entry>
               </row>
             </thead>
             <tbody>
@@ -958,6 +958,9 @@
   
   <sect1>
     <title>Putting Widgets to Work with JSP</title>
+    <para>
+      Widgets may work with JSP...
+    </para>
   </sect1>
   
   <sect1>
@@ -1120,7 +1123,7 @@
         <para>
           The <![CDATA[<ui:updateRegion>]]> should be used in most of the cases to
           define a region. The
-          <![CDATA[<ui:updateRegionRows]]> is for defining a region which contains
+          <![CDATA[<ui:updateRegionRows>]]> is for defining a region which contains
           HTML table rows.
         </para>
 
@@ -1270,7 +1273,7 @@
             </thead>
             <tbody>
               <row>
-                <entry>mold</entry>
+                <entry>renderMode</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.</entry>
               </row>
@@ -1367,7 +1370,7 @@
             </thead>
             <tbody>
               <row>
-                <entry>disabledCssClass</entry>
+                <entry>disabledStyleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>CSS class for disabled link.</entry>
               </row>
@@ -1405,6 +1408,26 @@
   
   <sect1>
     <title>Programming JSPs without HTML</title>
+    <para>
+       Aranea standard tag library should mostly be enough to shelter end-users from the need to write
+       HTML inside JSPs. Snippets of HTML are alright but using it too often tends to lead to inflexible
+       UI; instead of embedding HTML in JSPs custom tags should be written if the need arises.
+    </para>
+    
+    <para>
+       When writing JSPs without embedded HTML, programmers best friends are <emphasis>styleClass</emphasis>
+       attributes of presentation tags, allowing tuning of tag appearances and <emphasis>layout</emphasis> tags.
+    </para>
+    
+    <para>
+       Layout tags are tags extending <literal>UiLayoutBaseTag</literal>. Layout tags allow
+       placing of rows inside them (and rows allow using of cells inside). Standard layout
+       tag (&lt;ui:layout&gt;) outputs HTML <emphasis>table</emphasis>, and standard
+       row and cell tags output HTML <emphasis>tr</emphasis> and <emphasis>td</emphasis> tags,
+       respectively. This is by no means a requirement for layout tags&mdash;there are 
+       probably ways to achieve the same behaviour with correctly styled HTML <emphasis>div</emphasis> tags;
+       but the tables should do just fine for majority of needs.
+    </para>
   </sect1>
  
 
@@ -1453,12 +1476,12 @@
         </para>
         
         <para>
-            There is also a <literal>mold</literal> attribute; in current tag libarary there are very few tags
+            There is also a <literal>renderMode</literal> attribute; in current tag libarary there are very few tags
             supporting this attribute. One of those is
-            <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>)&mdash;its mold
+            <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>)&mdash;its renderMode
             should have value <literal>"input"</literal> or <literal>"button"</literal> (default) and it specifies whether
             the button should be rendered in HTML with <literal>&lt;input type=button ... &gt;</literal> or 
-            <literal>&lt;button ... &gt;</literal> tag. In the future, number of JSP tags having mold attribute will
+            <literal>&lt;button ... &gt;</literal> tag. In the future, number of JSP tags having renderMode attribute will
             probably increase (this can be used to get rid of multiple JSP tags for rendering different types 
             of (multi)selects, inputs and displays).
         </para>
@@ -1494,8 +1517,8 @@
                 <entry>Layout tags, row tags.</entry>
               </row>
               <row>
-                <entry>mold</entry>
-                <entry>Defines the mold used for rendering the tag.</entry>
+                <entry>renderMode</entry>
+                <entry>Defines the renderMode used for rendering the tag.</entry>
                 <entry><literal>&lt;ui:basicButton&gt;</literal>, <literal>&lt;ui:eventButton&gt;</literal>, <literal>&lt;ui:button&gt;</literal>.</entry>
               </row>              
             </tbody>

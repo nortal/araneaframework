@@ -16,7 +16,6 @@
 
 package org.araneaframework.example.main;
 
-import org.apache.log4j.Logger;
 import org.araneaframework.example.main.business.data.GeneralDAO;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.springframework.beans.factory.BeanFactory;
@@ -27,8 +26,6 @@ import org.springframework.beans.factory.BeanFactory;
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public abstract class TemplateBaseWidget extends StandardPresentationWidget {
-  private static final Logger log = Logger.getLogger(TemplateBaseWidget.class);
-		
   protected BeanFactory getBeanFactory() {
     return (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
   }

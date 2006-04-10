@@ -67,7 +67,6 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 	public void init() throws Exception {
 		super.init();
 		
-		addGlobalEventListener(new ProxyEventListener(this));
 		setViewSelector("demo/demoInMemoryEditableList");		
 		
 		formList = new BeanFormListWidget(new DemoEditableRowHandler(), DataDTO.class);

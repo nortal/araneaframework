@@ -31,15 +31,15 @@ import org.araneaframework.jsp.util.UiUtil;
  */
 public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 	
-	private static final String MOLD_BUTTON = "button";
-	private static final String MOLD_INPUT = "input";
+	private static final String RENDER_BUTTON = "button";
+	private static final String RENDER_INPUT = "input";
 	
-	protected String mold;	
+	protected String renderMode;	
 	
 	protected void init() {
 		super.init();
 		styleClass = "aranea-button";
-		mold = UiStdEventButtonTag.MOLD_BUTTON;
+		renderMode = UiStdEventButtonTag.RENDER_BUTTON;
 	}
 	
 	/**
@@ -49,15 +49,15 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 	 *   description = 
 	 *   	"Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button." 
 	 */
-	public void setMold(String mold) throws JspException {
-		this.mold = (String) evaluate("mold", mold, String.class);
+	public void setRenderMode(String renderMode) throws JspException {
+		this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
 	}	
 	
 	protected int before(Writer out) throws Exception {
 		super.before(out);                
 		// Write button tag
-		UiUtil.writeOpenStartTag(out, mold.equals(UiStdEventButtonTag.MOLD_BUTTON) ? UiStdEventButtonTag.MOLD_BUTTON : UiStdEventButtonTag.MOLD_INPUT);
-		if (mold.equals(UiStdEventButtonTag.MOLD_INPUT))
+		UiUtil.writeOpenStartTag(out, renderMode.equals(UiStdEventButtonTag.RENDER_BUTTON) ? UiStdEventButtonTag.RENDER_BUTTON : UiStdEventButtonTag.RENDER_INPUT);
+		if (renderMode.equals(UiStdEventButtonTag.RENDER_INPUT))
 			UiUtil.writeAttribute(out, "type", "button");		
 		UiUtil.writeAttribute(out, "id", id);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
@@ -74,12 +74,12 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 					eventParam, 
 					onClickPrecondition,
 					updateRegionNames);
-		if (labelId != null && mold.equals(UiStdEventButtonTag.MOLD_INPUT)) {
+		if (labelId != null && renderMode.equals(UiStdEventButtonTag.RENDER_INPUT)) {
 			UiUtil.writeAttribute(out, "value", localizedLabel);			
 		}
-		if (mold.equals(UiStdEventButtonTag.MOLD_BUTTON))
+		if (renderMode.equals(UiStdEventButtonTag.RENDER_BUTTON))
 			UiUtil.writeCloseStartTag_SS(out);			
-		if (mold.equals(UiStdEventButtonTag.MOLD_INPUT))
+		if (renderMode.equals(UiStdEventButtonTag.RENDER_INPUT))
 			UiUtil.writeCloseStartEndTag(out);	
 		
 		// Continue
@@ -87,7 +87,7 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 	}    
 	
 	protected int after(Writer out) throws Exception {
-		if (mold.equals(UiStdEventButtonTag.MOLD_BUTTON)) {
+		if (renderMode.equals(UiStdEventButtonTag.RENDER_BUTTON)) {
 			if (localizedLabel != null)
 				UiUtil.writeEscaped(out, localizedLabel);
 			

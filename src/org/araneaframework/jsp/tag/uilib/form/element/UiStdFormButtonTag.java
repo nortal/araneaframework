@@ -33,15 +33,15 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Form button, represents UiLib "ButtonControl"."
  */
 public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
-	private static final String MOLD_BUTTON = "button";
-	private static final String MOLD_INPUT = "input";
+	private static final String RENDER_BUTTON = "button";
+	private static final String RENDER_INPUT = "input";
 	
-	public String mold;
+	public String renderMode;
 
 	protected void init() {
 		super.init();
 		styleClass = "aranea-button";
-		mold = UiStdFormButtonTag.MOLD_BUTTON;
+		renderMode = UiStdFormButtonTag.RENDER_BUTTON;
 	}
 
 	/**
@@ -51,8 +51,8 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 	 *   description = 
 	 *   	"Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button." 
 	 */
-	public void setMold(String mold) throws JspException {
-		this.mold = (String) evaluate("mold", mold, String.class);
+	public void setRenderMode(String renderMode) throws JspException {
+		this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
 	}
 
 	//
@@ -65,14 +65,14 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 		// Prepare
 		String name = this.getScopedFullFieldId();
 		
-		UiUtil.writeOpenStartTag(out, mold.equals(UiStdFormButtonTag.MOLD_BUTTON) ? UiStdFormButtonTag.MOLD_BUTTON : UiStdFormButtonTag.MOLD_INPUT);
+		UiUtil.writeOpenStartTag(out, renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON) ? UiStdFormButtonTag.RENDER_BUTTON : UiStdFormButtonTag.RENDER_INPUT);
 
-		if (mold.equals(UiStdFormButtonTag.MOLD_INPUT))
+		if (renderMode.equals(UiStdFormButtonTag.RENDER_INPUT))
 			UiUtil.writeAttribute(out, "type", "button");
 		UiUtil.writeAttribute(out, "id", name);
 		UiUtil.writeAttribute(out, "name", name);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
-		if (showLabel && mold.equals(UiStdFormButtonTag.MOLD_INPUT)) {
+		if (showLabel && renderMode.equals(UiStdFormButtonTag.RENDER_INPUT)) {
 			if (accessKey != null) {
 				String escapedLabel = StringUtil
 						.escapeHtmlEntities(localizedLabel);
@@ -82,7 +82,7 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 				UiUtil.writeAttribute(out, "value", localizedLabel);			
 			}
 		}
-		if (mold.equals(UiStdFormButtonTag.MOLD_BUTTON))
+		if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON))
 			UiUtil.writeAttribute(out, "label", localizedLabel);
 		UiUtil.writeAttribute(out, "tabindex", tabindex);
 		if (events) {
@@ -91,9 +91,9 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 		UiUtil.writeAttributes(out, attributes);
 		if (accessKey != null)
 			UiUtil.writeAttribute(out, "accesskey", accessKey);
-		if (mold.equals(UiStdFormButtonTag.MOLD_BUTTON))
+		if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON))
 			UiUtil.writeCloseStartTag_SS(out);			
-		if (mold.equals(UiStdFormButtonTag.MOLD_INPUT))
+		if (renderMode.equals(UiStdFormButtonTag.RENDER_INPUT))
 			UiUtil.writeCloseStartEndTag(out);			
 
 		// Continue
@@ -102,7 +102,7 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 
 	protected int after(Writer out) throws Exception {
 
-		if (mold.equals(UiStdFormButtonTag.MOLD_BUTTON)) {
+		if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON)) {
 			if (showLabel) {
 				if (accessKey != null) {
 					String escapedLabel = StringUtil
@@ -113,7 +113,7 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 					UiUtil.writeEscaped(out, localizedLabel);
 				}
 			}
-			UiUtil.writeEndTag(out, UiStdFormButtonTag.MOLD_BUTTON);
+			UiUtil.writeEndTag(out, UiStdFormButtonTag.RENDER_BUTTON);
 		}
 
 		// Continue

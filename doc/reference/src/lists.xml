@@ -244,7 +244,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
     OracleListSqlHelper helper = new OracleListSqlHelper(query);
 
     helper.setColumnMapping("name", "NAME");
-    helper.setColumnMapping("surname", "SURNMAE");
+    helper.setColumnMapping("surname", "SURNAME");
     helper.setColumnMapping("phone", "PHONE_NO");
 
     StringBuffer s = new StringBuffer();
@@ -319,7 +319,567 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 	</sect1>
 
 	<sect1>
-		<title>List JSP Tags</title>	
+		<title>List JSP Tags</title>
+        <!-- LIST -->
+        <sect2>
+            <title><![CDATA[<ui:list>]]></title>
+            <para>
+                Starts a list context. List view model, list sequence view model and list id are made accessible to inner tags as EL variables.
+             </para>
+
+          <sect3>
+            <title>Attributes</title>
+            <informaltable frame="all">
+              <tgroup cols="3">
+                <colspec colwidth="2*"/>
+                <colspec colwidth="1*"/>
+                <colspec colwidth="4*"/>
+                <thead>
+                  <row>
+                    <entry>Attribute</entry>
+                    <entry>Required</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>id</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>List widget id.</entry>
+                  </row>
+                  <row>
+                    <entry>varSequence</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Name of variable that represents list sequence info (by default <emphasis>listSequence</emphasis>).</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </sect3>
+            
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>list</entry>
+                <entry>View model of list.</entry>
+                <entry><literal>ListWidget.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>listSequence (unless changed with <emphasis>varSequence</emphasis> attribute).</entry>
+                <entry>View model of list sequence info.</entry>
+                <entry><literal>SequenceHelper.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>listId</entry>
+                <entry>Id of list.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+              <row>
+                <entry>listFullId</entry>
+                <entry>Full id of list.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+    ...
+</ui:list>]]></programlisting> 
+      </sect3>
+      
+        </sect2>
+        
+        <sect2>
+            <title><![CDATA[<ui:listFilter>]]></title>
+            <para>
+                Represents list filter. Introduces an implicit form (&lt;ui:form&gt;), so one can place form elements under it.
+            </para>
+            
+            <para>
+                <emphasis>This tag has no attributes.</emphasis>
+            </para>
+            
+        <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+  <ui:listFilter>
+    <ui:row>
+        <ui:cell>
+            <ui:textInput id="field1Filter"/>
+        </ui:cell>
+    
+        <ui:cell>
+            <ui:textInput id="field2Filter"/>
+        </ui:cell>
+
+        ...
+
+    </ui:row>
+  </ui:listFilter>
+</ui:list>]]></programlisting> 
+      </sect3>
+        </sect2>        
+        
+        <sect2>
+            <title><![CDATA[<ui:listRows>]]></title>
+          <para>
+               Iterating tag that gives access to each row on the current list page.
+               The row is by default accessible as EL variable <emphasis>row</emphasis>.
+          </para>
+          
+          <sect3>
+            <title>Attributes</title>
+            <informaltable frame="all">
+              <tgroup cols="3">
+                <colspec colwidth="2*"/>
+                <colspec colwidth="1*"/>
+                <colspec colwidth="4*"/>
+                <thead>
+                  <row>
+                    <entry>Attribute</entry>
+                    <entry>Required</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>var</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Name of variable that represents individual row (by default "row").</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </sect3>
+          
+              <sect3>
+                <title>Variables</title>
+                <informaltable frame="all">
+                  <tgroup cols="3">
+                    <colspec colwidth="2*"/>
+                    <colspec colwidth="5*"/>
+                    <colspec colwidth="2*" align="center"/>
+                    <thead>
+                      <row>
+                        <entry>Variable</entry>
+                        <entry>Description</entry>
+                        <entry>Type</entry>
+                      </row>
+                    </thead>
+                    <tbody>
+                      <row>
+                        <entry>row (unless changed with <emphasis>var</emphasis> attribute).</entry>
+                        <entry>Object held in current row.</entry>
+                        <entry><literal>Object</literal></entry>
+                      </row>
+                    </tbody>
+                  </tgroup>
+                </informaltable>
+              </sect3>
+
+        <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+  <ui:listFilter>
+    ...
+  </ui:listFilter>
+  
+  <ui:listRows>
+    <ui:row>
+        <!-- In each row, object in this list row is accessible -->
+        <ui:cell>
+            <c:out value="${row.field1}"/>
+        </ui:cell>
+
+        <ui:cell>
+            <c:out value="${row.field2}"/>
+        </ui:cell>
+
+        ...
+    </ui:row>
+  </ui:listRows>
+</ui:list>]]></programlisting> 
+      </sect3>
+
+          
+        </sect2>
+
+        <sect2>
+            <title><![CDATA[<ui:listRowButton>]]></title>
+            <para>
+                Represents an HTML form button (not tied to any <literal>Control</literal> or <literal>FormElement</literal>). 
+                Default <literal>styleClass="aranea-button"</literal>, rendered with HTML <literal>&lt;button ...&gt;</literal> tag.
+            </para>
+            
+         <sect3>
+            <title>Attributes</title>
+            <informaltable frame="all">
+              <tgroup cols="3">
+                <colspec colwidth="2*"/>
+                <colspec colwidth="1*"/>
+                <colspec colwidth="4*"/>
+                <thead>
+                  <row>
+                    <entry>Attribute</entry>
+                    <entry>Required</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>eventId</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Event triggered when button is clicked.</entry>
+                  </row>
+                  <row>
+                    <entry>id</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Button id, allows to access button from JavaScript.</entry>
+                  </row>
+                  <row>
+                    <entry>labelId</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Id of button label.</entry>
+                  </row>
+                  <row>
+                    <entry>onClickPrecondition</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal>.</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+           <emphasis>Also has standard <literal>styleClass</literal>, <literal>updateRegions</literal> and <literal>globalUpdateRegions</literal> attributes.</emphasis>
+          </sect3>
+        </sect2> 
+        
+        <sect2>
+            <title><![CDATA[<ui:listRowLinkButton>]]></title>
+            <para>
+                Represents a HTML link with an <literal>onClick</literal> JavaScript event.
+                Default <literal>styleClass="aranea-link-button"</literal>, rendered with HTML <literal>&lt;a href="javascript:" ...&gt;</literal> tag.
+            </para>
+            
+          <sect3>
+            <title>Attributes</title>
+            <informaltable frame="all">
+              <tgroup cols="3">
+                <colspec colwidth="2*"/>
+                <colspec colwidth="1*"/>
+                <colspec colwidth="4*"/>
+                <thead>
+                  <row>
+                    <entry>Attribute</entry>
+                    <entry>Required</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>eventId</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Event triggered when link is clicked.</entry>
+                  </row>
+                  <row>
+                    <entry>id</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Link id, allows to access link from JavaScript.</entry>
+                  </row>
+                  <row>
+                    <entry>labelId</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Id of link label.</entry>
+                  </row>
+                  <row>
+                    <entry>onClickPrecondition</entry>
+                    <entry><emphasis>no</emphasis></entry>
+                    <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal>.</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+            <emphasis>Also has standard <literal>styleClass</literal>, <literal>updateRegions</literal> and <literal>globalUpdateRegions</literal> attributes.</emphasis>
+          </sect3>
+          
+        <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+  ...  
+  <ui:listRows>
+    <ui:row>
+      ...
+      <ui:cell>
+        <ui:listRowLinkButton eventId="edit">
+          <img src="editButton.png"/>
+        </ui:listRowLinkButton>
+      </ui:cell>
+      ...
+    </ui:row>
+  </ui:listRows>
+</ui:list>]]></programlisting> 
+      </sect3>
+            
+        </sect2> 
+        
+        <!-- FORMLIST  -->
+    
+    <sect2>
+      <title><![CDATA[<ui:formList>]]></title>
+      <para>
+            Formlist is a list of forms, an editable list. This tag specifies editable list context for its inner tags.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Id of editable list. When not specified, attempt is made to construct it from existing list context&mdash;it this does not succeed, tag fails.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>formList</entry>
+                <entry>Editable list view model.</entry>
+                <entry><literal>FormListWidget.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>formListId</entry>
+                <entry>Editable list id.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+    <ui:formList>
+       ...
+    </ui:formList>
+</ui:list>]]></programlisting> 
+      </sect3>
+      </sect2>
+
+    <!-- FORMLISTROWS  -->
+    
+    <sect2>
+      <title><![CDATA[<ui:formListRows>]]></title>
+      <para>
+           Iterating tag that gives access to each row and row form on the editable list current page.
+           The editable row is accessible as "editableRow" variable.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>var</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Name of variable that represents individual row (by default "row").</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>formRow</entry>
+                <entry>Current editable list row view model.</entry>
+                <entry><literal>FormRow.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>row (unless changed with <emphasis>var</emphasis> attribute).</entry>
+                <entry>Object held in current row.</entry>
+                <entry><literal>Object</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:list id="list">
+    <ui:formList>
+        <ui:formListRows>
+           ...
+        </ui:formListRows>
+    </ui:formList>
+</ui:list>]]></programlisting> 
+      </sect3>
+      </sect2>
+      
+   <sect2>
+      <title><![CDATA[<ui:formListAddForm>]]></title>
+      <para>
+            Allows for adding new forms (rows) to editable list.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Editable list id. Searched from context, if not specified.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>form</entry>
+                <entry>View model of form.</entry>
+                <entry><literal>FormWidget.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>formId</entry>
+                <entry>Id of form.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:formListAddForm>
+    <ui:row>
+        <ui:cell>
+            <ui:textInput id="name"/>
+        </ui:cell>
+        
+        <ui:cell>
+            <ui:textInput id="surname"/>
+        </ui:cell>
+        
+        <ui:cell>
+            <ui:textInput id="phone"/>
+        </ui:cell>
+        
+        <ui:cell>
+            <ui:dateInput id="birthdate"/>
+        </ui:cell>                          
+    </ui:row>       
+</ui:formListAddForm>]]></programlisting> 
+      </sect3>
+      </sect2>
+        
+        
 	</sect1>
 
 	<sect1>

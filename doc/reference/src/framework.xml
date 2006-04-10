@@ -324,7 +324,7 @@ jsp.path=/WEB-INF/jsp</programlisting>
     </sect2>
   </sect1>
 
-  <sect1>
+  <!-- sect1>
     <title>Components</title>
 
     <sect2>
@@ -384,5 +384,5 @@ jsp.path=/WEB-INF/jsp</programlisting>
 
   <sect1>
     <title>Exception Handling</title>
-  </sect1>
+  </sect1-->
 </chapter>

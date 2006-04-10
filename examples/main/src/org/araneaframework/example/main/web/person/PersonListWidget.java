@@ -18,13 +18,12 @@ package org.araneaframework.example.main.web.person;
 
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.form.data.DateData;
+import org.araneaframework.uilib.form.data.TimestampData;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
@@ -47,6 +46,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 	protected static final Logger log = Logger.getLogger(PersonListWidget.class);
 	
 	private boolean editMode = false;
+	private boolean selectOnly = false;
 	
 	private ListWidget list;
 	
@@ -66,9 +66,6 @@ public class PersonListWidget extends TemplateBaseWidget {
 		super.init();
 		setViewSelector("person/personList");
 		
-		log.debug("TemplatePersonListWidget init called");    
-		addGlobalEventListener(new ProxyEventListener(this));
-		
 		this.list = initList();
 		addWidget("personList", this.list);
 	}
@@ -83,8 +80,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 		
 		RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
 		temp.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
-		temp.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
-		temp.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
+		temp.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new TimestampData());
+		temp.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new TimestampData());
 		
 		// The dummy column without label (in list rows, some listRowLinkButton's will be written there).
 		// Needed to write out componentListHeader with correct number of columns. 
@@ -98,9 +95,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
 		log.debug("Event 'add' received!");
-		if (!this.editMode) {
-			throw new RuntimeException("Event 'add' shoud be called only in edit mode");
-		}
+
 		getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
@@ -128,8 +123,12 @@ public class PersonListWidget extends TemplateBaseWidget {
 	public void handleEventSelect(String eventParameter) throws Exception {
 		log.debug("Event 'select' received!");
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		PersonViewWidget newFlow = new PersonViewWidget(id);
-		getFlowCtx().start(newFlow, null, null);
+		if (!selectOnly) {
+			PersonViewWidget newFlow = new PersonViewWidget(id);
+			getFlowCtx().start(newFlow, null, null);
+		} else {
+			getFlowCtx().finish(id);
+		}
 	}
 	
 	public void handleEventEdit(String eventParameter) throws Exception {
@@ -141,7 +140,11 @@ public class PersonListWidget extends TemplateBaseWidget {
 	public void handleEventCancel(String eventParameter) throws Exception {
 		log.debug("Event 'cancel' received!");
 		getFlowCtx().cancel();
-	}  
+	}
+	
+	public void setSelectOnly(boolean selectOnly) {
+		this.selectOnly = selectOnly;
+	}	
 	
 	private class TemplatePersonListDataProvider extends MemoryBasedListDataProvider {
 		protected TemplatePersonListDataProvider() {

@@ -35,11 +35,9 @@ import org.araneaframework.uilib.form.FormWidget;
            Makes available following page scope variables: 
            <ul>
              <li><i>form</i> - UiLib form view model.
-             <li><i>formId</i> - UiLib form id.
            </ul> "
  */
 public class UiFormTag extends UiWidgetTag {
-	public final static String FORM_ID_KEY_REQUEST = "formId";
 	public final static String FORM_SCOPED_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.SCOPED_FULL_ID";
 	public final static String FORM_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FULL_ID";
 	public final static String FORM_VIEW_MODEL_KEY_REQUEST = "form";
@@ -56,7 +54,6 @@ public class UiFormTag extends UiWidgetTag {
 		formViewModel = (FormWidget.ViewModel) viewModel;		
 
 		// Set variables
-		pushAttribute(FORM_ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);
 		pushAttribute(FORM_SCOPED_FULL_ID_KEY_REQUEST, scopedFullId, PageContext.REQUEST_SCOPE);
 		pushAttribute(FORM_FULL_ID_KEY_REQUEST, fullId, PageContext.REQUEST_SCOPE);
 		pushAttribute(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel, PageContext.REQUEST_SCOPE);

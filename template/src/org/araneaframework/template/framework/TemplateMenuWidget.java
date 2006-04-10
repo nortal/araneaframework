@@ -16,7 +16,6 @@
 
 package org.araneaframework.template.framework;
 
-import org.araneaframework.Component;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;

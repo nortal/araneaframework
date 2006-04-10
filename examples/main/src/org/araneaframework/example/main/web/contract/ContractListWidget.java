@@ -46,8 +46,7 @@ public class ContractListWidget extends TemplateBaseWidget {
 		super.init();
 		setViewSelector("contract/contractList");
 		log.debug("TemplateContractListWidget init called");    
-		addGlobalEventListener(new ProxyEventListener(this));
-		
+
 		this.list = initList();
 		addWidget("contractList", this.list);
 	}

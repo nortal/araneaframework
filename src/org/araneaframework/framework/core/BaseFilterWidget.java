@@ -23,7 +23,6 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
 import org.araneaframework.core.BaseWidget;
-import org.araneaframework.framework.FilterService;
 import org.araneaframework.framework.FilterWidget;
 
 /**

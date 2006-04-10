@@ -56,8 +56,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
     setViewSelector("company/companyAddEdit");
     putViewData("formLabel", id != null ? "company.edit.form.label" : "company.add.form.label");
     log.debug("CompanyEditWidget init called");
-    addGlobalEventListener(new ProxyEventListener(this));    
-    
+
     form = new BeanFormWidget(CompanyMO.class);
     form.addBeanElement("name", "#Name", new TextControl(), true);
     form.addBeanElement("address", "#Address", new TextControl(), true);

@@ -57,7 +57,6 @@ public class DemoFileUpload extends TemplateBaseWidget {
 	public void init() throws Exception {
 		super.init();
 
-		addGlobalEventListener(new ProxyEventListener(this));
 		setViewSelector("demo/demoFileUpload");
 
 		form = buildForm();

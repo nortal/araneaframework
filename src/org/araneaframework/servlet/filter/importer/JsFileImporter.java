@@ -46,14 +46,15 @@ public class JsFileImporter extends DefaultFileImporter {
 		jsFiles.add("js/validation/jwlf-jsp-ui-form-validation.js");
 		jsFiles.add("js/validation/jwlf-jsp-ui-validation.js");
 		jsFiles.add("js/validation/jwlf-jsp-ui.js");
+		
+		jsFiles.add("js/calendar/calendar.js");
+		jsFiles.add("js/calendar/calendar-en.js");
+		jsFiles.add("js/calendar/calendar-setup.js");
 	}
 	
 	private static final List tmpltJsFiles = new ArrayList();
 	static {
 		tmpltJsFiles.add("js/validation/template-jwlf-jsp-ui.js");
-		tmpltJsFiles.add("js/calendar/calendar.js");
-		tmpltJsFiles.add("js/calendar/calendar-en.js");
-		tmpltJsFiles.add("js/calendar/calendar-setup.js");
 	}
 	
 	private static final List roJsFiles = Collections.unmodifiableList(jsFiles);
