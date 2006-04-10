@@ -92,18 +92,6 @@ public class StandardServletHttpFilterService extends BaseFilterService {
     this.cacheHoldingTime = cacheHoldingTime;
   }
   
-  public void init() throws Exception {
-    super.init();
-    
-    log.debug("Header filter service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Header filter service destroyed.");
-  }
-  
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletRequest request = ((ServletInputData) input).getRequest();
     HttpServletResponse response = ((ServletOutputData) output).getResponse();

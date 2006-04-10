@@ -26,6 +26,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.util.ErrorUtil;
 
 
@@ -168,7 +169,7 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
    * This method should be overriden by the control, returning the type of the value of this
    * control. It is later used in {@link org.araneaframework.uilib.form.converter.ConverterFactory}to
    * determine the {@link org.araneaframework.uilib.form.converter.BaseConverter}used to transfer the values
-   * from {@link org.araneaframework.uilib.form.data.Data}to control and back.
+   * from {@link org.araneaframework.uilib.form.Data}to control and back.
    * 
    * @return the type of the value of this control
    */
