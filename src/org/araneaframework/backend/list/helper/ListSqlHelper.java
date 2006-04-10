@@ -33,9 +33,6 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
-import org.araneaframework.backend.list.helper.ConverterManager;
-import org.araneaframework.backend.list.helper.DbHelper;
-import org.araneaframework.backend.list.helper.VariableMapper;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.helper.builder.compexpr.StandardCompExprToSqlExprBuilder;
 import org.araneaframework.backend.list.helper.builder.expression.StandardExpressionToSqlExprBuilder;
@@ -49,6 +46,8 @@ import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 import org.araneaframework.backend.util.BeanMapper;
+import org.araneaframework.backend.util.GeneralBeanMapper;
+import org.araneaframework.backend.util.RecursiveBeanMapper;
 import org.araneaframework.uilib.list.util.Converter;
 import org.araneaframework.uilib.list.util.converter.DummyConverter;
 
@@ -112,7 +111,7 @@ public abstract class ListSqlHelper {
 	
 	protected ResultSetColumnReader resultSetReader = DefaultResultSetColumnReader
 	.getInstance();
-	protected BeanMapper beanMapper;
+	protected GeneralBeanMapper beanMapper;
 	
 	// *********************************************************************
 	// * CONSTRUCTORS
@@ -582,7 +581,7 @@ public abstract class ListSqlHelper {
 		ListItemsData result = new ListItemsData();
 		result.setTotalCount(this.totalCount);
 		
-		this.beanMapper = new BeanMapper(beanClass);
+		this.beanMapper = new RecursiveBeanMapper(beanClass, true);
 		
 		List itemRange = new ArrayList();
 		//XXX add capacity
