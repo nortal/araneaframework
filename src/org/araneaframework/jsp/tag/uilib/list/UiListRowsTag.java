@@ -66,7 +66,7 @@ public class UiListRowsTag extends UiListRowsBaseTag {
 	protected void doForEachRow(Writer out) throws Exception {
 		super.doForEachRow(out);
 		
-		setAttribute(var, currentRow, PageContext.REQUEST_SCOPE);	
+		setAttribute(var, currentRow, PageContext.REQUEST_SCOPE);
 	}
 	
 	public int before(Writer out) throws Exception {

@@ -32,7 +32,7 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
  * @jsp.tag
  *   name = "eventKeyboardHandler"
  *   body-content = "empty"
- *   description = "Registers a "server-side" keyboard handler that sends an event to the specified widget."
+ *   description = "Registers a 'server-side' keyboard handler that sends an event to the specified widget."
  */
 public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
   

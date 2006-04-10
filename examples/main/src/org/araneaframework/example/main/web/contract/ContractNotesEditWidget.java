@@ -18,7 +18,7 @@ package org.araneaframework.example.main.web.contract;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.data.StringData;
 /**
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class ContractNotesEditWidget extends BaseWidget {
+public class ContractNotesEditWidget extends TemplateBaseWidget {
 	
 	private static final Logger log = Logger.getLogger(ContractNotesEditWidget.class);
 	private FormWidget form;
@@ -51,8 +51,7 @@ public class ContractNotesEditWidget extends BaseWidget {
     super.init();
     setViewSelector("contract/contractNotesEdit");
     log.debug("TemplateContractNotesEditWidget init called");
-    addGlobalEventListener(new ProxyEventListener(this));    
-    
+
     form = new FormWidget();
     form.addElement("notes", "#Notes", new TextControl(), new StringData(), true);
     addWidget("form", form);

@@ -20,8 +20,8 @@ function onWindowClosingEvent() {
    if (window.event) {
 	   if (window.event.clientX < 0 && window.event.clientY < 0) {
 			var closeParam = document.createElement("<input type='hidden' name='popupClose' value='true'>");
-			document.systemForm.appendChild(closeParam);
-			araneaSubmitEvent(document.systemForm, "", "", "");
+			document.system_form_0.appendChild(closeParam);
+			araneaSubmitEvent(document.system_form_0, "", "", "");
 	   }
    }
 }
@@ -40,7 +40,14 @@ var requestArgumentsPrefix = "?topServiceId=application&threadServiceId=";
 var popupProperties = new Object();
 
 function currentUrl() {
-	return systemForm.action;
+	if (document.system_form_0.action) {
+		return document.system_form_0.action;
+	}
+	else if (system_form_0.action) {
+		return system_form_0.action;
+	} else {
+		alert('Unable to get information about current URL. Requested popups probably cannot be processed.');
+	}
 }
 
 function addPopup(popupId, properties) {
@@ -50,7 +57,10 @@ function addPopup(popupId, properties) {
 
 function openPopup(popupId, properties) {
 	url = currentUrl() + requestArgumentsPrefix + popupId;
-	window.open(url, popupId, properties);
+	w = window.open(url, popupId, properties);
+	if (w) {
+		w.focus();
+	}
 }
 
 function processPopups() {

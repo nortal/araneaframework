@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form.constraint;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import org.araneaframework.uilib.form.Constraint;
 
 /**
  * Helper for the <code>GroupedConstraint</code> that holds a set of currently

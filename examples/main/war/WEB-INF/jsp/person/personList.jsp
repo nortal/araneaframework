@@ -2,35 +2,25 @@
 <jsp:root
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fmt="http://java.sun.com/jstl/fmt"
 	xmlns:ui="http://araneaframework.org/tag-library/template"
 	version="1.2"
 >
 	<ui:widgetContext>
-	
-		<h2>Persons</h2>
-		
-		<p>
-			This is a list of persons. You can use a filter to search for a specific person or use
-			links below the list to navigate through pages. To choose a person just click on it's First Name.
-		</p>
-		<c:if test="${contextWidget.data.allowAdd}">
-			<p>You can also add a new person (use a button below the list).</p>
-		</c:if>
-		<c:if test="${contextWidget.data.allowRemove}">
-			<p>You can also remove a person (use a link on it's row).</p>
-		</c:if>
-		
 		<ui:list id="personList">
-			<ui:container>
+			<ui:componentHeader>
+				<ui:componentName>Persons List</ui:componentName>
+			</ui:componentHeader>
+				
+			<ui:component>
 						
-				<!-- Body -->
-				<ui:containerListBody>
-					<!-- Title -->				
-					<ui:listTitleRow/>
-					
+				<ui:componentList>
+					<!-- Title -->
+					<ui:componentListHeader/>
+
 					<!-- Filter -->
 					<ui:listFilter>
-						<ui:row>
+						<ui:row styleClass="filter">
 							<ui:cell/>
 	
 							<ui:cell>
@@ -46,7 +36,9 @@
 							</ui:cell>
 							
 							<ui:cell>
-								<ui:dateInput id="birthdate"/>
+								<ui:dateInput id="birthdate_start"/>
+								<br/>
+								<ui:dateInput id="birthdate_end"/>
 							</ui:cell>
 	
 							<ui:cell>
@@ -76,31 +68,30 @@
 							</ui:cell>
 							
 							<ui:cell>
-								<c:out value="${row.birthdate}"/>
+								<fmt:formatDate value="${row.birthdate}" pattern="dd.MM.yyyy"/>
 							</ui:cell>
 
-							<c:if test="${contextWidget.data.allowRemove}">
-								<ui:cell>
-									<ui:listRowLinkButton eventId="remove" labelId="#Remove"/>
-								</ui:cell>
-							</c:if>
+							<ui:cell>
+								<ui:listRowLinkButton eventId="edit">
+									<ui:image code="buttonChange" alt="Edit person" title="Edit person"/>
+								</ui:listRowLinkButton>
+								<ui:listRowLinkButton eventId="remove">
+									<ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
+								</ui:listRowLinkButton>
+							</ui:cell>
 							
 						</ui:row>
-					</ui:listRows>				
-				</ui:containerListBody>
+					</ui:listRows>
+				</ui:componentList>
 
-				<!-- Sequence -->
-				<ui:listSequenceFooter/>
+				<ui:componentListFooter/>
 				
-				<ui:containerFooter>
-					<c:if test="${contextWidget.data.allowAdd}">
-						<ui:eventButton eventId="add" labelId="#Add new person"/>
-					</c:if>
-				</ui:containerFooter>
+				<ui:componentActions>
+					<ui:eventButton eventId="add" labelId="#Add new person"/>
+				</ui:componentActions>
 
-			</ui:container>
+			</ui:component>
 		
 		</ui:list>
-
-	</ui:widgetContext>		
+	</ui:widgetContext>
 </jsp:root>

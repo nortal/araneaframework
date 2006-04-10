@@ -5,37 +5,21 @@
 	xmlns:cui="http://araneaframework.org/tag-library/contrib"
 	version="1.2">		
 	<ui:widgetContext>
-	
-		<h2>Companies</h2>
-		
-		<p>
-			This is a list of companies. You can use a filter to search for a specific company or use
-			links below the list to navigate through pages. To choose a company just click on it's Name.
-		</p>
-		<c:if test="${contextWidget.data.allowAdd}">
-			<p>You can also add a new company (use a button below the list).</p>
-		</c:if>
-		<c:if test="${contextWidget.data.allowRemove}">
-			<p>You can also remove a company (use a link on it's row).</p>
-		</c:if>		
-		
 		<ui:list id="companyList">
 		
-			<ui:container>
+			<ui:componentHeader>
+				<ui:componentName>Companies</ui:componentName>
+			</ui:componentHeader>
+			<ui:component>
 			
-				<!-- Header -->
-				<ui:containerHeader>
-
-				</ui:containerHeader>
-						
 				<!-- Body -->
-				<ui:containerListBody>
+				<ui:componentList>
 					<!-- Title -->
-					<ui:listTitleRow/>					
+					<ui:componentListHeader/>
 					
 					<!-- Filter -->
 					<ui:listFilter>
-						<ui:row>
+						<ui:row styleClass="filter">
 							<ui:cell/>
 	
 							<ui:cell>
@@ -69,26 +53,30 @@
 								<c:out value="${row.address}"/>
 							</ui:cell>
 							
-							<c:if test="${contextWidget.data.allowRemove}">
-								<ui:cell>
-									<ui:listRowLinkButton eventId="remove" labelId="#Remove"/>
-								</ui:cell>
-							</c:if>
+							<ui:cell>
+								<ui:listRowLinkButton eventId="edit">
+									<ui:image code="buttonChange" alt="Edit company" title="Edit company"/>
+								</ui:listRowLinkButton>
+								<ui:listRowLinkButton eventId="remove">
+									<ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
+								</ui:listRowLinkButton>
+							</ui:cell>
 							
 						</ui:row>
 					</ui:listRows>				
-				</ui:containerListBody>
+				</ui:componentList>
 			
 				<!-- Sequence -->
-				<ui:listSequenceFooter/>
+				<ui:componentListFooter/>
 
-			</ui:container>
+				<ui:componentActions>
+					<ui:eventButton eventId="add" labelId="#Add new company"/>
+				</ui:componentActions>
+			</ui:component>
 		
 		</ui:list>
 
-		<c:if test="${contextWidget.data.allowAdd}">
-			<ui:eventButton eventId="add" labelId="#Add new person"/>
-		</c:if>
+		
 
 	</ui:widgetContext>
 </jsp:root>
