@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.util.Iterator;
+import org.araneaframework.uilib.form.Constraint;
 
 
 /**

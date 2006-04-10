@@ -56,8 +56,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		Map entries = new HashMap();
 		entries.put(PopupWindowContext.class, this);
 		childWidget._getComponent().init(new StandardEnvironment(getChildWidgetEnvironment(), entries));
-		
-		log.debug("Popup filter service initialized.");
 	}
 	
 	/** 
@@ -83,7 +81,18 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		popups.put(id, properties.toString()); 
 		popupProperties.put(id, properties);
 		
-		log.debug("popup with id = '" + id + "' was opened");
+		log.debug("Popup service with identifier '" + id + "' was created.");
+		return id;
+	}
+	
+	/** 
+	 * @see org.araneaframework.servlet.PopupWindowContext#open(java.lang.String, org.araneaframework.servlet.support.PopupWindowProperties)
+	 */
+	public String open(String id, PopupWindowProperties properties) {
+		popups.put(id, properties.toString());
+		popupProperties.put(id, properties);
+		
+		log.debug("Popup service with identifier '" + id + "' was registered.");
 		return id;
 	}
 	
@@ -99,7 +108,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 			
 			popupProperties.remove(id);
 			if (log.isDebugEnabled())
-				log.debug("popup with id = '" + id + "' was closed");
+				log.debug("Popup with identifier '" + id + "' was closed");
 		} 
 	}
 	

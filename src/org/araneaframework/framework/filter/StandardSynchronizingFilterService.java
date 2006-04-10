@@ -42,14 +42,10 @@ public class StandardSynchronizingFilterService extends BaseFilterService {
     entries.put(SynchronizingContext.class, new SynchronizingContext() {});
     
     childService._getComponent().init(new StandardEnvironment(getChildEnvironment(), entries));
-    
-    log.debug("Synchronizing filter service initialized.");
   }
   
   protected void destroy() throws Exception {
     super.destroy();
-    
-    log.debug("Synchronizing filter service destroyed.");
   }
   
   protected synchronized void action(Path path, InputData input, OutputData output) throws Exception {

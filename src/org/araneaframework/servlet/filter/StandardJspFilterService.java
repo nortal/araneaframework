@@ -36,16 +36,17 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.framework.filter.StandardSynchronizingFilterService;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.servlet.JspContext;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.w3c.dom.Document;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
-  public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.jsp.aranea.filter.UiAraneaJspConfigurationFilterService.Configuration";
+  public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.jsp.aranea.filter.UiAraneaJspConfigurationFilterService.JspConfiguration";
   private static final Logger log = Logger.getLogger(StandardSynchronizingFilterService.class);
   
   private Map tagMapping;
   
   private String submitCharset;
-  private String uiTldPath;
+  private String uiTldPath = "META-INF/aranea-presentation.tld";
   
   private String jspPath = "/WEB-INF/jsp";
   
@@ -73,11 +74,8 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     super.init();
         
     loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
-    
-    if (uiTldPath != null)
-      readTldMapping(); 
-    
-    log.debug("Aranea JSP configuration filter service initialized.");
+
+    readTldMapping();    
   }
   
   protected Environment getChildEnvironment() {
@@ -88,7 +86,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
   public void readTldMapping() throws Exception {
-    InputStream tldStream = getClass().getClassLoader().getResourceAsStream(uiTldPath);
+    InputStream tldStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(uiTldPath);
     
     if (tldStream == null) {
     	throw new FileNotFoundException("Unable to read file:"+uiTldPath);
@@ -102,7 +100,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    output.pushAttribute(JSP_CONFIGURATION_KEY, new Configuration());
+    output.pushAttribute(JSP_CONFIGURATION_KEY, new JspConfiguration());
     
     try {
       super.action(path, input, output);
@@ -112,7 +110,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     }
   }
   
-  public class Configuration {
+  public class JspConfiguration {
     public String getSubmitCharset() {
       return submitCharset;
     }
@@ -131,6 +129,10 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     
     public Map getTagMapping() {
       return tagMapping;
+    }
+    
+    public ConfigurationContext getConfiguration() {
+      return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
     }
   }
 }

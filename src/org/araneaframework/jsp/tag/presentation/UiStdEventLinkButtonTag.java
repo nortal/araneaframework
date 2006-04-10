@@ -64,7 +64,7 @@ public class UiStdEventLinkButtonTag extends UiEventButtonBaseTag {
     if (localizedLabel != null)
       UiUtil.writeEscaped(out, localizedLabel);
     
-    UiUtil.writeEndTag(out, "a"); 
+    UiUtil.writeEndTag_SS(out, "a"); 
     
     // Continue
     super.after(out);
