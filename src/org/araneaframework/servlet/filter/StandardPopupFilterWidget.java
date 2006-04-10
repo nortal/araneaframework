@@ -52,6 +52,13 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 	/** Holds properties for all types of popupwindows */
 	private Map popupProperties = new HashMap();
 	
+	private String topBean;
+	
+	/** Sets the name of Spring bean which instance will be created as new session thread. */
+	public void setTopBean(String topBean) {
+		this.topBean = topBean;
+	}
+	
 	protected void init() throws Exception {
 		Map entries = new HashMap();
 		entries.put(PopupWindowContext.class, this);
@@ -69,9 +76,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		id = (id != null) ? new StringBuffer(id).append(rndString).toString() : rndString;
 		
 		BeanFactory factory = (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
-		// TODO:: some better way in framework?
-		Service service = (Service) factory.getBean("servletServiceAdapterComponent");
-		
+		Service service = (Service) factory.getBean(topBean);
 		currentThreadCtx.addService(id, service);
 		
 		if (startMessage != null)

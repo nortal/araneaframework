@@ -79,6 +79,7 @@
   
     <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter"
     singleton="false">
+        <property name="topBean" value="araneaThreadFilters"/>
   </bean>
 	
 </beans>

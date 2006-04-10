@@ -21,6 +21,8 @@
 				<ref bean="araneaCriticalErrorHandler"/>
 				<ref bean="araneaReadFileFilter"/>
 				<ref bean="araneaMainStatisticFilter"/>
+                <ref bean="araneaHeaderFilter"/>
+                <ref bean="araneaFileUploadFilter"/>
 			</list>
 		</property>
 	</bean>  
@@ -80,8 +82,6 @@
 		<property name="filterChain">			
 			<list>
 				<ref bean="araneaSynchronizingFilter"/>
-				<ref bean="araneaHeaderFilter"/>
-				<ref bean="araneaFileUploadFilter"/>
 				<ref bean="araneaContinuationFilter"/>
 			</list>
 		</property>

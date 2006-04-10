@@ -32,11 +32,13 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class RootWidget extends StandardPresentationWidget implements SecurityContext {
+	MenuWidget menuWidget;
 
 	private static final Logger log = Logger.getLogger(RootWidget.class);
 
 	protected void init() throws Exception {
-		addWidget("menu", new MenuWidget(null));
+		menuWidget = new MenuWidget(null);
+		addWidget("menu", menuWidget);
 		setViewSelector("root");
 	}
   
@@ -48,6 +50,10 @@ public class RootWidget extends StandardPresentationWidget implements SecurityCo
 
   public boolean hasPrivilege(String privelege) {
     return false;
+  }
+  
+  public MenuWidget getMenuWidget() {
+	  return menuWidget;
   }
 
   public void logout() throws Exception {
