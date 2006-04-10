@@ -38,15 +38,63 @@ public class TemplateCriticalErrorHandler extends BaseWidget  {
     Writer out = ((ServletOutputData) output).getResponse().getWriter();
     
     ((ServletOutputData) output).getResponse().setContentType("text/html; charset=UTF-8");
-    
-    out.write("<html><head><title>Critical error occured!</title></head><body>");
-    out.write("<h1>Critical error occured!</h1>");
-    if (ExceptionUtils.getRootCause(exception) != null) {
-      out.write("Root cause:<br/>");    
-      out.write("<pre>"+ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(exception))+"</pre>");
-    }
-    out.write("Stack trace:<br/>");
-    out.write("<pre>"+ExceptionUtils.getFullStackTrace(exception)+"</pre>");
-    out.write("</body></html>");
+    out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" + 
+        "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" + 
+        "<head>\n" + 
+        "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n" + 
+        "<title>Critical Error!!!</title>\n" + 
+        "\n" + 
+        "<link rel=\"stylesheet\" type=\"text/css\" href=\"?loadCSSFile=styles/_styles_screen.css&importerType=cssFileImporter\" media=\"screen\"/>" +  
+        "<link rel=\"stylesheet\" type=\"text/css\" href=\"?loadCSSFile=styles/_styles_global.css&importerType=cssFileImporter\" media=\"screen\"/>" +
+        "\n" + 
+        "<script type=\"text/javascript\" src=\"_scripts.js\"></script>\n" + 
+        "\n" + 
+        "<!-- calendar -->\n" + 
+        "<link href=\"calendar/calendar.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen, projection\" />\n" + 
+        "<script type=\"text/javascript\" src=\"calendar/calendar.js\"></script>\n" + 
+        "\n" + 
+        "<script type=\"text/javascript\" src=\"calendar/calendar-ee.js\"></script>\n" + 
+        "<script type=\"text/javascript\" src=\"calendar/calendar-setup.js\"></script>\n" + 
+        "<!-- /calendar -->\n" + 
+        "</head>\n" + 
+        "\n" + 
+        "<body id=\"error\">\n" + 
+        "\n" + 
+        "<div id=\"cont1\">\n" + 
+        " <div id=\"header\">\n" + 
+        "   <div class=\"box1\">\n" + 
+        "     <a href=\"#\" id=\"logo\"><img src=\"gfx/logo_aranea_print.gif\" alt=\"\" /></a>\n" + 
+        "   </div>\n" + 
+        "\n" + 
+        " </div>\n" + 
+        " <div class=\"stripe1\">&nbsp;</div>\n" + 
+        " <div id=\"wholder\">\n" + 
+        "   <div id=\"content\">\n" + 
+        "     <!-- start content -->\n" + 
+        "     <h1>Error</h1>\n" + 
+        "<p><blockquote><a style='font-size: larger; text-decoration: underline' href='javascript:' onclick='javascript:window.location=window.location; return false'>Logout</a>" +
+        "<iframe width='0' height='0' src='?destroySession=true' style='display: none'></iframe></blockquote></p>" +          
+        "     <div class=\"msg-error\">\n" +        
+        "       <div style='overflow: auto;' id=\"crashinfo\">\n");
+        if (ExceptionUtils.getRootCause(exception) != null) {
+          out.write("<b>Root cause:</b><br/>");    
+          out.write("<pre style=\'font-size: 10pt\'>"+ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(exception))+"</pre>");
+        }        
+        out.write("<b>Stack trace:</b><br/>");
+        out.write("<pre style=\'font-size: 10pt\'>"+ExceptionUtils.getFullStackTrace(exception)+"</pre>");
+        out.write("</body></html>");        
+        out.write(        
+        "       </div>\n" + 
+        "     </div>\n" + 
+        "     <!-- end content -->\n" + 
+        "   </div>\n" + 
+        "\n" + 
+        " </div>\n" + 
+        " <div class=\"clear1\">&nbsp;</div>\n" + 
+        "</div>\n" + 
+        "\n" + 
+        "</body>\n" + 
+        "</html>\n" + 
+        "");
   }
 }

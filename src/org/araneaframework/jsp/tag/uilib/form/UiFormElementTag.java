@@ -38,11 +38,13 @@ import org.araneaframework.uilib.form.FormWidget;
            <ul>
              <li><i>formElement</i> - UiLib form element view model.
              <li><i>formElementId</i> - UiLib form element id.
+             <li><i>formElementValue</i> - UiLib form element value.
            </ul> "
  */
 public class UiFormElementTag extends UiBaseTag {
 	public static final String ID_KEY_REQUEST = "formElementId";
 	public static final String VIEW_MODEL_KEY_REQUEST = "formElement";
+  public static final String VALUE_KEY_REQUEST = "formElementValue";
 	
 	protected String id;
 	protected FormElement.ViewModel formElementViewModel;
@@ -78,6 +80,7 @@ public class UiFormElementTag extends UiBaseTag {
 		// Store data
     pushAttribute(VIEW_MODEL_KEY_REQUEST, formElementViewModel, PageContext.REQUEST_SCOPE);
     pushAttribute(ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);
+    pushAttribute(VALUE_KEY_REQUEST, formElementViewModel.getValue(), PageContext.REQUEST_SCOPE);
     				
 		// Continue
 	  return EVAL_BODY_INCLUDE;		

@@ -55,9 +55,9 @@ public class UiStdFormSimpleLabelTag extends UiPresentationTag {
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Whether the label showld display the asterisk, "false" by default." 
+	 *   description = "Whether the label should display the asterisk, "false" by default." 
 	 */
-  public void setMandatory(String mandatory) throws JspException {
+  public void setShowMandatory(String mandatory) throws JspException {
     this.mandatory = ((Boolean)(evaluateNotNull("mandatory", mandatory, Boolean.class))).booleanValue();
   }
   
@@ -67,7 +67,7 @@ public class UiStdFormSimpleLabelTag extends UiPresentationTag {
 	 *   required = "false"
 	 *   description = "Whether a colon (":") is draw after the label." 
 	 */
-  public void setShowColumn(String showColon) throws JspException {
+  public void setShowColon(String showColon) throws JspException {
     this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
   }  
   
