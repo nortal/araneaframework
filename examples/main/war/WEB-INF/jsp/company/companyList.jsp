@@ -82,7 +82,5 @@
 		
 		</ui:list>
 
-		
-
 	</ui:widgetContext>
 </jsp:root>
