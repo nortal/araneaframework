@@ -20,8 +20,10 @@ import java.io.Writer;
 
 import javax.servlet.jsp.PageContext;
 
+import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.UiWidgetTag;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.formlist.FormListWidget;
 
 
 
@@ -67,8 +69,12 @@ public class UiListTag extends UiWidgetTag {
 	public int before(Writer out) throws Exception {
 		super.before(out);
 		
-		// Get list data		
-		listViewModel = (ListWidget.ViewModel)viewModel;		
+		// Get list data
+		try {
+			listViewModel = (ListWidget.ViewModel)viewModel;
+		} catch (ClassCastException e) {
+			throw new UiException("Could not acquire list view model. <ui:list> should have id specified or should be in context of real ListWidget.", e);
+		}
 
 		// Set variables		
 		pushAttribute(LIST_ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);
