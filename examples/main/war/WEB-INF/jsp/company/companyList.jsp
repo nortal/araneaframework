@@ -36,7 +36,7 @@
 						</ui:row>
 					</ui:listFilter>
 										
-					<!-- Body -->
+					<!-- List body, where all list objects that fit on a current page will be rendered. -->
 					<ui:listRows>
 						<ui:row>
 							<ui:cell>
