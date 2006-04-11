@@ -16,6 +16,7 @@
 
 package org.araneaframework.core;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.Environment;
 
@@ -35,6 +36,18 @@ public class StandardEnvironment extends BaseEnvironment {
    */
   public StandardEnvironment(Environment env, Map entries) {
     this.entries = entries;
+    parentEnv = env;
+  }
+  
+  /**
+   * Constructs an object with the env parent Environment and entries data containing &lt;key, value&gt;.
+   * @param env the parent environment
+   * @param key a key of the value in the map of the Environment entries.
+   * @param value a value corresponding to given key in the map of the Environment entries.
+   */
+  public StandardEnvironment(Environment env, Object key, Object value) {
+    entries = new HashMap();
+    entries.put(key, value);
     parentEnv = env;
   }
   
