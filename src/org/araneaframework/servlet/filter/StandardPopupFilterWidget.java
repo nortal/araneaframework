@@ -141,7 +141,14 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 	
 	protected void render(OutputData output) throws Exception {
 		output.pushAttribute(POPUPS_KEY, popups);
+		
+		try {
+			super.render(output);
+		}
+		finally {
+			output.popAttribute(POPUPS_KEY);
+		}
+		
 		popups = new HashMap();
-		super.render(output);
 	}
 }
