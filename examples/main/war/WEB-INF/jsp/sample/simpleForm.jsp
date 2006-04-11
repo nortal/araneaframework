@@ -94,6 +94,16 @@
 								<ui:dateInput />
 							</ui:cell>
 						</ui:formElement>
+
+						<ui:formElement id="number">
+							<ui:cell styleClass="name">
+								<ui:label />
+							</ui:cell>
+
+							<ui:cell styleClass="inpt">
+								<ui:floatInput/>
+							</ui:cell>
+						</ui:formElement>
 					</ui:row>
 
 				</ui:componentForm>
