@@ -102,7 +102,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem(new MenuItem("Simple_List", SimpleListWidget.class));
       sampleMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
       sampleMenu.addMenuItem(new MenuItem("#Invisible element form", InvisibleElementFormWidget.class));
-      sampleMenu.addMenuItem(new MenuItem("#Popup ex", SamplePopupWidget.class));
+      sampleMenu.addMenuItem(new MenuItem("#Popup example", SamplePopupWidget.class));
     }
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Error")); {

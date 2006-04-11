@@ -7,6 +7,15 @@
 
 	<!-- Component starts here -->
 	<ui:widgetContext>
-		<ui:eventButton eventId="createThread" labelId="#Open popup with new thread"/>
+		<ui:componentHeader>
+			<ui:componentName>Popup example</ui:componentName>
+		</ui:componentHeader>
+		
+		<ui:component>
+			<ui:componentActions>
+				<ui:eventButton eventId="createThread" labelId="#Open popup (create new session thread)."/>
+			</ui:componentActions>
+		</ui:component>
+
 	</ui:widgetContext>
 </jsp:root>
