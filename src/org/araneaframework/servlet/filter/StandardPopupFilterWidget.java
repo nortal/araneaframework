@@ -26,13 +26,13 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
+import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.support.PopupWindowProperties;
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -52,17 +52,17 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 	/** Holds properties for all types of popupwindows */
 	protected Map popupProperties = new HashMap();
 	
-	private String topBean;
+	/** The factory used to create Spring bean which instance will be created as new session thread. */
+	protected ServiceFactory serviceFactory;
 	
-	/** Sets the name of Spring bean which instance will be created as new session thread. */
-	public void setTopBean(String topBean) {
-		this.topBean = topBean;
+	public ServiceFactory getServiceFactory() {
+		return serviceFactory;
 	}
-	
-	public String getTopBean() {
-		return topBean;
+
+	public void setServiceFactory(ServiceFactory serviceFactory) {
+		this.serviceFactory = serviceFactory;
 	}
-	
+
 	protected void init() throws Exception {
 		Map entries = new HashMap();
 		entries.put(PopupWindowContext.class, this);
@@ -79,8 +79,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		String rndString = RandomStringUtils.random(8, false, true);
 		idPrefix = (idPrefix != null) ? new StringBuffer(idPrefix).append(rndString).toString() : rndString;
 		
-		BeanFactory factory = (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
-		Service service = (Service) factory.getBean(topBean);
+		//BeanFactory factory = (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
+		Service service = serviceFactory.buildService();
 		currentThreadCtx.addService(idPrefix, service);
 		
 		if (startMessage != null)

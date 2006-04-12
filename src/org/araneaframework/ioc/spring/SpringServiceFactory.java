@@ -32,8 +32,8 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class SpringServiceFactory implements ServiceFactory, BeanFactoryAware {
-  private BeanFactory factory = null;
-  private String beanId;
+  protected BeanFactory factory = null;
+  protected String beanId;
   
   public void setBeanFactory(BeanFactory factory) throws BeansException {
     this.factory = factory;

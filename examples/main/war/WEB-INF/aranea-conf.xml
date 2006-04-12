@@ -21,7 +21,7 @@
 				<ref bean="araneaCriticalErrorHandler"/>
 				<ref bean="araneaReadFileFilter"/>
 				<ref bean="araneaMainStatisticFilter"/>
-                <ref bean="araneaHeaderFilter"/>
+                <ref bean="requestEncodingFilter"/>
                 <ref bean="araneaFileUploadFilter"/>
 			</list>
 		</property>
@@ -56,7 +56,7 @@
 		<property name="childService" ref="araneaThreadServiceRouter"/>
 		<property name="filterChain">			
 			<list>
-				<ref bean="araneaSerializingAudit"/>
+				<!-- <ref bean="araneaSerializingAudit"/>  -->
 				<ref bean="araneaLocalizationFilter"/>
 				<ref bean="araneaJspConfigFilter"/>
 			</list>
@@ -83,6 +83,7 @@
 			<list>
 				<ref bean="araneaSynchronizingFilter"/>
 				<ref bean="araneaContinuationFilter"/>
+                <ref bean="responseHeaderFilter"/>
 			</list>
 		</property>
 	</bean>  
