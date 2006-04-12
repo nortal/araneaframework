@@ -18,6 +18,7 @@ package org.araneaframework.framework;
 
 import java.io.Serializable;
 import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.core.Standard;
 
 public interface ExtendedCallContext extends FlowContext {
 	public CallFrameReference getCurrentCallFrameReference();
@@ -25,4 +26,6 @@ public interface ExtendedCallContext extends FlowContext {
 	public interface CallFrameReference extends Serializable {
 		public void reset(EnvironmentAwareCallback callback) throws Exception;
 	}
+  
+  public void addNestedEnvironmentEntry(Standard.StandardWidgetInterface scope, final Object entryId, Object envEntry) throws Exception;
 }

@@ -27,6 +27,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Standard;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.EmptyCallStackException;
@@ -65,6 +66,9 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
    * The top callable widget.
    */
   protected Widget top;
+  
+  private Map nestedEnvironmentEntries = new HashMap();
+  private Map nestedEnvEntryStacks = new HashMap();
 
   //*******************************************************************
   // CONSTRUCTORS
@@ -171,6 +175,38 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   	return new CallFrameReference();
   }
   
+  private LinkedList getEnvEntryStack(Object entryId) {
+    LinkedList envEntryStack = (LinkedList) nestedEnvEntryStacks.get(entryId);
+    
+    if (envEntryStack == null) {
+      envEntryStack = new LinkedList();
+      nestedEnvEntryStacks.put(entryId, envEntryStack);
+    }
+    
+    return envEntryStack;
+  }
+  
+  private void pushGlobalEnvEntry(Object entryId, Object envEntry) throws Exception {
+    getEnvEntryStack(entryId).addFirst(envEntry);
+    
+    refreshGlobalEnvironment();
+  }
+  
+  private void popGlobalEnvEntry(Object entryId) throws Exception {
+    getEnvEntryStack(entryId).removeFirst();
+    
+    refreshGlobalEnvironment();
+  }
+  
+  public void addNestedEnvironmentEntry(Standard.StandardWidgetInterface scope, final Object entryId, Object envEntry) throws Exception {
+    pushGlobalEnvEntry(entryId, envEntry);
+    scope.addDestroyer(new Destroyer() {
+      public void destroy() throws Exception {
+        popGlobalEnvEntry(entryId);
+      }
+    });
+  }
+  
   public boolean isNested() throws Exception {
     return callStack.size() != 0;
   }
@@ -245,12 +281,27 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     }
   }
   
-  protected Environment getChildWidgetEnvironment() throws Exception {
-    Map entries = new HashMap();
-    entries.put(FlowContext.class, this);
-    entries.put(ExtendedCallContext.class, this); 
+  private void refreshGlobalEnvironment()  throws Exception {
+    nestedEnvironmentEntries.clear();
     
-    return new StandardEnvironment(getEnvironment(), entries);
+    nestedEnvironmentEntries.put(FlowContext.class, this);
+    nestedEnvironmentEntries.put(ExtendedCallContext.class, this);    
+    
+    for (Iterator i = nestedEnvEntryStacks.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+      Object entryId = entry.getKey();
+      LinkedList stack = (LinkedList) entry.getValue();
+      if (stack.size() > 0) {
+        Object envEntry = stack.getFirst();
+        nestedEnvironmentEntries.put(entryId, envEntry);
+      }
+    }    
+  }
+  
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    refreshGlobalEnvironment();   
+    
+    return new StandardEnvironment(getEnvironment(), nestedEnvironmentEntries);
   }
   
   /**
