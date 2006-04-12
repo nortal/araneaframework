@@ -133,7 +133,7 @@ public void handleEventMyEvent(String parameter) {
       <para>
         Every initialized widget has a reference to <literal>org.araneaframework.Environment</literal> available through the <literal>getEnvironment()</literal> method. Environment allows to look up framework services (called <emphasis>contexts</emphasis>):
 <programlisting role="java">MessageContext msgCtx = (MessageContext) getEnvironment().getEntry(MessageContext.class);
-msgContext.showInfoMessage("Hello world!");</programlisting>        
+msgCtx.showInfoMessage("Hello world!");</programlisting>        
       As one can see from the examples, contexts are looked up using their interface <literal>Class</literal> object as key. All framework services in Aranea are accessible only using the environment.
       </para>      
     </sect2>
