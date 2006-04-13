@@ -103,7 +103,15 @@
 				<ref bean="araneaTransactionFilter"/>
 				<ref bean="araneaMessagingFilter"/>
 				<ref bean="araneaContexts"/>
-				<ref bean="araneaPopupFilter"/>
+                <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter"
+                    singleton="false">
+                    <property name="serviceFactory">
+                        <bean class="org.araneaframework.ioc.spring.EnvironmentAwareSpringServiceFactory" singleton="false">
+                            <property name="beanFactoryClass" value="org.springframework.beans.factory.BeanFactory"/>
+                            <property name="beanId" value="araneaThreadFilters"/>
+                        </bean>
+                    </property>
+                </bean>
 			</list>
 		</property>
 	</bean>  

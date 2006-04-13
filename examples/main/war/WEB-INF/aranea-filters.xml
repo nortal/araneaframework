@@ -81,13 +81,4 @@
     </property>    
   </bean>
   
-    <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter"
-        singleton="false">
-        <property name="serviceFactory">
-            <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" singleton="false">
-                <property name="beanId" value="araneaThreadFilters"/>
-            </bean>
-        </property>
-  </bean>
-	
 </beans>
