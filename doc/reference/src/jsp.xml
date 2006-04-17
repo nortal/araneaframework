@@ -850,6 +850,32 @@
 ...]]></programlisting>
       </sect3>
     </sect2>
+    
+     <sect2>
+        <title><![CDATA[<ui:registerPopups>]]></title>
+        <para>
+            This tag registers the serverside services that represent popups and adds system load event for opening them.
+            For this tag to have an effect, HTML page <literal>BODY</literal> tag must have attribute <literal>onload="processLoadEvents()"</literal>.
+            Also, this tag only works inside &lt;ui:systemForm&gt; tag.
+        </para>
+        
+      <sect3>
+        <title>Attributes</title>
+        <para>This tag has no attributes.</para>
+      </sect3>
+        
+        <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+<body onload="processLoadEvents()">
+  <ui:systemForm method="POST">
+    <ui:registerPopups>
+  </ui:systemForm>
+</body>
+...]]></programlisting>
+      </sect3>
+    </sect2>
       
      </sect1>
 

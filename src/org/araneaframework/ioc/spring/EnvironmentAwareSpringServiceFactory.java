@@ -29,7 +29,7 @@ import org.springframework.beans.factory.BeanFactory;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class EnvironmentAwareSpringServiceFactory implements EnvironmentAwareServiceFactory {
-  protected Class beanFactoryClass;
+  protected Class beanFactoryClass = BeanFactory.class;
   protected String beanId;
 
   /**

@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
@@ -59,10 +60,10 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		this.serviceFactory = serviceFactory;
 	}
 
-	protected void init() throws Exception {
+	protected Environment getChildWidgetEnvironment() {
 		Map entries = new HashMap();
 		entries.put(PopupWindowContext.class, this);
-		childWidget._getComponent().init(new StandardEnvironment(getChildWidgetEnvironment(), entries));
+		return new StandardEnvironment(super.getChildWidgetEnvironment(), entries);
 	}
 	
 	/** 

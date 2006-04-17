@@ -18,9 +18,7 @@ package org.araneaframework.servlet.router;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -28,7 +26,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.core.ServiceFactory;
+import org.araneaframework.core.EnvironmentAwareServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.servlet.ServletInputData;
@@ -52,12 +50,12 @@ public class StandardServletSessionRouterService extends BaseService {
    */
   public static final String SESSION_SERVICE_KEY = "sessionService";
   
-  private ServiceFactory serviceFactory;
+  private EnvironmentAwareServiceFactory serviceFactory;
   
   /**
    * Sets the factory which is used to build the service if one does not exist in the session.
    */
-  public void setSessionServiceFactory(ServiceFactory factory) {
+  public void setSessionServiceFactory(EnvironmentAwareServiceFactory factory) {
     serviceFactory = factory;
   }
 
@@ -86,7 +84,7 @@ public class StandardServletSessionRouterService extends BaseService {
       
       if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
         log.debug("Created HTTP session '"+sess.getId()+"'");
-        service = new StandardRelocatableServiceDecorator(serviceFactory.buildService());        
+        service = new StandardRelocatableServiceDecorator(serviceFactory.buildService(getEnvironment()));        
         
         service._getComponent().init(newEnv);
       }

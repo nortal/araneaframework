@@ -21,9 +21,9 @@ import org.araneaframework.Message;
 
 public abstract class BroadcastMessage implements Message {
   public final void send(Object id, Component component) throws Exception {
-    this.execute(component);
-    
-    component._getComponent().propagate(this);        
+	component._getComponent().propagate(this);	  
+	  
+    this.execute(component);        
   }
   
   protected abstract void execute(Component component) throws Exception;
