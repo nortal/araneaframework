@@ -147,7 +147,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 	public boolean closeTopService(String id) throws Exception {
 		if (!(allPopups.containsKey(id) && ((PopupServiceInfo)allPopups.get(id)).getThreadId() == null)) {
 			//XXX throw some exception - or better not?
-			log.warn("Attempt to close non-owned, unopened or already top service popup +'" + id + "'.");
+			log.warn("Attempt to close non-owned, unopened or already closed top service popup +'" + id + "'.");
 			return false;
 		}
 		
@@ -155,7 +155,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		allPopups.remove(id);
 		
 		if (log.isDebugEnabled())
-			log.debug("Thread popup with identifier '" + id + "' was closed");
+			log.debug("Topservice popup with identifier '" + id + "' was closed");
 
 		return true;
 	}
