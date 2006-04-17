@@ -39,25 +39,25 @@ var requestArgumentsPrefix = "?topServiceId=application&threadServiceId=";
 // popup properties, used for all types of popups
 var popupProperties = new Object();
 
-function currentUrl() {
-	if (document.system_form_0.action) {
-		return document.system_form_0.action;
-	}
-	else if (system_form_0.action) {
-		return system_form_0.action;
+function currentUrl(systemFormId) {
+	if (document.getElementById(systemFormId) && document.getElementById(systemFormId).action) {
+		return document.getElementById(systemFormId).action;
 	} else {
 		alert('Unable to get information about current URL. Requested popups probably cannot be processed.');
 	}
 }
 
-function addPopup(popupId, properties) {
+function addPopup(popupId, windowProperties, urlSuffix, systemFormId) {
 	popups[popupId] = popupId;
-	popupProperties[popupId] = properties;
+	popupProperties[popupId] = new Object();
+	popupProperties[popupId].windowProperties = windowProperties;
+	popupProperties[popupId].systemFormId = systemFormId;
+	popupProperties[popupId].urlSuffix = urlSuffix;
 }
 
 function openPopup(popupId, properties) {
-	url = currentUrl() + requestArgumentsPrefix + popupId;
-	w = window.open(url, popupId, properties);
+	url = currentUrl(properties.systemFormId) + properties.urlSuffix;
+	w = window.open(url, popupId, properties.windowProperties);
 	if (w) {
 		w.focus();
 	}

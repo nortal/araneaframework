@@ -22,15 +22,21 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
  * Interface for manipulating popup windows (each popup window 
- * corresponding to server-side threads).
+ * corresponding to thread- or application-level service server-side).
  * 
  * @author Taimo Peelo
  */
 
 public interface PopupWindowContext extends Serializable {
-	public static final int THREAD_POPUP=1;
-	public static final int APPLICATION_POPUP=2;
-	
+	public static final int THREAD_POPUP = 1;
+	public static final int APPLICATION_POPUP = 2;
+
+	/** keys for accessing the popup maps from viewmodels */
+	public static final String POPUPS_KEY = "popupWindows";
+
+	/** closing key for popups, if thread receives response containing that key, it dies. */
+	public static final String POPUPS_CLOSE_KEY = "popupClose";
+
 	/**
 	 * Method for registering a new thread-level service server-side, meant to open in popup window on client side.
 	 * @param idPrefix - prefix for service id that will be associated with created window.
@@ -68,8 +74,16 @@ public interface PopupWindowContext extends Serializable {
 	public String open(String id, PopupWindowProperties properties, int serviceType) throws Exception;
 
 	/**
-	 * Closes the server side service (serving client side popup).
+	 * Closes the server side thread service (serving client side popup).
 	 * @param id thread (popup) ID to close. 
+	 * @return whether service with given thread id was closed. 
 	 */
-	public void close(String id) throws Exception;
+	public boolean closeThreadService(String id) throws Exception;
+
+	/**
+	 * Closes the server side topservice (serving client side popup).
+	 * @param id topservice (popup) ID to close. 
+	 * @return whether topservice with given id was closed. 
+	 */
+	public boolean closeTopService(String id) throws Exception;
 }
