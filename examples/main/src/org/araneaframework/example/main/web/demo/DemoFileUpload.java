@@ -18,10 +18,8 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.service.FileDownloaderService;

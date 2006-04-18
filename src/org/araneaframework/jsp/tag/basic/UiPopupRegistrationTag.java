@@ -21,14 +21,12 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.OutputData;
-import org.araneaframework.framework.router.StandardThreadServiceRouterService;
-import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.servlet.PopupServiceInfo;
 import org.araneaframework.servlet.PopupWindowContext;
-import org.araneaframework.servlet.filter.StandardPopupFilterWidget;
 
 /**
  * Popup registering and rendering tag -- opens popups when HTML file BODY has onload event processing enabled.
@@ -62,19 +60,16 @@ public class UiPopupRegistrationTag extends UiBaseTag {
   protected void addPopups(Writer out, Map popups) throws Exception {
     String systemFormId = (String) readAttribute(UiSystemFormTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 	for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
-	  Map.Entry current = (Map.Entry)i.next();
-	  String serviceId = (String)current.getKey();
-	  StandardPopupFilterWidget.PopupServiceInfo serviceInfo = (StandardPopupFilterWidget.PopupServiceInfo)current.getValue();
-	  
-	  StringBuffer urlSuffix = new StringBuffer("?" + StandardTopServiceRouterService.TOP_SERVICE_KEY + "=").append(serviceInfo.getTopServiceId());
-	  if (serviceInfo.getThreadId() != null) {
-        urlSuffix.append("&" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "="); 
-        urlSuffix.append(serviceInfo.getThreadId());
-	  }
-	  
-	  out.write("addPopup('"  + serviceId + "', '" + 
-			  (serviceInfo.getPopupProperties() != null ? serviceInfo.getPopupProperties().toString():"")+ 
-			  "', '"  + urlSuffix.toString() + "', '" + systemFormId + "');\n");
+	  addPopup(out, systemFormId, (Map.Entry)i.next());
 	}
+  }
+
+  protected void addPopup(Writer out, String systemFormId, Map.Entry popup) throws Exception {
+	String serviceId = (String)popup.getKey();
+    PopupServiceInfo serviceInfo = (PopupServiceInfo)popup.getValue();
+
+	out.write("addPopup('"  + serviceId + "', '" + 
+              (serviceInfo.getPopupProperties() != null ? serviceInfo.getPopupProperties().toString():"")+ 
+              "', '?"  + serviceInfo.toURLParams() + "', '" + systemFormId + "');\n");
   }
 }

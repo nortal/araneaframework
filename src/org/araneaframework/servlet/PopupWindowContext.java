@@ -18,6 +18,7 @@ package org.araneaframework.servlet;
 
 import java.io.Serializable;
 import org.araneaframework.Message;
+import org.araneaframework.Service;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
@@ -28,13 +29,10 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
  */
 
 public interface PopupWindowContext extends Serializable {
-	public static final int THREAD_POPUP = 1;
-	public static final int APPLICATION_POPUP = 2;
-
 	/** keys for accessing the popup maps from viewmodels */
 	public static final String POPUPS_KEY = "popupWindows";
 
-	/** closing key for popups, if thread receives response containing that key, it dies. */
+	/** closing key for popups, if window receives response containing that key, it should close and take serverside service with it. */
 	public static final String POPUPS_CLOSE_KEY = "popupClose";
 
 	/**
@@ -51,39 +49,33 @@ public interface PopupWindowContext extends Serializable {
 	 * @param idPrefix - prefix for service id that will be associated with created window.
 	 * @param properties - properties specifying behaviour and appearance of creatable popup window. 
 	 * @param startMessage - message sent to newly created thread- or application-level service.
-	 * @param serviceType - either <code>PopupWindowContext.THREAD_POPUP</code> or <code>PopupWindowContext.APPLICATION_POPUP</code>.
+	 * @param serviceContext - Some context class deriving from <code>ManagedServiceContext</code>.
 	 * @return full ID of created service (thread).
 	 */
-	public String open(String idPrefix, PopupWindowProperties properties, Message startMessage, int serviceType) throws Exception;
+	public String open(String idPrefix, PopupWindowProperties properties, Message startMessage, Class serviceContext) throws Exception;
 	
 	/** 
-	 * Method for registering already created service with given thread ID as popup.
-	 * @param id service (thread) ID
+	 * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
+	 * @param idPrefix prefix for service id that will be associated with created window
 	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
-	 * @return given thread ID.
+	 * @return full ID of created service.
 	 */
-	public String open(String id, PopupWindowProperties properties) throws Exception;
+	public String open(String idPrefix, Service service, PopupWindowProperties properties) throws Exception;
 	
 	/** 
-	 * Method for registering already created service with given thread- or application-level service ID as popup.
-	 * @param id service (thread) ID
+	 * Method for registering already created service under given serviceContext as popup.
+	 * @param idPrefix prefix for service id that will be associated with created window
 	 * @param properties properties specifying behaviour and appearance of creatable popup window.
-	 * @param serviceType either <code>PopupWindowContext.THREAD_POPUP</code> or <code>PopupWindowContext.APPLICATION_POPUP</code>.
-	 * @return given thread ID.
+	 * @param serviceContext some context class deriving from <code>ManagedServiceContext</code>.
+	 * @return full ID of created service.
 	 */
-	public String open(String id, PopupWindowProperties properties, int serviceType) throws Exception;
+	public String open(String idPrefix, Service service, PopupWindowProperties properties, Class serviceContext) throws Exception;
 
 	/**
 	 * Closes the server side thread service (serving client side popup).
-	 * @param id thread (popup) ID to close. 
+	 * @param id thread (popup) ID to close.
+	 * @param serviceType either <code>PopupWindowContext.THREAD_POPUP</code> or <code>PopupWindowContext.APPLICATION_POPUP</code>.
 	 * @return whether service with given thread id was closed. 
 	 */
-	public boolean closeThreadService(String id) throws Exception;
-
-	/**
-	 * Closes the server side topservice (serving client side popup).
-	 * @param id topservice (popup) ID to close. 
-	 * @return whether topservice with given id was closed. 
-	 */
-	public boolean closeTopService(String id) throws Exception;
+	public boolean close(String id, Class serviceContext) throws Exception;
 }

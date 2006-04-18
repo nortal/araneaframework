@@ -16,10 +16,9 @@
 
 package org.araneaframework.servlet.filter;
 
-import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
@@ -30,11 +29,14 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.EnvironmentAwareServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
+import org.araneaframework.framework.router.StandardThreadServiceRouterService;
+import org.araneaframework.framework.router.StandardTopServiceRouterService;
+import org.araneaframework.servlet.PopupServiceInfo;
 import org.araneaframework.servlet.PopupWindowContext;
-import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
@@ -43,55 +45,54 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
 public class StandardPopupFilterWidget extends BaseFilterWidget implements PopupWindowContext {
 	private static final Logger log = Logger.getLogger(StandardPopupFilterWidget.class);
 	
+	/** Default context class for popup services */
+	protected Class defaultContext = ThreadContext.class;
+	
 	/** Maps of popups where keys are service IDs(==popup IDs) and values 
 	 * <code>StandardPopupFilterWidget.PopupServiceInfo</code>. Used for rendering popups.*/ 
 	protected Map popups = new HashMap();
 	/** Used to keep track of popups that have been opened from thread and not yet explicitly closed. */
 	protected Map allPopups = new HashMap();
-	
-	/** The factory used to create Spring bean which instance will be created as new session thread. */
-	protected EnvironmentAwareServiceFactory serviceFactory;
-	
-	public EnvironmentAwareServiceFactory getServiceFactory() {
-		return serviceFactory;
-	}
 
-	public void setServiceFactory(EnvironmentAwareServiceFactory serviceFactory) {
-		this.serviceFactory = serviceFactory;
+	/** Map of &lt;Class serviceContextClass, EnvironmentAwareServiceFactory factory &gt;. 
+	 *  Factories are used to create new popup services in context of serviceContextClass. */
+	protected Map serviceFactoryMap;
+	
+	public void setServiceFactoryMap(Map serviceFactories) throws Exception {
+		this.serviceFactoryMap = new HashMap();
+		for (Iterator i = serviceFactories.entrySet().iterator(); i.hasNext();) {
+			Map.Entry entry = (Map.Entry)i.next();
+			this.serviceFactoryMap.put((Class)Class.forName((String)entry.getKey()), entry.getValue());
+		}
 	}
-
+	
 	protected Environment getChildWidgetEnvironment() {
-		Map entries = new HashMap();
-		entries.put(PopupWindowContext.class, this);
-		return new StandardEnvironment(super.getChildWidgetEnvironment(), entries);
+		return new StandardEnvironment(super.getChildWidgetEnvironment(), PopupWindowContext.class, this);
 	}
-	
+
 	/** 
 	 * @see org.araneaframework.servlet.PopupWindowContext#open(java.lang.String, org.araneaframework.servlet.support.PopupWindowProperties, org.araneaframework.Message)
 	 */
 	public String open(String idPrefix, PopupWindowProperties properties, Message startMessage) throws Exception {
-		return open(idPrefix, properties, startMessage, PopupWindowContext.THREAD_POPUP);
+		return open(idPrefix, properties, startMessage, defaultContext);
 	}
 	
-	public String open(String idPrefix, PopupWindowProperties properties, Message startMessage, int serviceType) throws Exception {
-		if (!isLegalServiceType(serviceType))
-			throw new IllegalArgumentException("Specified service type value was found to be illegal.");
-		
+	public String open(String idPrefix, PopupWindowProperties properties, Message startMessage, Class serviceContext) throws Exception {
 		// append random suffix for requested service id
-		String rndString = RandomStringUtils.random(8, false, true);
+		String rndString = getRandomServiceId();
 		String id = (idPrefix != null) ? new StringBuffer(idPrefix).append(rndString).toString() : rndString;
 		
-		String topServiceId = isThreadServiceType(serviceType) ? (String) getTopServiceCtx().getCurrentId() : id;
-		String threadServiceId = isThreadServiceType(serviceType) ? (String) id : null;
+		String topServiceId = isThreadServiceType(serviceContext) ? (String) getTopServiceCtx().getCurrentId() : id;
+		String threadServiceId = isThreadServiceType(serviceContext) ? (String) id : null;
 		
-		Service service = serviceFactory.buildService(getEnvironment());
-		startPopupService(id, service, serviceType);
-		
+		Service service = ((EnvironmentAwareServiceFactory)serviceFactoryMap.get(serviceContext)).buildService(getEnvironment());
+		startPopupService(id, service, serviceContext);
+
 		if (startMessage != null)
 			startMessage.send(null, service);
 		
 		//add new, not yet opened popup to popup map
-		popups.put(id, new PopupServiceInfo(topServiceId, threadServiceId, properties));
+		popups.put(id, new StandardPopupServiceInfo(topServiceId, threadServiceId, properties));
 		allPopups.put(id, popups.get(id));
 		
 		log.debug("Popup service with identifier '" + id + "' was created.");
@@ -101,75 +102,56 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 	/** 
 	 * @see org.araneaframework.servlet.PopupWindowContext#open(java.lang.String, org.araneaframework.servlet.support.PopupWindowProperties)
 	 */
-	public String open(String id, PopupWindowProperties properties) {
-		return open(id, properties, PopupWindowContext.THREAD_POPUP);
+	public String open(String idPrefix, Service service, PopupWindowProperties properties) throws Exception {
+		return open(idPrefix, service, properties, defaultContext);
 	}
 	
 	/** 
 	 * @see org.araneaframework.servlet.PopupWindowContext#open(java.lang.String, org.araneaframework.servlet.support.PopupWindowProperties, int)
 	 */
-	public String open(String id, PopupWindowProperties properties, int serviceType) {
-		if (!isLegalServiceType(serviceType))
-			throw new IllegalArgumentException("Specified service type value was found to be illegal.");
+	public String open(String idPrefix, Service service, PopupWindowProperties properties, Class serviceContext) throws Exception {
+		String rndString = getRandomServiceId();
+		String id = (idPrefix != null) ? new StringBuffer(idPrefix).append(rndString).toString() : rndString;
 
 		TopServiceContext topServiceCtx = getTopServiceCtx();
-		String topServiceId = isThreadServiceType(serviceType) ? (String) topServiceCtx.getCurrentId() : id;
-		String threadServiceId = isThreadServiceType(serviceType) ? id : null;
+		String topServiceId = isThreadServiceType(serviceContext) ? (String) topServiceCtx.getCurrentId() : id;
+		String threadServiceId = isThreadServiceType(serviceContext) ? id : null;
 		
-		popups.put(id, new PopupServiceInfo(topServiceId, threadServiceId, properties));
+		startPopupService(id, service, serviceContext);
+		popups.put(id, new StandardPopupServiceInfo(topServiceId, threadServiceId, properties));
 		allPopups.put(id, popups.get(id));
 		
 		log.debug("Popup service with identifier '" + id + "' was registered.");
 		return id;
 	}
 	
-	protected void startPopupService(String id, Service service, int serviceType) throws Exception {
-		if (isThreadServiceType(serviceType))
-			getThreadCtx().addService(id, service);
-		else if (isTopServiceType(serviceType))
-			getTopServiceCtx().addService(id, service);
+	protected void startPopupService(String id, Service service, Class serviceContext) throws Exception {
+		getServiceCtx(serviceContext).addService(id, service);
 	}
 	
-	public boolean closeThreadService(String id) throws Exception {
-		if (!(allPopups.containsKey(id) && ((PopupServiceInfo)allPopups.get(id)).getThreadId() != null)) {
-			//XXX throw some exception - or better not?
-			log.warn("Attempt to close non-owned, unopened or already closed thread popup +'" + id + "'.");
+	public boolean close(String id, Class serviceContext) throws Exception {
+		if (!allPopups.containsKey(id)) {
+			log.warn("Attempt to close non-owned, unopened or already closed popup service with ID +'" + id + "'.");
 			return false;
 		}
 
-		getThreadCtx().close(id);
+		getServiceCtx(serviceContext).close(id);
 		allPopups.remove(id);
 
 		if (log.isDebugEnabled())
-			log.debug("Thread popup with identifier '" + id + "' was closed");
+			log.debug("Popup service with identifier '" + id + "' was closed");
 		return true;
 	}
-	
-	public boolean closeTopService(String id) throws Exception {
-		if (!(allPopups.containsKey(id) && ((PopupServiceInfo)allPopups.get(id)).getThreadId() == null)) {
-			//XXX throw some exception - or better not?
-			log.warn("Attempt to close non-owned, unopened or already closed top service popup +'" + id + "'.");
-			return false;
-		}
-		
-		getTopServiceCtx().close(id);
-		allPopups.remove(id);
-		
-		if (log.isDebugEnabled())
-			log.debug("Topservice popup with identifier '" + id + "' was closed");
 
-		return true;
+	protected final boolean isThreadServiceType(Class serviceType) {
+		return (serviceType.equals(ThreadContext.class));
 	}
 	
-	protected final boolean isThreadServiceType(int serviceType) {
-		return (serviceType == PopupWindowContext.THREAD_POPUP);
+	protected final boolean isTopServiceType(Class serviceType) {
+		return (serviceType.equals(TopServiceContext.class));
 	}
 	
-	protected final boolean isTopServiceType(int serviceType) {
-		return (serviceType == PopupWindowContext.APPLICATION_POPUP);
-	}
-	
-	protected boolean isLegalServiceType(int serviceType) {
+	protected boolean isLegalServiceType(Class serviceType) {
 		return isThreadServiceType(serviceType) || isTopServiceType(serviceType);
 	}
 
@@ -178,19 +160,15 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 	}
 	
 	protected void event(Path path, InputData input) throws Exception {
-		ThreadContext threadCtx = getThreadCtx();
-		HttpServletRequest request = ((ServletInputData) input).getRequest();
-		
-		if (request.getParameter(POPUPS_CLOSE_KEY) != null) {
-			if (log.isDebugEnabled())
-				log.debug("Should be closing myself now, threadId  = '" + threadCtx.getCurrentId() + "'" );
-			threadCtx.close(threadCtx.getCurrentId());
-		} 
-		else {
-			super.event(path, input);
-		}
+		// TODO: somehow get the whatever context this service is associated with and kill it without mercy if
+		// popup closing key is found.
+		super.event(path, input);
 	}
 	
+	/** 
+	 * Popups are rendered by pushing <code>Map &lt;String serviceId, PopupServiceInfo serviceInfo&gt;</code>
+	 * into output under the key {@link org.araneaframework.servlet.PopupWindowContext}.POPUPS_KEY
+	 */
 	protected void render(OutputData output) throws Exception {
 		output.pushAttribute(POPUPS_KEY, popups);
 		
@@ -204,20 +182,28 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		popups = new HashMap();
 	}
 	
+	protected String getRandomServiceId() {
+		return RandomStringUtils.random(8, false, true);
+	}
+	
+	public ManagedServiceContext getServiceCtx(Class contextClass) {
+		return (ManagedServiceContext)(getEnvironment().requireEntry(contextClass));
+	}
+	
 	public TopServiceContext getTopServiceCtx() {
-		return ((TopServiceContext)getEnvironment().getEntry(TopServiceContext.class));
+		return ((TopServiceContext)getEnvironment().requireEntry(TopServiceContext.class));
 	}
 	
 	public ThreadContext getThreadCtx() {
-		return ((ThreadContext)getEnvironment().getEntry(ThreadContext.class));
+		return ((ThreadContext)getEnvironment().requireEntry(ThreadContext.class));
 	}
 	
-	public class PopupServiceInfo implements Serializable {
+	public class StandardPopupServiceInfo implements PopupServiceInfo {
 		private String topServiceId;
 		private String threadId;
 		private PopupWindowProperties popupProperties;
 		
-		public PopupServiceInfo(String topServiceId, String threadId, PopupWindowProperties popupProperties) {
+		public StandardPopupServiceInfo(String topServiceId, String threadId, PopupWindowProperties popupProperties) {
 			this.topServiceId = topServiceId;
 			this.threadId = threadId;
 			this.popupProperties = popupProperties;
@@ -227,12 +213,20 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 			return popupProperties;
 		}
 
-		public String getThreadId() {
-			return threadId;
+		public String toURLParams() {
+			StringBuffer urlSuffix = new StringBuffer(StandardTopServiceRouterService.TOP_SERVICE_KEY + "=").append(topServiceId);
+			if (threadId != null) {
+		      urlSuffix.append("&" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "="); 
+		      urlSuffix.append(threadId);
+			}
+			return urlSuffix.toString();
 		}
 
-		public String getTopServiceId() {
-			return topServiceId;
+		public Map getServiceInfo() {
+			Map map = new HashMap();
+			map.put(StandardTopServiceRouterService.TOP_SERVICE_KEY, topServiceId);
+			map.put(StandardThreadServiceRouterService.THREAD_SERVICE_KEY, threadId);
+			return map;
 		}
 	}
 }
