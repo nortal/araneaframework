@@ -147,14 +147,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		return (serviceType.equals(ThreadContext.class));
 	}
 	
-	protected final boolean isTopServiceType(Class serviceType) {
-		return (serviceType.equals(TopServiceContext.class));
-	}
-	
-	protected boolean isLegalServiceType(Class serviceType) {
-		return isThreadServiceType(serviceType) || isTopServiceType(serviceType);
-	}
-
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		super.action(path, input, output);
 	}
