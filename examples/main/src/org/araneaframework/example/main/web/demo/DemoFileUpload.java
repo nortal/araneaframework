@@ -22,6 +22,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.service.FileDownloaderService;
 import org.araneaframework.servlet.support.PopupWindowProperties;
@@ -102,17 +103,11 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		FileInfo selectedFile = (FileInfo) uploadList.getRowFromRequestId(param);
 		
 		getMessageCtx().showInfoMessage("Popup window with download content should have opened. If it did not, please relax your popup blocker settings.");
-		
-		String rndServiceId = RandomStringUtils.random(30, true, true);
-		ThreadContext threadContext = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
-
 		FileDownloaderService service = new FileDownloaderService(selectedFile);
-		threadContext.addService(rndServiceId, service);
-		log.debug("Created new service with threadServiceId = " + rndServiceId);
 		
 		PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
 		PopupWindowProperties p = new PopupWindowProperties();
-		popupContext.open(rndServiceId, p);
+		popupContext.open("download", service, p, TopServiceContext.class);
 	}
 
 	// INNER CLASSES

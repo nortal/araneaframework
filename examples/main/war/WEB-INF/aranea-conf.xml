@@ -79,7 +79,7 @@
   <bean id="araneaThreadFilters" singleton="false"
 		class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
 		<property name="childService" ref="araneaWidgetAdapter"/>
-		<property name="filterChain">			
+		<property name="filterChain">
 			<list>
 				<ref bean="araneaSynchronizingFilter"/>
 				<ref bean="araneaContinuationFilter"/>
@@ -93,28 +93,31 @@
     <property name="childWidget" ref="araneaWidgetFilters"/>
   </bean>
   
-   <!-- Framework widgets -->     
-   
-  <bean id="araneaWidgetFilters" singleton="false"
+   <!-- Framework widgets -->
+  <bean id="araneaWidgetFilters" singleton="false" 
 		class="org.araneaframework.framework.filter.StandardWidgetFilterChainFilterWidget">
 		<property name="childWidget" ref="araneaWidgetContainer"/>
-		<property name="filterChain">			
+		<property name="filterChain">
 			<list>
 				<ref bean="araneaTransactionFilter"/>
 				<ref bean="araneaMessagingFilter"/>
 				<ref bean="araneaContexts"/>
                 <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter"
                     singleton="false">
-                    <property name="serviceFactory">
-                        <bean class="org.araneaframework.ioc.spring.EnvironmentAwareSpringServiceFactory" singleton="false">
-                            <property name="beanId" value="araneaThreadFilters"/>
-                        </bean>
+                    <property name="serviceFactoryMap">
+                        <map>
+                            <entry key="org.araneaframework.framework.ThreadContext" value-ref="threadServiceFactory"/>
+                        </map>
                     </property>
                 </bean>
 			</list>
 		</property>
-	</bean>  
+	</bean>
 
+  <bean class="org.araneaframework.ioc.spring.EnvironmentAwareSpringServiceFactory" singleton="false" id="threadServiceFactory">
+    <property name="beanId" value="araneaThreadFilters"/>
+  </bean>
+  
   <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="araneaWidgetContainer"
     singleton="false">
     <property name="childWidget" ref="thread.viewPort"/>
