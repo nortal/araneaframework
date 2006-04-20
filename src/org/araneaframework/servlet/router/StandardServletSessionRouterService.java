@@ -18,9 +18,7 @@ package org.araneaframework.servlet.router;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -86,7 +84,7 @@ public class StandardServletSessionRouterService extends BaseService {
       
       if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
         log.debug("Created HTTP session '"+sess.getId()+"'");
-        service = new StandardRelocatableServiceDecorator(serviceFactory.buildService());        
+        service = new StandardRelocatableServiceDecorator(serviceFactory.buildService(getEnvironment()));        
         
         service._getComponent().init(newEnv);
       }

@@ -25,10 +25,13 @@ import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.control.TimeControl;
+import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.DateData;
+import org.araneaframework.uilib.form.data.IntegerData;
 import org.araneaframework.uilib.form.data.StringData;
 
 
@@ -72,6 +75,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
     simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
     simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
+    simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
@@ -99,6 +103,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     	getMessageCtx().showInfoMessage("DateTime value is: " + simpleForm.getValueByFullName("dateTime"));
     	getMessageCtx().showInfoMessage("Time value is: " + simpleForm.getValueByFullName("time"));
     	getMessageCtx().showInfoMessage("Date value is: " + simpleForm.getValueByFullName("date"));
+    	getMessageCtx().showInfoMessage("Number value is: " + simpleForm.getValueByFullName("number"));
     }
   }
 }

@@ -23,7 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.araneaframework.Component;
 import org.araneaframework.Widget;
 import org.araneaframework.uilib.support.FlowCreator;
 

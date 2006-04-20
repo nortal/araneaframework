@@ -14,22 +14,29 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.core;
+package org.araneaframework.servlet;
 
 import java.io.Serializable;
-import org.araneaframework.Environment;
-import org.araneaframework.Widget;
+import java.util.Map;
+import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
- * A simple factory for creating widgets.
- * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public interface WidgetFactory extends Serializable {
+public interface PopupServiceInfo extends Serializable {
   /**
-   * Returns a Widget.
-   * @return the Widget
+   * @return Map of &lt;key, value&lt; where <i>keys</i> and <i>values</i>
+   *         give some information about popup service.
    */
-  public Widget buildWidget(Environment env);
+  public Map getServiceInfo();
+	
+  /**
+   * @return popup service's info translated into String containing URL style parameters. 
+   */
+  public String toURLParams();
+
+  /**
+   * @return popup service's window properties. 
+   */  
+  public PopupWindowProperties getPopupProperties();
 }

@@ -12,6 +12,15 @@
     </property>
   </bean>
   
+  <bean class="org.araneaframework.servlet.filter.StandardServletRequestEncodingFilterService" 
+    id="requestEncodingFilter" singleton="false">
+    <property name="requestEncoding" value="UTF-8"/>
+  </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardServletHttpResponseFilterService" 
+    id="responseHeaderFilter" singleton="false">
+  </bean>
+  
   <bean class="org.araneaframework.servlet.filter.StandardServletFileImportFilterService" 
   	id="araneaReadFileFilter" singleton="false">
   </bean>
@@ -45,11 +54,6 @@
   	id="araneaSynchronizingFilter" singleton="false">
   </bean>
   
-  <bean class="org.araneaframework.servlet.filter.StandardServletHttpFilterService" 
-	  id="araneaHeaderFilter" singleton="false">
-    <property name="requestEncoding" value="UTF-8"/>
-  </bean>
-  
   <bean class="org.araneaframework.servlet.filter.StandardServletFileUploadFilterService" 
 	  id="araneaFileUploadFilter" singleton="false">
   </bean>
@@ -77,8 +81,4 @@
     </property>    
   </bean>
   
-    <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter"
-    singleton="false">
-  </bean>
-	
 </beans>

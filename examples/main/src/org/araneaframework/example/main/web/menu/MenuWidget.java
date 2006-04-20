@@ -17,12 +17,10 @@
 package org.araneaframework.example.main.web.menu;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.araneaframework.Component;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.SecurityContext;
-import org.araneaframework.example.main.web.company.CompanyEditWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
@@ -42,6 +40,7 @@ import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.person.PersonListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
 import org.araneaframework.example.main.web.sample.InvisibleElementFormWidget;
+import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
 import org.araneaframework.servlet.ServletOutputData;
@@ -103,6 +102,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem(new MenuItem("Simple_List", SimpleListWidget.class));
       sampleMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
       sampleMenu.addMenuItem(new MenuItem("#Invisible element form", InvisibleElementFormWidget.class));
+      sampleMenu.addMenuItem(new MenuItem("#Popup example", SamplePopupWidget.class));
     }
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Error")); {
@@ -124,6 +124,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		result.addMenuItem(null, new MenuItem("Lists")); {
 			result.addMenuItem("Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
 			result.addMenuItem("Lists", new MenuItem("Multi_List", MultiListWidget.class));
+			
 		}
 		
 		return result;

@@ -36,9 +36,15 @@
 						</ui:row>
 					</ui:listFilter>
 										
-					<!-- Body -->
+					<!-- List body, where all list objects that fit on a current page will be rendered. -->
 					<ui:listRows>
+    					<!-- Creating a row inside the listRows signals that list object will be rendered inside it. 
+                             ui:listRows is iterating tag, it will render as many rows as there are object to show.
+                             Current list object being operated on is accessible as EL variable ${row}. List objects
+                             field values that have getters are accessible as ${row.field}.
+                        -->
 						<ui:row>
+						
 							<ui:cell>
 								<c:out value="${row.id}"/>
 							</ui:cell>
@@ -75,8 +81,6 @@
 			</ui:component>
 		
 		</ui:list>
-
-		
 
 	</ui:widgetContext>
 </jsp:root>

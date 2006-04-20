@@ -177,7 +177,7 @@ public abstract class BaseComponent implements Component {
    */
   protected void _checkCall() throws IllegalStateException {
     if (!wasInited) {
-      throw new IllegalStateException("Component has not been initialized!");
+      throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
     }
   }
   

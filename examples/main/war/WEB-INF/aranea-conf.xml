@@ -21,6 +21,8 @@
 				<ref bean="araneaCriticalErrorHandler"/>
 				<ref bean="araneaReadFileFilter"/>
 				<ref bean="araneaMainStatisticFilter"/>
+                <ref bean="requestEncodingFilter"/>
+                <ref bean="araneaFileUploadFilter"/>
 			</list>
 		</property>
 	</bean>  
@@ -77,12 +79,11 @@
   <bean id="araneaThreadFilters" singleton="false"
 		class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
 		<property name="childService" ref="araneaWidgetAdapter"/>
-		<property name="filterChain">			
+		<property name="filterChain">
 			<list>
 				<ref bean="araneaSynchronizingFilter"/>
-				<ref bean="araneaHeaderFilter"/>
-				<ref bean="araneaFileUploadFilter"/>
 				<ref bean="araneaContinuationFilter"/>
+                <ref bean="responseHeaderFilter"/>
 			</list>
 		</property>
 	</bean>  
@@ -92,21 +93,31 @@
     <property name="childWidget" ref="araneaWidgetFilters"/>
   </bean>
   
-   <!-- Framework widgets -->     
-   
-  <bean id="araneaWidgetFilters" singleton="false"
+   <!-- Framework widgets -->
+  <bean id="araneaWidgetFilters" singleton="false" 
 		class="org.araneaframework.framework.filter.StandardWidgetFilterChainFilterWidget">
 		<property name="childWidget" ref="araneaWidgetContainer"/>
-		<property name="filterChain">			
+		<property name="filterChain">
 			<list>
 				<ref bean="araneaTransactionFilter"/>
 				<ref bean="araneaMessagingFilter"/>
 				<ref bean="araneaContexts"/>
-				<ref bean="araneaPopupFilter"/>
+                <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter"
+                    singleton="false">
+                    <property name="serviceFactoryMap">
+                        <map>
+                            <entry key="org.araneaframework.framework.ThreadContext" value-ref="threadServiceFactory"/>
+                        </map>
+                    </property>
+                </bean>
 			</list>
 		</property>
-	</bean>  
+	</bean>
 
+  <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" singleton="false" id="threadServiceFactory">
+    <property name="beanId" value="araneaThreadFilters"/>
+  </bean>
+  
   <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="araneaWidgetContainer"
     singleton="false">
     <property name="childWidget" ref="thread.viewPort"/>

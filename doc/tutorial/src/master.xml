@@ -932,21 +932,21 @@ protected void init() throws Exception {
 
   // createElement(String labelId, Control control, Data data, boolean mandatory)
   FormElement el = simpleForm.createElement("#Textbox", new TextControl(), new StringData(), false);
-  SimpleForm.addElement("textbox1", el);
+  simpleForm.addElement("textbox1", el);
 
   // and here we add form elements to form without the extra step taken previously. 
-  SimpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
-  SimpleForm.addElement("button1", "#Button", new ButtonControl(), null, false);
-  SimpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
-  SimpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
-  SimpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
+  simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
+  simpleForm.addElement("button1", "#Button", new ButtonControl(), null, false);
+  simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
+  simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
+  simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
 
   // now we construct a button, that is also Control. Reason why we cannot just add it
   // to form is obvious, we want to add a specific listener to button before.
   ButtonControl button = new ButtonControl();
   button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm") );
   // add the button to form. As the button does not hold any value, Data will be null.
-  SimpleForm.addElement("button", "#Button", button, null, false);
+  simpleForm.addElement("button", "#Button", button, null, false);
 
   // the usual, add the created widget to main widget.
   addWidget("simpleForm", simpleForm);
@@ -1615,6 +1615,54 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                 falls outside the scope of this tutorial, but fine examples can be found from reference manual
                 chapter "Lists" and examples source code.
             </para>
+            
+            <para>
+                JSP fragment that renders the list would look something like that:
+            </para>
+            
+            <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+<ui:list id="companyList">
+  <!-- List body, where all list objects that fit on a current page will be rendered. -->
+  <ui:listRows>
+    <!-- Creating a row inside the listRows signals that list object will be rendered inside it. 
+         ui:listRows is iterating tag, it will render as many rows as there are object to show.
+         Current list object being operated on is accessible as EL variable ${row}. List objects
+         field values that have getters are accessible as ${row.field}.
+    -->
+    <ui:row>
+      <ui:cell>
+        <!-- Accessing the row object, as described previously. -->
+        <c:out value="${row.id}"/>
+      </ui:cell>
+
+      <ui:cell>
+        <ui:listRowLinkButton eventId="select">
+          <c:out value="${row.name}"/>
+        </ui:listRowLinkButton>
+      </ui:cell>
+
+      <ui:cell>
+        <c:out value="${row.address}"/>
+      </ui:cell>
+        
+      <ui:cell>
+        <!-- Edit company button. Note the listRow prefix for the tag, it separates 
+             this from ordinary linkButton tag and ensures that row's list id is
+             submitted with the request. -->
+        <ui:listRowLinkButton eventId="edit">
+            <ui:image code="buttonChange" alt="Edit company" title="Edit company"/>
+        </ui:listRowLinkButton>
+        <!-- Remove company button. -->
+        <ui:listRowLinkButton eventId="remove">
+            <ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
+        </ui:listRowLinkButton>
+      </ui:cell>
+        
+    </ui:row>
+  </ui:listRows>              
+</ui:list>
+...]]></programlisting>
 
             </sect3>
             

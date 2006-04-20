@@ -23,8 +23,7 @@
 
                     <div id="cont1">
                         <ui:systemForm method="POST" enctype="multipart/form-data">
-                        
-						<jsp:include page="/WEB-INF/jsp/util/popups.jsp"/>
+                        <ui:registerPopups/>
                         
 						<!-- Renders the menu on top of the screen -->
                          <jsp:include page="/WEB-INF/jsp/mainlayout/menu.jsp"/>
