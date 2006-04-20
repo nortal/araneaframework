@@ -28,7 +28,7 @@ import java.io.Writer;
  * @jsp.tag
  *   name = "label"
  *   body-content = "JSP"
- *   description = "Represents localizable label that is bound to an UiLib element."
+ *   description = "Represents localizable label that is bound to a form element."
  */
 public class UiStdFormElementLabelTag extends UiFormElementLabelBaseTag {
 
