@@ -23,9 +23,9 @@ import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.Control;
 
 
 /**
@@ -34,7 +34,6 @@ import org.araneaframework.uilib.form.control.Control;
  * @author Oleg Mürk
  */
 public class UiFormElementLabelBaseTag extends UiPresentationTag {
-	protected String formId;
 	protected FormWidget.ViewModel formViewModel;
 	
 	protected FormElement.ViewModel formElementViewModel;
@@ -84,7 +83,7 @@ public class UiFormElementLabelBaseTag extends UiPresentationTag {
 	 *   required = "false"
 	 *   description = "Whether a colon (":") is draw after the label." 
 	 */
-	public void setShowColumn(String showColon) throws JspException {
+	public void setShowColon(String showColon) throws JspException {
 		this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
 	}
 	
@@ -110,7 +109,6 @@ public class UiFormElementLabelBaseTag extends UiPresentationTag {
 		super.before(out);
 		
 		// Get form data		
-		formId = (String)readAttribute(UiFormTag.FORM_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 		formViewModel = (FormWidget.ViewModel)readAttribute(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 		FormWidget form = 
 			(FormWidget)UiUtil.readAttribute(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);

@@ -51,7 +51,7 @@ public class UiStdFormCheckboxMultiSelectItemTag extends UiFormElementBaseTag {
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "The value of this radio button that will be submitted with form if this radio button is selected." 
+	 *   description = "The value of this checkbox that will be submitted with form if this checkbox is selected." 
 	 */
 	public void setValue(String value) throws JspException  {
 	  this.value = (String)evaluateNotNull("value", value, String.class);

@@ -37,11 +37,12 @@ public class CssFileImporter extends DefaultFileImporter {
 		tmpltCssFiles.add("styles/_styles_screen.css");
 		tmpltCssFiles.add("styles/_styles_print.css");
 		tmpltCssFiles.add("styles/_styles_new.css");
-		tmpltCssFiles.add("js/calendar/calendar.css");
+		tmpltCssFiles.add("css/calendar/calendar.css");
 	}
 	
 	private static final List cssFiles = new ArrayList();
 	static {
+		cssFiles.add("css/calendar/calendar.css");
 	}
 	
 	private static final List roCssFiles = Collections.unmodifiableList(cssFiles);

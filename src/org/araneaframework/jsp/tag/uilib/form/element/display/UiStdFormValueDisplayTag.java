@@ -36,7 +36,7 @@ public class UiStdFormValueDisplayTag extends UiFormElementBaseDisplayTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-	 *   required = "false"
+	 *   required = "true"
 	 *   description = "Name of the page scope variable to put the element value into." 
 	 */
   public void setVar(String var) throws JspException {
