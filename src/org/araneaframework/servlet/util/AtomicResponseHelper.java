@@ -69,6 +69,7 @@ public class AtomicResponseHelper {
       super(arg0);
   
       resetStream();
+      resetWriter();
     }
     
 
@@ -79,12 +80,17 @@ public class AtomicResponseHelper {
     /**
      * Constructs a new writer with the current OutputStream and HttpServletResponse.
      */
-    private void resetWriter() throws UnsupportedEncodingException {
-      if (getResponse().getCharacterEncoding() != null) { 
-        writerOut = new PrintWriter(new OutputStreamWriter(out, getResponse().getCharacterEncoding()));
+    private void resetWriter() {
+      try {
+        if (getResponse().getCharacterEncoding() != null) { 
+          writerOut = new PrintWriter(new OutputStreamWriter(out, getResponse().getCharacterEncoding()));
+        }
+        else {
+          writerOut = new PrintWriter(new OutputStreamWriter(out));
+        }
       }
-      else {
-        writerOut = new PrintWriter(new OutputStreamWriter(out));
+      catch (UnsupportedEncodingException e) {
+        throw new AraneaRuntimeException(e);
       }
     }
     
@@ -131,17 +137,16 @@ public class AtomicResponseHelper {
      * If the output has not been commited yet, clears the content of the underlying
      * buffer in the response without clearing headers or status code.
      */
-    public void reset() {
+    public void rollback() {
       if (committed)
         throw new IllegalStateException("Cannot reset buffer - response is already committed");
+      
       resetStream();
-      try {
-        resetWriter();
-      }
-      catch (UnsupportedEncodingException e) {
-        throw new AraneaRuntimeException(e);
-      }
-    }
+      resetWriter();
+      
+      if (!isCommitted())
+        reset();
+    }    
   }
   
   private static class AraneaServletOutputStream extends ServletOutputStream {
@@ -177,6 +182,6 @@ public class AtomicResponseHelper {
   }
   
   public void rollback() throws Exception {
-    atomicWrapper.reset();
+    atomicWrapper.rollback();
   }
 }
