@@ -17,6 +17,7 @@
 package org.araneaframework.core;
 
 import java.io.Serializable;
+import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 
 /**
@@ -30,5 +31,5 @@ public interface WidgetFactory extends Serializable {
    * Returns a Widget.
    * @return the Widget
    */
-  public Widget buildWidget();
+  public Widget buildWidget(Environment env);
 }

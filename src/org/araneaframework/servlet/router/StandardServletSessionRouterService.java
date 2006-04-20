@@ -26,7 +26,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.core.EnvironmentAwareServiceFactory;
+import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.servlet.ServletInputData;
@@ -50,12 +50,12 @@ public class StandardServletSessionRouterService extends BaseService {
    */
   public static final String SESSION_SERVICE_KEY = "sessionService";
   
-  private EnvironmentAwareServiceFactory serviceFactory;
+  private ServiceFactory serviceFactory;
   
   /**
    * Sets the factory which is used to build the service if one does not exist in the session.
    */
-  public void setSessionServiceFactory(EnvironmentAwareServiceFactory factory) {
+  public void setSessionServiceFactory(ServiceFactory factory) {
     serviceFactory = factory;
   }
 

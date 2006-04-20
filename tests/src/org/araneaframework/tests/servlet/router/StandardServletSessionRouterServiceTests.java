@@ -17,6 +17,7 @@
 package org.araneaframework.tests.servlet.router;
 
 import junit.framework.TestCase;
+import org.araneaframework.Environment;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.ServiceFactory;
@@ -47,8 +48,8 @@ public class StandardServletSessionRouterServiceTests extends TestCase {
   public void setUp() throws Exception {
     service = new StandardServletSessionRouterService();
     child = new MockEventfulBaseService();
-    ServiceFactory factory = new ServiceFactory() {
-      public Service buildService() {
+    ServiceFactory factory = new ServiceFactory() {    	
+      public Service buildService(Environment env) {
         return child;
       }
     };

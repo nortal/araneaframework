@@ -42,7 +42,7 @@
     <property name="sessionServiceFactory" ref="application.sessionServiceFactory"/>
   </bean>
 
-  <bean class="org.araneaframework.ioc.spring.EnvironmentAwareSpringServiceFactory" id="application.sessionServiceFactory"
+  <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" id="application.sessionServiceFactory"
         singleton="false">
     <property name="beanId">
       <idref bean="araneaSessionFilters"/>
@@ -114,7 +114,7 @@
 		</property>
 	</bean>
 
-  <bean class="org.araneaframework.ioc.spring.EnvironmentAwareSpringServiceFactory" singleton="false" id="threadServiceFactory">
+  <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" singleton="false" id="threadServiceFactory">
     <property name="beanId" value="araneaThreadFilters"/>
   </bean>
   

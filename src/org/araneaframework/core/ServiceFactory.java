@@ -17,18 +17,18 @@
 package org.araneaframework.core;
 
 import java.io.Serializable;
+import org.araneaframework.Environment;
 import org.araneaframework.Service;
 
 /**
- * A simple factory for creating services.
+ * A simple factory interface for creating services with help from Environment.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public interface ServiceFactory extends Serializable {
   /**
    * Returns a Service.
    * @return the Service
    */
-  public Service buildService();
+  public Service buildService(Environment env);
 }

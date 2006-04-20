@@ -27,7 +27,7 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
-import org.araneaframework.core.EnvironmentAwareServiceFactory;
+import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
@@ -54,7 +54,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 	/** Used to keep track of popups that have been opened from thread and not yet explicitly closed. */
 	protected Map allPopups = new HashMap();
 
-	/** Map of &lt;Class serviceContextClass, EnvironmentAwareServiceFactory factory &gt;. 
+	/** Map of &lt;Class serviceContextClass, ServiceFactory factory &gt;. 
 	 *  Factories are used to create new popup services in context of serviceContextClass. */
 	protected Map serviceFactoryMap;
 	
@@ -85,7 +85,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 		String topServiceId = isThreadServiceType(serviceContext) ? (String) getTopServiceCtx().getCurrentId() : id;
 		String threadServiceId = isThreadServiceType(serviceContext) ? (String) id : null;
 		
-		Service service = ((EnvironmentAwareServiceFactory)serviceFactoryMap.get(serviceContext)).buildService(getEnvironment());
+		Service service = ((ServiceFactory)serviceFactoryMap.get(serviceContext)).buildService(getEnvironment());
 		startPopupService(id, service, serviceContext);
 
 		if (startMessage != null)
