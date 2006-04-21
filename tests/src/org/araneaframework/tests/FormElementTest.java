@@ -18,7 +18,7 @@ package org.araneaframework.tests;
 
 import junit.framework.TestCase;
 import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -41,7 +41,7 @@ public class FormElementTest extends TestCase {
 
     FormElement sfe = new FormElement();
     
-    sfe._getComponent().init(new MockEnviroment());
+    sfe._getComponent().init(new MockEnvironment());
     
     TextControl tb = new TextControl();
     tb.setMandatory(true);
