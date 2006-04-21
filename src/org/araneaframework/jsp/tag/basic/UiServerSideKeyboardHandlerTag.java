@@ -144,7 +144,7 @@ public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
 		if (eventParam == null) eventParam = "";
 		if (StringUtils.isBlank(precondition)) precondition = "return true;";
 		
-		String systemFormId = (String)UiUtil.readAttribute(pageContext, UiSystemFormTag.SYSTEM_FORM_ID_KEY, PageContext.REQUEST_SCOPE);	
+		String systemFormId = (String)UiUtil.requireContextEntry(pageContext, UiSystemFormTag.SYSTEM_FORM_ID_KEY, PageContext.REQUEST_SCOPE);	
 		
 		return "function(event, elementId) { " +
 		"uiStandardSubmitEvent(" + "document.forms['" + systemFormId + "'], '" + 

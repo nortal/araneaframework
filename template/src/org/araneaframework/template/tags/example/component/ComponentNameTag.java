@@ -1,7 +1,6 @@
 package org.araneaframework.template.tags.example.component;
 
 import java.io.Writer;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -26,7 +25,7 @@ public class ComponentNameTag extends UiPresentationTag {
 
 		// make sure we are inside component header and fail if no header is present.
 		// not strictly necessary, mainly for demonstration of attribute usage.
-		readAttribute(ComponentHeaderTag.COMPONENT_HEADER_KEY, PageContext.REQUEST_SCOPE);
+		requireContextEntry(ComponentHeaderTag.COMPONENT_HEADER_KEY);
 
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", styleClass);

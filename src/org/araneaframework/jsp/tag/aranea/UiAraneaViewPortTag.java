@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.aranea;
 
 import java.io.Writer;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.OutputData;
 import org.araneaframework.framework.container.StandardViewPortWidget;
 import org.araneaframework.jsp.container.UiAraneaWidgetContainer;
@@ -44,10 +43,9 @@ public class UiAraneaViewPortTag extends UiBaseTag {
       (StandardJspFilterService.JspConfiguration) output.getAttribute(
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
 
-    pushAttribute(
+    pushContextEntry(
         UiWidgetContainer.REQUEST_CONTEXT_KEY, 
-        new UiAraneaWidgetContainer(rootWidget, config), 
-        PageContext.REQUEST_SCOPE);  
+        new UiAraneaWidgetContainer(rootWidget, config));  
     
     return EVAL_BODY_INCLUDE;
   }

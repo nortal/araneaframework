@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
 import java.util.ListIterator;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiIterationBaseTag;
 
 
@@ -43,8 +42,8 @@ public abstract class UiListRowsBaseTag extends UiIterationBaseTag {
 	//
 	
 	protected void doForEachRow(Writer out) throws Exception {
-		setAttribute(ROW_KEY_REQUEST, currentRow, PageContext.REQUEST_SCOPE);
-		setAttribute(ROW_REQUEST_ID_KEY_REQUEST, Integer.toString(rowIterator.previousIndex()), PageContext.REQUEST_SCOPE);
+		pushContextEntry(ROW_KEY_REQUEST, currentRow);
+		pushContextEntry(ROW_REQUEST_ID_KEY_REQUEST, Integer.toString(rowIterator.previousIndex()));
 	}
 	
 	protected abstract ListIterator getIterator();

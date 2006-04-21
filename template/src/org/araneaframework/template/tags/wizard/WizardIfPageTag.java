@@ -18,7 +18,6 @@ package org.araneaframework.template.tags.wizard;
 
 import java.io.Writer;
 
-import javax.servlet.jsp.PageContext;
 
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.template.framework.context.WizardContext;
@@ -64,7 +63,7 @@ public class WizardIfPageTag extends UiBaseTag {
   
   protected int before(Writer out) throws Exception {
   	  	
-  	WizardContext wizard = (WizardContext) readAttribute(WIDGET_CONTEXT_KEY_REQUEST, PageContext.REQUEST_SCOPE);  	
+  	WizardContext wizard = (WizardContext) requireContextEntry(WIDGET_CONTEXT_KEY_REQUEST);  	
 		
 		int curIndex = wizard.getCurrentPageIndex();
 		int count = wizard.countPages();

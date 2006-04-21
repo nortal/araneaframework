@@ -64,7 +64,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
 	protected int before(Writer out) throws Exception {
 		super.before(out);
 		
-		OutputData output = (OutputData) UiUtil.readAttribute(pageContext, UiAraneaRootTag.OUTPUT_DATA_KEY, PageContext.REQUEST_SCOPE);
+		OutputData output = (OutputData) UiUtil.requireContextEntry(pageContext, UiAraneaRootTag.OUTPUT_DATA_KEY, PageContext.REQUEST_SCOPE);
 		Map messageMap = (Map) output.getAttribute(StandardMessagingFilterWidget.MESSAGE_KEY);
 		
 		List entries = new ArrayList();

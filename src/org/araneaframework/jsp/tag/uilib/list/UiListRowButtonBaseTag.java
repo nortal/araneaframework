@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.uilib.list;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.presentation.UiSimpleButtonBaseTag;
 import org.araneaframework.jsp.util.UiUpdateRegionUtil;
@@ -79,7 +78,7 @@ public class UiListRowButtonBaseTag extends UiSimpleButtonBaseTag {
 		if (contextWidgetId == null)
 			throw new UiException("'listRow(Link)Button' tags can only be used in a context widget!");
 		
-		eventParam = (String) readAttribute(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		eventParam = (String) requireContextEntry(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST);
     
     updateRegionNames = UiUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
     

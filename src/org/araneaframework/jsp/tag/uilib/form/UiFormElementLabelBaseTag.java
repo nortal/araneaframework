@@ -109,13 +109,13 @@ public class UiFormElementLabelBaseTag extends UiPresentationTag {
 		super.before(out);
 		
 		// Get form data		
-		formViewModel = (FormWidget.ViewModel)readAttribute(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
 		FormWidget form = 
-			(FormWidget)UiUtil.readAttribute(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+			(FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 		
 		//In case the tag is in formElement tag
-		if (id == null && getAttribute(UiFormElementTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE) != null) 
-			id = (String) getAttribute(UiFormElementTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		if (id == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
+			id = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
 		if (id == null) throw new UiMissingIdException(this);
 		formElementViewModel = 
 			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   

@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.context;
 import java.io.Writer;
 import java.util.StringTokenizer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.Standard;
 import org.araneaframework.jsp.tag.UiBaseTag;
@@ -75,8 +74,8 @@ public class UiWidgetContextTag extends UiBaseTag {
     viewModel = (Standard.WidgetViewModel) widget._getViewable().getViewModel();
     widgetId = UiWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
 
-    pushAttribute(WIDGET_CONTEXT_ID_KEY_REQUEST, widgetId, PageContext.REQUEST_SCOPE);
-    pushAttribute(WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST, viewModel, PageContext.REQUEST_SCOPE);
+    pushContextEntry(WIDGET_CONTEXT_ID_KEY_REQUEST, widgetId);
+    pushContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST, viewModel);
 
     return EVAL_BODY_INCLUDE;
   }

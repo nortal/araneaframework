@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -41,7 +40,7 @@ public class UiElementContentTag extends UiBaseTag {
 	protected int before(Writer out) throws Exception {
 		super.before(out);
 		
-		UiElementTag parent = (UiElementTag)readAttribute(UiElementTag.KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		UiElementTag parent = (UiElementTag)requireContextEntry(UiElementTag.KEY_REQUEST);
 		parent.onContent();
     
 		parent.writeAttributes(out);

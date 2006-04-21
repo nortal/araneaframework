@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
 
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 import org.araneaframework.uilib.list.ListWidget;
@@ -45,7 +44,7 @@ public class UiListFilterTag extends UiBaseTag {
 		super.before(out);
 
     // Get list data
-    String listId = (String)readAttribute(UiListTag.LIST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);    
+    String listId = (String)requireContextEntry(UiListTag.LIST_ID_KEY_REQUEST);    
     
     // Include form tag
     formTag = new UiFormTag();

@@ -41,7 +41,7 @@ public class SamplePathTag extends UiBaseTag {
   protected int before(Writer out) throws Exception {
     super.before(out);
     
-    pushAttribute(KEY, this);
+    pushContextEntry(KEY, this);
     
     // Continue
     return EVAL_BODY_INCLUDE;    

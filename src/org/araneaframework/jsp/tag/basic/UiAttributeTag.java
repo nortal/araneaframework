@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 
@@ -66,7 +65,7 @@ public class UiAttributeTag extends UiBaseTag {
 	protected int before(Writer out) throws Exception {
 		super.before(out);
 		
-		UiAttributedTagInterface attributedTag = (UiAttributedTagInterface)readAttribute(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		UiAttributedTagInterface attributedTag = (UiAttributedTagInterface)requireContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST);
 		attributedTag.addAttribute(name, value);
 		
 		// Continue

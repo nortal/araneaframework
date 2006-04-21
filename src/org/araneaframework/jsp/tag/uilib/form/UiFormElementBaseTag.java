@@ -167,17 +167,17 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		contextWidgetId = UiWidgetUtil.getContextWidgetFullId(pageContext);	
 		
 		// Get system form id 
-		systemFormId = (String)readAttribute(UiSystemFormTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
 		
 		// Get form data		
-		formScopedFullId = (String)readAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		formFullId = (String)readAttribute(UiFormTag.FORM_FULL_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		formViewModel = (FormWidget.ViewModel)readAttribute(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		FormWidget form = (FormWidget)readAttribute(UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		formScopedFullId = (String)requireContextEntry(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST);
+		formFullId = (String)requireContextEntry(UiFormTag.FORM_FULL_ID_KEY_REQUEST);
+		formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
+		FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
 		
 		//In case the tag is in formElement tag
-		if (id == null && getAttribute(UiFormElementTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE) != null) 
-			id = (String) getAttribute(UiFormElementTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		if (id == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
+			id = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
 		if (id == null) throw new UiMissingIdException(this);        
 		formElementViewModel = 
 			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
@@ -267,7 +267,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		// This code actually prevents using validation for non-simple form elements
 		// (this may be important because simpleLabel calls this method)
 		FormWidget form = 
-			(FormWidget)UiUtil.readAttribute(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+			(FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 		FormElement.ViewModel formElementViewModel = 
 			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, elementId)._getViewable().getViewModel();
 		boolean isValid = formElementViewModel.isValid();

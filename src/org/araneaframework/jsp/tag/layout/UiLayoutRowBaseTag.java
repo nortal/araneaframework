@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 
 
@@ -49,7 +48,7 @@ public abstract class UiLayoutRowBaseTag extends UiPresentationTag implements Ui
 	
 	protected int before(Writer out) throws Exception {
 		super.before(out);	
-		pushAttribute(UiLayoutRowTagInterface.KEY_REQUEST, this, PageContext.REQUEST_SCOPE);
+		pushContextEntry(UiLayoutRowTagInterface.KEY_REQUEST, this);
 		return EVAL_BODY_INCLUDE;
 	}	
 	

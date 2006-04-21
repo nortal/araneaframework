@@ -41,7 +41,7 @@ public class SamplePathItemTag extends UiBaseTag {
 	protected int before(Writer out) throws Exception {		
     super.before(out);
     
-    parent = (SamplePathTag)readAttribute(SamplePathTag.KEY);
+    parent = (SamplePathTag)requireContextEntry(SamplePathTag.KEY);
     
     if (parent.getHadItems()) {
       UiUtil.writeOpenStartTag(out, "img");

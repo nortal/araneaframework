@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form;				
 
 import java.io.Writer;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.UiWidgetTag;
 import org.araneaframework.jsp.util.UiUtil;
@@ -59,10 +58,10 @@ public class UiFormTag extends UiWidgetTag {
 		}
 
 		// Set variables
-		pushAttribute(FORM_SCOPED_FULL_ID_KEY_REQUEST, scopedFullId, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_FULL_ID_KEY_REQUEST, fullId, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_KEY_REQUEST, widget, PageContext.REQUEST_SCOPE);
+		pushContextEntry(FORM_SCOPED_FULL_ID_KEY_REQUEST, scopedFullId);
+		pushContextEntry(FORM_FULL_ID_KEY_REQUEST, fullId);
+		pushContextEntry(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel);
+		pushContextEntry(FORM_KEY_REQUEST, widget);
    
 		writeJavascript(out);
 	

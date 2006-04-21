@@ -21,6 +21,7 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.Standard;
 import org.araneaframework.jsp.tag.context.UiWidgetContextTag;
+import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
 import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 
@@ -82,8 +83,8 @@ public class UiWidgetIncludeTag extends UiIncludeBaseTag {
 		  out.flush();
   		  widget._getWidget().render(output);
       }
-      else {		
-        include("/widgets/" + page);
+      else {
+        UiUtil.include(pageContext, "/widgets/" + page);
       }
     }
     finally {		

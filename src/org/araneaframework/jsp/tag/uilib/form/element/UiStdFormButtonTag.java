@@ -85,8 +85,10 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 		if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON))
 			UiUtil.writeAttribute(out, "label", localizedLabel);
 		UiUtil.writeAttribute(out, "tabindex", tabindex);
-		if (events) {
+		if (events && !viewModel.isDisabled()) {
 			writeEventAttribute(out);
+		} else {
+			out.write(" DISABLED ");
 		}
 		UiUtil.writeAttributes(out, attributes);
 		if (accessKey != null)

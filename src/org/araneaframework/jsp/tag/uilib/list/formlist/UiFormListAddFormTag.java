@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.list.formlist;
 
 import java.io.Writer;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 
 /**
@@ -36,7 +35,7 @@ import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 public class UiFormListAddFormTag extends UiFormTag {
 
 	public int before(Writer out) throws Exception {		
-		String editableListId = (String)readAttribute(UiFormListTag.FORM_LIST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		String editableListId = (String)requireContextEntry(UiFormListTag.FORM_LIST_ID_KEY_REQUEST);
 		
 		id = editableListId + ".addForm";
 		

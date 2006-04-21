@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.uilib.list;
 import java.io.Writer;
 import java.util.ListIterator;
 
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.uilib.list.ListWidget;
 
 /**
@@ -66,12 +65,12 @@ public class UiListRowsTag extends UiListRowsBaseTag {
 	protected void doForEachRow(Writer out) throws Exception {
 		super.doForEachRow(out);
 		
-		setAttribute(var, currentRow, PageContext.REQUEST_SCOPE);
+		pushContextEntry(var, currentRow);
 	}
 	
 	public int before(Writer out) throws Exception {
 		// Get list data    
-		viewModel = (ListWidget.ViewModel)readAttribute(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST);
 		
 		return super.before(out);
 	}

@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.layout;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiContainedTagInterface;
 import org.araneaframework.jsp.tag.UiStyledWrapperTag;
 
@@ -74,7 +73,7 @@ public class UiLayoutRowWrapperTag extends UiStyledWrapperTag  {
 	 * Callback: get row tag
 	 */
 	protected UiContainedTagInterface getTag() throws JspException {
-		UiLayoutTagInterface layout = (UiLayoutTagInterface)readAttribute(UiLayoutTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		UiLayoutTagInterface layout = (UiLayoutTagInterface)requireContextEntry(UiLayoutTagInterface.KEY_REQUEST);
 		UiLayoutRowTagInterface tag = layout.getRowTag(layout.getRowClass());
 		if (layout.getCellClass() != null) tag.setCellClass(layout.getCellClass());
 		return tag;	

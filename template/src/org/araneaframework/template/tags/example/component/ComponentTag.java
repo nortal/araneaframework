@@ -2,7 +2,6 @@ package org.araneaframework.template.tags.example.component;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -28,7 +27,7 @@ public class ComponentTag extends UiPresentationTag {
 	protected int before(Writer out) throws Exception {
 		super.before(out);
 		
-		pushAttribute(ComponentTag.COMPONENT_KEY, this, PageContext.REQUEST_SCOPE);
+		pushContextEntry(ComponentTag.COMPONENT_KEY, this);
 
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", styleClass);

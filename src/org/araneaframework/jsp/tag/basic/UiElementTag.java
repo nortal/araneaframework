@@ -20,7 +20,6 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
@@ -60,8 +59,8 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
 	protected int before(Writer out) throws Exception {
 		super.before(out);
 		
-		pushAttribute(KEY_REQUEST, this, PageContext.REQUEST_SCOPE);
-    pushAttribute(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this, PageContext.REQUEST_SCOPE);
+		pushContextEntry(KEY_REQUEST, this);
+    pushContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
 		
 		UiUtil.writeOpenStartTag(out, name);
 		

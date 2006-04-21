@@ -2,7 +2,6 @@ package org.araneaframework.template.tags.example.component;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.apache.log4j.Logger;
 import org.araneaframework.jsp.tag.layout.UiLayoutBaseTag;
 import org.araneaframework.jsp.tag.layout.UiLayoutRowTagInterface;
@@ -43,7 +42,7 @@ public class ComponentListTag extends UiLayoutBaseTag {
 	}
 
 	public UiLayoutRowTagInterface getRowTag(String styleClass) throws JspException {
-		String rowRequestId = (String) getAttribute(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		String rowRequestId = (String) getContextEntry(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST);
 		if (rowRequestId != null) {
 			// this row is inside the list
 			long id = Long.parseLong(rowRequestId);

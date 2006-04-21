@@ -20,7 +20,6 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 
 /**
@@ -37,8 +36,7 @@ public class UiPresentationTag extends UiBaseTag implements
 		super.before(out);
 
 		// Register
-		pushAttribute(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, this,
-				PageContext.REQUEST_SCOPE);
+		pushContextEntry(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, this);
 
 		// Continue
 		return EVAL_BODY_INCLUDE;

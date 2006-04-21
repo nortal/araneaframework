@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.basic;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.OutputData;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
@@ -40,7 +39,7 @@ import org.araneaframework.servlet.PopupWindowContext;
 public class UiPopupRegistrationTag extends UiBaseTag {
 	
   protected int after(Writer out) throws Exception {
-    OutputData output = (OutputData) readAttribute(UiAraneaRootTag.OUTPUT_DATA_KEY, PageContext.REQUEST_SCOPE);
+    OutputData output = (OutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
 
     Object popups = output.getAttribute(PopupWindowContext.POPUPS_KEY);
     if (popups != null && !((Map)popups).isEmpty()) {
@@ -58,7 +57,7 @@ public class UiPopupRegistrationTag extends UiBaseTag {
   }
 
   protected void addPopups(Writer out, Map popups) throws Exception {
-    String systemFormId = (String) readAttribute(UiSystemFormTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+    String systemFormId = (String) requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
 	for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
 	  addPopup(out, systemFormId, (Map.Entry)i.next());
 	}

@@ -16,14 +16,12 @@
 
 package org.araneaframework.jsp.tag;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
@@ -42,6 +40,18 @@ import org.araneaframework.uilib.ConfigurationContext;
  * @author Oleg Mürk
  */
 public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface {
+  private Tag parent;
+  protected PageContext pageContext;
+
+  /**
+   * A list of registered tags.
+   */
+  private Set registeredTags;
+	
+  /**
+   * Map: scope -> (Map: key -> backup attribute value)
+   */ 
+  private Map attributeBackup; 
 	//
 	// Overridable methods
 	//
@@ -52,16 +62,10 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	protected void init() {}
 
 	/**
-	 * Internal callback: deinitialization
-	 */		
-	protected void deinit() {}
-	
-	/**
 	 * Internal callback: before tag.
 	 * @throws Exception
 	 */
 	protected int before(Writer out) throws Exception {
-		//out.write("<"+ getClass().getName() + ">\n");
 		return EVAL_BODY_INCLUDE;
 	}
 
@@ -70,7 +74,6 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	 * @throws Exception
 	 */
 	protected int after(Writer out) throws Exception {
-		//out.write("</"+ getClass().getName() + ">\n");
 		return EVAL_PAGE;
 	}
 
@@ -88,7 +91,6 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 		return value;
 	}
 
-
 	/**
 	 * Evaluates attribute value.
 	 */
@@ -103,80 +105,37 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	}
 
 	/**
-   * This is here for convenience and historical reasons only
-	 * @see UiUtil#getAttribute(PageContext, String)
+	 * Gets the value of <code>key</code> from <code>PageContext.REQUEST_SCOPE</code>.
 	 */	
-	protected Object getAttribute(String key) throws JspException {
-		return UiUtil.getAttribute(pageContext, key);
-	}
-	
-	/**
-	 * @see UiUtil#getAttribute(PageContext, String, int)  
-	 */	
-	protected Object getAttribute(String key, int scope) throws JspException {
-		return UiUtil.getAttribute(pageContext, key, scope);
+	protected Object getContextEntry(String key) throws JspException {
+		return pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
 	}
 
 	/**
-	 * @see UiUtil#readAttribute(PageContext, String)
-	 */	
-	protected Object readAttribute(String key) throws JspException {
-		return UiUtil.readAttribute(pageContext, key);
-	}
-	
-	/**
-	 * @see UiUtil#readAttribute(PageContext, String, int)
+	 * @see UiUtil#requireContextEntry(PageContext, String, int)
 	 */
-	protected Object readAttribute(String key, int scope) throws JspException {
-		return UiUtil.readAttribute(pageContext, key, scope);
+	protected Object requireContextEntry(String key) throws JspException {
+		return UiUtil.requireContextEntry(pageContext, key, PageContext.REQUEST_SCOPE);
 	}
-	
-	/**
-	 * Set attribute value, but allow restoring it to the state before 
-	 * executing this action.
-	 */
-	protected void pushAttribute(String key, Object value) {
-		pushAttribute(key, value, PageContext.PAGE_SCOPE);
-	}	
 	
 	/**
 	 * Set attribute value in given scope, but allow restoring it to the state before 
 	 * executing this action.
 	 */
-	protected void pushAttribute(String key, Object value, int scope) {
-		Map attributeBackupMap = getBackupAttributeMap(scope);	
+	protected void pushContextEntry(String key, Object value) {
+		Map attributeBackupMap = getBackupAttributeMap(PageContext.REQUEST_SCOPE);	
 		
 		// Backup value
-		Object currentAttribute = pageContext.getAttribute(key, scope);
+		Object currentAttribute = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
 		if (!attributeBackupMap.containsKey(key))
 			attributeBackupMap.put(key, currentAttribute);
-			
+
 		// Set new value
 		if (value != null)
-			pageContext.setAttribute(key, value, scope);
+			pageContext.setAttribute(key, value, PageContext.REQUEST_SCOPE);
 		else
-			pageContext.removeAttribute(key, scope);
+			pageContext.removeAttribute(key, PageContext.REQUEST_SCOPE);
 	}
-
-
-	/**
-	 * @see UiUtil#setAttribute(PageContext, String, Object)  
-	 */	
-	protected void setAttribute(String key, Object value) throws JspException {
-		UiUtil.setAttribute(pageContext, key, value);
-	}
-	
-	/**
-	 * @see UiUtil#setAttribute(PageContext, String, Object, int)  
-	 */	
-	protected void setAttribute(String key, Object value, int scope) throws JspException {
-		pageContext.setAttribute(key, value, scope);
-	}
-  
-  
-  protected void include(String path) throws ServletException, IOException, JspException  {
-    UiUtil.include(pageContext, path);
-  }
 
 	/**
 	 * Registers a subtag.
@@ -185,7 +144,6 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 		subtag.setPageContext(pageContext);
 		registeredTags.add(subtag);
 	}
-
 
 	/**
 	 * Unregisters a subtag.
@@ -197,7 +155,6 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 		registeredTags.remove(subtag);
 	}
 
-	
 	/**
 	 * Executes registered subtag.
 	 */
@@ -206,7 +163,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 		if (result == Tag.EVAL_BODY_INCLUDE)
 			return subtag.doEndTag(); 
 		else
-			return result;		
+			return result;
 	}
 
 	/**
@@ -271,9 +228,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	/**
 	 * Deinitialization.
 	 */
-	public void release() {
-		deinit();
-	}
+	public void release() {}
 
 	/**
 	 * Start tag.
@@ -304,15 +259,15 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 			throw e;
 		}
 		catch(JspException e) {
-			throw e;		
+			throw e;
 		}		
 		catch(Exception e) {
 			throw new JspException(e);
     }
 	}
   
-  public void doCatch(Throwable arg0) throws Throwable {
-    throw arg0;
+  public void doCatch(Throwable t) throws Throwable {
+    throw t;
   }
   
   public void doFinally() {
@@ -325,15 +280,15 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	//
 	
   private void releaseTags() {
-    for (Iterator i = registeredTags.iterator(); i.hasNext();) {
-      UiContainedTagInterface subtag = (UiContainedTagInterface) i.next();
-      
-      subtag.doFinally();      
-      subtag.release();
-      
-      i.remove();
-    }        
-	}
+	  for (Iterator i = registeredTags.iterator(); i.hasNext();) {
+		  UiContainedTagInterface subtag = (UiContainedTagInterface) i.next();
+		  
+		  subtag.doFinally();      
+		  subtag.release();
+
+		  i.remove();
+	  }        
+  }
 	
 	
 	/**
@@ -374,17 +329,4 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 		// Release data
 		attributeBackup = null;
 	}
-
-	private Tag parent;
-	protected PageContext pageContext;
-
-	/**
-	 * A list of registered tags.
-	 */
-  private Set registeredTags;
-	
-	/**
-	 * Map: scope -> (Map: key -> backup attribute value)
-	 */ 
-  private Map attributeBackup; 
 }

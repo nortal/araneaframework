@@ -18,7 +18,6 @@ package org.araneaframework.template.tags.uilib.list;
 
 import java.io.Writer;
 import java.util.Iterator;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
@@ -52,11 +51,11 @@ public class SampleListTitleRowTag extends UiBaseTag {
 		super.before(out);
 		
 		// Get system form id
-		String systemFormId = (String)readAttribute(UiSystemFormTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
 		
 		// Get list data
-		String listId = (String)readAttribute(UiListTag.LIST_FULL_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);    
-		ListWidget.ViewModel viewModel = (ListWidget.ViewModel)readAttribute(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY_REQUEST);    
+		ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST);
 		
 		// Get order data
 		ListStructure.ViewModel listStructureViewModel = viewModel.getListStructure();

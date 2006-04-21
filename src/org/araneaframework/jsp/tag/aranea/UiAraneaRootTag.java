@@ -46,10 +46,9 @@ public class UiAraneaRootTag extends UiBaseTag {
       (StandardJspFilterService.JspConfiguration) output.getAttribute(
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
     
-    pushAttribute(
+    pushContextEntry(
         OUTPUT_DATA_KEY, 
-        output, 
-        PageContext.REQUEST_SCOPE);
+        output);
     
     Config.set(
         pageContext, 

@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.Standard;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.container.UiWidgetContainer;
@@ -85,7 +84,7 @@ public class UiWidgetTag extends UiBaseTag {
   public int before(Writer out) throws Exception {
 		super.before(out);
 				
-        container = (UiWidgetContainer) readAttribute(UiWidgetContainer.REQUEST_CONTEXT_KEY, PageContext.REQUEST_SCOPE);
+        container = (UiWidgetContainer) requireContextEntry(UiWidgetContainer.REQUEST_CONTEXT_KEY);
         
 		// Get data
         widget = UiWidgetUtil.getWidgetFromContext(id, pageContext);
@@ -98,9 +97,9 @@ public class UiWidgetTag extends UiBaseTag {
         scopedFullId = container.scopeWidgetFullId(pageContext, fullId);
 		
 		// Set variables
-		pushAttribute(FULL_ID_KEY_REQUEST, fullId, PageContext.REQUEST_SCOPE);
-		pushAttribute(SCOPED_FULL_ID_KEY_REQUEST, scopedFullId, PageContext.REQUEST_SCOPE);		
-		pushAttribute(VIEW_MODEL_KEY_REQUEST, viewModel, PageContext.REQUEST_SCOPE);
+		pushContextEntry(FULL_ID_KEY_REQUEST, fullId);
+		pushContextEntry(SCOPED_FULL_ID_KEY_REQUEST, scopedFullId);		
+		pushContextEntry(VIEW_MODEL_KEY_REQUEST, viewModel);
 		writeJavascript(out);
 		
 		// Continue

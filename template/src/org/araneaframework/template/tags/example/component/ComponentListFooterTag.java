@@ -19,7 +19,6 @@ package org.araneaframework.template.tags.example.component;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
@@ -120,11 +119,11 @@ public class ComponentListFooterTag extends UiPresentationTag {
 		super.before(out);
 		
 		// Get system form id 
-		systemFormId = (String)readAttribute(UiSystemFormTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
 		
 		// Get list data
-		listId = (String)readAttribute(UiListTag.LIST_FULL_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);    
-		ListWidget.ViewModel viewModel = (ListWidget.ViewModel)readAttribute(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY_REQUEST);    
+		ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST);
 		
 		// Get sequnce data
 		SequenceHelper.ViewModel sequenceViewModel = viewModel.getSequence();

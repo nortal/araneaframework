@@ -53,7 +53,7 @@ public class UiStdFormValueDisplayTag extends UiFormElementBaseDisplayTag {
     DisplayControl.ViewModel viewModel = (DisplayControl.ViewModel) controlViewModel;
     
     // Store data
-    pushAttribute(var, viewModel.getValue());
+    pushContextEntry(var, viewModel.getValue());
     
     return EVAL_BODY_INCLUDE; 
   }

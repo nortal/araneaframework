@@ -84,14 +84,14 @@ public abstract class UiSystemFormTag extends UiBaseTag {
 		super.before(out);
 		
 		// Error check
-		if (getAttribute(ID_KEY_REQUEST, PageContext.REQUEST_SCOPE) != null)
+		if (getContextEntry(ID_KEY_REQUEST) != null)
 			throw new UiException("System form cannot be nested");										
 			
 		// Compute id
 		id = id == null ? UiSystemFormTag.generateId(pageContext) : id;
     
-		pushAttribute(ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);		
-        pushAttribute(SYSTEM_FORM_ID_KEY, id, PageContext.REQUEST_SCOPE);    
+		pushContextEntry(ID_KEY_REQUEST, id);		
+        pushContextEntry(SYSTEM_FORM_ID_KEY, id);    
 		
 		// Write form 
 		UiUtil.writeOpenStartTag(out, "form");

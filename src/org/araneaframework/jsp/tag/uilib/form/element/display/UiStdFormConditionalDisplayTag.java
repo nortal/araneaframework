@@ -52,7 +52,7 @@ public class UiStdFormConditionalDisplayTag extends UiFormElementBaseDisplayTag 
     if (viewModel.getValue() != null) 
       condition = ((Boolean) viewModel.getValue());
      
-    pushAttribute(CONDITION_KEY, condition);
+    pushContextEntry(CONDITION_KEY, condition);
     
     return EVAL_BODY_INCLUDE;   
   }

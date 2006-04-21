@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.support.FormElementViewSelector;
 import org.araneaframework.jsp.support.TagInfo;
@@ -170,12 +169,12 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
 		if(tagMapping == null)
 			throw new JspException("The tag mapping was not found!.");
 		
-		formViewModel = (FormWidget.ViewModel)readAttribute(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		FormWidget form = (FormWidget)readAttribute(UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
+		FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
 		
 		//In case the tag is in formElement tag
-		if (id == null && getAttribute(UiFormElementTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE) != null) 
-			id = (String) getAttribute(UiFormElementTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		if (id == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
+			id = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
 		if (id == null) throw new UiMissingIdException(this);
 		formElementViewModel = 
 			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   

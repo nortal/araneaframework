@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.form;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiWidgetUtil;
 import org.araneaframework.uilib.form.FormElement;
@@ -71,16 +70,16 @@ public class UiFormElementTag extends UiBaseTag {
     super.before(out);
     
     // Get form data    
-    FormWidget form = (FormWidget)readAttribute(UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+    FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
     
     // Get form element
     formElementViewModel = 
       (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
 		   
 		// Store data
-    pushAttribute(VIEW_MODEL_KEY_REQUEST, formElementViewModel, PageContext.REQUEST_SCOPE);
-    pushAttribute(ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);
-    pushAttribute(VALUE_KEY_REQUEST, formElementViewModel.getValue(), PageContext.REQUEST_SCOPE);
+    pushContextEntry(VIEW_MODEL_KEY_REQUEST, formElementViewModel);
+    pushContextEntry(ID_KEY_REQUEST, id);
+    pushContextEntry(VALUE_KEY_REQUEST, formElementViewModel.getValue());
     				
 		// Continue
 	  return EVAL_BODY_INCLUDE;		

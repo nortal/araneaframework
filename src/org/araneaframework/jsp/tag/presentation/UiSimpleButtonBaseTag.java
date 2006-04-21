@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.util.UiUtil;
@@ -79,7 +78,7 @@ public class UiSimpleButtonBaseTag extends UiPresentationTag {
 	protected int before(Writer out) throws Exception {
 		super.before(out);
 		
-		systemFormId = (String) readAttribute(UiSystemFormTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		systemFormId = (String) requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
 		
 		// Get data
 		if (labelId != null)
