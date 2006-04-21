@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -50,6 +51,8 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 	 *   	"Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button." 
 	 */
 	public void setRenderMode(String renderMode) throws JspException {
+		if (!(renderMode.equals(UiStdEventButtonTag.RENDER_BUTTON) || renderMode.equals(UiStdEventButtonTag.RENDER_INPUT)))
+			throw new UiException("<ui:eventButton> 'renderMode' attribute must be '" + UiStdEventButtonTag.RENDER_BUTTON + "' or '"+ UiStdEventButtonTag.RENDER_INPUT+"'");
 		this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
 	}	
 	
