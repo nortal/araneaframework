@@ -37,25 +37,12 @@ import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
         that temporary starts from root."
  */
 public class UiGlobalWidgetIncludeTag extends UiIncludeBaseTag {
-  //
-  // Attributes
-  //
-
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "true"
-	 *   description = "Widget id." 
-	 */
-	public void setId(String widgetId) throws JspException {
-		this.widgetId = (String)evaluateNotNull("widgetId", widgetId, String.class);		
-	}				
+  protected String widgetId;
   
-  //
-  // Implementation
-  //
-  
-	protected int doEndTag(Writer out) throws Exception {
+  public UiGlobalWidgetIncludeTag() {
+    widgetId = null;
+  }
+  protected int doEndTag(Writer out) throws Exception {
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
           StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
@@ -77,17 +64,22 @@ public class UiGlobalWidgetIncludeTag extends UiIncludeBaseTag {
         output.pushScope(next);
       }
     }
-		
-		// Continue
-		super.doEndTag(out);
-		return EVAL_PAGE;
-	}
-  
-  protected void init() {
-    super.init();
-    
-    widgetId = null;
+	
+	// Continue
+	super.doEndTag(out);
+	return EVAL_PAGE;
   }
 	
-	protected String widgetId;
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "true"
+   *   description = "Widget id." 
+   */
+  public void setId(String widgetId) throws JspException {
+	  this.widgetId = (String)evaluateNotNull("widgetId", widgetId, String.class);		
+  }
 }

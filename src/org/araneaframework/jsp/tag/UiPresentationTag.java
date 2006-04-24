@@ -27,10 +27,13 @@ import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
  * 
  * @author Oleg Mürk
  */
-public class UiPresentationTag extends UiBaseTag implements
-		UiAttributedTagInterface {
+public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInterface {
 	protected String styleClass = null;
 	protected Map attributes;
+	
+	public UiPresentationTag() {
+		attributes = new HashMap();
+	}
 
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
@@ -40,11 +43,6 @@ public class UiPresentationTag extends UiBaseTag implements
 
 		// Continue
 		return EVAL_BODY_INCLUDE;
-	}
-
-	protected void init() {
-		super.init();
-		attributes = new HashMap();
 	}
 
 	/**
