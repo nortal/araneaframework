@@ -147,6 +147,10 @@ public class AtomicResponseHelper {
       if (!isCommitted())
         reset();
     }    
+    
+    public byte[] getData() throws Exception {
+  	  return ((AraneaServletOutputStream) out).getData();
+    }
   }
   
   private static class AraneaServletOutputStream extends ServletOutputStream {
@@ -169,7 +173,7 @@ public class AtomicResponseHelper {
       out.flush();
     }
         
-    private byte[] getData() {
+    public byte[] getData() {
       return out.toByteArray();
     }
   }
@@ -183,5 +187,9 @@ public class AtomicResponseHelper {
   
   public void rollback() throws Exception {
     atomicWrapper.rollback();
+  }
+  
+  public byte[] getData() throws Exception {
+	return atomicWrapper.getData();
   }
 }
