@@ -45,7 +45,7 @@ public class WizardFooterTag extends UiBaseTag {
   public static final String WIZARD_SUBMIT_LABEL_ID = "#Submit";
   public static final String WIZARD_CANCEL_LABEL_ID = "#Cancel";
 
-  protected int before(Writer out) throws Exception {
+  protected int doStartTag(Writer out) throws Exception {
 		  	
   	WizardContext wizard = (WizardContext) UiWidgetUtil.getWidgetFromContext(null, pageContext);
 		

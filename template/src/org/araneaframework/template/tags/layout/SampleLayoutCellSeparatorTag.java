@@ -52,8 +52,8 @@ public class SampleLayoutCellSeparatorTag extends UiBaseTag {
 	// Implementation
 	//  
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		UiUtil.writeOpenStartTag(out, "td");
 		UiUtil.writeAttribute(out, "rowspan", rowSpan);
 		UiUtil.writeCloseStartTag(out);

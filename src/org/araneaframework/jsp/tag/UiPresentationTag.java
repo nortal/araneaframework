@@ -32,11 +32,11 @@ public class UiPresentationTag extends UiBaseTag implements
 	protected String styleClass = null;
 	protected Map attributes;
 
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 
 		// Register
-		pushContextEntry(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, this);
+		addContextEntry(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, this);
 
 		// Continue
 		return EVAL_BODY_INCLUDE;

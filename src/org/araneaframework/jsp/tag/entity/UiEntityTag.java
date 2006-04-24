@@ -61,8 +61,8 @@ public class UiEntityTag extends UiBaseTag {
   // Implementation
   //
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		for(long i = 0; i < count; i++) {
 			out.write("&");

@@ -61,7 +61,7 @@ public class UiStdFormCheckboxMultiSelectItemTag extends UiFormElementBaseTag {
   // Implementation
   //  
             
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("MultiSelectControl");		
 		
@@ -95,7 +95,7 @@ public class UiStdFormCheckboxMultiSelectItemTag extends UiFormElementBaseTag {
 		UiUtil.writeCloseStartEndTag_SS(out);
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
   

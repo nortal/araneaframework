@@ -45,15 +45,15 @@ public class UiStdFormValueDisplayTag extends UiFormElementBaseDisplayTag {
   
   /**
    */
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     assertControlType("DisplayControl");
     
     DisplayControl.ViewModel viewModel = (DisplayControl.ViewModel) controlViewModel;
     
     // Store data
-    pushContextEntry(var, viewModel.getValue());
+    addContextEntry(var, viewModel.getValue());
     
     return EVAL_BODY_INCLUDE; 
   }

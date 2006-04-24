@@ -62,7 +62,7 @@ public class UiStdFormMultiSelectDisplayTag extends UiFormElementBaseDisplayTag 
 	// Implementation
 	//
 	
-	protected int after(Writer out) throws Exception {				
+	protected int doEndTag(Writer out) throws Exception {				
 		MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
 		
 		UiUtil.writeOpenStartTag(out, "span");
@@ -82,7 +82,7 @@ public class UiStdFormMultiSelectDisplayTag extends UiFormElementBaseDisplayTag 
 			if (i.hasNext()) writeSeparator(out);
 		}
 		
-		return super.after(out);  
+		return super.doEndTag(out);  
 	}
 	
 	protected void writeSeparator(Writer out) throws IOException, UiException {

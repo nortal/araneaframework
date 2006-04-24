@@ -34,8 +34,8 @@ public class UiStdFormDateInputDisplayTag extends UiStdFormSimpleElementDisplayB
 		styleClass = "aranea-date-display";
 	}
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		assertControlType("DateControl");
-		return super.after(out);
+		return super.doEndTag(out);
   }
 }

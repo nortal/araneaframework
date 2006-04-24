@@ -80,8 +80,8 @@ public abstract class UiSystemFormTag extends UiBaseTag {
   // Implementation
   //
 
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		// Error check
 		if (getContextEntry(ID_KEY_REQUEST) != null)
@@ -90,8 +90,8 @@ public abstract class UiSystemFormTag extends UiBaseTag {
 		// Compute id
 		id = id == null ? UiSystemFormTag.generateId(pageContext) : id;
     
-		pushContextEntry(ID_KEY_REQUEST, id);		
-        pushContextEntry(SYSTEM_FORM_ID_KEY, id);    
+		addContextEntry(ID_KEY_REQUEST, id);		
+        addContextEntry(SYSTEM_FORM_ID_KEY, id);    
 		
 		// Write form 
 		UiUtil.writeOpenStartTag(out, "form");
@@ -119,11 +119,11 @@ public abstract class UiSystemFormTag extends UiBaseTag {
 		return EVAL_BODY_INCLUDE;		
 	}
 		
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		UiUtil.writeEndTag(out, "form");
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;      
 	}	
 	

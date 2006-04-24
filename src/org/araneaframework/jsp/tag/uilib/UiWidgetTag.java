@@ -81,8 +81,8 @@ public class UiWidgetTag extends UiBaseTag {
   // Implementation
   //
   
-  public int before(Writer out) throws Exception {
-		super.before(out);
+  public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 				
         container = (UiWidgetContainer) requireContextEntry(UiWidgetContainer.REQUEST_CONTEXT_KEY);
         
@@ -97,9 +97,9 @@ public class UiWidgetTag extends UiBaseTag {
         scopedFullId = container.scopeWidgetFullId(pageContext, fullId);
 		
 		// Set variables
-		pushContextEntry(FULL_ID_KEY_REQUEST, fullId);
-		pushContextEntry(SCOPED_FULL_ID_KEY_REQUEST, scopedFullId);		
-		pushContextEntry(VIEW_MODEL_KEY_REQUEST, viewModel);
+		addContextEntry(FULL_ID_KEY_REQUEST, fullId);
+		addContextEntry(SCOPED_FULL_ID_KEY_REQUEST, scopedFullId);		
+		addContextEntry(VIEW_MODEL_KEY_REQUEST, viewModel);
 		writeJavascript(out);
 		
 		// Continue

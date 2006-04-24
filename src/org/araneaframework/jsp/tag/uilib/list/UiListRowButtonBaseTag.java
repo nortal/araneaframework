@@ -72,8 +72,8 @@ public class UiListRowButtonBaseTag extends UiSimpleButtonBaseTag {
   }  
   
 
-	protected int before(Writer out) throws Exception {
-    int result = super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+    int result = super.doStartTag(out);
     
 		if (contextWidgetId == null)
 			throw new UiException("'listRow(Link)Button' tags can only be used in a context widget!");

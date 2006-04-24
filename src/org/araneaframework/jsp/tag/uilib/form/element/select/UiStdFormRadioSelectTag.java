@@ -76,7 +76,7 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 	// Implementation
 	//  
 	
-	public int after(Writer out) throws Exception {
+	public int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("SelectControl");		
 		
@@ -116,7 +116,7 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 		}
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;	
 	}
 	

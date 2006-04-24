@@ -40,8 +40,8 @@ public class UiListFilterTag extends UiBaseTag {
   // Implementation
   //
   
-	public int before(Writer out) throws Exception {
-		super.before(out);
+	public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 
     // Get list data
     String listId = (String)requireContextEntry(UiListTag.LIST_ID_KEY_REQUEST);    
@@ -56,13 +56,13 @@ public class UiListFilterTag extends UiBaseTag {
 	  return EVAL_BODY_INCLUDE;		
 	}
   
-  public int after(Writer out) throws Exception {   
+  public int doEndTag(Writer out) throws Exception {   
     
     this.executeEndSubtag(formTag);
     this.unregisterSubtag(formTag);
           
     // Continue
-    super.after(out);
+    super.doEndTag(out);
     return EVAL_PAGE;  
   }
   

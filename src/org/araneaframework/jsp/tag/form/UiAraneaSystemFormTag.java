@@ -58,7 +58,7 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
   // Implementation
   //
 
-  protected int before(Writer out) throws Exception {
+  protected int doStartTag(Writer out) throws Exception {
     output = 
       (OutputData) pageContext.getRequest().getAttribute(
           StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
@@ -67,7 +67,7 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
       (StandardJspFilterService.JspConfiguration) output.getAttribute(
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
     
-    super.before(out);
+    super.doStartTag(out);
     
     // Hidden fields: preset
     for (Iterator ite = formHiddenAttribs.iterator(); ite.hasNext();) {

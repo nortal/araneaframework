@@ -44,7 +44,7 @@ public class UiStdFormDateInputTag extends UiStdFormDateTimeInputBaseTag {
 	// Implementation
 	//
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("DateControl");		
 		
@@ -73,7 +73,7 @@ public class UiStdFormDateInputTag extends UiStdFormDateTimeInputBaseTag {
 		if (validate) writeValidationScript(out, viewModel);
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;      
 	}
 	

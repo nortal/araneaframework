@@ -115,8 +115,8 @@ public class ComponentListFooterTag extends UiPresentationTag {
 		this.numberStyleClass = numberStyleClass;
 	}
 
-	public int before(Writer out) throws Exception {
-		super.before(out);
+	public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		// Get system form id 
 		systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);

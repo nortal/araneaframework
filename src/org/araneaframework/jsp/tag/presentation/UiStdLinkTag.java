@@ -23,7 +23,7 @@ import org.araneaframework.jsp.util.UiUtil;
 /**
  * Standard link tag.
  * 
- * @author Oleg Mürk
+ * @author Oleg Mï¿½rk
  * 
  * @jsp.tag
  *   name = "link"
@@ -55,8 +55,8 @@ public class UiStdLinkTag extends UiLinkBaseTag {
 		disabledStyleClass = "aranea-disabled-link-button";
 	}
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "a");
 		UiUtil.writeAttribute(out, "id", id);
@@ -74,11 +74,11 @@ public class UiStdLinkTag extends UiLinkBaseTag {
 		return EVAL_BODY_INCLUDE;
 	}
 	
-	protected int after(Writer out) throws Exception {  
+	protected int doEndTag(Writer out) throws Exception {  
 		UiUtil.writeEndTag_SS(out, "a");
 
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;      
 	}
 }

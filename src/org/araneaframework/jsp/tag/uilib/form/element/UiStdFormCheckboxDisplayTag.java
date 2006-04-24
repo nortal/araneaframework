@@ -50,7 +50,7 @@ public class UiStdFormCheckboxDisplayTag extends UiFormElementBaseDisplayTag {
 	// Implementation
 	//
 	
-	protected int after(Writer out) throws Exception {				
+	protected int doEndTag(Writer out) throws Exception {				
 		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 		
 		UiUtil.writeOpenStartTag(out, "span");
@@ -60,7 +60,7 @@ public class UiStdFormCheckboxDisplayTag extends UiFormElementBaseDisplayTag {
 		if ("true".equals(viewModel.getSimpleValue())) //TODO: image?
 			UiUtil.writeEscaped(out, "x");
 		
-		return super.after(out);  
+		return super.doEndTag(out);  
 	}
 	
 }

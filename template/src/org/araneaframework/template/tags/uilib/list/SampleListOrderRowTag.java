@@ -47,8 +47,8 @@ public class SampleListOrderRowTag extends UiBaseTag {
 	// Implementation
 	//
 	
-	public int before(Writer out) throws Exception {
-		super.before(out);
+	public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		// Get system form id
 		log.debug("Get system form id");

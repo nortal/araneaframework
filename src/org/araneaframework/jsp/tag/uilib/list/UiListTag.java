@@ -64,8 +64,8 @@ public class UiListTag extends UiWidgetTag {
 		this.varSequence = varSequence;
 	}
   
-	public int before(Writer out) throws Exception {
-		super.before(out);
+	public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		// Get list data
 		try {
@@ -75,18 +75,18 @@ public class UiListTag extends UiWidgetTag {
 		}
 
 		// Set variables		
-		pushContextEntry(LIST_ID_KEY_REQUEST, id);
-		pushContextEntry(LIST_FULL_ID_KEY_REQUEST, fullId);
-		pushContextEntry(LIST_VIEW_MODEL_KEY_REQUEST, listViewModel);
+		addContextEntry(LIST_ID_KEY_REQUEST, id);
+		addContextEntry(LIST_FULL_ID_KEY_REQUEST, fullId);
+		addContextEntry(LIST_VIEW_MODEL_KEY_REQUEST, listViewModel);
 
-		pushContextEntry(varSequence, listViewModel.getSequence());
+		addContextEntry(varSequence, listViewModel.getSequence());
 	
 		// Continue
 		return EVAL_BODY_INCLUDE;		
 	}
 	
-	public int after(Writer out) throws Exception {
-		pushContextEntry(varSequence, null);
+	public int doEndTag(Writer out) throws Exception {
+		addContextEntry(varSequence, null);
 		
 		return EVAL_PAGE;		
 	}

@@ -34,8 +34,8 @@ public class UiStdFormNumberInputDisplayTag extends UiStdFormSimpleElementDispla
 		styleClass = "aranea-number-display";
 	}
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		assertControlType("NumberControl");
-		return super.after(out);
+		return super.doEndTag(out);
   }
 }

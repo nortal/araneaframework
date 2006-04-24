@@ -55,7 +55,7 @@ public class UiGlobalWidgetIncludeTag extends UiIncludeBaseTag {
   // Implementation
   //
   
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
           StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
@@ -79,7 +79,7 @@ public class UiGlobalWidgetIncludeTag extends UiIncludeBaseTag {
     }
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
   

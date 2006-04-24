@@ -45,13 +45,13 @@ public class UiFormListTag extends UiWidgetTag {
 	/**
 	 *
 	 */
-	public int before(Writer out) throws Exception {
+	public int doStartTag(Writer out) throws Exception {
 		if (id == null) {
 			String listId = (String) UiUtil.requireContextEntry(pageContext, UiListTag.LIST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 			id = listId + ".formList";
 		}
 		
-		super.before(out);
+		super.doStartTag(out);
 		
 		try {
 			formListViewModel = (FormListWidget.ViewModel) viewModel;
@@ -60,8 +60,8 @@ public class UiFormListTag extends UiWidgetTag {
 		}
 		
 		// Set variables
-		pushContextEntry(FORM_LIST_ID_KEY_REQUEST, id);
-		pushContextEntry(FORM_LIST_VIEW_MODEL_KEY_REQUEST, formListViewModel);		
+		addContextEntry(FORM_LIST_ID_KEY_REQUEST, id);
+		addContextEntry(FORM_LIST_VIEW_MODEL_KEY_REQUEST, formListViewModel);		
 		
 		return EVAL_BODY_INCLUDE; 
 	}		

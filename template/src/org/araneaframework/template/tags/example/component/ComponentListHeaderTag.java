@@ -32,8 +32,8 @@ public class ComponentListHeaderTag extends UiPresentationTag {
 		styleClass = ComponentListTag.COMPONENT_LIST_STYLE_CLASS;
 	}
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "tr");
 		UiUtil.writeAttribute(out, "class", getStyleClass());

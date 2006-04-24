@@ -117,8 +117,8 @@ public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
 	// Implementation
 	//
 		
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		String handler = null;
     

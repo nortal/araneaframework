@@ -33,8 +33,8 @@ public class UiStdFormTimeInputDisplayTag extends UiStdFormSimpleElementDisplayB
 		styleClass = "aranea-time-display";
 	}
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		assertControlType("TimeControl");
-		return super.after(out);
+		return super.doEndTag(out);
 	}
 }

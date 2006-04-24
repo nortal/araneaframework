@@ -37,7 +37,7 @@ public class UiStdFormTextareaDisplayTag extends UiFormElementBaseDisplayTag {
 		styleClass = "aranea-textarea-display";
 	}
 	
-	protected int after(Writer out) throws Exception {				
+	protected int doEndTag(Writer out) throws Exception {				
 		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 		
 		UiUtil.writeOpenStartTag(out, "span");
@@ -70,6 +70,6 @@ public class UiStdFormTextareaDisplayTag extends UiFormElementBaseDisplayTag {
 			
 		UiUtil.writeEndTag(out, "span");		
 
-		return super.after(out);  
+		return super.doEndTag(out);  
 	}
 }

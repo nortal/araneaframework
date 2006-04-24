@@ -62,8 +62,8 @@ public class UiStdFormButtonBaseTag extends UiFormElementBaseTag {
   // Implementation
   //  
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     // Type check
     assertControlType("ButtonControl");

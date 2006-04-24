@@ -34,8 +34,8 @@ public class UiStdFormFloatInputDisplayTag extends UiStdFormSimpleElementDisplay
 		styleClass = "aranea-float-display";
 	}
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		assertControlType("FloatControl");
-		return super.after(out);
+		return super.doEndTag(out);
   }
 }

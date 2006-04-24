@@ -48,8 +48,8 @@ public class UiStdFormRadioSelectItemLabelTag extends UiFormElementLabelBaseTag 
     this.value = (String)evaluateNotNull("value", value, String.class);
   }
     
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
     // Type check
 		//assertControlType("SelectControl");		

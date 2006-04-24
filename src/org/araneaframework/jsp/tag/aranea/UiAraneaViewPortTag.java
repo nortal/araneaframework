@@ -31,8 +31,8 @@ import org.araneaframework.servlet.filter.StandardJspFilterService;
  *   body-content = "JSP"
  */
 public class UiAraneaViewPortTag extends UiBaseTag {
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
@@ -43,7 +43,7 @@ public class UiAraneaViewPortTag extends UiBaseTag {
       (StandardJspFilterService.JspConfiguration) output.getAttribute(
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
 
-    pushContextEntry(
+    addContextEntry(
         UiWidgetContainer.REQUEST_CONTEXT_KEY, 
         new UiAraneaWidgetContainer(rootWidget, config));  
     

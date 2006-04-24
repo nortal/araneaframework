@@ -34,16 +34,16 @@ public class UiIncludeBaseTag extends UiBaseTag implements UiAttributedTagInterf
   // Implementation
   //
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
-    pushContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
+    addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
     
     // Continue
     return EVAL_BODY_INCLUDE;   
   }  
  
   public void addAttribute(String name, String value) throws JspException {
-    this.pushContextEntry(name, this.evaluate("attributeValue", value, Object.class));
+    this.addContextEntry(name, this.evaluate("attributeValue", value, Object.class));
   }
 }

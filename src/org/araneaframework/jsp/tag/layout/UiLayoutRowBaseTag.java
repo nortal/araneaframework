@@ -46,9 +46,9 @@ public abstract class UiLayoutRowBaseTag extends UiPresentationTag implements Ui
 	// Implementation
 	//
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);	
-		pushContextEntry(UiLayoutRowTagInterface.KEY_REQUEST, this);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);	
+		addContextEntry(UiLayoutRowTagInterface.KEY_REQUEST, this);
 		return EVAL_BODY_INCLUDE;
 	}	
 	

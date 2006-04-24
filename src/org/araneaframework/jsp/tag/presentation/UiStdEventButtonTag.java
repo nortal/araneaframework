@@ -56,8 +56,8 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 		this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
 	}	
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);                
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);                
 		// Write button tag
 		UiUtil.writeOpenStartTag(out, renderMode.equals(UiStdEventButtonTag.RENDER_BUTTON) ? UiStdEventButtonTag.RENDER_BUTTON : UiStdEventButtonTag.RENDER_INPUT);
 		if (renderMode.equals(UiStdEventButtonTag.RENDER_INPUT))
@@ -89,7 +89,7 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 		return EVAL_BODY_INCLUDE;    
 	}    
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		if (renderMode.equals(UiStdEventButtonTag.RENDER_BUTTON)) {
 			if (localizedLabel != null)
 				UiUtil.writeEscaped(out, localizedLabel);
@@ -98,7 +98,7 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 		}
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;      
 	}  
 }

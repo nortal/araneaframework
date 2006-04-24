@@ -49,8 +49,8 @@ public class UiStdFormCheckboxMultiSelectItemLabelTag extends UiFormElementLabel
     this.value = (String)evaluateNotNull("value", value, String.class);
   }
     
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		// Prepare	
 		MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);

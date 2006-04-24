@@ -35,7 +35,7 @@ import org.araneaframework.template.framework.context.WizardContext;
 public class WizardHeaderTag extends UiBaseTag {
   private static Logger log = Logger.getLogger(WizardHeaderTag.class);
 
-  protected int before(Writer out) throws Exception {
+  protected int doStartTag(Writer out) throws Exception {
 	  WizardContext wizard = (WizardContext) UiWidgetUtil.getWidgetFromContext(null, pageContext);
 	  
 	  int index = wizard.getCurrentPageIndex();

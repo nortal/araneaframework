@@ -43,8 +43,8 @@ public abstract class UiStdFormListDisplayBaseTag extends UiFormElementBaseDispl
     this.separator = separator;
   }  
   
-  protected int before(Writer out) throws Exception {    
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {    
+    super.doStartTag(out);
     
     assertControlType("DisplayControl");           
     
@@ -59,11 +59,11 @@ public abstract class UiStdFormListDisplayBaseTag extends UiFormElementBaseDispl
     return SKIP_BODY;
   }
   
-  protected int after(Writer out) throws Exception {    
+  protected int doEndTag(Writer out) throws Exception {    
     if (getStyleClass() != null)
       UiUtil.writeEndTag(out, "span");    
     
-    super.after(out);
+    super.doEndTag(out);
     
     return EVAL_PAGE;
   }

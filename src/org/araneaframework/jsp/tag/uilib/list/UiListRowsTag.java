@@ -65,13 +65,13 @@ public class UiListRowsTag extends UiListRowsBaseTag {
 	protected void doForEachRow(Writer out) throws Exception {
 		super.doForEachRow(out);
 		
-		pushContextEntry(var, currentRow);
+		addContextEntry(var, currentRow);
 	}
 	
-	public int before(Writer out) throws Exception {
+	public int doStartTag(Writer out) throws Exception {
 		// Get list data    
 		viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST);
 		
-		return super.before(out);
+		return super.doStartTag(out);
 	}
 }

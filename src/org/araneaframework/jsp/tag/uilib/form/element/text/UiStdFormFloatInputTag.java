@@ -45,7 +45,7 @@ public class UiStdFormFloatInputTag extends UiStdFormTextInputBaseTag {
   // Implementation
   //  
             
-  protected int after(Writer out) throws Exception {
+  protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("FloatControl");
 
@@ -58,7 +58,7 @@ public class UiStdFormFloatInputTag extends UiStdFormTextInputBaseTag {
     		
     
     // Continue
-    super.after(out);
+    super.doEndTag(out);
     return EVAL_PAGE;
 	}
   

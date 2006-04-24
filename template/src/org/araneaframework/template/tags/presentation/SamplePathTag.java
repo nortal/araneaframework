@@ -38,10 +38,10 @@ public class SamplePathTag extends UiBaseTag {
   // Implementation
   //  
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
-    pushContextEntry(KEY, this);
+    addContextEntry(KEY, this);
     
     // Continue
     return EVAL_BODY_INCLUDE;    

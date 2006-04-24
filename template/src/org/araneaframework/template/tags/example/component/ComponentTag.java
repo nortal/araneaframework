@@ -24,10 +24,10 @@ public class ComponentTag extends UiPresentationTag {
 		widthClass = ComponentTag.DEFAULT_COMPONENT_WIDTH_STYLE;
 	}
 
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
-		pushContextEntry(ComponentTag.COMPONENT_KEY, this);
+		addContextEntry(ComponentTag.COMPONENT_KEY, this);
 
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", styleClass);
@@ -41,10 +41,10 @@ public class ComponentTag extends UiPresentationTag {
 		return EVAL_BODY_INCLUDE;
 	}
 
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		UiUtil.writeEndTag(out, "div");
 		UiUtil.writeEndTag(out, "div");
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
 

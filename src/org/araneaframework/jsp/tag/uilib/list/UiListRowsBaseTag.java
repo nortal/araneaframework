@@ -42,14 +42,14 @@ public abstract class UiListRowsBaseTag extends UiIterationBaseTag {
 	//
 	
 	protected void doForEachRow(Writer out) throws Exception {
-		pushContextEntry(ROW_KEY_REQUEST, currentRow);
-		pushContextEntry(ROW_REQUEST_ID_KEY_REQUEST, Integer.toString(rowIterator.previousIndex()));
+		addContextEntry(ROW_KEY_REQUEST, currentRow);
+		addContextEntry(ROW_REQUEST_ID_KEY_REQUEST, Integer.toString(rowIterator.previousIndex()));
 	}
 	
 	protected abstract ListIterator getIterator();
 	
-	public int before(Writer out) throws Exception {
-		super.before(out);
+	public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		// Get list row iterator 
 		rowIterator = getIterator();

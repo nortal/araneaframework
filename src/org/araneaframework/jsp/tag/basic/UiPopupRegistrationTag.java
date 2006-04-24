@@ -38,7 +38,7 @@ import org.araneaframework.servlet.PopupWindowContext;
  */
 public class UiPopupRegistrationTag extends UiBaseTag {
 	
-  protected int after(Writer out) throws Exception {
+  protected int doEndTag(Writer out) throws Exception {
     OutputData output = (OutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
 
     Object popups = output.getAttribute(PopupWindowContext.POPUPS_KEY);
@@ -53,7 +53,7 @@ public class UiPopupRegistrationTag extends UiBaseTag {
       UiUtil.writeEndTag(out, "script");
     }
 
-    return super.after(out);
+    return super.doEndTag(out);
   }
 
   protected void addPopups(Writer out, Map popups) throws Exception {

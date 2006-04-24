@@ -35,8 +35,8 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 		styleClass = "aranea-link-button";
 	}
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);          
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);          
 		
 		UiUtil.writeOpenStartTag(out, "a");
 		UiUtil.writeAttribute(out, "id", id);
@@ -61,7 +61,7 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 		return EVAL_BODY_INCLUDE;    
 	}    
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		
 		if (localizedLabel != null)
 			UiUtil.writeEscaped(out, localizedLabel);
@@ -69,7 +69,7 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 		UiUtil.writeEndTag(out, "a"); 
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;      
 	}  
 	

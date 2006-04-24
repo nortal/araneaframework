@@ -54,7 +54,7 @@ public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 	// Implementation
 	//  
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("CheckboxControl");		
 		
@@ -87,7 +87,7 @@ public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 		UiUtil.writeCloseStartEndTag_SS(out);
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;      
 	}
 	

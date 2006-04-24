@@ -56,11 +56,11 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
   // Implementation
   //
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
-		pushContextEntry(KEY_REQUEST, this);
-    pushContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
+		addContextEntry(KEY_REQUEST, this);
+    addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
 		
 		UiUtil.writeOpenStartTag(out, name);
 		
@@ -71,7 +71,7 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
 	/**
 	 * After tag.
 	 */
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
     
 		if (hasContent)
 			UiUtil.writeEndTag_SS(out, name);
@@ -81,7 +81,7 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
     }
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;      
 	}
 	

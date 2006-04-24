@@ -39,7 +39,7 @@ public class UiStdFormHiddenInputTag extends UiFormElementBaseTag {
   //  
 
             
-  protected int after(Writer out) throws Exception {
+  protected int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("HiddenControl");
 
@@ -55,7 +55,7 @@ public class UiStdFormHiddenInputTag extends UiFormElementBaseTag {
     UiUtil.writeCloseStartEndTag_SS(out);
     
     // Continue
-    super.after(out);
+    super.doEndTag(out);
     return EVAL_PAGE;
   }
  

@@ -47,8 +47,8 @@ public class UiFormTag extends UiWidgetTag {
   // Implementation
   //
   
-	public int before(Writer out) throws Exception {
-		super.before(out);
+	public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		// Get form data
 		try {
@@ -58,10 +58,10 @@ public class UiFormTag extends UiWidgetTag {
 		}
 
 		// Set variables
-		pushContextEntry(FORM_SCOPED_FULL_ID_KEY_REQUEST, scopedFullId);
-		pushContextEntry(FORM_FULL_ID_KEY_REQUEST, fullId);
-		pushContextEntry(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel);
-		pushContextEntry(FORM_KEY_REQUEST, widget);
+		addContextEntry(FORM_SCOPED_FULL_ID_KEY_REQUEST, scopedFullId);
+		addContextEntry(FORM_FULL_ID_KEY_REQUEST, fullId);
+		addContextEntry(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel);
+		addContextEntry(FORM_KEY_REQUEST, widget);
    
 		writeJavascript(out);
 	

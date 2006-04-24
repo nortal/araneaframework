@@ -105,8 +105,8 @@ public class UiFormElementLabelBaseTag extends UiPresentationTag {
 	// Implementation
 	//
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		// Get form data		
 		formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);

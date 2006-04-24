@@ -91,8 +91,8 @@ public class UiEventButtonBaseTag extends UiSimpleButtonBaseTag {
     this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }    
 
-	protected int before(Writer out) throws Exception {
-		int result = super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		int result = super.doStartTag(out);
         
 		if (contextWidgetId == null)
 			throw new UiException("'eventButton' tag can only be used in a context widget!");

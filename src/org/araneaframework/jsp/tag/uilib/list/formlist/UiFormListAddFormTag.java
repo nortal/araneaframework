@@ -34,12 +34,12 @@ import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
  */
 public class UiFormListAddFormTag extends UiFormTag {
 
-	public int before(Writer out) throws Exception {		
+	public int doStartTag(Writer out) throws Exception {		
 		String editableListId = (String)requireContextEntry(UiFormListTag.FORM_LIST_ID_KEY_REQUEST);
 		
 		id = editableListId + ".addForm";
 		
-		return super.before(out);
+		return super.doStartTag(out);
 	}
 	
 }

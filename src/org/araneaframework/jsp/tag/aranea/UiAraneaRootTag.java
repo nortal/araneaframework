@@ -36,8 +36,8 @@ import org.araneaframework.servlet.filter.StandardJspFilterService;
 public class UiAraneaRootTag extends UiBaseTag {
   public static final String OUTPUT_DATA_KEY = "outputData";
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
@@ -46,7 +46,7 @@ public class UiAraneaRootTag extends UiBaseTag {
       (StandardJspFilterService.JspConfiguration) output.getAttribute(
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
     
-    pushContextEntry(
+    addContextEntry(
         OUTPUT_DATA_KEY, 
         output);
     

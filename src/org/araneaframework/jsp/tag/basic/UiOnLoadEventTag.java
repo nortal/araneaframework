@@ -52,8 +52,8 @@ public class UiOnLoadEventTag extends UiBaseTag{
   // Implementation
   //
 		
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		UiUtil.writeStartTag(out, "script");
 		out.write("addClientLoadEvent(");
 		out.write("function() {");

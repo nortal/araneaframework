@@ -61,8 +61,8 @@ public class UiUpdateRegionBaseTag extends UiBaseTag {
   }
   
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     if (id == null && globalId == null)
       throw new UiException("'id' or 'globalId' is required!");

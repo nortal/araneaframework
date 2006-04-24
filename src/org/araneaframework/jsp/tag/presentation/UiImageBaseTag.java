@@ -115,8 +115,8 @@ public abstract class UiImageBaseTag extends UiPresentationTag {
 	// Implementation
 	//
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		if (code != null) {
 			Info info = (Info)getImageInfo(code);

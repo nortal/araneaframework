@@ -31,8 +31,8 @@ public abstract class UiTagWrapperTag extends UiBaseTag {
   // Implementation
   //
   
-	protected int before(Writer out) throws Exception {
-		super.before(out);	
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);	
 
 		// Get wrapped tag		
 		tag = getTag(); 
@@ -52,11 +52,11 @@ public abstract class UiTagWrapperTag extends UiBaseTag {
 	/**
 	 * After tag.
 	 */
-	protected int after(Writer out) throws Exception {				
+	protected int doEndTag(Writer out) throws Exception {				
 		this.executeEndSubtag(tag);
     
 		// Complete
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
 	

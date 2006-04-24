@@ -34,7 +34,7 @@ public class UiStdFormDateTimeInputDisplayTag extends UiFormElementBaseDisplayTa
 		styleClass = "aranea-datetime-display";
 	}
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		assertControlType("DateTimeControl");	
 		
 		DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel)controlViewModel);
@@ -49,7 +49,7 @@ public class UiStdFormDateTimeInputDisplayTag extends UiFormElementBaseDisplayTa
 		
 		UiUtil.writeEndTag(out, "span");		
 		
-		return super.after(out);
+		return super.doEndTag(out);
 	}
 	
 }

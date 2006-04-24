@@ -51,12 +51,12 @@ public class UiFormListRowsTag extends UiListRowsBaseTag {
 		var = "row";
 	}
 	
-	public int before(Writer out) throws Exception {
+	public int doStartTag(Writer out) throws Exception {
 		// Get list data    
 		editableListViewModel = (FormListWidget.ViewModel)requireContextEntry(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY_REQUEST);
 		editableListId = (String)requireContextEntry(UiFormListTag.FORM_LIST_ID_KEY_REQUEST);
 		
-		return super.before(out);
+		return super.doStartTag(out);
 	}
   
   //
@@ -87,8 +87,8 @@ public class UiFormListRowsTag extends UiListRowsBaseTag {
 	  	Object currentRowKey = editableListViewModel.getRowHandler().getRowKey(currentRow);
 	  	FormRow.ViewModel currentEditableRow = (FormRow.ViewModel) editableListViewModel.getFormRows().get(currentRowKey);
 	  	
-	  	pushContextEntry(EDITABLE_ROW_KEY_REQUEST, currentEditableRow);
-	  	pushContextEntry(var, currentRow);	
+	  	addContextEntry(EDITABLE_ROW_KEY_REQUEST, currentEditableRow);
+	  	addContextEntry(var, currentRow);	
 	  	
 	    registerSubtag(rowForm);
 	    rowForm.setId(editableListId + "." + currentEditableRow.getRowFormId());

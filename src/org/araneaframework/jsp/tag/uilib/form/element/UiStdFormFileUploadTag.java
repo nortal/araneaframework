@@ -53,7 +53,7 @@ public class UiStdFormFileUploadTag extends UiFormElementBaseTag {
 	// Implementation
 	//  
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("FileUploadControl");
 		
@@ -88,7 +88,7 @@ public class UiStdFormFileUploadTag extends UiFormElementBaseTag {
 		UiUtil.writeCloseStartEndTag_SS(out);
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
 	

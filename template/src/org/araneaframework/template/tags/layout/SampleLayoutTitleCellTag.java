@@ -46,8 +46,8 @@ public class SampleLayoutTitleCellTag extends UiLayoutCellWrapperTag {
 	// Implementation
 	//
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", "template-layout");
@@ -62,14 +62,14 @@ public class SampleLayoutTitleCellTag extends UiLayoutCellWrapperTag {
 		return EVAL_BODY_INCLUDE;			
 	}		
 	
-	protected int after(Writer out) throws Exception {	
+	protected int doEndTag(Writer out) throws Exception {	
 		UiUtil.writeEndTag(out, "td");
 		UiUtil.writeEndTag(out, "tr");
 		UiUtil.writeEndTag(out, "table");
 		UiUtil.writeEndTag(out, "div");
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;     
 	}
 	

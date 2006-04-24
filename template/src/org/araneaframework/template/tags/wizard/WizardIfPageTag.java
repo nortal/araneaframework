@@ -61,7 +61,7 @@ public class WizardIfPageTag extends UiBaseTag {
   	index = null;
   }
   
-  protected int before(Writer out) throws Exception {
+  protected int doStartTag(Writer out) throws Exception {
   	  	
   	WizardContext wizard = (WizardContext) requireContextEntry(WIDGET_CONTEXT_KEY_REQUEST);  	
 		

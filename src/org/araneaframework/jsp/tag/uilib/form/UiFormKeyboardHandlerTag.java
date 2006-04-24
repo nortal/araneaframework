@@ -160,8 +160,8 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	//
 	// Implementation
 	//
-	protected final int before(Writer out) throws Exception {
-		super.before(out);
+	protected final int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		if (StringUtils.isBlank(handler)) {
 			// One of elemenId/event must be specified
 			if ((elementId == null && fullElementId == null) || event == null)

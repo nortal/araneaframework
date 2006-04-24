@@ -161,8 +161,8 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
 		this.globalUpdateRegions = null;    
 	}
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		Map tagMapping = UiStdWidgetCallUtil.getContainer(pageContext).getTagMapping(pageContext);
 		
@@ -224,11 +224,11 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
 	}
 	
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		executeEndSubtag(controlTag);
 		unregisterSubtag(controlTag);
 		
-		return super.after(out);    
+		return super.doEndTag(out);    
 	}
 	
 	protected void initTagAttributes(Class tagClass, Object tag, Map attributes) throws Exception {

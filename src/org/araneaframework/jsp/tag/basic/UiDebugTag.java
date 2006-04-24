@@ -79,7 +79,7 @@ public class UiDebugTag extends UiBaseTag {
   // Implementation
   //
 	
-	protected int after(Writer out) throws Exception {			
+	protected int doEndTag(Writer out) throws Exception {			
 		// Output
 		UiUtil.writeOpenStartTag(out, "table");
 		UiUtil.writeAttribute(out, "border", "1");
@@ -101,7 +101,7 @@ public class UiDebugTag extends UiBaseTag {
 		UiUtil.writeEndTag(out, "table");    
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;      
 	}
   

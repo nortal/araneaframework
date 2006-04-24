@@ -39,8 +39,8 @@ public class SampleFormFilterButtonTag extends UiStdFormLinkButtonTag {
   // Implementation
   //  
   
-  public int before(Writer out) throws Exception {    
-    super.before(out);
+  public int doStartTag(Writer out) throws Exception {    
+    super.doStartTag(out);
     
     SampleImageTag.writeImage(out, "buttonSearch", getStyleClass());
     

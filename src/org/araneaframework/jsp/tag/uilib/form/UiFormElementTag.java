@@ -66,8 +66,8 @@ public class UiFormElementTag extends UiBaseTag {
   // Implementation
   //
   	
-	public int before(Writer out) throws Exception {
-    super.before(out);
+	public int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     // Get form data    
     FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
@@ -77,9 +77,9 @@ public class UiFormElementTag extends UiBaseTag {
       (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
 		   
 		// Store data
-    pushContextEntry(VIEW_MODEL_KEY_REQUEST, formElementViewModel);
-    pushContextEntry(ID_KEY_REQUEST, id);
-    pushContextEntry(VALUE_KEY_REQUEST, formElementViewModel.getValue());
+    addContextEntry(VIEW_MODEL_KEY_REQUEST, formElementViewModel);
+    addContextEntry(ID_KEY_REQUEST, id);
+    addContextEntry(VALUE_KEY_REQUEST, formElementViewModel.getValue());
     				
 		// Continue
 	  return EVAL_BODY_INCLUDE;		

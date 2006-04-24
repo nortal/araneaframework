@@ -20,8 +20,8 @@ public class ComponentNameTag extends UiPresentationTag {
 		styleClass = ComponentNameTag.DEFAULT_HEADER_NAME_STYLE;
 	}
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 
 		// make sure we are inside component header and fail if no header is present.
 		// not strictly necessary, mainly for demonstration of attribute usage.
@@ -34,9 +34,9 @@ public class ComponentNameTag extends UiPresentationTag {
 		return EVAL_BODY_INCLUDE;
 	}
 
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		UiUtil.writeEndTag(out, "div");
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
 }

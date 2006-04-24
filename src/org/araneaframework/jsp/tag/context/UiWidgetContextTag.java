@@ -53,8 +53,8 @@ public class UiWidgetContextTag extends UiBaseTag {
     this.widgetId = (String) evaluateNotNull("widgetId", widgetId, String.class);
   }
 
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
 
     output = (OutputData) pageContext.getRequest().getAttribute(
         StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
@@ -74,8 +74,8 @@ public class UiWidgetContextTag extends UiBaseTag {
     viewModel = (Standard.WidgetViewModel) widget._getViewable().getViewModel();
     widgetId = UiWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
 
-    pushContextEntry(WIDGET_CONTEXT_ID_KEY_REQUEST, widgetId);
-    pushContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST, viewModel);
+    addContextEntry(WIDGET_CONTEXT_ID_KEY_REQUEST, widgetId);
+    addContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST, viewModel);
 
     return EVAL_BODY_INCLUDE;
   }

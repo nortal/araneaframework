@@ -37,8 +37,8 @@ public abstract class UiStdImageBaseTag extends UiImageBaseTag {
 	  this.styleClass = "aranea-image";
   }
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     writeImageLocal(out, src, width, height, alt, getStyleClass(), title); 
     // Continue
     return EVAL_BODY_INCLUDE;    

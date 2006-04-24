@@ -160,8 +160,8 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	// Implementation
 	//
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);    
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);    
 		
 		//Get context widget id
 		contextWidgetId = UiWidgetUtil.getContextWidgetFullId(pageContext);	
@@ -204,10 +204,10 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	}
 	
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		if (hasElementContextSpan) writeFormElementContextClose(out);
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
 	

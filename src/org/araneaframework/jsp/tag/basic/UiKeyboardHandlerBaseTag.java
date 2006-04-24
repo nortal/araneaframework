@@ -79,8 +79,8 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
    * Checks that either keyCode or key is specified (not both), and initializes the keyCode field.
    * When overriding don't forget to invoke superimplementation first.
    */
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		if (!(keyCode == null ^ key == null)) 
 			throw new JspException("Either key or keyCode must be specified for a keyboard handler tag.");

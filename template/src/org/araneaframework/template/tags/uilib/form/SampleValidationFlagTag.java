@@ -29,8 +29,8 @@ public class SampleValidationFlagTag extends UiFormElementBaseTag {
   
   /**
    */
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
 
     UiUtil.writeOpenStartTag(out, "img");
     UiUtil.writeOpenAttribute(out, "id");   

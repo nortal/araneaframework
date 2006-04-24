@@ -99,8 +99,8 @@ public class UiFormElementBaseDisplayTag extends UiPresentationTag implements Ui
 	// Implementation
 	//
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
 		FormWidget form = 
@@ -123,9 +123,9 @@ public class UiFormElementBaseDisplayTag extends UiPresentationTag implements Ui
 	}
 	
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
 	

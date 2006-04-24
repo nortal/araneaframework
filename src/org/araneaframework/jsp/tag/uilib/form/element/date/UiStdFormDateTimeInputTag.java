@@ -55,7 +55,7 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
 		this.timeStyleClass = (String) evaluate("timeStyleClass", timeCssClass, String.class);
 	}
 
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("DateTimeControl");
 
@@ -96,7 +96,7 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
 		out.write("</td></tr></table>\n");
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
 

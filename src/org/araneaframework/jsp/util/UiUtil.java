@@ -69,16 +69,8 @@ public class UiUtil {
 
     attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, "<ui:list> tag expected, but not found! Make sure list tags is used inside <ui:list> tag.");
     attributeErrorMap.put(UiListTag.LIST_ID_KEY_REQUEST, "<ui:list> tag expected, but not found!  Make sure list tags is used inside <ui:list> tag.");
-
     attributeErrorMap.put(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST, "<ui:listRows> or another list rows tag expected, but not found!");	
-
     attributeErrorMap.put(UiSystemFormTag.ID_KEY_REQUEST, "<ui:systemForm> tag expected, but not found! Make sure your tags are surrounded by <ui:systemForm>.");
-
-    /*attributeErrorMap.put(UiTreeNodesTag.NODE_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-
-    attributeErrorMap.put(UiTreeTag.TREE_FULL_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-    attributeErrorMap.put(UiTreeTag.TREE_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);*/
-
     attributeErrorMap.put(UiWidgetContainer.REQUEST_CONTEXT_KEY, "<ui:viewPort> or another widget container tag expected, but not found!");
   }
 

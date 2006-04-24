@@ -42,8 +42,8 @@ public class UiStdFormConditionalDisplayTag extends UiFormElementBaseDisplayTag 
   
   /**
    */
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     assertControlType("DisplayControl");
     
@@ -52,7 +52,7 @@ public class UiStdFormConditionalDisplayTag extends UiFormElementBaseDisplayTag 
     if (viewModel.getValue() != null) 
       condition = ((Boolean) viewModel.getValue());
      
-    pushContextEntry(CONDITION_KEY, condition);
+    addContextEntry(CONDITION_KEY, condition);
     
     return EVAL_BODY_INCLUDE;   
   }

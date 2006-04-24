@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  */
 public abstract class UiStdFormSimpleElementDisplayBaseTag extends UiFormElementBaseDisplayTag {	
 	
-	protected int after(Writer out) throws Exception {				
+	protected int doEndTag(Writer out) throws Exception {				
 		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 		
 		UiUtil.writeOpenStartTag(out, "span");
@@ -39,6 +39,6 @@ public abstract class UiStdFormSimpleElementDisplayBaseTag extends UiFormElement
 		
 		UiUtil.writeEndTag(out, "span");		
 		
-		return super.after(out);
+		return super.doEndTag(out);
 	}
 }

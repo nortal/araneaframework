@@ -62,7 +62,7 @@ public class UiStdFormMultiSelectTag extends UiFormElementBaseTag {
 	// Implementation
 	//  
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("MultiSelectControl");		
 		
@@ -107,7 +107,7 @@ public class UiStdFormMultiSelectTag extends UiFormElementBaseTag {
 		if (validate) writeValidationScript(out, viewModel);
 		
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;	
 	}
 	

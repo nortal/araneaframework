@@ -36,8 +36,8 @@ public class UiStdFormElementLabelTag extends UiFormElementLabelBaseTag {
   // Implementation
   //  
   
-	protected int before(Writer out) throws Exception {
-		super.before(out);		
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);		
     UiStdFormSimpleLabelTag.writeLabel(
                                 out, 
                                 localizedLabel, 

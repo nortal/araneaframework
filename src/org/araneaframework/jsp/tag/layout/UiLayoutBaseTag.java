@@ -77,9 +77,9 @@ public abstract class UiLayoutBaseTag extends UiPresentationTag implements UiLay
   // Implementation
   //
   		
-	protected int before(Writer out) throws Exception {
-		super.before(out);
-		pushContextEntry(UiLayoutTagInterface.KEY_REQUEST, this);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
+		addContextEntry(UiLayoutTagInterface.KEY_REQUEST, this);
 		return EVAL_BODY_INCLUDE;
 	}	
 	

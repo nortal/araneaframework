@@ -75,8 +75,8 @@ public class UiSimpleButtonBaseTag extends UiPresentationTag {
     this.onClickPrecondition = (String) evaluate("onChangePrecondition", onClickPrecondition, String.class);
   }
   
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		systemFormId = (String) requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
 		

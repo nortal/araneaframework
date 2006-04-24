@@ -61,8 +61,8 @@ public class UiStdMessagesTag extends UiPresentationTag {
 		this.type = type;
 	}
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		OutputData output = (OutputData) UiUtil.requireContextEntry(pageContext, UiAraneaRootTag.OUTPUT_DATA_KEY, PageContext.REQUEST_SCOPE);
 		Map messageMap = (Map) output.getAttribute(StandardMessagingFilterWidget.MESSAGE_KEY);
@@ -107,7 +107,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
 		return EVAL_PAGE;
 	}
 	
-	protected int after(Writer out) throws Exception {
-		return super.after(out);
+	protected int doEndTag(Writer out) throws Exception {
+		return super.doEndTag(out);
 	}
 }
