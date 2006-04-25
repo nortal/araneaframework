@@ -36,12 +36,16 @@ import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 public class UiWidgetContextTag extends UiBaseTag {
   public final static String WIDGET_CONTEXT_ID_KEY_REQUEST = "contextWidgetId";
   public final static String WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST = "contextWidget";
-
-  private String widgetId = null;
+ 
   private Standard.StandardWidgetInterface widget = null;
   private Standard.WidgetViewModel viewModel = null;
   private OutputData output = null;
   private int pathLength = 0;
+  private String fullId;
+  
+  //Attributes
+  
+  private String id;
 
   /**
    * @jsp.attribute
@@ -50,7 +54,7 @@ public class UiWidgetContextTag extends UiBaseTag {
 	 *   description = "Widget id."
    */
   public void setId(String widgetId) throws JspException {
-    this.widgetId = (String) evaluateNotNull("widgetId", widgetId, String.class);
+    this.id = (String) evaluateNotNull("widgetId", widgetId, String.class);
   }
 
   protected int doStartTag(Writer out) throws Exception {
@@ -58,8 +62,8 @@ public class UiWidgetContextTag extends UiBaseTag {
 
     output = (OutputData) pageContext.getRequest().getAttribute(
         StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
-    if (widgetId != null) {
-      StringTokenizer tokenizer = new StringTokenizer(widgetId, ".");
+    if (id != null) {
+      StringTokenizer tokenizer = new StringTokenizer(id, ".");
 
       pathLength = tokenizer.countTokens();
       if (pathLength == -1) pathLength = 0;
@@ -72,9 +76,9 @@ public class UiWidgetContextTag extends UiBaseTag {
 
     widget = UiWidgetUtil.getWidgetFromContext(null, pageContext);
     viewModel = (Standard.WidgetViewModel) widget._getViewable().getViewModel();
-    widgetId = UiWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
+    fullId = UiWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
 
-    addContextEntry(WIDGET_CONTEXT_ID_KEY_REQUEST, widgetId);
+    addContextEntry(WIDGET_CONTEXT_ID_KEY_REQUEST, fullId);
     addContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST, viewModel);
 
     return EVAL_BODY_INCLUDE;

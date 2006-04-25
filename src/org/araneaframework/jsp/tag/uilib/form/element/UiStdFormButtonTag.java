@@ -123,7 +123,7 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
   protected boolean writeEventAttribute(Writer out) throws IOException,
   JspException {
     if (viewModel.isOnClickEventRegistered())
-      this.writeEventAttributeForUiEvent(out, "onclick", id, "onClicked",
+      this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onClicked",
           validateOnEvent, onClickPrecondition, updateRegionNames);
 
     return viewModel.isOnClickEventRegistered();

@@ -41,12 +41,10 @@ public class UiFormTag extends UiWidgetTag {
 	public final static String FORM_SCOPED_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.SCOPED_FULL_ID";
 	public final static String FORM_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FULL_ID";
 	public final static String FORM_VIEW_MODEL_KEY_REQUEST = "form";
-	public final static String FORM_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FORM";    
-  
-  //
-  // Implementation
-  //
-  
+	public final static String FORM_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FORM";
+	
+	protected FormWidget.ViewModel formViewModel;
+
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
@@ -84,6 +82,4 @@ public class UiFormTag extends UiWidgetTag {
     out.write(");\n");
     UiUtil.writeEndTag(out, "script");
   }
-  
-	protected FormWidget.ViewModel formViewModel;		
 }

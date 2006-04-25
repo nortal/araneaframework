@@ -37,7 +37,7 @@ public class SampleFormFilterButtonTag extends UiStdFormLinkButtonTag {
   public SampleFormFilterButtonTag() {
     this.id = "filter";
     this.showLabel = false;
-    this.validateOnEvent = true;    
+    this.validateOnEvent = true;
   }
 
   public int doStartTag(Writer out) throws Exception {    

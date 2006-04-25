@@ -87,7 +87,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			UiUtil.writeAttribute(out, "disabled", "true");
 		}
 		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeEventAttributeForUiEvent(out, "onchange", this.id, "onChanged", validateOnEvent, onChangePrecondition, 
+			writeEventAttributeForUiEvent(out, "onchange", this.derivedId, "onChanged", validateOnEvent, onChangePrecondition, 
 					updateRegionNames);
 		}
 		
@@ -153,7 +153,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			UiUtil.writeAttribute(out, "disabled", "true");
 		}
 		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeEventAttributeForUiEvent(out, "onchange", this.id, "onChanged", validateOnEvent, onChangePrecondition,
+			writeEventAttributeForUiEvent(out, "onchange", this.derivedId, "onChanged", validateOnEvent, onChangePrecondition,
 					updateRegionNames);
 		}
 		

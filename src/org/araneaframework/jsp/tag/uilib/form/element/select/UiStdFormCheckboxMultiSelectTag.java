@@ -59,11 +59,11 @@ public class UiStdFormCheckboxMultiSelectTag extends UiFormElementBaseTag {
     for (Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
       DisplayItem displayItem = (DisplayItem) i.next();
 
-      if (labelBefore) writeLabel(label, id, displayItem.getValue());
+      if (labelBefore) writeLabel(label, derivedId, displayItem.getValue());
 
       registerSubtag(item);
 
-      item.setId(id);
+      item.setId(derivedId);
       item.setValue(displayItem.getValue());
       item.setEvents(events ? "true" : "false");
       item.setValidate(validate ? "true" : "false");
@@ -81,7 +81,7 @@ public class UiStdFormCheckboxMultiSelectTag extends UiFormElementBaseTag {
       executeStartSubtag(item);
       executeEndTagAndUnregister(item);
 
-      if (!labelBefore) writeLabel(label, id, displayItem.getValue());
+      if (!labelBefore) writeLabel(label, derivedId, displayItem.getValue());
 
       if ("horizontal".equals(type))
         out.write("&nbsp;");

@@ -64,7 +64,7 @@ public class UiStdFormSelectTag extends UiFormElementBaseTag {
     if (viewModel.isDisabled())
       UiUtil.writeAttribute(out, "disabled", "true");
     if (events && viewModel.isOnChangeEventRegistered())
-      this.writeEventAttributeForUiEvent(out, "onchange", id, "onChanged", validateOnEvent, onChangePrecondition,
+      this.writeEventAttributeForUiEvent(out, "onchange", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
           updateRegionNames);
     UiUtil.writeAttributes(out, attributes);
     UiUtil.writeCloseStartTag(out);

@@ -35,7 +35,7 @@ public class UiUpdateRegionCommonTag extends UiUpdateRegionBaseTag {
     super.doStartTag(out);
 
     UiUtil.writeOpenStartTag(out, "span");
-    UiUtil.writeAttribute(out, "id", globalId);
+    UiUtil.writeAttribute(out, "id",  fullId);
     UiUtil.writeCloseStartTag(out);
     
     return EVAL_BODY_INCLUDE;

@@ -97,7 +97,7 @@ public class UiStdFormTextInputBaseTag extends UiFormElementBaseTag {
     if (events && viewModel.isOnChangeEventRegistered())
       // We use "onblur" to simulate the textbox's "onchange" event
       // this is _not_ good, but there seems to be no other way
-      this.writeEventAttributeForUiEvent(out, "onblur", id, "onChanged", validateOnEvent, onChangePrecondition,
+      this.writeEventAttributeForUiEvent(out, "onblur", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
           updateRegionNames);
     UiUtil.writeAttributes(out, attributes);
     UiUtil.writeCloseStartEndTag_SS(out);

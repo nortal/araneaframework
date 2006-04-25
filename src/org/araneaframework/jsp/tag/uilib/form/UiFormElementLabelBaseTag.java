@@ -38,13 +38,16 @@ public class UiFormElementLabelBaseTag extends UiPresentationTag {
 
   protected FormElement.ViewModel formElementViewModel;
   protected Control.ViewModel controlViewModel;
-  protected String localizedLabel;    
-  protected String accessKey;
-
+  protected String localizedLabel;
+  protected String accessKeyId;  
+  protected String derivedId;
+  
+  //Attributes
+  
   protected String id;
   protected boolean showMandatory = true;
   protected boolean showColon = true;
-  protected String accessKeyId;
+  protected String accessKey;  
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -55,14 +58,15 @@ public class UiFormElementLabelBaseTag extends UiPresentationTag {
       (FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 
     //In case the tag is in formElement tag
-    if (id == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
-      id = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
+    derivedId = id;
+    if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
+      derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
 
-    if (id == null) 
+    if (derivedId == null) 
       throw new UiMissingIdException(this);
 
     formElementViewModel = 
-      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
+      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
 
     // Get control  
     controlViewModel = (formElementViewModel).getControl();

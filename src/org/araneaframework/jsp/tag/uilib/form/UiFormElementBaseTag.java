@@ -51,23 +51,27 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	protected FormElement.ViewModel formElementViewModel;
 	protected Control.ViewModel controlViewModel;
 	
+	protected String localizedLabel;
+	
+	protected String accessKeyId;
+	
+	protected List updateRegionNames;    
+	private boolean hasElementContextSpan = true;
+	
+	protected String derivedId;
+	
+	//Attributes
+	
 	protected boolean events = true;
 	protected boolean validate = true;
 	protected boolean validateOnEvent = false;
-
-	protected String localizedLabel;
+		
 	protected String accessKey;
-
-	protected String id;	
+	
+	protected String id;
 	protected String tabindex;
 	protected String updateRegions;
 	protected String globalUpdateRegions;  
-
-	protected List updateRegionNames;    
-
-	protected String accessKeyId;
-
-	private boolean hasElementContextSpan = true;
 	
 	/* ***********************************************************************************
 	 * Start & End tags
@@ -89,11 +93,14 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
 
 		//In case the tag is in formElement tag
-		if (id == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
-			id = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
-		if (id == null) throw new UiMissingIdException(this);        
+
+		derivedId = id;
+		if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
+			derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
+		if (derivedId == null) throw new UiMissingIdException(this);   
+		
 		formElementViewModel = 
-			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
+			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
 
 		// Get control	
 		controlViewModel = (formElementViewModel).getControl();
@@ -106,7 +113,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		}
 		if (accessKey != null && accessKey.length() != 1) accessKey = null;
 
-		if (hasElementContextSpan) writeFormElementContextOpen(out, formScopedFullId, id, pageContext);
+		if (hasElementContextSpan) writeFormElementContextOpen(out, formScopedFullId, derivedId, pageContext);
 
 		UiUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
 
@@ -214,14 +221,14 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	 * Computes field name.
 	 */
 	protected String getScopedFullFieldId() {
-		return formScopedFullId + "." + id;
+		return formScopedFullId + "." + derivedId;
 	}
 
 	/**
 	 * Computes field name.
 	 */	
 	protected String getFullFieldId() {
-		return formFullId + "." + id;
+		return formFullId + "." + derivedId;
 	}
 
 	/**
@@ -230,7 +237,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	 */
 	protected void assertControlType(String type) throws JspException {
 		if (!controlViewModel.getControlType().equals(type))
-			throw new UiException("Control of type '" + type + "' expected in form element '" + id + "' instead of '" + controlViewModel.getControlType() + "'");
+			throw new UiException("Control of type '" + type + "' expected in form element '" + derivedId + "' instead of '" + controlViewModel.getControlType() + "'");
 	}
 
 
@@ -385,7 +392,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 				out, 
 				systemFormId, 
 				formFullId, 
-				this.id, 
+				this.derivedId, 
 				id, 
 				null, 
 				validate, 

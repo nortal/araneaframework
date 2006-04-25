@@ -37,7 +37,7 @@ public class SampleValidationFlagTag extends UiFormElementBaseTag {
     out.write("img_");
     UiUtil.writeEscapedAttribute(out, formFullId);
     out.write(".");
-    UiUtil.writeEscapedAttribute(out, id);
+    UiUtil.writeEscapedAttribute(out, derivedId);
     UiUtil.writeCloseAttribute(out);
     if (formElementViewModel.isValid())
       UiUtil.writeAttribute(out, "style", "visibility: hidden;");

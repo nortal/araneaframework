@@ -73,7 +73,7 @@ public class UiStdFormRadioSelectItemTag extends UiFormElementBaseTag {
     if (selected)
       UiUtil.writeAttribute(out, "checked", "true");    
     if (events && viewModel.isOnChangeEventRegistered())
-      this.writeEventAttributeForUiEvent(out, "onclick", id, "onChanged", validateOnEvent, onChangePrecondition,
+      this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
           updateRegionNames);
     UiUtil.writeAttributes(out, attributes);
     UiUtil.writeCloseStartEndTag_SS(out);

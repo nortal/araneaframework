@@ -71,7 +71,7 @@ public class UiStdFormCheckboxMultiSelectItemTag extends UiFormElementBaseTag {
 		UiUtil.writeAttributes(out, attributes);
 
 		if (events && viewModel.isOnChangeEventRegistered())
-			this.writeEventAttributeForUiEvent(out, "onclick", id, "onChanged", validateOnEvent, "",
+			this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onChanged", validateOnEvent, "",
 					updateRegionNames);
 
 		UiUtil.writeCloseStartEndTag_SS(out);

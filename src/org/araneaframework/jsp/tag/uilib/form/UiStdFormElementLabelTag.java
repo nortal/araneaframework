@@ -38,7 +38,7 @@ public class UiStdFormElementLabelTag extends UiFormElementLabelBaseTag {
         localizedLabel, 
         (controlViewModel.isMandatory() && showMandatory), 
         getStyleClass(),
-        id,
+        derivedId,
         pageContext,
         showColon,
         accessKey

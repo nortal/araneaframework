@@ -65,7 +65,7 @@ public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 			UiUtil.writeAttribute(out, "accesskey", accessKey);
 
 		if (events && viewModel.isOnChangeEventRegistered())
-			this.writeEventAttributeForUiEvent(out, "onclick", id, "onChanged", validateOnEvent, onChangePrecondition,
+			this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
 					updateRegionNames);
 
 		UiUtil.writeAttributes(out, attributes);   

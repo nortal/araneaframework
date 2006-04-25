@@ -60,7 +60,7 @@ public class UiStdFormMultiSelectTag extends UiFormElementBaseTag {
     UiUtil.writeAttribute(out, "label", localizedLabel);
     UiUtil.writeAttribute(out, "tabindex", tabindex);
     if (viewModel.isOnChangeEventRegistered())
-      this.writeEventAttributeForUiEvent(out, "onchange", id, "onChanged", validateOnEvent, "",
+      this.writeEventAttributeForUiEvent(out, "onchange", derivedId, "onChanged", validateOnEvent, "",
           updateRegionNames);
     if (viewModel.isDisabled())
       UiUtil.writeAttribute(out, "disabled", "true");

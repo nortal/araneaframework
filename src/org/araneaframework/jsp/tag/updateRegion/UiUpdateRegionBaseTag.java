@@ -30,6 +30,7 @@ public class UiUpdateRegionBaseTag extends UiBaseTag {
 
   protected String id;
   protected String globalId;
+  protected String fullId;
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -39,9 +40,10 @@ public class UiUpdateRegionBaseTag extends UiBaseTag {
 
     String contextWidgetId = UiWidgetUtil.getContextWidgetFullId(pageContext);
 
-    if (globalId == null)
-      globalId = (contextWidgetId.length() > 0 ? contextWidgetId + "." + id : id);      
-    globalId = UPDATE_REGION_PREFIX + globalId;
+    fullId = globalId;
+    if (fullId == null)
+    	fullId = (contextWidgetId.length() > 0 ? contextWidgetId + "." + id : id);      
+    fullId = UPDATE_REGION_PREFIX + fullId;
 
     return EVAL_BODY_INCLUDE;    
   }
