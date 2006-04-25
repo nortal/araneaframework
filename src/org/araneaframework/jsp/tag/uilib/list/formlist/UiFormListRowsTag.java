@@ -44,18 +44,11 @@ public class UiFormListRowsTag extends UiListRowsBaseTag {
 	
 	protected UiFormTag rowForm = new UiFormTag();
 	
-	protected String var;
-	
-	protected void init() {
-		super.init();
-		var = "row";
-	}
+	protected String var = "row";
 	
 	public int doStartTag(Writer out) throws Exception {
-		// Get list data    
 		editableListViewModel = (FormListWidget.ViewModel)requireContextEntry(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY_REQUEST);
 		editableListId = (String)requireContextEntry(UiFormListTag.FORM_LIST_ID_KEY_REQUEST);
-		
 		return super.doStartTag(out);
 	}
   

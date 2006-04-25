@@ -61,7 +61,7 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
       
       if (e instanceof Error && 
           !(e instanceof StackOverflowError))
-        throw (Error) e;      
+        throw (Error) e;
       
       arUtil.rollback();
       

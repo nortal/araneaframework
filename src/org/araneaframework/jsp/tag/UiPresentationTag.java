@@ -29,12 +29,8 @@ import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
  */
 public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInterface {
 	protected String styleClass = null;
-	protected Map attributes;
+	protected Map attributes = new HashMap();
 	
-	public UiPresentationTag() {
-		attributes = new HashMap();
-	}
-
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.basic;
 
@@ -37,10 +37,54 @@ import org.araneaframework.jsp.util.UiUtil;
  */
 public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface {
 	public final static String KEY_REQUEST = "org.araneaframework.jsp.ui.basic.UiElementTag.KEY";
-  
-  //
-  // Attributes
-  //
+
+	protected String name = null;
+	protected Map attributes = new HashMap();
+	protected boolean hasContent = false;
+	
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
+
+		addContextEntry(KEY_REQUEST, this);
+		addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
+
+		UiUtil.writeOpenStartTag(out, name);
+
+		// Continue
+		return EVAL_BODY_INCLUDE;		
+	}
+
+	/**
+	 * After tag.
+	 */
+	protected int doEndTag(Writer out) throws Exception {
+		if (hasContent)
+			UiUtil.writeEndTag_SS(out, name);
+		else {
+			UiUtil.writeAttributes(out, attributes);
+			UiUtil.writeCloseStartEndTag_SS(out);
+		}
+
+		super.doEndTag(out);
+		return EVAL_PAGE;      
+	}
+	
+	public void addAttribute(String name, String value) throws JspException {
+		value = (String)evaluate("value", value, String.class);
+		attributes.put(name, value);
+	}
+
+	protected void onContent() {
+		this.hasContent = true;
+	}
+
+	protected void writeAttributes(Writer out) throws Exception {
+		UiUtil.writeAttributes(out, attributes);
+	}
+
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
 
 	/**
 	 * @jsp.attribute
@@ -51,62 +95,4 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
 	public void setName(String name) throws JspException {
 		this.name = (String)evaluateNotNull("name", name, String.class);
 	}
-  
-  //
-  // Implementation
-  //
-	
-	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
-		
-		addContextEntry(KEY_REQUEST, this);
-    addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
-		
-		UiUtil.writeOpenStartTag(out, name);
-		
-		// Continue
-	  return EVAL_BODY_INCLUDE;		
-	}
-	
-	/**
-	 * After tag.
-	 */
-	protected int doEndTag(Writer out) throws Exception {
-    
-		if (hasContent)
-			UiUtil.writeEndTag_SS(out, name);
-		else {
-      UiUtil.writeAttributes(out, attributes);
-			UiUtil.writeCloseStartEndTag_SS(out);
-    }
-		
-		// Continue
-		super.doEndTag(out);
-		return EVAL_PAGE;      
-	}
-	
-	protected void init() {
-    super.init();
-    this.name = null;
-		this.hasContent = false;
-    this.attributes = new HashMap();
-	}
-  
-  public void addAttribute(String name, String value) throws JspException {
-    value = (String)evaluate("value", value, String.class);
-    attributes.put(name, value);
-  }
-	
-	protected void onContent() {
-		this.hasContent = true;
-	}
-  
-  protected void writeAttributes(Writer out) throws Exception {
-    UiUtil.writeAttributes(out, attributes);
-  }
-            		
-	protected String name;
-  
-  protected Map attributes;
-  protected boolean hasContent;
 }

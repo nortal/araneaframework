@@ -34,7 +34,8 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Konstantin Tretyakov (kt@webmedia.ee)
  */
 public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
-  
+  protected String keyCode;
+  protected String key;
   
 	//
 	// Attributes
@@ -94,11 +95,7 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
 		return SKIP_BODY;
 	}
   
-  protected void init() {
-    keyCode = key = null;
-  }
-		
-  /**
+   /**
    * Writes "uiRegisterKeypressHandler" javascript, surrounded by &lt;script&gt tags.
    * Throws exceptions if parameters are not consistent (e.g. keyCode not specified).
    * 
@@ -174,13 +171,4 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
   		keyToKeyCodeMap.put("f" + i, new Integer(111 + i));
   	}
   }
-  
-  
- 
-  // Tag attributes
-  protected String keyCode;
-  protected String key;
-  
-  
-
 }

@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.example.main.web.company;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 
@@ -29,19 +28,17 @@ import org.araneaframework.example.main.business.model.CompanyMO;
  * @author Rein Raudjärv <reinra@ut.ee>*
  */
 public class CompanyViewWidget extends TemplateBaseWidget {
-	
-	private static final Logger log = Logger.getLogger(CompanyViewWidget.class);
-	
+  private static final Logger log = Logger.getLogger(CompanyViewWidget.class);
   private Long id = null;
-  
+
   /**
    * @param id Company's Id.
    */
   public CompanyViewWidget(Long id) {
-  	super();
-  	this.id = id;
+    super();
+    this.id = id;
   }
-	
+
   protected void init() throws Exception {
     super.init();
     setViewSelector("company/companyView");
@@ -49,9 +46,9 @@ public class CompanyViewWidget extends TemplateBaseWidget {
 
     putViewData("company" , getGeneralDAO().getById(CompanyMO.class, id));
   }
-  
+
   public void handleEventReturn(String eventParameter) throws Exception {
     log.debug("Event 'return' received!");
     getFlowCtx().cancel();
-  }	
+  }
 }

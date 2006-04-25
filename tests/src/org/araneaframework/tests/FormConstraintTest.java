@@ -20,7 +20,6 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
 import org.araneaframework.servlet.core.StandardServletInputData;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
@@ -46,9 +45,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * 
  */
 public class FormConstraintTest extends TestCase {
-
-  private static Logger log = Logger.getLogger(FormConstraintTest.class);
-
   boolean eventsWork = false;
   
   public FormConstraintTest(String name) {

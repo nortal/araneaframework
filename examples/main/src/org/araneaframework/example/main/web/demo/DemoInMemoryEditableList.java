@@ -18,7 +18,6 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.framework.MessageContext;

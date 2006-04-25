@@ -55,9 +55,12 @@ import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag;
           inside which the tag is located, and instead of specifying the handler, you may give the id of an element, and a javascript event to call on that element."
  */
 public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
-	//
-	// Attributes
-	//
+	protected String handler;
+	protected String subscope;
+	protected String elementId;
+	protected String fullElementId;
+	protected String event = "onclick";
+
 
 	/**
 	 * @see UiKeyboardHandlerTag#setHandler
@@ -229,16 +232,4 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 			fullElementId = scope + "." + elementId;
 		return fullElementId;
 	}
-
-	protected void init() {
-		super.init();
-		handler = subscope = elementId = fullElementId = null;
-		event = "onclick";
-	}
-
-	protected String handler;
-	protected String subscope;
-	protected String elementId;
-	protected String fullElementId;
-	protected String event;
 }

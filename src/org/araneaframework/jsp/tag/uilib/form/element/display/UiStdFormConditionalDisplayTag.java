@@ -29,19 +29,9 @@ import org.araneaframework.uilib.form.control.DisplayControl;
  *   description = "Depending whether element Boolean value is TRUE or FALSE display one or other content, represents UiLib "DisplayControl"."
  */
 public class UiStdFormConditionalDisplayTag extends UiFormElementBaseDisplayTag {
-  
   public final static String CONDITION_KEY = "org.araneaframework.jsp.uilook.std.uilib.form.element.display.UiStdFormConditionalDisplayTag.CONDITION";    
-  protected Boolean condition;
+  protected Boolean condition = Boolean.FALSE;
   
-  /**
-   */
-  protected void init() {
-    super.init();
-    condition = Boolean.FALSE;
-  }
-  
-  /**
-   */
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     

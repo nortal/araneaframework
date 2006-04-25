@@ -37,10 +37,10 @@ public class UiWidgetContextTag extends UiBaseTag {
   public final static String WIDGET_CONTEXT_ID_KEY_REQUEST = "contextWidgetId";
   public final static String WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST = "contextWidget";
 
-  private String widgetId;
-  private Standard.StandardWidgetInterface widget;
-  private Standard.WidgetViewModel viewModel;
-  private OutputData output;
+  private String widgetId = null;
+  private Standard.StandardWidgetInterface widget = null;
+  private Standard.WidgetViewModel viewModel = null;
+  private OutputData output = null;
   private int pathLength = 0;
 
   /**
@@ -81,19 +81,9 @@ public class UiWidgetContextTag extends UiBaseTag {
   }
   
   public void doFinally() {
-	for (int i = 0; i < pathLength; i++)
-		output.popScope();
-	    
-	super.doFinally();
-}
+    for (int i = 0; i < pathLength; i++)
+      output.popScope();
 
-  protected void init() {
-    super.init();
-
-    widgetId = null;
-    widget = null;
-    viewModel = null;
-    output = null;
-    pathLength = 0;
+    super.doFinally();
   }
 }

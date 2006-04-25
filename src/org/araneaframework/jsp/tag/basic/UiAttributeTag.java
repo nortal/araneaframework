@@ -33,6 +33,8 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  *   description = "Defines an attribute of the containing element."
  */
 public class UiAttributeTag extends UiBaseTag {
+	protected String name;
+	protected String value;
 
   //
   // Attributes
@@ -71,12 +73,4 @@ public class UiAttributeTag extends UiBaseTag {
 		// Continue
 	  return SKIP_BODY;
 	}
-  
-  protected void init() {
-    this.name = null;
-    this.value = null;
-  }
-		
-	protected String name;
-	protected String value;
 }

@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.list;				
 
 import java.io.Writer;
-
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 import org.araneaframework.uilib.list.ListWidget;

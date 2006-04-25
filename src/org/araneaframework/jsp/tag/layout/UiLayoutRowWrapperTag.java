@@ -35,39 +35,10 @@ public class UiLayoutRowWrapperTag extends UiStyledWrapperTag  {
 	protected String height;
 	protected String cellClass;
 	
-	protected void init() {
-		super.init();
+	public UiLayoutRowWrapperTag() {
+		super();
 		this.height = null;
 	}
-	
-	
-	//
-	// Attributes
-	//
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Row height." 
-	 */
-	public void setHeight(String height) throws JspException {
-		this.height = (String)evaluate("height", height, String.class);;
-	}	
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Default style of cells in this row." 
-	 */
-	public void setCellClass(String cellClass) throws JspException {
-		this.cellClass = (String)evaluate("cellClass", cellClass, String.class);
-	}
-	
-	//
-	// Implementation
-	//	
 	
 	/**
 	 * Callback: get row tag
@@ -89,5 +60,29 @@ public class UiLayoutRowWrapperTag extends UiStyledWrapperTag  {
 		
 		if (height != null) rowTag.setHeight(height);
 		if (cellClass != null) rowTag.setCellClass(cellClass);
+	}
+	
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Row height." 
+	 */
+	public void setHeight(String height) throws JspException {
+		this.height = (String)evaluate("height", height, String.class);;
+	}	
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Default style of cells in this row." 
+	 */
+	public void setCellClass(String cellClass) throws JspException {
+		this.cellClass = (String)evaluate("cellClass", cellClass, String.class);
 	}
 }

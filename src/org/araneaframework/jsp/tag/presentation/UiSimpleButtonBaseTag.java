@@ -12,9 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
-package org.araneaframework.jsp.tag.presentation;	
+package org.araneaframework.jsp.tag.presentation;  
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
@@ -29,76 +29,58 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
  * @author Oleg Mürk
  */
 public class UiSimpleButtonBaseTag extends UiPresentationTag {
-  
   protected String id;
-  
-  protected String labelId; 	
-	
-	protected String systemFormId;
-	protected String contextWidgetId;
-	
-	protected String localizedLabel;
-	
-	protected String onClickPrecondition;
-	
-  //
-  // Attributes
-  //
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Button id, allows to access button from JavaScript." 
-	 */
+  protected String labelId;   
+  protected String systemFormId;
+  protected String contextWidgetId;
+  protected String localizedLabel;
+  protected String onClickPrecondition = "return true;";
+
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+
+    systemFormId = (String) requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
+
+    if (labelId != null)
+      localizedLabel = UiUtil.getResourceString(pageContext, labelId);
+
+    contextWidgetId = UiWidgetUtil.getContextWidgetFullId(pageContext);
+
+    return EVAL_BODY_INCLUDE;    
+  }
+
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Button id, allows to access button from JavaScript." 
+   */
   public void setId(String id) throws JspException {
     this.id = (String)evaluate("id", id, String.class);
   }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Id of button label." 
-	 */
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Id of button label." 
+   */
   public void setLabelId(String labelId) throws JspException {
     this.labelId = (String)evaluate("labelId", labelId, String.class);
   }
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Precondition for deciding whether go to server side or not." 
-	 */
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Precondition for deciding whether go to server side or not." 
+   */
   public void setOnClickPrecondition(String onClickPrecondition) throws JspException {
     this.onClickPrecondition = (String) evaluate("onChangePrecondition", onClickPrecondition, String.class);
-  }
-  
-	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
-		
-		systemFormId = (String) requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
-		
-		// Get data
-		if (labelId != null)
-			localizedLabel = UiUtil.getResourceString(pageContext, labelId);
-				
-		contextWidgetId = UiWidgetUtil.getContextWidgetFullId(pageContext);
-		
-		return EVAL_BODY_INCLUDE;    
-	}
-  
-  
-  //
-  // Implementation
-  //
-    
-  protected void init() {
-    super.init();
-    id = null;
-    labelId = null;
-    onClickPrecondition = "return true;";
   }
 }
 

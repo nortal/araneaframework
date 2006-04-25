@@ -20,7 +20,6 @@
 package org.araneaframework.uilib.form;
 
 import java.util.Map;
-
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
 

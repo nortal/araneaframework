@@ -17,12 +17,9 @@
 package org.araneaframework.jsp.tag.uilib.list;				
 
 import java.io.Writer;
-
-
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.UiWidgetTag;
 import org.araneaframework.uilib.list.ListWidget;
-import org.araneaframework.uilib.list.formlist.FormListWidget;
 
 /**
  * List widget tag.
@@ -44,30 +41,11 @@ public class UiListTag extends UiWidgetTag {
 	public final static String LIST_FULL_ID_KEY_REQUEST = "listFullId";
 	
 	protected ListWidget.ViewModel listViewModel;
-	protected String varSequence;
+	protected String varSequence = "listSequence";
 	
-  //
-  // Implementation
-  //
-	public void init() {
-		super.init();
-		varSequence = "listSequence";
-	}	
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Name of variable that represents list sequence info (by default "listSequence")." 
-	 */
-	public void setVarSequence(String varSequence) {
-		this.varSequence = varSequence;
-	}
-  
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-		// Get list data
 		try {
 			listViewModel = (ListWidget.ViewModel)viewModel;
 		} catch (ClassCastException e) {
@@ -80,14 +58,22 @@ public class UiListTag extends UiWidgetTag {
 		addContextEntry(LIST_VIEW_MODEL_KEY_REQUEST, listViewModel);
 
 		addContextEntry(varSequence, listViewModel.getSequence());
-	
-		// Continue
+
 		return EVAL_BODY_INCLUDE;		
 	}
 	
 	public int doEndTag(Writer out) throws Exception {
 		addContextEntry(varSequence, null);
-		
 		return EVAL_PAGE;		
+	}
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Name of variable that represents list sequence info (by default "listSequence")." 
+	 */
+	public void setVarSequence(String varSequence) {
+		this.varSequence = varSequence;
 	}
 }

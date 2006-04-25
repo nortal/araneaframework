@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-
 import javax.servlet.jsp.JspException;
 
 /**
@@ -32,7 +31,8 @@ import javax.servlet.jsp.JspException;
  *   
  */
 public class UiKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
-  
+	protected String scope;
+	protected String handler;
 	  
 	/**
 	 * @jsp.attribute
@@ -79,13 +79,4 @@ public class UiKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
 		writeRegisterKeypressHandlerScript(out, scope, keyCode, handler);
 		return SKIP_BODY;
 	}
-	
-	protected void init() {
-		super.init();
-		scope = handler = null;
-	}
-	
-	// Tag attributes
-	protected String scope;
-	protected String handler;
 }

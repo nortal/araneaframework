@@ -18,7 +18,6 @@ package org.araneaframework.template.framework.error;
 
 import java.io.Writer;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -26,9 +25,7 @@ import org.araneaframework.core.BaseWidget;
 import org.araneaframework.servlet.ServletOutputData;
 
 public class TemplateCriticalErrorHandler extends BaseWidget  {
-  private static final Logger log = Logger.getLogger(TemplateCriticalErrorHandler.class);
-	
-	protected Throwable exception;
+  protected Throwable exception;
   
   public TemplateCriticalErrorHandler(Throwable exception) {
     this.exception = exception;
@@ -82,7 +79,7 @@ public class TemplateCriticalErrorHandler extends BaseWidget  {
         }        
         out.write("<b>Stack trace:</b><br/>");
         out.write("<pre style=\'font-size: 10pt\'>"+ExceptionUtils.getFullStackTrace(exception)+"</pre>");
-        out.write("</body></html>");        
+        out.write("</body></html>");
         out.write(        
         "       </div>\n" + 
         "     </div>\n" + 

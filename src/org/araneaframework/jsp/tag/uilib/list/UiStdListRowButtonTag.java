@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.list;
 
@@ -29,43 +29,37 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Represents an HTML form button."
  */
 public class UiStdListRowButtonTag extends UiListRowButtonBaseTag {
-	protected void init() {
-		super.init();
-		styleClass = "aranea-button";
-	}
-	
-	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);                
-		// Write button tag             
-		UiUtil.writeOpenStartTag(out, "button");
-		UiUtil.writeAttribute(out, "id", id);
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		if (eventId != null)
-			UiStdWidgetCallUtil.writeEventAttributeForEvent(
-					pageContext,
-					out, 
-					"onclick", 
-					systemFormId,  
-					contextWidgetId, 
-					eventId, 
-					eventParam, 
-					onClickPrecondition,
-					updateRegionNames);       
-		UiUtil.writeCloseStartTag_SS(out);
-		
-		// Continue
-		return EVAL_BODY_INCLUDE;
-	}    
-	
-	protected int doEndTag(Writer out) throws Exception {
-		
-		if (localizedLabel != null)
-			UiUtil.writeEscaped(out, localizedLabel);
-		
-		UiUtil.writeEndTag(out, "button"); 
-		
-		// Continue
-		super.doEndTag(out);
-		return EVAL_PAGE;      
-	}  
+
+  public UiStdListRowButtonTag() {
+    styleClass = "aranea-button";
+  }
+
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);                
+    // Write button tag             
+    UiUtil.writeOpenStartTag(out, "button");
+    UiUtil.writeAttribute(out, "id", id);
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    if (eventId != null)
+      UiStdWidgetCallUtil.writeEventAttributeForEvent(
+          pageContext,
+          out,
+          "onclick",
+          systemFormId,  
+          contextWidgetId, 
+          eventId, 
+          eventParam, 
+          onClickPrecondition,
+          updateRegionNames);       
+    UiUtil.writeCloseStartTag_SS(out);
+
+    return EVAL_BODY_INCLUDE;
+  }    
+
+  protected int doEndTag(Writer out) throws Exception {
+    if (localizedLabel != null)
+      UiUtil.writeEscaped(out, localizedLabel);
+    UiUtil.writeEndTag(out, "button"); 
+    return super.doEndTag(out);
+  }  
 }

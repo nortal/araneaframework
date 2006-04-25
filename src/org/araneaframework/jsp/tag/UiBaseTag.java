@@ -46,7 +46,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	private Tag parent;
 	protected PageContext pageContext;
 	
-	/**interface
+	/**
 	 * A list of registered tags.
 	 */
 	private Set registeredTags;
@@ -65,7 +65,6 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	 */
 	public void setPageContext(PageContext pageContext) {
 		this.pageContext = pageContext;
-		//init();
 		
 		// Internal initialization
 		registeredTags = new HashSet(); 
@@ -343,9 +342,4 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 		// Release data
 		attributeBackup = null;
 	}
-	
-	/**
-	 * XXX: remove !! Internal callback: initialization 
-	 */		
-	protected void init() {}
 }

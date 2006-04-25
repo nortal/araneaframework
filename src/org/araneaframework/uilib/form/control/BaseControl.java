@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.BaseWidget;
@@ -38,9 +37,6 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * 
  */
 public abstract class BaseControl extends StandardPresentationWidget implements java.io.Serializable, Control {
-
-  private static Logger log = Logger.getLogger(BaseControl.class);
-
   //*******************************************************************
   // FIELDS
   //*******************************************************************

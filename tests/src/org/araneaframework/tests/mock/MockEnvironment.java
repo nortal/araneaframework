@@ -18,7 +18,6 @@ package org.araneaframework.tests.mock;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
 import org.araneaframework.core.BaseEnvironment;
 import org.araneaframework.uilib.ConfigurationContext;
 
@@ -32,8 +31,6 @@ import org.araneaframework.uilib.ConfigurationContext;
  * 
  */
 public class MockEnvironment extends BaseEnvironment {
-  private static Logger log = Logger.getLogger(MockEnvironment.class);
-
   private Map contexts = new HashMap();
 
   public MockEnvironment() {

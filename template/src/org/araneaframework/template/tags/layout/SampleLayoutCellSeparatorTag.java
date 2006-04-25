@@ -21,9 +21,6 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 
-
-
-
 /**
  * SAMPLE layout cell separator tag.
  * 
@@ -34,43 +31,29 @@ import org.araneaframework.jsp.util.UiUtil;
  *   body-content = "empty"
  */
 public class SampleLayoutCellSeparatorTag extends UiBaseTag {
-	
-	//
-	// Attributes
-	//  
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 */
-	public void setRowSpan(String rowSpan) throws JspException {
-		this.rowSpan = (String)evaluate("rowSpan", rowSpan, String.class);
-	}
-	
-	//
-	// Implementation
-	//  
-	
-	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
-		UiUtil.writeOpenStartTag(out, "td");
-		UiUtil.writeAttribute(out, "rowspan", rowSpan);
-		UiUtil.writeCloseStartTag(out);
-		UiUtil.writeOpenStartTag(out, "img");
-		UiUtil.writeAttribute(out, "src",  "gfx/1.gif");
-		UiUtil.writeAttribute(out, "width", "10");	
-		UiUtil.writeAttribute(out, "height", "1");	
-		UiUtil.writeCloseStartEndTag(out);	
-		UiUtil.writeEndTag(out, "td");	
-		
-		return EVAL_BODY_INCLUDE;
-	}
-	
-	protected void init() {
-		super.init();
-		this.rowSpan = null;
-	}
-	
-	protected String rowSpan;			
+  protected String rowSpan;
+  
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    UiUtil.writeOpenStartTag(out, "td");
+    UiUtil.writeAttribute(out, "rowspan", rowSpan);
+    UiUtil.writeCloseStartTag(out);
+    UiUtil.writeOpenStartTag(out, "img");
+    UiUtil.writeAttribute(out, "src",  "gfx/1.gif");
+    UiUtil.writeAttribute(out, "width", "10");  
+    UiUtil.writeAttribute(out, "height", "1");  
+    UiUtil.writeCloseStartEndTag(out);  
+    UiUtil.writeEndTag(out, "td");  
+    
+    return EVAL_BODY_INCLUDE;
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   */
+  public void setRowSpan(String rowSpan) throws JspException {
+    this.rowSpan = (String)evaluate("rowSpan", rowSpan, String.class);
+  }
 }

@@ -13,8 +13,7 @@ import org.araneaframework.jsp.util.UiUtil;
 public class ComponentActionsTag extends UiPresentationTag {
 	public final static String COMPONENT_ACTION_STYLE_CLASS = "actions";
 
-	protected void init() {
-		super.init();
+	public ComponentActionsTag() {
 		styleClass = ComponentActionsTag.COMPONENT_ACTION_STYLE_CLASS;
 	}
 
@@ -33,5 +32,4 @@ public class ComponentActionsTag extends UiPresentationTag {
 		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
-
 }

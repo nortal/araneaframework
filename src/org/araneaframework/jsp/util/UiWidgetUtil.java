@@ -30,7 +30,6 @@ import org.araneaframework.uilib.util.NameUtil;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class UiWidgetUtil {
-	
     public static String getContextWidgetFullId(PageContext pageContext) throws JspException  {
       return getWidgetFullIdFromContext(null, pageContext);
     }

@@ -35,6 +35,16 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
  *   description = "Registers a 'server-side' keyboard handler that sends an event to the specified widget."
  */
 public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
+	  protected String scope;
+	  protected String widgetId;
+	  protected String eventId;
+	  protected String eventParam;
+	  protected String precondition;
+	  protected String updateRegions;
+	  protected String globalUpdateRegions;  
+	  
+	  protected List updateRegionNames;
+
   
   
   //
@@ -153,21 +163,4 @@ public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
            updateRegionNames)
             + "}, function() { " + precondition + "}); }";
 	}
-	
-	
- 
-  protected void init() {
-  	super.init();
-    scope = eventId = eventParam = precondition = keyCode = updateRegions = globalUpdateRegions = null;
-  }
-		
-  protected String scope;
-  protected String widgetId;
-  protected String eventId;
-  protected String eventParam;
-  protected String precondition;
-  protected String updateRegions;
-  protected String globalUpdateRegions;  
-  
-  protected List updateRegionNames;
 }

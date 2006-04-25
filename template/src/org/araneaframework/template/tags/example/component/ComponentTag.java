@@ -18,8 +18,7 @@ public class ComponentTag extends UiPresentationTag {
 	
 	protected String widthClass;
 
-	protected void init() {
-		super.init();
+	public ComponentTag() {
 		styleClass = ComponentTag.DEFAULT_COMPONENT_STYLE;
 		widthClass = ComponentTag.DEFAULT_COMPONENT_WIDTH_STYLE;
 	}

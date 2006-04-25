@@ -17,9 +17,7 @@
 package org.araneaframework.template.tags.layout;
 
 import java.io.Writer;
-
 import javax.servlet.jsp.JspException;
-
 import org.araneaframework.jsp.tag.layout.UiLayoutCellWrapperTag;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -34,18 +32,8 @@ import org.araneaframework.jsp.util.UiUtil;
  *   body-content = "JSP"
  */
 public class SampleLayoutTitleCellTag extends UiLayoutCellWrapperTag {
-	//
-	// Attributes
-	//  	
-	
-	public void setTitleStyle(String titleStyle) throws JspException {
-		this.titleStyle = (String)evaluate("titleStyle", titleStyle, String.class);
-	}
-	
-	//
-	// Implementation
-	//
-	
+	protected String titleStyle;
+
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
@@ -58,7 +46,6 @@ public class SampleLayoutTitleCellTag extends UiLayoutCellWrapperTag {
 		
 		UiUtil.writeStartTag(out, "td");
 		
-		// Continue
 		return EVAL_BODY_INCLUDE;			
 	}		
 	
@@ -68,19 +55,14 @@ public class SampleLayoutTitleCellTag extends UiLayoutCellWrapperTag {
 		UiUtil.writeEndTag(out, "table");
 		UiUtil.writeEndTag(out, "div");
 		
-		// Continue
-		super.doEndTag(out);
-		return EVAL_PAGE;     
+		return super.doEndTag(out);
+	}
+	
+	public void setTitleStyle(String titleStyle) throws JspException {
+		this.titleStyle = (String)evaluate("titleStyle", titleStyle, String.class);
 	}
 	
 	public String getStyle(String prefix) {
 		return null;
 	}
-	
-	protected void init() {
-		super.init();
-		this.titleStyle = null;
-	}
-	
-	protected String titleStyle;			
 }

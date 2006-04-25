@@ -25,7 +25,6 @@ import java.util.ResourceBundle;
 import javax.servlet.ServletConfig;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -33,7 +32,6 @@ import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.framework.filter.StandardSynchronizingFilterService;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.servlet.JspContext;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -41,8 +39,6 @@ import org.w3c.dom.Document;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
   public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.jsp.aranea.filter.UiAraneaJspConfigurationFilterService.JspConfiguration";
-  private static final Logger log = Logger.getLogger(StandardSynchronizingFilterService.class);
-  
   private Map tagMapping;
   
   private String submitCharset;

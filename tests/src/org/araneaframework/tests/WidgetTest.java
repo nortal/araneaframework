@@ -17,7 +17,6 @@
 package org.araneaframework.tests;
 
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
 import org.araneaframework.Widget;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
@@ -43,9 +42,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * 
  */
 public class WidgetTest extends TestCase {
-
-  private static Logger log = Logger.getLogger(WidgetTest.class);
-
   boolean eventsWork = false;
 
   private FormWidget makeUsualForm() throws Exception {

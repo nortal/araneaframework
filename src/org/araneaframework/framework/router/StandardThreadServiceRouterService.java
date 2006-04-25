@@ -18,7 +18,6 @@ package org.araneaframework.framework.router;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.StandardEnvironment;
@@ -32,8 +31,6 @@ import org.araneaframework.framework.ThreadContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardThreadServiceRouterService extends BaseServiceRouterService {
-  private static final Logger log = Logger.getLogger(StandardThreadServiceRouterService.class);
-  
   /**
    * The key of the thread-service's id in the request.
    */

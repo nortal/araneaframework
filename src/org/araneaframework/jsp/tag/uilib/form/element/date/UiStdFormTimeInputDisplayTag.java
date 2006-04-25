@@ -28,8 +28,7 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
  *   description = "Form time display field, represents UiLib "TimeControl"."
  */
 public class UiStdFormTimeInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
-	protected void init() {
-		super.init();
+	public UiStdFormTimeInputDisplayTag() {
 		styleClass = "aranea-time-display";
 	}
 	

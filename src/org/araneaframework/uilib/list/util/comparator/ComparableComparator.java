@@ -19,15 +19,11 @@ package org.araneaframework.uilib.list.util.comparator;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import org.apache.log4j.Logger;
-
 /**
  * Not-null comparator that compares <code>Comparable</code> objects by their
  * own (@see java.lang.Comparable#compareTo(java.lang.Object)) method.
  */
 public class ComparableComparator implements Comparator, Serializable {
-	private static final Logger log = Logger.getLogger(ComparableComparator.class);
-	
 	public static final ComparableComparator INSTANCE = new ComparableComparator();
 
 	public int compare(Object o1, Object o2) {

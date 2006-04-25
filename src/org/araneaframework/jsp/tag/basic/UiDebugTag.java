@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.basic;				
 
@@ -44,47 +44,21 @@ import org.araneaframework.jsp.util.UiUtil;
         The default scope is <i>page</i>."
  */
 
-// FIXME: does not work with request scope?
+//FIXME: does not work with request scope?
 public class UiDebugTag extends UiBaseTag {
-  public final static String APPLICATION_SCOPE = "application";
-  public final static String SESSION_SCOPE = "session";
-  public final static String REQUEST_SCOPE = "request";
-  public final static String PAGE_SCOPE = "page";
-    
-  //
-  // Attributes
-  //
-  /**
-   *	@jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Attribute scope."
-   */
-	public void setScope(String scope) throws JspException {
-    String scopeString = (String)evaluateNotNull("scope", scope, String.class);
-            
-    if (APPLICATION_SCOPE.equals(scopeString))
-      this.scope = PageContext.APPLICATION_SCOPE;
-    else if (SESSION_SCOPE.equals(scopeString))
-      this.scope = PageContext.SESSION_SCOPE;
-    else if (REQUEST_SCOPE.equals(scopeString))
-      this.scope = PageContext.REQUEST_SCOPE;
-    else if (PAGE_SCOPE.equals(scopeString))
-      this.scope = PageContext.PAGE_SCOPE;
-    else
-      throw new UiException("Wrong debug scope value '" + this.scope + "'");
-	}
-  
-  //
-  // Implementation
-  //
-	
+	public final static String APPLICATION_SCOPE = "application";
+	public final static String SESSION_SCOPE = "session";
+	public final static String REQUEST_SCOPE = "request";
+	public final static String PAGE_SCOPE = "page";
+
+	protected int scope = PageContext.PAGE_SCOPE;
+
 	protected int doEndTag(Writer out) throws Exception {			
 		// Output
 		UiUtil.writeOpenStartTag(out, "table");
 		UiUtil.writeAttribute(out, "border", "1");
 		UiUtil.writeCloseStartTag(out);
-		
+
 		for(Enumeration i = pageContext.getAttributeNamesInScope(scope); i.hasMoreElements();) {
 			String key = (String)i.nextElement();
 			UiUtil.writeStartTag(out, "tr");
@@ -99,16 +73,34 @@ public class UiDebugTag extends UiBaseTag {
 		}
 
 		UiUtil.writeEndTag(out, "table");    
-		
+
 		// Continue
 		super.doEndTag(out);
 		return EVAL_PAGE;      
 	}
-  
-  protected void init() {
-    super.init();
-    this.scope = PageContext.PAGE_SCOPE;
-  }
 	
-	protected int scope;
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
+
+	/**
+	 *	@jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Attribute scope."
+	 */
+	public void setScope(String scope) throws JspException {
+		String scopeString = (String)evaluateNotNull("scope", scope, String.class);
+
+		if (APPLICATION_SCOPE.equals(scopeString))
+			this.scope = PageContext.APPLICATION_SCOPE;
+		else if (SESSION_SCOPE.equals(scopeString))
+			this.scope = PageContext.SESSION_SCOPE;
+		else if (REQUEST_SCOPE.equals(scopeString))
+			this.scope = PageContext.REQUEST_SCOPE;
+		else if (PAGE_SCOPE.equals(scopeString))
+			this.scope = PageContext.PAGE_SCOPE;
+		else
+			throw new UiException("Wrong debug scope value '" + this.scope + "'");
+	}
 }

@@ -28,14 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import javax.sql.DataSource;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
-import org.araneaframework.backend.list.helper.ConverterManager;
-import org.araneaframework.backend.list.helper.DbHelper;
-import org.araneaframework.backend.list.helper.VariableMapper;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.helper.builder.compexpr.StandardCompExprToSqlExprBuilder;
 import org.araneaframework.backend.list.helper.builder.expression.StandardExpressionToSqlExprBuilder;

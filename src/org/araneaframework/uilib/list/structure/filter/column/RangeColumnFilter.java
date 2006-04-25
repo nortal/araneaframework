@@ -20,7 +20,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;

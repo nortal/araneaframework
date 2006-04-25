@@ -34,9 +34,11 @@ public class UiException extends JspException {
 		super(message);
 	}
 	
+	public UiException(Throwable cause) {
+		super(cause);
+	}
+	
 	public UiException(String message, Throwable cause) {
 		super(message, cause);
 	}
 }
-
-

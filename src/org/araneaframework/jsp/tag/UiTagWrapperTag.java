@@ -26,10 +26,7 @@ import javax.servlet.jsp.JspException;
  * @author Oleg Mürk
  */
 public abstract class UiTagWrapperTag extends UiBaseTag {
-  
-  //
-  // Implementation
-  //
+	protected UiContainedTagInterface tag;
   
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);	
@@ -49,9 +46,6 @@ public abstract class UiTagWrapperTag extends UiBaseTag {
 		return EVAL_BODY_INCLUDE;
 	}
 
-	/**
-	 * After tag.
-	 */
 	protected int doEndTag(Writer out) throws Exception {				
 		this.executeEndSubtag(tag);
     
@@ -69,7 +63,4 @@ public abstract class UiTagWrapperTag extends UiBaseTag {
 	 * Callback: configure tag
 	 */
 	protected abstract void configureTag(UiContainedTagInterface tag) throws JspException;	
-
-
-	protected UiContainedTagInterface tag;
 }

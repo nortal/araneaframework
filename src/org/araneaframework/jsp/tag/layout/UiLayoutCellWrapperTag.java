@@ -38,19 +38,43 @@ public class UiLayoutCellWrapperTag extends UiStyledWrapperTag {
 	protected String colSpan;
 	protected String rowSpan;
 	
-	protected void init() {
-		super.init();
+	public UiLayoutCellWrapperTag() {
+		super();
 		
 		width = null;
 		height = null;
-		
+
 		colSpan = null;
 		rowSpan = null;
-	} 
+	}
 	
-	//
-	// Attributes
-	//
+	/**
+	 * Callback: configure tag
+	 */
+	protected void configureTag(UiContainedTagInterface tag) throws JspException {
+		super.configureTag(tag);
+
+		UiLayoutCellTagInterface cellTag = (UiLayoutCellTagInterface)tag; 
+		
+		if (width != null) cellTag.setWidth(width);
+		if (height != null) cellTag.setHeight(height);				
+		if (colSpan != null) cellTag.setColSpan(colSpan);
+		if (rowSpan != null) cellTag.setRowSpan(rowSpan);
+		if (styleClass != null) cellTag.setStyleClass(styleClass);
+	}
+	
+	/**
+	 * Callback: get cell tag
+	 */
+	protected UiContainedTagInterface getTag() throws JspException {
+		UiLayoutRowTagInterface row = (UiLayoutRowTagInterface)requireContextEntry(UiLayoutRowTagInterface.KEY_REQUEST);
+		//UiLayoutTagInterface layout = (UiLayoutTagInterface)readAttribute(UiLayoutTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		return row.getCellTag(row.getCellClass());
+	}
+	
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -85,37 +109,9 @@ public class UiLayoutCellWrapperTag extends UiStyledWrapperTag {
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Cell rowspan, same as in HTML." 
+	 *   description = "Cell rowspan, same as in HTML."
 	 */
 	public void setRowSpan(String rowSpan) throws JspException {
 		this.rowSpan = rowSpan;
-	}
-	
-	//
-	// Implementation
-	//
-	
-	/**
-	 * Callback: get cell tag
-	 */
-	protected UiContainedTagInterface getTag() throws JspException {
-		UiLayoutRowTagInterface row = (UiLayoutRowTagInterface)requireContextEntry(UiLayoutRowTagInterface.KEY_REQUEST);
-		//UiLayoutTagInterface layout = (UiLayoutTagInterface)readAttribute(UiLayoutTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		return row.getCellTag(row.getCellClass());
-	}
-	
-	/**
-	 * Callback: configure tag
-	 */
-	protected void configureTag(UiContainedTagInterface tag) throws JspException {
-		super.configureTag(tag);
-
-		UiLayoutCellTagInterface cellTag = (UiLayoutCellTagInterface)tag; 
-		
-		if (width != null) cellTag.setWidth(width);
-		if (height != null) cellTag.setHeight(height);				
-		if (colSpan != null) cellTag.setColSpan(colSpan);
-		if (rowSpan != null) cellTag.setRowSpan(rowSpan);
-		if (styleClass != null) cellTag.setStyleClass(styleClass);
 	}
 }

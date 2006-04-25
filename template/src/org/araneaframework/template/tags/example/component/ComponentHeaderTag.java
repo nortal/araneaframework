@@ -15,8 +15,7 @@ public class ComponentHeaderTag extends UiPresentationTag {
 	public final static String COMPONENT_HEADER_KEY= "example.component.header.key";
 	public final static String DEFAULT_HEADER_STYLE = "component-header";
 
-	protected void init() {
-		super.init();
+	public ComponentHeaderTag() {
 		styleClass = ComponentHeaderTag.DEFAULT_HEADER_STYLE;
 	}
 	
@@ -24,7 +23,7 @@ public class ComponentHeaderTag extends UiPresentationTag {
 		super.doStartTag(out);
 		
 		addContextEntry(ComponentHeaderTag.COMPONENT_HEADER_KEY, this);
-		
+
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", styleClass);
 		UiUtil.writeCloseStartTag(out);
@@ -34,8 +33,6 @@ public class ComponentHeaderTag extends UiPresentationTag {
 
 	protected int doEndTag(Writer out) throws Exception {
 		UiUtil.writeEndTag(out, "div");
-		super.doEndTag(out);		
-		return EVAL_PAGE;
+		return super.doEndTag(out);
 	}
-	
 }

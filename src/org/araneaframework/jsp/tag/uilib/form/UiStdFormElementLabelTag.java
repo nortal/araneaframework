@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form;
 
@@ -31,27 +31,21 @@ import java.io.Writer;
  *   description = "Represents localizable label that is bound to a form element."
  */
 public class UiStdFormElementLabelTag extends UiFormElementLabelBaseTag {
-
-  //
-  // Implementation
-  //  
-  
-	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);		
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);    
     UiStdFormSimpleLabelTag.writeLabel(
-                                out, 
-                                localizedLabel, 
-                                (controlViewModel.isMandatory() && showMandatory), 
-                                getStyleClass(),
-                                id,
-                                pageContext,
-								showColon,
-								accessKey
-                              );
-							
-		// Continue
-	  return EVAL_BODY_INCLUDE;		
-	}
+        out, 
+        localizedLabel, 
+        (controlViewModel.isMandatory() && showMandatory), 
+        getStyleClass(),
+        id,
+        pageContext,
+        showColon,
+        accessKey
+    );
+
+    return EVAL_BODY_INCLUDE;    
+  }
 }
 
 

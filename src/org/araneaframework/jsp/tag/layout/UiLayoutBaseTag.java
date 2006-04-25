@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.layout;
 
@@ -27,79 +27,73 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  * @author Oleg Mürk
  */
 public abstract class UiLayoutBaseTag extends UiPresentationTag implements UiLayoutTagInterface {
-	protected String height;
-	protected String width;
+  protected String height;
+  protected String width;
 
-	protected String rowClass;
-	protected String cellClass;
+  protected String rowClass;
+  protected String cellClass;
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Layout width." 
-	 */
-	public void setWidth(String width) throws JspException {
-		this.width = (String)evaluate("width", width, String.class);
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Layout height." 
-	 */
-	public void setHeight(String height) throws JspException {
-		this.height = (String)evaluate("height", height, String.class);
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Default style of rows in this layout." 
-	 */
-	public void setRowClass(String rowClass) throws JspException {
-		this.rowClass = (String)evaluate("rowClass", rowClass, String.class);	
-	}
-		
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Default style of cells in this layout." 
-	 */
-	public void setCellClass(String cellClass) throws JspException {
-		this.cellClass = (String)evaluate("cellClass", cellClass, String.class);
-	}
-  
-  //
-  // Implementation
-  //
-  		
-	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
-		addContextEntry(UiLayoutTagInterface.KEY_REQUEST, this);
-		return EVAL_BODY_INCLUDE;
-	}	
-	
-	protected void init() {
-		super.init();
-		
-		height = null;
-		width = null;
-		rowClass = null;
-		cellClass = null;		
-	}
-	
-	public String getCellClass() {
-		return cellClass;
-	}
-	
-	/**
-	 * Get row style or <code>null</code>.
-	 */
-	public String getRowClass() {
-		return rowClass;
-	}
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    addContextEntry(UiLayoutTagInterface.KEY_REQUEST, this);
+    return EVAL_BODY_INCLUDE;
+  }
+
+  /**
+   * Get cell style or <code>null</code>.
+   */
+  public String getCellClass() {
+    return cellClass;
+  }
+
+  /**
+   * Get row style or <code>null</code>.
+   */
+  public String getRowClass() {
+    return rowClass;
+  }
+
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Layout width." 
+   */
+  public void setWidth(String width) throws JspException {
+    this.width = (String)evaluate("width", width, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Layout height." 
+   */
+  public void setHeight(String height) throws JspException {
+    this.height = (String)evaluate("height", height, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Default style of rows in this layout." 
+   */
+  public void setRowClass(String rowClass) throws JspException {
+    this.rowClass = (String)evaluate("rowClass", rowClass, String.class);  
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Default style of cells in this layout." 
+   */
+  public void setCellClass(String cellClass) throws JspException {
+    this.cellClass = (String)evaluate("cellClass", cellClass, String.class);
+  }
 }

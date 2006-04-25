@@ -2,7 +2,6 @@ package org.araneaframework.template.tags.example.component;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.apache.log4j.Logger;
 import org.araneaframework.jsp.tag.layout.UiLayoutBaseTag;
 import org.araneaframework.jsp.tag.layout.UiLayoutRowTagInterface;
 import org.araneaframework.jsp.tag.layout.UiStdLayoutRowTag;
@@ -17,39 +16,37 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Starts a container that is suitable for inserting &lt;listRows&gt;"
  */
 public class ComponentListTag extends UiLayoutBaseTag {
-	private static final Logger log = Logger.getLogger(ComponentListTag.class);
-	public final static String COMPONENT_LIST_STYLE_CLASS = "data";
-	public final static String COMPONENT_LIST_EVEN_ROW_CLASS = "even";
-	
-	protected void init() {
-		super.init();
-		styleClass = ComponentListTag.COMPONENT_LIST_STYLE_CLASS;
-	}
-	
-	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
-		UiUtil.writeOpenStartTag(out, "table");
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		UiUtil.writeCloseStartTag(out);
+  public final static String COMPONENT_LIST_STYLE_CLASS = "data";
+  public final static String COMPONENT_LIST_EVEN_ROW_CLASS = "even";
 
-		return EVAL_BODY_INCLUDE;
-	}
+  public ComponentListTag() {
+    styleClass = ComponentListTag.COMPONENT_LIST_STYLE_CLASS;
+  }
 
-	protected int doEndTag(Writer out) throws Exception {
-		UiUtil.writeEndTag(out, "table");
-		super.doEndTag(out);
-		return EVAL_PAGE;
-	}
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    UiUtil.writeOpenStartTag(out, "table");
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeCloseStartTag(out);
 
-	public UiLayoutRowTagInterface getRowTag(String styleClass) throws JspException {
-		String rowRequestId = (String) getContextEntry(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST);
-		if (rowRequestId != null) {
-			// this row is inside the list
-			long id = Long.parseLong(rowRequestId);
-			if (((id + 1) % 2) == 0)
-				return new UiStdLayoutRowTag(ComponentListTag.COMPONENT_LIST_EVEN_ROW_CLASS, cellClass);	
-		}
+    return EVAL_BODY_INCLUDE;
+  }
 
-		return new UiStdLayoutRowTag(rowClass, cellClass);
-	}
+  protected int doEndTag(Writer out) throws Exception {
+    UiUtil.writeEndTag(out, "table");
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
+
+  public UiLayoutRowTagInterface getRowTag(String styleClass) throws JspException {
+    String rowRequestId = (String) getContextEntry(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST);
+    if (rowRequestId != null) {
+      // this row is inside the list
+      long id = Long.parseLong(rowRequestId);
+      if (((id + 1) % 2) == 0)
+        return new UiStdLayoutRowTag(ComponentListTag.COMPONENT_LIST_EVEN_ROW_CLASS, cellClass);  
+    }
+
+    return new UiStdLayoutRowTag(rowClass, cellClass);
+  }
 }

@@ -37,47 +37,15 @@ import org.araneaframework.uilib.support.DisplayItem;
  *   description = "Form radioselect buttons field, represents UiLib "SelectControl"."
  */
 public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
-	protected String type;
-	protected boolean labelBefore;
+	protected String type = "horizontal";
+	protected boolean labelBefore = false;
 	
-	protected void init() {
-		super.init();
+	public UiStdFormRadioSelectTag() {
 		setHasElementContextSpan(false);
-		type = "horizontal";
 		styleClass = "aranea-radioselect";
-		labelBefore = false;
 	}
-	
-	//
-	// Attributes
-	//  
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "The way the radio buttons will be rendered - can be either vertical or horizontal. By default horizontal." 
-	 */ 
-	public void setType(String type) throws JspException {
-		this.type = (String)evaluate("type", type, String.class);
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Boolean that controls whether label is before or after each radio button. False by default." 
-	 */
-	public void setLabelBefore(String labelBefore) throws JspException {
-		this.labelBefore = ((Boolean) evaluateNotNull("labelBefore", labelBefore, Boolean.class)).booleanValue();
-	}
-	
-	//
-	// Implementation
-	//  
 	
 	public int doEndTag(Writer out) throws Exception {
-		// Type check
 		assertControlType("SelectControl");		
 		
 		if (!"horizontal".equals(type) && !"vertical".equals(type))
@@ -115,9 +83,33 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 			else if ("vertical".equals(type)) UiUtil.writeStartEndTag(out, "br");
 		}
 		
-		// Continue
 		super.doEndTag(out);
 		return EVAL_PAGE;	
+	}
+
+	
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
+
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "The way the radio buttons will be rendered - can be either vertical or horizontal. By default horizontal." 
+	 */ 
+	public void setType(String type) throws JspException {
+		this.type = (String)evaluate("type", type, String.class);
+	}
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Boolean that controls whether label is before or after each radio button. False by default." 
+	 */
+	public void setLabelBefore(String labelBefore) throws JspException {
+		this.labelBefore = ((Boolean) evaluateNotNull("labelBefore", labelBefore, Boolean.class)).booleanValue();
 	}
 	
 	protected void writeLabel(UiStdFormRadioSelectItemLabelTag label, String id, String value) throws JspException {

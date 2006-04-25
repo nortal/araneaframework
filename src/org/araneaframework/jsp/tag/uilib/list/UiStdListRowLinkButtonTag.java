@@ -30,13 +30,12 @@ import org.araneaframework.jsp.util.UiUtil;
  */
 public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 
-	protected void init() {
-		super.init();
+	public UiStdListRowLinkButtonTag() {
 		styleClass = "aranea-link-button";
 	}
 	
 	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);          
+		super.doStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "a");
 		UiUtil.writeAttribute(out, "id", id);
@@ -57,20 +56,14 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 		
 		UiUtil.writeCloseStartTag_SS(out);    
 		
-		// Continue
 		return EVAL_BODY_INCLUDE;    
 	}    
 	
 	protected int doEndTag(Writer out) throws Exception {
-		
 		if (localizedLabel != null)
 			UiUtil.writeEscaped(out, localizedLabel);
+		UiUtil.writeEndTag(out, "a");
 		
-		UiUtil.writeEndTag(out, "a"); 
-		
-		// Continue
-		super.doEndTag(out);
-		return EVAL_PAGE;      
+		return super.doEndTag(out);
 	}  
-	
 }

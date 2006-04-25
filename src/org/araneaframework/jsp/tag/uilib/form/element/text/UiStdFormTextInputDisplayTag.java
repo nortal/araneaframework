@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
-
 import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseTag;
 
 /**
@@ -30,8 +29,7 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
  */
 public class UiStdFormTextInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
 	
-	protected void init() {
-		super.init();
+	public UiStdFormTextInputDisplayTag() {
 		styleClass = "aranea-text-display";
 	}
 	
