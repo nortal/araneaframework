@@ -14,15 +14,25 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.framework;
+package org.araneaframework.tests.mock;
 
-import java.io.Serializable;
-import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.framework.MessageContext;
 
-public interface ExtendedCallContext extends FlowContext {
-	public CallFrameReference getCurrentCallFrameReference();
-	
-	public interface CallFrameReference extends Serializable {
-		public void reset(EnvironmentAwareCallback callback) throws Exception;
-	}
+
+/**
+ * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ */
+public class MockMessageContext implements MessageContext {
+
+  public void showMessage(String type, String message) {
+  }
+
+  public void showErrorMessage(String message) {
+  }
+
+  public void showInfoMessage(String message) {
+  }
+
+  public void clearMessages() {
+  }
 }

@@ -31,7 +31,7 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
 public class UiStdFormFloatInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
 	protected void init() {
 		super.init();
-		styleClass = "aranea-float-display";
+		baseStyleClass = "aranea-float-display";
 	}
 	
 	protected int after(Writer out) throws Exception {

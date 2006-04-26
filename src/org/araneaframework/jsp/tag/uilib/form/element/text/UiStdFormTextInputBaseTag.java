@@ -38,7 +38,7 @@ public class UiStdFormTextInputBaseTag extends UiFormElementBaseTag {
 	protected void init() {
 		super.init();
 		size = null;
-		styleClass = "aranea-text";
+		baseStyleClass = "aranea-text";
 		onChangePrecondition = "return true;";
 	}
 

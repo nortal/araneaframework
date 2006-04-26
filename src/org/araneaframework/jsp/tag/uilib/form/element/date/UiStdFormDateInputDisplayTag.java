@@ -31,7 +31,7 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
 public class UiStdFormDateInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
 	protected void init() {
 		super.init();
-		styleClass = "aranea-date-display";
+		baseStyleClass = "aranea-date-display";
 	}
 	
 	protected int after(Writer out) throws Exception {

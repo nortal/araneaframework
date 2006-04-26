@@ -19,7 +19,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
 
 	protected void init() {
 		super.init();
-		styleClass =  "aranea-time";
+		baseStyleClass =  "aranea-time";
 	}
 	
 	protected int after(Writer out) throws Exception {

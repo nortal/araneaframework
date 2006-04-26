@@ -40,7 +40,7 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 
 	protected void init() {
 		super.init();
-		styleClass = "aranea-button";
+		baseStyleClass = "aranea-button";
 		renderMode = UiStdFormButtonTag.RENDER_BUTTON;
 	}
 

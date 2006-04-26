@@ -51,7 +51,7 @@
   */
  function uiHandleKeypress(event, formElementId) { 	 
  	 // Check the keyCode
- 	 if (!event) return true;
+ 	 if (!event) return;
  	 
  	 var keyCode;
  	 if (event.keyCode) keyCode = event.keyCode;
@@ -64,9 +64,6 @@
  	 		//Keyboard handler errors may be thrown after AJAX region updates.
  	  	window.status = "Keyboard handler error (non-critical): " + e;
  	 }
- 	 
- 	 //Workaround for too eager browsers
- 	 return !(keyCode == 13);
 }
  
  /*	Defines up/down key navigation actions on

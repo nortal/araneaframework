@@ -44,7 +44,7 @@ public class UiStdFormSelectTag extends UiFormElementBaseTag {
 		super.init();
 		size = null;
 		onChangePrecondition = "return true;";
-		styleClass = "aranea-select";
+		baseStyleClass = "aranea-select";
 	}
 	
 	//

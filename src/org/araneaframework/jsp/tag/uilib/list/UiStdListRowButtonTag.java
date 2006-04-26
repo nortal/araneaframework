@@ -31,7 +31,7 @@ import org.araneaframework.jsp.util.UiUtil;
 public class UiStdListRowButtonTag extends UiListRowButtonBaseTag {
 	protected void init() {
 		super.init();
-		styleClass = "aranea-button";
+		baseStyleClass = "aranea-button";
 	}
 	
 	protected int before(Writer out) throws Exception {

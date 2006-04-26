@@ -81,7 +81,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
    * and the caller's class loader.
    */
   public ResourceBundle getResourceBundle(Locale locale) {
-    return ResourceBundle.getBundle(resourceBundleName, locale);
+     return ResourceBundle.getBundle(resourceBundleName, locale, Thread.currentThread().getContextClassLoader());
   }
 
   public String localize(String key) {

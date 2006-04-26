@@ -31,7 +31,7 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
 public class UiStdFormNumberInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
 	protected void init() {
 		super.init();
-		styleClass = "aranea-number-display";
+		baseStyleClass = "aranea-number-display";
 	}
 	
 	protected int after(Writer out) throws Exception {
