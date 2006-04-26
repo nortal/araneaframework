@@ -41,7 +41,7 @@ public class UiStdFormMultiSelectTag extends UiFormElementBaseTag {
 	protected void init() {
 		super.init();
 		size = null;
-		styleClass = "aranea-multi-select";
+		baseStyleClass = "aranea-multi-select";
 	}
 	
 //

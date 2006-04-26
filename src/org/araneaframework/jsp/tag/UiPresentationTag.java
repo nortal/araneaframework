@@ -31,7 +31,7 @@ import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 public class UiPresentationTag extends UiBaseTag implements
 		UiAttributedTagInterface {
 	protected String styleClass = null;
-	protected String ownStyleClass = null;
+	protected String baseStyleClass = null;
 	protected Map attributes;
 
 	protected int before(Writer out) throws Exception {
@@ -74,12 +74,12 @@ public class UiPresentationTag extends UiBaseTag implements
 	 */
 	protected String getStyleClass()  {
 		StringBuffer result = new StringBuffer();
-		if (ownStyleClass != null && ownStyleClass.length() > 0) {
-			result.append(ownStyleClass);
-			if (styleClass != null && styleClass.length() > 0)
+		if (baseStyleClass != null) {
+			result.append(baseStyleClass);
+			if (styleClass != null)
 				result.append(" ");
 		}
-		if (styleClass != null && styleClass.length() > 0) {
+		if (styleClass != null) {
 			result.append(styleClass);
 		}
 		return result.toString();

@@ -34,7 +34,7 @@ public abstract class UiStdImageBaseTag extends UiImageBaseTag {
   
   protected void init() {
 	  super.init();
-	  this.styleClass = "aranea-image";
+	  this.baseStyleClass = "aranea-image";
   }
   
   protected int before(Writer out) throws Exception {

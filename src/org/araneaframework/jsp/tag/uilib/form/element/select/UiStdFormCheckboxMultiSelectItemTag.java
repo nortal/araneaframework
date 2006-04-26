@@ -40,7 +40,7 @@ public class UiStdFormCheckboxMultiSelectItemTag extends UiFormElementBaseTag {
 	protected void init() {
 		super.init();
 		value = null;
-		styleClass = "aranea-multi-checkbox";
+		baseStyleClass = "aranea-multi-checkbox";
 	}
   
   //

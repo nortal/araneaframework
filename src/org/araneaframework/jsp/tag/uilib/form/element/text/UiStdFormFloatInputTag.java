@@ -38,7 +38,7 @@ public class UiStdFormFloatInputTag extends UiStdFormTextInputBaseTag {
 	
 	protected void init() {
 		super.init();
-		styleClass = "aranea-float";
+		baseStyleClass = "aranea-float";
 	}
   
   //
