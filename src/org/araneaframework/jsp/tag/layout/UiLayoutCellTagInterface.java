@@ -27,7 +27,8 @@ import org.araneaframework.jsp.tag.UiStyledTagInterface;
  */
 public interface UiLayoutCellTagInterface extends UiStyledTagInterface {
 	public void setWidth(String width) throws JspException;	
-	public void setHeight(String height) throws JspException;		
+	public void setHeight(String height) throws JspException;
+	public void setStyleClass(String styleClass) throws JspException;
 		
 	public void setColSpan(String colSpan) throws JspException;
 	public void setRowSpan(String rowSpan) throws JspException; 

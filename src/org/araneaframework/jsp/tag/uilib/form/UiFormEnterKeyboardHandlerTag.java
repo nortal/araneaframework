@@ -31,6 +31,11 @@ import javax.servlet.jsp.JspException;
  *   description = "Equivalent of formKeyboardHandler, but key="enter" and event="onclick" by default."
  */
 public final class UiFormEnterKeyboardHandlerTag extends UiFormKeyboardHandlerTag {
+	{
+		key = "enter";
+		event = "onclick";
+	}
+
 	/**
 	 * Throw an exception on attempt to set key. This tag supports "enter" only!
 	 */
@@ -43,11 +48,5 @@ public final class UiFormEnterKeyboardHandlerTag extends UiFormKeyboardHandlerTa
 	 */
 	public void setKeyCode(String keyCode) throws JspException {
 		throw new JspException("You may not set keyCode for the enter handler tag!");
-	}
-
-	protected void init() {
-		super.init();
-		key = "enter";
-		event = "onclick";
 	}
 }

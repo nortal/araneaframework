@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.include;
 
@@ -21,6 +21,7 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.Standard;
 import org.araneaframework.jsp.tag.context.UiWidgetContextTag;
+import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
 import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 
@@ -32,13 +33,50 @@ import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
  * @jsp.tag
  *   name = "widgetInclude"
  *   body-content = "JSP"
- *   description = "The JSP specified by the path given in <i>page</i> is included as 
-					the widget with id specified in <i>id</i>."
+ *   description = "The JSP specified by the path given in <i>page</i> is included as the widget with id specified in <i>id</i>."
  */
 public class UiWidgetIncludeTag extends UiIncludeBaseTag {
-  //
-  // Attributes
-  //
+	protected String widgetId;
+	protected String page;
+	
+	public UiWidgetIncludeTag() {
+		widgetId = null;
+		page = null;
+	}
+
+	protected int doEndTag(Writer out) throws Exception {   
+		Standard.StandardWidgetInterface widget = UiWidgetUtil.getWidgetFromContext(widgetId, pageContext);
+		
+		UiWidgetContextTag widgetContextTag = new UiWidgetContextTag();
+		
+		registerSubtag(widgetContextTag);
+		widgetContextTag.setId(widgetId);
+		executeStartSubtag(widgetContextTag);
+		
+		OutputData output = 
+			(OutputData) pageContext.getRequest().getAttribute(
+					StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+		
+		try {
+			if (page == null) {
+				out.flush();
+				widget._getWidget().render(output);
+			}
+			else {
+				UiUtil.include(pageContext, "/widgets/" + page);
+			}
+		}
+		finally {		
+			executeEndTagAndUnregister(widgetContextTag);
+		}
+		
+		super.doEndTag(out);
+		return EVAL_PAGE;
+	}	
+
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
 
 	/**
 	 * @jsp.attribute
@@ -48,8 +86,8 @@ public class UiWidgetIncludeTag extends UiIncludeBaseTag {
 	 */
 	public void setId(String widgetId) throws JspException {
 		this.widgetId = (String)evaluateNotNull("widgetId", widgetId, String.class);		
-	}	
-			
+	}
+	
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -59,49 +97,4 @@ public class UiWidgetIncludeTag extends UiIncludeBaseTag {
 	public void setPage(String page) throws JspException {
 		this.page = (String)evaluate("page", page, String.class);
 	}
-  
-  //
-  // Implementation
-  //  
-	protected int after(Writer out) throws Exception {   
-		// Call
-		Standard.StandardWidgetInterface widget = UiWidgetUtil.getWidgetFromContext(widgetId, pageContext);
-		
-    UiWidgetContextTag widgetContextTag = new UiWidgetContextTag();
-    
-    registerSubtag(widgetContextTag);
-    widgetContextTag.setId(widgetId);
-    executeStartSubtag(widgetContextTag);
-    
-    OutputData output = 
-      (OutputData) pageContext.getRequest().getAttribute(
-          StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
-    
-    try {
-  		if (page == null) {
-		  out.flush();
-  		  widget._getWidget().render(output);
-      }
-      else {		
-        include("/widgets/" + page);
-      }
-    }
-    finally {		
-      executeEndTagAndUnregister(widgetContextTag);
-    }
-		
-		// Continue
-		super.after(out);
-		return EVAL_PAGE;
-	}
-  
-  protected void init() {
-    super.init();
-    
-    widgetId = null;
-    page = null;
-  }
-	
-	protected String widgetId;
-	protected String page;
 }

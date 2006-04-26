@@ -32,9 +32,19 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
  * @jsp.tag
  *   name = "eventKeyboardHandler"
  *   body-content = "empty"
- *   description = "Registers a "server-side" keyboard handler that sends an event to the specified widget."
+ *   description = "Registers a 'server-side' keyboard handler that sends an event to the specified widget."
  */
 public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
+	  protected String scope;
+	  protected String widgetId;
+	  protected String eventId;
+	  protected String eventParam;
+	  protected String precondition;
+	  protected String updateRegions;
+	  protected String globalUpdateRegions;  
+	  
+	  protected List updateRegionNames;
+
   
   
   //
@@ -117,8 +127,8 @@ public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
 	// Implementation
 	//
 		
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		String handler = null;
     
@@ -144,7 +154,7 @@ public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
 		if (eventParam == null) eventParam = "";
 		if (StringUtils.isBlank(precondition)) precondition = "return true;";
 		
-		String systemFormId = (String)UiUtil.readAttribute(pageContext, UiSystemFormTag.SYSTEM_FORM_ID_KEY, PageContext.REQUEST_SCOPE);	
+		String systemFormId = (String)UiUtil.requireContextEntry(pageContext, UiSystemFormTag.SYSTEM_FORM_ID_KEY, PageContext.REQUEST_SCOPE);	
 		
 		return "function(event, elementId) { " +
 		"uiStandardSubmitEvent(" + "document.forms['" + systemFormId + "'], '" + 
@@ -153,21 +163,4 @@ public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
            updateRegionNames)
             + "}, function() { " + precondition + "}); }";
 	}
-	
-	
- 
-  protected void init() {
-  	super.init();
-    scope = eventId = eventParam = precondition = keyCode = updateRegions = globalUpdateRegions = null;
-  }
-		
-  protected String scope;
-  protected String widgetId;
-  protected String eventId;
-  protected String eventParam;
-  protected String precondition;
-  protected String updateRegions;
-  protected String globalUpdateRegions;  
-  
-  protected List updateRegionNames;
 }

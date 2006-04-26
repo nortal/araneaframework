@@ -39,6 +39,7 @@ import org.araneaframework.jsp.tag.uilib.form.UiFormElementTag;
 import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListRowsTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
+import org.araneaframework.jsp.tag.uilib.list.formlist.UiFormListTag;
 
 /**
  * UI common utilities.
@@ -46,60 +47,40 @@ import org.araneaframework.jsp.tag.uilib.list.UiListTag;
  * @author Oleg Mürk
  */
 public class UiUtil {
-	private static final Map attributeErrorMap = new HashMap();
-	public static final String MEANINGFUL_ERR_MSG = "Meaningful error message";
+  private static final Map attributeErrorMap = new HashMap();  
+  static {
+    attributeErrorMap.put(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, null);
+    attributeErrorMap.put(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, null);
 
-	static {
-		attributeErrorMap.put(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		
-		/*attributeErrorMap.put(UiEditableListTag.EDITABLE_LIST_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiEditableListTag.EDITABLE_LIST_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);*/
+    attributeErrorMap.put(UiFormListTag.FORM_LIST_ID_KEY_REQUEST, "<ui:formList> tag expected, but not found!");
+    attributeErrorMap.put(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY_REQUEST, "<ui:formList> tag expected, but not found!");
 
-		attributeErrorMap.put(UiElementTag.KEY_REQUEST, MEANINGFUL_ERR_MSG);
+    attributeErrorMap.put(UiElementTag.KEY_REQUEST, "<ui:element> tag expected, but not found! Probably this is an attempt to use <ui:elementContent> or <ui:attribute> outside <ui:element> tag.");
 
-		attributeErrorMap.put(UiFormElementTag.ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		
-		attributeErrorMap.put(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiFormTag.FORM_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiFormTag.FORM_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		
-		attributeErrorMap.put(UiLayoutRowTagInterface.KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiLayoutTagInterface.KEY_REQUEST, "Expected to find information about layout from context.");
+    attributeErrorMap.put(UiFormElementTag.ID_KEY_REQUEST, "<ui:formElement> tag expected, but not found!  Make sure that form element and control tags either have an 'id' or are used inside <ui:formElement> tag.");
 
-		attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiListTag.LIST_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		
-		attributeErrorMap.put(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		
-		attributeErrorMap.put(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		
-		attributeErrorMap.put(UiSystemFormTag.ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		
-		/*attributeErrorMap.put(UiTreeNodesTag.NODE_KEY_REQUEST, MEANINGFUL_ERR_MSG);
+    attributeErrorMap.put(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
+    attributeErrorMap.put(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
+    attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");		
+    attributeErrorMap.put(UiFormTag.FORM_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
 
-		attributeErrorMap.put(UiTreeTag.TREE_FULL_ID_KEY_REQUEST, MEANINGFUL_ERR_MSG);
-		attributeErrorMap.put(UiTreeTag.TREE_VIEW_MODEL_KEY_REQUEST, MEANINGFUL_ERR_MSG);*/
+    attributeErrorMap.put(UiLayoutRowTagInterface.KEY_REQUEST, "<ui:row> tag expected, but not found! Make sure all of you cells are used inside row tags.");
+    attributeErrorMap.put(UiLayoutTagInterface.KEY_REQUEST, "<ui:layout> or another layout tag expected, but not found!");
 
-		attributeErrorMap.put(UiWidgetContainer.REQUEST_CONTEXT_KEY, MEANINGFUL_ERR_MSG);
-	}
-  
+    attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, "<ui:list> tag expected, but not found! Make sure list tags is used inside <ui:list> tag.");
+    attributeErrorMap.put(UiListTag.LIST_ID_KEY_REQUEST, "<ui:list> tag expected, but not found!  Make sure list tags is used inside <ui:list> tag.");
+    attributeErrorMap.put(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST, "<ui:listRows> or another list rows tag expected, but not found!");	
+    attributeErrorMap.put(UiSystemFormTag.ID_KEY_REQUEST, "<ui:systemForm> tag expected, but not found! Make sure your tags are surrounded by <ui:systemForm>.");
+    attributeErrorMap.put(UiWidgetContainer.REQUEST_CONTEXT_KEY, "<ui:viewPort> or another widget container tag expected, but not found!");
+  }
+
   /**
    * Includes JSP page at given path.
    */
-	public static void include(PageContext pageContext, String path) throws ServletException, IOException {
-    
-		if (path.startsWith("/")) {
-			// Absolute path (may add prefix)
-			pageContext.include("/content" + path);
-		}	
-		else {
-			// Relative path
-			pageContext.include(path);
-		}
-	}
+  public static void include(PageContext pageContext, String path) throws ServletException, IOException {
+	// starting with '/' is absolute path (may add prefix), otherwise path is relative (unchanged).
+    pageContext.include(path.startsWith("/") ? "/content" + path : path);
+  }
   
   /**
    * Get resource string for given id.
@@ -414,51 +395,36 @@ public class UiUtil {
   // -------------- Operations with PageContext ------------------- //
   
   /**
-   * Get attribute value in page scope, may return <code>null</code>.  
-   */ 
-  public static Object getAttribute(PageContext pageContext, String key) throws JspException {
-    return getAttribute(pageContext, key, PageContext.PAGE_SCOPE);
-  }
-  
-  /**
-   * Get attribute value in given scope, may return <code>null</code>.  
-   */ 
-  public static Object getAttribute(PageContext pageContext, String key, int scope) throws JspException {
-    return pageContext.getAttribute(key, scope);
-  }
-
-  /**
-   * Read attribute value in page scope and ensure that it is defined.  
-   */ 
-  public static Object readAttribute(PageContext pageContext, String key) throws JspException {
-    return readAttribute(pageContext, key, PageContext.PAGE_SCOPE);
-  }
-  
-  /**
    * Read attribute value in given scope and ensure that it is defined.  
    */
-  public static Object readAttribute(PageContext pageContext, String key, int scope) throws JspException {
+  public static Object requireContextEntry(PageContext pageContext, String key, int scope) throws JspException {
     Object value = pageContext.getAttribute(key, scope);
     if (value == null) {
-      String errMsg = (String)attributeErrorMap.get(key);
-      if (errMsg == null) errMsg = "UNKNOWN";
-      throw new UiException("Missing attribute '" + key + "' in scope #" + scope + ". Error message : " + errMsg);
+      StringBuffer message = new StringBuffer();
+      String errMsg = (String)attributeErrorMap.get(key);      
+      if (errMsg != null) 
+        message.append(errMsg + " (");
+      message.append("Missing attribute '" + key + "' in ");
+      switch (scope) {
+        case PageContext.PAGE_SCOPE:
+          message.append("'PageContext.PAGE_SCOPE'");
+          break;
+        case PageContext.REQUEST_SCOPE:
+          message.append("'PageContext.REQUEST_SCOPE'");
+          break;        
+        case PageContext.SESSION_SCOPE:
+          message.append("'PageContext.SESSION_SCOPE'");
+          break;           
+        case PageContext.APPLICATION_SCOPE:
+          message.append("'PageContext.APPLICATION_SCOPE'");
+          break;               
+      }
+      message.append(" scope");
+      if (errMsg != null) 
+        message.append(")");      
+      throw new UiException(message.toString());
     }
     else
       return value;
-  }
-  
-  /**
-   * Set attribute value in page scope.  
-   */ 
-  public static void setAttribute(PageContext pageContext, String key, Object value) throws JspException {
-    setAttribute(pageContext, key, value, PageContext.PAGE_SCOPE);
-  }
-  
-  /**
-   * Get attribute value in given scope, may return <code>null</code>.  
-   */ 
-  public static void setAttribute(PageContext pageContext, String key, Object value, int scope) throws JspException {
-    pageContext.setAttribute(key, value, scope);
   }
 }

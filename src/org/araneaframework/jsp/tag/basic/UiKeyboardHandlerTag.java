@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-
 import javax.servlet.jsp.JspException;
 
 /**
@@ -32,7 +31,8 @@ import javax.servlet.jsp.JspException;
  *   
  */
 public class UiKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
-  
+	protected String scope;
+	protected String handler;
 	  
 	/**
 	 * @jsp.attribute
@@ -40,14 +40,13 @@ public class UiKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
 	 *   required = "false"
 	 *   description = "When a keyboard event happens, it is usually associated with 
           a certain form element / form / widget / etc. The object with which an event is associated
-          is identified by a hierarchical id (e.g. there may be widget "somelist", containing
-          form "somelist.form", containing textbox "somelist.form.textbox".
+          is identified by a hierarchical id (e.g. there may be widget 'somelist', containing
+          form 'somelist.form', containing textbox 'somelist.form.textbox'.
           The scope is a prefix of that id that must match in order for the handler to be triggered.
-          For example, the handler with scope="somelist.form.textbox" will be triggered only when
+          For example, the handler with scope='somelist.form.textbox' will be triggered only when
           the event in the textbox occurs, but the handler with scope="somelist" will be triggered when
           any event in any of the elements inside any of the forms of "somelist" occurs. I.e. for any
-          element with ID beginning with "somelist".
-
+          element with ID beginning with 'somelist'.
           When scope is not specified, a global handler is registered, that reacts to an event in any form/widget"
 	 */
 	public void setScope(String scope) throws JspException{
@@ -75,18 +74,9 @@ public class UiKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
 	}
 	
 
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		writeRegisterKeypressHandlerScript(out, scope, keyCode, handler);
 		return SKIP_BODY;
 	}
-	
-	protected void init() {
-		super.init();
-		scope = handler = null;
-	}
-	
-	// Tag attributes
-	protected String scope;
-	protected String handler;
 }

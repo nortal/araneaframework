@@ -17,7 +17,6 @@
 package org.araneaframework.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.apache.log4j.Logger;
 
 /**
  * This is test suite which contains all tests that have to be run and controlled
@@ -26,9 +25,6 @@ import org.apache.log4j.Logger;
 * @see "Junit testframework"
 * @see <a href="http://www.junit.org">www.junit.org</a> */
 public class UilibCurrentTestSuite extends TestSuite {
-	
-	private static Logger log = Logger.getLogger(UilibCurrentTestSuite.class);
-	
 	/**
 	 * Creates new instance of <code>GeneralCurrentTestSuite</code>.
 	 */

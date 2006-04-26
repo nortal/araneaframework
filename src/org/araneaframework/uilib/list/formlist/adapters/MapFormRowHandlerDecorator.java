@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.list.formlist.FormListWidget;
+import org.araneaframework.uilib.list.formlist.BaseFormListWidget;
 import org.araneaframework.uilib.list.formlist.FormRow;
 import org.araneaframework.uilib.list.formlist.FormRowHandler;
 
@@ -30,13 +30,13 @@ import org.araneaframework.uilib.list.formlist.FormRowHandler;
 public class MapFormRowHandlerDecorator implements FormRowHandler {
 
 	protected FormRowHandler rowHandler;
-	protected FormListWidget rowsWidget;
+	protected BaseFormListWidget rowsWidget;
 	protected Map data;
 	
 	/**
 	 * @param data
 	 */
-	public MapFormRowHandlerDecorator(Map data, FormListWidget rowsWidget, FormRowHandler rowHandler) {
+	public MapFormRowHandlerDecorator(Map data, BaseFormListWidget rowsWidget, FormRowHandler rowHandler) {
 		this.rowHandler = rowHandler;
 		this.rowsWidget = rowsWidget;
 		this.data = data;
@@ -69,7 +69,7 @@ public class MapFormRowHandlerDecorator implements FormRowHandler {
 		rowsWidget.setRows(new ArrayList(data.values()));
 	}
 
-	public void openOrCloseRow(FormRow editableRow) {
+	public void openOrCloseRow(FormRow editableRow) throws Exception{
 		rowHandler.openOrCloseRow(editableRow);
 	}
 

@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.servlet.ServletAtomicResponseOutputExtension;
 import org.araneaframework.servlet.ServletOverridableOutputData;
 
 /**
@@ -47,31 +46,17 @@ public class AtomicResponseHelper {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private AtomicResponse atomicResponse;
+  private ResponseWrapper atomicWrapper;
+  
+  public AtomicResponseHelper(ServletOverridableOutputData outputData) {
+    atomicWrapper = new ResponseWrapper(outputData.getResponse());
+    outputData.setResponse(atomicWrapper);
+  }
+  
   
   //*******************************************************************
   // PRIVATE CLASSES
   //*******************************************************************
-  private static class AtomicResponse implements ServletAtomicResponseOutputExtension {
-    private ResponseWrapper res;
-    
-    public AtomicResponse(ResponseWrapper res) {
-      this.res = res;
-    }
-
-    public void commit() throws Exception {
-      log.debug("Committing response stream.");
-      
-      res.commit();
-    }
-
-    public void rollback() throws Exception {
-      log.debug("Rolling back response stream.");
-      
-      res.reset();
-    }
-  }
-
   /**
    * Wraps a HttpServletResponse to make it possible of resetting and commiting it.
    */
@@ -186,18 +171,12 @@ public class AtomicResponseHelper {
   //*******************************************************************
   // PUBLIC METHODS
   //*******************************************************************  
-  public void wrapOutput(ServletOverridableOutputData outputData) {
-    ResponseWrapper newRes = new ResponseWrapper(outputData.getResponse());
-    
-    atomicResponse = new AtomicResponse(newRes);
-    outputData.setResponse(newRes);
-  }
   
   public void commit() throws Exception {
-    atomicResponse.commit();
+    atomicWrapper.commit();
   }
   
   public void rollback() throws Exception {
-    atomicResponse.rollback();
+    atomicWrapper.reset();
   }
 }
