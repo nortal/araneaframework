@@ -140,6 +140,7 @@
 			</fileset>
 			<fileset dir="etc" includes="js/**/*"/>
 			<fileset dir="etc" includes="css/**/*"/>
+			<fileset dir="etc" includes="gfx/**/*"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 		</jar>	
 		

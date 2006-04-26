@@ -208,7 +208,7 @@ public abstract class ListSqlHelper {
 	 * @param resultSetColumnName
 	 *            <code>ResultSet</code> column name.
 	 */
-	protected void setResultSetMapping(String beanFieldName,
+	public void setResultSetMapping(String beanFieldName,
 			String resultSetColumnName) {
 		this.beanToResultSetMapping.put(beanFieldName, resultSetColumnName);
 	}
