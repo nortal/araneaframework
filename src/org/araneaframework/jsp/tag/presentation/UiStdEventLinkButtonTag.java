@@ -32,7 +32,7 @@ public class UiStdEventLinkButtonTag extends UiEventButtonBaseTag {
 
 	protected void init() {
 		super.init();
-		styleClass = "aranea-link-button"; 
+		baseStyleClass = "aranea-link-button"; 
 	}
 	
 	protected int before(Writer out) throws Exception {
@@ -64,7 +64,7 @@ public class UiStdEventLinkButtonTag extends UiEventButtonBaseTag {
     if (localizedLabel != null)
       UiUtil.writeEscaped(out, localizedLabel);
     
-    UiUtil.writeEndTag(out, "a"); 
+    UiUtil.writeEndTag_SS(out, "a"); 
     
     // Continue
     super.after(out);

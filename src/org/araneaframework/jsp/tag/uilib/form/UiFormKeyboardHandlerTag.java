@@ -22,7 +22,6 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerBaseTag;
 import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag;
-import org.araneaframework.jsp.util.StringUtil;
 
 
 /**
@@ -70,14 +69,14 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
           the event was fired. 
           Example: function(event, elementId) { alert(elementId); }
 
-          You should either specify the handler, or elementId/event pair, not both." 
+          Either handler or elementId/event pair should be specified, not both." 
 	 */
 	public void setHandler(String handler) throws JspException {
 		this.handler = (String) evaluate("handler", handler, String.class);
 	}
 	
 	/**
-	 * Form element which is the scope of this handler.
+	 * Specifies form element which is the scope of this handler.
 	 * By default the "scope" (as in {@link UiKeyboarHandlerTag UiKeyboardHandlerTag}) of this keyboard handler
 	 * is the form inside which the handler is defined. By specifying this string you may narrow the scope to a certain element.
 	 * For example if the handler is defined inside form "myForm", and you specify subscope as "myelement",

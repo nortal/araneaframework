@@ -30,7 +30,14 @@ import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHa
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class FormListUtil {	
+public class FormListUtil {
+
+	public static void addButtonToRowForm(String labelId, FormWidget rowForm, OnClickEventListener listener, String elementName) throws Exception {
+		ButtonControl button = new ButtonControl();
+		button.addOnClickEventListener(listener);
+		rowForm.addElement(elementName, labelId, button, null, false);
+	}
+
 	/**
 	 * Adds a save button to the given row form. Save button has id 
 	 * "save" and will save the specified row when pressed by user. 
@@ -41,12 +48,9 @@ public class FormListUtil {
 	 * @param key row key.
 	 * @throws Exception 
 	 */
-	public static void addSaveButtonToRowForm(String labelId, FormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
-		ButtonControl saveButton = new ButtonControl();
-		saveButton.addOnClickEventListener(new ButtonSaveOnClickEventListener(key, editableRows));
-		rowForm.addElement("save", labelId, saveButton, null, false);
+	public static void addSaveButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
+		addButtonToRowForm(labelId, rowForm, new ButtonSaveOnClickEventListener(key, editableRows), "save");
 	}
-		
 	
 	/**
 	 * Adds a delete button to the given row form. Delete button has id 
@@ -58,12 +62,9 @@ public class FormListUtil {
 	 * @param key row key.
 	 * @throws Exception 
 	 */
-	public static void addDeleteButtonToRowForm(String labelId, FormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
-		ButtonControl deleteButton = new ButtonControl();
-		deleteButton.addOnClickEventListener(new ButtonDeleteOnClickEventListener(key, editableRows));
-		rowForm.addElement("delete", labelId, deleteButton, null, false);
-	}	
-
+	public static void addDeleteButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
+		addButtonToRowForm(labelId, rowForm, new ButtonDeleteOnClickEventListener(key, editableRows), "delete");
+	}
 	
 	/**
 	 * Adds an open/close button to the given row form. Open/close button has id "openClose" 
@@ -75,10 +76,8 @@ public class FormListUtil {
 	 * @param key row key.
 	 * @throws Exception 
 	 */
-	public static void addOpenCloseButtonToRowForm(String labelId, FormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
-		ButtonControl openCloseButton = new ButtonControl();
-		openCloseButton.addOnClickEventListener(new ButtonOpenCloseOnClickEventListener(key, editableRows));
-		rowForm.addElement("openClose", labelId, openCloseButton, null, false);
+	public static void addOpenCloseButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
+		addButtonToRowForm(labelId, rowForm, new ButtonOpenCloseOnClickEventListener(key, editableRows), "openClose");
 	}	
 	
 	
@@ -93,12 +92,10 @@ public class FormListUtil {
 	 * @param key row key.
 	 * @throws Exception 
 	 */
-	public static void addEditSaveButtonToRowForm(String labelId, FormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
-		ButtonControl editSaveButton = new ButtonControl();
-		editSaveButton.addOnClickEventListener(new ButtonEditSaveOnClickEventListener(key, editableRows));
-		rowForm.addElement("editSave", labelId, editSaveButton, null, false);
-	}		
-
+	public static void addEditSaveButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
+		addButtonToRowForm(labelId, rowForm, new ButtonEditSaveOnClickEventListener(key, editableRows), "editSave");
+	}
+	
 	/**
 	 * Adds an add button to the given add form. Add button has id 
 	 * "add" and will add the row from the add form when pressed by user.
@@ -108,10 +105,8 @@ public class FormListUtil {
 	 * @param addForm add form.
 	 * @throws Exception 
 	 */
-	public static void addAddButtonToAddForm(String labelId, FormListWidget editableRows, FormWidget addForm) throws Exception {
-		ButtonControl addButton = new ButtonControl();
-		addButton.addOnClickEventListener(new ButtonAddOnClickEventListener(editableRows, addForm));
-		addForm.addElement("add", labelId, addButton, null, false);
+	public static void addAddButtonToAddForm(String labelId, BaseFormListWidget editableRows, FormWidget addForm) throws Exception {
+		addButtonToRowForm(labelId, addForm, new ButtonAddOnClickEventListener(editableRows, addForm), "add");
 	}		
 	
 	/**
@@ -153,22 +148,6 @@ public class FormListUtil {
 	
 	/**
 	 * Decorates the current {@link FormRowHandler}
-	 * propagating all changes to the specified data <code>Map</code> making them visible 
-	 * in the {@link FormListWidget}. 
-	 * 
-	 * @param editableRows editable rows widget.
-	 * @param data data <code>Map</code>.
-	 */
-	public static void associateFormListWithMap(FormListWidget editableRows, Map data) {
-		editableRows.setFormRowHandler(
-				new MapFormRowHandlerDecorator(
-					data, 
-					editableRows, 
-					editableRows.getFormRowHandler()));
-	}
-	
-	/**
-	 * Decorates the current {@link FormRowHandler}
 	 * propagating all changes to the specified {@link MemoryBasedListDataProvider} making them 
 	 * visible in the {@link EditableListWidget}. 
 	 * 
@@ -191,7 +170,7 @@ public class FormListUtil {
 	 * @param inMemoryEditableListHelper helper that manages editable list rows in memory.
 	 */	
 	public static void keepFormListChangesInMemory(
-			FormListWidget editableRows,
+			BaseFormListWidget editableRows,
 			InMemoryFormListHelper inMemoryEditableListHelper) {
 		editableRows.setFormRowHandler(
 						new InMemoryFormRowHandlerDecorator(
@@ -201,9 +180,9 @@ public class FormListUtil {
 	
 	public static class ButtonSaveOnClickEventListener implements OnClickEventListener {
 		protected Object key;
-		protected FormListWidget editableRows;
+		protected BaseFormListWidget editableRows;
 		
-		public ButtonSaveOnClickEventListener(Object key, FormListWidget editableRows) {
+		public ButtonSaveOnClickEventListener(Object key, BaseFormListWidget editableRows) {
 			this.key = key;
 			this.editableRows = editableRows;
 		}
@@ -215,9 +194,9 @@ public class FormListUtil {
 	
 	public static class ButtonOpenCloseOnClickEventListener implements OnClickEventListener {
 		protected Object key;
-		protected FormListWidget editableRows;
+		protected BaseFormListWidget editableRows;
 		
-		public ButtonOpenCloseOnClickEventListener(Object key, FormListWidget editableRows) {
+		public ButtonOpenCloseOnClickEventListener(Object key, BaseFormListWidget editableRows) {
 			this.key = key;
 			this.editableRows = editableRows;
 		}
@@ -229,9 +208,9 @@ public class FormListUtil {
 	
 	public static class ButtonEditSaveOnClickEventListener implements OnClickEventListener {
 		protected Object key;
-		protected FormListWidget editableRows;
+		protected BaseFormListWidget editableRows;
 		
-		public ButtonEditSaveOnClickEventListener(Object key, FormListWidget editableRows) {
+		public ButtonEditSaveOnClickEventListener(Object key, BaseFormListWidget editableRows) {
 			this.key = key;
 			this.editableRows = editableRows;			
 		}
@@ -247,9 +226,9 @@ public class FormListUtil {
 	
 	public static class ButtonDeleteOnClickEventListener implements OnClickEventListener {
 		protected Object key;
-		protected FormListWidget editableRows;
+		protected BaseFormListWidget editableRows;
 		
-		public ButtonDeleteOnClickEventListener(Object key, FormListWidget editableRows) {
+		public ButtonDeleteOnClickEventListener(Object key, BaseFormListWidget editableRows) {
 			this.key = key;
 			this.editableRows = editableRows;
 		}
@@ -260,10 +239,10 @@ public class FormListUtil {
 	}	
 	
 	public static class ButtonAddOnClickEventListener implements OnClickEventListener {
-		protected FormListWidget editableRows;
+		protected BaseFormListWidget editableRows;
         protected FormWidget form;
 		
-		public ButtonAddOnClickEventListener(FormListWidget editableRows, FormWidget form) {
+		public ButtonAddOnClickEventListener(BaseFormListWidget editableRows, FormWidget form) {
 			this.editableRows = editableRows;
             this.form = form;
 		}

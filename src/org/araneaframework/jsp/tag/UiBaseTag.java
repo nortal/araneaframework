@@ -29,8 +29,12 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
+import org.araneaframework.OutputData;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
+import org.araneaframework.servlet.filter.StandardJspFilterService;
+import org.araneaframework.uilib.ConfigurationContext;
 
 /**
  * UI contained base tag.
@@ -166,7 +170,11 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	protected void setAttribute(String key, Object value, int scope) throws JspException {
 		pageContext.setAttribute(key, value, scope);
 	}
-
+  
+  
+  protected void include(String path) throws ServletException, IOException, JspException  {
+    UiUtil.include(pageContext, path);
+  }
 
 	/**
 	 * Registers a subtag.
@@ -223,6 +231,16 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 		unregisterSubtag(subtag);
 		return result;
 	}	
+  
+  protected ConfigurationContext getConfiguration() {
+    OutputData output = 
+      (OutputData) pageContext.getRequest().getAttribute(
+          StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+    StandardJspFilterService.JspConfiguration config = 
+      (StandardJspFilterService.JspConfiguration) output.getAttribute(
+          StandardJspFilterService.JSP_CONFIGURATION_KEY);
+    return config.getConfiguration(); 
+  }
 
 	//
 	// Tag methods
@@ -304,7 +322,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	// Internal implementation methods
 	//
 	
-	protected void releaseTags() {
+  private void releaseTags() {
     for (Iterator i = registeredTags.iterator(); i.hasNext();) {
       UiContainedTagInterface subtag = (UiContainedTagInterface) i.next();
       
@@ -319,7 +337,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	/**
 	 * Get backup attribute map for given scope. 
 	 */
-	protected Map getBackupAttributeMap(int scope) {
+	private Map getBackupAttributeMap(int scope) {
 		if (attributeBackup == null)
 			attributeBackup = new HashMap();
 		
@@ -334,7 +352,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	/**
 	 * Restores all attributes to the values before executing this action.
 	 */	
-	protected void restoreAllAttributes() {
+  private void restoreAllAttributes() {
 		if (attributeBackup == null) return;
 		
 		for(Iterator i = attributeBackup.keySet().iterator(); i.hasNext();) {
@@ -354,10 +372,6 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 		// Release data
 		attributeBackup = null;
 	}
-  
-  protected void include(String path) throws ServletException, IOException, JspException  {
-    UiUtil.include(pageContext, path);
-  }
 
 	private Tag parent;
 	protected PageContext pageContext;
@@ -365,10 +379,10 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	/**
 	 * A list of registered tags.
 	 */
-	protected Set registeredTags;
+  private Set registeredTags;
 	
 	/**
 	 * Map: scope -> (Map: key -> backup attribute value)
 	 */ 
-	protected Map attributeBackup; 
+  private Map attributeBackup; 
 }

@@ -31,9 +31,9 @@ import org.araneaframework.jsp.tag.uilib.form.UiFormElementTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.Control;
 
 
 /**
@@ -195,7 +195,8 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
 		if(tagInfo == null)
 			throw new JspException("Unexistant tag was passed to form element view selector!.");    
 		
-		Class tagClass = Class.forName(tagInfo.getTagClassName());
+		Class tagClass = 
+			Thread.currentThread().getContextClassLoader().loadClass(tagInfo.getTagClassName());
 		
 		controlTag = (UiFormElementTagInterface) tagClass.newInstance();
 		

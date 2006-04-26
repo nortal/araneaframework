@@ -16,13 +16,7 @@
 
 <chapter id="widgets">
 	<title>Programming with Widgets</title>
-  <sect1>
-    <title>The Mobile Device Abstraction</title>
-
-    <para>
-      Nowadays web applications are getting increasingly complex to the point where we are programming a rich client inside the browser. Such web applications are Aranea's main target , and we find it very useful to think of them in terms of programming a rich GUI. However, unlike rich clients, web clients have a peculiarity&mdash;the resources of the server are severely limited if counting the amount available to each user. Therefore, the suggested abstraction when programming using Aranea is a mobile device, which supports components and tight integration among them, but has limited resources.
-    </para>
-  </sect1>
+  
 	<sect1>
 		<title>Overview</title>
 
@@ -50,7 +44,7 @@
 		<title>StandardWidget &amp; StandardPresentationWidget</title>
 
     <para>
-      A typical widget class will extend <literal>org.araneaframework.presentation.StandardPresentationWidget</literal>. This widget represents the usual custom application component that is rendered using Aranea custom JSP tags. <literal>StandardPresentationWidget</literal> inherits most of its functionality from <literal>org.araneaframework.core.StandardWidget</literal> the difference between the two being only that <literal>StandardPresentationWidget</literal> assumes to be connected with a JSP page.
+      A typical widget class will extend <literal>org.araneaframework.uilib.core.StandardPresentationWidget</literal>. This widget represents the usual custom application component that is rendered using Aranea custom JSP tags. <literal>StandardPresentationWidget</literal> inherits most of its functionality from <literal>org.araneaframework.core.StandardWidget</literal> the difference between the two being only that <literal>StandardPresentationWidget</literal> assumes to be connected with a JSP page.
     </para>
 
     <sect2>
@@ -129,11 +123,8 @@ public void handleEventMyEvent(String parameter) {
       </para>
 
       <para>
-        A useful feature is the method <literal>addGlobalEventListener(EventListener listener)</literal> that allows to register a listener that will receive all events sent to the widget. A common idiom in Aranea is to register a global proxy event listener on initialization:
-<programlisting role="java">protected void init() {
-  addGlobalEventListener(new ProxyEventListener(this));
-}</programlisting>
-      This allows to just define correct method names (<literal>handleEvent&lt;event&gt;</literal>) and all events will be translated to the calls to these methods.
+        A useful feature is the method <literal>addGlobalEventListener(EventListener listener)</literal> that allows to register a listener that will receive all events sent to the widget. In fact <literal>StandardPresentationWidget</literal> does that by default, and typically you will use the individual event listeners only when you want to override this default behaviour. This allows to just define correct method names (<literal>handleEvent&lt;event&gt;</literal>) and all events will be translated to the calls to these methods. Certainly this can also be cancelled by calling <literal>clearGlobalEventListener()</literal>, or overridden by adding your own global event listener.
+
       </para>
     </sect2>
     <sect2 id="widgets-environment">
@@ -142,7 +133,7 @@ public void handleEventMyEvent(String parameter) {
       <para>
         Every initialized widget has a reference to <literal>org.araneaframework.Environment</literal> available through the <literal>getEnvironment()</literal> method. Environment allows to look up framework services (called <emphasis>contexts</emphasis>):
 <programlisting role="java">MessageContext msgCtx = (MessageContext) getEnvironment().getEntry(MessageContext.class);
-msgContext.showInfoMessage("Hello world!");</programlisting>        
+msgCtx.showInfoMessage("Hello world!");</programlisting>        
       As one can see from the examples, contexts are looked up using their interface <literal>Class</literal> object as key. All framework services in Aranea are accessible only using the environment.
       </para>      
     </sect2>
@@ -213,7 +204,7 @@ setViewSelector("myWidget/form");
         This code makes the widget render itself using the JSP situated in <literal>WEB-INF/jsp/myWidget/form.jsp</literal> (of course the exact place is configurable). It is also possible to render the widget using other template technologies with the same view selector by overriding the <literal>render()</literal> method in the base project widget.
       </para>
     </sect2>
-    <sect2>
+    <sect2 id="widgets-example-widget">
       <title>Putting It All Together</title>
 
       <para>
@@ -225,17 +216,14 @@ setViewSelector("myWidget/form");
   private Data data;
   
   protected void init() throws Exception {
-    //Sets the JSP for this widget to "WEB-INF/jsp/home.jsp"
+    //Sets the JSP for this widget to "/WEB-INF/jsp/home.jsp"
     setViewSelector("home");
-    
-    //Adds the global listener that translates events to handleEvent&lt;...&gt; calls
-    addGlobalEventListener(new ProxyEventListener(this));
     
     //Get data from the business layer
     data = ((TestService) lookupService("testService")).getData("test parameter");
     
     //Make the data accessible to the JSP for rendering
-    putViewData("data", data);    
+    putViewData("myData", data);    
   }
   
   /*
@@ -259,7 +247,7 @@ setViewSelector("myWidget/form");
       <title>MessageContext</title>
 
       <para>
-        <literal>org.araneaframework.context.MessageContext</literal> allows to show messages to the user. The messages can be of several types, inluding predefined error and informative types. Typically messages will be shown somewhere in the application (exact way is application-specific). <literal>MessageContext</literal> is available through a <literal>StandardPresentationWidget</literal> method <literal>getMessageCtx()</literal> and is typically used as follows:
+        <literal>org.araneaframework.framework.MessageContext</literal> allows to show messages to the user. The messages can be of several types, inluding predefined error and informative types. Typically messages will be shown somewhere in the application (exact way is application-specific). <literal>MessageContext</literal> is available through a <literal>StandardPresentationWidget</literal> method <literal>getMessageCtx()</literal> and is typically used as follows:
 <programlisting role="java">getMessageCtx().showInfoMessage("Hello world!");</programlisting>        
       More info is available in the JavaDoc.
       </para>
@@ -269,7 +257,7 @@ setViewSelector("myWidget/form");
       <title>LocalizationContext</title>
 
       <para>
-        <literal>org.araneaframework.context.LocalizationContext</literal> allows to get and set current session locale, localize strings and lookup resource bundles. The context is available through the <literal>StandardPresentationWidget</literal> method <literal>getL10nCtx()</literal>. Typically it is used as following:
+        <literal>org.araneaframework.framework.LocalizationContext</literal> allows to get and set current session locale, localize strings and lookup resource bundles. The context is available through the <literal>StandardPresentationWidget</literal> method <literal>getL10nCtx()</literal>. Typically it is used as following:
 <programlisting role="java">
 ...
 String message = getL10nCtx().localize("my.message.key");
@@ -281,9 +269,13 @@ getMessageCtx().showInfoMessage(message);
     </sect2>
     <sect2>
       <title>FlowContext</title>
-
+      
       <para>
-       <literal>org.araneaframework.context.FlowContext</literal> is the Aranea context that provides support for navigation and nested state management. A widget that is running in a nested state is referred to as <emphasis>flow</emphasis>. Aranea abstraction for the nested state is that of a function&mdash;the nested <emphasis>flow</emphasis> takes in some parameters and when finished may return some value or signal that no value can be returned. The context is available as <literal>getFlowCtx()</literal> method of <literal>StandardPresentationWidget</literal> and allows to start flows, finish flows and return the resulting value.
+        A common need in a web programming is to support navigation style known as <emphasis>flows</emphasis>&mdash;interactive stateful processes that can navigate to each other passing arguments when needed. A more complex case is when we also have flow nesting&mdash;a flow can call a subflow, and wait for it to finish, then reactivate again. In this case we can have at any given moment a stack of flows, where the top one is active, and the next one will reactivate when the top one finishes. It is also useful if nested flows can return resulting values when they finish.
+      </para>
+      
+      <para>
+       <literal>org.araneaframework.framework.FlowContext</literal> is the Aranea context that provides support for nested flow navigation. Aranea flow is a widget that is running in the flow container (using the <literal>FlowContext.start()</literal> method. Aranea abstraction for the nested state is that of a function&mdash;the nested <emphasis>flow</emphasis> takes in some parameters and when finished may return some value or signal that no value can be returned. The context is available as <literal>getFlowCtx()</literal> method of <literal>StandardPresentationWidget</literal> and allows to start flows, finish flows and return the resulting value.
       </para>
 
       <para>
@@ -334,11 +326,4 @@ getFlowCtx().start(new TestFlow(new Long(5)),
       </para>
     </sect2>
   </sect1>
-  
-  <sect1>
-    <title>The Flow Abstraction</title>
-
-    TODO
-  </sect1>
-
 </chapter>

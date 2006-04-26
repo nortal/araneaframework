@@ -40,7 +40,7 @@ public class UiStdFormRadioSelectItemTag extends UiFormElementBaseTag {
 		super.init();
 		value = null;
 		onChangePrecondition = "return true;";
-		styleClass = "aranea-radio";
+		baseStyleClass = "aranea-radio";
 	}	
 	
 	//

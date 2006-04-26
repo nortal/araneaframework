@@ -9,7 +9,7 @@
 		<body>
 			<form action="main/hello">
 				What is your name? <input name="name" type="text"/><br/>
-				<input type="submit"/>
+				<input type="submit" value="Say hello"/>
 			</form>
 		</body>
 	</html>

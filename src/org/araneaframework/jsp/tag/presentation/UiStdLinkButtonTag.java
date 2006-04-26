@@ -33,7 +33,7 @@ public class UiStdLinkButtonTag extends UiButtonBaseTag {
   
 	protected void init() {
 		super.init();
-		styleClass = "aranea-link-button"; 
+		baseStyleClass = "aranea-link-button"; 
 	}
   
   //

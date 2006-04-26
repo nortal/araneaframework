@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.apache.log4j.Logger;
 import org.araneaframework.jsp.util.UiUtil;
 
 
@@ -28,18 +27,15 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Oleg Mürk
  */
 public class UiStdLayoutCellTag extends UiLayoutCellBaseTag {
-	private static final Logger log = Logger.getLogger(UiStdLayoutCellTag.class);
 	
   //
   // Implementation
   //
 	
 	public UiStdLayoutCellTag(String styleClass) throws JspException {
-		setStyleClass(styleClass);
+		this.baseStyleClass = styleClass;
 	}
   
-  public UiStdLayoutCellTag() {
-  }
     
 	protected int before(Writer out) throws Exception {
 		super.before(out);
@@ -49,6 +45,7 @@ public class UiStdLayoutCellTag extends UiLayoutCellBaseTag {
 		UiUtil.writeAttribute(out, "rowspan", rowSpan);
 		UiUtil.writeAttribute(out, "width", width);	
 		UiUtil.writeAttribute(out, "height", height);
+		UiUtil.writeAttribute(out, "class", styleClass);
 		UiUtil.writeCloseStartTag(out);
 						
 		// Continue

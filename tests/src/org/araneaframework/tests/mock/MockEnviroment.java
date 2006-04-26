@@ -19,7 +19,9 @@ package org.araneaframework.tests.mock;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
-import org.araneaframework.Environment;
+import org.araneaframework.core.BaseEnvironment;
+import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.ConfigurationContext;
 
 
@@ -31,13 +33,15 @@ import org.araneaframework.uilib.ConfigurationContext;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * 
  */
-public class MockEnviroment implements Environment {
+public class MockEnviroment extends BaseEnvironment {
 	private static Logger log = Logger.getLogger(MockEnviroment.class);
 	
 	private Map contexts = new HashMap();
 	
 	public MockEnviroment() {
     contexts.put(ConfigurationContext.class, new MockConfiguration());
+    contexts.put(LocalizationContext.class, new MockLocalizationContext());
+    contexts.put(MessageContext.class, new MockMessageContext());
 	}
 
 	public Object getEntry(Object key) {

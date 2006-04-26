@@ -29,7 +29,7 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  */
 public abstract class UiLayoutRowBaseTag extends UiPresentationTag implements UiLayoutRowTagInterface {
 	protected String height;
-	private String cellClass;	
+	private String cellClass;
 
 	public void setHeight(String height) throws JspException {
 		this.height = (String)evaluate("height", height, String.class);
@@ -37,6 +37,10 @@ public abstract class UiLayoutRowBaseTag extends UiPresentationTag implements Ui
 	
 	public void setCellClass(String cellClass) throws JspException {
 		this.cellClass = (String)evaluate("cellClass", cellClass, String.class);
+	}
+	
+	public String getCellClass() {
+		return cellClass;
 	}
 	
 	//
@@ -51,8 +55,5 @@ public abstract class UiLayoutRowBaseTag extends UiPresentationTag implements Ui
 	
 	protected void init() {
 		super.init();
-		
-		height = null;
-		cellClass = null;		
 	}
 }
