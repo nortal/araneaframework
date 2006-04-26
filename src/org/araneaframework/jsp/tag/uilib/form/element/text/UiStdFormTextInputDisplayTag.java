@@ -30,7 +30,7 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
 public class UiStdFormTextInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
 	
 	public UiStdFormTextInputDisplayTag() {
-		styleClass = "aranea-text-display";
+		baseStyleClass = "aranea-text-display";
 	}
 	
 	protected int doEndTag(Writer out) throws Exception {

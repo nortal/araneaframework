@@ -18,7 +18,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
 
   public UiStdFormTimeInputTag() {
-    styleClass = "aranea-time";
+    baseStyleClass = "aranea-time";
   }
 
   protected int doEndTag(Writer out) throws Exception {

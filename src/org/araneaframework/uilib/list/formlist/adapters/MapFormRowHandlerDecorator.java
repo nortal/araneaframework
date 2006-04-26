@@ -69,7 +69,7 @@ public class MapFormRowHandlerDecorator implements FormRowHandler {
 		rowsWidget.setRows(new ArrayList(data.values()));
 	}
 
-	public void openOrCloseRow(FormRow editableRow) throws Exception{
+	public void openOrCloseRow(FormRow editableRow) throws Exception {
 		rowHandler.openOrCloseRow(editableRow);
 	}
 

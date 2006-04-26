@@ -37,7 +37,7 @@ public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 	protected String onChangePrecondition;
 
 	public UiStdFormCheckboxTag() {
-		styleClass = "aranea-checkbox";
+		baseStyleClass = "aranea-checkbox";
 	}
 	
 	protected int doEndTag(Writer out) throws Exception {

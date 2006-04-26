@@ -33,7 +33,7 @@ public class UiStdLayoutCellTag extends UiLayoutCellBaseTag {
   //
 	
 	public UiStdLayoutCellTag(String styleClass) throws JspException {
-		this.styleClass = styleClass;
+		this.baseStyleClass = styleClass;
 	}
   
     

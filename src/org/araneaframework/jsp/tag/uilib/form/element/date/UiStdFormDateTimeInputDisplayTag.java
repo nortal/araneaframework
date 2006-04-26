@@ -31,7 +31,7 @@ import org.araneaframework.uilib.form.control.DateTimeControl;
  */
 public class UiStdFormDateTimeInputDisplayTag extends UiFormElementBaseDisplayTag {
 	public UiStdFormDateTimeInputDisplayTag() {
-		styleClass = "aranea-datetime-display";
+		baseStyleClass = "aranea-datetime-display";
 	}
 	
 	protected int doEndTag(Writer out) throws Exception {

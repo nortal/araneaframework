@@ -34,7 +34,7 @@ public class UiStdLinkTag extends UiLinkBaseTag {
   private String disabledStyleClass;
 
   public UiStdLinkTag() {
-    styleClass = "aranea-link-button"; 
+    baseStyleClass = "aranea-link-button"; 
     disabledStyleClass = "aranea-disabled-link-button";
   }
 

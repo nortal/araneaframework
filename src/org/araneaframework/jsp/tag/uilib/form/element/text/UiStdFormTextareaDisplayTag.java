@@ -33,7 +33,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 public class UiStdFormTextareaDisplayTag extends UiFormElementBaseDisplayTag {
 
   public UiStdFormTextareaDisplayTag() {
-    styleClass = "aranea-textarea-display";
+    baseStyleClass = "aranea-textarea-display";
   }
 
   protected int doEndTag(Writer out) throws Exception {        

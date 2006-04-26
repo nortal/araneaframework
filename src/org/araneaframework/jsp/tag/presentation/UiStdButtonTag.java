@@ -38,13 +38,12 @@ public class UiStdButtonTag extends UiButtonBaseTag {
   protected String renderMode;
 
   public UiStdButtonTag() {
-    styleClass = "aranea-button";
+    baseStyleClass = "aranea-button";
     renderMode = UiStdButtonTag.RENDER_BUTTON;
   }
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
     UiUtil.writeOpenStartTag(out, renderMode.equals(UiStdButtonTag.RENDER_BUTTON) ? UiStdButtonTag.RENDER_BUTTON : UiStdButtonTag.RENDER_INPUT);
     if (renderMode.equals(UiStdButtonTag.RENDER_INPUT))
       UiUtil.writeAttribute(out, "type", "button");    

@@ -34,7 +34,7 @@ public class UiStdFormCheckboxDisplayTag extends UiFormElementBaseDisplayTag {
   protected String imageCode;
 
   public UiStdFormCheckboxDisplayTag() {
-    styleClass = "aranea-checkbox-display";
+    baseStyleClass = "aranea-checkbox-display";
   }
 
   protected int doEndTag(Writer out) throws Exception {        

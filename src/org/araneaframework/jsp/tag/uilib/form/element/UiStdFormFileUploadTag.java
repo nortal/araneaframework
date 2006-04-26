@@ -38,7 +38,7 @@ public class UiStdFormFileUploadTag extends UiFormElementBaseTag {
   protected Long size = null;
 
   public UiStdFormFileUploadTag() {
-    styleClass = "aranea-file-upload";
+    baseStyleClass = "aranea-file-upload";
   }
 
   protected int doEndTag(Writer out) throws Exception {

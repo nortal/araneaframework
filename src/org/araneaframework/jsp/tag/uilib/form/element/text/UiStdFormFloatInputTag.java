@@ -35,9 +35,8 @@ import org.araneaframework.uilib.form.control.FloatControl;
  *   description = "Form floating-point number input field, represents UiLib "FloatControl"."
  */
 public class UiStdFormFloatInputTag extends UiStdFormTextInputBaseTag {
-
   public UiStdFormFloatInputTag() {
-    styleClass = "aranea-float";
+    baseStyleClass = "aranea-float";
   }
 
   protected int doEndTag(Writer out) throws Exception {

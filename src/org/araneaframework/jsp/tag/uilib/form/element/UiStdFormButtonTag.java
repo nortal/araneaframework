@@ -36,11 +36,10 @@ import org.araneaframework.jsp.util.UiUtil;
 public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
   private static final String RENDER_BUTTON = "button";
   private static final String RENDER_INPUT = "input";
-
-  public String renderMode = UiStdFormButtonTag.RENDER_BUTTON;
+  private String renderMode = UiStdFormButtonTag.RENDER_BUTTON;
 
   public UiStdFormButtonTag() {
-    styleClass = "aranea-button";
+    baseStyleClass = "aranea-button";
   }
 
   protected int doStartTag(Writer out) throws Exception {

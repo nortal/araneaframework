@@ -27,9 +27,8 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Oleg Mürk
  */
 public abstract class UiStdImageBaseTag extends UiImageBaseTag {
-
   public UiStdImageBaseTag() {
-    this.styleClass = "aranea-image";
+    this.baseStyleClass = "aranea-image";
   }
 
   protected int doStartTag(Writer out) throws Exception {

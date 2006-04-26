@@ -29,7 +29,7 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
  */
 public class UiStdFormTimeInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
 	public UiStdFormTimeInputDisplayTag() {
-		styleClass = "aranea-time-display";
+		baseStyleClass = "aranea-time-display";
 	}
 	
 	protected int doEndTag(Writer out) throws Exception {

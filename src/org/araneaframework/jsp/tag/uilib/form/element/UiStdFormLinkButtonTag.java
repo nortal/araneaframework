@@ -33,9 +33,8 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "HTML link, represents UiLib "ButtonControl"."
  */
 public class UiStdFormLinkButtonTag extends UiStdFormButtonBaseTag {
-
   public UiStdFormLinkButtonTag() {
-    styleClass = "aranea-link";
+    baseStyleClass = "aranea-link";
   }
 
   protected int doStartTag(Writer out) throws Exception {

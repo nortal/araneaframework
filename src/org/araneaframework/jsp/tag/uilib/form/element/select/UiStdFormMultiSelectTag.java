@@ -40,7 +40,7 @@ public class UiStdFormMultiSelectTag extends UiFormElementBaseTag {
   protected Long size;
   
   public UiStdFormMultiSelectTag() {
-    styleClass = "aranea-multi-select";
+    baseStyleClass = "aranea-multi-select";
   }
   
   protected int doEndTag(Writer out) throws Exception {
@@ -90,7 +90,7 @@ public class UiStdFormMultiSelectTag extends UiFormElementBaseTag {
     return EVAL_PAGE;  
   }
   
-//
+  //
   // Attributes
   //  
   

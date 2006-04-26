@@ -31,7 +31,7 @@ import org.araneaframework.uilib.form.control.SelectControl;
  */
 public class UiStdFormSelectDisplayTag extends UiFormElementBaseDisplayTag {
 	public UiStdFormSelectDisplayTag() {
-		styleClass = "aranea-select-display";
+		baseStyleClass = "aranea-select-display";
 	}
 
 	protected int doEndTag(Writer out) throws Exception {				

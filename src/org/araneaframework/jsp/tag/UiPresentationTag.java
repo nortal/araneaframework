@@ -29,15 +29,13 @@ import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
  */
 public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInterface {
 	protected String styleClass = null;
+	protected String baseStyleClass = null;
+
 	protected Map attributes = new HashMap();
 	
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-
-		// Register
 		addContextEntry(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, this);
-
-		// Continue
 		return EVAL_BODY_INCLUDE;
 	}
 
@@ -64,6 +62,15 @@ public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInter
 	 * Callback: get default css class for tag or <code>null</code>.
 	 */
 	protected String getStyleClass()  {
-		return styleClass;
+		StringBuffer result = new StringBuffer();
+		if (baseStyleClass != null) {
+			result.append(baseStyleClass);
+			if (styleClass != null)
+				result.append(" ");
+		}
+		if (styleClass != null) {
+			result.append(styleClass);
+		}
+		return result.toString();
 	}
 }

@@ -40,7 +40,7 @@ public class UiStdFormTextareaTag extends UiFormElementBaseTag {
   protected Long rows;
   
   public UiStdFormTextareaTag() {
-    styleClass = "aranea-textarea";
+    baseStyleClass = "aranea-textarea";
   }
   
   protected int doEndTag(Writer out) throws Exception {

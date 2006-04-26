@@ -85,7 +85,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     InputStream tldStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(uiTldPath);
     
     if (tldStream == null) {
-    	throw new FileNotFoundException("Unable to read file:"+uiTldPath);
+    	throw new FileNotFoundException("Unable to read file: "+uiTldPath);
     }
     	
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

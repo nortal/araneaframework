@@ -40,7 +40,7 @@ public class UiStdFormMultiSelectDisplayTag extends UiFormElementBaseDisplayTag 
   protected String separator = ",&nbsp;";
 
   public UiStdFormMultiSelectDisplayTag() {
-    styleClass = "aranea-multi-select-display";
+    baseStyleClass = "aranea-multi-select-display";
   }  
 
   protected int doEndTag(Writer out) throws Exception {        
