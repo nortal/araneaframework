@@ -36,7 +36,7 @@ import org.araneaframework.jsp.util.UiUtil;
 public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
   private static final String RENDER_BUTTON = "button";
   private static final String RENDER_INPUT = "input";
-  private String renderMode = UiStdFormButtonTag.RENDER_BUTTON;
+  protected String renderMode = UiStdFormButtonTag.RENDER_BUTTON;
 
   public UiStdFormButtonTag() {
     baseStyleClass = "aranea-button";

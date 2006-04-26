@@ -76,7 +76,7 @@ public class UiKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
 
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		writeRegisterKeypressHandlerScript(out, scope, keyCode, handler);
+		writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);
 		return SKIP_BODY;
 	}
 }

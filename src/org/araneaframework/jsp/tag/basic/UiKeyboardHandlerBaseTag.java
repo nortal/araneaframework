@@ -34,6 +34,8 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Konstantin Tretyakov (kt@webmedia.ee)
  */
 public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
+  protected String intKeyCode;
+  protected String intKey;
   protected String keyCode;
   protected String key;
   
@@ -83,13 +85,16 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-		if (!(keyCode == null ^ key == null)) 
+		intKey = key;
+		intKeyCode = keyCode;
+		
+		if (!(intKeyCode == null ^ intKey == null)) 
 			throw new JspException("Either key or keyCode must be specified for a keyboard handler tag.");
 		
-		if (keyCode == null) {
-			int iKeyCode = keyToKeyCode(key);
+		if (intKeyCode == null) {
+			int iKeyCode = keyToKeyCode(intKey);
 			if (iKeyCode == 0) throw new JspException("Invalid key alias specified (" + key + ")");
-			keyCode = String.valueOf(iKeyCode);
+			intKeyCode = String.valueOf(iKeyCode);
 		}
 		
 		return SKIP_BODY;

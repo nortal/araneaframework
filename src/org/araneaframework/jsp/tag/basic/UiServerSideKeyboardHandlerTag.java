@@ -138,7 +138,7 @@ public class UiServerSideKeyboardHandlerTag extends UiKeyboardHandlerBaseTag{
 		handler = createHandlerToCallEvent(pageContext, widgetId, eventId, eventParam, precondition, updateRegionNames);				
 
 		// Write out.
-		UiKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, keyCode, handler);				
+		UiKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);				
 		return SKIP_BODY;
 	}
   

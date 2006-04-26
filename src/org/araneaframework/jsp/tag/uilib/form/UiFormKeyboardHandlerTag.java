@@ -56,6 +56,7 @@ import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag;
  */
 public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	protected String handler;
+	
 	protected String subscope;
 	protected String elementId;
 	protected String fullElementId;
@@ -165,7 +166,9 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	//
 	protected final int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		if (StringUtils.isBlank(handler)) {
+		String intHandler = handler;
+		
+		if (StringUtils.isBlank(intHandler)) {
 			// One of elemenId/event must be specified
 			if ((elementId == null && fullElementId == null) || event == null)
 				throw new JspException("You must specify handler or elementId/event for UiFormKeyboardHandlerTag (elementId=" + elementId + ", fullElementId=" + fullElementId + ", event=" + event + ",subscope=" + subscope);
@@ -177,7 +180,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 			// If elementId was given, translate to fullElementId
 			if (fullElementId == null)
 				fullElementId = elementIdToFullElementId(pageContext, elementId);
-			handler = createHandlerToInvokeJavascriptEvent(fullElementId, event);
+			intHandler = createHandlerToInvokeJavascriptEvent(fullElementId, event);
 		}
 		else {
 			// None of the elementId/event attributes may be specified
@@ -197,7 +200,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 		}
 
 		// Write out.
-		UiKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, keyCode, handler);
+		UiKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, intHandler);
 		return SKIP_BODY;
 	}
 
