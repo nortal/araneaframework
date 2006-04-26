@@ -31,7 +31,6 @@ import org.araneaframework.core.Standard;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.EmptyCallStackException;
-import org.araneaframework.framework.ExtendedCallContext;
 import org.araneaframework.framework.FlowContext;
 
 /**
@@ -40,7 +39,7 @@ import org.araneaframework.framework.FlowContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class StandardFlowContainerWidget extends StandardWidget implements FlowContext, ExtendedCallContext {
+public class StandardFlowContainerWidget extends StandardWidget implements FlowContext {
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
@@ -171,8 +170,8 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
       previousFrame.getHandler().onCancel();   
   }
   
-  public ExtendedCallContext.CallFrameReference getCurrentCallFrameReference() {
-  	return new CallFrameReference();
+  public FlowContext.FlowReference getCurrentReference() {
+  	return new FlowReference();
   }
   
   private LinkedList getEnvEntryStack(Object entryId) {
@@ -285,8 +284,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     nestedEnvironmentEntries.clear();
     
     nestedEnvironmentEntries.put(FlowContext.class, this);
-    nestedEnvironmentEntries.put(ExtendedCallContext.class, this);    
-    
+
     for (Iterator i = nestedEnvEntryStacks.entrySet().iterator(); i.hasNext();) {
       Map.Entry entry = (Map.Entry) i.next();
       Object entryId = entry.getKey();
@@ -322,7 +320,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   // PROTECTED CLASSES
   //*******************************************************************
   
-  protected class CallFrameReference implements ExtendedCallContext.CallFrameReference {
+  protected class FlowReference implements FlowContext.FlowReference {
   	private int currentDepth = StandardFlowContainerWidget.this.callStack.size();
   	
 		public void reset(EnvironmentAwareCallback callback) throws Exception {

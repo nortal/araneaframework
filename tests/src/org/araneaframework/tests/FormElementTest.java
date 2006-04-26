@@ -31,10 +31,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * 
  */
 public class FormElementTest extends TestCase {
-  /**
-   * Tests that {@link TextControl} return <code>null</code> on empty request.
-   * @throws Exception
-   */
   public void testDataCycling() throws Exception {
     MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
     emptyRequest.addParameter("myTextBox", "");

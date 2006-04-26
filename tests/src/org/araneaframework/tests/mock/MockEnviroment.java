@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.BaseEnvironment;
+import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.ConfigurationContext;
 
 
@@ -38,6 +40,8 @@ public class MockEnviroment extends BaseEnvironment {
 	
 	public MockEnviroment() {
     contexts.put(ConfigurationContext.class, new MockConfiguration());
+    contexts.put(LocalizationContext.class, new MockLocalizationContext());
+    contexts.put(MessageContext.class, new MockMessageContext());
 	}
 
 	public Object getEntry(Object key) {

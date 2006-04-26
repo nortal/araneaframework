@@ -86,7 +86,6 @@ public class WidgetTest extends TestCase {
     
     MockHttpServletRequest validRequest = new MockHttpServletRequest();
 
-    validRequest.addParameter("testForm.__present", "true");
     validRequest.addParameter("testForm.myCheckBox", "true");
     validRequest.addParameter("testForm.myLongText", "108");
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");

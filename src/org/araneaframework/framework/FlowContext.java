@@ -20,6 +20,7 @@ import java.io.Serializable;
 import org.araneaframework.Component;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Standard;
 
 /**
  * This context provides support for flow navigation and nesting. A flow is started using 
@@ -54,8 +55,7 @@ public interface FlowContext extends Serializable {
    * Finished the current flow passing control back to the calling flow. 
    * Should be interpreted by the calling flow as a unsuccessful return. 
    */
-  public void cancel() throws Exception;
-  
+  public void cancel() throws Exception;  
   
   /**
    * Returns whether the current flow is nested, that is has a caller flow.
@@ -68,6 +68,25 @@ public interface FlowContext extends Serializable {
    * stack. 
    */
   public void reset(EnvironmentAwareCallback callback) throws Exception;
+  
+  /**
+   * Returns a reference to the current flow that can be used later to manipulate the current flow. 
+   */
+  public FlowReference getCurrentReference();
+  
+  /**
+   * Adds an environment entry that is visible in all subflows.
+   */
+  public void addNestedEnvironmentEntry(Standard.StandardWidgetInterface scope, final Object entryId, Object envEntry) throws Exception;
+
+  
+  public interface FlowReference extends Serializable {
+    /**
+     * Resets the flow stack up to the referred flow and provides the callback with the local environment
+     * that can be used to manipulate the flow stack further.
+     */
+    public void reset(EnvironmentAwareCallback callback) throws Exception;
+  }
   
   public interface Handler extends Serializable {
     public void onFinish(Object returnValue) throws Exception;   
