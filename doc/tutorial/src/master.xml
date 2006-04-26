@@ -28,328 +28,548 @@
 				<firstname>Taimo</firstname>
 				<surname>Peelo</surname>
 			</author>
+			<author>
+				<firstname>Jevgeni</firstname>
+				<surname>Kabanov</surname>
+			</author>
 		</authorgroup>
 	</articleinfo>
 
 	<!-- INTRO. WHY/WHAT FOR THIS TUTORIAL IS FOR -->
 	<sect1>
-		<title>What's in tutorial?</title>
+		<title>What's in the tutorial?</title>
 		<para>
-			Example toy application built on Aranea framework is dissected and its 
-			workings explained. Tutorial
-			is meant as quick-dive into practical usage of Aranea. For
-			safe and successful surfacing, additional reading of Aranea
-			Reference Manual is heartily recommended. It may be helpful
-			to read quickstart documentation and examples before proceeding
-			to read this tutorial.
+           We start from a hello world example and proceed to dissecting toy application 
+           built on Aranea framework. Tutorial
+        	is meant as quick-dive into practical usage of Aranea. For
+			more thorough understanding, additional reading of Aranea
+			Reference Manual is recommended. More theoretically inclined readers
+              might also want to take a look at the technical paper, which briefly describes 
+              the inner workings of Aranea.
 		</para>
 		<para>
-			We try to present this tutorial in clear and newbie-friendly
-			way. Our goal is to provide material that would be
-			understandable on conceptual level even to people who have
-			no previous previous experience building JEE web
-			applications (with some googling for terminology, of
-			course). We are quite aware that currently our tutorial
-			falls little short of reaching that goal.
-			So please&mdash;if you have trouble understanding
-			something or have neat suggestions for improving either
-			tutorial or examples, please send your suggestions to
-			<ulink url="mailto:taimo@araneaframework.org">taimo@araneaframework.org</ulink>.
+			We try to present this tutorial in as clear and as beginner-friendly
+			way as possible. Our goal is to present material that would be
+			understandable on conceptual level, even to people who have
+			very little experience building JEE web
+			applications. 
+    </para>
+    <para>
+			This tutorial is a work that will always need improvement&mdash;comments, suggestions and critique
+            should be sent to
+			<ulink url="mailto:team@araneaframework.org?subject=Comments on Aranea tutorial">team@araneaframework.org</ulink>.
 		</para>
 	</sect1>
-	
-	<sect1>
-		<title>Running examples</title>
+
+  <sect1 id="hello-world">
+    <title>Hello World</title>
+    
+    <para>
+      We start with an example that became classical in computer literature for learning new languages and technologies&mdash;"Hello World!". 
+      Our variant of "Hello World!" will display a form where one can insert his name (shown on <xref linkend="example-name"/>) and after 
+      clicking the button personalized greeting is displayed (shown on <xref linkend="example-hello"/>).
+    </para>
+    
+    <figure id="example-name">    
+      <title>Insert your name display</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata 
+            fileref="images/example-name.png"
+            format="PNG" />
+        </imageobject>
+      </mediaobject>        
+    </figure>
+
+    
+    <figure id="example-hello">    
+      <title>Greeting display</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata 
+            fileref="images/example-hello.png"
+            format="PNG" />
+        </imageobject>
+      </mediaobject>        
+    </figure>
+
+    <para>
+      This example demonstrates the way Aranea applications are assembled from independent widgets, the way widgets receive and process events, the way the widgets communicate and navigate among each other and how they can render themselves.
+    </para>
+    
+    <para>
+      Most Aranea applications need a root widget class. In our very simple case it will be the <literal>NameWidget</literal> defined on <xref linkend="example-name-widget"/>. The widget package is not important and we assume it to be <literal>example</literal>.
+    </para>
+    
+    <figure id="example-name-widget">    
+      <title>NameWidget.java</title>
+<programlisting role="java">public class NameWidget extends StandardPresentationWidget {
+  protected void init() throws Exception {        
+    setViewSelector("name");
+  }
+  
+  public void handleEventHello() throws Exception {
+    String name = (String) getCurrentInput().getGlobalData().get("name");
+    getFlowCtx().replace(new HelloWidget(name), null);
+  }  
+}</programlisting>
+    </figure>
+    
+    <para>
+      The widget selects the JSP that will be used for rendering by calling the <literal>setViewSelector("name")</literal>, which in this case will be the JSP with path <literal>/WEB-INF/jsp/name.jsp</literal> (certainly this location can be altered, but this is outside the example scope). This JSP can be seen on the <xref linkend="example-name-jsp"/> (usually the root JSP tags are present only in topmost JSP template).
+    </para>
+    
+    <figure id="example-name-jsp">    
+      <title>/WEB-INF/jsp/name.jsp</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2">
+  <ui:root>
+    <ui:viewPort> 
+      <head>
+        <ui:importScripts/>
+            
+        <title>Hello World!</title>
+      </head>     
+             
+      <body>
+        <ui:systemForm method="GET">
+            Insert your name: <input type="text" name="name"/><br/><br/>            
+            <ui:eventButton labelId="#Say hello" eventId="hello"/>      
+        </ui:systemForm>
+      </body>
+    </ui:viewPort>
+  </ui:root>  
+</jsp:root>]]></programlisting>
+    </figure>
+
+    <para>
+      The only interesting parts are the <literal><![CDATA[<ui:systemForm/>]]></literal> that will render the actual HTML form and <literal><![CDATA[<ui:eventButton>]]></literal> that will render a button with a label "Say hello!" that will send the <literal>hello</literal> event to the <literal>NameWidget</literal> (which will call its <literal>handleEventHello()</literal> method). 
+    </para>
+
+    <para>
+      When that will occur the first line of <literal>handleEventHello()</literal> method
+      <programlisting role="java">String name = (String) getCurrentInput().getGlobalData().get("name");</programlisting>
+      will read the data submitted by the form input field "name". The second line of this method
+      <programlisting role="java">getFlowCtx().replace(new HelloWidget(name), null);</programlisting>
+      will create a new instance of <literal>HelloWidget</literal> passing it the read <literal>name</literal> as a constructor argument. Then we replace the current widget in the flow with a new one, which causes the <literal>NameWidget</literal> instance to be destroyed and the <literal>HelloWidget</literal> instance to become active. The <literal>HelloWidget</literal> can be seen on figure <xref linkend="example-hello-widget"/>
+    </para>
+    
+    <figure id="example-hello-widget">    
+      <title>HelloWidget.java</title>
+<programlisting role="java">public class HelloWidget extends StandardPresentationWidget {
+  private String name;
+  
+  public HelloWidget(String name) {
+    this.name = name;
+  }
+
+  protected void init() throws Exception {
+    putViewData("name", name);    
+    setViewSelector("hello");        
+  }
+}</programlisting>
+    </figure>
+
+  <para>
+    <literal>HelloWidget</literal> will save the constructor argument and pass it to the view (in our case JSP) using <literal>putViewData("name", name);</literal>. It will then delegate rendering to the JSP shown on <xref linkend="example-hello-jsp"/>.
+  </para>
+    
+    <figure id="example-hello-jsp">    
+      <title>/WEB-INF/jsp/hello.jsp</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2">
+  <ui:root>
+    <ui:viewPort> 
+      <ui:widgetContext>
+        <head>
+          <ui:importScripts/>
+              
+          <title>Hello World!</title>
+        </head>     
+        
+        <body>
+          Hello <c:out value="${contextWidget.data.name}"/>!
+        </body>
+      </ui:widgetContext>
+    </ui:viewPort>
+  </ui:root>  
+</jsp:root>]]></programlisting>
+    </figure>
+    
+    <para>
+      Finally we will need to deploy the example as a web application. Aranea uses 
+      <ulink url="http://www.springframework.org/">Spring</ulink> 
+      for configuration, so we will also have to start its listener as 
+      shown on <xref linkend="example-web-xml"/>
+    </para>
+    
+    <figure id="example-web-xml">    
+      <title>/WEB-INF/web.xml</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC 
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <context-param>
+    <!-- Spring configuration file name -->
+    <param-name>contextConfigLocation</param-name>
+    <param-value> 
+      /WEB-INF/aranea-conf.xml
+    </param-value>
+  </context-param>
+  
+  <!-- Aranea session cleanup listener -->
+  <listener>
+    <listener-class>
+      org.araneaframework.servlet.core.StandardSessionListener
+    </listener-class>
+  </listener>
+  
+  <!-- Spring loader listener -->
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
+   
+  <!-- Aranea dispatcher servlet -->
+   <servlet>
+      <servlet-name>araneaServlet</servlet-name>
+      <servlet-class>org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   
+   <!-- Aranea dispatcher servlet mapping -->
+   <servlet-mapping>
+      <servlet-name>araneaServlet</servlet-name>
+      <url-pattern>/main</url-pattern>
+   </servlet-mapping>
+</web-app>]]></programlisting>
+    </figure>
+
+    <para>
+      Finally we need the Aranea Spring configuration file, which in this case will only set the application root widget as 
+      shown on <xref linkend="example-spring-conf"/>.
+    </para>
+    
+    <figure id="example-spring-conf">    
+      <title>/WEB-INF/aranea-conf.xml</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC 
+  "-//SPRING//DTD BEAN//EN" 
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <!-- 
+    The application root widget.
+   -->
+  <bean id="araneaApplicationStart" 
+    class="example.NameFlow"  
+    singleton="false"/> 
+</beans>
+]]></programlisting>
+    </figure>
+  </sect1>
+  
+	<sect1 id="running-examples">
+		<title>Running Examples</title>
+    <para>
+      The rest of the tutorial will deal with the example applications found in <literal>examples</literal>
+      directory in the Aranea distribution. We will especially examine the full application example
+      found in <literal>examples/main</literal> directory.
+    </para>
+
 		<para>
-			If using full source distribution, <literal>ant build-all</literal> in the topmost
+			When using full source distribution, <literal>ant build-all</literal> in the topmost
 			distribution directory will build everything, including all that is necessary 
 			for examples. To start examples change directory to <literal>examples/</literal> 
 			any subdirectory and give command <literal>ant run-app</literal>. For main
-			example (<literal>examples/main</literal>), in-memory database should be started
-			first (otherwise some parts of it will not function). Database is started with command
-			<literal>ant run-database</literal>.
+			example (<literal>examples/main</literal>), embedded in-memory database should be started
+			first (otherwise some parts of the sample application will not function). Database is started with a command
+			<literal>ant run-database</literal> in the <literal>examples/main</literal> directory.
 		</para>
+
 		<para>
-			To test the running examples, point your browser to 
+			To test a running example, point your browser to 
 			<ulink url="http://localhost:2000/">http://localhost:2000/</ulink>.
 		</para>
 	</sect1>
 
 	<sect1>
-		<title>Static configuration of Aranea web application.</title>
-		<para>
-			Modifications to static configuration of the Aranea examples are
-			made in the following files.
-		</para>
-		<para>
-			<itemizedlist spacing="compact">
-				<listitem>
-					<literal>war/WEB-INF/web.xml</literal> (deployment descriptor)
-				</listitem>
-				<listitem>
-					<literal>war/WEB-INF/aranea-conf.xml</literal> (Aranea configuration)
-				</listitem>
-				<listitem>
-					<literal>war/WEB-INF/hibernate.cfg.xml</literal> (object relational mapping engine config)
-				</listitem>
-				<listitem>
-					<literal>log4j.xml</literal> (logging configuration)
-				</listitem>
-			</itemizedlist>
-		</para>
-		<sect2>
-			<title>Deployment descriptor</title>
-			Deployment descriptors are a part of every JEE web
-			application and provide wide possibilities for web
-			application configuration. Standard deployment descriptor used
-			for Aranea web applications is quite basic, usually it just ties
-			StandardSpringMainServlet class to servlet name:
-
+		<title>Configuring Aranea Web Applications</title>
+			<para>
+				Deployment descriptors are a part of every JEE web
+				application. Standard deployment descriptor used
+				for Aranea web applications is quite basic, usually it just defines one Aranea dispatcher servlet
+        and maps it to a particular URL path:
+				 class to servlet name:
 			<programlisting role="xml"><![CDATA[<servlet>
-    <servlet-name>araneaServlet</servlet-name>
-    <display-name>'|'</display-name>
-    <servlet-class>org.araneaframework.ioc.spring.StandardSpringMainServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-</servlet>]]></programlisting>
+  <servlet-name>araneaServlet</servlet-name>
+  <servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+  <load-on-startup>1</load-on-startup>
+</servlet>
 
-			and then maps this servlet to an URL&mdash;servlet will be executed
-			whenever an HTTP request to URL with matching pattern is
-			made. Often all requests go through one main
-			servlet&mdash;requests with different parameters will all be
-			made to the same URL (in our case <literal>/main</literal>).
-
-			<programlisting role="xml"><![CDATA[<servlet-mapping>
-    <servlet-name>araneaServlet</servlet-name>
-    <url-pattern>/main</url-pattern>
+<servlet-mapping>
+  <servlet-name>araneaServlet</servlet-name>
+  <url-pattern>/main</url-pattern>
 </servlet-mapping>]]></programlisting>
+				in case of framework main example this is <literal>/main</literal>. 	            In addition there is <literal>contextConfigLocation</literal> parameter, that specifies
+	            Spring bean configuration files read in by Spring's
+	            <literal>ContextLoaderListener</literal> and
+	            Aranea specific sessionlistener that takes over some session handling functions.
+	        </para>
 
-			Actual servicing of all requests coming in is done by Aranea.
-			Exact mechanism of that is explained in the following section.
-		</sect2>
+            <programlisting role="xml"><![CDATA[<context-param>
+  <param-name>contextConfigLocation</param-name>
+  <param-value> 
+    /WEB-INF/services.xml   
+    /WEB-INF/aranea-conf.xml
+  </param-value>
+</context-param>
 
-		<sect2 id="aranea-conf">
-			<title>Aranea configuration</title>
+<listener>
+  <listener-class>org.araneaframework.servlet.core.StandardSessionListener</listener-class>
+</listener>
+
+<listener>
+  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+</listener>]]></programlisting>
+
 			<para>
-				As mentioned, main servlet passes requests on to Aranea controller,
-				which static configuration is defined
-				in <literal>aranea-conf.xml</literal>&mdash;this is a Spring bean configuration
-				file, used to initialize chain (or tree) of Aranea
-				components that will be processing the incoming request.
-				Each bean configuration defines which classes are instantiated for dealing with
-				the requests and links beans with other component beans.
-				This configuration concept is known as <firstterm>dependency injection</firstterm>,
-				it allows for easy adding of new components and switching between
-				component implementations.
+         Note that we are using 
+        <literal>AraneaSpringDispatcherServlet</literal> not the simpler <literal>SimpleAraneaSpringDispatcherServlet</literal> used in 
+        "Hello World!" example. This means that we will also have to define the full Aranea configuration.
 			</para>
 			
-			<para>
-				First bean in the chain of request processing components defined for
-				TemplateApp is instance of <literal>StandardServletServiceAdapterComponent</literal>&mdash;
-				it translates the request and response data to suitable form for processing by Aranea and
-				then sends it forward to its child service. Child service may act as filter, router or container&mdash;
-				process request, modify the environment available to its child services (most common is putting 
-				a hook to itself into the environment under some specific key, so that its childs can invoke
-				parents methods). Last statically configured Aranea component is usually 
-				<literal>StandardFlowContainerWidget</literal>.
+      <para>
+        The difference is that while in simple configuration we have to define only the starting widget of the application, in the full 
+        configuration we put the framework together from independent POJOs using Spring dependency injection. The approach is illustrated on 
+        <xref linkend="full-spring-conf"/>, where some parts of this configuration are shown. Note that in the case of the main example 
+        the simple configuration would be enough, but we wanted to illustrate the need to extend it, which will surely appear in any
+        sufficiently complex application.
 			</para>
-			
-			<para>
-				Aranea static configuration is generally illustrated on diagram <xref linkend="conf-image"/>.
-				As can be seen, there are quite many services through which the request passes. Actually there are more, 
-				but on the diagram only the most important ones are shown. Default services do much useful stuff&mdash;for
-				example session routers route requests to child services tied with session associated with request 
-				(or create the new session, if needed), statistic filters measure the request time, localization 
-				filters provide the localized environment to child services, etc.
-			</para>
-			<para>
-				In the end of the chain are widgets, which also derive from services, but have 
-				additional capabilities, like updating and rendering itself. Widgets specified in 
-				Aranea configuration are yet not directly tied to user interface elements, although
-				they can output data which ends up rendered somewhere on the response page. Instead
-				they perform more general tasks&mdash;most important and visible for application programmers
-				are aforementioned <literal>StandardFlowContainerWidget</literal> which allows creation 
-				of nested processes (which we will mostly refer to as <emphasis>flows</emphasis> from
-				now on) and <literal>StandardMessagingFilterWidget</literal> that is a central place for
-				managing all kind of informational messages which are outputted to notify user of
-				invalid inputs, unsatisfied constraints and everything else imaginable.
-			</para>
-			
-			<!-- MAYBE RESIZE? caption and picture do not fit on one page in PDF -->
-			<mediaobject id="conf-image" xreflabel="Birdview of Aranea configuration">
-				<caption align="top">Birdview of Aranea configuration</caption>
-				<imageobject>
-					<imagedata 
-						fileref="images/aranea-conf.png"
-						format="PNG" 
-						align="center"/>
-				</imageobject>
-			</mediaobject>
-			
-			<para>
-				Slices of beginning and end of Aranea configuration in TemplateApp:
-				<programlisting role="xml"><![CDATA[<bean
-    id="servletServiceAdapterComponent" 
-    class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent">
-    <property name="childService" ref="criticalErrorHandler"/>
-</bean>
-  
-<bean 
-    id="criticalErrorHandler"
-    class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService" 
+      
+    <figure id="full-spring-conf">    
+      <title>/WEB-INF/aranea-conf.xml</title>
+             <programlisting role="xml"><![CDATA[<beans>
+
+  <import resource="aranea-filters.xml"/>
+
+  <!-- ########## ARANEA CONFIGURATION ########## -->
+
+  <bean 
+    id="applicationRoot" 
+    class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
     singleton="false">
-    <property name="childService" ref="readFileFilter"/>
-    <property name="exceptionHandlerFactory">
-        <bean 
-            class="org.araneaframework.templateApp.web.framework.error.TemplateCriticalErrorHandlerFactory"
-            singleton="false"/>
+    <property name="childService" ref="araneaApplicationFilters"/>
+  </bean>
+  
+  <bean 
+    id="araneaApplicationFilters" 
+    singleton="false"
+    class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
+    <property name="childService" ref="araneaTopServiceRouter"/>
+    <property name="filterChain">
+      <list>
+        <ref bean="araneaCriticalErrorHandler"/>
+        <ref bean="araneaReadFileFilter"/>
+        <ref bean="araneaMainStatisticFilter"/>
+      </list>
     </property>
-</bean>
+  </bean>
 
-...
+  <bean
+    id="araneaTopServiceRouter"
+    class="org.araneaframework.framework.router.StandardTopServiceRouterService" 
+    singleton="false">
+    <property name="defaultServiceId" value="application"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="application" value-ref="araneaSessionRouter"/>
+      </map>
+    </property>
+  </bean>
 
-<bean
-    class="org.araneaframework.framework.container.StandardWidgetContainerWidget" 
-    id="widgetContainer" singleton="false">
-    <property name="childWidget" ref="viewPort"/>
-</bean>
+  ...
+    
+  <!-- Session scope beans-->
+
+  <!-- Thread scope beans-->    
   
-<!-- Widgets -->  
+  <!-- Framework widgets -->
   
-<bean
-    class="org.araneaframework.framework.container.StandardViewPortWidget" 
-    id="viewPort" singleton="false">
-    <property name="root" ref="mainCallStack"/>
-</bean>
-
-<bean
-    class="org.araneaframework.framework.container.StandardFlowContainerWidget" 
-    id="mainCallStack" singleton="false">
-    <property name="top" ref="login"/>
-</bean>
+  ...
    
-<bean
-    class="org.araneaframework.templateApp.web.app.widget.TemplateLoginWidget" 
-    id="login" singleton="false"/>]]></programlisting>
-			</para>
-			
+  <bean 
+    id="araneaWidgetFilters" 
+    singleton="false"
+    class="org.araneaframework.framework.filter.StandardWidgetFilterChainFilterWidget">
+    <property name="childWidget" ref="araneaWidgetContainer"/>
+    <property name="filterChain">           
+      <list>
+        <ref bean="araneaTransactionFilter"/>
+        <ref bean="araneaMessagingFilter"/>
+        <ref bean="araneaContexts"/>
+        <ref bean="araneaPopupFilter"/>
+      </list>
+    </property>
+    </bean>  
+
+  <bean 
+    id="araneaWidgetContainer"
+    class="org.araneaframework.framework.container.StandardWidgetContainerWidget" 
+    singleton="false">
+    <property name="childWidget" ref="thread.viewPort"/>
+  </bean>
+
+  <!-- Application widgets -->     
+  
+   <bean 
+     id="thread.viewPort"
+     class="org.araneaframework.framework.container.StandardViewPortWidget"
+     singleton="false">
+     <property name="root" ref="thread.mainCallStack"/>
+   </bean>
+
+   <bean 
+     id="thread.mainCallStack"
+     class="org.araneaframework.framework.container.StandardFlowContainerWidget"
+     singleton="false">
+     <property name="top" ref="thread.login"/>
+   </bean>
+
+  <!-- <bean class="..." id="thread.login" singleton="false"/> -->
+
+</beans>]]></programlisting>
+  </figure>
+  
 			<para>
+                Note that many of the referenced
+                beans are predefined in the imported <literal>aranea-filters.xml</literal>.
 				We will not go into more detail about the configuration components right now,
-				but explain their functionality and usage as needed.
+				but explain their functionality and usage as needed. Thorough overview 
+                of configuration components is given in the reference manual.
 			</para>
-
-		</sect2>
-
-		<sect2>
-			<title>Hibernate configuration</title>
-			<para>
-				Hibernate is high-performance object-relational mapping
-				solution written in Java. It takes care of mapping database
-				tables to objects and much more. In our examples its usage is very basic -
-				just mapping database columns to fields in Data Objects 
-				(simple Java beans with getter and setter methods for private fields)&mdash;so that
-				we can easily save and retrieve objects from/to database.
-				Mappings between Java objects and database tables are generated 
-				automatically from xdoclet annotations&mdash;take a look at
-				<literal>war/WEB-INF/classes/mappings</literal>
-				directory to see what typical generated mappings look like&mdash;or any
-				classes from <literal>org.araneaframework.templateApp.business.model</literal>
-				to see samples of annotations from which mappings are generated.
-				Hibernate homepage is located at <ulink url="http://www.hibernate.org">http://www.hibernate.org</ulink>.
-			</para>
-
-			<para>
-				Some examples (especially SQL-based lists) need to use relational database to 
-				be informational. We have used capable little relational database called HSQLDB
-				for that purpose. You should start database with command <literal>ant run-database</literal>
-				before running main examples, otherwise some of them will not function correctly.
-				HSQLDB and Hibernate are
-				tied together in <literal>etc/hibernate.cfg.xml</literal> where
-				SQL dialect and database used by Hibernate are configured.
-			</para>
-		</sect2>
-
-		<sect2>
-			<title>Logging configuration</title>
-			<para>
-				Logging for all examples is configured in <literal>examples/log4j.xml</literal> 
-				file. Verbosity mode for logging statements is selected here&mdash;the level
-				of logging statements that are actually output. By default this is
-				set to <literal>DEBUG</literal> level for most packages. Just one appender
-				is defined&mdash;one that sends logging statements to standard output:
-			</para>
-
-			<para>
-			<programlisting role="xml"><![CDATA[<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-    <layout class="org.apache.log4j.PatternLayout">
-    <param name="ConversionPattern" value="%d{hh:mm:ss} %-5p&mdash;%c{1}.%M(%F:%L)&mdash;%m%n"/>
-    </layout>
-</appender>]]></programlisting>
-
-			Different packages are easily configured to have different logging verbosity levels and
-			various output destinations:
-			<programlisting role="xml"><![CDATA[<category name="org.araneaframework">
-    <priority value="DEBUG"/>
-    <appender-ref ref="CONSOLE"/>
-</category>]]></programlisting>
-			For detailed information about using log4j logging framework refer to 
-			<ulink url="http://logging.apache.org/log4j/docs/">http://logging.apache.org/log4j/docs/</ulink>
-			</para>
-		</sect2>
-
 	</sect1>
 	
 	<sect1>
-		<title>Getting TemplateApp (main example) to serve</title>
+		<title>Main Example</title>
+		<para>
+			Following will describe creation of our main example. 
+			It would be good to get acquainted with it before proceeding further
+			(see <xref linkend="running-examples"/> for instructions on how to get examples to run).
+			The main example's goal is to demonstrate a working Aranea web application 
+			that makes use of most often-used Aranea features.
+		</para>
+		
+
+		<ulink url="images/templateApp-screen.png">
+			<mediaobject id="templateAppInAction" xreflabel="templateApp-in-action">
+				<imageobject>
+					<imagedata 
+						fileref="images/templateApp-screen-small.png"
+						format="PNG" 
+						align="center"/>
+				</imageobject>
+				<caption align="top">TemplateApp in action (click for complete image).</caption>
+			</mediaobject>
+		</ulink>
 		
 		<sect2>
-			<title>Directory structure and needed libraries</title>
+			<title>Dependencies</title>
             <para>
-                TODO
+
+              Aranea webapp depends (at least) on the following libraries:
+              <itemizedlist spacing="compact">
+                  <listitem><literal>aranea.jar</literal></listitem>
+                  <listitem><literal>commons-collections.jar</literal></listitem>
+                  <listitem><literal>commons-el.jar</literal></listitem>
+                  <listitem><literal>commons-lang.jar</literal></listitem>
+                  <listitem><literal>commons-logging.jar</literal></listitem>
+                  <listitem><literal>j2ee.jar</literal></listitem>
+                  <listitem><literal>jstl.jar</literal></listitem>
+                  <listitem><literal>spring.jar</literal> (for configuration and Spring integration)</listitem>
+                  <listitem><literal>standard.jar</literal></listitem>
+              </itemizedlist>
+              The following libraries are needed for specific features only:
+              <itemizedlist spacing="compact">
+                  <listitem><literal>commons-fileupload.jar</literal>&mdash;for file uploading</listitem>
+                  <listitem><literal>jakarta-regexp.jar</literal>&mdash;for in memory lists</listitem>                                        
+                  <listitem><literal>xstream.jar</literal>&mdash;for serializing session to XML</listitem>
+              </itemizedlist>
+            </para>
+
+            <para>
+               These are usually put under webapp's <literal>WEB-INF/lib/</literal> directory.
+               Aranea main example also needs <literal>aranea-template.jar</literal> (and various
+               third-party libraries) to function. The sample application's build system takes care of the dependencies
+               and you don't have to download anything.
+            </para>
+
+            <para>
+                Aranea main example uses <ulink url="http://www.hibernate.org">Hibernate</ulink> for accessing the database and <ulink url="http://logging.apache.org/log4j/docs/">Log4J</ulink> for logging. This tutorial omits the details of their configuration and usage.
             </para>
 		</sect2>
 		
 		<sect2>
 			<title>Introduction to writing widgets</title>
 		<para>
-			The first custom widget written for main example is <literal>TemplateLoginWidget</literal>.
-			It is very simple, but gives good demonstration of stateful controller capabilities.
+			The first custom widget written for main example is <literal>LoginWidget</literal>.
+			It is simple, but gives a good demonstration of stateful controller capabilities.
 			Simple login screen is built and upon receiving successful login event,
-			it replaces itself on the call stack with real application widgets (flows). After
-			session timeout, state is lost and user is once again forced to log in.
+			it replaces itself on the call stack with real application widget (flow). After
+			session timeout state is lost and the user is once again forced to log in.
 		</para>
 
 		<para>
 			We build the login widget in its <literal>init()</literal> method.
 		</para>
 		<programlisting role="java"><![CDATA[protected void init() throws Exception {
-    /* Sets the view selector that will be used for rendering this widget. 
-     * The path to real JSP file is determined by:
-     *
-     * StandardJspFilterService field jspPath (configured in aranea-conf.xml) 
-     * + viewselector 
-     * + ".jsp" */
-    setViewSelector("login");
+  /* Sets the view selector that will be used for rendering this widget. 
+   * The path to real JSP file is determined by:
+   *
+   * StandardJspFilterService field jspPath (configured in aranea-conf.xml) 
+   * + viewselector 
+   * + ".jsp" */
+  setViewSelector("login");
 
-    /* Register a global proxying eventlistener&mdash;it receives all widget events and upon 
-     * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method */
-    addGlobalEventListener(new ProxyEventListener(this));
+  /* Register a global proxying eventlistener - it receives all widget events and upon 
+   * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method 
+   * 
+   * This listener is added by default in super class and is only shown here for
+   * illustrative purposes. It can also be overridden on need.
+   */   
+  addGlobalEventListener(new ProxyEventListener(this));
 
-    /* Create a new FormWidget with two self-described input fields. */
-    form = new FormWidget();
-    // Add the input fields. Arguments taken by addElement():  
-    // String elementName, String labelId, Control control, Data data, boolean mandatory
-    form.addElement("username", "#User", new TextControl(), new StringData(), true);
-    form.addElement("password", "#Password", new TextControl(), new StringData(), false);
+  /* Create a new FormWidget with two self-described input fields. */
+  form = new FormWidget();
+  // Add the input fields. Arguments taken by addElement():  
+  // String elementName, String labelId, Control control, Data data, boolean mandatory
+  form.addElement("username", "#User", new TextControl(), new StringData(), true);
+  form.addElement("password", "#Password", new TextControl(), new StringData(), false);
 
-    // attach created form to our widget. 
-    addWidget("loginForm", form);
+  // attach created form to our widget. 
+  addWidget("loginForm", form);
 }]]></programlisting>
 
 		<para>
-			Note that when creating new form element <literal>Control</literal> that 
-			it represents and data type it contains are specified. Specifying <literal>Control</literal> is
+			Note that when creating a new form element, the <literal>Control</literal> that 
+			it represents and the data type it contains, are specified. Specifying <literal>Control</literal> is
 			always necessary, <literal>Data</literal> can be left unspecified when one has 
-			bean associated with form and uses <literal>BeanFormWidget</literal> instead of <literal>FormWidget</literal>.
+			been associated with the form and uses <literal>BeanFormWidget</literal> instead of <literal>FormWidget</literal>.
+		</para>
+		
+		<para>
+		  Note also the line <literal>addWidget("loginForm", form)</literal>. Here we add another widget (in this case
+		  the <literal>form</literal>) as our widget child, associating it with a particular identifier "loginForm". This 
+		  will allow the child widget to process requests and receive user events, and the identifier can be used for 
+		  finding the child widget, when it should be rendered.
 		</para>
 		
 		<para>
@@ -357,136 +577,139 @@
 		</para>
 		
 		<programlisting role="java"><![CDATA[public void handleEventLogin() throws Exception {
-    /* convertAndValidate() fails if data found from form does not 
-     * satisfy the restrictions laid on it. If that is the case, 
-     * we ignore received event. There is only one restriction -
-     * username field must not be empty. */
-    if (form.convertAndValidate()) {
-        // find out the username supplied
-        String username = (String) form.getValueByFullName("username");
-        /* Add the message about wrong credentials to message context. 
-         * Messages will be shown to user upon exiting this event. */
-        getMsgCtx().showErrorMessage("Wrong name or password for username '" + username + "'");
-        // do nothing&mdash;don't let anyone in with this event
-    }
+  /* convertAndValidate() fails if data found from form does not 
+   * satisfy the restrictions laid on it. If that is the case, 
+   * we ignore received event. There is only one restriction -
+   * username field must not be empty. */
+  if (form.convertAndValidate()) {
+    // find out the username supplied
+    String username = (String) form.getValueByFullName("username");
+    /* Add the message about wrong credentials to message context. 
+     * Messages will be shown to user upon exiting this event. */
+    getMsgCtx().showErrorMessage("Wrong name or password for username '" + username + "'");
+    // do nothing - don't let anyone in with this event
+  }
 }
 
-/* Successful login event&mdash;does not check supplied credentials, 
- * promptly replaces login widget with root widget&mdash;allowing
+/* Successful login event - does not check supplied credentials, 
+ * promptly replaces login widget with root widget - allowing
  * user to start work with real examples. */ 
 public void handleEventBypass() throws Exception {
-    getFlowCtx().replace(new TemplateRootWidget(), null);
+  getFlowCtx().replace(new TemplateRootWidget(), null);
 }]]></programlisting>
 
 		<para>
-			Most crucial here is understanding workings of <literal>handleEventBypass()</literal>.
-			Our widget (think of it as synonymous with "flow" for a while) replaces itself on
-			<literal>FlowContainer</literal> call stack with real application widget. It could also
-			<literal>call()</literal> the next widget but in doing that the login widget itself would
-			remain at the bottom of the call stack&mdash;which is not wanted.
+			Most important here is to understand the <literal>handleEventBypass()</literal>.
+			Our widget (which is running as a <emphasis>flow</emphasis> here) replaces itself
+      with another widget.
 		</para>
 
 		<para>
-			You may think as flows as web pages that call and replace each other&mdash;and may return
-			control to calling page with <literal>getFlowCtx.return()</literal>.
+      Flows are a way of navigating in Aranea. A widget running as a flow can replace itself with another widget,
+      but it can also start a nested flow by creating a new widget instance and calling <literal>getFlowCtx().start()</literal>. Usually we will use the words "widget" and "flow" interchangeably, when widget is running as a flow.
+    </para>
+    
+    <para>
+			You may think of flows as web pages that call and replace each other&mdash;and may return
+			control to calling flow with <literal>getFlowCtx.finish()</literal>.
 		</para>
 		
 		<para>
-			Finally, the JSP page that renders <literal>TemplateLoginWidget</literal>. Do not pay
-			much attention to <literal>&lt;div&gt;</literal>s and other HTML constructs -
-			important tags are with namespace <literal>ui</literal>&mdash;in our examples this
+			Finally the JSP page that renders the <literal>LoginWidget</literal>. Do not pay
+			much attention to <emphasis>&lt;div&gt;</emphasis>s and other HTML constructs -
+			important tags are preceded by namespace <literal>ui</literal>&mdash;in our examples this
             namespace includes both Aranea standard and template tags.
 		</para>
 		
 		<programlisting role="xml"><![CDATA[<!-- This file is located in examples/main/war/WEB-INF/jsp/login.jsp -->
 <jsp:root 
-    xmlns:jsp="http://java.sun.com/JSP/Page" 
-    xmlns:c="http://java.sun.com/jstl/core" 
-    xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2">
-    <jsp:directive.page contentType="text/html; charset=UTF-8"/>
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:c="http://java.sun.com/jstl/core" 
+  xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2">
+  <jsp:directive.page contentType="text/html; charset=UTF-8"/>
     
-    <!-- This tag should always be the root of any Aranea template JSP. 
-    Its main function is to allow JSP access the controller. -->
-    <ui:root>
-        <!-- This tag should be immediately under the ui:root tag for any application that uses widgets. 
-            It allows widgets to be rendered and included. -->
-        <ui:viewPort>
-            <!-- This tag should generally be the root of every widget JSP. It makes the widget view model accessible as an EL variable.
-            It can also be used to render a descendant widget in the same JSP with the current widget. 
-            In the latter case you should set the id attribute to the identifier path of the descendent 
-            widget in question. Note that all widget-related tags inside of this tag will assume that the widget in question
-            is their parent or ancestor (that is all the identifier pathes will start from it). -->
-            <ui:widgetContext>
-                <html>
-                    <head>
-                        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                        <!-- Scripts -->
-                        <jsp:include page="scripts.jsp"/>
-                        <title>Aranea Template Application Login Screen</title>
-                    </head>
+  <!-- This tag should always be the root of any Aranea template JSP. 
+  Its main function is to allow JSP access the controller. -->
+  <ui:root>
+    <!-- This tag should be immediately under the ui:root tag for any application that uses widgets. 
+         It allows widgets to be rendered and included. -->
+    <ui:viewPort>
+      <!-- This tag should generally be the root of every widget JSP. It makes the widget view model 
+      accessible as an EL variable. It can also be used to render a descendant widget in the same JSP 
+      with the current widget. In the latter case you should set the id attribute to the identifier path 
+      of the descendent widget in question. Note that all widget-related tags inside of this tag will 
+      assume that the widget in question is their parent or ancestor (that is all the identifier pathes 
+      will start from it). -->
+      <ui:widgetContext>
+        <html>
+          <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <!-- Scripts -->
+            <jsp:include page="scripts.jsp"/>
+            <title>Aranea Template Application Login Screen</title>
+          </head>
 
-                    <body>
-                        <!-- This tag will render an HTML form tag along with some Aranea-specific hidden fields. 
-                        It is strongly suggested to have only one system form in the template and have it submit using 
-                        POST. This will ensure that no matter what user does no data is ever lost. -->
-                        <ui:systemForm method="POST">
+          <body>
+            <!-- This tag will render an HTML form tag along with some Aranea-specific hidden fields. 
+            It is strongly suggested to have only one system form in the template and have it submit using 
+            POST. This will ensure that no matter what user does no data is ever lost. -->
+            <ui:systemForm method="POST">
 
-                            <div id="outer">
-                                <div id="middle">
-                                    <div id="inner">
-                                        <div class="login">
-                                            <div id="login-logo">
-                                                <ui:image src="gfx/logo_aranea_login.jpg"/>
-                                            </div>
-        
-                                            <div class="a">
-                                                <!-- This tag will render messages of given type if they are present in current MessageContext,
-                                                    ie message about failured login (wrong username or password). StyleClass parameter
-                                                    defines the CSS style used for message display. -->
-                                                <ui:messages styleClass="msg-error"/>
-        
-                                                <!-- This is the form we added to our TemplateLoginWidget.
-                                                    Tag makes it the current form context tag and allows accessing 
-                                                    form's subelements just by their names, no path is needed. -->
-                                                <ui:form id="loginForm">
+              <div id="outer">
+                <div id="middle">
+                  <div id="inner">
+                    <div class="login">
+                      <div id="login-logo">
+                        <ui:image src="gfx/logo_aranea_login.jpg"/>
+                      </div>
 
-                                                    <ui:formElement id="username">
-                                                        <!-- Outputs the form element label -->
-                                                        <ui:label/>
-                                                        <!-- Outputs the input field for username -->
-                                                        <ui:textInput styleClass="usr"/>
-                                                    </ui:formElement>
-                                                    
-                                                    <ui:formElement id="password">
-                                                        <ui:label/>
-                                                        <ui:passwordInput styleClass="pwd"/>
-                                                    </ui:formElement>
-        
-                                                    <div class="clear1"><ui:nbsp/></div>
-        
-                                                    <div class="actions">
-                                                        <!-- Render buttons that will submit all systemForm data, 
-                                                            and tie them with events defined in TemplateLoginWidget.
-                                                         -->
-                                                        <ui:eventButton eventId="login" labelId="#Login"/>
-                                                        <ui:eventButton eventId="bypass" labelId="#Bypass login"/>
-                                                    </div>
-        
-                                                    <div class="clear1"><ui:nbsp/></div>
-                                                </ui:form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </ui:systemForm>
-                    
-                    </body>        
-                </html>
-            </ui:widgetContext>
-        </ui:viewPort>
-    </ui:root>
+                      <div class="a">
+                        <!-- This tag will render messages of given type if they are present in current MessageContext,
+                            ie message about failured login (wrong username or password). "styleClass" attribute
+                            defines the CSS style used for message display. -->
+                        <ui:messages styleClass="msg-error"/>
+
+                        <!-- This is the form we added to our LoginWidget.
+                            Tag makes it the current form context tag and allows accessing 
+                            form's subelements just by their names, no path is needed. -->
+                        <ui:form id="loginForm">
+
+                          <ui:formElement id="username">
+                            <!-- Outputs the form element label -->
+                            <ui:label/>
+                            <!-- Outputs the input field for username -->
+                            <ui:textInput styleClass="usr"/>
+                          </ui:formElement>
+                          
+                          <ui:formElement id="password">
+                            <ui:label/>
+                            <ui:passwordInput styleClass="pwd"/>
+                          </ui:formElement>
+
+                          <div class="clear1"><ui:nbsp/></div>
+
+                          <div class="actions">
+                            <!-- Render buttons that will submit all systemForm data, 
+                                and tie them with events defined in LoginWidget. -->
+                            <ui:eventButton eventId="login" labelId="#Login"/>
+                            <ui:eventButton eventId="bypass" labelId="#Bypass login"/>
+                          </div>
+
+                          <div class="clear1"><ui:nbsp/></div>
+                        </ui:form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                
+            </ui:systemForm>
+          
+          </body>        
+        </html>
+      </ui:widgetContext>
+    </ui:viewPort>
+  </ui:root>
 </jsp:root>]]></programlisting>
 
 		</sect2>
@@ -499,56 +722,51 @@ public void handleEventBypass() throws Exception {
 				renders application menu.
 			</para>
 			<para>
-				What we need from menu is basically a ability to start widgets (flows) on demand.
+				What we need from the menu is basically the ability to start widgets (flows) on demand.
 				As we already saw, this ability is not special, every widget can start other widgets.
-				However, they are not able to manipulate the call stack arbitrarily, which is
-				very much desirable in a menu. Aranea class <literal>StandardMenuWidget</literal>
-				achieves this by extending <literal>StandardFlowContainerWidget</literal>.
-			</para>
-			
-			<para>
-				Using <literal>StandardMenuWidget</literal> as a base, creating menu widget is a breeze.
+        However menu should not become inactive, which means that it should itself run as a flow
+        container, not just a flow.
+				Using <literal>StandardMenuWidget</literal> as a base, creating menu widget is fairly simple:
 			</para>
 			
 			<programlisting role="java"><![CDATA[public class MenuWidget extends StandardMenuWidget  {
-    public MenuWidget(Widget topWidget) throws Exception {
-        super(topWidget);
-    }
-	
-    protected MenuItem buildMenu() throws Exception {
-        // the top menu
-        MenuItem result = new MenuItem();
-		
-        result.addMenuItem(null, new MenuItem("Management")); {
-            result.addMenuItem("Management", new MenuItem("Persons"));
-            result.addMenuItem("Management.Persons", new MenuItem("View", TemplatePersonChooseAndViewWidget.class));
-            result.addMenuItem("Management.Persons", new MenuItem("Add", TemplatePersonEditWidget.class));
-            
-            // ...
-            
-            result.addMenuItem("Management", new MenuItem("Contracts"));
-            result.addMenuItem("Management.Contracts", new MenuItem("View", TemplateContractChooseAndViewWidget.class));
-            result.addMenuItem("Management.Contracts", new MenuItem("Add", TemplateContractEditWidget.class));
-            result.addMenuItem("Management.Contracts", new MenuItem("Edit", TemplateContractChooseAndEditWidget.class));
-        }
-        
-        // Another way of adding menuitems is available.
-        MenuItem sampleMenu = result.addMenuItem(new MenuItem("Samples")); {
-            sampleMenu.addMenuItem(new MenuItem("Simple_Form", SimpleFormWidget.class));
-            sampleMenu.addMenuItem(new MenuItem("Simple_List", SimpleListWidget.class));
-            sampleMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
-        }
+  public MenuWidget(Widget topWidget) throws Exception {
+    super(topWidget);
+  }
 
-        return result;
+  protected MenuItem buildMenu() throws Exception {
+    // the top menu
+    MenuItem result = new MenuItem();
+
+    result.addMenuItem(null, new MenuItem("Management")); {
+      result.addMenuItem("Management", new MenuItem("Persons"));
+      result.addMenuItem("Management.Persons", new MenuItem("View", TemplatePersonChooseAndViewWidget.class));
+      result.addMenuItem("Management.Persons", new MenuItem("Add", TemplatePersonEditWidget.class));
+      
+      // ...
+      
+      result.addMenuItem("Management", new MenuItem("Contracts"));
+      result.addMenuItem("Management.Contracts", new MenuItem("View", TemplateContractChooseAndViewWidget.class));
+      result.addMenuItem("Management.Contracts", new MenuItem("Add", TemplateContractEditWidget.class));
+      result.addMenuItem("Management.Contracts", new MenuItem("Edit", TemplateContractChooseAndEditWidget.class));
     }
+    
+    // Another way of adding menuitems is available.
+    MenuItem sampleMenu = result.addMenuItem(new MenuItem("Samples")); {
+      sampleMenu.addMenuItem(new MenuItem("Simple_Form", SimpleFormWidget.class));
+      sampleMenu.addMenuItem(new MenuItem("Simple_List", SimpleListWidget.class));
+      sampleMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
+    }
+
+    return result;
+  }
 }]]></programlisting>
 
 		<para>
-			<literal>MenuItem</literal> creation takes two parameters&mdash;localized menu label 
+			<literal>MenuItem</literal> creation takes two parameters&mdash;localizable menu label 
 			<emphasis>key</emphasis> and flow class that should be instantiated (with no argument 
 			constructor) and activated when <literal>MenuItem</literal> is selected. Those classes
-			must be <literal>Components</literal>, usually they are 
-			<literal>StandardPresentationWidget</literal>s. Instead of flow classes,
+			must be <literal>Widgets</literal>. Instead of flow classes,
 			<literal>FlowCreator</literal>s can be used to create flows that have
 			more complex constructors.
 		</para>
@@ -560,101 +778,97 @@ public void handleEventBypass() throws Exception {
         </para>
 		
 		<para>
-            Because <literal>MenuWidget</literal> is <literal>StandardFlowContainerWidget</literal>, 
-            its <literal>render()</literal> method is fundamentally different from 
-            <literal>StandardPresentationWidget</literal>'s <literal>render()</literal> method and
-            we do not use it directly. Rather we attach it to <literal>TemplateRootWidget</literal>
-
-        
-        <programlisting role="java"><![CDATA[public class TemplateRootWidget extends StandardPresentationWidget {
-    private static final Logger log = Logger.getLogger(TemplateRootWidget.class);
-
-    protected void init() throws Exception {
-        addWidget("menu", new MenuWidget(new TemplateEmptyWidget()));
-        setViewSelector("root");
-        log.debug("Root widget initialized");
-    }
+        Now that we have a menu we can proceed to the root widget that will host it. Note that menu is
+        just another widget and since we want it to run independently (not as a flow) the simplest thing to do 
+        is to add it as a child to the root widget.
+        <programlisting role="java"><![CDATA[public class RootWidget extends StandardPresentationWidget {
+  protected void init() throws Exception {
+    addWidget("menu", new MenuWidget(null));
+    setViewSelector("root");
+  }
 }]]></programlisting>
 
-            and render it from <literal>TemplateRootWidget</literal>'s view selector.
-            For the sake of brevity we will strip irrelevant parts from our example
-            JSP snippets from now on.
+            and render it from <literal>RootWidget</literal> JSP.         
+          Since menu is a flow container, including it as a widget will by default render the current active flow. 
+          This means that to actually render the clickable menu we will have to include a separate JSP.
+            For the sake of brevity we will strip irrelevant parts from our example JSP snippets from now on.
 		</para>
 
          <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
  ...
-    <ui:systemForm method="POST">
+  <ui:systemForm method="POST">
 
-        <!-- Renders the menu on top of the screen -->
-        <jsp:include page="/WEB-INF/jsp/mainlayout/menu.jsp"/>
-        <div class="stripe1"><ui:nbsp/></div>
+    <!-- Renders the menu on top of the screen -->
+    <jsp:include page="/WEB-INF/jsp/mainlayout/menu.jsp"/>
+    <div class="stripe1"><ui:nbsp/></div>
 
-        <!-- Renders the menu on left side of screen -->
-        <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
+    <!-- Renders the menu on left side of screen -->
+    <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
 
-        <div id="content">
-            <ui:messages/>
+    <div id="content">
+      <ui:messages/>
 
-            <!-- Renders the menu widget itself. As MenuWidget is subclass
-            of StandardFlowContainerWidget, this means that actual
-            widget rendered here is whatever widget is on top of call
-            stack at the moment of rendering. -->
-            <ui:widgetInclude id="menu"/>
-        </div>
+      <!-- Renders the menu widget itself. 
+        As MenuWidget is a flow container, 
+        this means that the actual
+        widget rendered here is the current active flow. -->
+      <ui:widgetInclude id="menu"/>
+    </div>
 
-        <div class="clear1"><ui:nbsp/></div>
+    <div class="clear1"><ui:nbsp/></div>
 
-    </ui:systemForm>
+  </ui:systemForm>
 ...]]></programlisting>
         
         <para>
-            JSP-s that render topmenu and sidemenu are quite similar. We will only present the
+            JSP-s that render top menu and side menu are quite similar. We will only present the
             topmenu JSP here.
             
             <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 ...
-    <!-- WidgetContext id must be set here, because we want to render MenuWidget 
-    not TemplateRootWidget (which includes this JSP, thereby providing its own widget context) here. -->
-    <ui:widgetContext id="menu">
-        <div id="header">
-            <div class="box1">
-                <a href="#" id="logo">
-                    <ui:image src="gfx/logo_aranea_screen.jpg"/>
-                </a>
+  <!-- Widget identifier must be set here, because we want to render MenuWidget, 
+  not RootWidget (which includes this JSP, thereby providing its own widget context) here. 
+  As you remember menu widget child identifier was "menu" -->
+  <ui:widgetContext id="menu">
+    <div id="header">
+      <div class="box1">
+        <a href="#" id="logo">
+          <ui:image src="gfx/logo_aranea_screen.jpg"/>
+        </a>
 
-                <div id="menu1">
-                    <!-- ${contextWidget.data.VariableName} allows us to access data 
-                        that was explicitly added to widget view model by the programmer
-                        with putViewData() method. -->
-                    <c:forEach items="${contextWidget.data.menu.subMenu}" var="item">
-                        <div class="item">
-                            <c:if test="${item.value.selected}">
-                                <!-- create a button that 
-                                    * has a label
-                                    * submits event called "menuSelect"
-                                    * submits label id as event parameter 
-                                    * CSS class is active, indicating that this menu item is selected currently -->
-                                <ui:eventLinkButton 
-                                    eventId="menuSelect" 
-                                    eventParam="${item.value.label}" 
-                                    labelId="${item.value.label}" 
-                                    styleClass="${activeStyle}"/>
-                            </c:if>
+        <div id="menu1">
+          <!-- ${contextWidget.data.VariableName} allows us to access data 
+              that was explicitly added to widget view model by the programmer
+              with putViewData() method. -->
+          <c:forEach items="${contextWidget.data.menu.subMenu}" var="item">
+            <div class="item">
+              <c:if test="${item.value.selected}">
+                <!-- create a button that 
+                  * has a label
+                  * submits event called "menuSelect"
+                  * submits label id as event parameter 
+                  * CSS class is active, indicating that this menu item is selected currently -->
+                <ui:eventLinkButton 
+                  eventId="menuSelect" 
+                  eventParam="${item.value.label}" 
+                  labelId="${item.value.label}" 
+                  styleClass="${activeStyle}"/>
+              </c:if>
 
-                            <c:if test="${not item.value.selected}">
-                                <!-- same as the other button, but menu item is not selected -->
-                                <ui:eventLinkButton 
-                                    eventId="menuSelect" 
-                                    eventParam="${item.value.label}" 
-                                    labelId="${item.value.label}"/>
-                            </c:if>
-                        </div>
-                    </c:forEach>
-                </div>
+              <c:if test="${not item.value.selected}">
+                <!-- same as the other button, but menu item is not selected -->
+                <ui:eventLinkButton 
+                  eventId="menuSelect" 
+                  eventParam="${item.value.label}" 
+                  labelId="${item.value.label}"/>
+              </c:if>
             </div>
+          </c:forEach>
         </div>
+      </div>
+    </div>
 
-    </ui:widgetContext>
+  </ui:widgetContext>
 ...]]></programlisting>
 
         This completes the menu system and master page, so now we can concentrate on 
@@ -669,40 +883,1110 @@ public void handleEventBypass() throws Exception {
             <sect3>
                 <title>Forms</title>
                 <para>
-                    TODO: forms, containing different control types. (Simple form, additions, multiselects?)
+                    Forms allow end-user to enter data and transfer it to wherever application programmer chooses.
+                    Aranea represents forms by <literal>FormWidget</literal> and <literal>BeanFormWidget</literal> classes.
+                    We will look at <literal>FormWidget</literal> first, because using it requires a little less setup. In
+                    practice, application programmers will probably be using <literal>BeanFormWidget</literal> most of the
+                    time&mdash;because of its convenient data binding (tying model objects with forms) capabilities.
                 </para>
-            </sect3>
+                
+                <sect4><title>Simple Form (FormWidget)</title>
+                
+                	<mediaobject id="first-form-image" xreflabel="Simple form">
+					<imageobject>
+						<imagedata 
+							fileref="images/first-form.png"
+							format="PNG" 
+							align="center"/>
+					</imageobject>
+					<caption align="top">Simple form</caption>
+				</mediaobject>
+                
+                <para>
+                    Our first example is the one that can be found under <literal>Samples-&gt;Simple Form</literal> in template application.
+                    It demonstrates form creation and reading single values from form. We also use 
+                    <literal>MessageContext</literal> to communicate input values back to web application user.
+                </para>
+                
+                <programlisting role="java"><![CDATA[...
+// we hold the form as instance variable
+private FormWidget simpleForm;
+
+/**
+* Builds the form.
+*/
+protected void init() throws Exception {
+  super.init();
+
+  setViewSelector("sample/simpleForm");
+
+  // creation of new form
+  simpleForm = new FormWidget();
+
+  // Now that we have created a form, we will need to add form elements.
+  // Form elements consist of four basic things - label, Control that implements
+  // form element functionality, Data holding values that form element can have.
+  // Note that the first sample with FormWidget's createElement method is not the
+  // way form elements are usually added to the form, but rather emphasises the
+  // fact that everything you add to FormWidget is a FormElement.
+
+  // createElement(String labelId, Control control, Data data, boolean mandatory)
+  FormElement el = simpleForm.createElement("#Textbox", new TextControl(), new StringData(), false);
+  simpleForm.addElement("textbox1", el);
+
+  // and here we add form elements to form without the extra step taken previously. 
+  simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
+  simpleForm.addElement("button1", "#Button", new ButtonControl(), null, false);
+  simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
+  simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
+  simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
+
+  // now we construct a button, that is also Control. Reason why we cannot just add it
+  // to form is obvious, we want to add a specific listener to button before.
+  ButtonControl button = new ButtonControl();
+  button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm") );
+  // add the button to form. As the button does not hold any value, Data will be null.
+  simpleForm.addElement("button", "#Button", button, null, false);
+
+  // the usual, add the created widget to main widget.
+  addWidget("simpleForm", simpleForm);
+}
+
+/**
+* A test action, invoked when button is pressed. It adds the values of 
+* formelements to message context, and they end up at the top of user screen
+* at the end of the request.
+*/
+public void handleEventTestSimpleForm() throws Exception {
+  // if form is not invalid, do not try to show form element values 
+  // (error messages are added automatically to the messagecontext 
+  // though, user will not be without feedback)
+  if (simpleForm.convertAndValidate()) {
+    getMessageCtx().showInfoMessage("Checkbox value is: " + ((FormElement) simpleForm.getElement("checkbox1")).getData().getValue());
+    getMessageCtx().showInfoMessage("Textbox value is: " + simpleForm.getValueByFullName("textbox1"));
+    getMessageCtx().showInfoMessage("DateTime value is: " + simpleForm.getValueByFullName("dateTime"));
+    getMessageCtx().showInfoMessage("Time value is: " + simpleForm.getValueByFullName("time"));
+    getMessageCtx().showInfoMessage("Date value is: " + simpleForm.getValueByFullName("date"));
+  }
+}
+
+...]]></programlisting>
+
+                <para>
+                    JSP used to render the previous widget is presented below and should be quite self explaining with
+                    the given commentary. Pay attention to tags used to render corresponding 
+                    controls&mdash;<literal>DateControl</literal> and <literal>&lt;ui:dateInput&gt;</literal>,
+                    <literal>TextControl</literal> and <literal>&lt;ui:textInput&gt;</literal> etc. Aranea standard
+                    tag library typically contains more than one way for rendering any given 
+                    <literal>Control</literal>&mdash;most <literal>Controls</literal> have tags for both input and display rendering 
+                    (e.g <literal>&lt;ui:textInput&gt;</literal>, <literal>&lt;ui:textDisplay&gt;</literal>). If the need 
+                    arises, you can write your own tags to customize rendering of standard (or custom) controls.
+                </para>
+
+                <programlisting role="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Set the form context, the form we will be rendering here. 
+    We cannot as simply refer to form elements unless we define it here. -->
+<ui:form id="simpleForm">
+
+  <!-- Now, these are the first custom tags in template application. They do
+       nothing particularly interesting, just set up the HTML DIV element
+       containing the component header -->
+  <ui:componentHeader>
+    <ui:componentName>Tutorial first form</ui:componentName>
+  </ui:componentHeader>
+
+  <!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
+  <ui:component>
+
+    <!-- Custom tag, but more interesting that previous tags. It derives from
+         UiLayoutBaseTag tag, it gives one ability to put row tags inside of it. 
+         Attribute rowClass defines the styleClass attribute for rows inserted under 
+         componentForm here. In HTML, this tag creates a TABLE. -->
+    <ui:componentForm rowClass="cols4">
+
+      <!-- As we can insert rows now, we just do that. -->
+      <ui:row>
+        <!-- ... we can insert cells too! As we defined componentForm rowClass 
+            to be cols4  we should insert 4 cells here... -->
+        <ui:cell styleClass="name">
+          <!-- label is formelement centric tag. As we are inside the form 
+          already, we provide it with form element id and corresponding 
+          form element label will be shown -->
+          <ui:label id="checkbox1" />
+        </ui:cell>
+
+        <ui:cell styleClass="inpt">
+          <!-- This is another approach to providing information about
+              form element that tag should apply to - instead providing
+              form element id to every single tag, tags could be enclosed
+              inside single formElement tag.
+           -->
+          <ui:formElement id="checkbox1">
+            <!-- will draw a checkbox tied to form element with id "checkbox1" -->
+            <ui:checkbox/>
+          </ui:formElement>
+        </ui:cell>
+
+        <ui:cell styleClass="name">
+          <ui:label id="textbox1" />
+        </ui:cell>
+
+        <ui:cell styleClass="inpt">
+          <!-- As "textbox1" is TextControl, we choose the corresponding tag to render it -->
+          <ui:textInput id="textbox1" />
+        </ui:cell>
+      </ui:row>
+
+      <!-- another row, and we just keep on going until all form elements have been described. -->
+      <ui:row>
+        <ui:formElement id="dateTime">
+          <ui:cell styleClass="name">
+            <ui:label />
+          </ui:cell>
+
+          <ui:cell styleClass="inpt">
+            <ui:dateTimeInput/>
+          </ui:cell>
+        </ui:formElement>
+
+        <ui:formElement id="time">
+          <ui:cell styleClass="name">
+            <ui:label />
+          </ui:cell>
+
+          <ui:cell styleClass="inpt">
+            <ui:timeInput />
+          </ui:cell>
+        </ui:formElement>
+      </ui:row>
+
+      <ui:row>
+        <ui:formElement id="date">
+          <ui:cell styleClass="name">
+            <ui:label />
+          </ui:cell>
+
+          <ui:cell styleClass="inpt">
+            <ui:dateInput />
+          </ui:cell>
+        </ui:formElement>
+      </ui:row>
+
+    </ui:componentForm>
+
+    <!-- pure design tag -->
+    <ui:componentActions>
+      <ui:formElement id="button">
+        <ui:button/>
+      </ui:formElement>
+    </ui:componentActions>
+  </ui:component>
+
+</ui:form>
+]]></programlisting>
+    </sect4>
+                
+                <sect4><title>Simple BeanFormWidget</title>
+	                	<mediaobject id="bean-form-image" xreflabel="Simple beanform">
+						<imageobject>
+							<imagedata 
+								fileref="images/simple-beanform.png"
+								format="PNG" 
+								align="center"/>
+						</imageobject>
+						<caption align="top">Simple form associated with JavaBean.</caption>
+					</mediaobject>
+
+                    <para>
+                        Next example is <literal>org.araneaframework.example.main.web.person.PersonAddEditWidget</literal> that
+                        demonstrates <literal>BeanFormWidget</literal> usage&mdash;binding a data model (JavaBean with getter and setter
+                        methods for instance fields) to a form. Data model being bind to form is of the <literal>PersonMO</literal> class.
+                        In actual source code, <literal>PersonMO</literal> class also contains <literal>xdoclet</literal> annotations 
+                        telling Hibernate database tables and columns where JavaBean data should be saved, these are removed 
+                        from tutorial sample code as they tell nothing useful about Aranea.
+                    </para>
+
+                    <programlisting role="java"><![CDATA[public class PersonMO implements GeneralMO {
+  private Long id;
+  private String name;
+  private String surname;
+  private String phone;
+  private Timestamp birthdate;
+
+  public Long getId() {
+    return id;
+  }
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  // and all other getters and setters for instance fields
+  ...
+
+}]]></programlisting>
+                
+       <para>
+           When you have model ready, using <literal>BeanFormWidget</literal> is almost the same as using
+           <literal>FormWidget</literal>. Main bonus is that 
+           specifing <literal>Data</literal> when adding <literal>FormElements</literal> to form is no longer needed
+           as it is determined from model class. Also <literal>BeanFormWidget's</literal> 
+           <literal>readBean()</literal> and <literal>writeBean(Object beanClass)</literal> methods allow 
+           programmer to read and write all form fields conveniently.
+       </para>
+                
+                <programlisting role="java"><![CDATA[public class PersonAddEditWidget extends TemplateBaseWidget {
+  /* The ID field of the person data model. We don't know it before saving the object to
+     database, so we initialize it to null here. */
+  private Long personId = null;
+  // Whether the person is being edited or added
+  private boolean editMode;
+  
+  /* The form. Person data (represented by class PersonMO) will be binded to it, thus 
+     usage of BeanFormWidget instead of FormWidget. */
+  private BeanFormWidget form;
+
+  /**
+   * Constructor for adding new person.
+   */
+  public PersonAddEditWidget() {
+  }
+
+  /**
+   * Constructor for editing existing person with specified Id.
+   * @param personId Person's Id.
+   */
+  public PersonAddEditWidget(Long id) {
+    this.personId = id;
+    editMode = true;
+  }
+  
+  protected void init() throws Exception {
+    super.init();
+
+    // Sets the view selector that will be used for rendering this widget. */ 
+    setViewSelector("person/personAddEdit");
+    // This viewdata is used in JSP to set component header (different for editing and adding). 
+    putViewData("label", editMode ? "person.edit.form.label" : "person.add.form.label");
+
+    /* Register a global proxying eventlistener - it receives all widget events and upon 
+     * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method. */
+    addGlobalEventListener(new ProxyEventListener(this));
+
+    form = buildPersonEditForm();
+    addWidget("personForm", form);
+  }
+
+  private BeanFormWidget buildPersonEditForm() throws Exception {
+    /* Create the form, specifying the class of data that is binded to this form. */
+    BeanFormWidget form = new BeanFormWidget(PersonMO.class);
+    
+    /* Adding the elements is done like in our SimpleFormWidget example, except
+     * that Data type is determined from bean class automatically and specifying
+     * it is not needed. */
+    
+    // BeanFormWidget.addBeanElement(String elementName, String labelId, Control control, boolean mandatory)
+    form.addBeanElement("name", "#First name", new TextControl(), true);
+    form.addBeanElement("surname", "#Last name", new TextControl(), false);
+    form.addBeanElement("phone", "#Phone no", new TextControl(), true);
+    form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+    
+    if (editMode) {
+      /* fetch the person with given ID from database */
+      PersonMO person = (PersonMO) getGeneralDAO().getById(PersonMO.class, personId);
+      /* and fill the form with current person data */
+      form.writeBean(person);
+    } /* otherwise we have no data and all form fields are initially left blank */
+
+    return form;
+  }
+  
+  public void handleEventSave(String eventParameter) throws Exception {
+    // if form data is found to be valid  
+    if (form.convertAndValidate()) {
+      // get the current person data (retrieved from database by getGeneralDAO() in case person already has assigned ID); 
+      PersonMO person = personId != null ? (PersonMO) getGeneralDAO().getById(PersonMO.class, personId) : new PersonMO();
+      // read the application user supplied data from form into model object.
+      person = (PersonMO) form.readBean(person);
+      
+      if (editMode) {
+        // updates person object in database
+        getGeneralDAO().edit(person);
+      } else {
+        // saves new person object to database
+        personId = getGeneralDAO().add(person);                 
+      }
+
+      /* finish current flow execution and return to calling flow, returning database ID 
+       * of added or edited person */ 
+      getFlowCtx().finish(personId);
+    } else {
+      /* Do nothing, error messages are applied to MessageContext by validating methods 
+       * so that application user receives immediate feedback about incorrectly filled
+       * form elements automatically. */
+    }
+  }
+}]]></programlisting>
+
+                <para>
+                    JSP for <literal>PersonAddEditWidget</literal> is very similar to previous form rendering JSP
+                    examples and we will not include it here. It can be found from 
+                    <literal>examples/main/war/jsp/person/personAddEdit.jsp</literal>
+                </para>
+
+                <para>
+                    Both <literal>FormWidgets</literal> and <literal>BeanFormWidgets</literal> may also contain
+                    subforms, these can be added with <literal>addSubForm()</literal> and <literal>addBeanSubForm()</literal>
+                    methods. Also, the model object non-primitive JavaBean fields are accessible, e.g given model classes
+                </para>
+
+               <programlisting role="java"><![CDATA[...
+public static class NameMO implements GeneralMO {
+  private String firstname;
+  private String surname;
+  
+  public Long getFirstname() {
+    return id;
+  }
+  public void setFirstname(String name) {
+    this.firstname = name;
+  }
+
+  public String setSurname(String name) {
+    this.surname = name;
+  }
+
+  public String getSurname() {
+    return name;
+  }
+}
+               
+public static class PersonMO implements GeneralMO {
+  private Long id;
+  private NameMO name;
+  private String phone;
+  private Timestamp birthdate;
+
+  public Long getId() {
+    return id;
+  }
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(NameMO name) {
+    this.name = name;
+  }
+
+  // and all other getters and setters for instance fields
+  ...
+}
+
+...
+]]></programlisting>
+                
+                <para>
+                    the model class fields can be referred to as
+                </para>
+                
+                <programlisting role="java"><![CDATA[...
+BeanFormWidget form = new BeanFormWidget(PersonMO.class);
+form.addBeanElement("name.firstname", "#First name", new TextControl(), true);
+form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
+...]]></programlisting>
+
+                <para>
+                     when constructing the <literal>BeanFormWidget</literal>.
+                </para>
+
+                </sect4>
+                
+                <sect4><title>Advanced forms</title>
+                    <mediaobject id="complex-form-image" xreflabel="Complex form">
+	                    	<imageobject>
+	                    		<imagedata 
+								fileref="images/complex-form.png"
+								format="PNG" 
+								align="center"/>
+						</imageobject>
+						<caption align="top">Complex form</caption>
+					</mediaobject>                
+                
+                    <para>
+                        Real world forms tend to be considerably more complex than simple examples presented before.
+                        They very often need to dynamically change&mdash;based on user input(s) form functionality
+                        and content need to be altered. What one usually does for creating such dynamic forms is 
+                        registering event listeners on controls and upon receiving event(s) updates 
+                        forms dynamically. This can be accomplished with pure HTTP requests or AJAX 
+                        (XMLHttpRequest or Msxml2.XMLHTTP) requests. AJAX requests have gained much
+                        popularity lately because they allow running complex business logic on background and
+                        updating HTML pages without full HTTP request (on older computers over slower connections 
+                        this is sure way to cause uncomfortable flicker).
+                    </para>
+
+                    <para>
+                        Next class we will be presenting is <literal>DemoComplexForm</literal> from our main example
+                        (<emphasis>Demos-&gt;Complex Form</emphasis>).
+                        It is not &quot;complex&quot; in the sense that it would be hard to understand,
+                        but it demonstrates concepts that can be used for creation of very sophisticated forms.
+                        The form contains a <literal>SelectControl</literal>, depending on selected value 
+                        different subwidgets are shown (subwidget updates are performed with AJAX requests).
+                    </para>
+
+                    <programlisting role="java"><![CDATA[public class DemoComplexForm extends TemplateBaseWidget {
+  /* Different controls and widgets we want to be accessible all the time are 
+     made instance variables by convention. */
+  private FormWidget complexForm;
+  /* SelectControl - control which provides various selections from which one must be picked. */
+  private SelectControl beastSelectionControl;
+  /* MultiSelectControl - provides various selections from which zero to many can be picked */
+  private MultiSelectControl concreteBeastMultiSelectionControl;
+
+  protected void init() throws Exception {
+    super.init();
+
+    setViewSelector("demo/demoComplexForm");
+    putViewData("formLabel", "Complex_Form");
+    
+    beastSelectionControl = new SelectControl();
+    /* SelectControls can be added DisplayItems, one by one ... */
+    beastSelectionControl.addItem(new DisplayItem("-choose-", "-choose-"));
+    /* or whole collections of value objects, which must have getters for specified value
+     * and displayString fields (here, for sampleValue and sampleDisplayString). Note that 
+     * both value and displayString must be of String class */
+    beastSelectionControl.addDisplayItems(getSelectItems(), "sampleValue", "sampleDisplayString");
+
+    /* Adds the onChange event listener to selectControl */
+    beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
+      public void onChange() throws Exception {
+        /* Form must be converted before new values can be read from form.
+           As we want to be sure that entered data is valid (no random strings
+           where numbers are expected, length and content constraints are met)
+           we usually also validate data before using it for anything. */
+        if (complexForm.convertAndValidate()) {
+          // get the value from control
+          String selectedBeast = (String)beastSelectionControl.getRawValue();
+
+          // if no beast is selected in our select control, we remove the other 
+          // elements from form that depend directly on selection being made - 
+          // the controls providing possibily for more specific beast selection.
+          if (selectedBeast.equals("-choose-")) {
+            complexForm.removeElement("concreteBeastControl");
+            complexForm.removeElement("selectedBeastDesc");
+            return;
+          }
+
+          // create the multiselectcontrol allowing selection of some beasts of selected type.
+          concreteBeastMultiSelectionControl = new MultiSelectControl();
+          for (Iterator i = getMultiSelectItems(selectedBeast).iterator(); i.hasNext(); ) {
+            String current = (String) i.next();
+            concreteBeastMultiSelectionControl.addItem(new DisplayItem(current, current));
+          }
+          
+          // finally add both beast group description and beast selection control to this widget.  
+          complexForm.addElement("concreteBeastControl","#Choose " + selectedBeast, 
+                                  concreteBeastMultiSelectionControl, new StringListData(), false);
+          complexForm.addElement("selectedBeastDesc", "#Description", new DisplayControl(), new StringData(), false);
+          // if not dealing with beanforms, form element values are typically set this way
+          complexForm.setValueByFullName("selectedBeastDesc", new SelectItem(selectedBeast).getDescription());
+        }
+      }
+    });
+    
+    complexForm = new FormWidget();
+    complexForm.addElement("beastSelection", "#Nature's Beasts", beastSelectionControl, new StringData(), true);
+    
+    addWidget("complexForm", complexForm);
+  }
+
+}]]></programlisting>
+                    
+                    <para>
+                        JSP view for this file is only a little fancier than previous ones:
+                    </para>
+                    
+                    <programlisting role="xml"><![CDATA[<ui:widgetContext>
+  <ui:form id="complexForm">
+
+    <ui:componentHeader>
+      <ui:componentName>
+        <!-- The label, defined in DemoComplexForm class. -->
+        <fmt:message key="${contextWidget.data.formLabel}"/>
+      </ui:componentName>
+    </ui:componentHeader>
+
+    <ui:component>
+
+      <ui:componentForm>
+
+        <ui:row>
+          <ui:formElement id="beastSelection">
+            <ui:cell width="25%"/>
+            <ui:cell styleClass="name">
+              <ui:label />
+            </ui:cell>
+            <ui:cell>
+              <!-- Note the updateRegions attribute - it specifies the regions
+                   that should be updated when event occurs (specifying this 
+                   attribute also means that upon listener activation AJAX
+                   request is made instead of ordinary HTTP request . -->
+              <ui:select updateRegions="ajaxBeasts"/>
+            </ui:cell>
+            <ui:cell width="25%"/>
+          </ui:formElement>
+        </ui:row>
             
+        <!-- Here we define the update region. All tags inside the update region
+            when AJAX request which update regions include "ajaxBeasts" is made. -->
+        <ui:updateRegionRows id="ajaxBeasts">
+          <!-- A way to test whether form elements are present. As both selectedBeastDesc 
+              and concreteBeastControl are only added to the form if beast is selected,
+              this needs to be done here. -->
+          <c:if test="${not empty form.elements['concreteBeastControl']}">
+            <ui:row>
+              <ui:formElement id="selectedBeastDesc">
+                <ui:cell colSpan="2" styleClass="wrap-centered" width="50%">
+                  <ui:textDisplay/>
+                </ui:cell>
+              </ui:formElement>
+
+              <ui:formElement id="concreteBeastControl">
+                <ui:cell styleClass="centered-name">
+                  <ui:label />
+                </ui:cell>
+                <ui:cell>
+                  <!-- Render MultiSelectControl with checkboxes. 
+                       Instead ui:multiSelect could be used ... -->
+                  <ui:checkboxMultiSelect type="vertical" />
+                </ui:cell>
+              </ui:formElement>
+            </ui:row>
+          </c:if>
+        </ui:updateRegionRows>
+
+      </ui:componentForm>
+
+    </ui:component>
+
+  </ui:form>
+
+</ui:widgetContext>
+]]></programlisting>
+
+                <para>
+                    There are some things to note here&mdash;if <literal>&lt;ui:select&gt;</literal> attribute referring to its 
+                    update regions is removed (and <literal>&lt;ui:updateRegionRows&gt;</literal> tags also) this example functions just
+                    like before, only smoothness of page update is lost. Secondly, <literal>&lt;ui:updateRegionRows&gt;</literal>
+                    must be placed outside of <literal>&lt;c:if&gt;</literal> tag, because it writes out some HTML tags identifying the update
+                    region, and if these are not found region update will not succeed.
+                    &mdash;it writes out some HTML tags that identify the region where updates take place and these tags are not
+                    found, response cannot be rendered.
+                </para>
+                
+                <para>
+                    Finally, expression <literal>&lt;c:if test="${not empty form.elements['concreteBeastControl']}"&gt;</literal> is not as
+                    obscure as it may seem at first. "form" refers to
+                    the current form ("complexForm") <emphasis>ViewModel</emphasis> that is accessible from JSP&mdash; its 
+                    exact class being <literal>FormWidget.ViewModel</literal> which has <literal>getElements()</literal>
+                    method that returns <literal>java.util.Map</literal>. Square brackets (<literal>['concreteBeastControl']</literal>) 
+                    containing element name are just the EL (Expression Language) way of accessing map elements. All 
+                    widgets make their <emphasis>ViewModels</emphasis> accessible from JSP-s under different names, these 
+                    can be used for building effective conditional branchings and alike. Names under which 
+                    <literal>ViewModels</literal> and other interesting JSP variables can be accessed are documented in
+                    reference manual JSP sections.
+                </para>
+                </sect4>
+                
+            </sect3>
+
             <sect3>
                 <title>Lists</title>
+                  <mediaobject id="company-list-image" xreflabel="company list">
+                   	<imageobject>
+                   		<imagedata 
+						fileref="images/companyList.png"
+						format="PNG" 
+						align="center"/>
+					</imageobject>
+					<caption align="top">BeanListWidget example, list of companies.</caption>
+ 				  </mediaobject>                
                 <para>
-                    TODO: nothing fancy, person/company list suffices. 
-                    AJAX?
+                    Lists are tables containing rows with records gathered from some data source. They 
+                    provide support for paged displays of long lists and filtering shown records
+                    based on their field values. Basic usage is quite simple:
                 </para>
+                
+                <programlisting role="java"><![CDATA[protected ListWidget initList() throws Exception {
+  // Create the new list widget whose records are JavaBeans, instances of CompanyMO
+  // CompanyMO has fields named id, name and address.
+  BeanListWidget temp = new BeanListWidget(CompanyMO.class);
+  // set the data provider for the list
+  temp.setListDataProvider(new TemplateCompanyListDataProvider());
+  // add the displayed columns to list 
+  // addBeanColumn(String id, String label, boolean isOrdered)
+  // note that # before the label means that label is treated as unlocalized and outputted as-is
+  temp.addBeanColumn("id", "#Id", false);
+  //addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
+  temp.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
+  temp.addBeanColumn("address", "#Address", true, new SimpleColumnFilter.Like(), new TextControl());
+  return temp;
+}]]></programlisting>
+
+                <para>
+                    Our example uses <literal>BeanListWidget</literal> instead of <literal>ListWidget</literal>.
+                    Differences between the two are the same as between <literal>BeanFormWidget</literal> and <literal>FormWidget</literal>.
+                    All that is needed to create a list is adding showed columns to list, supplying each column with 
+                    <emphasis>id</emphasis> that is also the name of JavaBean field.
+                </para>
+
+                <para>
+                    Additionally, one can specify whether ordering and filtering by given column should be available.
+                    <literal>SimpleColumnFilter</literal> contains different filter classes that specify how the
+                    filter conditions specified should be applied&mdash;<literal>SimpleColumnFilter.Equals</literal>, 
+                    <literal>SimpleColumnFilter.GreaterThan</literal>, 
+                    <literal>SimpleColumnFilter.LowerThan</literal>, 
+                    <literal>SimpleColumnFilter.GreaterThanOrEquals</literal>, 
+                    <literal>SimpleColumnFilter.LowerThanOrEquals</literal>, 
+                    <literal>SimpleColumnFilter.Like</literal>. Their behaviour is natural, filter application
+                    shows only those records that satisfy the filter expression.
+                </para>
+                
+                <para>
+                    For filling the list with data, some <literal>ListDataProvider</literal> must be
+                    passed to a newly created list. Aranea has two base classes that implement
+                    <literal>ListDataProvider</literal> interface&mdash;<literal>MemoryBasedListDataProvider</literal> 
+                    and <literal>BackendListDataProvider</literal>. When using memory based data provider, 
+                    all records belonging to a list are read into memory at once and paging and filtering
+                    takes also place completely in memory, whereas backend based 
+                    providers perform a query retrieving only the records that need to be shown currently (based 
+                    on paging and filtering conditions). For long lists of complex objects, using 
+                    <literal>BackendListDataProvider</literal>
+                    is a must&mdash;otherwise application will quickly start using too much memory. Data provider
+                    for previous list could be like this:
+                </para>
+
+                <programlisting role="java"><![CDATA[private class TemplateCompanyListDataProvider extends MemoryBasedListDataProvider {
+  // Overloading constructor with correct bean type.                
+  protected TemplateCompanyListDataProvider() {
+     super(CompanyMO.class);
+  }
+  // Overloading the real data loading method. Should
+  // return java.util.List containing CompanyMO objects.
+  public List loadData() throws Exception {
+    // Here, database query is performed and all rows from COMPANY table retrieved.
+    // But you could also get the data from parsing some XML file, /dev/random etc.
+    // All that matters is that returned List really contains CompanyMO objects.
+    return getGeneralDAO().getAll(CompanyMO.class);
+  }      
+}]]></programlisting>
+
+               <para>
+                    or, when using <literal>BackendListDataProvider</literal>.
+               </para>
+               
+               <programlisting role="java"><![CDATA[private class BackendCompanyListDataProvider extends BackendListDataProvider {
+  protected BackendCompanyListDataProvider() {
+    // Constructor with argument useCache set to false.
+    super(false);
+  }
+
+  // Functions as MemoryBasedListDataProvider's loadData, but takes query as an argument
+  // and returns ListItemsData instead of List. ListItemsData is just a wrapper around
+  // a List that contains an additional field, Long with total count of objects in list.
+  protected ListItemsData getItemRange(ListQuery query) throws Exception {
+    // call some method that takes a ListQuery as parameter, and returns the
+    // data filtered as needed.
+  }
+}]]></programlisting>
+            <para>
+                Actual implementations of methods that return data for memory based or backend based lists
+                falls outside the scope of this tutorial, but fine examples can be found from reference manual
+                chapter "Lists" and examples source code.
+            </para>
+            
+            <para>
+                JSP fragment that renders the list would look something like that:
+            </para>
+            
+            <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+<ui:list id="companyList">
+  <!-- List body, where all list objects that fit on a current page will be rendered. -->
+  <ui:listRows>
+    <!-- Creating a row inside the listRows signals that list object will be rendered inside it. 
+         ui:listRows is iterating tag, it will render as many rows as there are object to show.
+         Current list object being operated on is accessible as EL variable ${row}. List objects
+         field values that have getters are accessible as ${row.field}.
+    -->
+    <ui:row>
+      <ui:cell>
+        <!-- Accessing the row object, as described previously. -->
+        <c:out value="${row.id}"/>
+      </ui:cell>
+
+      <ui:cell>
+        <ui:listRowLinkButton eventId="select">
+          <c:out value="${row.name}"/>
+        </ui:listRowLinkButton>
+      </ui:cell>
+
+      <ui:cell>
+        <c:out value="${row.address}"/>
+      </ui:cell>
+        
+      <ui:cell>
+        <!-- Edit company button. Note the listRow prefix for the tag, it separates 
+             this from ordinary linkButton tag and ensures that row's list id is
+             submitted with the request. -->
+        <ui:listRowLinkButton eventId="edit">
+            <ui:image code="buttonChange" alt="Edit company" title="Edit company"/>
+        </ui:listRowLinkButton>
+        <!-- Remove company button. -->
+        <ui:listRowLinkButton eventId="remove">
+            <ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
+        </ui:listRowLinkButton>
+      </ui:cell>
+        
+    </ui:row>
+  </ui:listRows>              
+</ui:list>
+...]]></programlisting>
+
             </sect3>
             
              <sect3>
                 <title>Editable Lists</title>
+
+                  <mediaobject id="person-editable-list-image" xreflabel="personEditableList">
+                   	<imageobject>
+                   		<imagedata 
+						fileref="images/person-editableList.png"
+						format="PNG" 
+						align="center"/>
+					</imageobject>
+					<caption align="top">Editable list example.</caption>
+ 				  </mediaobject>          
+                
                 <para>
-                    
+                		Editable lists are <emphasis>lists of forms</emphasis>&mdash;their rows (and thus objects represented by
+                    these rows) can be edited, updated, deleted and added on-the-fly. Presented example is extracted
+                    from template application <literal>PersonEditableListWidget</literal> class. Its <literal>init()</literal>
+                    method resembles those that we have already seen, except few curiosities that are pointed out in
+                    code comments.
+				</para>
+
+                    <programlisting role="java"><![CDATA[public class PersonEditableListWidget extends TemplateBaseWidget {
+  protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
+  
+  /* Editable list. */
+  private EditableBeanListWidget list;
+  /* Actual holder of editable list rows (resides inside EditableBeanListWidget).
+     Look inside init() method to see where it comes from. */ 
+  private BeanFormListWidget formList;
+  private MemoryBasedListDataProvider dataProvider = new DataProvider();
+  
+  protected void init() throws Exception {
+    super.init();
+    
+    addGlobalEventListener(new ProxyEventListener(this));
+    setViewSelector("person/editableList");
+    
+    /* PersonMO class is already familiar from form examples. */
+    list = new EditableBeanListWidget(PersonMO.class);
+    list.addBeanColumn("id", "#Id", false);
+    /* Filtering by fields other than ID is enabled. */
+    list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
+    list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
+    list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
+    
+    /* Set up the custom range filter for birthdate column. */
+    RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
+    list.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
+    list.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
+    list.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
+    
+    /* Dummy column which holds no data. 
+     * Added here because we want <ui:componentListHeader/> tag to draw an extra column, which 
+     * we will use as edit/delete button holders. */
+    list.addListColumn(new ListColumn("dummy"));
+    
+    /* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
+    list.setListDataProvider(buildListDataProvider());
+    /* Now, this is new. Set FormRowHandler class that will handle the different row operations. See below. */
+    list.setFormRowHandler(buildFormRowHandler());
+
+    /* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
+    this.formList = list.getFormList();
+    addWidget("list", list);
+  }
+
+  /* Data provider for person list. Loads all person objects from database. */
+  private class DataProvider extends MemoryBasedListDataProvider {
+    protected DataProvider() {
+      super(PersonMO.class);
+    }
+    public List loadData() throws Exception {       
+      return getGeneralDAO().getAll(PersonMO.class);
+    }
+  }
+
+  protected ListDataProvider buildListDataProvider() throws Exception {
+    return dataProvider;
+  }
+
+  protected FormRowHandler buildFormRowHandler() throws Exception {
+    /* Implementation of FormRowHandler that also calls dataprovider's
+     * data refresh methods when list editing events occur. */
+    return new MemoryBasedListFormRowHandlerDecorator(dataProvider,
+            new PersonEditableRowHandler());
+  }
+
+  /* Row handling functions. As this handler extends ValidOnlyIndividualFormRowHandler class,
+   * its saveRow method does nothing: instead saveValidRow method should be implemented that
+   * saves only these forms (rows) which data passes validation.  
+   */ 
+  public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
+    /* Implementation of the method that must return unique key for each row
+     * in editable list. As we hold database objects (PersonMO-s) in this list, 
+     * it is natural to use synthetic ID field for a key.*/ 
+    public Object getRowKey(Object rowData) {
+      return ((PersonMO) rowData).getId();
+    }
+    
+    // Implementation of method that should save EDITED rows which data passes validation.
+    public void saveValidRow(FormRow editableRow) throws Exception {
+      /* Reads data from form. FormRow.getFormRow() method returns the widget that is 
+       * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
+       * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
+       * we can cast the return type accordingly. */
+      PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new PersonMO());
+      rowData.setId((Long) editableRow.getRowKey());
+      
+      // Save modified object.
+      getGeneralDAO().edit(rowData);
+      
+      // Set the row closed (for further editing, it must be opened again). 
+      editableRow.close();
+    }
+    
+    public void deleteRow(Object key) throws Exception {
+      Long id = (Long) key;
+      getGeneralDAO().remove(PersonMO.class, id);
+    }
+    
+    // Implementation of method that should save ADDED rows which data passes validation.
+    public void addValidRow(FormWidget addForm) throws Exception {
+      PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
+      getGeneralDAO().add(rowData);
+      // this callback must be made here!
+      formList.resetAddForm();
+    }
+    
+    // Called to initialize each row in editable list.
+    public void initFormRow(FormRow editableRow, Object rowData) throws Exception {
+      // Set initial status of list rows to closed - they cannot be edited before opened.
+      editableRow.close();
+      
+      // Get the rowForm (this is the formwidget holding row object data). 
+      BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
+      // See below.
+      addCommonFormFields(rowForm);
+      /* A button that opens row for editing upon receiving onClick event.
+       * Activating button in already opened row saves the row data. */
+      FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
+      /* A button that deletes this row and its data (calls deleteRow()). */
+      FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
+
+      rowForm.writeBean(rowData);
+    }
+    
+    // Called to initialize a blank row meant for adding new records.
+    public void initAddForm(FormWidget addForm) throws Exception {
+      addCommonFormFields((BeanFormWidget)addForm);
+      // Button that saves the content of the new record (calls addValidRow()). 
+      FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+    }
+    
+    // Adds PersonMO bean fields to given BeanFormWidget.
+    private void addCommonFormFields(BeanFormWidget form) throws Exception {
+      form.addBeanElement("name", "#First name", new TextControl(), true);
+      form.addBeanElement("surname", "#Last name", new TextControl(),  true);
+      form.addBeanElement("phone", "#Phone no", new TextControl(), false);
+      form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+    }
+  }
+}]]></programlisting>
+
+			<para>
+				As seen, defining editable lists does not differ much from defining ordinary lists&mdash;setting
+				the <literal>FormRowHandler</literal> is the only new procedure.
+				Rowhandlers themselves are not complex but some callback method purposes can be confused&mdash;
+				one must be well-acquainted with row-handling interfaces before implementing them.
+			</para>
+
+		        <table frame="all" align="center">
+		        	<title><literal>FormRowHandler</literal> interface</title>
+		          <tgroup cols="2">
+		            <colspec colwidth="2*"/>
+		            <colspec colwidth="5*"/>
+		            <thead>
+		              <row>
+		                <entry>Method</entry>
+		                <entry>Purpose</entry>
+		              </row>
+		            </thead>
+		            <tbody>
+		              <row>
+		                <entry><literal>getRowKey(Object row)</literal></entry>
+		                <entry>Should return the key that uniquely identifies given object among other same type objects.</entry>
+		              </row>
+		              <row>
+		                <entry><literal>initFormRow(FormRow formRow, Object row)</literal></entry>
+		                <entry>
+		                Should initialize the editable row by building the form inside the <literal>formRow</literal> and setting the 
+		                	correct open/close status. Called once for each object(<literal>row</literal>) that should be showed in the list.</entry>
+		              </row>
+		              <row>
+		                <entry><literal>initAddForm(FormWidget addForm)</literal></entry>
+		                <entry>
+			                Should initialize the form that will be used to add new rows. Usually modifies the supplied form 
+			                as calling <literal>initFormRow</literal> with empty <literal>row</literal> parameter would
+			                alter form inside <literal>formRow</literal>&mdash;but here the object's
+			                unique identifier is not required.
+						</entry>
+		              </row>
+		              <row>
+		                <entry><literal>addRow(FormWidget addForm)</literal></entry>
+		                <entry>
+		                		Called when a new row (object) should be added. Data of the new
+		                		object should be read from the supplied form.
+						</entry>
+		              </row>
+		              <row>
+		                <entry><literal>saveRows(Map &lt;Object rowKey, EditableRow formRow&gt; formRows)</literal></entry>
+		                <entry>Called when specified list rows should be saved.</entry>
+		              </row>
+		              <row>
+		                <entry><literal>deleteRows(Set rowKeys)</literal></entry>
+		                <entry>Called when the rows (objects) identified by the supplied set of keys should be deleted.</entry>
+		              </row>
+		              <row>
+		                <entry><literal>openOrCloseRow(FormRow formRow)</literal></entry>
+		                <entry>Called upon closing or opening of the formRow.</entry>
+		              </row>
+		
+		            </tbody>
+		          </tgroup>
+		        </table>
+                
+                <para>
+                    JSP for editable list does not need as much work as writing custom rowhandlers.
+                    instead of <literal>&lt;ui:list&gt;</literal> tag 
+                    <literal>&lt;ui:formList&gt;</literal> should be used (in our example both are used).
+                    <literal>&lt;ui:listRows&gt;</literal> is replaced by <literal>&lt;ui:formListRows&gt;</literal>
+                    and object adding form is rendered inside <literal>&lt;ui:formListAddForm&gt;</literal>.
                 </para>
+                
+                <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+... 
+<!-- See examples/main/war/WEB-INF/jsp/editableList.jsp for complete file. -->
+<!-- Start the list context ... -->
+<ui:list id="list">
+  <!-- and continue with announcement that this list is editable -->
+  <ui:formList>
+  ...
+    <!-- List filter for editable list is exactly 
+         the same as filter for ordinary lists -->
+    <ui:listFilter>
+      <!-- rows -->
+      ...
+    </ui:listFilter>
+    
+    <!-- Editable list rows. This tag usage is similar to ui:listRows;
+         but it makes available some extra variables -->
+    <ui:formListRows>
+      <ui:row>
+
+        <ui:cell>
+          <!-- Default variable name for accessing the row object is "row" as in
+               ordinary lists. This could have been changed by specifying "var" 
+               attribute for ui:formListRows tag. -->
+          <c:out value="${row.id}"/>
+        </ui:cell>
+
+        ...
+        <!-- other cells -->
+        ...
+        
+        <!-- finally, button column -->
+        <ui:cell width="0">
+          <c:choose>
+            <!-- formRow variable is of class FormRow.ViewModel.
+                 It holds the properties of form used to present current row object.
+                 Depending on formRow's current status, change button 
+                 *(opens the formRow for editing) or *(saves the formRow 
+                 already opened). Button title is set accordingly also be set 
+                 accordingly. -->
+            <c:when test="${formRow.open}">
+              <c:set var="altEditText" value="Save person"/>
+            </c:when>
+            <c:otherwise>
+              <c:set var="altEditText" value="Edit person"/>
+            </c:otherwise>
+          </c:choose>
+
+          <!-- EditSave event is produced by buttons created with 
+               FormListUtil.addEditSaveButtonToRowForm() -->
+          <ui:linkButton id="editSave" showLabel="false">
+            <ui:image code="buttonChange" alt="${altEditText}" title="${altEditText}"/>
+          </ui:linkButton>
+           <!-- Delete event is produced by buttons created with 
+                FormListUtil.addDeleteButtonToRowForm() -->
+          <ui:linkButton id="delete" showLabel="false">
+            <ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
+          </ui:linkButton>
+        </ui:cell>
+        
+      </ui:row>
+    </ui:formListRows>
+
+    <!-- Finally the empty form for addition of new objects. -->
+    <ui:formListAddForm>
+      <ui:row>
+        ...
+        <!-- columns -->
+        ...
+      </ui:row>
+    </ui:formListAddForm>
+  ...
+  </ui:formList>
+</ui:list>
+...
+]]></programlisting>
+                
             </sect3>
             
-            <sect3>
-                <title>Wizards</title>
-                <para>
-                    
-                </para>
-            </sect3>
         </sect2>
-        
-        <sect2>
-            <title> Something else? </title>
-            <para>
-                MAYBE
-            </para> 
-        </sect2>
-	
 	</sect1>
+
+    <sect1>
+        <title>Anything else?</title>
+        <para>
+            Sure. Ask!
+        </para> 
+     </sect1>
+	
 </article>
 

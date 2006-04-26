@@ -19,8 +19,11 @@ package org.araneaframework.jsp.tag.uilib.list;
 import java.io.Writer;
 
 import javax.servlet.jsp.PageContext;
+
+import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.UiWidgetTag;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.formlist.FormListWidget;
 
 
 
@@ -41,25 +44,54 @@ import org.araneaframework.uilib.list.ListWidget;
 public class UiListTag extends UiWidgetTag {
 	public final static String LIST_ID_KEY_REQUEST = "listId";
 	public final static String LIST_VIEW_MODEL_KEY_REQUEST = "list";  
-	public final static String LIST_FULL_ID_KEY_REQUEST = "listFullId";
+	public final static String LIST_FULL_ID_KEY_REQUEST = "listFullId";	
   //
   // Implementation
   //
+	
+	protected String varSequence;
+	
+	public void init() {
+		super.init();
+		varSequence = "listSequence";
+	}	
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Name of variable that represents list sequence info (by default "listSequence")." 
+	 */
+	public void setVarSequence(String varSequence) {
+		this.varSequence = varSequence;
+	}
   
 	public int before(Writer out) throws Exception {
 		super.before(out);
 		
-		// Get list data		
-		listViewModel = (ListWidget.ViewModel)viewModel;		
+		// Get list data
+		try {
+			listViewModel = (ListWidget.ViewModel)viewModel;
+		} catch (ClassCastException e) {
+			throw new UiException("Could not acquire list view model. <ui:list> should have id specified or should be in context of real ListWidget.", e);
+		}
 
 		// Set variables		
 		pushAttribute(LIST_ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);
 		pushAttribute(LIST_FULL_ID_KEY_REQUEST, fullId, PageContext.REQUEST_SCOPE);
-		pushAttribute(LIST_VIEW_MODEL_KEY_REQUEST, listViewModel, PageContext.REQUEST_SCOPE);		
+		pushAttribute(LIST_VIEW_MODEL_KEY_REQUEST, listViewModel, PageContext.REQUEST_SCOPE);
+		
+		setAttribute(varSequence, listViewModel.getSequence(), PageContext.REQUEST_SCOPE);
 	
 		// Continue
 	  return EVAL_BODY_INCLUDE;		
 	}
+	
+	public int after(Writer out) throws Exception {
+		setAttribute(varSequence, null, PageContext.REQUEST_SCOPE);
+		
+		return EVAL_PAGE;		
+	}
 
-	protected ListWidget.ViewModel listViewModel;		
+	protected ListWidget.ViewModel listViewModel;
 }

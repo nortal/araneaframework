@@ -23,7 +23,7 @@ import org.araneaframework.jsp.util.UiUtil;
 /**
  * Standard link tag.
  * 
- * @author Oleg MÃ¼rk
+ * @author Oleg Mürk
  * 
  * @jsp.tag
  *   name = "link"
@@ -31,7 +31,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Usual HTML link, acts as a <i>&lt;a&gt;</i> HTML tag."
  */
 public class UiStdLinkTag extends UiLinkBaseTag {
-	private String disabledCssClass;
+	private String disabledStyleClass;
 	
 	/// attributes
 	/**
@@ -40,19 +40,19 @@ public class UiStdLinkTag extends UiLinkBaseTag {
 	 *   required = "false"
 	 *   description = "CSS class for disabled link" 
 	 */
-	public void setDisabledCssClass(String disabledCssClass) throws JspException {
-		this.disabledCssClass = (String)this.evaluate("disabledCssClass", disabledCssClass, String.class);
+	public void setDisabledStyleClass(String disabledCssClass) throws JspException {
+		this.disabledStyleClass = (String)this.evaluate("disabledStyleClass", disabledCssClass, String.class);
 	}
 
-	public String getDisabledCssClass() {
-		return disabledCssClass;
+	public String getDisabledStyleClass() {
+		return disabledStyleClass;
 	}
 	
 	
 	protected void init() {
 		super.init();
-		styleClass = "aranea-link-button"; 
-		disabledCssClass = "aranea-disabled-link-button";
+		baseStyleClass = "aranea-link-button"; 
+		disabledStyleClass = "aranea-disabled-link-button";
 	}
 	
 	protected int before(Writer out) throws Exception {
@@ -60,7 +60,7 @@ public class UiStdLinkTag extends UiLinkBaseTag {
 		
 		UiUtil.writeOpenStartTag(out, "a");
 		UiUtil.writeAttribute(out, "id", id);
-		UiUtil.writeAttribute(out, "class", !disabled ? getStyleClass() : getDisabledCssClass());
+		UiUtil.writeAttribute(out, "class", !disabled ? getStyleClass() : getDisabledStyleClass());
 		if (!disabled) {
 			UiUtil.writeAttribute(out, "href", href);
 			UiUtil.writeAttribute(out, "target", target);   
@@ -68,7 +68,7 @@ public class UiStdLinkTag extends UiLinkBaseTag {
 		else
 			UiUtil.writeAttribute(out, "href", "javascript:");
 		
-		UiUtil.writeCloseStartTag(out);
+		UiUtil.writeCloseStartTag_SS(out);
 		
 		// Continue
 		return EVAL_BODY_INCLUDE;

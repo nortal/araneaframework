@@ -44,7 +44,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
 	
 	protected void init() {
 		super.init();
-		styleClass = "aranea-messages";
+		baseStyleClass = "aranea-messages";
 	}
 	
 	public String getType() {

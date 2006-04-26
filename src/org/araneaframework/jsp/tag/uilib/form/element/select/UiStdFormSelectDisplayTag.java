@@ -32,7 +32,7 @@ import org.araneaframework.uilib.form.control.SelectControl;
 public class UiStdFormSelectDisplayTag extends UiFormElementBaseDisplayTag {
 	protected void init() {
 		super.init();
-		styleClass = "aranea-select-display";
+		baseStyleClass = "aranea-select-display";
 	}
 	
   //

@@ -62,10 +62,10 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Key, to which the event must be triggered. Key is specified as a certain "alias". The alias may be an
-          ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (" "), or
-          one of the following: "return", "escape", "backspace", "tab", "shift", "control", "space", "f1",
-          "f2", ..., "f12"."
+	 *   description = "Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an
+          ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or
+          one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1',
+          'f2', ..., 'f12'."
 	 */
 	public void setKey(String key) throws JspException {
 		this.key = (String) evaluateNotNull("key", key, String.class);

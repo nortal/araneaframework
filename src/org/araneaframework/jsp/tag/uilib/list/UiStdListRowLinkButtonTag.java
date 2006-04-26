@@ -32,7 +32,7 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 
 	protected void init() {
 		super.init();
-		styleClass = "aranea-link-button";
+		baseStyleClass = "aranea-link-button";
 	}
 	
 	protected int before(Writer out) throws Exception {

@@ -18,7 +18,7 @@ package org.araneaframework.example.main.web.contract;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.web.person.PersonListWidget;
 import org.araneaframework.framework.FlowContext;
@@ -27,10 +27,9 @@ import org.araneaframework.framework.FlowContext;
 /**
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class ContractPersonEditWidget extends BaseWidget {
+public class ContractPersonEditWidget extends TemplateBaseWidget {
 	
 	private static final Logger log = Logger.getLogger(ContractPersonEditWidget.class);
-	
 	private PersonMO person = null;
 
   public PersonMO getPerson() {
@@ -44,7 +43,6 @@ public class ContractPersonEditWidget extends BaseWidget {
 	protected void init() throws Exception {
     log.debug("TemplateContractPersonWidget init called");
     setViewSelector("contract/contractPersonEdit");
-    addGlobalEventListener(new ProxyEventListener(this));
   }
   
   protected void process() {
@@ -52,15 +50,17 @@ public class ContractPersonEditWidget extends BaseWidget {
   }
   
 	public void handleEventChoosePerson(String eventParameter) throws Exception {
-    log.debug("Event 'choosePerson' received!");
-    getFlowCtx().start(new PersonListWidget(false), null, new FlowContext.Handler() {
-			public void onFinish(Object returnValue) throws Exception {
-				Long id = (Long) returnValue;
-				person = (PersonMO) getGeneralDAO().getById(PersonMO.class, id);
-				log.debug("Person with id of " + id + " set to this contract");
-      }
-      public void onCancel() throws Exception {
-      }
-    });
+	    log.debug("Event 'choosePerson' received!");
+	    PersonListWidget newFlow = new PersonListWidget(false);
+	    newFlow.setSelectOnly(true);
+	    getFlowCtx().start(newFlow, null, new FlowContext.Handler() {
+				public void onFinish(Object returnValue) throws Exception {
+					Long id = (Long) returnValue;
+					person = (PersonMO) getGeneralDAO().getById(PersonMO.class, id);
+					log.debug("Person with id of " + id + " set to this contract");
+	      }
+	      public void onCancel() throws Exception {
+	      }
+	    });
 	}
 }
