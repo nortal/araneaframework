@@ -26,9 +26,9 @@ import org.araneaframework.servlet.filter.StandardJspFilterService;
 
 public class UiAraneaWidgetContainer implements UiWidgetContainer {
   protected Standard.StandardWidgetInterface rootWidget;
-  private StandardJspFilterService.Configuration conf;
+  private StandardJspFilterService.JspConfiguration conf;
   
-  public UiAraneaWidgetContainer(Standard.StandardWidgetInterface rootWidget, StandardJspFilterService.Configuration conf) {
+  public UiAraneaWidgetContainer(Standard.StandardWidgetInterface rootWidget, StandardJspFilterService.JspConfiguration conf) {
     this.rootWidget = rootWidget;
     this.conf = conf;
   }

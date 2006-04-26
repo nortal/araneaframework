@@ -43,7 +43,7 @@ public class UiStdFormTextareaTag extends UiFormElementBaseTag {
 		super.init();
 		cols = null;
 		rows = null;
-		styleClass = "aranea-textarea";
+		baseStyleClass = "aranea-textarea";
 	}
 
 	//

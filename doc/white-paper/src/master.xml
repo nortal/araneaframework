@@ -20,7 +20,7 @@
 
 <article>
     <articleinfo>
-        <title>Aranea - Java Web Framework Construction and Integration Kit</title>
+        <title>Aranea&mdash;Java Web Framework Construction and Integration Kit</title>
         <titleabbrev>Aranea</titleabbrev>
 				<subtitle>White Paper</subtitle>
         <authorgroup>
@@ -30,6 +30,24 @@
 					</author>
         </authorgroup>        
     </articleinfo>
+
+    <sect1>    
+      <title>Mission Statement</title>
+
+<para>The abundance of Java web frameworks available at the moment on the
+web suggests a simple conclusion&mdash;one size does not fit all. We
+acknowledge and accept that there are a number of different approaches
+one can take while building a web application and we will try to embrace
+as many as we can.</para>
+
+<para>In addition to being a full-fledged web framework in its own right,
+Aranea provides a powerful and extremely simple component system that
+allows you to tailor the web framework fitting your needs by configuring
+the reusable modules and adding your own modules only for the missing
+features. Our goal is <emphasis>not</emphasis> to compete with good existing
+frameworks and solutions, but to serve as an integration platform that
+would allow using <emphasis>best-of-breed</emphasis> solutions together.</para>
+    </sect1>
 
     <sect1>    
       <title>Overview</title>
@@ -59,7 +77,7 @@ Whether you want to make a framework plug-in, custom GUI element or custom appli
       
       <sect2>
         <title>Easy to debug</title>
-Since there is no behind-the-scene magic occuring and all logic is in the component itself it is very easy to step through the path left by any bug. The framework also produces readable log messages and meaningful exceptions. 
+Since there is no behind-the-scene magic occurring and all logic is in the component itself it is very easy to step through the path left by any bug. The framework also produces readable log messages and meaningful exceptions. 
       </sect2>           
     </sect1>
 
@@ -68,12 +86,12 @@ Since there is no behind-the-scene magic occuring and all logic is in the compon
       
       <sect2>
         <title>Small core</title>
-Aranea core consists of ca. 10 interfaces, some conventions concerning how to use them and a number of default or base implementations. 
+Aranea core consists of 5 interfaces, some conventions concerning how to use them and a number of default or base implementations. 
       </sect2>           
     
       <sect2>
         <title>Component-oriented</title>
-In Aranea everything is a component and everything is reusable. The framework itself is assembled from a number of components with specific responsibilities and programmer also writes the code in terms of components. The components have very simple interface which has about 4-6 methods.
+In Aranea everything is a component and everything is reusable. The framework itself is assembled from a number of components with specific responsibilities and programmer also writes the code in terms of components. The components have very simple interface which have 4-8 methods.
       </sect2>  
       
       <sect2>
@@ -88,22 +106,22 @@ The components in Aranea are pure Java objects supporting polymorphism, inherita
       
       <sect2>
         <title>Explicit state management</title>
-Aranea component fields are persistent. However instead of limiting the programmer to a number of state scopes ("application", "session", "page", ...) Aranea does not mandate any state management and leaves it to the specific plug-ins. Every component lives until explicitly removed, however that doesn't mean that the programmer will have to bother with it or that the whole application will be in the user session&mdash;in Aranea programmers and even system programmers typically do not have to think about state at all. Every component will live as long as it is needed and the framework will take care to cleanup its state after that.
+Aranea component fields are persistent. However instead of limiting the programmer to a number of state scopes ("application", "session", "page", ...) Aranea does not mandate any state management and leaves it to the specific plug-ins. Every component lives until explicitly removed, however that does not mean that the programmer will have to bother with it or that the whole application will be in the user session&mdash;in Aranea programmers and even system programmers typically do not have to think about state at all. Every component will live as long as it is needed and the framework will take care to cleanup its state after that.
       </sect2>  
       
       <sect2>
         <title>Powerful navigation</title>
-Aranea out-of-the-box supports the so called flows and flow nesting, which allows to create nested processes that preserve the previous process state and restore it when finished (similar to modal dialogs in conventional GUI). However unlike other frameworks Aranea doesn't limit you to having just one flow&mdash;one can have several flows running in paralell or another flow running inside of the current one. In it fact can be easily extend to support any type of GUI abstractions, like windows or portals.
+Aranea out-of-the-box supports the so called flows and flow nesting, which allows to create nested processes that preserve the previous process state and restore it when finished (similar to modal dialogs in conventional GUI). However unlike other frameworks Aranea does not limit you to having just one flow&mdash;one can have several flows running in parallel or another flow running inside of the current one. In it fact can be easily extend to support any type of GUI abstractions, like windows or portals.
       </sect2>  
       
       <sect2>
         <title>Type safe</title>
-Since there is no playing around with session attributes and no XML mappings the Java compiler is able to verify that all types and classes match and navigating between components is as easy as holding <keycap>Ctrl</keycap> and clicking.
+Since there is no playing around with session attributes and no XML mappings the Java compiler is able to verify that all types and classes match and navigating between components in an IDE like Eclipse is as easy as holding <keycap>Ctrl</keycap> and clicking.
       </sect2>      
       
       <sect2>
         <title>Secure</title>
-Since components are created explicitly when needed and removed when they are needed no more there is no need to protect the controller URLs with roles or privileges. Instead it is enough to assert security when creating the components (which is typically considerably easier, as one doesn't have to assert privileges without which it would be impossible to get so far).        
+Since components are created explicitly when needed and removed when they are needed no more there is no need to protect the controller URLs with roles or privileges. Instead it is enough to assert security when creating the components (which is typically considerably easier, as one does not have to assert privileges without which it would be impossible to get so far).        
       </sect2>   
       
       <sect2>
@@ -113,7 +131,7 @@ Testing pure Java is as easy as it sounds, and there is no need for any J2EE con
       
       <sect2>
         <title>AJAX-ready</title>
-        Aranea supports natively both partial page updates and AJAX-enabled components like autocompletion search boxes. Aranea can also be used as a controller for a purely AJAX application.
+        Aranea supports natively both partial page updates and AJAX-enabled components like auto-completion search boxes. Aranea can also be used as a controller for a purely AJAX application.
       </sect2>                                                                
     </sect1>     
 
@@ -135,11 +153,11 @@ Another common programming task is to display user a list (also called grid) tha
       <sect2>
         <title>JSP tag library</title>
 <para>        
-Though Aranea is view-agnostic by design it comes bundled by default with a custom JSP tag library that renders the GUI elements into HTML. The JSP tag library is made to isolate the HTML completely, and in Aranea projects typically programmer describes the GUI using abstractions like <emphasis>containers</emphasis> and <emphasis>layouts</emphasis> rather than coding pure HTML. This allows to encapsulate the design and client-side behaviour and alter it easily on need. 
+Though Aranea is view-agnostic by design it comes bundled by default with a custom JSP tag library that renders the GUI elements into HTML. The JSP tag library is made to isolate the HTML completely, and in Aranea projects typically programmer describes the GUI using abstractions like <emphasis>containers</emphasis> and <emphasis>layouts</emphasis> rather than coding pure HTML. This allows to encapsulate the design and client-side behavior and alter it easily on need. 
 </para>        
 
 <para>
-Aranea JSP tags provide a number of useful features like client-side validation and keyboard events. Additionally to make new tags one doesn't have to know much more than the usual tag APIs (though a number of helper classes are provided to ease the new tag development).
+Aranea JSP tags provide a number of useful features like client-side validation and keyboard events. Additionally to make new tags one does not have to know much more than the usual tag APIs (though a number of helper classes are provided to ease the new tag development).
 </para>
       </sect2>             
 
@@ -183,10 +201,6 @@ Aranea JSP tags provide a number of useful features like client-side validation 
       </para>
       
       <para>
-      Spring integration is used for configuring Aranea framework as well as to lookup service implementations. Aranea also allows to use Spring Web functionality (though not Spring MVC).
-      </para>
-            
-      <para>
       Next are described a number of planned or possible integration scenarios:
                         
       <variablelist>
@@ -195,7 +209,7 @@ Aranea JSP tags provide a number of useful features like client-side validation 
           <listitem>This scenario allows to use the powerful Aranea hierarchical controller, while using some other system to render the actual markup (e.g. JSF, Tapestry, Wicket).</listitem>
         </varlistentry>
         <varlistentry>
-          <term>Hosting third-party GUI elemenys</term>
+          <term>Hosting third-party GUI elements</term>
           <listitem>Allows to reuse GUI controls made for a third-party framework APIs (e.g. JSF, Tapestry, Wicket).</listitem>
         </varlistentry>        
         <varlistentry>
@@ -255,7 +269,7 @@ Aranea JSP tags provide a number of useful features like client-side validation 
 
       <para>
         Currently Aranea is successfully used in the following projects
-        <itemizedlist>
+        <itemizedlist  spacing="compact">
           <listitem>eHL (Estonian healthcare infosystem for several major hospitals)</listitem>
           <listitem>Elion (major Estonian telecommunications provider backoffice project)</listitem>
           <listitem>PRIA (major Estonian public office)</listitem>

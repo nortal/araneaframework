@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework.router;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.log4j.Logger;
@@ -27,6 +28,7 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.NoSuchServiceException;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ManagedServiceContext;
 
 /**
@@ -92,7 +94,7 @@ public abstract class BaseServiceRouterService extends BaseService {
       output.pushAttribute(getServiceKey(), currentServiceId);
       
       try {
-        log.debug("Routing request through service '"+currentServiceId+"'.");
+        log.debug("Routing action to service '"+currentServiceId+"' under router '" + getClass().getName() + "'");
         ((Service) _getChildren().get(currentServiceId))._getService().action(path, input, output);
       }
       finally {
@@ -100,12 +102,16 @@ public abstract class BaseServiceRouterService extends BaseService {
       }
     }
     else {
-      throw new NoSuchServiceException("Non-existent service " + currentServiceId);
+      throw new NoSuchServiceException("Service '" + currentServiceId +"' was not found under router '" + getClass().getName() + "'!");
     }
   }
   
   // Callbacks 
-  protected abstract Environment getChildEnvironment(Object serviceId) throws Exception;
+  protected Environment getChildEnvironment(Object serviceId) throws Exception {
+    Map entries = new HashMap();    
+    entries.put(ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
+    return new StandardEnvironment(getEnvironment(), entries);
+  }
   
   /**
    * Returns the service id of the request. By default returns the parameter value of the request

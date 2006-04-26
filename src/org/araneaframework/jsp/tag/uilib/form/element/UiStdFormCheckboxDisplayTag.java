@@ -35,7 +35,7 @@ public class UiStdFormCheckboxDisplayTag extends UiFormElementBaseDisplayTag {
 	
 	protected void init() {
 		super.init();
-		styleClass = "aranea-checkbox-display";
+		baseStyleClass = "aranea-checkbox-display";
 	}
 	
 	//

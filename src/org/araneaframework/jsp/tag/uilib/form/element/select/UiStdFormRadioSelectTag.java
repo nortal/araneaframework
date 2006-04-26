@@ -44,6 +44,7 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 		super.init();
 		setHasElementContextSpan(false);
 		type = "horizontal";
+		baseStyleClass = "aranea-radioselect";
 		labelBefore = false;
 	}
 	
@@ -55,7 +56,7 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "The way the radio buttons will be rendered - can be either "vertical" or "horizontal". By default "horizontal"." 
+	 *   description = "The way the radio buttons will be rendered - can be either vertical or horizontal. By default horizontal." 
 	 */ 
 	public void setType(String type) throws JspException {
 		this.type = (String)evaluate("type", type, String.class);
@@ -97,11 +98,8 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 			
 			item.setId(id);
 			item.setValue(displayItem.getValue());
-			//item.setEvents(Boolean.toString(events));
 			item.setEvents(events ? "true" : "false");
-			//item.setValidate(Boolean.toString(validate));
 			item.setValidate(validate ? "true" : "false");
-			//item.setValidateOnEvent(Boolean.toString(validateOnEvent));
 			item.setValidateOnEvent(validateOnEvent ? "true" : "false");
 			item.setStyleClass(styleClass);
 

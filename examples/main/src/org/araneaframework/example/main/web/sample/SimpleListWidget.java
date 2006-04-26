@@ -19,28 +19,30 @@ package org.araneaframework.example.main.web.sample;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.collections.comparators.BooleanComparator;
 import org.apache.log4j.Logger;
-import org.araneaframework.OutputData;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.TestVO;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.ListOrder;
+import org.araneaframework.uilib.list.structure.order.SimpleColumnOrder;
+import org.araneaframework.uilib.list.util.comparator.StringComparator;
 
 /**
  * This is an example of component with a single list.
  */
-public class SimpleListWidget extends BaseWidget {
+public class SimpleListWidget extends TemplateBaseWidget {
   private static final Logger log = Logger.getLogger(SimpleFormWidget.class);
 
   protected ListWidget simpleList;
     
   protected void init() throws Exception {
 	super.init();
-	
-	addGlobalEventListener(new ProxyEventListener(this));
+
+	setViewSelector("sample/simpleList");
 	
 	simpleList = new ListWidget();
 	simpleList.setListDataProvider(new SimpleListDataProvider());
@@ -92,9 +94,4 @@ public class SimpleListWidget extends BaseWidget {
 	  log.debug("Event 'return' received!");
 	  getFlowCtx().cancel();
   }	
-  
-  protected void render(OutputData output) throws Exception {
-	log.debug(getClass().getName() + " render called");
-	ServletUtil.include("/WEB-INF/jsp/sample/simpleList/component.jsp", getEnvironment(), (ServletOutputData) output);
-  }
 }

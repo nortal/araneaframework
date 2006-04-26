@@ -34,7 +34,7 @@ public class UiStdFormTextareaDisplayTag extends UiFormElementBaseDisplayTag {
 
 	protected void init() {
 		super.init();
-		styleClass = "aranea-textarea-display";
+		baseStyleClass = "aranea-textarea-display";
 	}
 	
 	protected int after(Writer out) throws Exception {				

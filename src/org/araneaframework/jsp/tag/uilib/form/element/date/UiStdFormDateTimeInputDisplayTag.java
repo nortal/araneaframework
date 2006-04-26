@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseDisplayTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.DateTimeControl;
@@ -32,7 +31,7 @@ import org.araneaframework.uilib.form.control.DateTimeControl;
  */
 public class UiStdFormDateTimeInputDisplayTag extends UiFormElementBaseDisplayTag {
 	protected void init() {
-		styleClass = "aranea-datetime-display";
+		baseStyleClass = "aranea-datetime-display";
 	}
 	
 	protected int after(Writer out) throws Exception {

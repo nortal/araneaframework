@@ -206,16 +206,6 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 		return countPages() > 0 && index >= 0 && index < countPages();  
 	}
 	
-	
-	
-	/*
-	 * Protected methods
-	 */
-	
-	protected void init() throws Exception {
-		addGlobalEventListener(new ProxyEventListener(this));
-	}
-	
 	protected void render(OutputData output) throws Exception {
 		log.debug("StandardWizardWidget render called");    
 		output.pushScope(CURRENT_PAGE_KEY);

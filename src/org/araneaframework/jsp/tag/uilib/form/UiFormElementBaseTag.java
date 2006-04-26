@@ -29,9 +29,9 @@ import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUpdateRegionUtil;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.Control;
 
 
 /**
@@ -87,7 +87,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Whether the element will send the events that are registered by server-side (by default "true")."
+	 *   description = "Whether the element will send the events that are registered by server-side (by default 'true')."
 	 */	
 	public void setEvents(String events) throws JspException {
 		this.events = ((Boolean)evaluateNotNull("events", events, Boolean.class)).booleanValue(); 
@@ -97,7 +97,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Whether the element will be validated on the client-side when the form is submitted (by default "true")."
+	 *   description = "Whether the element will be validated on the client-side when the form is submitted (by default 'true')."
 	 */	
 	public void setValidate(String validate) throws JspException {
 		this.validate = ((Boolean)evaluateNotNull("validate", validate, Boolean.class)).booleanValue(); 
@@ -117,7 +117,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Element tabindex."
+	 *   description = "HTML tabindex for the element."
 	 */	
 	public void setTabindex(String tabindex) throws JspException {
 		this.tabindex = (String)evaluateNotNull("tabindex", tabindex, String.class);
@@ -284,7 +284,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		// All events are sent to a handler called "uiHandleKeypress(event, formElementId)"
 		// We use the "keydown" event, not keypress, because this allows to
 		// catch F2 in IE.
-		UiUtil.writeAttribute(out, "onkeydown", "uiHandleKeypress(event, '" + elementName +"');");
+		UiUtil.writeAttribute(out, "onkeydown", "return uiHandleKeypress(event, '" + elementName +"');");
 		UiUtil.writeCloseStartTag(out);
 		
 		UiUtil.writeStartTag(out, "script");
