@@ -136,7 +136,7 @@
   public Object next();
   public boolean hasNext();
 }</programlisting>        
-        Each <literal>next()</literal> call will return the identifier of the next child in the path to the descendant in question. Default implementation (<literal>org.araneaframework.core.StandardPath</literal>) uses simple string identifiers like "a" or "b" and combines them using dots forming full pathes like "a.b.c".
+        Each <literal>next()</literal> call will return the identifier of the next child in the path to the descendant in question. Default implementation (<literal>org.araneaframework.core.CustomPath</literal>) uses simple string identifiers like "a" or "b" and combines them using dots forming full pathes like "a.b.c".
       </para>
       
       <para>
@@ -173,7 +173,7 @@ msgContext.showInfoMessage("Hello world!");
       </para>
 
       <para>
-        A default implementation of <literal>Environment</literal> is <literal>org.araneaframework.core.StandardEnvironment</literal>. It provides for creating an <literal>Environment</literal> from a <literal>java.util.Map</literal>, or extending an existing environment with map entries.
+        A default implementation of <literal>Environment</literal> is <literal>org.araneaframework.core.CustomEnvironment</literal>. It provides for creating an <literal>Environment</literal> from a <literal>java.util.Map</literal>, or extending an existing environment with map entries.
       </para>
 		</sect2>
 		<sect2 id="components-messaging">
@@ -189,7 +189,7 @@ msgContext.showInfoMessage("Hello world!");
   
   TODO: explain double-dispatch
   
-  <para>A standard <literal>Message</literal> implementation that uses double-dispatch to visit all the components in hierarchy is <literal>org.araneaframework.core.StandardMessage</literal>. It usage can be illustrated with the following example:
+  <para>A standard <literal>Message</literal> implementation that uses double-dispatch to visit all the components in hierarchy is <literal>org.araneaframework.core.CustomMessage</literal>. It usage can be illustrated with the following example:
 <programlisting role="java">...
 Message myEvent = new StandardMessage() {
   public void execute(Component component) throws Exception {
@@ -232,7 +232,7 @@ myEvent.send(null, rootComponent);
       <title>StandardComponent</title>
 
       <para>
-        <literal>org.araneaframework.core.StandardComponent</literal> is the base class for application-specific components. It implements <emphasis>Composite</emphasis> pattern allowing to add, remove, enable and disable children and propagates messages to all the children. 
+        <literal>org.araneaframework.core.CustomComponent</literal> is the base class for application-specific components. It implements <emphasis>Composite</emphasis> pattern allowing to add, remove, enable and disable children and propagates messages to all the children. 
       </para>
     </sect2>
   </sect1>

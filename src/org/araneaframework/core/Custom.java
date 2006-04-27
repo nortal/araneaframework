@@ -28,37 +28,31 @@ import org.araneaframework.Widget;
 /**
  * An interface defining a set of standard components via its subinterfaces.
  * <br><br>
- * Provides a <code>ComponentInterface</code>,<code>ServiceInterface</code> and a
- * <code>WidgetInterface</code>. 
+ * Provides a <code>CustomComponent</code>,<code>CustomService</code> and a
+ * <code>CustomWidget</code>. 
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public interface Standard extends Serializable, Composite, Viewable {
+public interface Custom extends Serializable, Composite, Viewable {
   /**
    * Get the child Environment of this component.
    */
   public Environment getChildEnvironment() throws Exception;
   
-  public void addDestroyer(Destroyer destroyer);
-  
-  public interface Destroyer extends Serializable {
-    public void destroy() throws Exception;
-  }
-  
   /**
    * A Standard Component.
    */
-  public interface StandardComponentInterface extends Standard, Component, Composite.CompositeComponent, Viewable.ViewableComponent {}
+  public interface CustomComponent extends Custom, Component, Composite.CompositeComponent, Viewable.ViewableComponent {}
   /**
    * A Service Component.
    */
-  public interface StandardServiceInterface extends StandardComponentInterface, Service, Composite.CompositeService, Viewable.ViewableService {}
+  public interface CustomService extends CustomComponent, Service, Composite.CompositeService, Viewable.ViewableService {}
   
   /**
    * A Widget Component.
    */
-  public interface StandardWidgetInterface extends StandardServiceInterface, Widget, Composite.CompositeWidget, Viewable.ViewableWidget {}
+  public interface CustomWidget extends CustomService, Widget, Composite.CompositeWidget, Viewable.ViewableWidget {}
   
   /**
    * A model based on which a view can be constructed.
