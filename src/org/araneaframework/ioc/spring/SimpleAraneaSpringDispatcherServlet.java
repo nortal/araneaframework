@@ -24,26 +24,28 @@ import javax.servlet.ServletException;
 import org.araneaframework.servlet.ServletServiceAdapterComponent;
 import org.araneaframework.servlet.core.BaseAraneaDispatcherServlet;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class SimpleAraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
-  public static final String ARANEA_ROOT = "applicationRoot";
+  public static final String ARANEA_ROOT = "araneaApplicationRoot";
   
-  protected WebApplicationContext beanFactory;
-  protected ConfigurableListableBeanFactory rootConf;  
+  protected WebApplicationContext webAppCtx;
   
   public void init() throws ServletException {        
-    beanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());   
-    
-    rootConf = new XmlBeanFactory(new ClassPathResource("spring-property-conf/property-custom-webapp-aranea-conf.xml"), beanFactory);
+    WebApplicationContext beanFactory = WebApplicationContextUtils.getWebApplicationContext(getServletContext());           
+       
+    XmlBeanFactory rootConf = new XmlBeanFactory(new ClassPathResource("conf/default-aranea-conf.xml"), beanFactory);
+
     PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
-    cfg.setLocation(new ClassPathResource("spring-property-conf/default-aranea-conf.properties"));
+    cfg.setLocation(new ClassPathResource("conf/default-aranea-conf.properties"));
     
     Properties localConf = new Properties();
     try {
@@ -58,20 +60,25 @@ public class SimpleAraneaSpringDispatcherServlet extends BaseAraneaDispatcherSer
     
     cfg.postProcessBeanFactory(rootConf);
     
+    XmlBeanDefinitionReader localConfReader = new XmlBeanDefinitionReader(rootConf);
+    localConfReader.loadBeanDefinitions(new ServletContextResource(getServletContext(), "/WEB-INF/aranea-conf.xml"));
+    
+    webAppCtx = new GenericWebApplicationContext(rootConf);    
+    
     super.init();        
   }  
   
   protected ServletServiceAdapterComponent buildRootComponent() {
     ServletServiceAdapterComponent adapter = 
-      (ServletServiceAdapterComponent) rootConf.getBean(ARANEA_ROOT);
+      (ServletServiceAdapterComponent) webAppCtx.getBean(ARANEA_ROOT);
     return adapter;
   }
   
   protected Map getEnvironmentEntries() { 
     Map result = new HashMap();
-    result.put(BeanFactory.class, beanFactory);
-    result.put(ApplicationContext.class, beanFactory);
-    result.put(WebApplicationContext.class, beanFactory);    
+    result.put(BeanFactory.class, webAppCtx);   
+    result.put(ApplicationContext.class, webAppCtx);
+    result.put(WebApplicationContext.class, webAppCtx);
     return result;
   }
 }

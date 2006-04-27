@@ -6,7 +6,6 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value> 
 			/WEB-INF/services.xml	
-			/WEB-INF/aranea-conf.xml
 		</param-value>
 	</context-param>
 
@@ -24,7 +23,7 @@
 
    <servlet>
       <servlet-name>araneaServlet</servlet-name>
-     	<servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+     	<servlet-class>org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
    </servlet>
 

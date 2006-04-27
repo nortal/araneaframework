@@ -10,4 +10,9 @@
   <bean id="araneaApplicationStart" 
     class="example.NameWidget"  
     singleton="false"/>	
+    
+   <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"
+    id="araneaMainStatisticFilter" singleton="false">
+    <property name="namespace" value="MYOWN"/>
+  </bean>
 </beans>
