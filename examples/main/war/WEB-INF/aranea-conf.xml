@@ -21,8 +21,8 @@
 				<ref bean="araneaCriticalErrorHandler"/>
 				<ref bean="araneaReadFileFilter"/>
 				<ref bean="araneaMainStatisticFilter"/>
-                <ref bean="requestEncodingFilter"/>
-                <ref bean="araneaFileUploadFilter"/>
+        <ref bean="requestEncodingFilter"/>
+        <ref bean="araneaFileUploadFilter"/>
 			</list>
 		</property>
 	</bean>  
@@ -33,6 +33,7 @@
     <property name="serviceMap">
       <map>
         <entry key="application" value-ref="araneaSessionRouter"/>
+        <entry key="whateva" value-ref="blah"/>
       </map>
     </property>
   </bean>
