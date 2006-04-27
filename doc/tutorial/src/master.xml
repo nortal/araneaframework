@@ -241,7 +241,7 @@
   <!-- Aranea dispatcher servlet -->
    <servlet>
       <servlet-name>araneaServlet</servlet-name>
-      <servlet-class>org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet</servlet-class>
+      <servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
    </servlet>
    

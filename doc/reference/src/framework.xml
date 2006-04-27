@@ -261,7 +261,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </para>
 
       <para>
-        To make use of the simplified configuration one should use the Servlet <literal>org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet</literal> as illustrated in the following example:
+        To make use of the simplified configuration one should use the Servlet <literal>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</literal> as illustrated in the following example:
         <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC 
     "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
@@ -290,7 +290,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
    <servlet>
       <servlet-name>araneaServlet</servlet-name>
       <servlet-class>
-        org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet
+        org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet
       </servlet-class>
       <load-on-startup>1</load-on-startup>
    </servlet>

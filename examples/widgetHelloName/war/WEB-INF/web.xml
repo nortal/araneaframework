@@ -12,7 +12,11 @@
    
    <servlet>
       <servlet-name>araneaServlet</servlet-name>
-     	<servlet-class>org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet</servlet-class>
+     	<servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+     	<init-param>
+     		<param-name>araneaApplicationStart</param-name>
+     		<param-value>example.NameWidget</param-value>
+     	</init-param>
       <load-on-startup>1</load-on-startup>
    </servlet>
 
