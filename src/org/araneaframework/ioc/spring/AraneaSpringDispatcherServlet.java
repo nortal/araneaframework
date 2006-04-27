@@ -38,24 +38,35 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
-  public static final String DEFAULT_ARANEA_ROOT = "araneaApplicationRoot";
-  public static final String ARANEA_ROOT_INIT_PARAMETER_NAME = "araneaApplicationRoot";  
-  
+public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {   
   public static final String ARANEA_START = "araneaApplicationStart";  
-  public static final String ARANEA_START_CLASS_PARAMETER = "araneaApplicationStart";
   
   public static final String ARANEA_DEFAULT_CONF_XML = "conf/default-aranea-conf.xml";
   public static final String ARANEA_DEFAULT_CONF_PROPERTIES = "conf/default-aranea-conf.properties";
-  public static final String ARANEA_CUSTOM_CONF_XML = "/WEB-INF/aranea-conf.xml";
-  public static final String ARANEA_CUSTOM_CONF_PROPERTIES = "/WEB-INF/aranea-conf.properties";
+  
+  public static final String DEFAULT_ARANEA_ROOT = "araneaApplicationRoot";    
+  public static final String DEFAULT_ARANEA_CUSTOM_CONF_XML = "/WEB-INF/aranea-conf.xml";
+  public static final String DEFAULT_ARANEA_CUSTOM_CONF_PROPERTIES = "/WEB-INF/aranea-conf.properties";
+  
+  public static final String ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER = "araneaCustomConfXML";
+  public static final String ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER = "araneaCustomConfProperties";
+  public static final String ARANEA_START_CLASS_INIT_PARAMETER = "araneaApplicationStart";
+  public static final String ARANEA_ROOT_INIT_PARAMETER = "araneaApplicationRoot";
   
   protected WebApplicationContext webAppCtx;
   
-  public void init() throws ServletException {  
+  public void init() throws ServletException {    
+    //Reading init-param's
+    String araneaCustomConfXml = DEFAULT_ARANEA_CUSTOM_CONF_XML;    
+    if (getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER) != null)
+      araneaCustomConfXml = getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER);    
+    
+    String araneaCustomConfProperties = DEFAULT_ARANEA_CUSTOM_CONF_PROPERTIES;    
+    if (getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER) != null)
+      araneaCustomConfXml = getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER);    
+
     //Getting the Spring loaded main web application context
     WebApplicationContext beanFactory = WebApplicationContextUtils.getWebApplicationContext(getServletContext());                     
-    
     
     //Loading default Aranea configuration
     XmlBeanFactory rootConf = new XmlBeanFactory(new ClassPathResource(ARANEA_DEFAULT_CONF_XML), beanFactory);
@@ -64,13 +75,12 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     //Loading default properties
     PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
     cfg.setLocation(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
-    
-    
+        
     //Loading custom properties
     Properties localConf = new Properties();
     try {
-      if (getServletContext().getResource(ARANEA_CUSTOM_CONF_PROPERTIES) != null)
-        localConf.load(getServletContext().getResourceAsStream( ARANEA_CUSTOM_CONF_PROPERTIES));
+      if (getServletContext().getResource(araneaCustomConfProperties) != null)
+        localConf.load(getServletContext().getResourceAsStream(araneaCustomConfProperties));
     }
     catch (IOException e) {
       throw new ServletException(e);
@@ -84,9 +94,9 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     
     //Loading custom configuration 
     try {
-      if (getServletContext().getResource(ARANEA_CUSTOM_CONF_XML) != null) {    
+      if (getServletContext().getResource(araneaCustomConfXml) != null) {    
         XmlBeanDefinitionReader localConfReader = new XmlBeanDefinitionReader(rootConf);
-        localConfReader.loadBeanDefinitions(new ServletContextResource(getServletContext(), "/WEB-INF/aranea-conf.xml"));
+        localConfReader.loadBeanDefinitions(new ServletContextResource(getServletContext(), araneaCustomConfXml));
       }
     }
     catch (BeansException e) {
@@ -98,11 +108,11 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     
     
     //Reading the starting widget from an init parameter
-    if (getServletConfig().getInitParameter(ARANEA_START_CLASS_PARAMETER) != null) {
+    if (getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER) != null) {
       Class startClass;
       try {
         startClass = Thread.currentThread().getContextClassLoader().loadClass(
-            getServletConfig().getInitParameter(ARANEA_START_CLASS_PARAMETER));
+            getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER));
       }
       catch (ClassNotFoundException e) {
         throw new AraneaRuntimeException(e);
@@ -120,8 +130,8 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   protected ServletServiceAdapterComponent buildRootComponent() {
     //Getting the Aranea root component name
     String araneaRoot = DEFAULT_ARANEA_ROOT;    
-    if (getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER_NAME) != null)
-      araneaRoot = getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER_NAME);    
+    if (getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER) != null)
+      araneaRoot = getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER);    
     
     //Creating the root bean
     ServletServiceAdapterComponent adapter = 
