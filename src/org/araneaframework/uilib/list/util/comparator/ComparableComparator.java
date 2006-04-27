@@ -31,6 +31,9 @@ public class ComparableComparator implements Comparator, Serializable {
 	public static final ComparableComparator INSTANCE = new ComparableComparator();
 
 	public int compare(Object o1, Object o2) {
+		if (log.isDebugEnabled()) {
+			log.debug("Comparing objects " + o1 + " (" + o1.getClass().getName() + ") and " + o2 + " (" + o2.getClass().getName() + ")");			
+		}
 		return ((Comparable) o1).compareTo(o2);
 	}
 }
