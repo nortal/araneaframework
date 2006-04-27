@@ -74,7 +74,7 @@ public interface PopupWindowContext extends Serializable {
 	/**
 	 * Closes the server side thread service (serving client side popup).
 	 * @param id thread (popup) ID to close.
-	 * @param serviceType either <code>PopupWindowContext.THREAD_POPUP</code> or <code>PopupWindowContext.APPLICATION_POPUP</code>.
+	 * @param serviceContext either <code>PopupWindowContext.THREAD_POPUP</code> or <code>PopupWindowContext.APPLICATION_POPUP</code>.
 	 * @return whether service with given thread id was closed. 
 	 */
 	public boolean close(String id, Class serviceContext) throws Exception;

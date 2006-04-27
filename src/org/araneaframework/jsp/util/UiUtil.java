@@ -291,7 +291,7 @@ public class UiUtil {
    * @param value string value
    * @param expression expression
    * 
-   * @throw UiException if both value and expression are specified
+   * @throws UiException if both value and expression are specified
    */  
   public static void writeScriptString_rt(Writer out, String value, String expression) throws IOException, UiException {
     if (value != null && expression != null)

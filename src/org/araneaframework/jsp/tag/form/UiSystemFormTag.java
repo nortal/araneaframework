@@ -64,6 +64,7 @@ public abstract class UiSystemFormTag extends UiBaseTag {
     UiUtil.writeAttribute(out, "accept-charset", getAcceptCharset());
     UiUtil.writeAttribute(out, "action", getFormAction());
     UiUtil.writeAttribute(out, "style", "margin: 0px");
+    UiUtil.writeAttribute(out, "onsubmit", "javascript:return false");
     UiUtil.writeCloseStartTag(out);
 
     // Script

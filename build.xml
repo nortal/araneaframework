@@ -157,7 +157,13 @@
 	
 	<target name="javadoc">
 		<mkdir dir="dist/doc/javadoc/" />
-		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="dist/doc/javadoc/"/>
+		<javadoc 
+			packagenames="org.araneaframework.*" 
+			sourcepath="src"
+			destdir="dist/doc/javadoc/">
+			<tag name="jsp.tag" enabled="false"/>
+			<tag name="jsp.attribute" enabled="false"/>
+		</javadoc>
 	</target>
 	
 	<target name="javadoc-zip">
