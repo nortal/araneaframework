@@ -62,8 +62,8 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     if (validate)
       writeValidationScript(out, viewModel);
 
-    writeHourSelect(out, name, systemFormId);
-    writeMinuteSelect(out, name);
+    writeHourSelect(out, name, viewModel.isDisabled());
+    writeMinuteSelect(out, name, viewModel.isDisabled());
 
     out.write("</td></tr></table>\n");
 
@@ -103,13 +103,18 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
    * Helper functions, mostly javascript.
    * ***********************************************************************************/
 
-  protected void writeMinuteSelect(Writer out, String name) throws IOException {
+  protected void writeMinuteSelect(Writer out, String name, boolean disabled) throws IOException {
     out.write("<select name='"
         + name
         + ".select2' onChange=\"" +
         fillXJSCallConstructor("fillText", systemFormId, name)
-        + ";\">\n");
+        + ";\"");
 
+    if (disabled)
+      out.write(" disabled=\"true\"");
+    out.write(">\n");
+
+   // TODO: make JS that fills this select
     out.write("<option value=''></option>\n");
     for (int i = 0; i < 60; i++) {
       out.write("<option value='"
@@ -120,13 +125,18 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     out.write("<SCRIPT>" + fillXJSCallConstructor("fillSelect", systemFormId, name) + ";</SCRIPT>\n");
   }
 
-  protected void writeHourSelect(Writer out, String name, String systemFormId) throws IOException {
+  protected void writeHourSelect(Writer out, String name, boolean disabled) throws IOException {
     out.write("<select name='"
         + name
         + ".select1' onChange=\"" + 
-        fillXJSCallConstructor("fillText", systemFormId, name) + ";\">\n");
+        fillXJSCallConstructor("fillText", systemFormId, name) + ";\"");
+    if (disabled)
+      out.write(" disabled=\"true\"");
+    out.write(">\n");
+    
     out.write("<option value=''></option>\n");
 
+    // TODO: make JS that fills this select
     for (int i = 0; i < 24; i++) {
       out.write("<option value='"
           + (i < 10 ? "0" + i : String.valueOf(i)) + "'>"
@@ -173,10 +183,6 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
   }
 
   protected String fillXJSCallConstructor(String function, String formId, String element) {
-    return staticFillXJSCall(function, formId, element);
-  }
-
-  public static final String staticFillXJSCall(String function, String formId, String element) {
-    return function + "(document." + formId + ", '" + element + "')";
+    return UiStdFormTimeInputTag.staticFillXJSCall(function, formId, element);
   }
 }

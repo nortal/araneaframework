@@ -148,7 +148,7 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
    */
   public void setDisabled(boolean disabled) {
     this.disabled = disabled;
-  } 
+  }
   
   //*********************************************************************
   //* ABSTRACT METHODS
@@ -189,7 +189,12 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
     readFromRequest(input.getScope().toString(), ((ServletInputData) input).getRequest()); 
   }
   
-  public Widget.Interface _getWidget() {
+  protected void handleEvent(InputData input) throws Exception {
+    if (!disabled)
+      super.handleEvent(input);
+  }
+
+public Widget.Interface _getWidget() {
     return new WidgetImpl();
   }
   

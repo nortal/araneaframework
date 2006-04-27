@@ -40,8 +40,8 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     if (validate)
       writeValidationScript(out, viewModel);
 
-    writeHourSelect(out, name, systemFormId);
-    writeMinuteSelect(out, name);
+    writeHourSelect(out, name, systemFormId, viewModel.isDisabled());
+    writeMinuteSelect(out, name, viewModel.isDisabled());
 
     out.write("</td></tr></table>\n");
 
@@ -49,11 +49,16 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     return EVAL_PAGE;
   }
 
-  protected void writeMinuteSelect(Writer out, String name) throws IOException {
+  protected void writeMinuteSelect(Writer out, String name, boolean disabled) throws IOException {
     out.write("<select name='" + name + ".select2' onChange=\""
         + fillXJSCallConstructor("fillTimeText", systemFormId, name)
-        + ";\">\n");
+        + ";\"");
 
+    if (disabled)
+      out.write(" disabled=\"true\"");
+    out.write(">\n");
+
+    // TODO: make JS that fills this select
     out.write("<option value=''></option>\n");
     for (int i = 0; i < 60; i++) {
       out.write("<option value='"
@@ -66,12 +71,16 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
         + ";</SCRIPT>\n");
   }
 
-  protected void writeHourSelect(Writer out, String name, String systemFormId) throws IOException {
+  protected void writeHourSelect(Writer out, String name, String systemFormId, boolean disabled) throws IOException {
     out.write("<select name='" + name + ".select1' onChange=\""
         + fillXJSCallConstructor("fillTimeText", systemFormId, name)
-        + ";\">\n");
+        + ";\"");
+    if (disabled)
+      out.write(" disabled=\"true\"");
+    out.write(">\n");
     out.write("<option value=''></option>\n");
 
+    // TODO: make JS that fills this select
     for (int i = 0; i < 24; i++) {
       out.write("<option value='"
           + (i < 10 ? "0" + i : String.valueOf(i)) + "'>"
@@ -118,7 +127,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     UiUtil.writeAttribute(out, "size", size);
     UiUtil.writeAttribute(out, "label", label);
     UiUtil.writeAttribute(out, "tabindex", tabindex);
-    UiUtil.writeAttribute(out, "onBlur", "fillTimeSelect('" + name + "');");
+    UiUtil.writeAttribute(out, "onBlur", fillXJSCallConstructor("fillTimeSelect", systemFormId, name) + ";");
     if (!StringUtils.isBlank(accessKey))
       UiUtil.writeAttribute(out, "accesskey", accessKey);
     if (disabled)
@@ -128,6 +137,10 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
   }
 
   protected String fillXJSCallConstructor(String function, String formId, String element) {
-    return UiStdFormDateTimeInputTag.staticFillXJSCall(function, formId, element);
+    return UiStdFormTimeInputTag.staticFillXJSCall(function, formId, element);
+  }
+  
+  public static final String staticFillXJSCall(String function, String formId, String element) {
+    return function + "(document." + formId + ", '" + element + "')";
   }
 }

@@ -70,8 +70,8 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
     UiUtil.writeAttribute(out, "tabindex", tabindex);
     if (events && !viewModel.isDisabled()) {
       writeEventAttribute(out);
-    } else {
-      out.write(" DISABLED ");
+    } else if (viewModel.isDisabled()) {
+      UiUtil.writeAttribute(out, "disabled", "true");
     }
     UiUtil.writeAttributes(out, attributes);
     if (accessKey != null)
