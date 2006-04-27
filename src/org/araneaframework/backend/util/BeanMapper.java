@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 
@@ -258,7 +259,7 @@ public class BeanMapper implements Serializable {
 		String subFields = null;
 		if (fieldName.indexOf(".") != -1) {
 			mainFieldName = fieldName.substring(0, fieldName.indexOf("."));
-			subFields = fieldName.substring(mainFieldName.length());
+			subFields = fieldName.substring(mainFieldName.length() + 1);
 			return new BeanMapper(getBeanFieldType(mainFieldName)).getSetterMethod(subFields);
 		}
 		
