@@ -61,6 +61,8 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	protected String elementId;
 	protected String fullElementId;
 	protected String event = "onclick";
+	
+	protected String internalElementId;
 
 
 	/**
@@ -167,6 +169,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	protected final int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		String intHandler = handler;
+		internalElementId = fullElementId;
 		
 		if (StringUtils.isBlank(intHandler)) {
 			// One of elemenId/event must be specified
@@ -178,9 +181,9 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 				throw new JspException("Either elementId or fullElementId must be specified, not both.");
 
 			// If elementId was given, translate to fullElementId
-			if (fullElementId == null)
-				fullElementId = elementIdToFullElementId(pageContext, elementId);
-			intHandler = createHandlerToInvokeJavascriptEvent(fullElementId, event);
+			if (internalElementId == null)
+				internalElementId = elementIdToFullElementId(pageContext, elementId);
+			intHandler = createHandlerToInvokeJavascriptEvent(internalElementId, event);
 		}
 		else {
 			// None of the elementId/event attributes may be specified
