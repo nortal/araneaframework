@@ -37,7 +37,7 @@ public class SpringServiceFactory implements ServiceFactory {
    * @param beanFactoryClass the class under which BeanFactory resides in the Environment.
    */
   public void setBeanFactoryClass(Class beanFactoryClass) {
-	this.beanFactoryClass = beanFactoryClass;
+    this.beanFactoryClass = beanFactoryClass;
   }
 
   /**

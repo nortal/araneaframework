@@ -15,4 +15,16 @@
     id="araneaMainStatisticFilter" singleton="false">
     <property name="namespace" value="MYOWN"/>
   </bean>
+  
+  <bean id="customApplicationFilters" singleton="false"
+    class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
+    <property name="filterChain">     
+      <list>
+         <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"
+          singleton="false">
+          <property name="namespace" value="MAMBA NR.5"/>
+        </bean>
+      </list>
+    </property>
+  </bean> 
 </beans>

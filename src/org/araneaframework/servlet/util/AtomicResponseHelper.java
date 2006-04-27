@@ -142,10 +142,7 @@ public class AtomicResponseHelper {
         throw new IllegalStateException("Cannot reset buffer - response is already committed");
       
       resetStream();
-      resetWriter();
-      
-      if (!isCommitted())
-        reset();
+      resetWriter();     
     }    
     
     public byte[] getData() throws Exception {

@@ -131,7 +131,7 @@
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/ioc/spring/**/*"/>			
 			</fileset>
-			<fileset dir="etc" includes="spring-property-conf/**/*"/>
+			<fileset dir="etc" includes="conf/**/*"/>
 		</jar>	
 		
 		<jar destfile="dist/aranea-jsp.jar" compress="true">
