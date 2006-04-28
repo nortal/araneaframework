@@ -44,7 +44,7 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
 	protected boolean hasContent = false;
 	
 	public void setPageContext(PageContext pageContext) {
-		attributes = new HashMap();		
+		attributes = new HashMap();
 		hasContent = false;
 		
 		super.setPageContext(pageContext);
