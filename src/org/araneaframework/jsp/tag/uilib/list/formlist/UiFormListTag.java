@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.uilib.list.formlist;
 
 import java.io.Writer;
 import javax.servlet.jsp.PageContext;
+import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.UiWidgetTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
 import org.araneaframework.jsp.util.UiUtil;
@@ -44,19 +45,23 @@ public class UiFormListTag extends UiWidgetTag {
 	/**
 	 *
 	 */
-	public int before(Writer out) throws Exception {
+	public int doStartTag(Writer out) throws Exception {
 		if (id == null) {
-			String listId = (String) UiUtil.readAttribute(pageContext, UiListTag.LIST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+			String listId = (String) UiUtil.requireContextEntry(pageContext, UiListTag.LIST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 			id = listId + ".formList";
 		}
 		
-		super.before(out);
-						
-		formListViewModel = (FormListWidget.ViewModel) viewModel;	
+		super.doStartTag(out);
+		
+		try {
+			formListViewModel = (FormListWidget.ViewModel) viewModel;
+		} catch (ClassCastException e) {
+			throw new UiException("Could not acquire form list view model. <ui:formList> should have id specified or should be in context of real FormListWidget.", e);
+		}
 		
 		// Set variables
-		pushAttribute(FORM_LIST_ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_LIST_VIEW_MODEL_KEY_REQUEST, formListViewModel, PageContext.REQUEST_SCOPE);		
+		addContextEntry(FORM_LIST_ID_KEY_REQUEST, id);
+		addContextEntry(FORM_LIST_VIEW_MODEL_KEY_REQUEST, formListViewModel);		
 		
 		return EVAL_BODY_INCLUDE; 
 	}		
