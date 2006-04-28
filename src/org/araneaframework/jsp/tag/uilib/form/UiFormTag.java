@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form;				
 
 import java.io.Writer;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.UiWidgetTag;
 import org.araneaframework.jsp.util.UiUtil;
@@ -42,14 +41,12 @@ public class UiFormTag extends UiWidgetTag {
 	public final static String FORM_SCOPED_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.SCOPED_FULL_ID";
 	public final static String FORM_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FULL_ID";
 	public final static String FORM_VIEW_MODEL_KEY_REQUEST = "form";
-	public final static String FORM_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FORM";    
-  
-  //
-  // Implementation
-  //
-  
-	public int before(Writer out) throws Exception {
-		super.before(out);
+	public final static String FORM_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FORM";
+	
+	protected FormWidget.ViewModel formViewModel;
+
+	public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		// Get form data
 		try {
@@ -59,10 +56,10 @@ public class UiFormTag extends UiWidgetTag {
 		}
 
 		// Set variables
-		pushAttribute(FORM_SCOPED_FULL_ID_KEY_REQUEST, scopedFullId, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_FULL_ID_KEY_REQUEST, fullId, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_KEY_REQUEST, widget, PageContext.REQUEST_SCOPE);
+		addContextEntry(FORM_SCOPED_FULL_ID_KEY_REQUEST, scopedFullId);
+		addContextEntry(FORM_FULL_ID_KEY_REQUEST, fullId);
+		addContextEntry(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel);
+		addContextEntry(FORM_KEY_REQUEST, widget);
    
 		writeJavascript(out);
 	
@@ -85,6 +82,4 @@ public class UiFormTag extends UiWidgetTag {
     out.write(");\n");
     UiUtil.writeEndTag(out, "script");
   }
-  
-	protected FormWidget.ViewModel formViewModel;		
 }

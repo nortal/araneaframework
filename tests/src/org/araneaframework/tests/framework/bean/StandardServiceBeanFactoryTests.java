@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.araneaframework.Service;
 import org.araneaframework.ioc.spring.SpringServiceFactory;
 import org.araneaframework.mock.core.MockEventfulStandardService;
+import org.araneaframework.tests.mock.MockEnvironment;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -33,7 +34,7 @@ public class StandardServiceBeanFactoryTests extends TestCase {
     factory = new SpringServiceFactory();
     beanFactory = new MockBeanFactory();
     
-    factory.setBeanFactory(beanFactory);
+    factory.setBeanFactoryClass(MockBeanFactory.class);
   }
   
   public void testBuildService() {
@@ -41,7 +42,7 @@ public class StandardServiceBeanFactoryTests extends TestCase {
     beanFactory.setBean(service);
     
     factory.setBeanId("beanId");
-    assertEquals(service, factory.buildService());
+    assertEquals(service, factory.buildService(new MockEnvironment()));
     assertEquals("beanId",beanFactory.getBeanId());
   }
 }

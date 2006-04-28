@@ -67,5 +67,5 @@ public interface FormRowHandler extends RowHandler {
    * This method is called when the supplied row has been opened or closed.
    * @param formRow editable row.
    */
-  public void openOrCloseRow(FormRow formRow) throws Exception ;
+  public void openOrCloseRow(FormRow formRow) throws Exception;
 }

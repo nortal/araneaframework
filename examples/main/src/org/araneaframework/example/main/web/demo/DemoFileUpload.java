@@ -18,7 +18,6 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.servlet.PopupWindowContext;
@@ -45,8 +44,6 @@ import org.araneaframework.uilib.support.FileInfo;
  * @author Taimo Peelo (taimo@webmedia.ee) 
  */
 public class DemoFileUpload extends TemplateBaseWidget {
-	private static final Logger log = Logger.getLogger(DemoFileUpload.class);
-	
 	private FormWidget form;
 	private ListWidget uploadList;
 

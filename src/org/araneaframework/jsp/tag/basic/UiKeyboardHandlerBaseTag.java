@@ -34,7 +34,10 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Konstantin Tretyakov (kt@webmedia.ee)
  */
 public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
-  
+  protected String intKeyCode;
+  protected String intKey;
+  protected String keyCode;
+  protected String key;
   
 	//
 	// Attributes
@@ -79,26 +82,25 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
    * Checks that either keyCode or key is specified (not both), and initializes the keyCode field.
    * When overriding don't forget to invoke superimplementation first.
    */
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
-		if (!(keyCode == null ^ key == null)) 
+		intKey = key;
+		intKeyCode = keyCode;
+		
+		if (!(intKeyCode == null ^ intKey == null)) 
 			throw new JspException("Either key or keyCode must be specified for a keyboard handler tag.");
 		
-		if (keyCode == null) {
-			int iKeyCode = keyToKeyCode(key);
+		if (intKeyCode == null) {
+			int iKeyCode = keyToKeyCode(intKey);
 			if (iKeyCode == 0) throw new JspException("Invalid key alias specified (" + key + ")");
-			keyCode = String.valueOf(iKeyCode);
+			intKeyCode = String.valueOf(iKeyCode);
 		}
 		
 		return SKIP_BODY;
 	}
   
-  protected void init() {
-    keyCode = key = null;
-  }
-		
-  /**
+   /**
    * Writes "uiRegisterKeypressHandler" javascript, surrounded by &lt;script&gt tags.
    * Throws exceptions if parameters are not consistent (e.g. keyCode not specified).
    * 
@@ -174,13 +176,4 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
   		keyToKeyCodeMap.put("f" + i, new Integer(111 + i));
   	}
   }
-  
-  
- 
-  // Tag attributes
-  protected String keyCode;
-  protected String key;
-  
-  
-
 }

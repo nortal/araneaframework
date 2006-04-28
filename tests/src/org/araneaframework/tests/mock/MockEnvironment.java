@@ -14,24 +14,30 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.mock;
+package org.araneaframework.tests.mock;
 
 import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.core.BaseEnvironment;
+import org.araneaframework.uilib.ConfigurationContext;
+
 
 /**
- * @author toomas
- *
+ * This class implemets {@link UiLibEnviroment} interface
+ * providing a straightforward implementation, which basicly returns the
+ * arguments passed without any specific processing. It is used primarily for testing.
+ * 
+ * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * 
  */
 public class MockEnvironment extends BaseEnvironment {
-  private Map entries = new HashMap();
-  
-  public MockEnvironment(Map map) {
-    this.entries = map;
+  private Map contexts = new HashMap();
+
+  public MockEnvironment() {
+    contexts.put(ConfigurationContext.class, new MockConfiguration());
   }
-  
+
   public Object getEntry(Object key) {
-    return entries.get(key);
-  }
+    return contexts.get(key);
+  }	
 }

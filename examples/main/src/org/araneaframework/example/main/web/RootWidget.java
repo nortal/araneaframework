@@ -12,13 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.example.main.web;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.example.main.SecurityContext;
@@ -32,16 +31,14 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class RootWidget extends StandardPresentationWidget implements SecurityContext {
-	MenuWidget menuWidget;
+  MenuWidget menuWidget;
 
-	private static final Logger log = Logger.getLogger(RootWidget.class);
+  protected void init() throws Exception {
+    menuWidget = new MenuWidget(null);
+    addWidget("menu", menuWidget);
+    setViewSelector("root");
+  }
 
-	protected void init() throws Exception {
-		menuWidget = new MenuWidget(null);
-		addWidget("menu", menuWidget);
-		setViewSelector("root");
-	}
-  
   protected Environment getChildWidgetEnvironment() throws Exception {
     Map entries = new HashMap();
     entries.put(SecurityContext.class, this);
@@ -51,9 +48,9 @@ public class RootWidget extends StandardPresentationWidget implements SecurityCo
   public boolean hasPrivilege(String privelege) {
     return false;
   }
-  
+
   public MenuWidget getMenuWidget() {
-	  return menuWidget;
+    return menuWidget;
   }
 
   public void logout() throws Exception {

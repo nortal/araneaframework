@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
@@ -34,12 +34,47 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  *   description = "Form checkbox input field, represents UiLib "CheckboxControl"."
  */
 public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
+	protected String onChangePrecondition;
 
-	protected void init() {
-		super.init();
+	public UiStdFormCheckboxTag() {
 		baseStyleClass = "aranea-checkbox";
 	}
 	
+	protected int doEndTag(Writer out) throws Exception {
+		assertControlType("CheckboxControl");		
+
+		// Prepare
+		String name = this.getScopedFullFieldId(); 		
+		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
+
+		// Write input tag							
+		UiUtil.writeOpenStartTag(out, "input");
+		UiUtil.writeAttribute(out, "id", name);
+		UiUtil.writeAttribute(out, "name", name);
+		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "type", "checkbox");
+
+		if ("true".equals(viewModel.getSimpleValue()))
+			UiUtil.writeAttribute(out, "checked", "true");
+
+		if (viewModel.isDisabled())
+			UiUtil.writeAttribute(out, "disabled", "true");
+		UiUtil.writeAttribute(out, "label", localizedLabel);
+		UiUtil.writeAttribute(out, "tabindex", tabindex);
+		if (accessKey != null)
+			UiUtil.writeAttribute(out, "accesskey", accessKey);
+
+		if (events && viewModel.isOnChangeEventRegistered())
+			this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
+					updateRegionNames);
+
+		UiUtil.writeAttributes(out, attributes);   
+		UiUtil.writeCloseStartEndTag_SS(out);
+
+		super.doEndTag(out);
+		return EVAL_PAGE;      
+	}
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -49,51 +84,4 @@ public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 	public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
 		this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
 	}
-	
-	//
-	// Implementation
-	//  
-	
-	protected int after(Writer out) throws Exception {
-		// Type check
-		assertControlType("CheckboxControl");		
-		
-		// Prepare
-		String name = this.getScopedFullFieldId(); 		
-		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
-		
-		// Write input tag							
-		UiUtil.writeOpenStartTag(out, "input");
-		UiUtil.writeAttribute(out, "id", name);
-		UiUtil.writeAttribute(out, "name", name);
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		UiUtil.writeAttribute(out, "type", "checkbox");
-		
-		if ("true".equals(viewModel.getSimpleValue()))
-			UiUtil.writeAttribute(out, "checked", "true");
-		
-		if (viewModel.isDisabled())
-			UiUtil.writeAttribute(out, "disabled", "true");
-		UiUtil.writeAttribute(out, "label", localizedLabel);
-		UiUtil.writeAttribute(out, "tabindex", tabindex);
-		if (accessKey != null)
-			UiUtil.writeAttribute(out, "accesskey", accessKey);
-		
-		if (events && viewModel.isOnChangeEventRegistered())
-			this.writeEventAttributeForUiEvent(out, "onclick", id, "onChanged", validateOnEvent, onChangePrecondition,
-					updateRegionNames);
-		
-		UiUtil.writeAttributes(out, attributes);   
-		UiUtil.writeCloseStartEndTag_SS(out);
-		
-		// Continue
-		super.after(out);
-		return EVAL_PAGE;      
-	}
-	
-	protected String onChangePrecondition;	
 }
-
-
-
-

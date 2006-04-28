@@ -144,8 +144,10 @@ public class AtomicResponseHelper {
       resetStream();
       resetWriter();
       
-      if (!isCommitted())
-        reset();
+      //XXX: this causes the session to be created on every request
+      //Uncomment or remove when bug 105 solved.
+      /*if (!isCommitted())
+        reset();*/
     }    
     
     public byte[] getData() throws Exception {

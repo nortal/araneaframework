@@ -19,7 +19,6 @@ package org.araneaframework.servlet.core;
 import java.util.HashMap;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;

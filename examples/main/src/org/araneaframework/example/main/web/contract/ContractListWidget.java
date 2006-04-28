@@ -18,7 +18,6 @@ package org.araneaframework.example.main.web.contract;
 
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.framework.FlowContext;

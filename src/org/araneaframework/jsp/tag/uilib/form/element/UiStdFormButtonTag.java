@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.util.StringUtil;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -33,100 +34,97 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Form button, represents UiLib "ButtonControl"."
  */
 public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
-	private static final String RENDER_BUTTON = "button";
-	private static final String RENDER_INPUT = "input";
-	
-	public String renderMode;
+  private static final String RENDER_BUTTON = "button";
+  private static final String RENDER_INPUT = "input";
+  protected String renderMode = UiStdFormButtonTag.RENDER_BUTTON;
 
-	protected void init() {
-		super.init();
-		baseStyleClass = "aranea-button";
-		renderMode = UiStdFormButtonTag.RENDER_BUTTON;
-	}
+  public UiStdFormButtonTag() {
+    baseStyleClass = "aranea-button";
+  }
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = 
-	 *   	"Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button." 
-	 */
-	public void setRenderMode(String renderMode) throws JspException {
-		this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
-	}
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
 
-	//
-	// Implementation
-	//  
+    // Prepare
+    String name = this.getScopedFullFieldId();
 
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+    UiUtil.writeOpenStartTag(out, renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON) ? UiStdFormButtonTag.RENDER_BUTTON : UiStdFormButtonTag.RENDER_INPUT);
 
-		// Prepare
-		String name = this.getScopedFullFieldId();
-		
-		UiUtil.writeOpenStartTag(out, renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON) ? UiStdFormButtonTag.RENDER_BUTTON : UiStdFormButtonTag.RENDER_INPUT);
+    if (renderMode.equals(UiStdFormButtonTag.RENDER_INPUT))
+      UiUtil.writeAttribute(out, "type", "button");
+    UiUtil.writeAttribute(out, "id", name);
+    UiUtil.writeAttribute(out, "name", name);
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    if (showLabel && renderMode.equals(UiStdFormButtonTag.RENDER_INPUT)) {
+      if (accessKey != null) {
+        String escapedLabel = StringUtil
+        .escapeHtmlEntities(localizedLabel);
+        UiUtil.writeAttribute(out, "value", StringUtil
+            .underlineAccessKey(escapedLabel, accessKey));
+      } else {
+        UiUtil.writeAttribute(out, "value", localizedLabel);      
+      }
+    }
+    if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON))
+      UiUtil.writeAttribute(out, "label", localizedLabel);
+    UiUtil.writeAttribute(out, "tabindex", tabindex);
+    if (events && !viewModel.isDisabled()) {
+      writeEventAttribute(out);
+    } else if (viewModel.isDisabled()) {
+      UiUtil.writeAttribute(out, "disabled", "true");
+    }
+    UiUtil.writeAttributes(out, attributes);
+    if (accessKey != null)
+      UiUtil.writeAttribute(out, "accesskey", accessKey);
+    if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON))
+      UiUtil.writeCloseStartTag_SS(out);      
+    if (renderMode.equals(UiStdFormButtonTag.RENDER_INPUT))
+      UiUtil.writeCloseStartEndTag(out);      
 
-		if (renderMode.equals(UiStdFormButtonTag.RENDER_INPUT))
-			UiUtil.writeAttribute(out, "type", "button");
-		UiUtil.writeAttribute(out, "id", name);
-		UiUtil.writeAttribute(out, "name", name);
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		if (showLabel && renderMode.equals(UiStdFormButtonTag.RENDER_INPUT)) {
-			if (accessKey != null) {
-				String escapedLabel = StringUtil
-						.escapeHtmlEntities(localizedLabel);
-				UiUtil.writeAttribute(out, "value", StringUtil
-						.underlineAccessKey(escapedLabel, accessKey));
-			} else {
-				UiUtil.writeAttribute(out, "value", localizedLabel);			
-			}
-		}
-		if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON))
-			UiUtil.writeAttribute(out, "label", localizedLabel);
-		UiUtil.writeAttribute(out, "tabindex", tabindex);
-		if (events) {
-			writeEventAttribute(out);
-		}
-		UiUtil.writeAttributes(out, attributes);
-		if (accessKey != null)
-			UiUtil.writeAttribute(out, "accesskey", accessKey);
-		if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON))
-			UiUtil.writeCloseStartTag_SS(out);			
-		if (renderMode.equals(UiStdFormButtonTag.RENDER_INPUT))
-			UiUtil.writeCloseStartEndTag(out);			
+    // Continue
+    return EVAL_BODY_INCLUDE;
+  }
 
-		// Continue
-		return EVAL_BODY_INCLUDE;
-	}
+  protected int doEndTag(Writer out) throws Exception {
 
-	protected int after(Writer out) throws Exception {
+    if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON)) {
+      if (showLabel) {
+        if (accessKey != null) {
+          String escapedLabel = StringUtil
+          .escapeHtmlEntities(localizedLabel);
+          out.write(StringUtil
+              .underlineAccessKey(escapedLabel, accessKey));
+        } else {
+          UiUtil.writeEscaped(out, localizedLabel);
+        }
+      }
+      UiUtil.writeEndTag(out, UiStdFormButtonTag.RENDER_BUTTON);
+    }
 
-		if (renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON)) {
-			if (showLabel) {
-				if (accessKey != null) {
-					String escapedLabel = StringUtil
-							.escapeHtmlEntities(localizedLabel);
-					out.write(StringUtil
-							.underlineAccessKey(escapedLabel, accessKey));
-				} else {
-					UiUtil.writeEscaped(out, localizedLabel);
-				}
-			}
-			UiUtil.writeEndTag(out, UiStdFormButtonTag.RENDER_BUTTON);
-		}
+    // Continue
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
 
-		// Continue
-		super.after(out);
-		return EVAL_PAGE;
-	}
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = 
+   *     "Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button." 
+   */
+  public void setRenderMode(String renderMode) throws JspException {
+    if (!(renderMode.equals(UiStdFormButtonTag.RENDER_BUTTON) || renderMode.equals(UiStdFormButtonTag.RENDER_INPUT)))
+      throw new UiException("<ui:button> 'renderMode' attribute must be '" + UiStdFormButtonTag.RENDER_BUTTON + "' or '"+ UiStdFormButtonTag.RENDER_INPUT+"'");
+    this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+  }
 
-	protected boolean writeEventAttribute(Writer out) throws IOException,
-			JspException {
-		if (viewModel.isOnClickEventRegistered())
-			this.writeEventAttributeForUiEvent(out, "onclick", id, "onClicked",
-					validateOnEvent, onClickPrecondition, updateRegionNames);
+  protected boolean writeEventAttribute(Writer out) throws IOException,
+  JspException {
+    if (viewModel.isOnClickEventRegistered())
+      this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onClicked",
+          validateOnEvent, onClickPrecondition, updateRegionNames);
 
-		return viewModel.isOnClickEventRegistered();
-	}
+    return viewModel.isOnClickEventRegistered();
+  }
 }

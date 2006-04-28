@@ -24,7 +24,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.template.framework.context.WizardContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 

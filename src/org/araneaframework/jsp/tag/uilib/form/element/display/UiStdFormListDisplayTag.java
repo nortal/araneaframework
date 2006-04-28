@@ -34,7 +34,7 @@ public class UiStdFormListDisplayTag extends UiStdFormListDisplayBaseTag {
     
   /**
    */
-  protected int after(Writer out) throws Exception {    
+  protected int doEndTag(Writer out) throws Exception {    
     
     if (displayControlViewModel.getValue() != null) {
       for (Iterator i = ((List) displayControlViewModel.getValue()).iterator(); i.hasNext(); ) { 
@@ -45,7 +45,7 @@ public class UiStdFormListDisplayTag extends UiStdFormListDisplayBaseTag {
       }
     }
     
-    super.after(out);    
+    super.doEndTag(out);    
     return EVAL_PAGE;
   }
 }

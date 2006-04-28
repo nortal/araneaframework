@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.presentation;
 
@@ -27,48 +27,44 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Oleg Mürk
  */
 public abstract class UiStdImageBaseTag extends UiImageBaseTag {
-  
-  //
-  // Implementation
-  //  
-  
-  protected void init() {
-	  super.init();
-	  this.baseStyleClass = "aranea-image";
+  public UiStdImageBaseTag() {
+    this.baseStyleClass = "aranea-image";
   }
-  
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     writeImageLocal(out, src, width, height, alt, getStyleClass(), title); 
-    // Continue
     return EVAL_BODY_INCLUDE;    
   }
-  
+
   /**
    * Method to write out image with given properties and default style.
    */ 
   public void writeImage(Writer out, String src, String width, String height, String title) throws JspException, IOException {
-	  writeImage(out, src, width, height, null, getStyleClass(), title);
+    writeImage(out, src, width, height, null, styleClass, title);
   }
-  
+
+  public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass,  String title) throws JspException, IOException {
+    writeImage(out, src,width, height, alt, styleClass, title);
+  }
+
+  /* ***********************************************************************************
+   * STATIC methods for writing out <IMG> tag
+   * ***********************************************************************************/
   /**
    * Static method to write out image with given properties.
    */ 
   public static void writeImage(Writer out, String src, String width, String height, String styleClass, String title) throws JspException, IOException {
     writeImage(out, src,width, height, null, styleClass, title);
   }
-  
-  public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass,  String title) throws JspException, IOException {
-    writeImage(out, src,width, height, alt, styleClass, title);
-  }
-  
+
   /**
    * Static method to write out image with given properties.
    */ 
   public static void writeImage(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {
     UiUtil.writeOpenStartTag(out, "img");
     if (styleClass != null)
-        UiUtil.writeAttribute(out, "class", styleClass);
+      UiUtil.writeAttribute(out, "class", styleClass);
 
     UiUtil.writeAttribute(out, "src", src, false);
     UiUtil.writeAttribute(out, "width", width);
@@ -76,7 +72,7 @@ public abstract class UiStdImageBaseTag extends UiImageBaseTag {
     UiUtil.writeAttribute(out, "border", 0+"");
     UiUtil.writeAttribute(out, "alt", alt);
     UiUtil.writeAttribute(out, "title", title);
-    
+
     UiUtil.writeCloseStartEndTag_SS(out);
   }
 }

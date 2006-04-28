@@ -34,37 +34,25 @@ import org.araneaframework.jsp.tag.UiBaseTag;
 public class SamplePathTag extends UiBaseTag {
   public final static String KEY = "ee.wm.util.sample.web.jsp.ui.presentation.SamplePathTag.KEY";
   
-  //
-  // Implementation
-  //  
-  
-  protected int before(Writer out) throws Exception {
-    super.before(out);
-    
-    pushAttribute(KEY, this);
-    
-    // Continue
+  protected boolean hadItems = false;
+
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    addContextEntry(KEY, this);
     return EVAL_BODY_INCLUDE;    
   }
 
-  protected void init() {
-    super.init();
-    this.hadItems = false;  
-  } 
-  
   /**
    * Callback: path item
    */
   protected void onItem() {
     this.hadItems = true;
   }
-  
+
   /**
    * Tells if this path has had items.
    */
   protected boolean getHadItems() {
     return this.hadItems;
   }
-    
-  protected boolean hadItems;  
 }

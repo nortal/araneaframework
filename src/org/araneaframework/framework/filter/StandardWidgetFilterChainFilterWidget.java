@@ -18,7 +18,6 @@ package org.araneaframework.framework.filter;
 
 import java.util.List;
 import java.util.ListIterator;
-import org.apache.log4j.Logger;
 import org.araneaframework.framework.FilterWidget;
 import org.araneaframework.framework.core.BaseFilterWidget;
 
@@ -26,8 +25,6 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardWidgetFilterChainFilterWidget extends BaseFilterWidget {
-  private static final Logger log = Logger.getLogger(StandardWidgetFilterChainFilterWidget.class);
-  
   private List filterChain;  
   
   public void setFilterChain(List filterChain) {

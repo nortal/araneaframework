@@ -12,13 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 
 
@@ -28,32 +27,28 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  * @author Oleg Mürk
  */
 public abstract class UiLayoutRowBaseTag extends UiPresentationTag implements UiLayoutRowTagInterface {
-	protected String height;
-	private String cellClass;
+  protected String height;
+  private String cellClass;
 
-	public void setHeight(String height) throws JspException {
-		this.height = (String)evaluate("height", height, String.class);
-	}
-	
-	public void setCellClass(String cellClass) throws JspException {
-		this.cellClass = (String)evaluate("cellClass", cellClass, String.class);
-	}
-	
-	public String getCellClass() {
-		return cellClass;
-	}
-	
-	//
-	// Implementation
-	//
-	
-	protected int before(Writer out) throws Exception {
-		super.before(out);	
-		pushAttribute(UiLayoutRowTagInterface.KEY_REQUEST, this, PageContext.REQUEST_SCOPE);
-		return EVAL_BODY_INCLUDE;
-	}	
-	
-	protected void init() {
-		super.init();
-	}
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);  
+    addContextEntry(UiLayoutRowTagInterface.KEY_REQUEST, this);
+    return EVAL_BODY_INCLUDE;
+  }  
+
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+
+  public void setHeight(String height) throws JspException {
+    this.height = (String)evaluate("height", height, String.class);
+  }
+
+  public void setCellClass(String cellClass) throws JspException {
+    this.cellClass = (String)evaluate("cellClass", cellClass, String.class);
+  }
+
+  public String getCellClass() {
+    return cellClass;
+  }
 }

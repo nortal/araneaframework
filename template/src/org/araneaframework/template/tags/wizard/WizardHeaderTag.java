@@ -17,7 +17,6 @@
 package org.araneaframework.template.tags.wizard;
 
 import java.io.Writer;
-import org.apache.log4j.Logger;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiWidgetUtil;
 import org.araneaframework.template.framework.context.WizardContext;
@@ -33,9 +32,7 @@ import org.araneaframework.template.framework.context.WizardContext;
  *   description = "Includes navigation info."
  */
 public class WizardHeaderTag extends UiBaseTag {
-  private static Logger log = Logger.getLogger(WizardHeaderTag.class);
-
-  protected int before(Writer out) throws Exception {
+  protected int doStartTag(Writer out) throws Exception {
 	  WizardContext wizard = (WizardContext) UiWidgetUtil.getWidgetFromContext(null, pageContext);
 	  
 	  int index = wizard.getCurrentPageIndex();

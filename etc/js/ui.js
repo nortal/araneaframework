@@ -74,6 +74,7 @@ function uiValidateForm(systemForm, formId) {
 	return systemForm.uiProperties[formId].validator.validate();
 }
 
+// TODO: remove this function
 function fillText(systemForm, el) {
   if (systemForm[el+'.select1'].value=='' && systemForm[el+'.select2'].value=='') {
     systemForm[el+'.time'].value='';
@@ -82,7 +83,17 @@ function fillText(systemForm, el) {
     systemForm[el+'.time'].value=systemForm[el+'.select1'].value+':'+systemForm[el+'.select2'].value;
   }
 }
+
+function fillTimeText(systemForm, el) {
+  if (systemForm[el+'.select1'].value=='' && systemForm[el+'.select2'].value=='') {
+    systemForm[el].value='';
+  }
+  else {
+    systemForm[el].value=systemForm[el+'.select1'].value+':'+systemForm[el+'.select2'].value;
+  }
+}
     
+// TODO: remove this function
 function fillSelect(systemForm, el) {
   separatorPos = systemForm[el+'.time'].value.indexOf(':');
   if (systemForm[el+'.time'].value.substr(0, separatorPos).length==1) {
@@ -95,15 +106,6 @@ function fillSelect(systemForm, el) {
   systemForm[el+'.select2'].value=systemForm[el+'.time'].value.substr(separatorPos+1, systemForm[el+'.time'].value.length);
 }
 
-function fillTimeText(systemForm, el) {
-  if (systemForm[el+'.select1'].value=='' && systemForm[el+'.select2'].value=='') {
-    systemForm[el].value='';
-  }
-  else {
-    systemForm[el].value=systemForm[el+'.select1'].value+':'+systemForm[el+'.select2'].value;
-  }
-}
-    
 function fillTimeSelect(systemForm, el) {
   separatorPos = systemForm[el].value.indexOf(':');
   if (systemForm[el].value.substr(0, separatorPos).length==1) {
@@ -114,4 +116,11 @@ function fillTimeSelect(systemForm, el) {
   }
   systemForm[el+'.select1'].value=firstSelect;
   systemForm[el+'.select2'].value=systemForm[el].value.substr(separatorPos+1, systemForm[el].value.length);
+}
+
+// adds options empty,0-(z-1) to <select> when used inside <select>
+function addOptions(z) {
+	o = "option>";
+	document.write("<"+o+"</"+o);
+	for (i = 0; i < z; i++) document.write("<"+o+ (i < 10 ? "0" : "")+ i+"</"+o);
 }

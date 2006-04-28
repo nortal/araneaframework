@@ -17,7 +17,6 @@
 package org.araneaframework.servlet;
 
 import java.io.Serializable;
-
 import javax.servlet.http.HttpServletResponse;
 
 /**

@@ -42,8 +42,10 @@ var popupProperties = new Object();
 function currentUrl(systemFormId) {
 	if (document.getElementById(systemFormId) && document.getElementById(systemFormId).action) {
 		return document.getElementById(systemFormId).action;
+	} else if (document.forms[systemFormId] && document.forms[systemFormId].action) {
+	    return document.forms[systemFormId].action;
 	} else {
-		alert('Unable to get information about current URL. Requested popups probably cannot be processed.');
+		return location.href;
 	}
 }
 

@@ -30,7 +30,6 @@ import org.araneaframework.uilib.util.NameUtil;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class UiWidgetUtil {
-	
     public static String getContextWidgetFullId(PageContext pageContext) throws JspException  {
       return getWidgetFullIdFromContext(null, pageContext);
     }
@@ -55,7 +54,7 @@ public class UiWidgetUtil {
     
 	public static Standard.StandardWidgetInterface getWidgetFromContext(String widgetId, PageContext pageContext) throws JspException {
       UiWidgetContainer container = 
-        (UiWidgetContainer) UiUtil.readAttribute(pageContext,
+        (UiWidgetContainer) UiUtil.requireContextEntry(pageContext,
             UiWidgetContainer.REQUEST_CONTEXT_KEY, PageContext.REQUEST_SCOPE);
       
       String widgetFullId = getWidgetFullIdFromContext(widgetId, pageContext);

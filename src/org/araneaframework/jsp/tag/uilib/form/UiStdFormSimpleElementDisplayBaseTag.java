@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form;
 
 import java.io.Writer;
-
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
@@ -26,7 +25,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  */
 public abstract class UiStdFormSimpleElementDisplayBaseTag extends UiFormElementBaseDisplayTag {	
 	
-	protected int after(Writer out) throws Exception {				
+	protected int doEndTag(Writer out) throws Exception {				
 		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 		
 		UiUtil.writeOpenStartTag(out, "span");
@@ -39,6 +38,6 @@ public abstract class UiStdFormSimpleElementDisplayBaseTag extends UiFormElement
 		
 		UiUtil.writeEndTag(out, "span");		
 		
-		return super.after(out);
+		return super.doEndTag(out);
 	}
 }

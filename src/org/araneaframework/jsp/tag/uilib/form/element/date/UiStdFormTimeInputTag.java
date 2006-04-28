@@ -17,119 +17,112 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  */
 public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
 
-	protected void init() {
-		super.init();
-		baseStyleClass =  "aranea-time";
-	}
-	
-	protected int after(Writer out) throws Exception {
-		// Type check
-		assertControlType("TimeControl");
+  public UiStdFormTimeInputTag() {
+    baseStyleClass = "aranea-time";
+  }
 
-		// Prepare    
-		String name = this.getScopedFullFieldId();
-		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
+  protected int doEndTag(Writer out) throws Exception {
+    assertControlType("TimeControl");
 
-		Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
+    // Prepare    
+    String name = this.getScopedFullFieldId();
+    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 
-		// Write
-		out.write("<table border='0' cellpadding='0' cellspacing='0'><tr><td nowrap='true'>\n");
-		this.writeTimeInput(out, name, name, viewModel.getSimpleValue(),
-				localizedLabel, timeInputSize, viewModel.isDisabled(),
-				accessKey);
+    Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
 
-		if (validate)
-			writeValidationScript(out, viewModel);
+    // Write
+    out
+        .write("<table border='0' cellpadding='0' cellspacing='0'><tr><td nowrap='true'>\n");
+    this.writeTimeInput(out, name, name, viewModel.getSimpleValue(),
+        localizedLabel, timeInputSize, viewModel.isDisabled(),
+        accessKey);
 
-		writeHourSelect(out, name, systemFormId);
-		writeMinuteSelect(out, name);
+    if (validate)
+      writeValidationScript(out, viewModel);
 
-		out.write("</td></tr></table>\n");
+    writeHourSelect(out, name, systemFormId, viewModel.isDisabled());
+    writeMinuteSelect(out, name, viewModel.isDisabled());
 
-		// Continue
-		super.after(out);
-		return EVAL_PAGE;
-	}
+    out.write("</td></tr></table>\n");
 
-	protected void writeMinuteSelect(Writer out, String name)
-			throws IOException {
-		out.write("<select name='" + name + ".select2' onChange=\""
-				+ fillXJSCallConstructor("fillTimeText", systemFormId, name)
-				+ ";\">\n");
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
 
-		out.write("<option value=''></option>\n");
-		for (int i = 0; i < 60; i++) {
-			out.write("<option value='"
-					+ (i < 10 ? "0" + i : String.valueOf(i)) + "'>"
-					+ (i < 10 ? "0" + i : String.valueOf(i)) + "</option>\n");
-		}
-		out.write("</select>\n");
-		out.write("<SCRIPT>"
-				+ fillXJSCallConstructor("fillTimeSelect", systemFormId, name)
-				+ ";</SCRIPT>\n");
-	}
+  protected void writeMinuteSelect(Writer out, String name, boolean disabled) throws IOException {
+    out.write("<select name='" + name + ".select2' onChange=\""
+        + fillXJSCallConstructor("fillTimeText", systemFormId, name)
+        + ";\"");
 
-	protected void writeHourSelect(Writer out, String name, String systemFormId)
-			throws IOException {
-		out.write("<select name='" + name + ".select1' onChange=\""
-				+ fillXJSCallConstructor("fillTimeText", systemFormId, name)
-				+ ";\">\n");
-		out.write("<option value=''></option>\n");
+    if (disabled)
+      out.write(" disabled=\"true\"");
+    out.write(">\n");
+    out.write("<script type=\"text/javascript\">addOptions(60);</script>\n</select>\n");
+  }
 
-		for (int i = 0; i < 24; i++) {
-			out.write("<option value='"
-					+ (i < 10 ? "0" + i : String.valueOf(i)) + "'>"
-					+ (i < 10 ? "0" + i : String.valueOf(i)) + "</option>\n");
-		}
-		out.write("</select>\n");
-	}
+  protected void writeHourSelect(Writer out, String name, String systemFormId, boolean disabled) throws IOException {
+    out.write("<select name='" + name + ".select1' onChange=\""
+        + fillXJSCallConstructor("fillTimeText", systemFormId, name)
+        + ";\"");
+    if (disabled)
+      out.write(" disabled=\"true\"");
+    out.write(">\n");
+    
+    out.write("<script type=\"text/javascript\">addOptions(24);</script>\n</select>\n");
+  }
 
-	/**
-	 * Write validation javascript
-	 * @author Konstantin Tretyakov
-	 */
-	protected void writeValidationScript(Writer out,
-			StringArrayRequestControl.ViewModel viewModel) throws IOException {
-		UiUtil.writeStartTag(out, "script");
-		out.write("uiAddTimeValidator(");
-		UiUtil.writeScriptString(out, getScopedFullFieldId());
-		out.write(", ");
-		UiUtil.writeScriptString(out, localizedLabel);
-		out.write(", ");
-		out.write(viewModel.isMandatory() ? "true" : "false");
-		out.write(");\n");
-		UiUtil.writeEndTag_SS(out, "script");
-	}
+  /**
+   * Write validation javascript
+   * @author Konstantin Tretyakov
+   */
+  protected void writeValidationScript(Writer out, StringArrayRequestControl.ViewModel viewModel) throws IOException {
+    UiUtil.writeStartTag(out, "script");
+    out.write("uiAddTimeValidator(");
+    UiUtil.writeScriptString(out, getScopedFullFieldId());
+    out.write(", ");
+    UiUtil.writeScriptString(out, localizedLabel);
+    out.write(", ");
+    out.write(viewModel.isMandatory() ? "true" : "false");
+    out.write(");\n");
+    UiUtil.writeEndTag_SS(out, "script");
+  }
 
-	/**
-	 * Writes out time input
-	 */
-	protected void writeTimeInput(Writer out, String id, String name,
-			String value, String label, Long size, boolean disabled,
-			String accessKey) throws Exception {
-		// Write input tag
-		UiUtil.writeOpenStartTag(out, "input");
-		if (!StringUtils.isBlank(id))
-			UiUtil.writeAttribute(out, "id", id);
-		UiUtil.writeAttribute(out, "name", name);
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		UiUtil.writeAttribute(out, "type", "text");
-		UiUtil.writeAttribute(out, "value", value);
-		UiUtil.writeAttribute(out, "size", size);
-		UiUtil.writeAttribute(out, "label", label);
-		UiUtil.writeAttribute(out, "tabindex", tabindex);
-		UiUtil.writeAttribute(out, "onBlur", "fillTimeSelect('" + name + "');");
-		if (!StringUtils.isBlank(accessKey))
-			UiUtil.writeAttribute(out, "accesskey", accessKey);
-		if (disabled)
-			UiUtil.writeAttribute(out, "disabled", "true");
-		UiUtil.writeAttributes(out, attributes);
-		UiUtil.writeCloseStartEndTag_SS(out);
-	}
+  /**
+   * Writes out time input
+   */
+  protected void writeTimeInput(Writer out, 
+      String id, 
+      String name,
+      String value, 
+      String label, 
+      Long size, 
+      boolean disabled,
+      String accessKey) throws Exception {
+    // Write input tag
+    UiUtil.writeOpenStartTag(out, "input");
+    if (!StringUtils.isBlank(id))
+      UiUtil.writeAttribute(out, "id", id);
+    UiUtil.writeAttribute(out, "name", name);
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "type", "text");
+    UiUtil.writeAttribute(out, "value", value);
+    UiUtil.writeAttribute(out, "size", size);
+    UiUtil.writeAttribute(out, "label", label);
+    UiUtil.writeAttribute(out, "tabindex", tabindex);
+    UiUtil.writeAttribute(out, "onBlur", fillXJSCallConstructor("fillTimeSelect", systemFormId, name) + ";");
+    if (!StringUtils.isBlank(accessKey))
+      UiUtil.writeAttribute(out, "accesskey", accessKey);
+    if (disabled)
+      UiUtil.writeAttribute(out, "disabled", "true");
+    UiUtil.writeAttributes(out, attributes);
+    UiUtil.writeCloseStartEndTag_SS(out);
+  }
 
-	protected String fillXJSCallConstructor(String function, String formId,
-			String element) {
-		return UiStdFormDateTimeInputTag.staticFillXJSCall(function, formId,
-				element);
-	}
+  protected String fillXJSCallConstructor(String function, String formId, String element) {
+    return UiStdFormTimeInputTag.staticFillXJSCall(function, formId, element);
+  }
+  
+  public static final String staticFillXJSCall(String function, String formId, String element) {
+    return function + "(document." + formId + ", '" + element + "')";
+  }
 }

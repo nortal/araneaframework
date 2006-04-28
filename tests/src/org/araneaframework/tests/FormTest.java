@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.mock.MockInputData;
 import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
@@ -65,7 +65,7 @@ public class FormTest extends TestCase {
 
     //Creating form :-)
     FormWidget testForm = new FormWidget();
-    testForm._getComponent().init(new MockEnviroment());
+    testForm._getComponent().init(new MockEnvironment());
     
     //Adding elements to form
     testForm.addElement("myCheckBox", "my checkbox", new CheckboxControl(), new BooleanData(), true);

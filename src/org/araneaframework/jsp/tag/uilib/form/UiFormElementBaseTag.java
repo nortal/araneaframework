@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form;				
 
@@ -41,38 +41,99 @@ import org.araneaframework.uilib.form.FormWidget;
  */
 public class UiFormElementBaseTag extends UiPresentationTag implements UiFormElementTagInterface {
 	public final static String COUNTER_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormElementBaseTag.COUNTER";
-	
+
 	protected String contextWidgetId;
-	
 	protected String systemFormId;
-	
 	protected String formFullId;
 	protected String formScopedFullId;
-	protected FormWidget.ViewModel formViewModel;
 	
+	protected FormWidget.ViewModel formViewModel;
 	protected FormElement.ViewModel formElementViewModel;
-	protected	Control.ViewModel controlViewModel;
+	protected Control.ViewModel controlViewModel;
+	
 	protected String localizedLabel;
+	
+	protected String accessKeyId;
+	
+	protected List updateRegionNames;    
+	private boolean hasElementContextSpan = true;
+	
+	protected String derivedId;
+	
+	//Attributes
+	
+	protected boolean events = true;
+	protected boolean validate = true;
+	protected boolean validateOnEvent = false;
+		
 	protected String accessKey;
 	
-	protected String id;	
-	protected boolean events;
-	protected boolean validate;
-	protected boolean validateOnEvent;
+	protected String id;
 	protected String tabindex;
 	protected String updateRegions;
 	protected String globalUpdateRegions;  
 	
-	protected List updateRegionNames;    
-	
-	protected String accessKeyId;
-	
-	private boolean hasElementContextSpan = true;
-	
-	//
-	// Attributes
-	//
-	
+	/* ***********************************************************************************
+	 * Start & End tags
+	 * ***********************************************************************************/
+
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);    
+
+		//Get context widget id
+		contextWidgetId = UiWidgetUtil.getContextWidgetFullId(pageContext);	
+
+		// Get system form id 
+		systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
+
+		// Get form data		
+		formScopedFullId = (String)requireContextEntry(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST);
+		formFullId = (String)requireContextEntry(UiFormTag.FORM_FULL_ID_KEY_REQUEST);
+		formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
+		FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
+
+		//In case the tag is in formElement tag
+
+		derivedId = id;
+		if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
+			derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
+		if (derivedId == null) throw new UiMissingIdException(this);   
+		
+		formElementViewModel = 
+			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+
+		// Get control	
+		controlViewModel = (formElementViewModel).getControl();
+		localizedLabel = UiUtil.getResourceString(pageContext, controlViewModel.getLabel());
+
+		// We shall use the accesskey HTML attribute for this form element only if the attribute "accessKey" 
+		// was explicitly set (otherwise in most common cases the label tag sets up the access key)
+		if (accessKeyId != null) {
+			accessKey = UiUtil.getResourceStringOrNull(pageContext, accessKeyId);
+		}
+		if (accessKey != null && accessKey.length() != 1) accessKey = null;
+
+		if (hasElementContextSpan) writeFormElementContextOpen(out, formScopedFullId, derivedId, pageContext);
+
+		UiUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
+
+		updateRegionNames = UiUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
+
+		// Continue
+		return EVAL_BODY_INCLUDE;		
+	}
+
+
+	protected int doEndTag(Writer out) throws Exception {
+		if (hasElementContextSpan) 
+			writeFormElementContextClose(out);
+		return super.doEndTag(out);
+	}
+
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -82,7 +143,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public void setId(String id) throws JspException {
 		this.id = (String)evaluateNotNull("id", id, String.class);
 	}
-	
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -92,7 +153,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public void setEvents(String events) throws JspException {
 		this.events = ((Boolean)evaluateNotNull("events", events, Boolean.class)).booleanValue(); 
 	}
-	
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -102,7 +163,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public void setValidate(String validate) throws JspException {
 		this.validate = ((Boolean)evaluateNotNull("validate", validate, Boolean.class)).booleanValue(); 
 	}
-	
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -112,7 +173,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public void setValidateOnEvent(String validateOnEvent) throws JspException {
 		this.validateOnEvent = ((Boolean)evaluateNotNull("validateOnEvent", validateOnEvent, Boolean.class)).booleanValue(); 
 	}
-	
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -122,7 +183,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public void setTabindex(String tabindex) throws JspException {
 		this.tabindex = (String)evaluateNotNull("tabindex", tabindex, String.class);
 	}
-	
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -132,7 +193,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public void setUpdateRegions(String updateRegions) throws JspException {
 		this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
 	}
-	
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -142,7 +203,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
 		this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
 	}  
-	
+
 	/** 	
 	 * Id of the resource specifying the accesskey for this element.
 	 * Support for accesskeys is specific for each form element and is 
@@ -155,138 +216,67 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public void setAccessKeyId(String accessKeyId) throws JspException {
 		this.accessKeyId = (String)evaluate("accessKeyId", accessKeyId, String.class);
 	}
-	
-	//
-	// Implementation
-	//
-	
-	protected int before(Writer out) throws Exception {
-		super.before(out);    
-		
-		//Get context widget id
-		contextWidgetId = UiWidgetUtil.getContextWidgetFullId(pageContext);	
-		
-		// Get system form id 
-		systemFormId = (String)readAttribute(UiSystemFormTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		
-		// Get form data		
-		formScopedFullId = (String)readAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		formFullId = (String)readAttribute(UiFormTag.FORM_FULL_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		formViewModel = (FormWidget.ViewModel)readAttribute(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		FormWidget form = (FormWidget)readAttribute(UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		
-		//In case the tag is in formElement tag
-		if (id == null && getAttribute(UiFormElementTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE) != null) 
-			id = (String) getAttribute(UiFormElementTag.ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		if (id == null) throw new UiMissingIdException(this);        
-		formElementViewModel = 
-			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
-		
-		// Get control	
-		controlViewModel = (formElementViewModel).getControl();
-		localizedLabel = UiUtil.getResourceString(pageContext, controlViewModel.getLabel());
-		
-		// We shall use the accesskey HTML attribute for this form element only if the attribute "accessKey" 
-		// was explicitly set (otherwise in most common cases the label tag sets up the access key)
-		if (accessKeyId != null) {
-			accessKey = UiUtil.getResourceStringOrNull(pageContext, accessKeyId);
-		}
-		if (accessKey != null && accessKey.length() != 1) accessKey = null;
-		
-		if (hasElementContextSpan) writeFormElementContextOpen(out, formScopedFullId, id, pageContext);
-		
-		UiUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
-		
-		updateRegionNames = UiUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
-		
-		// Continue
-		return EVAL_BODY_INCLUDE;		
-	}
-	
-	
-	protected int after(Writer out) throws Exception {
-		if (hasElementContextSpan) writeFormElementContextClose(out);
-		// Continue
-		super.after(out);
-		return EVAL_PAGE;
-	}
-	
-	
-	protected void init() {
-		super.init();
-		
-		this.hasElementContextSpan = true;
-		this.id = null;
-		this.events = true;
-		this.validate = true;
-		this.validateOnEvent = false;
-		this.tabindex = null;
-		
-		this.updateRegions = null;
-		this.globalUpdateRegions = null;
-	}
-	
+
 	/**
 	 * Computes field name.
-	 */	
+	 */
 	protected String getScopedFullFieldId() {
-		return formScopedFullId + "." + id;
+		return formScopedFullId + "." + derivedId;
 	}
-	
+
 	/**
 	 * Computes field name.
 	 */	
 	protected String getFullFieldId() {
-		return formFullId + "." + id;
+		return formFullId + "." + derivedId;
 	}
-	
+
 	/**
 	 * Asserts that associated control is of given type. If the
 	 * condition does not hold, throws exception.
 	 */
 	protected void assertControlType(String type) throws JspException {
 		if (!controlViewModel.getControlType().equals(type))
-			throw new UiException("Control of type '" + type + "' expected in form element '" + id + "' instead of '" + controlViewModel.getControlType() + "'");
+			throw new UiException("Control of type '" + type + "' expected in form element '" + derivedId + "' instead of '" + controlViewModel.getControlType() + "'");
 	}
-	
-	
+
+
 	/** 
 	 * Write a span with random id around the element, and register this span with javascript
 	 * @param elementName the name of the element for which the uiFormElementContext function will be invoked
 	 * @throws Exception 
 	 */
 	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, PageContext pageContext) throws Exception{
-		
 		//  Enclose the element in a <span id=somerandomid>
 		//  Register this span using javascript
 		String spanId = "form-element-span-" + generateId(pageContext);
 		String elementName = fullFormId + "." + elementId;
-		
+
 		// Determine whether form element with that id is valid
-		
+
 		// This code actually prevents using validation for non-simple form elements
 		// (this may be important because simpleLabel calls this method)
 		FormWidget form = 
-			(FormWidget)UiUtil.readAttribute(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+			(FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 		FormElement.ViewModel formElementViewModel = 
 			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, elementId)._getViewable().getViewModel();
 		boolean isValid = formElementViewModel.isValid();
-		
-		
+
+
 		UiUtil.writeOpenStartTag(out, "span");
 		UiUtil.writeAttribute(out, "id", spanId);
-		
+
 		// We'll also use the span around a form element for tracking keyboard events.
 		// that is, the span will call our handler on a keypress.
 		// Another, better way would be to set up some global keypress handler, but unfortunately 
 		// that way it is too difficult to determine exactly which element was the target for the event.
-		
+
 		// All events are sent to a handler called "uiHandleKeypress(event, formElementId)"
 		// We use the "keydown" event, not keypress, because this allows to
 		// catch F2 in IE.
 		UiUtil.writeAttribute(out, "onkeydown", "return uiHandleKeypress(event, '" + elementName +"');");
 		UiUtil.writeCloseStartTag(out);
-		
+
 		UiUtil.writeStartTag(out, "script");
 		out.write("uiFormElementContext(");
 		UiUtil.writeScriptString(out, elementName);
@@ -297,7 +287,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		out.write(");\n");
 		UiUtil.writeEndTag_SS(out, "script");
 	}
-	
+
 	/**
 	 * Closes the span opened by writeFormElementContextOpen
 	 * @param out
@@ -306,7 +296,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public static void writeFormElementContextClose(Writer out) throws IOException{
 		UiUtil.writeEndTag_SS(out, "span");    
 	}
-	
+
 	/**
 	 * Generates an id, that is unique in request scope.
 	 * @param pageContext
@@ -321,7 +311,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		pageContext.setAttribute(COUNTER_KEY_REQUEST, counter, PageContext.REQUEST_SCOPE);
 		return counter;
 	}
-	
+
 	/**
 	 * Determines whether a "context span" will surround the contents of this tag.
 	 * You should only be interested in this property if you are making a subclass of 
@@ -342,16 +332,16 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	protected void setHasElementContextSpan(boolean hasElementContextSpan) {
 		this.hasElementContextSpan = hasElementContextSpan;
 	}
-	
+
 	/**
 	 * @see #setHasElementContextSpan
 	 */
 	protected boolean getHasElementContextSpan(){
 		return hasElementContextSpan;
 	}
-	
+
 	//// Script writing
-	
+
 	/**
 	 * Writes standard validation script that checks element for mandatority.
 	 * This function should not actually be ever used and its main value here
@@ -370,7 +360,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		out.write(");\n");
 		UiUtil.writeEndTag_SS(out, "script");
 	}
-	
+
 	/**
 	 * Writes event handling attribute which validates the form, if neccessary, and submits 
 	 * event to the system form.
@@ -390,7 +380,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 				precondition,
 				updateRegions);
 	}	
-	
+
 	/** 
 	 * Writes event handling function that is called on closeCalendar javascript function on picking date
 	 * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005
@@ -402,7 +392,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 				out, 
 				systemFormId, 
 				formFullId, 
-				this.id, 
+				this.derivedId, 
 				id, 
 				null, 
 				validate, 

@@ -37,8 +37,8 @@ public class UiStdLayoutCellTag extends UiLayoutCellBaseTag {
 	}
   
     
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "td");
 		UiUtil.writeAttribute(out, "colspan", colSpan);
@@ -52,11 +52,11 @@ public class UiStdLayoutCellTag extends UiLayoutCellBaseTag {
 	  return EVAL_BODY_INCLUDE;
 	}		
 
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		UiUtil.writeEndTag(out, "td");
     	
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;     
 	}
 }

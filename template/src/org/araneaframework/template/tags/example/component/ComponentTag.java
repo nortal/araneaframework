@@ -2,7 +2,6 @@ package org.araneaframework.template.tags.example.component;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -19,16 +18,15 @@ public class ComponentTag extends UiPresentationTag {
 	
 	protected String widthClass;
 
-	protected void init() {
-		super.init();
+	public ComponentTag() {
 		styleClass = ComponentTag.DEFAULT_COMPONENT_STYLE;
 		widthClass = ComponentTag.DEFAULT_COMPONENT_WIDTH_STYLE;
 	}
 
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
-		pushAttribute(ComponentTag.COMPONENT_KEY, this, PageContext.REQUEST_SCOPE);
+		addContextEntry(ComponentTag.COMPONENT_KEY, this);
 
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", styleClass);
@@ -42,10 +40,10 @@ public class ComponentTag extends UiPresentationTag {
 		return EVAL_BODY_INCLUDE;
 	}
 
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		UiUtil.writeEndTag(out, "div");
 		UiUtil.writeEndTag(out, "div");
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
 

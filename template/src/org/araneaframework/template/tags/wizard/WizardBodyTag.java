@@ -37,7 +37,7 @@ import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
  *   description = "Includes the current wizard page."
  */
 public class WizardBodyTag extends UiBaseTag {
-  protected int before(Writer out) throws Exception {
+  protected int doStartTag(Writer out) throws Exception {
 	  Standard.StandardWidgetInterface widget = (StandardWidgetInterface) UiWidgetUtil.getWidgetFromContext(null, pageContext);
 		
     OutputData output = 

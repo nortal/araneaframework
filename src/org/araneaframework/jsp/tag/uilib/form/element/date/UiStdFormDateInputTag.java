@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
@@ -34,65 +34,56 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  *   description = "Form date input field (custom control), represents UiLib "DateControl"."
  */
 public class UiStdFormDateInputTag extends UiStdFormDateTimeInputBaseTag {
-	
-	protected void init() {
-		super.init();
-		baseStyleClass = "aranea-date";
-	}
-	
-	//
-	// Implementation
-	//
-	
-	protected int after(Writer out) throws Exception {
-		// Type check
-		assertControlType("DateControl");		
-		
-		// Prepare
-		String name = this.getScopedFullFieldId();   		
-		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
-		
-		
-		Long dateInputSize = DEFAULT_DATE_INPUT_SIZE;
-		
-		// Write
-		this.writeDateInput(
-				out,
-				name,
-				name, 
-				viewModel.getSimpleValue(), 
-				localizedLabel,
-				viewModel.isMandatory(), 
-				formElementViewModel.isValid(),
-				dateInputSize,
-				validate,
-				viewModel.isDisabled(),
-				getStyleClass(),
-				accessKey,
-				viewModel);
-		if (validate) writeValidationScript(out, viewModel);
-		
-		// Continue
-		super.after(out);
-		return EVAL_PAGE;      
-	}
-	
-	
-	/**
-	 * Write validation javascript
-	 * @author Konstantin Tretyakov
-	 */
-	protected void writeValidationScript(Writer out, StringArrayRequestControl.ViewModel viewModel) throws IOException {
-		UiUtil.writeStartTag(out, "script");
-		out.write("uiAddDateValidator(");
-		UiUtil.writeScriptString(out, getScopedFullFieldId());
-		out.write(", ");
-		UiUtil.writeScriptString(out, localizedLabel);
-		out.write(", ");
-		out.write(viewModel.isMandatory() ? "true" : "false");
-		out.write(");\n");
-		UiUtil.writeEndTag_SS(out, "script");
-	}     
+  public UiStdFormDateInputTag() {
+    baseStyleClass = "aranea-date";
+  }
+
+  protected int doEndTag(Writer out) throws Exception {
+    assertControlType("DateControl");    
+
+    // Prepare
+    String name = this.getScopedFullFieldId();       
+    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
+
+    Long dateInputSize = DEFAULT_DATE_INPUT_SIZE;
+
+    this.writeDateInput(
+        out,
+        name,
+        name, 
+        viewModel.getSimpleValue(), 
+        localizedLabel,
+        viewModel.isMandatory(), 
+        formElementViewModel.isValid(),
+        dateInputSize,
+        validate,
+        viewModel.isDisabled(),
+        getStyleClass(),
+        accessKey,
+        viewModel);
+
+    if (validate) 
+      writeValidationScript(out, viewModel);
+
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
+
+  /**
+   * Write validation javascript
+   * @author Konstantin Tretyakov
+   */
+  protected void writeValidationScript(Writer out, StringArrayRequestControl.ViewModel viewModel) throws IOException {
+    UiUtil.writeStartTag(out, "script");
+    out.write("uiAddDateValidator(");
+    UiUtil.writeScriptString(out, getScopedFullFieldId());
+    out.write(", ");
+    UiUtil.writeScriptString(out, localizedLabel);
+    out.write(", ");
+    out.write(viewModel.isMandatory() ? "true" : "false");
+    out.write(");\n");
+    UiUtil.writeEndTag_SS(out, "script");
+  }     
 }
 
 

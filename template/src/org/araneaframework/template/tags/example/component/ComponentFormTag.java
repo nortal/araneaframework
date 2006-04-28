@@ -18,13 +18,12 @@ public class ComponentFormTag extends UiLayoutBaseTag {
 	
 	protected String widthClass;
 	
-	protected void init() {
-		super.init();
+	public ComponentFormTag() {
 		styleClass = ComponentFormTag.COMPONENT_FORM_STYLE_CLASS;
 	}
 	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "table");
 		UiUtil.writeAttribute(out, "class", styleClass);
@@ -36,10 +35,9 @@ public class ComponentFormTag extends UiLayoutBaseTag {
 		return EVAL_BODY_INCLUDE;
 	}
 
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		UiUtil.writeEndTag(out, "table");
-		super.after(out);
-		return EVAL_PAGE;
+		return super.doEndTag(out);
 	}
 
 	public UiLayoutRowTagInterface getRowTag(String styleClass) throws JspException {

@@ -18,7 +18,6 @@ package org.araneaframework.framework.router;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.StandardEnvironment;
@@ -31,8 +30,6 @@ import org.araneaframework.framework.TopServiceContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardTopServiceRouterService extends BaseServiceRouterService {
-  private static final Logger log = Logger.getLogger(StandardTopServiceRouterService.class);
-  
   /**
    * The key of the top-service's id in the request.
    */

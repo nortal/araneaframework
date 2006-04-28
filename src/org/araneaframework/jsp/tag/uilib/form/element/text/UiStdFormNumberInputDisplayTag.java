@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
-
 import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseTag;
 
 /**
@@ -29,13 +28,12 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
  *   description = "Form number display field, represents UiLib "NumberControl"."
  */
 public class UiStdFormNumberInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
-	protected void init() {
-		super.init();
+	public UiStdFormNumberInputDisplayTag() {
 		baseStyleClass = "aranea-number-display";
 	}
 	
-	protected int after(Writer out) throws Exception {
+	protected int doEndTag(Writer out) throws Exception {
 		assertControlType("NumberControl");
-		return super.after(out);
+		return super.doEndTag(out);
   }
 }

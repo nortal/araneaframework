@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
-
 import org.araneaframework.backend.list.model.ListQuery;
 
 

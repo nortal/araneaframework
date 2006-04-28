@@ -29,15 +29,15 @@ public class SampleValidationFlagTag extends UiFormElementBaseTag {
   
   /**
    */
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
 
     UiUtil.writeOpenStartTag(out, "img");
     UiUtil.writeOpenAttribute(out, "id");   
     out.write("img_");
     UiUtil.writeEscapedAttribute(out, formFullId);
     out.write(".");
-    UiUtil.writeEscapedAttribute(out, id);
+    UiUtil.writeEscapedAttribute(out, derivedId);
     UiUtil.writeCloseAttribute(out);
     if (formElementViewModel.isValid())
       UiUtil.writeAttribute(out, "style", "visibility: hidden;");

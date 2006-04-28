@@ -31,7 +31,7 @@ import org.araneaframework.servlet.filter.importer.JsFileImporter;
  */
 public class UiImportScriptsTag extends UiImportFileTag {
 	
-	public int before(Writer out) throws Exception {
+	public int doStartTag(Writer out) throws Exception {
 		// if filename specified we include the file, if not we include all js files
 		if (includeFileName != null) {
 			writeHtmlInclude(out,

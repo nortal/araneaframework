@@ -177,14 +177,9 @@ public class ImageFileImporter extends DefaultFileImporter {
 	 */
 	public final static String getImportString(String fileName) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("?");
-		sb.append(ImageFileImporter.LOAD_IMAGE_KEY);
-		sb.append("=");
+		sb.append("?" + ImageFileImporter.LOAD_IMAGE_KEY + "=");
 		sb.append(fileName);
-		sb.append("&");
-		sb.append(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
-		sb.append("=");
-		sb.append(ImageFileImporter.TYPE);
+		sb.append("&" + StandardServletFileImportFilterService.IMPORTER_TYPE_KEY + "=" + ImageFileImporter.TYPE);
 
 		return sb.toString();
 	}

@@ -18,7 +18,6 @@ package org.araneaframework.framework.filter;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -35,8 +34,7 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardSynchronizingFilterService extends BaseFilterService {
-  private static final Logger log = Logger.getLogger(StandardSynchronizingFilterService.class);
-  
+
   protected void init() throws Exception {
     Map entries = new HashMap();
     entries.put(SynchronizingContext.class, new SynchronizingContext() {});

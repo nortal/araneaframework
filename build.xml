@@ -140,6 +140,7 @@
 			</fileset>
 			<fileset dir="etc" includes="js/**/*"/>
 			<fileset dir="etc" includes="css/**/*"/>
+			<fileset dir="etc" includes="gfx/**/*"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 		</jar>	
 		
@@ -156,7 +157,13 @@
 	
 	<target name="javadoc">
 		<mkdir dir="dist/doc/javadoc/" />
-		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="dist/doc/javadoc/"/>
+		<javadoc 
+			packagenames="org.araneaframework.*" 
+			sourcepath="src"
+			destdir="dist/doc/javadoc/">
+			<tag name="jsp.tag" enabled="false"/>
+			<tag name="jsp.attribute" enabled="false"/>
+		</javadoc>
 	</target>
 	
 	<target name="javadoc-zip">

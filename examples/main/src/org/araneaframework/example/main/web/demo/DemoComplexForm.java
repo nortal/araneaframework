@@ -18,10 +18,8 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EventListener;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
@@ -36,8 +34,6 @@ import org.araneaframework.uilib.support.DisplayItem;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class DemoComplexForm extends TemplateBaseWidget {
-	private static final Logger log = Logger.getLogger(DemoComplexForm.class);
-	
     /* Different controls and widgets we want to be accessible all the time are 
        made instance variables by convention. */
 	private FormWidget complexForm;

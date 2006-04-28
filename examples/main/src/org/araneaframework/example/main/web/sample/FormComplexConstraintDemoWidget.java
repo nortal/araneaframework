@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.form.FormWidget;

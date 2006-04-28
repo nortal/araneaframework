@@ -29,9 +29,9 @@ import org.araneaframework.uilib.form.control.ButtonControl;
  * @author Oleg Mürk
  */
 public class UiStdFormButtonBaseTag extends UiFormElementBaseTag {
-  protected boolean showLabel;
+  protected boolean showLabel = true;
     
-  protected String onClickPrecondition;
+  protected String onClickPrecondition = "return true;";
   protected ButtonControl.ViewModel viewModel;
 	
   
@@ -62,8 +62,8 @@ public class UiStdFormButtonBaseTag extends UiFormElementBaseTag {
   // Implementation
   //  
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     // Type check
     assertControlType("ButtonControl");
@@ -81,12 +81,6 @@ public class UiStdFormButtonBaseTag extends UiFormElementBaseTag {
     
     // Continue
     return EVAL_BODY_INCLUDE;    
-  }
-  
-  protected void init() {
-    super.init();
-    showLabel = true;
-    onClickPrecondition = "return true;";
   }
 }
 
