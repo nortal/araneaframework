@@ -35,7 +35,7 @@ import org.araneaframework.Viewable;
  * A full featured Service with support for composite, eventlisteners, viewmodel.
  *
  */
-public abstract class StandardService extends BaseService implements Standard.StandardServiceInterface {
+public abstract class StandardService extends BaseService implements Custom.CustomService {
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
@@ -44,7 +44,7 @@ public abstract class StandardService extends BaseService implements Standard.St
    */
   public static final String ACTION_ID_ATTRIBUTE = "serviceActionListenerId";
   
-  private static final Logger log = Logger.getLogger(StandardWidgetInterface.class);
+  private static final Logger log = Logger.getLogger(CustomWidget.class);
 
   //*******************************************************************
   // FIELDS
@@ -75,7 +75,7 @@ public abstract class StandardService extends BaseService implements Standard.St
     }    
   }
   
-  public class ViewModel implements Standard.ServiceViewModel {
+  public class ViewModel implements Custom.ServiceViewModel {
     /**
      * Returns the children of this StandardService.
      */

@@ -44,7 +44,7 @@
 		<title>StandardWidget &amp; StandardPresentationWidget</title>
 
     <para>
-      A typical widget class will extend <literal>org.araneaframework.uilib.core.StandardPresentationWidget</literal>. This widget represents the usual custom application component that is rendered using Aranea custom JSP tags. <literal>StandardPresentationWidget</literal> inherits most of its functionality from <literal>org.araneaframework.core.StandardWidget</literal> the difference between the two being only that <literal>StandardPresentationWidget</literal> assumes to be connected with a JSP page.
+      A typical widget class will extend <literal>org.araneaframework.uilib.core.StandardPresentationWidget</literal>. This widget represents the usual custom application component that is rendered using Aranea custom JSP tags. <literal>StandardPresentationWidget</literal> inherits most of its functionality from <literal>org.araneaframework.core.CustomWidget</literal> the difference between the two being only that <literal>StandardPresentationWidget</literal> assumes to be connected with a JSP page.
     </para>
 
     <sect2>
@@ -102,7 +102,7 @@
     log.debug("Received event: " + eventId);
   }
 }</programlisting>      
-      Of course, the event listener does not have to be an anonymous class and can just as well be an inner or even a usual public class. A standard base implementation <literal>org.araneaframework.core.StandardEventListener</literal> is provided that receives an optional <literal>String</literal> event parameter:
+      Of course, the event listener does not have to be an anonymous class and can just as well be an inner or even a usual public class. A standard base implementation <literal>org.araneaframework.core.CustomEventListener</literal> is provided that receives an optional <literal>String</literal> event parameter:
 <programlisting role="java">addEventListener("myEvent", new StandardEventListener() {
   public void processEvent(Object eventId, Object parameter, InputData input) throws Exception {
     log.debug("Received event " + eventId + " with parameter " + parameter);

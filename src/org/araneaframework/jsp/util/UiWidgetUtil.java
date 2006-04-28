@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.Standard;
+import org.araneaframework.core.Custom;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
@@ -48,11 +48,11 @@ public class UiWidgetUtil {
 			return output.getScope().toString();
 	}
 	
-    public static Standard.StandardWidgetInterface getContextWidgetFromContext(PageContext pageContext) throws JspException  {
+    public static Custom.CustomWidget getContextWidgetFromContext(PageContext pageContext) throws JspException  {
       return getWidgetFromContext(null, pageContext);
     }    
     
-	public static Standard.StandardWidgetInterface getWidgetFromContext(String widgetId, PageContext pageContext) throws JspException {
+	public static Custom.CustomWidget getWidgetFromContext(String widgetId, PageContext pageContext) throws JspException {
       UiWidgetContainer container = 
         (UiWidgetContainer) UiUtil.requireContextEntry(pageContext,
             UiWidgetContainer.REQUEST_CONTEXT_KEY, PageContext.REQUEST_SCOPE);
@@ -63,11 +63,11 @@ public class UiWidgetUtil {
 			
 	}
 	
-	public static Standard.StandardWidgetInterface traverseToWidget(UiWidgetContainer container, String path) throws UiException {
+	public static Custom.CustomWidget traverseToWidget(UiWidgetContainer container, String path) throws UiException {
 		String pathStart = NameUtil.getNamePrefix(path);
 		String pathEnd = NameUtil.getNameSuffix(path);
 		
-        Standard.StandardWidgetInterface widget = (Standard.StandardWidgetInterface) container.getWidgets().get(pathStart);
+        Custom.CustomWidget widget = (Custom.CustomWidget) container.getWidgets().get(pathStart);
 		if (widget == null)
 			throw new UiException("Failed to traverse to widget with path '" + path + "' because widget '" + pathStart + "' was not found");
 				
@@ -77,8 +77,8 @@ public class UiWidgetUtil {
 		return widget;
 	}
 	
-	public static Standard.StandardWidgetInterface traverseToSubWidget(Standard.StandardWidgetInterface root, String path) throws UiException {		
-      Standard.StandardWidgetInterface widget = root;
+	public static Custom.CustomWidget traverseToSubWidget(Custom.CustomWidget root, String path) throws UiException {		
+      Custom.CustomWidget widget = root;
 		
     if ("".equals(path))
       throw new UiException("Trying to traverse to a widget with an empty path!");
@@ -87,7 +87,7 @@ public class UiWidgetUtil {
 		for(StringTokenizer tokenizer = new StringTokenizer(path, "."); tokenizer.hasMoreElements();) {
 			String token = tokenizer.nextToken();
 					
-			widget = (Standard.StandardWidgetInterface) widget._getComposite().getChildren().get(token);
+			widget = (Custom.CustomWidget) widget._getComposite().getChildren().get(token);
 			if (widget == null)
 				throw new UiException("Failed to traverse widget with path '" + path + "' because widget '" + token + "' was not found");
 		}

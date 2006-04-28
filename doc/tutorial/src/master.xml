@@ -202,10 +202,8 @@
     </figure>
     
     <para>
-      Finally we will need to deploy the example as a web application. Aranea uses 
-      <ulink url="http://www.springframework.org/">Spring</ulink> 
-      for configuration, so we will also have to start its listener as 
-      shown on <xref linkend="example-web-xml"/>
+      Finally we will need to deploy the example as a web application. The simplest way to 
+      configure Aranea is to pass the application starting widget to its dispatcher servlet.
     </para>
     
     <figure id="example-web-xml">    
@@ -216,32 +214,21 @@
   "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-  <context-param>
-    <!-- Spring configuration file name -->
-    <param-name>contextConfigLocation</param-name>
-    <param-value> 
-      /WEB-INF/aranea-conf.xml
-    </param-value>
-  </context-param>
-  
   <!-- Aranea session cleanup listener -->
   <listener>
     <listener-class>
       org.araneaframework.servlet.core.StandardSessionListener
     </listener-class>
   </listener>
-  
-  <!-- Spring loader listener -->
-  <listener>
-    <listener-class>
-      org.springframework.web.context.ContextLoaderListener
-    </listener-class>
-  </listener>
-   
+
   <!-- Aranea dispatcher servlet -->
    <servlet>
       <servlet-name>araneaServlet</servlet-name>
-      <servlet-class>org.araneaframework.ioc.spring.SimpleAraneaSpringDispatcherServlet</servlet-class>
+      <servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+     	<init-param>
+     		<param-name>araneaApplicationStart</param-name>
+     		<param-value>example.NameWidget</param-value>
+     	</init-param>      
       <load-on-startup>1</load-on-startup>
    </servlet>
    
@@ -251,29 +238,6 @@
       <url-pattern>/main</url-pattern>
    </servlet-mapping>
 </web-app>]]></programlisting>
-    </figure>
-
-    <para>
-      Finally we need the Aranea Spring configuration file, which in this case will only set the application root widget as 
-      shown on <xref linkend="example-spring-conf"/>.
-    </para>
-    
-    <figure id="example-spring-conf">    
-      <title>/WEB-INF/aranea-conf.xml</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC 
-  "-//SPRING//DTD BEAN//EN" 
-  "http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans>
-  <!-- 
-    The application root widget.
-   -->
-  <bean id="araneaApplicationStart" 
-    class="example.NameFlow"  
-    singleton="false"/> 
-</beans>
-]]></programlisting>
     </figure>
   </sect1>
   
@@ -322,14 +286,13 @@
 				in case of framework main example this is <literal>/main</literal>. 	            In addition there is <literal>contextConfigLocation</literal> parameter, that specifies
 	            Spring bean configuration files read in by Spring's
 	            <literal>ContextLoaderListener</literal> and
-	            Aranea specific sessionlistener that takes over some session handling functions.
+	            Aranea specific session listener that takes over some session cleanup functions.
 	        </para>
 
             <programlisting role="xml"><![CDATA[<context-param>
   <param-name>contextConfigLocation</param-name>
   <param-value> 
     /WEB-INF/services.xml   
-    /WEB-INF/aranea-conf.xml
   </param-value>
 </context-param>
 
@@ -342,120 +305,18 @@
 </listener>]]></programlisting>
 
 			<para>
-         Note that we are using 
-        <literal>AraneaSpringDispatcherServlet</literal> not the simpler <literal>SimpleAraneaSpringDispatcherServlet</literal> used in 
-        "Hello World!" example. This means that we will also have to define the full Aranea configuration.
-			</para>
-			
-      <para>
-        The difference is that while in simple configuration we have to define only the starting widget of the application, in the full 
-        configuration we put the framework together from independent POJOs using Spring dependency injection. The approach is illustrated on 
-        <xref linkend="full-spring-conf"/>, where some parts of this configuration are shown. Note that in the case of the main example 
-        the simple configuration would be enough, but we wanted to illustrate the need to extend it, which will surely appear in any
-        sufficiently complex application.
+				We use here Spring to configure Aranea starting widget. Spring configuration gives a lot of power
+				to extend or override framework modules when needed, but in this case it does not differ much.
 			</para>
       
     <figure id="full-spring-conf">    
       <title>/WEB-INF/aranea-conf.xml</title>
              <programlisting role="xml"><![CDATA[<beans>
-
-  <import resource="aranea-filters.xml"/>
-
-  <!-- ########## ARANEA CONFIGURATION ########## -->
-
-  <bean 
-    id="applicationRoot" 
-    class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
-    singleton="false">
-    <property name="childService" ref="araneaApplicationFilters"/>
-  </bean>
-  
-  <bean 
-    id="araneaApplicationFilters" 
-    singleton="false"
-    class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
-    <property name="childService" ref="araneaTopServiceRouter"/>
-    <property name="filterChain">
-      <list>
-        <ref bean="araneaCriticalErrorHandler"/>
-        <ref bean="araneaReadFileFilter"/>
-        <ref bean="araneaMainStatisticFilter"/>
-      </list>
-    </property>
-  </bean>
-
-  <bean
-    id="araneaTopServiceRouter"
-    class="org.araneaframework.framework.router.StandardTopServiceRouterService" 
-    singleton="false">
-    <property name="defaultServiceId" value="application"/>
-    <property name="serviceMap">
-      <map>
-        <entry key="application" value-ref="araneaSessionRouter"/>
-      </map>
-    </property>
-  </bean>
-
-  ...
-    
-  <!-- Session scope beans-->
-
-  <!-- Thread scope beans-->    
-  
-  <!-- Framework widgets -->
-  
-  ...
-   
-  <bean 
-    id="araneaWidgetFilters" 
-    singleton="false"
-    class="org.araneaframework.framework.filter.StandardWidgetFilterChainFilterWidget">
-    <property name="childWidget" ref="araneaWidgetContainer"/>
-    <property name="filterChain">           
-      <list>
-        <ref bean="araneaTransactionFilter"/>
-        <ref bean="araneaMessagingFilter"/>
-        <ref bean="araneaContexts"/>
-        <ref bean="araneaPopupFilter"/>
-      </list>
-    </property>
-    </bean>  
-
-  <bean 
-    id="araneaWidgetContainer"
-    class="org.araneaframework.framework.container.StandardWidgetContainerWidget" 
-    singleton="false">
-    <property name="childWidget" ref="thread.viewPort"/>
-  </bean>
-
-  <!-- Application widgets -->     
-  
-   <bean 
-     id="thread.viewPort"
-     class="org.araneaframework.framework.container.StandardViewPortWidget"
-     singleton="false">
-     <property name="root" ref="thread.mainCallStack"/>
-   </bean>
-
-   <bean 
-     id="thread.mainCallStack"
-     class="org.araneaframework.framework.container.StandardFlowContainerWidget"
-     singleton="false">
-     <property name="top" ref="thread.login"/>
-   </bean>
-
-  <!-- <bean class="..." id="thread.login" singleton="false"/> -->
-
+  <bean id="araneaApplicationStart" 
+    class="org.araneaframework.example.main.web.LoginWidget"  
+    singleton="false"/>
 </beans>]]></programlisting>
   </figure>
-  
-			<para>
-                Note that many of the referenced
-                beans are predefined in the imported <literal>aranea-filters.xml</literal>.
-				We will not go into more detail about the configuration components right now,
-				but explain their functionality and usage as needed. Thorough overview 
-                of configuration components is given in the reference manual.
-			</para>
 	</sect1>
 	
 	<sect1>

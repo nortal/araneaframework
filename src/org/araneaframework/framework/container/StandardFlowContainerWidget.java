@@ -21,13 +21,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Standard;
+import org.araneaframework.core.BaseWidget;
+import org.araneaframework.core.Custom;
+import org.araneaframework.core.ComponentUtil;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.EmptyCallStackException;
@@ -197,13 +201,15 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     refreshGlobalEnvironment();
   }
   
-  public void addNestedEnvironmentEntry(Standard.StandardWidgetInterface scope, final Object entryId, Object envEntry) throws Exception {
+  public void addNestedEnvironmentEntry(Custom.CustomWidget scope, final Object entryId, Object envEntry) throws Exception {
     pushGlobalEnvEntry(entryId, envEntry);
-    scope.addDestroyer(new Destroyer() {
-      public void destroy() throws Exception {
+    
+    BaseWidget scopeWidget = new BaseWidget() {
+      protected void destroy() throws Exception {
         popGlobalEnvEntry(entryId);
       }
-    });
+    };
+    ComponentUtil.addListenerComponent(scope, scopeWidget);
   }
   
   public boolean isNested() throws Exception {

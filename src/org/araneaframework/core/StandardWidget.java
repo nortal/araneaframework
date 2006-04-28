@@ -38,7 +38,7 @@ import org.araneaframework.Widget;
  * A full featured Widget with support for composite, eventlisteners, viewmodel.
  * 
  */
-public abstract class StandardWidget extends BaseWidget implements Standard.StandardWidgetInterface {
+public abstract class StandardWidget extends BaseWidget implements Custom.CustomWidget {
       
   //*******************************************************************
   // CONSTANTS
@@ -50,7 +50,7 @@ public abstract class StandardWidget extends BaseWidget implements Standard.Stan
   public static final String EVENT_HANDLER_ID_KEY = "widgetEventHandler";
   public static final String EVENT_PARAMETER_KEY = "widgetEventParameter";
   
-  private static final Logger log = Logger.getLogger(StandardWidgetInterface.class);
+  private static final Logger log = Logger.getLogger(CustomWidget.class);
   
   //*******************************************************************
   // FIELDS
@@ -116,7 +116,7 @@ public abstract class StandardWidget extends BaseWidget implements Standard.Stan
   // PUBLIC CLASSES
   //*******************************************************************
   
-  public class ViewModel implements Standard.WidgetViewModel {
+  public class ViewModel implements Custom.WidgetViewModel {
     private Map viewData;
     
     public ViewModel() {

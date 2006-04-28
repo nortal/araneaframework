@@ -102,11 +102,7 @@ public abstract class BaseComponent implements Component {
    */
   protected boolean isInitialized() {
     return wasInited;
-  }
-  
-  public void addDestroyer(Standard.Destroyer destroyer) {
-    destroyers.add(destroyer);
-  }    
+  } 
   
   /**
    * Sets the environment of this BaseComponent to environment. 
@@ -359,11 +355,6 @@ public abstract class BaseComponent implements Component {
               comp._getComponent().destroy();             
             }
           }    
-          
-          for (Iterator i = new ArrayList(destroyers).iterator(); i.hasNext(); ) {
-            Standard.Destroyer dest = (Standard.Destroyer) i.next();
-            dest.destroy();
-          }  
           
           BaseComponent.this.destroy();
         }

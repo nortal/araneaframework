@@ -20,7 +20,7 @@ import java.io.Writer;
 import java.util.StringTokenizer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.Standard;
+import org.araneaframework.core.Custom;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiWidgetUtil;
 import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
@@ -37,10 +37,12 @@ public class UiWidgetContextTag extends UiBaseTag {
   public final static String WIDGET_CONTEXT_ID_KEY_REQUEST = "contextWidgetId";
   public final static String WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST = "contextWidget";
  
-  private Standard.StandardWidgetInterface widget = null;
-  private Standard.WidgetViewModel viewModel = null;
+  private Custom.CustomWidget widget;
+  private Custom.WidgetViewModel viewModel;
   private OutputData output = null;
+  
   private int pathLength = 0;
+
   private String fullId;
   
   //Attributes
@@ -75,7 +77,7 @@ public class UiWidgetContextTag extends UiBaseTag {
     }
 
     widget = UiWidgetUtil.getWidgetFromContext(null, pageContext);
-    viewModel = (Standard.WidgetViewModel) widget._getViewable().getViewModel();
+    viewModel = (Custom.WidgetViewModel) widget._getViewable().getViewModel();
     fullId = UiWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
 
     addContextEntry(WIDGET_CONTEXT_ID_KEY_REQUEST, fullId);

@@ -30,11 +30,11 @@ import org.araneaframework.Viewable;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public abstract class StandardComponent extends BaseComponent implements Standard.StandardComponentInterface {
+public abstract class StandardComponent extends BaseComponent implements Custom.CustomComponent {
   //*******************************************************************
   // PROTECTED CLASSES
   //*******************************************************************
-  protected class ViewModel implements Standard.ComponentViewModel {
+  protected class ViewModel implements Custom.ComponentViewModel {
     public Map getChildren() {
       return StandardComponent.this.getChildren();
     }

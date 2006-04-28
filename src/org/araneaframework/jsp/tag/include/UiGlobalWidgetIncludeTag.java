@@ -20,7 +20,7 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.Standard;
+import org.araneaframework.core.Custom;
 import org.araneaframework.jsp.util.UiWidgetUtil;
 import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 
@@ -50,7 +50,7 @@ public class UiGlobalWidgetIncludeTag extends UiIncludeBaseTag {
     Path currentScope = output.getScope();
     
 	// Call
-	Standard.StandardWidgetInterface widget = UiWidgetUtil.getWidgetFromContext(widgetId, pageContext);
+	Custom.CustomWidget widget = UiWidgetUtil.getWidgetFromContext(widgetId, pageContext);
 
     while (output.getScope().hasNext())
       output.popScope();
