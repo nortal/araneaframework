@@ -16,7 +16,7 @@
 
 package org.araneaframework.example.main.business.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 
 /**
@@ -30,7 +30,7 @@ public class PersonMO implements GeneralMO {
 	private String name;
 	private String surname;
 	private String phone;
-	private Date birthdate;
+	private Timestamp birthdate;
 	
 	/**
 	 * @hibernate.id column="id" generator-class="increment"
@@ -75,10 +75,10 @@ public class PersonMO implements GeneralMO {
 	/**
 	 * @hibernate.property not-null="false"
 	 */
-	public Date getBirthdate() {
+	public Timestamp getBirthdate() {
 		return birthdate;
 	}
-	public void setBirthdate(Date birthdate) {
+	public void setBirthdate(Timestamp birthdate) {
 		this.birthdate = birthdate;
 	}
 }

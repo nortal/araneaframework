@@ -23,7 +23,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
 
 /**
  * This class provides a way to manipulate Value Object fields. This class
@@ -38,12 +37,6 @@ import org.apache.log4j.Logger;
  * @since 1.4.1.20
  */
 public class BeanMapper implements Serializable {
-	private static Logger log = Logger.getLogger(BeanMapper.class);
-	
-	//*******************************************************************
-	// FIELDS
-	//*******************************************************************
-	
 	/**
 	 * Holds the Value Object <code>Class</code>.
 	 */
