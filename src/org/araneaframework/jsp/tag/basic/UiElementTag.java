@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
@@ -41,6 +42,13 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
 	protected String name = null;
 	protected Map attributes = new HashMap();
 	protected boolean hasContent = false;
+	
+	public void setPageContext(PageContext pageContext) {
+		attributes = new HashMap();		
+		hasContent = false;
+		
+		super.setPageContext(pageContext);
+	}
 	
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
