@@ -251,7 +251,7 @@ public class BeanMapper implements Serializable {
 		String subFields = null;
 		if (fieldName.indexOf(".") != -1) {
 			mainFieldName = fieldName.substring(0, fieldName.indexOf("."));
-			subFields = fieldName.substring(mainFieldName.length());
+			subFields = fieldName.substring(mainFieldName.length() + 1);
 			return new BeanMapper(getBeanFieldType(mainFieldName)).getSetterMethod(subFields);
 		}
 		
