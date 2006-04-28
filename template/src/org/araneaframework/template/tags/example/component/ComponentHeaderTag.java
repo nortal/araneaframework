@@ -25,7 +25,7 @@ public class ComponentHeaderTag extends UiPresentationTag {
 		addContextEntry(ComponentHeaderTag.COMPONENT_HEADER_KEY, this);
 
 		UiUtil.writeOpenStartTag(out, "div");
-		UiUtil.writeAttribute(out, "class", styleClass);
+		UiUtil.writeAttribute(out, "class", getStyleClass());
 		UiUtil.writeCloseStartTag(out);
 		
 		return EVAL_BODY_INCLUDE;

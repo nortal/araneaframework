@@ -26,7 +26,7 @@ public class ComponentFormTag extends UiLayoutBaseTag {
 		super.doStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "table");
-		UiUtil.writeAttribute(out, "class", styleClass);
+		UiUtil.writeAttribute(out, "class", getStyleClass());
 		
 		UiUtil.writeAttribute(out, "width", width);
 		UiUtil.writeAttribute(out, "height", height);

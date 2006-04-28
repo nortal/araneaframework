@@ -29,7 +29,7 @@ public class ComponentTag extends UiPresentationTag {
 		addContextEntry(ComponentTag.COMPONENT_KEY, this);
 
 		UiUtil.writeOpenStartTag(out, "div");
-		UiUtil.writeAttribute(out, "class", styleClass);
+		UiUtil.writeAttribute(out, "class", getStyleClass());
 		UiUtil.writeCloseStartTag(out);
 		
 		// second div... maybe should be moved out

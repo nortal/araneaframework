@@ -45,7 +45,7 @@ public class UiStdLayoutCellTag extends UiLayoutCellBaseTag {
 		UiUtil.writeAttribute(out, "rowspan", rowSpan);
 		UiUtil.writeAttribute(out, "width", width);	
 		UiUtil.writeAttribute(out, "height", height);
-		UiUtil.writeAttribute(out, "class", styleClass);
+		UiUtil.writeAttribute(out, "class", getStyleClass());
 		UiUtil.writeCloseStartTag(out);
 						
 		// Continue

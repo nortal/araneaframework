@@ -21,7 +21,7 @@ public class ComponentActionsTag extends UiPresentationTag {
 		super.doStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "div");
-		UiUtil.writeAttribute(out, "class", styleClass);
+		UiUtil.writeAttribute(out, "class", getStyleClass());
 		UiUtil.writeCloseStartTag(out);
 		
 		return EVAL_BODY_INCLUDE;

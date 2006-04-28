@@ -42,7 +42,7 @@ public class UiStdLayoutRowTag extends UiLayoutRowBaseTag {
 		super.doStartTag(out);
 		
 		UiUtil.writeOpenStartTag(out, "tr");
-		UiUtil.writeAttribute(out, "class", styleClass);
+		UiUtil.writeAttribute(out, "class", getStyleClass());
 		UiUtil.writeAttribute(out, "height", height);
 		UiUtil.writeCloseStartTag(out);
 		
