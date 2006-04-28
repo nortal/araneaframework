@@ -1,76 +1,76 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-**/
-
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
 import java.io.IOException;
 import java.io.Writer;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
-
 /**
- * Standard date input form element tag.
+ * Time input form element tag.
  * 
- * @author Oleg Mürk
- * 
- * @jsp.tag
+ * @author Marko Muts
+ *  @jsp.tag
  *   name = "timeInput"
  *   body-content = "JSP"
  *   description = "Form time input field (custom control), represents UiLib "TimeControl"."
  */
 public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
-  	
-  //
-  // Implementation
-  //
-	
-  protected int after(Writer out) throws Exception {
-		// Type check
-		assertControlType("TimeControl");		
-		
-		// Prepare
-		String name = this.getScopedFullFieldId(); 		
-		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
-		
-    
-      Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
-    
-		// Write
-		this.writeTimeInput(
-										out, 
-										name,
-										name, 
-										viewModel.getSimpleValue(), 
-										localizedLabel,
-										timeInputSize,
-										viewModel.isDisabled(),
-                    getStyleClass(),
-										accessKey,
-                                        viewModel
-										);		
 
-		if (validate) writeValidationScript(out, viewModel);	
-    
-    // Continue
-    super.after(out);
+  public UiStdFormTimeInputTag() {
+    baseStyleClass = "aranea-time";
+  }
+
+  protected int doEndTag(Writer out) throws Exception {
+    assertControlType("TimeControl");
+
+    // Prepare    
+    String name = this.getScopedFullFieldId();
+    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
+
+    Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
+
+    // Write
+    out
+        .write("<table border='0' cellpadding='0' cellspacing='0'><tr><td nowrap='true'>\n");
+    this.writeTimeInput(out, name, name, viewModel.getSimpleValue(),
+        localizedLabel, timeInputSize, viewModel.isDisabled(),
+        accessKey);
+
+    if (validate)
+      writeValidationScript(out, viewModel);
+
+    writeHourSelect(out, name, systemFormId, viewModel.isDisabled());
+    writeMinuteSelect(out, name, viewModel.isDisabled());
+
+    out.write("</td></tr></table>\n");
+
+    super.doEndTag(out);
     return EVAL_PAGE;
-	}
-  
-  
+  }
+
+  protected void writeMinuteSelect(Writer out, String name, boolean disabled) throws IOException {
+    out.write("<select name='" + name + ".select2' onChange=\""
+        + fillXJSCallConstructor("fillTimeText", systemFormId, name)
+        + ";\"");
+
+    if (disabled)
+      out.write(" disabled=\"true\"");
+    out.write(">\n");
+    out.write("<script type=\"text/javascript\">addOptions(60);</script>\n</select>\n");
+  }
+
+  protected void writeHourSelect(Writer out, String name, String systemFormId, boolean disabled) throws IOException {
+    out.write("<select name='" + name + ".select1' onChange=\""
+        + fillXJSCallConstructor("fillTimeText", systemFormId, name)
+        + ";\"");
+    if (disabled)
+      out.write(" disabled=\"true\"");
+    out.write(">\n");
+    
+    out.write("<script type=\"text/javascript\">addOptions(24);</script>\n</select>\n");
+  }
+
   /**
    * Write validation javascript
    * @author Konstantin Tretyakov
@@ -85,9 +85,44 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     out.write(viewModel.isMandatory() ? "true" : "false");
     out.write(");\n");
     UiUtil.writeEndTag_SS(out, "script");
-  }    
+  }
+
+  /**
+   * Writes out time input
+   */
+  protected void writeTimeInput(Writer out, 
+      String id, 
+      String name,
+      String value, 
+      String label, 
+      Long size, 
+      boolean disabled,
+      String accessKey) throws Exception {
+    // Write input tag
+    UiUtil.writeOpenStartTag(out, "input");
+    if (!StringUtils.isBlank(id))
+      UiUtil.writeAttribute(out, "id", id);
+    UiUtil.writeAttribute(out, "name", name);
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "type", "text");
+    UiUtil.writeAttribute(out, "value", value);
+    UiUtil.writeAttribute(out, "size", size);
+    UiUtil.writeAttribute(out, "label", label);
+    UiUtil.writeAttribute(out, "tabindex", tabindex);
+    UiUtil.writeAttribute(out, "onBlur", fillXJSCallConstructor("fillTimeSelect", systemFormId, name) + ";");
+    if (!StringUtils.isBlank(accessKey))
+      UiUtil.writeAttribute(out, "accesskey", accessKey);
+    if (disabled)
+      UiUtil.writeAttribute(out, "disabled", "true");
+    UiUtil.writeAttributes(out, attributes);
+    UiUtil.writeCloseStartEndTag_SS(out);
+  }
+
+  protected String fillXJSCallConstructor(String function, String formId, String element) {
+    return UiStdFormTimeInputTag.staticFillXJSCall(function, formId, element);
+  }
+  
+  public static final String staticFillXJSCall(String function, String formId, String element) {
+    return function + "(document." + formId + ", '" + element + "')";
+  }
 }
-
-
-
-

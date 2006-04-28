@@ -12,7 +12,7 @@
         <div id="header">
             <div class="box1">
                 <a href="#" id="logo">
-                    <ui:image src="gfx/logo_aranea_screen.jpg"/>
+                    <ui:image src="gfx/logo_aranea_screen.jpg" alt="Aranea fancy logo"/>
                 </a>
 
                 <div id="menu1">
