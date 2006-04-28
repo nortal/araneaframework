@@ -16,9 +16,8 @@
 
 package org.araneaframework.example.main.web;
 
-import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
@@ -29,8 +28,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class LoginWidget extends BaseWidget {
-	private static final Logger log = Logger.getLogger(LoginWidget.class);
+public class LoginWidget extends TemplateBaseWidget {
 	/* Widget we will create and attach to this widget. */
 	private FormWidget form;
 
@@ -43,8 +41,12 @@ public class LoginWidget extends BaseWidget {
 		setViewSelector("login");
 		
 		/* Register a global proxying eventlistener - it receives all widget events and upon 
-		 * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method */
-		addGlobalEventListener(new ProxyEventListener(this));
+		 * receiving event named "someEvent" proxies it to "handleEventSomeEvent" method 
+     * 
+     * This listener is added by default in super class and is only shown here for
+     * illustrative purposes. It can also be overridden on need.
+     */
+	    addGlobalEventListener(new ProxyEventListener(this));
 
 		/* Create a new FormWidget with two self-described input fields. */
 		form = new FormWidget();
