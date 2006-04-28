@@ -72,6 +72,7 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
     	company.setCompany(contract.getCompany());
     	person.setPerson(contract.getPerson());
     	notes.setNotes(contract.getNotes());
+    	notes.setTotal(contract.getTotal());
     }
     
     wizard.addEventListener(new WizardContext.EventListener() {
@@ -83,6 +84,7 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
     			contract.setCompany(company.getCompany());
     			contract.setPerson(person.getPerson());
     			contract.setNotes(notes.getNotes());
+    			contract.setTotal(notes.getTotal());
     			if (id != null) {
     				getGeneralDAO().edit(contract);
     			} else {

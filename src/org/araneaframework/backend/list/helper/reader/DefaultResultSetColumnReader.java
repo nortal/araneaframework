@@ -55,7 +55,7 @@ public class DefaultResultSetColumnReader implements ResultSetColumnReader {
       return resultSet.getDate(columnName);        
     
 	if (java.util.Date.class.isAssignableFrom(javaType))
-		return resultSet.getTimestamp(columnName);
+		return new java.util.Date(resultSet.getTimestamp(columnName).getTime());
     
     if (String.class.isAssignableFrom(javaType))
       return resultSet.getString(columnName);
