@@ -123,6 +123,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     
     //Making a resulting web application context    
     webAppCtx = new GenericWebApplicationContext(rootConf);
+    webAppCtx.setParent(beanFactory);
     webAppCtx.refresh();
     
     super.init();        
