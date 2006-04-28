@@ -17,7 +17,7 @@
         <ref bean="araneaCriticalErrorHandler"/>
         <ref bean="araneaReadFileFilter"/>
         <ref bean="araneaMainStatisticFilter"/>
-        <ref bean="requestEncodingFilter"/>
+        <ref bean="araneaRequestEncodingFilter"/>
         <ref bean="araneaFileUploadFilter"/>
         <bean class="org.araneaframework.ioc.spring.SpringOptionalFilterService" singleton="false">
           <property name="beanId" value="customApplicationFilters"/>
@@ -153,7 +153,7 @@
   </bean>
   
   <bean class="org.araneaframework.servlet.filter.StandardServletRequestEncodingFilterService" 
-    id="requestEncodingFilter" singleton="false">
+    id="araneaRequestEncodingFilter" singleton="false">
     <property name="requestEncoding" value="${l10n.encoding}"/>
   </bean>
   
