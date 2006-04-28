@@ -57,6 +57,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	 * @see #writeTimeInput
 	 * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005 -- added callback function argument to popup-calendar
 	 */
+    //XXX: not used ANYWHERE
 	protected void writeDateInput(
 			Writer out, 
 			String id,
@@ -87,18 +88,17 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			UiUtil.writeAttribute(out, "disabled", "true");
 		}
 		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeEventAttributeForUiEvent(out, "onchange", this.id, "onChanged", validateOnEvent, onChangePrecondition, 
+			writeEventAttributeForUiEvent(out, "onchange", this.derivedId, "onChanged", validateOnEvent, onChangePrecondition, 
 					updateRegionNames);
 		}
 		
 		UiUtil.writeAttributes(out, attributes);    
 		UiUtil.writeCloseStartEndTag_SS(out);
 		
-		//<a href="javascript:;"><img src="gfx/ico_calendar.gif" id="start1Date_button_id" title="Ava kalender" alt="Ava kalender" class="ico"/></a>
 		if (!disabled) {
 			UiUtil.writeOpenStartTag(out, "a");
 			UiUtil.writeAttribute(out, "href", "javascript:;");
-			UiUtil.writeCloseStartTag(out);
+			UiUtil.writeCloseStartTag_SS(out);
 
 			String calendarImgId = id + CALENDAR_BUTTON_ID_SUFFIX;
 			UiUtil.writeOpenStartTag(out, "img");
@@ -106,10 +106,10 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			out.write(ImageFileImporter.getImportString("gfx/ico_calendar.gif"));
 			out.write("\" ");
 			UiUtil.writeAttribute(out, "id", calendarImgId);
-			UiUtil.writeAttribute(out, "class", "ico");
-			UiUtil.writeCloseStartTag(out);
+			//UiUtil.writeAttribute(out, "class", "ico");
+			UiUtil.writeCloseStartTag_SS(out);
 	
-			UiUtil.writeEndTag(out, "a");
+			UiUtil.writeEndTag_SS(out, "a");
 		
 			writeCalendarScript(out, id, "%d.%m.%Y");
 		}
@@ -128,6 +128,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	 * As you see, the <code>input</code> tag outputs its ID so that the <code>label</code> tag
 	 * could reference it. 
 	 */
+	// XXX: not used ANYWHERE
 	protected void writeTimeInput(
 			Writer out, 
 			String id,
@@ -154,7 +155,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			UiUtil.writeAttribute(out, "disabled", "true");
 		}
 		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeEventAttributeForUiEvent(out, "onchange", this.id, "onChanged", validateOnEvent, onChangePrecondition,
+			writeEventAttributeForUiEvent(out, "onchange", this.derivedId, "onChanged", validateOnEvent, onChangePrecondition,
 					updateRegionNames);
 		}
 		

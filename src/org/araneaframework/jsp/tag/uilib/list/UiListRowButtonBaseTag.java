@@ -12,14 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
-package org.araneaframework.jsp.tag.uilib.list;	
+package org.araneaframework.jsp.tag.uilib.list;  
 
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.presentation.UiSimpleButtonBaseTag;
 import org.araneaframework.jsp.util.UiUpdateRegionUtil;
@@ -30,74 +29,60 @@ import org.araneaframework.jsp.util.UiUpdateRegionUtil;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class UiListRowButtonBaseTag extends UiSimpleButtonBaseTag {
-  
+
   protected String eventId;
   protected String eventParam;
   protected String updateRegions;
   protected String globalUpdateRegions;  
-  
-  protected List updateRegionNames;  
-	
-  //
-  // Attributes
-  //
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Event id." 
-	 */
+  protected List updateRegionNames;
+
+  protected int doStartTag(Writer out) throws Exception {
+    int result = super.doStartTag(out);
+
+    if (contextWidgetId == null)
+      throw new UiException("'listRow(Link)Button' tags can only be used in a context widget!");
+
+    eventParam = (String) requireContextEntry(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST);
+
+    updateRegionNames = UiUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
+
+    return result;
+  }
+
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Event id." 
+   */
   public void setEventId(String eventId) throws JspException {
     this.eventId = (String)evaluate("eventId", eventId, String.class);
   }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details." 
-	 */
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details." 
+   */
   public void setUpdateRegions(String updateRegions) throws JspException {
     this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
   }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
-	 */
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
+   */
   public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
     this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }  
-  
-
-	protected int before(Writer out) throws Exception {
-    int result = super.before(out);
-    
-		if (contextWidgetId == null)
-			throw new UiException("'listRow(Link)Button' tags can only be used in a context widget!");
-		
-		eventParam = (String) readAttribute(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-    
-    updateRegionNames = UiUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
-    
-    return result;
-	}
-  
-  
-  //
-  // Implementation
-  //
-    
-  protected void init() {
-    super.init();
-    eventId = null;
-    eventParam = null;
-    updateRegions = null;
-    globalUpdateRegions = null;
-  }
 }
 
 
