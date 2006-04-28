@@ -38,10 +38,10 @@
 
   <bean class="org.araneaframework.servlet.router.StandardServletSessionRouterService" id="araneaSessionRouter"
         singleton="false">
-    <property name="sessionServiceFactory" ref="application.sessionServiceFactory"/>
+    <property name="sessionServiceFactory" ref="araneaSessionServiceFactory"/>
   </bean>
 
-  <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" id="application.sessionServiceFactory"
+  <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" id="araneaSessionServiceFactory"
         singleton="false">
     <property name="beanId">
       <idref bean="araneaSessionFilters"/>
@@ -147,7 +147,7 @@
     class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService" 
     id="araneaCriticalErrorHandler" singleton="false">
     <property name="exceptionHandlerFactory">
-      <bean class="org.araneaframework.template.framework.error.TemplateCriticalErrorHandlerFactory"
+      <bean class="org.araneaframework.servlet.service.SimpleCriticalErrorHandlerService"
             singleton="false"/>
     </property>
   </bean>
@@ -184,7 +184,6 @@
     id="araneaJspConfigFilter" singleton="false">
     <property name="submitCharset" value="${l10n.encoding}"/>
     <property name="jspPath" value="${jsp.path}"/>        
-    <!-- property name="uiTldPath" value="aranea-template.tld"/ -->
   </bean>
 
   <bean class="org.araneaframework.framework.filter.StandardSynchronizingFilterService" 
