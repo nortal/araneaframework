@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.form;
 
@@ -39,55 +39,52 @@ import org.araneaframework.servlet.filter.StandardJspFilterService;
  * @author Oleg Mürk
  * 
  * @jsp.tag
- * 	name = "systemForm"
- * 	description = "Puts an HTML <i>form</i> tag with parameters needed by Aranea."
+ *   name = "systemForm"
+ *   description = "Puts an HTML <i>form</i> tag with parameters needed by Aranea."
  */
 public class UiAraneaSystemFormTag extends UiSystemFormTag {  
   private OutputData output;
-  private StandardJspFilterService.Configuration config;
-  
-  protected List formHiddenAttribs = new ArrayList();
-  {
-  	formHiddenAttribs.add(StandardTopServiceRouterService.TOP_SERVICE_KEY);
-  	formHiddenAttribs.add(StandardSessionServiceRouterService.SESSION_SERVICE_KEY);
-  	formHiddenAttribs.add(StandardThreadServiceRouterService.THREAD_SERVICE_KEY);
-  	formHiddenAttribs.add(StandardTransactionFilterWidget.TRANSACTION_ID_KEY);
-  }
-  
-  //
-  // Implementation
-  //
+  private StandardJspFilterService.JspConfiguration config;
 
-  protected int before(Writer out) throws Exception {
+  protected int doStartTag(Writer out) throws Exception {
     output = 
       (OutputData) pageContext.getRequest().getAttribute(
           StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
-    
+
     config = 
-      (StandardJspFilterService.Configuration) output.getAttribute(
+      (StandardJspFilterService.JspConfiguration) output.getAttribute(
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
-    
-    super.before(out);
-    
+
+    super.doStartTag(out);
+
     // Hidden fields: preset
     for (Iterator ite = formHiddenAttribs.iterator(); ite.hasNext();) {
-    	String index = (String) ite.next();
-    	if (output.getAttribute(index) != null) {
-    		UiUtil.writeHiddenInputElement(out, index, output.getAttribute(index).toString());
-    	}
+      String index = (String) ite.next();
+      if (output.getAttribute(index) != null) {
+        UiUtil.writeHiddenInputElement(out, index, output.getAttribute(index).toString());
+      }
     }
-    
+
     // Hidden fields: to be set
-    UiUtil.writeHiddenInputElement(out, 
-        StandardWidget.EVENT_HANDLER_ID_KEY, "");
-    UiUtil.writeHiddenInputElement(out, 
-        StandardWidgetContainerWidget.EVENT_PATH_KEY, "");
-    UiUtil.writeHiddenInputElement(out, 
-        StandardWidget.EVENT_PARAMETER_KEY, "");
-    
+    UiUtil.writeHiddenInputElement(out, StandardWidget.EVENT_HANDLER_ID_KEY, "");
+    UiUtil.writeHiddenInputElement(out, StandardWidgetContainerWidget.EVENT_PATH_KEY, "");
+    UiUtil.writeHiddenInputElement(out, StandardWidget.EVENT_PARAMETER_KEY, "");
+
     // Continue
     return EVAL_BODY_INCLUDE;
   }
+  
+  protected List formHiddenAttribs = new ArrayList();
+  {
+    formHiddenAttribs.add(StandardTopServiceRouterService.TOP_SERVICE_KEY);
+    formHiddenAttribs.add(StandardSessionServiceRouterService.SESSION_SERVICE_KEY);
+    formHiddenAttribs.add(StandardThreadServiceRouterService.THREAD_SERVICE_KEY);
+    formHiddenAttribs.add(StandardTransactionFilterWidget.TRANSACTION_ID_KEY);
+  }
+
+  /* ***********************************************************************************
+   * Implementation of SystemForm abstract methods
+   * ***********************************************************************************/
 
   protected String getAcceptCharset() {
     return config.getSubmitCharset();
@@ -95,9 +92,5 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
 
   protected String getFormAction() {
     return ((HttpServletRequest) pageContext.getRequest()).getContextPath() + ((HttpServletRequest) pageContext.getRequest()).getServletPath();
-  }
-
-  protected void init() {
-    super.init();
   }
 }

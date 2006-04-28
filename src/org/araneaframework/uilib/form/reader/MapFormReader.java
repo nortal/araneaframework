@@ -19,10 +19,10 @@ package org.araneaframework.uilib.form.reader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
-import org.araneaframework.uilib.form.data.Data;
 
 
 /**
