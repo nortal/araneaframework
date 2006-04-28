@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form.constraint;
 
 import java.util.List;
 import org.araneaframework.Environment;
+import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.FormElement;
 
 /**

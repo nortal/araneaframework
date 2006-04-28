@@ -19,7 +19,6 @@ package org.araneaframework.uilib.list;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-
 import org.apache.log4j.Logger;
 
 public class MultiOrderHelper {
