@@ -46,6 +46,7 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
 	public void setPageContext(PageContext pageContext) {
 		attributes = new HashMap();
 		hasContent = false;
+		name = null;
 		
 		super.setPageContext(pageContext);
 	}
@@ -72,9 +73,7 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
 			UiUtil.writeAttributes(out, attributes);
 			UiUtil.writeCloseStartEndTag_SS(out);
 		}
-
-		super.doEndTag(out);
-		return EVAL_PAGE;      
+		return super.doEndTag(out);
 	}
 	
 	public void addAttribute(String name, String value) throws JspException {
