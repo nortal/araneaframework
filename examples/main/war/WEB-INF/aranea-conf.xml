@@ -4,5 +4,5 @@
 <beans>   
     <bean id="araneaApplicationStart" 
       class="org.araneaframework.example.main.web.LoginWidget"  
-      singleton="false"/> 
+      singleton="false"/>
 </beans>
