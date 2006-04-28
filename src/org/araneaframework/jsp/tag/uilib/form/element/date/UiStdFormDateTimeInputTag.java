@@ -114,15 +114,7 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
       out.write(" disabled=\"true\"");
     out.write(">\n");
 
-   // TODO: make JS that fills this select
-    out.write("<option value=''></option>\n");
-    for (int i = 0; i < 60; i++) {
-      out.write("<option value='"
-          + (i < 10 ? "0" + i : String.valueOf(i)) + "'>"
-          + (i < 10 ? "0" + i : String.valueOf(i)) + "</option>\n");
-    }
-    out.write("</select>\n");
-    out.write("<SCRIPT>" + fillXJSCallConstructor("fillSelect", systemFormId, name) + ";</SCRIPT>\n");
+    out.write("<script type=\"text/javascript\">addOptions(60);</script>\n</select>\n");
   }
 
   protected void writeHourSelect(Writer out, String name, boolean disabled) throws IOException {
@@ -133,16 +125,8 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     if (disabled)
       out.write(" disabled=\"true\"");
     out.write(">\n");
-    
-    out.write("<option value=''></option>\n");
 
-    // TODO: make JS that fills this select
-    for (int i = 0; i < 24; i++) {
-      out.write("<option value='"
-          + (i < 10 ? "0" + i : String.valueOf(i)) + "'>"
-          + (i < 10 ? "0" + i : String.valueOf(i)) + "</option>\n");
-    }
-    out.write("</select>\n");
+    out.write("<script type=\"text/javascript\">addOptions(24);</script>\n</select>\n");
   }
 
   /**

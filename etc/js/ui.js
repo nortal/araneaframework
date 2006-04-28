@@ -117,3 +117,10 @@ function fillTimeSelect(systemForm, el) {
   systemForm[el+'.select1'].value=firstSelect;
   systemForm[el+'.select2'].value=systemForm[el].value.substr(separatorPos+1, systemForm[el].value.length);
 }
+
+// adds options empty,0-(z-1) to <select> when used inside <select>
+function addOptions(z) {
+	o = "option>";
+	document.write("<"+o+"</"+o);
+	for (i = 0; i < z; i++) document.write("<"+o+ (i < 10 ? "0" : "")+ i+"</"+o);
+}
