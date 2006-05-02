@@ -16,19 +16,373 @@
 
 <chapter id="framework">
 	<title>Framework</title>
-	<sect1>
-		<title>Framework components</title>
+  <sect1>
+    <title>Overview</title>
+
+    <para>
+      Aranea framework consists of a number of independent components each performing a single well-defined function. This classes are arranged together during deployment and usually involving an IoC container (like Spring) for configuration. These components may be simple <literal>Component</literal>s, <literal>Service</literal>s or <literal>Widget</literal>s. 
+    </para>
+  </sect1>
+  
+  <sect1>
+    <title>Hosting Aranea</title>
+
     <sect2>
-      <title>Example service</title>
+      <title>Servlet Dispatcher</title>
+
+      <para>
+        Currently, the most common way to put Aranea to work is to host it in a Servlet 2.3 or compatible container. To do that one needs to extend the <literal>org.araneaframework.servlet.core.BaseAraneaDispatcherServlet</literal> and build the root component of type <literal>org.araneaframework.servlet.ServletServiceAdapterComponent</literal> in the overrided method <literal>buildRootComponent()</literal>:
+<programlisting role="java">package com.foobar.myapp;
+
+class MyServlet extends BaseAraneaDispatcherServlet {
+   protected ServletServiceAdapterComponent buildRootComponent() {
+     StandardServletServiceAdapterComponent root = new StandardServletServiceAdapterComponent();
+
+     //Configure the child components, service widgets using setter injection
+
+     return root;
+   }
+}</programlisting>
+      And one can then use such a servlet to configure Aranea in a web application:
+      <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC 
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <listener>
+    <listener-class>
+      org.araneaframework.servlet.core.StandardSessionListener
+    </listener-class>
+  </listener>
+
+   <servlet>
+      <servlet-name>araneaServlet</servlet-name>
+      <servlet-class>
+        org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>araneaServlet</servlet-name>
+      <url-pattern>/main</url-pattern>
+   </servlet-mapping>
+</web-app>]]></programlisting>
+      This will map Aranea to the web application URL ending in "/main". <literal>org.araneaframework.servlet.core.StandardSessionListener</literal> is an Aranea session listener that is needed for successful widget deinitialization.
+      </para>
+
+      <para>
+        Aranea also includes several ready dispatcher servlets, which configure the root component without the need for subclassing. They are described in the next section <xref linkend="framework-configuration"/>
+      </para>
     </sect2>
-	</sect1>
-	<sect1>
-		<title>Framework configuration</title>
+  </sect1>
+  
+  <sect1 id="framework-configuration">
+    <title>Configuration</title>
+     
+    <para>
+      Aranea uses Spring to wire the independent components into a working framework. Though other IoC containers and configuration frameworks would also work we support Spring by default since it provides a very comfortable syntax for configuring beans.
+    </para>
+     
     <sect2>
-      <title>Hosting widgets</title>
+      <title>Generic Spring Configuration</title>
+
+      <para>
+        The most common way to configure Aranea for a web application is using Spring and <literal>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</literal>:
+      <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC 
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value> 
+      /WEB-INF/aranea-conf.xml
+    </param-value>
+  </context-param>
+
+  <listener>
+    <listener-class>
+      org.araneaframework.servlet.core.StandardSessionListener
+    </listener-class>
+  </listener>
+  
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>  
+
+   <servlet>
+      <servlet-name>araneaServlet</servlet-name>
+      <servlet-class>
+        org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>araneaServlet</servlet-name>
+      <url-pattern>/main</url-pattern>
+   </servlet-mapping>
+</web-app>]]></programlisting>
+      This configuration uses Spring to load the <literal>/WEB-INF/aranea-conf.xml</literal> configuration file, one can also add other files that configure different Spring beans. <literal>org.springframework.web.context.ContextLoaderListener</literal> is a Spring Servlet listener that loads the configuration.  <literal>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</literal> expects to find a Spring bean with identifier "applicationRoot" that must be an instance of <literal>org.araneaframework.servlet.ServletServiceAdapterComponent</literal> and will be used as application root.
+      </para>
+
+      <para>
+        Following is an example of a very simple Aranea web application configuration:
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC 
+  "-//SPRING//DTD BEAN//EN" 
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <bean 
+    class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    id="applicationRoot" singleton="false">        
+    <property name="childService" ref="router"/>
+  </bean>  
+  <bean 
+    class="org.araneaframework.servlet.router.PathInfoServiceRouterService" 
+    id="router" singleton="false">
+    <property name="defaultServiceId" value="name"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="name">
+           <bean class="org.araneaframework.example.helloname.NameService" 
+            singleton="false"/>
+        </entry>
+        <entry key="hello">
+           <bean class="org.araneaframework.example.helloname.HelloService" 
+            singleton="false"/>
+        </entry>        
+      </map>
+    </property>
+  </bean>
+  
+</beans>]]></programlisting>
+      This configuration comes from example <literal>examples/serviceHelloName/war/WEB-INF/aranea-conf.xml</literal> and is a very simple static configuration. For a more elaborate example see <literal>examples/main/war/WEB-INF/aranea-conf.xml</literal>, an excerpt from it follows: 
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans 
+  PUBLIC "-//SPRING//DTD BEAN//EN" 
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <bean  
+    class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    id="applicationRoot" singleton="false">
+    <property name="childService" ref="application.criticalErrorHandler"/>
+  </bean>
+  ...
+  <!--
+    Manages sessions and routes the request to correct session.
+  -->
+  <bean 
+    class="org.araneaframework.servlet.router.StandardServletSessionRouterService" 
+    id="application.sessionRouter" singleton="false">
+    <property name="sessionServiceFactory" ref="application.sessionServiceFactory"/>
+  </bean>
+
+  <!--
+    Note that in some cases the beans are connected via a factory, 
+    so for every new session Session Router will create a new service.
+  -->
+  <bean 
+    class="org.araneaframework.ioc.spring.SpringServiceFactory" 
+    id="application.sessionServiceFactory" singleton="false">
+    <property name="beanId">
+      <idref bean="session.serializingAudit"/>
+    </property>
+  </bean>
+
+  ...
+
+  <!--
+    Manages all the HTTP headers and character encodings.
+  -->
+  <bean 
+    class="org.araneaframework.servlet.filter.StandardServletHttpFilterService" 
+    id="thread.headerFilter" singleton="false">
+    <property name="childService" ref="thread.fileUploadFilter"/>
+    <property name="requestEncoding" value="UTF-8"/>
+  </bean>
+
+  ...
+  
+  <!-- 
+    Translates a service action() call into widget request/response cycle 
+    and thus hosts a widget.
+  -->
+  <bean 
+    class="org.araneaframework.framework.container.StandardWidgetAdapterService" 
+    id="thread.widgetAdapter" singleton="false">
+    <property name="childWidget" ref="thread.transactionFilter"/>
+  </bean>
+  
+  <!--
+    Takes care of multi-submitted requests by ignoring the subsequent ones 
+    and just rendering the result.
+  -->
+  <bean 
+    class="org.araneaframework.framework.filter.StandardTransactionFilterWidget" 
+    id="thread.transactionFilter" singleton="false">
+    <property name="childWidget" ref="thread.messagingFilter"/>
+  </bean>
+  
+  ...
+  
+  <!--
+    Hosts the first flow and allows to run new nested ones
+  -->
+  <bean 
+    class="org.araneaframework.framework.container.StandardFlowContainerWidget" 
+    id="thread.mainCallStack" singleton="false">
+    <property name="top" ref="thread.login"/>
+  </bean>
+   
+  <!--
+    Shows the login page.
+  -->
+  <bean 
+    class="org.araneaframework.example.main.web.LoginWidget" 
+    id="thread.login" singleton="false"/>
+</beans>]]></programlisting>
+      Note that all beans are declared to be non-singletons, which should always be the case with Aranea beans. 
+      </para>
     </sect2>
-	</sect1>
-	<sect1>
-		<title>Exception handling</title>
-	</sect1>
+
+    <sect2>
+      <title>Simple Spring Configuration</title>
+
+      <para>
+        There is also a simpler way of configuring Aranea which uses a prdefined Spring configuration suitable for kicking off custom web applications. It is not suggested to be used generally, as it doesn't allow to customize the framework as well as a full configuration, but it is fine to use in the beginning, when a working application is more important than configuration possibilities.
+      </para>
+
+      <para>
+        To make use of the simplified configuration one should use the Servlet <literal>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</literal> as illustrated in the following example:
+        <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC 
+    "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value> 
+      /WEB-INF/aranea-conf.xml
+    </param-value>
+  </context-param>
+
+  <listener>
+    <listener-class>
+      org.araneaframework.servlet.core.StandardSessionListener
+    </listener-class>
+  </listener>
+  
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
+   
+   <servlet>
+      <servlet-name>araneaServlet</servlet-name>
+      <servlet-class>
+        org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>araneaServlet</servlet-name>
+      <url-pattern>/main</url-pattern>
+   </servlet-mapping>
+</web-app>]]></programlisting>
+        To configure the actual application one needs to provide a Spring bean with identifier "araneaApplicationStart" that will be the root custom widget of the application as illustrated by the following <literal>aranea-conf.xml</literal> file:
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC 
+  "-//SPRING//DTD BEAN//EN" 
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <bean id="araneaApplicationStart" 
+    class="org.araneaframework.example.quickstart.RootWidget"  
+    singleton="false"/> 
+</beans>]]></programlisting>
+        Optionally one can also configure some parameters using a property file <literal>/WEB-INF/aranea-conf.properties</literal>, the following property file contains the available properties and their defaults:
+<programlisting role="properties">#Resource bundle base name
+l10n.resourceBundle=org.araneaframework.template.framework.resource.TemplateResourceBundle
+#Default user session locale
+l10n.defaultLocale=en
+#Request and response encoding
+l10n.encoding=UTF-8
+#JSP location root catalog
+jsp.path=/WEB-INF/jsp</programlisting>
+      </para>
+    </sect2>
+  </sect1>
+
+  <!-- sect1>
+    <title>Components</title>
+
+    <sect2>
+      <title>Core Components</title>
+
+      StandardServletServiceAdapterComponent
+      StandardSessionListener
+    </sect2>
+    
+    <sect2>
+      <title>Routers</title>
+      
+      <sect3>
+        <title>BaseServiceRouterService, StandardTopServiceRouterService and StandardThreadServiceRouterService</title>
+      </sect3>
+
+      PathInfoServiceRouterService
+      StandardServletSessionRouterService
+    </sect2>
+    
+    <sect2>
+      <title>Filters</title>
+
+      StandardContextMapFilterWidget
+      StandardContinuationFilterService
+      StandardCriticalExceptionHandlingFilterService
+      StandardLocalizationFilterService
+      StandardMessagingFilterWidget
+      StandardSerializingAuditFilterService
+      StandardStatisticFilterService
+      StandardSynchronizingFilterService
+      StandardTransactionFilterWidget
+      StandardJspFilterService
+      StandardPopupFilterWidget
+      StandardServletFileImportFilterService
+      StandardServletFileUploadFilterService
+      StandardServletHttpFilterService
+    </sect2>
+    
+    <sect2>
+      <title>Containers</title>
+
+      StandardFlowContainerWidget
+      ExceptionHandlingFlowContainerWidget
+      StandardServiceAdapterWidget
+      StandardServiceContainerService
+      StandardViewPortWidget
+      StandardWidgetAdapterService
+      StandardWidgetContainerWidget
+      PathInfoServiceContainerService
+    </sect2>
+    
+    <sect2>
+      <title>Other</title>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Exception Handling</title>
+  </sect1-->
 </chapter>
