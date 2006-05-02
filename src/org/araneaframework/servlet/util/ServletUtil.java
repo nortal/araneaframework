@@ -17,6 +17,7 @@
 package org.araneaframework.servlet.util;
 
 import javax.servlet.ServletContext;
+import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
@@ -28,6 +29,7 @@ import org.araneaframework.servlet.ServletOutputData;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class ServletUtil {
+  private static final Logger log = Logger.getLogger(ServletUtil.class);
   
   /**
    * Includes the jsp specified by filePath using the the request and response streams
@@ -36,6 +38,8 @@ public class ServletUtil {
    * is used.
    */
   public static void include(String filePath, Environment env, ServletOutputData output) throws Exception {
+    log.debug("Including a resource from the absolute path '" + filePath + "'");
+    
     ServletContext servletContext = 
       (ServletContext) env.getEntry(ServletContext.class);
     servletContext.getRequestDispatcher(filePath).include(output.getRequest(), output.getResponse());
@@ -48,6 +52,8 @@ public class ServletUtil {
   * as relative to the current context root. 
   */
   public static void includeRelative(String filePath, Environment env, ServletOutputData output) throws Exception {
+    log.debug("Including a resource from the relative path '" + filePath + "'");
+    
     output.getRequest().getRequestDispatcher(filePath).include(output.getRequest(), output.getResponse());
   }
   

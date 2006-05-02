@@ -13,3 +13,4 @@ tmp
 *.essModel
 .refactorings
 dist
+aranea-main-example.launch

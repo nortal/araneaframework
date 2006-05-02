@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.uilib.list.formlist.FormListWidget;
+import org.araneaframework.uilib.list.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.list.formlist.FormRowHandler;
 
 /**
@@ -24,7 +24,7 @@ import org.araneaframework.uilib.list.formlist.FormRowHandler;
  */
 public class EditableBeanListWidget extends BeanListWidget {
 	
-	protected FormListWidget formList;
+	protected BeanFormListWidget formList;
 	
   //*********************************************************************
   //* CONSTRUCTORS  
@@ -48,12 +48,12 @@ public class EditableBeanListWidget extends BeanListWidget {
 	 * Returns the editable row manager.
 	 * @return the editable row manager.
 	 */
-	public FormListWidget getFormList() {
+	public BeanFormListWidget getFormList() {
 		return formList;
 	}
 	
 	public void setFormRowHandler(FormRowHandler rowHandler) {
-		formList = new FormListWidget(rowHandler);		
+		formList = new BeanFormListWidget(rowHandler, beanClass);		
 	}
 	
   //*********************************************************************
