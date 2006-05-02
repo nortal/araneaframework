@@ -102,7 +102,7 @@ public class NewLayoutCellTag extends UiPresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Whether this cell is header cell, defaults to false. In HTML, renders either &lt;th&gt; or &lt;tr&gt;."
+   *   description = "Whether this cell is header cell, defaults to false. In HTML, tag is rendered with &lt;th&gt; or &lt;tr&gt;."
    */
   public void setHeaderCell(String headerCell) throws JspException {
     boolean isHeaderCell = ((Boolean)evaluate("headerCell", headerCell, Boolean.class)).booleanValue();
