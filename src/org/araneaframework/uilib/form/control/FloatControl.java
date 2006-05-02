@@ -72,7 +72,7 @@ public class FloatControl extends EmptyStringNullableControl {
 	 * @param maxValue maximum permitted value.
 	 */
 	public FloatControl(BigDecimal minValue, BigDecimal maxValue) {
-		super();
+		this();
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 	}    
