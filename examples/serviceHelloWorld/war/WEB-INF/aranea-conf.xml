@@ -3,11 +3,11 @@
 
 <beans>
 
-  <bean id="application.root" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
-    singleton="false">
+  <bean class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+    id="applicationRoot" singleton="false">
 
     <property name="childService">
-      <bean class="org.araneaframework.example.helloworld.HelloWorldService"/>
+      <bean class="example.HelloWorldService"/>
     </property>
   </bean>  
 	

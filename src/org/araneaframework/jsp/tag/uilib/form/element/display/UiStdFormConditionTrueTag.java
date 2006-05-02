@@ -30,10 +30,10 @@ import org.araneaframework.jsp.tag.UiBaseTag;
 public class UiStdFormConditionTrueTag extends UiBaseTag {
   /**
    */
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
-    Boolean condition = (Boolean) readAttribute(UiStdFormConditionalDisplayTag.CONDITION_KEY);
+    Boolean condition = (Boolean) requireContextEntry(UiStdFormConditionalDisplayTag.CONDITION_KEY);
     
     return condition.booleanValue() ? EVAL_BODY_INCLUDE : SKIP_BODY;  }
 }
