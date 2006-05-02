@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardEnvironment;
@@ -47,7 +48,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
   public static final String MESSAGE_KEY = "org.araneaframework.framework.filter.StandardMessagingFilterWidget.MESSAGES"; 
   
-  private Map messages = new HashMap();
+  private Map messages = new LinkedMap();
 
   protected void init() throws Exception {
     Map entries = new HashMap();

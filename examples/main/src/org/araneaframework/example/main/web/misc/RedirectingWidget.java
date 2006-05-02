@@ -14,25 +14,26 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.web.error;
+package org.araneaframework.example.main.web.misc;
 
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.servlet.ServletOutputData;
 
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class EventErrorWidget extends TemplateBaseWidget {
+public class RedirectingWidget extends TemplateBaseWidget {
 
 	public void init() throws Exception {
 		super.init();
     
-    setViewSelector("error/EventErrorWidget/main");
-    addEventListener("error", new ProxyEventListener(this));
+    setViewSelector("misc/redirect");
+    addEventListener("redirect", new ProxyEventListener(this));
 	}
   
-  public void handleEventError() {
-    throw new RuntimeException("Error on event()!");
+  public void handleEventRedirect() throws Exception {
+    ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect("http://www.araneaframework.org");
   }
 }

@@ -76,7 +76,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
       List messages = (List) ((Map.Entry) i.next()).getValue();
 
       for (Iterator j = messages.iterator(); j.hasNext();) {
-        out.write(j.next().toString());
+        out.write((String) j.next());
         if (j.hasNext())
           UiUtil.writeStartEndTag(out, "br");
       }

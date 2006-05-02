@@ -31,11 +31,12 @@ import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
 import org.araneaframework.example.main.web.demo.DemoFileUpload;
 import org.araneaframework.example.main.web.demo.DemoFormList;
 import org.araneaframework.example.main.web.demo.DemoInMemoryEditableList;
-import org.araneaframework.example.main.web.error.EventErrorWidget;
-import org.araneaframework.example.main.web.error.InitErrorWidget;
-import org.araneaframework.example.main.web.error.RenderErrorWidget;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
+import org.araneaframework.example.main.web.misc.EventErrorWidget;
+import org.araneaframework.example.main.web.misc.InitErrorWidget;
+import org.araneaframework.example.main.web.misc.RedirectingWidget;
+import org.araneaframework.example.main.web.misc.RenderErrorWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.person.PersonListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
@@ -97,35 +98,36 @@ public class MenuWidget extends TemplateMenuWidget  {
 		}
 		
     // Another way of adding menuitems is available
-    MenuItem sampleMenu = result.addMenuItem(new MenuItem("Samples")); {
-      sampleMenu.addMenuItem(new MenuItem("Simple_Form", SimpleFormWidget.class));
-      sampleMenu.addMenuItem(new MenuItem("Simple_List", SimpleListWidget.class));
-      sampleMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
-      sampleMenu.addMenuItem(new MenuItem("#Invisible element form", InvisibleElementFormWidget.class));
-      sampleMenu.addMenuItem(new MenuItem("#Popup example", SamplePopupWidget.class));
-    }
+    MenuItem sampleMenu = result.addMenuItem(new MenuItem("Demos")); {
+      sampleMenu.addMenuItem(new MenuItem("#Simple"));
+      sampleMenu.addMenuItem("#Simple", new MenuItem("Simple_Form", SimpleFormWidget.class));
+      sampleMenu.addMenuItem("#Simple", new MenuItem("Simple_List", SimpleListWidget.class));
+      sampleMenu.addMenuItem("#Simple", new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
+      sampleMenu.addMenuItem("#Simple", new MenuItem("#Invisible element form", InvisibleElementFormWidget.class));
+      sampleMenu.addMenuItem("#Simple", new MenuItem("#Popup example", SamplePopupWidget.class));
+      
+      sampleMenu.addMenuItem(new MenuItem("#Advanced"));
+      sampleMenu.addMenuItem("#Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
+      sampleMenu.addMenuItem("#Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));   
+      
+      sampleMenu.addMenuItem(new MenuItem("#Form lists"));
+      sampleMenu.addMenuItem("#Form lists", new MenuItem("Display_Form", DemoDisplayForm.class));
+      sampleMenu.addMenuItem("#Form lists", new MenuItem("Editable_List", DemoFormList.class));
+      sampleMenu.addMenuItem("#Form lists", new MenuItem("In_memory_editable_list", DemoInMemoryEditableList.class));
+      sampleMenu.addMenuItem("#Form lists", new MenuItem("Editable_checkbox_list", DemoCheckboxList.class));
+      sampleMenu.addMenuItem("#Form lists", new MenuItem("Displayable_editable_list", DemoDisplayableEditableList.class));     
+      
+      sampleMenu.addMenuItem(new MenuItem("#Lists"));
+      sampleMenu.addMenuItem("#Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
+      sampleMenu.addMenuItem("#Lists", new MenuItem("Multi_List", MultiListWidget.class));         
+    } 
     
-    MenuItem errorMenu = result.addMenuItem(new MenuItem("Error")); {
+    MenuItem errorMenu = result.addMenuItem(new MenuItem("#Misc")); {
       errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("Error_on_event", EventErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("Error_on_render", RenderErrorWidget.class));
-    }    
-		
-		result.addMenuItem(null, new MenuItem("Demos")); {
-			result.addMenuItem("Demos", new MenuItem("Display_Form", DemoDisplayForm.class));
-			result.addMenuItem("Demos", new MenuItem("Editable_List", DemoFormList.class));
-			result.addMenuItem("Demos", new MenuItem("In_memory_editable_list", DemoInMemoryEditableList.class));
-			result.addMenuItem("Demos", new MenuItem("Editable_checkbox_list", DemoCheckboxList.class));
-			result.addMenuItem("Demos", new MenuItem("Displayable_editable_list", DemoDisplayableEditableList.class));
-			result.addMenuItem("Demos", new MenuItem("File_Upload", DemoFileUpload.class));
-			result.addMenuItem("Demos", new MenuItem("Complex_Form", DemoComplexForm.class));
-		}
-		
-		result.addMenuItem(null, new MenuItem("Lists")); {
-			result.addMenuItem("Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
-			result.addMenuItem("Lists", new MenuItem("Multi_List", MultiListWidget.class));
-			
-		}
+      errorMenu.addMenuItem(new MenuItem("#Redirecting", RedirectingWidget.class));
+    }   
 		
 		return result;
 	}

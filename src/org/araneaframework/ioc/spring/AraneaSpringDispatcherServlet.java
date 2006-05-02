@@ -53,7 +53,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   public static final String ARANEA_START_CLASS_INIT_PARAMETER = "araneaApplicationStart";
   public static final String ARANEA_ROOT_INIT_PARAMETER = "araneaApplicationRoot";
   
-  protected WebApplicationContext webAppCtx;
+  protected GenericWebApplicationContext webAppCtx;
   
   public void init() throws ServletException {    
     //Reading init-param's
@@ -122,7 +122,9 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     }
     
     //Making a resulting web application context    
-    webAppCtx = new GenericWebApplicationContext(rootConf);    
+    webAppCtx = new GenericWebApplicationContext(rootConf);
+    webAppCtx.setParent(beanFactory);
+    webAppCtx.refresh();
     
     super.init();        
   }  
