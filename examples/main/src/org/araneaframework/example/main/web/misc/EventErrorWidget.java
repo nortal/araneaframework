@@ -14,21 +14,25 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.web.error;
+package org.araneaframework.example.main.web.misc;
 
+import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class InitErrorWidget extends TemplateBaseWidget {
+public class EventErrorWidget extends TemplateBaseWidget {
 
 	public void init() throws Exception {
 		super.init();
     
-    setViewSelector("error/InitErrorWidget/main");
-
-    throw new RuntimeException("Error on init()!");
+    setViewSelector("misc/eventError");
+    addEventListener("error", new ProxyEventListener(this));
 	}
+  
+  public void handleEventError() {
+    throw new RuntimeException("Error on event()!");
+  }
 }

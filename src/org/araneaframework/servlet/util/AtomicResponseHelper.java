@@ -61,7 +61,6 @@ public class AtomicResponseHelper {
    * Wraps a HttpServletResponse to make it possible of resetting and commiting it.
    */
   private class ResponseWrapper extends HttpServletResponseWrapper {
-    private boolean committed = false;
     private ServletOutputStream out;
     private PrintWriter writerOut;
 
@@ -95,18 +94,15 @@ public class AtomicResponseHelper {
     }
     
     public ServletOutputStream getOutputStream() throws IOException {
-      if (committed)
+      if (out == null)
         return getResponse().getOutputStream();
       
       return out;
     }
     
     public PrintWriter getWriter() throws IOException {
-      if (committed)
+      if (out == null)
         return getResponse().getWriter();
-      
-      if (writerOut == null)
-        resetWriter();
       
       return writerOut;
     }
@@ -116,7 +112,7 @@ public class AtomicResponseHelper {
      * @throws AraneaRuntimeException if output has been commited already. 
      */
     public void commit() throws IOException {
-      if (committed)
+      if (out == null)
         throw new IllegalStateException("Cannot commit buffer - response is already committed");
       
       if (writerOut != null)
@@ -130,7 +126,7 @@ public class AtomicResponseHelper {
       getResponse().getOutputStream().write(data);
       getResponse().getOutputStream().flush();
       
-      committed = true;
+      out = null;
     }
     
     /**
@@ -138,7 +134,7 @@ public class AtomicResponseHelper {
      * buffer in the response without clearing headers or status code.
      */
     public void rollback() {
-      if (committed)
+      if (out == null)
         throw new IllegalStateException("Cannot reset buffer - response is already committed");
       
       resetStream();

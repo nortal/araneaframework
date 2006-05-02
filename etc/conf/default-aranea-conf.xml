@@ -103,7 +103,8 @@
     class="org.araneaframework.framework.filter.StandardWidgetFilterChainFilterWidget">
     <property name="childWidget" ref="araneaWidgetContainer"/>
     <property name="filterChain">
-      <list>
+      <list>      
+        <ref bean="araneaRedirectingFilter"/>
         <ref bean="araneaTransactionFilter"/>
         <ref bean="araneaMessagingFilter"/>
         <ref bean="araneaContexts"/>
@@ -147,7 +148,7 @@
     class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService" 
     id="araneaCriticalErrorHandler" singleton="false">
     <property name="exceptionHandlerFactory">
-      <bean class="org.araneaframework.servlet.service.SimpleCriticalErrorHandlerService"
+      <bean class="org.araneaframework.servlet.service.SimpleCriticalErrorHandlerService$Factory"
             singleton="false"/>
     </property>
   </bean>
@@ -201,6 +202,10 @@
   <bean class="org.araneaframework.framework.filter.StandardTransactionFilterWidget" 
     id="araneaTransactionFilter" singleton="false">
   </bean>
+  
+   <bean class="org.araneaframework.servlet.filter.StandardServletRedirectingFilterWidget" 
+    id="araneaRedirectingFilter" singleton="false">
+  </bean>    
   
   <bean class="org.araneaframework.framework.filter.StandardMessagingFilterWidget" 
     id="araneaMessagingFilter" singleton="false">
