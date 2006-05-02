@@ -36,7 +36,7 @@ public class UiStdFormValueDisplayTag extends UiFormElementBaseDisplayTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-	 *   required = "false"
+	 *   required = "true"
 	 *   description = "Name of the page scope variable to put the element value into." 
 	 */
   public void setVar(String var) throws JspException {
@@ -45,15 +45,15 @@ public class UiStdFormValueDisplayTag extends UiFormElementBaseDisplayTag {
   
   /**
    */
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     assertControlType("DisplayControl");
     
     DisplayControl.ViewModel viewModel = (DisplayControl.ViewModel) controlViewModel;
     
     // Store data
-    pushAttribute(var, viewModel.getValue());
+    addContextEntry(var, viewModel.getValue());
     
     return EVAL_BODY_INCLUDE; 
   }

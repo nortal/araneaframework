@@ -20,10 +20,10 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.backend.util.BeanMapper;
+import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
-import org.araneaframework.uilib.form.data.Data;
 
 
 /**

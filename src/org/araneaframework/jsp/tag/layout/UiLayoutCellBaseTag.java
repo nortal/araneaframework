@@ -26,29 +26,12 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  * @author Oleg Mürk
  */
 public class UiLayoutCellBaseTag extends UiPresentationTag implements UiLayoutCellTagInterface {
-	protected String width;
-	protected String height;
+	protected String width = null;
+	protected String height = null;
 	
-	protected Long colSpan;
-	protected Long rowSpan;
+	protected Long colSpan = null;
+	protected Long rowSpan = null;
 	
-	//
-	// Implementation
-	//
-	
-	protected void init() {
-		super.init();
-		
-		width = null;
-		height = null;
-		
-		colSpan = null;
-		rowSpan = null;
-	}
-	
-	//
-	// Atributes
-	//
 	public void setWidth(String width) throws JspException {
 		this.width = (String)evaluate("width", width, String.class);
 	}
