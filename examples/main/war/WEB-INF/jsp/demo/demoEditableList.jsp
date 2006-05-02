@@ -14,43 +14,43 @@
 			<ui:componentList>
 				<ui:formList id="editableList">
 					<ui:formListRows>
-						<ui:row>
-							<ui:cell styleClass="center">
+						<ui:newRow>
+							<ui:newCell styleClass="center">
 								<ui:checkbox id="booleanField" />
-							</ui:cell>
-							<ui:cell>
+							</ui:newCell>
+							<ui:newCell>
 								<ui:textInput id="stringField" />
-							</ui:cell>
-							<ui:cell>
+							</ui:newCell>
+							<ui:newCell>
 								<ui:numberInput id="longField" />
-							</ui:cell>
-							<ui:cell width="0">
+							</ui:newCell>
+							<ui:newCell width="0">
 								<ui:linkButton id="save" showLabel="false">
 									<ui:image code="buttonChange" />
 								</ui:linkButton>
 								<ui:linkButton id="delete" showLabel="false">
 									<ui:image code="buttonDelete" />
 								</ui:linkButton>
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formListRows>
 					<ui:formListAddForm>
-						<ui:row>
-							<ui:cell styleClass="center">
+						<ui:newRow>
+							<ui:newCell styleClass="center">
 								<ui:checkbox id="booleanField" />
-							</ui:cell>
-							<ui:cell>
+							</ui:newCell>
+							<ui:newCell>
 								<ui:textInput id="stringField" size="40" />
-							</ui:cell>
-							<ui:cell>
+							</ui:newCell>
+							<ui:newCell>
 								<ui:numberInput id="longField" size="5" />
-							</ui:cell>
-							<ui:cell width="0">
+							</ui:newCell>
+							<ui:newCell width="0">
 								<ui:linkButton id="add" showLabel="false">
 									<ui:image code="add" />
 								</ui:linkButton>
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formListAddForm>
 				</ui:formList>
 			</ui:componentList>

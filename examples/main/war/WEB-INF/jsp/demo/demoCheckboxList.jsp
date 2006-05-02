@@ -17,17 +17,17 @@
 
 					<!-- Body -->
 					<ui:formListRows>
-						<ui:row>
-							<ui:cell styleClass="center">
+						<ui:newRow>
+							<ui:newCell styleClass="center">
 								<ui:checkbox id="booleanField" />
-							</ui:cell>
-							<ui:cell>
+							</ui:newCell>
+							<ui:newCell>
 								<c:out value="${row.stringField}" />
-							</ui:cell>
-							<ui:cell>
+							</ui:newCell>
+							<ui:newCell>
 								<c:out value="${row.longField}" />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formListRows>
 
 				</ui:componentList>

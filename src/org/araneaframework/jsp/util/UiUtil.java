@@ -18,10 +18,13 @@ package org.araneaframework.jsp.util;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.StringTokenizer;
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -350,7 +353,7 @@ public class UiUtil {
         default:
           out.write(c);
       }     
-    }    
+    }
   }
   
   /**
@@ -379,18 +382,36 @@ public class UiUtil {
   }
   
   /**
-   * Writes out html input element.
+   * Writes out hidden html input element with give name and value.
    * 
-   * @author Nikita Salnikov
+   * @author Nikita Salnikov-Tarnovski
    */ 
   public static void writeHiddenInputElement(Writer out, String name, String value) throws IOException {
     UiUtil.writeOpenStartTag(out, "input");
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "type", "hidden");
     UiUtil.writeAttribute(out, "value", value);
-    UiUtil.writeCloseStartEndTag(out);    
+    UiUtil.writeCloseStartEndTag(out);
   }
   
+  
+  /**
+   * Parses multi-valued attribute, where attributes are separated by commas.
+   * Empty attribute values are allowed, they are specified by including whitespace
+   * between commas: "first, ,third".
+   * @return List&lt;String&gt; containing attribute values. 
+   */
+  public static List parseMultiValuedAttribute(String attribute) {
+    List result = new ArrayList();
+
+    if (attribute != null && !"".equals(attribute.trim())) {
+      StringTokenizer tokens = new StringTokenizer(attribute, ",");
+      while (tokens.hasMoreTokens())
+        result.add(tokens.nextToken().trim());
+    }
+
+    return result;
+  }
   
   // -------------- Operations with PageContext ------------------- //
   

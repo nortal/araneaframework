@@ -14,31 +14,31 @@
 					<ui:componentListHeader/>
 
 					<ui:listRows>
-						<ui:row>
-							<ui:cell>
+						<ui:newRow>
+							<ui:newCell>
 								<c:out value="${row.id}"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:listRowLinkButton eventId="edit">
 									<c:out value="${row.company.name}"/>
 								</ui:listRowLinkButton>
-							</ui:cell>
+							</ui:newCell>
 		
-							<ui:cell>
+							<ui:newCell>
 								<c:out value="${row.person.name} ${row.person.surname}"/>
-							</ui:cell>
+							</ui:newCell>
 		
-							<ui:cell>
+							<ui:newCell>
 								<c:out value="${row.notes}"/>
-							</ui:cell>
+							</ui:newCell>
 
-							<ui:cell>
+							<ui:newCell>
 								<ui:listRowLinkButton eventId="remove">
 									<ui:image code="buttonDelete" alt="Remove contract" title="Remove contract"/>
 								</ui:listRowLinkButton>
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:listRows>				
 				</ui:componentList>
 			

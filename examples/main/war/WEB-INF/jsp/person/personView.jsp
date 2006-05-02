@@ -12,45 +12,45 @@
 
 			<ui:component>
 				<ui:componentForm>
-					<ui:row>
+					<ui:newRow>
 						<ui:formElement id="name">
-							<ui:cell styleClass="name">
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="data">
+							</ui:newCell>
+							<ui:newCell styleClass="data">
 								<ui:textDisplay styleClass="display" />
-							</ui:cell>
+							</ui:newCell>
 						</ui:formElement>
 
 						<ui:formElement id="surname">
-							<ui:cell styleClass="name">
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="data">
+							</ui:newCell>
+							<ui:newCell styleClass="data">
 								<ui:textDisplay />
-							</ui:cell>
+							</ui:newCell>
 						</ui:formElement>
-					</ui:row>
+					</ui:newRow>
 
-					<ui:row>
+					<ui:newRow>
 						<ui:formElement id="phone">
-							<ui:cell styleClass="name">
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="data">
+							</ui:newCell>
+							<ui:newCell styleClass="data">
 								<ui:textDisplay />
-							</ui:cell>
+							</ui:newCell>
 						</ui:formElement>
 
 						<ui:formElement id="birthdate">
-							<ui:cell styleClass="name">
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="data">
+							</ui:newCell>
+							<ui:newCell styleClass="data">
 								<ui:dateInputDisplay />
-							</ui:cell>
+							</ui:newCell>
 						</ui:formElement>
-					</ui:row>
+					</ui:newRow>
 				</ui:componentForm>
 
 				<ui:componentActions>

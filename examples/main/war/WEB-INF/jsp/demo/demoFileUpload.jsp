@@ -15,24 +15,24 @@
 
                                <!-- Body -->
                                <ui:componentForm>
-                                       <ui:row>
-                                               <ui:cell styleClass="name">
+                                       <ui:newRow>
+                                               <ui:newCell styleClass="name">
                                                        <ui:label id="select"/>
-                                               </ui:cell>
-                                               <ui:cell styleClass="data">
+                                               </ui:newCell>
+                                               <ui:newCell styleClass="data">
                                                        <ui:select id="select"/>
-                                               </ui:cell>
-                                       </ui:row>
-                                       <ui:row>
-                                               <ui:cell styleClass="name">
+                                               </ui:newCell>
+                                       </ui:newRow>
+                                       <ui:newRow>
+                                               <ui:newCell styleClass="name">
                                                        <ui:fileUpload id="file"/>
-                                               </ui:cell>
+                                               </ui:newCell>
                                                <ui:formElement id="upload">
-	                                               <ui:cell styleClass="data">
+	                                               <ui:newCell styleClass="data">
 	                                                       <ui:button/>
-	                                               </ui:cell>
+	                                               </ui:newCell>
 	                                           </ui:formElement>
-                                       </ui:row>
+                                       </ui:newRow>
                                </ui:componentForm>
                            </ui:form>
                              
@@ -42,22 +42,22 @@
 	                       			<ui:componentListHeader/>
 	                       			
 	                       			<ui:listRows>
-	                       				<ui:row>
-	                       					<ui:cell>
+	                       				<ui:newRow>
+	                       					<ui:newCell>
 												<ui:listRowLinkButton eventId="selectFile">
 													<c:out value="${row.originalFilename}"/>
 												</ui:listRowLinkButton>
-	                       					</ui:cell>
-	                        					<ui:cell>
+	                       					</ui:newCell>
+	                        					<ui:newCell>
 	                        						<c:out value="${row.size}"/>
-	                       					</ui:cell>
-	                       					<ui:cell>
+	                       					</ui:newCell>
+	                       					<ui:newCell>
 	                       						<c:out value="${row.contentType}"/>
-	                       					</ui:cell>
-	                       					<ui:cell>
+	                       					</ui:newCell>
+	                       					<ui:newCell>
 												
-	                       					</ui:cell>
-	                       				</ui:row>
+	                       					</ui:newCell>
+	                       				</ui:newRow>
 	                       			</ui:listRows>
 	
 	                       		</ui:componentList>

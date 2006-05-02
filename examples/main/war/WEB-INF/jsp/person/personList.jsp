@@ -20,67 +20,67 @@
 
 					<!-- Filter -->
 					<ui:listFilter>
-						<ui:row styleClass="filter">
-							<ui:cell/>
+						<ui:newRow styleClass="filter">
+							<ui:newCell/>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:textInput id="name"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:textInput id="surname"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:textInput id="phone"/>
-							</ui:cell>
+							</ui:newCell>
 							
-							<ui:cell>
+							<ui:newCell>
 								<ui:dateInput id="birthdate_start"/>
 								<br/>
 								<ui:dateInput id="birthdate_end"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:filterButton/>
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:listFilter>					
 					
 					<ui:listRows>
-						<ui:row>
-							<ui:cell>
+						<ui:newRow>
+							<ui:newCell>
 								<c:out value="${row.id}"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:listRowLinkButton eventId="select">
 									<c:out value="${row.name}"/>
 								</ui:listRowLinkButton>
-							</ui:cell>
+							</ui:newCell>
 		
-							<ui:cell>
+							<ui:newCell>
 								<c:out value="${row.surname}"/>
-							</ui:cell>
+							</ui:newCell>
 		
-							<ui:cell>
+							<ui:newCell>
 								<c:out value="${row.phone}"/>
-							</ui:cell>
+							</ui:newCell>
 							
-							<ui:cell>
+							<ui:newCell>
 								<fmt:formatDate value="${row.birthdate}" pattern="dd.MM.yyyy"/>
-							</ui:cell>
+							</ui:newCell>
 
-							<ui:cell>
+							<ui:newCell>
 								<ui:listRowLinkButton eventId="edit">
 									<ui:image code="buttonChange" alt="Edit person" title="Edit person"/>
 								</ui:listRowLinkButton>
 								<ui:listRowLinkButton eventId="remove">
 									<ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
 								</ui:listRowLinkButton>
-							</ui:cell>
+							</ui:newCell>
 							
-						</ui:row>
+						</ui:newRow>
 					</ui:listRows>
 				</ui:componentList>
 

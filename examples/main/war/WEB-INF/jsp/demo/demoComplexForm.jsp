@@ -17,22 +17,22 @@
 			<ui:component>
 
 				<ui:componentForm>
-					<ui:row>
+					<ui:newRow>
 						<ui:formElement id="beastSelection">
-							<ui:cell width="25%"/>
-							<ui:cell styleClass="name">
+							<ui:newCell width="25%"/>
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell>
+							</ui:newCell>
+							<ui:newCell>
                             <!-- Note the updateRegions attribute - it specifies the regions
                                  that should be updated when event occurs (specifying this 
                                  attribute also means that upon listener activation AJAX
                                  request is made instead of ordinary HTTP request. -->
 								<ui:select updateRegions="ajaxBeasts"/>
-							</ui:cell>
-							<ui:cell width="25%"/>
+							</ui:newCell>
+							<ui:newCell width="25%"/>
 						</ui:formElement>
-					</ui:row>
+					</ui:newRow>
 						
 	                <!-- Here we define the update region. All tags inside the update region
 	                    when AJAX request which update regions include "ajaxBeasts" is made. -->
@@ -41,24 +41,24 @@
 							and concreteBeastControl are only added to the form if beast is selected,
 							this needs to be done here. -->
 						<c:if test="${not empty form.elements['concreteBeastControl']}">
-							<ui:row>
+							<ui:newRow>
 								<ui:formElement id="selectedBeastDesc">
-									<ui:cell colSpan="2" styleClass="wrap-centered" width="50%">
+									<ui:newCell colspan="2" styleClass="wrap-centered" width="50%">
 										<ui:textDisplay/>
-									</ui:cell>
+									</ui:newCell>
 								</ui:formElement>
 			
 								<ui:formElement id="concreteBeastControl">
-									<ui:cell styleClass="centered-name">
+									<ui:newCell styleClass="centered-name">
 										<ui:label />
-									</ui:cell>
-									<ui:cell>
+									</ui:newCell>
+									<ui:newCell>
 										<!-- Render MultiSelectControl with checkboxes. 
 										     Instead ui:multiSelect could be used ... -->
 										<ui:checkboxMultiSelect type="vertical" />
-									</ui:cell>
+									</ui:newCell>
 								</ui:formElement>
-							</ui:row>
+							</ui:newRow>
 						</c:if>
 					</ui:updateRegionRows>
 

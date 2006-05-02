@@ -37,11 +37,11 @@ public abstract class UiStdLayoutBaseTag extends UiLayoutBaseTag {
 		UiUtil.writeOpenStartTag(out, "table");
 		UiUtil.writeAttribute(out, "class",  getStyleClass());
 		UiUtil.writeAttribute(out, "width", width);
-		UiUtil.writeAttribute(out, "height", height);		
+		UiUtil.writeAttribute(out, "height", height);
 		UiUtil.writeCloseStartTag(out);
 		
 		// Continue
-	  return EVAL_BODY_INCLUDE;			
+	  return EVAL_BODY_INCLUDE;
 	}		
 	
 	protected int doEndTag(Writer out) throws Exception {

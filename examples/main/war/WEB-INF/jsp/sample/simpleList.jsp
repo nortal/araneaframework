@@ -23,17 +23,17 @@
 
 					<!-- Body -->
 					<ui:listRows>
-						<ui:row>
-							<ui:cell>
+						<ui:newRow>
+							<ui:newCell>
 								<c:out value="${row.booleanValue}" />
-							</ui:cell>
-							<ui:cell>
+							</ui:newCell>
+							<ui:newCell>
 								<c:out value="${row.stringValue}" />
-							</ui:cell>
-							<ui:cell>
+							</ui:newCell>
+							<ui:newCell>
 								<c:out value="${row.longValue}" />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:listRows>
 
 				</ui:componentList>

@@ -16,78 +16,78 @@
 			<ui:component>
 				<!-- Body -->
 				<ui:componentForm>
-					<ui:row>
-						<ui:cell colSpan="2">Client</ui:cell>
-					</ui:row>
+					<ui:newRow>
+						<ui:newCell colspan="2">Client</ui:newCell>
+					</ui:newRow>
 
 					<ui:formElement id="clientFirstName">
-						<ui:row>
-							<ui:cell styleClass="name">
+						<ui:newRow>
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="inpt">
+							</ui:newCell>
+							<ui:newCell styleClass="inpt">
 								<ui:textInput />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formElement>
 
 					<ui:formElement id="clientLastName">
-						<ui:row>
-							<ui:cell styleClass="name">
+						<ui:newRow>
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="inpt">
+							</ui:newCell>
+							<ui:newCell styleClass="inpt">
 								<ui:textInput />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formElement>
 
 					<ui:formElement id="clientPersonalId">
-						<ui:row>
-							<ui:cell styleClass="name">
+						<ui:newRow>
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="inpt">
+							</ui:newCell>
+							<ui:newCell styleClass="inpt">
 								<ui:textInput />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formElement>
 
-					<ui:row>
-						<ui:cell colSpan="2">Address</ui:cell>
-					</ui:row>
+					<ui:newRow>
+						<ui:newCell colspan="2">Address</ui:newCell>
+					</ui:newRow>
 
 					<ui:formElement id="clientAddressTown">
-						<ui:row>
-							<ui:cell styleClass="name">
+						<ui:newRow>
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="inpt">
+							</ui:newCell>
+							<ui:newCell styleClass="inpt">
 								<ui:textInput />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formElement>
 
 					<ui:formElement id="clientAddressStreet">
-						<ui:row>
-							<ui:cell styleClass="name">
+						<ui:newRow>
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="inpt">
+							</ui:newCell>
+							<ui:newCell styleClass="inpt">
 								<ui:textInput />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formElement>
 
 					<ui:formElement id="clientAddressHouse">
-						<ui:row>
-							<ui:cell styleClass="name">
+						<ui:newRow>
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="inpt">
+							</ui:newCell>
+							<ui:newCell styleClass="inpt">
 								<ui:textInput />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formElement>
 				</ui:componentForm>
 

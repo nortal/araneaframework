@@ -16,25 +16,25 @@
 			<ui:form id="form">
 				<ui:componentForm>
 					<ui:formElement id="name">
-						<ui:row styleClass="cols4">
-							<ui:cell styleClass="name">
+						<ui:newRow styleClass="cols4">
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="inpt">
+							</ui:newCell>
+							<ui:newCell styleClass="inpt">
 								<ui:textInput />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formElement>
 
 					<ui:formElement id="address">
-						<ui:row styleClass="cols4">
-							<ui:cell styleClass="name">
+						<ui:newRow styleClass="cols4">
+							<ui:newCell styleClass="name">
 								<ui:label />
-							</ui:cell>
-							<ui:cell styleClass="inpt">
+							</ui:newCell>
+							<ui:newCell styleClass="inpt">
 								<ui:textInput />
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:formElement>
 				</ui:componentForm>
 

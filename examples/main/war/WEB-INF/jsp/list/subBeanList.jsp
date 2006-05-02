@@ -20,56 +20,56 @@
 					
 					<!-- Filter -->
 					<ui:listFilter>
-						<ui:row>
-							<ui:cell/>
+						<ui:newRow>
+							<ui:newCell/>
 							
-							<ui:cell>
+							<ui:newCell>
 								<ui:textInput id="name.firstname"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:textInput id="name.lastname"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:textInput id="address.country"/>
-							</ui:cell>
+							</ui:newCell>
 
-							<ui:cell>
+							<ui:newCell>
 								<ui:textInput id="address.city"/>
-							</ui:cell>
+							</ui:newCell>
 
-							<ui:cell>
+							<ui:newCell>
 								<ui:filterButton/>
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:listFilter>					
 					
 					<ui:listRows>
-						<ui:row>
-							<ui:cell>
+						<ui:newRow>
+							<ui:newCell>
 								<c:out value="${row.id}"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 									<c:out value="${row.name.firstname}"/>
-							</ui:cell>
+							</ui:newCell>
 		
-							<ui:cell>
+							<ui:newCell>
 								<c:out value="${row.name.lastname}"/>
-							</ui:cell>
+							</ui:newCell>
 		
-							<ui:cell>
+							<ui:newCell>
 								<c:out value="${row.address.country}"/>
-							</ui:cell>
+							</ui:newCell>
 
-							<ui:cell>
+							<ui:newCell>
 								<c:out value="${row.address.city}"/>
-							</ui:cell>
+							</ui:newCell>
 
-							<ui:cell width="0" />
+							<ui:newCell width="0" />
 							
-						</ui:row>
+						</ui:newRow>
 					</ui:listRows>				
 				</ui:componentList>
 			
