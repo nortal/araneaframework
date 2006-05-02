@@ -2,93 +2,84 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
 	xmlns:c="http://java.sun.com/jstl/core" 
 	xmlns:ui="http://araneaframework.org/tag-library/template" 
-	xmlns:cui="http://araneaframework.org/tag-library/contrib"
 	version="1.2">		
 	<ui:widgetContext>
-	
-		<h2>Companies</h2>
-		
-		<p>
-			This is a list of companies. You can use a filter to search for a specific company or use
-			links below the list to navigate through pages. To choose a company just click on it's Name.
-		</p>
-		<c:if test="${contextWidget.data.allowAdd}">
-			<p>You can also add a new company (use a button below the list).</p>
-		</c:if>
-		<c:if test="${contextWidget.data.allowRemove}">
-			<p>You can also remove a company (use a link on it's row).</p>
-		</c:if>		
-		
 		<ui:list id="companyList">
 		
-			<ui:container>
+			<ui:componentHeader>
+				<ui:componentName>Companies</ui:componentName>
+			</ui:componentHeader>
+			<ui:component>
 			
-				<!-- Header -->
-				<ui:containerHeader>
-
-				</ui:containerHeader>
-						
 				<!-- Body -->
-				<ui:containerListBody>
+				<ui:componentList>
 					<!-- Title -->
-					<ui:listTitleRow/>					
+					<ui:componentListHeader/>
 					
 					<!-- Filter -->
 					<ui:listFilter>
-						<ui:row>
-							<ui:cell/>
+						<ui:newRow styleClass="filter">
+							<ui:newCell/>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:textInput id="name"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:textInput id="address"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:filterButton/>
-							</ui:cell>
-						</ui:row>
+							</ui:newCell>
+						</ui:newRow>
 					</ui:listFilter>
 										
-					<!-- Body -->
+					<!-- List body, where all list objects that fit on a current page will be rendered. -->
 					<ui:listRows>
-						<ui:row>
-							<ui:cell>
+    					<!-- Creating a row inside the listRows signals that list object will be rendered inside it. 
+                             ui:listRows is iterating tag, it will render as many rows as there are object to show.
+                             Current list object being operated on is accessible as EL variable ${row}. List objects
+                             field values that have getters are accessible as ${row.field}.
+                        -->
+						<ui:newRow>
+						
+							<ui:newCell>
 								<c:out value="${row.id}"/>
-							</ui:cell>
+							</ui:newCell>
 	
-							<ui:cell>
+							<ui:newCell>
 								<ui:listRowLinkButton eventId="select">
 									<c:out value="${row.name}"/>
 								</ui:listRowLinkButton>
-							</ui:cell>
+							</ui:newCell>
 		
-							<ui:cell>
+							<ui:newCell>
 								<c:out value="${row.address}"/>
-							</ui:cell>
+							</ui:newCell>
 							
-							<c:if test="${contextWidget.data.allowRemove}">
-								<ui:cell>
-									<ui:listRowLinkButton eventId="remove" labelId="#Remove"/>
-								</ui:cell>
-							</c:if>
+							<ui:newCell>
+								<ui:listRowLinkButton eventId="edit">
+									<ui:image code="buttonChange" alt="Edit company" title="Edit company"/>
+								</ui:listRowLinkButton>
+								<ui:listRowLinkButton eventId="remove">
+									<ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
+								</ui:listRowLinkButton>
+							</ui:newCell>
 							
-						</ui:row>
+						</ui:newRow>
 					</ui:listRows>				
-				</ui:containerListBody>
+				</ui:componentList>
 			
 				<!-- Sequence -->
-				<ui:listSequenceFooter/>
+				<ui:componentListFooter/>
 
-			</ui:container>
+				<ui:componentActions>
+					<ui:eventButton eventId="add" labelId="#Add new company"/>
+				</ui:componentActions>
+			</ui:component>
 		
 		</ui:list>
-
-		<c:if test="${contextWidget.data.allowAdd}">
-			<ui:eventButton eventId="add" labelId="#Add new person"/>
-		</c:if>
 
 	</ui:widgetContext>
 </jsp:root>

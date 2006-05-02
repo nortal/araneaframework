@@ -28,25 +28,20 @@ import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
  * 
  * @author Oleg Mürk
  */
-public class UiPresentationTag extends UiBaseTag implements
-		UiAttributedTagInterface {
+public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInterface {
 	protected String styleClass = null;
-	protected Map attributes;
+	protected String baseStyleClass = null;
 
-	protected int before(Writer out) throws Exception {
-		super.before(out);
-
-		// Register
-		pushAttribute(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, this,
-				PageContext.REQUEST_SCOPE);
-
-		// Continue
+	protected Map attributes = new HashMap();
+	
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
+		addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
 		return EVAL_BODY_INCLUDE;
 	}
-
-	protected void init() {
-		super.init();
-		attributes = new HashMap();
+	
+	public void setPageContext(PageContext pageContext) {
+		super.setPageContext(pageContext);
 	}
 
 	/**
@@ -71,7 +66,16 @@ public class UiPresentationTag extends UiBaseTag implements
 	/**
 	 * Callback: get default css class for tag or <code>null</code>.
 	 */
-	protected String getStyleClass()  {
-		return styleClass;
+	protected String getStyleClass() throws JspException  {
+		StringBuffer result = new StringBuffer();
+		if (baseStyleClass != null) {
+			result.append(baseStyleClass);
+			if (styleClass != null)
+				result.append(" ");
+		}
+		if (styleClass != null) {
+			result.append(styleClass);
+		}
+		return result.toString();
 	}
 }

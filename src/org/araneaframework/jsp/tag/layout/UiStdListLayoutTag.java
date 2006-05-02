@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.layout;
 
+import javax.servlet.jsp.JspException;
+
 /**
  * ETEA list layout tag.
  * 
@@ -26,7 +28,7 @@ public class UiStdListLayoutTag extends UiStdLayoutBaseTag {
 	// Implementation
 	//
 	
-	protected String getTableCssClass()  {
+	protected String getTableCssClass() throws JspException {
 		return getStyleClass();
 	}
 	

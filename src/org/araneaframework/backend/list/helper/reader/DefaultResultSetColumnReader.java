@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -28,8 +27,6 @@ import org.apache.log4j.Logger;
  */
 public class DefaultResultSetColumnReader implements ResultSetColumnReader {
   
-  private static Logger log = Logger.getLogger(DefaultResultSetColumnReader.class);
-
   protected static final ResultSetColumnReader instance = new DefaultResultSetColumnReader();
   
   /**
@@ -57,10 +54,8 @@ public class DefaultResultSetColumnReader implements ResultSetColumnReader {
     if (java.sql.Date.class.isAssignableFrom(javaType))
       return resultSet.getDate(columnName);        
     
-    if (java.util.Date.class.isAssignableFrom(javaType)) {
-    	java.sql.Date date = resultSet.getDate(columnName);
-      return date == null ? null : new java.util.Date(date.getTime());
-    }
+	if (java.util.Date.class.isAssignableFrom(javaType))
+		return resultSet.getTimestamp(columnName);
     
     if (String.class.isAssignableFrom(javaType))
       return resultSet.getString(columnName);

@@ -43,26 +43,15 @@ public class StandardWidgetContainerWidget extends BaseFilterWidget {
    */
   public static final String ACTION_PATH_KEY = "widgetActionPath";
   
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Widget container widget initialized.");  
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Widget container widget destroyed.");
-  }
-  
   /**
    * If <code>hasEvent(input)</code> returns true, event is called on the child.
    * The path to the child is constructed via <code>getEventPath(input)</code>.
    */
   protected void event(Path path, InputData input) throws Exception {
     if (hasEvent(input)) {
-      log.debug("Routing request through the container to the child's event.");
-      childWidget._getWidget().event(getEventPath(input), input);
+      Path eventPath = getEventPath(input);
+      log.debug("Routing event to widget '" + eventPath.toString() + "'");
+      childWidget._getWidget().event(eventPath, input);
     }
   }
     
@@ -72,8 +61,9 @@ public class StandardWidgetContainerWidget extends BaseFilterWidget {
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (hasAction(input)) {
-      log.debug("Routing request through the container to the child's action.");
-      childWidget._getService().action(getActionPath(input), input, output);
+      Path actionPath = getActionPath(input);
+      log.debug("Routing action to widget '" + actionPath.toString() + "'");
+      childWidget._getService().action(actionPath, input, output);
     }
   }
     
