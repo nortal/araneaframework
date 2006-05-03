@@ -39,7 +39,8 @@ public class UiFormElementBaseDisplayTag extends UiPresentationTag implements Ui
   protected FormElement.ViewModel formElementViewModel;
   protected Control.ViewModel controlViewModel;
 
-  protected String id;
+  private String id;
+  protected String derivedId;
   protected String tabindex;
   protected boolean events = true;
   protected boolean validate = true;
@@ -53,14 +54,15 @@ public class UiFormElementBaseDisplayTag extends UiPresentationTag implements Ui
       (FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 
     // In case the tag is in formElement tag
-    if (id == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null)
-      id = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
+    derivedId = id;
+    if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null)
+    	derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
 
-    if (id == null) throw new UiMissingIdException(this);
+    if (derivedId == null) throw new UiMissingIdException(this);
 
     // get control and formelement viewmodels
     formElementViewModel = 
-      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
+      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
     controlViewModel = (formElementViewModel).getControl();
 
     return EVAL_BODY_INCLUDE;    
