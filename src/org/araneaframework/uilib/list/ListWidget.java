@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.uilib.list;
 
@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -32,6 +33,7 @@ import org.araneaframework.core.StandardWidget;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
+import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
@@ -291,13 +293,53 @@ public class ListWidget extends StandardPresentationWidget {
 			this.filterForm = new FormWidget();
 		}
 		
-    this.filterForm.addElement(id, label, control, data, false);
+		addElement(this.filterForm, id, label, control, data, false);
 	}
 	
 	public void addFilterFormElement(String id, Control control, Data data) throws Exception {
 		addFilterFormElement(id, getColumnLabel(id), control, data);
 	}
-
+	
+	private static void addElement(FormWidget form, String fullId, String label, Control control, Data data, boolean mandatory) throws Exception {
+		if (fullId.indexOf(".") != -1) {
+			String subFormId = fullId.substring(0, fullId.indexOf("."));
+			String nextFullId =  fullId.substring(subFormId.length() + 1);
+			
+			FormWidget subForm = null;
+			
+			if (form.getElement(subFormId) != null) {
+				subForm = form.getSubFormByFullName(subFormId);        	
+			} else {
+				subForm = form.addSubForm(subFormId);        	
+			}
+			
+			addElement(subForm, nextFullId, label, control, data, mandatory);
+			return;
+		}
+		
+		form.addElement(fullId, label, control, data, mandatory);
+	}	
+	
+	private static void addBeanElement(BeanFormWidget form, String fullId, String label, Control control, boolean mandatory) throws Exception {
+		if (fullId.indexOf(".") != -1) {
+			String subFormId = fullId.substring(0, fullId.indexOf("."));
+			String nextFullId =  fullId.substring(subFormId.length() + 1);
+			
+			BeanFormWidget subForm = null;
+			
+			if (form.getElement(subFormId) != null) {
+				subForm = (BeanFormWidget) form.getElement(subFormId);        	
+			} else {
+				subForm = form.addBeanSubForm(subFormId);        	
+			}
+			
+			addBeanElement(subForm, nextFullId, label, control, mandatory);
+			return;
+		}
+		
+		form.addBeanElement(fullId, label, control, mandatory);
+	}
+	
 	/**
 	 * Returns how many items will be displayed on one page.
 	 * @return how many items will be displayed on one page.
@@ -314,7 +356,7 @@ public class ListWidget extends StandardPresentationWidget {
 		getSequenceHelper().setItemsOnPage(itemsOnPage);
 	}
 	
-
+	
 	
 	/**
 	 * Sets the page which will be displayed. Page index is 0-based.
@@ -528,7 +570,7 @@ public class ListWidget extends StandardPresentationWidget {
 					new ButtonControl(), null, false);
 			((ButtonControl) (filterButton.getControl()))
 			.addOnClickEventListener(new FilterEventHandler());
-
+			
 			this.filterForm.markBaseState();
 		}
 		else {
@@ -595,7 +637,7 @@ public class ListWidget extends StandardPresentationWidget {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToNextPage();
-    }
+		}
 	}
 	
 	/**
@@ -703,7 +745,7 @@ public class ListWidget extends StandardPresentationWidget {
 		
 		orderInfo.clearFields();
 		orderInfo.addField(new OrderInfoField(fieldName, ascending));
-				
+		
 		propagateListDataProviderWithOrderInfo(orderInfo);		
 		
 		// listDataProvider.setOrderInfo(orderInfo);   

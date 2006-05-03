@@ -126,7 +126,7 @@ public class FloatControl extends EmptyStringNullableControl {
 			DecimalPattern[] confFormat = (DecimalPattern[]) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DECIMAL_FORMAT);    
 			if (confFormat != null) decimalFormat = confFormat;
 			
-			DecimalPattern confOutputFormat = (DecimalPattern) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DECIMAL_FORMAT);    
+			DecimalPattern confOutputFormat = (DecimalPattern) getConfiguration().getEntry(ConfigurationContext.DEFAULT_DECIMAL_OUTPUT_FORMAT);    
 			if (confOutputFormat != null) currentNumberFormat = confOutputFormat.getNumberFormat();
 		}
 	}
