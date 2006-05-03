@@ -48,7 +48,10 @@ public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInter
 	 * Callback: add attribute.
 	 */
 	public void addAttribute(String name, String value) throws JspException {
-		attributes.put(name, evaluate("value", value, Object.class));
+		if (value == null)
+			attributes.remove(name);
+		else
+			attributes.put(name, evaluate("value", value, Object.class));
 	}
 
 	// Styles 

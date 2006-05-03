@@ -18,21 +18,21 @@
 					
 					<!-- Filter -->
 					<ui:listFilter>
-						<ui:newRow styleClass="filter">
-							<ui:newCell/>
+						<ui:row styleClass="filter">
+							<ui:cell/>
 	
-							<ui:newCell>
+							<ui:cell>
 								<ui:textInput id="name"/>
-							</ui:newCell>
+							</ui:cell>
 	
-							<ui:newCell>
+							<ui:cell>
 								<ui:textInput id="address"/>
-							</ui:newCell>
+							</ui:cell>
 	
-							<ui:newCell>
+							<ui:cell>
 								<ui:filterButton/>
-							</ui:newCell>
-						</ui:newRow>
+							</ui:cell>
+						</ui:row>
 					</ui:listFilter>
 										
 					<!-- List body, where all list objects that fit on a current page will be rendered. -->
@@ -42,32 +42,32 @@
                              Current list object being operated on is accessible as EL variable ${row}. List objects
                              field values that have getters are accessible as ${row.field}.
                         -->
-						<ui:newRow>
+						<ui:row>
 						
-							<ui:newCell>
+							<ui:cell>
 								<c:out value="${row.id}"/>
-							</ui:newCell>
+							</ui:cell>
 	
-							<ui:newCell>
+							<ui:cell>
 								<ui:listRowLinkButton eventId="select">
 									<c:out value="${row.name}"/>
 								</ui:listRowLinkButton>
-							</ui:newCell>
+							</ui:cell>
 		
-							<ui:newCell>
+							<ui:cell>
 								<c:out value="${row.address}"/>
-							</ui:newCell>
+							</ui:cell>
 							
-							<ui:newCell>
+							<ui:cell>
 								<ui:listRowLinkButton eventId="edit">
 									<ui:image code="buttonChange" alt="Edit company" title="Edit company"/>
 								</ui:listRowLinkButton>
 								<ui:listRowLinkButton eventId="remove">
 									<ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
 								</ui:listRowLinkButton>
-							</ui:newCell>
+							</ui:cell>
 							
-						</ui:newRow>
+						</ui:row>
 					</ui:listRows>				
 				</ui:componentList>
 			

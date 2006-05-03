@@ -335,7 +335,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 				if (oldAttribute != null)
 					pageContext.setAttribute(key, oldAttribute, scope.intValue());
 				else
-					pageContext.removeAttribute(key, scope.intValue());				
+					pageContext.removeAttribute(key, scope.intValue());
 			}
 		}
 		

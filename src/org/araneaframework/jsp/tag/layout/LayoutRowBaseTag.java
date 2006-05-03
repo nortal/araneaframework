@@ -16,8 +16,27 @@
 
 package org.araneaframework.jsp.tag.layout;
 
+import java.io.Writer;
+import java.util.List;
+import org.apache.commons.collections.iterators.LoopingIterator;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 
-public class NewRowBaseTag extends UiPresentationTag {
+/**
+ * Layout row base tag.
+ * @author Taimo Peelo (taimo@webmedia.ee)
+ */
+public abstract class LayoutRowBaseTag extends UiPresentationTag {
+  protected List cellClasses;
 
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+
+    requireContextEntry(LayoutInterface.KEY);
+
+    addContextEntry(LayoutRowInterface.KEY, this);
+    if (cellClasses != null && !cellClasses.isEmpty())
+    	  addContextEntry(LayoutInterface.CELLCLASS_KEY, new LoopingIterator(cellClasses));
+
+    return EVAL_BODY_INCLUDE;
+  }
 }

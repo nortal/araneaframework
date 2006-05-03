@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.layout;
 import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -27,20 +26,21 @@ import org.araneaframework.jsp.util.UiUtil;
  * In HTML this tag corresponds to column inside table row -- &lt;td&gt; with <code>class</code>, <code>colspan</code> and <code>rowspan</code> attributes.
  * 
  * @jsp.tag
- *   name = "newCell"
+ *   name = "cell"
  *   body-content = "JSP"
  *   description = "Represents a cell in layout."
  *
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class NewLayoutCellTag extends UiPresentationTag {
+public class LayoutCellTag extends LayoutCellBaseTag {
   protected String cellTag = "td";
   protected String colspan;
   protected String rowspan;
+  protected String width;
+  protected String height;
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    requireContextEntry(LayoutRowInterface.KEY);
 
     UiUtil.writeOpenStartTag(out, cellTag);
     writeCellAttributes(out);
@@ -51,9 +51,11 @@ public class NewLayoutCellTag extends UiPresentationTag {
   
   /** Overwrite if other attributes besides <code>styleclass</code> are needed for HTML table cell. */
   protected void writeCellAttributes(Writer out) throws Exception {
-    UiUtil.writeAttribute(out, "class",  getStyleClass());
-	UiUtil.writeAttribute(out, "colspan", colspan);
-	UiUtil.writeAttribute(out, "rowspan", rowspan);
+    addAttribute("class",  getStyleClass());
+    addAttribute("colspan", colspan);
+    addAttribute("rowspan", rowspan);
+    addAttribute("width", width);
+    addAttribute("height", height);
 	UiUtil.writeAttributes(out, attributes);
   }
   
@@ -96,6 +98,26 @@ public class NewLayoutCellTag extends UiPresentationTag {
    */
   public void setRowspan(String rowspan) throws JspException {
     this.rowspan = (String)evaluate("rowspan", rowspan, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Width for this cell. Same as in HTML, deprecated."
+   */
+  public void setWidth(String width) throws JspException {
+    this.width = (String)evaluate("width", width, String.class);
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Height for this cell. Same as in HTML, deprecated."
+   */
+  public void setHeight(String height) throws JspException {
+    this.height = (String)evaluate("height", height, String.class);
   }
 
   /**

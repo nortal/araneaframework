@@ -17,11 +17,7 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.jsp.JspException;
-import org.apache.commons.collections.iterators.LoopingIterator;
-import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -29,28 +25,19 @@ import org.araneaframework.jsp.util.UiUtil;
  * In HTML, this tag corresponds to &lt;table&gt; with <code>class</code> and <code>width</code> attributes.
  * 
  * @jsp.tag
- *   name = "newLayout"
+ *   name = "layout"
  *   body-content = "JSP"
  *   description = "Represents a layout. Layouts allow to describe the way content will be placed on the page."
  *
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class NewLayoutTag extends UiPresentationTag implements LayoutInterface {
-  protected List rowClasses = new ArrayList(0);
-  protected List cellClasses = new ArrayList(0);
-  
-  protected String width;
-
+public class LayoutTag extends LayoutBaseTag implements LayoutInterface {
   {
     baseStyleClass = "aranea-layout-base";
   }
   
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
-    addContextEntry(LayoutInterface.KEY, this);
-    addContextEntry(LayoutInterface.ROWCLASS_KEY, new LoopingIterator(rowClasses));
-    addContextEntry(LayoutInterface.CELLCLASS_KEY, new LoopingIterator(cellClasses));
 
 	UiUtil.writeOpenStartTag(out, "table");
 	writeTableAttributes(out);
@@ -61,8 +48,8 @@ public class NewLayoutTag extends UiPresentationTag implements LayoutInterface {
 
   /** Overwrite if other attributes besides <code>styleclass</code> and <code>width</code> are needed for HTML table. */
   protected void writeTableAttributes(Writer out) throws Exception {
-    UiUtil.writeAttribute(out, "class",  getStyleClass());
-    UiUtil.writeAttribute(out, "width",  width);
+    addAttribute("class", getStyleClass());
+    addAttribute("width",  width);
     UiUtil.writeAttributes(out, attributes);
   }
 

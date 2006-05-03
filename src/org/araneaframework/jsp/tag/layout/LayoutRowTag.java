@@ -20,8 +20,6 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.jsp.JspException;
-import org.apache.commons.collections.iterators.LoopingIterator;
-import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -29,23 +27,17 @@ import org.araneaframework.jsp.util.UiUtil;
  * In HTML this tag corresponds to table row -- &lt;tr&gt; with <code>class</code> attribute.
  * 
  * @jsp.tag
- *   name = "newRow"
+ *   name = "row"
  *   body-content = "JSP"
  *   description = "Represents a row in layout."
  *
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class NewLayoutRowTag extends UiPresentationTag implements LayoutRowInterface {
+public class LayoutRowTag extends LayoutRowBaseTag implements LayoutRowInterface {
   protected List cellClasses;
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
-    requireContextEntry(LayoutInterface.KEY);
-
-    addContextEntry(LayoutRowInterface.KEY, this);
-    if (cellClasses != null && !cellClasses.isEmpty())
-    	  addContextEntry(LayoutInterface.CELLCLASS_KEY, new LoopingIterator(cellClasses));
 
     UiUtil.writeOpenStartTag(out, "tr");
     writeRowAttributes(out);
@@ -56,7 +48,7 @@ public class NewLayoutRowTag extends UiPresentationTag implements LayoutRowInter
 
   /** Overwrite if other attributes besides <code>styleclass</code> are needed for HTML table row. */
   protected void writeRowAttributes(Writer out) throws Exception {
-    UiUtil.writeAttribute(out, "class",  getStyleClass());
+    addAttribute("class",  getStyleClass());
     UiUtil.writeAttributes(out, attributes);
   }
 

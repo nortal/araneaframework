@@ -16,7 +16,7 @@
 
 package org.araneaframework.template.tags.example.component;
 
-import org.araneaframework.jsp.tag.layout.NewLayoutTag;
+import org.araneaframework.jsp.tag.layout.LayoutTag;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -24,7 +24,7 @@ import org.araneaframework.jsp.tag.layout.NewLayoutTag;
  *   name = "componentForm"
  *   body-content = "JSP"
  */
-public class ComponentFormTag extends NewLayoutTag {
+public class ComponentFormTag extends LayoutTag {
   public final static String COMPONENT_FORM_STYLE_CLASS = "form";
 
   {

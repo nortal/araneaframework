@@ -29,86 +29,86 @@
               <!-- List filter for editable list is exactly 
                    the same as filter for ordinary lists -->
               <ui:listFilter>
-                <ui:newRow styleClass="filter">
-                  <ui:newCell/>
+                <ui:row styleClass="filter">
+                  <ui:cell/>
 
-                  <ui:newCell>
+                  <ui:cell>
                     <ui:textInput id="name"/>
-                  </ui:newCell>
+                  </ui:cell>
 
-                  <ui:newCell>
+                  <ui:cell>
                     <ui:textInput id="surname"/>
-                  </ui:newCell>
+                  </ui:cell>
 
-                  <ui:newCell>
+                  <ui:cell>
                     <ui:textInput id="phone"/>
-                  </ui:newCell>
+                  </ui:cell>
 
-                  <ui:newCell>
+                  <ui:cell>
                     <ui:dateInput id="birthdate_start"/>
                     <br/>
                     <ui:dateInput id="birthdate_end"/>
-                  </ui:newCell>							
+                  </ui:cell>							
 
-                  <ui:newCell>
+                  <ui:cell>
                     <ui:filterButton/>
-                  </ui:newCell>
-                </ui:newRow>
+                  </ui:cell>
+                </ui:row>
               </ui:listFilter>					
 
               <!-- Editable list rows. This tag usage is similar to ui:listRows;
                    but it makes available some extra variables -->
               <ui:formListRows>
-                <ui:newRow>
-                  <ui:newCell>
+                <ui:row>
+                  <ui:cell>
                     <!-- Default variable name for accessing the row object is "row" as in
                          ordinary lists. This could have been changed by specifying "var" 
                          attribute for ui:formListRows tag. -->
                     <c:out value="${row.id}"/>
-                  </ui:newCell>
+                  </ui:cell>
 
                   <c:choose>
                     <!-- formRow variable is of class FormRow.ViewModel.
                          It holds the properties of form used to present current row object. -->
                     <c:when test="${formRow.open}">
                       <!-- When formRow is "open", render the fields as inputs. -->
-                      <ui:newCell>
+                      <ui:cell>
                         <ui:textInput id="name"/>
-                      </ui:newCell>
+                      </ui:cell>
 
-                      <ui:newCell>
+                      <ui:cell>
                         <ui:textInput id="surname"/>
-                      </ui:newCell>
+                      </ui:cell>
 
-                      <ui:newCell>
+                      <ui:cell>
                         <ui:textInput id="phone"/>
-                      </ui:newCell>
+                      </ui:cell>
 
-                      <ui:newCell>
+                      <ui:cell>
                         <ui:dateInput id="birthdate"/>
-                      </ui:newCell>																																			
+                      </ui:cell>																																			
                     </c:when>
                     <c:otherwise>
                       <!-- When formRow is "closed", render the fields as displays. -->
-                      <ui:newCell>
+                      <ui:cell>
                         <c:out value="${row.name}"/>
-                      </ui:newCell>
+                      </ui:cell>
 
-                      <ui:newCell>
+                      <ui:cell>
                         <c:out value="${row.surname}"/>
-                      </ui:newCell>
+                      </ui:cell>
 
-                      <ui:newCell>
+                      <ui:cell>
                         <c:out value="${row.phone}"/>
-                      </ui:newCell>
+                      </ui:cell>
 
-                      <ui:newCell>
+                      <ui:cell>
                         <fmt:formatDate value="${row.birthdate}" pattern="dd.MM.yyyy"/>
-                      </ui:newCell>
+                      </ui:cell>
                     </c:otherwise>						
                   </c:choose>
 
-                  <ui:newCell>
+                  <ui:cell>
                     <ui:attribute name="width" value="0"/>
                     <c:choose>
                       <!-- Depending on formRow's current status, change button 
@@ -133,36 +133,36 @@
                     <ui:linkButton id="delete" showLabel="false">
                       <ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
                     </ui:linkButton>
-                  </ui:newCell>
-                </ui:newRow>
+                  </ui:cell>
+                </ui:row>
               </ui:formListRows>
 			
             <!-- Finally the empty form for addition of new objects. -->
             <ui:formListAddForm>
-              <ui:newRow>
-                <ui:newCell/>
+              <ui:row>
+                <ui:cell/>
 
-                <ui:newCell styleClass="center">
+                <ui:cell styleClass="center">
                   <ui:textInput id="name"/>
-                </ui:newCell>
+                </ui:cell>
 
-                <ui:newCell>
+                <ui:cell>
                   <ui:textInput id="surname"/>
-                </ui:newCell>
+                </ui:cell>
 
-                <ui:newCell>
+                <ui:cell>
                   <ui:textInput id="phone"/>
-                </ui:newCell>
+                </ui:cell>
 
-                <ui:newCell>
+                <ui:cell>
                   <ui:dateInput id="birthdate"/>
-                </ui:newCell>							
+                </ui:cell>							
 
-                <ui:newCell>
+                <ui:cell>
                   <ui:attribute name="width" value="0"/>
                   <ui:linkButton id="add" showLabel="false"><ui:image code="buttonAdd"/></ui:linkButton>
-                </ui:newCell>
-              </ui:newRow>
+                </ui:cell>
+              </ui:row>
             </ui:formListAddForm>
             
           </ui:componentList>

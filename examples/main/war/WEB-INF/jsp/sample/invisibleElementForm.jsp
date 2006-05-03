@@ -17,48 +17,48 @@
 				<!-- Body -->
 				<ui:componentForm>					
 					<ui:formElement id="showTitle">
-						<ui:newRow>
-							<ui:newCell styleClass="name">
+						<ui:row>
+							<ui:cell styleClass="name">
 								<ui:simpleLabel labelId="#Client"/>
-							</ui:newCell>
-							<ui:newCell styleClass="inpt">
+							</ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:checkbox/>
-							</ui:newCell>			
-							<ui:newCell styleClass="name">
+							</ui:cell>			
+							<ui:cell styleClass="name">
 								<c:if test="${formElementValue}">				
 									<ui:label id="title"/>
 								</c:if>
-							</ui:newCell>
-							<ui:newCell styleClass="inpt">
+							</ui:cell>
+							<ui:cell styleClass="inpt">
 								<c:if test="${formElementValue}">				
 									<ui:textInput id="title"/>
 								</c:if>																	
-							</ui:newCell>															
-						</ui:newRow>
+							</ui:cell>															
+						</ui:row>
 					</ui:formElement>
 
 					<ui:formElement id="firstName">					
-						<ui:newRow>
-							<ui:newCell styleClass="name">
+						<ui:row>
+							<ui:cell styleClass="name">
 								<ui:label />
-							</ui:newCell>
-							<ui:newCell styleClass="inpt">
+							</ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:textInput />
-							</ui:newCell>
-							<ui:newCell colspan="2"/>
-						</ui:newRow>
+							</ui:cell>
+							<ui:cell colspan="2"/>
+						</ui:row>
 					</ui:formElement>
 
 					<ui:formElement id="lastName">
-						<ui:newRow>
-							<ui:newCell styleClass="name">
+						<ui:row>
+							<ui:cell styleClass="name">
 								<ui:label />
-							</ui:newCell>
-							<ui:newCell styleClass="inpt">
+							</ui:cell>
+							<ui:cell styleClass="inpt">
 								<ui:textInput />
-							</ui:newCell>
-							<ui:newCell colspan="2"/>			
-						</ui:newRow>
+							</ui:cell>
+							<ui:cell colspan="2"/>			
+						</ui:row>
 					</ui:formElement>
 				</ui:componentForm>
 

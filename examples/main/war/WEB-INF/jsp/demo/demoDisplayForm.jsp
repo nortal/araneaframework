@@ -16,41 +16,41 @@
 				<!-- Body -->
 				<ui:componentForm>
 
-					<ui:newRow>
-						<ui:newCell styleClass="name">
+					<ui:row>
+						<ui:cell styleClass="name">
 							<ui:label id="condDisplay" />
-						</ui:newCell>
+						</ui:cell>
 
-						<ui:newCell styleClass="data">
+						<ui:cell styleClass="data">
 							<ui:conditionalDisplay id="condDisplay">
 								<ui:conditionTrue>
 									<ui:image code="triangle" />
 								</ui:conditionTrue>
 							</ui:conditionalDisplay>
-						</ui:newCell>
-					</ui:newRow>
+						</ui:cell>
+					</ui:row>
 
-					<ui:newRow>
-						<ui:newCell styleClass="name">
+					<ui:row>
+						<ui:cell styleClass="name">
 							<ui:label id="textDisplay" />
-						</ui:newCell>
+						</ui:cell>
 
-						<ui:newCell styleClass="data">
+						<ui:cell styleClass="data">
 							<ui:textDisplay id="textDisplay" />
-						</ui:newCell>
-					</ui:newRow>
+						</ui:cell>
+					</ui:row>
 
-					<ui:newRow>
-						<ui:newCell styleClass="name">
+					<ui:row>
+						<ui:cell styleClass="name">
 							<ui:label id="valueDisplay" />
-						</ui:newCell>
+						</ui:cell>
 
-						<ui:newCell styleClass="data">
+						<ui:cell styleClass="data">
 							<ui:valueDisplay id="valueDisplay" var="value">
 								<c:out value="${value * 3}" />%
 								</ui:valueDisplay>
-						</ui:newCell>
-					</ui:newRow>
+						</ui:cell>
+					</ui:row>
 
 				</ui:componentForm>
 

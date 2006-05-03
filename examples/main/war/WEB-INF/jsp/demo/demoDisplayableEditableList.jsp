@@ -12,34 +12,34 @@
 			<ui:componentList>
 				<ui:formList id="editableList">
 					<ui:formListRows>
-						<ui:newRow>
+						<ui:row>
 							<c:choose>
 								<c:when test="${formRow.open}">
-									<ui:newCell styleClass="center">
+									<ui:cell styleClass="center">
 										<ui:checkbox id="booleanField" />
-									</ui:newCell>
-									<ui:newCell>
+									</ui:cell>
+									<ui:cell>
 										<ui:textInput id="stringField" />
-									</ui:newCell>
-									<ui:newCell>
+									</ui:cell>
+									<ui:cell>
 										<ui:numberInput id="longField" />
-									</ui:newCell>
+									</ui:cell>
 								</c:when>
 								<c:otherwise>
-									<ui:newCell styleClass="center">
+									<ui:cell styleClass="center">
 										<c:if test="${row.booleanField}">
 											<ui:image code="flag" />
 										</c:if>
-									</ui:newCell>
-									<ui:newCell>
+									</ui:cell>
+									<ui:cell>
 										<c:out value="${row.stringField}" />
-									</ui:newCell>
-									<ui:newCell>
+									</ui:cell>
+									<ui:cell>
 										<c:out value="${row.longField}" />
-									</ui:newCell>
+									</ui:cell>
 								</c:otherwise>
 							</c:choose>
-							<ui:newCell width="0">
+							<ui:cell width="0">
 								<ui:linkButton id="editSave" showLabel="false">
 									<ui:image code="buttonChange" />
 								</ui:linkButton>
@@ -49,26 +49,26 @@
 										<ui:image code="buttonDelete" />
 									</ui:linkButton>
 								</c:if>
-							</ui:newCell>
-						</ui:newRow>
+							</ui:cell>
+						</ui:row>
 					</ui:formListRows>
 					<ui:formListAddForm>
-						<ui:newRow>
-							<ui:newCell styleClass="center">
+						<ui:row>
+							<ui:cell styleClass="center">
 								<ui:checkbox id="booleanField" />
-							</ui:newCell>
-							<ui:newCell>
+							</ui:cell>
+							<ui:cell>
 								<ui:textInput id="stringField" size="40" />
-							</ui:newCell>
-							<ui:newCell>
+							</ui:cell>
+							<ui:cell>
 								<ui:numberInput id="longField" size="5" />
-							</ui:newCell>
-							<ui:newCell width="0">
+							</ui:cell>
+							<ui:cell width="0">
 								<ui:linkButton id="add" showLabel="false">
 									<ui:image code="buttonAdd" />
 								</ui:linkButton>
-							</ui:newCell>
-						</ui:newRow>
+							</ui:cell>
+						</ui:row>
 					</ui:formListAddForm>
 				</ui:formList>
 			</ui:componentList>

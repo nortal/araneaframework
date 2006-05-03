@@ -22,45 +22,45 @@
 			<ui:component>
 
 				<ui:componentForm>
-					<ui:newRow>
+					<ui:row>
 						<ui:formElement id="name">
-							<ui:newCell styleClass="name">
+							<ui:cell styleClass="name">
 								<ui:label />
-							</ui:newCell>
-							<ui:newCell>
+							</ui:cell>
+							<ui:cell>
 								<ui:textInput />
-							</ui:newCell>
+							</ui:cell>
 						</ui:formElement>
 
 						<ui:formElement id="surname">
-							<ui:newCell styleClass="name">
+							<ui:cell styleClass="name">
 								<ui:label />
-							</ui:newCell>
-							<ui:newCell>
+							</ui:cell>
+							<ui:cell>
 								<ui:textInput />
-							</ui:newCell>
+							</ui:cell>
 						</ui:formElement>
-					</ui:newRow>
+					</ui:row>
 
-					<ui:newRow>
+					<ui:row>
 						<ui:formElement id="phone">
-							<ui:newCell styleClass="name">
+							<ui:cell styleClass="name">
 								<ui:label />
-							</ui:newCell>
-							<ui:newCell>
+							</ui:cell>
+							<ui:cell>
 								<ui:textInput />
-							</ui:newCell>
+							</ui:cell>
 						</ui:formElement>
 
 						<ui:formElement id="birthdate">
-							<ui:newCell styleClass="name">
+							<ui:cell styleClass="name">
 								<ui:label />
-							</ui:newCell>
-							<ui:newCell>
+							</ui:cell>
+							<ui:cell>
 								<ui:dateInput />
-							</ui:newCell>
+							</ui:cell>
 						</ui:formElement>
-					</ui:newRow>
+					</ui:row>
 				</ui:componentForm>
 
 				<!-- template design tag -->
