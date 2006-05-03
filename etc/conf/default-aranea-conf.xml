@@ -55,7 +55,6 @@
     <property name="childService" ref="araneaThreadServiceRouter"/>
     <property name="filterChain">     
       <list>
-        <ref bean="araneaSerializingAudit"/>
         <ref bean="araneaLocalizationFilter"/>
         <ref bean="araneaJspConfigFilter"/>
         <bean class="org.araneaframework.ioc.spring.SpringOptionalFilterService" singleton="false">
