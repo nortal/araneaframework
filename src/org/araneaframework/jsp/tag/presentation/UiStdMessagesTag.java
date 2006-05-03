@@ -43,7 +43,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
   protected String type;
 
   public UiStdMessagesTag() {
-    baseStyleClass = "aranea-messages";
+    styleClass = "aranea-messages";
   }
 
   protected int doStartTag(Writer out) throws Exception {
