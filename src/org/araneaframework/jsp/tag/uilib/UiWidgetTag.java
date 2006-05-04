@@ -43,11 +43,11 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
  */
 public class UiWidgetTag extends UiBaseTag {
   /** Widget full dot-separated identifier starting from container (e.g. component). */
-  public final static String FULL_ID_KEY_REQUEST = "widgetFullId";
+  public final static String FULL_ID_KEY = "widgetFullId";
   /** Widget full dot-separated identifier with added unique container identifier prefix (e.g. component id). */
-  public final static String SCOPED_FULL_ID_KEY_REQUEST = "widgetScopedFullId";    
+  public final static String SCOPED_FULL_ID_KEY = "widgetScopedFullId";    
   /** Widget view model. */
-  public final static String VIEW_MODEL_KEY_REQUEST = "widget";  
+  public final static String VIEW_MODEL_KEY = "widget";  
 
   protected String id;
   protected String fullId;
@@ -73,9 +73,9 @@ public class UiWidgetTag extends UiBaseTag {
     scopedFullId = container.scopeWidgetFullId(pageContext, fullId);
 
     // Set variables
-    addContextEntry(FULL_ID_KEY_REQUEST, fullId);
-    addContextEntry(SCOPED_FULL_ID_KEY_REQUEST, scopedFullId);    
-    addContextEntry(VIEW_MODEL_KEY_REQUEST, viewModel);
+    addContextEntry(FULL_ID_KEY, fullId);
+    addContextEntry(SCOPED_FULL_ID_KEY, scopedFullId);    
+    addContextEntry(VIEW_MODEL_KEY, viewModel);
     writeJavascript(out);
 
     // Continue

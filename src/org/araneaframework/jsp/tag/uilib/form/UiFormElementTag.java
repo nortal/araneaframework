@@ -41,9 +41,9 @@ import org.araneaframework.uilib.form.FormWidget;
            </ul> "
  */
 public class UiFormElementTag extends UiBaseTag {
-  public static final String ID_KEY_REQUEST = "formElementId";
-  public static final String VIEW_MODEL_KEY_REQUEST = "formElement";
-  public static final String VALUE_KEY_REQUEST = "formElementValue";
+  public static final String ID_KEY = "formElementId";
+  public static final String VIEW_MODEL_KEY = "formElement";
+  public static final String VALUE_KEY = "formElementValue";
 
   protected String id;
   protected FormElement.ViewModel formElementViewModel;
@@ -52,16 +52,16 @@ public class UiFormElementTag extends UiBaseTag {
     super.doStartTag(out);
 
     // Get form data    
-    FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
+    FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY);
 
     // Get form element
     formElementViewModel = 
       (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
 
     // Store data
-    addContextEntry(VIEW_MODEL_KEY_REQUEST, formElementViewModel);
-    addContextEntry(ID_KEY_REQUEST, id);
-    addContextEntry(VALUE_KEY_REQUEST, formElementViewModel.getValue());
+    addContextEntry(VIEW_MODEL_KEY, formElementViewModel);
+    addContextEntry(ID_KEY, id);
+    addContextEntry(VALUE_KEY, formElementViewModel.getValue());
 
     // Continue
     return EVAL_BODY_INCLUDE;

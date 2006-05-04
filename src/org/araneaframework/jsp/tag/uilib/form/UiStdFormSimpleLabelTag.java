@@ -131,7 +131,7 @@ public class UiStdFormSimpleLabelTag extends UiPresentationTag {
 
     if (formElementId != null){
       // Find surrounding form's id
-      String formId = (String)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST);      
+      String formId = (String)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_SCOPED_FULL_ID_KEY);      
       UiFormElementBaseTag.writeFormElementContextOpen(out, formId, formElementId, pageContext);
       fullFormElementId = formId + "." + formElementId;
     }

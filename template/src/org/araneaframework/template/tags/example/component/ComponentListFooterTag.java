@@ -80,11 +80,11 @@ public class ComponentListFooterTag extends UiPresentationTag {
     super.doStartTag(out);
 
     // Get system form id 
-    systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
+    systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY);
 
     // Get list data
-    listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY_REQUEST);    
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST);
+    listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY);    
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
 
     // Get sequnce data
     SequenceHelper.ViewModel sequenceViewModel = viewModel.getSequence();

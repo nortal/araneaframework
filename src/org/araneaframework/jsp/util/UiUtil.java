@@ -52,28 +52,28 @@ import org.araneaframework.jsp.tag.uilib.list.formlist.UiFormListTag;
 public class UiUtil {
   private static final Map attributeErrorMap = new HashMap();  
   static {
-    attributeErrorMap.put(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, null);
-    attributeErrorMap.put(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, null);
+    attributeErrorMap.put(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
+    attributeErrorMap.put(UiPresentationTag.ATTRIBUTED_TAG_KEY, null);
 
-    attributeErrorMap.put(UiFormListTag.FORM_LIST_ID_KEY_REQUEST, "<ui:formList> tag expected, but not found!");
-    attributeErrorMap.put(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY_REQUEST, "<ui:formList> tag expected, but not found!");
+    attributeErrorMap.put(UiFormListTag.FORM_LIST_ID_KEY, "<ui:formList> tag expected, but not found!");
+    attributeErrorMap.put(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY, "<ui:formList> tag expected, but not found!");
 
-    attributeErrorMap.put(UiElementTag.KEY_REQUEST, "<ui:element> tag expected, but not found! Probably this is an attempt to use <ui:elementContent> or <ui:attribute> outside <ui:element> tag.");
+    attributeErrorMap.put(UiElementTag.KEY, "<ui:element> tag expected, but not found! Probably this is an attempt to use <ui:elementContent> or <ui:attribute> outside <ui:element> tag.");
 
-    attributeErrorMap.put(UiFormElementTag.ID_KEY_REQUEST, "<ui:formElement> tag expected, but not found!  Make sure that form element and control tags either have an 'id' or are used inside <ui:formElement> tag.");
+    attributeErrorMap.put(UiFormElementTag.ID_KEY, "<ui:formElement> tag expected, but not found!  Make sure that form element and control tags either have an 'id' or are used inside <ui:formElement> tag.");
 
-    attributeErrorMap.put(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
-    attributeErrorMap.put(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
-    attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");		
-    attributeErrorMap.put(UiFormTag.FORM_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
+    attributeErrorMap.put(UiFormTag.FORM_SCOPED_FULL_ID_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
+    attributeErrorMap.put(UiFormTag.FORM_VIEW_MODEL_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
+    attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");		
+    attributeErrorMap.put(UiFormTag.FORM_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
 
     attributeErrorMap.put(LayoutRowInterface.KEY, "<ui:row> tag expected, but not found! Make sure all of you cells are used inside row tags.");
     attributeErrorMap.put(LayoutInterface.KEY, "<ui:layout> or another layout tag expected, but not found!");
 
-    attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, "<ui:list> tag expected, but not found! Make sure list tags is used inside <ui:list> tag.");
-    attributeErrorMap.put(UiListTag.LIST_ID_KEY_REQUEST, "<ui:list> tag expected, but not found!  Make sure list tags is used inside <ui:list> tag.");
-    attributeErrorMap.put(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST, "<ui:listRows> or another list rows tag expected, but not found!");	
-    attributeErrorMap.put(UiSystemFormTag.ID_KEY_REQUEST, "<ui:systemForm> tag expected, but not found! Make sure your tags are surrounded by <ui:systemForm>.");
+    attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY, "<ui:list> tag expected, but not found! Make sure list tags is used inside <ui:list> tag.");
+    attributeErrorMap.put(UiListTag.LIST_ID_KEY, "<ui:list> tag expected, but not found!  Make sure list tags is used inside <ui:list> tag.");
+    attributeErrorMap.put(UiListRowsTag.ROW_REQUEST_ID_KEY, "<ui:listRows> or another list rows tag expected, but not found!");	
+    attributeErrorMap.put(UiSystemFormTag.ID_KEY, "<ui:systemForm> tag expected, but not found! Make sure your tags are surrounded by <ui:systemForm>.");
     attributeErrorMap.put(UiWidgetContainer.REQUEST_CONTEXT_KEY, "<ui:viewPort> or another widget container tag expected, but not found!");
   }
 

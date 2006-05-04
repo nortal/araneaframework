@@ -48,14 +48,14 @@ public class UiFormElementBaseDisplayTag extends UiPresentationTag implements Ui
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
+    formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY);
     FormWidget form = 
-      (FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST);
+      (FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY);
 
     // In case the tag is in formElement tag
     derivedId = id;
-    if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null)
-    	derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
+    if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY) != null)
+    	derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY);
 
     if (derivedId == null) throw new UiMissingIdException(this);
 

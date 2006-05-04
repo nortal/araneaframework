@@ -30,8 +30,8 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Oleg Mürk
  */
 public abstract class UiSystemFormTag extends UiBaseTag {
-  public final static String COUNTER_KEY_REQUEST = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.FORM_COUNTER";  
-  public final static String ID_KEY_REQUEST = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.ID";
+  public final static String COUNTER_KEY = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.FORM_COUNTER";  
+  public final static String ID_KEY = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.ID";
 
   public final static String GET_METHOD = "GET";
   public final static String POST_METHOD = "POST";
@@ -47,13 +47,13 @@ public abstract class UiSystemFormTag extends UiBaseTag {
     super.doStartTag(out);
 
     // Error check
-    if (getContextEntry(ID_KEY_REQUEST) != null)
+    if (getContextEntry(ID_KEY) != null)
       throw new UiException("System forms cannot be nested");                    
 
     // Compute new id for systemForm.
     realId = id == null ? UiSystemFormTag.generateId(pageContext) : id;
 
-    addContextEntry(ID_KEY_REQUEST, realId);
+    addContextEntry(ID_KEY, realId);
     addContextEntry(SYSTEM_FORM_ID_KEY, realId);    
 
     // Write form 
@@ -92,12 +92,12 @@ public abstract class UiSystemFormTag extends UiBaseTag {
   }
 
   public static String generateId(PageContext pageContext){
-    Long counter = (Long)pageContext.getAttribute(COUNTER_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+    Long counter = (Long)pageContext.getAttribute(COUNTER_KEY, PageContext.REQUEST_SCOPE);
     if (counter == null)
       counter = new Long(0);
     else
       counter = new Long(counter.longValue() + 1);
-    pageContext.setAttribute(COUNTER_KEY_REQUEST, counter, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute(COUNTER_KEY, counter, PageContext.REQUEST_SCOPE);
     return "system_form_" + counter;
   }
 

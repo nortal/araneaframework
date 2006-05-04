@@ -72,13 +72,13 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
     if(tagMapping == null)
       throw new JspException("The tag mapping was not found!.");
 
-    formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
-    FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
+    formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY);
+    FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY);
 
     //In case the tag is in formElement tag
     internalId = id;
-    if (internalId == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
-    	internalId = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
+    if (internalId == null && getContextEntry(UiFormElementTag.ID_KEY) != null) 
+    	internalId = (String) getContextEntry(UiFormElementTag.ID_KEY);
     if (internalId == null) throw new UiMissingIdException(this);
     formElementViewModel = 
       (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, internalId)._getViewable().getViewModel();   
