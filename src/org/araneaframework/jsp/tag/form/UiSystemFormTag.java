@@ -38,7 +38,8 @@ public abstract class UiSystemFormTag extends UiBaseTag {
 
   public final static String SYSTEM_FORM_ID_KEY = "systemFormId";
 
-  protected String id = null;
+  private String id = null;
+  protected String realId = null;
   protected String method = null;
   protected String enctype = null;
 
@@ -50,15 +51,15 @@ public abstract class UiSystemFormTag extends UiBaseTag {
       throw new UiException("System forms cannot be nested");                    
 
     // Compute new id for systemForm.
-    id = id == null ? UiSystemFormTag.generateId(pageContext) : id;
+    realId = id == null ? UiSystemFormTag.generateId(pageContext) : id;
 
-    addContextEntry(ID_KEY_REQUEST, id);
-    addContextEntry(SYSTEM_FORM_ID_KEY, id);    
+    addContextEntry(ID_KEY_REQUEST, realId);
+    addContextEntry(SYSTEM_FORM_ID_KEY, realId);    
 
     // Write form 
     UiUtil.writeOpenStartTag(out, "form");
-    UiUtil.writeAttribute(out, "id", id);
-    UiUtil.writeAttribute(out, "name", id);    
+    UiUtil.writeAttribute(out, "id", realId);
+    UiUtil.writeAttribute(out, "name", realId);    
     UiUtil.writeAttribute(out, "method", method);
     UiUtil.writeAttribute(out, "enctype", enctype);
     UiUtil.writeAttribute(out, "accept-charset", getAcceptCharset());
@@ -74,7 +75,7 @@ public abstract class UiSystemFormTag extends UiBaseTag {
     UiUtil.writeAttribute(out, "type", "text/javascript");
     UiUtil.writeCloseStartTag(out);
     out.write("uiSystemFormContext(");
-    UiUtil.writeScriptString(out, id);
+    UiUtil.writeScriptString(out, realId);
     out.write(");\n");
     UiUtil.writeEndTag(out, "script");
 
