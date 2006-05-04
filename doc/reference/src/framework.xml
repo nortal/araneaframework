@@ -39,6 +39,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
      StandardServletServiceAdapterComponent root = new StandardServletServiceAdapterComponent();
 
      //Configure the child components, service widgets using setter injection
+     //...
 
      return root;
    }

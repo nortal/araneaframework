@@ -283,40 +283,26 @@
   <servlet-name>araneaServlet</servlet-name>
   <url-pattern>/main</url-pattern>
 </servlet-mapping>]]></programlisting>
-				in case of framework main example this is <literal>/main</literal>. 	            In addition there is <literal>contextConfigLocation</literal> parameter, that specifies
-	            Spring bean configuration files read in by Spring's
-	            <literal>ContextLoaderListener</literal> and
-	            Aranea specific session listener that takes over some session cleanup functions.
+				in case of framework main example this is <literal>/main</literal>. There is also a Aranea specific session listener that takes over some session cleanup functions.
 	        </para>
 
-            <programlisting role="xml"><![CDATA[<context-param>
-  <param-name>contextConfigLocation</param-name>
-  <param-value> 
-    /WEB-INF/services.xml   
-  </param-value>
-</context-param>
-
-<listener>
-  <listener-class>org.araneaframework.servlet.core.StandardSessionListener</listener-class>
-</listener>
-
-<listener>
-  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+            <programlisting role="xml"><![CDATA[<listener>
+  <listener-class>
+    org.araneaframework.servlet.core.StandardSessionListener
+  </listener-class>
 </listener>]]></programlisting>
 
 			<para>
-				We use here Spring to configure Aranea starting widget. Spring configuration gives a lot of power
+				We use here Spring to configure Aranea starting widget via the <literal>/WEB-INF/aranea-conf.xml</literal> configuration file. 
+        Spring configuration gives a lot of power
 				to extend or override framework modules when needed, but in this case it does not differ much.
 			</para>
       
-    <figure id="full-spring-conf">    
-      <title>/WEB-INF/aranea-conf.xml</title>
              <programlisting role="xml"><![CDATA[<beans>
   <bean id="araneaApplicationStart" 
     class="org.araneaframework.example.main.web.LoginWidget"  
     singleton="false"/>
 </beans>]]></programlisting>
-  </figure>
 	</sect1>
 	
 	<sect1>
