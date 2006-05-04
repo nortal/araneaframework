@@ -219,6 +219,6 @@
     </property>    
   </bean>
   
-  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.DefaultConfiguration" singleton="false"/>
+  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
   
 </beans>

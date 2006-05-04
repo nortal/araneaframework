@@ -35,8 +35,7 @@ import org.araneaframework.servlet.ServletOutputData;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardServletHttpResponseFilterService extends BaseFilterService {
-  private String contentType = "text/html";
-  private String responseEncoding = "UTF-8";
+  private String contentType = "text/html; charset=UTF-8";
   private boolean cacheable = false;
   private long cacheHoldingTime = 3600000;
   
@@ -51,18 +50,11 @@ public class StandardServletHttpResponseFilterService extends BaseFilterService 
   }
   
   /**
-   * Sets the content type of the response. This is a required field of the response.
+   * Sets the content type of the request. This is a required field of the response.
    */
   public void setContentType(String contentType) {
     this.contentType = contentType;
   }
-  
-  /**
-   * Sets the response character encoding.
-   */
-  public void setResponseEncoding(String responseEncoding) {
-    this.responseEncoding = responseEncoding;
-  }  
   
   /**
    * Constructs cookies from the key, value pair in the map of the cookies and sets them.
@@ -95,7 +87,6 @@ public class StandardServletHttpResponseFilterService extends BaseFilterService 
     }
     
     response.setContentType(contentType);
-    response.setCharacterEncoding(responseEncoding);
     
     if (!cacheable) {
       response.setHeader("Pragma", "no-cache");       
