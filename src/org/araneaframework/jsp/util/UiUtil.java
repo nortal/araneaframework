@@ -418,31 +418,18 @@ public class UiUtil {
   /**
    * Read attribute value in given scope and ensure that it is defined.  
    */
-  public static Object requireContextEntry(PageContext pageContext, String key, int scope) throws JspException {
-    Object value = pageContext.getAttribute(key, scope);
+  public static Object requireContextEntry(PageContext pageContext, String key) throws JspException {
+    Object value = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
     if (value == null) {
       StringBuffer message = new StringBuffer();
       String errMsg = (String)attributeErrorMap.get(key);      
       if (errMsg != null) 
         message.append(errMsg + " (");
       message.append("Missing attribute '" + key + "' in ");
-      switch (scope) {
-        case PageContext.PAGE_SCOPE:
-          message.append("'PageContext.PAGE_SCOPE'");
-          break;
-        case PageContext.REQUEST_SCOPE:
-          message.append("'PageContext.REQUEST_SCOPE'");
-          break;        
-        case PageContext.SESSION_SCOPE:
-          message.append("'PageContext.SESSION_SCOPE'");
-          break;           
-        case PageContext.APPLICATION_SCOPE:
-          message.append("'PageContext.APPLICATION_SCOPE'");
-          break;               
-      }
+      message.append("'PageContext.REQUEST_SCOPE'");
       message.append(" scope");
       if (errMsg != null) 
-        message.append(")");      
+        message.append(")");
       throw new UiException(message.toString());
     }
     else

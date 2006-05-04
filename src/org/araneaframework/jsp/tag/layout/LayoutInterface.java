@@ -18,20 +18,14 @@ package org.araneaframework.jsp.tag.layout;
 
 
 /**
- * Interface for layout tags, defines no behaviour, only keys under which layout attributes
- * can be located from the context. Implementing classes should provide the attributes to inner
- * tags under these keys and should have some notion of rows and cells (typically layout tag
- * is just an HTML table). 
- * 
+ * Interface for layout tags, defines no behaviour, only key under which layout can be 
+ * located from the context. Implementing classes should provide the callbacks to inner
+ * tags under these keys and should have some notion of rows and cells (typically layout 
+ * tag is just an HTML table).
+ *  
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public interface LayoutInterface {
+public interface LayoutInterface extends RowClassProvider, CellClassProvider {
   /** Key under which the layout tags can be found from the <code>PageContext</code>. */
   public static final String KEY = "org.araneaframework.jsp.tag.layout.LayoutInterface.KEY";
-  
-  /** Key under which the row's styleclasses defined by surrounding layout can be found from the <code>PageContext</code>. */
-  public static final String ROWCLASS_KEY = "org.araneaframework.jsp.tag.layout.LayoutInterface.ROWCLASS_KEY";
-
-  /** Key under which the cell's styleclasses defined by surrounding layout can be found from the <code>PageContext</code>. */
-  public static final String CELLCLASS_KEY = "org.araneaframework.jsp.tag.layout.LayoutInterface.CELLCLASS_KEY";
 }

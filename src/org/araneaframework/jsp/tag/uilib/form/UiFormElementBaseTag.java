@@ -257,7 +257,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		// This code actually prevents using validation for non-simple form elements
 		// (this may be important because simpleLabel calls this method)
 		FormWidget form = 
-			(FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+			(FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST);
 		FormElement.ViewModel formElementViewModel = 
 			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, elementId)._getViewable().getViewModel();
 		boolean isValid = formElementViewModel.isValid();

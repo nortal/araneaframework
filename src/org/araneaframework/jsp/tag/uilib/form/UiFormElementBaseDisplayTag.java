@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.form;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.tag.UiPresentationTag;
@@ -51,7 +50,7 @@ public class UiFormElementBaseDisplayTag extends UiPresentationTag implements Ui
 
     formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
     FormWidget form = 
-      (FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+      (FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST);
 
     // In case the tag is in formElement tag
     derivedId = id;

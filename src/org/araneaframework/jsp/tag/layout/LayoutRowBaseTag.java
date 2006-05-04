@@ -17,7 +17,10 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.jsp.JspException;
+import org.apache.commons.collections.ResettableIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 
@@ -26,17 +29,36 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public abstract class LayoutRowBaseTag extends UiPresentationTag implements LayoutRowInterface {
-  protected List cellClasses;
+  protected List cellClasses = new ArrayList(0);
+  
+  private LayoutInterface layout;
+  private ResettableIterator cellIter;
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
-    requireContextEntry(LayoutInterface.KEY);
+    
+    layout = (LayoutInterface)requireContextEntry(LayoutInterface.KEY);
+    cellIter = new LoopingIterator(cellClasses);
 
     addContextEntry(LayoutRowInterface.KEY, this);
-    if (cellClasses != null && !cellClasses.isEmpty())
-    	  addContextEntry(LayoutInterface.CELLCLASS_KEY, new LoopingIterator(cellClasses));
+    addContextEntry(CellClassProvider.KEY, this);
 
     return EVAL_BODY_INCLUDE;
+  }
+  
+  public String getCellClass() throws JspException {
+    String result = layout.getCellClass();
+    if (cellIter.hasNext())
+    	return (String)cellIter.next();
+
+    return result;
+  }
+
+  public String getStyleClass() throws JspException {
+    cellIter.reset();
+    String result = layout.getRowClass();
+    if (styleClass != null)
+      return super.getStyleClass();
+    return result;
   }
 }

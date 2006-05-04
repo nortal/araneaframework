@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -62,19 +61,6 @@ public class LayoutCellTag extends LayoutCellBaseTag {
   protected int doEndTag(Writer out) throws Exception {
     UiUtil.writeEndTag(out, cellTag);
     return super.doEndTag(out);
-  }
-
-  /* ***********************************************************************************
-   * Overridden methods
-   * ***********************************************************************************/
-
-  protected String getStyleClass() throws JspException {
-    Iterator it = ((Iterator)requireContextEntry(LayoutInterface.CELLCLASS_KEY));
-    String result = it.hasNext() ? (String)it.next() : null;
-    if (styleClass != null)
-      return super.getStyleClass();
-
-    return result;
   }
 
   /* ***********************************************************************************
