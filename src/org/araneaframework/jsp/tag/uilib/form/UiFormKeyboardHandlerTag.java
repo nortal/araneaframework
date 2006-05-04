@@ -22,7 +22,6 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerBaseTag;
 import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag;
-import org.araneaframework.jsp.util.StringUtil;
 
 
 /**
@@ -56,9 +55,15 @@ import org.araneaframework.jsp.util.StringUtil;
           inside which the tag is located, and instead of specifying the handler, you may give the id of an element, and a javascript event to call on that element."
  */
 public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
-	//
-	// Attributes
-	//
+	protected String handler;
+	
+	protected String subscope;
+	protected String elementId;
+	protected String fullElementId;
+	protected String event = "onclick";
+	
+	protected String internalElementId;
+
 
 	/**
 	 * @see UiKeyboardHandlerTag#setHandler
@@ -70,14 +75,14 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
           the event was fired. 
           Example: function(event, elementId) { alert(elementId); }
 
-          You should either specify the handler, or elementId/event pair, not both." 
+          Either handler or elementId/event pair should be specified, not both." 
 	 */
 	public void setHandler(String handler) throws JspException {
 		this.handler = (String) evaluate("handler", handler, String.class);
 	}
 	
 	/**
-	 * Form element which is the scope of this handler.
+	 * Specifies form element which is the scope of this handler.
 	 * By default the "scope" (as in {@link UiKeyboarHandlerTag UiKeyboardHandlerTag}) of this keyboard handler
 	 * is the form inside which the handler is defined. By specifying this string you may narrow the scope to a certain element.
 	 * For example if the handler is defined inside form "myForm", and you specify subscope as "myelement",
@@ -161,9 +166,12 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	//
 	// Implementation
 	//
-	protected final int before(Writer out) throws Exception {
-		super.before(out);
-		if (StringUtils.isBlank(handler)) {
+	protected final int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
+		String intHandler = handler;
+		internalElementId = fullElementId;
+		
+		if (StringUtils.isBlank(intHandler)) {
 			// One of elemenId/event must be specified
 			if ((elementId == null && fullElementId == null) || event == null)
 				throw new JspException("You must specify handler or elementId/event for UiFormKeyboardHandlerTag (elementId=" + elementId + ", fullElementId=" + fullElementId + ", event=" + event + ",subscope=" + subscope);
@@ -173,9 +181,9 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 				throw new JspException("Either elementId or fullElementId must be specified, not both.");
 
 			// If elementId was given, translate to fullElementId
-			if (fullElementId == null)
-				fullElementId = elementIdToFullElementId(pageContext, elementId);
-			handler = createHandlerToInvokeJavascriptEvent(fullElementId, event);
+			if (internalElementId == null)
+				internalElementId = elementIdToFullElementId(pageContext, elementId);
+			intHandler = createHandlerToInvokeJavascriptEvent(internalElementId, event);
 		}
 		else {
 			// None of the elementId/event attributes may be specified
@@ -195,7 +203,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 		}
 
 		// Write out.
-		UiKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, keyCode, handler);
+		UiKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, intHandler);
 		return SKIP_BODY;
 	}
 
@@ -230,16 +238,4 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 			fullElementId = scope + "." + elementId;
 		return fullElementId;
 	}
-
-	protected void init() {
-		super.init();
-		handler = subscope = elementId = fullElementId = null;
-		event = "onclick";
-	}
-
-	protected String handler;
-	protected String subscope;
-	protected String elementId;
-	protected String fullElementId;
-	protected String event;
 }

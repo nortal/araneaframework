@@ -7,7 +7,7 @@ BODY { background: #f4f4f4 url(?loadImage=gfx/i02.gif&importerType=imageFileImpo
 
 /* Main framework */
 
-#cont1 { min-height: 594px; height: 100%; margin-bottom: -22px; background: url(?loadImage=gfx/i03.gif&importerType=imageFileImporter) repeat-y; }
+#cont1 { min-height: 100%; margin-bottom: -22px; background: url(?loadImage=gfx/i03.gif&importerType=imageFileImporter) repeat-y; }
 #footer { height: 22px; clear: both; padding: 0 10px 0 190px; }
 #footer DIV.box1 { border-top: 1px solid #FFF; padding: 5px 0 0 15px; font-size: 10px; color: #828282; }
 #footer A { color: #828282; }
@@ -18,12 +18,13 @@ BODY { background: #f4f4f4 url(?loadImage=gfx/i02.gif&importerType=imageFileImpo
 #header DIV.box1 { height: 73px; width: 975px; background: url(?loadImage=gfx/logo_aranea_screen.jpg&importerType=imageFileImporter) no-repeat; }
 
 #leftcol { float: left; overflow: hidden; width: 190px; background: url(?loadImage=gfx/i04.gif&importerType=imageFileImporter) 50px 20px no-repeat; min-height: 550px; margin-right: 15px; }
-#content { float: left; padding: 15px 0 37px 0; color: #545454; }
+#content { float: left; width: 770px; padding: 15px 0 37px 0; color: #545454; }
 
 #menu1 { float: left; padding: 45px 0 0 30px; color: #b83701; }
 #menu1 DIV.item { float: left; margin-left: -1px; background: url(?loadImage=gfx/i07.gif&importerType=imageFileImporter) 100% 8px no-repeat; }
 #menu1 A { font-weight: bold; text-transform: uppercase; text-decoration: none; font-size: 10px; display: block; padding: 5px 10px; float: left; color: #FFF; }
 #menu1 A:hover { padding: 4px 9px; border: solid #FFF; border-width: 1px; background: #b83701; }
+#menu1 A.hover { padding: 4px 9px; border: solid #FFF; border-width: 1px; background: #b83701; }
 #menu1 A.active { padding: 4px 9px; background: #b83701; border: solid #FFF; border-width: 1px; }
 
 #logo { float: left; width: 250px; height: 73px; }
@@ -31,11 +32,11 @@ BODY { background: #f4f4f4 url(?loadImage=gfx/i02.gif&importerType=imageFileImpo
 
 #menu2 { padding: 10px; margin: 0;  list-style: none; color: #000000; }
 #menu2 LI { list-style: none; background: url(?loadImage=gfx/i05.gif&importerType=imageFileImporter) 0 100% repeat-x; padding: 0; margin: 0; }
-#menu2 A { color: #000000; padding: 4px 0 6px 5px; display: block;  }
+#menu2 A { color: #000000; padding: 4px 0 6px 5px; display: block; }
 #menu2 A.active { color: #f61901; font-weight: bold; }
 #menu2 UL { padding: 0 0 8px 0; margin: 0; }
 #menu2 UL LI { background: url(?loadImage=gfx/i06.gif&importerType=imageFileImporter) 10px 0.7em no-repeat; padding: 0; margin: 0; font-size: 90%; }
-#menu2 UL LI A { color: #000000; padding: 3px 0 3px 20px; display: block;  }
+#menu2 UL LI A { color: #000000; padding: 3px 0 3px 20px; display: block; }
 #menu2 UL LI A.active { font-weight: normal; text-decoration: underline; }
 
 DIV.stripe1 { background: #000000; height: 4px; font-size: 1px; line-height: 0px; }
@@ -73,11 +74,12 @@ INPUT.usr { float: left; width: 190px; margin-bottom: 5px; }
 INPUT.pwd { float: left; width: 190px; margin-bottom: 5px; }
 #login-logo { border-bottom: 4px solid #000; }
 
-BODY.login { text-align: left; background: #FFF url(i55.gif) repeat-x; }
+BODY.login { text-align: left; background: #FFF url(?loadImage=gfx/i55.gif&importerType=imageFileImporter) repeat-x; }
 
 DIV.login { width: 300px; padding: 0; margin: auto; background: #f7f7f7; }
 DIV.login DIV.a { padding: 10px 15px 0 15px; border: 1px solid #e4e4e4; border-top: none; text-align: left; }
 DIV.login LABEL { clear: left; display: block; float: left; padding: 3px 0 2px 0; width: 72px; }
+
 
 /* Messages */
 
@@ -87,4 +89,4 @@ DIV.msg-ok { padding: 0.8em 1em; border: 2px solid #66b51a; margin-bottom: 1em; 
 
 #error #cont1 { min-height: 100%; margin-bottom: -22px; background: none !important; }
 #error #footer { padding: 0; }
-#error #content { float: none; width: 960px; margin: 0 15px; padding: 15px 0 37px 0; color: #545454;
+#error #content { float: none; width: 960px; margin: 0 15px; padding: 15px 0 37px 0; color: #545454; }
