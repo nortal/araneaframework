@@ -23,12 +23,13 @@ import javax.servlet.jsp.JspException;
 import org.apache.commons.collections.ResettableIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
 import org.araneaframework.jsp.tag.UiPresentationTag;
+import org.araneaframework.jsp.util.UiUtil;
 
 /**
  * Layout row base tag.
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public abstract class LayoutRowBaseTag extends UiPresentationTag implements LayoutRowInterface {
+public abstract class LayoutRowBaseTag extends UiPresentationTag implements CellClassProvider {
   protected List cellClasses = new ArrayList(0);
   
   private LayoutInterface layout;
@@ -40,8 +41,8 @@ public abstract class LayoutRowBaseTag extends UiPresentationTag implements Layo
     layout = (LayoutInterface)requireContextEntry(LayoutInterface.KEY);
     cellIter = new LoopingIterator(cellClasses);
 
-    addContextEntry(LayoutRowInterface.KEY, this);
-    addContextEntry(CellClassProvider.KEY, this);
+    if (!cellClasses.isEmpty())
+      addContextEntry(CellClassProvider.KEY, this);
 
     return EVAL_BODY_INCLUDE;
   }
@@ -49,7 +50,7 @@ public abstract class LayoutRowBaseTag extends UiPresentationTag implements Layo
   public String getCellClass() throws JspException {
     String result = layout.getCellClass();
     if (cellIter.hasNext())
-    	return (String)cellIter.next();
+      return (String)cellIter.next();
 
     return result;
   }
@@ -60,5 +61,19 @@ public abstract class LayoutRowBaseTag extends UiPresentationTag implements Layo
     if (styleClass != null)
       return super.getStyleClass();
     return result;
+  }
+  
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Default styleclass of cells inside this row. This is multi-valued attribute and overwrites cell styleclasses defined by surrounding layout."
+   */
+  public void setCellClasses(String cellClasses) throws JspException {
+    this.cellClasses = UiUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
   }
 }

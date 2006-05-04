@@ -32,9 +32,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class LayoutRowTag extends LayoutRowBaseTag implements LayoutRowInterface {
-  protected List cellClasses;
-
+public class LayoutRowTag extends LayoutRowBaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -54,19 +52,5 @@ public class LayoutRowTag extends LayoutRowBaseTag implements LayoutRowInterface
   protected int doEndTag(Writer out) throws Exception {
     UiUtil.writeEndTag(out, "tr");
     return super.doEndTag(out);
-  }
-  
-  /* ***********************************************************************************
-   * Tag attributes
-   * ***********************************************************************************/
-  
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Default styleclass of cells inside this row. This is multi-valued attribute and overwrites cell styleclasses defined by surrounding layout."
-   */
-  public void setCellClasses(String cellClasses) throws JspException {
-    this.cellClasses = UiUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
   }
 }

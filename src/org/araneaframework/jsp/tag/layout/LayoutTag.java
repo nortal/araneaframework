@@ -31,11 +31,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class LayoutTag extends LayoutBaseTag implements LayoutInterface {
-  {
-    baseStyleClass = "aranea-layout-base";
-  }
-  
+public class LayoutTag extends LayoutBaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -56,39 +52,5 @@ public class LayoutTag extends LayoutBaseTag implements LayoutInterface {
   protected int doEndTag(Writer out) throws Exception {
     UiUtil.writeEndTag(out, "table");
     return super.doEndTag(out);
-  }
-
-  /* ***********************************************************************************
-   * Tag attributes
-   * ***********************************************************************************/
-  
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Default style of rows in this layout. This is multi-valued attribute." 
-   */
-  public void setRowClasses(String rowClasses) throws JspException {
-    this.rowClasses = UiUtil.parseMultiValuedAttribute((String)evaluate("rowClasses", rowClasses, String.class));
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Default styleclass of cells in this layout. This is multi-valued attribute."
-   */
-  public void setCellClasses(String cellClasses) throws JspException {
-    this.cellClasses = UiUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Width of the layout."
-   */
-  public void setWidth(String width) throws JspException {
-    this.width = (String)evaluate("width", width, String.class);
   }
 }

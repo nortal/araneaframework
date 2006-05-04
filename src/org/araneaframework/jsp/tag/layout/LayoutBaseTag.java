@@ -23,12 +23,13 @@ import javax.servlet.jsp.JspException;
 import org.apache.commons.collections.ResettableIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
 import org.araneaframework.jsp.tag.UiPresentationTag;
+import org.araneaframework.jsp.util.UiUtil;
 
 /**
  * Layout base tag.
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public abstract class LayoutBaseTag extends UiPresentationTag implements LayoutInterface {
+public abstract class LayoutBaseTag extends UiPresentationTag implements RowClassProvider, CellClassProvider {
   protected List rowClasses = new ArrayList(0);
   protected List cellClasses = new ArrayList(0);
   
@@ -40,7 +41,6 @@ public abstract class LayoutBaseTag extends UiPresentationTag implements LayoutI
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    addContextEntry(LayoutInterface.KEY, this);
     addContextEntry(RowClassProvider.KEY, this);
     addContextEntry(CellClassProvider.KEY, this);
 
@@ -59,6 +59,37 @@ public abstract class LayoutBaseTag extends UiPresentationTag implements LayoutI
     return cellIter.hasNext() ? (String)cellIter.next() : null;
   }
   
-  public abstract void setRowClasses(String rowClasses) throws JspException;
-  public abstract void setCellClasses(String cellClasses) throws JspException;
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Default style of rows in this layout. This is multi-valued attribute." 
+   */
+  public void setRowClasses(String rowClasses) throws JspException {
+    this.rowClasses = UiUtil.parseMultiValuedAttribute((String)evaluate("rowClasses", rowClasses, String.class));
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Default styleclass of cells in this layout. This is multi-valued attribute."
+   */
+  public void setCellClasses(String cellClasses) throws JspException {
+    this.cellClasses = UiUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Width of the layout."
+   */
+  public void setWidth(String width) throws JspException {
+    this.width = (String)evaluate("width", width, String.class);
+  }
 }
