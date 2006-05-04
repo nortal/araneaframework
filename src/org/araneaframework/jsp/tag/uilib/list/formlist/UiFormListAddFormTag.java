@@ -41,5 +41,9 @@ public class UiFormListAddFormTag extends UiFormTag {
 		
 		return super.doStartTag(out);
 	}
-	
+
+	public void doFinally() {
+		id = null;
+		super.doFinally();
+	}
 }

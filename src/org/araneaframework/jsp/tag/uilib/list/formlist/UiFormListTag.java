@@ -64,5 +64,10 @@ public class UiFormListTag extends UiWidgetTag {
 		addContextEntry(FORM_LIST_VIEW_MODEL_KEY_REQUEST, formListViewModel);		
 		
 		return EVAL_BODY_INCLUDE; 
-	}		
+	}
+	
+	public void doFinally() {
+		id = null;
+		super.doFinally();
+	}
 }
