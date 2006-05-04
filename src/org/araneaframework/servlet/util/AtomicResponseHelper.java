@@ -68,30 +68,12 @@ public class AtomicResponseHelper {
       super(arg0);
   
       resetStream();
-      resetWriter();
     }
     
 
     private void resetStream() {
       out = new AraneaServletOutputStream();
-    }
-    
-    /**
-     * Constructs a new writer with the current OutputStream and HttpServletResponse.
-     */
-    private void resetWriter() {
-      try {
-        if (getResponse().getCharacterEncoding() != null) { 
-          writerOut = new PrintWriter(new OutputStreamWriter(out, getResponse().getCharacterEncoding()));
-        }
-        else {
-          writerOut = new PrintWriter(new OutputStreamWriter(out));
-        }
-      }
-      catch (UnsupportedEncodingException e) {
-        throw new AraneaRuntimeException(e);
-      }
-    }
+    }    
     
     public ServletOutputStream getOutputStream() throws IOException {
       if (out == null)
@@ -103,6 +85,15 @@ public class AtomicResponseHelper {
     public PrintWriter getWriter() throws IOException {
       if (out == null)
         return getResponse().getWriter();
+      
+      if (writerOut == null) {
+        if (getResponse().getCharacterEncoding() != null) { 
+          writerOut = new PrintWriter(new OutputStreamWriter(out, getResponse().getCharacterEncoding()));
+        }
+        else {
+          writerOut = new PrintWriter(new OutputStreamWriter(out));
+        } 
+      }
       
       return writerOut;
     }
@@ -138,7 +129,7 @@ public class AtomicResponseHelper {
         throw new IllegalStateException("Cannot reset buffer - response is already committed");
       
       resetStream();
-      resetWriter();
+      writerOut = null;
       
       //XXX: this causes the session to be created on every request
       //Uncomment or remove when bug 105 solved.

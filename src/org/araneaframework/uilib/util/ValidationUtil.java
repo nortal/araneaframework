@@ -19,7 +19,9 @@ package org.araneaframework.uilib.util;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.mail.internet.AddressException;
@@ -107,14 +109,14 @@ public class ValidationUtil {
 	 * @param patterns (@link NumberFormat) formats.
 	 * @return parsed (@link Number) or null if parsing fails.
 	 */	
-	public static ParsedNumber parseNumber(String numberString, DecimalPattern[] patterns) {
+	public static ParsedNumber parseNumber(String numberString, Collection patterns) {
 		ParsedNumber result = null;
 		
 		// Remove all spaces
 		numberString = numberString.replaceAll(" ", "");
 		
-		for (int i = 0; i < patterns.length; i++) {
-			NumberFormat numberFormat = patterns[i].getNumberFormat();
+		for (Iterator i = patterns.iterator(); i.hasNext(); ) {
+			NumberFormat numberFormat =((DecimalPattern) i.next()).getNumberFormat();
 			ParsePosition pos = new ParsePosition(0);
 			
 			Number number = numberFormat.parse(numberString, pos);

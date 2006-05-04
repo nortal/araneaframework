@@ -73,6 +73,12 @@ public class UiStdFormFileUploadTag extends UiFormElementBaseTag {
     UiUtil.writeAttribute(out, "tabindex", tabindex);
     UiUtil.writeAttributes(out, attributes);
     UiUtil.writeCloseStartEndTag_SS(out);
+    
+    UiUtil.writeStartTag(out, "script");
+    out.write("document.getElementById('");
+    out.write(systemFormId);
+    out.write("').enctype='multipart/form-data';");
+    UiUtil.writeEndTag_SS(out, "script");
 
     super.doEndTag(out);
     return EVAL_PAGE;

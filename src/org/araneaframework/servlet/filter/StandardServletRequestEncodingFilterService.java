@@ -39,8 +39,8 @@ public class StandardServletRequestEncodingFilterService extends BaseFilterServi
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-	HttpServletRequest request = ((ServletInputData) input).getRequest();
-	request.setCharacterEncoding(requestEncoding);
-	childService._getService().action(path, input, output);
+  	HttpServletRequest request = ((ServletInputData) input).getRequest();
+  	request.setCharacterEncoding(requestEncoding);
+  	childService._getService().action(path, input, output);
   }
 }

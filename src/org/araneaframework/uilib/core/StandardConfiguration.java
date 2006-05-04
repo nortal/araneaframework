@@ -23,7 +23,7 @@ import org.araneaframework.uilib.ConfigurationContext;
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class DefaultConfiguration implements ConfigurationContext {
+public class StandardConfiguration implements ConfigurationContext {
   private Map confEntries = new HashMap();  
   
   public Object getEntry(String entryName) {
