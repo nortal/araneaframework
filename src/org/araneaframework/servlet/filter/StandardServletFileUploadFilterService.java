@@ -33,10 +33,10 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.servlet.ServletFileUploadInputExtension;
+import org.araneaframework.servlet.FileUploadInputExtension;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOverridableInputData;
-import org.araneaframework.servlet.core.StandardServletFileUploadInputExtension;
+import org.araneaframework.servlet.core.StandardFileUploadInputExtension;
 
 /**
  * This filter uses Commons FileUpload to parse the request and upload the <code>multipart/form-data</code> 
@@ -141,8 +141,8 @@ public class StandardServletFileUploadFilterService extends BaseFilterService {
           "' file items and '" + parameterLists.size() + "' request parameters");
       
       output.extend(
-          ServletFileUploadInputExtension.class, 
-          new StandardServletFileUploadInputExtension(fileItems));
+          FileUploadInputExtension.class, 
+          new StandardFileUploadInputExtension(fileItems));
       
       request = new MultipartWrapper(request, parameterLists);
       ((ServletOverridableInputData) input).setRequest(request);

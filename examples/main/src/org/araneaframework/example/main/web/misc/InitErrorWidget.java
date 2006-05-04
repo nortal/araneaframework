@@ -14,22 +14,21 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.web.error;
+package org.araneaframework.example.main.web.misc;
 
-import org.araneaframework.OutputData;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
 
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class RenderErrorWidget extends TemplateBaseWidget {
-  protected void render(OutputData output) throws Exception {
-    ServletUtil.include("/WEB-INF/jsp/error/InitErrorWidget/main.jsp", getEnvironment(), 
-        (ServletOutputData) output);
+public class InitErrorWidget extends TemplateBaseWidget {
+
+	public void init() throws Exception {
+		super.init();
     
-    throw new RuntimeException("Error on render()!");
-  }
+    setViewSelector("misc/initError");
+
+    throw new RuntimeException("Error on init()!");
+	}
 }

@@ -14,25 +14,25 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.servlet;
+package org.araneaframework.example.main.web.misc;
 
-import java.io.Serializable;
+import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.example.main.TemplateBaseWidget;
+
 
 /**
- * An extension to the response making rollbacking possible. If the stream
- * has not been commited, i can be rollbacked.
- * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public interface ServletAtomicResponseOutputExtension extends Serializable {
-  /**
-   * Commit the output, write everything in the buffer to the stream.
-   */
-  public void commit() throws Exception;
+public class EventErrorWidget extends TemplateBaseWidget {
+
+	public void init() throws Exception {
+		super.init();
+    
+    setViewSelector("misc/eventError");
+    addEventListener("error", new ProxyEventListener(this));
+	}
   
-  /**
-   * Rollback the body of the response, not the headers. The buffer must not
-   * been commited.
-   */
-  public void rollback() throws Exception;
+  public void handleEventError() {
+    throw new RuntimeException("Error on event()!");
+  }
 }

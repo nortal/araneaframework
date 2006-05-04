@@ -14,18 +14,22 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.servlet;
+package org.araneaframework.example.main.web.misc;
 
-import java.io.Serializable;
-import java.util.Map;
-import org.apache.commons.fileupload.FileItem;
+import org.araneaframework.OutputData;
+import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.servlet.util.ServletUtil;
+
 
 /**
- * Extension to {@link org.araneaframework.OutputData} that allows to access the uploaded files.
- * 
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public interface ServletFileUploadInputExtension extends Serializable {
-  public FileItem getUploadedFile(String fieldName);
-  public Map getUploadedFiles();
+public class RenderErrorWidget extends TemplateBaseWidget {
+  protected void render(OutputData output) throws Exception {
+    ServletUtil.include("/WEB-INF/jsp/error/InitErrorWidget/main.jsp", getEnvironment(), 
+        (ServletOutputData) output);
+    
+    throw new RuntimeException("Error on render()!");
+  }
 }

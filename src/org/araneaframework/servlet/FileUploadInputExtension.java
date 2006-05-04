@@ -14,32 +14,18 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.servlet.core;
+package org.araneaframework.servlet;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.io.Serializable;
 import java.util.Map;
 import org.apache.commons.fileupload.FileItem;
-import org.araneaframework.servlet.ServletFileUploadInputExtension;
 
 /**
- * A filter which parses a multipart request and extracts uploaded files.
+ * Extension to {@link org.araneaframework.OutputData} that allows to access the uploaded files.
  * 
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class StandardServletFileUploadInputExtension implements ServletFileUploadInputExtension {
-
-  private Map fileItems = new HashMap();
-
-  public StandardServletFileUploadInputExtension(Map fileItems) {
-    this.fileItems = fileItems;
-  }
-
-  public FileItem getUploadedFile(String fieldName) {
-    return (FileItem) fileItems.get(fieldName);
-  }
-
-  public Map getUploadedFiles() {
-    return Collections.unmodifiableMap(fileItems);
-  }
+public interface FileUploadInputExtension extends Serializable {
+  public FileItem getUploadedFile(String fieldName);
+  public Map getUploadedFiles();
 }
