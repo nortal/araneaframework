@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -33,21 +32,15 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Defines an HTML element content, meaning the body of the HTML element where text and other tags go."
  */
 public class UiElementContentTag extends UiBaseTag {
-  
-  //
-  // Implementation
-  //
-	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
-		
-		UiElementTag parent = (UiElementTag)readAttribute(UiElementTag.KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		parent.onContent();
-    
-		parent.writeAttributes(out);
-		UiUtil.writeCloseStartTag(out);
-		
-		// Continue
-	  return EVAL_BODY_INCLUDE;
-	}
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+
+    UiElementTag parent = (UiElementTag)requireContextEntry(UiElementTag.KEY_REQUEST);
+    parent.onContent();
+
+    parent.writeAttributes(out);
+    UiUtil.writeCloseStartTag(out);
+
+    return EVAL_BODY_INCLUDE;
+  }
 }

@@ -17,12 +17,8 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.OutputData;
-import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.framework.MessageContext;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.AndConstraint;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
@@ -32,19 +28,18 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.support.TextType;
 
-
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * @since {since}
  */
-public class FormComplexConstraintDemoWidget extends BaseWidget {
+public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
   private static final Logger log = Logger.getLogger(FormComplexConstraintDemoWidget.class);
   private FormWidget searchForm;
   
   protected void init() throws Exception {
     super.init();
-	
-	  addGlobalEventListener(new ProxyEventListener(this));
+	  
+	setViewSelector("sample/searchForm");
 	
     searchForm = new FormWidget();
 
@@ -85,7 +80,7 @@ public class FormComplexConstraintDemoWidget extends BaseWidget {
     searchConstraint.addConstraint(clientAddressConstraint);
     
     //Setting custom error message
-    searchConstraint.setCustomErrorMessage(t("searchform.notenoughdata"));
+    searchConstraint.setCustomErrorMessage("Not enough data! Please fill in either client first and lastname or client personal id or client town, street and number");
     
     //Setting constraint
     searchForm.setConstraint(searchConstraint);
@@ -104,9 +99,4 @@ public class FormComplexConstraintDemoWidget extends BaseWidget {
 	  log.debug("Event 'return' received!");
 	  getFlowCtx().cancel();
   }	
-  
-  protected void render(OutputData output) throws Exception {
-	  log.debug(getClass().getName() + " render called");
-	  ServletUtil.include("/WEB-INF/jsp/sample/searchForm/component.jsp", getEnvironment(), (ServletOutputData) output);
-  }  
 }
