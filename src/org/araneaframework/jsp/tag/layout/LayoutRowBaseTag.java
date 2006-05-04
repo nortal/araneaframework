@@ -25,7 +25,7 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  * Layout row base tag.
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public abstract class LayoutRowBaseTag extends UiPresentationTag {
+public abstract class LayoutRowBaseTag extends UiPresentationTag implements LayoutRowInterface {
   protected List cellClasses;
 
   protected int doStartTag(Writer out) throws Exception {

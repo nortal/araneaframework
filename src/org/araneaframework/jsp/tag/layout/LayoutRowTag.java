@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.collections.ResettableIterator;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -63,6 +64,8 @@ public class LayoutRowTag extends LayoutRowBaseTag implements LayoutRowInterface
   
   protected String getStyleClass() throws JspException {
     Iterator it = ((Iterator)requireContextEntry(LayoutInterface.ROWCLASS_KEY));
+    ResettableIterator cellIt = ((ResettableIterator)requireContextEntry(LayoutInterface.CELLCLASS_KEY));
+    cellIt.reset();
     String result = it.hasNext() ? (String)it.next() : null;
     if (styleClass != null)
       return super.getStyleClass();
