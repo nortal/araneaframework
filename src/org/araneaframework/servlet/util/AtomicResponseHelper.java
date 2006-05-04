@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.servlet.ServletAtomicResponseOutputExtension;
 import org.araneaframework.servlet.ServletOverridableOutputData;
 
 /**
@@ -47,31 +46,17 @@ public class AtomicResponseHelper {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private AtomicResponse atomicResponse;
+  private ResponseWrapper atomicWrapper;
+  
+  public AtomicResponseHelper(ServletOverridableOutputData outputData) {
+    atomicWrapper = new ResponseWrapper(outputData.getResponse());
+    outputData.setResponse(atomicWrapper);
+  }
+  
   
   //*******************************************************************
   // PRIVATE CLASSES
   //*******************************************************************
-  private static class AtomicResponse implements ServletAtomicResponseOutputExtension {
-    private ResponseWrapper res;
-    
-    public AtomicResponse(ResponseWrapper res) {
-      this.res = res;
-    }
-
-    public void commit() throws Exception {
-      log.debug("Committing response stream.");
-      
-      res.commit();
-    }
-
-    public void rollback() throws Exception {
-      log.debug("Rolling back response stream.");
-      
-      res.reset();
-    }
-  }
-
   /**
    * Wraps a HttpServletResponse to make it possible of resetting and commiting it.
    */
@@ -84,6 +69,7 @@ public class AtomicResponseHelper {
       super(arg0);
   
       resetStream();
+      resetWriter();
     }
     
 
@@ -94,12 +80,17 @@ public class AtomicResponseHelper {
     /**
      * Constructs a new writer with the current OutputStream and HttpServletResponse.
      */
-    private void resetWriter() throws UnsupportedEncodingException {
-      if (getResponse().getCharacterEncoding() != null) { 
-        writerOut = new PrintWriter(new OutputStreamWriter(out, getResponse().getCharacterEncoding()));
+    private void resetWriter() {
+      try {
+        if (getResponse().getCharacterEncoding() != null) { 
+          writerOut = new PrintWriter(new OutputStreamWriter(out, getResponse().getCharacterEncoding()));
+        }
+        else {
+          writerOut = new PrintWriter(new OutputStreamWriter(out));
+        }
       }
-      else {
-        writerOut = new PrintWriter(new OutputStreamWriter(out));
+      catch (UnsupportedEncodingException e) {
+        throw new AraneaRuntimeException(e);
       }
     }
     
@@ -146,16 +137,21 @@ public class AtomicResponseHelper {
      * If the output has not been commited yet, clears the content of the underlying
      * buffer in the response without clearing headers or status code.
      */
-    public void reset() {
+    public void rollback() {
       if (committed)
         throw new IllegalStateException("Cannot reset buffer - response is already committed");
+      
       resetStream();
-      try {
-        resetWriter();
-      }
-      catch (UnsupportedEncodingException e) {
-        throw new AraneaRuntimeException(e);
-      }
+      resetWriter();
+      
+      //XXX: this causes the session to be created on every request
+      //Uncomment or remove when bug 105 solved.
+      /*if (!isCommitted())
+        reset();*/
+    }    
+    
+    public byte[] getData() throws Exception {
+  	  return ((AraneaServletOutputStream) out).getData();
     }
   }
   
@@ -179,25 +175,23 @@ public class AtomicResponseHelper {
       out.flush();
     }
         
-    private byte[] getData() {
+    public byte[] getData() {
       return out.toByteArray();
     }
   }
   //*******************************************************************
   // PUBLIC METHODS
   //*******************************************************************  
-  public void wrapOutput(ServletOverridableOutputData outputData) {
-    ResponseWrapper newRes = new ResponseWrapper(outputData.getResponse());
-    
-    atomicResponse = new AtomicResponse(newRes);
-    outputData.setResponse(newRes);
-  }
   
   public void commit() throws Exception {
-    atomicResponse.commit();
+    atomicWrapper.commit();
   }
   
   public void rollback() throws Exception {
-    atomicResponse.rollback();
+    atomicWrapper.rollback();
+  }
+  
+  public byte[] getData() throws Exception {
+	return atomicWrapper.getData();
   }
 }

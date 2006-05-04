@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.presentation;
 
@@ -40,74 +40,69 @@ import org.araneaframework.jsp.util.UiUtil;
  */
 
 public class UiStdMessagesTag extends UiPresentationTag {
-	protected String type;
-	
-	protected void init() {
-		super.init();
-		styleClass = "aranea-messages";
-	}
-	
-	public String getType() {
-		return type;
-	}
-	
-	/**
-	 * @jsp.attribute
-	 * type = "java.lang.String"
-	 * required = "false"
-	 * description = "Type of messages to show."
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
-	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
-		
-		OutputData output = (OutputData) UiUtil.readAttribute(pageContext, UiAraneaRootTag.OUTPUT_DATA_KEY, PageContext.REQUEST_SCOPE);
-		Map messageMap = (Map) output.getAttribute(StandardMessagingFilterWidget.MESSAGE_KEY);
-		
-		List entries = new ArrayList();
-		for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry entry = (Map.Entry) i.next();
-			if (type == null || ((String)entry.getKey()).equals(type)) {
-				entries.add(entry);
-			}
-		}
-		
-		if (entries.size() == 0)
-			return EVAL_PAGE;
-		
-		/** matching messages, write them out */
-		UiUtil.writeOpenStartTag(out, "div");
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		UiUtil.writeCloseStartTag(out);
-		
-		UiUtil.writeStartTag(out, "div");
-		UiUtil.writeStartTag(out, "div");
-		UiUtil.writeStartTag(out, "div");
-		
-		for (Iterator i = entries.iterator(); i.hasNext(); ) {
-			List messages = (List) ((Map.Entry) i.next()).getValue();
-			
-			for (Iterator j = messages.iterator(); j.hasNext();) {
-				out.write(j.next().toString());
-				if (j.hasNext())
-					UiUtil.writeStartEndTag(out, "br");
-			}
-			if (i.hasNext())
-				UiUtil.writeStartEndTag(out, "br");;
-		}
+  protected String type;
 
-		UiUtil.writeEndTag(out, "div");
-		UiUtil.writeEndTag(out, "div");
-		UiUtil.writeEndTag(out, "div");
-		UiUtil.writeEndTag(out, "div");
-		
-		return EVAL_PAGE;
-	}
-	
-	protected int after(Writer out) throws Exception {
-		return super.after(out);
-	}
+  public UiStdMessagesTag() {
+    styleClass = "aranea-messages";
+  }
+
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+
+    OutputData output = (OutputData) UiUtil.requireContextEntry(pageContext, UiAraneaRootTag.OUTPUT_DATA_KEY, PageContext.REQUEST_SCOPE);
+    Map messageMap = (Map) output.getAttribute(StandardMessagingFilterWidget.MESSAGE_KEY);
+
+    List entries = new ArrayList();
+    for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      if (type == null || ((String)entry.getKey()).equals(type)) {
+        entries.add(entry);
+      }
+    }
+
+    if (entries.size() == 0)
+      return EVAL_PAGE;
+
+    /* matching messages, write them out */
+    UiUtil.writeOpenStartTag(out, "div");
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeCloseStartTag(out);
+
+    UiUtil.writeStartTag(out, "div");
+    UiUtil.writeStartTag(out, "div");
+    UiUtil.writeStartTag(out, "div");
+
+    for (Iterator i = entries.iterator(); i.hasNext(); ) {
+      List messages = (List) ((Map.Entry) i.next()).getValue();
+
+      for (Iterator j = messages.iterator(); j.hasNext();) {
+        out.write(j.next().toString());
+        if (j.hasNext())
+          UiUtil.writeStartEndTag(out, "br");
+      }
+      if (i.hasNext())
+        UiUtil.writeStartEndTag(out, "br");;
+    }
+
+    UiUtil.writeEndTag(out, "div");
+    UiUtil.writeEndTag(out, "div");
+    UiUtil.writeEndTag(out, "div");
+    UiUtil.writeEndTag(out, "div");
+
+    return EVAL_PAGE;
+  }
+
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+
+  /**
+   * @jsp.attribute
+   * type = "java.lang.String"
+   * required = "false"
+   * description = "Type of messages to show."
+   */
+  public void setType(String type) {
+    this.type = type;
+  }
 }
