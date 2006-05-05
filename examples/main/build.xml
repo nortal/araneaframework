@@ -5,8 +5,8 @@
 	
 	<!--Set the classpath-->
 	<path id="classpath">
-		<fileset dir="../../lib" includes="**/*.jar"/>
-		<fileset dir="../.." includes="build/aranea.jar"/>
+		<fileset dir="../../lib" includes="**/*.jar" />
+		<fileset dir="../.." includes="dist/aranea.jar"/>
 		<fileset dir="../.." includes="template/dist/aranea-template.jar"/>
 	</path>
 	
@@ -24,8 +24,9 @@
 	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
-		<delete dir="war/WEB-INF/classes" failonerror="false"/>
-		<delete dir="war/WEB-INF/lib" failonerror="false"/>		
+        <delete dir="war/WEB-INF/classes" failonerror="false"/>
+        <delete dir="war/WEB-INF/lib" failonerror="false"/>		
+        <delete dir="tmp" failonerror="false"/>
 	</target>
 	
 	<!-- Initialize the build system -->
@@ -66,7 +67,7 @@
 				<exclude name="j2ee.jar" />
 				<exclude name="jetty/*jar" />				
 			</fileset>
-			<fileset file="../../build/aranea.jar"/>
+			<fileset file="../../dist/aranea.jar"/>
 			<fileset file="../../template/dist/aranea-template.jar"/>					
 		</copy>
 		<copy todir="war/WEB-INF/classes">
@@ -92,6 +93,7 @@
 
 	<!-- Starts standalone server -->
 	<target name="run-app-only" description="Run in standalone container">
+		<mkdir dir="tmp/jsp" /> 
 		<java classname="org.mortbay.jetty.Server" dir="war" fork="yes">
 			<arg value="../jetty.xml"/>
 			<classpath>
@@ -112,7 +114,7 @@
 		
 		<java classname="org.hsqldb.Server" dir="data" fork="yes">
 			<classpath>
-				<pathelement location="../../lib/hsqldb.jar" />
+				<pathelement location="../../lib/hsqldb/hsqldb.jar" />
 			</classpath>
 			<arg line="-database.0 'templateapp' -dbname.0 'templateapp'" /> 
 		</java>
@@ -122,9 +124,9 @@
 	<target name="run-database-manager" description="Run database manager">
 		<java classname="org.hsqldb.util.DatabaseManagerSwing" dir="data" fork="yes">
 			<classpath>
-				<pathelement location="../lib/hsqldb.jar" />
+				<pathelement location="../../lib/hsqldb/hsqldb.jar" />
 			</classpath>
-			<arg line="--user sa --url ${db.url}" />
+      <arg line="--user sa --url jdbc:hsqldb:hsql://localhost/templateapp" />
 		</java>				
 	</target>
 </project>
