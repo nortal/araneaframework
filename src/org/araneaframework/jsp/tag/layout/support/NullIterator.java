@@ -12,24 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
-package org.araneaframework.jsp.tag.layout;
+package org.araneaframework.jsp.tag.layout.support;
 
-import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.tag.UiStyledTagInterface;
-
+import org.apache.commons.collections.ResettableIterator;
 
 /**
- * UI layout cell interface.
- * 
- * @author Oleg Mürk
+ * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public interface UiLayoutCellTagInterface extends UiStyledTagInterface {
-	public void setWidth(String width) throws JspException;	
-	public void setHeight(String height) throws JspException;
-	public void setStyleClass(String styleClass) throws JspException;
-		
-	public void setColSpan(String colSpan) throws JspException;
-	public void setRowSpan(String rowSpan) throws JspException; 
+public class NullIterator implements ResettableIterator {
+	public void reset() {}
+
+	public void remove() {}
+
+	public boolean hasNext() {
+		return false;
+	}
+
+	public Object next() {
+		return null;
+	}
 }

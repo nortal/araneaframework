@@ -34,8 +34,8 @@ import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
  *   description = "Initializes the widget context."
  */
 public class UiWidgetContextTag extends UiBaseTag {
-  public final static String WIDGET_CONTEXT_ID_KEY_REQUEST = "contextWidgetId";
-  public final static String WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST = "contextWidget";
+  public final static String WIDGET_CONTEXT_ID_KEY = "contextWidgetId";
+  public final static String WIDGET_CONTEXT_VIEW_MODEL_KEY = "contextWidget";
  
   private Custom.CustomWidget widget;
   private Custom.WidgetViewModel viewModel;
@@ -80,8 +80,8 @@ public class UiWidgetContextTag extends UiBaseTag {
     viewModel = (Custom.WidgetViewModel) widget._getViewable().getViewModel();
     fullId = UiWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
 
-    addContextEntry(WIDGET_CONTEXT_ID_KEY_REQUEST, fullId);
-    addContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST, viewModel);
+    addContextEntry(WIDGET_CONTEXT_ID_KEY, fullId);
+    addContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY, viewModel);
 
     return EVAL_BODY_INCLUDE;
   }

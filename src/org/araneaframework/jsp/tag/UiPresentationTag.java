@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 
 /**
@@ -35,15 +36,22 @@ public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInter
 	
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		addContextEntry(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, this);
+		addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY, this);
 		return EVAL_BODY_INCLUDE;
+	}
+	
+	public void setPageContext(PageContext pageContext) {
+		super.setPageContext(pageContext);
 	}
 
 	/**
 	 * Callback: add attribute.
 	 */
 	public void addAttribute(String name, String value) throws JspException {
-		attributes.put(name, evaluate("value", value, Object.class));
+		if (value == null)
+			attributes.remove(name);
+		else
+			attributes.put(name, evaluate("value", value, Object.class));
 	}
 
 	// Styles 
@@ -61,7 +69,7 @@ public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInter
 	/**
 	 * Callback: get default css class for tag or <code>null</code>.
 	 */
-	protected String getStyleClass()  {
+	protected String getStyleClass() throws JspException  {
 		StringBuffer result = new StringBuffer();
 		if (baseStyleClass != null) {
 			result.append(baseStyleClass);

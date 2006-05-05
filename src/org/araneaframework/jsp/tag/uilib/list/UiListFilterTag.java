@@ -43,7 +43,7 @@ public class UiListFilterTag extends UiBaseTag {
 		super.doStartTag(out);
 
     // Get list data
-    String listId = (String)requireContextEntry(UiListTag.LIST_ID_KEY_REQUEST);    
+    String listId = (String)requireContextEntry(UiListTag.LIST_ID_KEY);    
     
     // Include form tag
     formTag = new UiFormTag();

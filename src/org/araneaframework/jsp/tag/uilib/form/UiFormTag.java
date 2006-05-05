@@ -38,10 +38,10 @@ import org.araneaframework.uilib.form.FormWidget;
            </ul> "
  */
 public class UiFormTag extends UiWidgetTag {
-	public final static String FORM_SCOPED_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.SCOPED_FULL_ID";
-	public final static String FORM_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FULL_ID";
-	public final static String FORM_VIEW_MODEL_KEY_REQUEST = "form";
-	public final static String FORM_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FORM";
+	public final static String FORM_SCOPED_FULL_ID_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.SCOPED_FULL_ID";
+	public final static String FORM_FULL_ID_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FULL_ID";
+	public final static String FORM_VIEW_MODEL_KEY = "form";
+	public final static String FORM_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FORM";
 	
 	protected FormWidget.ViewModel formViewModel;
 
@@ -56,10 +56,10 @@ public class UiFormTag extends UiWidgetTag {
 		}
 
 		// Set variables
-		addContextEntry(FORM_SCOPED_FULL_ID_KEY_REQUEST, scopedFullId);
-		addContextEntry(FORM_FULL_ID_KEY_REQUEST, fullId);
-		addContextEntry(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel);
-		addContextEntry(FORM_KEY_REQUEST, widget);
+		addContextEntry(FORM_SCOPED_FULL_ID_KEY, scopedFullId);
+		addContextEntry(FORM_FULL_ID_KEY, fullId);
+		addContextEntry(FORM_VIEW_MODEL_KEY, formViewModel);
+		addContextEntry(FORM_KEY, widget);
    
 		writeJavascript(out);
 	

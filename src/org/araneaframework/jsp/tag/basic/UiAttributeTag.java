@@ -67,7 +67,7 @@ public class UiAttributeTag extends UiBaseTag {
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-		UiAttributedTagInterface attributedTag = (UiAttributedTagInterface)requireContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST);
+		UiAttributedTagInterface attributedTag = (UiAttributedTagInterface)requireContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY);
 		attributedTag.addAttribute(name, value);
 		
 		// Continue

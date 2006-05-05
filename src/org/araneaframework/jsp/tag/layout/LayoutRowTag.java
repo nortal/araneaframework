@@ -14,43 +14,41 @@
  * limitations under the License.
  **/
 
-package org.araneaframework.template.tags.example.component;
+package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
- *
+ * Aranea's row tag, represents one row in a layout.
+ * In HTML this tag corresponds to table row -- &lt;tr&gt; with <code>class</code> attribute.
+ * 
  * @jsp.tag
- *   name = "componentName"
+ *   name = "row"
  *   body-content = "JSP"
+ *   description = "Represents a row in layout."
+ *
+ * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class ComponentNameTag extends UiPresentationTag {
-  public final static String COMPONENT_HEADER_KEY= "example.component.header.key";
-  public final static String DEFAULT_HEADER_NAME_STYLE = "name";
-
-  public ComponentNameTag() {
-    styleClass = ComponentNameTag.DEFAULT_HEADER_NAME_STYLE;
-  }
-  
+public class LayoutRowTag extends LayoutRowBaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    // make sure we are inside component header and fail if no header is present.
-    // not strictly necessary, mainly for demonstration of attribute usage.
-    requireContextEntry(ComponentHeaderTag.COMPONENT_HEADER_KEY);
-
-    UiUtil.writeOpenStartTag(out, "div");
-    UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeOpenStartTag(out, "tr");
+    writeRowAttributes(out);
     UiUtil.writeCloseStartTag(out);
 
     return EVAL_BODY_INCLUDE;
   }
 
+  /** Overwrite if other attributes besides <code>styleclass</code> are needed for HTML table row. */
+  protected void writeRowAttributes(Writer out) throws Exception {
+    addAttribute("class",  getStyleClass());
+    UiUtil.writeAttributes(out, attributes);
+  }
+
   protected int doEndTag(Writer out) throws Exception {
-    UiUtil.writeEndTag(out, "div");
+    UiUtil.writeEndTag(out, "tr");
     return super.doEndTag(out);
   }
 }

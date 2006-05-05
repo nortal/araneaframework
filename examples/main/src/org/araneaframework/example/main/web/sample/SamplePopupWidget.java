@@ -31,7 +31,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 	public void handleEventCreateThread() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
 		
-		ExampleMenuMessage message = new ExampleMenuMessage("Samples.Simple_Form");
+		ExampleMenuMessage message = new ExampleMenuMessage("Demos.#Simple.Simple_Form");
 		
 		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
 		popupCtx.open("prefix", new PopupWindowProperties(), message);

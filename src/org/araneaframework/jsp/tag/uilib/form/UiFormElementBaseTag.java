@@ -40,7 +40,7 @@ import org.araneaframework.uilib.form.FormWidget;
  * @author Oleg Mürk
  */
 public class UiFormElementBaseTag extends UiPresentationTag implements UiFormElementTagInterface {
-	public final static String COUNTER_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormElementBaseTag.COUNTER";
+	public final static String COUNTER_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormElementBaseTag.COUNTER";
 
 	protected String contextWidgetId;
 	protected String systemFormId;
@@ -84,19 +84,19 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		contextWidgetId = UiWidgetUtil.getContextWidgetFullId(pageContext);	
 
 		// Get system form id 
-		systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
+		systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY);
 
 		// Get form data		
-		formScopedFullId = (String)requireContextEntry(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST);
-		formFullId = (String)requireContextEntry(UiFormTag.FORM_FULL_ID_KEY_REQUEST);
-		formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
-		FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
+		formScopedFullId = (String)requireContextEntry(UiFormTag.FORM_SCOPED_FULL_ID_KEY);
+		formFullId = (String)requireContextEntry(UiFormTag.FORM_FULL_ID_KEY);
+		formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY);
+		FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY);
 
 		//In case the tag is in formElement tag
 
 		derivedId = id;
-		if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
-			derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
+		if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY) != null) 
+			derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY);
 		if (derivedId == null) throw new UiMissingIdException(this);   
 		
 		formElementViewModel = 
@@ -257,7 +257,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		// This code actually prevents using validation for non-simple form elements
 		// (this may be important because simpleLabel calls this method)
 		FormWidget form = 
-			(FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+			(FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY);
 		FormElement.ViewModel formElementViewModel = 
 			(FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, elementId)._getViewable().getViewModel();
 		boolean isValid = formElementViewModel.isValid();
@@ -303,12 +303,12 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	 * @return
 	 */
 	public static Long generateId(PageContext pageContext){
-		Long counter = (Long)pageContext.getAttribute(COUNTER_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		Long counter = (Long)pageContext.getAttribute(COUNTER_KEY, PageContext.REQUEST_SCOPE);
 		if (counter == null)
 			counter = new Long(0);
 		else
 			counter = new Long(counter.longValue() + 1);
-		pageContext.setAttribute(COUNTER_KEY_REQUEST, counter, PageContext.REQUEST_SCOPE);
+		pageContext.setAttribute(COUNTER_KEY, counter, PageContext.REQUEST_SCOPE);
 		return counter;
 	}
 

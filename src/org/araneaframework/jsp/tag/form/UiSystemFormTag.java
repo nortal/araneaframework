@@ -30,15 +30,16 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Oleg Mürk
  */
 public abstract class UiSystemFormTag extends UiBaseTag {
-  public final static String COUNTER_KEY_REQUEST = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.FORM_COUNTER";  
-  public final static String ID_KEY_REQUEST = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.ID";
+  public final static String COUNTER_KEY = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.FORM_COUNTER";  
+  public final static String ID_KEY = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.ID";
 
   public final static String GET_METHOD = "GET";
   public final static String POST_METHOD = "POST";
 
   public final static String SYSTEM_FORM_ID_KEY = "systemFormId";
 
-  protected String id = null;
+  private String id = null;
+  protected String derivedId = null;
   protected String method = null;
   protected String enctype = null;
 
@@ -46,19 +47,19 @@ public abstract class UiSystemFormTag extends UiBaseTag {
     super.doStartTag(out);
 
     // Error check
-    if (getContextEntry(ID_KEY_REQUEST) != null)
+    if (getContextEntry(ID_KEY) != null)
       throw new UiException("System forms cannot be nested");                    
 
     // Compute new id for systemForm.
-    id = id == null ? UiSystemFormTag.generateId(pageContext) : id;
+    derivedId = id == null ? UiSystemFormTag.generateId(pageContext) : id;
 
-    addContextEntry(ID_KEY_REQUEST, id);
-    addContextEntry(SYSTEM_FORM_ID_KEY, id);    
+    addContextEntry(ID_KEY, derivedId);
+    addContextEntry(SYSTEM_FORM_ID_KEY, derivedId);    
 
     // Write form 
     UiUtil.writeOpenStartTag(out, "form");
-    UiUtil.writeAttribute(out, "id", id);
-    UiUtil.writeAttribute(out, "name", id);    
+    UiUtil.writeAttribute(out, "id", derivedId);
+    UiUtil.writeAttribute(out, "name", derivedId);    
     UiUtil.writeAttribute(out, "method", method);
     UiUtil.writeAttribute(out, "enctype", enctype);
     UiUtil.writeAttribute(out, "accept-charset", getAcceptCharset());
@@ -74,7 +75,7 @@ public abstract class UiSystemFormTag extends UiBaseTag {
     UiUtil.writeAttribute(out, "type", "text/javascript");
     UiUtil.writeCloseStartTag(out);
     out.write("uiSystemFormContext(");
-    UiUtil.writeScriptString(out, id);
+    UiUtil.writeScriptString(out, derivedId);
     out.write(");\n");
     UiUtil.writeEndTag(out, "script");
 
@@ -91,12 +92,12 @@ public abstract class UiSystemFormTag extends UiBaseTag {
   }
 
   public static String generateId(PageContext pageContext){
-    Long counter = (Long)pageContext.getAttribute(COUNTER_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+    Long counter = (Long)pageContext.getAttribute(COUNTER_KEY, PageContext.REQUEST_SCOPE);
     if (counter == null)
       counter = new Long(0);
     else
       counter = new Long(counter.longValue() + 1);
-    pageContext.setAttribute(COUNTER_KEY_REQUEST, counter, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute(COUNTER_KEY, counter, PageContext.REQUEST_SCOPE);
     return "system_form_" + counter;
   }
 

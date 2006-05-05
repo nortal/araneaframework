@@ -12,29 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.layout;
 
+import javax.servlet.jsp.JspException;
+
 /**
- * ETEA list layout tag.
- * 
- * @author Oleg Mürk
+ * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class UiStdListLayoutTag extends UiStdLayoutBaseTag {
-	//
-	// Implementation
-	//
-	
-	protected String getTableCssClass()  {
-		return getStyleClass();
-	}
-	
-	protected String getRowCssClass() {
-		return getRowClass();
-	}
-	
-	protected String getCellCssClass() {
-		return getCellClass();
-	}
+public interface RowClassProvider {
+  public static final String KEY = "org.araneaframework.jsp.tag.layout.RowClassProvider.KEY";
+  
+  public String getRowClass() throws JspException;
 }
