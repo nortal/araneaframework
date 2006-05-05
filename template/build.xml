@@ -16,18 +16,14 @@
 	
 	<property name="build.dir" value="${module.basedir}/build" />
 	<property name="build.tmp.dir" value="${build.dir}/tmp" />
-	<property name="build.web.dir" value="${build.dir}/web" />
 	
-	<property name="build.webinf.dir" value="${build.web.dir}/WEB-INF" />
-	<property name="build.classes.dir" value="${build.webinf.dir}/classes" />
-	<property name="build.lib.dir" value="${build.webinf.dir}/lib" />
+	<property name="build.classes.dir" value="${build.dir}/classes" />
 	<property name="build.jar.filename" value="aranea-template.jar" />
 
 	<property name="src.dir" value="src" />
 	<property name="presentation.src.dir" value="../presentation/src" />
 	
 	<property name="web.dir" value="web" />
-	<property name="web.jsp.dir" value="${module.basedir}/web/jsp" />
 	
 	<!-- HSQLDB -->
 	<property name="db.file" value="templateapp" />
@@ -43,7 +39,7 @@
 			<include name="**/*.jar" />
 		</fileset>
 		<fileset dir="..">
-			<include name="build/**/*.jar" />
+			<include name="dist/**/*.jar" />
 		</fileset>
 	</path>
 
@@ -54,8 +50,6 @@
 	/> 
 	<!-- Initializes defaults -->
 	<target name="init">
-		<mkdir dir="${build.web.dir}" />		
-		<mkdir dir="${build.tmp.dir}" />
 	</target>
 
 	<!-- Compile Java -->
@@ -77,22 +71,11 @@
 		<!--
 			Build the aranea-template.jar
 		-->
-		<jar jarfile="dist/${build.jar.filename}" compress="on">
-			<fileset dir="${web.dir}">
-				<include name="js/**/*js"/>
-				<include name="js/**/*css"/>
-				<include name="styles/**/*css"/>
-				<include name="gfx/**/*" />				
-				<include name="*.properties" />				
-			</fileset>
+		<jar jarfile="dist/${build.jar.filename}" compress="true">
+			<fileset dir="${web.dir}"/>
 			<fileset dir="build/tld" includes="**/*.tld"/>
 			<fileset dir="${build.classes.dir}" includes="**/*.class"/>
 		</jar>
-		
-		<!--
-			Copy the aranea-template.jar to web application
-		-->
-		<copy file="dist/${build.jar.filename}" todir="${build.lib.dir}" />	
 	</target>
 	
 	<!-- Clean project -->
@@ -102,8 +85,9 @@
 	</target>
 
 	<target name="tld-check">
-		<uptodate property="tld-check.uptodate" targetfile="${build.classes.dir}/aranea-template.tld">						
-			<srcfiles dir="src/org/araneaframework/template/web/tags"/>
+		<uptodate property="tld-check.uptodate" targetfile="build/tld/META-INF/aranea-template.tld">						
+			<srcfiles dir="src/org/araneaframework/template/tags"/>
+      <srcfiles dir="../src/org/araneaframework/jsp"/>  
 		</uptodate>
 	</target>
 	

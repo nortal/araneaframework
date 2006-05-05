@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form;
 
@@ -29,7 +29,12 @@ import javax.servlet.jsp.JspException;
  *   body-content = "empty"
  *   description = "Equivalent of formKeyboardHandler, but key="escape" and event="onclick" by default."
  */
-public final class UiFormEscapeKeyboardHandlerTag extends UiFormKeyboardHandlerTag{
+public final class UiFormEscapeKeyboardHandlerTag extends UiFormKeyboardHandlerTag {
+
+	public UiFormEscapeKeyboardHandlerTag() {
+		key = "escape";
+		event = "onclick";
+	}
 
 	/**
 	 * Throw an exception on attempt to set key. This tag supports "escape" only!
@@ -37,20 +42,11 @@ public final class UiFormEscapeKeyboardHandlerTag extends UiFormKeyboardHandlerT
 	public void setKey(String key) throws JspException {
 		throw new JspException("You may not set key for the escape handler tag!");
 	}
-	
+
 	/**
 	 * @see #setKey
 	 */
 	public void setKeyCode(String keyCode) throws JspException {
 		throw new JspException("You may not set keyCode for the escape handler tag!");
 	}
-  
-	
-
-  protected void init() {
-  	super.init();
-    key = "escape";
-    event = "onclick";
-  }
-  
 }
