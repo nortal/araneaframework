@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import junit.framework.TestCase;
-import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
@@ -45,7 +45,7 @@ public class FormControlTest extends TestCase {
 
     MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
     MultiSelectControl ms = new MultiSelectControl();
-    ms._getComponent().init(new MockEnviroment());
+    ms._getComponent().init(new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(ms, "myMultiSelect", emptyRequest);    
     ms.convertAndValidate();
 
@@ -65,7 +65,7 @@ public class FormControlTest extends TestCase {
     emptyRequest.addParameter("myTextBox", "");
 
     TextControl tb = new TextControl();   
-    tb._getComponent().init(new MockEnviroment());
+    tb._getComponent().init(new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(tb, "myTextBox", emptyRequest);
     tb.convertAndValidate();
 
@@ -86,7 +86,7 @@ public class FormControlTest extends TestCase {
     valueRequest.addParameter("myTextBox", DEV_NULL);
 
     TextControl tb = new TextControl();
-    tb._getComponent().init(new MockEnviroment());
+    tb._getComponent().init(new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(tb, "myTextBox", valueRequest);
     StringArrayRequestControl.ViewModel vm = (StringArrayRequestControl.ViewModel) tb._getViewable().getViewModel();
     
@@ -107,7 +107,7 @@ public class FormControlTest extends TestCase {
     correctValueRequest.addParameter("myNumberInput", "108");
     
     NumberControl nc = new NumberControl();
-    nc._getComponent().init(new MockEnviroment());
+    nc._getComponent().init(new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(nc, "myNumberInput", correctValueRequest);
     nc.convertAndValidate();
     
@@ -135,7 +135,7 @@ public class FormControlTest extends TestCase {
     correctValueRequest.addParameter("myNumberInput", "50");
     
     NumberControl nc = new NumberControl();
-    nc._getComponent().init(new MockEnviroment());
+    nc._getComponent().init(new MockEnvironment());
     
     nc.setMinValue(new BigInteger("25"));
     nc.setMaxValue(new BigInteger("75"));
@@ -173,7 +173,7 @@ public class FormControlTest extends TestCase {
     correctValueRequest.addParameter("myFloatInput", "28.012");
     
     FloatControl nc = new FloatControl();
-    nc._getComponent().init(new MockEnviroment());
+    nc._getComponent().init(new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(nc, "myFloatInput", correctValueRequest);
     nc.convertAndValidate();
     
@@ -201,7 +201,7 @@ public class FormControlTest extends TestCase {
     correctValueRequest.addParameter("myFloatInput", "50.0018");
     
     FloatControl nc = new FloatControl();
-    nc._getComponent().init(new MockEnviroment());
+    nc._getComponent().init(new MockEnvironment());
     
     nc.setMinValue(new BigDecimal("25.001"));
     nc.setMaxValue(new BigDecimal("75.002"));
@@ -230,34 +230,6 @@ public class FormControlTest extends TestCase {
   }
   
   /**
-   * Tests that {@link TextControl} with content type set to personal id
-   * lets only valid Estonian personal ids through. 
-   */
-  public void testPersonalIdControlSimpleValidation() throws Exception {
-    MockHttpServletRequest correctValueRequest = new MockHttpServletRequest();
-    correctValueRequest.addParameter("myPersonalIdInput", "38304280235");
-    
-    TextControl pic = new TextControl(TextType.EST_PERSONAL_ID);
-    pic._getComponent().init(new MockEnviroment());
-    MockUiLibUtil.emulateHandleRequest(pic, "myPersonalIdInput", correctValueRequest);
-    pic.convertAndValidate();
-    
-    assertTrue("Personal id control must be valid.", pic.isValid());
-    assertTrue("Personal id control value must be a 'String'.", pic.getRawValue() instanceof String);
-    assertTrue("Personal id control value must be '38304280235'.", ((String) pic.getRawValue()).equals("38304280235"));
-     
-    MockHttpServletRequest incorrectValueRequest = new MockHttpServletRequest();
-    incorrectValueRequest.addParameter("myPersonalIdInput", "abcd");
-    
-    MockUiLibUtil.emulateHandleRequest(pic, "myPersonalIdInput", incorrectValueRequest);
-    pic.convertAndValidate();    
-    
-    assertTrue("Personal id control mustn't be valid.", !pic.isValid());
-    
-    pic._getComponent().destroy();
-  }
-  
-  /**
    * Tests that {@link TextControl} uses the min/max length parameters
    * for validation. 
    */
@@ -267,7 +239,7 @@ public class FormControlTest extends TestCase {
     correctValueRequest.addParameter("myTextBox", "i love me");
     
     TextControl tc = new TextControl();
-    tc._getComponent().init(new MockEnviroment());
+    tc._getComponent().init(new MockEnvironment());
     
     tc.setMinLength(new Long(5));
     tc.setMaxLength(new Long(20));

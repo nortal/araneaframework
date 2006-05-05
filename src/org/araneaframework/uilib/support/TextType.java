@@ -17,7 +17,7 @@
 package org.araneaframework.uilib.support;
 
 import java.io.Serializable;
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 
 
 /**
@@ -35,11 +35,6 @@ public class TextType extends Enum implements Serializable {
    * Any text. 
    */
   public final static TextType TEXT = new TextType("TEXT");  
-  
-  /**
-   * Estonian personal id. 
-   */
-  public final static TextType EST_PERSONAL_ID = new TextType("PERSONAL_ID");
   
   /**
    * String containing numbers only. 

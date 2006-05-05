@@ -1,5 +1,8 @@
 /*
-Copyright 2005  Vitaliy Shevchuk (shevit@users.sourceforge.net)
+	 The file has been changed extensively.
+	 Copyright 2006  Webmedia Ltd. http://www.webmedia.ee
+	 
+	 Copyright 2005  Vitaliy Shevchuk (shevit@users.sourceforge.net)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -195,18 +198,11 @@ AjaxAnywhere.prototype.callback = function() {
 			
 			if (this.req.status == 200) {
 				// sess expired got account choosing as response
-				if ( /\/\/CHOOSEACCOUNT/.test(text)
-				     || /\/\/LOGINPAGE/.test(text)) {
-					window.location.href = window.location.href;
-				}
-				else {
-					updateRegions(this.updateRegions, text);
-					updateInfoRegions(text);
-					araneaSystemForm = this.systemForm?this.systemForm:"system_form_0";
-					
-					document.forms[araneaSystemForm].transactionId.value = extractTransactionId(text);			
-				}
-
+				updateRegions(this.updateRegions, text);
+				updateInfoRegions(text);
+				araneaSystemForm = this.systemForm?this.systemForm:"system_form_0";
+				
+				document.forms[araneaSystemForm].transactionId.value = extractTransactionId(text);			
 			} 
 			else if (this.req.status == 302) {
 				window.location.href = window.location.href;
@@ -241,7 +237,7 @@ AjaxAnywhere.prototype.showLoadingMessage = function() {
 	        div.style.position = "absolute";
 	        div.style.border = "1 solid black";
 	        div.style.color = "white";
-	        div.style.backgroundColor = "blue";
+	        div.style.backgroundColor = "#e01601";
 	        div.style.width = "100px";
 	        div.style.heigth = "50px";
 	        div.style.fontFamily = "Arial, Helvetica, sans-serif";
