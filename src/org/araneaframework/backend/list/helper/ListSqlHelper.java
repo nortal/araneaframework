@@ -24,13 +24,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Map.Entry;
 import javax.sql.DataSource;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
@@ -145,10 +143,18 @@ public abstract class ListSqlHelper {
 	// * PUBLIC METHODS
 	// *********************************************************************
 	
+	public ResultSetColumnReader getResultSetReader() {
+		return this.resultSetReader;
+	}
+
+	public void setResultSetReader(ResultSetColumnReader resultSetReader) {
+		this.resultSetReader = resultSetReader;
+	}
+	
 	/*
 	 * Database mapping and converters.
 	 */
-	
+
 	/**
 	 * Sets the converter between the filtering-ordering values in
 	 * <code>Expressions</code> and values in <code>SqlExpressions</code>.
@@ -222,7 +228,20 @@ public abstract class ListSqlHelper {
 	 *            database field name.
 	 */
 	public void setColumnMapping(String columnName, String databaseFieldName) {
-		setColumnMapping(columnName, databaseFieldName, databaseFieldName);
+		setColumnMapping(columnName, databaseFieldName, makeFieldNameUnique(removePrefix(databaseFieldName)));
+	}
+	
+	private String makeFieldNameUnique(String field) {
+		String alias = field;
+		int index = 0;
+		while (this.beanToResultSetMapping.containsValue(alias)) {
+			alias = alias + index++;
+		}
+		return alias;
+	}
+	
+	private static String removePrefix(String field) {
+		return field.substring(field.lastIndexOf('.') + 1);
 	}
 	
 	/**
@@ -291,10 +310,16 @@ public abstract class ListSqlHelper {
 	protected SqlExpression getFieldsSqlExpression() {
 		SqlCollectionExpression fields = new SqlCollectionExpression();
 		
-		Collection variables = new HashSet(this.variableToDatabaseMapping.values());		
-		Iterator i = variables.iterator();
-		while (i.hasNext()) {
-			fields.add(new SqlStringExpression((String) i.next()));
+		for (Iterator i = this.variableToDatabaseMapping.entrySet().iterator(); i.hasNext(); ) {
+			Map.Entry entry = (Entry) i.next();
+			
+			String variable = (String) entry.getKey();
+			String dbField = (String) entry.getValue();
+			String alias = (String) this.beanToResultSetMapping.get(variable);
+			
+			String sql = alias == null || alias.equals(dbField)
+				? dbField : new StringBuffer(dbField).append(" ").append(alias).toString();
+			fields.add(new SqlStringExpression(sql));
 		}
 		return fields;
 	}
