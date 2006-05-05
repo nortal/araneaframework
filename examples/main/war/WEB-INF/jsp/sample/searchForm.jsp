@@ -43,6 +43,21 @@
 					</ui:formElement>
 
 					<ui:row>
+						<ui:cell colspan="2">Client personal Id</ui:cell>
+					</ui:row>
+
+					<ui:formElement id="clientPersonalId">
+						<ui:row>
+							<ui:cell styleClass="name">
+								<ui:label />
+							</ui:cell>
+							<ui:cell styleClass="inpt">
+								<ui:textInput />
+							</ui:cell>
+						</ui:row>
+					</ui:formElement>
+
+					<ui:row>
 						<ui:cell colspan="2">Address</ui:cell>
 					</ui:row>
 

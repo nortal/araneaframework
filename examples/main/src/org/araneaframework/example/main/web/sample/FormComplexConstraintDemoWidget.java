@@ -46,6 +46,8 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
     searchForm.addElement("clientFirstName", "#Client first name", new TextControl(), new StringData(), false);
     searchForm.addElement("clientLastName", "#Client last name", new TextControl(), new StringData(), false);
 
+    searchForm.addElement("clientPersonalId", "#Client personal id", new TextControl(), new StringData(), false);
+    
     searchForm.addElement("clientAddressTown", "#Town", new TextControl(), new StringData(), false);
     searchForm.addElement("clientAddressStreet", "#Street", new TextControl(), new StringData(), false);
     searchForm.addElement("clientAddressHouse", "#House", new TextControl(), new StringData(), false);       
@@ -61,6 +63,9 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
     clientNameConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientFirstName")));
     clientNameConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientLastName")));
     
+    //Second searching scenario
+    NotEmptyConstraint clientPersonalIdConstraint = new NotEmptyConstraint(searchForm.getElementByFullName("clientPersonalId"));
+    
     //Third searching scenario
     AndConstraint clientAddressConstraint = new AndConstraint();
     clientAddressConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientAddressTown")));
@@ -68,12 +73,13 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
     clientAddressConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientAddressHouse")));
     
     //Combining scenarios
-    OrConstraint searchConstraint = new OrConstraint();    
+    OrConstraint searchConstraint = new OrConstraint();  
+    searchConstraint.addConstraint(clientPersonalIdConstraint);
     searchConstraint.addConstraint(clientNameConstraint);
     searchConstraint.addConstraint(clientAddressConstraint);
     
     //Setting custom error message
-    searchConstraint.setCustomErrorMessage("Not enough data! Please fill in either client first and last name or client town, street and number");
+    searchConstraint.setCustomErrorMessage("Not enough data! Please fill in either (client first and last name) or (client personal id) or (client town, street and number)");
     
     //Setting constraint
     searchForm.setConstraint(searchConstraint);
