@@ -12,19 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
-package org.araneaframework.jsp.tag.layout;
+package org.araneaframework.jsp.tag.layout.support;
+
+import org.apache.commons.collections.ResettableIterator;
 
 /**
- * Interface for rows contained in layout tags, defines no behaviour, only keys under which row 
- * attributes can be located from the context. Implementing classes should provide the attributes 
- * to inner tags under these keys and should have some notion of cells (typically layout's row tag
- * is column in a row of HTML table).
- * 
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public interface LayoutRowInterface extends CellClassProvider {
-  /** Key under which the layout's row tags can be found from the <code>PageContext</code>. */
-  public static final String KEY = "org.araneaframework.jsp.tag.layout.LayoutRowInterface.KEY";
+public class NullIterator implements ResettableIterator {
+	public void reset() {}
+
+	public void remove() {}
+
+	public boolean hasNext() {
+		return false;
+	}
+
+	public Object next() {
+		return null;
+	}
 }

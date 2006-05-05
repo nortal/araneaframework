@@ -32,6 +32,8 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class LayoutTag extends LayoutBaseTag {
+  protected String width;
+	
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -52,5 +54,18 @@ public class LayoutTag extends LayoutBaseTag {
   protected int doEndTag(Writer out) throws Exception {
     UiUtil.writeEndTag(out, "table");
     return super.doEndTag(out);
+  }
+
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Width of the layout."
+   */
+  public void setWidth(String width) throws JspException {
+    this.width = (String)evaluate("width", width, String.class);
   }
 }

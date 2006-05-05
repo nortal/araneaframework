@@ -17,12 +17,12 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.collections.ResettableIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
 import org.araneaframework.jsp.tag.UiPresentationTag;
+import org.araneaframework.jsp.tag.layout.support.NullIterator;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -30,34 +30,29 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public abstract class LayoutRowBaseTag extends UiPresentationTag implements CellClassProvider {
-  protected List cellClasses = new ArrayList(0);
-  
-  private LayoutInterface layout;
+  protected List cellClasses;
   private ResettableIterator cellIter;
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    layout = (LayoutInterface)requireContextEntry(LayoutInterface.KEY);
-    cellIter = new LoopingIterator(cellClasses);
+    requireContextEntry(RowClassProvider.KEY);
+    requireContextEntry(CellClassProvider.KEY);
 
-    if (!cellClasses.isEmpty())
+    cellIter = cellClasses != null ? (ResettableIterator)new LoopingIterator(cellClasses) : new NullIterator();
+    if (cellClasses != null)
       addContextEntry(CellClassProvider.KEY, this);
 
     return EVAL_BODY_INCLUDE;
   }
   
   public String getCellClass() throws JspException {
-    String result = layout.getCellClass();
-    if (cellIter.hasNext())
-      return (String)cellIter.next();
-
-    return result;
+    return cellIter.hasNext() ? (String)cellIter.next() : null;
   }
 
   public String getStyleClass() throws JspException {
     cellIter.reset();
-    String result = layout.getRowClass();
+    String result = ((RowClassProvider)requireContextEntry(RowClassProvider.KEY)).getRowClass();
     if (styleClass != null)
       return super.getStyleClass();
     return result;

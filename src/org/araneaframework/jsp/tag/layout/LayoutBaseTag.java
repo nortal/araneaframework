@@ -17,12 +17,12 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.collections.ResettableIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
 import org.araneaframework.jsp.tag.UiPresentationTag;
+import org.araneaframework.jsp.tag.layout.support.NullIterator;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -30,13 +30,11 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public abstract class LayoutBaseTag extends UiPresentationTag implements RowClassProvider, CellClassProvider {
-  protected List rowClasses = new ArrayList(0);
-  protected List cellClasses = new ArrayList(0);
+  protected List rowClasses;
+  protected List cellClasses;
   
-  private ResettableIterator rowIter;
-  private ResettableIterator cellIter;
-  
-  protected String width;
+  protected ResettableIterator rowIter;
+  protected ResettableIterator cellIter;
   
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -44,8 +42,8 @@ public abstract class LayoutBaseTag extends UiPresentationTag implements RowClas
     addContextEntry(RowClassProvider.KEY, this);
     addContextEntry(CellClassProvider.KEY, this);
 
-    rowIter = new LoopingIterator(rowClasses);
-    cellIter = new LoopingIterator(cellClasses);
+    rowIter = rowClasses != null ? (ResettableIterator)new LoopingIterator(rowClasses) : new NullIterator();
+    cellIter = cellClasses != null ?(ResettableIterator) new LoopingIterator(cellClasses) : new NullIterator();
 
     return EVAL_BODY_INCLUDE;
   }
@@ -62,7 +60,6 @@ public abstract class LayoutBaseTag extends UiPresentationTag implements RowClas
   /* ***********************************************************************************
    * Tag attributes
    * ***********************************************************************************/
-  
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -81,15 +78,5 @@ public abstract class LayoutBaseTag extends UiPresentationTag implements RowClas
    */
   public void setCellClasses(String cellClasses) throws JspException {
     this.cellClasses = UiUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Width of the layout."
-   */
-  public void setWidth(String width) throws JspException {
-    this.width = (String)evaluate("width", width, String.class);
   }
 }

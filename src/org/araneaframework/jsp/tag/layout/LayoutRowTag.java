@@ -17,8 +17,6 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import java.util.List;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**

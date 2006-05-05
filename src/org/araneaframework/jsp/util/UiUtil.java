@@ -36,8 +36,8 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.basic.UiElementTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
-import org.araneaframework.jsp.tag.layout.LayoutInterface;
-import org.araneaframework.jsp.tag.layout.LayoutRowInterface;
+import org.araneaframework.jsp.tag.layout.CellClassProvider;
+import org.araneaframework.jsp.tag.layout.RowClassProvider;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementTag;
 import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListRowsTag;
@@ -67,8 +67,8 @@ public class UiUtil {
     attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");		
     attributeErrorMap.put(UiFormTag.FORM_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
 
-    attributeErrorMap.put(LayoutRowInterface.KEY, "<ui:row> tag expected, but not found! Make sure all of you cells are used inside row tags.");
-    attributeErrorMap.put(LayoutInterface.KEY, "<ui:layout> or another layout tag expected, but not found!");
+    attributeErrorMap.put(RowClassProvider.KEY, "<ui:layout> tag expected, but not found! Make sure that row tags are used inside <ui:layout> tag.");
+    attributeErrorMap.put(CellClassProvider.KEY, "<ui:layout> or <ui:row> expected, but not found! Make sure that row and cell tags are inside inside <ui:layout> tag.");
 
     attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY, "<ui:list> tag expected, but not found! Make sure list tags is used inside <ui:list> tag.");
     attributeErrorMap.put(UiListTag.LIST_ID_KEY, "<ui:list> tag expected, but not found!  Make sure list tags is used inside <ui:list> tag.");

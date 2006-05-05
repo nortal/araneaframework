@@ -18,8 +18,8 @@ package org.araneaframework.template.tags.example.component;
 
 import java.io.Writer;
 import java.util.Iterator;
-import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
+import org.araneaframework.jsp.tag.layout.LayoutRowTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
@@ -39,7 +39,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  *   description = "Inside this tag list header should be written out." 
  */
 
-public class ComponentListHeaderTag extends UiPresentationTag {
+public class ComponentListHeaderTag extends LayoutRowTag {
   public final static String ORDER_EVENT_ID = "order";
   public final static String COMPONENT_LIST_STYLE_CLASS = "data";
   
@@ -49,13 +49,7 @@ public class ComponentListHeaderTag extends UiPresentationTag {
   
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
-    UiUtil.writeOpenStartTag(out, "tr");
-    UiUtil.writeAttribute(out, "class", getStyleClass());
-    UiUtil.writeCloseStartTag(out);
-    
     writeHeader(out);
-    
     return EVAL_BODY_INCLUDE;
   }
   

@@ -51,7 +51,7 @@ public class UiFormListTag extends UiWidgetTag {
 		}
 		
 		super.doStartTag(out);
-		
+
 		try {
 			formListViewModel = (FormListWidget.ViewModel) viewModel;
 		} catch (ClassCastException e) {
@@ -61,10 +61,13 @@ public class UiFormListTag extends UiWidgetTag {
 		// Set variables
 		addContextEntry(FORM_LIST_ID_KEY, id);
 		addContextEntry(FORM_LIST_VIEW_MODEL_KEY, formListViewModel);		
-		
+
 		return EVAL_BODY_INCLUDE; 
 	}
-	
+
+	/* ***********************************************************************************
+	 * FINALLY - reset some fields to allow safe reuse from tag pool.
+	 * ***********************************************************************************/
 	public void doFinally() {
 		id = null;
 		super.doFinally();

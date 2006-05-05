@@ -47,7 +47,7 @@ import org.araneaframework.uilib.form.FormWidget;
  *   description = "Automatic form element which dynamically draws correct form element tag."
  */
 public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
-  protected String internalId;
+  protected String derivedId;
   private String id;
   protected String events;
   protected String validate;
@@ -76,12 +76,12 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
     FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY);
 
     //In case the tag is in formElement tag
-    internalId = id;
-    if (internalId == null && getContextEntry(UiFormElementTag.ID_KEY) != null) 
-    	internalId = (String) getContextEntry(UiFormElementTag.ID_KEY);
-    if (internalId == null) throw new UiMissingIdException(this);
+    derivedId = id;
+    if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY) != null) 
+    	derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY);
+    if (derivedId == null) throw new UiMissingIdException(this);
     formElementViewModel = 
-      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, internalId)._getViewable().getViewModel();   
+      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
 
     // Get control  
     controlViewModel = formElementViewModel.getControl();
@@ -106,7 +106,7 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
 
     initTagAttributes(tagClass, controlTag, viewSelector.getAttributes());
 
-    controlTag.setId(internalId);
+    controlTag.setId(derivedId);
     if(events != null)
       controlTag.setEvents(events);
     if(validate != null)
