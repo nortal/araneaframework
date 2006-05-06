@@ -121,7 +121,7 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     out.write("<select name='"
         + name
         + ".select2' onChange=\"" +
-        fillXJSCallConstructor("fillText", systemFormId, name)
+        fillXJSCallConstructor("fillTimeText", systemFormId, name)
         + ";\"");
 
     if (disabled)
@@ -139,7 +139,7 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     out.write("<select name='"
         + name
         + ".select1' onChange=\"" + 
-        fillXJSCallConstructor("fillText", systemFormId, name) + ";\"");
+        fillXJSCallConstructor("fillTimeText", systemFormId, name) + ";\"");
     if (disabled)
       out.write(" disabled=\"true\"");
     out.write(">\n");
@@ -181,7 +181,7 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     UiUtil.writeAttribute(out, "size", size);
     UiUtil.writeAttribute(out, "label", label);
     UiUtil.writeAttribute(out, "tabindex", tabindex);
-    UiUtil.writeAttribute(out, "onBlur", fillXJSCallConstructor("fillSelect", systemFormId, name) + ";");
+    UiUtil.writeAttribute(out, "onBlur", fillXJSCallConstructor("fillTimeSelect", systemFormId, name) + ";");
     if (disabled)
       UiUtil.writeAttribute(out, "disabled", "true");
     UiUtil.writeAttributes(out, attributes);
@@ -189,6 +189,6 @@ public class UiStdFormDateTimeInputTag extends UiStdFormDateTimeInputBaseTag {
   }
 
   protected String fillXJSCallConstructor(String function, String formId, String element) {
-    return UiStdFormTimeInputTag.staticFillXJSCall(function, formId, element);
+    return UiStdFormTimeInputTag.staticFillXJSCall(function, formId, element +".time", element + ".select1", element + ".select2");
   }
 }

@@ -13,7 +13,7 @@ import org.araneaframework.uilib.form.control.TimeControl;
  * Time input form element tag.
  * 
  * @author Marko Muts
- *  @jsp.tag
+ * @jsp.tag
  *   name = "timeInput"
  *   body-content = "JSP"
  *   description = "Form time input field (custom control), represents UiLib "TimeControl"."
@@ -63,7 +63,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
 
   protected void writeMinuteSelect(Writer out, String name, boolean disabled, Integer minute) throws IOException {
     out.write("<select name='" + name + ".select2' onChange=\""
-        + fillXJSCallConstructor("fillTimeText", systemFormId, name)
+        + fillXJSCallConstructor("fillTimeText", systemFormId, name, name + ".select1", name + ".select2")
         + ";\"");
 
     if (disabled)
@@ -79,7 +79,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
 
   protected void writeHourSelect(Writer out, String name, String systemFormId, boolean disabled, Integer hour) throws IOException {
     out.write("<select name='" + name + ".select1' onChange=\""
-        + fillXJSCallConstructor("fillTimeText", systemFormId, name)
+        + fillXJSCallConstructor("fillTimeText", systemFormId, name, name + ".select1", name + ".select2")
         + ";\"");
     if (disabled)
       out.write(" disabled=\"true\"");
@@ -130,7 +130,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     UiUtil.writeAttribute(out, "size", size);
     UiUtil.writeAttribute(out, "label", label);
     UiUtil.writeAttribute(out, "tabindex", tabindex);
-    UiUtil.writeAttribute(out, "onBlur", fillXJSCallConstructor("fillTimeSelect", systemFormId, name) + ";");
+    UiUtil.writeAttribute(out, "onBlur", fillXJSCallConstructor("fillTimeSelect", systemFormId, name, name +".select1", name + ".select2") + ";");
     if (!StringUtils.isBlank(accessKey))
       UiUtil.writeAttribute(out, "accesskey", accessKey);
     if (disabled)
@@ -139,11 +139,11 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     UiUtil.writeCloseStartEndTag_SS(out);
   }
 
-  protected String fillXJSCallConstructor(String function, String formId, String element) {
-    return UiStdFormTimeInputTag.staticFillXJSCall(function, formId, element);
+  protected String fillXJSCallConstructor(String function, String formId, String timeInputEl, String hourSelectEl, String minuteSelectEl) {
+    return UiStdFormTimeInputTag.staticFillXJSCall(function, formId, timeInputEl, hourSelectEl, minuteSelectEl);
   }
   
-  public static final String staticFillXJSCall(String function, String formId, String element) {
-    return function + "(document." + formId + ", '" + element + "')";
+  public static final String staticFillXJSCall(String function, String formId, String timeInputEl, String hourSelectEl, String minuteSelectEl) {
+    return function + "(document." + formId + ", '" + timeInputEl + "', '"  +  hourSelectEl + "', '" + minuteSelectEl + "')";
   }
 }

@@ -74,48 +74,23 @@ function uiValidateForm(systemForm, formId) {
 	return systemForm.uiProperties[formId].validator.validate();
 }
 
-// TODO: remove this function
-function fillText(systemForm, el) {
-  if (systemForm[el+'.select1'].value=='' && systemForm[el+'.select2'].value=='') {
-    systemForm[el+'.time'].value='';
-  }
-  else {
-    systemForm[el+'.time'].value=systemForm[el+'.select1'].value+':'+systemForm[el+'.select2'].value;
-  }
-}
-
-function fillTimeText(systemForm, el) {
-  if (systemForm[el+'.select1'].value=='' && systemForm[el+'.select2'].value=='') {
+function fillTimeText(systemForm, el, hourSelect, minuteSelect) {
+  if (systemForm[hourSelect].value=='' && systemForm[minuteSelect].value=='') {
     systemForm[el].value='';
   }
   else {
-    systemForm[el].value=systemForm[el+'.select1'].value+':'+systemForm[el+'.select2'].value;
+    systemForm[el].value=systemForm[hourSelect].value+':'+systemForm[minuteSelect].value;
   }
-}
-    
-// TODO: remove this function
-function fillSelect(systemForm, el) {
-  separatorPos = systemForm[el+'.time'].value.indexOf(':');
-  if (systemForm[el+'.time'].value.substr(0, separatorPos).length==1) {
-    firstSelect = '0'+systemForm[el+'.time'].value.substr(0, separatorPos);
-  }
-  else {
-    firstSelect = systemForm[el+'.time'].value.substr(0, separatorPos);
-  }
-  systemForm[el+'.select1'].value=firstSelect;
-  systemForm[el+'.select2'].value=systemForm[el+'.time'].value.substr(separatorPos+1, systemForm[el+'.time'].value.length);
 }
 
-function fillTimeSelect(systemForm, el) {
-  separatorPos = systemForm[el].value.indexOf(':');
-  if (systemForm[el].value.substr(0, separatorPos).length==1) {
-    firstSelect = '0'+systemForm[el].value.substr(0, separatorPos);
-  }
-  else {
-    firstSelect = systemForm[el].value.substr(0, separatorPos);
-  }
-  systemForm[el+'.select1'].value=firstSelect;
-  systemForm[el+'.select2'].value=systemForm[el].value.substr(separatorPos+1, systemForm[el].value.length);
+function fillTimeSelect(systemForm, timeInput, hourSelect, minuteSelect) {
+  timestr = systemForm[timeInput].value;
+  separatorPos = timestr.indexOf(':');
+  hours = timestr.substr(0, separatorPos);
+  hourValue = hours.length==1 ? '0'+hours : hours;
+  minuteValue = timestr.substr(separatorPos+1, systemForm[timeInput].value.length);
+  systemForm[hourSelect].value=hourValue;
+  systemForm[minuteSelect].value=minuteValue;
 }
 
 // adds options empty,0-(z-1) to <select> when used inside <select> with option x preselected
