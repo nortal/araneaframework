@@ -18,7 +18,6 @@ package org.araneaframework.template.tags.wizard;
 
 import java.io.Writer;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.Custom;
 import org.araneaframework.core.Custom.CustomWidget;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiWidgetUtil;

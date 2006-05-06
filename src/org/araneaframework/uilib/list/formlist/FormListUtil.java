@@ -24,7 +24,6 @@ import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.list.EditableListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 import org.araneaframework.uilib.list.formlist.adapters.InMemoryFormRowHandlerDecorator;
-import org.araneaframework.uilib.list.formlist.adapters.MapFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
 
 /**

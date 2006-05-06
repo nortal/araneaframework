@@ -22,7 +22,6 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.core.BaseWidget;
 import org.araneaframework.servlet.ServletOutputData;
 
 public class TemplateCriticalErrorHandler extends BaseService  {

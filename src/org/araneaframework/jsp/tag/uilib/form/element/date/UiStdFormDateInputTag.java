@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.date;
 import java.io.IOException;
 import java.io.Writer;
 import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
 
@@ -43,7 +44,7 @@ public class UiStdFormDateInputTag extends UiStdFormDateTimeInputBaseTag {
 
     // Prepare
     String name = this.getScopedFullFieldId();       
-    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
+    DateControl.ViewModel viewModel = ((DateControl.ViewModel)controlViewModel);
 
     Long dateInputSize = DEFAULT_DATE_INPUT_SIZE;
 

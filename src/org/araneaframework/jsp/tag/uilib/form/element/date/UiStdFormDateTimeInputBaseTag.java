@@ -57,7 +57,6 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	 * @see #writeTimeInput
 	 * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005 -- added callback function argument to popup-calendar
 	 */
-    //XXX: not used ANYWHERE
 	protected void writeDateInput(
 			Writer out, 
 			String id,

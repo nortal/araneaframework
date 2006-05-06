@@ -27,7 +27,6 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.support.TextType;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 

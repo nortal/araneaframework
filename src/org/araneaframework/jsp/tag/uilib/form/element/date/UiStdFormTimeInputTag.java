@@ -2,9 +2,12 @@ package org.araneaframework.jsp.tag.uilib.form.element.date;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.ParseException;
+import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
+import org.araneaframework.uilib.form.control.TimeControl;
 
 /**
  * Time input form element tag.
@@ -26,7 +29,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
 
     // Prepare    
     String name = this.getScopedFullFieldId();
-    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
+    TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
 
     Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
 
@@ -40,8 +43,17 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     if (validate)
       writeValidationScript(out, viewModel);
 
-    writeHourSelect(out, name, systemFormId, viewModel.isDisabled());
-    writeMinuteSelect(out, name, viewModel.isDisabled());
+    Date currentTime = null;
+    Integer minute = null, hour = null;
+    try {
+      if (viewModel.getSimpleValue() != null) {
+   	    currentTime = viewModel.getCurrentSimpleDateTimeFormat().parse(viewModel.getSimpleValue());
+  	    hour = new Integer(currentTime.getHours());
+    	    minute = new Integer(currentTime.getMinutes());
+      }
+    } catch (ParseException e) {	}
+    writeHourSelect(out, name, systemFormId, viewModel.isDisabled(), hour);
+    writeMinuteSelect(out, name, viewModel.isDisabled(), minute);
 
     out.write("</td></tr></table>\n");
 
@@ -49,7 +61,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     return EVAL_PAGE;
   }
 
-  protected void writeMinuteSelect(Writer out, String name, boolean disabled) throws IOException {
+  protected void writeMinuteSelect(Writer out, String name, boolean disabled, Integer minute) throws IOException {
     out.write("<select name='" + name + ".select2' onChange=\""
         + fillXJSCallConstructor("fillTimeText", systemFormId, name)
         + ";\"");
@@ -57,10 +69,15 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     if (disabled)
       out.write(" disabled=\"true\"");
     out.write(">\n");
-    out.write("<script type=\"text/javascript\">addOptions(60);</script>\n</select>\n");
+    
+    StringBuffer sb = new StringBuffer().append("<script type=\"text/javascript\">");
+    sb.append("addOptions(60,").append(minute != null ? minute.toString():"null").append(");");
+    sb.append("</script>\n</select>\n");
+    
+    out.write(sb.toString());
   }
 
-  protected void writeHourSelect(Writer out, String name, String systemFormId, boolean disabled) throws IOException {
+  protected void writeHourSelect(Writer out, String name, String systemFormId, boolean disabled, Integer hour) throws IOException {
     out.write("<select name='" + name + ".select1' onChange=\""
         + fillXJSCallConstructor("fillTimeText", systemFormId, name)
         + ";\"");
@@ -68,7 +85,11 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
       out.write(" disabled=\"true\"");
     out.write(">\n");
     
-    out.write("<script type=\"text/javascript\">addOptions(24);</script>\n</select>\n");
+    StringBuffer sb = new StringBuffer().append("<script type=\"text/javascript\">");
+    sb.append("addOptions(24,").append(hour != null ? hour.toString():"null").append(");");
+    sb.append("</script>\n</select>\n");
+    
+    out.write(sb.toString());
   }
 
   /**

@@ -18,8 +18,6 @@ package org.araneaframework.example.main.web.contract;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormatSymbols;
-import java.util.Arrays;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
@@ -74,8 +72,6 @@ public class ContractNotesEditWidget extends TemplateBaseWidget {
 	
 	// Builds FloatControl that accepts points and commas as decimal separator.
 	private FloatControl buildFloatControl() {		
-		FloatControl result = null;
-		
 		DecimalFormatSymbols symbols1 = new DecimalFormatSymbols();
 		symbols1.setDecimalSeparator(',');
 		DecimalPattern format1 = new DecimalPattern("0.#", symbols1);
