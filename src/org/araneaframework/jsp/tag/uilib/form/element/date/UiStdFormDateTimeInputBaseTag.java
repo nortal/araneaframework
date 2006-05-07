@@ -183,6 +183,6 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 		script.append("\n});");
 		
 		out.write(script.toString());
-		UiUtil.writeEndTag(out, "script");
+		UiUtil.writeEndTag_SS(out, "script");
 	}
 }

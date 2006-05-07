@@ -92,11 +92,10 @@ public class FileDownloaderService extends BaseService {
 		return fileName;
 	}
 
-	protected void action(Path path, InputData input, OutputData output) throws Exception {
-		HttpServletResponse response = ((ServletOutputData) output).getResponse();
-		
-	  // XXX: basically cast from long to int - might be dangerous!!
-		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(fileContent.length);
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    HttpServletResponse response = ((ServletOutputData) output).getResponse();
+    
+    ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(fileContent.length);
     byteOutputStream.write(fileContent);
 
     response.setContentType(contentType);
@@ -106,9 +105,9 @@ public class FileDownloaderService extends BaseService {
     OutputStream out = response.getOutputStream();
     byteOutputStream.writeTo(out);
     out.flush();
-      
+
     //Ensure that allow to download only once...
     ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
     mngCtx.close(mngCtx.getCurrentId());
-	}
+  }
 }
