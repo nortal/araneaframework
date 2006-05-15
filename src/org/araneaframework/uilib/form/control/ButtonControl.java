@@ -17,10 +17,8 @@
 package org.araneaframework.uilib.form.control;
 
 import javax.servlet.http.HttpServletRequest;
-import org.araneaframework.InputData;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
-import org.araneaframework.uilib.form.FormElement;
 
 
 /**

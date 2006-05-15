@@ -19,7 +19,7 @@ package org.araneaframework.uilib.list;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.BeanFormWidget;
-import org.araneaframework.uilib.form.control.Control;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.list.structure.ComparableType;
 import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
 import org.araneaframework.uilib.list.structure.order.ColumnOrder;
@@ -30,7 +30,7 @@ public class BeanListWidget extends ListWidget {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Class beanClass;
+	protected Class beanClass;
 	
 	public BeanListWidget(Class beanClass) {
 		super();
@@ -80,7 +80,7 @@ public class BeanListWidget extends ListWidget {
 		ColumnOrder order = null;
 		if (isOrdered) {
 			order = new SimpleColumnOrder();
-			propagateValueType(order, id);			
+			propagateValueType(order, id);
 		}
 		addBeanColumn(id, label, order, filter, control);
 	}
