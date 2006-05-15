@@ -33,6 +33,11 @@ public interface ConfigurationContext extends Serializable {
   public static final String CUSTOM_TIME_FORMAT = "uilib.widgets.forms.controls.CustomTimeFormat";  
   
   /**
+   * <code>DecimalPattern[]</code> containing the patterns for <code>BigDecimal</code> decimal validation.
+   */
+  public static final String CUSTOM_DECIMAL_FORMAT = "uilib.widgets.forms.controls.CustomDecimalFormat";
+  
+  /**
    * <code>String</code> containing the format for <code>Date</code> default date output.
    */
   public static final String DEFAULT_DATE_OUTPUT_FORMAT = "uilib.widgets.forms.controls.DefaultOutputDateFormat";  
@@ -41,18 +46,17 @@ public interface ConfigurationContext extends Serializable {
    * <code>String</code> containing the format for <code>Date</code> default time output.
    */
   public static final String DEFAULT_TIME_OUTPUT_FORMAT = "uilib.widgets.forms.controls.DefaultOutputTimeFormat";  
+
+  /**
+   * <code>DecimalPattern</code> containing the pattern for <code>BigDecimal</code> default decimal output.
+   */
+  public static final String DEFAULT_DECIMAL_OUTPUT_FORMAT = "uilib.widgets.forms.controls.DefaultOutputDecimalFormat";  
   
   /**
    * The full class name of the implementation of {@link org.araneaframework.uilib.form.converter.ConverterProvider} interface
    * that will override the default.
    */
   public static final String CUSTOM_CONVERTER_PROVIDER = "uilib.widgets.forms.converters.CustomConverterProvider";
-  
-  /**
-   * <code>Boolean</code> that controls whether form elements will check if they have been submitted to request 
-   * before reading (this will increase request size, since every element will mark it's presence in request).
-   */
-  public static final String FORM_ELEMENT_READ_SUBMITTED_ONLY = "uilib.widgets.forms.FormElementReadSubmittedOnly"; 
   
   /**
    * <code>Long</code> that controls the default size of the list (i.e. how many rows are show on one page).
