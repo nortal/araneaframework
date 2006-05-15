@@ -49,16 +49,16 @@
   *     event  - the event object
   *     formElementId - full (unique) id of the element that received the event.
   */
- function uiHandleKeypress(event, formElementId) {
- 	 
+ function uiHandleKeypress(event, formElementId) { 	 
  	 // Check the keyCode
  	 if (!event) return;
+ 	 
  	 var keyCode;
  	 if (event.keyCode) keyCode = event.keyCode;
  	 else keyCode = event.which; // Mozilla
  	 
  	 try { 	 	
-	 	 uiKeypressHandlerRegistry.invokeHandlers(formElementId, keyCode, event);
+	 	 uiKeypressHandlerRegistry.invokeHandlers(formElementId, keyCode, event);	 	 
  	 }
  	 catch (e) { 	
  	 		//Keyboard handler errors may be thrown after AJAX region updates.

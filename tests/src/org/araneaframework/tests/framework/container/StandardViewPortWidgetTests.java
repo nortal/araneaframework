@@ -23,7 +23,6 @@ import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.container.StandardViewPortWidget;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockBaseWidget;
