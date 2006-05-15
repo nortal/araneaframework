@@ -17,20 +17,20 @@
 package org.araneaframework.jsp.tag.form;
 
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.container.StandardWidgetContainerWidget;
-import org.araneaframework.framework.filter.StandardTransactionFilterWidget;
-import org.araneaframework.framework.router.StandardSessionServiceRouterService;
-import org.araneaframework.framework.router.StandardThreadServiceRouterService;
-import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 import org.araneaframework.servlet.filter.StandardJspFilterService;
+import org.araneaframework.servlet.util.ClientStateUtil;
+
 
 /**
  * System form tag. System form maps into HTML form. 
@@ -45,7 +45,7 @@ import org.araneaframework.servlet.filter.StandardJspFilterService;
 public class UiAraneaSystemFormTag extends UiSystemFormTag {  
   private OutputData output;
   private StandardJspFilterService.JspConfiguration config;
-
+  
   protected int doStartTag(Writer out) throws Exception {
     output = 
       (OutputData) pageContext.getRequest().getAttribute(
@@ -56,15 +56,16 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
 
     super.doStartTag(out);
-
+    
     // Hidden fields: preset
-    for (Iterator ite = formHiddenAttribs.iterator(); ite.hasNext();) {
-      String index = (String) ite.next();
-      if (output.getAttribute(index) != null) {
-        UiUtil.writeHiddenInputElement(out, index, output.getAttribute(index).toString());
-      }
+    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
+    if (state != null) {
+	    for (Iterator iter = state.entrySet().iterator(); iter.hasNext();) {
+			Entry element = (Entry) iter.next();
+	        UiUtil.writeHiddenInputElement(out, (String)element.getKey(), (String)element.getValue());
+		}
     }
-
+    
     // Hidden fields: to be set
     UiUtil.writeHiddenInputElement(out, StandardWidget.EVENT_HANDLER_ID_KEY, "");
     UiUtil.writeHiddenInputElement(out, StandardWidgetContainerWidget.EVENT_PATH_KEY, "");
@@ -74,14 +75,6 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
     return EVAL_BODY_INCLUDE;
   }
   
-  protected List formHiddenAttribs = new ArrayList();
-  {
-    formHiddenAttribs.add(StandardTopServiceRouterService.TOP_SERVICE_KEY);
-    formHiddenAttribs.add(StandardSessionServiceRouterService.SESSION_SERVICE_KEY);
-    formHiddenAttribs.add(StandardThreadServiceRouterService.THREAD_SERVICE_KEY);
-    formHiddenAttribs.add(StandardTransactionFilterWidget.TRANSACTION_ID_KEY);
-  }
-
   /* ***********************************************************************************
    * Implementation of SystemForm abstract methods
    * ***********************************************************************************/

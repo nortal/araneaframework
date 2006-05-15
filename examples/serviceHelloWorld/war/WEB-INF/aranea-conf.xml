@@ -2,13 +2,11 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-
   <bean class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
     id="applicationRoot" singleton="false">
 
     <property name="childService">
       <bean class="example.HelloWorldService"/>
     </property>
-  </bean>  
-	
+  </bean>	
 </beans>

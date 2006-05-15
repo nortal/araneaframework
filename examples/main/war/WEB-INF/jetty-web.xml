@@ -9,7 +9,7 @@
       </Call>
       <Call name="setInitParameter">
         <Arg>scratchdir</Arg>
-				<Arg>../tmp/jsp</Arg>
+				<Arg>/tmp/jsp</Arg>
       </Call>      
     </Call>
   </Call>

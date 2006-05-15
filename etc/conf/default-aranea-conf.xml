@@ -76,6 +76,19 @@
     </property>
   </bean>
   
+	<bean class="org.araneaframework.servlet.filter.AjaxFilterService" 
+    id="araneaAjaxFilterService" singleton="false">
+    <property name="existingRegions">
+      <list>
+        <value>errorMessages</value>
+        <value>infoMessages</value>
+        <value>positiveMessages</value>
+        <value>focus</value>
+        <value>scrolling</value>
+      </list>
+    </property>
+  </bean>
+  
   <!-- Thread scope -->    
   
   <bean id="araneaThreadFilters" singleton="false"
@@ -85,6 +98,7 @@
       <list>
         <ref bean="araneaSynchronizingFilter"/>
         <ref bean="araneaContinuationFilter"/>
+        <ref bean="araneaAjaxFilterService"/>
         <ref bean="responseHeaderFilter"/>
         <bean class="org.araneaframework.ioc.spring.SpringOptionalFilterService" singleton="false">
           <property name="beanId" value="customThreadFilters"/>
@@ -93,9 +107,16 @@
     </property>
   </bean>  
 
-  <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService" id="araneaWidgetAdapter"
+  <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService"
+  	id="araneaWidgetAdapter"
     singleton="false">
     <property name="childWidget" ref="araneaWidgetFilters"/>
+  </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardClientStateFilterWidget"
+  	id="clientStatePreserver"
+  	singleton="false">
+  	<property name="compress" value="false"/>
   </bean>
   
    <!-- Framework widgets -->
@@ -104,8 +125,9 @@
     <property name="childWidget" ref="araneaWidgetContainer"/>
     <property name="filterChain">
       <list>      
-        <ref bean="araneaRedirectingFilter"/>
+        <ref bean="araneaRedirectingFilter"/>        
         <ref bean="araneaTransactionFilter"/>
+        <!-- ref bean="clientStatePreserver" / -->
         <ref bean="araneaMessagingFilter"/>
         <ref bean="araneaContexts"/>
         <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter"

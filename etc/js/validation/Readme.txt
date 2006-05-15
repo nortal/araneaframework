@@ -17,13 +17,13 @@
  Date and Time-related validation rules are contained in a 
  separate file:
    clientside-datetime-form-validation.js
- Some additional convenience utilities required for JWLF-JSP-UI
+ Some additional convenience utilities required for JSP-UI
  are provided in the file
-   jwlf-jsp-ui-form-validation.js
+   jsp-ui-form-validation.js
  Localized strings used by all the rules are stored in
    localization.js
- Interface for JWLF-JSP-UI is presented in the file 
-   jwlf-jsp-ui.js
+ Interface for JSP-UI is presented in the file 
+   jsp-ui.js
  This is also the only file that should be customized on a per-application
  basis.
  
@@ -34,8 +34,8 @@
    localization.js
    clientside-form-validation.js
    clientside-datetime-form-validation.js
-   jwlf-jsp-ui-form-validation.js
-   jwlf-jsp-ui.js
+   jsp-ui-form-validation.js
+   jsp-ui.js
  
  Framework presented there consists of four kinds of classes:
    Rules, Actions, the Validator class and the FormValidator class.
@@ -156,10 +156,10 @@
   +- clientside-datetime-form-validation.js - Date and Time validation additions to the 
   |                                           previous script.
   |
-  +- jwlf-ui-jsp-form-validation  - The definition of the UiFormValidator class, that provides 
-  |                                 functionality required for JWLF-JSP-UI
+  +- ui-jsp-form-validation  - The definition of the UiFormValidator class, that provides 
+  |                                 functionality required for JSP-UI
   |
-  +- jwlf-jsp-ui.js               - File providing interface functions for JWLF-JSP-UI
+  +- jsp-ui.js               - File providing interface functions for JSP-UI
   |
   +- validation.html              - Sample usage of validation utilities.
   |

@@ -198,7 +198,8 @@ AjaxAnywhere.prototype.callback = function() {
 			
 			if (this.req.status == 200) {
 				updateRegions(this.updateRegions, text);
-
+				updateInfoRegions(text);
+				
 				this.systemForm.transactionId.value = extractTransactionId(text);
 			} 
 			else if (this.req.status == 302) {
@@ -386,6 +387,68 @@ function extractContentsById(elemId, str) {
 	var endIndex = index;
 
 	return str.substring(startIndex, endIndex);
+}
+
+function updateInfoRegions(text) {
+	// find the message region from the text 
+	var errorMessages = extractContentsById('errorMessages', text);
+	var infoMessages = extractContentsById('infoMessages', text);
+	var positiveMessages = extractContentsById('positiveMessages', text);
+	var focus = extractContentsById('focus', text);
+	var scrolling = extractContentsById('scrolling', text);
+	
+	var targetError = document.getElementById('errorMessages');
+	var targetInfo = document.getElementById('infoMessages');
+	var targetPositive = document.getElementById('positiveMessages');
+	var targetFocus = document.getElementById('focus');
+	var targetScrolling = document.getElementById('scrolling');
+	
+   if (trim(errorMessages).length>0) {
+      targetError.innerHTML = errorMessages;
+      targetError.className = "visible";
+   }
+   else if (targetError.className!="hidden") {
+      targetError.innerHTML = '';
+      targetError.className = "hidden";
+   }
+   
+   if (trim(infoMessages).length>0) {
+      targetInfo.innerHTML = infoMessages;
+      targetInfo.className = 'visible';   
+   }
+   else if (targetInfo.className!="hidden"){
+      targetInfo.innerHTML = '';
+      targetInfo.className = 'hidden';   
+   }
+   
+   if (trim(positiveMessages).length>0) {
+      targetPositive.innerHTML = positiveMessages;
+      targetPositive.className = 'visible';   
+   }
+   else if (targetPositive.className!="hidden") {
+      targetPositive.innerHTML = '';
+      targetPositive.className = 'hidden';   
+   }
+
+   targetFocus.innerHTML='&nbsp;<style type="text/css">#focus {position:absolute; }</style>'+focus;
+		// execute all the scripts
+		scripts = extractScripts(targetFocus.innerHTML);
+		for(var i=0;i<scripts.length;i++) {
+			var script = scripts[i].replace(/uiWidgetContext\(/gm,'uiWidgetContext2(');
+			script = "try{"+script+"}catch(e){alert(e);}";
+			eval(script);
+		}	  
+   
+   targetScrolling.innerHTML='&nbsp;<style type="text/css">#scrolling {position:absolute; }</style>'+scrolling;
+		// execute all the scripts
+		scripts = extractScripts(targetScrolling.innerHTML);
+		for(var i=0;i<scripts.length;i++) {
+			var script = scripts[i].replace(/uiWidgetContext\(/gm,'uiWidgetContext2(');
+			script = "try{"+script+"}catch(e){alert(e);}";
+			eval(script);
+		}
+
+   
 }
 
 function updateRegion(updateRegionId, str) {		

@@ -50,7 +50,7 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
      
      childWidget._getWidget().update(input);
      childWidget._getWidget().event(path, input);       
-     childWidget._getWidget().process();        
+     childWidget._getWidget().process();
      childWidget._getWidget().render(output);
    }
   }

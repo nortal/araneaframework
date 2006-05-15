@@ -5,6 +5,7 @@
 	
 	<!--Set the classpath-->
 	<path id="classpath">
+		<fileset dir="../lib" includes="**/*.jar" />
 		<fileset dir="../../lib" includes="**/*.jar" />
 		<fileset dir="../.." includes="dist/aranea.jar"/>
 		<fileset dir="../.." includes="template/dist/aranea-template.jar"/>
@@ -12,7 +13,7 @@
 	
 	<!--Set the Jetty classpath-->
 	<path id="classpath.jetty">
-		<fileset dir="../../lib/jetty" includes="*.jar" />
+		<fileset dir="../lib/jetty" includes="*.jar" />
 		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
 	</path>
 	
@@ -39,7 +40,7 @@
 	
 	
 	<path id="classpath.hibernate">
-		<fileset dir="../../lib/hibernate" includes="*.jar" />
+		<fileset dir="../lib/hibernate" includes="*.jar" />
 	</path>
 	
 	<taskdef name="hibernatedoclet" classname="xdoclet.modules.hibernate.HibernateDocletTask">
@@ -62,10 +63,13 @@
 	<!-- Build the code -->
 	<target name="build" depends="xdoclet.hibernate,compile" description="Build the code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
+			<fileset dir="../lib">
+				<include name="**/*.jar" />
+				<exclude name="jetty/*jar" />
+			</fileset>
 			<fileset dir="../../lib">
 				<include name="**/*.jar" />
 				<exclude name="j2ee.jar" />
-				<exclude name="jetty/*jar" />				
 			</fileset>
 			<fileset file="../../dist/aranea.jar"/>
 			<fileset file="../../template/dist/aranea-template.jar"/>					
@@ -114,7 +118,7 @@
 		
 		<java classname="org.hsqldb.Server" dir="data" fork="yes">
 			<classpath>
-				<pathelement location="../../lib/hsqldb/hsqldb.jar" />
+				<pathelement location="../lib/hsqldb/hsqldb.jar" />
 			</classpath>
 			<arg line="-database.0 'templateapp' -dbname.0 'templateapp'" /> 
 		</java>
@@ -124,7 +128,7 @@
 	<target name="run-database-manager" description="Run database manager">
 		<java classname="org.hsqldb.util.DatabaseManagerSwing" dir="data" fork="yes">
 			<classpath>
-				<pathelement location="../../lib/hsqldb/hsqldb.jar" />
+				<pathelement location="../lib/hsqldb/hsqldb.jar" />
 			</classpath>
       <arg line="--user sa --url jdbc:hsqldb:hsql://localhost/templateapp" />
 		</java>				
