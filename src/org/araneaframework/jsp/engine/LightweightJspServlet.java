@@ -92,6 +92,8 @@ public class LightweightJspServlet extends HttpServlet {
       }
     }
 
+    log.debug("Evaluating JSP DOM from path: " + jspUri);
+    
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware(true);
