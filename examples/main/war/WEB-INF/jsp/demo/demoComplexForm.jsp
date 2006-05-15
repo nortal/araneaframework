@@ -43,7 +43,7 @@
 						<c:if test="${not empty form.elements['concreteBeastControl']}">
 							<ui:row>
 								<ui:formElement id="selectedBeastDesc">
-									<ui:cell colspan="2" styleClass="wrap-centered" width="50%">
+									<ui:cell colSpan="2" styleClass="wrap-centered" width="50%">
 										<ui:textDisplay/>
 									</ui:cell>
 								</ui:formElement>

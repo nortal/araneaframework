@@ -52,10 +52,6 @@ public class StandardRelocatableServiceDecorator extends BaseService implements 
       
       _endWaitingCall();
     }
-    
-    public Environment getCurrentEnvironment() throws Exception {
-      return getEnvironment();
-    }
   }
   
   //*******************************************************************

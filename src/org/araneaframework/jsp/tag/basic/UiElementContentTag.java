@@ -35,7 +35,7 @@ public class UiElementContentTag extends UiBaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    UiElementTag parent = (UiElementTag)requireContextEntry(UiElementTag.KEY);
+    UiElementTag parent = (UiElementTag)requireContextEntry(UiElementTag.KEY_REQUEST);
     parent.onContent();
 
     parent.writeAttributes(out);

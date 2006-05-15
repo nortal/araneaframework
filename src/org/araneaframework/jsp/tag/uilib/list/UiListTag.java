@@ -36,9 +36,9 @@ import org.araneaframework.uilib.list.ListWidget;
            </ul> "
  */
 public class UiListTag extends UiWidgetTag {
-	public final static String LIST_ID_KEY = "listId";
-	public final static String LIST_VIEW_MODEL_KEY = "list";  
-	public final static String LIST_FULL_ID_KEY = "listFullId";
+	public final static String LIST_ID_KEY_REQUEST = "listId";
+	public final static String LIST_VIEW_MODEL_KEY_REQUEST = "list";  
+	public final static String LIST_FULL_ID_KEY_REQUEST = "listFullId";
 	
 	protected ListWidget.ViewModel listViewModel;
 	protected String varSequence = "listSequence";
@@ -53,9 +53,9 @@ public class UiListTag extends UiWidgetTag {
 		}
 
 		// Set variables		
-		addContextEntry(LIST_ID_KEY, id);
-		addContextEntry(LIST_FULL_ID_KEY, fullId);
-		addContextEntry(LIST_VIEW_MODEL_KEY, listViewModel);
+		addContextEntry(LIST_ID_KEY_REQUEST, id);
+		addContextEntry(LIST_FULL_ID_KEY_REQUEST, fullId);
+		addContextEntry(LIST_VIEW_MODEL_KEY_REQUEST, listViewModel);
 
 		addContextEntry(varSequence, listViewModel.getSequence());
 

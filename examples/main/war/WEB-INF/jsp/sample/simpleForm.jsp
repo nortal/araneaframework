@@ -26,7 +26,7 @@
                      UiLayoutBaseTag tag, it gives one ability to put row tags inside of it. 
                      Attribute rowClass defines the styleClass attribute for rows inserted under 
                      componentForm here. In HTML, this tag creates a TABLE. -->
-				<ui:componentForm rowClasses="cols4">
+				<ui:componentForm rowClass="cols4">
 
 					<!-- As we can insert rows now, we just do that. -->
 					<ui:row>

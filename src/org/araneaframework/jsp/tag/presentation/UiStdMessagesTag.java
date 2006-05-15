@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.jsp.PageContext;
 import org.araneaframework.OutputData;
 import org.araneaframework.framework.filter.StandardMessagingFilterWidget;
 import org.araneaframework.jsp.tag.UiPresentationTag;
@@ -42,13 +43,13 @@ public class UiStdMessagesTag extends UiPresentationTag {
   protected String type;
 
   public UiStdMessagesTag() {
-    styleClass = "aranea-messages";
+    baseStyleClass = "aranea-messages";
   }
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    OutputData output = (OutputData) UiUtil.requireContextEntry(pageContext, UiAraneaRootTag.OUTPUT_DATA_KEY);
+    OutputData output = (OutputData) UiUtil.requireContextEntry(pageContext, UiAraneaRootTag.OUTPUT_DATA_KEY, PageContext.REQUEST_SCOPE);
     Map messageMap = (Map) output.getAttribute(StandardMessagingFilterWidget.MESSAGE_KEY);
 
     List entries = new ArrayList();

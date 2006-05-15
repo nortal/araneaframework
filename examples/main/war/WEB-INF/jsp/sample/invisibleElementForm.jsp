@@ -45,7 +45,7 @@
 							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
-							<ui:cell colspan="2"/>
+							<ui:cell colSpan="2"/>
 						</ui:row>
 					</ui:formElement>
 
@@ -57,7 +57,7 @@
 							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
-							<ui:cell colspan="2"/>			
+							<ui:cell colSpan="2"/>			
 						</ui:row>
 					</ui:formElement>
 				</ui:componentForm>

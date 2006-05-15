@@ -167,7 +167,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	 * @throws JspException when entry corresponding to key is not found
 	 */
 	protected Object requireContextEntry(String key) throws JspException {
-		return UiUtil.requireContextEntry(pageContext, key);
+		return UiUtil.requireContextEntry(pageContext, key, PageContext.REQUEST_SCOPE);
 	}
 	
 	/**
@@ -335,7 +335,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 				if (oldAttribute != null)
 					pageContext.setAttribute(key, oldAttribute, scope.intValue());
 				else
-					pageContext.removeAttribute(key, scope.intValue());
+					pageContext.removeAttribute(key, scope.intValue());				
 			}
 		}
 		

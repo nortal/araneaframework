@@ -1,25 +1,9 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- **/
-
 package org.araneaframework.template.tags.example.component;
 
 import java.io.Writer;
 import java.util.Iterator;
+import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
-import org.araneaframework.jsp.tag.layout.LayoutRowTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
@@ -39,7 +23,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  *   description = "Inside this tag list header should be written out." 
  */
 
-public class ComponentListHeaderTag extends LayoutRowTag {
+public class ComponentListHeaderTag extends UiPresentationTag {
   public final static String ORDER_EVENT_ID = "order";
   public final static String COMPONENT_LIST_STYLE_CLASS = "data";
   
@@ -49,17 +33,23 @@ public class ComponentListHeaderTag extends LayoutRowTag {
   
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
+    
+    UiUtil.writeOpenStartTag(out, "tr");
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeCloseStartTag(out);
+    
     writeHeader(out);
+    
     return EVAL_BODY_INCLUDE;
   }
   
   protected void writeHeader(Writer out) throws Exception {
     // Get system form id
-    String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY);
+    String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
     
     // Get list data
-    String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY);    
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
+    String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY_REQUEST);    
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST);
     
     // Get order data
     ListStructure.ViewModel listStructureViewModel = viewModel.getListStructure();

@@ -49,7 +49,7 @@ public class StandardSessionServiceRouterService extends BaseServiceRouterServic
   private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements SessionServiceContext {
     protected ServiceRouterContextImpl(Object serviceId) {
       super(serviceId);
-    }    
+    }
   }
 
   protected Object getServiceKey() throws Exception {

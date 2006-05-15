@@ -33,13 +33,16 @@ import org.araneaframework.core.NoSuchEnvironmentEntryException;
  */
 public interface Environment extends Serializable {
   /**
-   * Returns the entry with the specified key from this Environment.
+   * Returns the entry with the specified key from this Environment. 
+   * Returns null if the entry is not present in the environment.
    */
   public Object getEntry(Object key);
   
   /**
    * Does the same as {@link #getEntry(Object)}, but throws a {@link NoSuchEnvironmentEntryException} if 
    * entry cannot be found. 
+   * 
+   * @throws NoSuchEnvironmentEntryException If environment entry could not be found.
    */
-  public Object requireEntry(Object key);
+  public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException;
 }

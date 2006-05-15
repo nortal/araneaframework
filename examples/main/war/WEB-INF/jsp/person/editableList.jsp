@@ -108,8 +108,7 @@
                     </c:otherwise>						
                   </c:choose>
 
-                  <ui:cell>
-                    <ui:attribute name="width" value="0"/>
+                  <ui:cell width="0">
                     <c:choose>
                       <!-- Depending on formRow's current status, change button 
                            opens the formRow for editing or saves the formRow 
@@ -158,8 +157,7 @@
                   <ui:dateInput id="birthdate"/>
                 </ui:cell>							
 
-                <ui:cell>
-                  <ui:attribute name="width" value="0"/>
+                <ui:cell width="0">
                   <ui:linkButton id="add" showLabel="false"><ui:image code="buttonAdd"/></ui:linkButton>
                 </ui:cell>
               </ui:row>

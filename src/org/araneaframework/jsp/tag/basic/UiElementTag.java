@@ -37,7 +37,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Defines an HTML element."
  */
 public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface {
-	public final static String KEY = "org.araneaframework.jsp.ui.basic.UiElementTag.KEY";
+	public final static String KEY_REQUEST = "org.araneaframework.jsp.ui.basic.UiElementTag.KEY";
 
 	protected String name = null;
 	protected Map attributes = new HashMap();
@@ -54,8 +54,8 @@ public class UiElementTag extends UiBaseTag implements UiAttributedTagInterface 
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 
-		addContextEntry(KEY, this);
-		addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY, this);
+		addContextEntry(KEY_REQUEST, this);
+		addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
 
 		UiUtil.writeOpenStartTag(out, name);
 

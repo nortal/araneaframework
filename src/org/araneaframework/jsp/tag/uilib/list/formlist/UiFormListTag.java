@@ -17,6 +17,7 @@
 package org.araneaframework.jsp.tag.uilib.list.formlist;
 
 import java.io.Writer;
+import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.UiWidgetTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
@@ -39,19 +40,19 @@ import org.araneaframework.uilib.list.formlist.FormListWidget;
 public class UiFormListTag extends UiWidgetTag {
 	protected FormListWidget.ViewModel formListViewModel;
 	
-	public final static String FORM_LIST_ID_KEY = "formListId";
-	public final static String FORM_LIST_VIEW_MODEL_KEY = "formList";	
+	public final static String FORM_LIST_ID_KEY_REQUEST = "formListId";
+	public final static String FORM_LIST_VIEW_MODEL_KEY_REQUEST = "formList";	
 	/**
 	 *
 	 */
 	public int doStartTag(Writer out) throws Exception {
 		if (id == null) {
-			String listId = (String) UiUtil.requireContextEntry(pageContext, UiListTag.LIST_ID_KEY);
+			String listId = (String) UiUtil.requireContextEntry(pageContext, UiListTag.LIST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 			id = listId + ".formList";
 		}
 		
 		super.doStartTag(out);
-
+		
 		try {
 			formListViewModel = (FormListWidget.ViewModel) viewModel;
 		} catch (ClassCastException e) {
@@ -59,17 +60,9 @@ public class UiFormListTag extends UiWidgetTag {
 		}
 		
 		// Set variables
-		addContextEntry(FORM_LIST_ID_KEY, id);
-		addContextEntry(FORM_LIST_VIEW_MODEL_KEY, formListViewModel);		
-
+		addContextEntry(FORM_LIST_ID_KEY_REQUEST, id);
+		addContextEntry(FORM_LIST_VIEW_MODEL_KEY_REQUEST, formListViewModel);		
+		
 		return EVAL_BODY_INCLUDE; 
-	}
-
-	/* ***********************************************************************************
-	 * FINALLY - reset some fields to allow safe reuse from tag pool.
-	 * ***********************************************************************************/
-	public void doFinally() {
-		id = null;
-		super.doFinally();
-	}
+	}		
 }

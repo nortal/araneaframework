@@ -42,8 +42,7 @@ public class StandardSessionListener implements HttpSessionListener {
         (StandardRelocatableServiceDecorator) sessEvent.getSession().getAttribute(StandardServletSessionRouterService.SESSION_SERVICE_KEY);
 
       try {
-        if (service._getRelocatable().getCurrentEnvironment() == null)
-          service._getRelocatable().overrideEnvironment(new StandardEnvironment(null, new HashMap()));
+        service._getRelocatable().overrideEnvironment(new StandardEnvironment(null, new HashMap()));
         service._getComponent().destroy();
       }
       catch(Exception e) {

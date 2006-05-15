@@ -30,6 +30,7 @@ import org.araneaframework.core.BaseService;
 import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ManagedServiceContext;
+import org.araneaframework.servlet.util.ClientStateUtil;
 
 /**
  * A router service consists of multiple child services, they form a service map.
@@ -90,6 +91,8 @@ public abstract class BaseServiceRouterService extends BaseService {
     if (currentServiceId == null)
       currentServiceId = defaultServiceId;
 
+    ClientStateUtil.put((String)getServiceKey(), currentServiceId.toString(), output);
+    
     if (currentServiceId != null && _getChildren().containsKey(currentServiceId)) {
       output.pushAttribute(getServiceKey(), currentServiceId);
       

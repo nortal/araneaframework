@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.uilib.form;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.tag.UiPresentationTag;
@@ -38,8 +39,7 @@ public class UiFormElementBaseDisplayTag extends UiPresentationTag implements Ui
   protected FormElement.ViewModel formElementViewModel;
   protected Control.ViewModel controlViewModel;
 
-  private String id;
-  protected String derivedId;
+  protected String id;
   protected String tabindex;
   protected boolean events = true;
   protected boolean validate = true;
@@ -48,20 +48,19 @@ public class UiFormElementBaseDisplayTag extends UiPresentationTag implements Ui
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY);
+    formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
     FormWidget form = 
-      (FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY);
+      (FormWidget)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_KEY_REQUEST, PageContext.REQUEST_SCOPE);
 
     // In case the tag is in formElement tag
-    derivedId = id;
-    if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY) != null)
-    	derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY);
+    if (id == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null)
+      id = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
 
-    if (derivedId == null) throw new UiMissingIdException(this);
+    if (id == null) throw new UiMissingIdException(this);
 
     // get control and formelement viewmodels
     formElementViewModel = 
-      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
     controlViewModel = (formElementViewModel).getControl();
 
     return EVAL_BODY_INCLUDE;    

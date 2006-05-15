@@ -47,7 +47,7 @@ import org.araneaframework.uilib.form.FormWidget;
  *   description = "Automatic form element which dynamically draws correct form element tag."
  */
 public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
-  protected String derivedId;
+  protected String internalId;
   private String id;
   protected String events;
   protected String validate;
@@ -72,16 +72,16 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
     if(tagMapping == null)
       throw new JspException("The tag mapping was not found!.");
 
-    formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY);
-    FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY);
+    formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST);
+    FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY_REQUEST);
 
     //In case the tag is in formElement tag
-    derivedId = id;
-    if (derivedId == null && getContextEntry(UiFormElementTag.ID_KEY) != null) 
-    	derivedId = (String) getContextEntry(UiFormElementTag.ID_KEY);
-    if (derivedId == null) throw new UiMissingIdException(this);
+    internalId = id;
+    if (internalId == null && getContextEntry(UiFormElementTag.ID_KEY_REQUEST) != null) 
+    	internalId = (String) getContextEntry(UiFormElementTag.ID_KEY_REQUEST);
+    if (internalId == null) throw new UiMissingIdException(this);
     formElementViewModel = 
-      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+      (FormElement.ViewModel) UiWidgetUtil.traverseToSubWidget(form, internalId)._getViewable().getViewModel();   
 
     // Get control  
     controlViewModel = formElementViewModel.getControl();
@@ -106,7 +106,7 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
 
     initTagAttributes(tagClass, controlTag, viewSelector.getAttributes());
 
-    controlTag.setId(derivedId);
+    controlTag.setId(internalId);
     if(events != null)
       controlTag.setEvents(events);
     if(validate != null)

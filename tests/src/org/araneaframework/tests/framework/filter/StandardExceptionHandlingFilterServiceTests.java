@@ -29,6 +29,8 @@ import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.mock.MockRenderableStandardService;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulBaseService;
+import org.araneaframework.mock.servlet.MockServletAtomicResponseExtension;
+import org.araneaframework.servlet.ServletAtomicResponseOutputExtension;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.core.StandardServletInputData;
 import org.araneaframework.servlet.core.StandardServletOutputData;
@@ -103,11 +105,16 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
     service.setExceptionHandlerFactory(factory);
     MockLifeCycle.begin(service);
     
+    MockServletAtomicResponseExtension ext = new MockServletAtomicResponseExtension();
+    output.extend(ServletAtomicResponseOutputExtension.class, ext);
     service._getService().action(MockUtil.getPath(), input, output);
     
     // exception gets forwarded to render
     assertEquals(exception, this.exception);
     // render gets called
     assertTrue(factoryCreatedService.getActionCalled());
+    // rollback called
+    assertTrue(ext.getRollbackCalled());
+    // weeee, exception handled gracefully
   }
 }

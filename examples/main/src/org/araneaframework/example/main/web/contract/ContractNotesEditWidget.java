@@ -18,7 +18,6 @@ package org.araneaframework.example.main.web.contract;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormatSymbols;
-import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;

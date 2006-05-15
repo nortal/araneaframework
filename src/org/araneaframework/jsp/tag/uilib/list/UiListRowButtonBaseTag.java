@@ -43,7 +43,7 @@ public class UiListRowButtonBaseTag extends UiSimpleButtonBaseTag {
     if (contextWidgetId == null)
       throw new UiException("'listRow(Link)Button' tags can only be used in a context widget!");
 
-    eventParam = (String) requireContextEntry(UiListRowsTag.ROW_REQUEST_ID_KEY);
+    eventParam = (String) requireContextEntry(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST);
 
     updateRegionNames = UiUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 

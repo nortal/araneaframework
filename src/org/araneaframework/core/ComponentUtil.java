@@ -27,6 +27,6 @@ public class ComponentUtil {
       key = LISTENER_KEY + RandomUtils.nextLong();
     }
     
-    target._getComposite().attach(key, listener);
+    target._getComposite().attach(key, listener);    
   }
 }

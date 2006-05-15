@@ -41,7 +41,7 @@ public abstract class UiStdImageBaseTag extends UiImageBaseTag {
    * Method to write out image with given properties and default style.
    */ 
   public void writeImage(Writer out, String src, String width, String height, String title) throws JspException, IOException {
-    writeImage(out, src, width, height, null, getStyleClass(), title);
+    writeImage(out, src, width, height, null, styleClass, title);
   }
 
   public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass,  String title) throws JspException, IOException {

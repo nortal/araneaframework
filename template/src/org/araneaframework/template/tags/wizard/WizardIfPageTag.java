@@ -37,13 +37,13 @@ public class WizardIfPageTag extends UiBaseTag {
   public static final String INDEX_FIRST = "first";
   public static final String INDEX_LAST = "last";
   public static final String INDEX_NOT_PREFIX = "not";
-  public static final String WIDGET_CONTEXT_KEY = "org.araneaframework.jsp.ui.context.UiWidgetContextTag.WIDGET";
+  public static final String WIDGET_CONTEXT_KEY_REQUEST = "org.araneaframework.jsp.ui.context.UiWidgetContextTag.WIDGET";
 
   private String index;
   
   protected int doStartTag(Writer out) throws Exception {
 
-    WizardContext wizard = (WizardContext) requireContextEntry(WIDGET_CONTEXT_KEY);    
+    WizardContext wizard = (WizardContext) requireContextEntry(WIDGET_CONTEXT_KEY_REQUEST);    
 
     int curIndex = wizard.getCurrentPageIndex();
     int count = wizard.countPages();

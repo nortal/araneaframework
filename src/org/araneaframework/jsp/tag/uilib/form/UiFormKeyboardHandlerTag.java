@@ -108,7 +108,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	 * Either you specify this property, or the fullElementId property, not both.
 	 * <br>
 	 * The two attributes are here because there are currently two kinds of "button" tags
-	 * in Jwlf-Jsp-Ui. One is a <code>&lt;button&gt;</code> tag that corresponds
+	 * in Jsp-Ui. One is a <code>&lt;button&gt;</code> tag that corresponds
 	 * to a form element. This tag has an "id" attribute, and may look like
 	 * <pre>
 	 * &lt;button id="myButton"/&gt;
@@ -193,7 +193,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 
 		// Scope here means the analogue of "scope" attribute in UiKeyboardHandlerTag
 		// It must be prefixed by componentId when the surrounding systemForm's "scope" is "screen".
-		String scope = (String) pageContext.getAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY,
+		String scope = (String) pageContext.getAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST,
 		                                                 PageContext.REQUEST_SCOPE);
 		if (!StringUtils.isBlank(subscope)) {
 			if (StringUtils.isBlank(scope))
@@ -232,7 +232,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	public static final String elementIdToFullElementId(PageContext pageContext, String elementId) {
 		// Determine the full id.
 		String fullElementId = elementId;
-		String scope = (String) pageContext.getAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY,
+		String scope = (String) pageContext.getAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST,
 		                                                 PageContext.REQUEST_SCOPE);
 		if (!StringUtils.isBlank(scope))
 			fullElementId = scope + "." + elementId;

@@ -4,10 +4,10 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
-		<ui:componentHeader>
-			<ui:componentName>In memory editable List demo</ui:componentName>
-		</ui:componentHeader>
 		<ui:component>
+			<ui:componentHeader>
+				<ui:componentName>In memory editable List demo</ui:componentName>
+			</ui:componentHeader>
 
 			<ui:componentList>
 				<ui:formList id="editableList">

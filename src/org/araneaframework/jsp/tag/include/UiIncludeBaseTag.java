@@ -37,7 +37,7 @@ public class UiIncludeBaseTag extends UiBaseTag implements UiAttributedTagInterf
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY, this);
+    addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this);
     
     // Continue
     return EVAL_BODY_INCLUDE;   

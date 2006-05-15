@@ -53,7 +53,7 @@
 	
 	<target name="tld-check">
 		<uptodate property="tld-check.uptodate" targetfile="build/tmp/presentation/META-INF/aranea-presentation.tld">
-			<srcfiles dir="src/org/araneaframework/jsp"/>
+			<srcfiles dir="src/org/araneaframework/jsp/tag"/>
 		</uptodate>
 	</target>
 	
@@ -137,12 +137,19 @@
 		<jar destfile="dist/aranea-jsp.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/**/*"/>			
+				<exclude name="org/araneaframework/jsp/engine/**/*"/>			
 			</fileset>
 			<fileset dir="etc" includes="js/**/*"/>
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 		</jar>	
+		
+		<jar destfile="dist/aranea-jsp-engine.jar" compress="true">
+			<fileset dir="build/classes">
+				<include name="org/araneaframework/jsp/engine/**/*"/>			
+			</fileset>
+		</jar>			
 		
 		<jar destfile="dist/aranea.jar" compress="true">
 			<fileset dir="build/classes">

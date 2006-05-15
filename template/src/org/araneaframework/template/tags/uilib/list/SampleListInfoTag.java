@@ -52,11 +52,11 @@ public class SampleListInfoTag extends UiBaseTag {
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY);
+    String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
 
     // Get list data
-    String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY);    
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
+    String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY_REQUEST);    
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST);
 
     // Get sequence data
     SequenceHelper.ViewModel sequenceViewModel = viewModel.getSequence();
