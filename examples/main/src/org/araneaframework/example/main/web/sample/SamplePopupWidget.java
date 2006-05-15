@@ -17,10 +17,14 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.web.LoginWidget;
 import org.araneaframework.example.main.web.menu.ExampleMenuMessage;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 
+/**
+ * @author Taimo Peelo (taimo@webmedia.ee)
+ */
 public class SamplePopupWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
 		super.init();

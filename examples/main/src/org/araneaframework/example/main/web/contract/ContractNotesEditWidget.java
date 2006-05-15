@@ -73,8 +73,6 @@ public class ContractNotesEditWidget extends TemplateBaseWidget {
 	
 	// Builds FloatControl that accepts points and commas as decimal separator.
 	private FloatControl buildFloatControl() {		
-		FloatControl result = null;
-		
 		DecimalFormatSymbols symbols1 = new DecimalFormatSymbols();
 		symbols1.setDecimalSeparator(',');
 		DecimalPattern format1 = new DecimalPattern("0.#", symbols1);

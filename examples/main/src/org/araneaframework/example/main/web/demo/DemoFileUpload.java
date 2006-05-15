@@ -102,7 +102,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		
 		PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
 		PopupWindowProperties p = new PopupWindowProperties();
-		popupContext.open("download", service, p, TopServiceContext.class);
+		popupContext.openDetached(service, p);
 	}
 
 	// INNER CLASSES
