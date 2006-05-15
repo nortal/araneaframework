@@ -107,6 +107,7 @@ TABLE.data TD.inpt { padding: 2px 1px 1px 3px !important; }
 TABLE.data TD.inpt * { vertical-align: top; }
 TABLE.data .ico { margin: 0 1px 0 0; }
 TABLE.data TR.filter TD { background: #eeeeee url(?loadImage=gfx/i09.gif&importerType=imageFileImporter) repeat-x; border: 1px solid #e4e4e4; }
+TABLE.data TR.filter TD IMG { vertical-align: middle; }
 TABLE.data TR.filter TD.actions INPUT { font-family: Tahoma, Arial, Helvetica, sans-serif; padding: 2px 5px 1px 5px; }
 TABLE.data TR.filter .min { width: 40px; }
 TABLE.data TR.total-first TD { font-weight: bold; }

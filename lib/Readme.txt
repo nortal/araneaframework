@@ -22,12 +22,6 @@ project distribution/website before using any of them in your own applications.
 *****************************************************************************
 
 *****************************************************************************
-* ./base64/base64.jar
-- Base64 encoding/decoding (http://iharder.sourceforge.net/base64/)
-- Required for compiling the framework and running the client state filter.
-*****************************************************************************
-
-*****************************************************************************
 * ./jakarta-commons/commons-*.jar
 - Jakarta Project Commons (http://jakarta.apache.org/commons/)
 

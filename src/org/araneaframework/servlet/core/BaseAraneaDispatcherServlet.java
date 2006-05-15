@@ -59,7 +59,7 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
     } 
     catch (Exception e) {
       log.error("Unable to start Aranea.", e);
-      throw new ServletException(e.getMessage(), e);
+      throw new ServletException(e);
     }
     
     log.info("Aranea started");    
@@ -70,7 +70,7 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
       serviceAdapter.service(req, resp);
     }
     catch (Exception e) {
-      throw new ServletException(e.getMessage(), e);
+      throw new ServletException(e);
     }
   }
   
@@ -79,7 +79,7 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
       serviceAdapter.service(req, resp);
     }
     catch (Exception e) {
-      throw new ServletException(e.getMessage(), e);
+      throw new ServletException(e);
     }
   } 
 

@@ -17,7 +17,6 @@
 package org.araneaframework.servlet;
 
 import java.io.Serializable;
-import java.util.Map;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
@@ -25,15 +24,9 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
  */
 public interface PopupServiceInfo extends Serializable {
   /**
-   * @return Map of &lt;key, value&lt; where <i>keys</i> and <i>values</i>
-   *         give some information about popup service.
-   */
-  public Map getServiceInfo();
-	
-  /**
    * @return popup service's info translated into String containing URL style parameters. 
    */
-  public String toURLParams();
+  public String toURL();
 
   /**
    * @return popup service's window properties. 

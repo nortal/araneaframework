@@ -38,8 +38,9 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	public final static Long DEFAULT_DATE_INPUT_SIZE = new Long(11);
 	public final static Long DEFAULT_TIME_INPUT_SIZE = new Long(5);
 	
-	
 	protected String onChangePrecondition;
+	protected String calendarAlignment;
+	protected String calendarIconClass = "middle";
 	
 	/**
 	 * @jsp.attribute
@@ -50,6 +51,16 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
 		this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
 	}
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right)." 
+	 */
+	public void setCalendarAlignment(String calendarAlignment)throws JspException {
+		this.calendarAlignment = (String) evaluate("calendarAlignment", calendarAlignment, String.class);
+	}
 
 	/**
 	 * Writes out date input
@@ -57,7 +68,6 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	 * @see #writeTimeInput
 	 * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005 -- added callback function argument to popup-calendar
 	 */
-    //XXX: not used ANYWHERE
 	protected void writeDateInput(
 			Writer out, 
 			String id,
@@ -106,7 +116,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			out.write(ImageFileImporter.getImportString("gfx/ico_calendar.gif"));
 			out.write("\" ");
 			UiUtil.writeAttribute(out, "id", calendarImgId);
-			//UiUtil.writeAttribute(out, "class", "ico");
+			UiUtil.writeAttribute(out, "class", calendarIconClass);
 			UiUtil.writeCloseStartTag_SS(out);
 	
 			UiUtil.writeEndTag_SS(out, "a");
@@ -181,9 +191,11 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 		script.append("\",\nsingleClick : true, ");
 		script.append("\nstep: 1, ");
 		script.append("\nfirstDay: 1");
+		if (calendarAlignment != null)
+			script.append(",\nalign:\"").append(calendarAlignment).append("\"");
 		script.append("\n});");
-		
+
 		out.write(script.toString());
-		UiUtil.writeEndTag(out, "script");
+		UiUtil.writeEndTag_SS(out, "script");
 	}
 }

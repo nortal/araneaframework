@@ -87,7 +87,7 @@
 	<target name="tld-check">
 		<uptodate property="tld-check.uptodate" targetfile="build/tld/META-INF/aranea-template.tld">						
 			<srcfiles dir="src/org/araneaframework/template/tags"/>
-      <srcfiles dir="../src/org/araneaframework/jsp/tag"/>  
+      <srcfiles dir="../src/org/araneaframework/jsp"/>  
 		</uptodate>
 	</target>
 	

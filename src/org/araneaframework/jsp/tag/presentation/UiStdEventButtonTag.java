@@ -36,10 +36,6 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
 
   protected String renderMode = UiStdEventButtonTag.RENDER_BUTTON;  
 
-  public UiStdEventButtonTag() {
-    baseStyleClass = "aranea-button";
-  }
-
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);                
     // Write button tag

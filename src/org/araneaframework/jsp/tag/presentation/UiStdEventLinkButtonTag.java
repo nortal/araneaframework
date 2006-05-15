@@ -29,11 +29,6 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Represents a link with an onClick JavaScript event."
  */
 public class UiStdEventLinkButtonTag extends UiEventButtonBaseTag {
-
-  public UiStdEventLinkButtonTag() {
-    baseStyleClass = "aranea-link-button"; 
-  }
-
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);          
 

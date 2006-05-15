@@ -33,10 +33,6 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 public class UiStdFormCheckboxDisplayTag extends UiFormElementBaseDisplayTag {
   protected String imageCode;
 
-  public UiStdFormCheckboxDisplayTag() {
-    baseStyleClass = "aranea-checkbox-display";
-  }
-
   protected int doEndTag(Writer out) throws Exception {        
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 

@@ -33,11 +33,6 @@ import org.araneaframework.jsp.util.UiUtil;
 public class UiStdLinkTag extends UiLinkBaseTag {
   private String disabledStyleClass;
 
-  public UiStdLinkTag() {
-    baseStyleClass = "aranea-link-button"; 
-    disabledStyleClass = "aranea-disabled-link-button";
-  }
-
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -77,8 +72,7 @@ public class UiStdLinkTag extends UiLinkBaseTag {
    *   required = "false"
    *   description = "CSS class for disabled link" 
    */
-  public void setDisabledStyleClass(String disabledCssClass) throws JspException {
-    this.disabledStyleClass = (String)this.evaluate("disabledStyleClass", disabledCssClass, String.class);
+  public void setDisabledStyleClass(String disabledStyleClass) throws JspException {
+    this.disabledStyleClass = (String)this.evaluate("disabledStyleClass", disabledStyleClass, String.class);
   }
 }
-

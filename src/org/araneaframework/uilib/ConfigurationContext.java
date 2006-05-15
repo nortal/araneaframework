@@ -33,7 +33,7 @@ public interface ConfigurationContext extends Serializable {
   public static final String CUSTOM_TIME_FORMAT = "uilib.widgets.forms.controls.CustomTimeFormat";  
   
   /**
-   * <code>DecimalPattern[]</code> containing the patterns for <code>BigDecimal</code> decimal validation.
+   * <code>List&gt;DecimalPattern&lt;</code> containing the patterns for <code>BigDecimal</code> decimal validation.
    */
   public static final String CUSTOM_DECIMAL_FORMAT = "uilib.widgets.forms.controls.CustomDecimalFormat";
   

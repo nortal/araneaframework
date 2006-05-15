@@ -37,8 +37,6 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Represents localizable label."
  */
 public class UiStdFormSimpleLabelTag extends UiPresentationTag {
-  public final static String ASTERISK_STYLE = "aranea-label-asterisk";
-  
   protected boolean showColon = true;
   protected String labelId;
   protected boolean mandatory = false; 
@@ -140,7 +138,7 @@ public class UiStdFormSimpleLabelTag extends UiPresentationTag {
 
     if (mandatory) {
       UiUtil.writeOpenStartTag(out, "span");
-      UiUtil.writeAttribute(out, "class", ASTERISK_STYLE);
+      UiUtil.writeAttribute(out, "class", styleClass);
       UiUtil.writeCloseStartTag_SS(out);
       out.write("*&nbsp;");
       UiUtil.writeEndTag_SS(out, "span");

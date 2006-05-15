@@ -42,10 +42,10 @@ public class JsFileImporter extends DefaultFileImporter {
 		jsFiles.add("js/validation/localization.js");
 		jsFiles.add("js/validation/clientside-form-validation.js");
 		jsFiles.add("js/validation/clientside-datetime-form-validation.js");		
-		jsFiles.add("js/validation/jsp-ui-events.js");
-		jsFiles.add("js/validation/jsp-ui-form-validation.js");
-		jsFiles.add("js/validation/jsp-ui-validation.js");
-		jsFiles.add("js/validation/jsp-ui.js");
+		jsFiles.add("js/validation/jwlf-jsp-ui-events.js");
+		jsFiles.add("js/validation/jwlf-jsp-ui-form-validation.js");
+		jsFiles.add("js/validation/jwlf-jsp-ui-validation.js");
+		jsFiles.add("js/validation/jwlf-jsp-ui.js");
 		
 		jsFiles.add("js/calendar/calendar.js");
 		jsFiles.add("js/calendar/calendar-en.js");
@@ -54,7 +54,7 @@ public class JsFileImporter extends DefaultFileImporter {
 	
 	private static final List tmpltJsFiles = new ArrayList();
 	static {
-		tmpltJsFiles.add("js/validation/template-jsp-ui.js");
+		tmpltJsFiles.add("js/validation/template-jwlf-jsp-ui.js");
 	}
 	
 	private static final List roJsFiles = Collections.unmodifiableList(jsFiles);

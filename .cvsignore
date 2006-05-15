@@ -14,4 +14,3 @@ tmp
 .refactorings
 dist
 aranea-main-example.launch
-.ant-targets-build.xml

@@ -67,8 +67,11 @@ public class UiPopupRegistrationTag extends UiBaseTag {
 	String serviceId = (String)popup.getKey();
     PopupServiceInfo serviceInfo = (PopupServiceInfo)popup.getValue();
 
-	out.write("addPopup('"  + serviceId + "', '" + 
-              (serviceInfo.getPopupProperties() != null ? serviceInfo.getPopupProperties().toString():"")+ 
-              "', '?"  + serviceInfo.toURLParams() + "', '" + systemFormId + "');\n");
+    out.write("addPopup('"  + serviceId + "'");
+    out.write(", '");
+    out.write(serviceInfo.getPopupProperties() != null ? serviceInfo.getPopupProperties().toString():"");
+    out.write("', '");
+    out.write(serviceInfo.toURL());
+    out.write("');");
   }
 }

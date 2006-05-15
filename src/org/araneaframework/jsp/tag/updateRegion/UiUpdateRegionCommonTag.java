@@ -38,13 +38,10 @@ public class UiUpdateRegionCommonTag extends UiUpdateRegionBaseTag {
     UiUtil.writeAttribute(out, "id",  fullId);
     UiUtil.writeCloseStartTag(out);
     
-    out.write("<!--BEGIN:" + fullId + "-->");
-    
     return EVAL_BODY_INCLUDE;
   }    
   
   protected int doEndTag(Writer out) throws Exception {
-	out.write("<!--END:" + fullId + "-->");
     UiUtil.writeEndTag(out, "span");
     
     return super.doEndTag(out);

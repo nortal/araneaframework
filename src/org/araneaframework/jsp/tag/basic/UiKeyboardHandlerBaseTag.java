@@ -34,9 +34,12 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Konstantin Tretyakov (kt@webmedia.ee)
  */
 public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
+  protected String defaultKeyCode;
   protected String intKeyCode;
-  protected String intKey;
   protected String keyCode;
+  
+  protected String defaultKey;
+  protected String intKey;
   protected String key;
   
 	//
@@ -85,8 +88,8 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-		intKey = key;
-		intKeyCode = keyCode;
+		intKey = (key == null && keyCode == null) ? defaultKey : key;
+		intKeyCode = (key == null && keyCode == null) ? defaultKeyCode : keyCode;
 		
 		if (!(intKeyCode == null ^ intKey == null)) 
 			throw new JspException("Either key or keyCode must be specified for a keyboard handler tag.");

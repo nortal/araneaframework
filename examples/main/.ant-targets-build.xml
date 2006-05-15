@@ -1,7 +1,0 @@
-build
-clean
-run-app
-run-app-only
-run-database
-run-database-manager
-xdoclet.hibernate

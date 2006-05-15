@@ -39,10 +39,6 @@ public class UiStdFormTextareaTag extends UiFormElementBaseTag {
   protected Long cols;
   protected Long rows;
   
-  public UiStdFormTextareaTag() {
-    baseStyleClass = "aranea-textarea";
-  }
-  
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("TextareaControl");    
     

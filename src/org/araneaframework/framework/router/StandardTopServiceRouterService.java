@@ -18,7 +18,6 @@ package org.araneaframework.framework.router;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.StandardEnvironment;
@@ -49,7 +48,7 @@ public class StandardTopServiceRouterService extends BaseServiceRouterService {
     entries.put(TopServiceContext.class, new ServiceRouterContextImpl(serviceId));
     return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
-    
+  
   private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements TopServiceContext {
     protected ServiceRouterContextImpl(Object serviceId) {
       super(serviceId);

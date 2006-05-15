@@ -96,9 +96,9 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
     TagInfo tagInfo = (TagInfo) tagMapping.get(viewSelector.getTag());
 
     if(tagInfo == null)
-      throw new JspException("Unexistant tag was passed to form element view selector!.");    
+      throw new JspException("Unexistant tag was passed to form element view selector!.");
 
-    Class tagClass = Class.forName(tagInfo.getTagClassName());
+   	Class tagClass = Class.forName(tagInfo.getTagClassName(), true, Thread.currentThread().getContextClassLoader());
 
     controlTag = (UiFormElementTagInterface) tagClass.newInstance();
 

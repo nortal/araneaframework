@@ -38,10 +38,6 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
   private static final String RENDER_INPUT = "input";
   protected String renderMode = UiStdFormButtonTag.RENDER_BUTTON;
 
-  public UiStdFormButtonTag() {
-    baseStyleClass = "aranea-button";
-  }
-
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 

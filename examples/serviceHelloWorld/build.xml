@@ -5,16 +5,14 @@
 	
 	<!--Set the classpath-->
 	<path id="classpath">
-	    <fileset dir="../../lib" includes="**/*.jar"/>
-	    <fileset dir="../lib" includes="**/*.jar"/>
-		
+    <fileset dir="../../lib" includes="**/*.jar" excludes="cobertura//**/*"/>
 		<fileset dir="../.." includes="dist/aranea.jar"/>
 		<fileset dir="../.." includes="template/dist/aranea-template.jar"/>
 	</path>
 	
 	<!--Set the Jetty classpath-->
 	<path id="classpath.jetty">
-		<fileset dir="../lib/jetty" includes="*.jar" />
+		<fileset dir="../../lib/jetty" includes="*.jar" />
 		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
 	</path>
 	
@@ -44,10 +42,7 @@
 			<fileset dir="../../lib">
 				<include name="**/*.jar" />
 				<exclude name="j2ee.jar" />
-			</fileset>
-			<fileset dir="../lib">
-				<include name="**/*.jar" />
-				<exclude name="jetty/*jar"/>
+				<exclude name="jetty/*jar" />				
 			</fileset>
 			<fileset file="../../dist/aranea.jar"/>
 			<fileset file="../../template/dist/aranea-template.jar"/>							

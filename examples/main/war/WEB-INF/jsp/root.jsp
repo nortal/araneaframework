@@ -1,8 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"  %>
 <%@ taglib prefix="ui" uri="http://araneaframework.org/tag-library/template" %>
 
-<jsp:directive.page contentType="text/html; charset=UTF-8"/>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!-- This is a master page of Aranea framework template application (examples/main/war/WEB-INF/jsp/root.jsp) -->
@@ -22,7 +20,7 @@
                 <body onload="processLoadEvents()" onunload="processUnloadEvents()">
 
                     <div id="cont1">
-                        <ui:systemForm method="POST" enctype="multipart/form-data">
+                        <ui:systemForm method="POST">
                         <ui:registerPopups/>
                         
 						<!-- Renders the menu on top of the screen -->

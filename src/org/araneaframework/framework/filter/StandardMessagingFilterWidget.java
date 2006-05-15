@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
+import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardEnvironment;
@@ -46,6 +47,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
+  private static final Logger log = Logger.getLogger(StandardMessagingFilterWidget.class);
   public static final String MESSAGE_KEY = "org.araneaframework.framework.filter.StandardMessagingFilterWidget.MESSAGES"; 
   
   private Map messages = new LinkedMap();
@@ -81,6 +83,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
    *</p>
    */
   protected void render(OutputData output) throws Exception {
+	  log.debug("---------- MESSAGING RENDER CALLED ---");
     Map typedMessages = new HashMap();
     
     for (Iterator i = messages.entrySet().iterator(); i.hasNext();) {

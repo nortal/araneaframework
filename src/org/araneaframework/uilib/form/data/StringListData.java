@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.uilib.form.Data;
 
@@ -27,5 +28,6 @@ public class StringListData extends Data {
 
   public StringListData() {
     super(List.class, "List<String>");
-  }  
+    value = new ArrayList();
+  }
 }

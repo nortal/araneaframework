@@ -32,8 +32,8 @@ import javax.servlet.jsp.JspException;
  */
 public final class UiFormEnterKeyboardHandlerTag extends UiFormKeyboardHandlerTag {
 	public UiFormEnterKeyboardHandlerTag() {
-		key = "enter";
-		event = "onclick";
+		defaultKey = "enter";
+		defaultEvent = "onclick";
 	}
 
 	/**
