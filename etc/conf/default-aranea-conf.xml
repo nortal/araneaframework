@@ -132,15 +132,11 @@
         <ref bean="araneaContexts"/>
         <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter"
             singleton="false">
-            <property name="serviceFactoryMap">
-                <map>
-                  <entry key="org.araneaframework.framework.ThreadContext">
-                    <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" singleton="false">
-                      <property name="beanId" value="araneaThreadFilters"/>
-                    </bean>                    
-                  </entry>
-                </map>
-            </property>
+            <property name="threadServiceFactory">
+                <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" singleton="false">
+                    <property name="beanId" value="araneaThreadFilters"/>
+                </bean>
+             </property>
         </bean>
         <bean class="org.araneaframework.ioc.spring.SpringOptionalFilterWidget" singleton="false">
           <property name="beanId" value="customWidgetFilters"/>
@@ -242,6 +238,6 @@
     </property>    
   </bean>
   
-  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.DefaultConfiguration" singleton="false"/>
+  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
   
 </beans>

@@ -39,27 +39,15 @@ var requestArgumentsPrefix = "?topServiceId=application&threadServiceId=";
 // popup properties, used for all types of popups
 var popupProperties = new Object();
 
-function currentUrl(systemFormId) {
-	if (document.getElementById(systemFormId) && document.getElementById(systemFormId).action) {
-		return document.getElementById(systemFormId).action;
-	} else if (document.forms[systemFormId] && document.forms[systemFormId].action) {
-	    return document.forms[systemFormId].action;
-	} else {
-		return location.href;
-	}
-}
-
-function addPopup(popupId, windowProperties, urlSuffix, systemFormId) {
+function addPopup(popupId, windowProperties, url) {
 	popups[popupId] = popupId;
 	popupProperties[popupId] = new Object();
 	popupProperties[popupId].windowProperties = windowProperties;
-	popupProperties[popupId].systemFormId = systemFormId;
-	popupProperties[popupId].urlSuffix = urlSuffix;
+	popupProperties[popupId].url = url;
 }
 
-function openPopup(popupId, properties) {
-	url = currentUrl(properties.systemFormId) + properties.urlSuffix;
-	w = window.open(url, popupId, properties.windowProperties);
+function openPopup(popupId) {
+	w = window.open(popupProperties[popupId].url, popupId, popupProperties[popupId].windowProperties);
 	if (w) {
 		w.focus();
 	}
