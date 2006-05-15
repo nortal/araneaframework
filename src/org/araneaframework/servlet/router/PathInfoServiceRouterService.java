@@ -39,7 +39,7 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
     Map entries = new HashMap();    
     entries.put(PathInfoServiceContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
   
   private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements PathInfoServiceContext {
