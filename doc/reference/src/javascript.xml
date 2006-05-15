@@ -423,7 +423,7 @@ formValidator.addValidator(elementValidator);</programlisting>
 
 				<para>
 					We'll take a look at the example which is accessible from <literal>/etc/js/validation/validation.html</literal>.
-					In jwlf-jsp-ui-form-validation.js a subclass of Formvalidator is defined, UiFormValidator. The subclass adds
+					In jsp-ui-form-validation.js a subclass of Formvalidator is defined, UiFormValidator. The subclass adds
 					many helper functions for adding different validators with some more specific rules. We'll take a look at a few.
 				</para>
 				
@@ -471,7 +471,7 @@ function(elementName, elementLabel, mandatory){
                </programlisting>
             </para>
             <para>
-               The <literal>jwlf-jsp-ui-validation.js</literal> defines many other such helper functions.
+               The <literal>jsp-ui-validation.js</literal> defines many other such helper functions.
                The names of them are selfexplanatory and we will be looking at how to use them to
                do form validation.
             </para>

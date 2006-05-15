@@ -48,7 +48,7 @@ public abstract class UiImportFileTag extends UiBaseTag {
 		this.includeFileName = (String) evaluate("file", file, String.class);
 	}
 		
-	public int after(Writer out) throws Exception {
+	public int doEndTag(Writer out) throws Exception {
 		return EVAL_PAGE;
 	}
 	
