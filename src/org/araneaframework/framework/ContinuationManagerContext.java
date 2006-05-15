@@ -21,7 +21,7 @@ import org.araneaframework.Service;
 
 /**
  * This context allows to abort the current execution flow and pass control to a provided continuation service. The continuation service will
- * be rendered on the current and subsequent request until it explicitly passes control back using {@link org.araneaframework.framework.ContinuationContext#restore()}. This
+ * be rendered on the current and subsequent request until it explicitly passes control back using {@link org.araneaframework.framework.ContinuationContext#finish()}. This
  * will end the continuation and restore control back.  
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -30,18 +30,18 @@ import org.araneaframework.Service;
 public interface ContinuationManagerContext extends Serializable {
   /**
    * Returns whether a continuation is already registered during this request and is ready to run. In such a case it is unsafe
-   * to override the continuation using {@link #runContinuation(Service)}.
+   * to override the continuation using {@link #start(Service)}.
    */
-  public boolean isContinuationRunning();
+  public boolean isRunning();
   
   /**
    * Starts the continuation (by registering it and then throwing and exception, thus passing control to the continuation manager). 
    */
-  public void runContinuation(Service continuation) throws Exception;  
+  public void start(Service continuation) throws Exception;  
   
   /**
-   * Does same as {@link #runContinuation(Service)}, however after the first request passes through the continuation will return control 
+   * Does same as {@link #start(Service)}, however after the first request passes through the continuation will return control 
    * back to the starting component. 
    */
-  public void runContinuationOnce(Service continuation) throws Exception;
+  public void runOnce(Service continuation) throws Exception;
 }

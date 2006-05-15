@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.presentation;
 
@@ -30,14 +30,13 @@ import org.araneaframework.jsp.util.UiUtil;
  */
 public class UiStdEventLinkButtonTag extends UiEventButtonBaseTag {
 
-	protected void init() {
-		super.init();
-		styleClass = "aranea-link-button"; 
-	}
-	
-	protected int before(Writer out) throws Exception {
-    super.before(out);          
-    
+  public UiStdEventLinkButtonTag() {
+    baseStyleClass = "aranea-link-button"; 
+  }
+
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);          
+
     UiUtil.writeOpenStartTag(out, "a");
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", getStyleClass());
@@ -54,20 +53,16 @@ public class UiStdEventLinkButtonTag extends UiEventButtonBaseTag {
           onClickPrecondition,
           updateRegionNames);       
     UiUtil.writeCloseStartTag_SS(out);    
-    
-    // Continue
+
     return EVAL_BODY_INCLUDE;    
   }    
-    
-  protected int after(Writer out) throws Exception {
-    
+
+  protected int doEndTag(Writer out) throws Exception {
     if (localizedLabel != null)
       UiUtil.writeEscaped(out, localizedLabel);
-    
-    UiUtil.writeEndTag(out, "a"); 
-    
-    // Continue
-    super.after(out);
+
+    UiUtil.writeEndTag_SS(out, "a"); 
+    super.doEndTag(out);
     return EVAL_PAGE;
   }  
 }
