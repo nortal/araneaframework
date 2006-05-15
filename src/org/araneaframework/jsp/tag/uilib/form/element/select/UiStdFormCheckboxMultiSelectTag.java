@@ -73,7 +73,7 @@ public class UiStdFormCheckboxMultiSelectTag extends UiFormElementBaseTag {
         item.setUpdateRegions(updateRegions);
       if(globalUpdateRegions != null)
         item.setGlobalUpdateRegions(globalUpdateRegions);
-      item.setStyleClass(styleClass);
+      item.setStyleClass(getStyleClass());
 
       if(tabindex != null)
         item.setTabindex(tabindex);        

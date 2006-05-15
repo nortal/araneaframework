@@ -230,34 +230,6 @@ public class FormControlTest extends TestCase {
   }
   
   /**
-   * Tests that {@link TextControl} with content type set to personal id
-   * lets only valid Estonian personal ids through. 
-   */
-  public void testPersonalIdControlSimpleValidation() throws Exception {
-    MockHttpServletRequest correctValueRequest = new MockHttpServletRequest();
-    correctValueRequest.addParameter("myPersonalIdInput", "38304280235");
-    
-    TextControl pic = new TextControl(TextType.EST_PERSONAL_ID);
-    pic._getComponent().init(new MockEnvironment());
-    MockUiLibUtil.emulateHandleRequest(pic, "myPersonalIdInput", correctValueRequest);
-    pic.convertAndValidate();
-    
-    assertTrue("Personal id control must be valid.", pic.isValid());
-    assertTrue("Personal id control value must be a 'String'.", pic.getRawValue() instanceof String);
-    assertTrue("Personal id control value must be '38304280235'.", ((String) pic.getRawValue()).equals("38304280235"));
-     
-    MockHttpServletRequest incorrectValueRequest = new MockHttpServletRequest();
-    incorrectValueRequest.addParameter("myPersonalIdInput", "abcd");
-    
-    MockUiLibUtil.emulateHandleRequest(pic, "myPersonalIdInput", incorrectValueRequest);
-    pic.convertAndValidate();    
-    
-    assertTrue("Personal id control mustn't be valid.", !pic.isValid());
-    
-    pic._getComponent().destroy();
-  }
-  
-  /**
    * Tests that {@link TextControl} uses the min/max length parameters
    * for validation. 
    */

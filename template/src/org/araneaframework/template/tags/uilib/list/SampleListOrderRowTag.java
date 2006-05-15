@@ -52,12 +52,12 @@ public class SampleListOrderRowTag extends UiBaseTag {
 		
 		// Get system form id
 		log.debug("Get system form id");
-		String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
+		String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY);
 		
 		// Get list data
 		log.debug("Get list data");
-		String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY_REQUEST);    
-		ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST);
+		String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY);    
+		ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
 		
 		// Get order data
 		log.debug("Get order data");

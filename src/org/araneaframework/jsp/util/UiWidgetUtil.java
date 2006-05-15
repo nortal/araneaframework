@@ -55,7 +55,7 @@ public class UiWidgetUtil {
 	public static Custom.CustomWidget getWidgetFromContext(String widgetId, PageContext pageContext) throws JspException {
       UiWidgetContainer container = 
         (UiWidgetContainer) UiUtil.requireContextEntry(pageContext,
-            UiWidgetContainer.REQUEST_CONTEXT_KEY, PageContext.REQUEST_SCOPE);
+            UiWidgetContainer.REQUEST_CONTEXT_KEY);
       
       String widgetFullId = getWidgetFullIdFromContext(widgetId, pageContext);
       

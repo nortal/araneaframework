@@ -37,11 +37,6 @@ public class TextType extends Enum implements Serializable {
   public final static TextType TEXT = new TextType("TEXT");  
   
   /**
-   * Estonian personal id. 
-   */
-  public final static TextType EST_PERSONAL_ID = new TextType("PERSONAL_ID");
-  
-  /**
    * String containing numbers only. 
    */
   public final static TextType NUMBER_ONLY = new TextType("NUMBER_ONLY");   

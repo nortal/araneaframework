@@ -36,7 +36,7 @@ public class UiListRowsTag extends UiListRowsBaseTag {
 	
 	public int doStartTag(Writer out) throws Exception {
 		// Get list data    
-		viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST);
+		viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
 		return super.doStartTag(out);
 	}
 	

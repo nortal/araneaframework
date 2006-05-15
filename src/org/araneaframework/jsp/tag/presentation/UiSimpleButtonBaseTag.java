@@ -39,7 +39,7 @@ public class UiSimpleButtonBaseTag extends UiPresentationTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    systemFormId = (String) requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
+    systemFormId = (String) requireContextEntry(UiSystemFormTag.ID_KEY);
 
     if (labelId != null)
       localizedLabel = UiUtil.getResourceString(pageContext, labelId);

@@ -57,7 +57,7 @@ public class UiPopupRegistrationTag extends UiBaseTag {
   }
 
   protected void addPopups(Writer out, Map popups) throws Exception {
-    String systemFormId = (String) requireContextEntry(UiSystemFormTag.ID_KEY_REQUEST);
+    String systemFormId = (String) requireContextEntry(UiSystemFormTag.ID_KEY);
 	for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
 	  addPopup(out, systemFormId, (Map.Entry)i.next());
 	}

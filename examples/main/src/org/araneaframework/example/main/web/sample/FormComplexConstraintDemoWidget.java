@@ -26,7 +26,6 @@ import org.araneaframework.uilib.form.constraint.OrConstraint;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.support.TextType;
 
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
@@ -47,7 +46,7 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
     searchForm.addElement("clientFirstName", "#Client first name", new TextControl(), new StringData(), false);
     searchForm.addElement("clientLastName", "#Client last name", new TextControl(), new StringData(), false);
 
-    searchForm.addElement("clientPersonalId", "#Client personal id", new TextControl(TextType.EST_PERSONAL_ID), new StringData(), false);
+    searchForm.addElement("clientPersonalId", "#Client personal id", new TextControl(), new StringData(), false);
     
     searchForm.addElement("clientAddressTown", "#Town", new TextControl(), new StringData(), false);
     searchForm.addElement("clientAddressStreet", "#Street", new TextControl(), new StringData(), false);
@@ -74,13 +73,13 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
     clientAddressConstraint.addConstraint(new NotEmptyConstraint(searchForm.getElementByFullName("clientAddressHouse")));
     
     //Combining scenarios
-    OrConstraint searchConstraint = new OrConstraint();    
-    searchConstraint.addConstraint(clientNameConstraint);
+    OrConstraint searchConstraint = new OrConstraint();  
     searchConstraint.addConstraint(clientPersonalIdConstraint);
+    searchConstraint.addConstraint(clientNameConstraint);
     searchConstraint.addConstraint(clientAddressConstraint);
     
     //Setting custom error message
-    searchConstraint.setCustomErrorMessage("Not enough data! Please fill in either client first and lastname or client personal id or client town, street and number");
+    searchConstraint.setCustomErrorMessage("Not enough data! Please fill in either (client first and last name) or (client personal id) or (client town, street and number)");
     
     //Setting constraint
     searchForm.setConstraint(searchConstraint);

@@ -37,7 +37,7 @@ import org.araneaframework.uilib.list.formlist.FormRow;
  */
 public class UiFormListRowsTag extends UiListRowsBaseTag {
   
-	public static final String EDITABLE_ROW_KEY_REQUEST = "formRow";
+	public static final String EDITABLE_ROW_KEY = "formRow";
 	
 	protected FormListWidget.ViewModel editableListViewModel;
 	protected String editableListId;
@@ -47,8 +47,8 @@ public class UiFormListRowsTag extends UiListRowsBaseTag {
 	protected String var = "row";
 	
 	public int doStartTag(Writer out) throws Exception {
-		editableListViewModel = (FormListWidget.ViewModel)requireContextEntry(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY_REQUEST);
-		editableListId = (String)requireContextEntry(UiFormListTag.FORM_LIST_ID_KEY_REQUEST);
+		editableListViewModel = (FormListWidget.ViewModel)requireContextEntry(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY);
+		editableListId = (String)requireContextEntry(UiFormListTag.FORM_LIST_ID_KEY);
 		return super.doStartTag(out);
 	}
   
@@ -80,7 +80,7 @@ public class UiFormListRowsTag extends UiListRowsBaseTag {
 	  	Object currentRowKey = editableListViewModel.getRowHandler().getRowKey(currentRow);
 	  	FormRow.ViewModel currentEditableRow = (FormRow.ViewModel) editableListViewModel.getFormRows().get(currentRowKey);
 	  	
-	  	addContextEntry(EDITABLE_ROW_KEY_REQUEST, currentEditableRow);
+	  	addContextEntry(EDITABLE_ROW_KEY, currentEditableRow);
 	  	addContextEntry(var, currentRow);	
 	  	
 	    registerSubtag(rowForm);

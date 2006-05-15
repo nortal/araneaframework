@@ -18,10 +18,13 @@ package org.araneaframework.jsp.util;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.StringTokenizer;
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -33,8 +36,8 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.basic.UiElementTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
-import org.araneaframework.jsp.tag.layout.UiLayoutRowTagInterface;
-import org.araneaframework.jsp.tag.layout.UiLayoutTagInterface;
+import org.araneaframework.jsp.tag.layout.CellClassProvider;
+import org.araneaframework.jsp.tag.layout.RowClassProvider;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementTag;
 import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListRowsTag;
@@ -49,28 +52,28 @@ import org.araneaframework.jsp.tag.uilib.list.formlist.UiFormListTag;
 public class UiUtil {
   private static final Map attributeErrorMap = new HashMap();  
   static {
-    attributeErrorMap.put(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, null);
-    attributeErrorMap.put(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, null);
+    attributeErrorMap.put(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
+    attributeErrorMap.put(UiPresentationTag.ATTRIBUTED_TAG_KEY, null);
 
-    attributeErrorMap.put(UiFormListTag.FORM_LIST_ID_KEY_REQUEST, "<ui:formList> tag expected, but not found!");
-    attributeErrorMap.put(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY_REQUEST, "<ui:formList> tag expected, but not found!");
+    attributeErrorMap.put(UiFormListTag.FORM_LIST_ID_KEY, "<ui:formList> tag expected, but not found!");
+    attributeErrorMap.put(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY, "<ui:formList> tag expected, but not found!");
 
-    attributeErrorMap.put(UiElementTag.KEY_REQUEST, "<ui:element> tag expected, but not found! Probably this is an attempt to use <ui:elementContent> or <ui:attribute> outside <ui:element> tag.");
+    attributeErrorMap.put(UiElementTag.KEY, "<ui:element> tag expected, but not found! Probably this is an attempt to use <ui:elementContent> or <ui:attribute> outside <ui:element> tag.");
 
-    attributeErrorMap.put(UiFormElementTag.ID_KEY_REQUEST, "<ui:formElement> tag expected, but not found!  Make sure that form element and control tags either have an 'id' or are used inside <ui:formElement> tag.");
+    attributeErrorMap.put(UiFormElementTag.ID_KEY, "<ui:formElement> tag expected, but not found!  Make sure that form element and control tags either have an 'id' or are used inside <ui:formElement> tag.");
 
-    attributeErrorMap.put(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
-    attributeErrorMap.put(UiFormTag.FORM_VIEW_MODEL_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
-    attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");		
-    attributeErrorMap.put(UiFormTag.FORM_KEY_REQUEST, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
+    attributeErrorMap.put(UiFormTag.FORM_SCOPED_FULL_ID_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
+    attributeErrorMap.put(UiFormTag.FORM_VIEW_MODEL_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
+    attributeErrorMap.put(UiFormTag.FORM_FULL_ID_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");		
+    attributeErrorMap.put(UiFormTag.FORM_KEY, "<ui:form> tag expected, but not found! Make sure form element and control tags are used inside <ui:form> tag.");
 
-    attributeErrorMap.put(UiLayoutRowTagInterface.KEY_REQUEST, "<ui:row> tag expected, but not found! Make sure all of you cells are used inside row tags.");
-    attributeErrorMap.put(UiLayoutTagInterface.KEY_REQUEST, "<ui:layout> or another layout tag expected, but not found!");
+    attributeErrorMap.put(RowClassProvider.KEY, "<ui:layout> tag expected, but not found! Make sure that row tags are used inside <ui:layout> tag.");
+    attributeErrorMap.put(CellClassProvider.KEY, "<ui:layout> or <ui:row> expected, but not found! Make sure that row and cell tags are inside inside <ui:layout> tag.");
 
-    attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, "<ui:list> tag expected, but not found! Make sure list tags is used inside <ui:list> tag.");
-    attributeErrorMap.put(UiListTag.LIST_ID_KEY_REQUEST, "<ui:list> tag expected, but not found!  Make sure list tags is used inside <ui:list> tag.");
-    attributeErrorMap.put(UiListRowsTag.ROW_REQUEST_ID_KEY_REQUEST, "<ui:listRows> or another list rows tag expected, but not found!");	
-    attributeErrorMap.put(UiSystemFormTag.ID_KEY_REQUEST, "<ui:systemForm> tag expected, but not found! Make sure your tags are surrounded by <ui:systemForm>.");
+    attributeErrorMap.put(UiListTag.LIST_VIEW_MODEL_KEY, "<ui:list> tag expected, but not found! Make sure list tags is used inside <ui:list> tag.");
+    attributeErrorMap.put(UiListTag.LIST_ID_KEY, "<ui:list> tag expected, but not found!  Make sure list tags is used inside <ui:list> tag.");
+    attributeErrorMap.put(UiListRowsTag.ROW_REQUEST_ID_KEY, "<ui:listRows> or another list rows tag expected, but not found!");	
+    attributeErrorMap.put(UiSystemFormTag.ID_KEY, "<ui:systemForm> tag expected, but not found! Make sure your tags are surrounded by <ui:systemForm>.");
     attributeErrorMap.put(UiWidgetContainer.REQUEST_CONTEXT_KEY, "<ui:viewPort> or another widget container tag expected, but not found!");
   }
 
@@ -350,7 +353,7 @@ public class UiUtil {
         default:
           out.write(c);
       }     
-    }    
+    }
   }
   
   /**
@@ -379,49 +382,54 @@ public class UiUtil {
   }
   
   /**
-   * Writes out html input element.
+   * Writes out hidden html input element with give name and value.
    * 
-   * @author Nikita Salnikov
+   * @author Nikita Salnikov-Tarnovski
    */ 
   public static void writeHiddenInputElement(Writer out, String name, String value) throws IOException {
     UiUtil.writeOpenStartTag(out, "input");
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "type", "hidden");
     UiUtil.writeAttribute(out, "value", value);
-    UiUtil.writeCloseStartEndTag(out);    
+    UiUtil.writeCloseStartEndTag(out);
   }
   
+  
+  /**
+   * Parses multi-valued attribute, where attributes are separated by commas.
+   * Empty attribute values are allowed, they are specified by including whitespace
+   * between commas: "first, ,third".
+   * @return List&lt;String&gt; containing attribute values. 
+   */
+  public static List parseMultiValuedAttribute(String attribute) {
+    List result = new ArrayList();
+
+    if (attribute != null && !"".equals(attribute.trim())) {
+      StringTokenizer tokens = new StringTokenizer(attribute, ",");
+      while (tokens.hasMoreTokens())
+        result.add(tokens.nextToken().trim());
+    }
+
+    return result;
+  }
   
   // -------------- Operations with PageContext ------------------- //
   
   /**
    * Read attribute value in given scope and ensure that it is defined.  
    */
-  public static Object requireContextEntry(PageContext pageContext, String key, int scope) throws JspException {
-    Object value = pageContext.getAttribute(key, scope);
+  public static Object requireContextEntry(PageContext pageContext, String key) throws JspException {
+    Object value = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
     if (value == null) {
       StringBuffer message = new StringBuffer();
       String errMsg = (String)attributeErrorMap.get(key);      
       if (errMsg != null) 
         message.append(errMsg + " (");
       message.append("Missing attribute '" + key + "' in ");
-      switch (scope) {
-        case PageContext.PAGE_SCOPE:
-          message.append("'PageContext.PAGE_SCOPE'");
-          break;
-        case PageContext.REQUEST_SCOPE:
-          message.append("'PageContext.REQUEST_SCOPE'");
-          break;        
-        case PageContext.SESSION_SCOPE:
-          message.append("'PageContext.SESSION_SCOPE'");
-          break;           
-        case PageContext.APPLICATION_SCOPE:
-          message.append("'PageContext.APPLICATION_SCOPE'");
-          break;               
-      }
+      message.append("'PageContext.REQUEST_SCOPE'");
       message.append(" scope");
       if (errMsg != null) 
-        message.append(")");      
+        message.append(")");
       throw new UiException(message.toString());
     }
     else

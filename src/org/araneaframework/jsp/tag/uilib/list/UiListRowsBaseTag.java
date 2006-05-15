@@ -27,8 +27,8 @@ import org.araneaframework.jsp.tag.UiIterationBaseTag;
  * @author Oleg Mürk
  */
 public abstract class UiListRowsBaseTag extends UiIterationBaseTag {
-  public static final String ROW_REQUEST_ID_KEY_REQUEST = "rowRequestId";
-  public static final String ROW_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.list.UiListRowsTag.ROW";
+  public static final String ROW_REQUEST_ID_KEY = "rowRequestId";
+  public static final String ROW_KEY = "org.araneaframework.jsp.ui.uilib.list.UiListRowsTag.ROW";
   
   protected Object currentRow;
   protected ListIterator rowIterator;
@@ -52,8 +52,8 @@ public abstract class UiListRowsBaseTag extends UiIterationBaseTag {
   }
   
   protected void doForEachRow(Writer out) throws Exception {
-    addContextEntry(ROW_KEY_REQUEST, currentRow);
-    addContextEntry(ROW_REQUEST_ID_KEY_REQUEST, Integer.toString(rowIterator.previousIndex()));
+    addContextEntry(ROW_KEY, currentRow);
+    addContextEntry(ROW_REQUEST_ID_KEY, Integer.toString(rowIterator.previousIndex()));
   }
   
   protected int afterBody(Writer out) throws Exception {
