@@ -40,10 +40,6 @@ public class UiStdFormSelectTag extends UiFormElementBaseTag {
   protected Long size = null;
   protected String onChangePrecondition = "return true;";
 
-  public UiStdFormSelectTag() {
-    baseStyleClass = "aranea-select";
-  }
-
   public int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("SelectControl");    

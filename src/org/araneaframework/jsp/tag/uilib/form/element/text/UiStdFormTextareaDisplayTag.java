@@ -32,10 +32,6 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  */
 public class UiStdFormTextareaDisplayTag extends UiFormElementBaseDisplayTag {
 
-  public UiStdFormTextareaDisplayTag() {
-    baseStyleClass = "aranea-textarea-display";
-  }
-
   protected int doEndTag(Writer out) throws Exception {        
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 

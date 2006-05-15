@@ -18,9 +18,7 @@ package org.araneaframework.template.tags.uilib.form.element;
 
 import java.io.Writer;
 import org.araneaframework.jsp.tag.uilib.form.element.UiStdFormLinkButtonTag;
-import org.araneaframework.template.tags.presentation.SampleImageTag;
-
-
+import org.araneaframework.jsp.util.UiUtil;
 
 
 /**
@@ -42,7 +40,7 @@ public class SampleFormFilterButtonTag extends UiStdFormLinkButtonTag {
 
   public int doStartTag(Writer out) throws Exception {    
     super.doStartTag(out);
-    SampleImageTag.writeImage(out, "buttonSearch", getStyleClass());
+    out.write("<button>" + UiUtil.getResourceString(pageContext, "button.search").toUpperCase(UiUtil.getLocalizationContext(pageContext).getLocale()) + "</button");
     return EVAL_BODY_INCLUDE;    
   }    
 }

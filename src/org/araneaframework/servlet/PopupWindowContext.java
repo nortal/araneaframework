@@ -20,10 +20,11 @@ import java.io.Serializable;
 import org.araneaframework.Message;
 import org.araneaframework.Service;
 import org.araneaframework.servlet.support.PopupWindowProperties;
+import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
  * Interface for manipulating popup windows (each popup window 
- * corresponding to thread- or application-level service server-side).
+ * corresponding to server-side &quot;thread&quot;).
  * 
  * @author Taimo Peelo
  */
@@ -37,45 +38,39 @@ public interface PopupWindowContext extends Serializable {
 
 	/**
 	 * Method for registering a new thread-level service server-side, meant to open in popup window on client side.
-	 * @param idPrefix - prefix for service id that will be associated with created window.
 	 * @param properties - properties specifying behaviour and appearance of creatable popup window. 
 	 * @param startMessage - message sent to newly created service (thread).
-	 * @return full ID of created service (thread).
+	 * @return ID of created service (thread).
 	 */
-	public String open(String idPrefix, PopupWindowProperties properties, Message startMessage) throws Exception;
-	
-	/**
-	 * Method for registering a new service server-side, meant to open in popup window on client side.
-	 * @param idPrefix - prefix for service id that will be associated with created window.
-	 * @param properties - properties specifying behaviour and appearance of creatable popup window. 
-	 * @param startMessage - message sent to newly created thread- or application-level service.
-	 * @param serviceContext - Some context class deriving from <code>ManagedServiceContext</code>.
-	 * @return full ID of created service (thread).
-	 */
-	public String open(String idPrefix, PopupWindowProperties properties, Message startMessage, Class serviceContext) throws Exception;
+	public String openDetached(PopupWindowProperties properties, Message startMessage) throws Exception;
 	
 	/** 
 	 * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
 	 * @param idPrefix prefix for service id that will be associated with created window
 	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
-	 * @return full ID of created service.
+	 * @return ID of created service.
 	 */
-	public String open(String idPrefix, Service service, PopupWindowProperties properties) throws Exception;
-	
+	public String openDetached(Service service, PopupWindowProperties properties) throws Exception;
+
 	/** 
-	 * Method for registering already created service under given serviceContext as popup.
-	 * @param idPrefix prefix for service id that will be associated with created window
-	 * @param properties properties specifying behaviour and appearance of creatable popup window.
-	 * @param serviceContext some context class deriving from <code>ManagedServiceContext</code>.
-	 * @return full ID of created service.
+	 * Opens given URL in a new popup window.
+	 * @param url URL to be opened in the popup window
+	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
 	 */
-	public String open(String idPrefix, Service service, PopupWindowProperties properties, Class serviceContext) throws Exception;
+	public void openDetached(String url, PopupWindowProperties properties) throws Exception;
+	
+	/**
+	 * Creates a new thread, sends its first FlowContext request to open given flow.
+	 * @param flow new flow to open.
+	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
+	 * @return ID of thread inside which flow was started.
+	 */
+	public String openDetached(StandardPresentationWidget flow, PopupWindowProperties properties) throws Exception;
 
 	/**
 	 * Closes the server side thread service (serving client side popup).
 	 * @param id thread (popup) ID to close.
-	 * @param serviceContext either <code>PopupWindowContext.THREAD_POPUP</code> or <code>PopupWindowContext.APPLICATION_POPUP</code>.
 	 * @return whether service with given thread id was closed. 
 	 */
-	public boolean close(String id, Class serviceContext) throws Exception;
+	public boolean close(String id) throws Exception;
 }

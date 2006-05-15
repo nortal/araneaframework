@@ -39,10 +39,6 @@ public class UiStdFormMultiSelectDisplayTag extends UiFormElementBaseDisplayTag 
   protected static final String NEWLINE_SEPARATOR_CODE ="\\n";
   protected String separator = ",&nbsp;";
 
-  public UiStdFormMultiSelectDisplayTag() {
-    baseStyleClass = "aranea-multi-select-display";
-  }  
-
   protected int doEndTag(Writer out) throws Exception {        
     MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
 

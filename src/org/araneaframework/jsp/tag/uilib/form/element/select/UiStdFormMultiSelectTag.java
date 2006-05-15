@@ -39,10 +39,6 @@ import org.araneaframework.uilib.support.DisplayItem;
 public class UiStdFormMultiSelectTag extends UiFormElementBaseTag {
   protected Long size;
   
-  public UiStdFormMultiSelectTag() {
-    baseStyleClass = "aranea-multi-select";
-  }
-  
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");    
     

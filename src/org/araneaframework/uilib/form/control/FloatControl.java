@@ -18,7 +18,8 @@ package org.araneaframework.uilib.form.control;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-
+import java.util.Arrays;
+import java.util.Collection;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.DecimalPattern;
@@ -41,7 +42,7 @@ public class FloatControl extends EmptyStringNullableControl {
 	/**
 	 * The number format used by the element for parsing.
 	 */
-	protected DecimalPattern[] decimalFormat;
+	protected Collection decimalFormat;
 	protected NumberFormat currentNumberFormat;
 	
 	protected boolean confOverridden = false;  
@@ -50,7 +51,7 @@ public class FloatControl extends EmptyStringNullableControl {
 	 * Creates the control initializing the pattern default.
 	 */
 	public FloatControl() {
-		this.decimalFormat = new DecimalPattern[] {new DecimalPattern(null, null)};
+		this.decimalFormat = Arrays.asList(new DecimalPattern[] {new DecimalPattern(null, null)});
 		this.currentNumberFormat = NumberFormat.getNumberInstance();
 	}
 	
@@ -59,7 +60,7 @@ public class FloatControl extends EmptyStringNullableControl {
 	 * @param decimalFormat the custom pattern.
 	 */
 	public FloatControl(DecimalPattern[] decimalFormat, DecimalPattern defaultOutputFormat) {
-		this.decimalFormat = decimalFormat;
+		this.decimalFormat = Arrays.asList(decimalFormat);
 		this.currentNumberFormat = defaultOutputFormat.getNumberFormat();
 		
 		this.confOverridden = true;
@@ -123,10 +124,10 @@ public class FloatControl extends EmptyStringNullableControl {
 	
 	protected void init() {    
 		if (!confOverridden) {
-			DecimalPattern[] confFormat = (DecimalPattern[]) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DECIMAL_FORMAT);    
+      Collection confFormat = (Collection) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DECIMAL_FORMAT);    
 			if (confFormat != null) decimalFormat = confFormat;
 			
-			DecimalPattern confOutputFormat = (DecimalPattern) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DECIMAL_FORMAT);    
+			DecimalPattern confOutputFormat = (DecimalPattern) getConfiguration().getEntry(ConfigurationContext.DEFAULT_DECIMAL_OUTPUT_FORMAT);    
 			if (confOutputFormat != null) currentNumberFormat = confOutputFormat.getNumberFormat();
 		}
 	}

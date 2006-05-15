@@ -37,9 +37,6 @@
 		<mkdir dir="war/WEB-INF/lib" />		
 	</target>
 	
-	
-	
-	
 	<path id="classpath.hibernate">
 		<fileset dir="../lib/hibernate" includes="*.jar" />
 	</path>

@@ -1,6 +1,7 @@
 package org.araneaframework.backend.util;
 
 import java.lang.reflect.Method;
+
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
@@ -61,14 +62,17 @@ public class RecursiveBeanMapper extends BasicBeanMapper {
 	 * @return The value of the field.
 	 */
 	public Object getBeanFieldValue(Object bean, String fieldName) {
+		Object result;
 		if (isRecursive(fieldName)) {
 			Object subBean = super.getBeanFieldValue(bean, getThisField(fieldName));
 			if (this.ignoreNulls && subBean == null) {
 				return null;
 			}
-			return getSubBeanMapper(fieldName).getBeanFieldValue(subBean, getSubfields(fieldName));
+			result = getSubBeanMapper(fieldName).getBeanFieldValue(subBean, getSubfields(fieldName));
+		} else {
+			result = super.getBeanFieldValue(bean, fieldName);			
 		}
-		return super.getBeanFieldValue(bean, fieldName);
+		return result;
 	}
 	
 	/**
@@ -95,9 +99,10 @@ public class RecursiveBeanMapper extends BasicBeanMapper {
 					throw new NestableRuntimeException("There was a problem setting field '" + fieldName + "' to value " + value, e);
 				}
 			}
-			getSubBeanMapper(fieldName).setBeanFieldValue(subBean, getSubfields(fieldName), value);
+			getSubBeanMapper(fieldName).setBeanFieldValue(subBean, getSubfields(fieldName), value);			
+		} else {
+			super.setBeanFieldValue(bean, fieldName, value);			
 		}
-		super.setBeanFieldValue(bean, fieldName, value);
 	}
 	
 	//*********************************************************************
@@ -108,20 +113,26 @@ public class RecursiveBeanMapper extends BasicBeanMapper {
 	 * Returns getter from field name.
 	 */
 	protected Method getGetterMethod(String fieldName) {
+		Method result;
 		if (isRecursive(fieldName)) {
-			return getSubBeanMapper(fieldName).getGetterMethod(getSubfields(fieldName));
+			result = getSubBeanMapper(fieldName).getGetterMethod(getSubfields(fieldName));
+		} else {
+			result = super.getGetterMethod(fieldName);;
 		}
-		return super.getGetterMethod(fieldName);
+		return result;
 	}
 	
 	/**
 	 * Returns setter from field name.
 	 */
 	protected Method getSetterMethod(String fieldName) {
+		Method result;
 		if (isRecursive(fieldName)) {
-			return getSubBeanMapper(fieldName).getSetterMethod(getSubfields(fieldName));
+			result = getSubBeanMapper(fieldName).getSetterMethod(getSubfields(fieldName));
+		} else {
+			return super.getSetterMethod(fieldName);			
 		}
-		return super.getSetterMethod(fieldName);
+		return result;
 	}
 	
 	private BasicBeanMapper getSubBeanMapper(String fieldName) {

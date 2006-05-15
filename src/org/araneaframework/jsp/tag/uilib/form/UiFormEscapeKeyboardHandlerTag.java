@@ -32,8 +32,8 @@ import javax.servlet.jsp.JspException;
 public final class UiFormEscapeKeyboardHandlerTag extends UiFormKeyboardHandlerTag {
 
 	public UiFormEscapeKeyboardHandlerTag() {
-		key = "escape";
-		event = "onclick";
+		defaultKey = "escape";
+		defaultEvent = "onclick";
 	}
 
 	/**

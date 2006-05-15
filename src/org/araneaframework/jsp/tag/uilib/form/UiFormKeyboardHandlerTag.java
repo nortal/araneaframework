@@ -57,12 +57,11 @@ import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag;
 public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	protected String handler;
 	
+	protected String defaultEvent = "onclick";
 	protected String subscope;
 	protected String elementId;
 	protected String fullElementId;
-	protected String event = "onclick";
-	
-	protected String internalElementId;
+	private String event;
 
 
 	/**
@@ -169,11 +168,16 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	protected final int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		String intHandler = handler;
-		internalElementId = fullElementId;
+		String intElementId = fullElementId;
+		String intEvent = event;
+		
+		if (intHandler == null && intEvent == null) {
+			intEvent = defaultEvent;
+		}
 		
 		if (StringUtils.isBlank(intHandler)) {
 			// One of elemenId/event must be specified
-			if ((elementId == null && fullElementId == null) || event == null)
+			if ((elementId == null && fullElementId == null) || intEvent == null)
 				throw new JspException("You must specify handler or elementId/event for UiFormKeyboardHandlerTag (elementId=" + elementId + ", fullElementId=" + fullElementId + ", event=" + event + ",subscope=" + subscope);
 
 			// Only one of elementId/fullElementId must be specified
@@ -181,13 +185,13 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 				throw new JspException("Either elementId or fullElementId must be specified, not both.");
 
 			// If elementId was given, translate to fullElementId
-			if (internalElementId == null)
-				internalElementId = elementIdToFullElementId(pageContext, elementId);
-			intHandler = createHandlerToInvokeJavascriptEvent(internalElementId, event);
+			if (intElementId == null)
+				intElementId = elementIdToFullElementId(pageContext, elementId);
+			intHandler = createHandlerToInvokeJavascriptEvent(intElementId, intEvent);
 		}
 		else {
 			// None of the elementId/event attributes may be specified
-			if (fullElementId != null || elementId != null || event != null)
+			if (fullElementId != null || elementId != null || intEvent != null)
 				throw new JspException("You should specify either handler or event for UiFormKeyboardHandlerTag (handler=" + handler + ")");
 		}
 

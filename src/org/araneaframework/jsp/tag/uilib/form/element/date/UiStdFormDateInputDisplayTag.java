@@ -28,10 +28,6 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
  *   description = "Form date display field, represents UiLib "DateControl"."
  */
 public class UiStdFormDateInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
-  public UiStdFormDateInputDisplayTag() {
-    baseStyleClass = "aranea-date-display";
-  }
-
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("DateControl");
     return super.doEndTag(out);

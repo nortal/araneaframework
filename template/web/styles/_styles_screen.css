@@ -80,6 +80,13 @@ DIV.login { width: 300px; padding: 0; margin: auto; background: #f7f7f7; }
 DIV.login DIV.a { padding: 10px 15px 0 15px; border: 1px solid #e4e4e4; border-top: none; text-align: left; }
 DIV.login LABEL { clear: left; display: block; float: left; padding: 3px 0 2px 0; width: 72px; }
 
+/* standard presentation tags */
+DIV.aranea-messages { background: url(?loadImage=gfx/i37.gif&importerType=imageFileImporter); border-bottom: 10px solid #FFF; color: #939800; }
+DIV.aranea-messages A { color: #c30005; }
+DIV.aranea-messages DIV { background: url(?loadImage=gfx/i38.gif&importerType=imageFileImporter) 100% 0 no-repeat; }
+DIV.aranea-messages DIV DIV { background: url(?loadImage=gfx/i40.gif&importerType=imageFileImporter) 100% 100% no-repeat; }
+DIV.aranea-messages DIV DIV DIV { background: url(?loadImage=gfx/i39.gif&importerType=imageFileImporter) 0 100% no-repeat; padding: 10px 15px; }
+* HTML DIV.aranea-messages DIV DIV DIV { height: 1px; }
 
 /* Messages */
 

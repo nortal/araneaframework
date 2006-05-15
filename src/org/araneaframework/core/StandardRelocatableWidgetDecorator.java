@@ -28,6 +28,10 @@ public class StandardRelocatableWidgetDecorator extends BaseFilterWidget impleme
 
 			_endWaitingCall();
 		}
+    
+    public Environment getCurrentEnvironment() throws Exception {
+      return getEnvironment();
+    }
 	}
 
 	//*******************************************************************
