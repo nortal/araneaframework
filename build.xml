@@ -147,8 +147,9 @@
 		
 		<jar destfile="dist/aranea-jsp-engine.jar" compress="true">
 			<fileset dir="build/classes">
-				<include name="org/araneaframework/jsp/engine/**/*"/>			
+				<include name="org/araneaframework/jsp/engine/**/*"/>		        
 			</fileset>
+      <fileset dir="etc" includes="cache/**/*"/>      
 		</jar>			
 		
 		<jar destfile="dist/aranea.jar" compress="true">
