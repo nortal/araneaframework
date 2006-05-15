@@ -20,7 +20,7 @@
     <title>Introduction</title>
 
     <para>
-      One of the most common tasks in web applications is gathering user input, converting it to model objects and the validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity.
+      One of the most common tasks in web applications is gathering user input, converting it to model objects and then validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity.
     </para>
 
     <para>
@@ -38,14 +38,86 @@
       The following example shows how to create a control:
 <programlisting role="java">...
 TextControl textBox = new TextControl(new Long(10), null);
-textBox.setMandatory(true);
-textBox.setLabel("myTextBox.labelKey");
 ...</programlisting>
-      This code will create a mandatory textbox with a minimal length of 10 and a localizable label key "myTextBox.labelKey" (note that all Aranea labels are localizable by default). Note also that this code does not yet put the control to work, as controls are never used without forms, which are reviewed in the next section. 
+      This code will create a textbox with a minimal length of 10. Note that this code does not yet put the control to work, as controls are never used without forms, which are reviewed in the next section. 
     </para>
 
     <para>
-      TODO: Select controls, Control table
+        Follows a table of standard controls all found in <literal>org.araneaframework.uilib.form.control</literal> package:
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Control</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry><literal>TextControl</literal></entry>
+                <entry>A simple textbox control with one row of text 
+                that can constrain the inserted text minimal and maximal length.</entry>
+              </row>
+              <row>
+                <entry><literal>TextareaControl</literal></entry>
+                <entry>A multirow textbox control that can constrain the inserted text minimal and maximal length.</entry>
+              </row>
+              <row>
+                <entry><literal>NumberControl</literal></entry>
+                <entry>A textbox control that constrains the text to be integer numbers. Can also check
+                the allowed minimum and maximum limits. </entry>
+              </row>
+              <row>
+                <entry><literal>FloatControl</literal></entry>
+                <entry>A textbox control that constrains the text to be floating-point numbers. Can also check
+                the allowed minimum and maximum limits. </entry>
+              </row>
+              <row>
+                <entry><literal>TimeControl</literal></entry>
+                <entry>A time selection control that allows to choose a time of day. Supports custom formats of time input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>DateControl</literal></entry>
+                <entry>A date selection control that allows to choose a date. Supports custom formats of date input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>DateTimeControl</literal></entry>
+                <entry>A date and time selection control that allows to choose a date with a corresponding time. 
+                Supports custom formats of date and time input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>SelectControl</literal></entry>
+                <entry>A control that allows to select one of many choices (may be rendered as a dropdown list or option buttons). 
+                Ensures that the submitted value was one of the choices.</entry>
+              </row>
+              <row>
+                <entry><literal>MultiSelectControl</literal></entry>
+                <entry>A control that allows to select severl from many choices (may be rendered as a multiselect list or checkbox list). 
+                Ensures that the submitted values are a subset of the choices.</entry>
+              </row>
+              <row>
+                <entry><literal>CheckboxControl</literal></entry>
+                <entry>A control that represents a binary choice and is usually rendered as a checkbox.</entry>
+              </row>
+              <row>
+                <entry><literal>DisplayControl</literal></entry>
+                <entry>A control that can be used to render a read-only value that will not be submitted with an HTML form.</entry>
+              </row>
+              <row>
+                <entry><literal>HiddenControl</literal></entry>
+                <entry>A control that can be used to render an invisible value that will be submitted with an HTML form.</entry>
+              </row>
+              <row>
+                <entry><literal>FileUploadControl</literal></entry>
+                <entry>A control that can be used to upload files to the server.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        TODO: Select controls
     </para>
   </sect1>
   <sect1>
@@ -83,13 +155,15 @@ protected void init() {
   </varlistentry>
   <varlistentry>
     <term>Add form fieds</term>
-    <listitem>The line <literal>myForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true)</literal> adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (note that in the example it is escaped with a "#", which is the default way to escape non-localizable strings), a text box control with a minimal length of 3 and that is mandatory.</listitem>
+    <listitem>The line <literal>myForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true)</literal> adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (labels in Aranea are localizable by default and "#" escapes a non-localizable string), a text box control with a minimal length of 3 and that is mandatory.</listitem>
   </varlistentry>
   <varlistentry>
     <term>Write JavaBean</term>
     <listitem>The line <literal>myForm.writeBean(myModel)</literal> writes the data in the JavaBean properties to the corresponding form fields.</listitem>
   </varlistentry>
 </variablelist>  
+</para>
+<para>
 Now that we have created the form we show how to process events, validate and read the request data. The following example code should be in the same widget as the previous:
 <programlisting role="java">...
 private void handleEventSave() {
@@ -183,6 +257,8 @@ addWidget("searchForm", searchForm);
 ...</programlisting>
         The example use case is a two scenario search&mdash;either both client first name and client last name fields are filled in or both town and street address fields are filled in, otherwise an error message "Not enough data for search!" is shown. The constraints will be validated when <literal>convertAndValidate()</literal> method is called on <literal>searchForm</literal>. Note that the constraint is added to the form itself, rather than to its elements&mdash;this is a typical idiom, when the constraint involves several elements.
       </para>
+
+      TODO: a table of constraints
     </sect2>
 
     <sect2>
@@ -201,7 +277,7 @@ myForm.addElement("numberOfChildren", "#No. of chidren",
 private void handleEventSave() {
   if (myForm.convertAndValidate()) {
     ...
-    Long numberOfChildren = myForm.getValueByFullName("numberOfChildren");
+    Long numberOfChildren = (Long) myForm.getValueByFullName("numberOfChildren");
     //Alternative:
     //FormElement nocEl = (FormElement) myForm.getElement("numberOfChildren");
     //numberOfChildren = nocEl.getValue();
@@ -213,9 +289,10 @@ private void handleEventSave() {
       </para>
 
       <para>
-        Note that the reason for existence of <literal>Data</literal> objects is that Java types correspond poorly to some restricted types&mdash;for instance enumerations, type encodings and collections container types (this problem is somewhat solved in Java 5, but Aranea is compatible with Java 1.3).
+        Note that the reason for existence of <literal>Data</literal> objects is that Java types correspond poorly to some restricted types&mdash;for instance enumerations, type encodings and collections container types (this problem is somewhat solved in Java 5, but Aranea is compatible with Java 1.3).        
       </para>
 
+      TODO: a table of Data types?
     </sect2>
     
     <sect2>
@@ -229,6 +306,1624 @@ private void handleEventSave() {
 
   <sect1>
     <title>Form JSP Tags</title>
+    
+        Form JSP tags can be divided into two categories&mdash; tags providing <emphasis>contexts</emphasis> 
+        (&lt;ui:form&gt;, &lt;ui:formElement&gt;) and
+        tags for <emphasis>rendering</emphasis> form elements containing different controls. We will 
+        first describe the attributes that are common to
+        all form element rendering tags; then proceed to explain <emphasis>context</emphasis> tags 
+        and different form element rendering tags with their unique attributes.
+        
+      <sect2>
+      <title>Common attributes for all form element rendering tags.</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no/yes</emphasis></entry>
+                <entry>Id of form element to be rendered. 
+                  If not specified, it is usually taken from current form element context 
+                  (<xref linkend="uiFormElementTag">&lt;ui:formElement&gt;</xref>). For few tags, it is required.
+                 </entry>
+              </row>
+              <row>
+                <entry>events</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Whether element will send events that are registered by server-side, <literal>true</literal> by default.</entry>
+              </row>
+              <row>
+                <entry>validate</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Whether the element will be validated on the client-side when the form is <emphasis>submitted</emphasis> (by default <literal>true</literal>).</entry>
+              </row>
+              <row>
+                <entry>validateOnEvent</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Whether the form will be validated on the client-side when <emphasis>element generates an event</emphasis> (by default <literal>false</literal>)</entry>
+              </row>
+              <row>
+                <entry>tabindex</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>HTML tabindex for the element.</entry>
+              </row>
+              <row>
+                <entry>updateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Comma separated list of update regions that should be updated upon button receiving event. This attribute is only
+                    needed when using AJAX features&mdash; ordinary HTTP requests always update whole page.
+                </entry>
+              </row>
+              <row>
+                <entry>globalUpdateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Comma separated list of global update regions that should be updated upon button receiving event. 
+                This attribute is only needed when using AJAX features&mdash; ordinary HTTP requests always update whole page.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class applied HTML tag(s) that are used for rendering element.</entry>
+              </row>              
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect2>
+
+      <!--  UI:FORM -->
+      <sect2>
+      <title><![CDATA[<ui:form>]]></title>
+      <para>
+      	   Specifies form context for inner tags. Form view model and id are made accessible to inner tags as EL variables.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Id of context form. When not specified, current form context is preserved (if it exists).</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>form</entry>
+                <entry>View model of form.</entry>
+                <entry><literal>FormWidget.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>formId</entry>
+                <entry>Id of form.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="loginForm">
+    ...  <!-- formElements, formElementLabels, ... --> ...
+</ui:form>]]></programlisting> 
+      </sect3>
+      </sect2>
+      
+        <!--  UI:FORMELEMENT -->
+      <sect2>
+      <title id="uiFormElementTag">&lt;ui:formElement&gt;</title>
+      <para>
+      	   Specifies form element context for inner tags. Must be surrounded by &lt;ui:form&gt; tag. Form element 
+           view model, id and value are made accessible to inner tags as EL variables.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>Id of context form element.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Variables</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" align="center"/>
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>formElement</entry>
+                <entry>View model of form element.</entry>
+                <entry><literal>FormElement.ViewModel</literal></entry>
+              </row>
+              <row>
+                <entry>formElementId</entry>
+                <entry>Id of form element.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+              <row>
+                <entry>formElementValue</entry>
+                <entry>Value currently kept inside form element.</entry>
+                <entry><literal>Object</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="loginForm">
+    <ui:formElement id="username">
+        ...
+    </ui:formElement>
+</ui:form>]]></programlisting> 
+      </sect3>
+       </sect2>
+      
+      <!-- LABEL -->
+        <sect2>
+      <title><![CDATA[<ui:label>]]></title>
+      <para>
+          Renders localizable label bound to form element. Rendered with HTML &lt;span&gt; and &lt;label&gt; tags.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Id of form element which label should be rendered. If left unspecified, form element id from form element context is used.</entry>
+              </row>
+              <row>
+                <entry>showMandatory</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether mandatory input fields label is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal></entry>
+              </row>
+              <row>
+                <entry>showColon</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether colon is shown after the label. Default is <literal>true</literal>.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="loginForm">
+    <ui:row>
+        <ui:formElement id="username">
+            <ui:cell>
+                <ui:label/>
+            </ui:cell>
+        </ui:formElement>
+    </ui:row>
+</ui:form>]]></programlisting> 
+      </sect3>
+    </sect2>
+    
+    
+          <!-- SIMPLELABEL -->
+        <sect2>
+      <title><![CDATA[<ui:simpleLabel>]]></title>
+      <para>
+          Renders localizable label (with HTML &lt;span&gt; and &lt;label&gt; tags).
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>labelId</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>ID of label to render.</entry>
+              </row>
+              <row>
+                <entry>showMandatory</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether label is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>false</literal></entry>
+              </row>
+              <row>
+                <entry>showColon</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether colon is shown after the label. Default is <literal>true</literal>.</entry>
+              </row>
+              <row>
+                <entry>for</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>ID of the form element for which the label is created.</entry>
+              </row>              
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="loginForm">
+    <ui:row>
+        <ui:cell>
+            <ui:simpleLabel labelId="username.input.label" showMandatory="true" for="username"/>
+        </ui:cell>
+    </ui:row>
+</ui:form>]]></programlisting> 
+      </sect3>
+    </sect2>
+    
+      <!-- BUTTON -->
+        <sect2>
+      <title><![CDATA[<ui:button>]]></title>
+      <para>
+          Renders form buttons that represent <literal>ButtonControls</literal>. Either HTML &lt;button&gt; or &lt;input type="button" ... &gt; will
+          be used for rendering.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>showLabel</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether button label is shown.Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal></entry>
+              </row>
+              <row>
+                <entry>onClickPrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+              <row>
+                <entry>renderMode</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Allowed values are <literal>button</literal> and <literal>input</literal>&mdash;the corresponding HTML tag will be used to render the button. Default is button.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="loginForm">
+    <ui:button id="loginButton"/>
+</ui:form>]]></programlisting> 
+      </sect3>
+    </sect2>
+
+
+      <!-- LINKBUTTOn -->
+        <sect2>
+      <title><![CDATA[<ui:linkButton>]]></title>
+      <para>
+          Renders HTML link that represents <literal>ButtonControl</literal>. HTML &lt;a href="javascript:" ... &gt; tag will
+          be used for rendering. Default <literal>styleClass="aranea-link"</literal>.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>showLabel</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether button label is shown.Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal></entry>
+              </row>
+              <row>
+                <entry>onClickPrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis>
+      </sect3>
+    </sect2>
+
+    
+          <!-- formKeyboardHandler -->
+        <sect2>
+      <title><![CDATA[<ui:formKeyboardHandler>]]></title>
+      <para>
+        Registers a simple keyboard handler. Invokes a <literal>uiRegisterKeyboardHandler</literal> javascript.
+        This is basically the same stuff as &lt;ui:keyboardHandler&gt; with a few modifications.
+        
+        There is no <literal>scope</literal> attribute. Instead, the tag assumes that it is located
+        inside a form, and takes the full id of that form as its scope.
+        
+        As an alternative to specifying the <literal>handler</literal> attribute, you may
+        specify a form element and a javascript event to invoke on that element.
+        You specify the element by its id relative to the surrounding form.
+        The event is given as a name of the javascript function to be invoked on the element.
+        For example, if you specify the element as "someButton", and event as "click", then
+        when the required keyboard event occures, the following javascript will be executed:
+      </para>
+<programlisting role="javascript"><![CDATA[var el = document.getElementById("<form-id>.someButton");
+el.click();]]></programlisting>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>handler</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. 
+                    Example: <literal>function(event, elementId) { alert(elementId); } </literal>
+                    Either handler or elementId/event pair should be specified, not both.
+                </entry>
+              </row>
+              <row>
+                <entry>subscope</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                      Specifies form element which is the scope of this handler.
+                      By default the "scope" (as in <literal>&lt;ui:keyboardHandlerTag&gt;</literal>) of this keyboard handler
+                      is the form inside which the handler is defined. By specifying this, scope of certain element may be narrowed.
+                      For example if the handler is defined inside form "myForm", and subscope is specified as "myelement",
+                      the scope of the handler will be "myForm.myelement", not the default "myForm". The handler will therefore be active 
+                      only for the element 'someElement'".
+                </entry>
+              </row>
+              <row>
+                <entry>elementId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    Sets the (relative) <literal>id</literal> of the element whose javascript event should be invoked. 
+                    The <literal>id</literal> is relative with respect to the surrounding form. Instead of this attribute, element's 
+                    full id may be set using the <literal>fullElementId</literal> attribute, but only one of those attributes 
+                    should be set at once.
+                </entry>
+              </row>
+              <row>
+                <entry>fullElementId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    Sets the full <literal>id</literal> of the element whose javascript event should be invoked. 
+                </entry>
+              </row>
+              <row>
+                <entry>event</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    Set the javascript event that should be invoked when keypress is detected&mdash;"click" and "focus" 
+                    are safe for most controls.
+                    If target element (the one given by <literal>elementId</literal>) is a selectbox "select" may be used.
+                    For more, javascript reference should be consulted. This attribute is not foolproof and invalid javascript 
+                    may be produced when it is not used cautiously.
+                </entry>
+              </row>
+              <row>
+                <entry>keyCode</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                    Keycode to which the event must be triggered. Either keyCode or key must be specified, but not both.
+                </entry>
+              </row>
+              <row>
+                <entry>key</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>
+                   Key to which the event must be triggered, accepts key "aliases" instead of codes.
+                   Accepted aliases include <literal>F1..F12, RETURN, ENTER, BACKSPACE, ESCAPE, TAB, SHIFT, CONTROL, SPACE</literal>.
+                </entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="loginForm">
+    <ui:eventButton id="btnLogin" eventId="login" labelId="button.login.enter"/>
+    <ui:formKeyboardHandler fullElementId="btnLogin" key="enter"/>
+</ui:form>]]></programlisting> 
+      </sect3>
+    </sect2>
+    
+     <!-- formEnterKeyboardHandler -->
+    <sect2>
+      <title><![CDATA[<ui:formEnterKeyboardHandler>]]></title>
+      <para>
+        Same as <literal>&lt;ui:formKeyboardHandlerTag&gt;</literal> except <literal>key</literal> is already set to <literal>enter</literal>.
+      </para>
+    </sect2>
+    
+    <!-- formEscapeKeyboardHandler -->
+    <sect2>
+      <title><![CDATA[<ui:formEscapeKeyboardHandler>]]></title>
+      <para>
+        Same as <literal>&lt;ui:formKeyboardHandlerTag&gt;</literal> except <literal>key</literal> is already set to <literal>escape</literal>.
+      </para>
+    </sect2>
+    
+    	
+    <!--  textinput,textdisplay -->
+    <sect2>
+          <title><![CDATA[<ui:textInput>]]></title>
+          <para>
+	          Form text input field, represents <literal>TextControl</literal>.
+              It is rendered in HTML with <literal>&lt;input type="text" ...&gt;</literal> tag. Default <literal>styleClass="aranea-text"</literal>.
+          </para>
+      
+        <sect3>
+        <title>Attributes</title>
+	        <informaltable frame="all">
+	          <tgroup cols="3">
+	            <colspec colwidth="2*"/>
+	            <colspec colwidth="1*"/>
+	            <colspec colwidth="4*"/>
+	            <thead>
+	              <row>
+	                <entry>Attribute</entry>
+	                <entry>Required</entry>
+	                <entry>Description</entry>
+	              </row>
+	            </thead>
+	            <tbody>
+	              <row>
+	                <entry>size</entry>
+	                <entry><emphasis>no</emphasis></entry>
+	                <entry>Maximum length of accepted text (in characters).</entry>
+	              </row>
+	              <row>
+	                <entry>onChangePrecondition</entry>
+	                <entry><emphasis>no</emphasis></entry>
+	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+	              </row>
+	            </tbody>
+	          </tgroup>
+	        </informaltable>
+             <emphasis>Also has all common form element rendering attributes.</emphasis> 
+        </sect3>
+        
+              <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="someForm">
+  <ui:formElement id="firstField">
+     <!-- Renders input field binded to form's firstField element -->
+     <ui:textInput/>
+  </ui:formElement>
+</ui:form>]]></programlisting> 
+      </sect3>
+        
+      </sect2>
+      
+    <sect2>
+          <title><![CDATA[<ui:textInputDisplay>]]></title>
+          <para>
+	          Form text display field, represents <literal>TextControl</literal>.
+              It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
+              Default <literal>styleClass="aranea-text-display"</literal>.
+          </para>
+      
+        <sect3>
+        <title>Attributes</title>
+	        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+        </sect3>
+
+              <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="someForm">
+  <ui:formElement id="firstField">
+     <!-- Renders display field for form's firstField element -->
+     <ui:textInputDisplay/>
+  </ui:formElement>
+</ui:form>]]></programlisting> 
+      </sect3>
+
+      </sect2>
+      
+      <!-- numberinput, numberdisplay -->
+        <sect2>
+              <title><![CDATA[<ui:numberInput>]]></title>
+              <para>
+                  Form number input field, represents <literal>NumberControl</literal>.
+                  It is rendered in HTML with <literal>&lt;input type="text" ...&gt;</literal> tag. 
+                  Default <literal>styleClass="aranea-number"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <informaltable frame="all">
+                  <tgroup cols="3">
+                    <colspec colwidth="2*"/>
+                    <colspec colwidth="1*"/>
+                    <colspec colwidth="4*"/>
+                    <thead>
+                      <row>
+                        <entry>Attribute</entry>
+                        <entry>Required</entry>
+                        <entry>Description</entry>
+                      </row>
+                    </thead>
+                    <tbody>
+                      <row>
+                        <entry>size</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Maximum length of accepted text (in characters).</entry>
+                      </row>
+                      <row>
+                        <entry>onChangePrecondition</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                      </row>
+                    </tbody>
+                  </tgroup>
+                </informaltable>
+                 <emphasis>Also has all common form element rendering attributes.</emphasis> 
+            </sect3>
+       </sect2>
+          
+        <sect2>
+              <title><![CDATA[<ui:numberInputDisplay>]]></title>
+              <para>
+                  Form number display field, represents <literal>NumberControl</literal>.
+                  It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
+                  Default <literal>styleClass="aranea-number-display"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+            </sect3>
+        </sect2>
+        
+      <!-- floatinput, floatinputdisplay -->
+        <sect2>
+              <title><![CDATA[<ui:floatInput>]]></title>
+              <para>
+                  Form floating-point number input field, represents <literal>FloatControl</literal>.
+                  It is rendered in HTML with <literal>&lt;input type="text" ...&gt;</literal> tag. 
+                  Default <literal>styleClass="aranea-float"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <informaltable frame="all">
+                  <tgroup cols="3">
+                    <colspec colwidth="2*"/>
+                    <colspec colwidth="1*"/>
+                    <colspec colwidth="4*"/>
+                    <thead>
+                      <row>
+                        <entry>Attribute</entry>
+                        <entry>Required</entry>
+                        <entry>Description</entry>
+                      </row>
+                    </thead>
+                    <tbody>
+                      <row>
+                        <entry>size</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Maximum length of accepted floating-point number (in characters).</entry>
+                      </row>
+                      <row>
+                        <entry>onChangePrecondition</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                      </row>
+                    </tbody>
+                  </tgroup>
+                </informaltable>
+                 <emphasis>Also has all common form element rendering attributes.</emphasis> 
+            </sect3>
+       </sect2>
+          
+        <sect2>
+              <title><![CDATA[<ui:floatInputDisplay>]]></title>
+              <para>
+                  Form floating-point number display field, represents <literal>FloatControl</literal>.
+                  It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
+                  Default <literal>styleClass="aranea-float-display"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+            </sect3>
+        </sect2>
+        
+      <!-- passwordinput -->
+        <sect2>
+              <title><![CDATA[<ui:passwordInput>]]></title>
+              <para>
+                  Form number input field, represents <literal>TextControl</literal>.
+                  It is rendered in HTML with <literal>&lt;input type="password" ...&gt;</literal> tag. 
+                  Default <literal>styleClass="aranea-text"</literal>.
+              </para>
+          
+            <sect3>
+            <title>Attributes</title>
+                <informaltable frame="all">
+                  <tgroup cols="3">
+                    <colspec colwidth="2*"/>
+                    <colspec colwidth="1*"/>
+                    <colspec colwidth="4*"/>
+                    <thead>
+                      <row>
+                        <entry>Attribute</entry>
+                        <entry>Required</entry>
+                        <entry>Description</entry>
+                      </row>
+                    </thead>
+                    <tbody>
+                      <row>
+                        <entry>size</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Maximum length of password (in characters).</entry>
+                      </row>
+                      <row>
+                        <entry>onChangePrecondition</entry>
+                        <entry><emphasis>no</emphasis></entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                      </row>
+                    </tbody>
+                  </tgroup>
+                </informaltable>
+                 <emphasis>Also has all common form element rendering attributes.</emphasis> 
+            </sect3>
+       </sect2>
+
+
+      
+    <!-- textDisplay -->
+    <sect2>
+          <title><![CDATA[<ui:textDisplay>]]></title>
+          <para>
+              Form text display field, represents <literal>DisplayControl</literal>, displays element value as <literal>String</literal>.
+              It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
+          </para>
+      
+        <sect3>
+        <title>Attributes</title>
+            <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+        </sect3>
+      </sect2>
+      
+    <!-- value display -->  
+     <sect2>
+      <title><![CDATA[<ui:valueDisplay>]]></title>
+      <para>
+          Puts form element value in page scope variable, represents <literal>DisplayControl</literal>.
+          It does not output any HTML.
+      </para>
+  
+    <sect3>
+    <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>var</entry>
+                <entry><emphasis>true</emphasis></entry>
+                <entry>Name of the page-scoped EL variable that will be assigned element value.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has standard <literal>id</literal> attribute.</emphasis> 
+    </sect3>
+  </sect2>
+  
+   <!-- textarea, textareadisplay -->  
+     <sect2>
+      <title><![CDATA[<ui:textarea>]]></title>
+      <para>
+          Form text input area, represents <literal>TextareaControl</literal>.
+          It is rendered in HTML with <literal>&lt;textarea ...&gt;</literal> tag. Default <literal>styleClass="aranea-textarea"</literal>.
+      </para>
+  
+    <sect3>
+    <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>cols</entry>
+                <entry><emphasis>true</emphasis></entry>
+                <entry>Number of visible columns in textarea.</entry>
+              </row>
+              <row>
+                <entry>rows</entry>
+                <entry><emphasis>true</emphasis></entry>
+                <entry>Number of visible rows in textarea.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis>
+    </sect3>
+    
+       <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="someForm">
+  <ui:formElement id="longLongText">
+    <ui:cell>
+      <ui:textarea rows="15" cols="150"/>
+    </ui:cell>
+  </ui:formElement>
+</ui:form>]]></programlisting> 
+      </sect3>
+    
+  </sect2>
+  
+       <sect2>
+      <title><![CDATA[<ui:textareaDisplay>]]></title>
+      <para>
+          Form text display area, represents <literal>TextareaControl</literal>.
+          It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag. Default <literal>styleClass="aranea-textarea-display"</literal>.
+      </para>
+  
+    <sect3>
+    <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+    </sect3>
+  </sect2>
+     
+    
+    <!-- hiddeninput -->
+      <sect2>
+          <title><![CDATA[<ui:hiddenInput>]]></title>
+          <para>
+               Represents a "hidden" form input element&mdash;<literal>HiddenControl</literal>. It is rendered in HTML with
+               <literal>&lt;input type="hidden" ...&gt;</literal> tag.
+          </para>
+      
+        <sect3>
+        <title>Attributes</title>
+                <emphasis>Has all common form element rendering attributes.</emphasis> 
+                However, rendered tag is not visible to end-user, thus using any attributes is mostly pointless.
+        </sect3>
+      </sect2>
+      
+          
+      <!-- checkbox, checkboxdisplay -->
+      <sect2>
+      <title><![CDATA[<ui:checkbox>]]></title>
+      <para>
+          Form checkbox <emphasis>input</emphasis> field, represents <literal>CheckboxControl</literal>. By default <literal>styleClass="aranea-checkbox"</literal>.
+          Rendered in HTML with <literal>&lt;input type="checkbox" ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+          <sect2>
+      <title><![CDATA[<ui:checkboxDisplay>]]></title>
+      <para>
+          Form checkbox <emphasis>display</emphasis> field, represents <literal>CheckboxControl</literal>. By default <literal>styleClass="aranea-checkbox-display"</literal>.
+          Rendered in HTML inside <literal>&lt;span&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    <!-- fileupload -->
+    <sect2>
+      <title><![CDATA[<ui:fileUpload>]]></title>
+      <para>
+           Form file upload field, represents <literal>FileUploadControl</literal>.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+<ui:form id="uploadForm">
+   <ui:row>
+       <ui:cell styleClass="name">
+           <ui:fileUpload id="file"/>
+       </ui:cell>
+   </ui:row>
+</ui:form>
+...]]></programlisting> 
+      </sect3>
+    </sect2>
+    
+    <!-- dateinput -->
+    
+        <sect2>
+      <title><![CDATA[<ui:dateInput>]]></title>
+      <para>
+           Form date input field, represents <literal>DateControl</literal>. Default <literal>styleClass="aranea-date"</literal>. 
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+        <sect2>
+      <title><![CDATA[<ui:dateInputDisplay>]]></title>
+      <para>
+           Form date display field, represents <literal>DateControl</literal>. Default <literal>styleClass="aranea-date-display"</literal>. 
+      </para>
+      
+       <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+
+    
+     <!-- timeinput -->
+    
+     <sect2>
+      <title><![CDATA[<ui:timeInput>]]></title>
+      <para>
+           Form time input field, represents <literal>TimeControl</literal>. Default <literal>styleClass="aranea-time"</literal>.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+            <sect2>
+      <title><![CDATA[<ui:timeInputDisplay>]]></title>
+      <para>
+           Form time display field, represents <literal>TimeControl</literal>. Default <literal>styleClass="aranea-time-display"</literal>. 
+      </para>
+      
+       <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    
+     <sect2>
+      <title><![CDATA[<ui:dateTimeInput>]]></title>
+      <para>
+           Form input field for both date and time, represents <literal>DateTimeControl</literal>.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+              <row>
+                <entry>dateStyleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry><emphasis>styleClass</emphasis> for date. Default is "aranea-date".</entry>
+              </row>
+              <row>
+                <entry>timeStyleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry><emphasis>styleClass</emphasis> for time. Default is "aranea-time".</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+     <sect2>
+      <title><![CDATA[<ui:dateTimeInputDisplay>]]></title>
+      <para>
+           Form display field for both date and time, represents <literal>TimeControl</literal>. Default <literal>styleClass="aranea-datetime-display"</literal>. 
+      </para>
+      
+       <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    
+    <!-- SELECT -->
+         <sect2>
+      <title><![CDATA[<ui:select>]]></title>
+      <para>
+          Form dropdown list input field, represents <literal>SelectControl</literal>. Default <literal>styleClass="aranea-select"</literal>,
+          rendered with HTML <literal>&lt;select ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+              </row>
+              <row>
+                <entry>size</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Number of select elements visible at once.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    
+        <!-- SELECTDISPLAY -->
+      <sect2>
+      <title><![CDATA[<ui:selectDisplay>]]></title>
+      <para>
+          Form select display field, represents <literal>SelectControl</literal>. Default <literal>styleClass="aranea-select-display"</literal>,
+          rendered with HTML <literal>&lt;span ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    <!-- MULTISELECT -->
+         <sect2>
+      <title><![CDATA[<ui:multiSelect>]]></title>
+      <para>
+          Form list input field, represents <literal>MultiSelectControl</literal>. Default <literal>styleClass="aranea-multi-select"</literal>,
+          rendered with HTML <literal>&lt;select multiple="true" ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>size</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Vertical size, number of options displayed at once.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    
+        <!-- MULTISELECTDISPLAY -->
+      <sect2>
+      <title><![CDATA[<ui:multiSelectDisplay>]]></title>
+      <para>
+          Form multiselect display field, represents <literal>MultiSelectControl</literal>. Default <literal>styleClass="aranea-multi-select-display"</literal>,
+          rendered with HTML <literal>&lt;span ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>separator</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The separator between list items, can be any string or '\n' for newline. Default is ', ').</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    <!-- RADIOSELECT -->
+    <sect2>
+      <title><![CDATA[<ui:radioSelect>]]></title>
+      <para>
+          Form radioselect buttons field, represents <literal>SelectControl</literal>. 
+          Default <literal>styleClass="aranea-radioselect"</literal>. It takes care of rendering all its elements; internally using
+          &lt;ui:radioSelectItemLabel&gt; and &lt;ui:radioSelectItem&gt; tags.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>type</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The way the radio buttons will be rendered - can be either <emphasis>vertical</emphasis> or <emphasis>horizontal</emphasis>. By default "horizontal".</entry>
+              </row>
+              <row>
+                <entry>labelBefore</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that controls whether label is before or after each radio button, <literal>false</literal> by default.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+        <!-- RADIOSELECTITEM -->
+    <sect2>
+      <title><![CDATA[<ui:radioSelectItem>]]></title>
+      <para>
+          Form radio button, represents one item from <literal>SelectControl</literal>.
+          Default <literal>styleClass="aranea-radio"</literal>. It will be rendered with HTML <literal>&lt;input type="radio" ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The value of this radio button that will be submitted with form if this radio button is selected.</entry>
+              </row>
+              <row>
+                <entry>onChangePrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    <!-- RADIOSELECTITEMLABEL -->
+    <sect2>
+      <title><![CDATA[<ui:radioSelectItemLabel>]]></title>
+      <para>
+          Form radio button label, represents label of one item from <literal>SelectControl</literal>.
+           It will be rendered with HTML <literal>&lt;span ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Select item value.</entry>
+              </row>
+              <row>
+                <entry>showMandatory</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether label for mandatory input is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal>.</entry>
+              </row>
+              <row>
+                <entry>showColon</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether colon is shown between the label and value. Default is <literal>true</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+     <!-- checkboxMultiSelect -->
+    <sect2>
+      <title><![CDATA[<ui:checkboxMultiSelect>]]></title>
+      <para>
+          Form multiselect checkbox field, represents <literal>MultiSelectControl</literal>. 
+          It takes care of rendering all its elements; internally using
+          &lt;ui:checkboxMultiSelectItemLabel&gt; and &lt;ui:checkboxMultiSelectItem&gt; tags.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>type</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The way the checkboxes will be rendered - can be either <emphasis>vertical</emphasis> or <emphasis>horizontal</emphasis>. Default is <emphasis>horizontal</emphasis>.</entry>
+              </row>
+              <row>
+                <entry>labelBefore</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that controls whether label is before or after each cehckbox, <literal>false</literal> by default.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+        <!-- checkboxMultiSelectItem -->
+    <sect2>
+      <title><![CDATA[<ui:checkboxMultiSelectItem>]]></title>
+      <para>
+          Form radio button, represents one item from <literal>MultiSelectControl</literal>.
+          Default <literal>styleClass="aranea-multi-checkbox"</literal>. It will be rendered with HTML <literal>&lt;input type="checkbox" ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The value of this checkbox that will be submitted with form if this checkbox is selected.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    <!-- checkboxMultiSelectItemLabel -->
+    <sect2>
+      <title><![CDATA[<ui:checkboxMultiSelectItemLabel>]]></title>
+      <para>
+          Form checkbox label, represents label of one item from <literal>MultiSelectControl</literal>.
+          It will be rendered with HTML <literal>&lt;span ...&gt;</literal> tag.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Select item value.</entry>
+              </row>
+              <row>
+                <entry>showMandatory</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether label for mandatory input is marked with asterisk. Value should be <literal>true</literal> or <literal>false</literal>, default is <literal>true</literal>.</entry>
+              </row>
+              <row>
+                <entry>showColon</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Indicates whether colon is shown between the label and value. Default is <literal>true</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+    </sect2>
+    
+    
+     <!-- conditionalDisplay -->
+    <sect2>
+      <title><![CDATA[<ui:conditionalDisplay>]]></title>
+      <para>
+          Depending whether form element boolean value is <emphasis>true</emphasis> or <emphasis>false</emphasis> display one or other content, 
+          represents <literal>DisplayControl</literal>. <literal>&lt;ui:conditionFalse&gt;</literal> and
+          <literal>&lt;ui:conditionFalse&gt;</literal> tags must be used inside this tag to define alternative contents.
+          This tag itself is not rendered.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <emphasis>Has standard <literal>id</literal> attribute.</emphasis> 
+      </sect3>
+    </sect2>
+    
+     <!-- conditionFalse -->
+    <sect2>
+      <title><![CDATA[<ui:conditionFalse>]]></title>
+      <para>
+          The content of this tag will be displayed when form element of surrounding <literal>&lt;ui:conditionalDisplay&gt;</literal> was
+          <literal>false</literal>. Tag has no attributes.
+      </para>
+    </sect2>
+    
+     <!-- conditionTrue -->
+    <sect2>
+      <title><![CDATA[<ui:conditionTrue>]]></title>
+      <para>
+          The content of this tag will be displayed when form element of surrounding <literal>&lt;ui:conditionalDisplay&gt;</literal> was
+          <literal>true</literal>. Tag has no attributes.
+      </para>
+      
+      <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:form id="someForm">
+  <ui:conditionalDisplay id="isActive">
+    <ui:conditionTrue>
+      <img src="red_flag.png"/>
+    </ui:conditionTrue>
+    <ui:conditionFalse>
+      <img src="green_flag.png"/>
+    </ui:conditionFalse>
+  </ui:conditionalDisplay>
+</ui:form>]]></programlisting>
+      </sect3>
+      
+    </sect2>    
+    
+
+    <sect2>
+      <title><![CDATA[<ui:listDisplay>]]></title>
+      <para>
+          Display form element value as list of strings, 
+          represents <literal>DisplayControl</literal> and requires that element value would be of type <literal>Collection</literal>.
+      </para>
+
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>separator</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The separator between list items, can be any string and "\n", meaning a newline (default is "\n").</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <emphasis>Also has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+      </sect3>
+
+
+    </sect2>    
+    
   </sect1>
 
   <sect1>

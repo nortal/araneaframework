@@ -5,14 +5,15 @@
 	
 	<!--Set the classpath-->
 	<path id="classpath">
-		<fileset dir="../../lib" includes="**/*.jar"/>
-		<fileset dir="../.." includes="build/aranea.jar"/>
+		<fileset dir="../lib" includes="**/*.jar" />
+		<fileset dir="../../lib" includes="**/*.jar" />
+		<fileset dir="../.." includes="dist/aranea.jar"/>
 		<fileset dir="../.." includes="template/dist/aranea-template.jar"/>
 	</path>
 	
 	<!--Set the Jetty classpath-->
 	<path id="classpath.jetty">
-		<fileset dir="../../lib/jetty" includes="*.jar" />
+		<fileset dir="../lib/jetty" includes="*.jar" />
 		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
 	</path>
 	
@@ -24,8 +25,10 @@
 	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
-		<delete dir="war/WEB-INF/classes" failonerror="false"/>
-		<delete dir="war/WEB-INF/lib" failonerror="false"/>		
+        <delete dir="war/WEB-INF/classes" failonerror="false"/>
+        <delete dir="war/WEB-INF/lib" failonerror="false"/>	
+		<delete dir="dist" failonerror="false"/>	
+        <delete dir="tmp" failonerror="false"/>
 	</target>
 	
 	<!-- Initialize the build system -->
@@ -38,7 +41,7 @@
 	
 	
 	<path id="classpath.hibernate">
-		<fileset dir="../../lib/hibernate" includes="*.jar" />
+		<fileset dir="../lib/hibernate" includes="*.jar" />
 	</path>
 	
 	<taskdef name="hibernatedoclet" classname="xdoclet.modules.hibernate.HibernateDocletTask">
@@ -57,16 +60,29 @@
 		</hibernatedoclet>
 	</target>
 	
+	<!-- Create WAR -->
+	<target name="war" depends="build" description="Build the ready-to-deploy war archive">
+		<mkdir dir="dist"/>
+		<war destfile="dist/aranea-template-app.war" webxml="war/WEB-INF/web.xml">
+			<lib dir="war/WEB-INF/lib" excludes="jasper*"/>
+			<classes dir="war/WEB-INF/classes"/>
+			<zipfileset dir="war/WEB-INF" includes="*.xml" excludes="web.xml,jetty-web.xml" prefix="WEB-INF"/>
+			<zipfileset dir="war/WEB-INF/jsp" prefix="WEB-INF/jsp"/>
+		</war>
+	</target>
 
 	<!-- Build the code -->
 	<target name="build" depends="xdoclet.hibernate,compile" description="Build the code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
+			<fileset dir="../lib">
+				<include name="**/*.jar" />
+				<exclude name="jetty/*jar" />
+			</fileset>
 			<fileset dir="../../lib">
 				<include name="**/*.jar" />
 				<exclude name="j2ee.jar" />
-				<exclude name="jetty/*jar" />				
 			</fileset>
-			<fileset file="../../build/aranea.jar"/>
+			<fileset file="../../dist/aranea.jar"/>
 			<fileset file="../../template/dist/aranea-template.jar"/>					
 		</copy>
 		<copy todir="war/WEB-INF/classes">
@@ -92,6 +108,7 @@
 
 	<!-- Starts standalone server -->
 	<target name="run-app-only" description="Run in standalone container">
+		<mkdir dir="tmp/jsp" /> 
 		<java classname="org.mortbay.jetty.Server" dir="war" fork="yes">
 			<arg value="../jetty.xml"/>
 			<classpath>
@@ -112,7 +129,7 @@
 		
 		<java classname="org.hsqldb.Server" dir="data" fork="yes">
 			<classpath>
-				<pathelement location="../../lib/hsqldb.jar" />
+				<pathelement location="../lib/hsqldb/hsqldb.jar" />
 			</classpath>
 			<arg line="-database.0 'templateapp' -dbname.0 'templateapp'" /> 
 		</java>
@@ -122,9 +139,9 @@
 	<target name="run-database-manager" description="Run database manager">
 		<java classname="org.hsqldb.util.DatabaseManagerSwing" dir="data" fork="yes">
 			<classpath>
-				<pathelement location="../lib/hsqldb.jar" />
+				<pathelement location="../lib/hsqldb/hsqldb.jar" />
 			</classpath>
-			<arg line="--user sa --url ${db.url}" />
+      <arg line="--user sa --url jdbc:hsqldb:hsql://localhost/templateapp" />
 		</java>				
 	</target>
 </project>
