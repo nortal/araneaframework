@@ -25,8 +25,8 @@
       <servlet-name>araneaServlet</servlet-name>
      	<servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
-   </servlet> 
-
+   </servlet>    
+   
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>
       <url-pattern>/main</url-pattern>

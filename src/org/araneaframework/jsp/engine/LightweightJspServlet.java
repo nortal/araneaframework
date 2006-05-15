@@ -103,8 +103,8 @@ public class LightweightJspServlet extends HttpServlet {
       Document jspDom = builder.parse(getServletContext().getResourceAsStream(jspUri));
 
       PageContext pageContext = new PageContextImpl();
-      pageContext.initialize(this, req, resp, null, true, 8096, true);
-      processElement(jspDom.getDocumentElement(), pageContext.getOut(), pageContext);
+      pageContext.initialize(this, req, resp, null, true, Constants.DEFAULT_BUFFER_SIZE, true);
+      processElement(jspDom.getDocumentElement(), pageContext.getOut(), pageContext, null);
       pageContext.release();
     }
     catch (Exception e) {
@@ -116,11 +116,11 @@ public class LightweightJspServlet extends HttpServlet {
     }
   }
 
-  private void processElement(Element el, Writer w, PageContext pageContext) throws IOException, JspException,
+  private void processElement(Element el, Writer w, PageContext pageContext, Tag parent) throws IOException, JspException,
       ServletException {
     // Here will go specialized renderers
     if (el.getNamespaceURI() != null) {
-      processJspTagElement(el, w, pageContext);
+      processJspTagElement(el, w, pageContext, parent);
       return;
     }
 
@@ -132,12 +132,12 @@ public class LightweightJspServlet extends HttpServlet {
     }
     UiUtil.writeCloseStartTag_SS(w);
 
-    processChildren(el, w, pageContext);
+    processChildren(el, w, pageContext, parent);
 
     UiUtil.writeEndTag(w, el.getTagName());
   }
 
-  private void processChildren(Element el, Writer w, PageContext pageContext) throws IOException, JspException,
+  private void processChildren(Element el, Writer w, PageContext pageContext, Tag parent) throws IOException, JspException,
       ServletException {
     NodeList children = el.getChildNodes();
 
@@ -146,11 +146,11 @@ public class LightweightJspServlet extends HttpServlet {
         ;
       else if (children.item(i) instanceof CharacterData)
         w.write(((CharacterData) children.item(i)).getNodeValue());
-      else if (children.item(i) instanceof Element) processElement((Element) children.item(i), w, pageContext);
+      else if (children.item(i) instanceof Element) processElement((Element) children.item(i), w, pageContext, parent);
     }
   }
 
-  private void processJspTagElement(Element el, Writer w, PageContext pageContext) throws IOException, JspException,
+  private void processJspTagElement(Element el, Writer w, PageContext pageContext, Tag parent) throws IOException, JspException,
       ServletException {
     Map tagMap = getTagMap(el.getNamespaceURI());
 
@@ -159,7 +159,7 @@ public class LightweightJspServlet extends HttpServlet {
     }
 
     if (tagMap == null) {
-      processChildren(el, w, pageContext);
+      processChildren(el, w, pageContext, parent);
       return;
     }
 
@@ -185,7 +185,7 @@ public class LightweightJspServlet extends HttpServlet {
     }
     try {
       tag.setPageContext(pageContext);
-      tag.setParent(null);
+      tag.setParent(parent);
 
       for (int i = 0; i < el.getAttributes().getLength(); i++) {
         Attr attr = (Attr) el.getAttributes().item(i);
@@ -221,13 +221,13 @@ public class LightweightJspServlet extends HttpServlet {
       int result = tag.doStartTag();
       
       if (result != Tag.SKIP_BODY) {        
-        processChildren(el, w, pageContext);
+        processChildren(el, w, pageContext, tag);
       }
       
       if (tag instanceof IterationTag) {
         result = ((IterationTag) tag).doAfterBody();
         while (result == IterationTag.EVAL_BODY_AGAIN) {          
-          processChildren(el, w, pageContext);
+          processChildren(el, w, pageContext, tag);
           result = ((IterationTag) tag).doAfterBody();
         }
         
