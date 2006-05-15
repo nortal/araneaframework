@@ -16,6 +16,12 @@
 
 package org.araneaframework.framework.filter;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardEnvironment;

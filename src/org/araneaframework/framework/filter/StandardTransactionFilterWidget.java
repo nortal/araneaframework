@@ -18,6 +18,7 @@ package org.araneaframework.framework.filter;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -26,6 +27,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.framework.util.TransactionHelper;
+import org.araneaframework.servlet.util.ClientStateUtil;
 
 /**
  * Filters <code>update(InputData)</code>,  <code>event(Path, InputData)</code>, 
@@ -102,10 +104,11 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   protected void render(OutputData output) throws Exception {
     transHelper.resetTransactionId();
     output.pushAttribute(TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId());
+    ClientStateUtil.put(TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId()+"", output);
     
-    try {
-      log.debug("New transaction id '" + getTransactionId() + "'.");
-      childWidget._getWidget().render(output);
+	try {
+	    log.debug("New transaction id '" + getTransactionId() + "'.");
+	    childWidget._getWidget().render(output);
     }
     finally {
       output.popAttribute(TRANSACTION_ID_KEY);
