@@ -14,11 +14,10 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.jsp.tag.uilib.list;				
+package org.araneaframework.jsp.tag.uilib.list;        
 
 import java.io.Writer;
 import java.util.ListIterator;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiIterationBaseTag;
 
 
@@ -28,55 +27,47 @@ import org.araneaframework.jsp.tag.UiIterationBaseTag;
  * @author Oleg Mürk
  */
 public abstract class UiListRowsBaseTag extends UiIterationBaseTag {
-	public static final String ROW_REQUEST_ID_KEY_REQUEST = "rowRequestId";
-	public static final String ROW_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.list.UiListRowsTag.ROW";
-	
-	protected Object currentRow;
-	protected ListIterator rowIterator;
-	
-	protected void init() {
-		super.init();
-	}
-	
-	//
-	// Implementation
-	//
-	
-	protected void doForEachRow(Writer out) throws Exception {
-		setAttribute(ROW_KEY_REQUEST, currentRow, PageContext.REQUEST_SCOPE);
-		setAttribute(ROW_REQUEST_ID_KEY_REQUEST, Integer.toString(rowIterator.previousIndex()), PageContext.REQUEST_SCOPE);
-	}
-	
-	protected abstract ListIterator getIterator();
-	
-	public int before(Writer out) throws Exception {
-		super.before(out);
-		
-		// Get list row iterator 
-		rowIterator = getIterator();
-		
-		// Get first row & continue if needed
-		if (rowIterator.hasNext()) {
-			currentRow = rowIterator.next();
-			
-			doForEachRow(out);
-			
-			return EVAL_BODY_INCLUDE;
-		}
-		else
-			return SKIP_BODY;
-	}
-	
-	protected int afterBody(Writer out) throws Exception {
-		// Get next row & continue if needed    
-		if (rowIterator.hasNext()) {
-			currentRow = rowIterator.next();
-			
-			doForEachRow(out);
-			
-			return EVAL_BODY_AGAIN;
-		}
-		else
-			return SKIP_BODY;         
-	}
+  public static final String ROW_REQUEST_ID_KEY_REQUEST = "rowRequestId";
+  public static final String ROW_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.list.UiListRowsTag.ROW";
+  
+  protected Object currentRow;
+  protected ListIterator rowIterator;
+  
+  public int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    
+    // Get list row iterator 
+    rowIterator = getIterator();
+    
+    // Get first row & continue if needed
+    if (rowIterator.hasNext()) {
+      currentRow = rowIterator.next();
+      
+      doForEachRow(out);
+      
+      return EVAL_BODY_INCLUDE;
+    }
+    else
+      return SKIP_BODY;
+  }
+  
+  protected void doForEachRow(Writer out) throws Exception {
+    addContextEntry(ROW_KEY_REQUEST, currentRow);
+    addContextEntry(ROW_REQUEST_ID_KEY_REQUEST, Integer.toString(rowIterator.previousIndex()));
+  }
+  
+  protected int afterBody(Writer out) throws Exception {
+    // Get next row & continue if needed    
+    if (rowIterator.hasNext()) {
+      currentRow = rowIterator.next();
+      
+      doForEachRow(out);
+      
+      return EVAL_BODY_AGAIN;
+    }
+    else
+      return SKIP_BODY;         
+  }
+  
+  protected abstract ListIterator getIterator();
 }
