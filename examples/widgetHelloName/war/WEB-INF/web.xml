@@ -19,9 +19,20 @@
      	</init-param>
       <load-on-startup>1</load-on-startup>
    </servlet>
+   
+      <servlet>
+      <servlet-name>lightweightJSP</servlet-name>
+      <servlet-class>org.araneaframework.jsp.engine.LightweightJspServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>   
 
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>
       <url-pattern>/main</url-pattern>
    </servlet-mapping>
+   
+      <servlet-mapping>
+      <servlet-name>lightweightJSP</servlet-name>
+      <url-pattern>*.jsp</url-pattern>
+   </servlet-mapping>  
 </web-app>
