@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.layout;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiContainedTagInterface;
 import org.araneaframework.jsp.tag.UiStyledWrapperTag;
 
@@ -34,17 +33,38 @@ import org.araneaframework.jsp.tag.UiStyledWrapperTag;
  */
 public class UiLayoutRowWrapperTag extends UiStyledWrapperTag  {
 	protected String height;
+	protected String cellClass;
 	
-	protected void init() {
-		super.init();
-		
+	public UiLayoutRowWrapperTag() {
+		super();
 		this.height = null;
 	}
 	
+	/**
+	 * Callback: get row tag
+	 */
+	protected UiContainedTagInterface getTag() throws JspException {
+		UiLayoutTagInterface layout = (UiLayoutTagInterface)requireContextEntry(UiLayoutTagInterface.KEY_REQUEST);
+		UiLayoutRowTagInterface tag = layout.getRowTag(layout.getRowClass());
+		if (layout.getCellClass() != null) tag.setCellClass(layout.getCellClass());
+		return tag;	
+	}
 	
-	//
-	// Attributes
-	//
+	/**
+	 * Callback: configure row tag
+	 */	
+	protected void configureTag(UiContainedTagInterface tag) throws JspException {	
+		super.configureTag(tag);
+		
+		UiLayoutRowTagInterface rowTag = (UiLayoutRowTagInterface)tag;
+		
+		if (height != null) rowTag.setHeight(height);
+		if (cellClass != null) rowTag.setCellClass(cellClass);
+	}
+	
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
 	
 	/**
 	 * @jsp.attribute
@@ -62,31 +82,7 @@ public class UiLayoutRowWrapperTag extends UiStyledWrapperTag  {
 	 *   required = "false"
 	 *   description = "Default style of cells in this row." 
 	 */
-	public void setCellClass(String styleClass) throws JspException {
-		this.styleClass = (String)evaluate("styleClass", styleClass, String.class);
-	}
-	
-	//
-	// Implementation
-	//	
-	
-	/**
-	 * Callback: get row tag
-	 */
-	protected UiContainedTagInterface getTag() throws JspException {
-		UiLayoutTagInterface layout = (UiLayoutTagInterface)readAttribute(UiLayoutTagInterface.KEY_REQUEST, PageContext.REQUEST_SCOPE);		
-		return layout.getRowTag(styleClass); 		
-	}
-	
-	/**
-	 * Callback: configure row tag
-	 */	
-	protected void configureTag(UiContainedTagInterface tag) throws JspException {	
-		super.configureTag(tag);
-		
-		UiLayoutRowTagInterface rowTag = (UiLayoutRowTagInterface)tag;
-		
-		if (height != null) rowTag.setHeight(height);			
-		if (styleClass != null) rowTag.setCellClass(styleClass);
+	public void setCellClass(String cellClass) throws JspException {
+		this.cellClass = (String)evaluate("cellClass", cellClass, String.class);
 	}
 }

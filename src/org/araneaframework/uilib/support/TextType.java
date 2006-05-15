@@ -17,7 +17,7 @@
 package org.araneaframework.uilib.support;
 
 import java.io.Serializable;
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 
 
 /**
