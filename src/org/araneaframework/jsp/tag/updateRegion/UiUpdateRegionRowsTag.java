@@ -30,19 +30,23 @@ import org.araneaframework.jsp.util.UiUtil;
  */
 public class UiUpdateRegionRowsTag extends UiUpdateRegionBaseTag {
 
-  protected int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
+		
+		UiUtil.writeOpenStartTag(out, "tbody");
+		UiUtil.writeAttribute(out, "id", fullId);
+		UiUtil.writeCloseStartTag(out);
+		
+		out.write("<!--BEGIN:" + fullId + "-->");
+		
+		return EVAL_BODY_INCLUDE;
+	}
 
-    UiUtil.writeOpenStartTag(out, "tbody");
-    UiUtil.writeAttribute(out, "id", fullId);
-    UiUtil.writeCloseStartTag(out);        
-    
-    return EVAL_BODY_INCLUDE;
-  }    
-  
-  protected int doEndTag(Writer out) throws Exception {
-    UiUtil.writeEndTag(out, "tbody");
-    
-    return super.doEndTag(out);
-  }
+	protected int doEndTag(Writer out) throws Exception {
+		out.write("<!--END:" + fullId + "-->");
+		
+		UiUtil.writeEndTag(out, "tbody");
+		
+		return super.doEndTag(out);
+	}
 }

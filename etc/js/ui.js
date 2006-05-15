@@ -38,6 +38,7 @@ function uiSystemFormSubmit(systemForm, updateRegions){
 	
 	if (updateRegions && updateRegions.length > 0) {
 		window[ajaxKey].updateRegions = updateRegions;
+		window[ajaxKey].systemForm = systemForm;
 		window[ajaxKey].submitAJAX();
 	}
 	else {

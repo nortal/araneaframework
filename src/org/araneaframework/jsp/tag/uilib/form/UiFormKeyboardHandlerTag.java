@@ -107,7 +107,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	 * Either you specify this property, or the fullElementId property, not both.
 	 * <br>
 	 * The two attributes are here because there are currently two kinds of "button" tags
-	 * in Jwlf-Jsp-Ui. One is a <code>&lt;button&gt;</code> tag that corresponds
+	 * in Jsp-Ui. One is a <code>&lt;button&gt;</code> tag that corresponds
 	 * to a form element. This tag has an "id" attribute, and may look like
 	 * <pre>
 	 * &lt;button id="myButton"/&gt;
