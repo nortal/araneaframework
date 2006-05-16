@@ -51,7 +51,7 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
     
     childWidget._getComponent().init(new StandardEnvironment(getEnvironment(), entries));
            
-    log.debug("ContextMap service initialized, following contexts found: " + entries);
+    log.debug("Following contexts added to environment: " + entries);
   }
   
   public void setContexts(Map contexts) {
