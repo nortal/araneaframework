@@ -25,7 +25,7 @@
 				</ui:componentForm>
 				
 				<ui:componentActions>
-					<ui:eventButton eventId="test" labelId="#Test" updateRegions="msgRegion"/>
+					<ui:eventButton eventId="test" labelId="#Test"/>
 				</ui:componentActions>
 
 			</ui:component>
