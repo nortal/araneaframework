@@ -43,13 +43,13 @@ public class StandardSessionServiceRouterService extends BaseServiceRouterServic
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
     Map entries = new HashMap();    
     entries.put(SessionServiceContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
   
   private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements SessionServiceContext {
     protected ServiceRouterContextImpl(Object serviceId) {
       super(serviceId);
-    }    
+    }
   }
 
   protected Object getServiceKey() throws Exception {
