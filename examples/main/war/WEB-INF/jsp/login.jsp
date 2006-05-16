@@ -68,7 +68,8 @@
 		                                            		and tie them with events defined in TemplateLoginWidget.
 		                                            	 -->
 		                                                <ui:eventButton eventId="login" labelId="#Login"/>
-		                                                <ui:eventButton eventId="bypass" labelId="#Bypass login"/>
+		                                                <ui:eventButton id="bypassButton" eventId="bypass" labelId="#Bypass login"/>
+    		                                          	<ui:formEnterKeyboardHandler fullElementId="bypassButton"/>
 		                                            </div>
 		
 		                                            <div class="clear1"><ui:nbsp/></div>
