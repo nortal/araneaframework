@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main;
 
+import org.araneaframework.example.main.business.data.ContractDAO;
 import org.araneaframework.example.main.business.data.GeneralDAO;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.springframework.beans.factory.BeanFactory;
@@ -36,5 +37,9 @@ public abstract class TemplateBaseWidget extends StandardPresentationWidget {
   
 	public GeneralDAO getGeneralDAO() {
 		return (GeneralDAO) getBeanFactory().getBean("generalDAO");
+	}
+	
+	public ContractDAO getContractDAO() {
+		return (ContractDAO) getBeanFactory().getBean("contractDAO");
 	}
 }

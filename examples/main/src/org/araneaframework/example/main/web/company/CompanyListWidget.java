@@ -101,6 +101,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
   public void handleEventRemove(String eventParameter) throws Exception {
     log.debug("Event 'remove' received!");
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
+    getContractDAO().removeByCompanyId(id);
     getGeneralDAO().remove(CompanyMO.class, id);
     refreshList();
     log.debug("Company with Id of " + id + " removed sucessfully");
