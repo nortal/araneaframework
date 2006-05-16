@@ -55,6 +55,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		PopupWindowProperties p = new PopupWindowProperties();
 		p.setHeight("600");
 		p.setWidth("800");
+		p.setScrollbars("yes");
 		popupCtx.openDetached(new LoginWidget(), p);
 	}
 }

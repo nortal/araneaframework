@@ -94,9 +94,6 @@ DIV.msg-error { padding: 0.8em 1em; border: 2px solid #f61901; margin-bottom: 1e
 DIV.msg-neutral { padding: 0.8em 1em; border: 2px solid #a1a1a1; margin-bottom: 1em; color: #a1a1a1; }
 DIV.msg-ok { padding: 0.8em 1em; border: 2px solid #66b51a; margin-bottom: 1em; color: #66b51a; }
 
-A.simplelink {}
-A.simplelink:hover {}
-
 #error #cont1 { min-height: 100%; margin-bottom: -22px; background: none !important; }
 #error #footer { padding: 0; }
 #error #content { float: none; width: 960px; margin: 0 15px; padding: 15px 0 37px 0; color: #545454; }

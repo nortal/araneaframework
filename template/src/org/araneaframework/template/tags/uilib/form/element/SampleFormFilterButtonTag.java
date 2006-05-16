@@ -34,12 +34,12 @@ public class SampleFormFilterButtonTag extends UiStdFormLinkButtonTag {
 
   public SampleFormFilterButtonTag() {
     this.id = "filter";
-    this.styleClass = "simplelink";
     this.showLabel = false;
     this.validateOnEvent = true;
   }
 
   public int doStartTag(Writer out) throws Exception {
+    addAttribute("style", "text-decoration: none");
     super.doStartTag(out);
     out.write("<button>" + UiUtil.getResourceString(pageContext, "button.search").toUpperCase(UiUtil.getLocalizationContext(pageContext).getLocale()) + "</button");
     return EVAL_BODY_INCLUDE;    
