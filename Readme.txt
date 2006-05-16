@@ -61,6 +61,7 @@ Documentation can be found in the "doc" directory.
 
 KNOWN ISSUES
  
- * Client state not configurable in a easy way. Right now in the
- 	 main configuration file the filter is commented out from the chain.
- 	 In order to include it one has to uncomment it and rebuild aranea.jar.
+ * Saving user session on the client side is difficult configure
+  at the moment. The filter should be added to the main configuration
+  file (it is there right now but commented out) and then a new
+  aranea.jar should be built.
