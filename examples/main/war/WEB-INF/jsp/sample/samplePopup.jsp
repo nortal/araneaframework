@@ -15,7 +15,7 @@
 			<ui:componentActions>
 				<ui:eventButton eventId="createThread" labelId="#Open popup (create new session thread)."/>
 				<ui:eventButton eventId="openUrl" labelId="#Open some URL (/.)"/>
-				<ui:eventButton eventId="openNewCustomFlow" labelId="#Open flow as root flow (no menu, UUGLY)."/>
+				<ui:eventButton eventId="openNewCustomFlow" labelId="#Open flow as root flow."/>
 			</ui:componentActions>
 		</ui:component>
 

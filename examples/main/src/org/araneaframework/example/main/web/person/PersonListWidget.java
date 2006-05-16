@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.form.control.DateControl;
@@ -116,6 +117,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 			throw new RuntimeException("Event 'remove' shoud be called only in edit mode");
 		}
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
+		getContractDAO().removeByPersonId(id);
 		getGeneralDAO().remove(PersonMO.class, id);
 		refreshList();
 		log.debug("Person with Id of " + id + " removed sucessfully");

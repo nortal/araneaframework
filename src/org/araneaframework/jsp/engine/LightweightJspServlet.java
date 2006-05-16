@@ -20,6 +20,7 @@ import javax.servlet.jsp.tagext.TryCatchFinally;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
@@ -31,6 +32,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 public class LightweightJspServlet extends HttpServlet {
@@ -130,22 +132,31 @@ public class LightweightJspServlet extends HttpServlet {
       Attr attr = (Attr) attrs.item(i);
       UiUtil.writeAttribute(w, attr.getName(), attr.getValue());
     }
-    UiUtil.writeCloseStartTag_SS(w);
-
-    processChildren(el, w, pageContext, parent);
-
-    UiUtil.writeEndTag(w, el.getTagName());
+    
+    if (el.hasChildNodes()) {
+      UiUtil.writeCloseStartTag_SS(w);
+      processChildren(el, w, pageContext, parent);
+      UiUtil.writeEndTag_SS(w, el.getTagName());
+    }
+    else {
+      UiUtil.writeCloseStartEndTag_SS(w);
+    }
   }
 
   private void processChildren(Element el, Writer w, PageContext pageContext, Tag parent) throws IOException, JspException,
       ServletException {
+    
+    el.normalize();
     NodeList children = el.getChildNodes();
 
     for (int i = 0; i < children.getLength(); i++) {
       if (children.item(i) instanceof Comment)
         ;
-      else if (children.item(i) instanceof CharacterData)
-        w.write(((CharacterData) children.item(i)).getNodeValue());
+      else if (children.item(i) instanceof Text) {
+        Text text = (Text) children.item(i);
+        if (!StringUtils.isWhitespace(text.getNodeValue()))
+          w.write(text.getNodeValue());
+      }
       else if (children.item(i) instanceof Element) processElement((Element) children.item(i), w, pageContext, parent);
     }
   }
@@ -154,8 +165,15 @@ public class LightweightJspServlet extends HttpServlet {
       ServletException {
     Map tagMap = getTagMap(el.getNamespaceURI());
 
-    if ("http://java.sun.com/JSP/Page".equals(el.getNamespaceURI()) && "include".equals(el.getLocalName())) {
-      pageContext.include(el.getAttribute("page"));
+    if ("http://java.sun.com/JSP/Page".equals(el.getNamespaceURI())) {
+      if ("include".equals(el.getLocalName()))
+          pageContext.include(el.getAttribute("page"));
+      else if ("text".equals(el.getLocalName())) {
+        for (int i = 0; i < el.getChildNodes().getLength(); i++) {
+          w.write(((CharacterData) el.getChildNodes().item(i)).getNodeValue());
+        }
+        return;
+      }      
     }
 
     if (tagMap == null) {

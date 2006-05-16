@@ -2,11 +2,11 @@ package org.araneaframework.servlet.filter;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import net.iharder.base64.Base64;
 
+import org.apache.commons.collections.Buffer;
+import org.apache.commons.collections.buffer.CircularFifoBuffer;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -16,7 +16,7 @@ import org.araneaframework.core.StandardRelocatableWidgetDecorator;
 import org.araneaframework.framework.FilterWidget;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.servlet.util.ClientStateUtil;
-import org.araneaframework.servlet.util.EncodingUtils;
+import org.araneaframework.servlet.util.EncodingUtil;
 
 /**
  * A filter providing saving the state on the client side. On every render
@@ -28,7 +28,7 @@ import org.araneaframework.servlet.util.EncodingUtils;
 public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget {
 	private static final Logger log = Logger.getLogger(StandardClientStateFilterWidget.class);
 	
-	private Set digestSet = new HashSet();
+	private Buffer digestSet = new CircularFifoBuffer(10);
 	
 	/**
 	 * Global parameter key for the client state form input.
@@ -49,10 +49,10 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
 
 			if (!digestSet.contains(new Digest(lastDigest)))
 				throw new SecurityException("Invalid session digest!");	
-			if (!EncodingUtils.checkDigest(state.getBytes(), lastDigest))
+			if (!EncodingUtil.checkDigest(state.getBytes(), lastDigest))
 				throw new SecurityException("Invalid session state!");
 			
-			childWidget = (RelocatableWidget)EncodingUtils.decodeObjectBase64(state, compress);
+			childWidget = (RelocatableWidget)EncodingUtil.decodeObjectBase64(state, compress);
 			((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
 		}
 	}
@@ -67,20 +67,20 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
 		
 		((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(null);
 
-		String base64 = EncodingUtils.encodeObjectBase64(this.childWidget, compress);
+		String base64 = EncodingUtil.encodeObjectBase64(this.childWidget, compress);
 		
 		log.debug("Serialized client state size: " + base64.length());
 		
 		ClientStateUtil.put(CLIENT_STATE, base64, output);
 		
-		byte[] lastDigest = EncodingUtils.buildDigest(base64.getBytes());
+		byte[] lastDigest = EncodingUtil.buildDigest(base64.getBytes());
 		
 		ClientStateUtil.put(CLIENT_STATE_VERSION, Base64.encodeBytes(lastDigest, Base64.DONT_BREAK_LINES), output);
 		digestSet.add(new Digest(lastDigest));
 		
 		((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
 		super.render(output);
-	    
+
 	    childWidget = null;
 	}
 	  

@@ -1,7 +1,7 @@
 The following libraries are included in the Aranea Framework distribution because they 
-are required either for building the framework or for running the sample apps. Note
-that each of these libraries is subject to the respective license; check the respective
-project distribution/website before using any of them in your own applications.
+are required for building the framework Note that each of these libraries is subject
+to the respective license; check the respective project distribution/website before using
+any of them in your own applications.
 
 *****************************************************************************
 * ./jakarta-regexp/jakarta-regexp-1.2.jar
@@ -34,55 +34,12 @@ project distribution/website before using any of them in your own applications.
 - Collections is required by the framework core.
 - Lang is required by the framework.
 - Fileupload is required by the framework's FileUpload service.
-- Logging is required for running sample applications.
 *****************************************************************************
 
 *****************************************************************************
 * ./jakarta-taglibs/standard.jar
 - JSP custom tag library (http://jakarta.apache.org/taglibs/)
 - Required by the Aranea presentation.
-*****************************************************************************
-
-*****************************************************************************
-* ./ant/ant.jar
-- Apache Ant (http://ant.apache.org/)
-- Required to build the framework and run the samples out of the box.
-*****************************************************************************
-
-*****************************************************************************
-* ./antlr/antlr-2.7.5H3.jar
-- ANTRL (http://www.antlr.org/)
-- Required for running the sample applications.
-*****************************************************************************
-
-*****************************************************************************
-* ./asm/asm-2.2.1.jar;./asm/asm-attrs.jar
-- ASM (http://asm.objectweb.org/)
-- Required for running the sample application.
-*****************************************************************************
-
-*****************************************************************************
-* ./hibernate/hibernate3.jar
-- O/R mapping service for Java (http://www.hibernate.org/)
-- Required for running the sample application.
-*****************************************************************************
-
-*****************************************************************************
-* ./hsqldb/hsqldb.jar
-- HSQL database engine (http://www.hsqldb.org/)
-- Required for running the sample applications.
-*****************************************************************************
-
-*****************************************************************************
-* ./jasper/jasper-runtime.jar;./jasper/jasper-compiler.jar
-- JSP engine Jasper http://tomcat.apache.org
-- Required for running the sample applications.
-*****************************************************************************
-
-*****************************************************************************
-* ./dom4j/dom4j-1.6.1.jar;./dom4j/jaxen-full.jar
-- DOM4J XML parser (http://www.dom4j.org)
-- Required to run the sample applications.
 *****************************************************************************
 
 *****************************************************************************
@@ -116,6 +73,12 @@ project distribution/website before using any of them in your own applications.
 *****************************************************************************
 
 *****************************************************************************
+* ./javancss/javancss.jar
+- Code metric tool Javancss (http://www.kclee.de/clemens/java/javancss/)
+- Required for running code coverage.
+*****************************************************************************
+
+*****************************************************************************
 * ./xdoclet
       xdoclet-web-module-1.2.3.jar
       xdoclet-1.2.3.jar
@@ -124,22 +87,4 @@ project distribution/website before using any of them in your own applications.
       xjavadoc-1.1.jar
 - XDoclet (http://xdoclet.sourceforge.net/xdoclet/index.html)
 - Required for generating tld's from the JSP tags' source files.
-*****************************************************************************
-
-*****************************************************************************
-* ./cglib/cglib-nodep-2.1_3
-- CGLIB - code generation library (http://cglib.sourceforge.net/)
-- Required by Spring
-*****************************************************************************
-
-*****************************************************************************
-* ./javancss/javancss.jar
-- Code metric tool Javancss (http://www.kclee.de/clemens/java/javancss/)
-- Required for running code coverage.
-*****************************************************************************
-
-*****************************************************************************
-* ./jetty/org.mortbay.jetty.jar
-- Standalone servlet container (http://jetty.mortbay.org/jetty/)
-- Required for running the sample applications.
 *****************************************************************************

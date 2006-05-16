@@ -1,5 +1,5 @@
 ***************************************************
-* THE ARANEA FRAMEWORK, release 1.0 M2 (Mar 2006) *
+* THE ARANEA FRAMEWORK, release 1.0 M3 (May 2006) *
 *        http://www.araneaframework.org/          *
 ***************************************************
 
@@ -61,7 +61,7 @@ Documentation can be found in the "doc" directory.
 
 KNOWN ISSUES
  
- * Date ranged filters don't function properly with timestamps. Check task 47.
-   http://changelogic.araneaframework.org/index.php?event=Show_task&task_id=47&project_id=1
-
- 
+ * Saving user session on the client side is difficult configure
+  at the moment. The filter should be added to the main configuration
+  file (it is there right now but commented out) and then a new
+  aranea.jar should be built.
