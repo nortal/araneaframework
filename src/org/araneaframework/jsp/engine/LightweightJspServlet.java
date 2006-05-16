@@ -103,7 +103,6 @@ public class LightweightJspServlet extends HttpServlet {
       DocumentBuilder builder = factory.newDocumentBuilder();
 
       Document jspDom = builder.parse(getServletContext().getResourceAsStream(jspUri));
-      jspDom.normalizeDocument();
 
       PageContext pageContext = new PageContextImpl();
       pageContext.initialize(this, req, resp, null, true, Constants.DEFAULT_BUFFER_SIZE, true);
@@ -147,6 +146,7 @@ public class LightweightJspServlet extends HttpServlet {
   private void processChildren(Element el, Writer w, PageContext pageContext, Tag parent) throws IOException, JspException,
       ServletException {
     
+    el.normalize();
     NodeList children = el.getChildNodes();
 
     for (int i = 0; i < children.getLength(); i++) {
