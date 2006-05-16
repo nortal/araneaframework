@@ -1,5 +1,5 @@
 ***************************************************
-* THE ARANEA FRAMEWORK, release 1.0 M2 (Mar 2006) *
+* THE ARANEA FRAMEWORK, release 1.0 M3 (May 2006) *
 *        http://www.araneaframework.org/          *
 ***************************************************
 
@@ -64,5 +64,3 @@ KNOWN ISSUES
  * Client state not configurable in a easy way. Right now in the
  	 main configuration file the filter is commented out from the chain.
  	 In order to include it one has to uncomment it and rebuild aranea.jar.
-
- 
