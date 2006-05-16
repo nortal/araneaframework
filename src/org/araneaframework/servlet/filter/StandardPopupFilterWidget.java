@@ -27,6 +27,7 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
+import org.araneaframework.Widget;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ManagedServiceContext;
@@ -40,7 +41,6 @@ import org.araneaframework.servlet.PopupServiceInfo;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.support.PopupWindowProperties;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -64,7 +64,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return new StandardEnvironment(super.getChildWidgetEnvironment(), PopupWindowContext.class, this);
   }
   
-  public String openDetached(PopupWindowProperties properties, Message startMessage) throws Exception {
+  public String openDetached(Message startMessage, PopupWindowProperties properties) throws Exception {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
 
@@ -94,7 +94,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
   
-  public String openDetached(StandardPresentationWidget flow, PopupWindowProperties properties) throws Exception {
+  public String openDetached(Widget flow, PopupWindowProperties properties) throws Exception {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
     
@@ -111,7 +111,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
 
-  public void openDetached(final String url, final PopupWindowProperties properties) throws Exception {
+  public void open(final String url, final PopupWindowProperties properties) throws Exception {
     popups.put(url, new PopupServiceInfo() {
       public PopupWindowProperties getPopupProperties() {
         return properties;
@@ -123,7 +123,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     });
   }
 
-  public boolean close(String id) throws Exception {
+  public boolean closeDetached(String id) throws Exception {
     if (!allPopups.containsKey(id)) {
       log.warn("Attempt to close non-owned, unopened or already closed popup service with ID +'" + id + "'.");
       return false;

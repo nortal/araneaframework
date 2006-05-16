@@ -134,7 +134,7 @@ public class LightweightJspServlet extends HttpServlet {
 
     processChildren(el, w, pageContext, parent);
 
-    UiUtil.writeEndTag(w, el.getTagName());
+    UiUtil.writeEndTag_SS(w, el.getTagName());
   }
 
   private void processChildren(Element el, Writer w, PageContext pageContext, Tag parent) throws IOException, JspException,
@@ -154,8 +154,15 @@ public class LightweightJspServlet extends HttpServlet {
       ServletException {
     Map tagMap = getTagMap(el.getNamespaceURI());
 
-    if ("http://java.sun.com/JSP/Page".equals(el.getNamespaceURI()) && "include".equals(el.getLocalName())) {
-      pageContext.include(el.getAttribute("page"));
+    if ("http://java.sun.com/JSP/Page".equals(el.getNamespaceURI())) {
+      if ("include".equals(el.getLocalName()))
+          pageContext.include(el.getAttribute("page"));
+      else if ("text".equals(el.getLocalName())) {
+        for (int i = 0; i < el.getChildNodes().getLength(); i++) {
+          w.write(((CharacterData) el.getChildNodes().item(i)).getNodeValue());
+        }
+        return;
+      }      
     }
 
     if (tagMap == null) {

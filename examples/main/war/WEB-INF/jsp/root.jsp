@@ -16,7 +16,7 @@
 	
 	                    <!-- Scripts -->
 	                    <jsp:include page="scripts.jsp"/>
-	                    <title>Aranea--Java Web Framework Construction and Integration Kit</title>
+	                    <title>Aranea<ui:entity code="mdash"/>Java Web Framework Construction and Integration Kit</title>
 	                </head>
 	
 	                <body onload="processLoadEvents()" onunload="processUnloadEvents()">

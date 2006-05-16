@@ -19,8 +19,8 @@ package org.araneaframework.servlet;
 import java.io.Serializable;
 import org.araneaframework.Message;
 import org.araneaframework.Service;
+import org.araneaframework.Widget;
 import org.araneaframework.servlet.support.PopupWindowProperties;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
  * Interface for manipulating popup windows (each popup window 
@@ -38,11 +38,11 @@ public interface PopupWindowContext extends Serializable {
 
 	/**
 	 * Method for registering a new thread-level service server-side, meant to open in popup window on client side.
-	 * @param properties - properties specifying behaviour and appearance of creatable popup window. 
 	 * @param startMessage - message sent to newly created service (thread).
+	 * @param properties - properties specifying behaviour and appearance of creatable popup window. 
 	 * @return ID of created service (thread).
 	 */
-	public String openDetached(PopupWindowProperties properties, Message startMessage) throws Exception;
+	public String openDetached(Message startMessage, PopupWindowProperties properties) throws Exception;
 	
 	/** 
 	 * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
@@ -52,25 +52,25 @@ public interface PopupWindowContext extends Serializable {
 	 */
 	public String openDetached(Service service, PopupWindowProperties properties) throws Exception;
 
+  /**
+   * Creates a new thread, sends its first FlowContext request to open given flow.
+   * @param flow new flow to open.
+   * @param properties properties specifying behaviour and appearance of creatable popup window. 
+   * @return ID of thread inside which flow was started.
+   */
+  public String openDetached(Widget flow, PopupWindowProperties properties) throws Exception;  
+  
 	/** 
 	 * Opens given URL in a new popup window.
 	 * @param url URL to be opened in the popup window
 	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
 	 */
-	public void openDetached(String url, PopupWindowProperties properties) throws Exception;
-	
-	/**
-	 * Creates a new thread, sends its first FlowContext request to open given flow.
-	 * @param flow new flow to open.
-	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
-	 * @return ID of thread inside which flow was started.
-	 */
-	public String openDetached(StandardPresentationWidget flow, PopupWindowProperties properties) throws Exception;
+	public void open(String url, PopupWindowProperties properties) throws Exception;
 
 	/**
 	 * Closes the server side thread service (serving client side popup).
 	 * @param id thread (popup) ID to close.
 	 * @return whether service with given thread id was closed. 
 	 */
-	public boolean close(String id) throws Exception;
+	public boolean closeDetached(String id) throws Exception;
 }

@@ -38,14 +38,14 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		ExampleMenuMessage message = new ExampleMenuMessage("Demos.#Simple.Simple_Form");
 		
 		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-		popupCtx.openDetached(new PopupWindowProperties(), message);
+		popupCtx.openDetached(message, new PopupWindowProperties());
 	}
 	
 	public void handleEventOpenUrl() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
 
 		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-		popupCtx.openDetached("http://www.slashdot.org", new PopupWindowProperties());
+		popupCtx.open("http://www.slashdot.org", new PopupWindowProperties());
 	}
 	
 	public void handleEventOpenNewCustomFlow() throws Exception {

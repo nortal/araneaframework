@@ -20,6 +20,7 @@ import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Message;
+import org.araneaframework.Widget;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
@@ -28,9 +29,9 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class StandardFlowContextResettingMessage implements Message {
-  StandardPresentationWidget flow;
+  Widget flow;
   
-  public StandardFlowContextResettingMessage(StandardPresentationWidget flow) {
+  public StandardFlowContextResettingMessage(Widget flow) {
     this.flow = flow;
   }
   
