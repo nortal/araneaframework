@@ -2,11 +2,11 @@ package org.araneaframework.servlet.filter;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import net.iharder.base64.Base64;
 
+import org.apache.commons.collections.Buffer;
+import org.apache.commons.collections.buffer.CircularFifoBuffer;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -28,7 +28,7 @@ import org.araneaframework.servlet.util.EncodingUtil;
 public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget {
 	private static final Logger log = Logger.getLogger(StandardClientStateFilterWidget.class);
 	
-	private Set digestSet = new HashSet();
+	private Buffer digestSet = new CircularFifoBuffer(10);
 	
 	/**
 	 * Global parameter key for the client state form input.
@@ -80,7 +80,7 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
 		
 		((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
 		super.render(output);
-	    
+
 	    childWidget = null;
 	}
 	  

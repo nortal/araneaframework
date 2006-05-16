@@ -61,7 +61,8 @@ Documentation can be found in the "doc" directory.
 
 KNOWN ISSUES
  
- * Date ranged filters don't function properly with timestamps. Check task 47.
-   http://changelogic.araneaframework.org/index.php?event=Show_task&task_id=47&project_id=1
+ * Client state not configurable in a easy way. Right now in the
+ 	 main configuration file the filter is commented out from the chain.
+ 	 In order to include it one has to uncomment it and rebuild aranea.jar.
 
  
