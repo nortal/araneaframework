@@ -2,6 +2,18 @@ ARANEA FRAMEWORK CHANGELOG
 ---------------------------
 2006.05.16    | Aranea 1.0-M3
 
+Features and Improvements
+        Possible to save state on the client side                             | See # 87
+        Popups allow to start just a root flow in a popup                     | See #109
+        Partial page update takes place on server-side                        | See #1
+
+        Aranea configuration is modularized now. A main configuration is
+        provided in the aranea.jar and an application can have overrides.
+
+        JSP tag API improvements and simplification.    
+        
+            
+
 Bugfixes
         Date ranged filters with timestamp throws exception                   | See #47
         Encoding was broken with multipart requests                           | See #112
@@ -11,11 +23,6 @@ Bugfixes
         Widgets were rendered even when a HTTP redirect was taking place      | See #71
         Correct handling of empty collection with MultiSelect value           | See #99
 And others...
-
-Features
-        Possible to save state on the client side                             | See # 87
-        Popups allow to start just a root flow in a popup                     | See #109
-        Partial page update takes place on server-side                        | See #1
 
 API Changes
         Tag API cleanup (before->doStartTag, after->doEndTag, init() removed,
@@ -31,11 +38,6 @@ General changes
 
         Jars needed to run the example applications have moved from ./lib     | See #78
         to ./examples/lib directory.                                          |
-
-        Aranea configuration is modularized now. A main configuration is
-        provided in the aranea.jar and an application can have overrides.
-
-        JSP tag API improvements and simplification.
 	
 Infrastructure changes
         Nightly builds available.                                             | See #39
