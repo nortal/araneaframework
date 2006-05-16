@@ -36,8 +36,8 @@ public class UiBoldTag extends UiBaseTag {
   // Implementation
   //
     
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     UiUtil.writeStartTag_SS(out, "b");
     
@@ -45,11 +45,11 @@ public class UiBoldTag extends UiBaseTag {
     return EVAL_BODY_INCLUDE;    
   }
   
-  protected int after(Writer out) throws Exception {   
+  protected int doEndTag(Writer out) throws Exception {   
     UiUtil.writeEndTag(out, "b");
       
     // Continue
-    super.after(out);
+    super.doEndTag(out);
     return EVAL_PAGE;  
   }
 }

@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.business.util;
 
 import java.io.Serializable;
-import org.apache.log4j.Logger;
 import org.araneaframework.backend.BaseBean;
 import org.araneaframework.backend.util.BeanMapper;
 
@@ -30,9 +29,6 @@ import org.araneaframework.backend.util.BeanMapper;
  * 
  */
 public class TestVO extends BaseBean implements Serializable, Cloneable {
-
-  private static Logger log = Logger.getLogger(TestVO.class);
-
   /**
    * Private VoMapper, used for <code>toString</code> and <code>equals</code> methods.
    */

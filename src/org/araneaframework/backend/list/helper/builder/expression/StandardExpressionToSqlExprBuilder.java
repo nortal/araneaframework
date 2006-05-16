@@ -22,6 +22,7 @@ import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.Variable;
 import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
+import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
@@ -113,12 +114,25 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 	}
 	
 	// comparing	
-	
-	class EqualsTranslator extends CompositeExprToSqlExprTranslator {
-		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
-			return new SqlEqualsExpression(sqlChildren[0], sqlChildren[1]);
+
+	class EqualsTranslator implements ExprToSqlExprTranslator  {
+		// TODO check values to be null deeply
+		public SqlExpression translate(Expression expr, ExpressionToSqlExprBuilder builder) {
+			Expression[] children = ((CompositeExpression) expr).getChildren();
+			Expression leftExpr = children[0];
+			Expression rightExpr = children[1];
+			if (ValueExpression.class.isAssignableFrom(rightExpr.getClass())
+					&& ((ValueExpression) rightExpr).getValue() == null) {
+				return new SqlIsNullExpression(builder.buildSqlExpression(leftExpr));
+			}
+			if (ValueExpression.class.isAssignableFrom(leftExpr.getClass())
+					&& ((ValueExpression) leftExpr).getValue() == null) {
+				return new SqlIsNullExpression(builder.buildSqlExpression(rightExpr));
+			}
+			return new SqlEqualsExpression(builder.buildSqlExpression(leftExpr), 
+					builder.buildSqlExpression(rightExpr));
 		}
-	}
+	}	
 	
 	class IsNullTranslator extends CompositeExprToSqlExprTranslator {
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
