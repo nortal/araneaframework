@@ -5,7 +5,7 @@ ARANEA FRAMEWORK CHANGELOG
 Bugfixes
         Date ranged filters with timestamp throws exception                   | See #47
         Encoding was broken with multipart requests                           | See #112
-        Duplicate filterButton tags removed                                   | See #67
+        Duplicate filterButton tags removed from template                     | See #67
         BeanMapper fields separating                                          | See #96
         Non descriptive exception name with forms when no id specified        | See #61
         Widgets were rendered even when a HTTP redirect was taking place      | See #71
@@ -18,6 +18,11 @@ Features
         Partial page update takes place on server-side                        | See #1
 
 API Changes
+        Tag API cleanup (before->doStartTag, after->doEndTag, init() removed,
+        deinit() removed), new layout tags.
+        
+        Popup API has changed (no more need to specify ID-s, possibility to
+        open popup windows to random URL, open -> openDetached)
 
 General changes
         Javascript filenames lost the prefix jwlf. As framework's javascript  |
