@@ -112,7 +112,14 @@ public class CompanyListWidget extends TemplateBaseWidget {
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     log.debug("Company selected with Id of " + id);
     if (editMode)
-      getFlowCtx().start(new CompanyEditWidget(id), null, null);
+      getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
+	    public void onFinish(Object returnValue) throws Exception {
+	        log.debug("Company added with Id of " + returnValue + " sucessfully");
+	        refreshList();
+	      }
+	      public void onCancel() throws Exception {
+	      }
+	    });
     else
       getFlowCtx().finish(id);
   }
@@ -121,7 +128,15 @@ public class CompanyListWidget extends TemplateBaseWidget {
     log.debug("Event 'edit' received!");
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     log.debug("Company selected with Id of " + id);
-    getFlowCtx().start(new CompanyEditWidget(id), null, null);
+    getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
+	    public void onFinish(Object returnValue) throws Exception {
+	        log.debug("Company added with Id of " + returnValue + " sucessfully");
+	        refreshList();
+	      }
+	      public void onCancel() throws Exception {
+	      }
+	    }
+    );
   }
 
   public void handleEventCancel(String eventParameter) throws Exception {
