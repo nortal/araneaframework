@@ -20,6 +20,7 @@ import javax.servlet.jsp.tagext.TryCatchFinally;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
@@ -31,6 +32,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 public class LightweightJspServlet extends HttpServlet {
@@ -101,6 +103,7 @@ public class LightweightJspServlet extends HttpServlet {
       DocumentBuilder builder = factory.newDocumentBuilder();
 
       Document jspDom = builder.parse(getServletContext().getResourceAsStream(jspUri));
+      jspDom.normalizeDocument();
 
       PageContext pageContext = new PageContextImpl();
       pageContext.initialize(this, req, resp, null, true, Constants.DEFAULT_BUFFER_SIZE, true);
@@ -130,22 +133,30 @@ public class LightweightJspServlet extends HttpServlet {
       Attr attr = (Attr) attrs.item(i);
       UiUtil.writeAttribute(w, attr.getName(), attr.getValue());
     }
-    UiUtil.writeCloseStartTag_SS(w);
-
-    processChildren(el, w, pageContext, parent);
-
-    UiUtil.writeEndTag_SS(w, el.getTagName());
+    
+    if (el.hasChildNodes()) {
+      UiUtil.writeCloseStartTag_SS(w);
+      processChildren(el, w, pageContext, parent);
+      UiUtil.writeEndTag_SS(w, el.getTagName());
+    }
+    else {
+      UiUtil.writeCloseStartEndTag_SS(w);
+    }
   }
 
   private void processChildren(Element el, Writer w, PageContext pageContext, Tag parent) throws IOException, JspException,
       ServletException {
+    
     NodeList children = el.getChildNodes();
 
     for (int i = 0; i < children.getLength(); i++) {
       if (children.item(i) instanceof Comment)
         ;
-      else if (children.item(i) instanceof CharacterData)
-        w.write(((CharacterData) children.item(i)).getNodeValue());
+      else if (children.item(i) instanceof Text) {
+        Text text = (Text) children.item(i);
+        if (!StringUtils.isWhitespace(text.getNodeValue()))
+          w.write(text.getNodeValue());
+      }
       else if (children.item(i) instanceof Element) processElement((Element) children.item(i), w, pageContext, parent);
     }
   }

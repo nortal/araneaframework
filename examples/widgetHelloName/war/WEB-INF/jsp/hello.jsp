@@ -6,6 +6,7 @@
   <ui:root>
   	<ui:viewPort>	
 			<ui:widgetContext>
+			<html>
      		<head>
 	        <ui:importScripts includeTemplate="true"/>
 	            
@@ -15,6 +16,7 @@
         <body>
         	Hello <c:out value="${contextWidget.data.name}"/>!
 				</body>
+			</html>				
 			</ui:widgetContext>
 		</ui:viewPort>
 	</ui:root>	

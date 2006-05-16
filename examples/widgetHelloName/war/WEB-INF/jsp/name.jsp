@@ -4,6 +4,7 @@
 	xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2">
   <ui:root>
   	<ui:viewPort>	
+  	<html>
     	<head>
         <ui:importScripts includeTemplate="true"/>
             
@@ -16,6 +17,7 @@
 						<ui:eventButton labelId="#Say hello" eventId="hello"/>			
 				</ui:systemForm>
 			</body>
+		</html>
 		</ui:viewPort>
 	</ui:root>	
 </jsp:root>
