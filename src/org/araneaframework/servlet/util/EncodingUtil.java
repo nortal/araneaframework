@@ -18,7 +18,7 @@ import net.iharder.base64.Base64;
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class EncodingUtils {
+public class EncodingUtil {
 	/**
 	 * The method serializes the object, optionally compresses it and base64 encodes. 
 	 * GZip is used for the optional compression.
