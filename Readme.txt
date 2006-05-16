@@ -61,7 +61,7 @@ Documentation can be found in the "doc" directory.
 
 KNOWN ISSUES
  
- * Saving user session on the client side is difficult configure
+ * Saving user session on the client side is difficult to configure
   at the moment. The filter should be added to the main configuration
   file (it is there right now but commented out) and then a new
   aranea.jar should be built.

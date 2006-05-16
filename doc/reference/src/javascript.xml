@@ -442,7 +442,7 @@ function(elementName, elementLabel, mandatory){
      "HH:MM|HHMM|HH,MM|HH.MM|H:MM|HMM|H,MM|H.MM"));
    v.addAction(this.createDefaultValidatorAction(elementName, elementLabel));
    this.addValidator(v);
-}VVvVV
+}
 					</programlisting>
 				</para>
 
