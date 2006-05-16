@@ -11,12 +11,6 @@ of them in your own applications.
 *****************************************************************************
 
 *****************************************************************************
-* ./ant/ant.jar
-- Apache Ant (http://ant.apache.org/)
-- Required by jasper.
-*****************************************************************************
-
-*****************************************************************************
 * ./antlr/antlr-2.7.5H3.jar
 - ANTRL (http://www.antlr.org/)
 - Required for running the sample applications.
@@ -37,12 +31,6 @@ of them in your own applications.
 *****************************************************************************
 * ./hsqldb/hsqldb.jar
 - HSQL database engine (http://www.hsqldb.org/)
-- Required for running the sample applications.
-*****************************************************************************
-
-*****************************************************************************
-* ./jasper/jasper-runtime.jar;./jasper/jasper-compiler.jar
-- JSP engine Jasper http://tomcat.apache.org
 - Required for running the sample applications.
 *****************************************************************************
 
