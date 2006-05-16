@@ -38,6 +38,7 @@ function uiSystemFormSubmit(systemForm, updateRegions){
 	
 	if (updateRegions && updateRegions.length > 0) {
 		window[ajaxKey].updateRegions = updateRegions;
+		window[ajaxKey].systemForm = systemForm;
 		window[ajaxKey].submitAJAX();
 	}
 	else {
@@ -74,44 +75,30 @@ function uiValidateForm(systemForm, formId) {
 	return systemForm.uiProperties[formId].validator.validate();
 }
 
-function fillText(el) {
-  if (document.systemForm[el+'.select1'].value=='' && document.systemForm[el+'.select2'].value=='') {
-    document.systemForm[el+'.time'].value='';
+function fillTimeText(systemForm, el, hourSelect, minuteSelect) {
+  if (systemForm[hourSelect].value=='' && systemForm[minuteSelect].value=='') {
+    systemForm[el].value='';
   }
   else {
-    document.systemForm[el+'.time'].value=document.systemForm[el+'.select1'].value+':'+document.systemForm[el+'.select2'].value;
+    systemForm[el].value=systemForm[hourSelect].value+':'+systemForm[minuteSelect].value;
   }
-}
-    
-function fillSelect(el) {
-  separatorPos = document.systemForm[el+'.time'].value.indexOf(':');
-  if (document.systemForm[el+'.time'].value.substr(0, separatorPos).length==1) {
-    firstSelect = '0'+document.systemForm[el+'.time'].value.substr(0, separatorPos);
-  }
-  else {
-    firstSelect = document.systemForm[el+'.time'].value.substr(0, separatorPos);
-  }
-  document.systemForm[el+'.select1'].value=firstSelect;
-  document.systemForm[el+'.select2'].value=document.systemForm[el+'.time'].value.substr(separatorPos+1, document.systemForm[el+'.time'].value.length);
 }
 
-function fillTimeText(el) {
-  if (document.systemForm[el+'.select1'].value=='' && document.systemForm[el+'.select2'].value=='') {
-    document.systemForm[el].value='';
-  }
-  else {
-    document.systemForm[el].value=document.systemForm[el+'.select1'].value+':'+document.systemForm[el+'.select2'].value;
-  }
+function fillTimeSelect(systemForm, timeInput, hourSelect, minuteSelect) {
+  timestr = systemForm[timeInput].value;
+  separatorPos = timestr.indexOf(':');
+  hours = timestr.substr(0, separatorPos);
+  hourValue = hours.length==1 ? '0'+hours : hours;
+  minuteValue = timestr.substr(separatorPos+1, systemForm[timeInput].value.length);
+  systemForm[hourSelect].value=hourValue;
+  systemForm[minuteSelect].value=minuteValue;
 }
-    
-function fillTimeSelect(el) {
-  separatorPos = document.systemForm[el].value.indexOf(':');
-  if (document.systemForm[el].value.substr(0, separatorPos).length==1) {
-    firstSelect = '0'+document.systemForm[el].value.substr(0, separatorPos);
-  }
-  else {
-    firstSelect = document.systemForm[el].value.substr(0, separatorPos);
-  }
-  document.systemForm[el+'.select1'].value=firstSelect;
-  document.systemForm[el+'.select2'].value=document.systemForm[el].value.substr(separatorPos+1, document.systemForm[el].value.length);
+
+// adds options empty,0-(z-1) to <select> when used inside <select> with option x preselected
+function addOptions(z, x) {
+	o = "option";
+	document.write("<"+o+"></"+o+">");
+	for (i = 0; i < z; i++) {
+	   document.write("<"+o + (i == x ? " selected=\"true\">" : ">") + (i < 10 ? "0" : "")+ i+"</"+o +">");
+	}
 }

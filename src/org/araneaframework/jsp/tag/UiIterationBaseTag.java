@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag;
 
@@ -20,45 +20,39 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.IterationTag;
 
-
 /**
  * UI iteration base tag.
  * 
  * @author Oleg Mürk
  */
 public class UiIterationBaseTag extends UiBaseTag implements IterationTag {
-	
-	//
-	// Overridable methods
-	//
+  /**
+   * Internal callback: afer body.
+   * @throws Exception
+   */
+  protected int afterBody(Writer out) throws Exception {
+    return SKIP_BODY;
+  }
 
-	/**
-	 * Internal callback: afer body.
-	 * @throws Exception
-	 */
-	protected int afterBody(Writer out) throws Exception {
-		return SKIP_BODY;
-	}
-	
-	//
-	// IterationTag methods
-	//
+  //
+  // IterationTag methods
+  //
 
-	/**
-	 * Standard implementation of after body.
-	 */	
-	public int doAfterBody() throws JspException {
-		try {
-			return afterBody(pageContext.getOut());
-		}
-		catch(RuntimeException e) {
-			throw e;
-		}
-		catch(JspException e) {
-			throw e;		
-		}		
-		catch(Exception e) {
-			throw new JspException(e);
-		}		
-	}
+  /**
+   * Standard implementation of after body.
+   */  
+  public int doAfterBody() throws JspException {
+    try {
+      return afterBody(pageContext.getOut());
+    }
+    catch(RuntimeException e) {
+      throw e;
+    }
+    catch(JspException e) {
+      throw e;    
+    }    
+    catch(Exception e) {
+      throw new JspException(e);
+    }    
+  }
 }

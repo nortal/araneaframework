@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
+import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.ConverterKey;
 
 /**
