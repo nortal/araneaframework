@@ -19,7 +19,6 @@ package org.araneaframework.backend.list.memorybased.compexpr;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
