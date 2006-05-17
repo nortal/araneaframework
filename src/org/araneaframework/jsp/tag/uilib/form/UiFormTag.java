@@ -60,8 +60,6 @@ public class UiFormTag extends UiWidgetTag {
 		addContextEntry(FORM_FULL_ID_KEY, fullId);
 		addContextEntry(FORM_VIEW_MODEL_KEY, formViewModel);
 		addContextEntry(FORM_KEY, widget);
-   
-		writeJavascript(out);
 	
 		// Continue
 	  return EVAL_BODY_INCLUDE;		
@@ -76,10 +74,11 @@ public class UiFormTag extends UiWidgetTag {
   protected void writeJavascript(Writer out) throws Exception{
     // Append a property to the global uiSystemFormProperties object
     // this property's property "validator" will be our form's validator
-    UiUtil.writeStartTag(out, "script");
+    UiUtil.writeStartTag_SS(out, "script");
     out.write("uiFormContext(");
     UiUtil.writeScriptString(out, fullId);
-    out.write(");\n");
-    UiUtil.writeEndTag(out, "script");
+    out.write(");");
+    UiUtil.writeEndTag_SS(out, "script");
+    out.write('\n');
   }
 }
