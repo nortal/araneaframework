@@ -115,7 +115,10 @@
   *          initially valid or invalid.
   */
  function uiFormElementContext(elementName, spanId, valid){
- 
+   span=document.getElementById(spanId);
+   span.onkeydown=function(event) { return uiHandleKeypress(event, elementName); }
+   hiddenPresent="<input name='"+elementName+".__present"+"' type='hidden' value='true'/>";
+   document.write(hiddenPresent);
  }
  
  

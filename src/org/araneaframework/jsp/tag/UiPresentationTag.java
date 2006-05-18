@@ -79,6 +79,7 @@ public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInter
 		if (styleClass != null) {
 			result.append(styleClass);
 		}
-		return result.toString();
+
+		return result.length() == 0 ? null : result.toString();
 	}
 }

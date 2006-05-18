@@ -115,7 +115,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 
 		if (hasElementContextSpan) writeFormElementContextOpen(out, formScopedFullId, derivedId, pageContext);
 
-		UiUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
+		if (!hasElementContextSpan) UiUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
 
 		updateRegionNames = UiUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 
@@ -274,9 +274,11 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		// All events are sent to a handler called "uiHandleKeypress(event, formElementId)"
 		// We use the "keydown" event, not keypress, because this allows to
 		// catch F2 in IE.
-		UiUtil.writeAttribute(out, "onkeydown", "return uiHandleKeypress(event, '" + elementName +"');");
+		// Actual onkeydown event is attached to span within uiFormElementContext() javascript
 		UiUtil.writeCloseStartTag(out);
 
+		// Write out form element context: sets keydown event for this element and writes out
+		// hidden element indicating that form element is present in the request.
 		UiUtil.writeStartTag(out, "script");
 		out.write("uiFormElementContext(");
 		UiUtil.writeScriptString(out, elementName);
