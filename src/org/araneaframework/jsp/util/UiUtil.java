@@ -374,7 +374,8 @@ public class UiUtil {
         case '&': out.write(escapeEntities ? "&amp;": "&"); break;
         case '"': out.write(escapeEntities ? "&quot;": "\""); break;
         case '\'': out.write("\\'"); break;
-        case '\n': out.write("\\n"); break;        
+        case '\n': out.write("\\n"); break;
+        case '\\': out.write("\\\\"); break;
         default:
           out.write(c);
       }     
