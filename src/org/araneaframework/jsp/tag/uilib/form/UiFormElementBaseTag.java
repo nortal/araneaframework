@@ -279,15 +279,15 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 
 		// Write out form element context: sets keydown event for this element and writes out
 		// hidden element indicating that form element is present in the request.
-		UiUtil.writeStartTag(out, "script");
+		UiUtil.writeStartTag_SS(out, "script");
 		out.write("uiFormElementContext(");
 		UiUtil.writeScriptString(out, elementName);
 		out.write(", ");
 		UiUtil.writeScriptString(out, spanId);
 		out.write(", ");
-		out.write(isValid ? "true" : "false");    
-		out.write(");\n");
-		UiUtil.writeEndTag_SS(out, "script");
+		out.write(isValid ? "true" : "false");
+		out.write(");");
+		UiUtil.writeEndTag(out, "script");
 	}
 
 	/**
