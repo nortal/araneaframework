@@ -120,17 +120,20 @@ function addSystemUnloadEvent(eventFunction) {
  *
  * @author Maksim Boiko
  */
-function processLoadEvents() {
-	
+function processLoadEvents() {	
 	//process firstly system events 
   for(var i=0; i<systemLoadEvents.length; i++) {
   	processEvent(systemLoadEvents[i]);
   }
   
+  systemLoadEvents = new Array();
+  
   //client events
   for(var i=0; i<clientLoadEvents.length; i++) {
   	processEvent(clientLoadEvents[i]);
   }
+  
+  clientLoadEvents = new Array();
 }
 
 function processUnloadEvents() {
@@ -138,9 +141,9 @@ function processUnloadEvents() {
   for(var i=0; i<systemUnloadEvents.length; i++) {
   	processEvent(systemUnloadEvents[i]);
   }
+  
+  systemUnloadEvents = new Array();
 }
-
-
 
 function processEvent(event) {
 	if (typeof event != 'function') {

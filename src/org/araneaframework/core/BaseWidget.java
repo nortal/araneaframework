@@ -118,7 +118,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
 
   	// lets try to give a not null answer to the user
   	if (input == null && output != null) {
-  			return output.getCurrentInputData();
+  			return output.getInputData();
   	}
   	
   	return super.getCurrentInput();
@@ -128,7 +128,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
   	OutputData output = super.getCurrentOutput();
   	InputData input = super.getCurrentInput();
   	if (output == null && input != null) {
-  		return input.getCurrentOutputData();
+  		return input.getOutputData();
   	}
   	
   	return super.getCurrentOutput();

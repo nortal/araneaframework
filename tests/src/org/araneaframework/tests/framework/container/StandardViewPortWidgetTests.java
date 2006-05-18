@@ -23,6 +23,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.ViewPortContext;
 import org.araneaframework.framework.container.StandardViewPortWidget;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockBaseWidget;
@@ -43,7 +44,7 @@ public class StandardViewPortWidgetTests extends TestCase {
     
     widget = new StandardViewPortWidget() {
       protected void renderViewPort(OutputData output, Object currentViewPort) throws Exception {
-        attribute = output.getAttribute(VIEW_PORT_WIDGET_KEY);
+        attribute = output.getAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
       }
             
       public Environment getEnvironment() {

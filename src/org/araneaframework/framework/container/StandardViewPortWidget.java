@@ -19,6 +19,7 @@ package org.araneaframework.framework.container;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardWidget;
+import org.araneaframework.framework.ViewPortContext;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -27,11 +28,6 @@ public class StandardViewPortWidget extends StandardWidget {
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
-  
-  /**
-   * The widget's key in the output attributes.
-   */
-  public static final String VIEW_PORT_WIDGET_KEY = "org.araneaframework.framework.container.StandardViewPortWidget";
   
   /**
    * The key of the child widget in the children set.
@@ -57,7 +53,7 @@ public class StandardViewPortWidget extends StandardWidget {
   }
   
   protected void render(OutputData output) throws Exception {
-    output.pushAttribute(VIEW_PORT_WIDGET_KEY, this);
+    output.pushAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY, this);
     
     try {
       output.pushScope(CHILD_KEY);
@@ -65,7 +61,7 @@ public class StandardViewPortWidget extends StandardWidget {
     }
     finally {
       output.popScope();
-      output.popAttribute(VIEW_PORT_WIDGET_KEY);
+      output.popAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
     }
   }
 }

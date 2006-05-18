@@ -79,9 +79,7 @@
     id="araneaAjaxFilterService" singleton="false">
     <property name="existingRegions">
       <list>
-        <value>errorMessages</value>
-        <value>infoMessages</value>
-        <value>positiveMessages</value>
+        <value>messages</value>
         <value>focus</value>
         <value>scrolling</value>
       </list>
