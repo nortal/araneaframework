@@ -18,6 +18,8 @@ package org.araneaframework.servlet.router;
 
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +43,7 @@ import org.jgroups.ChannelNotConnectedException;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.TimeoutException;
+import org.jgroups.stack.IpAddress;
 
 /**
  * Associates this service with the HttpSession. Is a session does not exist, it is created. Also handles the
@@ -53,7 +56,7 @@ public class JGroupClusteredSessionRouterService extends BaseService {
 
   public static final String JGROUP_NAME = "org.araneaframework.framework.router.JGroupClusteredSessionRouterService";
 
-  public static final String SESSION_ID_KEY = "ARANEASESSIONID";
+  public static final String SESSION_ID_KEY = "ARASESSIONID";
 
   private ServiceFactory serviceFactory;
 
@@ -122,7 +125,7 @@ public class JGroupClusteredSessionRouterService extends BaseService {
 
     synchronized (sessionId.intern()) {
       if (sessions.get(sessionId) == null) {
-        log.debug("Created JGroups session '" + sessionId + "'");
+        log.debug("Creating JGroups session '" + sessionId + "'");
         service = new StandardRelocatableServiceDecorator(serviceFactory.buildService(getEnvironment()));
 
         service._getComponent().init(getEnvironment());
@@ -132,12 +135,19 @@ public class JGroupClusteredSessionRouterService extends BaseService {
       else {
         service = (RelocatableService) sessions.get(sessionId);
         service._getRelocatable().overrideEnvironment(getEnvironment());
-        log.debug("Reusing JGroups session '" + sessionId + "'");
+        log.debug("Found JGroups session '" + sessionId + "'");
       }
 
       try {
         ClientStateUtil.put(SESSION_ID_KEY, sessionId, output);
-        resp.addCookie(new Cookie(SESSION_ID_KEY, sessionId));        
+        List members = channel.getView().getMembers();
+        for (Iterator i = members.iterator(); i.hasNext();) {
+          IpAddress member = (IpAddress) i.next();
+          
+          Cookie memberCookie = new Cookie(SESSION_ID_KEY, sessionId);
+          memberCookie.setPath(member.getIpAddress().getHostAddress());
+          resp.addCookie(memberCookie);      
+        }                
         
         service._getService().action(path, input, output);
       }
