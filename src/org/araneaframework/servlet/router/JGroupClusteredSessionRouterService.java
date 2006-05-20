@@ -144,6 +144,8 @@ public class JGroupClusteredSessionRouterService extends BaseService {
         for (Iterator i = members.iterator(); i.hasNext();) {
           IpAddress member = (IpAddress) i.next();
           
+          log.debug("Writing out cookie for member " + member);
+          
           Cookie memberCookie = new Cookie(SESSION_ID_KEY, sessionId);
           memberCookie.setPath(member.getIpAddress().getHostAddress());
           resp.addCookie(memberCookie);      
