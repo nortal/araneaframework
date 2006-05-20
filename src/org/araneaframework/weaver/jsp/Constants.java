@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.araneaframework.weaver;
+package org.araneaframework.weaver.jsp;
 
 
 /**

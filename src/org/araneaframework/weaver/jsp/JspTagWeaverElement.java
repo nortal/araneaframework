@@ -12,7 +12,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.araneaframework.weaver.WeaverContext;
 import org.araneaframework.weaver.WeaverElement;
 import org.araneaframework.weaver.WeaverElementBody;
-import org.araneaframework.weaver.WeaverRegistry;
+import org.araneaframework.weaver.WeaverFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
@@ -23,7 +23,7 @@ public class JspTagWeaverElement implements WeaverElement {
   private Element el;
   private TagInfo tagInfo;
   
-  private WeaverRegistry reg;
+  private WeaverFactory reg;
   private WeaverElementBody body;
   
   private Class tagClass;
@@ -34,7 +34,7 @@ public class JspTagWeaverElement implements WeaverElement {
     this.tagInfo = tagInfo;    
   }
   
-  public void init(WeaverRegistry reg, WeaverElementBody body) {
+  public void init(WeaverFactory reg, WeaverElementBody body) {
     this.reg = reg;
     this.body = body;
 

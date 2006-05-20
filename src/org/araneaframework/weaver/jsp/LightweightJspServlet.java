@@ -1,4 +1,4 @@
-package org.araneaframework.weaver;
+package org.araneaframework.weaver.jsp;
 
 import java.io.IOException;
 import java.io.InputStream;

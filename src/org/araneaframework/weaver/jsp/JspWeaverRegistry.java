@@ -9,9 +9,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.araneaframework.weaver.TldLocationsCache;
 import org.araneaframework.weaver.WeaverElement;
-import org.araneaframework.weaver.WeaverRegistry;
+import org.araneaframework.weaver.WeaverFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -21,7 +20,7 @@ import org.xml.sax.SAXException;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  *
  */
-public class JspWeaverRegistry implements WeaverRegistry{
+public class JspWeaverRegistry implements WeaverFactory{
   private ServletContext srvCtx;
   
   private TldLocationsCache tldLocationsCache;
