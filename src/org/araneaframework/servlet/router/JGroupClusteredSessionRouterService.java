@@ -34,7 +34,6 @@ import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ClientStateUtil;
 import org.jgroups.Channel;
 import org.jgroups.ChannelClosedException;
 import org.jgroups.ChannelNotConnectedException;
@@ -68,8 +67,19 @@ public class JGroupClusteredSessionRouterService extends BaseService {
   protected void init() throws Exception {
     super.init();
 
-    String props = "UDP:PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:STATE_TRANSFER:QUEUE";
-
+    String props =  "UDP:" + 
+        "PING(num_initial_members=2;timeout=3000):" + 
+        "FD:" + 
+        "STABLE:" + 
+        "NAKACK:" + 
+        "UNICAST:" + 
+        "FRAG:" + 
+        "FLUSH:" + 
+        "GMS:" + 
+        "VIEW_ENFORCER:" + 
+        "STATE_TRANSFER:" + 
+        "QUEUE";
+    
     channel = new JChannel(props);
     channel.connect(JGROUP_NAME);
     
