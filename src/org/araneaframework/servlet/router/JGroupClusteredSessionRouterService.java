@@ -102,12 +102,13 @@ public class JGroupClusteredSessionRouterService extends BaseService {
     
     String sessionId = null;
     
-    for (int i = 0; i < req.getCookies().length; i++) {
-      Cookie c = req.getCookies()[i];
-      
-      if (SESSION_ID_KEY.equals(c.getName()))
-        sessionId = c.getValue();
-    }    
+    if (req.getCookies() != null)
+      for (int i = 0; i < req.getCookies().length; i++) {
+        Cookie c = req.getCookies()[i];
+        
+        if (SESSION_ID_KEY.equals(c.getName()))
+          sessionId = c.getValue();
+      }    
     
     //String sessionId = (String) input.getGlobalData().get(SESSION_ID_KEY);
     
