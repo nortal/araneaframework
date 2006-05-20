@@ -10,4 +10,13 @@
         singleton="false">
     <property name="sessionServiceFactory" ref="araneaSessionServiceFactory"/>
   </bean>      
+  
+  <bean id="customSessionFilters" singleton="false"
+      class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
+    <property name="filterChain">     
+      <list>
+        <ref bean="araneaSerializingAudit"/>
+      </list>
+    </property>
+  </bean>    
 </beans>
