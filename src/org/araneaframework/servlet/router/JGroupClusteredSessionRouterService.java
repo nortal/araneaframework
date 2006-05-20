@@ -52,7 +52,7 @@ public class JGroupClusteredSessionRouterService extends BaseService {
 
   public static final String JGROUP_NAME = "org.araneaframework.framework.router.JGroupClusteredSessionRouterService";
 
-  public static final String SESSION_ID_KEY = "ARANEASESSIONID";
+  public static final String SESSION_ID_KEY = "ARASESSIONID";
 
   private ServiceFactory serviceFactory;
 
