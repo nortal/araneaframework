@@ -136,7 +136,7 @@ public class JGroupClusteredSessionRouterService extends BaseService {
       }
 
       try {
-        ClientStateUtil.put(SESSION_ID_KEY, sessionId, output);
+        //ClientStateUtil.put(SESSION_ID_KEY, sessionId, output);
         resp.addCookie(new Cookie(SESSION_ID_KEY, sessionId));        
         
         service._getService().action(path, input, output);
