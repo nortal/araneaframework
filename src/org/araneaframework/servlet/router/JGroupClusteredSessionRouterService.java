@@ -34,6 +34,7 @@ import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.servlet.util.ClientStateUtil;
 import org.jgroups.Channel;
 import org.jgroups.ChannelClosedException;
 import org.jgroups.ChannelNotConnectedException;
@@ -100,17 +101,15 @@ public class JGroupClusteredSessionRouterService extends BaseService {
     HttpServletRequest req = ((ServletInputData) input).getRequest();
     HttpServletResponse resp = ((ServletOutputData) output).getResponse();
     
-    String sessionId = null;
+    String sessionId = (String) input.getGlobalData().get(SESSION_ID_KEY);
     
-    if (req.getCookies() != null)
+    if (sessionId == null && req.getCookies() != null)
       for (int i = 0; i < req.getCookies().length; i++) {
         Cookie c = req.getCookies()[i];
         
         if (SESSION_ID_KEY.equals(c.getName()))
           sessionId = c.getValue();
-      }    
-    
-    //String sessionId = (String) input.getGlobalData().get(SESSION_ID_KEY);
+      }            
     
     if (sessionId == null) {
       do      
@@ -137,7 +136,7 @@ public class JGroupClusteredSessionRouterService extends BaseService {
       }
 
       try {
-        //ClientStateUtil.put(SESSION_ID_KEY, sessionId, output);
+        ClientStateUtil.put(SESSION_ID_KEY, sessionId, output);
         resp.addCookie(new Cookie(SESSION_ID_KEY, sessionId));        
         
         service._getService().action(path, input, output);
