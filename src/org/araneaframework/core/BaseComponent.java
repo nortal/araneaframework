@@ -44,8 +44,8 @@ public abstract class BaseComponent implements Component {
   private static final Logger log = Logger.getLogger(BaseComponent.class);
   
   private Environment environment;
-  private Map children = Collections.synchronizedMap(new LinkedMap());
-  private Map disabledChildren = Collections.synchronizedMap(new LinkedMap());
+  private Map children;
+  private Map disabledChildren;
   
   private boolean wasInited = false;
   
@@ -53,8 +53,6 @@ public abstract class BaseComponent implements Component {
   private transient int reentrantCallCount = 0;
   private transient ThreadLocal reentrantTLS;
   
-  private Collection destroyers = new ArrayList();
-
   //*******************************************************************
   // PUBLIC METHODS
   //*******************************************************************
@@ -181,7 +179,18 @@ public abstract class BaseComponent implements Component {
    * Returns the children of this component.
    */
   protected Map _getChildren() {
+    if (children == null)
+      children = Collections.synchronizedMap(new LinkedMap());
     return children;
+  }
+  
+  /**
+   * Returns the disabled children of this component.
+   */
+  protected Map _getDisabledChildren() {
+    if (disabledChildren == null)
+      disabledChildren = Collections.synchronizedMap(new LinkedMap());
+    return disabledChildren;
   }
   
   /**
@@ -192,8 +201,8 @@ public abstract class BaseComponent implements Component {
     _checkCall();
     
     // cannot add a child with key that clashes with a disabled child's key
-    if (children.containsKey(key)) {
-      if (disabledChildren.containsKey(key))
+    if (_getChildren().containsKey(key)) {
+      if (_getDisabledChildren().containsKey(key))
         _enableComponent(key);
       _removeComponent(key);
     }
@@ -201,7 +210,7 @@ public abstract class BaseComponent implements Component {
     // Sequence is very important as by the time of init 
     // component should be in place since during init the 
     // component might be overridden.
-    children.put(key, component);
+    _getChildren().put(key, component);
     component._getComponent().init(env);
   }
   
@@ -211,7 +220,7 @@ public abstract class BaseComponent implements Component {
   protected void _removeComponent(Object key) throws Exception {
     _checkCall();
     
-    Component comp = (Component)children.get(key);
+    Component comp = (Component)_getChildren().get(key);
     
     if (comp == null) {
       return;
@@ -219,7 +228,7 @@ public abstract class BaseComponent implements Component {
 
     //Sequence is very important, and guarantees that there won't 
     //be a second destroy call if the first one doesn't succeed.
-    children.remove(key);
+    _getChildren().remove(key);
     comp._getComponent().destroy();
   }
 
@@ -230,12 +239,12 @@ public abstract class BaseComponent implements Component {
   protected void _disableComponent(Object key) throws Exception {
     _checkCall();
     
-    if (!children.containsKey(key)) {
+    if (!_getChildren().containsKey(key)) {
       throw new NoSuchComponentException(key);
     }
     
-    ((Component) children.get(key))._getComponent().disable();
-    disabledChildren.put(key, children.remove(key));    
+    ((Component) _getChildren().get(key))._getComponent().disable();
+    _getDisabledChildren().put(key, _getChildren().remove(key));    
   }
   
   /**
@@ -246,12 +255,12 @@ public abstract class BaseComponent implements Component {
   protected void _enableComponent(Object key) throws Exception {
     _checkCall();
     
-    if (!disabledChildren.containsKey(key)) {
+    if (!_getDisabledChildren().containsKey(key)) {
       throw new NoSuchComponentException(key);
     }
         
-    children.put(key, disabledChildren.remove(key));
-    ((Component) children.get(key))._getComponent().enable();
+    _getChildren().put(key, _getDisabledChildren().remove(key));
+    ((Component) _getChildren().get(key))._getComponent().enable();
   }
   
   /**
@@ -270,7 +279,7 @@ public abstract class BaseComponent implements Component {
     Relocatable comp = (Relocatable) parent._getComposite().detach(keyFrom);
     comp._getRelocatable().overrideEnvironment(newEnv);
     
-    children.put(keyTo, comp);
+    _getChildren().put(keyTo, comp);
   }
   
   protected void _propagate(Message message) throws Exception {
@@ -349,8 +358,8 @@ public abstract class BaseComponent implements Component {
             _removeComponent(i.next());
           }
           
-          for (Iterator i = new HashMap(disabledChildren).keySet().iterator(); i.hasNext(); ) {
-            Component comp = (Component) disabledChildren.get(i.next());
+          for (Iterator i = new HashMap(_getDisabledChildren()).keySet().iterator(); i.hasNext(); ) {
+            Component comp = (Component) _getDisabledChildren().get(i.next());
             if (comp != null) {          
               comp._getComponent().destroy();             
             }

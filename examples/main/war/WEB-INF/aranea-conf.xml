@@ -11,12 +11,15 @@
     <property name="sessionServiceFactory" ref="araneaSessionServiceFactory"/>
   </bean>      
   
-  <bean id="customSessionFilters" singleton="false"
+  <!-- bean id="customSessionFilters" singleton="false"
       class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
     <property name="filterChain">     
       <list>
-        <ref bean="araneaSerializingAudit"/>
+        <bean class="org.araneaframework.framework.filter.StandardSerializingAuditFilterService" 
+          id="araneaSerializingAudit" singleton="false">
+          <property name="testXmlSessionPath" value="/projects/tmp"/>
+      </bean> 
       </list>
     </property>
-  </bean>    
+  </bean -->    
 </beans>
