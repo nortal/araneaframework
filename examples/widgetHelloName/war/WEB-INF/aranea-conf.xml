@@ -2,12 +2,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>   
-    <bean id="araneaApplicationStart" 
-      class="org.araneaframework.example.main.web.LoginWidget"  
-      singleton="false"/>
-      
   <bean class="org.araneaframework.servlet.router.JGroupClusteredSessionRouterService" id="araneaSessionRouter"
         singleton="false">
     <property name="sessionServiceFactory" ref="araneaSessionServiceFactory"/>
-  </bean>      
+  </bean>
 </beans>

@@ -113,6 +113,8 @@
 				<path refid="classpath" />
 				<path refid="classpath.jetty" />
 			</classpath>
+			<sysproperty key="jetty.listener" value="${jetty.listener}"/>
+			<sysproperty key="java.net.preferIPv4Stack" value="true"/>
 		</java>
 	</target>
 	

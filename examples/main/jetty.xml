@@ -5,7 +5,7 @@
                                                                         
 <Configure class="org.mortbay.jetty.Server">
   <Call name="addListener">
-    <Arg>:2000</Arg>
+    <Arg><SystemProperty name="jetty.listener" default=":2000"/></Arg>
   </Call>                                                                        
   <Call name="addWebApplication">
     <Arg>/mainExample</Arg>
