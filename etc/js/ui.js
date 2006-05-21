@@ -99,6 +99,6 @@ function addOptions(z, x) {
 	o = "option";
 	document.write("<"+o+"></"+o+">");
 	for (i = 0; i < z; i++) {
-	   document.write("<"+o + (i == x ? " selected=\"true\">" : ">") + (i < 10 ? "0" : "")+ i+"</"+o +">");
+   	   document.write("<"+o + " value='" + (i < 10 ? "0" : "")+ i +"' " + (i == x ? " selected=\"true\">" : ">") + (i < 10 ? "0" : "")+ i+"</"+o +">");
 	}
 }
