@@ -130,11 +130,14 @@ public class UiStdFormSimpleLabelTag extends UiPresentationTag {
     if (accessKey != null && accessKey.length() != 1) accessKey = null;
 
     String fullFormElementId = null; // Need this for the "for" attribute of the <label> tag
+    boolean insideFormElement = null != UiUtil.getContextEntry(pageContext, UiFormElementTag.ID_KEY);
 
     if (formElementId != null){
       // Find surrounding form's id
-      String formId = (String)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_SCOPED_FULL_ID_KEY);      
-      UiFormElementBaseTag.writeFormElementContextOpen(out, formId, formElementId, pageContext);
+      String formId = (String)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_SCOPED_FULL_ID_KEY);
+      // NOTE: this assumes that label belonging to formelement X is never used inside formelement Y
+      if (!insideFormElement)
+        UiFormElementBaseTag.writeFormElementContextOpen(out, formId, formElementId, pageContext);
       fullFormElementId = formId + "." + formElementId;
     }
 
@@ -165,9 +168,9 @@ public class UiStdFormSimpleLabelTag extends UiPresentationTag {
 
     // Close </label></span>
     UiUtil.writeEndTag_SS(out, "label");
-    UiUtil.writeEndTag(out, "span");   
+    UiUtil.writeEndTag(out, "span");
 
-    if (formElementId != null) {
+    if (formElementId != null && !insideFormElement) {
       UiFormElementBaseTag.writeFormElementContextClose(out);
     }
   }

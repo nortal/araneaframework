@@ -116,7 +116,11 @@
   */
  function uiFormElementContext(elementName, spanId, valid){
    span=document.getElementById(spanId);
-   span.onkeydown=function(event) { return uiHandleKeypress(event, elementName); }
+   if (document.addEventListener) { // Moz
+     span.onkeydown=function(event) { return uiHandleKeypress(event, elementName); };
+   } else {
+     span.onkeydown=function() { return uiHandleKeypress(event, elementName); };
+   }
    hiddenPresent="<input name='"+elementName+".__present"+"' type='hidden' value='true'/>";
    document.write(hiddenPresent);
  }
@@ -196,17 +200,3 @@
    if (!inFormContext()) return;
    uiFormProperties.validator.addMandatoryValidator(name, label, mandatory);
  }
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
- 
- 
- 

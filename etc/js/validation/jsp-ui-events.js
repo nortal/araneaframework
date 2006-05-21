@@ -57,7 +57,7 @@
  	 if (event.keyCode) keyCode = event.keyCode;
  	 else keyCode = event.which; // Mozilla
  	 
- 	 try { 	 	
+ 	 try {
 	 	 uiKeypressHandlerRegistry.invokeHandlers(formElementId, keyCode, event);	 	 
  	 }
  	 catch (e) { 	
