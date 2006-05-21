@@ -26,7 +26,6 @@ import java.io.Writer;
  * @author Oleg Mürk
  */
 public class UiStdScriptUtil {
-
   /**
    * Writes out event handling attribute that does nothing.
    */ 
@@ -43,5 +42,26 @@ public class UiStdScriptUtil {
    */
   public static void writeObject(Writer out, Object o) throws IOException {
     out.write(o == null ? "undefined" : o.toString());
+  }
+  
+  /**
+   * Constructs <code>StringBuffer</code> containing javascript for invoking JS function with given arguments.
+   * 
+   * @param functionName JS function name
+   * @param arguments
+   * @return javascript for invoking function with given arguments. 
+  */
+  public static StringBuffer constructJSFunctionCall(String functionName, String[] arguments) {
+    StringBuffer sb = new StringBuffer();
+    sb.append(functionName);
+    sb.append('(');
+    for (int i = 0; i < arguments.length; i++) {
+      if (i > 0)
+        sb.append(", ");
+      sb.append(arguments[i]);
+    }
+    sb.append(')');
+    
+    return sb;
   }
 }

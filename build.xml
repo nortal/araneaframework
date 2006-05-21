@@ -5,7 +5,8 @@
 	</description>
 	
 	<property file="version.properties"/>
-	
+	<property file="build.properties"/>
+
 	<property name="project.title" value="Aranea"/>
 	
 	<!--Set the classpath-->
@@ -81,9 +82,9 @@
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
-			compiler="javac1.3"
-			target="1.3"
-			source="1.3"
+			compiler="${javac.compiler}"
+			target="${javac.target}"
+			source="${javac.source}"
 			srcdir="src"
 			deprecation="yes"
 		>

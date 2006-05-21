@@ -2,6 +2,7 @@
 
 <project basedir="." default="build" name="Aranea QuickStart1 Example"> 
 	<property environment="env" />
+	<property file="../../build.properties"/>
 	
 	<!--Set the classpath-->
 	<path id="classpath">
@@ -62,9 +63,9 @@
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
-			compiler="javac1.3"
-			target="1.3"
-			source="1.3"
+			compiler="${javac.compiler}"
+			target="${javac.target}"
+			source="${javac.source}"
 			srcdir="src"
 			includes="**/*.java"
 			classpathref="classpath"

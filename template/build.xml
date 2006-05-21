@@ -5,6 +5,8 @@
 		ANT buildfile for the Template-App project.
 	</description>
 	
+	<property file="../build.properties"/>
+	
 	<dirname property="module.basedir" file="${ant.file.Aranea Template Application}"/>
 	
 	<!-- Project title is used in the echo statements -->
@@ -57,7 +59,13 @@
 		<mkdir dir="${build.classes.dir}" />
 
 		<!--Compile Java source files-->
-		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on">
+		<javac 
+			srcdir="${src.dir}" 
+			destdir="${build.classes.dir}" 
+			compiler="${javac.compiler}"
+			target="${javac.target}"
+			source="${javac.source}"
+			debug="on">
 			<classpath refid="classpath" />
 			<include name="**/*.java" />
 		</javac>
