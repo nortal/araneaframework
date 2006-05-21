@@ -37,11 +37,11 @@ public interface ContinuationManagerContext extends Serializable {
   /**
    * Starts the continuation (by registering it and then throwing and exception, thus passing control to the continuation manager). 
    */
-  public void start(Service continuation) throws Exception;  
+  public void start(Service continuation);  
   
   /**
    * Does same as {@link #start(Service)}, however after the first request passes through the continuation will return control 
    * back to the starting component. 
    */
-  public void runOnce(Service continuation) throws Exception;
+  public void runOnce(Service continuation);
 }

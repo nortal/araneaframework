@@ -199,7 +199,7 @@ public Widget.Interface _getWidget() {
   }
   
   protected class WidgetImpl extends BaseWidget.WidgetImpl {
-    public void update(InputData input) throws Exception {
+    public void update(InputData input) {
       clearErrors();
       
       super.update(input);
@@ -207,7 +207,7 @@ public Widget.Interface _getWidget() {
       dirty = false;
     }
     
-    public void process() throws Exception {
+    public void process()  {
       if (!dirty) return; 
       
       super.process();

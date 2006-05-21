@@ -29,6 +29,7 @@ import org.araneaframework.Composite;
 import org.araneaframework.Environment;
 import org.araneaframework.Message;
 import org.araneaframework.Relocatable;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * The base class for all Aranea components. Base entities do not make a Composite pattern 
@@ -188,7 +189,7 @@ public abstract class BaseComponent implements Component {
    * Adds a child component to this component with the key and initilizes it with the
    * specified Environment env. 
    */
-  protected void _addComponent(Object key, Component component, Environment env) throws Exception {
+  protected void _addComponent(Object key, Component component, Environment env){
     _checkCall();
     
     // cannot add a child with key that clashes with a disabled child's key
@@ -208,7 +209,7 @@ public abstract class BaseComponent implements Component {
   /**
    * Removes the childcomponent with the specified key from the children and calls destroy on it.
    */
-  protected void _removeComponent(Object key) throws Exception {
+  protected void _removeComponent(Object key) {
     _checkCall();
     
     Component comp = (Component)children.get(key);
@@ -227,7 +228,7 @@ public abstract class BaseComponent implements Component {
    * Disables the child component with the specified key. A disabled child is a child that is removed
    * from the standard set of children 
    */
-  protected void _disableComponent(Object key) throws Exception {
+  protected void _disableComponent(Object key) {
     _checkCall();
     
     if (!children.containsKey(key)) {
@@ -241,9 +242,8 @@ public abstract class BaseComponent implements Component {
   /**
    * Enables a disabled child component with the specified key.
    * @param key
-   * @throws Exception
    */
-  protected void _enableComponent(Object key) throws Exception {
+  protected void _enableComponent(Object key) {
     _checkCall();
     
     if (!disabledChildren.containsKey(key)) {
@@ -262,7 +262,7 @@ public abstract class BaseComponent implements Component {
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  protected void _relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) throws Exception {
+  protected void _relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
     if (!(parent._getComposite().getChildren().get(keyFrom) instanceof Relocatable)) {
       throw new AraneaRuntimeException("Child with key '"+keyFrom+"' of class '" + parent._getComposite().getChildren().get(keyFrom).getClass() + "' is not Relocatable");
     }
@@ -273,7 +273,7 @@ public abstract class BaseComponent implements Component {
     children.put(keyTo, comp);
   }
   
-  protected void _propagate(Message message) throws Exception {
+  protected void _propagate(Message message) {
     Iterator ite = (new HashMap(_getChildren())).keySet().iterator();
     while(ite.hasNext()) {
       Object key = ite.next();
@@ -324,7 +324,7 @@ public abstract class BaseComponent implements Component {
   //component implementation
   protected class ComponentImpl implements Component.Interface {
     
-    public synchronized void init(Environment env) throws Exception {
+    public synchronized void init(Environment env) {
       if (env == null) {
         throw new AraneaRuntimeException("Environment cannot be null");
       }
@@ -334,10 +334,15 @@ public abstract class BaseComponent implements Component {
       }      
       BaseComponent.this._setEnvironment(env);
       wasInited = true;
-      BaseComponent.this.init();
+      try {
+        BaseComponent.this.init();
+      }
+      catch (Exception e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
     
-    public void destroy() throws Exception {     
+    public void destroy(){     
       _startWaitingCall();
       
       try {
@@ -360,36 +365,48 @@ public abstract class BaseComponent implements Component {
         }
         wasInited = false;   
       }
+      catch (Exception e) {
+        ExceptionUtil.uncheckException(e);
+      }
       finally {
         _endWaitingCall();
       }
     }
     
-    public void propagate(Message message) throws Exception {
+    public void propagate(Message message) {
       _startCall();
       try {      
         BaseComponent.this.propagate(message);
       }
+      catch (Exception e) {
+        ExceptionUtil.uncheckException(e);
+      }      
       finally {
         _endCall();
       }
     }
 
-    public void enable() throws Exception {
+    public void enable() {
       _startCall();
       try {
         BaseComponent.this.enable();
       }
+      catch (Exception e) {
+        ExceptionUtil.uncheckException(e);
+      }      
       finally {
         _endCall();
       }
     }
 
-    public void disable() throws Exception {
+    public void disable() {
       _startCall();
       try {
         BaseComponent.this.disable();
       }
+      catch (Exception e) {
+        ExceptionUtil.uncheckException(e);
+      }      
       finally {
         _endCall();
       }

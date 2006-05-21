@@ -38,7 +38,7 @@ public interface Custom extends Serializable, Composite, Viewable {
   /**
    * Get the child Environment of this component.
    */
-  public Environment getChildEnvironment() throws Exception;
+  public Environment getChildEnvironment();
   
   /**
    * A Standard Component.

@@ -20,6 +20,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * Non-composite widget component.
@@ -47,14 +48,19 @@ public abstract class BaseWidget extends BaseService implements Widget {
     
   protected class WidgetImpl implements Widget.Interface {
     
-    public void update(InputData input) throws Exception {
+    public void update(InputData input) {
       _startCall();
       currentInputData = input;
       try {
         BaseWidget.this.update(input);
       }
       catch (Exception e) {
-        handleException(e);
+        try {
+          handleException(e);
+        }
+        catch (Exception e2) {
+          ExceptionUtil.uncheckException(e2);
+        }
       }
       finally {
         currentInputData = null;
@@ -62,14 +68,19 @@ public abstract class BaseWidget extends BaseService implements Widget {
       } 
     }
     
-    public void event(Path path, InputData input) throws Exception {
+    public void event(Path path, InputData input) {
       _startCall();
       currentInputData = input;
       try {
         BaseWidget.this.event(path, input);
       }
       catch (Exception e) {
-        handleException(e);
+        try {
+          handleException(e);
+        }
+        catch (Exception e2) {
+          ExceptionUtil.uncheckException(e2);
+        }
       }
       finally {
         currentInputData = null;
@@ -77,27 +88,37 @@ public abstract class BaseWidget extends BaseService implements Widget {
       }
     }
     
-    public void process() throws Exception {
+    public void process() {
       _startCall();
       try {
         BaseWidget.this.process();
       }
       catch (Exception e) {
-        handleException(e);
+        try {
+          handleException(e);
+        }
+        catch (Exception e2) {
+          ExceptionUtil.uncheckException(e2);
+        }
       }
       finally {
         _endCall();
       }
     }
     
-    public void render(OutputData output) throws Exception {
+    public void render(OutputData output) {
       _startCall();
       currentOutputData = output;
       try {
         BaseWidget.this.render(output);
       }
       catch (Exception e) {
-        handleException(e);
+        try {
+          handleException(e);
+        }
+        catch (Exception e2) {
+          ExceptionUtil.uncheckException(e2);
+        }
       }
       finally {
         currentOutputData = null;

@@ -48,7 +48,7 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
     childService._getComponent().destroy();
   }
   
-  public void service(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public void service(HttpServletRequest request, HttpServletResponse response) {
     ServletInputData input = new StandardServletInputData(request);
     ServletOutputData output = new StandardServletOutputData(request, response);
 

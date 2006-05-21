@@ -42,7 +42,7 @@ public interface PopupWindowContext extends Serializable {
 	 * @param properties - properties specifying behaviour and appearance of creatable popup window. 
 	 * @return ID of created service (thread).
 	 */
-	public String openDetached(Message startMessage, PopupWindowProperties properties) throws Exception;
+	public String openDetached(Message startMessage, PopupWindowProperties properties);
 	
 	/** 
 	 * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
@@ -50,7 +50,7 @@ public interface PopupWindowContext extends Serializable {
 	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
 	 * @return ID of created service.
 	 */
-	public String openDetached(Service service, PopupWindowProperties properties) throws Exception;
+	public String openDetached(Service service, PopupWindowProperties properties);
 
   /**
    * Creates a new thread, sends its first FlowContext request to open given flow.
@@ -58,19 +58,19 @@ public interface PopupWindowContext extends Serializable {
    * @param properties properties specifying behaviour and appearance of creatable popup window. 
    * @return ID of thread inside which flow was started.
    */
-  public String openDetached(Widget flow, PopupWindowProperties properties) throws Exception;  
+  public String openDetached(Widget flow, PopupWindowProperties properties);  
   
 	/** 
 	 * Opens given URL in a new popup window.
 	 * @param url URL to be opened in the popup window
 	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
 	 */
-	public void open(String url, PopupWindowProperties properties) throws Exception;
+	public void open(String url, PopupWindowProperties properties);
 
 	/**
 	 * Closes the server side thread service (serving client side popup).
 	 * @param id thread (popup) ID to close.
 	 * @return whether service with given thread id was closed. 
 	 */
-	public boolean closeDetached(String id) throws Exception;
+	public boolean closeDetached(String id);
 }

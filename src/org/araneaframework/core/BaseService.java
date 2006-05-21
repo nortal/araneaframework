@@ -20,6 +20,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * Non-composite service component providing the extra action(Path, InputData, OutputData)
@@ -37,7 +38,7 @@ public abstract class BaseService extends BaseComponent implements Service {
   }
   
   protected class ServiceImpl implements Service.Interface {
-    public void action(Path path, InputData input, OutputData output) throws Exception {
+    public void action(Path path, InputData input, OutputData output){
       _startCall();
       currentInputData = input;
       currentOutputData = output;
@@ -45,7 +46,12 @@ public abstract class BaseService extends BaseComponent implements Service {
         BaseService.this.action(path, input, output);
       }
       catch (Exception e) {
-        handleException(e);
+        try {
+          handleException(e);
+        }
+        catch (Exception e2) {
+          ExceptionUtil.uncheckException(e2);
+        }
       }
       finally {
         currentInputData = null;

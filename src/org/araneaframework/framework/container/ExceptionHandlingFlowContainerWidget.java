@@ -68,7 +68,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
     this.exception = e;
   }
   
-  public void reset(EnvironmentAwareCallback callback) throws Exception {
+  public void reset(EnvironmentAwareCallback callback) {
     this.exception = null;
     
     super.reset(callback);

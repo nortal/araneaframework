@@ -29,6 +29,7 @@ import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.servlet.util.ClientStateUtil;
 
@@ -141,12 +142,17 @@ public abstract class BaseServiceRouterService extends BaseService {
       return currentServiceId;
     }
     
-    public Object addService(Object id, Service service) throws Exception {
-      _addComponent(id, service, getChildEnvironment(id));
+    public Object addService(Object id, Service service) {
+      try {
+        _addComponent(id, service, getChildEnvironment(id));
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
       return service;
     }
 
-    public void close(Object id) throws Exception {
+    public void close(Object id) {
       ((Service)_getChildren().get(id))._getComponent().destroy();
     }
   }

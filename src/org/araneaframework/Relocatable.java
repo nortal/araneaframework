@@ -40,12 +40,12 @@ public interface Relocatable extends Serializable {
     /**
      * Overrides the current environment with env.
      */
-    public void overrideEnvironment(Environment newEnv) throws Exception;
+    public void overrideEnvironment(Environment newEnv);
     
     /**
      * Returns the current environment of the relocatable component. 
      */
-    public Environment getCurrentEnvironment() throws Exception;
+    public Environment getCurrentEnvironment();
   }
   
   /**

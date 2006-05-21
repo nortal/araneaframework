@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
+package org.araneaframework.core.util;
 
-package org.araneaframework.core;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
-import org.araneaframework.Component;
-import org.araneaframework.Message;
-import org.araneaframework.core.util.ExceptionUtil;
 
-public abstract class BroadcastMessage implements Message {
-  public final void send(Object id, Component component) {
-	component._getComponent().propagate(this);	  
-	  
-    try {
-      this.execute(component);
-    }
-    catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }        
+/**
+ * This utility class contains methods for managing exceptions.
+ * 
+ * @author Jevgeni kabanov (ekabanov@webmedia.ee)
+ */
+public class ExceptionUtil {
+  public static RuntimeException uncheckException(Exception e) {
+    if (e instanceof RuntimeException)
+      throw (RuntimeException) e;
+    
+    throw new NestableRuntimeException(e);
   }
-  
-  protected abstract void execute(Component component) throws Exception;
 }
