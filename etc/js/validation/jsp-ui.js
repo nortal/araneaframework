@@ -121,8 +121,8 @@
    } else {
      span.onkeydown=function() { return uiHandleKeypress(event, elementName); };
    }
-   hiddenPresent="<input name='"+elementName+".__present"+"' type='hidden' value='true'/>";
-   document.write(hiddenPresent);
+   hiddenPresent=document.createElement("<input name='"+elementName+".__present"+"' type='hidden' value='true'/>");
+   span.appendChild(hiddenPresent);
  }
  
  
