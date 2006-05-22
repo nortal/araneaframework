@@ -129,7 +129,15 @@
    } else {
      span.onkeydown=function() { return uiHandleKeypress(event, elementName); };
    }
-   hiddenPresent=document.createElement("<input name='"+elementName+".__present"+"' type='hidden' value='true'/>");
+   var hiddenPresent;
+   try {
+     hiddenPresent=document.createElement("<input name=\'"+elementName+".__present\' type=\'hidden\' value=\'true\'/>");
+   } catch (ns_error_dom_invalid_char) {
+     hiddenPresent=document.createElement('input');
+     hiddenPresent.setAttribute('name',elementName+".__present");
+     hiddenPresent.setAttribute('type','hidden');
+     hiddenPresent.setAttribute('value','true'); 
+   }
    span.appendChild(hiddenPresent);
  }
  

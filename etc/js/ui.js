@@ -96,9 +96,9 @@ function fillTimeSelect(systemForm, timeInput, hourSelect, minuteSelect) {
 
 // adds options empty,0-(z-1) to <select> when used inside <select> with option x preselected
 function addOptions(z, x) {
-	o = "option";
-	document.write("<"+o+"></"+o+">");
-	for (i = 0; i < z; i++) {
-   	   document.write("<"+o + " value='" + (i < 10 ? "0" : "")+ i +"' " + (i == x ? " selected=\"true\">" : ">") + (i < 10 ? "0" : "")+ i+"</"+o +">");
-	}
+  o = "option";
+  document.write("<"+o+"></"+o+">");
+  for (i = 0; i < z; i++) {
+    document.write("<"+o + " value='" + (i < 10 ? "0" : "")+ i +"' " + (i == x ? " selected=\"true\">" : ">") + (i < 10 ? "0" : "")+ i+"</"+o +">");
+  }
 }
