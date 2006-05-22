@@ -83,10 +83,16 @@
   * Assumes that it is in a context of a containing systemform.
   */
  function uiWidgetContext(widgetName){
+   alert('Systemform properties ' + uiSystemFormProperties.name)
    if (!uiSystemFormProperties) window.status = 'Javascript error: current system form context not found!';
    else if (!uiSystemFormProperties.widgets[widgetName]) {
      uiSystemFormProperties.widgets[widgetName] = true;
-     document.write("<input name='" + widgetName + ".__present' type='hidden' value='true'/>");
+     var widgetPresent=document.createElement('input');
+     widgetPresent.setAttribute('name',widgetName+".__present");
+     widgetPresent.setAttribute('type','hidden');
+     widgetPresent.setAttribute('value','true'); 
+     var elems=document.getElementsByTagName("body");
+     elems.item(0).appendChild(node);
    }
  }
  

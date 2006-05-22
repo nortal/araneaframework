@@ -427,7 +427,7 @@ function updateRegion(updateRegionId, str) {
 		// execute all the scripts
 		var scripts = extractScripts(extracted);
 		for(var i=0;i<scripts.length;i++) {
-			var script = scripts[i].replace(/uiWidgetContext\(/gm,'uiWidgetContext2(');
+			var script = scripts[i];
 			script = "try{"+script+"}catch(e){alert(e);}";
 			eval(script);
 		}	  
