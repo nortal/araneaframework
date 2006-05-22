@@ -438,32 +438,6 @@ function trim(str) {
    return str.replace(/^\s+|\s+$/, ''); 
 }
 
-function printString(str) {
-	var result="";
-	// not string, assuming array, this IS a debug function :)
-	if (typeof str.replace == 'undefined') {
-		for(var i=0;i<str.length;i++)
-			result+=str[i]+"\n";
-	}
-	else {
-		result = str.replace(/</mg,'&lt;');
-		result = result.replace(/>/mg,'&gt;');
-	}
-	newWin = window.open('','debug','');	
-	newWin.document.write('<textarea cols=100 rows=50>'+result+'</textarea>');
-}
-
-function printObject(obj) {
-	newWin = window.open('','new','');
-	for (i in obj)
-		newWin.document.write(i+" = '"+eval("obj."+i)+"'<br>");
-}
-
-function printValue(value) {
-	newWin = window.open('','new','');
-	newWin.document.write(value);
-}
-
 // default instance.
 ajaxAnywhere = new AjaxAnywhere();
 ajaxKey = ajaxAnywhere.bindById();
