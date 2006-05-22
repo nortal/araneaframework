@@ -48,7 +48,7 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
 
     if (renderMode.equals(UiStdFormButtonTag.RENDER_INPUT))
       UiUtil.writeAttribute(out, "type", "button");
-    UiUtil.writeAttribute(out, "id", name);
+    //UiUtil.writeAttribute(out, "id", name);
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "class", getStyleClass());
     if (showLabel && renderMode.equals(UiStdFormButtonTag.RENDER_INPUT)) {

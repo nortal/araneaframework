@@ -59,7 +59,7 @@ public class UiStdFormFileUploadTag extends UiFormElementBaseTag {
 
     // Write
     UiUtil.writeOpenStartTag(out, "input");
-    UiUtil.writeAttribute(out, "id", name);
+    //UiUtil.writeAttribute(out, "id", name);
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "class", getStyleClass());
     UiUtil.writeAttribute(out, "type", "file");
