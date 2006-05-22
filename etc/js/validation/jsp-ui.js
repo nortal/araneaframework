@@ -92,7 +92,7 @@
      widgetPresent.setAttribute('type','hidden');
      widgetPresent.setAttribute('value','true'); 
      var elems=document.getElementsByTagName("body");
-     elems.item(0).appendChild(node);
+     elems.item(0).appendChild(widgetPresent);
    }
  }
  
