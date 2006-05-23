@@ -63,7 +63,7 @@ public class StandardServletFileImportFilterService extends BaseFilterService {
 			ClassLoader loader = getClass().getClassLoader();	
 			URL fileURL = loader.getResource(fileName);
 			
-  		if (fileURL != null) {
+			if (fileURL != null) {
 				InputStream inputStream = fileURL.openStream();
 				log.debug("Loading "+fileName);
 				if (inputStream!=null) {
@@ -74,11 +74,12 @@ public class StandardServletFileImportFilterService extends BaseFilterService {
 		    		if (length==-1) break;
 		    		out.write(bytes, 0, length);
 					} while (length!=-1);
-	  		}
+				}
 			}
-  		else {
-  			log.warn("Unable to locate resource '"+fileName+"'");
-  		}
-		}
+			else {
+				log.warn("Unable to locate resource '"+fileName+"'");
+			}
+	}
   }
+  
 }

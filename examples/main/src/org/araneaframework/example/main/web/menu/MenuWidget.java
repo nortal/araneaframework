@@ -112,7 +112,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem(new MenuItem("#Advanced"));
       sampleMenu.addMenuItem("#Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
       sampleMenu.addMenuItem("#Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
-      sampleMenu.addMenuItem("#Advanced", new MenuItem("WYSIWYG_Editor", DemoRichTextForm.class));
+      sampleMenu.addMenuItem("#Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
       
       sampleMenu.addMenuItem(new MenuItem("#Form lists"));
       sampleMenu.addMenuItem("#Form lists", new MenuItem("Display_Form", DemoDisplayForm.class));

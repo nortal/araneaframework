@@ -52,11 +52,11 @@ public class UiImportScriptsTag extends UiImportFileTag {
 	}
 		
 	protected void writeHtmlInclude(Writer out, String keyValue) throws Exception {
-		StringBuffer buf = new StringBuffer(keyValue);
-		buf.append("&");
-		buf.append(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
+		StringBuffer buf = new StringBuffer(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
 		buf.append("=");
 		buf.append(JsFileImporter.TYPE);
+		buf.append("&");
+		buf.append(keyValue);
 		
 		UiUtil.writeOpenStartTag(out, "script");
 		UiUtil.writeAttribute(out, "language", "JavaScript1.2");
