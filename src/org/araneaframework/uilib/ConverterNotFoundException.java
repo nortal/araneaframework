@@ -18,7 +18,7 @@ package org.araneaframework.uilib;
 
 /**
  * This exception is thrown when the {@link org.araneaframework.uilib.form.converter.BaseConverter} 
- * for the current {@link org.araneaframework.uilib.form.control.BaseControl} and {@link org.araneaframework.uilib.form.data.Data} 
+ * for the current {@link org.araneaframework.uilib.form.control.BaseControl} and {@link org.araneaframework.uilib.form.Data} 
  * could not be found.
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>

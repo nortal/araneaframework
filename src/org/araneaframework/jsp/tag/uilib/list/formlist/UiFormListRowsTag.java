@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.list.formlist;
 
 import java.io.Writer;
 import java.util.ListIterator;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListRowsBaseTag;
 import org.araneaframework.uilib.list.formlist.FormListWidget;
@@ -38,14 +37,20 @@ import org.araneaframework.uilib.list.formlist.FormRow;
  */
 public class UiFormListRowsTag extends UiListRowsBaseTag {
   
-	public static final String EDITABLE_ROW_KEY_REQUEST = "formRow";
+	public static final String EDITABLE_ROW_KEY = "formRow";
 	
 	protected FormListWidget.ViewModel editableListViewModel;
 	protected String editableListId;
 	
 	protected UiFormTag rowForm = new UiFormTag();
 	
-	protected String var;
+	protected String var = "row";
+	
+	public int doStartTag(Writer out) throws Exception {
+		editableListViewModel = (FormListWidget.ViewModel)requireContextEntry(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY);
+		editableListId = (String)requireContextEntry(UiFormListTag.FORM_LIST_ID_KEY);
+		return super.doStartTag(out);
+	}
   
   //
   // Attributes
@@ -72,33 +77,20 @@ public class UiFormListRowsTag extends UiListRowsBaseTag {
 	protected void doForEachRow(Writer out) throws Exception {
 		super.doForEachRow(out);		
 		
-  	Object currentRowKey = editableListViewModel.getRowHandler().getRowKey(currentRow);
-  	FormRow.ViewModel currentEditableRow = (FormRow.ViewModel) editableListViewModel.getFormRows().get(currentRowKey);
-  	
-  	setAttribute(EDITABLE_ROW_KEY_REQUEST, currentEditableRow, PageContext.REQUEST_SCOPE);
-  	setAttribute(var, currentRow, PageContext.REQUEST_SCOPE);	
-  	
-    registerSubtag(rowForm);
-    rowForm.setId(editableListId + "." + currentEditableRow.getRowFormId());
-    executeStartSubtag(rowForm);
+	  	Object currentRowKey = editableListViewModel.getRowHandler().getRowKey(currentRow);
+	  	FormRow.ViewModel currentEditableRow = (FormRow.ViewModel) editableListViewModel.getFormRows().get(currentRowKey);
+	  	
+	  	addContextEntry(EDITABLE_ROW_KEY, currentEditableRow);
+	  	addContextEntry(var, currentRow);	
+	  	
+	    registerSubtag(rowForm);
+	    rowForm.setId(editableListId + "." + currentEditableRow.getRowFormId());
+	    executeStartSubtag(rowForm);
 	}
     
-	public int before(Writer out) throws Exception {
-    // Get list data    
-    editableListViewModel = (FormListWidget.ViewModel)readAttribute(UiFormListTag.FORM_LIST_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-    editableListId = (String)readAttribute(UiFormListTag.FORM_LIST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		
-		return super.before(out);
-	}
-	
   protected int afterBody(Writer out) throws Exception {
   	executeEndTagAndUnregister(rowForm);
   	
   	return super.afterBody(out);   
   } 
-  
-  protected void init() {
-    super.init();
-    var = "row";
-  }
 }

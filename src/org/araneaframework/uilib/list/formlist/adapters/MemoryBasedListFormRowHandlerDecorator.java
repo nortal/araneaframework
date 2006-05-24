@@ -63,7 +63,7 @@ public class MemoryBasedListFormRowHandlerDecorator implements FormRowHandler {
 		listDataProvider.refreshData();
 	}
 
-	public void openOrCloseRow(FormRow editableRow) {
+	public void openOrCloseRow(FormRow editableRow) throws Exception {
 		rowHandler.openOrCloseRow(editableRow);
 	}
 

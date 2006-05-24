@@ -27,9 +27,7 @@ package org.araneaframework.jsp.tag.entity;
  *   description = "HTML <i>&amp;laquo;</i> entity."
  */
 public class UiLaquoEntityTag extends UiEntityTag {
-	protected void init() {
-		super.init();
-		
-		this.code = "laquo";
+	public UiLaquoEntityTag() {
+		super("laquo");
 	}
 }
