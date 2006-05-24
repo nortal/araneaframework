@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.converter;
 
 import org.araneaframework.uilib.ConverterNotFoundException;
+import org.araneaframework.uilib.form.Converter;
 
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>

@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 
@@ -34,6 +33,8 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  *   description = "Defines an attribute of the containing element."
  */
 public class UiAttributeTag extends UiBaseTag {
+	protected String name;
+	protected String value;
 
   //
   // Attributes
@@ -63,21 +64,13 @@ public class UiAttributeTag extends UiBaseTag {
   // Implementation
   //
 		
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
-		UiAttributedTagInterface attributedTag = (UiAttributedTagInterface)readAttribute(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+		UiAttributedTagInterface attributedTag = (UiAttributedTagInterface)requireContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY);
 		attributedTag.addAttribute(name, value);
 		
 		// Continue
 	  return SKIP_BODY;
 	}
-  
-  protected void init() {
-    this.name = null;
-    this.value = null;
-  }
-		
-	protected String name;
-	protected String value;
 }

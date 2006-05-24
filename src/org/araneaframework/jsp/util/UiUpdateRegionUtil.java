@@ -19,7 +19,6 @@ package org.araneaframework.jsp.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.updateRegion.UiUpdateRegionCommonTag;
@@ -30,18 +29,7 @@ import org.araneaframework.uilib.util.NameUtil;
  */
 public class UiUpdateRegionUtil {
   public static List parseUpdateRegionNames(String updateRegions) throws JspException  {
-    List result = new ArrayList();
-    
-    if (updateRegions != null && !"".equals(updateRegions.trim())) {
-      StringTokenizer tokens = new StringTokenizer(updateRegions, ",");
-      while (tokens.hasMoreTokens()) {
-        String token = tokens.nextToken();
-        
-        result.add(token.trim());
-      }
-    }
-    
-    return result;
+    return UiUtil.parseMultiValuedAttribute(updateRegions);
   }
   
   public static String getUpdateRegionName(String regionName) {
