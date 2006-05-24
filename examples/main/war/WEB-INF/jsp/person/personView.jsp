@@ -1,29 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jstl/core" xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2">		
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/template"
+	version="1.2">
 	<ui:widgetContext>
-	
-		<h2>Viewing person</h2>
-		
-		<p>
-			Here you can see the data of selected person.
-		</p>
-				
-		<p>
-			<jsp:text>First name: </jsp:text>
-			<c:out value="${contextWidget.data.person.name}"/>
-		</p>
-		
-		<p>
-			<jsp:text>Last name: </jsp:text>
-			<c:out value="${contextWidget.data.person.surname}"/>
-		</p>
-		
-		<p>
-			<jsp:text>Phone no: </jsp:text>
-			<c:out value="${contextWidget.data.person.phone}"/>
-		</p>
-		
-		<ui:eventButton eventId="return" labelId="#Back"/>
+		<ui:form id="personForm">
 
-	</ui:widgetContext>		
+			<ui:componentHeader>
+				<ui:componentName>Viewing person</ui:componentName>
+			</ui:componentHeader>
+
+			<ui:component>
+				<ui:componentForm>
+					<ui:row>
+						<ui:formElement id="name">
+							<ui:cell styleClass="name">
+								<ui:label />
+							</ui:cell>
+							<ui:cell styleClass="data">
+								<ui:textDisplay styleClass="display" />
+							</ui:cell>
+						</ui:formElement>
+
+						<ui:formElement id="surname">
+							<ui:cell styleClass="name">
+								<ui:label />
+							</ui:cell>
+							<ui:cell styleClass="data">
+								<ui:textDisplay />
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
+
+					<ui:row>
+						<ui:formElement id="phone">
+							<ui:cell styleClass="name">
+								<ui:label />
+							</ui:cell>
+							<ui:cell styleClass="data">
+								<ui:textDisplay />
+							</ui:cell>
+						</ui:formElement>
+
+						<ui:formElement id="birthdate">
+							<ui:cell styleClass="name">
+								<ui:label />
+							</ui:cell>
+							<ui:cell styleClass="data">
+								<ui:dateInputDisplay />
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
+				</ui:componentForm>
+
+				<ui:componentActions>
+					<ui:eventButton eventId="return" labelId="#Back" />
+				</ui:componentActions>
+			</ui:component>
+
+		</ui:form>
+	</ui:widgetContext>
 </jsp:root>
