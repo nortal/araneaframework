@@ -55,19 +55,17 @@ public interface Component extends Serializable {
     /**
      * Initializes this Component with the specified Environment.
      * @param env the Environment of this Component
-     * @throws Exception
      */
-    public void init(Environment env) throws Exception;
+    public void init(Environment env);
     
     /**
      * Destroys this Component.
-     * @throws Exception
      */
-    public void destroy() throws Exception;
+    public void destroy();
     
-    public void propagate(Message message) throws Exception;
+    public void propagate(Message message);
     
-    public void enable() throws Exception;
-    public void disable() throws Exception;
+    public void enable();
+    public void disable();
   }
 }

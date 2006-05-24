@@ -30,16 +30,8 @@ import org.araneaframework.uilib.form.control.SelectControl;
  *   description = "Form select display field, represents UiLib "SelectControl"."
  */
 public class UiStdFormSelectDisplayTag extends UiFormElementBaseDisplayTag {
-	protected void init() {
-		super.init();
-		styleClass = "aranea-select-display";
-	}
-	
-  //
-  // Implementation
-  //
-	
-	protected int after(Writer out) throws Exception {				
+
+	protected int doEndTag(Writer out) throws Exception {				
 		SelectControl.ViewModel viewModel = ((SelectControl.ViewModel)controlViewModel);
 		
 		UiUtil.writeOpenStartTag(out, "span");
@@ -47,7 +39,7 @@ public class UiStdFormSelectDisplayTag extends UiFormElementBaseDisplayTag {
 		UiUtil.writeCloseStartTag(out);
 
 		UiUtil.writeEscaped(out, viewModel.getLabelForValue(viewModel.getSimpleValue()));
-		
-		return super.after(out);  
+
+		return super.doEndTag(out);  
 	}
 }

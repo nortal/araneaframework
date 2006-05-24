@@ -20,8 +20,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileItem;
 import org.araneaframework.OutputData;
-import org.araneaframework.servlet.ServletFileUploadOutputExtension;
-import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
+import org.araneaframework.servlet.FileUploadInputExtension;
 import org.araneaframework.uilib.support.FileInfo;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
@@ -77,9 +76,9 @@ public class FileUploadControl extends BaseControl {
    */
   protected void readFromRequest(String controlName, HttpServletRequest request) {
     OutputData output = 
-      (OutputData) request.getAttribute(StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
-    ServletFileUploadOutputExtension fileUpload = 
-      (ServletFileUploadOutputExtension) output.narrow(ServletFileUploadOutputExtension.class);    
+      (OutputData) request.getAttribute(OutputData.OUTPUT_DATA_KEY);
+    FileUploadInputExtension fileUpload = 
+      (FileUploadInputExtension) output.narrow(FileUploadInputExtension.class);    
     
   	if (fileUpload.getUploadedFile(controlName)!= null) {
       FileItem file = fileUpload.getUploadedFile(controlName);
