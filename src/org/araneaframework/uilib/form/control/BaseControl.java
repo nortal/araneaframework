@@ -20,12 +20,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.util.ErrorUtil;
 
 
@@ -37,9 +37,6 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * 
  */
 public abstract class BaseControl extends StandardPresentationWidget implements java.io.Serializable, Control {
-
-  private static Logger log = Logger.getLogger(BaseControl.class);
-
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -151,7 +148,7 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
    */
   public void setDisabled(boolean disabled) {
     this.disabled = disabled;
-  } 
+  }
   
   //*********************************************************************
   //* ABSTRACT METHODS
@@ -168,7 +165,7 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
    * This method should be overriden by the control, returning the type of the value of this
    * control. It is later used in {@link org.araneaframework.uilib.form.converter.ConverterFactory}to
    * determine the {@link org.araneaframework.uilib.form.converter.BaseConverter}used to transfer the values
-   * from {@link org.araneaframework.uilib.form.data.Data}to control and back.
+   * from {@link org.araneaframework.uilib.form.Data}to control and back.
    * 
    * @return the type of the value of this control
    */
@@ -192,12 +189,17 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
     readFromRequest(input.getScope().toString(), ((ServletInputData) input).getRequest()); 
   }
   
-  public Widget.Interface _getWidget() {
+  protected void handleEvent(InputData input) throws Exception {
+    if (!disabled)
+      super.handleEvent(input);
+  }
+
+public Widget.Interface _getWidget() {
     return new WidgetImpl();
   }
   
   protected class WidgetImpl extends BaseWidget.WidgetImpl {
-    public void update(InputData input) throws Exception {
+    public void update(InputData input) {
       clearErrors();
       
       super.update(input);
@@ -205,7 +207,7 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
       dirty = false;
     }
     
-    public void process() throws Exception {
+    public void process()  {
       if (!dirty) return; 
       
       super.process();
