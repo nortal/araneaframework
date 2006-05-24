@@ -232,7 +232,7 @@ public class PopupWindowProperties implements Serializable {
 	}
 
 	/**
-	 * 	SSpecifies whether the dialog window displays the border window chrome. 
+	 * 	Specifies whether the dialog window displays the border window chrome. 
 	 *  This feature is only available when a dialog box is opened from a trusted application. The default is no.
 	 *  Applicable to modal and modeless popups.
 	 */
