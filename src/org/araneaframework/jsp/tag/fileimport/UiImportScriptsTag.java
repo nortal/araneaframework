@@ -50,13 +50,17 @@ public class UiImportScriptsTag extends UiImportFileTag {
 		}
 		return EVAL_BODY_INCLUDE;
 	}
-		
+	
 	protected void writeHtmlInclude(Writer out, String keyValue) throws Exception {
-		StringBuffer buf = new StringBuffer(keyValue);
-		buf.append("&");
-		buf.append(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
+		writeHtmlScriptsInclude(out, keyValue);
+	}
+	
+	public static void writeHtmlScriptsInclude(Writer out, String keyValue) throws Exception {
+		StringBuffer buf = new StringBuffer(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
 		buf.append("=");
 		buf.append(JsFileImporter.TYPE);
+		buf.append("&");
+		buf.append(keyValue);
 		
 		UiUtil.writeOpenStartTag(out, "script");
 		UiUtil.writeAttribute(out, "language", "JavaScript1.2");

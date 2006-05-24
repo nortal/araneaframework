@@ -1206,6 +1206,57 @@ el.click();]]></programlisting>
       </sect3>
     
   </sect2>
+   
+	<!-- textarea, textareadisplay -->  
+     <sect2>
+      <title><![CDATA[<ui:richtextarea>]]></title>
+      <para>
+          Form text input area, represents <literal>TextareaControl</literal>.
+          It is rendered in HTML with <literal>&lt;textarea ...&gt;</literal> tag with <literal>styleClass="richTextEditor"</literal>.
+			 The area is displayed as a rich text editor. The configuration of the editor is done via <literal>&lt;ui:richTextAreaInit&gt;</literal>.
+			 The tag shares all the attributes of the <literal>&lt;ui:textarea&gt;</literal> except the <literal>styleClass</literal> which cannot
+			 be set for this tag.
+      </para>
+	</sect2>
+     
+	  <sect2>
+      <title><![CDATA[<ui:richTextAreaInit>]]></title>
+      <para>
+			A tag for configuring the rich textareas. The <ulink url="http://tinymce.moxiecode.com/">tinyMCE</ulink> WYSIWYG editor 
+			is attached to the textareas defined via <literal>&lt;richtextarea&gt;</literal> . The configuration lets you choose the looks,
+			buttons, functionality of the editor. See
+			<ulink url="http://tinymce.moxiecode.com/tinymce/docs/reference_configuration.html">tinyMCE configuration reference</ulink>
+			for different configurable options.
+      </para>
+
+		<para>
+			The configuration is done via nesting key value pairs inside the <literal>&lt;richTextAreaInit&gt;</literal>. For the key value pairs the
+			<literal>&lt;ui:attribute&gt;</literal> tag is used. See the example for an overview.
+		</para>
+
+		<para>
+			The <literal>editor_selector</literal> and <literal>mode</literal> options are set by default and should not be changed. The
+			default <literal>theme</literal> is "simple".
+		</para>
+
+		<para>
+			<emphasis>Important:</emphasis> the configuration should be done in the
+			<literal>&lt;head&gt;</literal> section of the HTML document. 
+ 		</para>
+
+       <sect3>
+        <title>Example</title>
+<programlisting role="xml"><![CDATA[<ui:richTextAreaInit>
+	<ui:attribute name="theme" value="advanced"/>
+	<ui:attribute name="theme_advanced_buttons1" value="bold,italic,underline,separator,code"/>
+	<ui:attribute name="theme_advanced_toolbar_location" value="top"/>
+	<ui:attribute name="theme_advanced_toolbar_align" value="left"/>
+	<ui:attribute name="theme_advanced_path_location" value="bottom"/>
+</ui:richTextAreaInit>]]></programlisting> 
+      </sect3>
+    
+  </sect2>
+  
   
        <sect2>
       <title><![CDATA[<ui:textareaDisplay>]]></title>
