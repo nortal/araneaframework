@@ -23,7 +23,7 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.tag.basic.UiElementTag;
-import org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormRichareaTag;
+import org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormRichTextAreaTag;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -35,11 +35,11 @@ import org.araneaframework.jsp.util.UiUtil;
  * @author Toomas Römer
  * 
  * @jsp.tag
- *   name = "richTextInit"
+ *   name = "richTextAreaInit"
  *   body-content = "JSP"
  *   description = "Initializes configures the richtext area component."
  */
-public class UiRichEditorInitialization extends UiElementTag {
+public class UiRichTextAreaInitialization extends UiElementTag {
 	public static final String KEY = "org.araneaframework.jsp.tag.uilib.head.KEY";
 	
 	protected int doStartTag(Writer out) throws Exception {
@@ -62,7 +62,7 @@ public class UiRichEditorInitialization extends UiElementTag {
 	 * set in this method can be overridden via nested attribute tags.
 	 */
 	protected void setDefaultSettings() {
-		attributes.put("editor_selector", UiStdFormRichareaTag.EDITOR_SELECTOR);
+		attributes.put("editor_selector", UiStdFormRichTextAreaTag.EDITOR_SELECTOR);
 		
 		attributes.put("mode", "textareas");
 		attributes.put("theme", "simple");

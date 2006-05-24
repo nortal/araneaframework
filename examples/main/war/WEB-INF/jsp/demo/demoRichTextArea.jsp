@@ -10,7 +10,7 @@
 			<ui:component>
 				<ui:formElement id="richArea">
 								<!-- will draw a checkbox tied to form element with id "checkbox1" -->
-								<ui:richarea cols="100" rows="20"/>
+								<ui:richtextarea cols="100" rows="20"/>
 				</ui:formElement>
 
 

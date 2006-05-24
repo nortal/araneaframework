@@ -10,11 +10,11 @@ import javax.servlet.jsp.JspException;
  * @author Toomas Römer
  * 
  * @jsp.tag
- *   name = "richarea"
+ *   name = "richtextarea"
  *   body-content = "JSP"
  *   description = "Form text input field (textarea) wrapped with rich text editor capabilities."
  */
-public class UiStdFormRichareaTag extends UiStdFormTextareaTag{
+public class UiStdFormRichTextAreaTag extends UiStdFormTextareaTag{
 	public static final String EDITOR_SELECTOR = "richTextEditor";
 	
 	protected String getStyleClass() throws JspException  {
