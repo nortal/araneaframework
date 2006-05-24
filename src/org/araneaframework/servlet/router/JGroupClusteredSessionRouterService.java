@@ -40,6 +40,7 @@ import org.jgroups.ChannelNotConnectedException;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.TimeoutException;
+import org.jgroups.stack.IpAddress;
 
 /**
  * Associates this service with the HttpSession. Is a session does not exist, it is created. Also handles the
@@ -81,7 +82,7 @@ public class JGroupClusteredSessionRouterService extends BaseService {
         "QUEUE";
     
     channel = new JChannel(props);
-    channel.connect(JGROUP_NAME);
+    channel.connect(JGROUP_NAME);        
     
     new Receiver().start();
   }
