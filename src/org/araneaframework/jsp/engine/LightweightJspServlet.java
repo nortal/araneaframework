@@ -240,15 +240,14 @@ public class LightweightJspServlet extends HttpServlet {
       
       if (result != Tag.SKIP_BODY) {        
         processChildren(el, w, pageContext, tag);
-      }
-      
-      if (tag instanceof IterationTag) {
-        result = ((IterationTag) tag).doAfterBody();
-        while (result == IterationTag.EVAL_BODY_AGAIN) {          
-          processChildren(el, w, pageContext, tag);
+
+        if (tag instanceof IterationTag) {
           result = ((IterationTag) tag).doAfterBody();
-        }
-        
+          while (result == IterationTag.EVAL_BODY_AGAIN) {          
+            processChildren(el, w, pageContext, tag);
+            result = ((IterationTag) tag).doAfterBody();
+          }        
+        }      
       }
 
       tag.doEndTag();
