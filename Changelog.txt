@@ -1,0 +1,93 @@
+ARANEA FRAMEWORK CHANGELOG
+---------------------------
+2006.05.16    | Aranea 1.0-M3
+
+Features and Improvements
+        Possible to save state on the client side                             | See # 87
+        Popups allow to start just a root flow in a popup                     | See #109
+        Partial page update takes place on server-side                        | See #1
+
+        Aranea configuration is modularized now. A main configuration is
+        provided in the aranea.jar and an application can have overrides.
+
+        JSP tag API improvements and simplification.    
+        
+            
+
+Bugfixes
+        Date ranged filters with timestamp throws exception                   | See #47
+        Encoding was broken with multipart requests                           | See #112
+        Duplicate filterButton tags removed from template                     | See #67
+        BeanMapper fields separating                                          | See #96
+        Non descriptive exception name with forms when no id specified        | See #61
+        Widgets were rendered even when a HTTP redirect was taking place      | See #71
+        Correct handling of empty collection with MultiSelect value           | See #99
+And others...
+
+API Changes
+        Tag API cleanup (before->doStartTag, after->doEndTag, init() removed,
+        deinit() removed), new layout tags.
+        
+        Popup API has changed (no more need to specify ID-s, possibility to
+        open popup windows to random URL, open -> openDetached)
+
+General changes
+        Javascript filenames lost the prefix jwlf. As framework's javascript  |
+        files are automatically included from the jar no change in any of     | See #29
+        applications should be noted.                                         |
+
+        Jars needed to run the example applications have moved from ./lib     | See #78
+        to ./examples/lib directory.                                          |
+	
+Infrastructure changes
+        Nightly builds available.                                             | See #39
+
+        The example application running www.araneaframework.org:2000/main     | See #91
+
+        RSS feeds available for the forum.                                    | See #84
+
+---------------------------------------------------------------------------------------------
+2006.03.31    | Aranea 1.0-M2
+
+Change: API   | Button tags' attribute "mold" changed to "renderMode".
+Change: API   | Tags' disabledCssClass changed to "disabledStyleClass".
+Change: API   | StandardRoutedMessage renamed to RoutedMessage.
+Change: API   | StandardMessage renamed to BroadcastMessage.
+Change: API   | StandardJspFilterService.Configuration renamed to StandardJspFilterService.JspConfiguration
+Change: API   | Some standard styleclasses may have been changed.
+Change: API   | UiStdFormButtonBaseTag had action* attributes removed.
+Change: API   | Label tag attribute showColumn renamed to showColon.
+Change: API   | Some ContinuationManagerContext methods were renamed: 
+                 runContinuationOnce() -> runOnce()
+                 isContinuationRunning() -> isRunning()
+                 runContinuation() -> start()
+Change: API   | Environment's getEntry() method does not throw exception anymore when entry is not found.
+Change: API   | Environment has new requireEntry() method that behaves like old getEntry method.
+Change: API   | All StandardPresentationWidget's have global proxying eventlistener preregistered after initialization.
+Change: API   | StandardViewPortService does not exist anymore.
+Change: API   | StandardSpringMainServlet, StandardSpringServiceFactory and StandardMainServlet are removed.
+Change: API   | Instead there are AraneaSpringDispatcherServlet, SimpleAraneaSpringDispatcherServlet, BaseAraneaDispatcherServlet, SpringServiceFactory.
+Change: Docs  | Updates to tutorial.
+Change: Docs  | Updates to reference manual.
+
+Feature: Core | New flowcontainer, ExceptionHandlingFlowContainerWidget that has exception handling ability.
+Feature: Core | BeanListWidget now consists of real BeanFormWidget's instead of FormWidget's.
+Feature: Core | MessageContext has clearMessages() method now.
+Feature: Core | StandardWidget has clearGlobalEventListener() method now.
+Feature: Core | Added FileDownloaderService for serving downloadable files.
+Feature: Core | UiImageBaseTag has new setTitle() method.
+Feature: Core | StandardServletInputData implements ServletOverridableInputData instead ServletInputData.
+Feature: Core | New services: StandardServiceFilterChainFilterService && StandardWidgetFilterChainFilterWidget allow easier configuration.
+Feature: Core | New DefaultConfiguration class.
+Feature: Core | New ReloadingPropertyFileResourceBundle class.
+  
+Bugfix: Core  | Working timeinputs.
+Bugfix: Core  | Layout tag rowClasses and cellClasses work again.
+Bugfix: Core  | Meaningful messages for JSP missing attribute exceptions.
+Bugfix: Core  | The encoding problems in StandardServletFileUploadFilterService were fixed.
+Bugfix: Core  | List bug fixes.
+Bugfix: Core  | Updates and fixes to example application.
+Bugfix: Core  | ... and countless other bug fixes :)
+
+
+
