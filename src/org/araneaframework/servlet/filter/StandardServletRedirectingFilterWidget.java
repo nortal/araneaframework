@@ -31,7 +31,7 @@ import org.araneaframework.servlet.ServletOverridableOutputData;
  */
 public class StandardServletRedirectingFilterWidget extends BaseFilterWidget {
   protected void update(InputData input) throws Exception {
-    ServletOverridableOutputData overOutput = (ServletOverridableOutputData) input.getCurrentOutputData();
+    ServletOverridableOutputData overOutput = (ServletOverridableOutputData) input.getOutputData();
     ResponseWrapper wrapper = new ResponseWrapper(overOutput.getResponse());    
     overOutput.setResponse(wrapper);    
     

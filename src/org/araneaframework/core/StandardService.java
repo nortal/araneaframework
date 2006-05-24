@@ -30,6 +30,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * A full featured Service with support for composite, eventlisteners, viewmodel.
@@ -56,8 +57,13 @@ public abstract class StandardService extends BaseService implements Custom.Cust
   // PROTECTED CLASSES
   //*******************************************************************
   protected class ViewableImpl implements Viewable.Interface {
-    public Object getViewModel() throws Exception {
-      return StandardService.this.getViewModel();
+    public Object getViewModel() {
+      try {
+        return StandardService.this.getViewModel();
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
     }
   }
   
@@ -140,7 +146,7 @@ public abstract class StandardService extends BaseService implements Custom.Cust
    * Adds a service with the specified key. Allready initilized services cannot be added. Duplicate
    * keys not allowed. The child is initialized with the Environment env.
    */
-  public void addService(Object key, Service child, Environment env) throws Exception {
+  public void addService(Object key, Service child, Environment env) {
     _addComponent(key, child, env);
   }
   
@@ -148,16 +154,20 @@ public abstract class StandardService extends BaseService implements Custom.Cust
    * Adds a service with the specified key. Allready initilized services cannot be added. Duplicate
    * keys not allowed. The child is initialized with the Environment from
    * <code>getChildServiceEnvironment()</code>. 
-   * @throws Exception
    */
-  public void addService(Object key, Service child) throws Exception {
-    _addComponent(key, child, getChildServiceEnvironment());
+  public void addService(Object key, Service child) {
+    try {
+      _addComponent(key, child, getChildServiceEnvironment());
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
   } 
   
   /**
    * Removes the service with the specified key.
    */
-  public void removeService(Object key) throws Exception {
+  public void removeService(Object key) {
     _removeComponent(key);
   }
   
@@ -169,7 +179,7 @@ public abstract class StandardService extends BaseService implements Custom.Cust
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateService(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) throws Exception {
+  public void relocateService(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
     _relocateComponent(parent, newEnv, keyFrom, keyTo);
   }
   
@@ -180,14 +190,19 @@ public abstract class StandardService extends BaseService implements Custom.Cust
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateService(Composite parent, Object keyFrom, Object keyTo) throws Exception {
-    _relocateComponent(parent, getChildServiceEnvironment(), keyFrom, keyTo);
+  public void relocateService(Composite parent, Object keyFrom, Object keyTo) {
+    try {
+      _relocateComponent(parent, getChildServiceEnvironment(), keyFrom, keyTo);
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
   }
   
   /**
    * Enables the service with the specified key. Only a disabled service can be enabled.
    */
-  public void enableService(Object key) throws Exception {
+  public void enableService(Object key) {
     _enableComponent(key);
   }
   
@@ -195,7 +210,7 @@ public abstract class StandardService extends BaseService implements Custom.Cust
    * Disables the service with the specified key. Only a enabled service can be disabled. A disabled
    * service does not get any actions routed to them.
    */
-  public void disableService(Object key) throws Exception {
+  public void disableService(Object key) {
     _disableComponent(key);
   }
   
@@ -203,8 +218,13 @@ public abstract class StandardService extends BaseService implements Custom.Cust
     return super.getEnvironment();
   }
   
-  public Environment getChildEnvironment() throws Exception {
-    return getChildServiceEnvironment();
+  public Environment getChildEnvironment() {
+    try {
+      return getChildServiceEnvironment();
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
   }
   
   //*******************************************************************
@@ -213,14 +233,14 @@ public abstract class StandardService extends BaseService implements Custom.Cust
   /**
    * Returns the view model. Usually overridden.
    */
-  protected Object getViewModel() {
+  protected Object getViewModel() throws Exception {
     return new ViewModel();
   }
   
   /**
    * Returns the the Environment of this Service by default. Usually overridden.
    */
-  protected Environment getChildServiceEnvironment() {
+  protected Environment getChildServiceEnvironment() throws Exception{
     return getEnvironment();
   }
   

@@ -63,7 +63,7 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
 	}
 	
 	protected void render(OutputData output) throws Exception {
-		refreshClientState(output.getCurrentInputData());
+		refreshClientState(output.getInputData());
 		
 		((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(null);
 

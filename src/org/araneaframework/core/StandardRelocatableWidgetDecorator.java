@@ -2,6 +2,7 @@ package org.araneaframework.core;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.araneaframework.Environment;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Widget;
@@ -18,10 +19,15 @@ public class StandardRelocatableWidgetDecorator extends BaseFilterWidget impleme
 	// PROTECTED CLASSES
 	//*******************************************************************
 	protected class RelocatableComponentImpl implements Relocatable.Interface {
-		public void overrideEnvironment(Environment newEnv) throws Exception{
+		public void overrideEnvironment(Environment newEnv) {
 			_startWaitingCall();
 
-			_waitNoCall();      
+			try {
+        _waitNoCall();
+      }
+      catch (InterruptedException e) {
+        throw new NestableRuntimeException(e);
+      }      
 			synchronized (this) {
 			  _setEnvironment(newEnv);
 			}
@@ -29,7 +35,7 @@ public class StandardRelocatableWidgetDecorator extends BaseFilterWidget impleme
 			_endWaitingCall();
 		}
     
-    public Environment getCurrentEnvironment() throws Exception {
+    public Environment getCurrentEnvironment() {
       return getEnvironment();
     }
 	}

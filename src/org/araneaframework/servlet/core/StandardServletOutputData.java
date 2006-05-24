@@ -174,8 +174,8 @@ public class StandardServletOutputData implements ServletOutputData, MimeOutputD
     this.res = res;
   }
 
-	public InputData getCurrentInputData() {
-		InputData inputData = (InputData)req.getAttribute(StandardServletServiceAdapterComponent.INPUT_DATA_REQUEST_ATTRIBUTE);
+	public InputData getInputData() {
+		InputData inputData = (InputData)req.getAttribute(InputData.INPUT_DATA_KEY);
 		if (inputData == null)
 			throw new NoCurrentInputDataSetException("No InputData set in the request.");
 		else

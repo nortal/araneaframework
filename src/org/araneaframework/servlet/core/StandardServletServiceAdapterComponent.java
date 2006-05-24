@@ -18,6 +18,8 @@ package org.araneaframework.servlet.core;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseComponent;
 import org.araneaframework.servlet.ServletInputData;
@@ -32,15 +34,6 @@ import org.araneaframework.servlet.ServletServiceAdapterComponent;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */   
 public class StandardServletServiceAdapterComponent extends BaseComponent implements ServletServiceAdapterComponent {
-  /**
-   * The key of the request attribute under which lies the ServletInputData.
-   */
-  public static final String INPUT_DATA_REQUEST_ATTRIBUTE = "org.araneaframework.servlet.ServletInputData";
-  /**
-   * The key of the request attribute under which lies the ServletOutputData.
-   */
-  public static final String OUTPUT_DATA_REQUEST_ATTRIBUTE = "org.araneaframework.servlet.ServletOutputData";
-  
   private Service childService;
   
   protected void init() throws Exception {
@@ -55,12 +48,12 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
     childService._getComponent().destroy();
   }
   
-  public void service(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public void service(HttpServletRequest request, HttpServletResponse response) {
     ServletInputData input = new StandardServletInputData(request);
     ServletOutputData output = new StandardServletOutputData(request, response);
 
-    request.setAttribute(INPUT_DATA_REQUEST_ATTRIBUTE, input);
-    request.setAttribute(OUTPUT_DATA_REQUEST_ATTRIBUTE, output);
+    request.setAttribute(InputData.INPUT_DATA_KEY, input);
+    request.setAttribute(OutputData.OUTPUT_DATA_KEY, output);
 
     childService._getService().action(null, input, output);
   }

@@ -29,5 +29,5 @@ public interface ExceptionHandlerContext extends Serializable {
   /**
    * Restore control and end the continuation flow.
    */
-  public void restore() throws Exception;
+  public void restore();
 }

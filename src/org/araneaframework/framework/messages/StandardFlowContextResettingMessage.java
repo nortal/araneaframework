@@ -21,8 +21,8 @@ import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Message;
 import org.araneaframework.Widget;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
  * Message that sends resets the first flow context and starts a specified flow in it.
@@ -35,11 +35,16 @@ public class StandardFlowContextResettingMessage implements Message {
     this.flow = flow;
   }
   
-  public final void send(Object id, Component component) throws Exception {
+  public final void send(Object id, Component component){
     if (!(component instanceof FlowContext))
       component._getComponent().propagate(this);
     else
-      this.execute(component);
+      try {
+        this.execute(component);
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
   }
 
   protected void execute(Component component) throws Exception {

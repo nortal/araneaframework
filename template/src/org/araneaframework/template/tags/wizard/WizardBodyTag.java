@@ -21,7 +21,6 @@ import org.araneaframework.OutputData;
 import org.araneaframework.core.Custom.CustomWidget;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiWidgetUtil;
-import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 
 
 /**
@@ -41,7 +40,7 @@ public class WizardBodyTag extends UiBaseTag {
 		
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
-          StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+          OutputData.OUTPUT_DATA_KEY);
     
 	  out.flush();
 	  widget._getWidget().render(output);	  

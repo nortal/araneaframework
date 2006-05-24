@@ -14,23 +14,16 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.core;
+package org.araneaframework.framework;
 
-import org.araneaframework.Component;
-import org.araneaframework.Message;
-import org.araneaframework.core.util.ExceptionUtil;
+import java.io.Serializable;
 
-public abstract class BroadcastMessage implements Message {
-  public final void send(Object id, Component component) {
-	component._getComponent().propagate(this);	  
-	  
-    try {
-      this.execute(component);
-    }
-    catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }        
-  }
-  
-  protected abstract void execute(Component component) throws Exception;
+/**
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ */
+public interface ViewPortContext extends Serializable {
+  /**
+   * The view port widget key in the output attributes.
+   */
+  public static final String VIEW_PORT_WIDGET_KEY = "org.araneaframework.framework.ViewPortContext.WIDGET_KEY";
 }

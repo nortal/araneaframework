@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Message;
 import org.araneaframework.Path;
+import org.araneaframework.core.util.ExceptionUtil;
 
 public abstract class RoutedMessage implements Message {
   private static final Logger log = Logger.getLogger(RoutedMessage.class);
@@ -32,7 +33,7 @@ public abstract class RoutedMessage implements Message {
     destination = path.toString();
   }
 
-  public final void send(Object id, Component component) throws Exception {
+  public final void send(Object id, Component component) {
     //After routing finished
     if (!path.hasNext())
       return;
@@ -49,7 +50,12 @@ public abstract class RoutedMessage implements Message {
         component._getComponent().propagate(this);
       else {
         log.debug("Delivering message routed to '" + destination + "'");
-        execute(component);
+        try {
+          execute(component);
+        }
+        catch (Exception e) {
+          throw ExceptionUtil.uncheckException(e);
+        }
       }
     }
   }

@@ -87,7 +87,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     }
   }
 
-  public void start(Service continuation) throws Exception {
+  public void start(Service continuation) {
     this.continuation = continuation;
     
     Map entries = new HashMap();
@@ -97,7 +97,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     throw new AraneaRuntimeException("Continuation set!");
   }
   
-  public void finish() throws Exception {
+  public void finish() {
     continuation._getComponent().destroy();
     continuation = null;
   }
@@ -106,7 +106,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     return continuation != null;
   }
 
-	public void runOnce(Service continuation) throws Exception {
+	public void runOnce(Service continuation) {
 		BaseFilterService service = new BaseFilterService(continuation) {
 			protected void action(Path path, InputData input, OutputData output) throws Exception {
         childService._getService().action(path, input, output);

@@ -28,10 +28,11 @@ import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.BaseWidget;
-import org.araneaframework.core.ComponentUtil;
 import org.araneaframework.core.Custom;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.util.ComponentUtil;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 
@@ -94,7 +95,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     this.top = topWidget;
   }
   
-  public void start(Widget flow, Configurator configurator, Handler handler) throws Exception {
+  public void start(Widget flow, Configurator configurator, Handler handler) {
     flow = decorateCallableWidget((Widget) flow);
     CallFrame frame = makeCallFrame((Widget) flow, configurator, handler);
     
@@ -110,11 +111,16 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     addWidget(FLOW_KEY, (Widget) flow);
 
     if (configurator != null) {
-      configurator.configure(flow);
+      try {
+        configurator.configure(flow);
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
     }    
   }
   
-  public void replace(Widget flow, Configurator configurator) throws Exception {
+  public void replace(Widget flow, Configurator configurator) {
     flow = decorateCallableWidget((Widget) flow);
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
     CallFrame frame = makeCallFrame((Widget) flow, configurator, previousFrame.getHandler());
@@ -129,11 +135,16 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     addWidget(FLOW_KEY, (Widget) flow);
     
     if (configurator != null) {
-      configurator.configure(flow);
+      try {
+        configurator.configure(flow);
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
     }
   }
 
-  public void finish(Object returnValue) throws Exception {
+  public void finish(Object returnValue) {
     if (callStack.size() == 0)
       throw new EmptyCallStackException();
     
@@ -149,11 +160,16 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     }
     
     if (previousFrame.getHandler() != null) {
-      previousFrame.getHandler().onFinish(returnValue);
+      try {
+        previousFrame.getHandler().onFinish(returnValue);
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
     }                
   }
 
-  public void cancel() throws Exception {
+  public void cancel() {
     if (callStack.size() == 0)
       throw new EmptyCallStackException();
     
@@ -168,8 +184,12 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
       ((Component) getChildren().get(FLOW_KEY))._getComponent().enable();
     }
     
-    if (previousFrame.getHandler() != null)
-      previousFrame.getHandler().onCancel();   
+    if (previousFrame.getHandler() != null) try {
+      previousFrame.getHandler().onCancel();
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }   
   }
   
   public FlowContext.FlowReference getCurrentReference() {
@@ -187,19 +207,19 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     return envEntryStack;
   }
   
-  private void pushGlobalEnvEntry(Object entryId, Object envEntry) throws Exception {
+  private void pushGlobalEnvEntry(Object entryId, Object envEntry) {
     getEnvEntryStack(entryId).addFirst(envEntry);
     
     refreshGlobalEnvironment();
   }
   
-  private void popGlobalEnvEntry(Object entryId) throws Exception {
+  private void popGlobalEnvEntry(Object entryId) {
     getEnvEntryStack(entryId).removeFirst();
     
     refreshGlobalEnvironment();
   }
   
-  public void addNestedEnvironmentEntry(Custom.CustomWidget scope, final Object entryId, Object envEntry) throws Exception {
+  public void addNestedEnvironmentEntry(Custom.CustomWidget scope, final Object entryId, Object envEntry) {
     pushGlobalEnvEntry(entryId, envEntry);
     
     BaseWidget scopeWidget = new BaseWidget() {
@@ -210,11 +230,11 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     ComponentUtil.addListenerComponent(scope, scopeWidget);
   }
   
-  public boolean isNested() throws Exception {
+  public boolean isNested() {
     return callStack.size() != 0;
   }
   
-  public void reset(final EnvironmentAwareCallback callback) throws Exception {   
+  public void reset(final EnvironmentAwareCallback callback) {   
     log.debug("Resetting all flows in '" + getClass().getName() + "'");
     
     for (Iterator i = callStack.iterator(); i.hasNext();) {
@@ -226,8 +246,12 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     
     callStack.clear();
     
-    if (callback != null)
+    if (callback != null) try {
       callback.call(getChildWidgetEnvironment());
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
   }
   
   public void setTitle(String titleLabelId) throws Exception {    
@@ -284,7 +308,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     }
   }
   
-  private void refreshGlobalEnvironment()  throws Exception {
+  private void refreshGlobalEnvironment() {
     nestedEnvironmentEntries.clear();
     
     nestedEnvironmentEntries.put(FlowContext.class, this);

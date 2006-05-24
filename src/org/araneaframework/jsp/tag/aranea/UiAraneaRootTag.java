@@ -24,7 +24,6 @@ import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.araneaframework.OutputData;
 import org.araneaframework.jsp.tag.UiBaseTag;
-import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 import org.araneaframework.servlet.filter.StandardJspFilterService;
 
 /**
@@ -41,7 +40,7 @@ public class UiAraneaRootTag extends UiBaseTag {
     
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
-          StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+          OutputData.OUTPUT_DATA_KEY);
     StandardJspFilterService.JspConfiguration config = 
       (StandardJspFilterService.JspConfiguration) output.getAttribute(
           StandardJspFilterService.JSP_CONFIGURATION_KEY);
