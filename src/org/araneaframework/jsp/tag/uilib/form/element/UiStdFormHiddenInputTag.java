@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
@@ -30,44 +30,33 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  * @jsp.tag
  *   name = "hiddenInput"
  *   body-content = "JSP"
- *   description = "Represents a "hidden" html input element mapped to an UiLib HiddenStringValueControl."
+ *   description = "Represents a "hidden" html input element mapped to an UiLib HiddenControl."
  */
 public class UiStdFormHiddenInputTag extends UiFormElementBaseTag {
-   
-  //
-  // Implementation
-  //  
 
-            
-  protected int after(Writer out) throws Exception {
+  public UiStdFormHiddenInputTag() {
+    // Hidden element may not be validated!
+    this.validate = false;
+    this.validateOnEvent = false;
+  }
+
+  protected int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("HiddenControl");
 
-    String name = this.getScopedFullFieldId();    
+    String name = this.getScopedFullFieldId();
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
-    
-    // Write
+
     UiUtil.writeOpenStartTag(out, "input");
     UiUtil.writeAttribute(out, "name", name);     
     UiUtil.writeAttribute(out, "id", name);         
     UiUtil.writeAttribute(out, "type", "hidden");
     UiUtil.writeAttribute(out, "value", viewModel.getSimpleValue());  
     UiUtil.writeCloseStartEndTag_SS(out);
-    
-    // Continue
-    super.after(out);
+
+    super.doEndTag(out);
     return EVAL_PAGE;
   }
- 
-  
-  protected void init() {
-    super.init();
-
-    // Hidden element may not be validated!
-    this.validate = false;
-    this.validateOnEvent = false;
-  }
-  
 }
 
 

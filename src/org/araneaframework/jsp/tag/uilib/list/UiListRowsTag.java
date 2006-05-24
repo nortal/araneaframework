@@ -18,8 +18,6 @@ package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
 import java.util.ListIterator;
-
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.uilib.list.ListWidget;
 
 /**
@@ -33,17 +31,19 @@ import org.araneaframework.uilib.list.ListWidget;
  *   description = "Iterating tag that gives access to each row on the UiLib list current page."
  */
 public class UiListRowsTag extends UiListRowsBaseTag {
-	protected String var;
+	protected String var = "row";
 	protected ListWidget.ViewModel viewModel;
 	
-	protected void init() {
-		super.init();
-		var = "row";
+	public int doStartTag(Writer out) throws Exception {
+		// Get list data    
+		viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
+		return super.doStartTag(out);
 	}
 	
-	//
-	// Attributes
-	//
+	protected void doForEachRow(Writer out) throws Exception {
+		super.doForEachRow(out);
+		addContextEntry(var, currentRow);
+	}
 	
 	/**
 	 * @jsp.attribute
@@ -55,24 +55,7 @@ public class UiListRowsTag extends UiListRowsBaseTag {
 		this.var = var;
 	}
 	
-	//
-	// Implementation
-	//
-	
 	protected ListIterator getIterator() {
 		return viewModel.getItemRange().listIterator();
-	}
-	
-	protected void doForEachRow(Writer out) throws Exception {
-		super.doForEachRow(out);
-		
-		setAttribute(var, currentRow, PageContext.REQUEST_SCOPE);	
-	}
-	
-	public int before(Writer out) throws Exception {
-		// Get list data    
-		viewModel = (ListWidget.ViewModel)readAttribute(UiListTag.LIST_VIEW_MODEL_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		
-		return super.before(out);
 	}
 }
