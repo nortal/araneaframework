@@ -12,23 +12,7 @@
 		<ui:importStyles file="styles/_styles_print.css" media="print" />
 		<ui:importStyles file="css/calendar/calendar.css" media="screen" />
 
-		<ui:importScripts file="js/ui.js"/>
-		<ui:importScripts file="js/ui-aranea.js"/>
-		<ui:importScripts file="js/ui-handlers.js"/>
-		<ui:importScripts file="js/ui-popups.js"/>
-		<ui:importScripts file="js/aa.js"/>
-		<ui:importScripts file="js/validation/localization.js"/>
-		<ui:importScripts file="js/validation/clientside-form-validation.js"/>
-		<ui:importScripts file="js/validation/clientside-datetime-form-validation.js"/>
-		<ui:importScripts file="js/validation/jsp-ui-events.js"/>
-		<ui:importScripts file="js/validation/jsp-ui-form-validation.js"/>
-		<ui:importScripts file="js/validation/jsp-ui-validation.js"/>
-		<ui:importScripts file="js/validation/jsp-ui.js"/>
-		<ui:importScripts file="js/calendar/calendar.js"/>
-		<ui:importScripts file="js/calendar/calendar-en.js"/>
-		<ui:importScripts file="js/calendar/calendar-setup.js"/>
-		
-		<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
+		<ui:importScripts/>
 
 		<ui:richTextAreaInit>
 			<ui:attribute name="theme" value="advanced"/>

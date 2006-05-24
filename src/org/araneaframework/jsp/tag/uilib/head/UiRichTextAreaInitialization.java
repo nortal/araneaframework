@@ -23,8 +23,10 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.tag.basic.UiElementTag;
+import org.araneaframework.jsp.tag.fileimport.UiImportScriptsTag;
 import org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormRichTextAreaTag;
 import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.servlet.filter.importer.JsFileImporter;
 
 /**
  * The rich text editor (tinyMCE at the moment) requires a global
@@ -41,8 +43,12 @@ import org.araneaframework.jsp.util.UiUtil;
  */
 public class UiRichTextAreaInitialization extends UiElementTag {
 	public static final String KEY = "org.araneaframework.jsp.tag.uilib.head.KEY";
+	private static final String MCE_JS = "js/tiny_mce/tiny_mce.js";
 	
 	protected int doStartTag(Writer out) throws Exception {
+		UiImportScriptsTag.writeHtmlScriptsInclude(out, 
+				JsFileImporter.INCLUDE_JS_FILE_KEY+"="+MCE_JS);
+		
 		setName("script");
 		
 		super.doStartTag(out);

@@ -50,8 +50,12 @@ public class UiImportScriptsTag extends UiImportFileTag {
 		}
 		return EVAL_BODY_INCLUDE;
 	}
-		
+	
 	protected void writeHtmlInclude(Writer out, String keyValue) throws Exception {
+		writeHtmlScriptsInclude(out, keyValue);
+	}
+	
+	public static void writeHtmlScriptsInclude(Writer out, String keyValue) throws Exception {
 		StringBuffer buf = new StringBuffer(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
 		buf.append("=");
 		buf.append(JsFileImporter.TYPE);
