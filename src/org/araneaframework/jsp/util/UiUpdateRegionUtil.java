@@ -19,9 +19,10 @@ package org.araneaframework.jsp.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.jsp.tag.updateRegion.UiUpdateRegionCommonTag;
+
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
@@ -33,7 +34,7 @@ public class UiUpdateRegionUtil {
   }
   
   public static String getUpdateRegionLocalName(String regionName) {
-  	return UiUpdateRegionCommonTag.UPDATE_REGION_PREFIX + regionName;
+  	return regionName;
   }
   
   public static List getUpdateRegionNames(PageContext pageContext, String updateRegions, String globalUpdateRegions) throws JspException {
@@ -51,7 +52,7 @@ public class UiUpdateRegionUtil {
     for (Iterator i = parseUpdateRegionNames(updateRegions).iterator(); i.hasNext();) {
       String regionName = (String) i.next();
       
-      result.add(UiUpdateRegionCommonTag.UPDATE_REGION_PREFIX + NameUtil.getFullName(contextWidgetId, regionName));
+      result.add(NameUtil.getFullName(contextWidgetId, regionName));
     }
     
     return result;
