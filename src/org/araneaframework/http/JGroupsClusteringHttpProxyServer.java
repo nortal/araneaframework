@@ -99,7 +99,6 @@ public class JGroupsClusteringHttpProxyServer extends HttpServer {
 
 	        try
 	        {
-	            //URL thisURL = new URL(request.getRequestURL().toString());
 	        		URL url = null;
 	        		int seconds = new Date().getSeconds();
 	        		if ((seconds % 4) == 0) {
@@ -107,7 +106,7 @@ public class JGroupsClusteringHttpProxyServer extends HttpServer {
 	        		} else{
 	        			url = new URL("http", "192.168.40.167", 12000, request.getURI().toString());
 	        		} 
-	        		
+
 	        		System.out.println("Proxying request to URL : " + url);
 	        		
 	            if (url == null)
