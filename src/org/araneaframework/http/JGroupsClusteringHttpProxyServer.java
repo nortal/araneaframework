@@ -103,14 +103,10 @@ public class JGroupsClusteringHttpProxyServer extends HttpServer {
 	        		URL url = null;
 	        		int seconds = new Date().getSeconds();
 	        		if ((seconds % 4) == 0) {
-	        			url = new URL("http", "localhost", 12000, request.getURI().toString());
-	        		} else if ((seconds % 4) == 1) {
-	        			url = new URL("http", "192.168.1.3", 12000, request.getURI().toString());
-	        		} else if ((seconds % 4) == 2) {
-	        			url = new URL("http", "localhost", 11000, request.getURI().toString());
-	        		} else if ((seconds % 4) == 3) {
-	        			url = new URL("http", "192.168.1.3", 11000, request.getURI().toString());
-	        		}
+	        			url = new URL("http", "192.168.40.193", 12000, request.getURI().toString());
+	        		} else{
+	        			url = new URL("http", "192.168.40.167", 12000, request.getURI().toString());
+	        		} 
 	        		
 	        		System.out.println("Proxying request to URL : " + url);
 	        		
