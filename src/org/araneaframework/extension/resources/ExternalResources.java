@@ -1,4 +1,4 @@
-package org.araneaframework.servlet.filter.importer.extension;
+package org.araneaframework.extension.resources;
 
 import java.util.ArrayList;
 import java.util.HashMap;

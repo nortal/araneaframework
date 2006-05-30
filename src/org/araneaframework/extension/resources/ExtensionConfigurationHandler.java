@@ -1,4 +1,4 @@
-package org.araneaframework.servlet.filter.importer.extension;
+package org.araneaframework.extension.resources;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
