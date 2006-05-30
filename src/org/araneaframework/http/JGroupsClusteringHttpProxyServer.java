@@ -125,7 +125,6 @@ public class JGroupsClusteringHttpProxyServer extends HttpServer {
 				});
 				
 				updateNodes(channel.getView().getMembers());
-
 				
 			} catch (ChannelException x) {
 				throw new NestableRuntimeException(x);
@@ -139,10 +138,16 @@ public class JGroupsClusteringHttpProxyServer extends HttpServer {
 	
 	private static void updateNodes(Collection members) {
 		log.debug("Updating registered node information.");
-		
+
 		synchronized (nodes) {
 			nodes.clear();
-			nodes.addAll(members);
+			
+			//XXX (TP): do not add selves address (damn string comparison...)
+			for (Iterator i = members.iterator(); i.hasNext(); ) {
+				IpAddress memberAddress = (IpAddress)i.next();
+				if (!memberAddress.toString().equals(channel.getLocalAddress().toString()))
+					nodes.add(memberAddress);
+			}
 			
 			System.out.println("***********************************************************");
 			for (Iterator i = nodes.iterator(); i.hasNext(); ) {
