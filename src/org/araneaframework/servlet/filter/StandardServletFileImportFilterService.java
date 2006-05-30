@@ -21,14 +21,12 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.filter.importer.FileImportFactory;
-import org.araneaframework.servlet.filter.importer.FileImporter;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -37,18 +35,24 @@ import org.araneaframework.servlet.filter.importer.FileImporter;
 public class StandardServletFileImportFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardServletFileImportFilterService.class);
   
-  public static final String IMPORTER_TYPE_KEY = "importerType";
+  public static final String IMPORTER_FILE_NAME = "FileImporter.fileName";
+  public static final String IMPORTER_GROUP_NAME = "FileImporter.groupName";
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-  	String type = (String)input.getGlobalData().get(IMPORTER_TYPE_KEY);
-  	FileImporter importer = FileImportFactory.createFileImporter(type);
-  	
-  	if (importer != null) {
-  		List filesToLoad = importer.importFiles(input);
+  	String fileName = (String)input.getGlobalData().get(IMPORTER_FILE_NAME);
+  	String groupName = (String)input.getGlobalData().get(IMPORTER_GROUP_NAME);
+
+  	if (fileName != null) {
+  		
+  	}
+  	else if (groupName != null) {
+  		/*
+  		 List filesToLoad = importer.importFiles(input);
   		importer.setHeaders(output);
   	
   		loadFiles(filesToLoad, 
   			((ServletOutputData)output).getResponse().getOutputStream());
+  	} */
   	}
   	else {
   		log.debug("Routing to child.");

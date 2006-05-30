@@ -18,6 +18,7 @@ package org.araneaframework.servlet.filter.importer;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -179,7 +180,7 @@ public class ImageFileImporter extends DefaultFileImporter {
 		StringBuffer sb = new StringBuffer();
 		sb.append("?" + ImageFileImporter.LOAD_IMAGE_KEY + "=");
 		sb.append(fileName);
-		sb.append("&" + StandardServletFileImportFilterService.IMPORTER_TYPE_KEY + "=" + ImageFileImporter.TYPE);
+		sb.append("&" + StandardServletFileImportFilterService.IMPORTER_FILE_NAME + "=" + ImageFileImporter.TYPE);
 
 		return sb.toString();
 	}
