@@ -113,6 +113,7 @@
 				<path refid="classpath" />
 				<path refid="classpath.jetty" />
 			</classpath>
+			<jvmarg value="-Dorg.xml.sax.driver=org.apache.crimson.parser.XMLReaderImpl"/>
 		</java>
 	</target>
 	

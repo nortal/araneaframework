@@ -1,5 +1,22 @@
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
 package org.araneaframework.extension.resources;
 
+import org.araneaframework.core.AraneaRuntimeException;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -11,28 +28,34 @@ public class ExtensionConfigurationHandler extends DefaultHandler {
 	private static final String ATTRIB_GROUP = "group";
 	private static final String ATTRIB_PATH = "path";
 	
-	private ExternalResources result = new ExternalResources();
+	private ExternalResource result = new ExternalResource();
 	private FileGroup fileGroup;
 	
 	public ExtensionConfigurationHandler() {
-		super();
-		
-		result = new ExternalResources();
+		this(new ExternalResource());
 	}
 	
+	public ExtensionConfigurationHandler(ExternalResource resource) {
+		super();
+		result = resource;;
+	}
+
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (TAG_FILES.equalsIgnoreCase(qName)) {
-			result.addGroup(fileGroup);
 			fileGroup = new FileGroup();
+			boolean contentTypeSet = false;
 			
 			for (int i=0;i<attributes.getLength();i++) {
 				if (ATTRIB_CONTENT_TYPE.equalsIgnoreCase(attributes.getQName(i))) {
 					fileGroup.setContentType(attributes.getValue(i));
+					contentTypeSet = true;
 				}
 				else if (ATTRIB_GROUP.equalsIgnoreCase(attributes.getQName(i))) {
 					fileGroup.setName(attributes.getValue(i));
 				}
 			}
+			if (!contentTypeSet)
+				throw new AraneaRuntimeException("No content type set for files in resource configuration");
 		}
 		else if (TAG_FILE.equalsIgnoreCase(qName)) {
 			int i = attributes.getIndex(ATTRIB_PATH);
@@ -43,7 +66,13 @@ public class ExtensionConfigurationHandler extends DefaultHandler {
 		}
 	} 
 
-	public ExternalResources getResult() {
+	public void endElement(String uri, String localName, String qName) {
+		if (TAG_FILES.equalsIgnoreCase(qName)) {
+			result.addGroup(fileGroup);	
+		}
+	}
+	
+	public ExternalResource getResource() {
 		return result;
 	}	
 }

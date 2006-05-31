@@ -9,25 +9,18 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.araneaframework.extension.resources.ExtensionConfigurationHandler;
-import org.araneaframework.extension.resources.ExternalResources;
+import org.araneaframework.extension.resources.ExternalResource;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class ResourceConfigurationParsingTest extends TestCase {
-	private ExternalResources struct;
+	private ExternalResource struct;
 	
 	private static final List availableGroups = new ArrayList();
 	static {
 		availableGroups.add("common-styles");
 		availableGroups.add("common-js");
-	}
-	
-	private static final List availableContentTypes = new ArrayList();
-	static {
-		availableContentTypes.add("image/gif");
-		availableContentTypes.add("text/javascript");
-		availableContentTypes.add("text/css");
 	}
 	
 	private static final List availableFilesInGroup = new ArrayList();
@@ -37,6 +30,21 @@ public class ResourceConfigurationParsingTest extends TestCase {
 		availableFilesInGroup.add("js/prototype.js");
 		
 		availableFilesInGroup.add("js/behaviour.js");
+	}
+	
+	private static final List allFiles = new ArrayList();
+	static {
+		allFiles.add("gfx/alfa.gif");
+		allFiles.add("gfx/beta.gif");
+		allFiles.add("gfx/deta.gif");
+		allFiles.add("css/print.css");
+		allFiles.add("css/screen.css");
+		allFiles.add("css/sexy.css");
+		allFiles.add("js/mce_helper.js");
+		allFiles.add("js/mce_popup.js");
+		allFiles.add("js/mce_debug.js");
+		
+		allFiles.addAll(availableFilesInGroup);
 	}
 	
 	public void setUp() throws Exception {
@@ -51,7 +59,7 @@ public class ResourceConfigurationParsingTest extends TestCase {
 		
 		xr.parse(new InputSource(stream));
 		
-		struct =  handler.getResult();
+		struct =  handler.getResource();
 	}
 	
 	public void testGetGroups() throws Exception {
@@ -61,15 +69,7 @@ public class ResourceConfigurationParsingTest extends TestCase {
 				fail("Unknown group extracted");
 		}
 	}
-	
-	public void testGetContentTypes() {
-		for (Iterator ite = struct.getContentTypes().iterator();ite.hasNext();) {
-			String contentType = (String)ite.next();
-			if (availableContentTypes.indexOf(contentType) == -1)
-				fail("Unknown content-type extracted");
-		}
-	}
-	
+		
 	public void testGetContentsUnion() {
 		Map map = struct.getGroupByName("common-js");
 		List files = (List)map.get("text/javascript");
@@ -80,5 +80,18 @@ public class ResourceConfigurationParsingTest extends TestCase {
 			if (availableFilesInGroup.indexOf(file) == -1)
 				fail("Unknown file in a group");
 		}
+	}
+	
+	public void testAllowedFilesContains() {		
+		for (Iterator iter = allFiles.iterator(); iter.hasNext();) {
+			String file = (String)iter.next();
+			if (!struct.isAllowedFile(file))
+				fail("File is reported not allowed although in allowed list");
+		}
+	}
+	
+	public void testNotInAllowedFiles() {
+		if (struct.isAllowedFile("nonexistent"))
+			fail("Non existent file is reported to be allowed");
 	}
 }
