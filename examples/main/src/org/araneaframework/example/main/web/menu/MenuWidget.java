@@ -28,6 +28,7 @@ import org.araneaframework.example.main.web.demo.DemoCheckboxList;
 import org.araneaframework.example.main.web.demo.DemoComplexForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
+import org.araneaframework.example.main.web.demo.DemoEmbeddedDisplayableEditableList;
 import org.araneaframework.example.main.web.demo.DemoFileUpload;
 import org.araneaframework.example.main.web.demo.DemoFormList;
 import org.araneaframework.example.main.web.demo.DemoInMemoryEditableList;
@@ -119,7 +120,9 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("#Form lists", new MenuItem("Editable_List", DemoFormList.class));
       sampleMenu.addMenuItem("#Form lists", new MenuItem("In_memory_editable_list", DemoInMemoryEditableList.class));
       sampleMenu.addMenuItem("#Form lists", new MenuItem("Editable_checkbox_list", DemoCheckboxList.class));
-      sampleMenu.addMenuItem("#Form lists", new MenuItem("Displayable_editable_list", DemoDisplayableEditableList.class));     
+      sampleMenu.addMenuItem("#Form lists", new MenuItem("Displayable_editable_list", DemoDisplayableEditableList.class));
+      sampleMenu.addMenuItem("#Form lists", new MenuItem("#Embedded form list", DemoEmbeddedDisplayableEditableList.class));
+      
       
       sampleMenu.addMenuItem(new MenuItem("#Lists"));
       sampleMenu.addMenuItem("#Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));

@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.list.formlist;
 
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.FormWidget;
 
 
@@ -40,17 +41,22 @@ public class FormListWidget extends BaseFormListWidget {
 		this.formRowHandler = rowHandler;
 	}
 	
-	protected FormWidget buildAddForm() throws Exception {
+	protected FormWidget buildAddForm(){
 		return new FormWidget();
 	}
 	
-	protected void addFormRow(Object newRow) throws Exception {
+	protected void addFormRow(Object newRow) {
 		FormWidget rowForm = buildAddForm();
 		String rowFormId = "rowForm" + rowFormCounter++;
 		FormRow newEditableRow = new FormRow(formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
 		
-		formRowHandler.initFormRow(newEditableRow, newRow);     
-		addWidget(rowFormId, rowForm);
+    addWidget(rowFormId, rowForm);
+		try {
+      formRowHandler.initFormRow(newEditableRow, newRow);
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }     		
 		
 		formRows.put(formRowHandler.getRowKey(newRow), newEditableRow);
 	}
