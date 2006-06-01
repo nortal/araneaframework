@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseTag;
 
 /**
@@ -29,13 +28,8 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
  *   description = "Form float display field, represents UiLib "FloatControl"."
  */
 public class UiStdFormFloatInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
-	protected void init() {
-		super.init();
-		styleClass = "aranea-float-display";
-	}
-	
-	protected int after(Writer out) throws Exception {
-		assertControlType("FloatControl");
-		return super.after(out);
+  protected int doEndTag(Writer out) throws Exception {
+    assertControlType("FloatControl");
+    return super.doEndTag(out);
   }
 }

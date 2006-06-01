@@ -28,13 +28,13 @@ import org.araneaframework.jsp.util.UiUtil;
  *   name = "listDisplay"
  *   body-content = "empty"
  *   description = "Display element value as list of strings, 
-          represents UiLib "DisplayControl" and requires that element value would be of type "Collection"."
+          represents DisplayControl and requires that element value would be of type Collection."
  */
 public class UiStdFormListDisplayTag extends UiStdFormListDisplayBaseTag {
     
   /**
    */
-  protected int after(Writer out) throws Exception {    
+  protected int doEndTag(Writer out) throws Exception {    
     
     if (displayControlViewModel.getValue() != null) {
       for (Iterator i = ((List) displayControlViewModel.getValue()).iterator(); i.hasNext(); ) { 
@@ -45,7 +45,7 @@ public class UiStdFormListDisplayTag extends UiStdFormListDisplayBaseTag {
       }
     }
     
-    super.after(out);    
+    super.doEndTag(out);    
     return EVAL_PAGE;
   }
 }
