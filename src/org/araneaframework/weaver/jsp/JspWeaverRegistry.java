@@ -32,7 +32,7 @@ public class JspWeaverRegistry implements WeaverFactory{
     tldLocationsCache = new TldLocationsCache(srvCtx);
   }
   
-  public WeaverElement getElement(Element el) {
+  public WeaverElement buildElement(Element el) {
     Map tagMap = getTagMap(el.getNamespaceURI());
 
     if (tagMap == null) return null;
