@@ -17,6 +17,7 @@
 
 package org.araneaframework.uilib.list.formlist;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,7 +41,7 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 	// FIELDS
 	//*******************************************************************	
 	
-	protected List rows;
+	protected List rows = new ArrayList();
 	
 	protected FormRowHandler formRowHandler;	
 	protected Map formRows = new HashMap();
@@ -57,7 +58,21 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 	 */
 	public void setRows(List rows) {
 		this.rows = rows;
+    
+    if (isInitialized())
+      processRows();
 	}
+  
+  public void processRows() {
+    for (Iterator i = rows.iterator(); i.hasNext();) {
+      Object row = i.next();
+      
+      if (formRows.get(formRowHandler.getRowKey(row)) == null)
+        addFormRow(row);
+      else
+        ((FormRow) formRows.get(formRowHandler.getRowKey(row))).setRow(row);
+    }   
+  }
 	
 	/**
 	 * Returns <code>Map&lt;Object key, EditableRow&gt;</code> of initialized editable rows.
@@ -107,32 +122,21 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 	/**
 	 * Creates and adds an editable row from a usual row object.
 	 */
-	protected abstract void addFormRow(Object newRow) throws Exception; 
+	protected abstract void addFormRow(Object newRow); 
 	
 	protected void init() throws Exception {
-		super.init();
-		
-		FormWidget addForm = buildAddForm();
-		formRowHandler.initAddForm(addForm);
-		addWidget("addForm", addForm);		
+		super.init();		
+    
+    processRows();
+    resetAddForm();		
 	}
+  
+  protected void handleProcess() throws Exception {
+    processRows();
+  }
 	
 	/** Used to build instance of FormWidget belonging to this list. */
 	protected abstract FormWidget buildAddForm() throws Exception;
-	
-	protected void handleProcess() throws Exception {
-		if (rows == null) throw new AraneaRuntimeException("You must set rows before using FormListWidget!");
-		
-		for (Iterator i = rows.iterator(); i.hasNext();) {
-			Object row = i.next();
-			
-			if (formRows.get(formRowHandler.getRowKey(row)) == null)
-				addFormRow(row);
-			else
-				((FormRow) formRows.get(formRowHandler.getRowKey(row))).setRow(row);
-		}
-		
-	}
 	
 	//*********************************************************************
 	//* ROW HANDLING METHODS
@@ -213,8 +217,8 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 	
 	public void resetAddForm() throws Exception {    
 		FormWidget addForm = buildAddForm();
-		formRowHandler.initAddForm(addForm);
-		addWidget("addForm", addForm);   
+    addWidget("addForm", addForm);   
+		formRowHandler.initAddForm(addForm);		
 	}
 	
 	public void resetFormRow(Object key) throws Exception {
