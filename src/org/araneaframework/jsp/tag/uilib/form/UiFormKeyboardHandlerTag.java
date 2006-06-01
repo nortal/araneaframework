@@ -22,7 +22,6 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerBaseTag;
 import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerTag;
-import org.araneaframework.jsp.util.StringUtil;
 
 
 /**
@@ -56,9 +55,14 @@ import org.araneaframework.jsp.util.StringUtil;
           inside which the tag is located, and instead of specifying the handler, you may give the id of an element, and a javascript event to call on that element."
  */
 public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
-	//
-	// Attributes
-	//
+	protected String handler;
+	
+	protected String defaultEvent = "onclick";
+	protected String subscope;
+	protected String elementId;
+	protected String fullElementId;
+	private String event;
+
 
 	/**
 	 * @see UiKeyboardHandlerTag#setHandler
@@ -70,14 +74,14 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
           the event was fired. 
           Example: function(event, elementId) { alert(elementId); }
 
-          You should either specify the handler, or elementId/event pair, not both." 
+          Either handler or elementId/event pair should be specified, not both." 
 	 */
 	public void setHandler(String handler) throws JspException {
 		this.handler = (String) evaluate("handler", handler, String.class);
 	}
 	
 	/**
-	 * Form element which is the scope of this handler.
+	 * Specifies form element which is the scope of this handler.
 	 * By default the "scope" (as in {@link UiKeyboarHandlerTag UiKeyboardHandlerTag}) of this keyboard handler
 	 * is the form inside which the handler is defined. By specifying this string you may narrow the scope to a certain element.
 	 * For example if the handler is defined inside form "myForm", and you specify subscope as "myelement",
@@ -103,7 +107,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	 * Either you specify this property, or the fullElementId property, not both.
 	 * <br>
 	 * The two attributes are here because there are currently two kinds of "button" tags
-	 * in Jwlf-Jsp-Ui. One is a <code>&lt;button&gt;</code> tag that corresponds
+	 * in Jsp-Ui. One is a <code>&lt;button&gt;</code> tag that corresponds
 	 * to a form element. This tag has an "id" attribute, and may look like
 	 * <pre>
 	 * &lt;button id="myButton"/&gt;
@@ -111,17 +115,8 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	 * The HTML <code>id</code> attribute of the corresponding input element will be
 	 * something like "myForm.myButton".
 	 * <br>
-	 * Now another kind of "buttons" is represented by <code>&lt;actionLinkButton&gt;</code>.
-	 * It also has an id attribute, but if you write
-	 * <pre>
-	 * &lt;actionLinkButton id="myButton"/&gt;
-	 * </pre>
-	 * the HTML <code>id</code> of the corresponding input element will be "myButton".
-	 * <br>
 	 * Therefore, if you would like to bind a keyboard handler to a "button", use
 	 * the elementId attribute, and the tag will automatically append the correct prefix.
-	 * To bind a keyboard handler to an "actionLinkButton" or something similar, use the
-	 * "fullElementId" attribute.
 	 * 
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -161,11 +156,19 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	//
 	// Implementation
 	//
-	protected final int before(Writer out) throws Exception {
-		super.before(out);
-		if (StringUtils.isBlank(handler)) {
+	protected final int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
+		String intHandler = handler;
+		String intElementId = fullElementId;
+		String intEvent = event;
+		
+		if (intHandler == null && intEvent == null) {
+			intEvent = defaultEvent;
+		}
+		
+		if (StringUtils.isBlank(intHandler)) {
 			// One of elemenId/event must be specified
-			if ((elementId == null && fullElementId == null) || event == null)
+			if ((elementId == null && fullElementId == null) || intEvent == null)
 				throw new JspException("You must specify handler or elementId/event for UiFormKeyboardHandlerTag (elementId=" + elementId + ", fullElementId=" + fullElementId + ", event=" + event + ",subscope=" + subscope);
 
 			// Only one of elementId/fullElementId must be specified
@@ -173,19 +176,19 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 				throw new JspException("Either elementId or fullElementId must be specified, not both.");
 
 			// If elementId was given, translate to fullElementId
-			if (fullElementId == null)
-				fullElementId = elementIdToFullElementId(pageContext, elementId);
-			handler = createHandlerToInvokeJavascriptEvent(fullElementId, event);
+			if (intElementId == null)
+				intElementId = elementIdToFullElementId(pageContext, elementId);
+			intHandler = createHandlerToInvokeJavascriptEvent(intElementId, intEvent);
 		}
 		else {
 			// None of the elementId/event attributes may be specified
-			if (fullElementId != null || elementId != null || event != null)
+			if (fullElementId != null || elementId != null || intEvent != null)
 				throw new JspException("You should specify either handler or event for UiFormKeyboardHandlerTag (handler=" + handler + ")");
 		}
 
 		// Scope here means the analogue of "scope" attribute in UiKeyboardHandlerTag
 		// It must be prefixed by componentId when the surrounding systemForm's "scope" is "screen".
-		String scope = (String) pageContext.getAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST,
+		String scope = (String) pageContext.getAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY,
 		                                                 PageContext.REQUEST_SCOPE);
 		if (!StringUtils.isBlank(subscope)) {
 			if (StringUtils.isBlank(scope))
@@ -195,7 +198,7 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 		}
 
 		// Write out.
-		UiKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, keyCode, handler);
+		UiKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, intHandler);
 		return SKIP_BODY;
 	}
 
@@ -224,22 +227,10 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	public static final String elementIdToFullElementId(PageContext pageContext, String elementId) {
 		// Determine the full id.
 		String fullElementId = elementId;
-		String scope = (String) pageContext.getAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY_REQUEST,
+		String scope = (String) pageContext.getAttribute(UiFormTag.FORM_SCOPED_FULL_ID_KEY,
 		                                                 PageContext.REQUEST_SCOPE);
 		if (!StringUtils.isBlank(scope))
 			fullElementId = scope + "." + elementId;
 		return fullElementId;
 	}
-
-	protected void init() {
-		super.init();
-		handler = subscope = elementId = fullElementId = null;
-		event = "onclick";
-	}
-
-	protected String handler;
-	protected String subscope;
-	protected String elementId;
-	protected String fullElementId;
-	protected String event;
 }
