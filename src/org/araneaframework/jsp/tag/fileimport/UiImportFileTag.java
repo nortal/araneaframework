@@ -32,7 +32,7 @@ public abstract class UiImportFileTag extends UiBaseTag {
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Flag to indicate if the template files should be included too."
+	 *   description = "The name of the group of files that should get included."
 	 */
 	public void setGroup(String includeTemplate) throws JspException {
 		this.includeGroupName = (String) evaluate("includeTemplate", includeTemplate, String.class);
