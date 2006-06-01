@@ -42,19 +42,19 @@ public class StandardPresentationWidget extends StandardWidget {
   }  
   
   public ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    return (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
   }
   
   protected FlowContext getFlowCtx() {
-    return (FlowContext) getEnvironment().getEntry(FlowContext.class);
+    return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
   }
   
   protected MessageContext getMessageCtx() {
-    return (MessageContext) getEnvironment().getEntry(MessageContext.class);
+    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
   }
   
   protected LocalizationContext getL10nCtx() {
-    return (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+    return (LocalizationContext) getEnvironment().requireEntry(LocalizationContext.class);
   }
   
   protected String t(String key) {
@@ -76,7 +76,7 @@ public class StandardPresentationWidget extends StandardWidget {
   }
   
   protected class ComponentImpl extends StandardWidget.ComponentImpl {
-    public synchronized void init(Environment env) throws Exception {
+    public synchronized void init(Environment env) {
    	  addGlobalEventListener(new ProxyEventListener(StandardPresentationWidget.this));
     	
       super.init(env);           

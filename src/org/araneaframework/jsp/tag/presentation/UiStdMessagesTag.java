@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.araneaframework.OutputData;
-import org.araneaframework.framework.filter.StandardMessagingFilterWidget;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
 import org.araneaframework.jsp.util.UiUtil;
@@ -49,7 +49,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
     super.doStartTag(out);
 
     OutputData output = (OutputData) UiUtil.requireContextEntry(pageContext, UiAraneaRootTag.OUTPUT_DATA_KEY);
-    Map messageMap = (Map) output.getAttribute(StandardMessagingFilterWidget.MESSAGE_KEY);
+    Map messageMap = (Map) output.getAttribute(MessageContext.MESSAGE_KEY);
 
     List entries = new ArrayList();
     for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {

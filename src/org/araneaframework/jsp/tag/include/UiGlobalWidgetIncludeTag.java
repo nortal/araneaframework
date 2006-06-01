@@ -22,7 +22,6 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Custom;
 import org.araneaframework.jsp.util.UiWidgetUtil;
-import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 
 
 /**
@@ -45,7 +44,7 @@ public class UiGlobalWidgetIncludeTag extends UiIncludeBaseTag {
   protected int doEndTag(Writer out) throws Exception {
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
-          StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+          OutputData.OUTPUT_DATA_KEY);
     
     Path currentScope = output.getScope();
     

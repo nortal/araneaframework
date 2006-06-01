@@ -23,7 +23,6 @@ import org.araneaframework.OutputData;
 import org.araneaframework.core.Custom;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiWidgetUtil;
-import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -63,7 +62,7 @@ public class UiWidgetContextTag extends UiBaseTag {
     super.doStartTag(out);
 
     output = (OutputData) pageContext.getRequest().getAttribute(
-        StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+        OutputData.OUTPUT_DATA_KEY);
     if (id != null) {
       StringTokenizer tokenizer = new StringTokenizer(id, ".");
 

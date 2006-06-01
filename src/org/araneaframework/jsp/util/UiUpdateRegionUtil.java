@@ -32,7 +32,7 @@ public class UiUpdateRegionUtil {
     return UiUtil.parseMultiValuedAttribute(updateRegions);
   }
   
-  public static String getUpdateRegionName(String regionName) {
+  public static String getUpdateRegionLocalName(String regionName) {
   	return UiUpdateRegionCommonTag.UPDATE_REGION_PREFIX + regionName;
   }
   
@@ -63,7 +63,7 @@ public class UiUpdateRegionUtil {
     for (Iterator i = parseUpdateRegionNames(globalUpdateRegions).iterator(); i.hasNext();) {
       String regionName = (String) i.next();
       
-      result.add(UiUpdateRegionCommonTag.UPDATE_REGION_PREFIX + regionName);
+      result.add(regionName);
     }
     
     return result;

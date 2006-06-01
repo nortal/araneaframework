@@ -21,6 +21,7 @@ import org.araneaframework.Component;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Custom;
+import org.araneaframework.core.Custom.CustomWidget;
 
 /**
  * This context provides support for flow navigation and nesting. A flow is started using 
@@ -37,37 +38,37 @@ public interface FlowContext extends Serializable {
    * untils subflow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification,
    * when the subflow ends execution.
    */
-  public void start(Widget flow, Configurator configurator, Handler handler) throws Exception;
+  public void start(Widget flow, Configurator configurator, Handler handler);
 
   /**
    * Destroys the current flow and starts a new one. When the new flow will end execution it will return control
    * to the caller of the current flow (if there is one). 
    */
-  public void replace(Widget flow, Configurator configurator) throws Exception;
+  public void replace(Widget flow, Configurator configurator);
 
   /**
    * Finisheds the current flow passing control back to the calling flow. Optionally may return some value that 
    * can be interpreted by the calling flow as the result of the call.
    */
-  public void finish(Object result) throws Exception;
+  public void finish(Object result);
   
   /**
    * Finished the current flow passing control back to the calling flow. 
    * Should be interpreted by the calling flow as a unsuccessful return. 
    */
-  public void cancel() throws Exception;  
+  public void cancel();  
   
   /**
    * Returns whether the current flow is nested, that is has a caller flow.
    */
-  public boolean isNested() throws Exception;
+  public boolean isNested();
   
   /**
    * Resets all currently running flows and calls the <code>callback</code> allowing to start 
    * new flows. Useful e.g. in a menu, when selecting a new menu item and reseting the old
    * stack. 
    */
-  public void reset(EnvironmentAwareCallback callback) throws Exception;
+  public void reset(EnvironmentAwareCallback callback);
   
   /**
    * Returns a reference to the current flow that can be used later to manipulate the current flow. 
@@ -77,7 +78,7 @@ public interface FlowContext extends Serializable {
   /**
    * Adds an environment entry that is visible in all subflows.
    */
-  public void addNestedEnvironmentEntry(Custom.CustomWidget scope, final Object entryId, Object envEntry) throws Exception;
+  public void addNestedEnvironmentEntry(CustomWidget scope, final Object entryId, Object envEntry);
 
   
   public interface FlowReference extends Serializable {

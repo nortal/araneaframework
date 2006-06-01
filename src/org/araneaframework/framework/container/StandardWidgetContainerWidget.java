@@ -20,8 +20,10 @@ import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.Widget;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.framework.core.BaseFilterWidget;
+import org.araneaframework.core.StandardWidget;
+import org.araneaframework.framework.ViewPortContext;
 
 /**
  * A widget that contains a child widget. It routes an action to the child
@@ -30,8 +32,16 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  *
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardWidgetContainerWidget extends BaseFilterWidget {
+public class StandardWidgetContainerWidget extends StandardWidget {  
+  //*******************************************************************
+  // CONSTANTS
+  //*******************************************************************
   private static final Logger log = Logger.getLogger(StandardWidgetContainerWidget.class);
+  
+  /**
+   * The key of the child widget in the children set.
+   */
+  public static final String CHILD_KEY = "root";
   
   /**
    * The key of the path of the event in the request.
@@ -43,6 +53,37 @@ public class StandardWidgetContainerWidget extends BaseFilterWidget {
    */
   public static final String ACTION_PATH_KEY = "widgetActionPath";
   
+  private Widget root;
+  
+  //*******************************************************************
+  // PUBLIC METHODS
+  //*******************************************************************  
+    
+  public void setRoot(Widget root) {
+    this.root = root;
+  }  
+  
+  //*******************************************************************
+  // PROTECTED METHODS
+  //*******************************************************************
+
+  protected void init() throws Exception {
+    addWidget(CHILD_KEY, root);
+  }
+  
+  protected void render(OutputData output) throws Exception {
+    output.pushAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY, this);
+    
+    try {
+      output.pushScope(CHILD_KEY);
+      ((Widget) getChildren().get(CHILD_KEY))._getWidget().render(output);
+    }
+    finally {
+      output.popScope();
+      output.popAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
+    }
+  }
+    
   /**
    * If <code>hasEvent(input)</code> returns true, event is called on the child.
    * The path to the child is constructed via <code>getEventPath(input)</code>.
@@ -51,7 +92,7 @@ public class StandardWidgetContainerWidget extends BaseFilterWidget {
     if (hasEvent(input)) {
       Path eventPath = getEventPath(input);
       log.debug("Routing event to widget '" + eventPath.toString() + "'");
-      childWidget._getWidget().event(eventPath, input);
+      super.event(eventPath, input);
     }
   }
     
@@ -63,7 +104,7 @@ public class StandardWidgetContainerWidget extends BaseFilterWidget {
     if (hasAction(input)) {
       Path actionPath = getActionPath(input);
       log.debug("Routing action to widget '" + actionPath.toString() + "'");
-      childWidget._getService().action(actionPath, input, output);
+      super.action(actionPath, input, output);
     }
   }
     

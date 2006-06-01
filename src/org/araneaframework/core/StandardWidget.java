@@ -33,6 +33,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * A full featured Widget with support for composite, eventlisteners, viewmodel.
@@ -69,8 +70,13 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
   // PROTECTED CLASSES
   //*******************************************************************
   protected class ViewableImpl implements Viewable.Interface {
-    public Object getViewModel() throws Exception {
-      return StandardWidget.this.getViewModel();
+    public Object getViewModel() {
+      try {
+        return StandardWidget.this.getViewModel();
+      }
+      catch (Exception e) {        
+        throw ExceptionUtil.uncheckException(e);        
+      }
     }
   }
   
@@ -311,9 +317,8 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
    * @param key of the the child Widget 
    * @param child Widget being added
    * @param env the Environment the child will be initialized with
-   * @throws Exception
    */
-  public void addWidget(Object key, Widget child, Environment env) throws Exception {
+  public void addWidget(Object key, Widget child, Environment env) {
     _addComponent(key, child, env);
   }
   
@@ -321,32 +326,35 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
    * Environment of this Widget
    * @param key of the the child Widget 
    * @param child Widget being added
-   * @throws Exception
    */
-  public void addWidget(Object key, Widget child) throws Exception {
-    addWidget(key, child, this.getChildWidgetEnvironment());
+  public void addWidget(Object key, Widget child) {
+    try {
+      addWidget(key, child, this.getChildWidgetEnvironment());
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
   }
   
   /**
    * Removes component from the children and calls destroy on it.
    * @param key of the child being removed
-   * @throws Exception
    */
-  public void removeWidget(Object key) throws Exception {
+  public void removeWidget(Object key) {
     _removeComponent(key);
   }
   
   /**
    * Enables the widget with the specified key. Only a disabled widgets can be enabled.
    */
-  public void enableWidget(Object key) throws Exception {
+  public void enableWidget(Object key) {
     _enableComponent(key);
   }
   
   /**
    * Disables the widget with the specified key. Only a enabled widgets can be disabled.
    */
-  public void disableWidget(Object key) throws Exception {
+  public void disableWidget(Object key) {
     _disableComponent(key);
   }
   
@@ -354,8 +362,13 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
     return super.getEnvironment();
   }
   
-  public final Environment getChildEnvironment() throws Exception {
-    return getChildWidgetEnvironment();
+  public final Environment getChildEnvironment() {
+    try {
+      return getChildWidgetEnvironment();
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
   }
   
   /**

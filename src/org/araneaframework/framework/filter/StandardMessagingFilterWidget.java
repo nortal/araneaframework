@@ -46,8 +46,6 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
-  public static final String MESSAGE_KEY = "org.araneaframework.framework.filter.StandardMessagingFilterWidget.MESSAGES"; 
-  
   private Map messages = new LinkedMap();
 
   protected void init() throws Exception {
@@ -96,13 +94,13 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
       typeCol.add(entry.getKey());
     }
     
-    output.pushAttribute(MESSAGE_KEY, typedMessages);
+    output.pushAttribute(MessageContext.MESSAGE_KEY, typedMessages);
     
     try {
       childWidget._getWidget().render(output);
     }
     finally {
-      output.popAttribute(MESSAGE_KEY);
+      output.popAttribute(MessageContext.MESSAGE_KEY);
     }
   }
   

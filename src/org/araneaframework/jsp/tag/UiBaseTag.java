@@ -30,7 +30,6 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.araneaframework.OutputData;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 import org.araneaframework.servlet.filter.StandardJspFilterService;
 import org.araneaframework.uilib.ConfigurationContext;
 
@@ -280,7 +279,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	protected ConfigurationContext getConfiguration() {
 		OutputData output = 
 			(OutputData) pageContext.getRequest().getAttribute(
-					StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+					OutputData.OUTPUT_DATA_KEY);
 		StandardJspFilterService.JspConfiguration config = 
 			(StandardJspFilterService.JspConfiguration) output.getAttribute(
 					StandardJspFilterService.JSP_CONFIGURATION_KEY);
