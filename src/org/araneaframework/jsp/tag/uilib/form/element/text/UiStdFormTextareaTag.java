@@ -33,7 +33,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  * @jsp.tag
  *   name = "textarea"
  *   body-content = "JSP"
- *   description = "Form text input field (textarea), represents UiLib "TextareaControl"."
+ *   description = "Form text input field (textarea), represents UiLib 'TextareaControl'."
  */
 public class UiStdFormTextareaTag extends UiFormElementBaseTag {
   protected Long cols;
