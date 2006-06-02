@@ -41,7 +41,7 @@ public class SampleFormFilterButtonTag extends UiStdFormLinkButtonTag {
   public int doStartTag(Writer out) throws Exception {
     addAttribute("style", "text-decoration: none");
     super.doStartTag(out);
-    out.write("<button>" + UiUtil.getResourceString(pageContext, "button.search").toUpperCase(UiUtil.getLocalizationContext(pageContext).getLocale()) + "</button");
+    out.write("<button type=\"button\">" + UiUtil.getResourceString(pageContext, "button.search").toUpperCase(UiUtil.getLocalizationContext(pageContext).getLocale()) + "</button");
     return EVAL_BODY_INCLUDE;    
   }    
 }
