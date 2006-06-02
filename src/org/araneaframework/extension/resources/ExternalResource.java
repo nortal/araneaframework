@@ -25,6 +25,13 @@ import java.util.Set;
 
 import org.apache.commons.collections.map.LinkedMap;
 
+/**
+ * A data structure for holding information about external resources. Different
+ * files are grouped by group names. Every file has its specific content-type. Possible
+ * to query by file name if a file is allowed to be loaded.
+ * 
+ * @author "Toomas Römer" <toomas@webmedia.ee>
+ */
 public class ExternalResource {
 	private Map groupsByName = new HashMap();
 	private Map allowedFiles = new HashMap();
@@ -51,19 +58,38 @@ public class ExternalResource {
 			group.put(iter.next(), fileGroup.getContentType());
 		}
 	}
-		
+	
+	/**
+	 * Returns a Set of available group names.
+	 * @return a Set of available group names.
+	 */
 	public Set getGroupNames() {
 		return groupsByName.keySet();
 	}
 	
+	/**
+	 * Returns a Map of filenames paired with respective content types.
+	 * @param name the name of the group.
+	 * @return Map of filenames paired with respective content types.
+	 */
 	public Map getGroupByName(String name) {
 		return (Map)groupsByName.get(name);
 	}
 
+	/**
+	 * Returns true if the fileName is in the allowed list.
+	 * @param fileName the name of the file.
+	 * @return true if the file is in the allowed list otherwise false.
+	 */
 	public boolean isAllowedFile(String fileName) {
 		return allowedFiles.containsKey(fileName);
 	}
 
+	/**
+	 * Returns the content-type of the file. Returns null, if no such file is in the allowed list.
+	 * @param fileName the name of the file.
+	 * @return the content-type of the file.
+	 */
 	public String getContentType(String fileName) {
 		return (String)allowedFiles.get(fileName);
 	}

@@ -20,6 +20,12 @@ import org.araneaframework.core.AraneaRuntimeException;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * SAX handler for parsing external resources' configuration files.
+ * See 'etc/aranea-resources.xml' for a sample configuration file.
+ * 
+ * @author "Toomas Römer" <toomas@webmedia.ee>
+ */
 public class ExtensionConfigurationHandler extends DefaultHandler {
 	private static final String TAG_FILES = "files";
 	private static final String TAG_FILE = "file";

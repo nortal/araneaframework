@@ -31,6 +31,17 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+/**
+ * Initializes the external resources of Aranea. External resources are static
+ * files that are required by different web components - images, javascripts, html
+ * files. All resources are listed in different XML configuration files.Consult the 
+ * reference manual for configuring resources how-to.
+ * 
+ * The order is to search all "conf/aranea-resources.xml" files and then the
+ * extensions' configuration files.
+ * 
+ * @author "Toomas Römer" <toomas@webmedia.ee>
+ */
 public class ResourceInitializer {
 	private static final Logger log = Logger.getLogger(ResourceInitializer.class);
 	
