@@ -81,8 +81,6 @@
 				<path refid="classpath" />
 				<path refid="classpath.jetty" />
 			</classpath>
-
-			<jvmarg value="-Dorg.xml.sax.driver=org.apache.xerces.parsers.SAXParser"/>
 		</java>
 	</target>
 	

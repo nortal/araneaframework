@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.extension.resources.ExtensionConfigurationHandler;
@@ -27,7 +30,6 @@ import org.araneaframework.extension.resources.ExternalResource;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public class ResourceInitializer {
 	private static final Logger log = Logger.getLogger(ResourceInitializer.class);
@@ -42,7 +44,7 @@ public class ResourceInitializer {
 	
 	public ExternalResource getResources() {
 		try {
-			XMLReader xr = XMLReaderFactory.createXMLReader();
+			XMLReader xr = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 			ExtensionConfigurationHandler handler = new ExtensionConfigurationHandler();
 			
 			xr.setContentHandler(handler);
@@ -70,6 +72,9 @@ public class ResourceInitializer {
 			}
 
 			return handler.getResource();
+		}
+		catch (ParserConfigurationException e) {
+			throw new AraneaRuntimeException("Problem while configuring SAX parser", e);
 		}
 		catch (SAXException e) {
 			throw new AraneaRuntimeException("Problem while parsing resource configuration file", e);
