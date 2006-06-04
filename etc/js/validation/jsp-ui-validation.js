@@ -136,7 +136,7 @@
    var hiddenPresent = createNamedElement('input', elementName+".__present");
    hiddenPresent.setAttribute('type','hidden');
    hiddenPresent.setAttribute('value','true'); 
-   span.appendChild(hiddenPresent);
+   addSystemLoadEvent(function() {span.appendChild(hiddenPresent);});
  }
  
  

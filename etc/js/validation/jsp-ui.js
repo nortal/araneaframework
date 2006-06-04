@@ -88,9 +88,8 @@
      uiSystemFormProperties.widgets[widgetName] = true;
      var widgetPresent=createNamedElement('input', widgetName+".__present");
      widgetPresent.setAttribute('type','hidden');
-     widgetPresent.setAttribute('value','true'); 
-     var elems=document.getElementsByTagName("body");
-     elems.item(0).appendChild(widgetPresent);
+     widgetPresent.setAttribute('value','true');
+     addSystemLoadEvent(function() {document.getElementById(uiSystemFormProperties.name).appendChild(widgetPresent);});
    }
  }
  
@@ -127,8 +126,8 @@
    }
    var hiddenPresent = createNamedElement('input', elementName+".__present");
    hiddenPresent.setAttribute('type','hidden');
-   hiddenPresent.setAttribute('value','true'); 
-   span.appendChild(hiddenPresent);
+   hiddenPresent.setAttribute('value','true');
+   addSystemLoadEvent(function() {span.appendChild(hiddenPresent);});
  }
  
  
