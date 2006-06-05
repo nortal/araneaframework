@@ -107,6 +107,7 @@
 		<file path="js/tiny_mce/langs/en.js"/>
 		<file path="js/tiny_mce/tiny_mce_popup.js"/>
 		<file path="js/tiny_mce/tiny_mce_src.js"/>
+		<file path="js/tiny_mce/tiny_mce.js"/>
 	</files>
 	
 	<files content-type="text/css">

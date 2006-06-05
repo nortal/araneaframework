@@ -18,6 +18,8 @@ package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.servlet.filter.StandardServletFileImportFilterService;
 
@@ -50,15 +52,16 @@ public class UiImportScriptsTag extends UiImportFileTag {
 	}
 	
 	protected void writeContent(Writer out, String keyValue) throws Exception {
-		writeHtmlScriptsInclude(out, keyValue);
+		StringBuffer url = ((HttpServletRequest)pageContext.getRequest()).getRequestURL();
+		writeHtmlScriptsInclude(out, keyValue, url);
 		out.write("\n");
 	}
 	
-	public static void writeHtmlScriptsInclude(Writer out, String keyValue) throws Exception {		
+	public static void writeHtmlScriptsInclude(Writer out, String keyValue, StringBuffer prefix) throws Exception {
 		UiUtil.writeOpenStartTag(out, "script");
 		UiUtil.writeAttribute(out, "language", "JavaScript1.2");
 		UiUtil.writeAttribute(out, "type", "text/javascript");
-		UiUtil.writeAttribute(out, "src", "?"+keyValue, false);
+		UiUtil.writeAttribute(out, "src", prefix.append("?").append(keyValue), false);
 		UiUtil.writeCloseStartTag(out);
 		UiUtil.writeEndTag(out, "script");
 	}

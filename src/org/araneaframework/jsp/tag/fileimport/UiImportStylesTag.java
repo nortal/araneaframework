@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.util.UiUtil;
@@ -67,7 +68,9 @@ public class UiImportStylesTag extends UiImportFileTag {
 		UiUtil.writeOpenStartTag(out, "link");
 		UiUtil.writeAttribute(out, "rel", "stylesheet");
 		UiUtil.writeAttribute(out, "type", "text/css");
-		UiUtil.writeAttribute(out, "href", "?" + keyValue, false);
+		UiUtil.writeAttribute(out, "href", 
+				((HttpServletRequest)pageContext.getRequest()).getRequestURL().append("?").append(keyValue)
+				, false);
 		UiUtil.writeAttribute(out, "media", this.media);	
 		UiUtil.writeCloseStartEndTag(out);
 		out.write("\n");

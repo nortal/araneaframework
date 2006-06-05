@@ -26,7 +26,6 @@
 		<file path="js/calendar/calendar.js"/>
 		<file path="js/calendar/calendar-en.js"/>
 		<file path="js/calendar/calendar-setup.js"/>
-		<file path="js/tiny_mce/tiny_mce.js"/>
 	</files>
 	
 	<files content-type="image/gif">

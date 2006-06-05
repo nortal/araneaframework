@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.tag.basic.UiElementTag;
@@ -41,13 +42,15 @@ import org.araneaframework.servlet.filter.StandardServletFileImportFilterService
  *   body-content = "JSP"
  *   description = "Initializes configures the richtext area component."
  */
-public class UiRichTextAreaInitialization extends UiElementTag {
+public class UiRichTextAreaInitializationTag extends UiElementTag {
 	public static final String KEY = "org.araneaframework.jsp.tag.uilib.head.KEY";
 	private static final String MCE_JS = "js/tiny_mce/tiny_mce.js";
+	private static final String MCE_DEBUG_JS = "js/tiny_mce/tiny_mce_src.js";
 	
 	protected int doStartTag(Writer out) throws Exception {
 		UiImportScriptsTag.writeHtmlScriptsInclude(out, 
-				StandardServletFileImportFilterService.IMPORTER_FILE_NAME+"="+MCE_JS);
+				StandardServletFileImportFilterService.IMPORTER_FILE_NAME+"="+MCE_DEBUG_JS,
+				((HttpServletRequest)pageContext.getRequest()).getRequestURL());
 		
 		setName("script");
 		
@@ -93,7 +96,9 @@ public class UiRichTextAreaInitialization extends UiElementTag {
 			buf.append(entry.getKey());
 			buf.append(" : \"");
 			buf.append(entry.getValue());
-			buf.append("\",\n");
+			buf.append("\"");
+			if (ite.hasNext())
+				buf.append(",\n");
 			
 			out.write(buf.toString());
 		}
