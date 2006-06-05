@@ -5,8 +5,6 @@
 		ANT buildfile for the Template-App project.
 	</description>
 	
-	<property file="../build.properties"/>
-	
 	<dirname property="module.basedir" file="${ant.file.Aranea Template Application}"/>
 	
 	<!-- Project title is used in the echo statements -->

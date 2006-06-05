@@ -3,8 +3,6 @@
 <project basedir="." default="build" name="Aranea QuickStart1 Example"> 
 	<property environment="env" />
 	
-	<property file="../../build.properties"/>
-	
 	<!--Set the classpath-->
 	<path id="classpath">
 	    <fileset dir="../../lib" includes="**/*.jar"/>
