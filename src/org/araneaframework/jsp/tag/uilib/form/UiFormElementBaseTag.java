@@ -113,9 +113,10 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		}
 		if (accessKey != null && accessKey.length() != 1) accessKey = null;
 
-		if (hasElementContextSpan) writeFormElementContextOpen(out, formScopedFullId, derivedId, pageContext);
-
-		UiUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
+		if (hasElementContextSpan)
+            writeFormElementContextOpen(out, formScopedFullId, derivedId, pageContext);
+		else
+			UiUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
 
 		updateRegionNames = UiUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 
@@ -274,18 +275,20 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		// All events are sent to a handler called "uiHandleKeypress(event, formElementId)"
 		// We use the "keydown" event, not keypress, because this allows to
 		// catch F2 in IE.
-		UiUtil.writeAttribute(out, "onkeydown", "return uiHandleKeypress(event, '" + elementName +"');");
+		// Actual onkeydown event is attached to span within uiFormElementContext() javascript.
 		UiUtil.writeCloseStartTag(out);
 
-		UiUtil.writeStartTag(out, "script");
+		// Write out form element context: sets keydown event for this element and writes out
+		// hidden element indicating that form element is present in the request.
+		UiUtil.writeStartTag_SS(out, "script");
 		out.write("uiFormElementContext(");
 		UiUtil.writeScriptString(out, elementName);
 		out.write(", ");
 		UiUtil.writeScriptString(out, spanId);
 		out.write(", ");
-		out.write(isValid ? "true" : "false");    
-		out.write(");\n");
-		UiUtil.writeEndTag_SS(out, "script");
+		out.write(isValid ? "true" : "false");
+		out.write(");");
+		UiUtil.writeEndTag(out, "script");
 	}
 
 	/**
@@ -355,7 +358,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		UiUtil.writeScriptString(out, name);
 		out.write(", ");
 		UiUtil.writeScriptString(out, label);
-		out.write(", ");		
+		out.write(", ");
 		out.write(isMandatory ? "true" : "false");
 		out.write(");\n");
 		UiUtil.writeEndTag_SS(out, "script");

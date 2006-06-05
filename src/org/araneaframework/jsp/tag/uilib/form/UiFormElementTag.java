@@ -25,7 +25,8 @@ import org.araneaframework.uilib.form.FormWidget;
 
 
 /**
- * Base form element data tag.
+ * Specifies form element context for inner tags. 
+ * Form element view model, id and value are made accessible to inner tags as EL variables.
  * 
  * @author Jevgeni Kabanov
  * 
