@@ -9,6 +9,17 @@
   </Call>                                                                        
   <Call name="addWebApplication">
     <Arg>/mainExample</Arg>
-    <Arg>../war</Arg>
-  </Call>                                                                        
+    <Arg>.</Arg>
+  </Call>
+  <Call name="getContext">
+  	<Arg>/</Arg>
+    <Call name="addServlet">
+    		<Arg>/</Arg>
+    		<Arg>org.araneaframework.template.framework.RedirectionServlet</Arg>
+    		<Call name="setInitParameter">
+    			<Arg>webapp-root</Arg>
+    			<Arg>mainExample/main</Arg>
+    		</Call>    		
+		</Call>
+  </Call>
 </Configure>

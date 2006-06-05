@@ -25,11 +25,24 @@ import javax.servlet.jsp.JspException;
  * @author Oleg Mürk
  */
 public abstract class UiStyledWrapperTag extends UiTagWrapperTag  {
-	//
-	// Attributes
-	//
 	protected String styleClass;
 	
+	public UiStyledWrapperTag() {
+		this.styleClass = null;
+	}
+	
+	/**
+	 * Callback: configure row tag
+	 */
+	protected void configureTag(UiContainedTagInterface tag) throws JspException {
+		UiStyledTagInterface styledTag = (UiStyledTagInterface)tag; 
+		styledTag.setStyleClass(styleClass);
+	}
+
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -38,21 +51,5 @@ public abstract class UiStyledWrapperTag extends UiTagWrapperTag  {
 	 */
 	public void setStyleClass(String styleClass) throws JspException {
 		this.styleClass = (String)evaluate("styleClass", styleClass, String.class);
-	}
-	
-	//
-	// Implementation
-	//
-	/**
-	 * Callback: configure row tag
-	 */
-	protected void configureTag(UiContainedTagInterface tag) throws JspException {
-		UiStyledTagInterface styledTag = (UiStyledTagInterface)tag; 
-		styledTag.setStyleClass(styleClass);
-	}
-	
-	protected void init() {
-		super.init();
-		this.styleClass = null;
 	}
 }
