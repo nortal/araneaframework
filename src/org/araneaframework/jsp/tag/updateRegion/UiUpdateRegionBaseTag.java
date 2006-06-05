@@ -26,8 +26,6 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
  * @author Jevgeni kabanov (ekabanov@webmedia.ee)
  */
 public class UiUpdateRegionBaseTag extends UiBaseTag {
-  public static final String UPDATE_REGION_PREFIX = "update_region_";
-
   protected String id;
   protected String globalId;
   
@@ -44,7 +42,7 @@ public class UiUpdateRegionBaseTag extends UiBaseTag {
     fullId = globalId;
     
     if (fullId == null)
-    	fullId = UPDATE_REGION_PREFIX + (contextWidgetId.length() > 0 ? (contextWidgetId + "." + id) : id);
+    	fullId = contextWidgetId.length() > 0 ? (contextWidgetId + "." + id) : id;
 
     return EVAL_BODY_INCLUDE;    
   }
