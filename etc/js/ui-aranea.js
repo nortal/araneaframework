@@ -48,7 +48,7 @@ function araneaSubmitEvent(systemForm, widgetId, eventId, eventParam, updateRegi
 /**
  * More compact aranea submit for using with uiStandardSubmit*Event
  */
-function araneaSubmitEvent_C(standardParams, updateRegions) {
+function araEvent(standardParams, updateRegions) {
 	standardParams.systemForm.widgetEventPath.value = standardParams.widgetId;
 	standardParams.systemForm.widgetEventHandler.value = standardParams.eventId;
 	standardParams.systemForm.widgetEventParameter.value = standardParams.eventParam;
