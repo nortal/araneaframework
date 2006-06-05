@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.util.ResourceResolverUtil;
 import org.araneaframework.servlet.ServletServiceAdapterComponent;
 import org.araneaframework.servlet.core.BaseAraneaDispatcherServlet;
 import org.springframework.beans.BeansException;
@@ -111,7 +112,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     if (getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER) != null) {
       Class startClass;
       try {
-        startClass = Thread.currentThread().getContextClassLoader().loadClass(
+        startClass = ResourceResolverUtil.getDefaultClassLoader().loadClass(
             getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER));
       }
       catch (ClassNotFoundException e) {
