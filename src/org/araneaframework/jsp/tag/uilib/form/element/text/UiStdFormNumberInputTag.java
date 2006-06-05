@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
@@ -21,8 +21,6 @@ import java.io.Writer;
 import org.araneaframework.jsp.util.UiStdScriptUtil;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.NumberControl;
-
-
 
 /**
  * Standard number input form element tag.
@@ -35,28 +33,23 @@ import org.araneaframework.uilib.form.control.NumberControl;
  *   description = "Form number input field, represents UiLib "NumberControl"."
  */
 public class UiStdFormNumberInputTag extends UiStdFormTextInputBaseTag {
-        
-  //
-  // Implementation
-  //  
-  
-  protected int after(Writer out) throws Exception {
-		// Type check
-		assertControlType("NumberControl");  
+  public UiStdFormNumberInputTag() {
+    size = null;
+    onChangePrecondition = "return true;";
+  }
 
-    // Prepare
+  protected int doEndTag(Writer out) throws Exception {
+    assertControlType("NumberControl");  
     NumberControl.ViewModel viewModel = ((NumberControl.ViewModel)controlViewModel);
-    
-    // Write
     writeTextInput(out, "text");
-    
-    if (validate) writeValidationScript(out, viewModel);
-    
-    // Continue
-    super.after(out);
+
+    if (validate) 
+      writeValidationScript(out, viewModel);
+
+    super.doEndTag(out);
     return EVAL_PAGE;
-	}
-  
+  }
+
   /**
    * Write validation javascript
    * @author Konstantin Tretyakov
@@ -77,7 +70,3 @@ public class UiStdFormNumberInputTag extends UiStdFormTextInputBaseTag {
     UiUtil.writeEndTag_SS(out, "script");
   }  
 }
-
-
-
-
