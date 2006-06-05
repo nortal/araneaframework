@@ -62,9 +62,8 @@
 		<javac 
 			srcdir="${src.dir}" 
 			destdir="${build.classes.dir}" 
-			compiler="${javac.compiler}"
-			target="${javac.target}"
-			source="${javac.source}"
+			target="1.3"
+			source="1.3"
 			debug="on">
 			<classpath refid="classpath" />
 			<include name="**/*.java" />
