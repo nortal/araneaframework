@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.util.ResourceResolverUtil;
+import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.filter.importer.FileImportFactory;
@@ -61,7 +61,7 @@ public class StandardServletFileImportFilterService extends BaseFilterService {
   	for (Iterator iter = files.iterator(); iter.hasNext();) {
 			String fileName = (String) iter.next();
 			
-			ClassLoader loader = ResourceResolverUtil.getDefaultClassLoader();
+			ClassLoader loader = ClassLoaderUtil.getDefaultClassLoader();
 			URL fileURL = loader.getResource(fileName);
 			
 			if (fileURL != null) {

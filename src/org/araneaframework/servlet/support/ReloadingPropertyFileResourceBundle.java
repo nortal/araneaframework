@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
-import org.araneaframework.core.util.ResourceResolverUtil;
+import org.araneaframework.core.util.ClassLoaderUtil;
 
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
@@ -63,11 +63,11 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
   private void reloadProperties() {
     try {
       String resourceName = propertyResource + "_" + getLocale().getLanguage() + ".properties";
-      URL propertyURL = ResourceResolverUtil.getDefaultClassLoader().getResource(resourceName);
+      URL propertyURL = ClassLoaderUtil.getDefaultClassLoader().getResource(resourceName);
 
       if (propertyURL == null) {
         resourceName = propertyResource + ".properties";
-        propertyURL = ResourceResolverUtil.getDefaultClassLoader().getResource(resourceName);
+        propertyURL = ClassLoaderUtil.getDefaultClassLoader().getResource(resourceName);
       }
 
       File propertyFile = new File(propertyURL.getFile());

@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
-import org.araneaframework.core.util.ResourceResolverUtil;
+import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.jsp.util.UiUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
@@ -186,7 +186,7 @@ public class LightweightJspServlet extends HttpServlet {
     Class tagClass = null;
 
     try {
-      tagClass = ResourceResolverUtil.getDefaultClassLoader().loadClass(tagInfo.getTagClassName());
+      tagClass = ClassLoaderUtil.getDefaultClassLoader().loadClass(tagInfo.getTagClassName());
     }
     catch (ClassNotFoundException e) {
       throw new NestableRuntimeException(e);
@@ -212,7 +212,7 @@ public class LightweightJspServlet extends HttpServlet {
         AttrInfo attrInfo = (AttrInfo) tagInfo.getAttributes().get(attr.getLocalName());
         Class attrType;
         try {
-          attrType = ResourceResolverUtil.getDefaultClassLoader().loadClass(attrInfo.getType());
+          attrType = ClassLoaderUtil.getDefaultClassLoader().loadClass(attrInfo.getType());
           Method attrMethod = tagClass.getMethod("set" + attrInfo.getName().substring(0, 1).toUpperCase()
               + attrInfo.getName().substring(1), new Class[] { attrType });
           attrMethod.invoke(tag, new Object[] { attr.getValue() });
@@ -283,7 +283,7 @@ public class LightweightJspServlet extends HttpServlet {
   private Map readTldMapping(String location) {
     Map result = new HashMap();
 
-    InputStream tldStream = ResourceResolverUtil.getDefaultClassLoader().getResourceAsStream(location);
+    InputStream tldStream = ClassLoaderUtil.getDefaultClassLoader().getResourceAsStream(location);
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     Document tldDoc = null;

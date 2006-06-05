@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.util.ResourceResolverUtil;
+import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
 
@@ -80,7 +80,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
    * and the caller's class loader.
    */
   public ResourceBundle getResourceBundle(Locale locale) {
-     return ResourceBundle.getBundle(resourceBundleName, locale, ResourceResolverUtil.getDefaultClassLoader());
+     return ResourceBundle.getBundle(resourceBundleName, locale, ClassLoaderUtil.getDefaultClassLoader());
   }
 
   public String localize(String key) {

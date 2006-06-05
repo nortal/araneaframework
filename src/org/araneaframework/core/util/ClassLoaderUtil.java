@@ -16,10 +16,16 @@
 
 package org.araneaframework.core.util;
 
-public class ResourceResolverUtil {
+/**
+ * Utility to determine the classloader that should be used for
+ * loading resources.
+ * 
+ * @author "Toomas Römer" <toomas@webmedia.ee>
+ */
+public class ClassLoaderUtil {
 	/**
 	 * Returns the thread context ClassLoader, if available. Otherwise
-	 * falls back to the ClassLoader of ResourceResolverUtil.
+	 * falls back to the ClassLoader of ClassLoaderUtil.
 	 * @return
 	 */
 	public static ClassLoader getDefaultClassLoader() {
@@ -27,7 +33,7 @@ public class ResourceResolverUtil {
 			Thread.currentThread().getContextClassLoader();
 		
 		if (classLoader == null) {
-			classLoader = ResourceResolverUtil.class.getClassLoader();
+			classLoader = ClassLoaderUtil.class.getClassLoader();
 		}
 		return classLoader;
 	}

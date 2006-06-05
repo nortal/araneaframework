@@ -30,7 +30,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.util.ResourceResolverUtil;
+import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.jsp.support.TagInfo;
@@ -83,7 +83,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
   public void readTldMapping() throws Exception {
-    InputStream tldStream = ResourceResolverUtil.getDefaultClassLoader().getResourceAsStream(uiTldPath);
+    InputStream tldStream = ClassLoaderUtil.getDefaultClassLoader().getResourceAsStream(uiTldPath);
     
     if (tldStream == null) {
     	throw new FileNotFoundException("Unable to read file: "+uiTldPath);
