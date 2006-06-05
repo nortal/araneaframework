@@ -31,7 +31,7 @@ import org.araneaframework.servlet.filter.importer.JsFileImporter;
  */
 public class UiImportScriptsTag extends UiImportFileTag {
 	
-	public int before(Writer out) throws Exception {
+	public int doStartTag(Writer out) throws Exception {
 		// if filename specified we include the file, if not we include all js files
 		if (includeFileName != null) {
 			writeHtmlInclude(out,
@@ -50,16 +50,20 @@ public class UiImportScriptsTag extends UiImportFileTag {
 		}
 		return EVAL_BODY_INCLUDE;
 	}
-		
+	
 	protected void writeHtmlInclude(Writer out, String keyValue) throws Exception {
-		StringBuffer buf = new StringBuffer(keyValue);
-		buf.append("&");
-		buf.append(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
+		writeHtmlScriptsInclude(out, keyValue);
+	}
+	
+	public static void writeHtmlScriptsInclude(Writer out, String keyValue) throws Exception {
+		StringBuffer buf = new StringBuffer(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
 		buf.append("=");
 		buf.append(JsFileImporter.TYPE);
+		buf.append("&");
+		buf.append(keyValue);
 		
 		UiUtil.writeOpenStartTag(out, "script");
-		UiUtil.writeAttribute(out, "language", "JavasScript1.2");
+		UiUtil.writeAttribute(out, "language", "JavaScript1.2");
 		UiUtil.writeAttribute(out, "type", "text/javascript");
 		UiUtil.writeAttribute(out, "src", "?"+buf.toString(), false);
 		UiUtil.writeCloseStartTag(out);

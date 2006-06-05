@@ -47,7 +47,7 @@
     </property>
   </bean>
 
-  <bean class="org.araneaframework.ioc.spring.StandardSpringServiceFactory" id="sessionServiceFactory" singleton="false">
+  <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" id="sessionServiceFactory" singleton="false">
     <property name="beanId">
       <idref bean="serializingAudit"/>
     </property>
