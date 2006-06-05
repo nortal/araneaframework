@@ -45,7 +45,6 @@ import org.araneaframework.servlet.filter.StandardServletFileImportFilterService
 public class UiRichTextAreaInitializationTag extends UiElementTag {
 	public static final String KEY = "org.araneaframework.jsp.tag.uilib.head.KEY";
 	private static final String MCE_JS = "js/tiny_mce/tiny_mce.js";
-	private static final String MCE_DEBUG_JS = "js/tiny_mce/tiny_mce_src.js";
 	
 	protected int doStartTag(Writer out) throws Exception {
 		UiImportScriptsTag.writeHtmlScriptsInclude(out, 
