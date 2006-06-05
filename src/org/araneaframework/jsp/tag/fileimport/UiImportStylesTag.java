@@ -33,7 +33,7 @@ import org.araneaframework.servlet.filter.importer.CssFileImporter;
 public class UiImportStylesTag extends UiImportFileTag {
 	private String media;
 	
-	public int before(Writer out) throws Exception {
+	public int doStartTag(Writer out) throws Exception {
 		// if filename specified we include the file
 		if (includeFileName != null) {
 			writeHtmlInclude(out, 
