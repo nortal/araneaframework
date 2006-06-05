@@ -86,7 +86,10 @@
    if (!uiSystemFormProperties) window.status = 'Javascript error: current system form context not found!';
    else if (!uiSystemFormProperties.widgets[widgetName]) {
      uiSystemFormProperties.widgets[widgetName] = true;
-     document.write("<input name='" + widgetName + ".__present' type='hidden' value='true'/>");
+     var widgetPresent=createNamedElement('input', widgetName+".__present");
+     widgetPresent.setAttribute('type','hidden');
+     widgetPresent.setAttribute('value','true');
+     addSystemLoadEvent(function() {document.forms[uiSystemFormProperties.name].appendChild(widgetPresent);});
    }
  }
  
@@ -115,7 +118,16 @@
   *          initially valid or invalid.
   */
  function uiFormElementContext(elementName, spanId, valid){
- 
+   span=document.getElementById(spanId);
+   if (document.addEventListener) { // Moz
+     span.onkeydown=function(event) { return uiHandleKeypress(event, elementName); };
+   } else {
+     span.onkeydown=function() { return uiHandleKeypress(event, elementName); };
+   }
+   var hiddenPresent = createNamedElement('input', elementName+".__present");
+   hiddenPresent.setAttribute('type','hidden');
+   hiddenPresent.setAttribute('value','true');
+   addSystemLoadEvent(function() {span.appendChild(hiddenPresent);});
  }
  
  
@@ -193,17 +205,3 @@
    if (!inFormContext()) return;
    uiFormProperties.validator.addMandatoryValidator(name, label, mandatory);
  }
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
- 
- 
- 

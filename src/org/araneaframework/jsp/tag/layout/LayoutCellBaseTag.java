@@ -15,6 +15,6 @@ public abstract class LayoutCellBaseTag extends UiPresentationTag {
     String result = ((CellClassProvider)requireContextEntry(CellClassProvider.KEY)).getCellClass();
     if (styleClass != null) 
       return super.getStyleClass();
-    return result;
+    return (result != null && result.length() == 0) ? null : result;
   }
 }

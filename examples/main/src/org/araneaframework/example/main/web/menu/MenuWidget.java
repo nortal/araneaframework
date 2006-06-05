@@ -32,6 +32,7 @@ import org.araneaframework.example.main.web.demo.DemoFileUpload;
 import org.araneaframework.example.main.web.demo.DemoFormList;
 import org.araneaframework.example.main.web.demo.DemoInMemoryEditableList;
 import org.araneaframework.example.main.web.demo.DemoMultiSelect;
+import org.araneaframework.example.main.web.demo.DemoRichTextForm;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.misc.EventErrorWidget;
@@ -110,7 +111,8 @@ public class MenuWidget extends TemplateMenuWidget  {
       
       sampleMenu.addMenuItem(new MenuItem("#Advanced"));
       sampleMenu.addMenuItem("#Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
-      sampleMenu.addMenuItem("#Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));   
+      sampleMenu.addMenuItem("#Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
+      sampleMenu.addMenuItem("#Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
       
       sampleMenu.addMenuItem(new MenuItem("#Form lists"));
       sampleMenu.addMenuItem("#Form lists", new MenuItem("Display_Form", DemoDisplayForm.class));

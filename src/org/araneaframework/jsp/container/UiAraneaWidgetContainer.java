@@ -43,16 +43,8 @@ public class UiAraneaWidgetContainer implements UiWidgetContainer {
 
   public String buildWidgetCall(String systemFormId, String fullWidgetId, String eventId, String eventParam, List updateRegions) throws JspException {
     StringBuffer result = new StringBuffer();
-    result.append("araneaSubmitEvent(document.");
-    result.append(systemFormId);
-    result.append(", '");
-    result.append(fullWidgetId);
-    result.append("', '");
-    result.append(eventId);  
-    result.append("', '");
-    result.append(eventParam); 
-    result.append("', ");
-    result.append(UiUpdateRegionUtil.formatUpdateRegionsJS(updateRegions));       
+    result.append("araEvent(standardParams, ");
+    result.append(UiUpdateRegionUtil.formatUpdateRegionsJS(updateRegions));
     result.append(");");
     return result.toString();
   }

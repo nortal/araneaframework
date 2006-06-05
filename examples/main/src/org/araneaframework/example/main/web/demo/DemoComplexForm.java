@@ -75,7 +75,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 						complexForm.removeElement("selectedBeastDesc");
 						return;
 					}
-	
+
 					// create the multiselectcontrol allowing selection of some beasts of selected type.
 					concreteBeastMultiSelectionControl = new MultiSelectControl();
 					for (Iterator i = getMultiSelectItems(selectedBeast).iterator(); i.hasNext(); ) {

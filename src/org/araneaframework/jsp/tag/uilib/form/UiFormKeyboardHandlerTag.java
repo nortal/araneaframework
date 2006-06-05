@@ -115,17 +115,8 @@ public class UiFormKeyboardHandlerTag extends UiKeyboardHandlerBaseTag {
 	 * The HTML <code>id</code> attribute of the corresponding input element will be
 	 * something like "myForm.myButton".
 	 * <br>
-	 * Now another kind of "buttons" is represented by <code>&lt;actionLinkButton&gt;</code>.
-	 * It also has an id attribute, but if you write
-	 * <pre>
-	 * &lt;actionLinkButton id="myButton"/&gt;
-	 * </pre>
-	 * the HTML <code>id</code> of the corresponding input element will be "myButton".
-	 * <br>
 	 * Therefore, if you would like to bind a keyboard handler to a "button", use
 	 * the elementId attribute, and the tag will automatically append the correct prefix.
-	 * To bind a keyboard handler to an "actionLinkButton" or something similar, use the
-	 * "fullElementId" attribute.
 	 * 
 	 * @jsp.attribute
 	 *   type = "java.lang.String"

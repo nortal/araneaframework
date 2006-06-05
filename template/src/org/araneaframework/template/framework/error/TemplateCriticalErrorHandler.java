@@ -44,9 +44,7 @@ public class TemplateCriticalErrorHandler extends BaseService  {
         "<link rel=\"stylesheet\" type=\"text/css\" href=\"?loadCSSFile=styles/_styles_screen.css&importerType=cssFileImporter\" media=\"screen\"/>" +  
         "<link rel=\"stylesheet\" type=\"text/css\" href=\"?loadCSSFile=styles/_styles_global.css&importerType=cssFileImporter\" media=\"screen\"/>" +
         "\n" + 
-        "<script type=\"text/javascript\" src=\"_scripts.js\"></script>\n" + 
-        "\n" + 
-        "<!-- calendar -->\n" + 
+         "<!-- calendar -->\n" + 
         "<link href=\"calendar/calendar.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen, projection\" />\n" + 
         "<script type=\"text/javascript\" src=\"calendar/calendar.js\"></script>\n" + 
         "\n" + 

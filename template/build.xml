@@ -57,7 +57,12 @@
 		<mkdir dir="${build.classes.dir}" />
 
 		<!--Compile Java source files-->
-		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on">
+		<javac 
+			srcdir="${src.dir}" 
+			destdir="${build.classes.dir}" 
+			target="1.3"
+			source="1.3"
+			debug="on">
 			<classpath refid="classpath" />
 			<include name="**/*.java" />
 		</javac>

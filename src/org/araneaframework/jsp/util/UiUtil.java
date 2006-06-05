@@ -374,7 +374,8 @@ public class UiUtil {
         case '&': out.write(escapeEntities ? "&amp;": "&"); break;
         case '"': out.write(escapeEntities ? "&quot;": "\""); break;
         case '\'': out.write("\\'"); break;
-        case '\n': out.write("\\n"); break;        
+        case '\n': out.write("\\n"); break;
+        case '\\': out.write("\\\\"); break;
         default:
           out.write(c);
       }     
@@ -414,9 +415,16 @@ public class UiUtil {
   }
   
   // -------------- Operations with PageContext ------------------- //
+  /**
+   * Read attribute value from request scope.  
+   */
+  public static Object getContextEntry(PageContext pageContext, String key) throws JspException {
+    return pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
+  }
   
   /**
-   * Read attribute value in given scope and ensure that it is defined.  
+   * Read attribute value from request scope and ensure that it is defined.
+   * @throws UiException if key is not present in given <code>PageContext</code>
    */
   public static Object requireContextEntry(PageContext pageContext, String key) throws JspException {
     Object value = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);

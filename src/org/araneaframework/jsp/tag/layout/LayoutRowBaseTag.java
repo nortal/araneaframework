@@ -55,7 +55,7 @@ public abstract class LayoutRowBaseTag extends UiPresentationTag implements Cell
     String result = ((RowClassProvider)requireContextEntry(RowClassProvider.KEY)).getRowClass();
     if (styleClass != null)
       return super.getStyleClass();
-    return result;
+    return (result != null && result.length() == 0) ? null : result;
   }
   
   /* ***********************************************************************************
