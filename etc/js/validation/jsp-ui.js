@@ -89,7 +89,7 @@
      var widgetPresent=createNamedElement('input', widgetName+".__present");
      widgetPresent.setAttribute('type','hidden');
      widgetPresent.setAttribute('value','true');
-     addSystemLoadEvent(function() {document.getElementById(uiSystemFormProperties.name).appendChild(widgetPresent);});
+     addSystemLoadEvent(function() {document.forms[uiSystemFormProperties.name].appendChild(widgetPresent);});
    }
  }
  
