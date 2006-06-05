@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.business.data;
 
 import java.util.List;
-
 import org.araneaframework.example.main.business.model.GeneralMO;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

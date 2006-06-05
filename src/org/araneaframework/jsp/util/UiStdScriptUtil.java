@@ -26,7 +26,6 @@ import java.io.Writer;
  * @author Oleg Mürk
  */
 public class UiStdScriptUtil {
-
   /**
    * Writes out event handling attribute that does nothing.
    */ 
