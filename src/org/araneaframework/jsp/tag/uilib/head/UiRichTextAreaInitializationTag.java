@@ -49,7 +49,7 @@ public class UiRichTextAreaInitializationTag extends UiElementTag {
 	
 	protected int doStartTag(Writer out) throws Exception {
 		UiImportScriptsTag.writeHtmlScriptsInclude(out, 
-				StandardServletFileImportFilterService.IMPORTER_FILE_NAME+"="+MCE_DEBUG_JS,
+				StandardServletFileImportFilterService.IMPORTER_FILE_NAME+"="+MCE_JS,
 				((HttpServletRequest)pageContext.getRequest()).getRequestURL());
 		
 		setName("script");
