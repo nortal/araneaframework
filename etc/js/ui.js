@@ -94,11 +94,37 @@ function fillTimeSelect(systemForm, timeInput, hourSelect, minuteSelect) {
   systemForm[minuteSelect].value=minuteValue;
 }
 
-// adds options empty,0-(z-1) to <select> when used inside <select> with option x preselected
-function addOptions(z, x) {
-	o = "option";
-	document.write("<"+o+"></"+o+">");
-	for (i = 0; i < z; i++) {
-	   document.write("<"+o + (i == x ? " selected=\"true\">" : ">") + (i < 10 ? "0" : "")+ i+"</"+o +">");
-	}
+// b/c braindead IE: The NAME attribute cannot be set at run time on elements dynamically 
+// created with the createElement method. To create an element with a name attribute, 
+// include the attribute and value when using the createElement method.
+// http://www.thunderguy.com/semicolon/2005/05/23/setting-the-name-attribute-in-internet-explorer/
+function createNamedElement(type, name) {
+   var element = null;
+   // Try the IE way; this fails on standards-compliant browsers
+   try {
+      element = document.createElement('<'+type+' name="'+name+'">');
+   } catch (e) {
+   }
+   if (!element || element.nodeName != type.toUpperCase()) {
+      // Non-IE browser; use canonical method to create named element
+      element = document.createElement(type);
+      element.name = name;
+   }
+   return element;
+}
+
+// adds options empty,0-(z-1) to select with option x preselected
+function addOptions(selectName, z, x) {
+  select=document.getElementsByName(selectName).item(0);
+  emptyOpt=document.createElement("option");
+  emptyOpt.setAttribute("value", "");
+  select.appendChild(emptyOpt);
+  for (i = 0; i < z; i++) {
+    opt = document.createElement("option");
+    opt.setAttribute("value", (i < 10 ? "0" : "")+ i);
+    if (i == x) { opt.setAttribute("selected", "true") };
+    node = document.createTextNode((i < 10 ? "0" : "")+ i);
+    opt.appendChild(node);
+    select.appendChild(opt);
+  }
 }

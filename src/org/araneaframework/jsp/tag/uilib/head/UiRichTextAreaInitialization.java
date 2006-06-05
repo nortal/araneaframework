@@ -93,8 +93,9 @@ public class UiRichTextAreaInitialization extends UiElementTag {
 			buf.append(entry.getKey());
 			buf.append(" : \"");
 			buf.append(entry.getValue());
-			buf.append("\",\n");
-			
+			buf.append('"');
+			buf.append(ite.hasNext() ? ",\n" : "\n");
+
 			out.write(buf.toString());
 		}
 	}

@@ -66,7 +66,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     out.write(">\n");
     
     StringBuffer sb = new StringBuffer().append("<script type=\"text/javascript\">");
-    sb.append("addOptions(60,").append(minute != null ? minute.toString():"null").append(");");
+    sb.append("addOptions('"+name+".select2',60,").append(minute != null ? minute.toString():"null").append(");");
     sb.append("</script>\n</select>\n");
     
     out.write(sb.toString());
@@ -81,7 +81,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
     out.write(">\n");
     
     StringBuffer sb = new StringBuffer().append("<script type=\"text/javascript\">");
-    sb.append("addOptions(24,").append(hour != null ? hour.toString():"null").append(");");
+    sb.append("addOptions('"+name+".select1',24,").append(hour != null ? hour.toString():"null").append(");");
     sb.append("</script>\n</select>\n");
     
     out.write(sb.toString());

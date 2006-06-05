@@ -2,7 +2,7 @@
 
 <project basedir="." default="build" name="Aranea QuickStart1 Example"> 
 	<property environment="env" />
-	
+
 	<!--Set the classpath-->
 	<path id="classpath">
 	    <fileset dir="../../lib" includes="**/*.jar"/>
@@ -62,7 +62,6 @@
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
-			compiler="javac1.3"
 			target="1.3"
 			source="1.3"
 			srcdir="src"

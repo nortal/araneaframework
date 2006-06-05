@@ -38,16 +38,28 @@ var systemLoadEvents = new Array();
 /** array for system events that should happen when page unload event occurs */
 var systemUnloadEvents = new Array();
 
+/** standard parameters, sent to widget container submit function upon event */
+function getStandardParameterObject(systemForm, widgetId, eventId, eventParam) {
+  result = new Object();
+  result.systemForm = systemForm;
+  result.widgetId = widgetId;
+  result.eventId = eventId;
+  result.eventParam = eventParam;
+  return result;
+}
+
 /**
  * Submit event in a given system form
  *
- * @author Oleg M?rk
+ * @author Oleg Mürk
  */
 function uiStandardSubmitEvent(systemForm, widgetId, eventId, eventParam, call, precondition) {
 	if (!pageActive) return false;
 	
 	if (precondition && !precondition()) return false;
 	
+	standardParams = getStandardParameterObject(systemForm, widgetId, eventId, eventParam);
+
 	call();
 	
 	return false;
@@ -57,7 +69,7 @@ function uiStandardSubmitEvent(systemForm, widgetId, eventId, eventParam, call, 
 /**
  * Submit form event in a given system form. Validates form if needed.
  *
- * @author Oleg M?rk
+ * @author Oleg Mürk
  */
 function uiStandardSubmitFormEvent(systemForm, formId, elementId, eventId, eventParam, validate, call, precondition) {	
 	if (!pageActive) return false;
@@ -68,6 +80,8 @@ function uiStandardSubmitFormEvent(systemForm, formId, elementId, eventId, event
 	}
 
 	if(precondition && !precondition()) return false;
+	
+	standardParams = getStandardParameterObject(systemForm, formId+"."+elementId, eventId, eventParam);
 
 	call();
 	
