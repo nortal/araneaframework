@@ -45,7 +45,7 @@ public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 
 		// Write input tag							
 		UiUtil.writeOpenStartTag(out, "input");
-		//UiUtil.writeAttribute(out, "id", name);
+		UiUtil.writeAttribute(out, "id", name);
 		UiUtil.writeAttribute(out, "name", name);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
 		UiUtil.writeAttribute(out, "type", "checkbox");

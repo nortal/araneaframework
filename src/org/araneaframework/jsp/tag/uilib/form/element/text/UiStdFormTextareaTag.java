@@ -46,7 +46,7 @@ public class UiStdFormTextareaTag extends UiFormElementBaseTag {
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
     
     UiUtil.writeOpenStartTag(out, "textarea");
-    //UiUtil.writeAttribute(out, "id", name);
+    UiUtil.writeAttribute(out, "id", name);
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "class", getStyleClass());
     

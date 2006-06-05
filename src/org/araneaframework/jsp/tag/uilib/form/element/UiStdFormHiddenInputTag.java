@@ -49,7 +49,7 @@ public class UiStdFormHiddenInputTag extends UiFormElementBaseTag {
 
     UiUtil.writeOpenStartTag(out, "input");
     UiUtil.writeAttribute(out, "name", name);     
-    //UiUtil.writeAttribute(out, "id", name);         
+    UiUtil.writeAttribute(out, "id", name);         
     UiUtil.writeAttribute(out, "type", "hidden");
     UiUtil.writeAttribute(out, "value", viewModel.getSimpleValue());  
     UiUtil.writeCloseStartEndTag_SS(out);
