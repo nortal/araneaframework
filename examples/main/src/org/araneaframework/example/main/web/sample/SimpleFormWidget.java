@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -69,7 +70,13 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
     simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
     simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
-    simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
+    DateControl dc = new DateControl();
+    dc.addOnChangeEventListener(new OnChangeEventListener() {
+    	public void onChange() throws Exception {
+    		SimpleFormWidget.this.getMessageCtx().showInfoMessage("DateControl has changed!");
+    	}
+    });
+    simpleForm.addElement("date", "#Date", dc, new DateData(), false);
     simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
@@ -81,6 +88,39 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     
     // the usual, add the created widget to main widget.
 	addWidget("simpleForm", simpleForm);
+	
+	/*
+	 * 02.06.06 13:33:20 DEBUG filter.StandardServletFileImportFilterService - Routing to child.
+02.06.06 13:33:20 DEBUG router.BaseServiceRouterService - Routing action to service 'application' under router 'org.araneaframework.framework.router.S
+tandardTopServiceRouterService'
+02.06.06 13:33:20 DEBUG router.StandardServletSessionRouterService - Reusing HTTP session 'GQTBbT01DVqyXtL1K5nfMsCs2vVJFgpLpTCWB4FfTRjTtp3QcmPg!-13124
+5584!1149244353311'
+02.06.06 13:33:20 DEBUG router.BaseServiceRouterService - Routing action to service 'mainThread' under router 'org.araneaframework.framework.router.St
+andardThreadServiceRouterService'
+02.06.06 13:33:20 DEBUG filter.StandardContinuationFilterService - Routing action to child service
+02.06.06 13:33:20 DEBUG filter.AjaxFilterService - AjaxFilterService found regions = null
+02.06.06 13:33:20 DEBUG container.StandardWidgetAdapterService - Translating action() call to widget update()/event()/process()/render() calls.
+02.06.06 13:33:20 DEBUG container.StandardWidgetContainerWidget - Routing event to widget 'root.flow.menu.flow.voladokInfo.form.null'
+02.06.06 13:33:20 WARN  core.Custom$CustomWidget - No widget found
+org.araneaframework.core.NoSuchWidgetException: No such widget 'null'
+        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:191)
+        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
+        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
+        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
+        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
+        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
+        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
+        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
+        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
+        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
+        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
+        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
+        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
+        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
+        at org.araneaframework.framework.container.StandardWidgetContainerWidget.event(StandardWidgetContainerWidget.java:54)
+        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
+...
+	 * */
   }
   
   /**

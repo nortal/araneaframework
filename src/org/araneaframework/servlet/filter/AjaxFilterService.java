@@ -96,7 +96,7 @@ public class AjaxFilterService extends BaseFilterService {
 		int endIndex = source.indexOf(blockEnd);
 
 		if(endIndex == -1)
-			throw new IllegalStateException("Expected END block for AJAX update regiond with id '" + id + "'");
+			throw new IllegalStateException("Expected END block for AJAX update region with id '" + id + "'");
 
 	    return source.substring(startIndex, endIndex + blockEnd.length());
 	}

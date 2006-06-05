@@ -48,7 +48,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
   }
 
   /**
-   * @param onChangeEventListener {@link OnChangeEventListener}which is called when the control value is changing.
+   * @param onChangeEventListener {@link OnChangeEventListener} which is called when the control value is changing.
    * @see StandardControlEventListenerAdapter#addOnChangeEventListener(OnChangeEventListener)
    */
   public void addOnChangeEventListener(OnChangeEventListener onChangeEventListener) {
@@ -62,7 +62,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
   protected void init() throws Exception {
     super.init();
     
-    addGlobalEventListener(eventHelper);
+    setGlobalEventListener(eventHelper);
   }
   
   /**

@@ -46,7 +46,7 @@ public class LoginWidget extends TemplateBaseWidget {
      * This listener is added by default in super class and is only shown here for
      * illustrative purposes. It can also be overridden on need.
      */
-	    addGlobalEventListener(new ProxyEventListener(this));
+	    setGlobalEventListener(new ProxyEventListener(this));
 
 		/* Create a new FormWidget with two self-described input fields. */
 		form = new FormWidget();
