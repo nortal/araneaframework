@@ -8,8 +8,8 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.araneaframework.extension.resources.ExtensionConfigurationHandler;
-import org.araneaframework.extension.resources.ExternalResource;
+import org.araneaframework.extension.resource.ExternalResourceConfigurationHandler;
+import org.araneaframework.extension.resource.ExternalResource;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -49,7 +49,7 @@ public class ResourceConfigurationParsingTest extends TestCase {
 	
 	public void setUp() throws Exception {
 		XMLReader xr = XMLReaderFactory.createXMLReader();
-		ExtensionConfigurationHandler handler = new ExtensionConfigurationHandler();
+		ExternalResourceConfigurationHandler handler = new ExternalResourceConfigurationHandler();
 		
 		xr.setContentHandler(handler);
 		xr.setErrorHandler(handler);

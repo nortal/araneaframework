@@ -307,6 +307,39 @@
 	</files>
 	
 	<files content-type="text/html">
+		<file path="js/tiny_mce/plugins/searchreplace/replace.htm"/>
+		<file path="js/tiny_mce/plugins/searchreplace/search.htm"/>
+		<file path="js/tiny_mce/plugins/advhr/rule.htm"/>
+		<file path="js/tiny_mce/plugins/emotions/emotions.htm"/>
+		<file path="js/tiny_mce/plugins/table/cell.htm"/>
+		<file path="js/tiny_mce/plugins/table/merge_cells.htm"/>
+		<file path="js/tiny_mce/plugins/table/row.htm"/>
+		<file path="js/tiny_mce/plugins/table/table.htm"/>
+		<file path="js/tiny_mce/plugins/advimage/image.htm"/>
+		<file path="js/tiny_mce/plugins/style/props.htm"/>
+		<file path="js/tiny_mce/plugins/fullpage/fullpage.htm"/>
+		<file path="js/tiny_mce/plugins/fullpage/blank.htm"/>
+		<file path="js/tiny_mce/plugins/flash/flash.htm"/>
+		<file path="js/tiny_mce/plugins/_template/popup.htm"/>
+		<file path="js/tiny_mce/plugins/paste/pastetext.htm"/>
+		<file path="js/tiny_mce/plugins/paste/blank.htm"/>
+		<file path="js/tiny_mce/plugins/paste/pasteword.htm"/>
+		<file path="js/tiny_mce/plugins/fullscreen/fullscreen.htm"/>
+		<file path="js/tiny_mce/plugins/advlink/link.htm"/>
+		<file path="js/tiny_mce/themes/advanced/docs/en/about.htm"/>
+		<file path="js/tiny_mce/themes/advanced/docs/en/index.htm"/>
+		<file path="js/tiny_mce/themes/advanced/docs/en/create_accessible_content.htm"/>
+		<file path="js/tiny_mce/themes/advanced/docs/en/insert_anchor_button.htm"/>
+		<file path="js/tiny_mce/themes/advanced/docs/en/insert_image_button.htm"/>
+		<file path="js/tiny_mce/themes/advanced/docs/en/insert_table_button.htm"/>
+		<file path="js/tiny_mce/themes/advanced/docs/en/insert_link_button.htm"/>
+		<file path="js/tiny_mce/themes/advanced/docs/en/common_buttons.htm"/>
+		<file path="js/tiny_mce/themes/advanced/color_picker.htm"/>
+		<file path="js/tiny_mce/themes/advanced/about.htm"/>
+		<file path="js/tiny_mce/themes/advanced/link.htm"/>
 		<file path="js/tiny_mce/themes/advanced/source_editor.htm"/>
+		<file path="js/tiny_mce/themes/advanced/image.htm"/>
+		<file path="js/tiny_mce/themes/advanced/anchor.htm"/>
+		<file path="js/tiny_mce/themes/advanced/charmap.htm"/>
 	</files>
 </resources>
