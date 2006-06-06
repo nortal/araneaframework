@@ -75,6 +75,8 @@ H2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bo
 .disabled { background: #EEE; }
 
 .nowrap { white-space: nowrap !important; }
+.wrap { white-space: wrap; }
+.wrap-centered { vertical-align: middle !important; text-align: center !important; }
 .nowrap TD { white-space: nowrap; }
 .hidden { display: none; }
 
@@ -89,14 +91,14 @@ H2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bo
 /* Data table */
 
 TABLE.data { margin: 0 0 0.8em 0; clear: both; width: 100%; }
-TABLE.data TH { padding: 4px 5px; text-align: left; vertical-align: bottom; font-family: Tahoma; font-weight: normal; border: 1px solid #e4e4e4; background: #FFF url(?loadImage=gfx/i08.gif&importerType=imageFileImporter) 0 0 no-repeat; }
+TABLE.data TH { padding: 4px 5px; text-align: left; vertical-align: bottom; font-family: Tahoma; font-weight: normal; border: 1px solid #e4e4e4; background: #FFF url(?FileImporterFileName=gfx/i08.gif) 0 0 no-repeat; }
 TABLE.data TH A { text-decoration: none; color: #545454; border-bottom: 1px solid #bbb; }
 TABLE.data TH A:hover { text-decoration: none; color: #f61901; border-bottom: 1px solid #f61901; }
-TABLE.data TD { padding: 5px 5px 5px 6px; text-align: left; vertical-align: top; border: solid #e4e4e4; border-width: 1px 0; background: url(?loadImage=gfx/i12.gif&importerType=imageFileImporter); }
+TABLE.data TD { padding: 5px 5px 5px 6px; text-align: left; vertical-align: top; border: solid #e4e4e4; border-width: 1px 0; background: url(?FileImporterFileName=gfx/i12.gif); }
 TABLE.data TD A { color: #545454; text-decoration: underline; }
 TABLE.data TD.actions { padding: 3px 0 1px 2px; white-space: nowrap; line-height: 0px; }
 TABLE.data TD.actions INPUT,
-TABLE.data TD.actions BUTTON { margin: 0 2px 2px 0; padding: 0 2px; overflow: visible; font-size: 90%; border: 1px solid; border-color: #cbcbcb #808080 #808080 #cbcbcb; cursor: pointer; background: #FFF url(?loadImage=gfx/i11.gif&importerType=imageFileImporter); }
+TABLE.data TD.actions BUTTON { margin: 0 2px 2px 0; padding: 0 2px; overflow: visible; font-size: 90%; border: 1px solid; border-color: #cbcbcb #808080 #808080 #cbcbcb; cursor: pointer; background: #FFF url(?FileImporterFileName=gfx/i11.gif); }
 TABLE.data TD.actions IMG { margin: 0 2px 2px 0; vertical-align: top; }
 TABLE.data TD.inpt { font-size: 100%; }
 TABLE.data TD.inpt SELECT { margin-top: 1px; }
@@ -104,19 +106,21 @@ TABLE.data TH.inpt { padding: 0 0 0 1px !important; }
 TABLE.data TD.inpt { padding: 2px 1px 1px 3px !important; }
 TABLE.data TD.inpt * { vertical-align: top; }
 TABLE.data .ico { margin: 0 1px 0 0; }
-TABLE.data TR.filter TD { background: #eeeeee url(?loadImage=gfx/i09.gif&importerType=imageFileImporter) repeat-x; border: 1px solid #e4e4e4; }
+TABLE.data TR.filter TD { background: #eeeeee url(?FileImporterFileName=gfx/i09.gif) repeat-x; border: 1px solid #e4e4e4; }
+TABLE.data TR.filter TD IMG { vertical-align: middle; }
 TABLE.data TR.filter TD.actions INPUT { font-family: Tahoma, Arial, Helvetica, sans-serif; padding: 2px 5px 1px 5px; }
 TABLE.data TR.filter .min { width: 40px; }
 TABLE.data TR.total-first TD { font-weight: bold; }
 TABLE.data TR.total TD { font-weight: bold; }
-TABLE.data TR.even TD { background: url(?loadImage=gfx/i13.gif&importerType=imageFileImporter); }
+TABLE.data TR.even TD { background: url(?FileImporterFileName=gfx/i13.gif); }
 TABLE.data TR.total-first TD { border-top: 2px solid #cbd0c3 !important; }
 
 /* Form table */
 
 TABLE.form { margin-bottom: 10px; width: 100%; border-top: 1px solid #e8e8e8; }
-TABLE.form TD { padding: 0; text-align: left; vertical-align: top; border-bottom: 1px solid #e8e8e8; background: url(?loadImage=gfx/i12.gif&importerType=imageFileImporter); }
+TABLE.form TD { padding: 0; text-align: left; vertical-align: top; border-bottom: 1px solid #e8e8e8; background: url(?FileImporterFileName=gfx/i12.gif); }
 TABLE.form TD.name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; }
+TABLE.form TD.centered-name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; vertical-align: middle !important;}
 TABLE.form TD.inpt { width: 35%; padding: 3px 5px 2px 5px; }
 TABLE.form TD.data { width: 35%; padding: 6px 5px 5px 5px; }
 TABLE.form TD.tbl { width: 35%; padding: 4px 5px 4px 5px; }
@@ -128,9 +132,9 @@ TABLE.form INPUT,
 TABLE.form SELECT,
 TABLE.form TEXTAREA { font-size: 100%; vertical-align: middle; }
 TABLE.form IMG { vertical-align: middle; margin-top: -2px; }
-TABLE.form TR.error TD { background: url(?loadImage=gfx/i14.gif&importerType=imageFileImporter); color: #f61901; }
+TABLE.form TR.error TD { background: url(?FileImporterFileName=gfx/i14.gif); color: #f61901; }
 TABLE.form TR.error TD * { color: #f61901; }
-TABLE.form TD.error { background: url(?loadImage=gfx/i14.gif&importerType=imageFileImporter); color: #f61901; }
+TABLE.form TD.error { background: url(?FileImporterFileName=gfx/i14.gif); color: #f61901; }
 TABLE.form TD.error * { color: #f61901; }
 TABLE.form .submit { font-size: 80%; padding: 0 5px 1px 5px; overflow: visible; margin-top: -1px; cursor: pointer; }
 TABLE.form .limit { color: #bcc2b2; }
@@ -155,10 +159,17 @@ TABLE.form TR.cols4 .norm { width: 150px; }
 
 DIV.actions { text-align: right; margin: 0 0 1em 0; }
 DIV.actions INPUT,
-DIV.actions BUTTON { background: url(?loadImage=gfx/i10.gif&importerType=imageFileImporter); color: #FFF; padding: 2px 10px 1px 10px; overflow: visible; border: 0px none; cursor: pointer; }
+DIV.actions BUTTON { background: url(?FileImporterFileName=gfx/i10.gif); color: #FFF; padding: 2px 10px 1px 10px; overflow: visible; border: 0px none; cursor: pointer; }
+
+/* Component */
+
+DIV.component-header { background: url(?FileImporterFileName=gfx/i16.gif) 0 100% repeat-x; height: 20px; }
+DIV.component-header DIV.name { float: left; border: 1px solid #b4b4b4; border-bottom: none; background: #FFF url(?FileImporterFileName=gfx/i15.gif) repeat-x; padding: 3px 10px 2px 10px; font-weight: bold; }
+DIV.component { border: 1px solid #b4b4b4; border-top: none; padding: 5px; margin-bottom: 10px; }
 
 /* IE Fixes */
 * HTML #cont1 { height: 100%; }
+* HTML #cont1-error { height: 100%; }
 * HTML #leftcol { height: 550px; }
 * HTML #menu2 A { height: 1px; }
 * HTML #menu2 UL LI A { height: 1px; }

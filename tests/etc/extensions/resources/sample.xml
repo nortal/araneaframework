@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+	<files content-type="image/gif">
+		<file path="gfx/alfa.gif"/>
+		<file path="gfx/beta.gif"/>
+		<file path="gfx/deta.gif"/>
+	</files>
+	
+	<files content-type="text/css" group="common-styles">
+		<file path="css/print.css"/>
+		<file path="css/screen.css"/>
+		<file path="css/sexy.css"/>
+	</files>
+	
+	<files content-type="text/javascript" group="common-js">
+		<file path="js/mce.js"/>
+		<file path="js/calendar.js"/>
+		<file path="js/prototype.js"/>
+	</files>
+	
+	<files content-type="text/javascript" group="common-js">
+		<file path="js/behaviour.js"/>
+	</files>
+	
+	<files content-type="text/javascript">
+		<file path="js/mce_helper.js"/>
+		<file path="js/mce_popup.js"/>
+		<file path="js/mce_debug.js"/>
+	</files>
+</resources>
