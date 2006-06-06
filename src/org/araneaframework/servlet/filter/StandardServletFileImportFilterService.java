@@ -46,8 +46,8 @@ import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.extension.ResourceInitializer;
-import org.araneaframework.extension.resources.ExternalResource;
+import org.araneaframework.extension.resource.ExternalResource;
+import org.araneaframework.extension.resource.ExternalResourceInitializer;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.servlet.ServletOutputData;
 
@@ -57,7 +57,7 @@ import org.araneaframework.servlet.ServletOutputData;
  */
 public class StandardServletFileImportFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardServletFileImportFilterService.class);
-  private static final ExternalResource resources = (new ResourceInitializer()).getResources();
+  private static final ExternalResource resources = (new ExternalResourceInitializer()).getResources();
   private long cacheHoldingTime = 3600000;
   
   
