@@ -16,14 +16,21 @@
 
 package org.araneaframework.servlet.filter.importer;
 
-import java.util.List;
-import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
+import org.araneaframework.servlet.filter.StandardServletFileImportFilterService;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public interface FileImporter {
-	public void setHeaders(OutputData output);
-	public List importFiles(InputData input);
+public class FileImporter {	
+	/**
+	 * Returns the string needed to import image with given name from within HTML.
+	 * @param fileName
+	 */
+	public final static String getImportString(String fileName) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("?" + StandardServletFileImportFilterService.IMPORTER_FILE_NAME + "=");
+		sb.append(fileName);
+	
+		return sb.toString();
+	}
 }

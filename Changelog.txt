@@ -10,9 +10,7 @@ Features and Improvements
         Aranea configuration is modularized now. A main configuration is
         provided in the aranea.jar and an application can have overrides.
 
-        JSP tag API improvements and simplification.    
-        
-            
+        JSP tag API improvements and simplification.      
 
 Bugfixes
         Date ranged filters with timestamp throws exception                   | See #47

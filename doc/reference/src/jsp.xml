@@ -121,18 +121,17 @@
     <sect2>
       <title><![CDATA[<ui:importScripts>]]></title>
       <para>
-         Aranea comes bundled with standard javascript functions, used to do event calls (submits), client side validation, AJAX, provide htmleditor,
-         calendar, etc. One way for
-         using these javascript libraries would be to extract them from the corresponding jar's (aranea-presentation.jar and aranea-template.jar)
-         and copy them to a location that your webapp can read from and then using the html capabilities (<![CDATA[<script>]]> tag) to read them in. 
-         
-         The <![CDATA[<ui:importScripts>]]> tag automates this process. When using with no parameters it includes all the javascript files from the
-         aranea-presentation.jar. 
+         Aranea comes bundled with different external resources: javascript libraries, stylesheets and images. To automate the process
+			of loading the javascript files without the manual copying of them to specific webapp locations,  a special filter is used. The filter is able
+			to read files from aranea <literal>jar</literal> files.
       </para>
       <para>
          <![CDATA[<ui:importScripts>]]> depends on the filter <emphasis>StandardServletFileImportFilterService</emphasis> being set. The filter provides
          the functionality of reading files from the jars on the server.
       </para>
+		<para>
+			If no attributes specified, the default group of javascript files are loaded.
+		</para>
       
       <sect3>
         <title>Attributes</title>
@@ -150,14 +149,14 @@
             </thead>
             <tbody>
               <row>
-                <entry>includeTemplate</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>If set, all the javascript files from the aranea-template.jar are also included.</entry>
-              </row>
-              <row>
                 <entry>file</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Includes only the specified javascript file. Be sure to prefix the file accordingly, <emphasis>styles/xxx.css</emphasis>.</entry>
+                <entry>Writes HTML <literal>&lt;script&gt;</literal> tag to load the specific file.</entry>
+              </row>
+              <row>
+                <entry>group</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Writes HTML <literal>&lt;script&gt;</literal> tag to load a group of javascript files.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -177,6 +176,10 @@
          <![CDATA[<ui:importStyles>]]> depends on the filter <emphasis>StandardServletFileImportFilterService</emphasis> being set. The filter provides
          the functionality of reading files from the jars on the server.
       </para>
+
+		<para>
+			If no attributes specified, the default group of css files are loaded.
+		</para>
       
       <sect3>
         <title>Attributes</title>
@@ -194,14 +197,14 @@
             </thead>
             <tbody>
               <row>
-                <entry>includeTemplate</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>If set, all the css files from the aranea-template.jar are also included.</entry>
-              </row>
-              <row>
                 <entry>file</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Includes only the specified css file. Be sure to prefix the file accordingly, <emphasis>styles/xxx.css</emphasis>.</entry>
+                <entry>Writes out the HTML's CSS handling <literal>link</literal> to load the specific file.</entry>
+              </row>
+              <row>
+                <entry>group</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Writes out the HTML's CSS handling <literal>link</literal> to load the group of files.</entry>
               </row>
             </tbody>
           </tgroup>

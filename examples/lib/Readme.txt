@@ -11,6 +11,13 @@ of them in your own applications.
 *****************************************************************************
 
 *****************************************************************************
+* ./xerces/*.jar
+- Apache XML project Xerces Java Parser (http://xerces.apache.org/xerces-j/)
+
+- Required for running the sample applications.
+*****************************************************************************
+
+*****************************************************************************
 * ./antlr/antlr-2.7.5H3.jar
 - ANTRL (http://www.antlr.org/)
 - Required for running the sample applications.
