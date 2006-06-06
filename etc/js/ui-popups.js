@@ -34,7 +34,6 @@ addSystemUnloadEvent(onWindowUnload);
 
 //popup maps
 var popups = new Object();
-var requestArgumentsPrefix = "?topServiceId=application&threadServiceId=";
 
 // popup properties, used for all types of popups
 var popupProperties = new Object();
