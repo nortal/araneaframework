@@ -61,8 +61,7 @@ public class StandardServletFileImportFilterService extends BaseFilterService {
   	for (Iterator iter = files.iterator(); iter.hasNext();) {
 			String fileName = (String) iter.next();
 			
-			ClassLoader loader = ClassLoaderUtil.getDefaultClassLoader();
-			URL fileURL = loader.getResource(fileName);
+			URL fileURL = ClassLoaderUtil.findResource(fileName);
 			
 			if (fileURL != null) {
 				InputStream inputStream = fileURL.openStream();

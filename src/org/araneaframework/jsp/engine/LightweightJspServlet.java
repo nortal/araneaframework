@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import javax.servlet.jsp.tagext.TryCatchFinally;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -186,7 +188,7 @@ public class LightweightJspServlet extends HttpServlet {
     Class tagClass = null;
 
     try {
-      tagClass = ClassLoaderUtil.getDefaultClassLoader().loadClass(tagInfo.getTagClassName());
+      tagClass = ClassLoaderUtil.loadClass(tagInfo.getTagClassName());
     }
     catch (ClassNotFoundException e) {
       throw new NestableRuntimeException(e);
@@ -283,7 +285,7 @@ public class LightweightJspServlet extends HttpServlet {
   private Map readTldMapping(String location) {
     Map result = new HashMap();
 
-    InputStream tldStream = ClassLoaderUtil.getDefaultClassLoader().getResourceAsStream(location);
+    InputStream tldStream = ClassLoaderUtil.getResourceAsStream(location);
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     Document tldDoc = null;

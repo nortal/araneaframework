@@ -16,6 +16,15 @@
 
 package org.araneaframework.core.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Utility to determine the classloader that should be used for
  * loading resources.
@@ -29,20 +38,87 @@ public class ClassLoaderUtil {
 	 * @return
 	 */
 	public static ClassLoader getDefaultClassLoader() {
-		ClassLoader classLoader = 
-			Thread.currentThread().getContextClassLoader();
+		return (ClassLoader)getClassLoaders().iterator().next();
+	}
+	
+	public static InputStream getResourceAsStream(String name) {
+		URL url = findResource(name);
+		if (url == null)
+			return null;
 		
-		if (classLoader == null) {
-			classLoader = ClassLoaderUtil.class.getClassLoader();
+		try {
+			return url.openStream();
 		}
-		return classLoader;
+		catch (IOException e) {
+			return null;
+		}
 	}
 	
 	/**
-	 * Wrapper for forName using the ClassLoader returned by
-	 * getDefaultClassLoader().
+	 * Trys to load class using the ClassLoaders in the order that
+	 * getClassLoaders() returns them. On success returns the class.
+	 * 
+	 * @throws ClassNotFoundException
 	 */
-	public static Class forName(String name) throws ClassNotFoundException {
-		return Class.forName(name, true, getDefaultClassLoader());
+	public static Class loadClass(String name) throws ClassNotFoundException{
+		List loaders = getClassLoaders();
+		for (Iterator iter = loaders.iterator(); iter.hasNext();) {
+			ClassLoader loader = (ClassLoader) iter.next();
+			try {
+				return loader.loadClass(name);
+			}
+			catch (ClassNotFoundException e) {
+			  if (!iter.hasNext()) 
+				  throw e;
+			}
+		}
+		throw new ClassNotFoundException();
+	}
+
+	/**
+	 * Searches through all the ClassLoaders provided by the getClassLoaders()
+	 * for the resource identified by name. Returns the URL of the first
+	 * found resource.
+	 */
+	public static URL findResource(final String name) {
+		List loaders = getClassLoaders();
+		for (Iterator iter = loaders.iterator(); iter.hasNext();) {
+			ClassLoader loader = (ClassLoader) iter.next();
+			URL url = loader.getResource(name);
+			if (url != null)
+				return url;
+		}
+		return null;
+	}
+
+	/**
+	 * Searches through all the ClassLoaders provided by the getClassLoaders()
+	 * for the resources identified by name. Returns an union of all the found
+	 * URLs.
+	 */
+	public static Enumeration findResources(final String name) throws IOException {
+		List list = new ArrayList();
+		List loaders = getClassLoaders();
+		for (Iterator iter = loaders.iterator(); iter.hasNext();) {
+			ClassLoader loader = (ClassLoader) iter.next();
+			Enumeration resources = loader.getResources(name);
+			list.addAll(Collections.list(resources));
+		}
+		return Collections.enumeration(loaders);
+	}
+	
+	/**
+	 * Returns a list of ClassLoaders in the order that Aranea
+	 * searches for resources.
+	 */
+	public static List getClassLoaders() {
+		List rtrn = new ArrayList();
+		ClassLoader classLoader = 
+			Thread.currentThread().getContextClassLoader();
+		if (classLoader != null) {
+			rtrn.add(classLoader);
+		}
+		rtrn.add(ClassLoaderUtil.class.getClassLoader());
+		return rtrn;
 	}
 }

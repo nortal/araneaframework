@@ -17,9 +17,13 @@
 package org.araneaframework.framework.filter;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ClassLoaderUtil;
@@ -76,11 +80,24 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   }
   
   /** 
-   * Gets a resource bundle using the specified resource bundle name and current locale,
-   * and the caller's class loader.
+   * Gets a resource bundle using the specified resource bundle name and current locale
+   * and the ClassLoaders provided by the ClassLoaderUtil.
    */
   public ResourceBundle getResourceBundle(Locale locale) {
-     return ResourceBundle.getBundle(resourceBundleName, locale, ClassLoaderUtil.getDefaultClassLoader());
+	  List loaders = ClassLoaderUtil.getClassLoaders();
+	  
+	  for (Iterator iter = loaders.iterator(); iter.hasNext();) {
+		ClassLoader loader = (ClassLoader) iter.next();
+		try {
+			return ResourceBundle.getBundle(resourceBundleName, locale, loader);
+		}
+		catch(MissingResourceException e) {
+			if (!iter.hasNext())
+				throw e;
+		}
+	  }
+     throw new MissingResourceException("No resource bundle for the specified base name can be found",
+    		 							getClass().getName(), "");
   }
 
   public String localize(String key) {

@@ -83,7 +83,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
   public void readTldMapping() throws Exception {
-    InputStream tldStream = ClassLoaderUtil.getDefaultClassLoader().getResourceAsStream(uiTldPath);
+    InputStream tldStream = ClassLoaderUtil.getResourceAsStream(uiTldPath);
     
     if (tldStream == null) {
     	throw new FileNotFoundException("Unable to read file: "+uiTldPath);

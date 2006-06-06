@@ -112,7 +112,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     if (getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER) != null) {
       Class startClass;
       try {
-        startClass = ClassLoaderUtil.getDefaultClassLoader().loadClass(
+        startClass = ClassLoaderUtil.loadClass(
             getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER));
       }
       catch (ClassNotFoundException e) {
