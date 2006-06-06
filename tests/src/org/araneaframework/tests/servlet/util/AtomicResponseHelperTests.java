@@ -27,7 +27,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class AtomicResponsetHelperTests extends TestCase {
+public class AtomicResponseHelperTests extends TestCase {
   private AtomicResponseHelper atomic;
   private StandardServletOutputData output;
   private MockHttpServletResponse res;
@@ -44,7 +44,7 @@ public class AtomicResponsetHelperTests extends TestCase {
   public void testCommitWriter() throws Exception {
     res.getWriter().write("Hello, World!");
     atomic.commit();
-    assertTrue(res.getContentAsByteArray().length > 0);;
+    assertTrue(res.getContentAsByteArray().length > 0);
   }
   
   /*

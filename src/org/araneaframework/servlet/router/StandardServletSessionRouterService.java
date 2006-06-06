@@ -16,8 +16,6 @@
 
 package org.araneaframework.servlet.router;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
@@ -68,16 +66,14 @@ public class StandardServletSessionRouterService extends BaseService {
       ((ServletInputData) input).getRequest().getSession();
     
     boolean destroySession = ((ServletInputData)input).getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY)!=null;
-    
-    Map map = new HashMap();
-    map.put(HttpSession.class, sess);
-    Environment newEnv = new StandardEnvironment(getEnvironment(), map);
+
+    Environment newEnv = new StandardEnvironment(getEnvironment(), HttpSession.class, sess);
     
     //XXX Should we synchronize on session?
     synchronized (sess) {
       Relocatable.RelocatableService service = null;   
             
-      if (destroySession) {       
+      if (destroySession) {
         sess.invalidate();                    
         return;
       }
@@ -99,7 +95,7 @@ public class StandardServletSessionRouterService extends BaseService {
       }
       finally {
         service._getRelocatable().overrideEnvironment(null);
-        try {        
+        try {
           sess.setAttribute(SESSION_SERVICE_KEY, service);
         }
         catch (IllegalStateException  e) {
