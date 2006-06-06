@@ -19,10 +19,10 @@ package org.araneaframework.jsp.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.jsp.tag.updateRegion.UiUpdateRegionCommonTag;
+
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
@@ -30,22 +30,11 @@ import org.araneaframework.uilib.util.NameUtil;
  */
 public class UiUpdateRegionUtil {
   public static List parseUpdateRegionNames(String updateRegions) throws JspException  {
-    List result = new ArrayList();
-    
-    if (updateRegions != null && !"".equals(updateRegions.trim())) {
-      StringTokenizer tokens = new StringTokenizer(updateRegions, ",");
-      while (tokens.hasMoreTokens()) {
-        String token = tokens.nextToken();
-        
-        result.add(token.trim());
-      }
-    }
-    
-    return result;
+    return UiUtil.parseMultiValuedAttribute(updateRegions);
   }
   
-  public static String getUpdateRegionName(String regionName) {
-  	return UiUpdateRegionCommonTag.UPDATE_REGION_PREFIX + regionName;
+  public static String getUpdateRegionLocalName(String regionName) {
+  	return regionName;
   }
   
   public static List getUpdateRegionNames(PageContext pageContext, String updateRegions, String globalUpdateRegions) throws JspException {
@@ -63,7 +52,7 @@ public class UiUpdateRegionUtil {
     for (Iterator i = parseUpdateRegionNames(updateRegions).iterator(); i.hasNext();) {
       String regionName = (String) i.next();
       
-      result.add(UiUpdateRegionCommonTag.UPDATE_REGION_PREFIX + NameUtil.getFullName(contextWidgetId, regionName));
+      result.add(NameUtil.getFullName(contextWidgetId, regionName));
     }
     
     return result;
@@ -75,7 +64,7 @@ public class UiUpdateRegionUtil {
     for (Iterator i = parseUpdateRegionNames(globalUpdateRegions).iterator(); i.hasNext();) {
       String regionName = (String) i.next();
       
-      result.add(UiUpdateRegionCommonTag.UPDATE_REGION_PREFIX + regionName);
+      result.add(regionName);
     }
     
     return result;

@@ -16,38 +16,21 @@
 
 package org.araneaframework.uilib.list.formlist;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.core.StandardWidget;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.FormWidget;
+
 
 /**
  * Editable rows widget that is used to handle simultenous editing of multiple forms with same structure.
  * 
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class FormListWidget extends StandardPresentationWidget {
-  
-	//*******************************************************************
-  // FIELDS
-  //*******************************************************************	
+public class FormListWidget extends BaseFormListWidget {
 	
-	protected List rows;
-	
-	protected FormRowHandler formRowHandler;	
-	protected Map formRows = new HashMap();
-	
-	protected int rowFormCounter = 0;
 	
 	//*******************************************************************
-  // CONSTRUCTORS
-  //*******************************************************************		
+	// CONSTRUCTORS
+	//*******************************************************************		
 	
 	/**
 	 * @param id widget id.
@@ -58,237 +41,23 @@ public class FormListWidget extends StandardPresentationWidget {
 		this.formRowHandler = rowHandler;
 	}
 	
-	//*******************************************************************
-  // PUBLIC METHODS
-  //*******************************************************************		
-	
-	/**
-	 * Sets the list of row objects. 
-	 * @param rows the list of row objects.
-	 */
-	public void setRows(List rows) {
-		this.rows = rows;
+	protected FormWidget buildAddForm(){
+		return new FormWidget();
 	}
 	
-	/**
-	 * Returns <code>Map&lt;Object key, EditableRow&gt;</code> of initialized editable rows.
-	 * @return <code>Map&lt;Object key, EditableRow&gt;</code> of initialized editable rows.
-	 */
-	public Map getFormRows() {
-		return formRows;
-	}
-	
-	/**
-	 * Returns add form of the widget.
-	 * @return Add form of the widget.
-	 */
-	public FormWidget getAddForm() {
-	  return (FormWidget) getWidget("addForm");
-	}
-	
-	/**
-	 * Returns editable row corresponding to the row key.
-	 * @param key row key.
-	 * @return editable row corresponding to the row key.
-	 */
-	public FormRow getFormRow(Object key) {
-		return (FormRow) formRows.get(key);
-	}
-	
-	/**
-	 * Returns current {@link FormRowHandler}.
-	 * @return current {@link FormRowHandler}.
-	 */
-	public FormRowHandler getFormRowHandler() {
-		return this.formRowHandler;
-	}
-	
-	/**
-	 * Sets new {@link FormRowHandler}.
-	 * @param editableRowHandler new {@link FormRowHandler}.
-	 */
-	public void setFormRowHandler(FormRowHandler editableRowHandler) {
-		this.formRowHandler = editableRowHandler;
-	}	
-	
-	//*******************************************************************
-  // PROTECTED METHODS
-  //*******************************************************************		
-	
-	/**
-	 * Creates and adds an editable row from a usual row object.
-	 */
-	protected void addFormRow(Object newRow) throws Exception {
-		FormWidget rowForm = new FormWidget();
+	protected void addFormRow(Object newRow) {
+		FormWidget rowForm = buildAddForm();
 		String rowFormId = "rowForm" + rowFormCounter++;
 		FormRow newEditableRow = new FormRow(formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
 		
-    formRowHandler.initFormRow(newEditableRow, newRow);     
     addWidget(rowFormId, rowForm);
-               
-    formRows.put(formRowHandler.getRowKey(newRow), newEditableRow);
-	}			
-	
-  //*********************************************************************
-  //* ROW HANDLING METHODS
-  //*********************************************************************
-	
-	/**
-	 * Saves all editable rows.
-	 */
-	public void saveAllRows() throws Exception {
-		Map rowsToSave = new HashMap();
-		
-		for (Iterator i = formRows.values().iterator(); i.hasNext();) {
-			FormRow editableRow = (FormRow) i.next();
-			rowsToSave.put(editableRow.getRowKey(), editableRow);
-		}
-		
-		formRowHandler.saveRows(rowsToSave);
-	}
-	
-	/**
-	 * Saves all editable rows that correspond to the current usual rows.
-	 */
-	public void saveCurrentRows() throws Exception {
-		Map rowsToSave = new HashMap();
-		
-		for (Iterator i = rows.iterator(); i.hasNext();) {
-			Object row = i.next();
-			
-			FormRow editableRow = (FormRow) formRows.get(formRowHandler.getRowKey(row));
-			rowsToSave.put(editableRow.getRowKey(), editableRow);
-		}
-		
-		formRowHandler.saveRows(rowsToSave);
-	}	
-	
-	/**
-	 * Saves row specified by key.
-	 * @param key row key.
-	 */
-	public void saveRow(Object key) throws Exception {
-		Map rowsToSave = new HashMap();
-		
-		FormRow editableRow = (FormRow) formRows.get(key);
-		rowsToSave.put(editableRow.getRowKey(), editableRow);
-
-		formRowHandler.saveRows(rowsToSave);
-	}		
-	
-	/**
-	 * Deletes row specified by key.
-	 * @param key row key.
-	 */
-	public void deleteRow(Object key) throws Exception {
-		Set rowsToDelete = new HashSet();		
-		
-		rowsToDelete.add(key);
-		formRows.remove(key);
-		
-		formRowHandler.deleteRows(rowsToDelete);
-	}	
-	
-	/**
-	 * Adds row from given form.
-	 * @param addForm add form.
-	 */
-	public void addRow(FormWidget addForm) throws Exception {
-		formRowHandler.addRow(addForm);
-	}		
-	
-	/**
-	 * Opens or closes the row specified by the key.
-	 * @param key row key.
-	 */
-	public void openCloseRow(Object key) throws Exception {
-		FormRow currentRow = (FormRow) formRows.get(key);		
-		formRowHandler.openOrCloseRow(currentRow);
-	}
-  
-  public void resetAddForm() throws Exception {    
-    FormWidget addForm = new FormWidget();
-    formRowHandler.initAddForm(addForm);
-    addWidget("addForm", addForm);   
-  }
-  
-  public void resetFormRow(Object key) throws Exception {
-    formRows.remove(key);
-  }
-  
-  public void resetFormRows() throws Exception {
-    formRows.clear();
-  }
-	
-  protected void init() throws Exception {
-  	super.init();
-  	
-  	FormWidget addForm = new FormWidget();
-  	formRowHandler.initAddForm(addForm);
-  	addWidget("addForm", addForm);		
-  }
-  
-  protected void handleProcess() throws Exception {
-    if (rows == null) throw new AraneaRuntimeException("You must set rows before using FormListWidget!");
-
-    for (Iterator i = rows.iterator(); i.hasNext();) {
-      Object row = i.next();
-
-      if (formRows.get(formRowHandler.getRowKey(row)) == null)
-        addFormRow(row);
-      else
-        ((FormRow) formRows.get(formRowHandler.getRowKey(row))).setRow(row);
+		try {
+      formRowHandler.initFormRow(newEditableRow, newRow);
     }
-
-  }
-	
-  // *********************************************************************
-  //* VIEW MODEL
-  //*********************************************************************
-	
-	public Object getViewModel() throws Exception {
-		return new ViewModel();
-	}	
-	
-	public class ViewModel extends StandardWidget.ViewModel {
-		protected Map editableRows = new HashMap();
-		protected List rows;
-
-		public ViewModel() {			
-			for (Iterator i = FormListWidget.this.formRows.entrySet().iterator(); i.hasNext();) {
-				Map.Entry ent = (Map.Entry) i.next();
-				
-				editableRows.put(ent.getKey(), ((FormRow)ent.getValue()).getViewModel());
-			}
-			
-			this.rows = FormListWidget.this.rows;
-		}
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }     		
 		
-		
-		/**
-		 * 
-		 * Returns <code>Map&lt;Object key, EditableRow&gt;</code>.
-		 * @return <code>Map&lt;Object key, EditableRow&gt;</code>.
-		 */
-		public Map getFormRows() {
-			return editableRows;
-		}
-
-		
-		/**
-		 * Returns row handler that is used to get row keys.
-		 */
-		public FormRowHandler getRowHandler() {
-			return FormListWidget.this.formRowHandler;
-		}
-		
-		/**
-		 * Returns rows.
-		 * @return rows.
-		 */
-		public List getRows() {
-			return rows;
-		}
-	}	
-
+		formRows.put(formRowHandler.getRowKey(newRow), newEditableRow);
+	}
 }
