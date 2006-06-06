@@ -214,7 +214,7 @@ public class LightweightJspServlet extends HttpServlet {
         AttrInfo attrInfo = (AttrInfo) tagInfo.getAttributes().get(attr.getLocalName());
         Class attrType;
         try {
-          attrType = ClassLoaderUtil.getDefaultClassLoader().loadClass(attrInfo.getType());
+          attrType = ClassLoaderUtil.loadClass(attrInfo.getType());
           Method attrMethod = tagClass.getMethod("set" + attrInfo.getName().substring(0, 1).toUpperCase()
               + attrInfo.getName().substring(1), new Class[] { attrType });
           attrMethod.invoke(tag, new Object[] { attr.getValue() });
