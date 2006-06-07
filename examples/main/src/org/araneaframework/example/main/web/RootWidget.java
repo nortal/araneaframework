@@ -40,9 +40,7 @@ public class RootWidget extends StandardPresentationWidget implements SecurityCo
   }
 
   protected Environment getChildWidgetEnvironment() throws Exception {
-    Map entries = new HashMap();
-    entries.put(SecurityContext.class, this);
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(getEnvironment(), SecurityContext.class, this);
   }
 
   public boolean hasPrivilege(String privelege) {
