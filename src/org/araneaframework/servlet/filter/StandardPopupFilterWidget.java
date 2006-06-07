@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
+import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
@@ -28,6 +29,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.Widget;
+import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ManagedServiceContext;
@@ -53,6 +55,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   protected Map popups = new HashMap();
   /** Used to keep track of popups that have been opened from thread and not yet explicitly closed. */
   protected Map allPopups = new HashMap();
+  /** Widget that opened this popup. Only applicable to threads. */
+  protected Widget opener = null;
 
   protected ServiceFactory threadServiceFactory;
 
@@ -60,10 +64,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     this.threadServiceFactory = factory;
   }
   
-  protected Environment getChildWidgetEnvironment() {
-    return new StandardEnvironment(super.getChildWidgetEnvironment(), PopupWindowContext.class, this);
-  }
-  
+  /* ************************************************************************************
+   * PopupWindowContext interface methods
+   * ************************************************************************************/
   public String openDetached(Message startMessage, PopupWindowProperties properties) throws Exception {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
@@ -92,6 +95,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     if (startMessage != null)
       startMessage.send(null, service);
     
+    if (caller != null)
+      new OpenerRegistrationMessage(caller).send(null, service);
+
     //add new, not yet opened popup to popup map
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
@@ -100,7 +106,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
 
-  
   public String openDetached(Service service, PopupWindowProperties properties) throws Exception {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
@@ -162,6 +167,17 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return true;
   }
   
+  public Widget getOpener() {
+    return this.opener;
+  }
+  
+  /* ************************************************************************************
+   * Widget methods
+   * ************************************************************************************/
+  protected Environment getChildWidgetEnvironment() {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), PopupWindowContext.class, this);
+  }
+  
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     super.action(path, input, output);
   }
@@ -193,6 +209,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     popups = new HashMap();
   }
   
+  /* ************************************************************************************
+   * Internal methods
+   * ************************************************************************************/
   protected void startThreadPopupService(String id, Service service) throws Exception {
     startPopupService(id, service, ThreadContext.class);
   }
@@ -217,6 +236,27 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return ((HttpServletRequest)((ServletInputData)getCurrentInput()).getRequest()).getRequestURL().toString();
   }
 
+  /* ************************************************************************************
+   * PUBLIC INNER CLASSES
+   * ************************************************************************************/
+  /**
+   * Message that registers opener as creator of the popup thread.
+   */
+  public class OpenerRegistrationMessage extends BroadcastMessage {
+    Widget opener;
+
+    public OpenerRegistrationMessage(Widget opener) {
+      this.opener = opener;
+    }
+    
+    protected void execute(Component component) throws Exception {
+      if (component instanceof StandardPopupFilterWidget) {
+        StandardPopupFilterWidget w = (StandardPopupFilterWidget) component;
+        w.opener = opener;
+      }
+    }
+  }
+  
   public class StandardPopupServiceInfo implements PopupServiceInfo {
     private String topServiceId;
     private String threadId;

@@ -83,4 +83,10 @@ public interface PopupWindowContext extends Serializable {
    * @return whether service with given thread id was closed. 
    */
   public boolean closeDetached(String id) throws Exception;
+  
+  /**
+   * Returns the widget that opened calling thread-level service (popup).
+   * @return opener of thread-level service, <code>null</code> when calling service does not registered opener.
+   */
+  public Widget getOpener();
 }

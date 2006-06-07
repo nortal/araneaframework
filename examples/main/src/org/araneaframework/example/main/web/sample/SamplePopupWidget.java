@@ -38,7 +38,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		ExampleMenuMessage message = new ExampleMenuMessage("Demos.#Simple.Simple_Form");
 		
 		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-		popupCtx.openDetached(message, new PopupWindowProperties());
+		popupCtx.openAttached(message, new PopupWindowProperties(), this);
 	}
 	
 	public void handleEventOpenUrl() throws Exception {

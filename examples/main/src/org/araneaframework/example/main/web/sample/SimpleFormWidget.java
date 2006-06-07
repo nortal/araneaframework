@@ -62,7 +62,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
 	// way form elements are usually added to the form, but rather emphasises the
 	// fact that everything you add to FormWidget is a FormElement.
 
-	//  createElement(String labelId, Control control, Data data, boolean mandatory)
+	// createElement(String labelId, Control control, Data data, boolean mandatory)
     FormElement el = simpleForm.createElement("#Textbox", new TextControl(), new StringData(), false);
     simpleForm.addElement("textbox1", el);
     
@@ -82,47 +82,14 @@ public class SimpleFormWidget extends TemplateBaseWidget {
 	// now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
     ButtonControl button = new ButtonControl();
-	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm") );
+	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
 	// add the button to form. As the button does not hold any value, Data will be null.
 	simpleForm.addElement("button", "#Button", button, null, false);
     
     // the usual, add the created widget to main widget.
 	addWidget("simpleForm", simpleForm);
-	
-	/*
-	 * 02.06.06 13:33:20 DEBUG filter.StandardServletFileImportFilterService - Routing to child.
-02.06.06 13:33:20 DEBUG router.BaseServiceRouterService - Routing action to service 'application' under router 'org.araneaframework.framework.router.S
-tandardTopServiceRouterService'
-02.06.06 13:33:20 DEBUG router.StandardServletSessionRouterService - Reusing HTTP session 'GQTBbT01DVqyXtL1K5nfMsCs2vVJFgpLpTCWB4FfTRjTtp3QcmPg!-13124
-5584!1149244353311'
-02.06.06 13:33:20 DEBUG router.BaseServiceRouterService - Routing action to service 'mainThread' under router 'org.araneaframework.framework.router.St
-andardThreadServiceRouterService'
-02.06.06 13:33:20 DEBUG filter.StandardContinuationFilterService - Routing action to child service
-02.06.06 13:33:20 DEBUG filter.AjaxFilterService - AjaxFilterService found regions = null
-02.06.06 13:33:20 DEBUG container.StandardWidgetAdapterService - Translating action() call to widget update()/event()/process()/render() calls.
-02.06.06 13:33:20 DEBUG container.StandardWidgetContainerWidget - Routing event to widget 'root.flow.menu.flow.voladokInfo.form.null'
-02.06.06 13:33:20 WARN  core.Custom$CustomWidget - No widget found
-org.araneaframework.core.NoSuchWidgetException: No such widget 'null'
-        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:191)
-        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
-        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
-        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
-        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
-        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
-        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
-        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
-        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
-        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
-        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
-        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
-        at org.araneaframework.core.StandardWidget.event(StandardWidget.java:197)
-        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
-        at org.araneaframework.framework.container.StandardWidgetContainerWidget.event(StandardWidgetContainerWidget.java:54)
-        at org.araneaframework.core.BaseWidget$WidgetImpl.event(BaseWidget.java:69)
-...
-	 * */
   }
-  
+
   /**
    * A test action, invoked when button is pressed. It adds the values of 
    * formelements to message context, and they end up at the top of user screen

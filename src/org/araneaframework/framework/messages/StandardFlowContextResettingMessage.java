@@ -22,7 +22,6 @@ import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Message;
 import org.araneaframework.Widget;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
  * Message that sends resets the first flow context and starts a specified flow in it.
