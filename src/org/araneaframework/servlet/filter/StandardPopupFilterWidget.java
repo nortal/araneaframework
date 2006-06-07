@@ -82,6 +82,25 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
 
+  public String openAttached(Message startMessage, PopupWindowProperties properties, Widget caller) throws Exception {
+    String threadId = getRandomServiceId();
+    String topServiceId = (String) getTopServiceCtx().getCurrentId();
+
+    Service service = threadServiceFactory.buildService(getEnvironment());
+    startThreadPopupService(threadId, service);
+
+    if (startMessage != null)
+      startMessage.send(null, service);
+    
+    //add new, not yet opened popup to popup map
+    popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
+    allPopups.put(threadId, popups.get(threadId));
+    
+    log.debug("Popup service with identifier '" + threadId + "' was created.");
+    return threadId;
+  }
+
+  
   public String openDetached(Service service, PopupWindowProperties properties) throws Exception {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
