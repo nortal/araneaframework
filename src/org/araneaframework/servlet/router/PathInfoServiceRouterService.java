@@ -25,6 +25,9 @@ import org.araneaframework.framework.router.BaseServiceRouterService;
 import org.araneaframework.servlet.PathInfoServiceContext;
 import org.araneaframework.servlet.ServletInputData;
 
+/**
+ * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
+ */
 public class PathInfoServiceRouterService extends BaseServiceRouterService {
 
   protected Object getServiceId(InputData input) throws Exception {    

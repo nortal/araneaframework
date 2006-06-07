@@ -31,7 +31,18 @@
     <property name="defaultServiceId" value="application"/>
     <property name="serviceMap">
       <map>
-        <entry key="application" value-ref="araneaSessionRouter"/>
+        <entry key="application" value-ref="araneaPathInfoRouter"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.servlet.router.PathInfoServiceRouterService" id="araneaPathInfoRouter"
+        singleton="false">
+
+			<property name="defaultServiceId" value="pathInfoServiceId"/>
+      <property name="serviceMap">
+      <map>
+        <entry key="pathInfoServiceId" value-ref="araneaSessionRouter"/>
       </map>
     </property>
   </bean>
