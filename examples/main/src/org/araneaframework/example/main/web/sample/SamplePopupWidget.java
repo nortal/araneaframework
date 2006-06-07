@@ -33,7 +33,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 	public void handleEventCreateThread() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
 		ExampleMenuMessage message = new ExampleMenuMessage("Demos.#Simple.Simple_Form");
-		getPopupCtx().openAttached(message, new PopupWindowProperties(), this);
+		getPopupCtx().open(message, new PopupWindowProperties(), this);
 	}
 
 	public void handleEventOpenUrl() throws Exception {
@@ -48,6 +48,6 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		p.setHeight("600");
 		p.setWidth("800");
 		p.setScrollbars("yes");
-		getPopupCtx().openDetached(new LoginWidget(), p);
+		getPopupCtx().open(new LoginWidget(), p, this);
 	}
 }

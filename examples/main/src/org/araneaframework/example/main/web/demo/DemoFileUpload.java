@@ -19,7 +19,6 @@ package org.araneaframework.example.main.web.demo;
 import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.service.FileDownloaderService;
 import org.araneaframework.servlet.support.PopupWindowProperties;
@@ -102,7 +101,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		
 		PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
 		PopupWindowProperties p = new PopupWindowProperties();
-		popupContext.openDetached(service, p);
+		popupContext.open(service, p, null);
 	}
 
 	// INNER CLASSES

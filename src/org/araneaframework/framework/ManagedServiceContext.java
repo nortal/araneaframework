@@ -17,7 +17,6 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
-import org.araneaframework.Message;
 import org.araneaframework.Service;
 
 /**
@@ -42,9 +41,9 @@ public interface ManagedServiceContext extends Serializable {
    */
   public Service addService(Object id, Service service) throws Exception;
   
-  public Service getService(Object id);
+  //public Service getService(Object id);
   
-  public void send(Object id, Message message);
+  //public void send(Object id, Message message);
   
   /**
    * Closes the service under the key id.

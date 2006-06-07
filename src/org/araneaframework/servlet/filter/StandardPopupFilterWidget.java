@@ -67,7 +67,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   /* ************************************************************************************
    * PopupWindowContext interface methods
    * ************************************************************************************/
-  public String openDetached(Message startMessage, PopupWindowProperties properties) throws Exception {
+  public String open(Message startMessage, PopupWindowProperties properties) throws Exception {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
 
@@ -85,7 +85,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
 
-  public String openAttached(Message startMessage, PopupWindowProperties properties, Widget caller) throws Exception {
+  public String open(Message startMessage, PopupWindowProperties properties, Widget caller) throws Exception {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
 
@@ -106,7 +106,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
 
-  public String openDetached(Service service, PopupWindowProperties properties) throws Exception {
+  public String open(Service service, PopupWindowProperties properties, Widget caller) throws Exception {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
 
@@ -118,7 +118,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
   
-  public String openDetached(Widget flow, PopupWindowProperties properties) throws Exception {
+  public String open(Widget flow, PopupWindowProperties properties, Widget caller) throws Exception {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
     
@@ -147,7 +147,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     });
   }
 
-  public boolean closeDetached(String id) throws Exception {
+  public boolean close(String id) throws Exception {
     if (!allPopups.containsKey(id)) {
       log.warn("Attempt to close non-owned, unopened or already closed popup service with ID +'" + id + "'.");
       return false;

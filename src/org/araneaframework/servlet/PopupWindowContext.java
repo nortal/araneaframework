@@ -44,7 +44,7 @@ public interface PopupWindowContext extends Serializable {
    * @param caller - widget that is registered as opener of created thread.
    * @return
    */
-  public String openAttached(Message startMessage, PopupWindowProperties properties, Widget opener) throws Exception;
+  public String open(Message startMessage, PopupWindowProperties properties, Widget opener) throws Exception;
   
   /** 
    * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
@@ -52,7 +52,7 @@ public interface PopupWindowContext extends Serializable {
    * @param properties properties specifying behaviour and appearance of creatable popup window. 
    * @return ID of created service.
    */
-  public String openDetached(Service service, PopupWindowProperties properties, Widget opener) throws Exception;
+  public String open(Service service, PopupWindowProperties properties, Widget opener) throws Exception;
 
   /**
    * Creates a new thread, sends its first FlowContext request to open given flow.
@@ -60,7 +60,7 @@ public interface PopupWindowContext extends Serializable {
    * @param properties properties specifying behaviour and appearance of creatable popup window. 
    * @return ID of thread inside which flow was started.
    */
-  public String openDetached(Widget flow, PopupWindowProperties properties, Widget opener) throws Exception;  
+  public String open(Widget flow, PopupWindowProperties properties, Widget opener) throws Exception;  
   
   /** 
    * Opens given URL in a new popup window.
@@ -74,7 +74,7 @@ public interface PopupWindowContext extends Serializable {
    * @param id thread (popup) ID to close.
    * @return whether service with given thread id was closed. 
    */
-  public boolean closeDetached(String id) throws Exception;
+  public boolean close(String id) throws Exception;
   
   /**
    * Returns the widget that opened calling thread-level service (popup).

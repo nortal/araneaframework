@@ -141,7 +141,7 @@ public abstract class BaseServiceRouterService extends BaseService {
       return currentServiceId;
     }
     
-    public Object addService(Object id, Service service) throws Exception {
+    public Service addService(Object id, Service service) throws Exception {
       _addComponent(id, service, getChildEnvironment(id));
       return service;
     }
