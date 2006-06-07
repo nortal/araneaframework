@@ -29,12 +29,12 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
  * @author Taimo Peelo
  */
 
-public interface PopupWindowContext extends Serializable {
+public interface SessionThreadPopupContext extends Serializable {
   /** keys for accessing the popup maps from viewmodels */
-  public static final String POPUPS_KEY = "popupWindows";
+  public static final String POPUPS_KEY = "threadPopupWindows";
 
   /** closing key for popups, if window receives response containing that key, it should close and take serverside service with it. */
-  public static final String POPUPS_CLOSE_KEY = "popupClose";
+  public static final String POPUPS_CLOSE_KEY = "threadPopupClose";
   
   /**
    * Registers new thread-level service server-side and gives started service means of communicating with
@@ -62,19 +62,12 @@ public interface PopupWindowContext extends Serializable {
    */
   public String openDetached(Widget flow, PopupWindowProperties properties, Widget opener) throws Exception;  
   
-  /** 
-   * Opens given URL in a new popup window.
-   * @param url URL to be opened in the popup window
-   * @param properties properties specifying behaviour and appearance of creatable popup window. 
-   */
-  public void open(String url, PopupWindowProperties properties) throws Exception;
-
   /**
    * Closes the server side thread service (serving client side popup).
    * @param id thread (popup) ID to close.
    * @return whether service with given thread id was closed. 
    */
-  public boolean closeDetached(String id) throws Exception;
+  public boolean close(String id) throws Exception;
   
   /**
    * Returns the widget that opened calling thread-level service (popup).
