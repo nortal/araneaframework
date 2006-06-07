@@ -16,8 +16,6 @@
 
 package org.araneaframework.example.main.web;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.araneaframework.Environment;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.example.main.SecurityContext;
@@ -26,7 +24,6 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
  * This is root widget. It initializes MenuWidget with
- * TemplateEmptyWidget as first element.
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
