@@ -37,7 +37,7 @@ public abstract class TemplateBaseWidget extends StandardPresentationWidget {
   }
   
   protected PopupWindowContext getPopupCtx() {
-    return (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+    return (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
   }
   
   public GeneralDAO getGeneralDAO() {

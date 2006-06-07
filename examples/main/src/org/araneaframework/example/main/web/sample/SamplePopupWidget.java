@@ -19,7 +19,6 @@ package org.araneaframework.example.main.web.sample;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.LoginWidget;
 import org.araneaframework.example.main.web.menu.ExampleMenuMessage;
-import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
@@ -28,34 +27,27 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
 public class SamplePopupWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
 		super.init();
-
 		setViewSelector("sample/samplePopup");
 	}
 
 	public void handleEventCreateThread() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
-		
 		ExampleMenuMessage message = new ExampleMenuMessage("Demos.#Simple.Simple_Form");
-		
-		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-		popupCtx.openAttached(message, new PopupWindowProperties(), this);
+		getPopupCtx().openAttached(message, new PopupWindowProperties(), this);
 	}
-	
+
 	public void handleEventOpenUrl() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
-
-		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-		popupCtx.open("http://www.slashdot.org", new PopupWindowProperties());
+		getPopupCtx().open("http://www.slashdot.org", new PopupWindowProperties());
 	}
 	
 	public void handleEventOpenNewCustomFlow() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
 
-		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
 		PopupWindowProperties p = new PopupWindowProperties();
 		p.setHeight("600");
 		p.setWidth("800");
 		p.setScrollbars("yes");
-		popupCtx.openDetached(new LoginWidget(), p);
+		getPopupCtx().openDetached(new LoginWidget(), p);
 	}
 }
