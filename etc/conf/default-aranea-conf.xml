@@ -15,7 +15,7 @@
     <property name="filterChain">     
       <list>
         <ref bean="araneaCriticalErrorHandler"/>
-        <ref bean="araneaReadFileFilter"/>
+        <!--ref bean="araneaReadFileFilter"/ -->
         <ref bean="araneaMainStatisticFilter"/>
         <ref bean="araneaRequestEncodingFilter"/>
         <ref bean="araneaFileUploadFilter"/>
@@ -38,12 +38,11 @@
 
   <bean class="org.araneaframework.servlet.router.PathInfoServiceRouterService" id="araneaPathInfoRouter"
         singleton="false">
-
 			<property name="defaultServiceId" value="pathInfoServiceId"/>
       <property name="serviceMap">
-      <map>
-        <entry key="pathInfoServiceId" value-ref="araneaSessionRouter"/>
-      </map>
+	      <map>
+   	     <entry key="pathInfoServiceId" value-ref="araneaSessionRouter"/>
+   	   </map>
     </property>
   </bean>
 
