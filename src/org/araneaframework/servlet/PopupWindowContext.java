@@ -53,14 +53,6 @@ public interface PopupWindowContext extends Serializable {
    * @return ID of created service.
    */
   public String open(Service service, PopupWindowProperties properties, Widget opener);
-
-  /**
-   * Creates a new thread, sends its first FlowContext request to open given flow.
-   * @param flow new flow to open.
-   * @param properties properties specifying behaviour and appearance of creatable popup window. 
-   * @return ID of thread inside which flow was started.
-   */
-  public String open(Widget flow, PopupWindowProperties properties, Widget opener);  
 	/** 
 	 * Opens given URL in a new popup window.
 	 * @param url URL to be opened in the popup window

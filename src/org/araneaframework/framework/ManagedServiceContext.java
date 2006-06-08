@@ -39,7 +39,7 @@ public interface ManagedServiceContext extends Serializable {
   /**
    * Adds a child service service with the specified id.
    */
-  public Service addService(Object id, Service service) throws Exception;
+  public Service addService(Object id, Service service);
   
   public Service getService(Object id);
   

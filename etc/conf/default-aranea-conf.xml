@@ -128,20 +128,27 @@
         <!-- ref bean="clientStatePreserver" / -->
         <ref bean="araneaMessagingFilter"/>
         <ref bean="araneaContexts"/>
-        <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter"
-            singleton="false">
-            <property name="threadServiceFactory">
-                <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" singleton="false">
-                    <property name="beanId" value="araneaThreadFilters"/>
-                </bean>
-             </property>
-        </bean>
+        <ref bean="araneaPopupFilter"/>
         <bean class="org.araneaframework.ioc.spring.SpringOptionalFilterWidget" singleton="false">
           <property name="beanId" value="customWidgetFilters"/>
-        </bean>           
+        </bean>        
       </list>
     </property>
   </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardPopupFilterWidget" id="araneaPopupFilter" singleton="false">
+    <property name="threadServiceFactory">
+      <bean class="org.araneaframework.ioc.spring.SpringServiceFactory" singleton="false">
+        <property name="beanId">
+          <idref bean="araneaThreadFilters"/>
+        </property>
+      </bean>
+    </property>
+  </bean>
+  
+  <bean class="org.araneaframework.core.ApplicationRootWidgetFactory" id="applicationRootWidgetFactory" singleton="false">
+    <property name="root" ref="araneaMainCallStack"/>
+  </bean>  
   
   <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="araneaWidgetContainer"
     singleton="false">

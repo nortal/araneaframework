@@ -25,7 +25,11 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 
 /**
- * Message that sends resets the first flow context and starts a specified flow in it.
+ * Message that:
+ * <ul> 
+ *   <li>resets the first encountered {@link org.araneaframework.framework.FlowContext}</li>
+ *   <li>starts a specified flow in it</li>
+ * </ul>
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class StandardFlowContextResettingMessage implements Message {
@@ -36,28 +40,28 @@ public class StandardFlowContextResettingMessage implements Message {
   }
   
   public final void send(Object id, Component component){
-    if (!(component instanceof FlowContext))
+    if (!(component instanceof FlowContext)) {
       component._getComponent().propagate(this);
-    else
+    }
+    else {
       try {
         this.execute(component);
       }
       catch (Exception e) {
         throw ExceptionUtil.uncheckException(e);
       }
+    }
   }
 
   protected void execute(Component component) throws Exception {
-    if (component instanceof FlowContext) {
-      final FlowContext fCtx = (FlowContext) component;
-      
-      fCtx.reset(new EnvironmentAwareCallback() {
-        public void call(Environment env) throws Exception {
-          FlowContext f = (FlowContext)env.getEntry(FlowContext.class);
-          if (flow != null)
-            f.start(flow, null, null);
-        }
-      });
-    }
+    final FlowContext fCtx = (FlowContext) component;
+  
+    fCtx.reset(new EnvironmentAwareCallback() {
+      public void call(Environment env) throws Exception {
+        FlowContext f = (FlowContext)env.getEntry(FlowContext.class);
+        if (flow != null)
+          f.start(flow, null, null);
+      }
+    });
   }
 }

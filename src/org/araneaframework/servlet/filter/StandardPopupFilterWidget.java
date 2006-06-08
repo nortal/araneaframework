@@ -36,7 +36,6 @@ import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
-import org.araneaframework.framework.messages.StandardFlowContextResettingMessage;
 import org.araneaframework.framework.router.StandardThreadServiceRouterService;
 import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.servlet.PopupServiceInfo;
@@ -53,13 +52,14 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   /** Maps of popups where keys are service IDs(==popup IDs) and values 
    * <code>StandardPopupFilterWidget.PopupServiceInfo</code>. Used for rendering popups.*/ 
   protected Map popups = new HashMap();
-  /** Used to keep track of popups that have been opened from thread and not yet explicitly closed. */
+  /** Used to keep track of popups that have been opened from thread and not yet known to be closed. */
   protected Map allPopups = new HashMap();
   /** Widget that opened this popup. Only applicable to threads. */
   protected Widget opener = null;
 
+  /** When creating new popup with unspecified service, popup is acquired from the factory. */
   protected ServiceFactory threadServiceFactory;
-
+  
   public void setThreadServiceFactory(ServiceFactory factory) {
     this.threadServiceFactory = factory;
   }
@@ -118,23 +118,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
   
-  public String open(Widget flow, PopupWindowProperties properties, Widget caller) {
-    String threadId = getRandomServiceId();
-    String topServiceId = (String) getTopServiceCtx().getCurrentId();
-    
-    Service service = threadServiceFactory.buildService(getEnvironment());
-    startThreadPopupService(threadId, service);
-
-    if (flow != null) {
-      new StandardFlowContextResettingMessage(flow).send(null, service);
-    }
-
-    popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
-    allPopups.put(threadId, popups.get(threadId));
-
-    return threadId;
-  }
-
   public void open(final String url, final PopupWindowProperties properties) {
     popups.put(url, new PopupServiceInfo() {
       public PopupWindowProperties getPopupProperties() {
@@ -256,7 +239,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       }
     }
   }
-  
+
   public class StandardPopupServiceInfo implements PopupServiceInfo {
     private String topServiceId;
     private String threadId;
