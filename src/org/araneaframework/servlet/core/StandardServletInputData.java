@@ -137,8 +137,8 @@ public class StandardServletInputData implements ServletOverridableInputData {
     return extension;
   }
 
-	public OutputData getCurrentOutputData() {
-		OutputData output = (OutputData)req.getAttribute(StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+	public OutputData getOutputData() {
+		OutputData output = (OutputData)req.getAttribute(OutputData.OUTPUT_DATA_KEY);
 		if (output == null)
 			throw new NoCurrentOutputDataSetException("No OutputData set in the request.");
 		else

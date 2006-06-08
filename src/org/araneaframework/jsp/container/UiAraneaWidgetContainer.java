@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.Custom;
+import org.araneaframework.core.Custom.CustomWidget;
 import org.araneaframework.jsp.util.UiUpdateRegionUtil;
 import org.araneaframework.servlet.filter.StandardJspFilterService;
 
@@ -28,7 +29,7 @@ public class UiAraneaWidgetContainer implements UiWidgetContainer {
   protected Custom.CustomWidget rootWidget;
   private StandardJspFilterService.JspConfiguration conf;
   
-  public UiAraneaWidgetContainer(Custom.CustomWidget rootWidget, StandardJspFilterService.JspConfiguration conf) {
+  public UiAraneaWidgetContainer(CustomWidget rootWidget, StandardJspFilterService.JspConfiguration conf) {
     this.rootWidget = rootWidget;
     this.conf = conf;
   }

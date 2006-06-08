@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
+package org.araneaframework.core.util;
 
-package org.araneaframework.servlet.filter.importer;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
-import org.araneaframework.OutputData;
-import org.araneaframework.servlet.ServletOutputData;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
- *
+ * This utility class contains methods for managing exceptions.
+ * 
+ * @author Jevgeni kabanov (ekabanov@webmedia.ee)
  */
-public abstract class DefaultFileImporter implements FileImporter {
-	private long cacheHoldingTime = 3600000;
-	
-	public void setHeaders(OutputData output) {
-		((ServletOutputData)output).getResponse().setHeader("Cache-Control", "max-age=" + (cacheHoldingTime / 1000));
-  	((ServletOutputData)output).getResponse().setDateHeader ("Expires", System.currentTimeMillis () + cacheHoldingTime);
-	}
+public class ExceptionUtil {
+  public static RuntimeException uncheckException(Exception e) {
+    if (e instanceof RuntimeException)
+      throw (RuntimeException) e;
+    
+    throw new NestableRuntimeException(e);
+  }
 }

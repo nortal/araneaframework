@@ -44,7 +44,7 @@ public interface PopupWindowContext extends Serializable {
    * @param caller - widget that is registered as opener of created thread.
    * @return
    */
-  public String open(Message startMessage, PopupWindowProperties properties, Widget opener) throws Exception;
+  public String open(Message startMessage, PopupWindowProperties properties, Widget opener);
   
   /** 
    * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
@@ -52,7 +52,7 @@ public interface PopupWindowContext extends Serializable {
    * @param properties properties specifying behaviour and appearance of creatable popup window. 
    * @return ID of created service.
    */
-  public String open(Service service, PopupWindowProperties properties, Widget opener) throws Exception;
+  public String open(Service service, PopupWindowProperties properties, Widget opener);
 
   /**
    * Creates a new thread, sends its first FlowContext request to open given flow.
@@ -60,15 +60,13 @@ public interface PopupWindowContext extends Serializable {
    * @param properties properties specifying behaviour and appearance of creatable popup window. 
    * @return ID of thread inside which flow was started.
    */
-  public String open(Widget flow, PopupWindowProperties properties, Widget opener) throws Exception;  
-  
-  /** 
-   * Opens given URL in a new popup window.
-   * @param url URL to be opened in the popup window
-   * @param properties properties specifying behaviour and appearance of creatable popup window. 
-   */
-  public void open(String url, PopupWindowProperties properties) throws Exception;
-
+  public String open(Widget flow, PopupWindowProperties properties, Widget opener);  
+	/** 
+	 * Opens given URL in a new popup window.
+	 * @param url URL to be opened in the popup window
+	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
+	 */
+	public void open(String url, PopupWindowProperties properties);
   /**
    * Closes the server side thread service (serving client side popup).
    * @param id thread (popup) ID to close.

@@ -18,12 +18,18 @@ package org.araneaframework.core;
 
 import org.araneaframework.Component;
 import org.araneaframework.Message;
+import org.araneaframework.core.util.ExceptionUtil;
 
 public abstract class BroadcastMessage implements Message {
-  public final void send(Object id, Component component) throws Exception {
+  public final void send(Object id, Component component) {
 	component._getComponent().propagate(this);	  
 	  
-    this.execute(component);        
+    try {
+      this.execute(component);
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }        
   }
   
   protected abstract void execute(Component component) throws Exception;

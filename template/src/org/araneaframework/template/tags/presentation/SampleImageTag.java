@@ -23,7 +23,7 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.presentation.UiStdImageBaseTag;
-import org.araneaframework.servlet.filter.importer.ImageFileImporter;
+import org.araneaframework.servlet.filter.importer.FileImporter;
 
 /**
  * SAMPLE image tag.
@@ -55,7 +55,7 @@ public class SampleImageTag extends UiStdImageBaseTag {
   }
   
 	public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {
-		String imageUrl = ImageFileImporter.getImportString(src);
+		String imageUrl = FileImporter.getImportString(src);
 		writeImage(out, imageUrl, width, height, alt, styleClass, title);
 	}
 	
@@ -67,7 +67,7 @@ public class SampleImageTag extends UiStdImageBaseTag {
     if (info == null)
        throw new UiException("Missing image description with code '" + code + "'");
    
-    String imageUrl = ImageFileImporter.getImportString(info.src);
+    String imageUrl = FileImporter.getImportString(info.src);
     writeImage(out, imageUrl, info.width, info.height, info.alt, styleClass, null);
   }
 

@@ -159,15 +159,4 @@ public class CompanyListWidget extends TemplateBaseWidget {
       return getGeneralDAO().getAll(CompanyMO.class);
     }      
   }
-
-  private class BackendCompanyListDataProvider extends BackendListDataProvider {
-    protected BackendCompanyListDataProvider() {
-      // Constructor with argument useCache set to false.
-      super(false);
-    }
-
-    protected ListItemsData getItemRange(ListQuery query) throws Exception {
-      return null;
-    }
-  }
 }

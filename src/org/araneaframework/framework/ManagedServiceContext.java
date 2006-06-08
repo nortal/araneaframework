@@ -48,5 +48,5 @@ public interface ManagedServiceContext extends Serializable {
   /**
    * Closes the service under the key id.
    */
-  public void close(Object id) throws Exception;
+  public void close(Object id);
 }

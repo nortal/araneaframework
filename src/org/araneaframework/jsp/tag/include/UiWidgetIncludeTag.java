@@ -23,7 +23,6 @@ import org.araneaframework.core.Custom;
 import org.araneaframework.jsp.tag.context.UiWidgetContextTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
-import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 
 /**
  * Widget include tag.
@@ -55,7 +54,7 @@ public class UiWidgetIncludeTag extends UiIncludeBaseTag {
 		
 		OutputData output = 
 			(OutputData) pageContext.getRequest().getAttribute(
-					StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+					OutputData.OUTPUT_DATA_KEY);
 		
 		try {
 			if (page == null) {

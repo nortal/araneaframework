@@ -34,8 +34,6 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardLocalizationFilterService extends BaseFilterService implements LocalizationContext {
-  public static final String RESOURCE_BUNDLE_KEY = "org.araneaframework.framework.filter.StandardLocalizationFilterService.ResourceBundle";
-  
   private static final Logger log = Logger.getLogger(StandardLocalizationFilterService.class);
   private String resourceBundleName;
   private Locale currentLocale;

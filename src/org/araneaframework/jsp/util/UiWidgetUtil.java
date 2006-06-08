@@ -23,7 +23,6 @@ import org.araneaframework.OutputData;
 import org.araneaframework.core.Custom;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.container.UiWidgetContainer;
-import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
@@ -38,7 +37,7 @@ public class UiWidgetUtil {
 		//Get widget id and view model from context
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
-          StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
+          OutputData.OUTPUT_DATA_KEY);
 		
 		//Widget name given
 		if (widgetId != null)

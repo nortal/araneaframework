@@ -24,6 +24,7 @@ import org.araneaframework.Composite;
 import org.araneaframework.Environment;
 import org.araneaframework.Message;
 import org.araneaframework.Viewable;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * A component with support for composite.
@@ -41,8 +42,13 @@ public abstract class StandardComponent extends BaseComponent implements Custom.
   }
   
   protected class ViewableImpl implements Viewable.Interface {
-    public Object getViewModel() throws Exception {
-      return StandardComponent.this.getViewModel();
+    public Object getViewModel() {
+      try {
+        return StandardComponent.this.getViewModel();
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
     }
   }
   
@@ -83,7 +89,7 @@ public abstract class StandardComponent extends BaseComponent implements Custom.
    * Adds a component with the specified key. Allready initilized component cannot be added.
    * Duplicate keys not allowed. The child is initialized with the Environment env.
    */
-  public void addComponent(Object key, Component child, Environment env) throws Exception {
+  public void addComponent(Object key, Component child, Environment env) {
     _addComponent(key, child, env);
   }
   
@@ -93,7 +99,7 @@ public abstract class StandardComponent extends BaseComponent implements Custom.
    * <code>getChildComponentEnvironment()</code>. 
    * @throws Exception
    */
-  public void addComponent(Object key, Component child) throws Exception {
+  public void addComponent(Object key, Component child) {
     _addComponent(key, child, getChildComponentEnvironment());
   }
   
@@ -105,7 +111,7 @@ public abstract class StandardComponent extends BaseComponent implements Custom.
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) throws Exception {
+  public void relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
     _relocateComponent(parent, newEnv, keyFrom, keyTo);
   }
   
@@ -116,32 +122,32 @@ public abstract class StandardComponent extends BaseComponent implements Custom.
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */  
-  public void relocateComponent(Composite parent, Object keyFrom, Object keyTo) throws Exception {
+  public void relocateComponent(Composite parent, Object keyFrom, Object keyTo) {
     _relocateComponent(parent, getChildComponentEnvironment(), keyFrom, keyTo);
   }
 
   /**
    * Enables the component with the specified key. Only a disabled componet can be enabled.
    */
-  public void enableComponent(Object key) throws Exception {
+  public void enableComponent(Object key) {
     _enableComponent(key);
   }
 
   /**
    * Disables the component with the specified key. Only a enabled component can be disabled.
    */
-  public void disableComponent(Object key) throws Exception {
+  public void disableComponent(Object key) {
     _disableComponent(key);
   }    
   
   /**
    * Removes the component with the specified key.
    */
-  public void removeComponent(Object key) throws Exception {
+  public void removeComponent(Object key) {
     _removeComponent(key);
   }  
   
-  protected void propagate(Message message) throws Exception {   
+  protected void propagate(Message message) {   
     _propagate(message);
   }
   
@@ -149,7 +155,7 @@ public abstract class StandardComponent extends BaseComponent implements Custom.
     return super.getEnvironment();
   }
   
-  public Environment getChildEnvironment() throws Exception {
+  public Environment getChildEnvironment() {
     return getChildComponentEnvironment();
   }
   //*******************************************************************
@@ -158,7 +164,7 @@ public abstract class StandardComponent extends BaseComponent implements Custom.
   /**
    * Returns the view model. Usually overridden.
    */  
-  protected Object getViewModel() {
+  protected Object getViewModel() throws Exception {
     return new ViewModel();
   }
   

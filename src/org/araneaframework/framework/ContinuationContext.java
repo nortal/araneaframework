@@ -29,5 +29,5 @@ public interface ContinuationContext extends Serializable {
   /**
    * Restore control and finishes the continuation service.
    */
-  public void finish() throws Exception;
+  public void finish();
 }

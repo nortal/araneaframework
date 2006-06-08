@@ -6,7 +6,7 @@
   	<ui:viewPort>	
   	<html>
     	<head>
-        <ui:importScripts includeTemplate="true"/>
+        <ui:importScripts/>
             
         <title>Hello Name Example</title>
       </head>			

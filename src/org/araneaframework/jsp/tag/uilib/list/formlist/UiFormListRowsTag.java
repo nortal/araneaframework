@@ -33,7 +33,7 @@ import org.araneaframework.uilib.list.formlist.FormRow;
  *   name = "formListRows"
  *   body-content = "JSP"
  *   description = "Iterating tag that gives access to each row and row form on the UiLib editable list current page.
-					The editable row is accessible as "editableRow" variable."
+					The editable row is accessible as "formRow" variable."
  */
 public class UiFormListRowsTag extends UiListRowsBaseTag {
   
