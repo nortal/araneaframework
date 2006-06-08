@@ -141,6 +141,10 @@ public abstract class BaseServiceRouterService extends BaseService {
       return currentServiceId;
     }
     
+    public Service getService(Object id) {
+      return (Service)_getChildren().get(id);
+    }
+    
     public Service addService(Object id, Service service) throws Exception {
       _addComponent(id, service, getChildEnvironment(id));
       return service;
