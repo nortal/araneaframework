@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework.router;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.log4j.Logger;
@@ -27,7 +28,9 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.NoSuchServiceException;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ManagedServiceContext;
+import org.araneaframework.servlet.util.ClientStateUtil;
 
 /**
  * A router service consists of multiple child services, they form a service map.
@@ -88,11 +91,13 @@ public abstract class BaseServiceRouterService extends BaseService {
     if (currentServiceId == null)
       currentServiceId = defaultServiceId;
 
+    ClientStateUtil.put((String)getServiceKey(), currentServiceId.toString(), output);
+    
     if (currentServiceId != null && _getChildren().containsKey(currentServiceId)) {
       output.pushAttribute(getServiceKey(), currentServiceId);
       
       try {
-        log.debug("Routing request through service '"+currentServiceId+"'.");
+        log.debug("Routing action to service '"+currentServiceId+"' under router '" + getClass().getName() + "'");
         ((Service) _getChildren().get(currentServiceId))._getService().action(path, input, output);
       }
       finally {
@@ -100,12 +105,16 @@ public abstract class BaseServiceRouterService extends BaseService {
       }
     }
     else {
-      throw new NoSuchServiceException("Non-existent service " + currentServiceId);
+      throw new NoSuchServiceException("Service '" + currentServiceId +"' was not found under router '" + getClass().getName() + "'!");
     }
   }
   
   // Callbacks 
-  protected abstract Environment getChildEnvironment(Object serviceId) throws Exception;
+  protected Environment getChildEnvironment(Object serviceId) throws Exception {
+    Map entries = new HashMap();    
+    entries.put(ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
+    return new StandardEnvironment(getEnvironment(), entries);
+  }
   
   /**
    * Returns the service id of the request. By default returns the parameter value of the request
@@ -132,7 +141,11 @@ public abstract class BaseServiceRouterService extends BaseService {
       return currentServiceId;
     }
     
-    public Object addService(Object id, Service service) throws Exception {
+    public Service getService(Object id) {
+      return (Service)_getChildren().get(id);
+    }
+    
+    public Service addService(Object id, Service service) throws Exception {
       _addComponent(id, service, getChildEnvironment(id));
       return service;
     }

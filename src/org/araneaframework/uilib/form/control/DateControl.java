@@ -76,14 +76,15 @@ public class DateControl extends TimestampControl {
   //* INTERNAL METHODS
   //*********************************************************************  	
 
-  protected void init() {    
-  		if (!confOverridden) {
-  			String confFormat = (String) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DATE_FORMAT);    
-  			if (confFormat != null) dateTimeFormat = confFormat;
+  protected void init() throws Exception {
+    super.init();
+  	if (!confOverridden) {
+  	  String confFormat = (String) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DATE_FORMAT);    
+  	  if (confFormat != null) dateTimeFormat = confFormat;
 	    
-	    	String confOutputFormat = (String) getConfiguration().getEntry(ConfigurationContext.DEFAULT_DATE_OUTPUT_FORMAT);    
-	    	if (confOutputFormat != null) currentSimpleDateTimeFormat = new SimpleDateFormat(confOutputFormat);
-  		}
+	  String confOutputFormat = (String) getConfiguration().getEntry(ConfigurationContext.DEFAULT_DATE_OUTPUT_FORMAT);    
+	  if (confOutputFormat != null) currentSimpleDateTimeFormat = new SimpleDateFormat(confOutputFormat);
+    }
   }	 
   
 	protected Object fromRequest(String parameterValue) {

@@ -93,4 +93,27 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
   protected String toResponse(Object controlValue) {    
     return currentSimpleDateTimeFormat.format((Timestamp) controlValue);
   }
+  
+  /**
+   * Returns {@link ViewModel}.
+   * @return {@link ViewModel}.
+   */
+  public Object getViewModel() {
+    return new ViewModel();
+  }
+  
+  public class ViewModel extends EmptyStringNullableControl.ViewModel {
+    private SimpleDateFormat currentSimpleDateTimeFormat;
+    
+    /**
+     * Takes an outer class snapshot.     
+     */
+    public ViewModel() {
+      this.currentSimpleDateTimeFormat = TimestampControl.this.currentSimpleDateTimeFormat;
+    }
+    
+    public SimpleDateFormat getCurrentSimpleDateTimeFormat() {
+      return this.currentSimpleDateTimeFormat;
+    }
+  }
 }
