@@ -104,7 +104,7 @@ public class StandardServletOutputData implements ServletOutputData, MimeOutputD
       attributes.put(key, stack); 
     }
     
-    stack.addFirst(value);  
+    stack.addFirst(value);
     currentTopAttributes.put(key, value);
   }
   

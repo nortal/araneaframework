@@ -6,7 +6,7 @@
   
   <bean id="araneaApplicationRoot" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
     singleton="false">
-    <property name="childService" ref="araneaApplicationFilters"/>
+    <property name="childService" ref="araneaPathInfoRouter"/>
   </bean>
   
   <bean id="araneaApplicationFilters" singleton="false"
@@ -15,7 +15,6 @@
     <property name="filterChain">     
       <list>
         <ref bean="araneaCriticalErrorHandler"/>
-        <!--ref bean="araneaReadFileFilter"/ -->
         <ref bean="araneaMainStatisticFilter"/>
         <ref bean="araneaRequestEncodingFilter"/>
         <ref bean="araneaFileUploadFilter"/>
@@ -38,10 +37,12 @@
 
   <bean class="org.araneaframework.servlet.router.PathInfoServiceRouterService" id="araneaPathInfoRouter"
         singleton="false">
-			<property name="defaultServiceId" value="pathInfoServiceId"/>
+			<property name="defaultServiceId" value="application"/>
+      
       <property name="serviceMap">
 	      <map>
-   	     <entry key="pathInfoServiceId" value-ref="araneaSessionRouter"/>
+   	     <entry key="application" value-ref="araneaSessionRouter"/>
+   	     <entry key="fileimporter" value-ref="araneaReadFile"/>
    	   </map>
     </property>
   </bean>
@@ -182,8 +183,8 @@
     id="responseHeaderFilter" singleton="false">
   </bean>
   
-  <bean class="org.araneaframework.servlet.filter.StandardServletFileImportFilterService" 
-    id="araneaReadFileFilter" singleton="false">
+  <bean class="org.araneaframework.servlet.filter.StandardServletFileImportService" 
+    id="araneaReadFile" singleton="false">
   </bean>
   
   <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"

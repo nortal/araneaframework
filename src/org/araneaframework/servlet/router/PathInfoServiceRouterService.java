@@ -75,10 +75,11 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 				serviceId = path;
 			}
 		}
+		serviceId = serviceId != null && serviceId.length() == 0 ? null : serviceId;
 		
 		return new String[]{serviceId, pathInfo};
 	}
-  
+
 	protected Environment getChildEnvironment(Object serviceId) throws Exception {
 		Map entries = new HashMap();    
 		entries.put(PathInfoServiceContext.class, new ServiceRouterContextImpl(serviceId));
