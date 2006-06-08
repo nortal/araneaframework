@@ -57,11 +57,10 @@ import org.araneaframework.uilib.support.FlowCreator;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class MenuWidget extends TemplateMenuWidget  {
-	public MenuWidget(Widget topWidget) throws Exception {
-		super(topWidget);
-	}
-  
-  
+  public MenuWidget(Widget topWidget) throws Exception {
+	super(topWidget);
+  }
+
   protected void init() throws Exception {
     super.init();
     

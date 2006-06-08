@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.special.MainExampleMessageFactory;
 import org.araneaframework.example.main.web.menu.ExampleMenuMessage;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 
@@ -47,7 +48,6 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		p.setHeight("600");
 		p.setWidth("800");
 		p.setScrollbars("yes");
-		//getFlowCtx().start(new PopupFlowWrapper(PopupFlowWidget(Widget)),configurator,callback);
-		//getPopupCtx().open(new Login, p, this);
+		getPopupCtx().open(new MainExampleMessageFactory().buildMessage(new SamplePopupWidget()), p, this);
 	}
 }

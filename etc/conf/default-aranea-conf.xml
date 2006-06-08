@@ -146,10 +146,6 @@
     </property>
   </bean>
   
-  <bean class="org.araneaframework.core.ApplicationRootWidgetFactory" id="applicationRootWidgetFactory" singleton="false">
-    <property name="root" ref="araneaMainCallStack"/>
-  </bean>  
-  
   <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="araneaWidgetContainer"
     singleton="false">
     <property name="root" ref="araneaMainCallStack"/>
