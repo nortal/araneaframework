@@ -16,10 +16,13 @@
 
 package org.araneaframework.example.main.web.sample;
 
+import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.special.MainExampleMessageFactory;
 import org.araneaframework.example.main.web.menu.ExampleMenuMessage;
+import org.araneaframework.framework.FlowContext;
 import org.araneaframework.servlet.support.PopupWindowProperties;
+import org.araneaframework.uilib.core.PopupFlowPseudoWidget;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -48,6 +51,30 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		p.setHeight("600");
 		p.setWidth("800");
 		p.setScrollbars("yes");
-		getPopupCtx().open(new MainExampleMessageFactory().buildMessage(new SamplePopupWidget()), p, this);
+		PopupFlowPseudoWidget pfw =
+			//XXX: refactor the monster
+			new PopupFlowPseudoWidget(new SamplePopupWidget(), p, new MainExampleMessageFactory(), getPopupCtx(), this);
+		getFlowCtx().start(pfw, new SampleConfigurator(), new SampleHandler());
+	}
+	
+	public void handleEventEndFlow() {
+		getFlowCtx().finish("Funky end!");
+	}
+
+	class SampleConfigurator implements FlowContext.Configurator {
+		public void configure(Widget comp) throws Exception {
+			System.out.println("-------------------");
+			System.out.println("Configurator running");
+		}
+	}
+	
+	class SampleHandler implements FlowContext.Handler {
+		public void onCancel() throws Exception {
+			System.out.println("This was cancelled ");
+		}
+
+		public void onFinish(Object returnValue) throws Exception {
+			System.out.println("This returned result " + returnValue);
+		}
 	}
 }

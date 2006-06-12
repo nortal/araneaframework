@@ -9,7 +9,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.web.RootWidget;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.uilib.core.PopupFlowWidget.MessageFactory;
+import org.araneaframework.uilib.core.PopupFlowPseudoWidget.MessageFactory;
 
 public class MainExampleMessageFactory implements MessageFactory, Serializable {
 	public Message buildMessage(Widget widget) {

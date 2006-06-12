@@ -20,8 +20,8 @@ import java.io.Serializable;
 import org.araneaframework.Component;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Custom;
 import org.araneaframework.core.Custom.CustomWidget;
+import org.araneaframework.uilib.core.PopupFlowPseudoWidget;
 
 /**
  * This context provides support for flow navigation and nesting. A flow is started using 
@@ -39,6 +39,12 @@ public interface FlowContext extends Serializable {
    * when the subflow ends execution.
    */
   public void start(Widget flow, Configurator configurator, Handler handler);
+  
+  /**
+   * Starts a new subflow in a popup window.
+   * TODO: more javadoc.
+   */
+  public void start(PopupFlowPseudoWidget flow, Configurator configurator, Handler handler);
 
   /**
    * Destroys the current flow and starts a new one. When the new flow will end execution it will return control

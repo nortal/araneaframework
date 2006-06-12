@@ -35,6 +35,7 @@ import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.uilib.core.PopupFlowPseudoWidget;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -68,6 +69,8 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
    * The top callable widget.
    */
   protected Widget top;
+  protected FlowContext.Configurator topConfigurator;
+  protected FlowContext.Handler topHandler;
   
   private Map nestedEnvironmentEntries = new HashMap();
   private Map nestedEnvEntryStacks = new HashMap();
@@ -84,6 +87,15 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     this.top = topWidget;
   }
   
+  /**
+   * TODO: javadoc
+   */
+  public StandardFlowContainerWidget(Widget topWidget, FlowContext.Configurator configurator, FlowContext.Handler handler) {
+    this.top = topWidget;
+    this.topConfigurator = configurator;
+    this.topHandler = handler;
+  }
+  
   public StandardFlowContainerWidget() {
   }
   
@@ -95,6 +107,14 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     this.top = topWidget;
   }
   
+  public void setTopConfigurator(FlowContext.Configurator topConfigurator) {
+    this.topConfigurator = topConfigurator;
+  }
+
+  public void setTopHandler(FlowContext.Handler topHandler) {
+    this.topHandler = topHandler;
+  }
+
   public void start(Widget flow, Configurator configurator, Handler handler) {
     flow = decorateCallableWidget((Widget) flow);
     CallFrame frame = makeCallFrame((Widget) flow, configurator, handler);
@@ -118,6 +138,21 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
         throw ExceptionUtil.uncheckException(e);
       }
     }    
+  }
+
+  public void start(PopupFlowPseudoWidget flow, Configurator configurator, Handler handler) {
+    flow.getPopupContext().open(flow.getMessage(), flow.getPopupWindowProperties(), flow.getOpener());
+    flow.setConfigurator(configurator);
+    flow.setHandler(handler);
+
+    if (configurator != null) {
+	  try {
+        configurator.configure(flow.getWidget());
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
+    }
   }
   
   public void replace(Widget flow, Configurator configurator) {
@@ -267,7 +302,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     super.init();
             
     if (top != null)
-      start(top, null, null);
+      start(top, topConfigurator, topHandler);
   }
   
   protected void destroy() throws Exception {
