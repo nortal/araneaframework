@@ -11,7 +11,5 @@ public class PopupFlowContainerWidget extends StandardFlowContainerWidget {
   public PopupFlowContainerWidget(PopupFlowPseudoWidget pseudoWidget) {
     super(pseudoWidget.getWidget());
     this.pseudoWidget = pseudoWidget; 
-    this.topConfigurator = pseudoWidget.getConfigurator();
-    this.topHandler = pseudoWidget.getHandler();
   }
 }

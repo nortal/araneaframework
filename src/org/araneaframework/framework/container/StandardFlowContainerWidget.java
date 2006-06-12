@@ -69,8 +69,6 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
    * The top callable widget.
    */
   protected Widget top;
-  protected FlowContext.Configurator topConfigurator;
-  protected FlowContext.Handler topHandler;
   
   private Map nestedEnvironmentEntries = new HashMap();
   private Map nestedEnvEntryStacks = new HashMap();
@@ -86,16 +84,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   public StandardFlowContainerWidget(Widget topWidget) {
     this.top = topWidget;
   }
-  
-  /**
-   * TODO: javadoc
-   */
-  public StandardFlowContainerWidget(Widget topWidget, FlowContext.Configurator configurator, FlowContext.Handler handler) {
-    this.top = topWidget;
-    this.topConfigurator = configurator;
-    this.topHandler = handler;
-  }
-  
+
   public StandardFlowContainerWidget() {
   }
   
@@ -105,14 +94,6 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   
   public void setTop(Widget topWidget) {
     this.top = topWidget;
-  }
-  
-  public void setTopConfigurator(FlowContext.Configurator topConfigurator) {
-    this.topConfigurator = topConfigurator;
-  }
-
-  public void setTopHandler(FlowContext.Handler topHandler) {
-    this.topHandler = topHandler;
   }
 
   public void start(Widget flow, Configurator configurator, Handler handler) {
@@ -302,7 +283,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     super.init();
             
     if (top != null)
-      start(top, topConfigurator, topHandler);
+      start(top, null, null);
   }
   
   protected void destroy() throws Exception {
