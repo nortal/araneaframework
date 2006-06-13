@@ -33,7 +33,7 @@ public class UiStdFormTextDisplayTag extends UiFormElementBaseDisplayTag {
   
   /**
    */
-  protected int after(Writer out) throws Exception {
+  protected int doEndTag(Writer out) throws Exception {
     assertControlType("DisplayControl");
     
     DisplayControl.ViewModel viewModel = (DisplayControl.ViewModel) controlViewModel;
@@ -51,7 +51,7 @@ public class UiStdFormTextDisplayTag extends UiFormElementBaseDisplayTag {
     if (getStyleClass() != null)
       UiUtil.writeEndTag(out, "span");
     
-    super.after(out);    
+    super.doEndTag(out);    
     return EVAL_PAGE;
   }
 }
