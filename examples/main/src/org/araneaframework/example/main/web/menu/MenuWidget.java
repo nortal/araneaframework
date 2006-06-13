@@ -40,6 +40,7 @@ import org.araneaframework.example.main.web.misc.EventErrorWidget;
 import org.araneaframework.example.main.web.misc.InitErrorWidget;
 import org.araneaframework.example.main.web.misc.RedirectingWidget;
 import org.araneaframework.example.main.web.misc.RenderErrorWidget;
+import org.araneaframework.example.main.web.misc.TestWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.person.PersonListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
@@ -134,6 +135,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       errorMenu.addMenuItem(new MenuItem("Error_on_event", EventErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("Error_on_render", RenderErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("#Redirecting", RedirectingWidget.class));
+      errorMenu.addMenuItem(new MenuItem("#test", TestWidget.class));
     }   
 		
 		return result;

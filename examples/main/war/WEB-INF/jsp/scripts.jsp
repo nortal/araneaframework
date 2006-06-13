@@ -4,8 +4,8 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:ui="http://araneaframework.org/tag-library/template"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
-	version="1.2"
-	>
+	version="1.2">
+	
 		<ui:importStyles file="styles/_styles_global.css" media="all"/>
 		<ui:importStyles file="styles/_styles_new.css" media="screen" />
 		<ui:importStyles file="styles/_styles_screen.css" media="screen"/>

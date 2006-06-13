@@ -97,3 +97,27 @@ DIV.msg-ok { padding: 0.8em 1em; border: 2px solid #66b51a; margin-bottom: 1em; 
 #error #cont1 { min-height: 100%; margin-bottom: -22px; background: none !important; }
 #error #footer { padding: 0; }
 #error #content { float: none; width: 960px; margin: 0 15px; padding: 15px 0 37px 0; color: #545454; }
+
+/* Autocomplete */
+div.autocompletediv {
+	position:absolute;
+	width:250px;
+	background-color:white;
+	border:1px solid #888;
+	margin:0px;
+	padding:0px;
+}
+div.autocompletediv ul {
+	list-style-type:none;
+	margin:0px;
+	padding:0px;
+}
+div.autocompletediv ul li.selected { background-color: #ffb;}
+div.autocompletediv ul li {
+	list-style-type:none;
+	display:block;
+	margin:0;
+	padding:2px;
+	height:15px;
+	cursor:pointer;
+}
