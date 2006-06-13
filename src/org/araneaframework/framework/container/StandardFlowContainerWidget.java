@@ -35,7 +35,8 @@ import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.uilib.core.PopupFlowPseudoWidget;
+import org.araneaframework.servlet.PopupWindowContext;
+import org.araneaframework.uilib.core.PopupFlowWidget;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -119,21 +120,6 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
         throw ExceptionUtil.uncheckException(e);
       }
     }    
-  }
-
-  public void start(PopupFlowPseudoWidget flow, Configurator configurator, Handler handler) {
-    flow.getPopupContext().open(flow.getMessage(), flow.getPopupWindowProperties(), flow.getOpener());
-    flow.setConfigurator(configurator);
-    flow.setHandler(handler);
-
-    if (configurator != null) {
-	  try {
-        configurator.configure(flow.getWidget());
-      }
-      catch (Exception e) {
-        throw ExceptionUtil.uncheckException(e);
-      }
-    }
   }
   
   public void replace(Widget flow, Configurator configurator) {

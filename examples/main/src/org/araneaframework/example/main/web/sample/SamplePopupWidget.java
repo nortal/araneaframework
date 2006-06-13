@@ -16,18 +16,21 @@
 
 package org.araneaframework.example.main.web.sample;
 
+import org.apache.log4j.Logger;
 import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.special.MainExampleMessageFactory;
 import org.araneaframework.example.main.web.menu.ExampleMenuMessage;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.servlet.support.PopupWindowProperties;
-import org.araneaframework.uilib.core.PopupFlowPseudoWidget;
+import org.araneaframework.uilib.core.PopupFlowWidget;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class SamplePopupWidget extends TemplateBaseWidget {
+	private static final Logger log = Logger.getLogger(SamplePopupWidget.class);
+	
 	protected void init() throws Exception {
 		super.init();
 		setViewSelector("sample/samplePopup");
@@ -51,30 +54,31 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		p.setHeight("600");
 		p.setWidth("800");
 		p.setScrollbars("yes");
-		PopupFlowPseudoWidget pfw =
-			//XXX: refactor the monster
-			new PopupFlowPseudoWidget(new SamplePopupWidget(), p, new MainExampleMessageFactory(), getPopupCtx(), this);
+		PopupFlowWidget pfw = new PopupFlowWidget(new SamplePopupWidget(), p, new MainExampleMessageFactory());
 		getFlowCtx().start(pfw, new SampleConfigurator(), new SampleHandler());
 	}
 	
 	public void handleEventEndFlow() {
-		getFlowCtx().finish("Funky end!");
+		getFlowCtx().finish("Funky end for SamplePopupWidget!");
 	}
 
 	class SampleConfigurator implements FlowContext.Configurator {
 		public void configure(Widget comp) throws Exception {
-			System.out.println("-------------------");
-			System.out.println("Configurator running");
+			log.debug("Configurator running");
 		}
 	}
 	
 	class SampleHandler implements FlowContext.Handler {
 		public void onCancel() throws Exception {
-			System.out.println("This was cancelled ");
+			log.debug("--------------------------------- ");
+			log.debug("SampleHandler handling cancel ");
+			log.debug("--------------------------------- ");
 		}
 
 		public void onFinish(Object returnValue) throws Exception {
-			System.out.println("This returned result " + returnValue);
+			log.debug("--------------------------------- ");
+			log.debug("SampleHandler handling finish(" + returnValue + ")");
+			log.debug("--------------------------------- ");
 		}
 	}
 }
