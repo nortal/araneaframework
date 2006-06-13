@@ -18,17 +18,12 @@ package org.araneaframework.uilib.list.structure;
 
 import java.util.Comparator;
 import java.util.Locale;
-
-import org.apache.log4j.Logger;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 import org.araneaframework.uilib.list.util.comparator.ComparableComparator;
 import org.araneaframework.uilib.list.util.comparator.NullComparator;
 
 
 public abstract class ComparableType {
-	
-	private static final Logger log = Logger.getLogger(ComparableType.class);
-
 	private Comparator comparator;
 	private Class valueType;
 	

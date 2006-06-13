@@ -20,13 +20,9 @@ import org.araneaframework.InputData;
 import org.araneaframework.Path;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.constraint.BaseConstraint;
-import org.araneaframework.uilib.form.constraint.Constraint;
 import org.araneaframework.uilib.form.control.BaseControl;
-import org.araneaframework.uilib.form.control.Control;
 import org.araneaframework.uilib.form.converter.BaseConverter;
-import org.araneaframework.uilib.form.converter.Converter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
-import org.araneaframework.uilib.form.data.Data;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ErrorUtil;
 
@@ -333,6 +329,7 @@ public class FormElement extends GenericFormElement {
     private Control.ViewModel control;
     private String label;
     private boolean valid;
+    private Object value;
     
     /**
      * Takes an outer class snapshot.     
@@ -342,6 +339,7 @@ public class FormElement extends GenericFormElement {
       this.control = (Control.ViewModel) FormElement.this.getControl()._getViewable().getViewModel();
       this.label = FormElement.this.getLabel();
       this.valid = FormElement.this.isValid();
+      this.value = FormElement.this.getData() != null ? FormElement.this.getData().getValue() : null;
     }    
     
     /**
@@ -366,6 +364,10 @@ public class FormElement extends GenericFormElement {
      */
     public boolean isValid() {
       return valid;
+    }
+
+    public Object getValue() {
+      return value;
     }
   }
 }
