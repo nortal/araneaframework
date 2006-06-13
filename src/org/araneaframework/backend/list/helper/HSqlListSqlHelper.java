@@ -17,10 +17,14 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
+
 import org.araneaframework.backend.list.model.ListQuery;
 
 
 public class HSqlListSqlHelper extends ListSqlHelper {
+	
+	private static final Long ZERO = new Long(0);
+	private static final Long MAX = new Long(Long.MAX_VALUE);
 
 	protected SqlStatement statement = new SqlStatement();
 
@@ -45,15 +49,28 @@ public class HSqlListSqlHelper extends ListSqlHelper {
 	}
 
 	protected SqlStatement getRangeSqlStatement() {
-		StringBuffer query = new StringBuffer();
-		query.append("SELECT LIMIT ? ? ");
-		query.append(this.statement.getQuery());
+		SqlStatement result;
+		
+		if (isShowAll()) {
+			result = new SqlStatement("SELECT " + this.statement.getQuery());
+			result.addAllParams(this.statement.getParams());
+		} else {
+			StringBuffer query = new StringBuffer();
+			query.append("SELECT LIMIT ? ? ");
+			query.append(this.statement.getQuery());
 
-		SqlStatement temp = new SqlStatement(query.toString());
-		temp.addParam(this.itemRangeStart);
-		temp.addParam(this.itemRangeCount);
-		temp.addAllParams(this.statement.getParams());
-		return temp;
+			result = new SqlStatement(query.toString());
+			result.addParam(this.itemRangeStart);
+			result.addParam(this.itemRangeCount);
+			result.addAllParams(this.statement.getParams());
+		}		
+		
+		return result;
+	}
+	
+	protected boolean isShowAll() {
+		return this.itemRangeStart == null || ZERO.equals(this.itemRangeStart)
+			&& (this.itemRangeCount == null || MAX.equals(this.itemRangeCount));
 	}
 
 	/**
