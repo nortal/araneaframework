@@ -74,7 +74,7 @@ public class MapUtil {
 			Object value = entry.getValue();
 			
 			if (value instanceof Map) {
-				result.putAll(convertToPlainMap((Map) value, key + MAP_KEY_SEPARATOR));
+				result.putAll(convertToPlainMap((Map) value, keyPrefix + key + MAP_KEY_SEPARATOR));
 			} else {
 				result.put(keyPrefix + key, value);
 			}						

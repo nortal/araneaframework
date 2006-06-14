@@ -21,7 +21,7 @@ import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.importer.ImageFileImporter;
+import org.araneaframework.servlet.filter.importer.FileImporter;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.TimeControl;
 
@@ -38,8 +38,9 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	public final static Long DEFAULT_DATE_INPUT_SIZE = new Long(11);
 	public final static Long DEFAULT_TIME_INPUT_SIZE = new Long(5);
 	
-	
 	protected String onChangePrecondition;
+	protected String calendarAlignment;
+	protected String calendarIconClass = "middle";
 	
 	/**
 	 * @jsp.attribute
@@ -49,6 +50,16 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	 */
 	public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
 		this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
+	}
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right)." 
+	 */
+	public void setCalendarAlignment(String calendarAlignment)throws JspException {
+		this.calendarAlignment = (String) evaluate("calendarAlignment", calendarAlignment, String.class);
 	}
 
 	/**
@@ -87,29 +98,28 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			UiUtil.writeAttribute(out, "disabled", "true");
 		}
 		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeEventAttributeForUiEvent(out, "onchange", this.id, "onChanged", validateOnEvent, onChangePrecondition, 
+			writeEventAttributeForUiEvent(out, "onchange", this.derivedId, "onChanged", validateOnEvent, onChangePrecondition, 
 					updateRegionNames);
 		}
 		
 		UiUtil.writeAttributes(out, attributes);    
 		UiUtil.writeCloseStartEndTag_SS(out);
 		
-		//<a href="javascript:;"><img src="gfx/ico_calendar.gif" id="start1Date_button_id" title="Ava kalender" alt="Ava kalender" class="ico"/></a>
 		if (!disabled) {
 			UiUtil.writeOpenStartTag(out, "a");
 			UiUtil.writeAttribute(out, "href", "javascript:;");
-			UiUtil.writeCloseStartTag(out);
+			UiUtil.writeCloseStartTag_SS(out);
 
 			String calendarImgId = id + CALENDAR_BUTTON_ID_SUFFIX;
 			UiUtil.writeOpenStartTag(out, "img");
 			out.write(" src=\"");
-			out.write(ImageFileImporter.getImportString("gfx/ico_calendar.gif"));
+			out.write(FileImporter.getImportString("gfx/ico_calendar.gif"));
 			out.write("\" ");
 			UiUtil.writeAttribute(out, "id", calendarImgId);
-			UiUtil.writeAttribute(out, "class", "ico");
-			UiUtil.writeCloseStartTag(out);
+			UiUtil.writeAttribute(out, "class", calendarIconClass);
+			UiUtil.writeCloseStartTag_SS(out);
 	
-			UiUtil.writeEndTag(out, "a");
+			UiUtil.writeEndTag_SS(out, "a");
 		
 			writeCalendarScript(out, id, "%d.%m.%Y");
 		}
@@ -128,6 +138,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	 * As you see, the <code>input</code> tag outputs its ID so that the <code>label</code> tag
 	 * could reference it. 
 	 */
+	// XXX: not used ANYWHERE
 	protected void writeTimeInput(
 			Writer out, 
 			String id,
@@ -154,7 +165,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			UiUtil.writeAttribute(out, "disabled", "true");
 		}
 		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeEventAttributeForUiEvent(out, "onchange", this.id, "onChanged", validateOnEvent, onChangePrecondition,
+			writeEventAttributeForUiEvent(out, "onchange", this.derivedId, "onChanged", validateOnEvent, onChangePrecondition,
 					updateRegionNames);
 		}
 		
@@ -180,9 +191,11 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 		script.append("\",\nsingleClick : true, ");
 		script.append("\nstep: 1, ");
 		script.append("\nfirstDay: 1");
+		if (calendarAlignment != null)
+			script.append(",\nalign:\"").append(calendarAlignment).append("\"");
 		script.append("\n});");
-		
+
 		out.write(script.toString());
-		UiUtil.writeEndTag(out, "script");
+		UiUtil.writeEndTag_SS(out, "script");
 	}
 }

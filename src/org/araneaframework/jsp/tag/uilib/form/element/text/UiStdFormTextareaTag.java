@@ -33,98 +33,83 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  * @jsp.tag
  *   name = "textarea"
  *   body-content = "JSP"
- *   description = "Form text input field (textarea), represents UiLib "TextareaControl"."
+ *   description = "Form text input field (textarea), represents UiLib 'TextareaControl'."
  */
 public class UiStdFormTextareaTag extends UiFormElementBaseTag {
-	protected Long cols;
-	protected Long rows;
-	
-	protected void init() {
-		super.init();
-		cols = null;
-		rows = null;
-		styleClass = "aranea-textarea";
-	}
+  protected Long cols;
+  protected Long rows;
 
-	//
-	// Attributes
-	//  
+  {
+    baseStyleClass = "aranea-textarea";
+  }
+  
+  protected int doEndTag(Writer out) throws Exception {
+    assertControlType("TextareaControl");    
+    
+    String name = this.getScopedFullFieldId();     
+    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
+    
+    UiUtil.writeOpenStartTag(out, "textarea");
+    UiUtil.writeAttribute(out, "id", name);
+    UiUtil.writeAttribute(out, "name", name);
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    
+    UiUtil.writeAttribute(out, "cols", cols);
+    UiUtil.writeAttribute(out, "rows", rows);
+    UiUtil.writeAttribute(out, "label", localizedLabel);
+    UiUtil.writeAttribute(out, "tabindex", tabindex);
+    if (viewModel.isDisabled())
+      UiUtil.writeAttribute(out, "disabled", "true");
+    UiUtil.writeAttributes(out, attributes);
+    UiUtil.writeCloseStartTag(out);
+    UiUtil.writeEscaped(out, viewModel.getSimpleValue());
+    UiUtil.writeEndTag_SS(out, "textarea");
+    if (!StringUtils.isBlank(accessKey))
+      UiUtil.writeAttribute(out, "accesskey", accessKey);
+    if (validate) 
+      writeValidationScript(out, viewModel);
+    
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false" 
-	 *   description = "Number of visible columns."
-	 */
-	public void setCols(String size) throws JspException {
-		this.cols = (Long)evaluate("cols", size, Long.class);
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false" 
-	 *   description = "Number of visible rows."
-	 */
-	public void setRows(String size) throws JspException {
-		this.rows = (Long)evaluate("rows", size, Long.class);
-	}
-	
-	//
-	// Implementation
-	//  
-	
-	protected int after(Writer out) throws Exception {
-		// Type check
-		assertControlType("TextareaControl");		
-		
-		// Prepare
-		String name = this.getScopedFullFieldId(); 		
-		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
-		
-		// Write
-		UiUtil.writeOpenStartTag(out, "textarea");
-		UiUtil.writeAttribute(out, "id", name);
-		UiUtil.writeAttribute(out, "name", name);
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		
-		UiUtil.writeAttribute(out, "cols", cols);
-		UiUtil.writeAttribute(out, "rows", rows);
-		UiUtil.writeAttribute(out, "label", localizedLabel);
-		UiUtil.writeAttribute(out, "tabindex", tabindex);
-		if (viewModel.isDisabled())
-			UiUtil.writeAttribute(out, "disabled", "true");
-		UiUtil.writeAttributes(out, attributes);
-		UiUtil.writeCloseStartTag(out);
-		UiUtil.writeEscaped(out, viewModel.getSimpleValue());
-		UiUtil.writeEndTag_SS(out, "textarea");
-		if (!StringUtils.isBlank(accessKey))
-			UiUtil.writeAttribute(out, "accesskey", accessKey);
-		if (validate) writeValidationScript(out, viewModel);
-		
-		// Continue
-		super.after(out);
-		return EVAL_PAGE;
-	}
-	
-	
-	/**
-	 * Write validation javascript
-	 * @author Konstantin Tretyakov
-	 */
-	protected void writeValidationScript(Writer out, StringArrayRequestControl.ViewModel viewModel) throws IOException {
-		UiUtil.writeStartTag(out, "script");
-		out.write("uiAddTextAreaValidator(");
-		UiUtil.writeScriptString(out, getScopedFullFieldId());
-		out.write(", ");
-		UiUtil.writeScriptString(out, localizedLabel);
-		out.write(", ");
-		out.write(viewModel.isMandatory() ? "true" : "false");
-		out.write(");\n");
-		UiUtil.writeEndTag_SS(out, "script");
-	}    
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false" 
+   *   description = "Number of visible columns."
+   */
+  public void setCols(String size) throws JspException {
+    this.cols = (Long)evaluate("cols", size, Long.class);
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false" 
+   *   description = "Number of visible rows."
+   */
+  public void setRows(String size) throws JspException {
+    this.rows = (Long)evaluate("rows", size, Long.class);
+  }
+  
+  /**
+   * Write validation javascript
+   * @author Konstantin Tretyakov
+   */
+  protected void writeValidationScript(Writer out, StringArrayRequestControl.ViewModel viewModel) throws IOException {
+    UiUtil.writeStartTag(out, "script");
+    out.write("uiAddTextAreaValidator(");
+    UiUtil.writeScriptString(out, getScopedFullFieldId());
+    out.write(", ");
+    UiUtil.writeScriptString(out, localizedLabel);
+    out.write(", ");
+    out.write(viewModel.isMandatory() ? "true" : "false");
+    out.write(");\n");
+    UiUtil.writeEndTag_SS(out, "script");
+  }    
 }
-
-
-
-
