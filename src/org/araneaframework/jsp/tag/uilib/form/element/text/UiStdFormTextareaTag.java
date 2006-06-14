@@ -38,6 +38,10 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 public class UiStdFormTextareaTag extends UiFormElementBaseTag {
   protected Long cols;
   protected Long rows;
+
+  {
+    baseStyleClass = "aranea-textarea";
+  }
   
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("TextareaControl");    

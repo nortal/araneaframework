@@ -41,6 +41,7 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 	protected boolean labelBefore = false;
 	
 	public UiStdFormRadioSelectTag() {
+		baseStyleClass = "aranea-radioselect";
 		setHasElementContextSpan(false);
 	}
 	

@@ -37,6 +37,10 @@ public class UiStdButtonTag extends UiButtonBaseTag {
 
   protected String renderMode;
 
+  {
+    baseStyleClass = "aranea-button";
+  }
+
   public UiStdButtonTag() {
     renderMode = UiStdButtonTag.RENDER_BUTTON;
   }

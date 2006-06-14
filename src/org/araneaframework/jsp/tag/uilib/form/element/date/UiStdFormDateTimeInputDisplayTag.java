@@ -30,6 +30,9 @@ import org.araneaframework.uilib.form.control.DateTimeControl;
  *   description = "Form date-time display field, represents UiLib "DateTimeControl"."
  */
 public class UiStdFormDateTimeInputDisplayTag extends UiFormElementBaseDisplayTag {
+	{
+		baseStyleClass = "aranea-datetime-display";
+	}
 	protected int doEndTag(Writer out) throws Exception {
 		assertControlType("DateTimeControl");	
 		

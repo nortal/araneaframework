@@ -195,7 +195,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   protected String getRequestURL() {
-    return ((HttpServletRequest)((ServletInputData)getCurrentInput()).getRequest()).toString();
+    return ((HttpServletRequest)((ServletInputData)getCurrentInput()).getRequest()).getRequestURL().toString();
   }
 
   public class StandardPopupServiceInfo implements PopupServiceInfo {
@@ -218,7 +218,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
     public String toURL() {
       StringBuffer url = new StringBuffer(requestUrl != null ? requestUrl : "");
-      url = new StringBuffer().append('?').append((StandardTopServiceRouterService.TOP_SERVICE_KEY + "=")).append(topServiceId);
+      url.append('?').append((StandardTopServiceRouterService.TOP_SERVICE_KEY + "=")).append(topServiceId);
       if (threadId != null) {
         url.append("&" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=");
         url.append(threadId);

@@ -28,6 +28,10 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
  *   description = "Form float display field, represents UiLib "FloatControl"."
  */
 public class UiStdFormFloatInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
+  {
+    baseStyleClass = "aranea-float-display";
+  }
+
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("FloatControl");
     return super.doEndTag(out);
