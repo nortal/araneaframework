@@ -28,5 +28,5 @@ import org.araneaframework.Component;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public interface ServletServiceAdapterComponent extends Component, Serializable {
-  public void service(HttpServletRequest request, HttpServletResponse response) throws Exception;
+  public void service(HttpServletRequest request, HttpServletResponse response);
 }

@@ -73,7 +73,7 @@ public class PersonMO implements GeneralMO {
 	}
 
 	/**
-	 * @hibernate.property not-null="false"
+	 * @hibernate.property not-null="false" type="date"
 	 */
 	public Date getBirthdate() {
 		return birthdate;
