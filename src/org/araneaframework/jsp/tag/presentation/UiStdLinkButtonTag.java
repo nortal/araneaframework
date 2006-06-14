@@ -30,6 +30,10 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Represents a link with an onClick JavaScript action."
  */
 public class UiStdLinkButtonTag extends UiButtonBaseTag {
+  {
+    baseStyleClass = "aranea-link-button"; 
+  }
+  
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 

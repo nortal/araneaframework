@@ -36,6 +36,10 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 	protected String onChangePrecondition;
 
+	{
+		baseStyleClass = "aranea-checkbox";
+	}
+
 	protected int doEndTag(Writer out) throws Exception {
 		assertControlType("CheckboxControl");		
 
