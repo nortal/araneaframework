@@ -34,8 +34,6 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardLocalizationFilterService extends BaseFilterService implements LocalizationContext {
-  public static final String RESOURCE_BUNDLE_KEY = "org.araneaframework.framework.filter.StandardLocalizationFilterService.ResourceBundle";
-  
   private static final Logger log = Logger.getLogger(StandardLocalizationFilterService.class);
   private String resourceBundleName;
   private Locale currentLocale;
@@ -45,7 +43,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
    * language name in {@link Locale}.
    */
   public void setLanguageName(String languageName) {
-    this.currentLocale = new Locale(languageName);
+    setLocale(new Locale(languageName));
   }
   
   /**
@@ -61,6 +59,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   }
 
   public void setLocale(Locale currentLocale) {
+    log.debug("Current locale switched to:" + currentLocale);
     this.currentLocale = currentLocale;
   }
   
@@ -73,8 +72,6 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     entries.put(LocalizationContext.class, this);
     
     childService._getComponent().init(new StandardEnvironment(getChildEnvironment(), entries));
-    
-    log.debug("Synchronizing filter service initialized.");
   }
   
   /** 
@@ -82,7 +79,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
    * and the caller's class loader.
    */
   public ResourceBundle getResourceBundle(Locale locale) {
-    return ResourceBundle.getBundle(resourceBundleName, locale);
+     return ResourceBundle.getBundle(resourceBundleName, locale, Thread.currentThread().getContextClassLoader());
   }
 
   public String localize(String key) {
