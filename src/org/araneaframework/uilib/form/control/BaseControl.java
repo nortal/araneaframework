@@ -150,6 +150,14 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
     this.disabled = disabled;
   }
   
+  /**
+   * Returns whether the control is disabled.
+   * @return whether the control is disabled
+   */
+  public boolean isDisabled() {
+    return disabled;
+  }
+  
   //*********************************************************************
   //* ABSTRACT METHODS
   //*********************************************************************
