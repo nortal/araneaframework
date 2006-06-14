@@ -225,7 +225,7 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
   }
   
   /**
-   * Callback called when <code>input(InputData)</code> is invoked.
+   * Callback called when <code>update(InputData)</code> is invoked.
    */
   protected void handleUpdate(InputData input) throws Exception {}
   
@@ -239,7 +239,7 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
    * a {@link NoSuchEventListenerException}, otherwise calls the respective listeners. 
    */
   protected void handleEvent(InputData input) throws Exception {
-    Object eventId = getEventId(input);        
+    Object eventId = getEventId(input);
     List listener = (List)eventListeners.get(eventId);  
     
     log.debug("Delivering event '" + eventId +"' to widget '" + getClass().getName() + "'");
