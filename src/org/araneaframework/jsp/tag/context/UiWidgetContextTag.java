@@ -19,9 +19,8 @@ package org.araneaframework.jsp.tag.context;
 import java.io.Writer;
 import java.util.StringTokenizer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.Standard;
+import org.araneaframework.core.Custom;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiWidgetUtil;
 import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
@@ -35,14 +34,20 @@ import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
  *   description = "Initializes the widget context."
  */
 public class UiWidgetContextTag extends UiBaseTag {
-  public final static String WIDGET_CONTEXT_ID_KEY_REQUEST = "contextWidgetId";
-  public final static String WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST = "contextWidget";
-
-  private String widgetId;
-  private Standard.StandardWidgetInterface widget;
-  private Standard.WidgetViewModel viewModel;
-  private OutputData output;
+  public final static String WIDGET_CONTEXT_ID_KEY = "contextWidgetId";
+  public final static String WIDGET_CONTEXT_VIEW_MODEL_KEY = "contextWidget";
+ 
+  private Custom.CustomWidget widget;
+  private Custom.WidgetViewModel viewModel;
+  private OutputData output = null;
+  
   private int pathLength = 0;
+
+  private String fullId;
+  
+  //Attributes
+  
+  private String id;
 
   /**
    * @jsp.attribute
@@ -51,16 +56,16 @@ public class UiWidgetContextTag extends UiBaseTag {
 	 *   description = "Widget id."
    */
   public void setId(String widgetId) throws JspException {
-    this.widgetId = (String) evaluateNotNull("widgetId", widgetId, String.class);
+    this.id = (String) evaluateNotNull("widgetId", widgetId, String.class);
   }
 
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
 
     output = (OutputData) pageContext.getRequest().getAttribute(
         StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
-    if (widgetId != null) {
-      StringTokenizer tokenizer = new StringTokenizer(widgetId, ".");
+    if (id != null) {
+      StringTokenizer tokenizer = new StringTokenizer(id, ".");
 
       pathLength = tokenizer.countTokens();
       if (pathLength == -1) pathLength = 0;
@@ -72,30 +77,19 @@ public class UiWidgetContextTag extends UiBaseTag {
     }
 
     widget = UiWidgetUtil.getWidgetFromContext(null, pageContext);
-    viewModel = (Standard.WidgetViewModel) widget._getViewable().getViewModel();
-    widgetId = UiWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
+    viewModel = (Custom.WidgetViewModel) widget._getViewable().getViewModel();
+    fullId = UiWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
 
-    pushAttribute(WIDGET_CONTEXT_ID_KEY_REQUEST, widgetId, PageContext.REQUEST_SCOPE);
-    pushAttribute(WIDGET_CONTEXT_VIEW_MODEL_KEY_REQUEST, viewModel, PageContext.REQUEST_SCOPE);
+    addContextEntry(WIDGET_CONTEXT_ID_KEY, fullId);
+    addContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY, viewModel);
 
     return EVAL_BODY_INCLUDE;
   }
-
-  protected int after(Writer out) throws Exception {
+  
+  public void doFinally() {
     for (int i = 0; i < pathLength; i++)
       output.popScope();
 
-    super.after(out);
-    return EVAL_PAGE;
-  }
-
-  protected void init() {
-    super.init();
-
-    widgetId = null;
-    widget = null;
-    viewModel = null;
-    output = null;
-    pathLength = 0;
+    super.doFinally();
   }
 }

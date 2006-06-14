@@ -16,8 +16,10 @@
 
 package org.araneaframework.uilib.list.structure.filter.column;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
@@ -93,9 +95,6 @@ public abstract class RangeColumnFilter extends ComparableType implements Column
 		if (this.endFilterInfoKey == null) {
 			throw new RuntimeException("End FilterInfo key must be provided"); 
 		}
-		if (this.startFilterInfoKey.equals(this.endFilterInfoKey)) {
-			throw new RuntimeException("Start and End FilterInfo keys must be different"); 
-		}
 	}
 	
 	public Expression buildExpression(Map filterInfo) {
@@ -109,10 +108,18 @@ public abstract class RangeColumnFilter extends ComparableType implements Column
 		}
 		
 		Expression columnExpr = new VariableExpression(this.columnId);
-		Expression startValueExpr = startValue != null ? new ValueExpression(startValue) : null;
-		Expression endValueExpr = endValue != null ? new ValueExpression(endValue) : null;
+		Expression startValueExpr = startValue != null ? new ValueExpression(convertStartValue(startValue)) : null;
+		Expression endValueExpr = endValue != null ? new ValueExpression(convertEndValue(endValue)) : null;
 		return buildAction(columnExpr, startValueExpr, endValueExpr); 
 	}
+	
+	protected Object convertStartValue(Object value) {
+		return value;
+	}
+	
+	protected Object convertEndValue(Object value) {
+		return value;
+	}	
 	
 	protected abstract Expression buildAction(Expression var, Expression startValue, Expression endValue);
 	
@@ -164,4 +171,59 @@ public abstract class RangeColumnFilter extends ComparableType implements Column
 		}
 	}
 	
+	// Left non-strict and right strict 	
+	private static class RightStrict extends RangeColumnFilter {
+		private static final long serialVersionUID = 1L;
+		public RightStrict(String columnId) {
+			super(columnId);
+		}		
+		public RightStrict() {
+			super();
+		}		
+		protected Expression buildAction(Expression var, Expression startValue, Expression endValue) {
+			AndExpression expr = new AndExpression();
+			if (startValue != null) {
+				expr.add(new OrExpression().add(
+						new GreaterThanExpression(var, startValue, getComparator())).add(
+								new ComparedEqualsExpression(var, startValue, getComparator())));
+			}
+			if (endValue != null) {
+				expr.add(new LowerThanExpression(var, endValue, getComparator()));
+			}
+			return expr;
+		}
+	}
+	
+	public static class DateNonStrict extends RightStrict {
+		private static final long serialVersionUID = 1L;		
+		public DateNonStrict(String columnId) {
+			super(columnId);
+		}		
+		public DateNonStrict() {
+			super();
+		}
+		protected Object convertEndValue(Object value) {
+			return addDays((Date) value, getLocale(), 1);
+		}
+	}
+	
+	public static class DateStrict extends RightStrict {
+		private static final long serialVersionUID = 1L;		
+		public DateStrict(String columnId) {
+			super(columnId);
+		}		
+		public DateStrict() {
+			super();
+		}
+		protected Object convertStartValue(Object value) {
+			return addDays((Date) value, getLocale(), 1);
+		}
+	}
+	
+	protected static Date addDays(Date date, Locale locale, int days) {
+		Calendar cal = locale != null ? Calendar.getInstance(locale) : Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_MONTH, days);			
+		return cal.getTime();
+	}
 }
