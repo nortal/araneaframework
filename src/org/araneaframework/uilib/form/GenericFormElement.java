@@ -201,8 +201,8 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
 	public abstract void setDisabled(boolean disabled);
   
   /**
-   * Returns wether the element is disabled.
-   * @return wether the element is disabled.
+   * Returns whether the element is disabled.
+   * @return whether the element is disabled.
    */
 	public abstract boolean isDisabled();
     
@@ -219,7 +219,7 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    * Converts the element value from control to data item
    * @throws Exception 
    */
-  protected abstract void convertInternal() throws Exception;    
+  protected abstract void convertInternal() throws Exception;
   
   /**
    * Validates the element.

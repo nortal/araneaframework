@@ -114,6 +114,12 @@ public interface Control extends Widget, Viewable {
   public void setDisabled(boolean disabled);
   
   /**
+   * Returns whether the control is disabled.
+   * @return whether the control is disabled
+   */
+  public boolean isDisabled();
+  
+  /**
    * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
    *
    */
