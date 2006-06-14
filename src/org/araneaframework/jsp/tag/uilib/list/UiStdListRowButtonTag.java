@@ -29,6 +29,9 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Represents an HTML form button."
  */
 public class UiStdListRowButtonTag extends UiListRowButtonBaseTag {
+  {
+    baseStyleClass = "aranea-button";
+  }
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);                

@@ -37,6 +37,10 @@ import org.araneaframework.uilib.form.control.FileUploadControl;
 public class UiStdFormFileUploadTag extends UiFormElementBaseTag {
   protected Long size = null;
 
+  {
+    baseStyleClass = "aranea-file-upload";
+  }
+  
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("FileUploadControl");
 

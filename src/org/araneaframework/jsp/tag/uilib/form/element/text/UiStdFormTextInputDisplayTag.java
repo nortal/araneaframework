@@ -28,6 +28,9 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
  *   description = "Form text display field, represents UiLib "TextControl"."
  */
 public class UiStdFormTextInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
+	{
+		baseStyleClass = "aranea-text-display";
+	}
 
 	protected int doEndTag(Writer out) throws Exception {
 		assertControlType("TextControl");
