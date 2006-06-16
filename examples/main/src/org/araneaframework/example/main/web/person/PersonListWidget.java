@@ -19,7 +19,10 @@ package org.araneaframework.example.main.web.person;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.araneaframework.backend.list.model.ListItemsData;
+import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.business.data.PersonListDAO;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
@@ -28,6 +31,7 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
@@ -157,4 +161,14 @@ public class PersonListWidget extends TemplateBaseWidget {
 			return getGeneralDAO().getAll(PersonMO.class);
 		}  	
 	}
+  
+  private class TemplatePersonListBackendDataProvider extends BackendListDataProvider {
+    protected TemplatePersonListBackendDataProvider() {
+      super(false);
+    }
+    
+    protected ListItemsData getItemRange(ListQuery query) throws Exception {
+      return ((PersonListDAO) getBeanFactory().getBean("personListDAO")).getItems(query);
+    }
+  }
 }

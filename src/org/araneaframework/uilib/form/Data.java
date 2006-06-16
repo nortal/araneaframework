@@ -114,7 +114,6 @@ public class Data implements java.io.Serializable {
    * {@link #isStateChanged()}. 
    */
   public void markBaseState() {
-  	//TODO: maybe deep copy?
   	markedBaseValue = value;
   }
   
