@@ -29,6 +29,7 @@ import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
  * @author Oleg Mürk
  */
 public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInterface {
+	protected String style = null;
 	protected String styleClass = null;
 	protected String baseStyleClass = null;
 
@@ -54,7 +55,21 @@ public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInter
 			attributes.put(name, evaluate("value", value, Object.class));
 	}
 
-	// Styles 
+	// Styles
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false" 
+	 *   description = "Inline style for HTML tag."
+	 */
+	public void setStyle(String style) throws JspException {
+		this.style = (String) evaluate("style", style, String.class);
+	}
+	
+	public String getStyle() throws JspException {
+		return this.style;
+	}
+	
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
