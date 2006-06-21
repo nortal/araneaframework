@@ -132,14 +132,14 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
   public boolean close(String id) {
     if (!allPopups.containsKey(id)) {
-      log.warn("Attempt to close non-owned, unopened or already closed popup service with ID +'" + id + "'.");
+      log.warn("Attempt to close non-owned, unopened or already closed popup service with ID '" + id + "'.");
       return false;
     }
 
     try {
       getServiceCtx(ThreadContext.class).close(id);
     } catch (Exception e) {
-      log.warn("Attempt to close registered popup service with ID +'" + id + "' has failed with exception : ." + e);
+      log.warn("Attempt to close registered popup service with ID '" + id + "' has failed with exception : ." + e);
       return false;
     } finally {
       allPopups.remove(id);

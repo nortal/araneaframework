@@ -79,6 +79,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 			log.debug("--------------------------------- ");
 			log.debug("SampleHandler handling finish(" + returnValue + ")");
 			log.debug("--------------------------------- ");
+			getFlowCtx().start(new SimpleFormWidget(), null, null);
 		}
 	}
 }
