@@ -57,6 +57,7 @@ public class UiStdFormSelectTag extends UiFormElementBaseTag {
     UiUtil.writeAttribute(out, "id", name);
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeAttribute(out, "label", localizedLabel);
     UiUtil.writeAttribute(out, "tabindex", tabindex);
     UiUtil.writeAttribute(out, "size", size);

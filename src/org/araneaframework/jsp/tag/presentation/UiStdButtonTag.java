@@ -52,6 +52,7 @@ public class UiStdButtonTag extends UiButtonBaseTag {
       UiUtil.writeAttribute(out, "type", "button");    
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeAttribute(out, "onclick", onclick);
     if (labelId != null && renderMode.equals(UiStdButtonTag.RENDER_INPUT)) {
       UiUtil.writeAttribute(out, "value", UiUtil.getResourceString(pageContext, labelId));      

@@ -56,6 +56,7 @@ public class UiStdFormCheckboxMultiSelectItemTag extends UiFormElementBaseTag {
 		UiUtil.writeOpenStartTag(out, "input");
 		UiUtil.writeAttribute(out, "name", name);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeAttribute(out, "type", "checkbox");
 		UiUtil.writeAttribute(out, "label", localizedLabel);
 		UiUtil.writeAttribute(out, "value", value);

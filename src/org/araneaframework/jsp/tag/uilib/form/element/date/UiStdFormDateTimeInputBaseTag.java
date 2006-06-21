@@ -86,7 +86,8 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 		UiUtil.writeOpenStartTag(out, "input");
 		if (!StringUtils.isBlank(id)) UiUtil.writeAttribute(out, "id", id);
 		UiUtil.writeAttribute(out, "name", name);
-		UiUtil.writeAttribute(out, "class", styleClass);
+		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeAttribute(out, "type", "text");
 		UiUtil.writeAttribute(out, "value", value);	
 		UiUtil.writeAttribute(out, "size", size);

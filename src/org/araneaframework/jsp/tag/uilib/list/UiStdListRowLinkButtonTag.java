@@ -39,6 +39,7 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 		UiUtil.writeOpenStartTag(out, "a");
 		UiUtil.writeAttribute(out, "id", id);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeAttribute(out, "border", "0");
 		UiUtil.writeAttribute(out, "href", "javascript:");
 		if (eventId != null)

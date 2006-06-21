@@ -48,6 +48,7 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
       UiUtil.writeAttribute(out, "type", "button");    
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     if (disabled != null) 
       out.write(" DISABLED ");
     if (eventId != null)

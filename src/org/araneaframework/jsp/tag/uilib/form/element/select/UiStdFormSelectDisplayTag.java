@@ -39,6 +39,7 @@ public class UiStdFormSelectDisplayTag extends UiFormElementBaseDisplayTag {
 		
 		UiUtil.writeOpenStartTag(out, "span");
 		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeCloseStartTag(out);
 
 		UiUtil.writeEscaped(out, viewModel.getLabelForValue(viewModel.getSimpleValue()));

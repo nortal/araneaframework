@@ -55,6 +55,7 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
     UiUtil.writeAttribute(out, "id", name);
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     if (showLabel && renderMode.equals(UiStdFormButtonTag.RENDER_INPUT)) {
       if (accessKey != null) {
         String escapedLabel = StringUtil
