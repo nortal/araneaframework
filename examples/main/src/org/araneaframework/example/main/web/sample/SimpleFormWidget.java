@@ -16,11 +16,9 @@
 
 package org.araneaframework.example.main.web.sample;
 
-import java.math.BigDecimal;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
-import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
@@ -79,11 +77,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     	}
     });
     simpleForm.addElement("date", "#Date", dc, new DateData(), false);
-    FloatControl fc = new FloatControl();
-    Data data = new BigDecimalData();
-    data.setValue(new BigDecimal("12.1"));
-    fc.setDisabled(true);
-    simpleForm.addElement("number", "#Number", fc, data, true);
+    simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), true);
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
