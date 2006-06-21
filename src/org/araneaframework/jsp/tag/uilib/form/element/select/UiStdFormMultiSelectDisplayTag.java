@@ -48,6 +48,7 @@ public class UiStdFormMultiSelectDisplayTag extends UiFormElementBaseDisplayTag 
 
     UiUtil.writeOpenStartTag(out, "span");
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeCloseStartTag(out);
 
     List selectedItems = new ArrayList(viewModel.getSelectItems());

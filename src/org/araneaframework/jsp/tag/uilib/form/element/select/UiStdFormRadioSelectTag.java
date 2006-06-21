@@ -70,6 +70,7 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 			item.setValidate(validate ? "true" : "false");
 			item.setValidateOnEvent(validateOnEvent ? "true" : "false");
 			item.setStyleClass(getStyleClass());
+			item.setStyle(getStyle());
 
 			if(tabindex != null)
 				item.setTabindex(tabindex);	

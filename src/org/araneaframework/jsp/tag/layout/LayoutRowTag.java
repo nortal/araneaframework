@@ -44,6 +44,7 @@ public class LayoutRowTag extends LayoutRowBaseTag {
   /** Overwrite if other attributes besides <code>styleclass</code> are needed for HTML table row. */
   protected void writeRowAttributes(Writer out) throws Exception {
     addAttribute("class",  getStyleClass());
+    addAttribute("style",  getStyle());
     UiUtil.writeAttributes(out, attributes);
   }
 

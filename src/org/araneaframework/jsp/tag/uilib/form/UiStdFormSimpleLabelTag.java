@@ -52,7 +52,7 @@ public class UiStdFormSimpleLabelTag extends UiPresentationTag {
     String accessKey = UiUtil.getResourceStringOrNull(pageContext, accessKeyId);
     writeLabel(out, UiUtil.getResourceString(pageContext, labelId), mandatory,
         getStyleClass(),
-        forElementId, pageContext, showColon, accessKey);              
+        forElementId, pageContext, showColon, accessKey);
 
     return EVAL_BODY_INCLUDE;    
   }

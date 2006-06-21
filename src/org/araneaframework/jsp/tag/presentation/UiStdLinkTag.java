@@ -43,6 +43,7 @@ public class UiStdLinkTag extends UiLinkBaseTag {
     UiUtil.writeOpenStartTag(out, "a");
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", !disabled ? getStyleClass() : getDisabledStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     if (!disabled) {
       UiUtil.writeAttribute(out, "href", href);
       UiUtil.writeAttribute(out, "target", target);   

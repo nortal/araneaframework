@@ -40,6 +40,7 @@ public class UiStdLinkButtonTag extends UiButtonBaseTag {
     UiUtil.writeOpenStartTag(out, "a");
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeAttribute(out, "href", "javascript:");
     UiUtil.writeAttribute(out, "onclick", onclick);    
     UiUtil.writeCloseStartTag_SS(out);

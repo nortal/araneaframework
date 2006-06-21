@@ -39,6 +39,7 @@ public class UiStdListRowButtonTag extends UiListRowButtonBaseTag {
     UiUtil.writeOpenStartTag(out, "button");
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     if (eventId != null)
       UiStdWidgetCallUtil.writeEventAttributeForEvent(
           pageContext,

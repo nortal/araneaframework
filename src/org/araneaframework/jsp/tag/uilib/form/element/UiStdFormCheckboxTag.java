@@ -41,10 +41,10 @@ public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 	}
 
 	protected int doEndTag(Writer out) throws Exception {
-		assertControlType("CheckboxControl");		
+		assertControlType("CheckboxControl");	
 
 		// Prepare
-		String name = this.getScopedFullFieldId(); 		
+		String name = this.getScopedFullFieldId();
 		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
 
 		// Write input tag							
@@ -52,6 +52,7 @@ public class UiStdFormCheckboxTag extends UiFormElementBaseTag {
 		UiUtil.writeAttribute(out, "id", name);
 		UiUtil.writeAttribute(out, "name", name);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeAttribute(out, "type", "checkbox");
 
 		if ("true".equals(viewModel.getSimpleValue()))

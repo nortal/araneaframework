@@ -46,6 +46,7 @@ public class LayoutTag extends LayoutBaseTag {
 
   /** Overwrite if other attributes besides <code>styleclass</code> and <code>width</code> are needed for HTML table. */
   protected void writeTableAttributes(Writer out) throws Exception {
+    addAttribute("style", getStyle());
     addAttribute("class", getStyleClass());
     addAttribute("width",  width);
     UiUtil.writeAttributes(out, attributes);

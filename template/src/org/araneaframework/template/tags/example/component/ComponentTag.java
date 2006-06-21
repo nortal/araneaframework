@@ -46,6 +46,7 @@ public class ComponentTag extends UiPresentationTag {
 
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeCloseStartTag(out);
 		
 		// second div... maybe should be moved out

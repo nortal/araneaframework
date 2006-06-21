@@ -53,6 +53,7 @@ public class UiStdFormTextareaTag extends UiFormElementBaseTag {
     UiUtil.writeAttribute(out, "id", name);
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     
     UiUtil.writeAttribute(out, "cols", cols);
     UiUtil.writeAttribute(out, "rows", rows);

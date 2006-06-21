@@ -42,6 +42,7 @@ public class UiStdFormLinkButtonTag extends UiStdFormButtonBaseTag {
     // Write button tag             
     UiUtil.writeOpenStartTag(out, "a");
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeAttribute(out, "id", this.getScopedFullFieldId());
     UiUtil.writeAttribute(out, "href", "javascript:");    
     UiUtil.writeAttribute(out, "label", localizedLabel);
