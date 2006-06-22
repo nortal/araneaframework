@@ -20,7 +20,10 @@ import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
+
 import javax.servlet.jsp.JspException;
+
+import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.support.FormElementViewSelector;
 import org.araneaframework.jsp.support.TagInfo;
@@ -98,9 +101,8 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
     if(tagInfo == null)
       throw new JspException("Unexistant tag was passed to form element view selector!.");
 
-   	Class tagClass = Class.forName(tagInfo.getTagClassName(), true, Thread.currentThread().getContextClassLoader());
-
-    controlTag = (UiFormElementTagInterface) tagClass.newInstance();
+    controlTag = (UiFormElementTagInterface)ClassLoaderUtil.loadClass(tagInfo.getTagClassName()).newInstance();
+    Class tagClass = controlTag.getClass();
 
     registerSubtag(controlTag);
 

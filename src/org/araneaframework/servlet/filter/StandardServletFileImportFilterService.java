@@ -48,6 +48,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.extension.resource.ExternalResource;
 import org.araneaframework.extension.resource.ExternalResourceInitializer;
+import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.servlet.ServletOutputData;
 
@@ -113,7 +114,7 @@ public class StandardServletFileImportFilterService extends BaseFilterService {
 			
 			ClassLoader loader = getClass().getClassLoader();
 			// first we try load an override
-			URL fileURL = loader.getResource(OVERRIDE_PREFIX+"/"+fileName);
+			URL fileURL = ClassLoaderUtil.findResource(OVERRIDE_PREFIX+"/"+fileName);
 			
 			if (fileURL == null) {
 				// fallback to the original
