@@ -6,7 +6,6 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value> 
 			/WEB-INF/services.xml	
-			/WEB-INF/aranea-conf.xml
 		</param-value>
 	</context-param>
 
@@ -15,15 +14,32 @@
       org.araneaframework.servlet.core.StandardSessionListener
     </listener-class>
   </listener>
+  
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
 
    <servlet>
       <servlet-name>araneaServlet</servlet-name>
-     	<servlet-class>org.araneaframework.ioc.spring.StandardSpringMainServlet</servlet-class>
+     	<servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   
+   <servlet>
+      <servlet-name>lightweightJSP</servlet-name>
+      <servlet-class>org.araneaframework.jsp.engine.LightweightJspServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
    </servlet>
 
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>
       <url-pattern>/main</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+      <servlet-name>lightweightJSP</servlet-name>
+      <url-pattern>*.jsp</url-pattern>
    </servlet-mapping>
 </web-app>
