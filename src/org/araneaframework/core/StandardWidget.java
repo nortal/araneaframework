@@ -158,7 +158,7 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
     return getEnvironment();
   }
   
-  protected void propagate(Message message) throws Exception {   
+  protected void propagate(Message message) throws Exception {
     _propagate(message);
   }
 
