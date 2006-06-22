@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.structure.filter.column;
 
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
@@ -87,6 +86,9 @@ public abstract class ConstantColumnFilter extends ComparableType implements Col
 	}
 
 	protected boolean isFilterActive(Map filterInfo) {
+		if (this.value == null) {
+			throw new RuntimeException("Value must be not null"); 
+		}
 		return true;
 	}
 
@@ -115,6 +117,9 @@ public abstract class ConstantColumnFilter extends ComparableType implements Col
 		public Equals(Object value) {
 			super(value);
 		}
+		protected boolean isFilterActive(Map filterInfo) {
+			return true;
+		}		
 		protected Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand) {
 			if (isComparatorNatural()) {
 				return new EqualsExpression(leftOperand, rightOperand);

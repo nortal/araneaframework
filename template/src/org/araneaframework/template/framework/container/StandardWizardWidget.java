@@ -24,7 +24,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.template.framework.context.WizardContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
@@ -204,16 +203,6 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 	
 	public boolean containsIndex(int index) {
 		return countPages() > 0 && index >= 0 && index < countPages();  
-	}
-	
-	
-	
-	/*
-	 * Protected methods
-	 */
-	
-	protected void init() throws Exception {
-		addGlobalEventListener(new ProxyEventListener(this));
 	}
 	
 	protected void render(OutputData output) throws Exception {

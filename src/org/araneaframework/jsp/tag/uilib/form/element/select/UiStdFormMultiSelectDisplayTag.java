@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
@@ -21,7 +21,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseDisplayTag;
 import org.araneaframework.jsp.util.UiUtil;
@@ -37,58 +36,51 @@ import org.araneaframework.uilib.support.DisplayItem;
  *   description = "Form multiselect display field, represents UiLib "MultiSelectControl"."
  */
 public class UiStdFormMultiSelectDisplayTag extends UiFormElementBaseDisplayTag {
-	protected static final String NEWLINE_SEPARATOR_CODE ="\\n";
-	
-	protected String separator;
-	
-	protected void init() {
-		super.init();
-		styleClass = "aranea-multi-select-display";
-		separator = ",&nbsp;";
-	}	
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "The separator between list items, can be any string and '\n', meaning a newline (by default ', ')." 
-	 */
-	public void setSeparator(String separator) {
-		this.separator = separator;
-	}    
-	
-	
-	//
-	// Implementation
-	//
-	
-	protected int after(Writer out) throws Exception {				
-		MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
-		
-		UiUtil.writeOpenStartTag(out, "span");
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		UiUtil.writeCloseStartTag(out);
-		
-		List selectedItems = new ArrayList(viewModel.getSelectItems());
-		for (Iterator i = selectedItems.iterator(); i.hasNext();) {
-			DisplayItem displayItem = (DisplayItem) i.next();
-			if (!viewModel.getValueSet().contains(displayItem.getValue())) i.remove();
-		}
-		
-		for (Iterator i = selectedItems.iterator(); i.hasNext();) {
-			DisplayItem displayItem = (DisplayItem) i.next();
-			
-			UiUtil.writeEscaped(out, displayItem.getDisplayString());
-			if (i.hasNext()) writeSeparator(out);
-		}
-		
-		return super.after(out);  
-	}
-	
-	protected void writeSeparator(Writer out) throws IOException, UiException {
-		if (NEWLINE_SEPARATOR_CODE.equals(separator))      
-			UiUtil.writeStartEndTag(out, "br");
-		else 
-			out.write(separator);      
-	}	
+  protected static final String NEWLINE_SEPARATOR_CODE ="\\n";
+  protected String separator = ",&nbsp;";
+
+  {
+    baseStyleClass = "aranea-multi-select-display";
+  }
+
+  protected int doEndTag(Writer out) throws Exception {        
+    MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
+
+    UiUtil.writeOpenStartTag(out, "span");
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
+    UiUtil.writeCloseStartTag(out);
+
+    List selectedItems = new ArrayList(viewModel.getSelectItems());
+    for (Iterator i = selectedItems.iterator(); i.hasNext();) {
+      DisplayItem displayItem = (DisplayItem) i.next();
+      if (!viewModel.getValueSet().contains(displayItem.getValue())) i.remove();
+    }
+
+    for (Iterator i = selectedItems.iterator(); i.hasNext();) {
+      DisplayItem displayItem = (DisplayItem) i.next();
+
+      UiUtil.writeEscaped(out, displayItem.getDisplayString());
+      if (i.hasNext()) writeSeparator(out);
+    }
+
+    return super.doEndTag(out);  
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "The separator between list items, can be any string and '\n', meaning a newline (by default ', ')." 
+   */
+  public void setSeparator(String separator) {
+    this.separator = separator;
+  }    
+
+  protected void writeSeparator(Writer out) throws IOException, UiException {
+    if (NEWLINE_SEPARATOR_CODE.equals(separator))      
+      UiUtil.writeStartEndTag(out, "br");
+    else 
+      out.write(separator);      
+  }
 }
