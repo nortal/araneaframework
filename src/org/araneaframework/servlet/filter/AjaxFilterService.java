@@ -53,9 +53,7 @@ public class AjaxFilterService extends BaseFilterService {
 				arUtil.rollback();
 
 				String transactionElement = getTransactionElement(response);
-				log.debug("Transaction element " + transactionElement);
 				servletResponse.getOutputStream().write(transactionElement.getBytes(characterEncoding));
-				log.debug("updating regions " + commaSeparatedRegions);
 
 				String[] regions = commaSeparatedRegions.split(",");
 				// adding the regions that may appear in the response but
@@ -85,12 +83,9 @@ public class AjaxFilterService extends BaseFilterService {
 	}
 	
 	private String getContentById(String source, String id) {
-		log.debug("Id = " + id);
-		log.debug("REsponce - " + source);
 		String blockStart = "<!--BEGIN:" + id + "-->";
 		int startIndex = source.indexOf(blockStart);
 
-		log.debug("startIndex = " + startIndex);
 		if(startIndex == -1)
 			return "";
 
@@ -98,7 +93,6 @@ public class AjaxFilterService extends BaseFilterService {
 
 		int endIndex = source.indexOf(blockEnd);
 
-		log.debug("endIndex = " + endIndex);
 		if(endIndex == -1)
 			throw new IllegalStateException("Expected END block for AJAX update regiond with id '" + id + "'");
 

@@ -87,7 +87,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
 
     tldLocationsCache = new TldLocationsCache((ServletContext) getEnvironment().getEntry(ServletContext.class));
-    log.debug("tldLocationsCache = " + tldLocationsCache);
   }
   
   protected Environment getChildEnvironment() {
