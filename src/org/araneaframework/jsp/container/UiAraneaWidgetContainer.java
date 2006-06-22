@@ -50,8 +50,8 @@ public class UiAraneaWidgetContainer implements UiWidgetContainer {
     return result.toString();
   }
 
-  public Map getTagMapping(PageContext pageContext) throws JspException {
-    return conf.getTagMapping();
+  public Map getTagMapping(PageContext pageContext, String uri) {
+    return conf.getTagMapping(uri);
   }
 
 }

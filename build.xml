@@ -51,7 +51,7 @@
 	</target>
 	
 	<target name="tld-check">
-		<uptodate property="tld-check.uptodate" targetfile="build/tmp/presentation/META-INF/aranea-presentation.tld">
+		<uptodate property="tld-check.uptodate" targetfile="build/tmp/presentation/META-INF/taglib.tld">
 			<srcfiles dir="src/org/araneaframework/jsp/tag"/>
 		</uptodate>
 	</target>
@@ -65,7 +65,7 @@
 			
 			<jsptaglib validatexml="true"
 				shortName="aui"
-				filename="aranea-presentation.tld"
+				filename="taglib.tld"
 				uri="http://araneaframework.org/tag-library/standard"
 				description="Aranea User Interface Tag Library"
 			/>

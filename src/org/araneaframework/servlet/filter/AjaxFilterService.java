@@ -85,9 +85,12 @@ public class AjaxFilterService extends BaseFilterService {
 	}
 	
 	private String getContentById(String source, String id) {
+		log.debug("Id = " + id);
+		log.debug("REsponce - " + source);
 		String blockStart = "<!--BEGIN:" + id + "-->";
 		int startIndex = source.indexOf(blockStart);
 
+		log.debug("startIndex = " + startIndex);
 		if(startIndex == -1)
 			return "";
 
@@ -95,6 +98,7 @@ public class AjaxFilterService extends BaseFilterService {
 
 		int endIndex = source.indexOf(blockEnd);
 
+		log.debug("endIndex = " + endIndex);
 		if(endIndex == -1)
 			throw new IllegalStateException("Expected END block for AJAX update regiond with id '" + id + "'");
 

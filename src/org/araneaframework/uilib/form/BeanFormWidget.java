@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
@@ -34,7 +35,24 @@ public class BeanFormWidget extends FormWidget {
     if (!beanMapper.fieldExists(fieldId))
       throw new AraneaRuntimeException("Could not infer type for bean field '" + fieldId + "'!");
 
-    return new Data(beanMapper.getBeanFieldType(fieldId));
+    Class type = beanMapper.getBeanFieldType(fieldId);
+    
+    if (type.isPrimitive()) {
+      String[] primitiveTypes = new String[] {"int", "long", "short", "double", "float", "boolean", "byte", "char"};
+      switch(ArrayUtils.indexOf(primitiveTypes, type.getName())) {
+        case 0: { type = Integer.class; break; }
+        case 1: { type = Long.class; break; }
+        case 2: { type = Short.class; break; }
+        case 3: { type = Double.class; break; }
+        case 4: { type = Float.class; break; }
+        case 5: { type = Boolean.class; break; }
+        case 6: { type = Byte.class; break; }
+        case 7: { type = Character.class; break; }
+        default : throw new AraneaRuntimeException("Could not infer type for bean field '" + fieldId + "'!");
+      }
+    }
+    
+    return new Data(type);
   }
   
   public BeanFormWidget addBeanSubForm(String id) throws Exception {

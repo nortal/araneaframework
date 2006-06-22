@@ -47,6 +47,7 @@ import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 import org.araneaframework.backend.util.GeneralBeanMapper;
 import org.araneaframework.backend.util.RecursiveBeanMapper;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.list.util.Converter;
 import org.araneaframework.uilib.list.util.converter.DummyConverter;
 
@@ -64,7 +65,9 @@ import org.araneaframework.uilib.list.util.converter.DummyConverter;
  */
 public abstract class ListSqlHelper {
 	
-	private static Logger log = Logger.getLogger(ListSqlHelper.class);
+	private static final Long DEFAULT_RANGE_START = new Long(0);
+
+  private static Logger log = Logger.getLogger(ListSqlHelper.class);
 	
 	// *******************************************************************
 	// FIELDS
@@ -131,7 +134,7 @@ public abstract class ListSqlHelper {
 	public ListSqlHelper(ListQuery query) {		
 		this.filterExpr = query.getFilterExpression();
 		this.orderExpr = query.getOrderExpression();
-		this.itemRangeStart = query.getItemRangeStart();
+		this.itemRangeStart = query.getItemRangeStart() != null ? query.getItemRangeStart() : DEFAULT_RANGE_START;
 		this.itemRangeCount = query.getItemRangeCount();
 	}
 	
@@ -492,20 +495,23 @@ public abstract class ListSqlHelper {
 	 * Implementations should set the <code>DataSource</code> on
 	 * <code>setSessionContext</code>.
 	 * 
-	 * @throws SQLException
 	 */
-	public void setDataSource(DataSource ds) throws SQLException {
+	public void setDataSource(DataSource ds) {
 		this.ds = ds;
+    try {
 		this.con = ds.getConnection();
+    }
+    catch (SQLException ex) {
+      throw ExceptionUtil.uncheckException(ex);
+    }
 	}
 	
 	/**
 	 * Executes the SQL query that should return the total count of items in the
 	 * list, retrieving the total count.
 	 * 
-	 * @throws SQLException
 	 */
-	public void executeCountSql() throws SQLException {
+	public void executeCountSql() {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {			
@@ -521,7 +527,11 @@ public abstract class ListSqlHelper {
 			if (rs.next()) {
 				this.totalCount = new Long(rs.getLong(1));
 			}
-		} finally {
+		}
+    catch (SQLException e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
+    finally {
 			DbHelper.closeDbObjects(null, stmt, rs);
 		}
 	}
@@ -530,13 +540,13 @@ public abstract class ListSqlHelper {
 	 * Executes an SQL query that should retrieve a range of items from the
 	 * list, saves <code>ResultSet</code> for further processing.
 	 * 
-	 * @throws SQLException
 	 */
-	public void executeItemRangeSql() throws SQLException {
+	public void executeItemRangeSql() {
 		SqlStatement rangeSqlStatement = getRangeSqlStatement();
 		log.debug("Item range database query: " + rangeSqlStatement.getQuery());
 		log.debug("Item range statement parameters: " + rangeSqlStatement.getParams());
 		
+    try {
 		this.itemRangeStatement = this.con.prepareStatement(rangeSqlStatement.getQuery());
 		rangeSqlStatement.propagateStatementWithParams(this.itemRangeStatement);
 		
@@ -545,14 +555,17 @@ public abstract class ListSqlHelper {
 		}*/
 		
 		this.itemRangeResultSet = this.itemRangeStatement.executeQuery();
+    }
+    catch (SQLException e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
 	}
 	
 	/**
 	 * Executes the item range and total count SQL queries.
 	 * 
-	 * @throws SQLException
 	 */
-	public void execute() throws SQLException {
+	public void execute() {
 		if (this.ds == null) {
 			throw new RuntimeException(
 			"Please pass a DataSource to the ListSqlHelper!");
@@ -573,10 +586,8 @@ public abstract class ListSqlHelper {
 	 *         count.
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
-	 * @throws SQLException
 	 */
-	public ListItemsData getListItemsData(Class beanClass) throws SQLException,
-	InstantiationException, IllegalAccessException {
+	public ListItemsData getListItemsData(Class beanClass) {
 		ListItemsData result = new ListItemsData();
 		result.setTotalCount(this.totalCount);
 		
@@ -585,11 +596,22 @@ public abstract class ListSqlHelper {
 		List itemRange = new ArrayList();
 		//XXX add capacity
 		
-		while (this.itemRangeResultSet.next()) {
-			Object record = beanClass.newInstance();
-			readBeanFields(this.itemRangeResultSet, record);
-			itemRange.add(record);
-		}
+    try {
+  		while (this.itemRangeResultSet.next()) {
+  			Object record = beanClass.newInstance();
+  			readBeanFields(this.itemRangeResultSet, record);
+  			itemRange.add(record);
+  		}
+    }
+    catch (SQLException e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
+    catch (InstantiationException e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
+    catch (IllegalAccessException e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
 		
 		result.setItemRange(itemRange);
 		
@@ -636,11 +658,8 @@ public abstract class ListSqlHelper {
 	 *            query.
 	 * @param bean
 	 *            bean to read.
-	 * @throws SQLException
-	 *             in case of a database error.
 	 */
-	protected void readBeanFields(ResultSet resultSet, Object bean)
-	throws SQLException {
+	protected void readBeanFields(ResultSet resultSet, Object bean) {
 		log.debug("Starting to read value object fields.");
 		
 		Collection fields = this.beanToResultSetMapping.keySet();
@@ -670,11 +689,8 @@ public abstract class ListSqlHelper {
 	 *            bean to read.
 	 * @param field
 	 *            bean field to read.
-	 * @throws SQLException
-	 *             in case of a database error.
 	 */
-	protected void readBeanField(ResultSet resultSet, Object bean, String field)
-	throws SQLException {
+	protected void readBeanField(ResultSet resultSet, Object bean, String field) {
 		
 		String resultSetColumnName = (String) this.beanToResultSetMapping
 		.get(field);

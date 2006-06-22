@@ -16,15 +16,19 @@
 
 package org.araneaframework.servlet.filter;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -33,14 +37,24 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
+import org.araneaframework.jsp.engine.TldLocationsCache;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.servlet.JspContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
+  private static final Logger log = Logger.getLogger(StandardJspFilterService.class);
+  
   public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.jsp.aranea.filter.UiAraneaJspConfigurationFilterService.JspConfiguration";
-  private Map tagMapping;
+
+  private TldLocationsCache tldLocationsCache;
+
+  // URI -> Map<TagInfo>
+  private Map taglibs = new HashMap();
   
   private String submitCharset;
   private String uiTldPath = "META-INF/aranea-presentation.tld";
@@ -72,7 +86,8 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
         
     loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
 
-    readTldMapping();    
+    tldLocationsCache = new TldLocationsCache((ServletContext) getEnvironment().getEntry(ServletContext.class));
+    log.debug("tldLocationsCache = " + tldLocationsCache);
   }
   
   protected Environment getChildEnvironment() {
@@ -82,21 +97,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     return new StandardEnvironment(getEnvironment(), entries);
   }
   
-  public void readTldMapping() throws Exception {
-    InputStream tldStream = ClassLoaderUtil.getResourceAsStream(uiTldPath);
-    
-    if (tldStream == null) {
-    	throw new FileNotFoundException("Unable to read file: "+uiTldPath);
-    }
-    	
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    Document tldDoc = builder.parse(tldStream);
-    
-    tagMapping = TagInfo.makeTagMapping(tldDoc.getDocumentElement());
-  }
-  
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
+ protected void action(Path path, InputData input, OutputData output) throws Exception {
     output.pushAttribute(JSP_CONFIGURATION_KEY, new JspConfiguration());
     
     try {
@@ -124,12 +125,58 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
       return loc.getLocale();
     }
     
-    public Map getTagMapping() {
-      return tagMapping;
+    public Map getTagMapping(String uri) {
+      return getTagMap(uri);
     }
     
     public ConfigurationContext getConfiguration() {
       return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
     }
   }
+  
+  public Map getTagMap(String uri) {
+    if (!taglibs.containsKey(uri)) {
+      String[] locations = tldLocationsCache.getLocation(uri);
+
+      if (locations != null) {
+        String tldLoc = locations[1] == null ? locations[0] : locations[1];
+        taglibs.put(uri, readTldMapping(tldLoc));
+      }
+    }
+
+    return (Map) taglibs.get(uri);
+  }
+
+  private Map readTldMapping(String location) {
+    Map result = new HashMap();
+
+    InputStream tldStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(location);
+
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    Document tldDoc = null;
+    try {
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      tldDoc = builder.parse(tldStream);
+    }
+    catch (ParserConfigurationException e) {
+      throw new NestableRuntimeException(e);
+    }
+    catch (SAXException e) {
+      throw new NestableRuntimeException(e);
+    }
+    catch (IOException e) {
+      throw new NestableRuntimeException(e);
+    }
+
+    NodeList tagElements = tldDoc.getDocumentElement().getElementsByTagName("tag");
+
+    for (int i = 0; i < tagElements.getLength(); i++) {
+      TagInfo tagInfo = TagInfo.readTagInfo((Element) tagElements.item(i));
+
+      result.put(tagInfo.getTagName(), tagInfo);
+    }
+
+    return result;
+  }
+
 }
