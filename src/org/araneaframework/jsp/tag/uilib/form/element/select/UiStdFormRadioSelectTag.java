@@ -37,46 +37,15 @@ import org.araneaframework.uilib.support.DisplayItem;
  *   description = "Form radioselect buttons field, represents UiLib "SelectControl"."
  */
 public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
-	protected String type;
-	protected boolean labelBefore;
+	protected String type = "horizontal";
+	protected boolean labelBefore = false;
 	
-	protected void init() {
-		super.init();
+	public UiStdFormRadioSelectTag() {
+		baseStyleClass = "aranea-radioselect";
 		setHasElementContextSpan(false);
-		type = "horizontal";
-		labelBefore = false;
 	}
 	
-	//
-	// Attributes
-	//  
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "The way the radio buttons will be rendered - can be either "vertical" or "horizontal". By default "horizontal"." 
-	 */ 
-	public void setType(String type) throws JspException {
-		this.type = (String)evaluate("type", type, String.class);
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Boolean that controls whether label is before or after each radio button. False by default." 
-	 */
-	public void setLabelBefore(String labelBefore) throws JspException {
-		this.labelBefore = ((Boolean) evaluateNotNull("labelBefore", labelBefore, Boolean.class)).booleanValue();
-	}
-	
-	//
-	// Implementation
-	//  
-	
-	public int after(Writer out) throws Exception {
-		// Type check
+	public int doEndTag(Writer out) throws Exception {
 		assertControlType("SelectControl");		
 		
 		if (!"horizontal".equals(type) && !"vertical".equals(type))
@@ -91,19 +60,17 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 		for (Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
 			DisplayItem displayItem = (DisplayItem) i.next();
 			
-			if (labelBefore) writeLabel(label, id, displayItem.getValue());
+			if (labelBefore) writeLabel(label, derivedId, displayItem.getValue());
 			
 			registerSubtag(item);
 			
-			item.setId(id);
+			item.setId(derivedId);
 			item.setValue(displayItem.getValue());
-			//item.setEvents(Boolean.toString(events));
 			item.setEvents(events ? "true" : "false");
-			//item.setValidate(Boolean.toString(validate));
 			item.setValidate(validate ? "true" : "false");
-			//item.setValidateOnEvent(Boolean.toString(validateOnEvent));
 			item.setValidateOnEvent(validateOnEvent ? "true" : "false");
-			item.setStyleClass(styleClass);
+			item.setStyleClass(getStyleClass());
+			item.setStyle(getStyle());
 
 			if(tabindex != null)
 				item.setTabindex(tabindex);	
@@ -111,15 +78,39 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 			executeStartSubtag(item);
 			executeEndTagAndUnregister(item);		
 			
-			if (!labelBefore) writeLabel(label, id, displayItem.getValue());
+			if (!labelBefore) writeLabel(label, derivedId, displayItem.getValue());
 			
 			if ("horizontal".equals(type)) out.write("&nbsp;");
 			else if ("vertical".equals(type)) UiUtil.writeStartEndTag(out, "br");
 		}
 		
-		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;	
+	}
+
+	
+	/* ***********************************************************************************
+	 * Tag attributes
+	 * ***********************************************************************************/
+
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "The way the radio buttons will be rendered - can be either vertical or horizontal. By default horizontal." 
+	 */ 
+	public void setType(String type) throws JspException {
+		this.type = (String)evaluate("type", type, String.class);
+	}
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Boolean that controls whether label is before or after each radio button. False by default." 
+	 */
+	public void setLabelBefore(String labelBefore) throws JspException {
+		this.labelBefore = ((Boolean) evaluateNotNull("labelBefore", labelBefore, Boolean.class)).booleanValue();
 	}
 	
 	protected void writeLabel(UiStdFormRadioSelectItemLabelTag label, String id, String value) throws JspException {
