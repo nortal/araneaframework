@@ -36,7 +36,7 @@
 	    		</ui:componentForm>
 
 				<ui:componentActions>
-					<ui:eventButton eventId="test"/>
+					<ui:eventButton eventId="test" labelId="#Test"/>
 				</ui:componentActions>
 			</ui:component>
 
