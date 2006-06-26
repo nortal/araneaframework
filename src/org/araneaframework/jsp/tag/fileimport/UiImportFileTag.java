@@ -25,17 +25,17 @@ import org.araneaframework.jsp.tag.UiBaseTag;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class UiImportFileTag extends UiBaseTag {
-	protected String includeTemplates;
+	protected String includeGroupName;
 	protected String includeFileName;
 
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Flag to indicate if the template files should be included too."
+	 *   description = "The name of the group of files that should get included."
 	 */
-	public void setIncludeTemplate(String includeTemplate) throws JspException {
-		this.includeTemplates = (String) evaluate("includeTemplate", includeTemplate, String.class);
+	public void setGroup(String includeTemplate) throws JspException {
+		this.includeGroupName = (String) evaluate("includeTemplate", includeTemplate, String.class);
 	}
 	
 	/**
@@ -48,9 +48,9 @@ public abstract class UiImportFileTag extends UiBaseTag {
 		this.includeFileName = (String) evaluate("file", file, String.class);
 	}
 		
-	public int after(Writer out) throws Exception {
+	public int doEndTag(Writer out) throws Exception {
 		return EVAL_PAGE;
 	}
 	
-	protected abstract void writeHtmlInclude(Writer out, String key) throws Exception;
+	protected abstract void writeContent(Writer out, String key) throws Exception;
 }
