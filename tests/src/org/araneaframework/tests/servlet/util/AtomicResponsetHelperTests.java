@@ -38,8 +38,7 @@ public class AtomicResponsetHelperTests extends TestCase {
     
     output = new StandardServletOutputData(new MockHttpServletRequest(), res);
     
-    atomic = new AtomicResponseHelper();
-    atomic.wrapOutput(output);
+    atomic = new AtomicResponseHelper(output);
   }
   
   public void testCommitWriter() throws Exception {

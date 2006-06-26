@@ -67,7 +67,7 @@ public class InMemoryFormRowHandlerDecorator implements FormRowHandler {
 		rowHandler.addRow(rowForm);
 	}
 
-	public void openOrCloseRow(FormRow editableRow) {
+	public void openOrCloseRow(FormRow editableRow) throws Exception {
 		rowHandler.openOrCloseRow(editableRow);
 	}
 }
