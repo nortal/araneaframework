@@ -42,14 +42,6 @@
  
  // ------------------------------- Keyboard Events ---------------------------------- //
  
- function debug(event, formElementId) {
- 	debugdiv=document.getElementById("debug");
- 	
- 	node=document.createTextNode("Handling event '" + event + "' from formElement '" + formElementId + "'");
-	debugdiv.appendChild(node);
- 	return true;
- }
- 
  /**
   * This function will receive all keypress events from all form elements
   *
@@ -58,21 +50,30 @@
   *     formElementId - full (unique) id of the element that received the event.
   */
  function uiHandleKeypress(event, formElementId) {
- 	 debug(event, formElementId);
  	 // Check the keyCode
  	 if (!event) return;
- 	 
+
  	 var keyCode;
  	 if (event.keyCode) keyCode = event.keyCode;
  	 else keyCode = event.which; // Mozilla
  	 
+ 	 var result = true;
  	 try {
-	 	 uiKeypressHandlerRegistry.invokeHandlers(formElementId, keyCode, event);	 	 
+	 	 result = uiKeypressHandlerRegistry.invokeHandlers(formElementId, keyCode, event);	 	 
  	 }
  	 catch (e) { 	
  	 		//Keyboard handler errors may be thrown after AJAX region updates.
  	  	window.status = "Keyboard handler error (non-critical): " + e;
  	 }
+ 	 
+ 	 if (result != undefined) {
+ 	 	if (result == false) {
+ 			event.cancelBubble = true;
+ 			event.returnValue = false;
+ 	 	}
+ 	 }
+
+ 	 return result;
 }
  
  /*	Defines up/down key navigation actions on
@@ -200,8 +201,8 @@
          var elementPrefix   = handlers[i].elementPrefix;
          if (elementPrefix == element.substring(0, elementPrefix.length)) {
             var result = handlerFunction(event, element);
-            return;
-		     }
+            return result;
+	     }
 	  }
    }
  }

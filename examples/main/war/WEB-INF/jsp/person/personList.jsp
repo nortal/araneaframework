@@ -46,7 +46,7 @@
 							</ui:cell>
 						</ui:row>
 
-					</ui:listFilter>					
+					</ui:listFilter>
 					
 					<ui:listRows>
 						<ui:row>
