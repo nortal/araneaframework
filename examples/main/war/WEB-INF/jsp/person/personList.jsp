@@ -46,7 +46,6 @@
 							</ui:cell>
 						</ui:row>
 
-						<ui:formEnterKeyboardHandler fullElementId="${widgetFullId}.filter"/>
 					</ui:listFilter>					
 					
 					<ui:listRows>
