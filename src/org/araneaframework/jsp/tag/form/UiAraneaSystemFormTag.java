@@ -84,7 +84,6 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
   }
 
   protected String getFormAction() {
-	  String url = ((HttpServletRequest) pageContext.getRequest()).getContextPath() + ((HttpServletRequest) pageContext.getRequest()).getServletPath();
-	  return ((HttpServletResponse)pageContext.getResponse()).encodeURL(url);
+	  return ((HttpServletRequest) pageContext.getRequest()).getContextPath() + ((HttpServletRequest) pageContext.getRequest()).getServletPath();
   }
 }
