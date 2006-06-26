@@ -58,7 +58,7 @@ public class BaseFilterService extends BaseService implements FilterService{
   }
   
   protected void init() throws Exception {
-    childService._getComponent().init(getChildEnvironment());
+	  childService._getComponent().init(getChildEnvironment());
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {

@@ -16,7 +16,7 @@
 
 package org.araneaframework.servlet.filter.importer;
 
-import org.araneaframework.servlet.filter.StandardServletFileImportFilterService;
+import org.araneaframework.servlet.filter.StandardServletFileImportService;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -28,7 +28,8 @@ public class FileImporter {
 	 */
 	public final static String getImportString(String fileName) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("?" + StandardServletFileImportFilterService.IMPORTER_FILE_NAME + "=");
+		
+		sb.append("/" + StandardServletFileImportService.FILE_IMPORTER_NAME + "/");
 		sb.append(fileName);
 	
 		return sb.toString();
