@@ -42,9 +42,8 @@ public class MainExampleMessageFactory implements MessageFactory, Serializable {
 			
 			fCtx.reset(new EnvironmentAwareCallback() {
 				public void call(Environment env) throws Exception {
-					FlowContext f = (FlowContext)env.getEntry(FlowContext.class);
 					if (flow != null)
-						f.start(new RootWidget(flow), null, null);
+						fCtx.start(new RootWidget(flow), null, null);
 				}
 			});
 		}
