@@ -24,6 +24,7 @@ import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
+import org.araneaframework.example.main.web.demo.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.web.demo.DemoCheckboxList;
 import org.araneaframework.example.main.web.demo.DemoComplexForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayForm;
@@ -40,7 +41,6 @@ import org.araneaframework.example.main.web.misc.EventErrorWidget;
 import org.araneaframework.example.main.web.misc.InitErrorWidget;
 import org.araneaframework.example.main.web.misc.RedirectingWidget;
 import org.araneaframework.example.main.web.misc.RenderErrorWidget;
-import org.araneaframework.example.main.web.misc.TestWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.person.PersonListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
@@ -111,10 +111,11 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("#Simple", new MenuItem("#Popup example", SamplePopupWidget.class));
       sampleMenu.addMenuItem("#Simple", new MenuItem("#MultiSelect", DemoMultiSelect.class));
       
-      sampleMenu.addMenuItem(new MenuItem("#Advanced"));
+      MenuItem advDemos = sampleMenu.addMenuItem(new MenuItem("#Advanced"));
       sampleMenu.addMenuItem("#Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
       sampleMenu.addMenuItem("#Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
       sampleMenu.addMenuItem("#Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
+      advDemos.addMenuItem(new MenuItem("#AutoComplete", DemoAutoCompletionWidget.class));
       
       sampleMenu.addMenuItem(new MenuItem("#Form lists"));
       sampleMenu.addMenuItem("#Form lists", new MenuItem("Display_Form", DemoDisplayForm.class));
@@ -135,7 +136,6 @@ public class MenuWidget extends TemplateMenuWidget  {
       errorMenu.addMenuItem(new MenuItem("Error_on_event", EventErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("Error_on_render", RenderErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("#Redirecting", RedirectingWidget.class));
-      errorMenu.addMenuItem(new MenuItem("#test", TestWidget.class));
     }   
 		
 		return result;

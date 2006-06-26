@@ -516,7 +516,7 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
   /**
    * Adds the ActionListener listener with the specified action id. 
    */
-  public void addActionListner(Object actionId, ActionListener listener) {
+  public void addActionListener(Object actionId, ActionListener listener) {
     actionListeners.put(actionId, listener);
   }
   

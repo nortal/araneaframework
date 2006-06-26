@@ -1,17 +1,13 @@
 package org.araneaframework.uilib.form.control;
 
-import java.io.PrintWriter;
 import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ActionListener;
 import org.araneaframework.jsp.util.StringUtil;
 import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.TextType;
 
 /**
@@ -21,9 +17,8 @@ import org.araneaframework.uilib.support.TextType;
  * 
  */
 public class AutoCompleteTextControl extends TextControl {
-  private static final Logger log = Logger.getLogger(FormElement.class);
-
-  private DataProvider dataProvider;
+  private static final Logger log = Logger.getLogger(AutoCompleteTextControl.class);
+  protected DataProvider dataProvider;
 
   public AutoCompleteTextControl() throws Exception {
     super();
@@ -35,11 +30,11 @@ public class AutoCompleteTextControl extends TextControl {
 
   protected void init() throws Exception {
     super.init();
-    addActionListner("autocomplete", new AutoCompleteActionListener());
+    addActionListener("autocomplete", new AutoCompleteActionListener());
   }
 
-  public void setDataProvider(DataProvider dp) {
-    dataProvider = dp;
+  public void setDataProvider(DataProvider dataProvider) {
+    this.dataProvider = dataProvider;
   }
 
   public interface DataProvider {
@@ -64,8 +59,7 @@ public class AutoCompleteTextControl extends TextControl {
       log.debug("Writing output: " + xml.toString());
       HttpServletResponse response = ((ServletOutputData) output).getResponse();
       response.setContentType("text/xml");
-      PrintWriter pout = response.getWriter();
-      pout.write(xml.toString());
+      response.getWriter().write(xml.toString());
     }
   }
 }
