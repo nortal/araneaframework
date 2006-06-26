@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardWidget;
@@ -83,6 +84,7 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
   }
 
   protected String getFormAction() {
-    return ((HttpServletRequest) pageContext.getRequest()).getContextPath() + ((HttpServletRequest) pageContext.getRequest()).getServletPath();
+	  String url = ((HttpServletRequest) pageContext.getRequest()).getContextPath() + ((HttpServletRequest) pageContext.getRequest()).getServletPath();
+	  return ((HttpServletResponse)pageContext.getResponse()).encodeURL(url);
   }
 }
