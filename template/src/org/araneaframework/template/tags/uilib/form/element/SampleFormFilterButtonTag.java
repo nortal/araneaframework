@@ -17,6 +17,8 @@
 package org.araneaframework.template.tags.uilib.form.element;
 
 import java.io.Writer;
+import org.araneaframework.jsp.tag.uilib.form.UiFormEnterKeyboardHandlerTag;
+import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
 import org.araneaframework.jsp.tag.uilib.form.element.UiStdFormLinkButtonTag;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -43,6 +45,13 @@ public class SampleFormFilterButtonTag extends UiStdFormLinkButtonTag {
     addAttribute("style", getStyle());
     super.doStartTag(out);
     out.write("<button type=\"button\">" + UiUtil.getResourceString(pageContext, "button.search").toUpperCase(UiUtil.getLocalizationContext(pageContext).getLocale()) + "</button>");
+
+    UiFormEnterKeyboardHandlerTag tag = new UiFormEnterKeyboardHandlerTag();
+    tag.setFullElementId((String)requireContextEntry(UiFormTag.FORM_FULL_ID_KEY)+"."+id);
+    registerSubtag(tag);
+    executeStartSubtag(tag);
+    executeEndTagAndUnregister(tag);
+    
     return EVAL_BODY_INCLUDE;    
-  }    
+  }
 }
