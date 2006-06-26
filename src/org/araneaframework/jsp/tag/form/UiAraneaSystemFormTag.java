@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardWidget;
