@@ -58,10 +58,6 @@ public class BaseFilterService extends BaseService implements FilterService{
   }
   
   protected void init() throws Exception {
-	  if (childService == null)
-		  System.out.println();
-	  if (childService._getComponent() == null)
-		  System.out.println();
 	  childService._getComponent().init(getChildEnvironment());
   }
   

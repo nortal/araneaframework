@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.form.element.date;
 
 import java.io.Writer;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.apache.commons.lang.StringUtils;
@@ -116,8 +115,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			String calendarImgId = id + CALENDAR_BUTTON_ID_SUFFIX;
 			UiUtil.writeOpenStartTag(out, "img");
 			out.write(" src=\"");
-			StringBuffer url = ((HttpServletRequest)pageContext.getRequest()).getRequestURL();
-			out.write(url.append(FileImporter.getImportString("gfx/ico_calendar.gif")).toString());
+			out.write(FileImporter.getImportString("gfx/ico_calendar.gif"));
 			out.write("\" ");
 			UiUtil.writeAttribute(out, "id", calendarImgId);
 			UiUtil.writeAttribute(out, "class", calendarIconClass);
