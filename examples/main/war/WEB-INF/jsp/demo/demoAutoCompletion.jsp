@@ -21,7 +21,7 @@
 
 					<!-- As we can insert rows now, we just do that. -->
 					<ui:row>
-						<ui:formElement id="autocompletedTextBox1">
+						<ui:formElement id="acinput">
 							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>

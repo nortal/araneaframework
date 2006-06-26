@@ -301,7 +301,8 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
     Object actionId = getActionId(input);    
     ActionListener listener = (ActionListener)actionListeners.get(actionId);
     
-    log.debug("Delivering action '" + actionId +"' to service '" + getClass().getName() + "'");    
+    if (log.isDebugEnabled())
+      log.debug("Delivering action '" + actionId +"' to service '" + getClass().getName() + "'");    
     
     if (listener != null ) {
       listener.processAction(actionId, input, output);
