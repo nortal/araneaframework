@@ -18,33 +18,77 @@ package org.araneaframework.servlet.router;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.router.BaseServiceRouterService;
 import org.araneaframework.servlet.PathInfoServiceContext;
 import org.araneaframework.servlet.ServletInputData;
 
+/**
+ * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
+ */
 public class PathInfoServiceRouterService extends BaseServiceRouterService {
+	public static String PATH_ARGUMENT = "pathInfo";
+	
+	protected Object getServiceId(InputData input) throws Exception {
+		return getPathInfo(input)[0];
+	}
+  
+	protected Object getServiceKey() throws Exception {
+		return "pathInfoServiceId";
+	}
 
-  protected Object getServiceId(InputData input) throws Exception {    
-    String result = ((ServletInputData) input).getRequest().getPathInfo();
-    return result == null ? null : result.substring(1);
-  }
+	protected void action(Path path, InputData input, OutputData output) throws Exception {
+	    output.pushAttribute(PATH_ARGUMENT, getPathInfo(input)[1]);
+	    
+	    try {
+	      super.action(path, input, output);
+	    }
+	    finally {
+	      output.popAttribute(PATH_ARGUMENT);
+	    }
+	}
+	
+	private static String[] getPathInfo(InputData input) {
+		String serviceId  = null;
+		String pathInfo = "";
+		
+		String path = ((ServletInputData) input).getRequest().getPathInfo();
+		if (path != null) {
+			// lose the first slash
+			if (path.indexOf("/") != -1)
+				path = path.substring(1);
+			
+			
+			int index = path.indexOf("/");
+			// we have a second slash
+			if (index != -1) {
+				// not interested in the first slash
+				pathInfo = path.substring(index+1);
+				serviceId = path.substring(0, index);
+			}
+			else {
+				serviceId = path;
+			}
+		}
+		serviceId = serviceId != null && serviceId.length() == 0 ? null : serviceId;
+		
+		return new String[]{serviceId, pathInfo};
+	}
+
+	protected Environment getChildEnvironment(Object serviceId) throws Exception {
+		Map entries = new HashMap();    
+		entries.put(PathInfoServiceContext.class, new ServiceRouterContextImpl(serviceId));
+		return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
+	}
   
-  protected Object getServiceKey() throws Exception {
-    return "pathInfoServiceId";
-  }
-  
-  protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    Map entries = new HashMap();    
-    entries.put(PathInfoServiceContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(getEnvironment(), entries);
-  }
-  
-  private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements PathInfoServiceContext {
-    protected ServiceRouterContextImpl(Object serviceId) {
-      super(serviceId);
-    }
-  }
+	private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements PathInfoServiceContext {
+		protected ServiceRouterContextImpl(Object serviceId) {
+			super(serviceId);
+		}
+	}
 }
