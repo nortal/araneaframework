@@ -3,7 +3,6 @@ package org.araneaframework.jsp.tag.uilib.form.element.text;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -13,16 +12,16 @@ import org.araneaframework.uilib.form.control.TextControl;
  * 
  * @author Steven Jentson (steven@webmedia.ee)
  * 
- * @jsp.tag name = "autoCompleteTextInput" body-content = "JSP" description =
- *          "Form text input field, represents UiLib "AutoCompleteTextControl"."
+ * @jsp.tag 
+ *   name = "autoCompleteTextInput" 
+ * 	 body-content = "JSP" 
+ *   description = "Form text input field, represents UiLib &quot;AutoCompleteTextControl&quot;."
  */
-public class UiStdFormAutoCompleteTextInputTag extends
-    UiStdFormValidatingTextInputBaseTag {
+public class UiStdFormAutoCompleteTextInputTag extends UiStdFormValidatingTextInputBaseTag {
 
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("AutoCompleteTextControl");
 
-    String name = this.getScopedFullFieldId();
     TextControl.ViewModel viewModel = ((TextControl.ViewModel) controlViewModel);
 
     Map attributes = new HashMap();
@@ -47,8 +46,7 @@ public class UiStdFormAutoCompleteTextInputTag extends
     url.append("&serviceActionListenerId=autocomplete&");
     url.append(getScopedFullFieldId()).append(".__present=true\"");
     
-    UiUtil.writeOpenStartTag(out, "script");
-    UiUtil.writeCloseStartTag(out);
+    UiUtil.writeStartTag_SS(out, "script");
     StringBuffer script = new StringBuffer();
     script.append("new Ajax.Autocompleter(\"");
     script.append(getScopedFullFieldId());

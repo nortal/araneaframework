@@ -30,6 +30,7 @@ public class AutoCompleteTextControl extends TextControl {
 
   protected void init() throws Exception {
     super.init();
+    //XXX: make constant
     addActionListener("autocomplete", new AutoCompleteActionListener());
   }
 
@@ -47,6 +48,7 @@ public class AutoCompleteTextControl extends TextControl {
       String val = innerData == null ? null : ((String[]) innerData)[0];
       List suggestions = dataProvider.getSuggestions((String) val);
 
+      //XXX: outputting some hardcoded HTML from here is not good
       StringBuffer xml = new StringBuffer();
       xml.append("<ul>");
       for (int i = 0; i < suggestions.size(); i++) {

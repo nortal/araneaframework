@@ -9,7 +9,7 @@
 		<ui:form id="testform">
 
 			<ui:componentHeader>
-				<ui:componentName>Tutorial first form</ui:componentName>
+				<ui:componentName>Autocomplete (suggestion) demo</ui:componentName>
 			</ui:componentHeader>
 
 			<ui:component>
