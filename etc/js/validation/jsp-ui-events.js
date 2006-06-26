@@ -42,6 +42,14 @@
  
  // ------------------------------- Keyboard Events ---------------------------------- //
  
+ function debug(event, formElementId) {
+ 	debugdiv=document.getElementById("debug");
+ 	
+ 	node=document.createTextNode("Handling event '" + event + "' from formElement '" + formElementId + "'");
+	debugdiv.appendChild(node);
+ 	return true;
+ }
+ 
  /**
   * This function will receive all keypress events from all form elements
   *
@@ -49,7 +57,8 @@
   *     event  - the event object
   *     formElementId - full (unique) id of the element that received the event.
   */
- function uiHandleKeypress(event, formElementId) { 	 
+ function uiHandleKeypress(event, formElementId) {
+ 	 debug(event, formElementId);
  	 // Check the keyCode
  	 if (!event) return;
  	 

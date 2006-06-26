@@ -34,6 +34,8 @@
 	                             <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
 	 
 	                             <div id="content">
+	                             	<div id="debug">
+	                             	</div>
 		                               <ui:messages type="info"/>
 	                                 <ui:messages type="error" styleClass="msg-error"/>
 	                                 <!-- Renders the menu widget itself. As MenuWidget is subclass
