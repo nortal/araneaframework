@@ -60,7 +60,7 @@ public class AjaxFilterService extends BaseFilterService {
 				// we're not present in the request
 				if (existingRegions != null) {
 					for (Iterator iter = existingRegions.iterator(); iter.hasNext();) {
-						regions = (String[])ArrayUtils.add(regions, (String) iter.next());
+						regions = (String[])ArrayUtils.add(regions, iter.next());
 					}
 				}
 

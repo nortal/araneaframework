@@ -34,7 +34,6 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.jsp.engine.TldLocationsCache;
@@ -57,7 +56,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   private Map taglibs = new HashMap();
   
   private String submitCharset;
-  private String uiTldPath = "META-INF/aranea-presentation.tld";
   
   private String jspPath = "/WEB-INF/jsp";
   
@@ -65,10 +63,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   // Spring injection parameters  
   
-  public void setUiTldPath(String uiTldPath) {
-    this.uiTldPath = uiTldPath;
-  }
-
   public void setSubmitCharset(String submitCharset) {
     this.submitCharset = submitCharset;
   }
