@@ -20,7 +20,6 @@ import java.io.Serializable;
 import org.araneaframework.Component;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Custom;
 import org.araneaframework.core.Custom.CustomWidget;
 
 /**

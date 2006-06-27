@@ -6,7 +6,7 @@
   
   <bean id="araneaApplicationRoot" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
     singleton="false">
-    <property name="childService" ref="araneaPathInfoRouter"/>
+    <property name="childService" ref="araneaApplicationFilters"/>
   </bean>
   
   <bean id="araneaApplicationFilters" singleton="false"

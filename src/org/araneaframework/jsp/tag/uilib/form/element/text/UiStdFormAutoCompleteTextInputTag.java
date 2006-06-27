@@ -33,7 +33,7 @@ public class UiStdFormAutoCompleteTextInputTag extends UiStdFormValidatingTextIn
     AutoCompleteTextControl.ViewModel viewModel = ((AutoCompleteTextControl.ViewModel) controlViewModel);
 
     Map attributes = new HashMap();
-    attributes.put("maxLength", viewModel.getMaxLength());
+    attributes.put("maxlength", viewModel.getMaxLength());
     attributes.put("autocomplete", "off");
     writeTextInput(out, "text", true, attributes);
     UiUtil.writeOpenStartTag(out, "div");

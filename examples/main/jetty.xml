@@ -10,9 +10,6 @@
 	<Call name="addWebApplication">
 		<Arg>/mainExample</Arg>
 		<Arg>.</Arg>
-		<Call name="getServletHandler">
-			<Set name="usingCookies" type="boolean">false</Set>
-		</Call>
 	</Call>
 	<Call name="getContext">
 		<Arg>/</Arg>
