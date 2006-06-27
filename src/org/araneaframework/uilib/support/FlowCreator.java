@@ -17,7 +17,7 @@
 package org.araneaframework.uilib.support;
 
 import java.io.Serializable;
-import org.araneaframework.Component;
+import org.araneaframework.Widget;
 
 /**
  * Object with capability of creating new flow.
@@ -25,5 +25,5 @@ import org.araneaframework.Component;
  * @author Taimo Peelo
  */
 public interface FlowCreator extends Serializable {
-	public Component createFlow();
+	public Widget createFlow();
 }

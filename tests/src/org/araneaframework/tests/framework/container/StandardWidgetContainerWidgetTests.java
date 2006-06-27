@@ -46,7 +46,7 @@ public class StandardWidgetContainerWidgetTests extends TestCase {
   public void setUp() throws Exception {
     child = new MockEventfulStandardWidget();
     parent = new StandardWidgetContainerWidget();
-    parent.setChildWidget(child);
+    parent.setRoot(child);
     MockLifeCycle.begin(parent);
     
     req = new MockHttpServletRequest();

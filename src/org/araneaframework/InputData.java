@@ -39,6 +39,11 @@ import java.util.Map;
 public interface InputData extends Serializable, Extendable, Narrowable {
   
   /**
+   * The key that can be used to retrieve InputData (e.g. as a request scope attribute).
+   */
+  public static final String INPUT_DATA_KEY = "org.araneaframework.InputData";
+
+  /**
    * Returns the current Path of this InputData.
    * @return the Path of this InputData
    */
@@ -71,5 +76,5 @@ public interface InputData extends Serializable, Extendable, Narrowable {
   /**
    * Returns the current OutputData.
    */
-  public OutputData getCurrentOutputData();
+  public OutputData getOutputData();
 }
