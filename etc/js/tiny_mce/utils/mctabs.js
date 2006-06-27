@@ -1,8 +1,4 @@
 /**
- * $RCSfile$
- * $Revision$
- * $Date$
- *
  * Moxiecode DHTML Tabs script.
  *
  * @author Moxiecode

@@ -104,6 +104,7 @@ public class ComponentListFooterTag extends UiPresentationTag {
 
     UiUtil.writeOpenStartTag(out, "div");
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeCloseStartTag(out);
 
     if (totalItemCount > 0 && !allItemsShown) {

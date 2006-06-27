@@ -42,6 +42,7 @@ public abstract class UiStdFormListDisplayBaseTag extends UiFormElementBaseDispl
     if (getStyleClass() != null) {
       UiUtil.writeOpenStartTag(out, "span");
       UiUtil.writeAttribute(out, "class", getStyleClass());
+      UiUtil.writeAttribute(out, "style", getStyle());
       UiUtil.writeCloseStartTag(out);
     }    
 

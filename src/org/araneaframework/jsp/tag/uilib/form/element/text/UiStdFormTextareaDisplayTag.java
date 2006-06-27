@@ -31,12 +31,16 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  *   description = "Form textarea display field, represents UiLib "TextareaControl"."
  */
 public class UiStdFormTextareaDisplayTag extends UiFormElementBaseDisplayTag {
+  {
+    baseStyleClass = "aranea-textarea-display";
+  }
 
   protected int doEndTag(Writer out) throws Exception {        
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 
     UiUtil.writeOpenStartTag(out, "span");
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeCloseStartTag(out);
 
     if (viewModel.getSimpleValue() != null)

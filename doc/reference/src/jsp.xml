@@ -1373,16 +1373,6 @@
               <row>
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Id of button label.</entry>
-              </row>
-              <row>
-                <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry><literal>onClick</literal> Javascript action.</entry>
-              </row>
-              <row>
-                <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
                 <entry>CSS class for tag.</entry>
               </row>
             </tbody>
@@ -1484,6 +1474,11 @@
          some default style bundled with Aranea is used; or in some cases no HTML 
          <literal>class</literal> attribute is output at all&mdash;allowing 
          cascading styles from some parent (HTML) tag to take over the presentation.
+      </para>
+      
+      <para>
+        Presentation tags also have <literal>style</literal> attribute for specifying inline style for tag.
+        Using it is discouraged&mdash;twinking style classes to fit ones specific needs is highly recommended.
       </para>
 
       <para>

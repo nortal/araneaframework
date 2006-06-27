@@ -17,6 +17,8 @@
 package org.araneaframework.jsp.tag.form;        
 
 import java.io.Writer;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiException;
@@ -63,7 +65,7 @@ public abstract class UiSystemFormTag extends UiBaseTag {
     UiUtil.writeAttribute(out, "method", method);
     UiUtil.writeAttribute(out, "enctype", enctype);
     UiUtil.writeAttribute(out, "accept-charset", getAcceptCharset());
-    UiUtil.writeAttribute(out, "action", getFormAction());
+    UiUtil.writeAttribute(out, "action", ((HttpServletResponse)pageContext.getResponse()).encodeURL(getFormAction()));
     UiUtil.writeAttribute(out, "style", "margin: 0px");
     UiUtil.writeAttribute(out, "onsubmit", "javascript:return false");
     UiUtil.writeCloseStartTag(out);

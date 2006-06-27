@@ -19,6 +19,10 @@ import org.araneaframework.uilib.form.control.TimeControl;
  *   description = "Form time input field (custom control), represents UiLib "TimeControl"."
  */
 public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
+
+  {
+    baseStyleClass = "aranea-time";
+  }
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("TimeControl");
 

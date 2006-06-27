@@ -39,6 +39,10 @@ public class UiStdFormRadioSelectItemTag extends UiFormElementBaseTag {
   protected String value;
   protected String onChangePrecondition = "return true;";
 
+  {
+    baseStyleClass = "aranea-radio";
+  }
+
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("SelectControl");    
     
@@ -60,6 +64,7 @@ public class UiStdFormRadioSelectItemTag extends UiFormElementBaseTag {
     UiUtil.writeOpenStartTag(out, "input");
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeAttribute(out, "type", "radio");    
     UiUtil.writeAttribute(out, "label", localizedLabel);
     UiUtil.writeAttribute(out, "value", value);

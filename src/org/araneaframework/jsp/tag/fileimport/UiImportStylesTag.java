@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.StandardServletFileImportFilterService;
+import org.araneaframework.servlet.filter.StandardServletFileImportService;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -41,15 +41,15 @@ public class UiImportStylesTag extends UiImportFileTag {
 		// if filename specified we include the file
 		if (includeFileName != null) {
 			writeContent(out, 
-				StandardServletFileImportFilterService.IMPORTER_FILE_NAME+"="+includeFileName);
+				StandardServletFileImportService.FILE_IMPORTER_NAME+"/"+includeFileName);
 		}
 		else if (includeGroupName != null){
 			writeContent(out,
-				StandardServletFileImportFilterService.IMPORTER_GROUP_NAME+"="+includeGroupName);
+				StandardServletFileImportService.FILE_IMPORTER_NAME+"="+includeGroupName);
 		}
 		else {
 			writeContent(out,
-					StandardServletFileImportFilterService.IMPORTER_GROUP_NAME+"="+DEFAULT_GROUP_NAME);
+					StandardServletFileImportService.FILE_IMPORTER_NAME+"="+DEFAULT_GROUP_NAME);
 		}
 		return EVAL_BODY_INCLUDE;
 	}
@@ -69,7 +69,7 @@ public class UiImportStylesTag extends UiImportFileTag {
 		UiUtil.writeAttribute(out, "rel", "stylesheet");
 		UiUtil.writeAttribute(out, "type", "text/css");
 		UiUtil.writeAttribute(out, "href", 
-				((HttpServletRequest)pageContext.getRequest()).getRequestURL().append("?").append(keyValue)
+				((HttpServletRequest)pageContext.getRequest()).getRequestURL().append("/").append(keyValue)
 				, false);
 		UiUtil.writeAttribute(out, "media", this.media);	
 		UiUtil.writeCloseStartEndTag(out);

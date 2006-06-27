@@ -150,6 +150,14 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
     this.disabled = disabled;
   }
   
+  /**
+   * Returns whether the control is disabled.
+   * @return whether the control is disabled
+   */
+  public boolean isDisabled() {
+    return disabled;
+  }
+  
   //*********************************************************************
   //* ABSTRACT METHODS
   //*********************************************************************
@@ -186,7 +194,8 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
   protected void update(InputData input) throws Exception {
     super.update(input);
     
-    readFromRequest(input.getScope().toString(), ((ServletInputData) input).getRequest()); 
+    if (!disabled)
+      readFromRequest(input.getScope().toString(), ((ServletInputData) input).getRequest());
   }
   
   protected void handleEvent(InputData input) throws Exception {

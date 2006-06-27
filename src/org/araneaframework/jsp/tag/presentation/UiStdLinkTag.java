@@ -33,12 +33,17 @@ import org.araneaframework.jsp.util.UiUtil;
 public class UiStdLinkTag extends UiLinkBaseTag {
   private String disabledStyleClass;
 
+  {
+    baseStyleClass = "aranea-link";
+  }
+
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
     UiUtil.writeOpenStartTag(out, "a");
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", !disabled ? getStyleClass() : getDisabledStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     if (!disabled) {
       UiUtil.writeAttribute(out, "href", href);
       UiUtil.writeAttribute(out, "target", target);   

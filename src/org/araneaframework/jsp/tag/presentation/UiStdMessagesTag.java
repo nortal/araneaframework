@@ -66,6 +66,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
     /* matching messages, write them out */
     UiUtil.writeOpenStartTag(out, "div");
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeCloseStartTag(out);
 
     UiUtil.writeStartTag(out, "div");

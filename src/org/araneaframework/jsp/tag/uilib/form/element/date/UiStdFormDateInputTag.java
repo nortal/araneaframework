@@ -35,6 +35,10 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  *   description = "Form date input field (custom control), represents UiLib "DateControl"."
  */
 public class UiStdFormDateInputTag extends UiStdFormDateTimeInputBaseTag {
+
+  {
+    baseStyleClass = "aranea-date";
+  }
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("DateControl");    
 

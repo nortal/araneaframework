@@ -39,11 +39,16 @@ public class UiStdFormMultiSelectDisplayTag extends UiFormElementBaseDisplayTag 
   protected static final String NEWLINE_SEPARATOR_CODE ="\\n";
   protected String separator = ",&nbsp;";
 
+  {
+    baseStyleClass = "aranea-multi-select-display";
+  }
+
   protected int doEndTag(Writer out) throws Exception {        
     MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
 
     UiUtil.writeOpenStartTag(out, "span");
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeCloseStartTag(out);
 
     List selectedItems = new ArrayList(viewModel.getSelectItems());

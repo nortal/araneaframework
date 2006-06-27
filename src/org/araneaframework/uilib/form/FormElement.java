@@ -44,8 +44,6 @@ public class FormElement extends GenericFormElement {
   protected Control control;
   protected Converter converter;
   protected Data data;
-
-  protected boolean disabled;
   
   protected String label;
 
@@ -162,13 +160,14 @@ public class FormElement extends GenericFormElement {
   }
   
   public void setDisabled(boolean disabled) {
-    this.disabled = disabled;
   	if (getControl() != null)
   		getControl().setDisabled(disabled);
   }
 	
 	public boolean isDisabled() {
-		return disabled;
+      if (getControl() != null)
+        return getControl().isDisabled();
+      return false;
 	}	  
 
 	public void markBaseState() {

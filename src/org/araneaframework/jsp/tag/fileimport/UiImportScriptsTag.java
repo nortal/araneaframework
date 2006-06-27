@@ -21,7 +21,7 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.StandardServletFileImportFilterService;
+import org.araneaframework.servlet.filter.StandardServletFileImportService;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -38,15 +38,15 @@ public class UiImportScriptsTag extends UiImportFileTag {
 		// if filename specified we include the file
 		if (includeFileName != null) {
 			writeContent(out,
-					StandardServletFileImportFilterService.IMPORTER_FILE_NAME+"="+includeFileName);
+					StandardServletFileImportService.FILE_IMPORTER_NAME+"/"+includeFileName);
 		}
 		else if (includeGroupName != null) {
 			writeContent(out, 
-					StandardServletFileImportFilterService.IMPORTER_GROUP_NAME+"="+includeGroupName);
+					StandardServletFileImportService.FILE_IMPORTER_NAME+"/"+includeGroupName);
 		}
 		else {
 			writeContent(out, 
-					StandardServletFileImportFilterService.IMPORTER_GROUP_NAME+"="+DEFAULT_GROUP_NAME);
+					StandardServletFileImportService.FILE_IMPORTER_NAME+"/"+DEFAULT_GROUP_NAME);
 		}
 		return EVAL_BODY_INCLUDE;
 	}
@@ -61,7 +61,7 @@ public class UiImportScriptsTag extends UiImportFileTag {
 		UiUtil.writeOpenStartTag(out, "script");
 		UiUtil.writeAttribute(out, "language", "JavaScript1.2");
 		UiUtil.writeAttribute(out, "type", "text/javascript");
-		UiUtil.writeAttribute(out, "src", prefix.append("?").append(keyValue), false);
+		UiUtil.writeAttribute(out, "src", prefix.append("/").append(keyValue), false);
 		UiUtil.writeCloseStartTag(out);
 		UiUtil.writeEndTag(out, "script");
 	}
