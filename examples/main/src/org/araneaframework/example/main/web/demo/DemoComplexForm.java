@@ -50,7 +50,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		
 		beastSelectionControl = new SelectControl();
 		/* SelectControls can be added DisplayItems, one by one ... */
-		beastSelectionControl.addItem(new DisplayItem("-choose-", "-choose-"));
+		beastSelectionControl.addItem(new DisplayItem(null, "-choose-"));
 		/* or whole collections of value objects, which must have getters for specified value
          * and displayString fields (here, for sampleValue and sampleDisplayString). Note that 
          * both value and displayString must be of String class */
@@ -70,7 +70,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
                     // if no beast is selected in our select control, we remove the other 
                     // elements from form that depend directly on selection being made - 
                     // the controls providing possibily for more specific beast selection.
-					if (selectedBeast.equals("-choose-")) {
+					if (selectedBeast == null) {
 						complexForm.removeElement("concreteBeastControl");
 						complexForm.removeElement("selectedBeastDesc");
 						return;
@@ -93,7 +93,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		});
 		
 		complexForm = new FormWidget();
-		complexForm.addElement("beastSelection", "#Nature's Beasts", beastSelectionControl, new StringData(), true);
+		complexForm.addElement("beastSelection", "#Nature's Beasts", beastSelectionControl, new StringData(), false);
 		
 		addWidget("complexForm", complexForm);
 	}
