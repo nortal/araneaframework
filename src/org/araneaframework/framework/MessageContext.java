@@ -35,6 +35,8 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public interface MessageContext extends Serializable {
+  public static final String MESSAGE_KEY = "org.araneaframework.framework.MessageContext.MESSAGES";
+  
   /**
    * A message type indicating its an error message. 
    */
@@ -43,7 +45,7 @@ public interface MessageContext extends Serializable {
   /**
    * A message type indicating its an info message.
    */
-  public static final String INFO_TYPE = "info";
+  public static final String INFO_TYPE = "info";  
   
   /**
    * Shows a message with type type and contents message to this MessageContext.
@@ -60,4 +62,9 @@ public interface MessageContext extends Serializable {
    * Shows an informative message of type {@link #INFO_TYPE}.
    */
   public void showInfoMessage(String message);
+  
+  /**
+   * Removes all messages currently present in this MessageContext.  
+   */
+  public void clearMessages();
 }
