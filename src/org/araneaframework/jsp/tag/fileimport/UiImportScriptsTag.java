@@ -17,9 +17,11 @@
 package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.StandardServletFileImportFilterService;
-import org.araneaframework.servlet.filter.importer.JsFileImporter;
+import org.araneaframework.servlet.filter.StandardServletFileImportService;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -30,38 +32,36 @@ import org.araneaframework.servlet.filter.importer.JsFileImporter;
  *   description = "Imports js files"
  */
 public class UiImportScriptsTag extends UiImportFileTag {
+	public static final String DEFAULT_GROUP_NAME = "defaultScripts";
 	
-	public int before(Writer out) throws Exception {
-		// if filename specified we include the file, if not we include all js files
+	public int doStartTag(Writer out) throws Exception {
+		// if filename specified we include the file
 		if (includeFileName != null) {
-			writeHtmlInclude(out,
-					JsFileImporter.INCLUDE_JS_FILE_KEY+"="+includeFileName);
+			writeContent(out,
+					StandardServletFileImportService.FILE_IMPORTER_NAME+"/"+includeFileName);
+		}
+		else if (includeGroupName != null) {
+			writeContent(out, 
+					StandardServletFileImportService.FILE_IMPORTER_NAME+"/"+includeGroupName);
 		}
 		else {
-			writeHtmlInclude(out, 
-					JsFileImporter.INCLUDE_JS_KEY+"=true");
-		}
-		
-		// if no filename specified and includetemplates is specified we include the
-		// template js files also
-		if (includeFileName == null && includeTemplates != null) {
-			writeHtmlInclude(out, 
-					JsFileImporter.INCLUDE_TMPLT_JS_KEY+"=true");
+			writeContent(out, 
+					StandardServletFileImportService.FILE_IMPORTER_NAME+"/"+DEFAULT_GROUP_NAME);
 		}
 		return EVAL_BODY_INCLUDE;
 	}
-		
-	protected void writeHtmlInclude(Writer out, String keyValue) throws Exception {
-		StringBuffer buf = new StringBuffer(keyValue);
-		buf.append("&");
-		buf.append(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
-		buf.append("=");
-		buf.append(JsFileImporter.TYPE);
-		
+	
+	protected void writeContent(Writer out, String keyValue) throws Exception {
+		StringBuffer url = ((HttpServletRequest)pageContext.getRequest()).getRequestURL();
+		writeHtmlScriptsInclude(out, keyValue, url);
+		out.write("\n");
+	}
+	
+	public static void writeHtmlScriptsInclude(Writer out, String keyValue, StringBuffer prefix) throws Exception {
 		UiUtil.writeOpenStartTag(out, "script");
-		UiUtil.writeAttribute(out, "language", "JavasScript1.2");
+		UiUtil.writeAttribute(out, "language", "JavaScript1.2");
 		UiUtil.writeAttribute(out, "type", "text/javascript");
-		UiUtil.writeAttribute(out, "src", "?"+buf.toString(), false);
+		UiUtil.writeAttribute(out, "src", prefix.append("/").append(keyValue), false);
 		UiUtil.writeCloseStartTag(out);
 		UiUtil.writeEndTag(out, "script");
 	}
