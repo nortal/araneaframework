@@ -21,7 +21,6 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.tag.presentation.UiStdImageBaseTag;
@@ -55,8 +54,8 @@ public class SampleImageTag extends UiStdImageBaseTag {
 	}
   
 	public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {
-		StringBuffer url = ((HttpServletRequest)pageContext.getRequest()).getRequestURL();
-		writeImage(out, url.append(FileImporter.getImportString(src)).toString(), width, height, alt, styleClass, title);
+		String url = FileImporter.getImportString(src, pageContext.getRequest(), pageContext.getResponse());
+		writeImage(out, url, width, height, alt, styleClass, title);
 	}
 
 	protected Info getImageInfo(String code) {
