@@ -17,21 +17,36 @@ import org.araneaframework.uilib.support.TextType;
  * 
  */
 public class AutoCompleteTextControl extends TextControl {
-  private static final Logger log = Logger.getLogger(AutoCompleteTextControl.class);
+  private static final Logger log = Logger.getLogger(AutoCompleteTextControl.class);	
+  public static final String LISTENER_NAME = "autocomplete"; 
+
+  protected long minCompletionLength = 1;
   protected DataProvider dataProvider;
 
-  public AutoCompleteTextControl() throws Exception {
-    super();
+  public AutoCompleteTextControl() {}
+
+  /**
+   * @param minCompletionLength number of chars that must be input before suggestions are provided
+   */
+  public AutoCompleteTextControl(long minCompletionLength) {
+    this.minCompletionLength = minCompletionLength;
   }
 
-  public AutoCompleteTextControl(TextType textType) throws Exception {
+  public AutoCompleteTextControl(TextType textType) {
     super(textType);
+  }
+  
+  /**
+   * @param minCompletionLength number of chars that must be input before suggestions are provided
+   */
+  public AutoCompleteTextControl(TextType textType, long minCompletionLength) {
+    super(textType);
+    this.minCompletionLength = minCompletionLength;
   }
 
   protected void init() throws Exception {
     super.init();
-    //XXX: make constant
-    addActionListener("autocomplete", new AutoCompleteActionListener());
+    addActionListener(LISTENER_NAME, new AutoCompleteActionListener());
   }
 
   public void setDataProvider(DataProvider dataProvider) {
@@ -62,6 +77,30 @@ public class AutoCompleteTextControl extends TextControl {
       HttpServletResponse response = ((ServletOutputData) output).getResponse();
       response.setContentType("text/xml");
       response.getWriter().write(xml.toString());
+    }
+  }
+  
+  /**
+   * Returns {@link ViewModel}.
+   * 
+   * @return {@link ViewModel}.
+   */
+  public Object getViewModel() {
+    return new ViewModel();
+  }	  
+
+  //*********************************************************************
+  //* VIEW MODEL
+  //*********************************************************************  	
+  public class ViewModel extends TextControl.ViewModel {
+    private long minCompletionLength;
+    
+    public ViewModel() {
+      this.minCompletionLength = AutoCompleteTextControl.this.minCompletionLength;
+    }
+
+    public long getMinCompletionLength() {
+      return minCompletionLength;
     }
   }
 }

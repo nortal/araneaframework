@@ -22,6 +22,7 @@
 		<file path="js/validation/jsp-ui-form-validation.js"/>
 		<file path="js/validation/jsp-ui-validation.js"/>
 		<file path="js/validation/jsp-ui.js"/>
+
 		<file path="js/scriptaculous/prototype.js"/>
 		<file path="js/scriptaculous/controls.js"/>
 		<file path="js/scriptaculous/effects.js"/>

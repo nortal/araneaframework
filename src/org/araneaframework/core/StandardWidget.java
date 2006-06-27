@@ -280,7 +280,7 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
       try {
         input.pushScope(next);
         output.pushScope(next);
-        
+
         service._getService().action(path, input, output);
       }
       finally {
