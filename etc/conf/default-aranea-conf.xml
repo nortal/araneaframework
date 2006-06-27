@@ -190,7 +190,7 @@
     id="araneaLocalizationFilter" singleton="false">
     <property name="resourceBundleName" value="${l10n.resourceBundle}"/>
     <property name="languageName" value="${l10n.defaultLocale}"/>
-  </bean>        
+  </bean>
 
   <bean class="org.araneaframework.servlet.filter.StandardJspFilterService" 
     id="araneaJspConfigFilter" singleton="false">
