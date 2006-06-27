@@ -20,14 +20,13 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.tag.basic.UiElementTag;
 import org.araneaframework.jsp.tag.fileimport.UiImportScriptsTag;
 import org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormRichTextAreaTag;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.StandardServletFileImportService;
+import org.araneaframework.servlet.filter.importer.FileImporter;
 
 /**
  * The rich text editor (tinyMCE at the moment) requires a global
@@ -47,9 +46,8 @@ public class UiRichTextAreaInitializationTag extends UiElementTag {
 	private static final String MCE_JS = "js/tiny_mce/tiny_mce.js";
 	
 	protected int doStartTag(Writer out) throws Exception {
-		UiImportScriptsTag.writeHtmlScriptsInclude(out, 
-				StandardServletFileImportService.FILE_IMPORTER_NAME+"/"+MCE_JS,
-				((HttpServletRequest)pageContext.getRequest()).getRequestURL());
+		String url = FileImporter.getImportString(MCE_JS, pageContext.getRequest(), pageContext.getResponse());
+		UiImportScriptsTag.writeHtmlScriptsInclude(out,  url);
 		
 		setName("script");
 		

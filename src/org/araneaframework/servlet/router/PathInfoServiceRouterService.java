@@ -59,10 +59,9 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 		
 		String path = ((ServletInputData) input).getRequest().getPathInfo();
 		if (path != null) {
-			// lose the first slash
-			if (path.indexOf("/") != -1)
+			// lose the first slashes
+			while (path.indexOf("/") == 0 && path.length() > 0)
 				path = path.substring(1);
-			
 			
 			int index = path.indexOf("/");
 			// we have a second slash

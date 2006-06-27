@@ -42,7 +42,7 @@ public class UiBaseTag implements Tag, TryCatchFinally, UiContainedTagInterface 
 	/* ***********************************************************************************
 	 * VARIABLES
 	 * ***********************************************************************************/
-	private Tag parent;
+	protected Tag parent;
 	protected PageContext pageContext;
 	
 	/**
