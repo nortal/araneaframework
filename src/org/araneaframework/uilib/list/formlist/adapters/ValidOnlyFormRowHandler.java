@@ -17,11 +17,8 @@
 package org.araneaframework.uilib.list.formlist.adapters;
 
 import java.util.Map;
-import java.util.Set;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.formlist.FormListUtil;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.FormRowHandler;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
