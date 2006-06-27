@@ -874,7 +874,7 @@ el.click();]]></programlisting>
     </sect2>
     
     	
-    <!--  textinput,textdisplay -->
+    <!--  textinput,autoCompleteTextInput,textdisplay -->
     <sect2>
           <title><![CDATA[<ui:textInput>]]></title>
           <para>
@@ -926,6 +926,54 @@ el.click();]]></programlisting>
         
       </sect2>
       
+    <sect2>
+          <title><![CDATA[<ui:autoCompleteTextInput>]]></title>
+          <para>
+	          Form text input field, represents <literal>AutoCompleteTextControl</literal>.
+              It is rendered in HTML with <literal>&lt;input type="text" ...&gt;</literal> tag. Default <literal>styleClass="aranea-text"</literal>.
+              It is able to make background AJAX request to the server, fetching suggested completions to user input and displaying these to the
+              user.
+          </para>
+      
+        <sect3>
+        <title>Attributes</title>
+	        <informaltable frame="all">
+	          <tgroup cols="3">
+	            <colspec colwidth="2*"/>
+	            <colspec colwidth="1*"/>
+	            <colspec colwidth="4*"/>
+	            <thead>
+	              <row>
+	                <entry>Attribute</entry>
+	                <entry>Required</entry>
+	                <entry>Description</entry>
+	              </row>
+	            </thead>
+	            <tbody>
+	              <row>
+	                <entry>size</entry>
+	                <entry><emphasis>no</emphasis></entry>
+	                <entry>Maximum length of accepted text (in characters).</entry>
+	              </row>
+	              <row>
+	                <entry>onChangePrecondition</entry>
+	                <entry><emphasis>no</emphasis></entry>
+	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+	              </row>
+                  <row>
+	                <entry>divClass</entry>
+	                <entry><emphasis>no</emphasis></entry>
+	                <entry>CSS class attribute assigned to &lt;DIV&gt; inside which suggestions are presented.</entry>
+	              </row>
+	            </tbody>
+	          </tgroup>
+	        </informaltable>
+             <emphasis>Also has all common form element rendering attributes.</emphasis> 
+        </sect3>
+
+      </sect2>
+
+
     <sect2>
           <title><![CDATA[<ui:textInputDisplay>]]></title>
           <para>

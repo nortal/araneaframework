@@ -36,8 +36,6 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * 
  */
 public class FormElement extends GenericFormElement {
-	  private static final Logger log = Logger.getLogger(FormElement.class);
-
   //*******************************************************************
   // FIELDS
   //*******************************************************************

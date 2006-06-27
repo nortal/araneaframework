@@ -1,5 +1,6 @@
 package org.araneaframework.uilib.form.control;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
@@ -8,17 +9,18 @@ import org.araneaframework.OutputData;
 import org.araneaframework.core.ActionListener;
 import org.araneaframework.jsp.util.StringUtil;
 import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.support.TextType;
 
 /**
- * TextControl with Ajax autocompletion support
+ * TextControl with AJAX autocompletion support.
  * 
  * @author Steven Jentson (steven@webmedia.ee)
- * 
+ * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class AutoCompleteTextControl extends TextControl {
   private static final Logger log = Logger.getLogger(AutoCompleteTextControl.class);	
-  public static final String LISTENER_NAME = "autocomplete"; 
+  public static final String LISTENER_NAME = "autocomplete";
 
   protected long minCompletionLength = 1;
   protected DataProvider dataProvider;
@@ -35,7 +37,7 @@ public class AutoCompleteTextControl extends TextControl {
   public AutoCompleteTextControl(TextType textType) {
     super(textType);
   }
-  
+
   /**
    * @param minCompletionLength number of chars that must be input before suggestions are provided
    */
@@ -60,23 +62,48 @@ public class AutoCompleteTextControl extends TextControl {
   private class AutoCompleteActionListener implements ActionListener {
     public void processAction(Object actionId, InputData input,
         OutputData output) throws Exception {
-      String val = innerData == null ? null : ((String[]) innerData)[0];
-      List suggestions = dataProvider.getSuggestions((String) val);
+      String str = innerData == null ? null : ((String[]) innerData)[0];
+      List suggestions = dataProvider.getSuggestions(str);
 
-      //XXX: outputting some hardcoded HTML from here is not good
-      StringBuffer xml = new StringBuffer();
-      xml.append("<ul>");
-      for (int i = 0; i < suggestions.size(); i++) {
-        xml.append("<li>");
-        xml.append(StringUtil.escapeHtmlEntities((String) suggestions.get(i)));
-        xml.append("</li>");
-      }
-      xml.append("</ul>");
-
-      log.debug("Writing output: " + xml.toString());
+      ResponseBuilder responseBuilder = 
+        (ResponseBuilder) getConfiguration().getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
+      if (responseBuilder == null)
+        responseBuilder = new DefaultResponseBuilder();
+      
       HttpServletResponse response = ((ServletOutputData) output).getResponse();
-      response.setContentType("text/xml");
-      response.getWriter().write(xml.toString());
+      String xml = responseBuilder.getResponseContent(suggestions);
+      response.setContentType(responseBuilder.getResponseContentType());
+      //TODO: remove
+      log.debug("Writing output: " + xml);
+      response.getWriter().write(xml);
+    }
+  }
+  
+  //*********************************************************************
+  //* Interface and implementation of AJAX response builder that 
+  //* sends suggestions back to client. 
+  //*********************************************************************  	
+  
+  public interface ResponseBuilder extends Serializable {
+    public String getResponseContent(List suggestions);
+    public String getResponseContentType();
+  }
+  
+  public class DefaultResponseBuilder implements ResponseBuilder {
+	public String getResponseContent(List suggestions) {
+  	  StringBuffer xml = new StringBuffer();
+        xml.append("<ul>");
+        for (int i = 0; i < suggestions.size(); i++) {
+  		  xml.append("<li>");
+  		  xml.append(StringUtil.escapeHtmlEntities((String) suggestions.get(i)));
+  		  xml.append("</li>");
+        }
+        xml.append("</ul>");
+        return xml.toString();
+    }
+	
+    public String getResponseContentType() {
+      return "text/xml";
     }
   }
   
