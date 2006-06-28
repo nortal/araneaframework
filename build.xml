@@ -93,21 +93,10 @@
 	<target name="jar" depends="compile">
 		<mkdir dir="dist" />
 		
-		<!-- TMP file for the version -->
-		<property name="versionFile" value="version"/>
-		<property file="version.properties"/>
-		<property file="change.properties"/>
-		
-		<echo file="version" message="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}${line.separator}"/>
-		<echo file="version" append="true" message="change_${change.id}${line.separator}"/>
-
 		<jar destfile="dist/aranea-core.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/*"/>
 				<include name="org/araneaframework/core/**/*"/>
-			</fileset>
-			<fileset dir=".">
-				<include name="${versionFile}"/>
 			</fileset>
 		</jar>
 		
@@ -115,17 +104,11 @@
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/framework/**/*"/>												
 			</fileset>
-			<fileset dir=".">
-				<include name="${versionFile}"/>
-			</fileset>
 		</jar>		
 		
 		<jar destfile="dist/aranea-servlet.jar" compress="true">
 			<fileset dir="build/classes">							
 			  <include name="org/araneaframework/servlet/**/*"/>						
-			</fileset>
-			<fileset dir=".">
-				<include name="${versionFile}"/>
 			</fileset>
 		</jar>			
 		
@@ -133,17 +116,11 @@
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/backend/**/*"/>			
 			</fileset>
-			<fileset dir=".">
-				<include name="${versionFile}"/>
-			</fileset>
 		</jar>
 		
 		<jar destfile="dist/aranea-uilib.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/uilib/**/*"/>			
-			</fileset>
-			<fileset dir=".">
-				<include name="${versionFile}"/>
 			</fileset>
       	<fileset dir="etc" includes="resource/**/*"/>  
 		</jar>	
@@ -153,9 +130,6 @@
 				<include name="org/araneaframework/ioc/spring/**/*"/>			
 			</fileset>
 			<fileset dir="etc" includes="conf/**/*"/>
-			<fileset dir=".">
-				<include name="${versionFile}"/>
-			</fileset>
 		</jar>	
 		
 		<jar destfile="dist/aranea-jsp.jar" compress="true">
@@ -167,21 +141,17 @@
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
-			<fileset dir=".">
-				<include name="${versionFile}"/>
-			</fileset>
 		</jar>	
 		
 		<jar destfile="dist/aranea-jsp-engine.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/engine/**/*"/>		        
 			</fileset>
-			<fileset dir=".">
-				<include name="${versionFile}"/>
-			</fileset>
       <fileset dir="etc" includes="cache/**/*"/>      
 		</jar>			
-		
+	
+		<!-- harvest the information for the versioning -->
+		<property file="version.properties"/>
 		<jar destfile="dist/aranea.jar" compress="true">
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/**/*"/>		
@@ -191,9 +161,11 @@
 			<fileset dir=".">
 				<include name="${versionFile}"/>
 			</fileset>
+			
+			<manifest>
+				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+			</manifest>
 		</jar>	
-		
-		<delete file="${versionFile}"/>	
 	</target>
 	
 	<target name="javadoc">
