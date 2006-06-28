@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseTag;
 
 /**
@@ -29,13 +28,11 @@ import org.araneaframework.jsp.tag.uilib.form.UiStdFormSimpleElementDisplayBaseT
  *   description = "Form date display field, represents UiLib "DateControl"."
  */
 public class UiStdFormDateInputDisplayTag extends UiStdFormSimpleElementDisplayBaseTag {
-	protected void init() {
-		super.init();
-		styleClass = "aranea-date-display";
-	}
-	
-	protected int after(Writer out) throws Exception {
-		assertControlType("DateControl");
-		return super.after(out);
+  {
+     baseStyleClass = "aranea-date-display";
+  }
+  protected int doEndTag(Writer out) throws Exception {
+    assertControlType("DateControl");
+    return super.doEndTag(out);
   }
 }
