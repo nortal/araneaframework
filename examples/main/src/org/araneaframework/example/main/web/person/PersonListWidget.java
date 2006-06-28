@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.form.control.DateControl;

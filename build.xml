@@ -100,7 +100,8 @@
 			</fileset>
 			
 			<manifest>
-				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+				<attribute name="framework-version" value="${araneaframework.version}"/>
+				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
 			</manifest>
 		</jar>
 		
@@ -110,7 +111,8 @@
 			</fileset>
 			
 			<manifest>
-				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+				<attribute name="framework-version" value="${araneaframework.version}"/>
+				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
 			</manifest>
 		</jar>		
 		
@@ -120,7 +122,8 @@
 			</fileset>
 			
 			<manifest>
-				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+				<attribute name="framework-version" value="${araneaframework.version}"/>
+				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
 			</manifest>
 		</jar>			
 		
@@ -130,7 +133,8 @@
 			</fileset>
 			
 			<manifest>
-				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+				<attribute name="framework-version" value="${araneaframework.version}"/>
+				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
 			</manifest>
 		</jar>
 		
@@ -139,8 +143,10 @@
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
       	<fileset dir="etc" includes="resource/**/*"/>  
+
 			<manifest>
-				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+				<attribute name="framework-version" value="${araneaframework.version}"/>
+				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
 			</manifest>
 		</jar>	
 		
@@ -149,8 +155,10 @@
 				<include name="org/araneaframework/ioc/spring/**/*"/>			
 			</fileset>
 			<fileset dir="etc" includes="conf/**/*"/>
+			
 			<manifest>
-				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+				<attribute name="framework-version" value="${araneaframework.version}"/>
+				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
 			</manifest>
 		</jar>	
 		
@@ -163,8 +171,10 @@
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
+
 			<manifest>
-				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+				<attribute name="framework-version" value="${araneaframework.version}"/>
+				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
 			</manifest>
 		</jar>	
 		
@@ -176,7 +186,8 @@
 			<fileset dir="etc" includes="cache/**/*"/>      
 			
 			<manifest>
-				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+				<attribute name="framework-version" value="${araneaframework.version}"/>
+				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
 			</manifest>
 		</jar>			
 	
@@ -191,7 +202,8 @@
 			</fileset>
 			
 			<manifest>
-				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+				<attribute name="framework-version" value="${araneaframework.version}"/>
+				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
 			</manifest>
 		</jar>	
 	</target>
