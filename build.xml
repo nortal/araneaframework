@@ -197,10 +197,7 @@
 			</fileset>
 			<fileset dir="etc"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
-			<fileset dir=".">
-				<include name="${versionFile}"/>
-			</fileset>
-			
+
 			<manifest>
 				<attribute name="framework-version" value="${araneaframework.version}"/>
 				<attribute name="changelogic-version" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
