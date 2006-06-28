@@ -123,7 +123,8 @@ public class FloatControl extends EmptyStringNullableControl {
 	//* INTERNAL METHODS
 	//*********************************************************************
 	
-	protected void init() {    
+	protected void init() throws Exception {
+		super.init();
 		if (!confOverridden) {
       Collection confFormat = (Collection) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DECIMAL_FORMAT);    
 			if (confFormat != null) decimalFormat = confFormat;
