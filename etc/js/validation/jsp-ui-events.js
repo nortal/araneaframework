@@ -105,13 +105,13 @@
             if (c < 'A' || c > 'Z')
                 break;
         }
-        idPrefix = current.id.substring(0,i);
-        pos = current.id.substring(i);
+        var idPrefix = current.id.substring(0,i);
+        var pos = current.id.substring(i);
 
         // navigate to next button if up/down keys pressed...
         if (e.keyCode == 40 || e.keyCode == 38) { // DOWN || UP
-            nextpos = e.keyCode == 40 ? parseInt(pos) + 1 : parseInt(pos) - 1;
-            nextbutton = document.getElementById(idPrefix + nextpos.toString());
+            var nextpos = e.keyCode == 40 ? parseInt(pos) + 1 : parseInt(pos) - 1;
+            var nextbutton = document.getElementById(idPrefix + nextpos.toString());
             if (nextbutton) {
                 unCheckRadioButton(current);
                 checkRadioButton(nextbutton);
