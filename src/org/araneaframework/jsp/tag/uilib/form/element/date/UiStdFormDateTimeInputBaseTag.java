@@ -116,7 +116,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 			String calendarImgId = id + CALENDAR_BUTTON_ID_SUFFIX;
 			UiUtil.writeOpenStartTag(out, "img");
 			out.write(" src=\"");
-			out.write(FileImporter.getImportString("gfx/ico_calendar.gif"));
+			out.write(FileImporter.getImportString("gfx/ico_calendar.gif", pageContext.getRequest(), pageContext.getResponse()));
 			out.write("\" ");
 			UiUtil.writeAttribute(out, "id", calendarImgId);
 			UiUtil.writeAttribute(out, "class", calendarIconClass);
