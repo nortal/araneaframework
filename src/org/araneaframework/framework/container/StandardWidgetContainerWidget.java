@@ -41,7 +41,7 @@ public class StandardWidgetContainerWidget extends StandardWidget {
   /**
    * The key of the child widget in the children set.
    */
-  public static final String CHILD_KEY = "root";
+  public static final String CHILD_KEY = "r";
   
   /**
    * The key of the path of the event in the request.
