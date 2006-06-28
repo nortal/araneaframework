@@ -115,16 +115,24 @@ function createNamedElement(type, name) {
 
 // adds options empty,0-(z-1) to select with option x preselected
 function addOptions(selectName, z, x) {
-  select=document.getElementsByName(selectName).item(0);
-  emptyOpt=document.createElement("option");
+  var select=document.getElementsByName(selectName).item(0);
+  var emptyOpt=document.createElement("option");
   emptyOpt.setAttribute("value", "");
   select.appendChild(emptyOpt);
-  for (i = 0; i < z; i++) {
-    opt = document.createElement("option");
+  for (var i = 0; i < z; i++) {
+    var opt = document.createElement("option");
     opt.setAttribute("value", (i < 10 ? "0" : "")+ i);
     if (i == x) { opt.setAttribute("selected", "true") };
-    node = document.createTextNode((i < 10 ? "0" : "")+ i);
+    var node = document.createTextNode((i < 10 ? "0" : "")+ i);
     opt.appendChild(node);
     select.appendChild(opt);
   }
+}
+
+function saveValue(element) {
+  element.oldValue = element.value; 
+}
+
+function isChanged(elementId) {
+  return (document.getElementById(elementId).oldValue != document.getElementById(elementId).value);
 }
