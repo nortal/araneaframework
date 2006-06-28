@@ -98,24 +98,40 @@
 				<include name="org/araneaframework/*"/>
 				<include name="org/araneaframework/core/**/*"/>
 			</fileset>
+			
+			<manifest>
+				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+			</manifest>
 		</jar>
 		
 		<jar destfile="dist/aranea-framework.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/framework/**/*"/>												
 			</fileset>
+			
+			<manifest>
+				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+			</manifest>
 		</jar>		
 		
 		<jar destfile="dist/aranea-servlet.jar" compress="true">
 			<fileset dir="build/classes">							
 			  <include name="org/araneaframework/servlet/**/*"/>						
 			</fileset>
+			
+			<manifest>
+				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+			</manifest>
 		</jar>			
 		
 		<jar destfile="dist/aranea-backend.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/backend/**/*"/>			
 			</fileset>
+			
+			<manifest>
+				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+			</manifest>
 		</jar>
 		
 		<jar destfile="dist/aranea-uilib.jar" compress="true">
@@ -123,6 +139,9 @@
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
       	<fileset dir="etc" includes="resource/**/*"/>  
+			<manifest>
+				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+			</manifest>
 		</jar>	
 		
 		<jar destfile="dist/aranea-spring.jar" compress="true">
@@ -130,6 +149,9 @@
 				<include name="org/araneaframework/ioc/spring/**/*"/>			
 			</fileset>
 			<fileset dir="etc" includes="conf/**/*"/>
+			<manifest>
+				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+			</manifest>
 		</jar>	
 		
 		<jar destfile="dist/aranea-jsp.jar" compress="true">
@@ -141,17 +163,23 @@
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
+			<manifest>
+				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+			</manifest>
 		</jar>	
 		
 		<jar destfile="dist/aranea-jsp-engine.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/engine/**/*"/>		        
 			</fileset>
-      <fileset dir="etc" includes="cache/**/*"/>      
+      	
+			<fileset dir="etc" includes="cache/**/*"/>      
+			
+			<manifest>
+				<attribute name="version-number" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
+			</manifest>
 		</jar>			
 	
-		<!-- harvest the information for the versioning -->
-		<property file="version.properties"/>
 		<jar destfile="dist/aranea.jar" compress="true">
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/**/*"/>		
