@@ -134,5 +134,6 @@ function saveValue(element) {
 }
 
 function isChanged(elementId) {
-  return (document.getElementById(elementId).oldValue != document.getElementById(elementId).value);
+  var el = document.getElementById(elementId);
+  return (el.oldValue != el.value);
 }
