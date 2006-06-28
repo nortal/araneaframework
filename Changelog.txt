@@ -86,6 +86,3 @@ Bugfix: Core  | The encoding problems in StandardServletFileUploadFilterService 
 Bugfix: Core  | List bug fixes.
 Bugfix: Core  | Updates and fixes to example application.
 Bugfix: Core  | ... and countless other bug fixes :)
-
-
-

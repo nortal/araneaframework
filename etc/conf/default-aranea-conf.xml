@@ -11,7 +11,7 @@
   
   <bean id="araneaApplicationFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
-    <property name="childService" ref="araneaPathInfoRouter"/>
+		<property name="childService" ref="araneaTopServiceRouter"/>
     <property name="filterChain">     
       <list>
         <ref bean="araneaCriticalErrorHandler"/>
@@ -24,6 +24,16 @@
       </list>
     </property>
   </bean>  
+
+ <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="araneaTopServiceRouter"
+    singleton="false">
+    <property name="defaultServiceId" value="application"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="application" value-ref="araneaPathInfoRouter"/>
+      </map>
+    </property>
+  </bean>
 
   <bean class="org.araneaframework.servlet.router.PathInfoServiceRouterService" id="araneaPathInfoRouter"
         singleton="false">
