@@ -53,16 +53,14 @@ public class AjaxFilterService extends BaseFilterService {
 				arUtil.rollback();
 
 				String transactionElement = getTransactionElement(response);
-				log.debug("Transaction element " + transactionElement);
 				servletResponse.getOutputStream().write(transactionElement.getBytes(characterEncoding));
-				log.debug("updating regions " + commaSeparatedRegions);
 
 				String[] regions = commaSeparatedRegions.split(",");
 				// adding the regions that may appear in the response but
 				// we're not present in the request
 				if (existingRegions != null) {
 					for (Iterator iter = existingRegions.iterator(); iter.hasNext();) {
-						regions = (String[])ArrayUtils.add(regions, (String) iter.next());
+						regions = (String[])ArrayUtils.add(regions, iter.next());
 					}
 				}
 

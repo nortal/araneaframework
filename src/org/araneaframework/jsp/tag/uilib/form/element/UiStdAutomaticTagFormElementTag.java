@@ -70,10 +70,6 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    Map tagMapping = UiStdWidgetCallUtil.getContainer(pageContext).getTagMapping(pageContext);
-
-    if(tagMapping == null)
-      throw new JspException("The tag mapping was not found!.");
 
     formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY);
     FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY);
@@ -95,6 +91,11 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
 
     if(viewSelector == null)
       throw new JspException("The form element view selector was not passed!.");
+    
+    Map tagMapping = UiStdWidgetCallUtil.getContainer(pageContext).getTagMapping(pageContext, viewSelector.getUri());
+    
+    if(tagMapping == null)
+      throw new JspException("The tag mapping was not found!.");
 
     TagInfo tagInfo = (TagInfo) tagMapping.get(viewSelector.getTag());
 
