@@ -20,8 +20,10 @@ import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.Widget;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.framework.core.BaseFilterWidget;
+import org.araneaframework.core.StandardWidget;
+import org.araneaframework.framework.ViewPortContext;
 
 /**
  * A widget that contains a child widget. It routes an action to the child
@@ -30,8 +32,16 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  *
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardWidgetContainerWidget extends BaseFilterWidget {
+public class StandardWidgetContainerWidget extends StandardWidget {  
+  //*******************************************************************
+  // CONSTANTS
+  //*******************************************************************
   private static final Logger log = Logger.getLogger(StandardWidgetContainerWidget.class);
+  
+  /**
+   * The key of the child widget in the children set.
+   */
+  public static final String CHILD_KEY = "r";
   
   /**
    * The key of the path of the event in the request.
@@ -43,26 +53,46 @@ public class StandardWidgetContainerWidget extends BaseFilterWidget {
    */
   public static final String ACTION_PATH_KEY = "widgetActionPath";
   
+  private Widget root;
+  
+  //*******************************************************************
+  // PUBLIC METHODS
+  //*******************************************************************  
+    
+  public void setRoot(Widget root) {
+    this.root = root;
+  }  
+  
+  //*******************************************************************
+  // PROTECTED METHODS
+  //*******************************************************************
+
   protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Widget container widget initialized.");  
+    addWidget(CHILD_KEY, root);
   }
   
-  protected void destroy() throws Exception {
-    super.destroy();
+  protected void render(OutputData output) throws Exception {
+    output.pushAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY, this);
     
-    log.debug("Widget container widget destroyed.");
+    try {
+      output.pushScope(CHILD_KEY);
+      ((Widget) getChildren().get(CHILD_KEY))._getWidget().render(output);
+    }
+    finally {
+      output.popScope();
+      output.popAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
+    }
   }
-  
+    
   /**
    * If <code>hasEvent(input)</code> returns true, event is called on the child.
    * The path to the child is constructed via <code>getEventPath(input)</code>.
    */
   protected void event(Path path, InputData input) throws Exception {
     if (hasEvent(input)) {
-      log.debug("Routing request through the container to the child's event.");
-      childWidget._getWidget().event(getEventPath(input), input);
+      Path eventPath = getEventPath(input);
+      log.debug("Routing event to widget '" + eventPath.toString() + "'");
+      super.event(eventPath, input);
     }
   }
     
@@ -72,8 +102,9 @@ public class StandardWidgetContainerWidget extends BaseFilterWidget {
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (hasAction(input)) {
-      log.debug("Routing request through the container to the child's action.");
-      childWidget._getService().action(getActionPath(input), input, output);
+      Path actionPath = getActionPath(input);
+      log.debug("Routing action to widget '" + actionPath.toString() + "'");
+      super.action(actionPath, input, output);
     }
   }
     
