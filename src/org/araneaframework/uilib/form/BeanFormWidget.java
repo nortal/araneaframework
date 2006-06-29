@@ -23,6 +23,7 @@ import org.araneaframework.uilib.form.reader.BeanFormReader;
 import org.araneaframework.uilib.form.reader.BeanFormWriter;
 
 public class BeanFormWidget extends FormWidget {
+  private static final String[] primitiveTypes = new String[] {"int", "long", "short", "double", "float", "boolean", "byte", "char"};
   private BeanMapper beanMapper;
   private Class beanClass;
   
@@ -38,7 +39,6 @@ public class BeanFormWidget extends FormWidget {
     Class type = beanMapper.getBeanFieldType(fieldId);
     
     if (type.isPrimitive()) {
-      String[] primitiveTypes = new String[] {"int", "long", "short", "double", "float", "boolean", "byte", "char"};
       switch(ArrayUtils.indexOf(primitiveTypes, type.getName())) {
         case 0: { type = Integer.class; break; }
         case 1: { type = Long.class; break; }
