@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.data;
 
 import java.sql.Timestamp;
+import org.araneaframework.uilib.form.Data;
 
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>

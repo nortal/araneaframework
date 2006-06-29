@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
@@ -31,45 +31,44 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  *   description = "Form textarea display field, represents UiLib "TextareaControl"."
  */
 public class UiStdFormTextareaDisplayTag extends UiFormElementBaseDisplayTag {
+  {
+    baseStyleClass = "aranea-textarea-display";
+  }
 
-	protected void init() {
-		super.init();
-		styleClass = "aranea-textarea-display";
-	}
-	
-	protected int after(Writer out) throws Exception {				
-		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
-		
-		UiUtil.writeOpenStartTag(out, "span");
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		UiUtil.writeCloseStartTag(out);
-		
-		if (viewModel.getSimpleValue() != null)
-			for (StringTokenizer lines = new StringTokenizer(viewModel.getSimpleValue(), "\n"); lines.hasMoreTokens(); ) {
-				String line = lines.nextToken();
-				boolean isPreviousNbsp = false;
-				for (int i = 0; i < line.length(); i++) {
-					if (line.charAt(i) == ' ') {
-						if (isPreviousNbsp) {
-							out.write(" ");
-							isPreviousNbsp = false;
-						} else {							
-							out.write("&nbsp;");
-							isPreviousNbsp = true;
-						}													
-					} 
-					else {
-						isPreviousNbsp = false;
-						UiUtil.writeEscaped(out, line.charAt(i));
-					}
-				}
-				
-				if (lines.hasMoreTokens())
-					UiUtil.writeStartEndTag(out, "br");
-			}
-			
-		UiUtil.writeEndTag(out, "span");		
+  protected int doEndTag(Writer out) throws Exception {        
+    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 
-		return super.after(out);  
-	}
+    UiUtil.writeOpenStartTag(out, "span");
+    UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
+    UiUtil.writeCloseStartTag(out);
+
+    if (viewModel.getSimpleValue() != null)
+      for (StringTokenizer lines = new StringTokenizer(viewModel.getSimpleValue(), "\n"); lines.hasMoreTokens(); ) {
+        String line = lines.nextToken();
+        boolean isPreviousNbsp = false;
+        for (int i = 0; i < line.length(); i++) {
+          if (line.charAt(i) == ' ') {
+            if (isPreviousNbsp) {
+              out.write(" ");
+              isPreviousNbsp = false;
+            } else {              
+              out.write("&nbsp;");
+              isPreviousNbsp = true;
+            }                          
+          } 
+          else {
+            isPreviousNbsp = false;
+            UiUtil.writeEscaped(out, line.charAt(i));
+          }
+        }
+
+        if (lines.hasMoreTokens())
+          UiUtil.writeStartEndTag(out, "br");
+      }
+
+    UiUtil.writeEndTag(out, "span");
+
+    return super.doEndTag(out);  
+  }
 }

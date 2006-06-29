@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.structure.filter.column;
 
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.IsNullExpression;

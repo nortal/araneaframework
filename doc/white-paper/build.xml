@@ -3,7 +3,7 @@
     <dirname property="imported.basedir" file="${ant.file.ReferenceDocumentation}"/>
 
     <!-- Set build directories for all formats. -->
-    <property name="build.dir"             value="../../build/doc/white-paper"/>
+    <property name="build.dir"             value="../../dist/doc/white-paper"/>
 
     <!-- Support files for build process. -->
     <property name="support.dir"           value="${imported.basedir}/../support"/>
