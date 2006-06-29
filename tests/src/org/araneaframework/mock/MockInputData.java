@@ -99,7 +99,7 @@ public class MockInputData implements InputData {
     return data;
   }
 
-	public OutputData getCurrentOutputData() {
+	public OutputData getOutputData() {
 		return null;
 	}
 }
