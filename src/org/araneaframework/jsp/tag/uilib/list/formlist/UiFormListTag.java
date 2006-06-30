@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.uilib.list.formlist;
 
 import java.io.Writer;
-import javax.servlet.jsp.PageContext;
+import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.UiWidgetTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
 import org.araneaframework.jsp.util.UiUtil;
@@ -39,25 +39,37 @@ import org.araneaframework.uilib.list.formlist.FormListWidget;
 public class UiFormListTag extends UiWidgetTag {
 	protected FormListWidget.ViewModel formListViewModel;
 	
-	public final static String FORM_LIST_ID_KEY_REQUEST = "formListId";
-	public final static String FORM_LIST_VIEW_MODEL_KEY_REQUEST = "formList";	
+	public final static String FORM_LIST_ID_KEY = "formListId";
+	public final static String FORM_LIST_VIEW_MODEL_KEY = "formList";	
 	/**
 	 *
 	 */
-	public int before(Writer out) throws Exception {
+	public int doStartTag(Writer out) throws Exception {
 		if (id == null) {
-			String listId = (String) UiUtil.readAttribute(pageContext, UiListTag.LIST_ID_KEY_REQUEST, PageContext.REQUEST_SCOPE);
+			String listId = (String) UiUtil.requireContextEntry(pageContext, UiListTag.LIST_ID_KEY);
 			id = listId + ".formList";
 		}
 		
-		super.before(out);
-						
-		formListViewModel = (FormListWidget.ViewModel) viewModel;	
+		super.doStartTag(out);
+
+		try {
+			formListViewModel = (FormListWidget.ViewModel) viewModel;
+		} catch (ClassCastException e) {
+			throw new UiException("Could not acquire form list view model. <ui:formList> should have id specified or should be in context of real FormListWidget.", e);
+		}
 		
 		// Set variables
-		pushAttribute(FORM_LIST_ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_LIST_VIEW_MODEL_KEY_REQUEST, formListViewModel, PageContext.REQUEST_SCOPE);		
-		
+		addContextEntry(FORM_LIST_ID_KEY, id);
+		addContextEntry(FORM_LIST_VIEW_MODEL_KEY, formListViewModel);		
+
 		return EVAL_BODY_INCLUDE; 
-	}		
+	}
+
+	/* ***********************************************************************************
+	 * FINALLY - reset some fields to allow safe reuse from tag pool.
+	 * ***********************************************************************************/
+	public void doFinally() {
+		id = null;
+		super.doFinally();
+	}
 }

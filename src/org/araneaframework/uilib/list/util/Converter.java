@@ -16,15 +16,13 @@
 
 package org.araneaframework.uilib.list.util;
 
-import java.io.Serializable;
-
 import org.araneaframework.uilib.list.util.converter.ConvertionException;
 
 /**
  * Data converter between <code>source</code> and <code>destination</code>
  * types.
  */
-public interface Converter extends Serializable {
+public interface Converter {
 	/**
 	 * Converts data from source type into destination type.
 	 * 
