@@ -144,9 +144,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       return false;
     } finally {
       allPopups.remove(id);
-      if (getOpener() != null) {
-        getServiceCtx(ThreadContext.class).addService(id, new TemporaryThreadService());
-      }
+      getServiceCtx(ThreadContext.class).addService(id, new TemporaryThreadService());
     }
 
     if (log.isDebugEnabled())

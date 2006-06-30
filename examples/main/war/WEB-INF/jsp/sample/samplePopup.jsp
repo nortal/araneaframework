@@ -5,8 +5,6 @@
 	xmlns:ui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 	
-	<ui:onLoadEvent event="window.opener.document.location.href=window.opener.document.location.href"/>
-
 	<!-- Component starts here -->
 	<ui:widgetContext>
 		<ui:componentHeader>
