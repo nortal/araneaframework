@@ -20,8 +20,8 @@ function onWindowClosingEvent() {
    if (window.event) {
 	   if (window.event.clientX < 0 && window.event.clientY < 0) {
 			var closeParam = document.createElement("<input type='hidden' name='popupClose' value='true'>");
-			document.systemForm.appendChild(closeParam);
-			araneaSubmitEvent(document.systemForm, "", "", "");
+			document.system_form_0.appendChild(closeParam);
+			araneaSubmitEvent(document.system_form_0, "", "", "");
 	   }
    }
 }
@@ -34,23 +34,22 @@ addSystemUnloadEvent(onWindowUnload);
 
 //popup maps
 var popups = new Object();
-var requestArgumentsPrefix = "?topServiceId=application&threadServiceId=";
 
 // popup properties, used for all types of popups
 var popupProperties = new Object();
 
-function currentUrl() {
-	return systemForm.action;
-}
-
-function addPopup(popupId, properties) {
+function addPopup(popupId, windowProperties, url) {
 	popups[popupId] = popupId;
-	popupProperties[popupId] = properties;
+	popupProperties[popupId] = new Object();
+	popupProperties[popupId].windowProperties = windowProperties;
+	popupProperties[popupId].url = url;
 }
 
-function openPopup(popupId, properties) {
-	url = currentUrl() + requestArgumentsPrefix + popupId;
-	window.open(url, popupId, properties);
+function openPopup(popupId) {
+	w = window.open(popupProperties[popupId].url, popupId, popupProperties[popupId].windowProperties);
+	if (w) {
+		w.focus();
+	}
 }
 
 function processPopups() {
