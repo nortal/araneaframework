@@ -21,10 +21,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.template.framework.context.WizardContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
@@ -72,43 +73,47 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 	
 	public void gotoNext() {
 		if (countPages() == 0) {
-			throw new RuntimeException("No pages found");
+			throw new AraneaRuntimeException("No pages found");
 		}
 		if (getCurrentPageIndex() == countPages() - 1) {
-			throw new RuntimeException("There are no more pages");
+			throw new AraneaRuntimeException("There are no more pages");
 		}
 		setCurrentPageIndex(getCurrentPageIndex() + 1);
 	}
+	
 	public void gotoPrevious() {
 		if (countPages() == 0) {
-			throw new RuntimeException("No pages found");
+			throw new AraneaRuntimeException("No pages found");
 		}
 		if (getCurrentPageIndex() == 0) {
-			throw new RuntimeException("There are no more pages");
+			throw new AraneaRuntimeException("There are no more pages");
 		}
 		setCurrentPageIndex(getCurrentPageIndex() - 1);
 	}
+	
 	public void gotoFirst() {
 		if (countPages() == 0) {
-			throw new RuntimeException("No pages found");
+			throw new AraneaRuntimeException("No pages found");
 		}
 		setCurrentPageIndex(0);
 	}
 	public void gotoLast() {
 		if (countPages() == 0) {
-			throw new RuntimeException("No pages found");
+			throw new AraneaRuntimeException("No pages found");
 		}
 		setCurrentPageIndex(countPages() - 1);
 	}
+	
 	public void gotoPage(Widget page) {
 		if (!containsPage(page)) {
-			throw new RuntimeException("Page not found");
+			throw new AraneaRuntimeException("Page not found");
 		}
 		setCurrentPageIndex(getIndexOfPage(page));
 	}
+	
 	public void gotoPage(int index) {
 		if (!containsIndex(index)) {
-			throw new RuntimeException("Page index out of bounds, page index = " + index + ", total pages = " + countPages());
+			throw new AraneaRuntimeException("Page index out of bounds, page index = " + index + ", total pages = " + countPages());
 		}
 		setCurrentPageIndex(index);
 	}
@@ -120,6 +125,7 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 		initPage(page);
 		log.debug("Page added, index = " + index);
 	}
+	
 	public void addPage(Widget page) throws Exception {
 		pages.add(page);
 		initPage(page);
@@ -135,6 +141,7 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 		}
 		log.debug("Page removed, page index = " + index);
 	}
+	
 	public void removePage(int index) throws Exception {
 		removePage(getPage(index));
 	}
@@ -172,7 +179,7 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 			return (Widget) pages.get(index);
 		}
 		catch (IndexOutOfBoundsException e) {
-			throw new RuntimeException("Page index out of bounds, page index = " + index + ", total pages = " + countPages());
+			throw new AraneaRuntimeException("Page index out of bounds, page index = " + index + ", total pages = " + countPages());
 		}
 	}
 	
@@ -183,7 +190,7 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 	public int getIndexOfPage(Widget page) {
 		int index = pages.indexOf(page);
 		if (index == -1) {
-			throw new RuntimeException("Page not found");
+			throw new AraneaRuntimeException("Page not found");
 		}
 		return index;
 	}
@@ -204,16 +211,6 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 	
 	public boolean containsIndex(int index) {
 		return countPages() > 0 && index >= 0 && index < countPages();  
-	}
-	
-	
-	
-	/*
-	 * Protected methods
-	 */
-	
-	protected void init() throws Exception {
-		addGlobalEventListener(new ProxyEventListener(this));
 	}
 	
 	protected void render(OutputData output) throws Exception {
@@ -265,7 +262,7 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 				((WizardContext.EventListener) i.next()).onGoto(page);
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new AraneaRuntimeException(e);
 		}
 	}	
 	private void makeListenersHandleSubmit() {
@@ -274,7 +271,7 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 				((WizardContext.EventListener) i.next()).onSubmit();
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new AraneaRuntimeException(e);
 		}
 	}	
 	private void makeListenersHandleCancel() {
@@ -283,7 +280,7 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 				((WizardContext.EventListener) i.next()).onCancel();
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new AraneaRuntimeException(e);
 		}
 	}
 	

@@ -19,7 +19,7 @@ package org.araneaframework.framework;
 import java.io.Serializable;
 
 /**
- * This context is passed to a continuation started using {@link org.araneaframework.framework.ContinuationManagerContext#runContinuation(Service)} 
+ * This context is passed to a continuation started using {@link org.araneaframework.framework.ContinuationManagerContext#start(Service)} 
  * and allows the continuation to explicitly restore control once it is finished. 
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -27,7 +27,7 @@ import java.io.Serializable;
  */
 public interface ContinuationContext extends Serializable {
   /**
-   * Restore control and end the continuation flow.
+   * Restore control and finishes the continuation service.
    */
-  public void restore() throws Exception;
+  public void finish();
 }
