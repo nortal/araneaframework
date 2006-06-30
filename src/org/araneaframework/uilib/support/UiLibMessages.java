@@ -24,6 +24,7 @@ public class UiLibMessages {
 	public static final String RANGE_CHECK_FAILED = "uilib.form.rangecheckfailed";
   public static final String DATE_BEFORE_TODAY = "uilib.form.date.beforetoday";
   public static final String ELEMENT_EMPTY = "uilib.form.element.empty";
+  //XXX
   public static final String INVALID_ESTONIAN_PERSONAL_ID = "uilib.form.invalid.socialsecurityid";  
   public static final String STRING_NOT_IN_RANGE = "uilib.form.string.notinrange";  
   public static final String MANDATORY_FIELD = "uilib.form.mandatoryfield";  

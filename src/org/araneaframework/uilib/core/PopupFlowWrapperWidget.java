@@ -47,7 +47,8 @@ public class PopupFlowWrapperWidget extends StandardWidget implements
 		ThreadContext threadCtx = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
 		getOpenerFlowContext().finish(result);
 		try {
-		  getOpenerPopupContext().close(threadCtx.getCurrentId().toString());
+          // on close, we shall send response that reloads parent and then closes itself.
+		  //getOpenerPopupContext().close(threadCtx.getCurrentId().toString());
 		} catch (Exception e) {
           ExceptionUtil.uncheckException(e);
 		}
