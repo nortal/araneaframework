@@ -48,7 +48,7 @@ public class UiStdFormCheckboxMultiSelectTag extends UiFormElementBaseTag {
     assertControlType("MultiSelectControl");    
 
     if (!"horizontal".equals(type) && !"vertical".equals(type))
-      throw new UiException("Attribute 'type' cna be only either 'horizontal' or 'vertical'!");
+      throw new UiException("Attribute 'type' can be only either 'horizontal' or 'vertical'!");
 
     // Prepare
     MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
@@ -74,6 +74,7 @@ public class UiStdFormCheckboxMultiSelectTag extends UiFormElementBaseTag {
       if(globalUpdateRegions != null)
         item.setGlobalUpdateRegions(globalUpdateRegions);
       item.setStyleClass(getStyleClass());
+      if (getStyle() != null) item.setStyle(getStyle());
 
       if(tabindex != null)
         item.setTabindex(tabindex);        

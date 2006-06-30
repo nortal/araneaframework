@@ -33,11 +33,16 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 public class UiStdFormCheckboxDisplayTag extends UiFormElementBaseDisplayTag {
   protected String imageCode;
 
+  {
+    baseStyleClass = "aranea-checkbox-display";
+  }
+  
   protected int doEndTag(Writer out) throws Exception {        
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 
     UiUtil.writeOpenStartTag(out, "span");
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeCloseStartTag(out);
 
     if ("true".equals(viewModel.getSimpleValue())) //TODO: image?

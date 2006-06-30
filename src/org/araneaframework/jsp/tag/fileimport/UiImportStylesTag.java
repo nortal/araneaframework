@@ -18,11 +18,10 @@ package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.StandardServletFileImportFilterService;
+import org.araneaframework.servlet.filter.importer.FileImporter;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -40,16 +39,13 @@ public class UiImportStylesTag extends UiImportFileTag {
 	public int doStartTag(Writer out) throws Exception {
 		// if filename specified we include the file
 		if (includeFileName != null) {
-			writeContent(out, 
-				StandardServletFileImportFilterService.IMPORTER_FILE_NAME+"="+includeFileName);
+			writeContent(out, includeFileName);
 		}
 		else if (includeGroupName != null){
-			writeContent(out,
-				StandardServletFileImportFilterService.IMPORTER_GROUP_NAME+"="+includeGroupName);
+			writeContent(out, includeGroupName);
 		}
 		else {
-			writeContent(out,
-					StandardServletFileImportFilterService.IMPORTER_GROUP_NAME+"="+DEFAULT_GROUP_NAME);
+			writeContent(out, DEFAULT_GROUP_NAME);
 		}
 		return EVAL_BODY_INCLUDE;
 	}
@@ -64,13 +60,13 @@ public class UiImportStylesTag extends UiImportFileTag {
 		this.media = (String) evaluate("media", media, String.class);
 	}
 	 
-	protected void writeContent(Writer out, String keyValue) throws Exception {		
+	protected void writeContent(Writer out, String srcFile) throws Exception {
+		srcFile = FileImporter.getImportString(srcFile, pageContext.getRequest(), pageContext.getResponse());
+				
 		UiUtil.writeOpenStartTag(out, "link");
 		UiUtil.writeAttribute(out, "rel", "stylesheet");
 		UiUtil.writeAttribute(out, "type", "text/css");
-		UiUtil.writeAttribute(out, "href", 
-				((HttpServletRequest)pageContext.getRequest()).getRequestURL().append("?").append(keyValue)
-				, false);
+		UiUtil.writeAttribute(out, "href", srcFile, false);
 		UiUtil.writeAttribute(out, "media", this.media);	
 		UiUtil.writeCloseStartEndTag(out);
 		out.write("\n");

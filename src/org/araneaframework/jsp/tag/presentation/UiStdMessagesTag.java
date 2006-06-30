@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.jsp.tag.UiPresentationTag;
@@ -65,6 +66,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
     /* matching messages, write them out */
     UiUtil.writeOpenStartTag(out, "div");
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeCloseStartTag(out);
 
     UiUtil.writeStartTag(out, "div");
@@ -101,7 +103,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
    * required = "false"
    * description = "Type of messages to show."
    */
-  public void setType(String type) {
-    this.type = type;
+  public void setType(String type) throws JspException {
+    this.type = (String) evaluate("type", type, String.class);
   }
 }

@@ -20,7 +20,10 @@ import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
+
 import javax.servlet.jsp.JspException;
+
+import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.support.FormElementViewSelector;
 import org.araneaframework.jsp.support.TagInfo;
@@ -67,10 +70,6 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    Map tagMapping = UiStdWidgetCallUtil.getContainer(pageContext).getTagMapping(pageContext);
-
-    if(tagMapping == null)
-      throw new JspException("The tag mapping was not found!.");
 
     formViewModel = (FormWidget.ViewModel)requireContextEntry(UiFormTag.FORM_VIEW_MODEL_KEY);
     FormWidget form = (FormWidget)requireContextEntry(UiFormTag.FORM_KEY);
@@ -92,15 +91,19 @@ public class UiStdAutomaticTagFormElementTag extends UiBaseTag {
 
     if(viewSelector == null)
       throw new JspException("The form element view selector was not passed!.");
+    
+    Map tagMapping = UiStdWidgetCallUtil.getContainer(pageContext).getTagMapping(pageContext, viewSelector.getUri());
+    
+    if(tagMapping == null)
+      throw new JspException("The tag mapping was not found!.");
 
     TagInfo tagInfo = (TagInfo) tagMapping.get(viewSelector.getTag());
 
     if(tagInfo == null)
       throw new JspException("Unexistant tag was passed to form element view selector!.");
 
-   	Class tagClass = Class.forName(tagInfo.getTagClassName(), true, Thread.currentThread().getContextClassLoader());
-
-    controlTag = (UiFormElementTagInterface) tagClass.newInstance();
+    controlTag = (UiFormElementTagInterface)ClassLoaderUtil.loadClass(tagInfo.getTagClassName()).newInstance();
+    Class tagClass = controlTag.getClass();
 
     registerSubtag(controlTag);
 

@@ -42,6 +42,7 @@ public class ComponentHeaderTag extends UiPresentationTag {
 
 		UiUtil.writeOpenStartTag(out, "div");
 		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeCloseStartTag(out);
 		
 		return EVAL_BODY_INCLUDE;

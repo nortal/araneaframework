@@ -35,7 +35,7 @@
 
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>
-      <url-pattern>/main</url-pattern>
+      <url-pattern>/main/*</url-pattern>
    </servlet-mapping>
    
    <servlet-mapping>

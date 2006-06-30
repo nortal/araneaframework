@@ -38,6 +38,10 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
 public class UiStdFormCheckboxMultiSelectItemTag extends UiFormElementBaseTag {
 	protected String value;
 
+	{
+		baseStyleClass = "aranea-multi-checkbox";
+	}
+	
 	protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("MultiSelectControl");		
@@ -52,6 +56,7 @@ public class UiStdFormCheckboxMultiSelectItemTag extends UiFormElementBaseTag {
 		UiUtil.writeOpenStartTag(out, "input");
 		UiUtil.writeAttribute(out, "name", name);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeAttribute(out, "type", "checkbox");
 		UiUtil.writeAttribute(out, "label", localizedLabel);
 		UiUtil.writeAttribute(out, "value", value);

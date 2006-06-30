@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import org.araneaframework.core.util.ExceptionUtil;
 
 
 /**
@@ -32,7 +33,8 @@ public class DefaultResultSetColumnReader implements ResultSetColumnReader {
   /**
    * Tries to read the same type as is given in the <code>javaType</code>.
    */
-  public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType) throws SQLException {        
+  public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType){
+    try {
     if (resultSet.getObject(columnName) == null)
       return null;
     
@@ -60,6 +62,10 @@ public class DefaultResultSetColumnReader implements ResultSetColumnReader {
     if (String.class.isAssignableFrom(javaType))
       return resultSet.getString(columnName);
     
+    }
+    catch (SQLException e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
     throw new RuntimeException("Could not read column '" + columnName + "' with Java type '" + javaType + "' from the ResultSet!");
   }
 

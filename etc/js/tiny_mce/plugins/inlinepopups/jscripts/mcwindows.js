@@ -1,8 +1,4 @@
 /**
- * $RCSfile$
- * $Revision$
- * $Date$
- *
  * Moxiecode DHTML Windows script.
  *
  * @author Moxiecode

@@ -16,7 +16,9 @@
 
 package org.araneaframework.uilib.form;
 
+import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.constraint.BaseConstraint;
@@ -34,15 +36,12 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * 
  */
 public class FormElement extends GenericFormElement {
-
   //*******************************************************************
   // FIELDS
   //*******************************************************************
   protected Control control;
   protected Converter converter;
   protected Data data;
-
-  protected boolean disabled;
   
   protected String label;
 
@@ -159,13 +158,14 @@ public class FormElement extends GenericFormElement {
   }
   
   public void setDisabled(boolean disabled) {
-    this.disabled = disabled;
   	if (getControl() != null)
   		getControl().setDisabled(disabled);
   }
 	
 	public boolean isDisabled() {
-		return disabled;
+      if (getControl() != null)
+        return getControl().isDisabled();
+      return false;
 	}	  
 
 	public void markBaseState() {
@@ -230,7 +230,7 @@ public class FormElement extends GenericFormElement {
     if (!path.hasNext())
       getControl()._getWidget().event(path, input);
   }
-  
+
   /**
    * Copies the value from data item to control if data item is valid.
    */
@@ -239,17 +239,23 @@ public class FormElement extends GenericFormElement {
       if (getData() != null && getData().isDirty()) {
         getControl().setRawValue(getConverter().reverseConvert(getData().getValue()));
         getData().setValue(null);
-        getData().clean();    
+        getData().clean();
         
         getConverter().clearErrors();
       }
-      
+
       getControl()._getWidget().process();
     }
     
     super.process();    
   }
   
+  protected void handleAction(InputData input, OutputData output) throws Exception {
+    update(input);
+    if (control != null)
+      control._getService().action(null, input, output);
+    process();
+  }
 
   /**
    * Returns {@link ViewModel}.

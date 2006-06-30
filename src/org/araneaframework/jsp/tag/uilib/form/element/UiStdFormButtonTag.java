@@ -38,6 +38,10 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
   private static final String RENDER_INPUT = "input";
   protected String renderMode = UiStdFormButtonTag.RENDER_BUTTON;
 
+  {
+    baseStyleClass = "aranea-button";
+  }
+
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -51,6 +55,7 @@ public class UiStdFormButtonTag extends UiStdFormButtonBaseTag {
     UiUtil.writeAttribute(out, "id", name);
     UiUtil.writeAttribute(out, "name", name);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     if (showLabel && renderMode.equals(UiStdFormButtonTag.RENDER_INPUT)) {
       if (accessKey != null) {
         String escapedLabel = StringUtil

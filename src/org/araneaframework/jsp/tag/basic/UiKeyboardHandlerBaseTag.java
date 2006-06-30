@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.UiBaseTag;
+import org.araneaframework.jsp.tag.UiContainedTagInterface;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -33,7 +34,7 @@ import org.araneaframework.jsp.util.UiUtil;
  * 
  * @author Konstantin Tretyakov (kt@webmedia.ee)
  */
-public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
+public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag implements UiContainedTagInterface {
   protected String defaultKeyCode;
   protected String intKeyCode;
   protected String keyCode;

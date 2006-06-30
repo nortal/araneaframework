@@ -56,8 +56,8 @@ public abstract class RangeInRangeFilter extends ComparableType implements ListF
 			throw new RuntimeException("Column Id must be not null");
 		}
 		this.endColumnId = endColumnId;
-		if (this.endColumnId == null) {
-			this.endColumnId = endColumnId;
+		if (this.endFilterInfoKey == null) {
+			this.endFilterInfoKey = endColumnId;
 		}
 		return this;
 	}

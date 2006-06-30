@@ -31,6 +31,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.Service;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
 import org.araneaframework.core.util.ExceptionUtil;
@@ -58,6 +59,8 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
   //*******************************************************************
   private Map eventListeners = Collections.synchronizedMap(new LinkedMap());
   private EventListener globalListener;
+  
+  protected Map actionListeners = Collections.synchronizedMap(new LinkedMap());
   
   private Map viewData = new HashMap();
   private Map viewDataOnce = new HashMap();
@@ -158,29 +161,28 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
     return getEnvironment();
   }
   
-  protected void propagate(Message message) throws Exception {   
+  protected void propagate(Message message) throws Exception {
     _propagate(message);
   }
 
   protected void update(InputData input) throws Exception {
     viewDataOnce.clear();
-    
+
     handleUpdate(input);
-    
+
     Iterator ite = (new HashMap(getChildren())).keySet().iterator();
-    while(ite.hasNext()) {
+    while (ite.hasNext()) {
       Object key = ite.next();
-      Widget widget = (Widget)getChildren().get(key);
+      Widget widget = (Widget) getChildren().get(key);
       if (widget != null) {
-      try {
+        try {
           input.pushScope(key);
-        widget._getWidget().update(input);
-      }
-      finally {
-        input.popScope();
+          widget._getWidget().update(input);
+        } finally {
+          input.popScope();
+        }
       }
     }
-  }
   }
   
   /**
@@ -262,6 +264,56 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
   }
   
   /**
+   * If path hasNextStep() routes to the correct child, otherwise calls the
+   * appropriate listener.
+   */ 
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    if (path != null && path.hasNext()) {
+      Object next = path.next();
+      
+      Service service = (Service)getChildren().get(next);
+      if (service == null) {
+        log.warn("No service found", new NoSuchServiceException(next));  
+        return;
+      }
+      
+      try {
+        input.pushScope(next);
+        output.pushScope(next);
+
+        service._getService().action(path, input, output);
+      }
+      finally {
+        input.popScope();
+        output.popScope();
+      }
+    }
+    else {
+      handleAction(input, output);
+    }
+  }
+  
+  /**
+   * Calls the approriate listener, if none present throws
+   * {@link NoSuchActionListenerException}.
+   */
+  protected void handleAction(InputData input, OutputData output) throws Exception {
+    Object actionId = getActionId(input);    
+    ActionListener listener = (ActionListener)actionListeners.get(actionId);
+    
+    if (log.isDebugEnabled())
+      log.debug("Delivering action '" + actionId +"' to service '" + getClass().getName() + "'");    
+    
+    if (listener != null ) {
+      listener.processAction(actionId, input, output);
+    }
+    else {
+      log.warn("No listener found", new NoSuchActionListenerException(actionId));
+      return;
+    }
+  }
+  
+  /**
    * Renders the component to output, meant for overriding.
    */
   protected void render(OutputData output) throws Exception {}
@@ -272,6 +324,14 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
    */
   protected Object getEventId(InputData input) {
     return input.getGlobalData().get(EVENT_HANDLER_ID_KEY);
+  }
+  
+  /**
+   * Returns the id of the action based on the input. Uses the ACTION_ID_ATTRIBUTE key
+   * to extract it from InputData's global data.
+   */
+  protected Object getActionId(InputData input) {
+    return input.getGlobalData().get(StandardService.ACTION_ID_ATTRIBUTE);
   }
   
   //*******************************************************************
@@ -456,4 +516,19 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
   public Object getViewModel() throws Exception {
     return new ViewModel();
   }
+ 
+  /**
+   * Adds the ActionListener listener with the specified action id. 
+   */
+  public void addActionListener(Object actionId, ActionListener listener) {
+    actionListeners.put(actionId, listener);
+  }
+  
+  /**
+   * Removes the ActionListener listener from this component.
+   */
+  public void removeActionListener(ActionListener listener) {
+    actionListeners.values().remove(listener);
+  }
+
 }

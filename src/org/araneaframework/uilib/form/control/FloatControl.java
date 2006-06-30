@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collection;
+
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.DecimalPattern;
@@ -167,7 +168,7 @@ public class FloatControl extends EmptyStringNullableControl {
 		
 		if (result != null) {
 			currentNumberFormat = result.getFormat();
-			return new BigDecimal(result.getNumber().doubleValue());
+			return new BigDecimal(result.getNumber().toString());
 		}
 		
 		addError(

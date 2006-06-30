@@ -18,6 +18,9 @@ package org.araneaframework.template.tags.uilib.list;
 
 import java.io.Writer;
 import java.util.Iterator;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
@@ -81,15 +84,18 @@ public class SampleListTitleRowTag extends UiBaseTag {
 					OrderInfoField.ViewModel orderInfoFieldViewModel = (OrderInfoField.ViewModel)j.next();
 					
 					if (orderInfoFieldViewModel.getId().equals(columnViewModel.getId())) {
+						StringBuffer url = ((HttpServletRequest)pageContext.getRequest()).getRequestURL();
 						// Found
 						if (orderInfoFieldViewModel.isAscending()) {
 							UiUtil.writeOpenStartTag(out, "img");
-							UiUtil.writeAttribute(out, "src", FileImporter.getImportString("gfx/ico_sortup.gif"));
+							UiUtil.writeAttribute(out, "src", 
+									url.append(FileImporter.getImportString("gfx/ico_sortup.gif")));
 							UiUtil.writeCloseStartEndTag(out);
 						}
 						else {
 							UiUtil.writeOpenStartTag(out, "img");
-							UiUtil.writeAttribute(out, "src", FileImporter.getImportString("gfx/ico_sortdown.gif"));
+							UiUtil.writeAttribute(out, "src", 
+									url.append(FileImporter.getImportString("gfx/ico_sortdown.gif")));
 							UiUtil.writeCloseStartEndTag(out);
 						}
 						out.write("&nbsp;");

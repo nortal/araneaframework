@@ -1,8 +1,4 @@
 /**
- * $RCSfile$
- * $Revision$
- * $Date$
- *
  * Makes select boxes editable.
  *
  * @author Moxiecode

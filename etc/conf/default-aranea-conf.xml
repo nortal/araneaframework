@@ -11,11 +11,10 @@
   
   <bean id="araneaApplicationFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardServiceFilterChainFilterService">
-    <property name="childService" ref="araneaTopServiceRouter"/>
+		<property name="childService" ref="araneaTopServiceRouter"/>
     <property name="filterChain">     
       <list>
         <ref bean="araneaCriticalErrorHandler"/>
-        <ref bean="araneaReadFileFilter"/>
         <ref bean="araneaMainStatisticFilter"/>
         <ref bean="araneaRequestEncodingFilter"/>
         <ref bean="araneaFileUploadFilter"/>
@@ -26,13 +25,25 @@
     </property>
   </bean>  
 
-  <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="araneaTopServiceRouter"
+ <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="araneaTopServiceRouter"
     singleton="false">
     <property name="defaultServiceId" value="application"/>
     <property name="serviceMap">
       <map>
-        <entry key="application" value-ref="araneaSessionRouter"/>
+        <entry key="application" value-ref="araneaPathInfoRouter"/>
       </map>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.servlet.router.PathInfoServiceRouterService" id="araneaPathInfoRouter"
+        singleton="false">
+			<property name="defaultServiceId" value="application"/>
+      
+      <property name="serviceMap">
+	      <map>
+   	     <entry key="application" value-ref="araneaSessionRouter"/>
+   	     <entry key="fileimporter" value-ref="araneaReadFile"/>
+   	   </map>
     </property>
   </bean>
 
@@ -175,8 +186,8 @@
     id="responseHeaderFilter" singleton="false">
   </bean>
   
-  <bean class="org.araneaframework.servlet.filter.StandardServletFileImportFilterService" 
-    id="araneaReadFileFilter" singleton="false">
+  <bean class="org.araneaframework.servlet.filter.StandardServletFileImportService" 
+    id="araneaReadFile" singleton="false">
   </bean>
   
   <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"
@@ -192,7 +203,7 @@
     id="araneaLocalizationFilter" singleton="false">
     <property name="resourceBundleName" value="${l10n.resourceBundle}"/>
     <property name="languageName" value="${l10n.defaultLocale}"/>
-  </bean>        
+  </bean>
 
   <bean class="org.araneaframework.servlet.filter.StandardJspFilterService" 
     id="araneaJspConfigFilter" singleton="false">

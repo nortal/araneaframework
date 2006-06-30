@@ -118,7 +118,7 @@
   *          initially valid or invalid.
   */
  function uiFormElementContext(elementName, spanId, valid){
-   span=document.getElementById(spanId);
+   var span=document.getElementById(spanId);
    if (document.addEventListener) { // Moz
      span.onkeydown=function(event) { return uiHandleKeypress(event, elementName); };
    } else {

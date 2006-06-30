@@ -56,9 +56,9 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
   }
 
   /**
-   * If returns true then propagates the action to the child widget. By default returns false.
+   * Returns whether inputData is such that action should be propagated to the child widget.
    */
   public boolean propagateAsAction(InputData input) {
-    return false;
+    return (input.getGlobalData().get(StandardWidgetContainerWidget.ACTION_PATH_KEY) != null); 
   }
 }

@@ -51,6 +51,7 @@ public class LayoutCellTag extends LayoutCellBaseTag {
   /** Overwrite if other attributes besides <code>styleclass</code> are needed for HTML table cell. */
   protected void writeCellAttributes(Writer out) throws Exception {
     addAttribute("class",  getStyleClass());
+    addAttribute("style", getStyle());
     addAttribute("colspan", colspan);
     addAttribute("rowspan", rowspan);
     addAttribute("width", width);

@@ -16,7 +16,15 @@
 
 package org.araneaframework.tests.integration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import junit.framework.TestCase;
+
+import org.araneaframework.mock.servlet.MockServlet;
+import org.araneaframework.servlet.ServletServiceAdapterComponent;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * 
@@ -34,7 +42,7 @@ public class SmokeTests extends TestCase {
   public SmokeTests(String name) {
     super(name);
   }
-    
+  
   public ServletServiceAdapterComponent initAdapter(String configFile) throws Exception {
     
     if (servlet == null ) {
@@ -64,7 +72,6 @@ public class SmokeTests extends TestCase {
   }
   
   public void testSmoke() throws Exception {
-    
     adapter = (ServletServiceAdapterComponent)initAdapter("smokeTest.xml");
     adapter.service(req, resp);
     //success if no exception thrown
@@ -147,7 +154,6 @@ public class SmokeTests extends TestCase {
     adapter.service(req, resp);
     
     assertTrue(((MockStandardWidget)widget.getChildren().get(childKey)).getEventProcessed());
-    
   }
   
   public static Test suite() {
@@ -156,5 +162,6 @@ public class SmokeTests extends TestCase {
 
   public static void main(String args[]) {
     junit.textui.TestRunner.run(suite());
-  }*/
+  }
+  */
 }

@@ -57,7 +57,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   /**
    * The key of the callable child.
    */
-  public static final String FLOW_KEY = "flow"; 
+  public static final String FLOW_KEY = "f";
   
   //*******************************************************************
   // FIELDS
@@ -106,7 +106,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     if (_getChildren().get(FLOW_KEY) != null) {
       ((Widget) getChildren().get(FLOW_KEY))._getComponent().disable();      
       _getChildren().remove(FLOW_KEY);
-    }  
+    }
     
     callStack.addFirst(frame);
     

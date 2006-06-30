@@ -84,6 +84,12 @@ public interface ConfigurationContext extends Serializable {
   public static final String LIST_FILTER_CONFIGURATOR = "uilib.widgets.lists.ListFilterConfigurator";  
   
   /**
+   * {@link org.araneaframework.uilib.form.control.AutoCompleteTextControl.ResponseBuilder} that configures how
+   * {@link org.araneaframework.uilib.form.control.AutoCompleteTextControl} sends back the suggested completions.
+   */
+  public static final String AUTO_COMPLETE_RESPONSE_BUILDER = "uilib.widgets.AutoCompleteTextControl.DefaultResponseBuilder";
+  
+  /**
    * Returns a configuration entry.
    */
   public Object getEntry(String entryName);
