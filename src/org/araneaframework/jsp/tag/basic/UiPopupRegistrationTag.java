@@ -45,9 +45,10 @@ public class UiPopupRegistrationTag extends UiBaseTag {
     if (popups != null && !((Map)popups).isEmpty()) {
       UiUtil.writeOpenStartTag(out, "script");
       UiUtil.writeAttribute(out, "type", "text/javascript");
-      UiUtil.writeAttribute(out, "language", "JavaScript1.2");
       UiUtil.writeCloseStartTag(out);
       out.write("addSystemLoadEvent(processPopups);\n");
+      
+      // <ui:onLoadEvent event="window.opener.document.location.href=window.opener.document.location.href"/>
       
       addPopups(out, (Map)popups);
       UiUtil.writeEndTag(out, "script");

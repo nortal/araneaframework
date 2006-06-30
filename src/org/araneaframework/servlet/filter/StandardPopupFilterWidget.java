@@ -41,6 +41,7 @@ import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.servlet.PopupServiceInfo;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.ServletInputData;
+import org.araneaframework.servlet.service.TemporaryThreadService;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
@@ -85,7 +86,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
 
-  public String open(Message startMessage, PopupWindowProperties properties, Widget caller) {
+  public String open(Message startMessage, PopupWindowProperties properties, Widget opener) {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
 
@@ -95,8 +96,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     if (startMessage != null)
       startMessage.send(null, service);
     
-    if (caller != null)
-      new OpenerRegistrationMessage(caller).send(null, service);
+    if (opener != null)
+      new OpenerRegistrationMessage(opener).send(null, service);
 
     //add new, not yet opened popup to popup map
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
@@ -106,7 +107,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return threadId;
   }
 
-  public String open(Service service, PopupWindowProperties properties, Widget caller) {
+  public String open(Service service, PopupWindowProperties properties, Widget opener) {
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
 
@@ -143,6 +144,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       return false;
     } finally {
       allPopups.remove(id);
+      if (getOpener() != null) {
+        getServiceCtx(ThreadContext.class).addService(id, new TemporaryThreadService());
+      }
     }
 
     if (log.isDebugEnabled())
