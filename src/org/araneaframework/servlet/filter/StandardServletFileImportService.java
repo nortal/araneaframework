@@ -15,6 +15,8 @@
 **/
 package org.araneaframework.servlet.filter;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -77,9 +79,25 @@ public class StandardServletFileImportService extends BaseService {
 					filesToLoad.add(fileName);
 					loadFiles(filesToLoad, out);
 				}
+				/*
+				 * Fallback to the filesystem. Container takes care if it is okay to load
+				 * a file from the application's system.
+				 */
 				else {
-					log.warn("Not allowed to import "+fileName+" add it to the allowed list");
-					throw new AraneaFileNotFoundException();
+					try {
+						// checking for the existence
+						new FileInputStream(fileName);
+						filesToLoad.add(fileName);
+						loadFiles(filesToLoad, out);						
+					}
+					catch (FileNotFoundException e) {
+						log.warn("Not allowed to import "+fileName+" add it to the allowed list or make sure it exists on the filesystem.");
+						throw new AraneaFileNotFoundException();	
+					}
+					catch (SecurityException e) {
+						log.warn("Not allowed to import "+fileName+" add it to the allowed list or make sure it exists on the filesystem.");
+						throw new AraneaFileNotFoundException();	
+					}
 				}
 			}
 			else if (groupName != null) {
@@ -124,8 +142,30 @@ public class StandardServletFileImportService extends BaseService {
 				fileURL = loader.getResource(fileName);
 			}
 			
-			if (fileURL != null) {
-				InputStream inputStream = fileURL.openStream();
+			FileInputStream fileInputStream = null;
+			// fallback to the filesystem
+			if (fileURL == null) {
+				try {
+					fileInputStream = new FileInputStream(fileName);
+				}
+				catch (FileNotFoundException e) {
+					// not being able to load results in AraneaFileNotFoundException, see below
+				}
+				catch (SecurityException e) {
+					// not being able to load results in AraneaFileNotFoundException, see below
+				}
+			}
+			
+			if (fileURL != null || fileInputStream != null) {
+				InputStream inputStream = null;
+				
+				if (fileInputStream != null) {
+					inputStream = fileInputStream;
+				} 
+				else {
+					inputStream = fileURL.openStream();
+				}
+				
 				log.debug("Loading "+fileName);
 				if (inputStream!=null) {
 					int length = 0;
