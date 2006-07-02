@@ -18,8 +18,6 @@ package org.araneaframework.servlet.core;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Service;

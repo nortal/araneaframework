@@ -40,7 +40,10 @@ public class TemporaryThreadService extends BaseService {
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ((ServletOutputData) output).getResponse();
 		
-		String responseStr = "<html><head><title>close me now</title></head><body onload=\"window.opener.document.location.href=window.opener.document.location.href;setTimeout('window.close()', 40); \"></body></html>";
+		String responseStr = 
+			"<html><head><title>close me now</title></head><body>" + 
+			"<script type=\"text/javascript\">reloadParentWindow();closeWindow(40);"+ 
+			"</script></body></html>";
 		
 		byte[] rsp = responseStr.getBytes();
 		

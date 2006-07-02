@@ -48,7 +48,7 @@ public class UiStdFormTimeInputTag extends UiStdFormDateTimeInputBaseTag {
       if (viewModel.getSimpleValue() != null) {
    	    currentTime = viewModel.getCurrentSimpleDateTimeFormat().parse(viewModel.getSimpleValue());
   	    hour = new Integer(currentTime.getHours());
-    	    minute = new Integer(currentTime.getMinutes());
+        minute = new Integer(currentTime.getMinutes());
       }
     } catch (ParseException e) {	}
     writeHourSelect(out, name, systemFormId, viewModel.isDisabled(), hour);

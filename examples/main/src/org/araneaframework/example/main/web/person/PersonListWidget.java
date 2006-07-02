@@ -136,7 +136,16 @@ public class PersonListWidget extends TemplateBaseWidget {
 	public void handleEventEdit(String eventParameter) throws Exception {
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		PersonAddEditWidget newFlow = new PersonAddEditWidget(id);
-		getFlowCtx().start(newFlow, null, null);
+
+		getFlowCtx().start(newFlow, null, new FlowContext.Handler() {
+			private static final long serialVersionUID = 1L;
+			
+			public void onFinish(Object returnValue) throws Exception {
+				refreshList();
+			}
+			public void onCancel() throws Exception {
+			}
+		});
 	}
 	
 	public void handleEventCancel(String eventParameter) throws Exception {
