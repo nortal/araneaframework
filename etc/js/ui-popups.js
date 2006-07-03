@@ -28,6 +28,7 @@ function onWindowClosingEvent() {
 
 function onWindowUnload() {
   onWindowClosingEvent();
+  closeOpenedPopupWindows();
 }
 
 addSystemUnloadEvent(onWindowUnload);
@@ -38,6 +39,9 @@ var popups = new Object();
 // popup properties, used for all types of popups
 var popupProperties = new Object();
 
+// opened windows
+var openedPopupWindows = new Object();
+
 function addPopup(popupId, windowProperties, url) {
   popups[popupId] = popupId;
   popupProperties[popupId] = new Object();
@@ -45,15 +49,23 @@ function addPopup(popupId, windowProperties, url) {
   popupProperties[popupId].url = url;
 }
 
+function closeOpenedPopupWindows() {
+  for (var popupId in openedPopupWindows) {
+    var w = openedPopupWindows[popupId];
+    w.close();
+  }
+}
+
 function openPopup(popupId) {
   var w = window.open(popupProperties[popupId].url, popupId, popupProperties[popupId].windowProperties);
   if (w) {
+    openedPopupWindows[popupId] = w;
     w.focus();
   }
 }
 
 function processPopups() {
-  for (popupId in popups) {
+  for (var popupId in popups) {
     openPopup(popupId, popupProperties[popupId]);
   }
 }
@@ -65,5 +77,5 @@ function reloadParentWindow() {
 }
 
 function closeWindow(delay) {
-  setTimeout('self.close()', delay);
+  setTimeout('window.close()', delay);
 }

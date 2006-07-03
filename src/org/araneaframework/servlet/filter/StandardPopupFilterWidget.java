@@ -41,7 +41,6 @@ import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.servlet.PopupServiceInfo;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.ServletInputData;
-import org.araneaframework.servlet.service.TemporaryThreadService;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
@@ -144,7 +143,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       return false;
     } finally {
       allPopups.remove(id);
-      getServiceCtx(ThreadContext.class).addService(id, new TemporaryThreadService());
     }
 
     if (log.isDebugEnabled())
@@ -206,7 +204,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   protected String getRandomServiceId() {
-    return RandomStringUtils.random(8, true, true);
+    return RandomStringUtils.randomAlphanumeric(8);
   }
   
   protected ManagedServiceContext getServiceCtx(Class contextClass) {
@@ -242,7 +240,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     }
   }
 
-  public class StandardPopupServiceInfo implements PopupServiceInfo {
+  public static class StandardPopupServiceInfo implements PopupServiceInfo {
     private String topServiceId;
     private String threadId;
     private PopupWindowProperties popupProperties;

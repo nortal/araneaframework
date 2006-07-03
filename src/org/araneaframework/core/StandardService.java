@@ -109,7 +109,7 @@ public abstract class StandardService extends BaseService implements Custom.Cust
   /**
    * Adds the ActionListener listener with the specified action id. 
    */
-  public void addActionListner(Object actionId, ActionListener listener) {
+  public void addActionListener(Object actionId, ActionListener listener) {
     actionListeners.put(actionId, listener);
   }
   

@@ -1,5 +1,6 @@
 package org.araneaframework.uilib.core;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
@@ -9,7 +10,13 @@ import org.araneaframework.core.StandardWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.servlet.PopupWindowContext;
+import org.araneaframework.servlet.ServletInputData;
+import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.servlet.filter.StandardPopupFilterWidget.StandardPopupServiceInfo;
+import org.araneaframework.servlet.service.WindowClosingService;
+import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -43,12 +50,25 @@ public class PopupFlowWrapperWidget extends StandardWidget implements
 	}
 
 	public void finish(Object result) {
-		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+		// PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
 		ThreadContext threadCtx = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
+		TopServiceContext topCtx = (TopServiceContext) getEnvironment().getEntry(TopServiceContext.class);
 		getOpenerFlowContext().finish(result);
 		try {
-          // on close, we shall send response that reloads parent and then closes itself.
+          // on close, we shall redirect to page  that closes current popup window and reloads parent.
 		  getOpenerPopupContext().close(threadCtx.getCurrentId().toString());
+
+		  String randomId = RandomStringUtils.randomAlphanumeric(12);
+		  threadCtx.addService(randomId, new WindowClosingService());
+
+		  StandardPopupServiceInfo temp = 
+			  new StandardPopupServiceInfo(
+					  (String)topCtx.getCurrentId(), 
+					  randomId, 
+					  (PopupWindowProperties)null, 
+					  ((ServletInputData)getCurrentInput()).getRequest().getRequestURL().toString());
+
+		  ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(temp.toURL());
 		} catch (Exception e) {
           ExceptionUtil.uncheckException(e);
 		}

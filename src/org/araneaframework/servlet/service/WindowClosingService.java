@@ -24,28 +24,36 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
+import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.servlet.filter.importer.FileImporter;
 
 /**
- * When server side thread is closed, client sometimes cannot be made aware
- * of that and may make a request to it. In these cases, temporary replacement
- * service can be started that upon receiving request notifies client with
- * some predetermined method that this thread is already dead and can also 
- * provide client with clues for further action. After temporary thread has 
- * notified client of its morbid state, it performs final suicide.
- * 
+ * Service that returns response that closes browser window that made the 
+ * request; and if possible, reloads the opener of that window.
+ *
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class TemporaryThreadService extends BaseService {
+public class WindowClosingService extends BaseService {
+	protected String script = 
+		"reloadParentWindow();" +
+		"closeWindow(50);";
+
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ((ServletOutputData) output).getResponse();
 		
+		String scriptSrc = FileImporter.getImportString("js/ui-popups.js", ((ServletInputData) input).getRequest() ,((ServletOutputData) output).getResponse());
 		String responseStr = 
-			"<html><head><title>close me now</title></head><body>" + 
-			"<script type=\"text/javascript\">reloadParentWindow();closeWindow(40);"+ 
-			"</script></body></html>";
-		
-		byte[] rsp = responseStr.getBytes();
+			"<html>" +
+			  "<head>" +
+			    "<script type=\"text/javascript\" src=\"" + scriptSrc + "\"></script>" +
+			  "</head>" +
+			  "<body>" + 
+			    "<script type=\"text/javascript\">"+ script +"</script>" +
+			  "</body>" +
+			"</html>";
+
+		byte[] rsp = responseStr.getBytes(); 
 		
 		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
 		byteOutputStream.write(rsp);
