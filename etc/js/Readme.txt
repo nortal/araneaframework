@@ -2,8 +2,9 @@ This folder contains supporting scripts for Uilib.
 
 * tiny_mce/*
 - web based Javascript HTML WYSIWYG editor (http://tinymce.moxiecode.com/)
+- includes plugins and themes
 - Required for using Uilib 'rich' textarea JSP tags.
-- License is LGPL see, details at http://tinymce.moxiecode.com/
+- License is LGPL, details at http://tinymce.moxiecode.com/
 
 * calendar/*
 - nice DHTML calendar (http://www.bazon.net/mishoo)
