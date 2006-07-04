@@ -57,9 +57,7 @@
 
 						<ui:cell styleClass="inpt">
 							<!-- As "textbox1" is TextControl, we choose the corresponding tag to render it -->
-							<ui:textInput id="textbox1">
-								<ui:attribute name="onfocus" value="function() {alert('woot');}"/>
-							</ui:textInput>
+							<ui:textInput id="textbox1"/>
 						</ui:cell>
 					</ui:row>
 
