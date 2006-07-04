@@ -43,4 +43,10 @@ public class UiStdScriptUtil {
   public static void writeObject(Writer out, Object o) throws IOException {
     out.write(o == null ? "undefined" : o.toString());
   }
+  
+  public static void writeElementAttributeScript(Writer out, String elementId, String attribute, String value) throws IOException {
+    out.write("<script type=\"text/javascript\">");
+    out.write("document.getElementById('" + elementId + "')." + attribute + "="+value+";");
+    out.write("</script>");
+  }
 }

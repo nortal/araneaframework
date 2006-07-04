@@ -45,9 +45,14 @@ public class UiStdMessagesTag extends UiPresentationTag {
   public UiStdMessagesTag() {
     styleClass = "aranea-messages";
   }
-
+  
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
+    return SKIP_BODY;
+  }
+
+  protected int doEndTag(Writer out) throws Exception {
+    super.doEndTag(out);
 
     OutputData output = (OutputData) UiUtil.requireContextEntry(pageContext, UiAraneaRootTag.OUTPUT_DATA_KEY);
     Map messageMap = (Map) output.getAttribute(MessageContext.MESSAGE_KEY);
@@ -67,6 +72,7 @@ public class UiStdMessagesTag extends UiPresentationTag {
     UiUtil.writeOpenStartTag(out, "div");
     UiUtil.writeAttribute(out, "class", getStyleClass());
     UiUtil.writeAttribute(out, "style", getStyle());
+    UiUtil.writeAttributes(out, attributes);
     UiUtil.writeCloseStartTag(out);
 
     UiUtil.writeStartTag(out, "div");

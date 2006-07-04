@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
@@ -43,7 +44,13 @@ public class UiStdFormTextareaTag extends UiFormElementBaseTag {
     baseStyleClass = "aranea-textarea";
   }
   
-  protected int doEndTag(Writer out) throws Exception {
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, null);
+    return EVAL_BODY_INCLUDE;
+  }
+
+protected int doEndTag(Writer out) throws Exception {
     assertControlType("TextareaControl");    
     
     String name = this.getScopedFullFieldId();     

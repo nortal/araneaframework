@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.util.UiUpdateRegionUtil;
 
 /**
@@ -39,6 +40,8 @@ public class UiEventButtonBaseTag extends UiSimpleButtonBaseTag {
   protected int doStartTag(Writer out) throws Exception {
     int result = super.doStartTag(out);
 
+    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, id);
+    
     if (contextWidgetId == null)
       throw new UiException("'eventButton' tag can only be used in a context widget!");
 

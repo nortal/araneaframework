@@ -17,6 +17,7 @@
 package org.araneaframework.template.tags.uilib.form;
 
 import java.io.Writer;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -31,14 +32,12 @@ public class SampleValidationFlagTag extends UiFormElementBaseTag {
    */
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
+    
+    String imgId = "img_"+formFullId+"."+derivedId;
+    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, imgId);
 
     UiUtil.writeOpenStartTag(out, "img");
-    UiUtil.writeOpenAttribute(out, "id");   
-    out.write("img_");
-    UiUtil.writeEscapedAttribute(out, formFullId);
-    out.write(".");
-    UiUtil.writeEscapedAttribute(out, derivedId);
-    UiUtil.writeCloseAttribute(out);
+    UiUtil.writeAttribute(out, "id", imgId);
     if (formElementViewModel.isValid())
       UiUtil.writeAttribute(out, "style", "visibility: hidden;");
     else

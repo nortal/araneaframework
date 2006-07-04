@@ -43,6 +43,7 @@ public class UiStdFormCheckboxDisplayTag extends UiFormElementBaseDisplayTag {
     UiUtil.writeOpenStartTag(out, "span");
     UiUtil.writeAttribute(out, "class", getStyleClass());
     UiUtil.writeAttribute(out, "style", getStyle());
+    UiUtil.writeAttributes(out, attributes);
     UiUtil.writeCloseStartTag(out);
 
     if ("true".equals(viewModel.getSimpleValue())) //TODO: image?

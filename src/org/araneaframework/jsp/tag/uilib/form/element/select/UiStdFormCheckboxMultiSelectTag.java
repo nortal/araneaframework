@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
@@ -43,6 +44,16 @@ public class UiStdFormCheckboxMultiSelectTag extends UiFormElementBaseTag {
   public UiStdFormCheckboxMultiSelectTag() {
     setHasElementContextSpan(false);
   }
+
+  
+  
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, null);
+    return EVAL_BODY_INCLUDE;
+  }
+
+
 
   public int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");    

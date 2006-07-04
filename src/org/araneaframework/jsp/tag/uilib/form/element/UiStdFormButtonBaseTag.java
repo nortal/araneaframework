@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.ButtonControl;
@@ -70,8 +71,6 @@ public class UiStdFormButtonBaseTag extends UiFormElementBaseTag {
     
     // Prepare    
     viewModel = ((ButtonControl.ViewModel)controlViewModel);
-    
- 
     
     // Check whether access key was specified in the resources
     if (accessKey == null) {

@@ -138,7 +138,7 @@ function isChanged(elementId) {
   return (el.oldValue != el.value);
 }
 
-function setFormEncoding(formId, encoding) {
-  document.forms[formId].enctype = encoding;
-  document.forms[formId].encoding = encoding; // IE
+function setFormEncoding(formName, encoding) {
+  document.forms[formName].enctype = encoding;
+  document.forms[formName].encoding = encoding; // IE
 }

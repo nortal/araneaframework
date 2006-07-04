@@ -31,6 +31,7 @@ public abstract class UiStdFormSimpleElementDisplayBaseTag extends UiFormElement
 		UiUtil.writeOpenStartTag(out, "span");
 		UiUtil.writeAttribute(out, "class", getStyleClass());
 		UiUtil.writeAttribute(out, "style", getStyle());
+		UiUtil.writeAttributes(out, attributes);
 		UiUtil.writeCloseStartTag(out);
 		
 		String s = viewModel.getSimpleValue();
