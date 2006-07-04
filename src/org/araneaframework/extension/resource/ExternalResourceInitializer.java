@@ -60,6 +60,8 @@ public class ExternalResourceInitializer {
 			xr.setErrorHandler(handler);
 			
 			//ClassLoader loader = getClass().getClassLoader();
+			//XXX: using classloader is bad here, we cannot load resources from reasonable places
+			//outside classpath
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
 			Enumeration resources =  loader.getResources(ARANEA_RESOURCES_FILE_NAME);
 			
