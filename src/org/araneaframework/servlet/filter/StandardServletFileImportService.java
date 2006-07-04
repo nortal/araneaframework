@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -37,22 +37,36 @@ import org.araneaframework.extension.resource.ExternalResource;
 import org.araneaframework.extension.resource.ExternalResourceInitializer;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.router.PathInfoServiceRouterService;
+import org.springframework.web.context.support.ServletContextResourceLoader;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
 */
 public class StandardServletFileImportService extends BaseService {
 	private static final Logger log = Logger.getLogger(StandardServletFileImportService.class);
-	private static final ExternalResource resources = (new ExternalResourceInitializer()).getResources();
+	private static boolean isInitialized = false;
+	private static ExternalResource resources;
 	private long cacheHoldingTime = 3600000;
-
 
 	public static final String IMPORTER_FILE_NAME = "FileImporterFileName";
 	public static final String IMPORTER_GROUP_NAME = "FileImporterGroupName";
 	public static final String OVERRIDE_PREFIX = "override";
 	public static final String FILE_IMPORTER_NAME = "fileimporter";
+	
+	synchronized static void initialize(ServletContext context) {
+		if (!isInitialized) {
+			ExternalResourceInitializer initializer = new ExternalResourceInitializer();
+			resources = initializer.getResources(context);
+			isInitialized = true;
+		}
+	}
 
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
+		if (!isInitialized) {
+			ServletConfig config = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
+			initialize(config.getServletContext());
+		}
+		
 		String fileName = (String)input.getGlobalData().get(IMPORTER_FILE_NAME);
 		String groupName = (String)input.getGlobalData().get(IMPORTER_GROUP_NAME);
 		

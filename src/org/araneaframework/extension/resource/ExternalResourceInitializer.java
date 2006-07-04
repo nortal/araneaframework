@@ -17,12 +17,17 @@
 package org.araneaframework.extension.resource;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
-
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import javax.servlet.ServletContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.xml.sax.InputSource;
@@ -51,7 +56,7 @@ public class ExternalResourceInitializer {
 	// TODO: extensions configurable, right now explicit extension configuration file
 	public static final String EXTENSION_TINY_MCE = "conf/aranea-extension-tinymce.xml";
 	
-	public ExternalResource getResources() {
+	public ExternalResource getResources(ServletContext context) {
 		try {
 			XMLReader xr = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 			ExternalResourceConfigurationHandler handler = new ExternalResourceConfigurationHandler();
@@ -60,27 +65,20 @@ public class ExternalResourceInitializer {
 			xr.setErrorHandler(handler);
 			
 			//ClassLoader loader = getClass().getClassLoader();
-			//XXX: using classloader is bad here, we cannot load resources from reasonable places
-			//outside classpath
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			Enumeration resources =  loader.getResources(ARANEA_RESOURCES_FILE_NAME);
+
+			Enumeration classPathResources = loader.getResources(ARANEA_RESOURCES_FILE_NAME);
+			Enumeration contextPathResources = getContextResources(context, ARANEA_RESOURCES_FILE_NAME); 
+
+			if (!(classPathResources.hasMoreElements() || contextPathResources.hasMoreElements()))
+				log.warn("Aranea resource configuration file '" + ARANEA_RESOURCES_FILE_NAME + "' not found.");
+			loadResources(classPathResources, xr);
+			loadResources(contextPathResources, xr);
 			
-			if (!resources.hasMoreElements())
-				log.warn("No resources configuration file found");
-			
-			for(;resources.hasMoreElements();) {
-				URL fileURL = (URL)resources.nextElement();
-				log.debug("Adding resources from file'"+fileURL+"'");
-				xr.parse(new InputSource(fileURL.openStream()));
-			}
-			
-			resources =  loader.getResources(EXTENSION_TINY_MCE);
-			
-			for(;resources.hasMoreElements();) {
-				URL fileURL = (URL)resources.nextElement();
-				log.debug("Adding resources from file'"+fileURL+"'");
-				xr.parse(new InputSource(fileURL.openStream()));
-			}
+			classPathResources = loader.getResources(EXTENSION_TINY_MCE);
+			contextPathResources = getContextResources(context, EXTENSION_TINY_MCE); 
+			loadResources(classPathResources, xr);
+			loadResources(contextPathResources, xr);
 
 			return handler.getResource();
 		}
@@ -93,5 +91,25 @@ public class ExternalResourceInitializer {
 		catch (IOException e) {
 			throw new AraneaRuntimeException("Problem while reading configuration file", e);
 		}
+	}
+	
+	protected void loadResources(Enumeration resources, XMLReader xr) throws IOException, SAXException {
+		while (resources.hasMoreElements()) {
+			URL fileURL = (URL)resources.nextElement();
+			log.debug("Adding resources from file'"+fileURL+"'");
+			xr.parse(new InputSource(fileURL.openStream()));
+		}
+	}
+	
+	protected Enumeration getContextResources(ServletContext ctx, String fileName) throws MalformedURLException {
+		Set set = new HashSet();
+		URL url;
+
+		url = ctx.getResource("/META-INF/" + fileName);
+		if (url != null) set.add(url);
+		url = ctx.getResource("/WEB-INF/" + fileName);
+		if (url != null) set.add(url);
+
+		return Collections.enumeration(set);
 	}
 }
