@@ -82,6 +82,9 @@ public class StandardServletFileImportService extends BaseService {
 				/*
 				 * Fallback to the filesystem. Container takes care if it is okay to load
 				 * a file from the application's system.
+				 * 
+				 * XXX: container behaviour is not known. i.e Jetty allows loading files
+				 * from application context that way, but for example WL does not.
 				 */
 				else {
 					try {
