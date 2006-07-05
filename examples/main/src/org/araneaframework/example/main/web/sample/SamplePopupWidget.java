@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.special.MainExampleMessageFactory;
 import org.araneaframework.example.main.web.menu.ExampleMenuMessage;
@@ -30,9 +29,21 @@ import org.araneaframework.uilib.core.PopupFlowWidget;
  */
 public class SamplePopupWidget extends TemplateBaseWidget {
 	private static final Logger log = Logger.getLogger(SamplePopupWidget.class);
+	String title;
+	int count = 1;
+	
+	public SamplePopupWidget() {
+		super();
+	}
+	
+	protected SamplePopupWidget(int count) {
+		super();
+		this.count = count;
+	}
 	
 	protected void init() throws Exception {
 		super.init();
+		putViewData("title", "#" + Integer.toString(count) + ". Popup Example");
 		setViewSelector("sample/samplePopup");
 	}
 
@@ -54,32 +65,20 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		p.setHeight("600");
 		p.setWidth("800");
 		p.setScrollbars("yes");
-		PopupFlowWidget pfw = new PopupFlowWidget(new SamplePopupWidget(), p, new MainExampleMessageFactory());
-		getFlowCtx().start(pfw, new SampleConfigurator(), new SampleHandler());
+		PopupFlowWidget pfw = new PopupFlowWidget(new SamplePopupWidget(count+1), p, new MainExampleMessageFactory());
+		getFlowCtx().start(pfw, null, new SampleHandler());
 	}
 	
 	public void handleEventEndFlow() {
 		getFlowCtx().finish("Funky end for SamplePopupWidget!");
 	}
-
-	class SampleConfigurator implements FlowContext.Configurator {
-		public void configure(Widget comp) throws Exception {
-			log.debug("Configurator running");
-		}
-	}
 	
 	class SampleHandler implements FlowContext.Handler {
 		public void onCancel() throws Exception {
-			log.debug("--------------------------------- ");
-			log.debug("SampleHandler handling cancel ");
-			log.debug("--------------------------------- ");
 		}
 
 		public void onFinish(Object returnValue) throws Exception {
-			log.debug("--------------------------------- ");
-			log.debug("SampleHandler handling finish(" + returnValue + ")");
-			log.debug("--------------------------------- ");
-			getFlowCtx().start(new SimpleFormWidget(), null, null);
+			putViewData("returnValue", returnValue);
 		}
 	}
 }

@@ -8,10 +8,14 @@
 	<!-- Component starts here -->
 	<ui:widgetContext>
 		<ui:componentHeader>
-			<ui:componentName>Popup example</ui:componentName>
+			<ui:componentName><fmt:message key="${contextWidget.data.title}"/></ui:componentName>
 		</ui:componentHeader>
 		
 		<ui:component>
+			<c:if test="${contextWidget.data.returnValue != null}">
+				<c:out value="${contextWidget.data.returnValue}"/>
+			</c:if>
+		
 			<ui:componentActions>
 				<ui:eventButton eventId="createThread" labelId="#Open popup (create new session thread)."/>
 				<ui:eventButton eventId="openUrl" labelId="#Open some URL (/.)"/>
@@ -19,11 +23,8 @@
  				<ui:eventButton 
  					eventId="endFlow" 
  					labelId="#End this flow." />
-<!-- 					onClickPrecondition="if (window.opener) { window.opener.document.location.href=window.opener.document.location.href } return true;"/> -->
 			</ui:componentActions>
 		</ui:component>
-
-		<script></script>
 
 	</ui:widgetContext>
 </jsp:root>

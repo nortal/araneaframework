@@ -16,6 +16,7 @@
 
 // functions for window close detection, submit event notifying serverside to
 // close corresponding thread. Works only with IE and even then, not perfectly.
+// XXX: useless, to remove
 function onWindowClosingEvent() {
    if (window.event) {
      if (window.event.clientX < 0 && window.event.clientY < 0) {
@@ -27,7 +28,6 @@ function onWindowClosingEvent() {
 }
 
 function onWindowUnload() {
-  onWindowClosingEvent();
   closeOpenedPopupWindows();
 }
 
@@ -49,10 +49,24 @@ function addPopup(popupId, windowProperties, url) {
   popupProperties[popupId].url = url;
 }
 
+function submitThreadCloseRequest(win) {
+  if (win.document) {
+    var closeParam = createNamedElement("input", "popupClose");
+    closeParam.setAttribute("type", "hidden");
+    closeParam.setAttribute("value", "true");
+    //TODO: find the systemform reliably
+    win.document.system_form_0.appendChild(closeParam);
+    araneaSubmitEvent(win.document.system_form_0, "", "", "", "");
+  }
+}
+
 function closeOpenedPopupWindows() {
   for (var popupId in openedPopupWindows) {
     var w = openedPopupWindows[popupId];
-    w.close();
+    if (w) {
+      submitThreadCloseRequest(w);
+      w.close();
+    }
   }
 }
 

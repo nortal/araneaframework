@@ -170,6 +170,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       ThreadContext threadCtx = (ThreadContext)getEnvironment().getEntry(ThreadContext.class);
       Object id = threadCtx.getCurrentId();
       threadCtx.close(id);
+      log.debug("Closed thread with id : " + id);
     } else {
       super.event(path, input);
     }
