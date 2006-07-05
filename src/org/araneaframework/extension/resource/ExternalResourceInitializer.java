@@ -19,11 +19,9 @@ package org.araneaframework.extension.resource;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.ParserConfigurationException;
@@ -49,7 +47,7 @@ public class ExternalResourceInitializer {
 	private static final Logger log = Logger.getLogger(ExternalResourceInitializer.class);
 	
 	/**
-	 * Main configuration file bundled with the framework.
+	 * Framework application main configuration file.
 	 */
 	public static final String ARANEA_RESOURCES_FILE_NAME = "conf/aranea-resources.xml";
 	
@@ -64,7 +62,6 @@ public class ExternalResourceInitializer {
 			xr.setContentHandler(handler);
 			xr.setErrorHandler(handler);
 			
-			//ClassLoader loader = getClass().getClassLoader();
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
 			Enumeration classPathResources = loader.getResources(ARANEA_RESOURCES_FILE_NAME);
@@ -102,14 +99,14 @@ public class ExternalResourceInitializer {
 	}
 	
 	protected Enumeration getContextResources(ServletContext ctx, String fileName) throws MalformedURLException {
-		Set set = new HashSet();
+		Set fileURLSet = new HashSet();
 		URL url;
 
 		url = ctx.getResource("/META-INF/" + fileName);
-		if (url != null) set.add(url);
+		if (url != null) fileURLSet.add(url);
 		url = ctx.getResource("/WEB-INF/" + fileName);
-		if (url != null) set.add(url);
+		if (url != null) fileURLSet.add(url);
 
-		return Collections.enumeration(set);
+		return Collections.enumeration(fileURLSet);
 	}
 }

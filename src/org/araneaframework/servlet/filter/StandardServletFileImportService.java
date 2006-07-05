@@ -37,7 +37,6 @@ import org.araneaframework.extension.resource.ExternalResource;
 import org.araneaframework.extension.resource.ExternalResourceInitializer;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.router.PathInfoServiceRouterService;
-import org.springframework.web.context.support.ServletContextResourceLoader;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -53,6 +52,8 @@ public class StandardServletFileImportService extends BaseService {
 	public static final String OVERRIDE_PREFIX = "override";
 	public static final String FILE_IMPORTER_NAME = "fileimporter";
 	
+	public static final String FILE_NAME_RE = new String("^[a-zA-Z0-9./\\-]+$");
+	
 	synchronized static void initialize(ServletContext context) {
 		if (!isInitialized) {
 			ExternalResourceInitializer initializer = new ExternalResourceInitializer();
@@ -66,7 +67,7 @@ public class StandardServletFileImportService extends BaseService {
 			ServletConfig config = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
 			initialize(config.getServletContext());
 		}
-		
+
 		String fileName = (String)input.getGlobalData().get(IMPORTER_FILE_NAME);
 		String groupName = (String)input.getGlobalData().get(IMPORTER_GROUP_NAME);
 		
@@ -97,15 +98,34 @@ public class StandardServletFileImportService extends BaseService {
 				 * Fallback to the filesystem. Container takes care if it is okay to load
 				 * a file from the application's system.
 				 * 
-				 * XXX: container behaviour is not known. i.e Jetty allows loading files
-				 * from application context that way, but for example WL does not.
+				 * XXX: in case of plain new FileInputStream(fileName)
+				 * container behaviour is not known. i.e Jetty allows loading files
+				 * from application context that way, but Weblogic does not.
 				 */
 				else {
 					try {
+						// allow only very simple filenames to prevent malicious URL hacking
+						// and check that remaining simple filename does not contain ".."
+						if (!(fileName.matches(FILE_NAME_RE) && (fileName.indexOf("..") == -1)))
+							throw new SecurityException("Filename too weird, preventing fallback.");
+
+						// now it is sure that file cannot lie outside the web application context
+						// access to WEB-INF and META-INF should also be prevented - might be
+						// sensitive stuff in configuration files there
+						
+						if (fileName.toUpperCase().indexOf("WEB-INF") != -1 || fileName.toUpperCase().indexOf("META-INF") != -1)
+							throw new SecurityException("Fallback not allowed.");
+						
+						ServletConfig sc = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
+						String realContextPath = sc.getServletContext().getRealPath("/");
+						
+						String realFileName = realContextPath + "/" + fileName;
+
 						// checking for the existence
-						new FileInputStream(fileName);
-						filesToLoad.add(fileName);
-						loadFiles(filesToLoad, out);						
+						new FileInputStream(realFileName);
+						filesToLoad.add(realFileName);
+						// this will try override directory first but for fallback that should not matter
+						loadFiles(filesToLoad, out);
 					}
 					catch (FileNotFoundException e) {
 						log.warn("Not allowed to import "+fileName+" add it to the allowed list or make sure it exists on the filesystem.");
