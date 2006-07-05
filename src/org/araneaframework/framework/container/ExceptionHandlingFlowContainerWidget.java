@@ -1,0 +1,99 @@
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
+package org.araneaframework.framework.container;
+
+import org.apache.log4j.Logger;
+import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.OutputData;
+import org.araneaframework.Widget;
+import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.servlet.ServletOverridableOutputData;
+import org.araneaframework.servlet.util.AtomicResponseHelper;
+
+/**
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ */
+public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget {
+  private static final Logger log = Logger.getLogger(ExceptionHandlingFlowContainerWidget.class);
+  
+  protected Exception exception;  
+  
+  public ExceptionHandlingFlowContainerWidget() {
+    super();
+  }
+
+  public ExceptionHandlingFlowContainerWidget(Widget topWidget) {
+    super(topWidget);
+  }
+  
+  protected void init() throws Exception {
+    super.init();
+    
+    addEventListener("retry", new ProxyEventListener(this));
+    addEventListener("cancel", new ProxyEventListener(this));
+    addEventListener("reset", new ProxyEventListener(this));
+  }
+  
+  public void handleEventRetry() throws Exception {
+    this.exception = null;
+  }
+  
+  public void handleEventCancel() throws Exception {
+    this.exception = null;
+    
+    cancel();
+  }
+  
+  public void handleEventReset() throws Exception {
+    this.exception = null;
+    
+    reset(null);    
+  }
+  
+  protected void handleException(Exception e) throws Exception {
+    this.exception = e;
+  }
+  
+  public void reset(EnvironmentAwareCallback callback) {
+    this.exception = null;
+    
+    super.reset(callback);
+  }
+  
+  protected void render(OutputData output) throws Exception {
+    AtomicResponseHelper arUtil = 
+      new AtomicResponseHelper((ServletOverridableOutputData)output);
+    
+    try {
+      if (exception != null)
+        throw exception;
+      
+      super.render(output);
+    }
+    catch (Exception e) {
+      arUtil.rollback();
+      
+      log.error("Handling error:", e);
+            
+      renderExceptionHandler(output, e);
+    }
+    
+    arUtil.commit();
+  }
+  
+  protected abstract void renderExceptionHandler(OutputData output, Exception e) throws Exception;
+}

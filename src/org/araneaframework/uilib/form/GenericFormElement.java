@@ -18,13 +18,10 @@ package org.araneaframework.uilib.form;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.core.StandardWidget;
-import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
-import org.araneaframework.uilib.form.constraint.Constraint;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ErrorUtil;
 
@@ -204,8 +201,8 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
 	public abstract void setDisabled(boolean disabled);
   
   /**
-   * Returns wether the element is disabled.
-   * @return wether the element is disabled.
+   * Returns whether the element is disabled.
+   * @return whether the element is disabled.
    */
 	public abstract boolean isDisabled();
     
@@ -222,7 +219,7 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    * Converts the element value from control to data item
    * @throws Exception 
    */
-  protected abstract void convertInternal() throws Exception;    
+  protected abstract void convertInternal() throws Exception;
   
   /**
    * Validates the element.
