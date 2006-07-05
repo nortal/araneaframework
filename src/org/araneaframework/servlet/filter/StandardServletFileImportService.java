@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -43,16 +43,31 @@ import org.araneaframework.servlet.router.PathInfoServiceRouterService;
 */
 public class StandardServletFileImportService extends BaseService {
 	private static final Logger log = Logger.getLogger(StandardServletFileImportService.class);
-	private static final ExternalResource resources = (new ExternalResourceInitializer()).getResources();
+	private static boolean isInitialized = false;
+	private static ExternalResource resources;
 	private long cacheHoldingTime = 3600000;
-
 
 	public static final String IMPORTER_FILE_NAME = "FileImporterFileName";
 	public static final String IMPORTER_GROUP_NAME = "FileImporterGroupName";
 	public static final String OVERRIDE_PREFIX = "override";
 	public static final String FILE_IMPORTER_NAME = "fileimporter";
+	
+	public static final String FILE_NAME_RE = new String("^[a-zA-Z0-9./\\-]+$");
+	
+	synchronized static void initialize(ServletContext context) {
+		if (!isInitialized) {
+			ExternalResourceInitializer initializer = new ExternalResourceInitializer();
+			resources = initializer.getResources(context);
+			isInitialized = true;
+		}
+	}
 
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
+		if (!isInitialized) {
+			ServletConfig config = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
+			initialize(config.getServletContext());
+		}
+
 		String fileName = (String)input.getGlobalData().get(IMPORTER_FILE_NAME);
 		String groupName = (String)input.getGlobalData().get(IMPORTER_GROUP_NAME);
 		
@@ -82,13 +97,35 @@ public class StandardServletFileImportService extends BaseService {
 				/*
 				 * Fallback to the filesystem. Container takes care if it is okay to load
 				 * a file from the application's system.
+				 * 
+				 * XXX: in case of plain new FileInputStream(fileName)
+				 * container behaviour is not known. i.e Jetty allows loading files
+				 * from application context that way, but Weblogic does not.
 				 */
 				else {
 					try {
+						// allow only very simple filenames to prevent malicious URL hacking
+						// and check that remaining simple filename does not contain ".."
+						if (!(fileName.matches(FILE_NAME_RE) && (fileName.indexOf("..") == -1)))
+							throw new SecurityException("Filename too weird, preventing fallback.");
+
+						// now it is sure that file cannot lie outside the web application context
+						// access to WEB-INF and META-INF should also be prevented - might be
+						// sensitive stuff in configuration files there
+						
+						if (fileName.toUpperCase().indexOf("WEB-INF") != -1 || fileName.toUpperCase().indexOf("META-INF") != -1)
+							throw new SecurityException("Fallback not allowed.");
+						
+						ServletConfig sc = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
+						String realContextPath = sc.getServletContext().getRealPath("/");
+						
+						String realFileName = realContextPath + "/" + fileName;
+
 						// checking for the existence
-						new FileInputStream(fileName);
-						filesToLoad.add(fileName);
-						loadFiles(filesToLoad, out);						
+						new FileInputStream(realFileName);
+						filesToLoad.add(realFileName);
+						// this will try override directory first but for fallback that should not matter
+						loadFiles(filesToLoad, out);
 					}
 					catch (FileNotFoundException e) {
 						log.warn("Not allowed to import "+fileName+" add it to the allowed list or make sure it exists on the filesystem.");
