@@ -142,16 +142,9 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       TODO: describe existing Aranea filters and where new ones can be added (currently one can see /etc/default-aranea-conf.xml in Aranea distribution).
 
       <para>
-        Aranea configuration defaults can be overidden alltogether by providing a "araneaApplicationRoot" bean that will serve as the root component of the whole application.
+        Aranea configuration defaults can be completely overidden by specifying a "araneaApplicationRoot" bean that will serve as the root component of the whole application.
       </para>
 
-	  <sect2>
-	  	<title>PopupFilterWidget</title>
-
-		<para>
-			TODO: describe purpose and configuration.	
-		</para>
-	  </sect2>
   </sect1>
 
   <sect1>
@@ -223,15 +216,15 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
 
   </sect1>
-
-  <!-- sect1>
+  
+    <sect1>
     <title>Components</title>
 
     <sect2>
       <title>Core Components</title>
-
+	<!-- 
       StandardServletServiceAdapterComponent
-      StandardSessionListener
+      StandardSessionListener  -->
     </sect2>
     
     <sect2>
@@ -240,14 +233,17 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <sect3>
         <title>BaseServiceRouterService, StandardTopServiceRouterService and StandardThreadServiceRouterService</title>
       </sect3>
-
+		<!--  
       PathInfoServiceRouterService
-      StandardServletSessionRouterService
+      StandardServletSessionRouterService -->
     </sect2>
     
     <sect2>
       <title>Filters</title>
-
+      
+      &popupfilter;
+      
+<!--  
       StandardContextMapFilterWidget
       StandardContinuationFilterService
       StandardCriticalExceptionHandlingFilterService
@@ -261,12 +257,12 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       StandardPopupFilterWidget
       StandardServletFileImportFilterService
       StandardServletFileUploadFilterService
-      StandardServletHttpFilterService
+      StandardServletHttpFilterService -->
     </sect2>
     
     <sect2>
       <title>Containers</title>
-
+<!-- 
       StandardFlowContainerWidget
       ExceptionHandlingFlowContainerWidget
       StandardServiceAdapterWidget
@@ -274,7 +270,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       StandardViewPortWidget
       StandardWidgetAdapterService
       StandardWidgetContainerWidget
-      PathInfoServiceContainerService
+      PathInfoServiceContainerService -->
     </sect2>
     
     <sect2>
@@ -282,6 +278,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     </sect2>
   </sect1>
 
+  <!-- sect1>
   <sect1>
     <title>Exception Handling</title>
   </sect1-->

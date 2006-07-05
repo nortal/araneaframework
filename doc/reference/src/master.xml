@@ -10,6 +10,9 @@
 	<!ENTITY forms               SYSTEM "forms.xml">	
 	<!ENTITY lists               SYSTEM "lists.xml">	
 	<!ENTITY javascript               SYSTEM "javascript.xml">	
+	
+	
+	<!ENTITY popupfilter 	 SYSTEM "framework/components/filters/StandardPopupFilterWidget.xml">
 ]>
 
 <!--
