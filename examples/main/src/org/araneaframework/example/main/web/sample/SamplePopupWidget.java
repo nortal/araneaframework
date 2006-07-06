@@ -18,8 +18,8 @@ package org.araneaframework.example.main.web.sample;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.example.main.special.MainExampleMessageFactory;
-import org.araneaframework.example.main.web.menu.ExampleMenuMessage;
+import org.araneaframework.example.main.messages.ExampleMenuMessage;
+import org.araneaframework.example.main.messages.MainExampleMessageFactory;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
@@ -33,14 +33,12 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 	int count = 1;
 	
 	public SamplePopupWidget() {
-		super();
 	}
-	
+
 	protected SamplePopupWidget(int count) {
-		super();
 		this.count = count;
 	}
-	
+
 	protected void init() throws Exception {
 		super.init();
 		putViewData("title", "#" + Integer.toString(count) + ". Popup Example");
@@ -63,12 +61,12 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 
 		PopupWindowProperties p = new PopupWindowProperties();
 		p.setHeight("600");
-		p.setWidth("800");
+		p.setWidth("1000");
 		p.setScrollbars("yes");
-		PopupFlowWidget pfw = new PopupFlowWidget(new SamplePopupWidget(count+1), p, new MainExampleMessageFactory());
+		PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new MainExampleMessageFactory());
 		getFlowCtx().start(pfw, null, new SampleHandler());
 	}
-	
+
 	public void handleEventEndFlow() {
 		getFlowCtx().finish("Funky end for SamplePopupWidget!");
 	}
@@ -78,7 +76,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		}
 
 		public void onFinish(Object returnValue) throws Exception {
-			putViewData("returnValue", returnValue);
+			getFlowCtx().replace(new InvisibleElementFormWidget((String)returnValue), null);
 		}
 	}
 }

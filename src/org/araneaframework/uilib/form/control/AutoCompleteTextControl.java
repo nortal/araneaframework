@@ -78,18 +78,29 @@ public class AutoCompleteTextControl extends TextControl {
       response.getWriter().write(xml);
     }
   }
-  
-  //*********************************************************************
-  //* Interface and implementation of AJAX response builder that 
-  //* sends suggestions back to client. 
-  //*********************************************************************  	
-  
+
+  /**
+   * Autocompletion response builder interface.
+   * @author Taimo Peelo (taimo@webmedia.ee)
+   */
   public interface ResponseBuilder extends Serializable {
+    /**
+     * Returns response content with <code>suggestions</code> appropriately set. 
+     * @param suggestions suggested completions that should be included in response
+     * @return appropriate response content
+     */
     public String getResponseContent(List suggestions);
+    /**
+     * Returns response content type. 
+     * @return response content type
+     */
     public String getResponseContentType();
   }
   
-  public class DefaultResponseBuilder implements ResponseBuilder {
+  /**
+   * @author Steven Jentson (steven@webmedia.ee)
+   */
+  public static class DefaultResponseBuilder implements ResponseBuilder {
 	public String getResponseContent(List suggestions) {
   	  StringBuffer xml = new StringBuffer();
         xml.append("<ul>");
@@ -114,7 +125,7 @@ public class AutoCompleteTextControl extends TextControl {
    */
   public Object getViewModel() {
     return new ViewModel();
-  }	  
+  }
 
   //*********************************************************************
   //* VIEW MODEL
