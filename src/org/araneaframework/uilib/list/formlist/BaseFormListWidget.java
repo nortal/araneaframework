@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.form.FormWidget;
