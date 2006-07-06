@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.engine;
 
 import java.io.InputStream;
-import java.io.Serializeable;
+import java.io.Serializable;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -70,7 +70,7 @@ import org.araneaframework.jsp.engine.xml.TreeNode;
  * @author Jan Luehe
  */
 
-public class TldLocationsCache implements Serializeable {
+public class TldLocationsCache implements Serializable {
 
     // Logger
     private Log log = LogFactory.getLog(TldLocationsCache.class);
