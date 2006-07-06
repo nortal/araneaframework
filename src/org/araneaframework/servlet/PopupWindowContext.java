@@ -28,7 +28,6 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
  * 
  * @author Taimo Peelo
  */
-
 public interface PopupWindowContext extends Serializable {
   /** keys for accessing the popup maps from viewmodels */
   public static final String POPUPS_KEY = "popupWindows";
@@ -41,7 +40,7 @@ public interface PopupWindowContext extends Serializable {
    * its opener and vice-versa.
    * @param startMessage - message sent to newly created service (thread).
    * @param properties - properties specifying behaviour and appearance of creatable popup window.
-   * @param caller - widget that is registered as opener of created thread.
+   * @param opener - widget that is registered as opener of created thread.
    * @return
    */
   public String open(Message startMessage, PopupWindowProperties properties, Widget opener);
@@ -50,15 +49,18 @@ public interface PopupWindowContext extends Serializable {
    * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
    * @param idPrefix prefix for service id that will be associated with created window
    * @param properties properties specifying behaviour and appearance of creatable popup window. 
+   * @param opener - widget that is registered as opener of created thread.
    * @return ID of created service.
    */
   public String open(Service service, PopupWindowProperties properties, Widget opener);
-	/** 
-	 * Opens given URL in a new popup window.
-	 * @param url URL to be opened in the popup window
-	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
-	 */
-	public void open(String url, PopupWindowProperties properties);
+  
+  /** 
+   * Opens given URL in a new popup window.
+   * @param url URL to be opened in the popup window
+   * @param properties properties specifying behaviour and appearance of creatable popup window. 
+   */
+  public void open(String url, PopupWindowProperties properties);
+
   /**
    * Closes the server side thread service (serving client side popup).
    * @param id thread (popup) ID to close.
@@ -68,7 +70,7 @@ public interface PopupWindowContext extends Serializable {
   
   /**
    * Returns the widget that opened calling thread-level service (popup).
-   * @return opener of thread-level service, <code>null</code> when calling service does not registered opener.
+   * @return opener of thread-level service, <code>null</code> when calling service does not have registered opener.
    */
   public Widget getOpener();
 }
