@@ -13,6 +13,7 @@
 		<file path="js/ui-aranea.js"/>
 		<file path="js/ui-handlers.js"/>
 		<file path="js/ui-popups.js"/>
+		<file path="js/aranea-util.js"/>
 		<file path="js/aa.js"/>
 		
 		<file path="js/validation/localization.js"/>

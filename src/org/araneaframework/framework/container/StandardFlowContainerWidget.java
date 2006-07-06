@@ -83,7 +83,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   public StandardFlowContainerWidget(Widget topWidget) {
     this.top = topWidget;
   }
-  
+
   public StandardFlowContainerWidget() {
   }
   
@@ -94,7 +94,10 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
   public void setTop(Widget topWidget) {
     this.top = topWidget;
   }
-  
+
+  // TODO: notion of "non-renderable" widget that should take place
+  // on call stack but will not be rendered itself - instead first
+  // renderable widget on call stack is.
   public void start(Widget flow, Configurator configurator, Handler handler) {
     flow = decorateCallableWidget((Widget) flow);
     CallFrame frame = makeCallFrame((Widget) flow, configurator, handler);
@@ -102,7 +105,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     log.debug("Starting flow '" + flow.getClass().getName() +"'");
     
     if (_getChildren().get(FLOW_KEY) != null) {
-      ((Widget) getChildren().get(FLOW_KEY))._getComponent().disable();      
+      ((Widget) getChildren().get(FLOW_KEY))._getComponent().disable();
       _getChildren().remove(FLOW_KEY);
     }
     

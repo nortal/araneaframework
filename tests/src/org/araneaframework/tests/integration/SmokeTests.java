@@ -27,8 +27,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
- * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
+ * XXX: why is the whole test commented out?
  */
 public class SmokeTests extends TestCase {
   /*private MockServlet servlet;

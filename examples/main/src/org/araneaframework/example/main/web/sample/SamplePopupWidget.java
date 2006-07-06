@@ -16,46 +16,67 @@
 
 package org.araneaframework.example.main.web.sample;
 
+import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.example.main.web.LoginWidget;
-import org.araneaframework.example.main.web.menu.ExampleMenuMessage;
-import org.araneaframework.servlet.PopupWindowContext;
+import org.araneaframework.example.main.messages.ExampleMenuMessage;
+import org.araneaframework.example.main.messages.MainExampleMessageFactory;
+import org.araneaframework.framework.FlowContext;
 import org.araneaframework.servlet.support.PopupWindowProperties;
+import org.araneaframework.uilib.core.PopupFlowWidget;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class SamplePopupWidget extends TemplateBaseWidget {
+	private static final Logger log = Logger.getLogger(SamplePopupWidget.class);
+	String title;
+	int count = 1;
+	
+	public SamplePopupWidget() {
+	}
+
+	protected SamplePopupWidget(int count) {
+		this.count = count;
+	}
+
 	protected void init() throws Exception {
 		super.init();
-
+		putViewData("title", "#" + Integer.toString(count) + ". Popup Example");
 		setViewSelector("sample/samplePopup");
 	}
 
 	public void handleEventCreateThread() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
-		
 		ExampleMenuMessage message = new ExampleMenuMessage("Demos.#Simple.Simple_Form");
-		
-		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-		popupCtx.openDetached(message, new PopupWindowProperties());
+		getPopupCtx().open(message, new PopupWindowProperties(), this);
 	}
-	
+
 	public void handleEventOpenUrl() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
-
-		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-		popupCtx.open("http://www.slashdot.org", new PopupWindowProperties());
+		getPopupCtx().open("http://www.slashdot.org", new PopupWindowProperties());
 	}
 	
 	public void handleEventOpenNewCustomFlow() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
 
-		PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
 		PopupWindowProperties p = new PopupWindowProperties();
 		p.setHeight("600");
-		p.setWidth("800");
+		p.setWidth("1000");
 		p.setScrollbars("yes");
-		popupCtx.openDetached(new LoginWidget(), p);
+		PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new MainExampleMessageFactory());
+		getFlowCtx().start(pfw, null, new SampleHandler());
+	}
+
+	public void handleEventEndFlow() {
+		getFlowCtx().finish("Funky end for SamplePopupWidget!");
+	}
+	
+	class SampleHandler implements FlowContext.Handler {
+		public void onCancel() throws Exception {
+		}
+
+		public void onFinish(Object returnValue) throws Exception {
+			getFlowCtx().replace(new InvisibleElementFormWidget((String)returnValue), null);
+		}
 	}
 }

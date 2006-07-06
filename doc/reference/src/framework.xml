@@ -20,7 +20,7 @@
     <title>Overview</title>
 
     <para>
-      Aranea framework consists of a number of independent components each performing a single well-defined function. This classes are arranged together during deployment and usually involving an IoC container (like Spring) for configuration. These components may be simple <literal>Component</literal>s, <literal>Service</literal>s or <literal>Widget</literal>s. 
+      Aranea framework consists of a number of independent components each performing a single well-defined function. These classes are arranged together during deployment and usually involve an IoC container (like Spring) for configuration. These components may be simple <literal>Components</literal>, <literal>Services</literal> or <literal>Widgets</literal>. 
     </para>
   </sect1>
   
@@ -121,7 +121,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </para>
 
       <para>
-        Alternatively one can also specify a Spring configuration file (that should be located in <literal>/WEB-INF/aranea-conf.xml</literal>), which can also be used to configure Aranea. Particulary it may be used to set the starting widget instead of the init-parameter:
+        Alternatively one can also specify a Spring configuration file (that should be located in <literal>/WEB-INF/aranea-conf.xml</literal>), which can also be used to configure Aranea. Particularly it may be used to set the starting widget instead of the init-parameter:
 <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
   "http://www.springframework.org/dtd/spring-beans.dtd">
@@ -139,11 +139,12 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       as well as adding one's own. 
       </para>
 
-      TODO: describe existing Aranea filters and where new ones can be added (currently one can watch /etc/default-aranea-conf.xml in Aranea distribution).
+      TODO: describe existing Aranea filters and where new ones can be added (currently one can see /etc/default-aranea-conf.xml in Aranea distribution).
 
       <para>
-        Aranea configuration defaults can be overidden alltogether by providing a "araneaApplicationRoot" bean that will serve as the root component of the whole application.
+        Aranea configuration defaults can be completely overidden by specifying a "araneaApplicationRoot" bean that will serve as the root component of the whole application.
       </para>
+
   </sect1>
 
   <sect1>
@@ -215,15 +216,15 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
 
   </sect1>
-
-  <!-- sect1>
+  
+    <sect1>
     <title>Components</title>
 
     <sect2>
       <title>Core Components</title>
-
+	<!-- 
       StandardServletServiceAdapterComponent
-      StandardSessionListener
+      StandardSessionListener  -->
     </sect2>
     
     <sect2>
@@ -232,14 +233,17 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <sect3>
         <title>BaseServiceRouterService, StandardTopServiceRouterService and StandardThreadServiceRouterService</title>
       </sect3>
-
+		<!--  
       PathInfoServiceRouterService
-      StandardServletSessionRouterService
+      StandardServletSessionRouterService -->
     </sect2>
     
     <sect2>
       <title>Filters</title>
-
+      
+      &popupfilter;
+      
+<!--  
       StandardContextMapFilterWidget
       StandardContinuationFilterService
       StandardCriticalExceptionHandlingFilterService
@@ -253,12 +257,12 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       StandardPopupFilterWidget
       StandardServletFileImportFilterService
       StandardServletFileUploadFilterService
-      StandardServletHttpFilterService
+      StandardServletHttpFilterService -->
     </sect2>
     
     <sect2>
       <title>Containers</title>
-
+<!-- 
       StandardFlowContainerWidget
       ExceptionHandlingFlowContainerWidget
       StandardServiceAdapterWidget
@@ -266,7 +270,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       StandardViewPortWidget
       StandardWidgetAdapterService
       StandardWidgetContainerWidget
-      PathInfoServiceContainerService
+      PathInfoServiceContainerService -->
     </sect2>
     
     <sect2>
@@ -274,6 +278,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     </sect2>
   </sect1>
 
+  <!-- sect1>
   <sect1>
     <title>Exception Handling</title>
   </sect1-->

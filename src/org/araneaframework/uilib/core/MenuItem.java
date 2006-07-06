@@ -31,155 +31,155 @@ import org.araneaframework.uilib.support.FlowCreator;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class MenuItem implements Serializable {
-	public static final String MENU_PATH_SEPARATOR = ".";
-	
-	/** Name for this menu item. */ 
-	private String label;
+  public static final String MENU_PATH_SEPARATOR = ".";
+  
+  /** Name for this menu item. */ 
+  private String label;
 
-	/** Flow which instance should be started when menuitem is selected. */
-	private Class flowClass;
-	/** <code>FlowCreator</code> used to create new flow instance started when menuitem is selected. */
-	private FlowCreator flowCreator;
+  /** Flow which instance should be started when menuitem is selected. */
+  private Class flowClass;
+  /** <code>FlowCreator</code> used to create new flow instance started when menuitem is selected. */
+  private FlowCreator flowCreator;
 
-	/** Indicates whether the menuitem is in selected state. */
-	private boolean selected;
-	/** Indicates whether the menuitem serves as holder for others. */
-	private boolean holder;
+  /** Indicates whether the menuitem is in selected state. */
+  private boolean selected;
+  /** Indicates whether the menuitem serves as holder for others. */
+  private boolean holder;
 
-	/** Submenu of this <code>MenuItem</code> (may exist only when this <code>MenuItem</code> is a holder. */
-	private Map subMenu;
-	private List selectedItems = new ArrayList();
+  /** Submenu of this <code>MenuItem</code> (may exist only when this <code>MenuItem</code> is a holder. */
+  private Map subMenu;
+  private List selectedItems = new ArrayList();
 
-	/***************************************************************************************************
-	 * CONSTRUCTORS 
-	 ***************************************************************************************************/
-	/**
-	 * Creates a top menu.
-	 */
-	public MenuItem() {
-		this.label = null;
-		this.holder = true;
-	}
+  /* **************************************************************************************************
+   * CONSTRUCTORS 
+   * **************************************************************************************************/
+  /**
+   * Creates a top menu.
+   */
+  public MenuItem() {
+    this.label = null;
+    this.holder = true;
+  }
 
-	/**
-	 * Creates a new menuitem that serves as holder to other menu items.
-	 * @label label name assigned to created menuitem. May not contain dots.
-	 */
-	public MenuItem(String label) {
-		checkLabelLegality(label);
-		this.label = label;
-		this.holder = true;
-	}
+  /**
+   * Creates a new menuitem that serves as holder to other menu items.
+   * @label label name assigned to created menuitem. May not contain dots.
+   */
+  public MenuItem(String label) {
+    checkLabelLegality(label);
+    this.label = label;
+    this.holder = true;
+  }
 
-	/**
-	 * Creates a new menuitem that starts a new flow (instantiating given class with no-argument constructor) when selected.
-	 * @param label name assigned to created menuitem. May not contain dots.
-	 * @param flowClass class of flow.
-	 */
-	public MenuItem(String label, Class flowClass) {
-		checkLabelLegality(label);
-		this.label = label;
-		this.flowClass = flowClass;
-	}
+  /**
+   * Creates a new menuitem that starts a new flow (instantiating given class with no-argument constructor) when selected.
+   * @param label name assigned to created menuitem. May not contain dots.
+   * @param flowClass class of flow.
+   */
+  public MenuItem(String label, Class flowClass) {
+    checkLabelLegality(label);
+    this.label = label;
+    this.flowClass = flowClass;
+  }
 
-	/**
-	 * Creates a new menuitem that starts a new flow (instantiating it with specified constructor) when selected.
-	 * @param label name assigned to created menuitem. May not contain dots.
-	 * @param flowCreator <code>FlowCreator</code> used to create instance of flow to be started.
-	 */
-	public MenuItem(String label, FlowCreator flowCreator) {
-		checkLabelLegality(label);
-		this.label = label;
-		this.flowCreator = flowCreator;
-	}
+  /**
+   * Creates a new menuitem that starts a new flow (instantiating it with specified constructor) when selected.
+   * @param label name assigned to created menuitem. May not contain dots.
+   * @param flowCreator <code>FlowCreator</code> used to create instance of flow to be started.
+   */
+  public MenuItem(String label, FlowCreator flowCreator) {
+    checkLabelLegality(label);
+    this.label = label;
+    this.flowCreator = flowCreator;
+  }
 
-	/***************************************************************************************************
-	 * PRIVATE METHODS. 
-	 ***************************************************************************************************/
-	private void checkLabelLegality(String label) throws IllegalArgumentException {
-		if  (label == null)
-			throw new IllegalArgumentException("Menu label may not be null");
-		if  (label.indexOf(MENU_PATH_SEPARATOR) != -1)
-			throw new IllegalArgumentException("Menu labels may not contain '" + MENU_PATH_SEPARATOR + "'");
-	}
-	
-	/**
-	 * Adds a menu item to submenu of this <code>MenuItem</code>.
-	 * @param item menu item to add into submenu of this <code>MenuItem</code>.
-	 * @throws UnsupportedOperationException if this <code>MenuItem</code> is not a holder.
-	 */
-	private void addSubMenuItem(MenuItem item) throws UnsupportedOperationException {
-		if (!holder)
-			throw new UnsupportedOperationException("Menu items can only be added into holders.");
-		if (subMenu == null)
-			subMenu = new LinkedHashMap();
-		subMenu.put(item.getLabel(), item);
-	}
-	
-	/***************************************************************************************************
-	 * PUBLIC METHODS. 
-	 ***************************************************************************************************/
-	/**
-	 * Adds a new <code>MenuItem</code> under this <code>MenuItem</code>.
-	 * @param item item to add.
-	 * @return item added to menu
-	 */
-	public MenuItem addMenuItem(MenuItem item) {
-		return addMenuItem(null, item);
-	}
+  /* **************************************************************************************************
+   * PRIVATE METHODS. 
+   * **************************************************************************************************/
+  private void checkLabelLegality(String label) throws IllegalArgumentException {
+    if  (label == null)
+      throw new IllegalArgumentException("Menu label may not be null");
+    if  (label.indexOf(MENU_PATH_SEPARATOR) != -1)
+      throw new IllegalArgumentException("Menu labels may not contain '" + MENU_PATH_SEPARATOR + "'");
+  }
+  
+  /**
+   * Adds a menu item to submenu of this <code>MenuItem</code>.
+   * @param item menu item to add into submenu of this <code>MenuItem</code>.
+   * @throws UnsupportedOperationException if this <code>MenuItem</code> is not a holder.
+   */
+  private void addSubMenuItem(MenuItem item) throws UnsupportedOperationException {
+    if (!holder)
+      throw new UnsupportedOperationException("Menu items can only be added into holders.");
+    if (subMenu == null)
+      subMenu = new LinkedHashMap();
+    subMenu.put(item.getLabel(), item);
+  }
+  
+  /* **************************************************************************************************
+   * PUBLIC METHODS. 
+   * **************************************************************************************************/
+  /**
+   * Adds a new <code>MenuItem</code> under this <code>MenuItem</code>.
+   * @param item item to add.
+   * @return item added to menu
+   */
+  public MenuItem addMenuItem(MenuItem item) {
+    return addMenuItem(null, item);
+  }
 
-	/**
-	 * Adds a new <code>MenuItem</code> under this <code>MenuItem</code> at given path.
-	 * @param menuPath
-	 * 		path to new menu item.
-	 * 		Must be <code>null</code> or empty string for to add <code>MenuItem</code> directly to this <code>MenuItem</code>.
-	 * 		Must consist of preceding menu labels separated by dots.
-	 * @param item item to add into menu.
-	 * @throws NullPointerException if some of the items on specified <code>menuPath</code> do not exist.
-	 * @return item added to menu
-	 */
-	public MenuItem addMenuItem(String menuPath, MenuItem item) {
-		String path = menuPath != null ? menuPath : "";
-		MenuItem menu = this;
+  /**
+   * Adds a new <code>MenuItem</code> under this <code>MenuItem</code> at given path.
+   * @param menuPath
+   *     path to new menu item.
+   *     Must be <code>null</code> or empty string for to add <code>MenuItem</code> directly to this <code>MenuItem</code>.
+   *     Must consist of preceding menu labels separated by dots.
+   * @param item item to add into menu.
+   * @throws NullPointerException if some of the items on specified <code>menuPath</code> do not exist.
+   * @return item added to menu
+   */
+  public MenuItem addMenuItem(String menuPath, MenuItem item) {
+    String path = menuPath != null ? menuPath : "";
+    MenuItem menu = this;
 
-		for (StringTokenizer st = new StringTokenizer(path, MENU_PATH_SEPARATOR); st.hasMoreTokens(); )
-			menu = (MenuItem)menu.subMenu.get(st.nextToken());
+    for (StringTokenizer st = new StringTokenizer(path, MENU_PATH_SEPARATOR); st.hasMoreTokens(); )
+      menu = (MenuItem)menu.subMenu.get(st.nextToken());
 
-		menu.addSubMenuItem(item);
+    menu.addSubMenuItem(item);
 
-		return item;
-	}
-	
-	/**
-	 * Changes the selection in menu.
-	 * @param menuPath path to select in menu.
-	 * @return instance of flow that should be started after activating given selection.
-	 * @throws Exception if menuPath is invalid or creation of flow fails.
-	 */
-	public Widget selectMenuItem(String menuPath) throws Exception {
-		clearSelection();
+    return item;
+  }
+  
+  /**
+   * Changes the selection in menu.
+   * @param menuPath path to select in menu.
+   * @return instance of flow that should be started after activating given selection.
+   * @throws Exception if menuPath is invalid or creation of flow fails.
+   */
+  public Widget selectMenuItem(String menuPath) throws Exception {
+    clearSelection();
 
-		MenuItem menu = this;
+    MenuItem menu = this;
     Widget resultFlow = null;
-		
-		try {
-			for (StringTokenizer st = new StringTokenizer(menuPath, MENU_PATH_SEPARATOR); st.hasMoreTokens(); ) {
-				menu = (MenuItem)menu.subMenu.get(st.nextToken());
-				menu.setSelected(true);
-				selectedItems.add(menu);
-			}
+    
+    try {
+      for (StringTokenizer st = new StringTokenizer(menuPath, MENU_PATH_SEPARATOR); st.hasMoreTokens(); ) {
+        menu = (MenuItem)menu.subMenu.get(st.nextToken());
+        menu.setSelected(true);
+        selectedItems.add(menu);
+      }
 
-			if (menu.flowClass != null)
-				resultFlow = (Widget) menu.flowClass.newInstance();
-			else if (menu.flowCreator != null)
-				resultFlow = menu.flowCreator.createFlow();
-		} catch (Exception e) {
-			clearSelection();
-			throw e;
-		}
+      if (menu.flowClass != null)
+        resultFlow = (Widget) menu.flowClass.newInstance();
+      else if (menu.flowCreator != null)
+        resultFlow = menu.flowCreator.createFlow();
+    } catch (Exception e) {
+      clearSelection();
+      throw e;
+    }
 
-		return resultFlow;
-	}
+    return resultFlow;
+  }
   
   public void clearSelection() {
     if (!selectedItems.isEmpty()) {
@@ -188,29 +188,29 @@ public class MenuItem implements Serializable {
     }
     selectedItems.clear();
   }
-	/***************************************************************************************************
-	 * GETTERS. 
-	 ***************************************************************************************************/
-	public String getLabel() {
-		return label;
-	}
+  /* **************************************************************************************************
+   * GETTERS. 
+   * **************************************************************************************************/
+  public String getLabel() {
+    return label;
+  }
 
-	public boolean isHolder() {
-		return holder;
-	}
+  public boolean isHolder() {
+    return holder;
+  }
 
-	public boolean isSelected() {
-		return selected;
-	}
-	
-	public Map getSubMenu() {
-		return subMenu;
-	}
+  public boolean isSelected() {
+    return selected;
+  }
+  
+  public Map getSubMenu() {
+    return subMenu;
+  }
 
-	/***************************************************************************************************
-	 * SETTERS. 
-	 ***************************************************************************************************/
-	public void setSelected(boolean isSelected) {
-		selected = isSelected;
-	}
+  /* **************************************************************************************************
+   * SETTERS. 
+   * **************************************************************************************************/
+  public void setSelected(boolean isSelected) {
+    selected = isSelected;
+  }
 }

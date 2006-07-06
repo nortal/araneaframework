@@ -1,4 +1,4 @@
-This folder contains small standalone web-apps build on Aranea
+This folder contains small standalone web-apps built on Aranea
 framework - examples demonstrating how to use the framework.
 
 

@@ -18,6 +18,7 @@ package org.araneaframework.example.main;
 
 import org.araneaframework.example.main.business.data.ContractDAO;
 import org.araneaframework.example.main.business.data.GeneralDAO;
+import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.springframework.beans.factory.BeanFactory;
 
@@ -35,11 +36,15 @@ public abstract class TemplateBaseWidget extends StandardPresentationWidget {
     return (SecurityContext) getEnvironment().getEntry(SecurityContext.class);
   }
   
-	public GeneralDAO getGeneralDAO() {
-		return (GeneralDAO) getBeanFactory().getBean("generalDAO");
-	}
-	
-	public ContractDAO getContractDAO() {
-		return (ContractDAO) getBeanFactory().getBean("contractDAO");
-	}
+  protected PopupWindowContext getPopupCtx() {
+    return (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
+  }
+  
+  public GeneralDAO getGeneralDAO() {
+    return (GeneralDAO) getBeanFactory().getBean("generalDAO");
+  }
+
+  public ContractDAO getContractDAO() {
+    return (ContractDAO) getBeanFactory().getBean("contractDAO");
+  }
 }

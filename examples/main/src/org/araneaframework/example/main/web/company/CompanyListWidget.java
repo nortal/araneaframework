@@ -18,15 +18,12 @@ package org.araneaframework.example.main.web.company;
 
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.araneaframework.backend.list.model.ListItemsData;
-import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
-import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;

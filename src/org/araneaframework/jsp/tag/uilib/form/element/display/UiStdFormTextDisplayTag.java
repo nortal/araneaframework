@@ -43,6 +43,7 @@ public class UiStdFormTextDisplayTag extends UiFormElementBaseDisplayTag {
       UiUtil.writeOpenStartTag(out, "span");
       UiUtil.writeAttribute(out, "class", getStyleClass());
       UiUtil.writeAttribute(out, "style", getStyle());
+      UiUtil.writeAttributes(out, attributes);
       UiUtil.writeCloseStartTag(out);
     }        
     

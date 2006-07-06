@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -61,7 +62,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
 	// way form elements are usually added to the form, but rather emphasises the
 	// fact that everything you add to FormWidget is a FormElement.
 
-	//  createElement(String labelId, Control control, Data data, boolean mandatory)
+	// createElement(String labelId, Control control, Data data, boolean mandatory)
     FormElement el = simpleForm.createElement("#Textbox", new TextControl(), new StringData(), false);
     simpleForm.addElement("textbox1", el);
     
@@ -69,20 +70,26 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
     simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
     simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
-    simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
-    simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
+    DateControl dc = new DateControl();
+    dc.addOnChangeEventListener(new OnChangeEventListener() {
+    	public void onChange() throws Exception {
+    		SimpleFormWidget.this.getMessageCtx().showInfoMessage("DateControl has changed!");
+    	}
+    });
+    simpleForm.addElement("date", "#Date", dc, new DateData(), false);
+    simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), true);
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
     ButtonControl button = new ButtonControl();
-	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm") );
+	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
 	// add the button to form. As the button does not hold any value, Data will be null.
 	simpleForm.addElement("button", "#Button", button, null, false);
     
     // the usual, add the created widget to main widget.
 	addWidget("simpleForm", simpleForm);
   }
-  
+
   /**
    * A test action, invoked when button is pressed. It adds the values of 
    * formelements to message context, and they end up at the top of user screen

@@ -16,45 +16,80 @@
 
 // functions for window close detection, submit event notifying serverside to
 // close corresponding thread. Works only with IE and even then, not perfectly.
+// XXX: useless, to remove
 function onWindowClosingEvent() {
    if (window.event) {
-	   if (window.event.clientX < 0 && window.event.clientY < 0) {
-			var closeParam = document.createElement("<input type='hidden' name='popupClose' value='true'>");
-			document.system_form_0.appendChild(closeParam);
-			araneaSubmitEvent(document.system_form_0, "", "", "");
-	   }
+     if (window.event.clientX < 0 && window.event.clientY < 0) {
+      var closeParam = document.createElement("<input type='hidden' name='popupClose' value='true'>");
+      document.system_form_0.appendChild(closeParam);
+      araneaSubmitEvent(document.system_form_0, "", "", "");
+     }
    }
 }
 
 function onWindowUnload() {
-	onWindowClosingEvent();
+  closeOpenedPopupWindows();
 }
 
 addSystemUnloadEvent(onWindowUnload);
 
 //popup maps
 var popups = new Object();
-var requestArgumentsPrefix = "?topServiceId=application&threadServiceId=";
 
 // popup properties, used for all types of popups
 var popupProperties = new Object();
 
+// opened windows
+var openedPopupWindows = new Object();
+
 function addPopup(popupId, windowProperties, url) {
-	popups[popupId] = popupId;
-	popupProperties[popupId] = new Object();
-	popupProperties[popupId].windowProperties = windowProperties;
-	popupProperties[popupId].url = url;
+  popups[popupId] = popupId;
+  popupProperties[popupId] = new Object();
+  popupProperties[popupId].windowProperties = windowProperties;
+  popupProperties[popupId].url = url;
+}
+
+function submitThreadCloseRequest(win) {
+  if (win.document) {
+    var closeParam = createNamedElement("input", "popupClose");
+    closeParam.setAttribute("type", "hidden");
+    closeParam.setAttribute("value", "true");
+    //TODO: find the systemform reliably
+    win.document.system_form_0.appendChild(closeParam);
+    araneaSubmitEvent(win.document.system_form_0, "", "", "", "");
+  }
+}
+
+function closeOpenedPopupWindows() {
+  for (var popupId in openedPopupWindows) {
+    var w = openedPopupWindows[popupId];
+    if (w) {
+      submitThreadCloseRequest(w);
+      w.close();
+    }
+  }
 }
 
 function openPopup(popupId) {
-	w = window.open(popupProperties[popupId].url, popupId, popupProperties[popupId].windowProperties);
-	if (w) {
-		w.focus();
-	}
+  var w = window.open(popupProperties[popupId].url, popupId, popupProperties[popupId].windowProperties);
+  if (w) {
+    openedPopupWindows[popupId] = w;
+    w.focus();
+  }
 }
 
 function processPopups() {
-	for (popupId in popups) {
-		openPopup(popupId, popupProperties[popupId]);
-	}
+  for (var popupId in popups) {
+    openPopup(popupId, popupProperties[popupId]);
+  }
+}
+
+function reloadParentWindow() {
+  if (window.opener) {
+    window.opener.document.location.href=window.opener.document.location.href;
+  }
+}
+
+function closeWindow(delay) {
+  setTimeout('window.close()', delay);
 }

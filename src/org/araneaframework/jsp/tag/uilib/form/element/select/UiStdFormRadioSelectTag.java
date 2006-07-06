@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.SelectControl;
@@ -52,6 +53,7 @@ public class UiStdFormRadioSelectTag extends UiFormElementBaseTag {
 			throw new UiException("Attribute 'type' cna be only either 'horizontal' or 'vertical'!");
 		
 		// Prepare
+		addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, null);
 		SelectControl.ViewModel viewModel = ((SelectControl.ViewModel)controlViewModel);
 		
 		UiStdFormRadioSelectItemLabelTag label = new UiStdFormRadioSelectItemLabelTag();

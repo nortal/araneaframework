@@ -24,6 +24,7 @@ import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.UiMissingIdException;
 import org.araneaframework.jsp.tag.UiPresentationTag;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUpdateRegionUtil;
@@ -119,6 +120,8 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 			UiUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
 
 		updateRegionNames = UiUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
+		
+		addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, this.getScopedFullFieldId());
 
 		// Continue
 		return EVAL_BODY_INCLUDE;		

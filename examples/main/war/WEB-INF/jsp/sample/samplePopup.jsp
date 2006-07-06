@@ -4,18 +4,25 @@
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
 	xmlns:ui="http://araneaframework.org/tag-library/template"
 	version="1.2">
-
+	
 	<!-- Component starts here -->
 	<ui:widgetContext>
 		<ui:componentHeader>
-			<ui:componentName>Popup example</ui:componentName>
+			<ui:componentName><fmt:message key="${contextWidget.data.title}"/></ui:componentName>
 		</ui:componentHeader>
 		
 		<ui:component>
+			<c:if test="${contextWidget.data.returnValue != null}">
+				<c:out value="${contextWidget.data.returnValue}"/>
+			</c:if>
+		
 			<ui:componentActions>
 				<ui:eventButton eventId="createThread" labelId="#Open popup (create new session thread)."/>
 				<ui:eventButton eventId="openUrl" labelId="#Open some URL (/.)"/>
 				<ui:eventButton eventId="openNewCustomFlow" labelId="#Open flow as root flow."/>
+ 				<ui:eventButton 
+ 					eventId="endFlow" 
+ 					labelId="#End this flow." />
 			</ui:componentActions>
 		</ui:component>
 

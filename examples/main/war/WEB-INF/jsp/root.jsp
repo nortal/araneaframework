@@ -34,8 +34,10 @@
 	                             <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
 	 
 	                             <div id="content">
-	                                 <ui:messages type="info"/>
-	                                 <ui:messages type="error" styleClass="msg-error"/>
+	                             	<ui:updateRegion globalId="messageRegion">
+		                               <ui:messages type="info"/>
+	                                   <ui:messages type="error" styleClass="msg-error"/>
+                                    </ui:updateRegion>
 	                                 <!-- Renders the menu widget itself. As MenuWidget is subclass
 	                                 	of StandardFlowContainerWidget, this means that actual
 	                                 	widget rendered here is whatever widget is on top of call

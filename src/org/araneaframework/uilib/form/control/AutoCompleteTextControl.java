@@ -3,7 +3,6 @@ package org.araneaframework.uilib.form.control;
 import java.io.Serializable;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ActionListener;
@@ -19,7 +18,6 @@ import org.araneaframework.uilib.support.TextType;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class AutoCompleteTextControl extends TextControl {
-  private static final Logger log = Logger.getLogger(AutoCompleteTextControl.class);	
   public static final String LISTENER_NAME = "autocomplete";
 
   protected long minCompletionLength = 1;
@@ -60,8 +58,7 @@ public class AutoCompleteTextControl extends TextControl {
   }
 
   private class AutoCompleteActionListener implements ActionListener {
-    public void processAction(Object actionId, InputData input,
-        OutputData output) throws Exception {
+    public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
       String str = innerData == null ? null : ((String[]) innerData)[0];
       List suggestions = dataProvider.getSuggestions(str);
 
@@ -72,24 +69,34 @@ public class AutoCompleteTextControl extends TextControl {
       
       HttpServletResponse response = ((ServletOutputData) output).getResponse();
       String xml = responseBuilder.getResponseContent(suggestions);
+
       response.setContentType(responseBuilder.getResponseContentType());
-      //TODO: remove
-      log.debug("Writing output: " + xml);
       response.getWriter().write(xml);
     }
   }
-  
-  //*********************************************************************
-  //* Interface and implementation of AJAX response builder that 
-  //* sends suggestions back to client. 
-  //*********************************************************************  	
-  
+
+  /**
+   * Autocompletion response builder interface.
+   * @author Taimo Peelo (taimo@webmedia.ee)
+   */
   public interface ResponseBuilder extends Serializable {
+    /**
+     * Returns response content with <code>suggestions</code> appropriately set. 
+     * @param suggestions suggested completions that should be included in response
+     * @return appropriate response content
+     */
     public String getResponseContent(List suggestions);
+    /**
+     * Returns response content type. 
+     * @return response content type
+     */
     public String getResponseContentType();
   }
   
-  public class DefaultResponseBuilder implements ResponseBuilder {
+  /**
+   * @author Steven Jentson (steven@webmedia.ee)
+   */
+  public static class DefaultResponseBuilder implements ResponseBuilder {
 	public String getResponseContent(List suggestions) {
   	  StringBuffer xml = new StringBuffer();
         xml.append("<ul>");
@@ -114,7 +121,7 @@ public class AutoCompleteTextControl extends TextControl {
    */
   public Object getViewModel() {
     return new ViewModel();
-  }	  
+  }
 
   //*********************************************************************
   //* VIEW MODEL

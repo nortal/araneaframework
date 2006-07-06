@@ -26,6 +26,14 @@ import org.araneaframework.uilib.form.data.StringData;
 
 public class InvisibleElementFormWidget extends TemplateBaseWidget {
   private FormWidget form;
+  private String initialName;
+  
+  public InvisibleElementFormWidget() {
+  }
+  
+  public InvisibleElementFormWidget(String initialName) {
+    this.initialName = initialName;
+  }
   
   protected void init() throws Exception {
     super.init();
@@ -35,7 +43,7 @@ public class InvisibleElementFormWidget extends TemplateBaseWidget {
     form = new FormWidget();
 
     //Adding form controls
-    form.addElement("firstName", "#First name", new TextControl(), new StringData(), true);
+    form.addElement("firstName", "#First name", new TextControl(), new StringData(), initialName, true);
     form.addElement("lastName", "#Last name", new TextControl(), new StringData(), true);
     
     CheckboxControl showTitleCtl = new CheckboxControl();

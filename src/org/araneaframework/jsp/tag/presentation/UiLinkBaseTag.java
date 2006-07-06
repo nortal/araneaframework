@@ -16,8 +16,10 @@
 
 package org.araneaframework.jsp.tag.presentation;   
 
+import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.UiPresentationTag;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 
 /**
  * Link base tag.
@@ -27,6 +29,13 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
 public class UiLinkBaseTag extends UiPresentationTag {
   protected String id, href, target;
   protected boolean disabled = false;
+  
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, id);
+
+    return EVAL_BODY_INCLUDE;
+  }
 
   /* ***********************************************************************************
    * Tag attributes

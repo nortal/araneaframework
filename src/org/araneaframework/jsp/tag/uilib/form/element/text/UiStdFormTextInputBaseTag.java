@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
@@ -39,11 +40,16 @@ public class UiStdFormTextInputBaseTag extends UiFormElementBaseTag {
   {
     baseStyleClass = "aranea-text";
   }
+  
+  protected int doStartTag(Writer out) throws Exception {
+    int result = super.doStartTag(out);
+    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, null);
+    return result;
+  }  
 
   /* ***********************************************************************************
    * Tag attributes
    * ***********************************************************************************/
-
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -109,7 +115,3 @@ public class UiStdFormTextInputBaseTag extends UiFormElementBaseTag {
     UiUtil.writeCloseStartEndTag_SS(out);
   }
 }
-
-
-
-

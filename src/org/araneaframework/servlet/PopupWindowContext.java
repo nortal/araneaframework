@@ -28,49 +28,49 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
  * 
  * @author Taimo Peelo
  */
-
 public interface PopupWindowContext extends Serializable {
-	/** keys for accessing the popup maps from viewmodels */
-	public static final String POPUPS_KEY = "popupWindows";
+  /** keys for accessing the popup maps from viewmodels */
+  public static final String POPUPS_KEY = "popupWindows";
 
-	/** closing key for popups, if window receives response containing that key, it should close and take serverside service with it. */
-	public static final String POPUPS_CLOSE_KEY = "popupClose";
-
-	/**
-	 * Method for registering a new thread-level service server-side, meant to open in popup window on client side.
-	 * @param startMessage - message sent to newly created service (thread).
-	 * @param properties - properties specifying behaviour and appearance of creatable popup window. 
-	 * @return ID of created service (thread).
-	 */
-	public String openDetached(Message startMessage, PopupWindowProperties properties);
-	
-	/** 
-	 * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
-	 * @param idPrefix prefix for service id that will be associated with created window
-	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
-	 * @return ID of created service.
-	 */
-	public String openDetached(Service service, PopupWindowProperties properties);
+  /** closing key for popups, if window receives response containing that key, it should close and take serverside service with it. */
+  public static final String POPUPS_CLOSE_KEY = "popupClose";
+  
+  /**
+   * Registers new thread-level service server-side and gives started service means of communicating with
+   * its opener and vice-versa.
+   * @param startMessage - message sent to newly created service (thread).
+   * @param properties - properties specifying behaviour and appearance of creatable popup window.
+   * @param opener - widget that is registered as opener of created thread.
+   * @return
+   */
+  public String open(Message startMessage, PopupWindowProperties properties, Widget opener);
+  
+  /** 
+   * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
+   * @param idPrefix prefix for service id that will be associated with created window
+   * @param properties properties specifying behaviour and appearance of creatable popup window. 
+   * @param opener - widget that is registered as opener of created thread.
+   * @return ID of created service.
+   */
+  public String open(Service service, PopupWindowProperties properties, Widget opener);
+  
+  /** 
+   * Opens given URL in a new popup window.
+   * @param url URL to be opened in the popup window
+   * @param properties properties specifying behaviour and appearance of creatable popup window. 
+   */
+  public void open(String url, PopupWindowProperties properties);
 
   /**
-   * Creates a new thread, sends its first FlowContext request to open given flow.
-   * @param flow new flow to open.
-   * @param properties properties specifying behaviour and appearance of creatable popup window. 
-   * @return ID of thread inside which flow was started.
+   * Closes the server side thread service (serving client side popup).
+   * @param id thread (popup) ID to close.
+   * @return whether service with given thread id was closed. 
    */
-  public String openDetached(Widget flow, PopupWindowProperties properties);  
+  public boolean close(String id) throws Exception;
   
-	/** 
-	 * Opens given URL in a new popup window.
-	 * @param url URL to be opened in the popup window
-	 * @param properties properties specifying behaviour and appearance of creatable popup window. 
-	 */
-	public void open(String url, PopupWindowProperties properties);
-
-	/**
-	 * Closes the server side thread service (serving client side popup).
-	 * @param id thread (popup) ID to close.
-	 * @return whether service with given thread id was closed. 
-	 */
-	public boolean closeDetached(String id);
+  /**
+   * Returns the widget that opened calling thread-level service (popup).
+   * @return opener of thread-level service, <code>null</code> when calling service does not have registered opener.
+   */
+  public Widget getOpener();
 }

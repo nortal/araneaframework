@@ -16,9 +16,8 @@
 
 package org.araneaframework.example.main.web;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.araneaframework.Environment;
+import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.menu.MenuWidget;
@@ -26,26 +25,31 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
  * This is root widget. It initializes MenuWidget with
- * TemplateEmptyWidget as first element.
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class RootWidget extends StandardPresentationWidget implements SecurityContext {
-  MenuWidget menuWidget;
+  private MenuWidget menuWidget;
+  private Widget topWidget;
+  
+  public RootWidget() {}
+  
+  public RootWidget(Widget topWidget) {
+    this.topWidget = topWidget;
+  }
 
   protected void init() throws Exception {
-    menuWidget = new MenuWidget(null);
+    menuWidget = new MenuWidget(topWidget);
+    topWidget = null;
     addWidget("menu", menuWidget);
     setViewSelector("root");
   }
 
   protected Environment getChildWidgetEnvironment() throws Exception {
-    Map entries = new HashMap();
-    entries.put(SecurityContext.class, this);
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(getEnvironment(), SecurityContext.class, this);
   }
 
-  public boolean hasPrivilege(String privelege) {
+  public boolean hasPrivilege(String privilege) {
     return false;
   }
 

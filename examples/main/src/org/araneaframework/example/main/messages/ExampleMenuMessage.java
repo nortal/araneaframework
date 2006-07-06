@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.web.menu;
+package org.araneaframework.example.main.messages;
 
 import org.araneaframework.Component;
 import org.araneaframework.core.BroadcastMessage;

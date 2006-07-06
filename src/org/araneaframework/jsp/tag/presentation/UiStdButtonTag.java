@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.presentation;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -47,6 +48,9 @@ public class UiStdButtonTag extends UiButtonBaseTag {
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
+    
+    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, id);
+    
     UiUtil.writeOpenStartTag(out, renderMode.equals(UiStdButtonTag.RENDER_BUTTON) ? UiStdButtonTag.RENDER_BUTTON : UiStdButtonTag.RENDER_INPUT);
     if (renderMode.equals(UiStdButtonTag.RENDER_INPUT))
       UiUtil.writeAttribute(out, "type", "button");    
