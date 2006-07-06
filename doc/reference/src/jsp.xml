@@ -873,7 +873,7 @@
 ...
 <body onload="processLoadEvents()">
   <ui:systemForm method="POST">
-    <ui:registerPopups>
+    <ui:registerPopups/>
   </ui:systemForm>
 </body>
 ...]]></programlisting>
