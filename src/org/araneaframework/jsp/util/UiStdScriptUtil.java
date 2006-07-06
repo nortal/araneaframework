@@ -26,7 +26,6 @@ import java.io.Writer;
  * @author Oleg Mürk
  */
 public class UiStdScriptUtil {
-
   /**
    * Writes out event handling attribute that does nothing.
    */ 
@@ -43,5 +42,11 @@ public class UiStdScriptUtil {
    */
   public static void writeObject(Writer out, Object o) throws IOException {
     out.write(o == null ? "undefined" : o.toString());
+  }
+  
+  public static void writeElementAttributeScript(Writer out, String elementId, String attribute, String value) throws IOException {
+    out.write("<script type=\"text/javascript\">");
+    out.write("document.getElementById('" + elementId + "')." + attribute + "="+value+";");
+    out.write("</script>");
   }
 }
