@@ -62,7 +62,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
   protected void init() throws Exception {
     super.init();
     
-    setGlobalEventListener(eventHelper);
+    addGlobalEventListener(eventHelper);
   }
   
   /**

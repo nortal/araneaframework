@@ -437,7 +437,7 @@ public abstract class StandardWidget extends BaseWidget implements Custom.Custom
    * 
    * @param eventListener a EventListener added as the global eventlistener.
    */
-  public void setGlobalEventListener(EventListener eventListener) {
+  public void addGlobalEventListener(EventListener eventListener) {
     this.globalListener = eventListener;
   }
   

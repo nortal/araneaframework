@@ -66,7 +66,7 @@ public class ButtonControl extends BaseControl {
   protected void init() throws Exception {
     super.init();
     
-    setGlobalEventListener(eventHelper);
+    addGlobalEventListener(eventHelper);
   }
   
   /**

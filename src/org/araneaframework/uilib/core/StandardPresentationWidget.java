@@ -77,7 +77,7 @@ public class StandardPresentationWidget extends StandardWidget {
   
   protected class ComponentImpl extends StandardWidget.ComponentImpl {
     public synchronized void init(Environment env) {
-      setGlobalEventListener(new ProxyEventListener(StandardPresentationWidget.this));
+      addGlobalEventListener(new ProxyEventListener(StandardPresentationWidget.this));
 	
       super.init(env);
     }

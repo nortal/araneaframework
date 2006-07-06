@@ -3,7 +3,6 @@ package org.araneaframework.uilib.form.control;
 import java.io.Serializable;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ActionListener;
@@ -19,7 +18,6 @@ import org.araneaframework.uilib.support.TextType;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class AutoCompleteTextControl extends TextControl {
-  private static final Logger log = Logger.getLogger(AutoCompleteTextControl.class);	
   public static final String LISTENER_NAME = "autocomplete";
 
   protected long minCompletionLength = 1;
@@ -60,8 +58,7 @@ public class AutoCompleteTextControl extends TextControl {
   }
 
   private class AutoCompleteActionListener implements ActionListener {
-    public void processAction(Object actionId, InputData input,
-        OutputData output) throws Exception {
+    public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
       String str = innerData == null ? null : ((String[]) innerData)[0];
       List suggestions = dataProvider.getSuggestions(str);
 
@@ -72,9 +69,8 @@ public class AutoCompleteTextControl extends TextControl {
       
       HttpServletResponse response = ((ServletOutputData) output).getResponse();
       String xml = responseBuilder.getResponseContent(suggestions);
+
       response.setContentType(responseBuilder.getResponseContentType());
-      //TODO: remove
-      log.debug("Writing output: " + xml);
       response.getWriter().write(xml);
     }
   }
