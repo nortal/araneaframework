@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.FormElement;
 
 /**
