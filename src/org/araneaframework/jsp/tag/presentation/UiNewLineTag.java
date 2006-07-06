@@ -36,8 +36,8 @@ public class UiNewLineTag extends UiBaseTag {
   // Implementation
   //
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     UiUtil.writeStartEndTag_SS(out, "br");
     
