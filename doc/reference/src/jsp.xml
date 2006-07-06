@@ -857,9 +857,9 @@
      <sect2>
         <title><![CDATA[<ui:registerPopups>]]></title>
         <para>
-            This tag registers the serverside services that represent popups and adds system load event for opening them.
-            For this tag to have an effect, HTML page <literal>BODY</literal> tag must have attribute <literal>onload="processLoadEvents()"</literal>.
-            Also, this tag only works inside &lt;ui:systemForm&gt; tag.
+            This tag checks presence of serverside session-threads that represent popups and adds system loadevent for opening them
+            in new browser window at client-side. For tag to have an effect, HTML page <literal>BODY</literal> tag must have attribute
+            <literal>onload="processLoadEvents()"</literal>. Also, this tag only works inside &lt;ui:systemForm&gt; tag.
         </para>
         
       <sect3>
