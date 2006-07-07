@@ -125,7 +125,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   public Map getTagMap(String uri) {
     if (!taglibs.containsKey(uri)) {
-    	  //XXX: little wasteful
+      //XXX: little wasteful
       String[] locations = new TldLocationsCache((ServletContext) getEnvironment().getEntry(ServletContext.class)).getLocation(uri);
 
       if (locations != null) {
