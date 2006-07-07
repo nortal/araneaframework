@@ -116,7 +116,7 @@ public class MockOutputData implements OutputData {
     //XXX
   }
 
-	public InputData getCurrentInputData() {
+	public InputData getInputData() {
 		return null;
 	}
 }

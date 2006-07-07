@@ -19,6 +19,11 @@
 				<ui:textInput id="notes"/>
 			</p>
 			
+			<p>
+				<jsp:text>Total: </jsp:text><ui:newLine/>
+				<ui:floatInput id="total" />
+			</p>			
+			
 		</ui:form>
 
 	</ui:widgetContext>		
