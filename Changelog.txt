@@ -51,7 +51,7 @@ Infrastructure changes
 2006.05.16    | Aranea 1.0-M3
 
 Features and Improvements
-        Possible to save state on the client side                             | See # 87
+        Possible to save state on the client side                             | See #87
         Popups allow to start just a root flow in a popup                     | See #109
         Partial page update takes place on server-side                        | See #1
 
