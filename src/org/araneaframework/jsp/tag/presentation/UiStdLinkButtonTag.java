@@ -12,11 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.presentation;     
 
 import java.io.Writer;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -30,37 +31,32 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Represents a link with an onClick JavaScript action."
  */
 public class UiStdLinkButtonTag extends UiButtonBaseTag {
+  {
+    baseStyleClass = "aranea-link-button"; 
+  }
   
-	protected void init() {
-		super.init();
-		styleClass = "aranea-link-button"; 
-	}
-  
-  //
-  // Implementation
-  //  
-  
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    
+    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, id);
 
     UiUtil.writeOpenStartTag(out, "a");
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", getStyleClass());
+    UiUtil.writeAttribute(out, "style", getStyle());
     UiUtil.writeAttribute(out, "href", "javascript:");
     UiUtil.writeAttribute(out, "onclick", onclick);    
     UiUtil.writeCloseStartTag_SS(out);
-    
-    // Continue
+
     return EVAL_BODY_INCLUDE;    
   }
-  
-  protected int after(Writer out) throws Exception {  
+
+  protected int doEndTag(Writer out) throws Exception {  
     if (labelId != null)            
       UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, labelId));
     UiUtil.writeEndTag(out, "a"); 
-    
-    // Continue
-    super.after(out);
+
+    super.doEndTag(out);
     return EVAL_PAGE;      
   }
 }

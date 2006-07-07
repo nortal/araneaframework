@@ -27,9 +27,7 @@ package org.araneaframework.jsp.tag.entity;
  *   description = "HTML <i>&amp;copyright;</i> entity."
  */
 public class UiCopyEntityTag extends UiEntityTag {
-	protected void init() {
-		super.init();
-		
-		this.code = "copy";
+	public UiCopyEntityTag() {
+		super("copy");
 	}
 }

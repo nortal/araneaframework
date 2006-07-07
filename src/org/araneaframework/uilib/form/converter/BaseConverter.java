@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.araneaframework.Environment;
+import org.araneaframework.uilib.form.Converter;
 
 /**
  * This class is the base class for form converters. The converters' task is to convert the value
