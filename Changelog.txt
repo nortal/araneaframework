@@ -16,6 +16,7 @@ Features and Improvements
         Every framework interface method does not throw checked Exception
         anymore, instead exceptions are wrapped into RuntimeExceptions        | See #137
         Aranea distributed jars now include manifest with version information | See #161
+        Tags can be added attributes with <ui:attribute>                      | See #101
         Inline styles can be specified for JSP tags                           | See #173
         BeanFormWidget works with primitive bean fields
         
