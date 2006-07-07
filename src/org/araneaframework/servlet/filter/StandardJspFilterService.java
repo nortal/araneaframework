@@ -50,8 +50,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.jsp.aranea.filter.UiAraneaJspConfigurationFilterService.JspConfiguration";
 
-  private TldLocationsCache tldLocationsCache;
-
   // URI -> Map<TagInfo>
   private Map taglibs = new HashMap();
   
@@ -79,8 +77,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     super.init();
         
     loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
-
-    tldLocationsCache = new TldLocationsCache((ServletContext) getEnvironment().getEntry(ServletContext.class));
   }
   
   protected Environment getChildEnvironment() {
@@ -129,7 +125,8 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   public Map getTagMap(String uri) {
     if (!taglibs.containsKey(uri)) {
-      String[] locations = tldLocationsCache.getLocation(uri);
+    	  //XXX: little wasteful
+      String[] locations = new TldLocationsCache((ServletContext) getEnvironment().getEntry(ServletContext.class)).getLocation(uri);
 
       if (locations != null) {
         String tldLoc = locations[1] == null ? locations[0] : locations[1];

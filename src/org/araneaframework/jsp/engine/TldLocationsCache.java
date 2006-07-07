@@ -70,7 +70,7 @@ import org.araneaframework.jsp.engine.xml.TreeNode;
  * @author Jan Luehe
  */
 
-public class TldLocationsCache implements Serializable {
+public class TldLocationsCache {
 
     // Logger
     private Log log = LogFactory.getLog(TldLocationsCache.class);
