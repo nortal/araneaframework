@@ -46,7 +46,7 @@ public class StandardServiceAdapterWidget extends BaseWidget {
   
   protected void init() throws Exception {
     childService._getComponent().init(getEnvironment());
-  } 
+  }
   
   /**
    * Returns the path of action from the InputData. Uses the

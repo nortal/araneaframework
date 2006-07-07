@@ -39,6 +39,9 @@ public class FallbackResourceBundle extends ResourceBundle implements Serializab
    */
   public void addResourceBundle(ResourceBundle resourceBundle) {
     resourceBundles.add(resourceBundle);
+    
+    if (resourceBundle instanceof LocaleAwareResourceBundle) 
+      ((LocaleAwareResourceBundle) resourceBundle).setLocale(locale);
   }
   
   public void clearResourceBundles() {
@@ -76,6 +79,12 @@ public class FallbackResourceBundle extends ResourceBundle implements Serializab
       if (currentBundle instanceof LocaleAwareResourceBundle) 
         ((LocaleAwareResourceBundle) currentBundle).setLocale(locale);
     }      
+  }
+  
+  public Locale getLocale() {
+    if (locale != null)
+        return locale;
+    return super.getLocale();
   }
 
 }
