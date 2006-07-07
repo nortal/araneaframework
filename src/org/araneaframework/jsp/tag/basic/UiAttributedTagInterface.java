@@ -25,7 +25,8 @@ import javax.servlet.jsp.JspException;
  * @author Oleg Mürk
  */
 public interface UiAttributedTagInterface {
-  public static final String ATTRIBUTED_TAG_KEY_REQUEST = "org.araneaframework.jsp.ui.basic.UiAttributedTagInterface.KEY";
-
+	public static final String HTML_ELEMENT_KEY = "UiAttributedTagInterface.HTML_ELEMENT_KEY";
+	public static final String ATTRIBUTED_TAG_KEY = "org.araneaframework.jsp.ui.basic.UiAttributedTagInterface.KEY";
+	
 	public void addAttribute(String name, String value) throws JspException;
 }

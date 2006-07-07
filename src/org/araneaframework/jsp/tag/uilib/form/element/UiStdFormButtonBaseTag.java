@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.ButtonControl;
@@ -30,14 +30,9 @@ import org.araneaframework.uilib.form.control.ButtonControl;
  * @author Oleg Mürk
  */
 public class UiStdFormButtonBaseTag extends UiFormElementBaseTag {
-  protected boolean showLabel;
+  protected boolean showLabel = true;
     
-  protected String actionId;
-  protected String actionId_rt;
-  protected String actionParam;  
-  protected String actionParam_rt;
-  protected String onClickPrecondition;
-  
+  protected String onClickPrecondition = "return true;";
   protected ButtonControl.ViewModel viewModel;
 	
   
@@ -59,46 +54,6 @@ public class UiStdFormButtonBaseTag extends UiFormElementBaseTag {
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Action id." 
-	 */
-  public void setActionId(String actionId) throws JspException {
-    this.actionId = (String)evaluate("actionId", actionId, String.class);
-  }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Action parameter." 
-	 */
-  public void setActionParam(String actionParam) throws JspException {
-    this.actionParam = (String)evaluate("actionParam", actionParam, String.class);
-  }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Action id, allows to put JavaScript expression here." 
-	 */
-  public void setActionId_rt(String actionId) throws JspException {
-    this.actionId_rt = (String)evaluate("actionId_rt", actionId, String.class);
-  }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Action parameter, allows to put JavaScript expression here." 
-	 */
-  public void setActionParam_rt(String actionParam) throws JspException {
-    this.actionParam_rt = (String)evaluate("actionParam_rt", actionParam, String.class);
-  }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
 	 *   description = "Precondition for deciding whether go to server side or not." 
 	 */
   public void setOnClickPrecondition(String onClickPrecondition) throws JspException {
@@ -108,18 +63,14 @@ public class UiStdFormButtonBaseTag extends UiFormElementBaseTag {
   // Implementation
   //  
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     // Type check
     assertControlType("ButtonControl");
     
     // Prepare    
     viewModel = ((ButtonControl.ViewModel)controlViewModel);
-    
-    // More checks    
-    if (viewModel.isOnClickEventRegistered() && actionId != null)
-      throw new UiException("Action ID cannot be set for form element event that has a handler."); 
     
     // Check whether access key was specified in the resources
     if (accessKey == null) {
@@ -129,16 +80,6 @@ public class UiStdFormButtonBaseTag extends UiFormElementBaseTag {
     
     // Continue
     return EVAL_BODY_INCLUDE;    
-  }
-  
-  protected void init() {
-    super.init();
-    showLabel = true;
-    actionId = null;
-    actionId_rt = null;
-    actionParam = null;
-    actionParam_rt = null;   
-    onClickPrecondition = "return true;";
   }
 }
 
