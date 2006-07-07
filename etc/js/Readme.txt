@@ -1,4 +1,4 @@
-This folder contains supporting scripts for Uilib.
+This folder contains scripts needed by Aranea Uilib. 
 
 * tiny_mce/*
 - web based Javascript HTML WYSIWYG editor (http://tinymce.moxiecode.com/)
@@ -13,7 +13,7 @@ This folder contains supporting scripts for Uilib.
 
 * scriptaculous/*
 - scripts from script.aculo.us JavaScript libraries (http://script.aculo.us/)
-- Required for using Uilib JSP tags that support autocompletion.
+- Required for using Uilib controls and tags that support autocompletion.
 - License is MIT-style license, details at http://script.aculo.us/
 
 * validation/*

@@ -1,11 +1,6 @@
 <sect3>
 	<title>StandardPopupFilterWidget</title>
 
-	<para>
-		Provides methods for opening new session-threads and renders
-		these in different browser windows at client-side.
-	</para>
-
 	<informaltable frame="all">
 		<tgroup cols="2">
 			<colspec colwidth="2*" />
@@ -29,6 +24,12 @@
 			</tbody>
 		</tgroup>
 	</informaltable>
+    
+    <para>
+        Provides methods for opening new session-threads and renders
+        these in different browser windows at client-side.
+    </para>
+    
 	<informaltable frame="all">
 		<tgroup cols="2">
 			<colspec colwidth="2*" />

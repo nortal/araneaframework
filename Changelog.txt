@@ -1,9 +1,58 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2006.07.07    | Aranea 1.0-M4
+
+Features and Improvements
+        Proper rich text editor integrated (http://tinymce.moxiecode.com/)    | See #22, #152
+        Aranea javascripts do not use document.write() anymore                | See #141
+        More reliable class resolving with ClassLoaderUtil                    | See #95
+        Uilib includes AutoCompleteTextControl (provides suggestions)         | See #63
+        FileImporter now simulates real URLs for accessible resources         | See #159
+        Popups have means of interacting between themselves                   | See #127
+        Extension mechanism - defining resources Aranea can use               | See #89
+        HTML for rendering formelements is smaller                            | See #81
+        Request URLs are properly encoded to allow both cookie and URL 
+        rewriting based session tracking                                      | See #123
+        Every framework interface method does not throw checked Exception
+        anymore, instead exceptions are wrapped into RuntimeExceptions        | See #137
+        Aranea distributed jars now include manifest with version information | See #161
+        Tags can be added attributes with <ui:attribute>                      | See #101
+        Inline styles can be specified for JSP tags                           | See #173
+        BeanFormWidget works with primitive bean fields
+        
+Bugfixes
+        <ui:fileUpload/> failed to set encoding of surrounding systemForm     | See #184
+        Incorrect handling of simulated onchange in most JSP *input tags      | See #178
+        Date, Float and TimeControl tried to invoke wrong onChange listener   | See #153
+        "Show all" button that used to crash backend list                     | See #128
+        Filtering editable list in template application crashed               | See #132
+        Disabled Controls did not preserve values between requests            | See #168
+And others... 
+
+API Changes
+        StandardViewPortWidget has been removed, StandardWidgetContainerWidget|
+        includes its previous functionality.                                  | See #133
+
+        Popup API has changed, open() methods are back and take an additional | 
+        opener parameter.                                                     | See #127
+
+General changes
+        Due to FileImporter simulating real URLs now, Aranea servlet needs to | 
+        be mapped as <url-pattern>/servlet/*</url-pattern> not just           | See #159
+        <url-pattern>/servlet</url-pattern> as before.                        | 
+
+        XStream jar bundled with Aranea has been updated, older version had   |
+        problems with serializing TextControls                                |
+
+
+Infrastructure changes
+        The example application running www.araneaframework.org:2000/main     | See #91
+
+---------------------------------------------------------------------------------------------
 2006.05.16    | Aranea 1.0-M3
 
 Features and Improvements
-        Possible to save state on the client side                             | See # 87
+        Possible to save state on the client side                             | See #87
         Popups allow to start just a root flow in a popup                     | See #109
         Partial page update takes place on server-side                        | See #1
 
