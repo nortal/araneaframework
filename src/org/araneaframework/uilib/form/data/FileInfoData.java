@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.data;
 
 import java.io.Serializable;
+import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.support.FileInfo;
 
 

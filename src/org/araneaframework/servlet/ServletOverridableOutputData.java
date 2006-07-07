@@ -17,7 +17,6 @@
 package org.araneaframework.servlet;
 
 import java.io.Serializable;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -31,10 +30,4 @@ public interface ServletOverridableOutputData extends ServletOutputData, Seriali
    * Sets the response stream to response.
    */
   public void setResponse(HttpServletResponse response);
-  
-  /**
-   * Sets the request stream to request.
-   * @param request
-   */
-  public void setRequest(HttpServletRequest request);
 }

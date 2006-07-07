@@ -33,33 +33,66 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.servlet.ServletFileUploadOutputExtension;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.core.StandardServletFileUploadOutputExtension;
-import org.araneaframework.servlet.core.StandardServletInputData;
+import org.araneaframework.servlet.FileUploadInputExtension;
+import org.araneaframework.servlet.ServletInputData;
+import org.araneaframework.servlet.ServletOverridableInputData;
+import org.araneaframework.servlet.core.StandardFileUploadInputExtension;
 
 /**
- * A filter which parses a multipart request and extracts uploaded files.
+ * This filter uses Commons FileUpload to parse the request and upload the <code>multipart/form-data</code> 
+ * encoded files to a temporary directory.
  * 
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardServletFileUploadFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardServletFileUploadFilterService.class);
+  
+  private String multipartEncoding;
+  private boolean useRequestEncoding = false; 
+  private Integer maximumCachedSize = null;
+  private Long maximumSize = null;
+  private String tempDirectory = null;
+  
 
-  public void init() throws Exception {
-    super.init();
-
-    log.debug("File upload filter service initialized.");
+  /**
+   * Sets the character encoding that will be used to decode the <code>multipart/form-data</code>
+   *  encoded strings. The default encoding is determined by Commons FileUpload.
+   */
+  public void setMultipartEncoding(String multipartEncoding) {
+    this.multipartEncoding = multipartEncoding;
   }
 
-  protected void destroy() throws Exception {
-    super.destroy();
+  /**
+   * When set to "true" will use the request character encoding to parse the <code>multipart/form-data</code>
+   * encoded strings.
+   */
+  public void setUseRequestEncoding(boolean useRequestEncoding) {
+    this.useRequestEncoding = useRequestEncoding;
+  }
 
-    log.debug("File upload filter service destroyed.");
+  /**
+   * Sets the maximum size of file that may be cached in memory.
+   */
+  public void setMaximumCachedSize(Integer maximumCachedSize) {
+    this.maximumCachedSize = maximumCachedSize;
+  }
+
+  /**
+   * Sets the maximum size of file that may be uploaded to server.
+   */
+  public void setMaximumSize(Long maximumSize) {
+    this.maximumSize = maximumSize;
+  }
+
+  /**
+   * Sets the temporary directory to use when uploading files.
+   */
+  public void setTempDirectory(String tempDirectory) {
+    this.tempDirectory = tempDirectory;
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    HttpServletRequest request = ((ServletOutputData) output).getRequest();
+    HttpServletRequest request = ((ServletInputData) input).getRequest();
     
     if (FileUpload.isMultipartContent(request)) {
       Map fileItems = new HashMap();
@@ -67,14 +100,22 @@ public class StandardServletFileUploadFilterService extends BaseFilterService {
       
       // Create a new file upload handler
       DiskFileUpload upload = new DiskFileUpload();
+      
+      if (useRequestEncoding)
+        upload.setHeaderEncoding(request.getCharacterEncoding());
+      else if (multipartEncoding != null)
+        upload.setHeaderEncoding(multipartEncoding);     
 
       // Set upload parameters
-      // upload.setSizeThreshold(yourMaxMemorySize);
-      // upload.setSizeMax(yourMaxRequestSize);
-      // upload.setRepositoryPath(yourTempDirectory);
+      if (maximumCachedSize != null)
+        upload.setSizeThreshold(maximumCachedSize.intValue());
+      if (maximumSize != null)
+        upload.setSizeMax(maximumSize.longValue());
+      if (tempDirectory != null)
+        upload.setRepositoryPath(tempDirectory);
 
       // Parse the request
-      List /* FileItem */items = upload.parseRequest(request);
+      List items = upload.parseRequest(request);
 
       // Process the uploaded items
       Iterator iter = items.iterator();
@@ -96,12 +137,15 @@ public class StandardServletFileUploadFilterService extends BaseFilterService {
         }
       }
       
+      log.debug("Parsed multipart request, found '" + fileItems.size() + 
+          "' file items and '" + parameterLists.size() + "' request parameters");
+      
       output.extend(
-          ServletFileUploadOutputExtension.class, 
-          new StandardServletFileUploadOutputExtension(fileItems));
+          FileUploadInputExtension.class, 
+          new StandardFileUploadInputExtension(fileItems));
       
       request = new MultipartWrapper(request, parameterLists);
-      input = new StandardServletInputData(request);
+      ((ServletOverridableInputData) input).setRequest(request);
     }   
     
     super.action(path, input, output);
@@ -123,23 +167,13 @@ public class StandardServletFileUploadFilterService extends BaseFilterService {
         
         parameters.put(entry.getKey(), toStringArray(parameterList.toArray()));
       }
-    }    
-    
-    private String iso2utf(String input) throws java.io.UnsupportedEncodingException {
-      if (input != null) {
-        byte[] bytes = input.getBytes("ISO-8859-1");
-        return new String(bytes, "UTF-8");    
-      }
-      else {
-        return null;
-      }
-    }
+    }        
     
     private String[] toStringArray(Object[] array) throws Exception { 
       String[] result = new String[array.length];
       
       for (int i = 0; i < array.length; i++) {
-        result[i] = iso2utf((String) array[i]);
+        result[i] = (String) array[i];
       }
       
       return result;
