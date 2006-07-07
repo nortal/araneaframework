@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.helper.reader;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 
 /**
@@ -32,5 +31,5 @@ public interface ResultSetColumnReader {
    * @param javaType TODO
    * @return Custom Java Object from the given <code>ResultSet</code> column.
    */
-  public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType) throws SQLException;
+  public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType);
 }

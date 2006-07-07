@@ -12,12 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.presentation;   
 
+import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.UiPresentationTag;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 
 /**
  * Link base tag.
@@ -25,65 +27,57 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  * @author Oleg Mürk
  */
 public class UiLinkBaseTag extends UiPresentationTag {
-
-  //
-  // Attributes
-  //  
+  protected String id, href, target;
+  protected boolean disabled = false;
   
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Link id, allows to access link from JavaScript." 
-	 */
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, id);
+
+    return EVAL_BODY_INCLUDE;
+  }
+
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Link id, allows to access link from JavaScript." 
+   */
   public void setId(String id) throws JspException {
     this.id = (String)this.evaluateNotNull("id", id, String.class);
   }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "true"
-	 *   description = "Link target URL." 
-	 */
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "true"
+   *   description = "Link target URL." 
+   */
   public void setHref(String href) throws JspException {
     this.href = (String)this.evaluateNotNull("href", href, String.class);
   }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Link target, same as <i>&lt;a&gt;</i> HTML tag <i>target</i> attribute." 
-	 */
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Link target, same as <i>&lt;a&gt;</i> HTML tag <i>target</i> attribute." 
+   */
   public void setTarget(String target) throws JspException {
     this.target = (String)this.evaluateNotNull("target", target, String.class);
   }
-  
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Controls whether the link is disabled, disabled link doesn't link anywhere." 
-	 */
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Controls whether the link is disabled, disabled link doesn't link anywhere." 
+   */
   public void setDisabled(String disabled) throws JspException {
     this.disabled = ((Boolean)this.evaluateNotNull("disabled", disabled, Boolean.class)).booleanValue();
   }
-
-  protected void init() {
-    super.init();
-    id = null;
-    href = null;
-    target = null;
-    disabled = false;
-  }
-  
-  
-  protected String id;
-  protected String href;
-  protected String target;
-  protected boolean disabled;
 }
 
 
