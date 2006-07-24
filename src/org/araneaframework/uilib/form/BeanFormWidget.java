@@ -40,7 +40,7 @@ public class BeanFormWidget extends FormWidget {
     
     if (type.isPrimitive()) {
       if (!mandatory) 
-        throw new AraneaRuntimeException("Form element '" + fieldId +"' corresponding to JavaBean's primitive-typed field was not specified as mandatory field.");
+        throw new AraneaRuntimeException("Form element '" + fieldId +"' corresponding to JavaBean's primitive-typed field was not specified as mandatory.");
 
       switch(ArrayUtils.indexOf(primitiveTypes, type.getName())) {
         case 0: { type = Integer.class; break; }
