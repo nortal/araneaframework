@@ -134,8 +134,8 @@ public class UiStdFormSimpleLabelTag extends UiPresentationTag {
     if (formElementId != null){
       // Find surrounding form's id
       String formId = (String)UiUtil.requireContextEntry(pageContext, UiFormTag.FORM_SCOPED_FULL_ID_KEY);
-      // NOTE: this assumes that label belonging to formelement X is never used inside formelement Y
-      UiFormElementBaseTag.writeFormElementContextOpen(out, formId, formElementId, pageContext);
+      // XXX: even if formElementContext JS should be invoked when writing label, formelement should not be marked as present
+      //UiFormElementBaseTag.writeFormElementContextOpen(out, formId, formElementId, pageContext);
       fullFormElementId = formId + "." + formElementId;
     }
 
