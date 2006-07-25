@@ -107,30 +107,43 @@
      uiFormProperties = uiSystemFormProperties[formName];
    }
  }
+
+ function uiFormElementContext(elementName, spanId, valid){
+   uiFormElementContext_4(elementName, spanId, valid, true);
+ }
  
- /**
+  /**
   * Function that is invoked when a context of a certain form element is reached.
+  * Attaches keyboard listener to formelement and creates hidden input field indicating
+  * that formelement value should be read from request (only when present is set to true).
+  * 
   * Assumes that it is in a context of a containing form
   *   elementName is the fully qualified name of the element.
   *   spanId is the id of a span containing this element (there may be several
   *          spans related to an element)
   *   valid  is true/false depending on whether the element is to be displayed as
   *          initially valid or invalid.
+  *   isPresent true/false (indicates whether form element is present and should be
+  *          (re)read from request. Notice that this is not always the case - ie
+  *          textInputDisplay shows form element, but it's value should not be read
+  *          from request.
   */
- function uiFormElementContext(elementName, spanId, valid){
+ function uiFormElementContext_4(elementName, spanId, valid, isPresent){
    var span=document.getElementById(spanId);
    if (document.addEventListener) { // Moz
      span.onkeydown=function(event) { return uiHandleKeypress(event, elementName); };
    } else {
      span.onkeydown=function() { return uiHandleKeypress(event, elementName); };
    }
-   var hiddenPresent = createNamedElement('input', elementName+".__present");
-   hiddenPresent.setAttribute('type','hidden');
-   hiddenPresent.setAttribute('value','true');
-   addSystemLoadEvent(function() {span.appendChild(hiddenPresent);});
+   if (isPresent) {
+     var hiddenPresent = createNamedElement('input', elementName+".__present");
+     hiddenPresent.setAttribute('type','hidden');
+     hiddenPresent.setAttribute('value','true');
+     addSystemLoadEvent(function() {span.appendChild(hiddenPresent);});
+   }
  }
- 
- 
+
+
  function inFormContext(){
    if (!uiFormProperties) {
      window.status = 'Javascript error: current form context not found!';
