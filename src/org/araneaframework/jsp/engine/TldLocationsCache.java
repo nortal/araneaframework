@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
@@ -36,6 +37,8 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.jsp.engine.xml.ParserUtils;
 import org.araneaframework.jsp.engine.xml.TreeNode;
+import org.springframework.core.CollectionFactory;
+import org.springframework.util.ResourceUtils;
 
 /**
  * A container for all tag libraries that are defined "globally"
@@ -245,7 +248,7 @@ public class TldLocationsCache {
             processTldsInFileSystem("/WEB-INF/");
             initialized = true;
         } catch (Exception ex) {
-            throw new AraneaRuntimeException(ex.getMessage());
+            throw new AraneaRuntimeException(ex);
         }
     }
 
@@ -465,8 +468,10 @@ public class TldLocationsCache {
 
         ClassLoader webappLoader
             = Thread.currentThread().getContextClassLoader();
-        ClassLoader loader = webappLoader;
+        ClassLoader loader = webappLoader.getParent();                
 
+        scanPathForJars("/WEB-INF/lib/");
+        
         while (loader != null) {
             if (loader instanceof URLClassLoader) {
                 URL[] urls = ((URLClassLoader) loader).getURLs();
@@ -493,17 +498,40 @@ public class TldLocationsCache {
             loader = loader.getParent();
         }
     }
+    
+    private void scanPathForJars(String path) throws Exception {      
+      Set paths = ctxt.getResourcePaths(path);
+      
+      for (Iterator i = paths.iterator(); i.hasNext();) {
+        String entry = (String) i.next();
+        
+        if (entry.charAt(entry.length() - 1) == '/') {
+          scanPathForJars(entry);
+        }
+        else {        
+          URL entryUrl = ctxt.getResource(entry);
+          
+          //Will this work if the webapp is packaged in a war?
+          //Just have to check it...
+          if (entryUrl.getProtocol().equals("file")) {
+            entryUrl = new URL("jar:" + entryUrl.toExternalForm() + "!/");
+          }
+          
+          URLConnection con = entryUrl.openConnection();
+
+          if (con instanceof JarURLConnection) 
+            scanJar((JarURLConnection) con, true);
+        }           
+      }
+    }
 
     /*
-     * Determines if the JAR file with the given <tt>jarPath</tt> needs to be
-     * scanned for TLDs.
-     *
-     * @param loader The current classloader in the parent chain
-     * @param webappLoader The webapp classloader
-     * @param jarPath The JAR file path
-     *
-     * @return TRUE if the JAR file identified by <tt>jarPath</tt> needs to be
-     * scanned for TLDs, FALSE otherwise
+     * Determines if the JAR file with the given <tt>jarPath</tt> needs to be scanned for TLDs.
+     * 
+     * @param loader The current classloader in the parent chain @param webappLoader The webapp classloader @param
+     * jarPath The JAR file path
+     * 
+     * @return TRUE if the JAR file identified by <tt>jarPath</tt> needs to be scanned for TLDs, FALSE otherwise
      */
     private boolean needScanJar(ClassLoader loader, ClassLoader webappLoader,
                                 String jarPath) {

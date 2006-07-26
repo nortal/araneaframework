@@ -195,7 +195,7 @@ class MyEntityResolver implements EntityResolver {
                 InputStream input = this.getClass().getResourceAsStream(
                         resourcePath);
                 if (input == null) {
-                    throw new SAXException("jsp.error.internal.filenotfound");
+                    throw new SAXException("Resource not found: " + resourcePath);
                 }
                 InputSource isrc = new InputSource(input);
                 return isrc;

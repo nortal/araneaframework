@@ -203,7 +203,7 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
       super.handleEvent(input);
   }
 
-public Widget.Interface _getWidget() {
+  public Widget.Interface _getWidget() {
     return new WidgetImpl();
   }
   
