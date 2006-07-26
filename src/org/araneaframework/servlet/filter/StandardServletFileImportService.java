@@ -100,7 +100,9 @@ public class StandardServletFileImportService extends BaseService {
 				 * 
 				 * XXX: in case of plain new FileInputStream(fileName)
 				 * container behaviour is not known. i.e Jetty allows loading files
-				 * from application context that way, but Weblogic does not.
+				 * from application context that way, but Weblogic does no
+         * 
+         * XXX: This is security by blacklisting, it is evil and should be abolished. 
 				 */
 				else {
 					try {

@@ -173,6 +173,7 @@ public class BeanMapper implements Serializable {
 		if (getter != null) {
 			result = getter.getReturnType();
 		}
+    
 		return result;
 	}
 	

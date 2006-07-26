@@ -64,7 +64,7 @@ public class ConverterFactory implements ConverterProvider {
     converters.put(new ConverterKey("Timestamp", "Date"), new TimestampToDateConverter());
 
     //Long -> Type
-    converters.put(new ConverterKey("Long", "Boolean"), new ReverseConverter(new BooleanToLongConverter()));
+    converters.put(new ConverterKey("Long", "Boolean"), new ReverseConverter(new BooleanToLongConverter()));    
   }
 
   /**
