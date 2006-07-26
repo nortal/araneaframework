@@ -36,8 +36,10 @@ public interface UiWidgetContainer {
   
   /**
    * Returns the mapping from tags to their classes.
+   * 
+   * @param uri - uri of the taglib sought
    */
-  public Map getTagMapping(PageContext pageContext) throws JspException;
+  public Map getTagMapping(PageContext pageContext, String uri) throws JspException;
   
   /**
    * Scopes the widget full id adding a container identifier (in 
