@@ -16,9 +16,9 @@
 
 package org.araneaframework.jsp.tag.basic;
 
+import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 
@@ -34,50 +34,57 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  *   description = "Defines an attribute of the containing element."
  */
 public class UiAttributeTag extends UiBaseTag {
-
-  //
-  // Attributes
-  //
- 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "true" 
-	 *   description = "Attribute name."
-	 */
-	public void setName(String name) throws JspException {
-		this.name = (String)evaluateNotNull("name", name, String.class);
-	}
-
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "true"
-	 *   description = "Attribute value." 
-	 */
-	public void setValue(String value) throws JspException {
-		this.value = (String)evaluate("value", value, String.class);
-	}
+  protected String name;
+  protected String value;
   
-  //
-  // Implementation
-  //
-		
-	protected int before(Writer out) throws Exception {
-		super.before(out);
-		
-		UiAttributedTagInterface attributedTag = (UiAttributedTagInterface)readAttribute(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, PageContext.REQUEST_SCOPE);
-		attributedTag.addAttribute(name, value);
-		
-		// Continue
-	  return SKIP_BODY;
-	}
-  
-  protected void init() {
-    this.name = null;
-    this.value = null;
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    
+    String elementKey = (String)getContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY);
+    if (elementKey != null) {
+    	  writeAttributeScript(out, elementKey);
+    	  return SKIP_BODY;
+    }
+    
+    UiAttributedTagInterface attributedTag = (UiAttributedTagInterface)requireContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY);
+    attributedTag.addAttribute(name, value);
+
+    return SKIP_BODY;
   }
-		
-	protected String name;
-	protected String value;
+
+  public void writeAttributeScript(Writer out, String elementKey) throws IOException {
+    out.write("<script type=\"text/javascript\">");
+    out.write("setElementAttr(\"");
+    out.write(elementKey);
+	out.write("\", \"");
+	out.write(name);
+	out.write("\", \"");
+	out.write(value);
+	out.write("\");");
+    out.write("</script>");
+  }
+  
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+ 
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "true" 
+   *   description = "Attribute name."
+   */
+  public void setName(String name) throws JspException {
+    this.name = (String)evaluateNotNull("name", name, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "true"
+   *   description = "Attribute value." 
+   */
+  public void setValue(String value) throws JspException {
+    this.value = (String)evaluate("value", value, String.class);
+  }
 }
