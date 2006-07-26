@@ -47,8 +47,8 @@ import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
   private static final Logger log = Logger.getLogger(StandardJspFilterService.class);
-  
   public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.jsp.aranea.filter.UiAraneaJspConfigurationFilterService.JspConfiguration";
+  protected static TldLocationsCache tldLocationsCache;
 
   // URI -> Map<TagInfo>
   private Map taglibs = new HashMap();
@@ -58,6 +58,12 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   private String jspPath = "/WEB-INF/jsp";
   
   private LocalizationContext loc;
+  
+  private synchronized static void initTldLocationsCache(ServletContext ctx) {
+    if (tldLocationsCache == null) {
+      tldLocationsCache = new TldLocationsCache(ctx);
+    }
+  }
   
   // Spring injection parameters  
   
@@ -75,7 +81,9 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   protected void init() throws Exception {
     super.init();
-        
+    
+    if (tldLocationsCache == null)
+      initTldLocationsCache((ServletContext)getEnvironment().getEntry(ServletContext.class));
     loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
   }
   
@@ -126,8 +134,8 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   public Map getTagMap(String uri) {
     if (!taglibs.containsKey(uri)) {
       //XXX: little wasteful
-      String[] locations = new TldLocationsCache((ServletContext) getEnvironment().getEntry(ServletContext.class)).getLocation(uri);
-
+      //String[] locations = new TldLocationsCache((ServletContext) getEnvironment().getEntry(ServletContext.class)).getLocation(uri);
+      String[] locations = tldLocationsCache.getLocation(uri);
       if (locations != null) {
         String tldLoc = locations[1] == null ? locations[0] : locations[1];
         taglibs.put(uri, readTldMapping(tldLoc));

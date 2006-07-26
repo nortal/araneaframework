@@ -115,7 +115,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		if (accessKey != null && accessKey.length() != 1) accessKey = null;
 
 		if (hasElementContextSpan)
-            writeFormElementContextOpen(out, formScopedFullId, derivedId, pageContext);
+            writeFormElementContextOpen(out, formScopedFullId, derivedId, true, pageContext);
 		else
 			UiUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
 
@@ -245,12 +245,16 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	}
 
 
+	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, PageContext pageContext) throws Exception{
+		writeFormElementContextOpen(out, fullFormId, elementId, true, pageContext);
+	}
+	
 	/** 
 	 * Write a span with random id around the element, and register this span with javascript
 	 * @param elementName the name of the element for which the uiFormElementContext function will be invoked
 	 * @throws Exception 
 	 */
-	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, PageContext pageContext) throws Exception{
+	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
 		//  Enclose the element in a <span id=somerandomid>
 		//  Register this span using javascript
 		String spanId = "form-element-span-" + generateId(pageContext);
@@ -284,12 +288,18 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 		// Write out form element context: sets keydown event for this element and writes out
 		// hidden element indicating that form element is present in the request.
 		UiUtil.writeStartTag_SS(out, "script");
-		out.write("uiFormElementContext(");
+		if (!isPresent)
+			out.write("uiFormElementContext_4(");
+		else
+			out.write("uiFormElementContext(");
 		UiUtil.writeScriptString(out, elementName);
 		out.write(", ");
 		UiUtil.writeScriptString(out, spanId);
 		out.write(", ");
 		out.write(isValid ? "true" : "false");
+		if (!isPresent) {
+			out.write(", false");
+		}
 		out.write(");");
 		UiUtil.writeEndTag(out, "script");
 	}
