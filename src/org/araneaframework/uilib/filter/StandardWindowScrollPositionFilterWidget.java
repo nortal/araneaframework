@@ -14,14 +14,14 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.servlet.filter;
+package org.araneaframework.uilib.filter;
 
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
-import org.araneaframework.servlet.WindowScrollPositionContext;
+import org.araneaframework.uilib.core.WindowScrollPositionContext;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)

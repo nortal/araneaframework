@@ -23,7 +23,7 @@ import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.WindowScrollPositionContext;
+import org.araneaframework.uilib.core.WindowScrollPositionContext;
 /**
  * Tag that registers functions dealing with window scroll position storing and restoring.
  * @author Taimo Peelo (taimo@webmedia.ee)
