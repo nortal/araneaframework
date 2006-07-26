@@ -82,6 +82,7 @@
     <property name="serviceMap">
       <map>
         <entry key="mainThread" value-ref="araneaThreadFilters"/>
+        <entry key="cloningThread" value-ref="threadCloner"/>
       </map>
     </property>
   </bean>
@@ -113,7 +114,9 @@
         </bean>                
       </list>
     </property>
-  </bean>  
+  </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.ThreadCloningService" id="threadCloner" singleton="false"/>
 
   <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService"
   	id="araneaWidgetAdapter"

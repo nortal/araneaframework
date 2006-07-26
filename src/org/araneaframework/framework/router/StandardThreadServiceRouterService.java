@@ -17,10 +17,13 @@
 package org.araneaframework.framework.router;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
+import org.araneaframework.Service;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.framework.ThreadContext;
 
 /**
@@ -35,6 +38,21 @@ public class StandardThreadServiceRouterService extends BaseServiceRouterService
    * The key of the thread-service's id in the request.
    */
   public static final String THREAD_SERVICE_KEY = "threadServiceId";
+  
+  /**
+   * Initialize all the services in the service map with
+   * <code>getChildEnvironment(Object serviceId)</code>. The serviceId is the key
+   * of the service in the service map. 
+   */
+  protected void init() throws Exception {
+    //Initializes provided service map
+    Iterator ite = serviceMap.entrySet().iterator();
+    while(ite.hasNext()) {
+      Map.Entry entry = (Map.Entry) ite.next();
+      StandardRelocatableServiceDecorator service = new StandardRelocatableServiceDecorator((Service)entry.getValue());
+      _addComponent(entry.getKey(), service, getChildEnvironment(entry.getKey()));
+    }
+  }
   
   protected Object getServiceId(InputData input) throws Exception {
     return input.getGlobalData().get(THREAD_SERVICE_KEY);
