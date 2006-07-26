@@ -32,54 +32,48 @@ import org.araneaframework.jsp.tag.UiBaseTag;
  *   description = "Represents an HTML entity, for instance <i>&amp;nbsp;</i>."
  */
 public class UiEntityTag extends UiBaseTag {
-
-  //
-  // Attributes
-  //
-
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "HTML entity code, e.g. <i>nbsp</i> or <i>#012</i>." 
-	 */
-	public void setCode(String code) throws JspException {
-		this.code = (String)evaluateNotNull("code", code, String.class);	
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Number of times to repeat the entity." 
-	 */
-	public void setCount(String count) throws JspException {
-		this.count = ((Long)evaluate("count", count, Long.class)).longValue();	
-	}
+  protected String code = null;
+  protected long count = 1;
   
-  //
-  // Implementation
-  //
-	
-	protected int before(Writer out) throws Exception {
-		super.before(out);
-		
-		for(long i = 0; i < count; i++) {
-			out.write("&");
-			out.write(code);
-			out.write(";");			
-		}		
-		
-		// Continue
-	  return EVAL_BODY_INCLUDE;		
-	}
-  
-  protected void init () {
-    super.init();
-    code = null;
-    count = 1; 
+  public UiEntityTag() {}
+  public UiEntityTag(String code) {
+	  this.code = code;
   }
-	
-	protected String code;
-	protected long count;
+  
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    
+    for(long i = 0; i < count; i++) {
+      out.write("&");
+      out.write(code);
+      out.write(";");      
+    }    
+    
+    // Continue
+    return EVAL_BODY_INCLUDE;    
+  }
+
+   /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "HTML entity code, e.g. <i>nbsp</i> or <i>#012</i>." 
+   */
+  public void setCode(String code) throws JspException {
+    this.code = (String)evaluateNotNull("code", code, String.class);  
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Number of times to repeat the entity." 
+   */
+  public void setCount(String count) throws JspException {
+    this.count = ((Long)evaluate("count", count, Long.class)).longValue();  
+  }
 }
