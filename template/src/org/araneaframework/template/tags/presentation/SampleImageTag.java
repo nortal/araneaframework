@@ -24,7 +24,7 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.tag.presentation.UiStdImageBaseTag;
-import org.araneaframework.servlet.filter.importer.FileImporter;
+import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
  * SAMPLE image tag.
@@ -54,7 +54,7 @@ public class SampleImageTag extends UiStdImageBaseTag {
 	}
   
 	public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {
-		String url = FileImporter.getImportString(src, pageContext.getRequest(), pageContext.getResponse());
+		String url = FileImportUtil.getImportString(src, pageContext.getRequest(), pageContext.getResponse());
 		writeImage(out, url, width, height, alt, styleClass, title);
 	}
 
