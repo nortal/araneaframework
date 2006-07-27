@@ -16,8 +16,10 @@
 
 package org.araneaframework.servlet.filter;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
@@ -46,18 +48,14 @@ import org.araneaframework.servlet.ThreadCloningContext;
  */
 public class StandardThreadCloningFilterService extends BaseFilterService implements ThreadCloningContext {
 	private static final Logger log = Logger.getLogger(StandardThreadCloningFilterService.class);
-	private boolean childInited;
+	private boolean initializeChildren = true;
 
 	public StandardThreadCloningFilterService() {
 		super();
 	}
 
-	public StandardThreadCloningFilterService(Service childService) {
-		super(childService);
-	}
-	
-	protected StandardThreadCloningFilterService(Service childService, boolean decorate, boolean childInited) {
-		this.childInited = childInited;
+	protected StandardThreadCloningFilterService(Service childService, boolean decorate, boolean initializeChildren) {
+		this.initializeChildren = initializeChildren;
 		if (decorate)
 			setChildService(childService);
 		else
@@ -84,8 +82,12 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
 		Relocatable.RelocatableService service = (RelocatableService) childService;
 		Environment env = service._getRelocatable().getCurrentEnvironment();
 		service._getRelocatable().overrideEnvironment(null);
-        XStream xstream = new XStream(new DomDriver());
-        RelocatableService clone = (RelocatableService) xstream.fromXML(xstream.toXML(service));
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		new ObjectOutputStream(baos).writeObject(service);
+		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
+
+		RelocatableService clone = (RelocatableService) ois.readObject();
         clone._getRelocatable().overrideEnvironment(getEnvironment());
         
         // restore cloned service's environment
@@ -93,10 +95,12 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
 
         /* wrap the cloned service in a new StandardThreadCloningFilterService.
          * a) created service should not be decorated relocatable again, because clone is relocatable already 
-         * b) new StandardThreadCloningFilterService childService may not be reinited! */
-        StandardThreadCloningFilterService wrappedClone = new StandardThreadCloningFilterService(clone, false, true);
+         * b) new StandardThreadCloningFilterService's childService may not be reinited! */
+        StandardThreadCloningFilterService wrappedClone = new StandardThreadCloningFilterService(clone, false, false);
 
         String cloneServiceId = RandomStringUtils.randomAlphabetic(12);
+        if (log.isDebugEnabled())
+        	log.debug("Attaching the cloned thread as '" + cloneServiceId + "'.");
         threadCtx.addService(cloneServiceId, wrappedClone);
 
         // send event to cloned service
@@ -109,7 +113,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
 	}
 
 	protected void init() throws Exception {
-		if (!childInited)
+		if (initializeChildren)
 			super.init();
 	}
 	

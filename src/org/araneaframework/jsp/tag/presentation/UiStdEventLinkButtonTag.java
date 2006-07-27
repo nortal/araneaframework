@@ -17,11 +17,17 @@
 package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
+import java.util.Map;
+import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.container.StandardWidgetContainerWidget;
+import org.araneaframework.framework.filter.StandardTransactionFilterWidget;
+import org.araneaframework.framework.router.StandardThreadServiceRouterService;
+import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.servlet.ThreadCloningContext;
+import org.araneaframework.servlet.util.ClientStateUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -39,7 +45,12 @@ public class UiStdEventLinkButtonTag extends UiEventButtonBaseTag {
     super.doStartTag(out);
     
     StringBuffer url = getRequestURL();
+    OutputData output = (OutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
+    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
+    Object threadId = state.get(StandardThreadServiceRouterService.THREAD_SERVICE_KEY);
+    
     url.append("?").append(ThreadCloningContext.CLONING_REQUEST_KEY).append("=").append("true");
+    url.append("&").append(StandardThreadServiceRouterService.THREAD_SERVICE_KEY).append("=").append(threadId);
     url.append("&").append(StandardWidgetContainerWidget.EVENT_PATH_KEY).append("=").append(contextWidgetId);
     url.append("&").append(StandardWidget.EVENT_HANDLER_ID_KEY).append("=").append(eventId);
     url.append("&").append(StandardWidget.EVENT_PARAMETER_KEY).append("=").append(eventParam);

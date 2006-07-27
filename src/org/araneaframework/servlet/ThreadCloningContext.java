@@ -22,9 +22,6 @@ import java.io.Serializable;
  * @author Taimo Peelo
  */
 public interface ThreadCloningContext extends Serializable {
-  //public static final String CLONING_THREAD_KEY = "cloningThread";
-  //public static final String CLONABLE_THREAD_KEY = "clonableThread";
-  
   /** key indicating that incoming request is requesting cloning of the current session thread */
   public static final String CLONING_REQUEST_KEY = "pleaseClone";
 }

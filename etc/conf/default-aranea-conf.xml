@@ -111,7 +111,7 @@
         <ref bean="responseHeaderFilter"/>
         <bean class="org.araneaframework.ioc.spring.SpringOptionalFilterService" singleton="false">
           <property name="beanId" value="customThreadFilters"/>
-        </bean>                
+        </bean>
       </list>
     </property>
   </bean>
