@@ -99,7 +99,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
         String cloneServiceId = RandomStringUtils.randomAlphabetic(12);
         threadCtx.addService(cloneServiceId, wrappedClone);
 
-        // send event to service
+        // send event to cloned service
         clone._getService().action(path, input, output);
         
         // redirect to URL where cloned service resides
