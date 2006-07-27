@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
+package org.araneaframework.framework.util;
 
-package org.araneaframework.servlet;
-
-import org.araneaframework.framework.util.ServiceInfo;
-import org.araneaframework.servlet.support.PopupWindowProperties;
+import java.io.Serializable;
 
 /**
- * Encapsulates info about popup window properties and URL where 
- * servicing session-thread lives.
+ * Aranea services live under different routers. Sometimes need arises
+ * to access services directly from URL. Interface implementations
+ * should provide means to constructing that URL.
  * 
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public interface PopupServiceInfo extends ServiceInfo {
+public interface ServiceInfo extends Serializable {
   /**
-   * @return popup service's window properties. 
-   */  
-  public PopupWindowProperties getPopupProperties();
+   * @return popup service's info translated into String containing URL style parameters. 
+   */
+  public String toURL();
 }

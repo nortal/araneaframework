@@ -28,25 +28,40 @@ import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.Relocatable.RelocatableService;
-import org.araneaframework.core.StandardNonInitializableRelocatableService;
 import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterService;
+import org.araneaframework.framework.util.ServiceInfo;
+import org.araneaframework.framework.util.StandardServiceInfo;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.ThreadCloningContext;
-import org.araneaframework.servlet.filter.StandardPopupFilterWidget.StandardPopupServiceInfo;
-import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
+ * Filter that clones session threads upon requests. Should always be configured as the first thread-level
+ * filter.
+ * 
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class ThreadCloningFilterService extends BaseFilterService implements ThreadCloningContext {
-	private static final Logger log = Logger.getLogger(ThreadCloningFilterService.class);
+public class StandardThreadCloningFilterService extends BaseFilterService implements ThreadCloningContext {
+	private static final Logger log = Logger.getLogger(StandardThreadCloningFilterService.class);
+	private boolean childInited;
 
-	public ThreadCloningFilterService(Service childService) {
+	public StandardThreadCloningFilterService() {
+		super();
+	}
+
+	public StandardThreadCloningFilterService(Service childService) {
 		super(childService);
+	}
+	
+	protected StandardThreadCloningFilterService(Service childService, boolean decorate, boolean childInited) {
+		this.childInited = childInited;
+		if (decorate)
+			setChildService(childService);
+		else
+			super.setChildService(childService);
 	}
 
 	public void setChildService(Service childService) {
@@ -63,31 +78,39 @@ public class ThreadCloningFilterService extends BaseFilterService implements Thr
 		TopServiceContext topCtx = getTopServiceCtx();
 
 		if (log.isDebugEnabled())
-			log.debug("Attempting to clone current thread ('" + threadCtx.getCurrentId() + "')");
+			log.debug("Attempting to clone current thread ('" + threadCtx.getCurrentId() + "').");
 
-		// get the service to clone
+		// clone the service and set its new environment
 		Relocatable.RelocatableService service = (RelocatableService) childService;
 		Environment env = service._getRelocatable().getCurrentEnvironment();
 		service._getRelocatable().overrideEnvironment(null);
-
         XStream xstream = new XStream(new DomDriver());
-        RelocatableService t = (RelocatableService) xstream.fromXML(xstream.toXML(service));
-        ThreadCloningFilterService cloneService = new ThreadCloningFilterService(t);
+        RelocatableService clone = (RelocatableService) xstream.fromXML(xstream.toXML(service));
+        clone._getRelocatable().overrideEnvironment(getEnvironment());
+        
+        // restore cloned service's environment
+        service._getRelocatable().overrideEnvironment(env);
 
-		// now how to add this?
+        /* wrap the cloned service in a new StandardThreadCloningFilterService.
+         * a) created service should not be decorated relocatable again, because clone is relocatable already 
+         * b) new StandardThreadCloningFilterService childService may not be reinited! */
+        StandardThreadCloningFilterService wrappedClone = new StandardThreadCloningFilterService(clone, false, true);
+
         String cloneServiceId = RandomStringUtils.randomAlphabetic(12);
-        threadCtx.addService(cloneServiceId, cloneService);
+        threadCtx.addService(cloneServiceId, wrappedClone);
 
-        StandardPopupServiceInfo threadInfo = 
-            new StandardPopupServiceInfo((String)getTopServiceCtx().getCurrentId(), cloneServiceId, (PopupWindowProperties) null, getRequestURL());
-
-        ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(threadInfo.toURL());
-	    
-	    service._getRelocatable().overrideEnvironment(env);
+        // send event to service
+        clone._getService().action(path, input, output);
+        
+        // redirect to URL where cloned service resides
+        ServiceInfo serviceInfo = 
+            new StandardServiceInfo((String)topCtx.getCurrentId(), cloneServiceId, getRequestURL());
+        ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(serviceInfo.toURL());
 	}
 
 	protected void init() throws Exception {
-		super.init();
+		if (!childInited)
+			super.init();
 	}
 	
 	protected boolean cloningRequested(InputData input) throws Exception {

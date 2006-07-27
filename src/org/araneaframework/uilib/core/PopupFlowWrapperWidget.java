@@ -28,12 +28,12 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.util.ServiceInfo;
+import org.araneaframework.framework.util.StandardServiceInfo;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.filter.StandardPopupFilterWidget.StandardPopupServiceInfo;
 import org.araneaframework.servlet.service.WindowClosingService;
-import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
  * Wrapper around the flow that is started from new session-thread. It pretends
@@ -82,11 +82,10 @@ public class PopupFlowWrapperWidget extends StandardWidget implements FlowContex
       String randomId = RandomStringUtils.randomAlphanumeric(12);
       threadCtx.addService(randomId, new WindowClosingService());
 
-      StandardPopupServiceInfo threadInfo = 
-        new StandardPopupServiceInfo(
+      ServiceInfo threadInfo = 
+        new StandardServiceInfo(
             (String)topCtx.getCurrentId(), 
-            randomId, 
-            (PopupWindowProperties) null, 
+            randomId,
             ((ServletInputData)getCurrentInput()).getRequest().getRequestURL().toString());
 
       // popup window is closed with redirect to a page that closes current window and reloads parent.

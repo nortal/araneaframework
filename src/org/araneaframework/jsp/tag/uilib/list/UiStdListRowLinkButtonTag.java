@@ -17,15 +17,12 @@
 package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
-import java.util.Map;
-import org.araneaframework.framework.router.StandardThreadServiceRouterService;
-import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
+import org.araneaframework.core.StandardWidget;
+import org.araneaframework.framework.container.StandardWidgetContainerWidget;
 import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.ThreadCloningContext;
-import org.araneaframework.servlet.util.ClientStateUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -44,12 +41,10 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 		super.doStartTag(out);
 		
 		StringBuffer url = getRequestURL();
-	    ServletOutputData output = (ServletOutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
-	    Map attributes = (Map) output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
-	    Object currentThreadId = attributes.get(StandardThreadServiceRouterService.THREAD_SERVICE_KEY);
-
-	    url.append("?").append(StandardThreadServiceRouterService.THREAD_SERVICE_KEY).append("=").append(ThreadCloningContext.CLONING_THREAD_KEY);
-	    url.append("&").append(ThreadCloningContext.CLONABLE_THREAD_KEY).append("=").append(currentThreadId);
+	    url.append("?").append(ThreadCloningContext.CLONING_REQUEST_KEY).append("=").append("true");
+	    url.append("&").append(StandardWidgetContainerWidget.EVENT_PATH_KEY).append("=").append(contextWidgetId);
+	    url.append("&").append(StandardWidget.EVENT_HANDLER_ID_KEY).append("=").append(eventId);
+	    url.append("&").append(StandardWidget.EVENT_PARAMETER_KEY).append("=").append(eventParam);
 	    
 	    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, id);
 
