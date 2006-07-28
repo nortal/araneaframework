@@ -21,7 +21,7 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.importer.FileImporter;
+import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -61,7 +61,7 @@ public class UiImportStylesTag extends UiImportFileTag {
 	}
 	 
 	protected void writeContent(Writer out, String srcFile) throws Exception {
-		srcFile = FileImporter.getImportString(srcFile, pageContext.getRequest(), pageContext.getResponse());
+		srcFile = FileImportUtil.getImportString(srcFile, pageContext.getRequest(), pageContext.getResponse());
 				
 		UiUtil.writeOpenStartTag(out, "link");
 		UiUtil.writeAttribute(out, "rel", "stylesheet");

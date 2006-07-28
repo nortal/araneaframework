@@ -18,6 +18,8 @@ package org.araneaframework.servlet.filter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -33,10 +35,12 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.jsp.engine.TldLocationsCache;
+import org.araneaframework.jsp.support.FormElementViewSelector;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.servlet.JspContext;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -47,8 +51,8 @@ import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
   private static final Logger log = Logger.getLogger(StandardJspFilterService.class);
-  
   public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.jsp.aranea.filter.UiAraneaJspConfigurationFilterService.JspConfiguration";
+  protected static TldLocationsCache tldLocationsCache;
 
   // URI -> Map<TagInfo>
   private Map taglibs = new HashMap();
@@ -75,7 +79,10 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   protected void init() throws Exception {
     super.init();
-        
+    
+    if (tldLocationsCache == null)
+      tldLocationsCache = new TldLocationsCache(
+			(ServletContext) getEnvironment().getEntry(ServletContext.class));
     loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
   }
   
@@ -114,7 +121,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
       return loc.getLocale();
     }
     
-    public Map getTagMapping(String uri) {
+    public Map getTagMapping(String uri){
       return getTagMap(uri);
     }
     
@@ -125,22 +132,31 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   public Map getTagMap(String uri) {
     if (!taglibs.containsKey(uri)) {
-      //XXX: little wasteful
-      String[] locations = new TldLocationsCache((ServletContext) getEnvironment().getEntry(ServletContext.class)).getLocation(uri);
-
+      String[] locations = tldLocationsCache.getLocation(uri);
       if (locations != null) {
-        String tldLoc = locations[1] == null ? locations[0] : locations[1];
-        taglibs.put(uri, readTldMapping(tldLoc));
+        URL realLoc = null;        
+        
+        try {
+          if (locations[1] == null)
+            realLoc = new URL(locations[0]);
+          else
+            realLoc = new URL("jar:" + locations[0] + "!/" + locations[1]);
+
+          taglibs.put(uri, readTldMapping(realLoc));
+        }
+        catch (IOException e) {
+          throw new AraneaRuntimeException("Failed to read the tag library descriptor for URI '" + uri + "'", e);
+        }
       }
     }
 
     return (Map) taglibs.get(uri);
   }
 
-  private Map readTldMapping(String location) {
+  private Map readTldMapping(URL location) throws IOException {
     Map result = new HashMap();
 
-    InputStream tldStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(location);
+    InputStream tldStream = location.openStream();
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     Document tldDoc = null;

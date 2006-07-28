@@ -15,7 +15,7 @@
 **/
 
 
-package org.araneaframework.example.main.messages;
+package org.araneaframework.example.main.message;
 
 import java.io.Serializable;
 import org.araneaframework.Component;
@@ -34,7 +34,7 @@ import org.araneaframework.uilib.core.PopupFlowWidget.MessageFactory;
  * 
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class MainExampleMessageFactory implements MessageFactory, Serializable {
+public class PopupMessageFactory implements MessageFactory, Serializable {
 	public Message buildMessage(Widget widget) {
 		return new MainExampleMessage(widget);
 	}

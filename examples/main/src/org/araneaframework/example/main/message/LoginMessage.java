@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.messages;
+package org.araneaframework.example.main.message;
 
 import org.araneaframework.Component;
 import org.araneaframework.core.BroadcastMessage;
@@ -22,19 +22,12 @@ import org.araneaframework.example.main.web.LoginWidget;
 import org.araneaframework.example.main.web.RootWidget;
 import org.araneaframework.framework.FlowContext;
 
-public class ExampleMenuMessage extends BroadcastMessage {
-	private String menuPath;
-	
-	public ExampleMenuMessage(String menuPath) {
-		this.menuPath = menuPath;
-	}
-	
+public class LoginMessage extends BroadcastMessage {	
 	protected void execute(Component component) throws Exception {
 		if (component instanceof LoginWidget) {
 			LoginWidget w = (LoginWidget) component;
 			RootWidget root = new RootWidget();
 			((FlowContext)w.getChildEnvironment().getEntry(FlowContext.class)).replace(root, null);
-			root.getMenuWidget().selectMenuItem(menuPath);
 		}
 	}
 }

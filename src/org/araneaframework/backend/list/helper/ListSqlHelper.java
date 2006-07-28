@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
@@ -574,6 +575,23 @@ public abstract class ListSqlHelper {
 		executeCountSql();
 		executeItemRangeSql();
 	}
+  
+  public ListItemsData execute(DataSource ds, Class itemClass) {
+    ListItemsData data = null;
+    try {
+      setDataSource(ds);
+      execute();
+      data = getListItemsData(itemClass);
+    } catch (Exception e) {
+      if (e instanceof RuntimeException)
+        throw (RuntimeException) e;
+      else
+        throw new NestableRuntimeException(e);
+    } finally {
+      close();
+    }
+    return data;
+  }
 	
 	/**
 	 * Tries to retrieve the item range from the saved <code>ResultSet</code>

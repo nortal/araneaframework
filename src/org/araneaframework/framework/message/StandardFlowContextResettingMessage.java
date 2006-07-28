@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.framework.messages;
+package org.araneaframework.framework.message;
 
 import org.araneaframework.Component;
 import org.araneaframework.Environment;

@@ -26,7 +26,7 @@ import org.araneaframework.jsp.tag.layout.LayoutRowTag;
 import org.araneaframework.jsp.tag.uilib.list.UiListTag;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.importer.FileImporter;
+import org.araneaframework.servlet.util.FileImportUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.OrderInfoField;
@@ -87,13 +87,13 @@ public class ComponentListHeaderTag extends LayoutRowTag {
             if (orderInfoFieldViewModel.isAscending()) {
               UiUtil.writeOpenStartTag(out, "img");  
               UiUtil.writeAttribute(out, "src", 
-            		  url.append(FileImporter.getImportString("gfx/ico_sortup.gif")));
+            		  url.append(FileImportUtil.getImportString("gfx/ico_sortup.gif")));
               UiUtil.writeCloseStartEndTag(out);
             }
             else {
               UiUtil.writeOpenStartTag(out, "img");
               UiUtil.writeAttribute(out, "src", 
-            		  url.append(FileImporter.getImportString("gfx/ico_sortdown.gif")));
+            		  url.append(FileImportUtil.getImportString("gfx/ico_sortdown.gif")));
               UiUtil.writeCloseStartEndTag(out);
             }
             out.write("&nbsp;");

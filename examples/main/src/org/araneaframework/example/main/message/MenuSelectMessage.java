@@ -14,16 +14,23 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.support;
+package org.araneaframework.example.main.message;
 
-import java.io.Serializable;
-import org.araneaframework.Widget;
+import org.araneaframework.Component;
+import org.araneaframework.core.BroadcastMessage;
+import org.araneaframework.example.main.web.menu.MenuWidget;
 
-/**
- * Object with capability of creating new flow.
- * 
- * @author Taimo Peelo
- */
-public interface FlowCreator extends Serializable {
-	public Widget createFlow() throws Exception;
+public class MenuSelectMessage extends BroadcastMessage {
+	private String menuPath;
+	
+	public MenuSelectMessage(String menuPath) {
+		this.menuPath = menuPath;
+	}
+	
+	protected void execute(Component component) throws Exception {
+		if (component instanceof MenuWidget) {
+      MenuWidget w = (MenuWidget) component;
+			w.selectMenuItem(menuPath);
+		}
+	}
 }

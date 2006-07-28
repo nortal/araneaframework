@@ -5,12 +5,15 @@
 	<bean id="araneaApplicationStart"
 		class="org.araneaframework.example.main.web.LoginWidget"
 		singleton="false" />
-
-	<bean
-		class="org.araneaframework.framework.filter.StandardLocalizationFilterService"
-		id="araneaLocalizationFilter" singleton="false">
-		<property name="resourceBundleName"
-			value="org.araneaframework.template.framework.resource.TemplateResourceBundle" />
-		<property name="languageName" value="en" />
-	</bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardServletMountFilterService" 
+    id="araneaMountFilter" singleton="false">
+    <property name="mounts">
+      <map>
+        <entry key="person">
+          <bean class="org.araneaframework.example.main.message.ExamplePersonMountMessageFactory" singleton="false"/>
+        </entry>
+      </map>
+    </property>
+  </bean>  
 </beans>

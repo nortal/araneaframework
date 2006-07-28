@@ -32,16 +32,18 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.AraneaFileNotFoundException;
-import org.araneaframework.core.BaseService;
 import org.araneaframework.extension.resource.ExternalResource;
 import org.araneaframework.extension.resource.ExternalResourceInitializer;
+import org.araneaframework.framework.core.BaseFilterService;
+import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.router.PathInfoServiceRouterService;
+import org.araneaframework.servlet.util.URLUtil;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
 */
-public class StandardServletFileImportService extends BaseService {
+public class StandardServletFileImportService  extends BaseFilterService {
 	private static final Logger log = Logger.getLogger(StandardServletFileImportService.class);
 	private static boolean isInitialized = false;
 	private static ExternalResource resources;
@@ -51,8 +53,6 @@ public class StandardServletFileImportService extends BaseService {
 	public static final String IMPORTER_GROUP_NAME = "FileImporterGroupName";
 	public static final String OVERRIDE_PREFIX = "override";
 	public static final String FILE_IMPORTER_NAME = "fileimporter";
-	
-	public static final String FILE_NAME_RE = new String("^[a-zA-Z0-9./\\-]+$");
 	
 	synchronized static void initialize(ServletContext context) {
 		if (!isInitialized) {
@@ -67,12 +67,21 @@ public class StandardServletFileImportService extends BaseService {
 			ServletConfig config = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
 			initialize(config.getServletContext());
 		}
+    
+    String uri = URLUtil.normalizeURI(((ServletInputData) input).getRequest().getPathInfo());
+    
+    if (uri == null || 
+        URLUtil.splitURI(uri).length == 0 || 
+        !URLUtil.splitURI(uri)[0].equals(FILE_IMPORTER_NAME)) {        
+      childService._getService().action(path, input, output);
+      return;
+    }
 
 		String fileName = (String)input.getGlobalData().get(IMPORTER_FILE_NAME);
 		String groupName = (String)input.getGlobalData().get(IMPORTER_GROUP_NAME);
 		
 		if (fileName == null) {
-			fileName = (String)output.getAttribute(PathInfoServiceRouterService.PATH_ARGUMENT);
+			fileName = uri.substring(FILE_IMPORTER_NAME.length() + 1);
 			
 			if (fileName.indexOf(".") == -1) {
 				groupName = fileName;
@@ -93,49 +102,7 @@ public class StandardServletFileImportService extends BaseService {
 					setHeaders(response, resources.getContentType(fileName));
 					filesToLoad.add(fileName);
 					loadFiles(filesToLoad, out);
-				}
-				/*
-				 * Fallback to the filesystem. Container takes care if it is okay to load
-				 * a file from the application's system.
-				 * 
-				 * XXX: in case of plain new FileInputStream(fileName)
-				 * container behaviour is not known. i.e Jetty allows loading files
-				 * from application context that way, but Weblogic does not.
-				 */
-				else {
-					try {
-						// allow only very simple filenames to prevent malicious URL hacking
-						// and check that remaining simple filename does not contain ".."
-						if (!(fileName.matches(FILE_NAME_RE) && (fileName.indexOf("..") == -1)))
-							throw new SecurityException("Filename too weird, preventing fallback.");
-
-						// now it is sure that file cannot lie outside the web application context
-						// access to WEB-INF and META-INF should also be prevented - might be
-						// sensitive stuff in configuration files there
-						
-						if (fileName.toUpperCase().indexOf("WEB-INF") != -1 || fileName.toUpperCase().indexOf("META-INF") != -1)
-							throw new SecurityException("Fallback not allowed.");
-						
-						ServletConfig sc = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
-						String realContextPath = sc.getServletContext().getRealPath("/");
-						
-						String realFileName = realContextPath + "/" + fileName;
-
-						// checking for the existence
-						new FileInputStream(realFileName);
-						filesToLoad.add(realFileName);
-						// this will try override directory first but for fallback that should not matter
-						loadFiles(filesToLoad, out);
-					}
-					catch (FileNotFoundException e) {
-						log.warn("Not allowed to import "+fileName+" add it to the allowed list or make sure it exists on the filesystem.");
-						throw new AraneaFileNotFoundException();	
-					}
-					catch (SecurityException e) {
-						log.warn("Not allowed to import "+fileName+" add it to the allowed list or make sure it exists on the filesystem.");
-						throw new AraneaFileNotFoundException();	
-					}
-				}
+				}				
 			}
 			else if (groupName != null) {
 				Map group = resources.getGroupByName(groupName);
@@ -146,13 +113,10 @@ public class StandardServletFileImportService extends BaseService {
 					loadFiles(filesToLoad, out);
 				}
 				else {
-					log.warn("Non-existent group specified for file importing, "+groupName);
+					log.warn("Unexistent group specified for file importing, "+groupName);
 					throw new AraneaFileNotFoundException();
 				}
-			}
-			else {
-				log.debug("No fileName or groupName specified. Doing nothing");
-			}
+			}	
 		}
 		catch (AraneaFileNotFoundException e) {
 			String notFoundName = fileName == null ? groupName : fileName;

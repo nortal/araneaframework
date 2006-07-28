@@ -26,7 +26,7 @@ import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.filter.importer.FileImporter;
+import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
  * Service that returns response that closes browser window that made the 
@@ -42,7 +42,7 @@ public class WindowClosingService extends BaseService {
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ((ServletOutputData) output).getResponse();
 		
-		String scriptSrc = FileImporter.getImportString("js/ui-popups.js", ((ServletInputData) input).getRequest() ,((ServletOutputData) output).getResponse());
+		String scriptSrc = FileImportUtil.getImportString("js/ui-popups.js", ((ServletInputData) input).getRequest() ,((ServletOutputData) output).getResponse());
 		String responseStr = 
 			"<html>" +
 			  "<head>" +
