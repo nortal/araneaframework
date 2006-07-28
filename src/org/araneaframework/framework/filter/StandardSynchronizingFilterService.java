@@ -18,7 +18,6 @@ package org.araneaframework.framework.filter;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -35,21 +34,16 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardSynchronizingFilterService extends BaseFilterService {
-  private static final Logger log = Logger.getLogger(StandardSynchronizingFilterService.class);
-  
+
   protected void init() throws Exception {
     Map entries = new HashMap();
     entries.put(SynchronizingContext.class, new SynchronizingContext() {});
     
     childService._getComponent().init(new StandardEnvironment(getChildEnvironment(), entries));
-    
-    log.debug("Synchronizing filter service initialized.");
   }
   
   protected void destroy() throws Exception {
     super.destroy();
-    
-    log.debug("Synchronizing filter service destroyed.");
   }
   
   protected synchronized void action(Path path, InputData input, OutputData output) throws Exception {

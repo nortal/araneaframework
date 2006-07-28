@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.presentation;
 
@@ -27,70 +27,12 @@ import org.araneaframework.jsp.tag.UiPresentationTag;
  * @author Oleg Mürk
  */
 public abstract class UiImageBaseTag extends UiPresentationTag {
+  // Usual HTML <img> tag attributes	
+  protected String code, src, width, height, alt, title;
 
-  //
-  // Attributes
-  //
-  
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Image code." 
-  */
-	public void setCode(String code) throws JspException {
-    this.code = (String)evaluate("code", code, String.class);
-  }
-  
-	  /**
-	   * @jsp.attribute
-	   *   type = "java.lang.String"
-	   *   required = "false"
-	   *   description = "Image src." 
-	  */
-  public void setSrc(String src) throws JspException {
-    this.src = (String)evaluate("src", src, String.class);
-  }
-  
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Image width" 
-  */
-  
-  public void setWidth(String width) throws JspException {
-    this.width = (String)evaluate("width", width, String.class);
-  }  
-  
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Image height." 
-  */
-  public void setHeight(String height) throws JspException {
-    this.height = (String)evaluate("height", height, String.class);
-  }  
-  
-  
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Image alternate text." 
-  */
-  public void setAlt(String alt) throws JspException {
-    this.alt = (String)evaluate("alt", alt, String.class);
-  }
-  
-  //
-  // Implementation
-  //
-    
-  protected int before(Writer out) throws Exception {
-    super.before(out);
-    
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+
     if (code != null) {
       Info info = (Info)getImageInfo(code);
       if (info == null)
@@ -99,32 +41,14 @@ public abstract class UiImageBaseTag extends UiPresentationTag {
       this.width = info.width;
       this.height = info.height;
     }
-    
-    // Continue
+
     return EVAL_BODY_INCLUDE;    
   }
-  
-  protected void init() {
-    super.init();
-    
-    this.code = null;
-    this.src = null;
-    this.width = null;
-    this.height = null;
-    this.alt = null;
-  }
-  
-  protected String code;
-  protected String src;
-  protected String width;
-  protected String height;
-  protected String alt;
-  
+
   /**
    * Image info class.
    */  
   protected static class Info {    
-    
     public Info(String src, String width, String height) {
       this.src = src;
       this.width = width;
@@ -137,15 +61,81 @@ public abstract class UiImageBaseTag extends UiPresentationTag {
       this.height = height;
       this.alt = alt;
     }
-    
+
     public String src;
     public String width;
     public String height;
     public String alt;
   }
-  
+
+  /* ***********************************************************************************
+   * Tag attributes
+   * ***********************************************************************************/
   /**
-   * Get image info for given code.
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Image code." 
    */
+  public void setCode(String code) throws JspException {
+    this.code = (String)evaluate("code", code, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Image src." 
+   */
+  public void setSrc(String src) throws JspException {
+    this.src = (String)evaluate("src", src, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Image width" 
+   */
+
+  public void setWidth(String width) throws JspException {
+    this.width = (String)evaluate("width", width, String.class);
+  }  
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Image height." 
+   */
+  public void setHeight(String height) throws JspException {
+    this.height = (String)evaluate("height", height, String.class);
+  }  
+
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Image alternate text." 
+   */
+  public void setAlt(String alt) throws JspException {
+    this.alt = (String)evaluate("alt", alt, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Image title" 
+   */
+  public void setTitle(String title) throws JspException {
+    this.title = (String)evaluate("title", title, String.class);
+  }
+
+
+  /* ***********************************************************************************
+   * ABSTRACT METHODS
+   * ***********************************************************************************/
   protected abstract Info getImageInfo(String code); 
 }

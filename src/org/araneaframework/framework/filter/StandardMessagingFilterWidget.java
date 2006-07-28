@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardEnvironment;
@@ -46,19 +46,13 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
-  public static final String MESSAGE_KEY = "org.araneaframework.framework.filter.StandardMessagingFilterWidget.MESSAGES"; 
-  
-  private static final Logger log = Logger.getLogger(StandardMessagingFilterWidget.class);
-  
-  private Map messages = new HashMap();
+  private Map messages = new LinkedMap();
 
   protected void init() throws Exception {
     Map entries = new HashMap();
     entries.put(MessageContext.class, this);
     
     childWidget._getComponent().init(new StandardEnvironment(getChildWidgetEnvironment(), entries));
-    
-    log.debug("Messaging filter service initialized.");
   }
   
   protected void update(InputData input) throws Exception {
@@ -100,13 +94,13 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
       typeCol.add(entry.getKey());
     }
     
-    output.pushAttribute(MESSAGE_KEY, typedMessages);
+    output.pushAttribute(MessageContext.MESSAGE_KEY, typedMessages);
     
     try {
       childWidget._getWidget().render(output);
     }
     finally {
-      output.popAttribute(MESSAGE_KEY);
+      output.popAttribute(MessageContext.MESSAGE_KEY);
     }
   }
   
@@ -120,5 +114,9 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
 
   public void showInfoMessage(String message) {
     showMessage(INFO_TYPE, message);
+  }
+  
+  public void clearMessages() {
+	  messages.clear();
   }
 }

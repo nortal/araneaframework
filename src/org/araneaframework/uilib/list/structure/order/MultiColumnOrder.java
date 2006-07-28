@@ -19,7 +19,6 @@ package org.araneaframework.uilib.list.structure.order;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.MultiComparatorExpression;
