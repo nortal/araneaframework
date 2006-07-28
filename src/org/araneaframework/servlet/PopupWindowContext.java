@@ -54,6 +54,8 @@ public interface PopupWindowContext extends Serializable {
    */
   public String open(Service service, PopupWindowProperties properties, Widget opener);
   
+  public String openMounted(String url, PopupWindowProperties properties);
+  
   /** 
    * Opens given URL in a new popup window.
    * @param url URL to be opened in the popup window

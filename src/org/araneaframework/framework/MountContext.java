@@ -52,6 +52,8 @@ public interface MountContext extends Serializable {
   
   public void unmount(String pathPrefix);
   public String getMountURL(InputData input, String pathPrefix);
+  
+  public Message getMountedMessage(InputData input);  
 
   public interface MessageFactory {
     /**
