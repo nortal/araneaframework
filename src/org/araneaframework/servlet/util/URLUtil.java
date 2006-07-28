@@ -17,8 +17,17 @@
 package org.araneaframework.servlet.util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.araneaframework.InputData;
+import org.araneaframework.servlet.ServletInputData;
+import org.araneaframework.servlet.filter.StandardServletFileImportService;
 
 /**
  * 
@@ -54,5 +63,37 @@ public class URLUtil {
     }
 
     return (String[]) result.toArray(new String[result.size()]);
+  }
+  
+  public static String parametrizeURI(String uri, Map parameters) {
+    StringBuffer sb = new StringBuffer(uri);
+    
+    if (parameters != null && parameters.size() > 0) {
+      sb.append('?');
+      for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
+        Map.Entry pair = (Map.Entry) i.next();
+        sb.append((String)pair.getKey());
+        sb.append('=');
+        sb.append(pair.getValue());
+        if (i.hasNext())
+          sb.append('&');
+      }
+    }
+
+    return sb.toString();
+  }
+  
+  public String getURL(InputData input) {
+    HttpServletRequest req = ((ServletInputData) input).getRequest();
+
+    StringBuffer url = new StringBuffer();
+    url.append(req.getScheme());
+    url.append("://");
+    url.append(req.getServerName());    
+    url.append(":");
+    url.append(req.getServerPort());
+    url.append(req.getContextPath());
+    url.append(req.getServletPath());
+    return url.toString();    
   }
 }

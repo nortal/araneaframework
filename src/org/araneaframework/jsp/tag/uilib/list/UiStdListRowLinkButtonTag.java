@@ -17,7 +17,9 @@
 package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.container.StandardWidgetContainerWidget;
@@ -28,6 +30,7 @@ import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.servlet.ThreadCloningContext;
 import org.araneaframework.servlet.util.ClientStateUtil;
+import org.araneaframework.servlet.util.URLUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -49,12 +52,8 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 	    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
 	    Object threadId = state.get(StandardThreadServiceRouterService.THREAD_SERVICE_KEY);
 		
-		StringBuffer url = getRequestURL();
-	    url.append("?").append(ThreadCloningContext.CLONING_REQUEST_KEY).append("=").append("true");
-	    url.append("&").append(StandardThreadServiceRouterService.THREAD_SERVICE_KEY).append("=").append(threadId);
-	    url.append("&").append(StandardWidgetContainerWidget.EVENT_PATH_KEY).append("=").append(contextWidgetId);
-	    url.append("&").append(StandardWidget.EVENT_HANDLER_ID_KEY).append("=").append(eventId);
-	    url.append("&").append(StandardWidget.EVENT_PARAMETER_KEY).append("=").append(eventParam);
+	    Map parameters = getParameterMap();
+	    StringBuffer url = getRequestURL();
 	    
 	    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, id);
 
@@ -63,7 +62,8 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 		UiUtil.writeAttribute(out, "class", getStyleClass());
 		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeAttribute(out, "border", "0");
-		UiUtil.writeAttribute(out, "href", url.toString());
+		UiUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
+
 		if (eventId != null)
 			UiStdWidgetCallUtil.writeEventAttributeForEvent(
 					pageContext,
@@ -87,5 +87,20 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 		UiUtil.writeEndTag(out, "a");
 		
 		return super.doEndTag(out);
-	}  
+	}
+	
+  protected Map getParameterMap() throws JspException {
+    OutputData output = (OutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
+    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
+    Object threadId = state.get(StandardThreadServiceRouterService.THREAD_SERVICE_KEY);
+
+    Map result = new HashMap();
+    result.put(StandardThreadServiceRouterService.THREAD_SERVICE_KEY, threadId);
+    result.put(StandardWidgetContainerWidget.EVENT_PATH_KEY, contextWidgetId);
+    result.put(StandardWidget.EVENT_HANDLER_ID_KEY, eventId);
+    result.put(StandardWidget.EVENT_PARAMETER_KEY, eventParam);
+    result.put(ThreadCloningContext.CLONING_REQUEST_KEY, "true");
+
+    return result;
+  }
 }
