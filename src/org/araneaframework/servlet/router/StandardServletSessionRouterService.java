@@ -16,15 +16,15 @@
 
 package org.araneaframework.servlet.router;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
+import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
+import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
@@ -59,18 +59,6 @@ public class StandardServletSessionRouterService extends BaseService {
     serviceFactory = factory;
   }
 
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Session router service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Session router service destroyed.");
-  }
-
   /**
    * Routes an action to the service in the session. If the service does not exist,
    * it is created.
@@ -79,45 +67,60 @@ public class StandardServletSessionRouterService extends BaseService {
     HttpSession sess = 
       ((ServletInputData) input).getRequest().getSession();
     
-    boolean destroySession = ((ServletInputData)input).getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY)!=null;
+    boolean destroySession = ((ServletInputData)input).getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY)!=null;   
     
-    Map map = new HashMap();
-    map.put(HttpSession.class, sess);
-    Environment newEnv = new StandardEnvironment(getEnvironment(), map);
-    
-    //XXX Must synchronize differently!!!
-    synchronized (sess) {
-      Relocatable.RelocatableService service = null;   
-            
-      if (destroySession) {       
-        sess.invalidate();        
+    //XXX Should we synchronize on session?
+    synchronized (sess) {                  
+      if (destroySession) {
+        sess.invalidate();                    
         return;
       }
       
-      if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
-        log.debug("Created HTTP session '"+sess.getId()+"'");
-        service = new StandardRelocatableServiceDecorator(serviceFactory.buildService());        
-        
-        service._getComponent().init(newEnv);
-      }
-      else {
-        service = (Relocatable.RelocatableService) sess.getAttribute(SESSION_SERVICE_KEY);
-        service._getRelocatable().overrideEnvironment(newEnv);
-        log.debug("Using HTTP session '"+sess.getId()+"'");
-      }
+      RelocatableService service = getOrCreateSessionService(sess);   
       
       try {
         service._getService().action(path, input, output);
       }
       finally {
         service._getRelocatable().overrideEnvironment(null);
-        try {        
+        try {
           sess.setAttribute(SESSION_SERVICE_KEY, service);
         }
         catch (IllegalStateException  e) {
           log.warn("Session invalidated before request was finished", e);
         }
       }
+    }    
+  }
+  
+  public void propagate(Message message, InputData input, OutputData output) {
+    HttpSession sess = 
+      ((ServletInputData) input).getRequest().getSession();
+    
+    RelocatableService service = getOrCreateSessionService(sess);
+    
+    message.send(null, service);
+    
+    sess.setAttribute(SESSION_SERVICE_KEY, service);
+  }
+  
+  private RelocatableService getOrCreateSessionService(HttpSession sess) {
+    Environment newEnv = new StandardEnvironment(getEnvironment(), HttpSession.class, sess);
+    
+    RelocatableService result = null;   
+    
+    if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
+      log.debug("Created HTTP session '"+sess.getId()+"'");
+      result = new StandardRelocatableServiceDecorator(serviceFactory.buildService(getEnvironment()));        
+      
+      result._getComponent().init(newEnv);
     }
+    else {
+      result = (RelocatableService) sess.getAttribute(SESSION_SERVICE_KEY);
+      result._getRelocatable().overrideEnvironment(newEnv);
+      log.debug("Reusing HTTP session '"+sess.getId()+"'");
+    }
+    
+    return result;
   }
 }

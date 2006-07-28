@@ -19,15 +19,12 @@ package org.araneaframework.backend.util;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.log4j.Logger;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  * @since 1.4.1.20
  */
 public class BeanConverter implements Serializable {
-  private static Logger log = Logger.getLogger(BeanConverter.class);
-  
   /**
    * Sets all the fields with same names to same values.
    * <p> 

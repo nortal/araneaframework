@@ -19,5 +19,5 @@ package org.araneaframework;
 import java.io.Serializable;
 
 public interface Message extends Serializable {
-  public void send(Object id, Component component) throws Exception;
+  public void send(Object id, Component component);
 }
