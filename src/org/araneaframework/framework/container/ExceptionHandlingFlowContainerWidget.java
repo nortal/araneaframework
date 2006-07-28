@@ -74,6 +74,30 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
     super.reset(callback);
   }
   
+  public void cancel() {
+    this.exception = null;
+    
+    super.cancel();
+  }
+  
+  public void finish(Object returnValue) {
+    this.exception = null;
+    
+    super.finish(returnValue);
+  }
+  
+  public void start(Widget flow, Configurator configurator, Handler handler) {
+    this.exception = null;    
+    
+    super.start(flow, configurator, handler);
+  }
+  
+  public void replace(Widget flow, Configurator configurator) {
+    this.exception = null;
+    
+    super.replace(flow, configurator);
+  }
+  
   protected void render(OutputData output) throws Exception {
     AtomicResponseHelper arUtil = 
       new AtomicResponseHelper((ServletOverridableOutputData)output);

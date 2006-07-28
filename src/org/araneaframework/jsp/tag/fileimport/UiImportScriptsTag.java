@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.fileimport;
 import java.io.Writer;
 
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.importer.FileImporter;
+import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -49,7 +49,7 @@ public class UiImportScriptsTag extends UiImportFileTag {
 	}
 	
 	protected void writeContent(Writer out, String srcFile) throws Exception {
-		writeHtmlScriptsInclude(out, FileImporter.getImportString(srcFile, pageContext.getRequest(),
+		writeHtmlScriptsInclude(out, FileImportUtil.getImportString(srcFile, pageContext.getRequest(),
 				pageContext.getResponse()));
 		out.write("\n");
 	}

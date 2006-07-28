@@ -24,6 +24,7 @@ import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.MountContext;
 import org.araneaframework.servlet.JspContext;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.util.ServletUtil;
@@ -55,6 +56,10 @@ public class StandardPresentationWidget extends StandardWidget {
   
   protected LocalizationContext getL10nCtx() {
     return (LocalizationContext) getEnvironment().requireEntry(LocalizationContext.class);
+  }
+  
+  protected MountContext getMountCtx() {
+    return (MountContext) getEnvironment().requireEntry(MountContext.class);
   }
   
   protected String t(String key) {

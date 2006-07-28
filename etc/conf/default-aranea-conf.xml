@@ -21,6 +21,8 @@
         <bean class="org.araneaframework.ioc.spring.SpringOptionalFilterService" singleton="false">
           <property name="beanId" value="customApplicationFilters"/>
         </bean>
+        <ref bean="araneaReadFile"/>   
+        <ref bean="araneaMountFilter"/>            
       </list>
     </property>
   </bean>  
@@ -30,20 +32,8 @@
     <property name="defaultServiceId" value="application"/>
     <property name="serviceMap">
       <map>
-        <entry key="application" value-ref="araneaPathInfoRouter"/>
+        <entry key="application" value-ref="araneaSessionRouter"/>
       </map>
-    </property>
-  </bean>
-
-  <bean class="org.araneaframework.servlet.router.PathInfoServiceRouterService" id="araneaPathInfoRouter"
-        singleton="false">
-			<property name="defaultServiceId" value="application"/>
-      
-      <property name="serviceMap">
-	      <map>
-   	     <entry key="application" value-ref="araneaSessionRouter"/>
-   	     <entry key="fileimporter" value-ref="araneaReadFile"/>
-   	   </map>
     </property>
   </bean>
 
@@ -105,7 +95,7 @@
     <property name="filterChain">
       <list>
         <ref bean="araneaSynchronizingFilter"/>
-        <ref bean="araneaContinuationFilter"/>
+        <ref bean="araneaContinuationFilter"/> 
         <ref bean="araneaAjaxFilterService"/>
         <ref bean="responseHeaderFilter"/>
         <bean class="org.araneaframework.ioc.spring.SpringOptionalFilterService" singleton="false">
@@ -214,6 +204,10 @@
   <bean class="org.araneaframework.framework.filter.StandardSynchronizingFilterService" 
     id="araneaSynchronizingFilter" singleton="false">
   </bean>
+  
+  <bean class="org.araneaframework.servlet.filter.StandardServletMountFilterService" 
+    id="araneaMountFilter" singleton="false">
+  </bean>  
   
   <bean class="org.araneaframework.servlet.filter.StandardServletFileUploadFilterService" 
     id="araneaFileUploadFilter" singleton="false">

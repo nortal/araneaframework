@@ -16,8 +16,16 @@
 
 package org.araneaframework.example.main.web.misc;
 
+import org.araneaframework.InputData;
+import org.araneaframework.Message;
+import org.araneaframework.OutputData;
+import org.araneaframework.core.MessageSeries;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.message.LoginAndMenuSelectMessage;
+import org.araneaframework.example.main.message.LoginMessage;
+import org.araneaframework.example.main.message.MenuSelectMessage;
+import org.araneaframework.framework.MountContext;
 import org.araneaframework.servlet.ServletOutputData;
 
 
@@ -35,5 +43,15 @@ public class RedirectingWidget extends TemplateBaseWidget {
   
   public void handleEventRedirect() throws Exception {
     ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect("http://www.araneaframework.org");
+  }
+  
+  public void handleEventMountAndRedirect() throws Exception {
+    String url = getMountCtx().mount(getCurrentInput(), "/mount/test", new MountContext.MessageFactory() {
+      public Message buildMessage(String url, String suffix, InputData input, OutputData output) {
+        return new LoginAndMenuSelectMessage("Demos.#Simple.Simple_Form");
+      }
+    });
+    
+    ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(url);
   }
 }

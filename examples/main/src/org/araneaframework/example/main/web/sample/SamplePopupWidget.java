@@ -17,10 +17,17 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.apache.log4j.Logger;
+import org.araneaframework.InputData;
+import org.araneaframework.Message;
+import org.araneaframework.OutputData;
+import org.araneaframework.core.MessageSeries;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.example.main.messages.ExampleMenuMessage;
-import org.araneaframework.example.main.messages.MainExampleMessageFactory;
+import org.araneaframework.example.main.message.LoginAndMenuSelectMessage;
+import org.araneaframework.example.main.message.LoginMessage;
+import org.araneaframework.example.main.message.MenuSelectMessage;
+import org.araneaframework.example.main.message.PopupMessageFactory;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.MountContext;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 
@@ -47,8 +54,9 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 
 	public void handleEventCreateThread() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
-		ExampleMenuMessage message = new ExampleMenuMessage("Demos.#Simple.Simple_Form");
-		getPopupCtx().open(message, new PopupWindowProperties(), this);
+		getPopupCtx().open(
+        new LoginAndMenuSelectMessage("Demos.#Simple.Simple_Form"), 
+        new PopupWindowProperties(), this);
 	}
 
 	public void handleEventOpenUrl() throws Exception {
@@ -63,7 +71,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		p.setHeight("600");
 		p.setWidth("1000");
 		p.setScrollbars("yes");
-		PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new MainExampleMessageFactory());
+		PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new PopupMessageFactory());
 		getFlowCtx().start(pfw, null, new SampleHandler());
 	}
 

@@ -20,9 +20,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
+import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
+import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
@@ -65,30 +67,16 @@ public class StandardServletSessionRouterService extends BaseService {
     HttpSession sess = 
       ((ServletInputData) input).getRequest().getSession();
     
-    boolean destroySession = ((ServletInputData)input).getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY)!=null;
-
-    Environment newEnv = new StandardEnvironment(getEnvironment(), HttpSession.class, sess);
+    boolean destroySession = ((ServletInputData)input).getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY)!=null;   
     
     //XXX Should we synchronize on session?
-    synchronized (sess) {
-      Relocatable.RelocatableService service = null;   
-            
+    synchronized (sess) {                  
       if (destroySession) {
         sess.invalidate();                    
         return;
       }
       
-      if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
-        log.debug("Created HTTP session '"+sess.getId()+"'");
-        service = new StandardRelocatableServiceDecorator(serviceFactory.buildService(getEnvironment()));        
-        
-        service._getComponent().init(newEnv);
-      }
-      else {
-        service = (Relocatable.RelocatableService) sess.getAttribute(SESSION_SERVICE_KEY);
-        service._getRelocatable().overrideEnvironment(newEnv);
-        log.debug("Reusing HTTP session '"+sess.getId()+"'");
-      }
+      RelocatableService service = getOrCreateSessionService(sess);   
       
       try {
         service._getService().action(path, input, output);
@@ -102,6 +90,37 @@ public class StandardServletSessionRouterService extends BaseService {
           log.warn("Session invalidated before request was finished", e);
         }
       }
+    }    
+  }
+  
+  public void propagate(Message message, InputData input, OutputData output) {
+    HttpSession sess = 
+      ((ServletInputData) input).getRequest().getSession();
+    
+    RelocatableService service = getOrCreateSessionService(sess);
+    
+    message.send(null, service);
+    
+    sess.setAttribute(SESSION_SERVICE_KEY, service);
+  }
+  
+  private RelocatableService getOrCreateSessionService(HttpSession sess) {
+    Environment newEnv = new StandardEnvironment(getEnvironment(), HttpSession.class, sess);
+    
+    RelocatableService result = null;   
+    
+    if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
+      log.debug("Created HTTP session '"+sess.getId()+"'");
+      result = new StandardRelocatableServiceDecorator(serviceFactory.buildService(getEnvironment()));        
+      
+      result._getComponent().init(newEnv);
     }
+    else {
+      result = (RelocatableService) sess.getAttribute(SESSION_SERVICE_KEY);
+      result._getRelocatable().overrideEnvironment(newEnv);
+      log.debug("Reusing HTTP session '"+sess.getId()+"'");
+    }
+    
+    return result;
   }
 }

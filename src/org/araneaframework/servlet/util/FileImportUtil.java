@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.servlet.filter.importer;
+package org.araneaframework.servlet.util;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -26,7 +26,7 @@ import org.araneaframework.servlet.filter.StandardServletFileImportService;
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class FileImporter {	
+public class FileImportUtil {	
 	
 	/**
 	 * Given a filename, returns the string that can be used for importing via the
@@ -43,21 +43,20 @@ public class FileImporter {
 	public final static String getImportString(String fileName, ServletRequest req, ServletResponse res) {
 		HttpServletResponse hres = (HttpServletResponse) res;
 		HttpServletRequest hreq = (HttpServletRequest) req;
-		StringBuffer url = hreq.getRequestURL();
+    
+    StringBuffer url = new StringBuffer();
+    url.append(hreq.getScheme());
+    url.append("://");
+    url.append(hreq.getServerName());    
+    url.append(":");
+    url.append(hreq.getServerPort());
+    url.append(hreq.getContextPath());
+    url.append(hreq.getServletPath());
+    url.append("/");
+    url.append(StandardServletFileImportService.FILE_IMPORTER_NAME);
+    url.append("/");
+    url.append(fileName);
 		
-		/* XXX
-		 * When using jsessionid for session tracking we start getting weird url from
-		 * getRequestURL(). They are in the form of xxx://host/path;jsessionid=abcd. I'd
-		 * expect them as parameters separated by & and starting with ?. Right now i'm stripping
-		 * the url of the jsessionid and it gets added with the encodeURL again. 
-		 */
-		int index = url.indexOf(";");
-		if (index != -1) {
-			url = new StringBuffer(url.substring(0, url.indexOf(";")));
-		}
-		
-		return hres.encodeURL(url
-			.append("/"+StandardServletFileImportService.FILE_IMPORTER_NAME + "/")
-			.append(fileName).toString());
+		return hres.encodeURL(url.toString());
 	}
 }

@@ -14,16 +14,20 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.support;
+package org.araneaframework.core;
 
-import java.io.Serializable;
-import org.araneaframework.Widget;
+import org.araneaframework.Component;
+import org.araneaframework.Message;
 
-/**
- * Object with capability of creating new flow.
- * 
- * @author Taimo Peelo
- */
-public interface FlowCreator extends Serializable {
-	public Widget createFlow() throws Exception;
+public class MessageSeries implements Message {
+  private Message[] series;
+    
+  public MessageSeries(Message[] series) {
+    this.series = series;
+  }
+
+  public void send(Object id, Component component) {
+    for (int i = 0; i < series.length; i++)
+      series[i].send(id, component);
+  }
 }
