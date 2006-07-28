@@ -16,19 +16,270 @@
 
 <chapter id="framework">
 	<title>Framework</title>
-	<sect1>
-		<title>Framework components</title>
+  <sect1>
+    <title>Overview</title>
+
+    <para>
+      Aranea framework consists of a number of independent components each performing a single well-defined function. These classes are arranged together during deployment and usually involve an IoC container (like Spring) for configuration. These components may be simple <literal>Components</literal>, <literal>Services</literal> or <literal>Widgets</literal>. 
+    </para>
+  </sect1>
+  
+  <sect1>
+    <title>Hosting Aranea</title>
+
     <sect2>
-      <title>Example service</title>
+      <title>Servlet Dispatcher</title>
+
+      <para>
+        Currently, the most common way to put Aranea to work is to host it in a Servlet 2.3 or compatible container. The most generic way to do that is to extend the <literal>org.araneaframework.servlet.core.BaseAraneaDispatcherServlet</literal> and build the root component of type <literal>org.araneaframework.servlet.ServletServiceAdapterComponent</literal> in the overrided method <literal>buildRootComponent()</literal>:
+<programlisting role="java">package com.foobar.myapp;
+
+class MyServlet extends BaseAraneaDispatcherServlet {
+   protected ServletServiceAdapterComponent buildRootComponent() {
+     StandardServletServiceAdapterComponent root = new StandardServletServiceAdapterComponent();
+
+     //Configure the child components, service widgets using setter injection
+     //...
+
+     return root;
+   }
+}</programlisting>
+      And one can then use such a servlet to configure Aranea in a web application:
+      <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC 
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <listener>
+    <listener-class>
+      org.araneaframework.servlet.core.StandardSessionListener
+    </listener-class>
+  </listener>
+
+   <servlet>
+      <servlet-name>araneaServlet</servlet-name>
+      <servlet-class>
+        org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>araneaServlet</servlet-name>
+      <url-pattern>/main</url-pattern>
+   </servlet-mapping>
+</web-app>]]></programlisting>
+      This will map Aranea to the web application URL ending in "/main". <literal>org.araneaframework.servlet.core.StandardSessionListener</literal> is an Aranea session listener that is needed for successful widget deinitialization.
+      </para>
+
+      <para>
+        Aranea also includes several ready dispatcher servlets, which configure the root component without the need for subclassing. They are described in the next section <xref linkend="framework-configuration"/>
+      </para>
     </sect2>
-	</sect1>
-	<sect1>
-		<title>Framework configuration</title>
+  </sect1>
+  
+  <sect1 id="framework-configuration">
+    <title>Configuration</title>
+     
+    <para>
+      Aranea uses Spring to wire the independent components into a working framework. Though other IoC containers and configuration frameworks would also work we support Spring by default since it provides a very comfortable and versatile syntax for configuring beans. The dispatcher servlet that uses Spring is called <literal>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</literal>.
+    </para>
+     
+    TODO: describe servlet init parameters
+     
+      <para>
+        The simplest way to configure Aranea for a web application is to set the <literal>araneaApplicationStart</literal> init parameter of the dispatcher servlet to the starting widget or flow of the application:
+      <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC 
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <listener>
+    <listener-class>
+      org.araneaframework.servlet.core.StandardSessionListener
+    </listener-class>
+  </listener>
+   
+   <servlet>
+      <servlet-name>araneaServlet</servlet-name>
+      <servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+      <init-param>
+        <param-name>araneaApplicationStart</param-name>
+        <param-value>example.StartWidget</param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   
+   <servlet-mapping>
+      <servlet-name>araneaServlet</servlet-name>
+      <url-pattern>/main</url-pattern>
+   </servlet-mapping>  
+</web-app>]]></programlisting>
+      This configuration will load Aranea using <literal>example.StartWidget</literal> as the application starting point.
+      </para>
+
+      <para>
+        Alternatively one can also specify a Spring configuration file (that should be located in <literal>/WEB-INF/aranea-conf.xml</literal>), which can also be used to configure Aranea. Particularly it may be used to set the starting widget instead of the init-parameter:
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>   
+    <bean id="araneaApplicationStart" 
+      class="example.StartWidget"  
+      singleton="false"/>
+</beans>]]></programlisting>        
+      This seems to be more verbose, but it also allows to override Aranea filters:
+<programlisting><![CDATA[<bean class="example.LocalizationFilterService" 
+  id="araneaLocalizationFilter" singleton="false">
+  <property name="languageName" value="ee"/>
+</bean>]]></programlisting>        
+      as well as adding one's own. 
+      </para>
+
+      TODO: describe existing Aranea filters and where new ones can be added (currently one can see /etc/default-aranea-conf.xml in Aranea distribution).
+
+      <para>
+        Aranea configuration defaults can be completely overidden by specifying a "araneaApplicationRoot" bean that will serve as the root component of the whole application.
+      </para>
+
+  </sect1>
+
+  <sect1>
+  	<title>Extensions</title>
+
+	<sect2>
+		<title>External resources</title>
+
+		<para>
+			External resources, such as javascript, style and image files of Aranea components are managed through different configuration files.
+			The resources are listed in XML files and can be accessed through <literal>StandardServletFileImportFilterService</literal>. This approach
+			makes it possible to package all the resources into the aranea <literal>jar</literal> archives and no manual copying of necessary files to
+			fixed locations is needed.
+		</para>
+
+		<para>
+			Aranea comes bundled with a <literal>aranea-resources.xml</literal> file which defines all the external resources.
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<files content-type="text/css" group="defaultStyles">
+		<file path="styles/_styles_global.css"/>
+		...
+		<file path="styles/_styles_screen.css"/>
+	</files>
+
+	<files content-type="image/gif">
+		<file path="gfx/i01.gif"/>
+		...
+		<file path="gfx/i02.gif"/>
+	</files>
+	...
+</resources>
+]]></programlisting>        
+		
+		All the files listed in the configuration files are allowed to be loaded through the <literal>FileImportFilter</literal>. Some are grouped
+		by name to provide an easy access for reading files in bulk.
+		</para>
+
+		<para>
+		To <emphasis>override</emphasis> specific files in the configuration file, the new file should be placed in a subdirectory <literal>override</literal>. When loading
+		a file, Aranea first trys to open the file in the  <literal>override</literal>  directory and on failure trys to read the file without the prefix
+		directory.
+		</para>
+
+		<para>
+		To <emphasis>add</emphasis> files to the defined list, construct a configuration file and name it <literal>aranea-resources.xml</literal>. All such configuration
+		files from the classpath are parsed for the resources. If two file groups are defined with the same name, the group is formed by taking a union
+		from the files in the group.
+		</para>
+
+		<para>
+		Groupnames <literal>defaultStyles</literal> and <literal>defaultScripts</literal> are predefined groups for managing the necessary core
+		files that must be included for Aranea to work correctly.
+		</para>
+
+		<para>
+			For custom loading a resource, the URL to use is <literal>/fileimporter/filepath</literal>. The
+			<literal>fileimporter</literal> is 
+			<literal>StandardServletFileImportService.FILE_IMPORTER_NAME</literal> and
+			<literal>filepath</literal> is the path that is defined for the file in the resource
+			configuration file.
+		</para>
+
+		<para>
+		Extensions of the framework provide their own configuration files for configuring their resources.
+		New extensions cannot be defined right now on the fly.
+		</para>
+	</sect2>
+
+
+  </sect1>
+  
+    <sect1>
+    <title>Components</title>
+
     <sect2>
-      <title>Hosting widgets</title>
+      <title>Core Components</title>
+	<!-- 
+      StandardServletServiceAdapterComponent
+      StandardSessionListener  -->
     </sect2>
-	</sect1>
-	<sect1>
-		<title>Exception handling</title>
-	</sect1>
+    
+    <sect2>
+      <title>Routers</title>
+      
+      <sect3>
+        <title>BaseServiceRouterService, StandardTopServiceRouterService and StandardThreadServiceRouterService</title>
+      </sect3>
+		<!--  
+      PathInfoServiceRouterService
+      StandardServletSessionRouterService -->
+    </sect2>
+    
+    <sect2>
+      <title>Filters</title>
+      
+      &popupfilter;
+      
+<!--  
+      StandardContextMapFilterWidget
+      StandardContinuationFilterService
+      StandardCriticalExceptionHandlingFilterService
+      StandardLocalizationFilterService
+      StandardMessagingFilterWidget
+      StandardSerializingAuditFilterService
+      StandardStatisticFilterService
+      StandardSynchronizingFilterService
+      StandardTransactionFilterWidget
+      StandardJspFilterService
+      StandardPopupFilterWidget
+      StandardServletFileImportFilterService
+      StandardServletFileUploadFilterService
+      StandardServletHttpFilterService -->
+    </sect2>
+    
+    <sect2>
+      <title>Containers</title>
+<!-- 
+      StandardFlowContainerWidget
+      ExceptionHandlingFlowContainerWidget
+      StandardServiceAdapterWidget
+      StandardServiceContainerService
+      StandardViewPortWidget
+      StandardWidgetAdapterService
+      StandardWidgetContainerWidget
+      PathInfoServiceContainerService -->
+    </sect2>
+    
+    <sect2>
+      <title>Other</title>
+    </sect2>
+  </sect1>
+
+  <!-- sect1>
+  <sect1>
+    <title>Exception Handling</title>
+  </sect1-->
 </chapter>

@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import org.apache.log4j.Logger;
+import org.araneaframework.core.util.ExceptionUtil;
 
 
 /**
@@ -28,14 +28,13 @@ import org.apache.log4j.Logger;
  */
 public class DefaultResultSetColumnReader implements ResultSetColumnReader {
   
-  private static Logger log = Logger.getLogger(DefaultResultSetColumnReader.class);
-
   protected static final ResultSetColumnReader instance = new DefaultResultSetColumnReader();
   
   /**
    * Tries to read the same type as is given in the <code>javaType</code>.
    */
-  public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType) throws SQLException {        
+  public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType){
+    try {
     if (resultSet.getObject(columnName) == null)
       return null;
     
@@ -57,14 +56,16 @@ public class DefaultResultSetColumnReader implements ResultSetColumnReader {
     if (java.sql.Date.class.isAssignableFrom(javaType))
       return resultSet.getDate(columnName);        
     
-    if (java.util.Date.class.isAssignableFrom(javaType)) {
-    	java.sql.Date date = resultSet.getDate(columnName);
-      return date == null ? null : new java.util.Date(date.getTime());
-    }
+	if (java.util.Date.class.isAssignableFrom(javaType))
+		return new java.util.Date(resultSet.getTimestamp(columnName).getTime());
     
     if (String.class.isAssignableFrom(javaType))
       return resultSet.getString(columnName);
     
+    }
+    catch (SQLException e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
     throw new RuntimeException("Could not read column '" + columnName + "' with Java type '" + javaType + "' from the ResultSet!");
   }
 

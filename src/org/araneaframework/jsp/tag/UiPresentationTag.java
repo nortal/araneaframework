@@ -28,35 +28,49 @@ import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
  * 
  * @author Oleg Mürk
  */
-public class UiPresentationTag extends UiBaseTag implements
-		UiAttributedTagInterface {
+public class UiPresentationTag extends UiBaseTag implements UiAttributedTagInterface {
+	protected String style = null;
 	protected String styleClass = null;
-	protected Map attributes;
+	protected String baseStyleClass = null;
 
-	protected int before(Writer out) throws Exception {
-		super.before(out);
-
-		// Register
-		pushAttribute(UiAttributedTagInterface.ATTRIBUTED_TAG_KEY_REQUEST, this,
-				PageContext.REQUEST_SCOPE);
-
-		// Continue
+	protected Map attributes = new HashMap();
+	
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
+		addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY, this);
+		addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, null);
 		return EVAL_BODY_INCLUDE;
 	}
-
-	protected void init() {
-		super.init();
-		attributes = new HashMap();
+	
+	public void setPageContext(PageContext pageContext) {
+		super.setPageContext(pageContext);
 	}
 
 	/**
 	 * Callback: add attribute.
 	 */
 	public void addAttribute(String name, String value) throws JspException {
-		attributes.put(name, evaluate("value", value, Object.class));
+		if (value == null)
+			attributes.remove(name);
+		else
+			attributes.put(name, evaluate("value", value, Object.class));
 	}
 
-	// Styles 
+	// Styles
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false" 
+	 *   description = "Inline style for HTML tag."
+	 */
+	public void setStyle(String style) throws JspException {
+		this.style = (String) evaluate("style", style, String.class);
+	}
+	
+	public String getStyle() throws JspException {
+		return this.style;
+	}
+	
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -71,7 +85,17 @@ public class UiPresentationTag extends UiBaseTag implements
 	/**
 	 * Callback: get default css class for tag or <code>null</code>.
 	 */
-	protected String getStyleClass()  {
-		return styleClass;
+	protected String getStyleClass() throws JspException  {
+		StringBuffer result = new StringBuffer();
+		if (baseStyleClass != null) {
+			result.append(baseStyleClass);
+			if (styleClass != null)
+				result.append(" ");
+		}
+		if (styleClass != null) {
+			result.append(styleClass);
+		}
+
+		return result.length() == 0 ? null : result.toString();
 	}
 }

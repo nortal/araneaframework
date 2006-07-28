@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
@@ -36,70 +36,61 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
  *   description = "Form radio button, represents one item from UiLib "MultiSelectControl"."
  */
 public class UiStdFormCheckboxMultiSelectItemTag extends UiFormElementBaseTag {
+	protected String value;
 
-	protected void init() {
-		super.init();
-		value = null;
-		styleClass = "aranea-multi-checkbox";
+	{
+		baseStyleClass = "aranea-multi-checkbox";
 	}
-  
-  //
-  // Attributes
-  //  
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "The value of this radio button that will be submitted with form if this radio button is selected." 
-	 */
-	public void setValue(String value) throws JspException  {
-	  this.value = (String)evaluateNotNull("value", value, String.class);
-	}
-  
-  //
-  // Implementation
-  //  
-            
-	protected int after(Writer out) throws Exception {
+	
+	protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("MultiSelectControl");		
-		
+
 		// Prepare
 		String name = this.getScopedFullFieldId(); 		
 		MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
-		
+
 		if (viewModel.getSelectItemByValue(value) == null) 
 			throw new UiException("Value '" + value + "' not found in values list.");
-		
+
 		UiUtil.writeOpenStartTag(out, "input");
 		UiUtil.writeAttribute(out, "name", name);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeAttribute(out, "type", "checkbox");
 		UiUtil.writeAttribute(out, "label", localizedLabel);
 		UiUtil.writeAttribute(out, "value", value);
 		UiUtil.writeAttribute(out, "tabindex", tabindex);
-		
+
 		if (viewModel.isDisabled() || viewModel.getSelectItemByValue(value).isDisabled())
 			UiUtil.writeAttribute(out, "disabled", "true");
-		
+
 		if (viewModel.getValueSet().contains(value))
 			UiUtil.writeAttribute(out, "checked", "true");
-		
+
 		UiUtil.writeAttributes(out, attributes);
-		
+
 		if (events && viewModel.isOnChangeEventRegistered())
-			this.writeEventAttributeForUiEvent(out, "onclick", id, "onChanged", validateOnEvent, "",
+			this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onChanged", validateOnEvent, "",
 					updateRegionNames);
-		
+
 		UiUtil.writeCloseStartEndTag_SS(out);
-		
+
 		// Continue
-		super.after(out);
+		super.doEndTag(out);
 		return EVAL_PAGE;
 	}
-  
-  protected String value;
+
+
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "The value of this checkbox that will be submitted with form if this checkbox is selected." 
+	 */
+	public void setValue(String value) throws JspException  {
+		this.value = (String)evaluateNotNull("value", value, String.class);
+	}
 }
 
 

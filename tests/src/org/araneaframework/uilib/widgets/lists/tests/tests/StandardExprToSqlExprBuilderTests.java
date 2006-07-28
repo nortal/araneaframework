@@ -69,7 +69,6 @@ public class StandardExprToSqlExprBuilderTests extends TestCase {
 		catch (Exception e) {
 			fail("Casting into SqlValueExpression failed");
 		}
-		
 	}
 
 }
