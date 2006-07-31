@@ -53,7 +53,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
 
   protected StandardThreadCloningFilterService(Service childService, boolean freshChildren) {
-    /* if childs are not fresh (they are clones) childs may not be re-inited */
+    /* if children are not fresh (they are clones) they may not be re-inited */
     this.initializeChildren = freshChildren;
     if (freshChildren)
       setChildService(childService);
