@@ -20,9 +20,10 @@ import java.io.Serializable;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
+import org.araneaframework.framework.filter.StandardMountPointFilterService;
 
 /**
- * This context allows to <i>mount</i> specific pathes, so that when user requests an URL matching this path it would 
+ * This context allows to <i>mount</i> specific pathes, so that when user requests an URI matching this path it would 
  * show him predefined use case. The context uses a message factory instead of any concrete component factory, so that
  * arbitrary actions could be done on the underlying component hierarchy.
  * <p> 
@@ -35,23 +36,53 @@ import org.araneaframework.OutputData;
  * the <code>3331</code> will be passed as the suffix to the message factory and may be used to show the particular client. 
  * 
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * 
+ * @see StandardMountPointFilterService
  */
 public interface MountContext extends Serializable {
   /**
-   * Mounts a message factory to the specified URL path prefix. All requests to pathes matching this prefix 
+   * Mounts a message factory to the specified URI prefix. All requests to pathes matching this prefix 
    * will cause the {@link MessageFactory} to be called and the built {@link Message} to be sent.
    * <p>
    * In case several prefixes match the current path the most specific one will be used.
    * 
-   * @param pathPrefix The prefix of the path that will be matched aginst the current URL.
+   * @param input Input data representing the current HTTP request.
+   * @param uriPrefix The prefix of the URI that will be matched aginst the current URL.
    * @param messageFactory The factory that should produce the message used to 
    * 
-   * @return The assembled URL pointing to the mounted path prefix.
+   * @return The assembled full URL pointing to the mounted path prefix.
+   * 
+   * @see #getMountURL(InputData, String)
    */
-  public String mount(InputData input, String pathPrefix, MessageFactory messageFactory);
+  public String mount(InputData input, String uriPrefix, MessageFactory messageFactory);
   
-  public void unmount(String pathPrefix);
-  public String getMountURL(InputData input, String pathPrefix);
+  /**
+   * Unmounts the message factory from the specified URI prefix.
+   * 
+   * @param uriPrefix Mounted URI prefix.
+   */
+  public void unmount(String uriPrefix);
+  
+  
+  /**
+   * Returns an assembled full URL pointing to the mounted URI prefix. 
+   * URL can be further modified by appending the path or query parameters.
+   * 
+   * @param input Input data representing the current HTTP request.
+   * @param uriPrefix Mounted URI prefix.
+   * @return The assembled full URL pointing to the mounted path prefix.
+   */
+  public String getMountURL(InputData input, String uri);
+  
+  /**
+   * Returns the {@link Message} that applies the mounted action corresponding to the current URL. 
+   * Used primarily by the {@link StandardMountPointFilterService} or similar services to <i>mount</i> the application state
+   * correspondimng to the URL.
+   * 
+   * @param input Input data representing the current HTTP request.
+   * @return The {@link Message} corresponding to the current mounted URL or <code>null</code>. 
+   */
+  public Message getMountedMessage(InputData input);  
 
   public interface MessageFactory {
     /**

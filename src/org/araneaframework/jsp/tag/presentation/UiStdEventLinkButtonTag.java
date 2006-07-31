@@ -17,8 +17,19 @@
 package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.jsp.JspException;
+import org.araneaframework.OutputData;
+import org.araneaframework.core.StandardWidget;
+import org.araneaframework.framework.container.StandardWidgetContainerWidget;
+import org.araneaframework.framework.router.StandardThreadServiceRouterService;
+import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.servlet.ThreadCloningContext;
+import org.araneaframework.servlet.util.ClientStateUtil;
+import org.araneaframework.servlet.util.URLUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -33,13 +44,17 @@ public class UiStdEventLinkButtonTag extends UiEventButtonBaseTag {
      baseStyleClass = "aranea-link-button";
   }
   protected int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);          
-
+    super.doStartTag(out);
+    
+    StringBuffer url = getRequestURL();
+    Map parameters = getParameterMap();
+    parameters.put(ThreadCloningContext.CLONING_REQUEST_KEY, "true");
+    
     UiUtil.writeOpenStartTag(out, "a");
     UiUtil.writeAttribute(out, "id", id);
     UiUtil.writeAttribute(out, "class", getStyleClass());
     UiUtil.writeAttribute(out, "style", getStyle());
-    UiUtil.writeAttribute(out, "href", "javascript:");
+    UiUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
     if (eventId != null)
       UiStdWidgetCallUtil.writeEventAttributeForEvent(
           pageContext,
@@ -63,5 +78,19 @@ public class UiStdEventLinkButtonTag extends UiEventButtonBaseTag {
     UiUtil.writeEndTag_SS(out, "a"); 
     super.doEndTag(out);
     return EVAL_PAGE;
-  }  
+  }
+  
+  protected Map getParameterMap() throws JspException {
+    OutputData output = (OutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
+    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
+    Object threadId = state.get(StandardThreadServiceRouterService.THREAD_SERVICE_KEY);
+
+    Map result = new HashMap();
+    result.put(StandardThreadServiceRouterService.THREAD_SERVICE_KEY, threadId);
+    result.put(StandardWidgetContainerWidget.EVENT_PATH_KEY, contextWidgetId);
+    result.put(StandardWidget.EVENT_HANDLER_ID_KEY, eventId);
+    result.put(StandardWidget.EVENT_PARAMETER_KEY, eventParam);
+    
+    return result;
+  }
 }

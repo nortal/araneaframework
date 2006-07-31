@@ -19,12 +19,9 @@ package org.araneaframework.example.main.web.misc;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.MessageSeries;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.message.LoginAndMenuSelectMessage;
-import org.araneaframework.example.main.message.LoginMessage;
-import org.araneaframework.example.main.message.MenuSelectMessage;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.servlet.ServletOutputData;
 

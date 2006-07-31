@@ -22,7 +22,7 @@ public class SpringLocalizationFilterService extends StandardLocalizationFilterS
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final String SPRING_LOCALIZATION_CONTEXT_KEY = "ee.pria.web.framework.filter.SpringLocalizationFilterService";
+	public static final String SPRING_LOCALIZATION_CONTEXT_KEY = "org.araneaframework.ioc.spring.SpringLocalizationFilterService";
 	
 	public MessageSource getMessageSource() {
 		return (WebApplicationContext) getEnvironment().getEntry(WebApplicationContext.class);

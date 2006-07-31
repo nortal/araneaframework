@@ -34,8 +34,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  */
 public class UiStdFormTextInputBaseTag extends UiFormElementBaseTag {
   protected Long size;
-  public static final String defaultOnChangePrecondition = "DEFAULT";
-  protected String onChangePrecondition = defaultOnChangePrecondition;
+  protected String onChangePrecondition;
 
   {
     baseStyleClass = "aranea-text";
@@ -106,12 +105,16 @@ public class UiStdFormTextInputBaseTag extends UiFormElementBaseTag {
       // We use "onblur" to simulate the textbox's "onchange" event
       // this is _not_ good, but there seems to be no other way
       UiUtil.writeAttribute(out, "onfocus", "saveValue(this)");
-      if (onChangePrecondition.equals(defaultOnChangePrecondition)) 
+      if (onChangePrecondition == null)
     	  onChangePrecondition = "return isChanged('" + name + "');";
       this.writeEventAttributeForUiEvent(out, "onblur", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
           updateRegionNames);
     }
     UiUtil.writeAttributes(out, attributes);
     UiUtil.writeCloseStartEndTag_SS(out);
+  }
+
+  public void doFinally() {
+    onChangePrecondition = null;
   }
 }

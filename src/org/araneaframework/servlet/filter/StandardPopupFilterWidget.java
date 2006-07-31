@@ -114,7 +114,32 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
     
-    log.debug("Popup service with identifier '" + threadId + "' was registered.");
+    log.debug("Popup service with identifier '" + threadId + "' was created.");
+    return threadId;
+  }
+  
+  public String openMounted(final String url, final PopupWindowProperties properties) {
+    final String threadId = getRandomServiceId();
+
+    Service service = threadServiceFactory.buildService(getEnvironment());
+    startThreadPopupService(threadId, service);
+
+    open(url  + "?" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=" + threadId, properties);
+    
+    //add new, not yet opened popup to popup map
+    popups.put(threadId, new PopupServiceInfo() {
+      public PopupWindowProperties getPopupProperties() {
+        return properties;
+      }
+
+      public String toURL() {
+        //XXX: Should I use something more generic here?
+        return url  + "?" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=" + threadId;
+      }
+    });
+    allPopups.put(threadId, popups.get(threadId));
+    
+    log.debug("Popup service with identifier '" + threadId + "' was created for mounted URL '" + url + "'.");
     return threadId;
   }
   
@@ -243,30 +268,37 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
   public static class StandardPopupServiceInfo implements PopupServiceInfo {
     private String topServiceId;
-    private String threadId;
-    private PopupWindowProperties popupProperties;
-    
+    private String threadServiceId;
     private String requestUrl;
-    
+    private PopupWindowProperties popupProperties;
+
     public StandardPopupServiceInfo(String topServiceId, String threadId, PopupWindowProperties popupProperties, String requestUrl) {
       this.topServiceId = topServiceId;
-      this.threadId = threadId;
-      this.popupProperties = popupProperties;
+      this.threadServiceId = threadId;
       this.requestUrl = requestUrl;
+      this.popupProperties = popupProperties;
     }
 
-    public PopupWindowProperties getPopupProperties() {
-      return popupProperties;
+    public String getTopServiceId() {
+      return topServiceId;
+    }
+
+    public String getThreadServiceId() {
+      return threadServiceId;
     }
 
     public String toURL() {
       StringBuffer url = new StringBuffer(requestUrl != null ? requestUrl : "");
       url.append('?').append((StandardTopServiceRouterService.TOP_SERVICE_KEY + "=")).append(topServiceId);
-      if (threadId != null) {
+      if (threadServiceId != null) {
         url.append("&" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=");
-        url.append(threadId);
+        url.append(threadServiceId);
       }
       return url.toString();
+    }
+
+    public PopupWindowProperties getPopupProperties() {
+      return popupProperties;
     }
   }
 }
