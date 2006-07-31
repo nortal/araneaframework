@@ -31,6 +31,11 @@ import java.util.ResourceBundle;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public interface LocalizationContext extends Serializable {
+  /**
+   * The key under which this {@link org.araneaframework.framework.LocalizationContext} is registered under OutputData.
+   */
+  public static final String LOCALIZATION_CONTEXT_KEY = "org.araneaframework.ioc.spring.SpringLocalizationFilterService";
+
   public Locale getLocale();
   public void setLocale(Locale locale);
   

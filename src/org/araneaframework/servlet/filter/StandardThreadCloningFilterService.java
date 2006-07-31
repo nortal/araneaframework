@@ -34,8 +34,6 @@ import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.framework.router.StandardThreadServiceRouterService;
-import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.ThreadCloningContext;
 import org.araneaframework.servlet.util.URLUtil;
@@ -54,10 +52,10 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     super();
   }
 
-  protected StandardThreadCloningFilterService(Service childService, boolean freshChilds) {
+  protected StandardThreadCloningFilterService(Service childService, boolean freshChildren) {
     /* if childs are not fresh (they are clones) childs may not be re-inited */
-    this.initializeChildren = freshChilds;
-    if (freshChilds)
+    this.initializeChildren = freshChildren;
+    if (freshChildren)
       setChildService(childService);
     else
       super.setChildService(childService);
@@ -124,8 +122,8 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   
   protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
     Map m = new HashMap();
-    m.put(StandardTopServiceRouterService.TOP_SERVICE_KEY, topServiceId);
-    m.put(StandardThreadServiceRouterService.THREAD_SERVICE_KEY, threadServiceId);
+    m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
+    m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     return URLUtil.parametrizeURI(url, m);
   }
 

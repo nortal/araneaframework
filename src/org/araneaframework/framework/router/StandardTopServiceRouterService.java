@@ -31,17 +31,12 @@ import org.araneaframework.framework.TopServiceContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardTopServiceRouterService extends BaseServiceRouterService {
-  /**
-   * The key of the top-service's id in the request.
-   */
-  public static final String TOP_SERVICE_KEY = "topServiceId";
-  
   protected Object getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get(TOP_SERVICE_KEY);
+    return input.getGlobalData().get(TopServiceContext.TOP_SERVICE_KEY);
   }
   
   protected Object getServiceKey() throws Exception {
-    return TOP_SERVICE_KEY;
+    return TopServiceContext.TOP_SERVICE_KEY;
   }
 
   protected Environment getChildEnvironment(Object serviceId) throws Exception {

@@ -22,9 +22,12 @@ import java.io.Serializable;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public interface TemplateMenuContext extends Serializable {
-	/**
-	 * Selects (activates) the requested menu item.
-	 * @param menuItemPath
-	 */
-	public void selectMenuItem(String menuItemPath) throws Exception;
+  public static final String MENU_VIEWDATA_KEY = "menu";
+  public static final String MENU_SELECT_EVENT_KEY = "menuSelect";
+
+  /**
+   * Selects (activates) the requested menu item.
+   * @param menuItemPath
+   */
+  public void selectMenuItem(String menuItemPath) throws Exception;
 }

@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.StandardService;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.container.StandardWidgetContainerWidget;
-import org.araneaframework.framework.filter.StandardTransactionFilterWidget;
-import org.araneaframework.framework.router.StandardThreadServiceRouterService;
-import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
@@ -60,9 +60,9 @@ public class UiStdFormAutoCompleteTextInputTag extends UiStdFormValidatingTextIn
   protected StringBuffer constructACUrl(String systemFormId) {
     StringBuffer result = new StringBuffer();
     result.append("document.").append(systemFormId).append(".action + \"?");
-    result.append(constructServiceParameter(systemFormId, StandardTopServiceRouterService.TOP_SERVICE_KEY)).append(" + \"").append('&');
-    result.append(constructServiceParameter(systemFormId, StandardTransactionFilterWidget.TRANSACTION_ID_KEY)).append(" + \"").append('&');
-    result.append(constructServiceParameter(systemFormId, StandardThreadServiceRouterService.THREAD_SERVICE_KEY)).append(" + \"").append('&');
+    result.append(constructServiceParameter(systemFormId, TopServiceContext.TOP_SERVICE_KEY)).append(" + \"").append('&');
+    result.append(constructServiceParameter(systemFormId, TransactionContext.TRANSACTION_ID_KEY)).append(" + \"").append('&');
+    result.append(constructServiceParameter(systemFormId, ThreadContext.THREAD_SERVICE_KEY)).append(" + \"").append('&');
     result.append(StandardWidgetContainerWidget.ACTION_PATH_KEY).append('=').append(getScopedFullFieldId()).append('&');
     result.append(StandardService.ACTION_ID_ATTRIBUTE).append('=').append(AutoCompleteTextControl.LISTENER_NAME).append('&');
     result.append(getScopedFullFieldId()).append(".__present=true\"");

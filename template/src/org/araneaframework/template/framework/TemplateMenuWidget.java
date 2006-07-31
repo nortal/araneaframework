@@ -27,9 +27,6 @@ import org.araneaframework.uilib.core.MenuItem;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerWidget implements TemplateMenuContext {
-	public static final String MENU_VIEWDATA_KEY = "menu";
-	public static final String MENU_SELECT_EVENT_KEY = "menuSelect";
-	
 	protected MenuItem menu;  
 	
 	// CONSTRUCTOR 
@@ -37,8 +34,8 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
 		super(topWidget);
 		
 		menu = buildMenu();
-		addEventListener(TemplateMenuWidget.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
-		putViewData(TemplateMenuWidget.MENU_VIEWDATA_KEY, menu);
+		addEventListener(TemplateMenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
+		putViewData(TemplateMenuContext.MENU_VIEWDATA_KEY, menu);
 	}
 	
 	// MENU SELECTION LISTENER

@@ -49,7 +49,6 @@ import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
   private static final Logger log = Logger.getLogger(StandardJspFilterService.class);
-  public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.jsp.aranea.filter.UiAraneaJspConfigurationFilterService.JspConfiguration";
   protected static TldLocationsCache tldLocationsCache;
 
   // URI -> Map<TagInfo>
@@ -92,13 +91,13 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    output.pushAttribute(JSP_CONFIGURATION_KEY, new JspConfiguration());
+    output.pushAttribute(JspContext.JSP_CONFIGURATION_KEY, new JspConfiguration());
     
     try {
       super.action(path, input, output);
     }
     finally {
-      output.popAttribute(JSP_CONFIGURATION_KEY);
+      output.popAttribute(JspContext.JSP_CONFIGURATION_KEY);
     }
   }
   

@@ -38,11 +38,6 @@ import org.araneaframework.servlet.util.ClientStateUtil;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardTransactionFilterWidget extends BaseFilterWidget implements TransactionContext {
-  /**
-   * The key in the request, under which is the transaction id.
-   */
-  public static final String TRANSACTION_ID_KEY = "transactionId";
-  
   private static final Logger log = Logger.getLogger(StandardTransactionFilterWidget.class);  
   private TransactionHelper transHelper;
   
@@ -103,15 +98,15 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    */
   protected void render(OutputData output) throws Exception {
     transHelper.resetTransactionId();
-    output.pushAttribute(TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId());
-    ClientStateUtil.put(TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId()+"", output);
+    output.pushAttribute(TransactionContext.TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId());
+    ClientStateUtil.put(TransactionContext.TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId()+"", output);
     
 	try {
 	    log.debug("New transaction id '" + getTransactionId() + "'.");
 	    childWidget._getWidget().render(output);
     }
     finally {
-      output.popAttribute(TRANSACTION_ID_KEY);
+      output.popAttribute(TransactionContext.TRANSACTION_ID_KEY);
     }
   }
 
@@ -127,6 +122,6 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    * Extracts the transaction id from the input's global data with the key TRANSACTION_ID_KEY.
    */
   protected Object getTransactionId(InputData input) throws Exception {
-    return input.getGlobalData().get(TRANSACTION_ID_KEY);
+    return input.getGlobalData().get(TransactionContext.TRANSACTION_ID_KEY);
   }
 }

@@ -20,7 +20,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.StandardWidget;
-import org.araneaframework.framework.filter.StandardTransactionFilterWidget;
+import org.araneaframework.framework.TransactionContext;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -42,7 +42,7 @@ public class MockEventfulStandardWidget extends StandardWidget {
   private Long transactionId;
   
   public void render(OutputData output) {
-    transactionId = (Long)output.getAttribute(StandardTransactionFilterWidget.TRANSACTION_ID_KEY);
+    transactionId = (Long)output.getAttribute(TransactionContext.TRANSACTION_ID_KEY);
     
     this.renderCalled = true;
   }

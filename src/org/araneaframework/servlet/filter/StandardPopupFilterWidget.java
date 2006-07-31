@@ -36,8 +36,6 @@ import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
-import org.araneaframework.framework.router.StandardThreadServiceRouterService;
-import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.servlet.PopupServiceInfo;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.ServletInputData;
@@ -124,7 +122,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     Service service = threadServiceFactory.buildService(getEnvironment());
     startThreadPopupService(threadId, service);
 
-    open(url  + "?" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=" + threadId, properties);
+    open(url  + "?" + ThreadContext.THREAD_SERVICE_KEY + "=" + threadId, properties);
     
     //add new, not yet opened popup to popup map
     popups.put(threadId, new PopupServiceInfo() {
@@ -134,7 +132,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
       public String toURL() {
         //XXX: Should I use something more generic here?
-        return url  + "?" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=" + threadId;
+        return url  + "?" + ThreadContext.THREAD_SERVICE_KEY + "=" + threadId;
       }
     });
     allPopups.put(threadId, popups.get(threadId));
@@ -289,9 +287,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
     public String toURL() {
       StringBuffer url = new StringBuffer(requestUrl != null ? requestUrl : "");
-      url.append('?').append((StandardTopServiceRouterService.TOP_SERVICE_KEY + "=")).append(topServiceId);
+      url.append('?').append((TopServiceContext.TOP_SERVICE_KEY + "=")).append(topServiceId);
       if (threadServiceId != null) {
-        url.append("&" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=");
+        url.append("&" + ThreadContext.THREAD_SERVICE_KEY + "=");
         url.append(threadServiceId);
       }
       return url.toString();

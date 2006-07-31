@@ -33,8 +33,6 @@ import org.araneaframework.servlet.util.URLUtil;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardServletMountingFilterService extends BaseFilterService implements MountContext {
-  public static final String MOUNT_PATH = "/mount/";
-  
   private Map mounts = new HashMap();    
   
   public String mount(InputData input, String pathPrefix, MessageFactory messageFactory) {
@@ -59,7 +57,7 @@ public class StandardServletMountingFilterService extends BaseFilterService impl
     url.append(req.getServerPort());
     url.append(req.getContextPath());
     url.append(req.getServletPath());
-    url.append(MOUNT_PATH);
+    url.append(MountContext.MOUNT_PATH);
     url.append(URLUtil.normalizeURI(pathPrefix));    
     return url.toString();    
   }
@@ -86,14 +84,14 @@ public class StandardServletMountingFilterService extends BaseFilterService impl
       for (Iterator i = mounts.keySet().iterator(); i.hasNext();) {
         String mountPrefix = (String) i.next();      
                       
-        if (pathInfo.startsWith(MOUNT_PATH + mountPrefix) && (mountPrefix.length() > maxPrefix.length())) 
+        if (pathInfo.startsWith(MountContext.MOUNT_PATH + mountPrefix) && (mountPrefix.length() > maxPrefix.length())) 
           maxPrefix = mountPrefix;
       }
       
       if (maxPrefix.length() > 0) {
         MessageFactory mountFactory = (MessageFactory) mounts.get(maxPrefix);
         
-        int fullPrefixLength = MOUNT_PATH.length() + maxPrefix.length();
+        int fullPrefixLength = MountContext.MOUNT_PATH.length() + maxPrefix.length();
         String suffix = fullPrefixLength < pathInfo.length() ? pathInfo.substring(fullPrefixLength + 1) : null;
         
         return mountFactory.buildMessage(
