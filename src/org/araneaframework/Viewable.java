@@ -32,7 +32,7 @@ public interface Viewable extends Serializable {
   public Interface _getViewable();
 
   interface Interface extends Serializable {
-    public Object getViewModel() throws Exception;
+    public Object getViewModel();
   }
   
   /**

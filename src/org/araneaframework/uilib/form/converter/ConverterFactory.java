@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
+import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.ConverterKey;
 
 /**
@@ -63,7 +64,7 @@ public class ConverterFactory implements ConverterProvider {
     converters.put(new ConverterKey("Timestamp", "Date"), new TimestampToDateConverter());
 
     //Long -> Type
-    converters.put(new ConverterKey("Long", "Boolean"), new ReverseConverter(new BooleanToLongConverter()));
+    converters.put(new ConverterKey("Long", "Boolean"), new ReverseConverter(new BooleanToLongConverter()));    
   }
 
   /**

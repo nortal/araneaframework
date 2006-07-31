@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root 
-	xmlns:jsp="http://java.sun.com/JSP/Page" 
-	xmlns:c="http://java.sun.com/jstl/core" version="1.2">
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="1.2">
 	<jsp:directive.page contentType="text/html; charset=UTF-8"/>
 	
 	<html>
@@ -9,7 +8,7 @@
 		<body>
 			<form action="main/hello">
 				What is your name? <input name="name" type="text"/><br/>
-				<input type="submit"/>
+				<input type="submit" value="Say hello"/>
 			</form>
 		</body>
 	</html>
