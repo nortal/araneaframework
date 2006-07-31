@@ -60,7 +60,3 @@ public class UiStdLinkButtonTag extends UiButtonBaseTag {
     return EVAL_PAGE;      
   }
 }
-
-
-
-

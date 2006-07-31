@@ -17,21 +17,15 @@
 package org.araneaframework.servlet;
 
 import java.io.Serializable;
-import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
- * Encapsulates info about popup window properties and URL where 
- * servicing session-thread lives.
+ * Service that clones currently running session thread upon request and sends a response
+ * that redirects to cloned session thread. It can be used to support "open link in new
+ * window" feature in browsers.
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo
  */
-public interface PopupServiceInfo extends Serializable {
-  /**
-   * @return popup service's info translated into String containing URL style parameters. 
-   */
-  public String toURL();
-  /**
-   * @return popup service's window properties. 
-   */  
-  public PopupWindowProperties getPopupProperties();
+public interface ThreadCloningContext extends Serializable {
+  /** key indicating that incoming request is requesting cloning of the current session thread */
+  public static final String CLONING_REQUEST_KEY = "pleaseClone";
 }

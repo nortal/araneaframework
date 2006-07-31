@@ -23,7 +23,6 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.Relocatable;
 import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.ServiceFactory;

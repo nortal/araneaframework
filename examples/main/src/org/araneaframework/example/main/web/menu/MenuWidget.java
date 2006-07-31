@@ -102,39 +102,39 @@ public class MenuWidget extends TemplateMenuWidget  {
 		
     // Another way of adding menuitems is available
     MenuItem sampleMenu = result.addMenuItem(new MenuItem("Demos")); {
-      sampleMenu.addMenuItem(new MenuItem("#Simple"));
-      sampleMenu.addMenuItem("#Simple", new MenuItem("Simple_Form", SimpleFormWidget.class));
-      sampleMenu.addMenuItem("#Simple", new MenuItem("Simple_List", SimpleListWidget.class));
-      sampleMenu.addMenuItem("#Simple", new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
-      sampleMenu.addMenuItem("#Simple", new MenuItem("#Invisible element form", InvisibleElementFormWidget.class));
-      sampleMenu.addMenuItem("#Simple", new MenuItem("#Popup example", SamplePopupWidget.class));
-      sampleMenu.addMenuItem("#Simple", new MenuItem("#MultiSelect", DemoMultiSelect.class));
+      sampleMenu.addMenuItem(new MenuItem("Simple"));
+      sampleMenu.addMenuItem("Simple", new MenuItem("Simple_Form", SimpleFormWidget.class));
+      sampleMenu.addMenuItem("Simple", new MenuItem("Simple_List", SimpleListWidget.class));
+      sampleMenu.addMenuItem("Simple", new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
+      sampleMenu.addMenuItem("Simple", new MenuItem("Invisible_Element_Form", InvisibleElementFormWidget.class));
+      sampleMenu.addMenuItem("Simple", new MenuItem("Popup_Example", SamplePopupWidget.class));
+      sampleMenu.addMenuItem("Simple", new MenuItem("MultiSelect", DemoMultiSelect.class));
       
-      MenuItem advDemos = sampleMenu.addMenuItem(new MenuItem("#Advanced"));
-      sampleMenu.addMenuItem("#Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
-      sampleMenu.addMenuItem("#Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
-      sampleMenu.addMenuItem("#Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
-      advDemos.addMenuItem(new MenuItem("#AutoComplete", DemoAutoCompletionWidget.class));
+      MenuItem advDemos = sampleMenu.addMenuItem(new MenuItem("Advanced"));
+      sampleMenu.addMenuItem("Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
+      sampleMenu.addMenuItem("Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
+      sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
+      advDemos.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
       
-      sampleMenu.addMenuItem(new MenuItem("#Form lists"));
-      sampleMenu.addMenuItem("#Form lists", new MenuItem("Display_Form", DemoDisplayForm.class));
-      sampleMenu.addMenuItem("#Form lists", new MenuItem("Editable_List", DemoFormList.class));
-      sampleMenu.addMenuItem("#Form lists", new MenuItem("In_memory_editable_list", DemoInMemoryEditableList.class));
-      sampleMenu.addMenuItem("#Form lists", new MenuItem("Editable_checkbox_list", DemoCheckboxList.class));
-      sampleMenu.addMenuItem("#Form lists", new MenuItem("Displayable_editable_list", DemoDisplayableEditableList.class));
-      sampleMenu.addMenuItem("#Form lists", new MenuItem("#Embedded form list", DemoEmbeddedDisplayableEditableList.class));
+      MenuItem formListMenu = sampleMenu.addMenuItem(new MenuItem("Form_Lists"));
+      formListMenu.addMenuItem(new MenuItem("Display_Form", DemoDisplayForm.class));
+      formListMenu.addMenuItem(new MenuItem("Editable_List", DemoFormList.class));
+      formListMenu.addMenuItem(new MenuItem("In_memory_editable_list", DemoInMemoryEditableList.class));
+      formListMenu.addMenuItem(new MenuItem("Editable_checkbox_list", DemoCheckboxList.class));
+      formListMenu.addMenuItem(new MenuItem("Displayable_editable_list", DemoDisplayableEditableList.class));
+      formListMenu.addMenuItem(new MenuItem("Embedded_Form_List", DemoEmbeddedDisplayableEditableList.class));
       
       
-      sampleMenu.addMenuItem(new MenuItem("#Lists"));
-      sampleMenu.addMenuItem("#Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
-      sampleMenu.addMenuItem("#Lists", new MenuItem("Multi_List", MultiListWidget.class));         
+      sampleMenu.addMenuItem(new MenuItem("Lists"));
+      sampleMenu.addMenuItem("Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
+      sampleMenu.addMenuItem("Lists", new MenuItem("Multi_List", MultiListWidget.class));         
     } 
     
-    MenuItem errorMenu = result.addMenuItem(new MenuItem("#Misc")); {
+    MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
       errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("Error_on_event", EventErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("Error_on_render", RenderErrorWidget.class));
-      errorMenu.addMenuItem(new MenuItem("#Redirecting", RedirectingWidget.class));
+      errorMenu.addMenuItem(new MenuItem("Redirecting", RedirectingWidget.class));
     }   
 		
 		return result;

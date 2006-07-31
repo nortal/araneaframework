@@ -242,6 +242,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <title>Filters</title>
       
       &popupfilter;
+      &threadcloningfilter;
       
 <!--  
       StandardContextMapFilterWidget

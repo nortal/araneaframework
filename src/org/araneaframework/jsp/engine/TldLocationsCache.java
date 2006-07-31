@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.engine;
 
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -26,7 +25,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
@@ -37,8 +35,6 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.jsp.engine.xml.ParserUtils;
 import org.araneaframework.jsp.engine.xml.TreeNode;
-import org.springframework.core.CollectionFactory;
-import org.springframework.util.ResourceUtils;
 
 /**
  * A container for all tag libraries that are defined "globally"

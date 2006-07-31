@@ -142,3 +142,32 @@ function setFormEncoding(formName, encoding) {
   document.forms[formName].enctype = encoding;
   document.forms[formName].encoding = encoding; // IE
 }
+
+//--------------- Scroll position saving/restoring --------------//
+function saveScrollCoordinates(form) {
+	var x, y;
+  
+	if (document.documentElement && document.documentElement.scrollTop) {
+		// IE 6
+		x = document.documentElement.scrollLeft;
+		y = document.documentElement.scrollTop;
+	} else if (document.body) {
+		// IE 5
+		x = document.body.scrollLeft;
+		y = document.body.scrollTop;
+	} else {
+		// Netscape, Mozilla, Firefox etc
+		x = window.pageXOffset;
+		y = window.pageYOffset;
+	}
+	
+	// alert("x = " + x + "; y = " + y);
+	
+	form.windowScrollX.value = x;
+	form.windowScrollY.value = y;
+} 
+
+function scrollToCoordinates(x, y) {
+	// alert("x = " + x + "; y = " + y);
+	window.scrollTo(x, y);
+} 

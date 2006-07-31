@@ -36,7 +36,6 @@ public class UiStdFormNumberInputTag extends UiStdFormTextInputBaseTag {
   {
     size = null;
     baseStyleClass = "aranea-number";
-    onChangePrecondition = "return true;";
   }
 
   protected int doEndTag(Writer out) throws Exception {

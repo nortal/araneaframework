@@ -53,7 +53,11 @@ public abstract class StringArrayRequestControl extends BaseControl {
    */
   public void addOnChangeEventListener(OnChangeEventListener onChangeEventListener) {
     eventHelper.addOnChangeEventListener(onChangeEventListener);
-  }   
+  }
+  
+  public void clearOnChangeEventListeners() {
+    eventHelper.clearOnChangeEventListeners();
+  }
   
   //*********************************************************************
   //* INTERNAL METHODS
