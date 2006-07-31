@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.include;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
@@ -35,16 +34,16 @@ public class UiIncludeBaseTag extends UiBaseTag implements UiAttributedTagInterf
   // Implementation
   //
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
-    pushAttribute(UiPresentationTag.ATTRIBUTED_TAG_KEY_REQUEST, this, PageContext.REQUEST_SCOPE);
+    addContextEntry(UiPresentationTag.ATTRIBUTED_TAG_KEY, this);
     
     // Continue
     return EVAL_BODY_INCLUDE;   
   }  
  
   public void addAttribute(String name, String value) throws JspException {
-    this.pushAttribute(name, this.evaluate("attributeValue", value, Object.class), PageContext.REQUEST_SCOPE);
+    this.addContextEntry(name, this.evaluate("attributeValue", value, Object.class));
   }
 }
