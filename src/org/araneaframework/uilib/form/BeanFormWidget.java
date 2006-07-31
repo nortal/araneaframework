@@ -16,16 +16,14 @@
 
 package org.araneaframework.uilib.form;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.commons.lang.ArrayUtils;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.uilib.form.control.Control;
-import org.araneaframework.uilib.form.data.Data;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
 import org.araneaframework.uilib.form.reader.BeanFormWriter;
 
 public class BeanFormWidget extends FormWidget {
+  private static final String[] primitiveTypes = new String[] {"int", "long", "short", "double", "float", "boolean", "byte", "char"};
   private BeanMapper beanMapper;
   private Class beanClass;
   
@@ -34,11 +32,30 @@ public class BeanFormWidget extends FormWidget {
     this.beanMapper = new BeanMapper(beanClass);
   }
   
-  private Data inferDataType(String fieldId) {
+  private Data inferDataType(String fieldId, boolean mandatory) {
     if (!beanMapper.fieldExists(fieldId))
       throw new AraneaRuntimeException("Could not infer type for bean field '" + fieldId + "'!");
 
-    return new Data(beanMapper.getBeanFieldType(fieldId));
+    Class type = beanMapper.getBeanFieldType(fieldId);
+    
+    if (type.isPrimitive()) {
+      if (!mandatory) 
+        throw new AraneaRuntimeException("Form element '" + fieldId +"' corresponding to JavaBean's primitive-typed field was not specified as mandatory.");
+
+      switch(ArrayUtils.indexOf(primitiveTypes, type.getName())) {
+        case 0: { type = Integer.class; break; }
+        case 1: { type = Long.class; break; }
+        case 2: { type = Short.class; break; }
+        case 3: { type = Double.class; break; }
+        case 4: { type = Float.class; break; }
+        case 5: { type = Boolean.class; break; }
+        case 6: { type = Byte.class; break; }
+        case 7: { type = Character.class; break; }
+        default : throw new AraneaRuntimeException("Could not infer type for bean field '" + fieldId + "'!");
+      }
+    }
+    
+    return new Data(type);
   }
   
   public BeanFormWidget addBeanSubForm(String id) throws Exception {
@@ -51,11 +68,11 @@ public class BeanFormWidget extends FormWidget {
   }
   
   public FormElement addBeanElement(String elementName, String labelId, Control control, boolean mandatory) throws Exception {
-    return super.addElement(elementName, labelId, control, inferDataType(elementName), mandatory);
+    return super.addElement(elementName, labelId, control, inferDataType(elementName, mandatory), mandatory);
   }  
   
   public FormElement addBeanElement(String elementName, String labelId, Control control, Object initialValue, boolean mandatory) throws Exception {
-    return super.addElement(elementName, labelId, control, inferDataType(elementName), initialValue, mandatory);
+    return super.addElement(elementName, labelId, control, inferDataType(elementName, mandatory), initialValue, mandatory);
   }
   
   public Object readBean(Object bean) {

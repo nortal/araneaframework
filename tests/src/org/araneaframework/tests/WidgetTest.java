@@ -17,9 +17,8 @@
 package org.araneaframework.tests;
 
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
 import org.araneaframework.Widget;
-import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -43,16 +42,13 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * 
  */
 public class WidgetTest extends TestCase {
-
-  private static Logger log = Logger.getLogger(WidgetTest.class);
-
   boolean eventsWork = false;
 
   private FormWidget makeUsualForm() throws Exception {
 
     //Creating form :-)
     FormWidget testForm = new FormWidget();
-    testForm._getComponent().init(new MockEnviroment());
+    testForm._getComponent().init(new MockEnvironment());
     
     //Adding elements to form
     testForm.addElement("myCheckBox", "my checkbox", new CheckboxControl(), new BooleanData(), true);
@@ -86,7 +82,6 @@ public class WidgetTest extends TestCase {
     
     MockHttpServletRequest validRequest = new MockHttpServletRequest();
 
-    validRequest.addParameter("testForm.__present", "true");
     validRequest.addParameter("testForm.myCheckBox", "true");
     validRequest.addParameter("testForm.myLongText", "108");
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
