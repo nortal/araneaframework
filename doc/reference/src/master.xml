@@ -13,6 +13,7 @@
 	
 	
 	<!ENTITY popupfilter 	 SYSTEM "framework/components/filters/StandardPopupFilterWidget.xml">
+	<!ENTITY threadcloningfilter 	 SYSTEM "framework/components/filters/StandardThreadCloningFilterService.xml">
 ]>
 
 <!--

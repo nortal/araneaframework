@@ -16,7 +16,7 @@
 
 package org.araneaframework.servlet;
 
-import org.araneaframework.framework.util.ServiceInfo;
+import java.io.Serializable;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 
 /**
@@ -25,7 +25,11 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
  * 
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public interface PopupServiceInfo extends ServiceInfo {
+public interface PopupServiceInfo extends Serializable {
+  /**
+   * @return popup service's info translated into String containing URL style parameters. 
+   */
+  public String toURL();
   /**
    * @return popup service's window properties. 
    */  

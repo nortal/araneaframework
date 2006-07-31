@@ -17,6 +17,8 @@
 
 package org.araneaframework.uilib.core;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -28,12 +30,12 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
-import org.araneaframework.framework.util.ServiceInfo;
-import org.araneaframework.framework.util.StandardServiceInfo;
+import org.araneaframework.framework.router.StandardThreadServiceRouterService;
+import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.servlet.PopupWindowContext;
-import org.araneaframework.servlet.ServletInputData;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.service.WindowClosingService;
+import org.araneaframework.servlet.util.URLUtil;
 
 /**
  * Wrapper around the flow that is started from new session-thread. It pretends
@@ -79,19 +81,12 @@ public class PopupFlowWrapperWidget extends StandardWidget implements FlowContex
       // close the session-thread serving popupflow
       getOpenerPopupContext().close(threadCtx.getCurrentId().toString());
 
-      String randomId = RandomStringUtils.randomAlphanumeric(12);
-      threadCtx.addService(randomId, new WindowClosingService());
-
-      ServiceInfo threadInfo = 
-        new StandardServiceInfo(
-            (String)topCtx.getCurrentId(), 
-            randomId,
-            ((ServletInputData)getCurrentInput()).getRequest().getRequestURL().toString());
-
+      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
       // popup window is closed with redirect to a page that closes current window and reloads parent.
-      ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(threadInfo.toURL());
+      threadCtx.addService(rndThreadId, new WindowClosingService());
+      ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), rndThreadId));
     } catch (Exception e) {
-          ExceptionUtil.uncheckException(e);
+      ExceptionUtil.uncheckException(e);
     }
   }
 
@@ -133,6 +128,17 @@ public class PopupFlowWrapperWidget extends StandardWidget implements FlowContex
     return (FlowContext) getEnvironment().getEntry(FlowContext.class);
   }
   
+  protected String getRequestURL() {
+    return URLUtil.getServletRequestURL(getCurrentInput());
+  }
+  
+  protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
+    Map m = new HashMap();
+    m.put(StandardTopServiceRouterService.TOP_SERVICE_KEY, topServiceId);
+    m.put(StandardThreadServiceRouterService.THREAD_SERVICE_KEY, threadServiceId);
+    return URLUtil.parametrizeURI(url, m);
+  }
+  
   private FlowContext getOpenerFlowContext() {
     PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment()
         .getEntry(PopupWindowContext.class);
@@ -141,16 +147,10 @@ public class PopupFlowWrapperWidget extends StandardWidget implements FlowContex
         .getChildEnvironment().getEntry(FlowContext.class);
   }
   
-  /**
-   * @return
-   */
   protected PopupWindowContext getPopupContext() {
     return (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
   }
 
-  /**
-   * @return
-   */
   protected PopupWindowContext getOpenerPopupContext() {
     return (PopupWindowContext)((CustomWidget)getPopupContext().getOpener()).getChildEnvironment().getEntry(PopupWindowContext.class);
   }

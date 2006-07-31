@@ -18,7 +18,8 @@ package org.araneaframework.servlet.filter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
@@ -33,15 +34,15 @@ import org.araneaframework.core.StandardRelocatableServiceDecorator;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.framework.util.ServiceInfo;
-import org.araneaframework.framework.util.StandardServiceInfo;
-import org.araneaframework.servlet.ServletInputData;
+import org.araneaframework.framework.router.StandardThreadServiceRouterService;
+import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.ThreadCloningContext;
+import org.araneaframework.servlet.util.URLUtil;
 
 /**
- * Filter that clones session threads upon requests. Should always be configured as the first thread-level
- * filter.
+ * Filter that clones session threads upon requests and redirects request to cloned session thread. Should 
+ * always be configured as the first thread-level filter.
  * 
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
@@ -105,9 +106,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     clone._getService().action(path, input, output);
     
     // redirect to URL where cloned service resides
-    ServiceInfo serviceInfo = 
-        new StandardServiceInfo((String)topCtx.getCurrentId(), cloneServiceId, getRequestURL());
-    ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(serviceInfo.toURL());
+    ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), cloneServiceId));
   }
 
   protected void init() throws Exception {
@@ -120,7 +119,14 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
   
   protected String getRequestURL() {
-    return ((HttpServletRequest)((ServletInputData)getCurrentInput()).getRequest()).getRequestURL().toString();
+    return URLUtil.getServletRequestURL(getCurrentInput());
+  }
+  
+  protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
+    Map m = new HashMap();
+    m.put(StandardTopServiceRouterService.TOP_SERVICE_KEY, topServiceId);
+    m.put(StandardThreadServiceRouterService.THREAD_SERVICE_KEY, threadServiceId);
+    return URLUtil.parametrizeURI(url, m);
   }
 
   protected ThreadContext getThreadServiceCtx() {

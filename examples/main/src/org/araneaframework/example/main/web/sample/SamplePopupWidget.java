@@ -16,18 +16,10 @@
 
 package org.araneaframework.example.main.web.sample;
 
-import org.apache.log4j.Logger;
-import org.araneaframework.InputData;
-import org.araneaframework.Message;
-import org.araneaframework.OutputData;
-import org.araneaframework.core.MessageSeries;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.message.LoginAndMenuSelectMessage;
-import org.araneaframework.example.main.message.LoginMessage;
-import org.araneaframework.example.main.message.MenuSelectMessage;
 import org.araneaframework.example.main.message.PopupMessageFactory;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.framework.MountContext;
 import org.araneaframework.servlet.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 
@@ -35,7 +27,6 @@ import org.araneaframework.uilib.core.PopupFlowWidget;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class SamplePopupWidget extends TemplateBaseWidget {
-	private static final Logger log = Logger.getLogger(SamplePopupWidget.class);
 	String title;
 	int count = 1;
 	

@@ -17,14 +17,14 @@
 package org.araneaframework.jsp.tag.presentation;  
 
 import java.io.Writer;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.OutputData;
 import org.araneaframework.jsp.tag.UiPresentationTag;
 import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.jsp.util.UiWidgetUtil;
-import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.servlet.util.URLUtil;
 
 /**
  * Button base tag.
@@ -87,12 +87,8 @@ public class UiSimpleButtonBaseTag extends UiPresentationTag {
   }
   
   public StringBuffer getRequestURL() throws JspException {
-    ServletOutputData output = (ServletOutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
-    StringBuffer sb = ((HttpServletRequest)output.getRequest()).getRequestURL();
+    OutputData output = (OutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
+    StringBuffer sb = new StringBuffer(URLUtil.getServletRequestURL(output.getInputData()));
     return sb;
   }
 }
-
-
-
-

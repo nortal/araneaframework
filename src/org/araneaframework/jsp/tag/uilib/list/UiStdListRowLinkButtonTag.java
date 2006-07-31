@@ -48,10 +48,6 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-	    OutputData output = (OutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
-	    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
-	    Object threadId = state.get(StandardThreadServiceRouterService.THREAD_SERVICE_KEY);
-		
 	    Map parameters = getParameterMap();
 	    StringBuffer url = getRequestURL();
 	    

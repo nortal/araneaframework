@@ -21,13 +21,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.servlet.ServletInputData;
-import org.araneaframework.servlet.filter.StandardServletFileImportService;
 
 /**
  * 
@@ -83,7 +79,19 @@ public class URLUtil {
     return sb.toString();
   }
   
-  public String getURL(InputData input) {
+  /**
+   * Returns request URL up to the servlet name.
+   * 
+   * This is an utility method alike to <code>HttpServletRequest.getRequestURL</code>, but returned URL 
+   * only contains only protocol, server name, port number, web application context path,
+   * and servlet path. Query string parameters are ignored and so is everything after servlet path. 
+   * As URL might be simulated by {@link org.araneaframework.framework.MountContext} this method
+   * should usually be used instead of <code>getRequestURL</code>.
+   * 
+   * @param input request data
+   * @return request URL up to the servlet name.
+   */
+  public static String getServletRequestURL(InputData input) {
     HttpServletRequest req = ((ServletInputData) input).getRequest();
 
     StringBuffer url = new StringBuffer();
@@ -94,6 +102,6 @@ public class URLUtil {
     url.append(req.getServerPort());
     url.append(req.getContextPath());
     url.append(req.getServletPath());
-    return url.toString();    
+    return url.toString();
   }
 }

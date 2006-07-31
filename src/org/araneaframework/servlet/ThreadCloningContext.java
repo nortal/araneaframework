@@ -19,6 +19,10 @@ package org.araneaframework.servlet;
 import java.io.Serializable;
 
 /**
+ * Service that clones currently running session thread upon request and sends a response
+ * that redirects to cloned session thread. It can be used to support "open link in new
+ * window" feature in browsers.
+ * 
  * @author Taimo Peelo
  */
 public interface ThreadCloningContext extends Serializable {

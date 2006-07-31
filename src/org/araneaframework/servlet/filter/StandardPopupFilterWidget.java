@@ -38,7 +38,6 @@ import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.framework.router.StandardThreadServiceRouterService;
 import org.araneaframework.framework.router.StandardTopServiceRouterService;
-import org.araneaframework.framework.util.StandardServiceInfo;
 import org.araneaframework.servlet.PopupServiceInfo;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.ServletInputData;
@@ -242,12 +241,35 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     }
   }
 
-  public static class StandardPopupServiceInfo extends StandardServiceInfo implements PopupServiceInfo {
+  public static class StandardPopupServiceInfo implements PopupServiceInfo {
+    private String topServiceId;
+    private String threadServiceId;
+    private String requestUrl;
     private PopupWindowProperties popupProperties;
 
     public StandardPopupServiceInfo(String topServiceId, String threadId, PopupWindowProperties popupProperties, String requestUrl) {
-      super(topServiceId, threadId, requestUrl);
+      this.topServiceId = topServiceId;
+      this.threadServiceId = threadId;
+      this.requestUrl = requestUrl;
       this.popupProperties = popupProperties;
+    }
+
+    public String getTopServiceId() {
+      return topServiceId;
+    }
+
+    public String getThreadServiceId() {
+      return threadServiceId;
+    }
+
+    public String toURL() {
+      StringBuffer url = new StringBuffer(requestUrl != null ? requestUrl : "");
+      url.append('?').append((StandardTopServiceRouterService.TOP_SERVICE_KEY + "=")).append(topServiceId);
+      if (threadServiceId != null) {
+        url.append("&" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=");
+        url.append(threadServiceId);
+      }
+      return url.toString();
     }
 
     public PopupWindowProperties getPopupProperties() {
