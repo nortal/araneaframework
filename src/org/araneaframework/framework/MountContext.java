@@ -40,7 +40,9 @@ import org.araneaframework.framework.filter.StandardMountPointFilterService;
  * @see StandardMountPointFilterService
  */
 public interface MountContext extends Serializable {
-  /**
+  public static final String MOUNT_PATH = "/mount/";
+
+/**
    * Mounts a message factory to the specified URI prefix. All requests to pathes matching this prefix 
    * will cause the {@link MessageFactory} to be called and the built {@link Message} to be sent.
    * <p>

@@ -96,7 +96,7 @@
       <list>
         <ref bean="araneaThreadCloningService"/>
         <ref bean="araneaSynchronizingFilter"/>
-        <ref bean="araneaMountPointFilter"/>                
+        <ref bean="araneaMountPointFilter"/>
         <ref bean="araneaContinuationFilter"/> 
         <ref bean="araneaAjaxFilterService"/>
         <ref bean="responseHeaderFilter"/>

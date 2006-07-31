@@ -30,8 +30,6 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
-import org.araneaframework.framework.router.StandardThreadServiceRouterService;
-import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.servlet.PopupWindowContext;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.service.WindowClosingService;
@@ -134,8 +132,8 @@ public class PopupFlowWrapperWidget extends StandardWidget implements FlowContex
   
   protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
     Map m = new HashMap();
-    m.put(StandardTopServiceRouterService.TOP_SERVICE_KEY, topServiceId);
-    m.put(StandardThreadServiceRouterService.THREAD_SERVICE_KEY, threadServiceId);
+    m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
+    m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     return URLUtil.parametrizeURI(url, m);
   }
   

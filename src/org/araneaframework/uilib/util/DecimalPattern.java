@@ -6,7 +6,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 
 /**
- * @author <a href="mailto:rein@webmedia.ee>Rein Raudjärv</a>
+ * @author <a href="mailto:rein@webmedia.ee">Rein Raudjärv</a>
  */
 public class DecimalPattern implements Serializable {
 	private String pattern;

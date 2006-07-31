@@ -27,6 +27,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.framework.container.StandardWidgetContainerWidget;
 import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.servlet.JspContext;
 import org.araneaframework.servlet.filter.StandardJspFilterService;
 import org.araneaframework.servlet.util.ClientStateUtil;
 
@@ -52,7 +53,7 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
 
     config = 
       (StandardJspFilterService.JspConfiguration) output.getAttribute(
-          StandardJspFilterService.JSP_CONFIGURATION_KEY);
+          JspContext.JSP_CONFIGURATION_KEY);
 
     super.doStartTag(out);
     

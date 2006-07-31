@@ -31,13 +31,8 @@ import org.araneaframework.framework.ThreadContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardThreadServiceRouterService extends BaseServiceRouterService {
-  /**
-   * The key of the thread-service's id in the request.
-   */
-  public static final String THREAD_SERVICE_KEY = "threadServiceId";
-  
   protected Object getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get(THREAD_SERVICE_KEY);
+    return input.getGlobalData().get(ThreadContext.THREAD_SERVICE_KEY);
   }
 
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
@@ -53,6 +48,6 @@ public class StandardThreadServiceRouterService extends BaseServiceRouterService
   }
 
   protected Object getServiceKey() throws Exception {
-    return THREAD_SERVICE_KEY;
+    return ThreadContext.THREAD_SERVICE_KEY;
   }
 }

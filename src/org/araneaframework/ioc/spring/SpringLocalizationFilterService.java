@@ -4,11 +4,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
-import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.filter.StandardLocalizationFilterService;
 import org.springframework.context.MessageSource;
@@ -16,13 +12,10 @@ import org.springframework.context.support.MessageSourceResourceBundle;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
- * @author <a href="mailto:rein@webmedia.ee>Rein Raudjärv</a>
+ * @author <a href="mailto:rein@webmedia.ee">Rein Raudjärv</a>
  */
 public class SpringLocalizationFilterService extends StandardLocalizationFilterService implements SpringLocalizationContext {
-	
 	private static final long serialVersionUID = 1L;
-	
-	public static final String SPRING_LOCALIZATION_CONTEXT_KEY = "org.araneaframework.ioc.spring.SpringLocalizationFilterService";
 	
 	public MessageSource getMessageSource() {
 		return (WebApplicationContext) getEnvironment().getEntry(WebApplicationContext.class);
@@ -43,19 +36,7 @@ public class SpringLocalizationFilterService extends StandardLocalizationFilterS
 		return new StandardEnvironment(super.getChildEnvironment(), entries);
 	}
 	
-	protected void action(Path path, InputData input, OutputData output) throws Exception {
-		output.pushAttribute(SPRING_LOCALIZATION_CONTEXT_KEY, this);
-		
-		try {
-			super.action(path, input, output);
-		}
-		finally {
-			output.popAttribute(SPRING_LOCALIZATION_CONTEXT_KEY);
-		}
-	}
-	
 	/* Resource Bundle Localization Context */
-	
 	public ResourceBundle getResourceBundle(Locale locale) {
 		return new MessageSourceResourceBundle(getMessageSource(), locale);
 	}

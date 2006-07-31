@@ -25,6 +25,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.framework.LocalizationContext;
@@ -102,5 +105,16 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
 
   public String localize(String key) {
     return getResourceBundle().getString(key);
+  }
+
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+	output.pushAttribute(LOCALIZATION_CONTEXT_KEY, this);
+	
+	try {
+		super.action(path, input, output);
+	}
+	finally {
+		output.popAttribute(LOCALIZATION_CONTEXT_KEY);
+	}
   }
 }

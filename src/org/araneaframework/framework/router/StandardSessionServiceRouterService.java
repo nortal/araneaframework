@@ -31,13 +31,8 @@ import org.araneaframework.framework.SessionServiceContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardSessionServiceRouterService extends BaseServiceRouterService {
-  /**
-   * The key of the service id in the request.
-   */
-  public static final String SESSION_SERVICE_KEY = "sessionServiceId";
-  
   protected Object getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get(SESSION_SERVICE_KEY);
+    return input.getGlobalData().get(SessionServiceContext.SESSION_SERVICE_KEY);
   }
 
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
@@ -53,6 +48,6 @@ public class StandardSessionServiceRouterService extends BaseServiceRouterServic
   }
 
   protected Object getServiceKey() throws Exception {
-    return SESSION_SERVICE_KEY;
+    return SessionServiceContext.SESSION_SERVICE_KEY;
   }
 }

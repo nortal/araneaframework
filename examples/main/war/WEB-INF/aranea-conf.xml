@@ -6,7 +6,7 @@
 		class="org.araneaframework.example.main.web.LoginWidget"
 		singleton="false" />
   
-  <bean class="org.araneaframework.servlet.filter.StandardServletMountFilterService" 
+  <bean class="org.araneaframework.servlet.filter.StandardServletMountingFilterService" 
     id="araneaMountFilter" singleton="false">
     <property name="mounts">
       <map>
