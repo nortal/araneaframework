@@ -26,4 +26,5 @@ import javax.servlet.jsp.JspException;
  */
 public interface UiStyledTagInterface extends UiContainedTagInterface {
 	public void setStyleClass(String styleClass) throws JspException;
+	public void setStyle(String style) throws JspException;
 }

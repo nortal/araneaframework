@@ -12,19 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.template.framework.resource;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
+
 import org.araneaframework.servlet.support.FallbackResourceBundle;
 import org.araneaframework.servlet.support.StringResourceBundle;
-
 
 public class TemplateResourceBundle extends FallbackResourceBundle {
 
 	public TemplateResourceBundle() throws Exception {
-    addResourceBundle(new StringResourceBundle());
-    addResourceBundle(ResourceBundle.getBundle("templateResources"));
-  }
+		setLocale(Locale.ENGLISH);
+
+		addResourceBundle(new StringResourceBundle());
+		addResourceBundle(ResourceBundle.getBundle("resource/template", getLocale()));
+		addResourceBundle(ResourceBundle.getBundle("resource/uilib", getLocale()));
+	}
 }
