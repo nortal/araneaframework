@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.UiBaseTag;
+import org.araneaframework.jsp.tag.UiContainedTagInterface;
 import org.araneaframework.jsp.util.UiUtil;
 
 /**
@@ -33,8 +34,14 @@ import org.araneaframework.jsp.util.UiUtil;
  * 
  * @author Konstantin Tretyakov (kt@webmedia.ee)
  */
-public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
+public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag implements UiContainedTagInterface {
+  protected String defaultKeyCode;
+  protected String intKeyCode;
+  protected String keyCode;
   
+  protected String defaultKey;
+  protected String intKey;
+  protected String key;
   
 	//
 	// Attributes
@@ -62,10 +69,10 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Key, to which the event must be triggered. Key is specified as a certain "alias". The alias may be an
-          ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (" "), or
-          one of the following: "return", "escape", "backspace", "tab", "shift", "control", "space", "f1",
-          "f2", ..., "f12"."
+	 *   description = "Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an
+          ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or
+          one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1',
+          'f2', ..., 'f12'."
 	 */
 	public void setKey(String key) throws JspException {
 		this.key = (String) evaluateNotNull("key", key, String.class);
@@ -79,26 +86,25 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
    * Checks that either keyCode or key is specified (not both), and initializes the keyCode field.
    * When overriding don't forget to invoke superimplementation first.
    */
-	protected int before(Writer out) throws Exception {
-		super.before(out);
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
-		if (!(keyCode == null ^ key == null)) 
+		intKey = (key == null && keyCode == null) ? defaultKey : key;
+		intKeyCode = (key == null && keyCode == null) ? defaultKeyCode : keyCode;
+		
+		if (!(intKeyCode == null ^ intKey == null)) 
 			throw new JspException("Either key or keyCode must be specified for a keyboard handler tag.");
 		
-		if (keyCode == null) {
-			int iKeyCode = keyToKeyCode(key);
+		if (intKeyCode == null) {
+			int iKeyCode = keyToKeyCode(intKey);
 			if (iKeyCode == 0) throw new JspException("Invalid key alias specified (" + key + ")");
-			keyCode = String.valueOf(iKeyCode);
+			intKeyCode = String.valueOf(iKeyCode);
 		}
 		
 		return SKIP_BODY;
 	}
   
-  protected void init() {
-    keyCode = key = null;
-  }
-		
-  /**
+   /**
    * Writes "uiRegisterKeypressHandler" javascript, surrounded by &lt;script&gt tags.
    * Throws exceptions if parameters are not consistent (e.g. keyCode not specified).
    * 
@@ -174,13 +180,4 @@ public abstract class UiKeyboardHandlerBaseTag extends UiBaseTag{
   		keyToKeyCodeMap.put("f" + i, new Integer(111 + i));
   	}
   }
-  
-  
- 
-  // Tag attributes
-  protected String keyCode;
-  protected String key;
-  
-  
-
 }

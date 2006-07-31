@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.framework.core.BaseFilterService;
 
 /**
@@ -35,51 +34,19 @@ import org.araneaframework.framework.core.BaseFilterService;
 public class StandardStatisticFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardStatisticFilterService.class);
   private String namespace;
-  private long requestTime=-1;
-  private long maxAllowedRequestTime=-1;
-  
-  public void setRequestTime(long requestTime) {
-    this.requestTime = requestTime;
-  }
 
   public void setNamespace(String namespace) {
     this.namespace = namespace;
-  }
-
-  public void setMaxAllowedRequestTime(long maxAllowedRequestTime) {
-    this.maxAllowedRequestTime = maxAllowedRequestTime;
-  }
-
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Statistics filter service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Statistics filter service destroyed.");
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     long start = System.currentTimeMillis();
     
     childService._getService().action(path, input, output);
-    requestTime = System.currentTimeMillis() - start;
-    log.info(namespace + ": request took " + requestTime + " ms.");
-    
-    if (maxAllowedRequestTime!=-1 && requestTime>maxAllowedRequestTime) {
-      throw new AraneaRuntimeException("Request processing took longer than allowed. Allowed: <"
-            +maxAllowedRequestTime+"ms Real: "+requestTime+"ms");
-    }
+    log.info(namespace + ": action took " + (System.currentTimeMillis() - start) + " ms.");
   }
     
   public String getNamespace() {
     return namespace;
-  }
-
-  public long getRequestTime() {
-    return this.requestTime;
   }
 }
