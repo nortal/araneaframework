@@ -22,7 +22,7 @@
           <property name="beanId" value="customApplicationFilters"/>
         </bean>
         <ref bean="araneaReadFile"/>   
-        <ref bean="araneaMountFilter"/>            
+        <ref bean="araneaMountingFilter"/>            
       </list>
     </property>
   </bean>  
@@ -96,6 +96,7 @@
       <list>
         <ref bean="araneaThreadCloningService"/>
         <ref bean="araneaSynchronizingFilter"/>
+        <ref bean="araneaMountPointFilter"/>                
         <ref bean="araneaContinuationFilter"/> 
         <ref bean="araneaAjaxFilterService"/>
         <ref bean="responseHeaderFilter"/>
@@ -208,9 +209,13 @@
     id="araneaSynchronizingFilter" singleton="false">
   </bean>
   
-  <bean class="org.araneaframework.servlet.filter.StandardServletMountFilterService" 
-    id="araneaMountFilter" singleton="false">
-  </bean>  
+  <bean class="org.araneaframework.servlet.filter.StandardServletMountingFilterService" 
+    id="araneaMountingFilter" singleton="false">
+  </bean> 
+  
+  <bean class="org.araneaframework.framework.filter.StandardMountPointFilterService" 
+    id="araneaMountPointFilter" singleton="false">
+  </bean>     
   
   <bean class="org.araneaframework.servlet.filter.StandardServletFileUploadFilterService" 
     id="araneaFileUploadFilter" singleton="false">

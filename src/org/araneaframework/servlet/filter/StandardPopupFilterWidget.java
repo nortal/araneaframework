@@ -114,7 +114,32 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
     
-    log.debug("Popup service with identifier '" + threadId + "' was registered.");
+    log.debug("Popup service with identifier '" + threadId + "' was created.");
+    return threadId;
+  }
+  
+  public String openMounted(final String url, final PopupWindowProperties properties) {
+    final String threadId = getRandomServiceId();
+
+    Service service = threadServiceFactory.buildService(getEnvironment());
+    startThreadPopupService(threadId, service);
+
+    open(url  + "?" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=" + threadId, properties);
+    
+    //add new, not yet opened popup to popup map
+    popups.put(threadId, new PopupServiceInfo() {
+      public PopupWindowProperties getPopupProperties() {
+        return properties;
+      }
+
+      public String toURL() {
+        //XXX: Should I use something more generic here?
+        return url  + "?" + StandardThreadServiceRouterService.THREAD_SERVICE_KEY + "=" + threadId;
+      }
+    });
+    allPopups.put(threadId, popups.get(threadId));
+    
+    log.debug("Popup service with identifier '" + threadId + "' was created for mounted URL '" + url + "'.");
     return threadId;
   }
   

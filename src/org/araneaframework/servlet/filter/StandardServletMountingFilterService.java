@@ -23,19 +23,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
-import org.araneaframework.OutputData;
-import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.servlet.ServletInputData;
-import org.araneaframework.servlet.message.SessionMessage;
 import org.araneaframework.servlet.util.URLUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class StandardServletMountFilterService extends BaseFilterService implements MountContext {
+public class StandardServletMountingFilterService extends BaseFilterService implements MountContext {
   public static final String MOUNT_PATH = "/mount/";
   
   private Map mounts = new HashMap();    
@@ -67,7 +64,19 @@ public class StandardServletMountFilterService extends BaseFilterService impleme
     return url.toString();    
   }
   
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
+  protected Environment getChildEnvironment() {
+    return new StandardEnvironment(super.getChildEnvironment(), MountContext.class, this);
+  }
+
+  /**
+   * This setter allows to configure the default mounts using dependency injection. 
+   * It expects as keys the mounting path prefixes and as valued {@link MountContext.MessageFactory}.
+   */
+  public void setMounts(Map mounts) {
+    this.mounts = mounts;
+  }
+
+  public Message getMountedMessage(InputData input) {
     HttpServletRequest req = ((ServletInputData) input).getRequest();
     
     String pathInfo = req.getPathInfo();
@@ -83,29 +92,18 @@ public class StandardServletMountFilterService extends BaseFilterService impleme
       
       if (maxPrefix.length() > 0) {
         MessageFactory mountFactory = (MessageFactory) mounts.get(maxPrefix);
-        Message mountMessage = 
-          mountFactory.buildMessage(
+        
+        int fullPrefixLength = MOUNT_PATH.length() + maxPrefix.length();
+        String suffix = fullPrefixLength < pathInfo.length() ? pathInfo.substring(fullPrefixLength + 1) : null;
+        
+        return mountFactory.buildMessage(
               req.getRequestURL().toString(), 
-              pathInfo.substring(MOUNT_PATH.length() + maxPrefix.length() + 1), 
+              suffix, 
               input, 
-              output);
-
-        new SessionMessage(mountMessage, input, output).send(null, childService);
+              input.getOutputData());
       }
     }
     
-    super.action(path, input, output);
-  }
-  
-  protected Environment getChildEnvironment() {
-    return new StandardEnvironment(super.getChildEnvironment(), MountContext.class, this);
-  }
-
-  /**
-   * This setter allows to configure the default mounts using dependency injection. 
-   * It expects as keys the mounting path prefixes and as valued {@link MountContext.MessageFactory}.
-   */
-  public void setMounts(Map mounts) {
-    this.mounts = mounts;
+    return null;
   }
 }
