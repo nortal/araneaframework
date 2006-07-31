@@ -1,0 +1,58 @@
+<sect3>
+	<title>StandardPopupFilterWidget</title>
+
+	<informaltable frame="all">
+		<tgroup cols="2">
+			<colspec colwidth="2*" />
+			<colspec colwidth="5*" />
+			<tbody>
+				<row>
+					<entry>Implements</entry>
+					<entry>
+						<emphasis>PopupWindowContext</emphasis>
+					</entry>
+				</row>
+				<row>
+					<entry>Depends on</entry>
+					<entry>
+						<literal>ThreadContext</literal>
+						implementation,
+						<literal>TopServiceContext</literal>
+						implementation
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</informaltable>
+    
+    <para>
+        Provides methods for opening new session-threads and renders
+        these in different browser windows at client-side.
+    </para>
+    
+	<informaltable frame="all">
+		<tgroup cols="2">
+			<colspec colwidth="2*" />
+			<colspec colwidth="5*" />
+			<thead>
+				<row>
+					<entry>Injectable property</entry>
+					<entry>Purpose</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry>threadServiceFactory</entry>
+					<entry>
+						<literal>
+							org.araneaframework.core.ServiceFactory
+						</literal>
+						that should build the component chain according
+						to effective Aranea configuration, beginning
+						with sessionthread-level filters.
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</informaltable>
+</sect3>
