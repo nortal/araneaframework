@@ -20,7 +20,7 @@
 				<ui:eventButton eventId="createThread" labelId="#Open popup (create new session thread)."/>
 				<ui:eventButton eventId="openUrl" labelId="#Open some URL (/.)"/>
 				<ui:eventButton eventId="openNewCustomFlow" labelId="#Open interactive popup."/>
-				<ui:eventButton eventId="openMountedUrl" labelId="#Open mounted URL."/>
+				<ui:eventButton eventId="openMountedPopup" labelId="#Open mounted URL."/>
  				<ui:eventButton 
  					eventId="endFlow" 
  					labelId="#End this flow." />
