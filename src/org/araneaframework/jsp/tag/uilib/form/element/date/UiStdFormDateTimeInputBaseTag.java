@@ -141,7 +141,7 @@ public class UiStdFormDateTimeInputBaseTag extends UiFormElementBaseTag {
 	 * As you see, the <code>input</code> tag outputs its ID so that the <code>label</code> tag
 	 * could reference it. 
 	 */
-	// XXX: not used ANYWHERE
+	// XXX: not used ANYWHERE in Aranea classes.
 	protected void writeTimeInput(
 			Writer out, 
 			String id,

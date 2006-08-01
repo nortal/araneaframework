@@ -16,7 +16,7 @@
 		<Call name="addServlet">
 			<Arg>/</Arg>
 			<Arg>
-				org.araneaframework.template.framework.RedirectionServlet
+				org.araneaframework.example.common.framework.RedirectionServlet
 			</Arg>
 			<Call name="setInitParameter">
 				<Arg>webapp-root</Arg>

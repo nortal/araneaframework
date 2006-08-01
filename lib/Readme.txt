@@ -4,6 +4,12 @@ to the respective license; check the respective project distribution/website bef
 any of them in your own applications.
 
 *****************************************************************************
+* ./asm/asm-2.2.1.jar;./asm/asm-attrs.jar
+- ASM (http://asm.objectweb.org/)
+- Required for running the sample application and for generating unittest code coverage.
+*****************************************************************************
+
+*****************************************************************************
 * ./jakarta-regexp/jakarta-regexp-1.2.jar
 - Pure Java Regular Expression package (http://jakarta.apache.org/regexp/)
 - Required by the framework.
@@ -57,6 +63,14 @@ any of them in your own applications.
 *****************************************************************************
 * ./cobertura/cobertura.jar
 - Cobertura - code coverage tool (http://cobertura.sourceforge.net/)
+- Required for generating unittest code coverage.
+*****************************************************************************
+
+*****************************************************************************
+* ./jakarta-oro/jakarta-oro-2.0.8.jar
+- Java classes that provide Perl5 compatible regular expressions, 
+  AWK-like regular expressions, glob expressions, and utility classes for 
+  performing substitutions, splits, filtering filenames, etc.
 - Required for generating unittest code coverage.
 *****************************************************************************
 

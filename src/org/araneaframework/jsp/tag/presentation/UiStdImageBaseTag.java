@@ -18,11 +18,8 @@ package org.araneaframework.jsp.tag.presentation;
 
 import java.io.IOException;
 import java.io.Writer;
-
 import javax.servlet.jsp.JspException;
-
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
  * Standard image base tag.
@@ -44,12 +41,10 @@ public abstract class UiStdImageBaseTag extends UiImageBaseTag {
    * Method to write out image with given properties and default style.
    */ 
   public void writeImage(Writer out, String src, String width, String height, String title) throws JspException, IOException {
-	  src = FileImportUtil.getImportString(src, pageContext.getRequest(), pageContext.getResponse());
 	  writeImage(out, src, width, height, null, getStyleClass(), title);
   }
 
   public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass,  String title) throws JspException, IOException {
-	  src = FileImportUtil.getImportString(src, pageContext.getRequest(), pageContext.getResponse());
 	  writeImage(out, src,width, height, alt, styleClass, title);
   }
 

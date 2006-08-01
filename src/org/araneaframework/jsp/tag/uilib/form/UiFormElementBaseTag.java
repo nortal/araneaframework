@@ -257,7 +257,7 @@ public class UiFormElementBaseTag extends UiPresentationTag implements UiFormEle
 	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
 		//  Enclose the element in a <span id=somerandomid>
 		//  Register this span using javascript
-		String spanId = "form-element-span-" + generateId(pageContext);
+		String spanId = "fe-span-" + generateId(pageContext);
 		String elementName = fullFormId + "." + elementId;
 
 		// Determine whether form element with that id is valid

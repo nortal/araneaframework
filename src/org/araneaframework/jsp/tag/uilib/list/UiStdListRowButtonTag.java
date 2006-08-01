@@ -50,7 +50,8 @@ public class UiStdListRowButtonTag extends UiListRowButtonBaseTag {
           eventId, 
           eventParam, 
           onClickPrecondition,
-          updateRegionNames);       
+          updateRegionNames,
+          false);       
     UiUtil.writeCloseStartTag_SS(out);
 
     return EVAL_BODY_INCLUDE;

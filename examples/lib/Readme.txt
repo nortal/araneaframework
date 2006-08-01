@@ -24,12 +24,6 @@ of them in your own applications.
 *****************************************************************************
 
 *****************************************************************************
-* ./asm/asm-2.2.1.jar;./asm/asm-attrs.jar
-- ASM (http://asm.objectweb.org/)
-- Required for running the sample application.
-*****************************************************************************
-
-*****************************************************************************
 * ./hibernate/hibernate3.jar
 - O/R mapping service for Java (http://www.hibernate.org/)
 - Required for running the sample application.

@@ -20,6 +20,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
@@ -50,7 +51,6 @@ import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
 import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.servlet.util.ServletUtil;
-import org.araneaframework.template.framework.TemplateMenuWidget;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.support.FlowCreator;
 

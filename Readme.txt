@@ -24,8 +24,8 @@ Release contents:
  * "src" contains the Java source files for the framework
  * "etc" contains the accompanying configuration files and web scripts
  * "tests" contains the unit tests of the framework
- * "template" template library for the examples
  * "examples" examples of using the framework
+ * "examples/common" common class library for the examples
  * "doc" documentation of the project
 
 DISTRIBUTION JAR FILES
