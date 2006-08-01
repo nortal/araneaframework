@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
+package org.araneaframework;
 
-package org.araneaframework.core;
 
-public class AraneaFileNotFoundException extends AraneaRuntimeException {
-	public AraneaFileNotFoundException(String msg) {
-		super(msg);
-	}
-	
-	public AraneaFileNotFoundException() {
-		super();
-	}
+/**
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ */
+public class AraneaVersion {
+  public static String getTitle() {
+    return AraneaVersion.class.getPackage().getImplementationTitle();
+  }
+  
+  public static String getVersion() {
+    return AraneaVersion.class.getPackage().getImplementationVersion();
+  }
+  
+  public static void main(String[] args) {
+    System.out.println(getTitle() + " " + getVersion());
+  }
 }
