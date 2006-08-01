@@ -17,7 +17,6 @@
 package org.araneaframework.template.framework.context;
 
 import java.io.Serializable;
-
 import org.araneaframework.Widget;
 
 /**
