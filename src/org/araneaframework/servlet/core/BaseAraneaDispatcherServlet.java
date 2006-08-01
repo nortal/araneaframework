@@ -63,9 +63,7 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
       throw new ServletException(e.getMessage(), e);
     }
     
-    log.info(AraneaVersion.getTitle() + " " + AraneaVersion.getVersion() + " started");    
-    
-    System.out.println(getClass().getClassLoader().getResource("org/araneaframework/AraneaVersion.class"));
+    log.info(AraneaVersion.getTitle() + " " + AraneaVersion.getVersion() + " started");        
   }
   
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
