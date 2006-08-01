@@ -89,20 +89,6 @@ function uiStandardSubmitFormEvent(systemForm, formId, elementId, eventId, event
 }
 
 /**
- * Pops up calendar.
- *
- * @param ititiator - object that initiated the function
- * @param srcObject - input element that contains date to use
- * @param dstObject - input element to store selected date to
- * @param format - date format.
- *
- * @author Oleg M?rk
- */
-function uiPopUpCalendar(initiator, srcObject, dstObject, format, callback) {
-	popUpCalendar(initiator, srcObject, dstObject, format, callback);
-}
-
-/**
  * Adds event invoked by client to clientLoadEvents array.
  * @param event - event that was invoked by client.
  *
@@ -135,7 +121,7 @@ function addSystemUnloadEvent(eventFunction) {
  * @author Maksim Boiko
  */
 function processLoadEvents() {	
-	//process firstly system events 
+  //process firstly system events 
   for(var i=0; i<systemLoadEvents.length; i++) {
   	processEvent(systemLoadEvents[i]);
   }
