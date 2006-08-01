@@ -75,60 +75,7 @@
 
  	 return result;
 }
- 
- /*	Defines up/down key navigation actions on
-	radiobuttons. Works assuming that all
-	radiobutton group button id-s are named like
-	"somePrefix" + parseInt(orderString), where
-	ordering integers are sequential. 
-	If keyCode is not up or down, passes the event
-	forward to uiHandleKeypress.
-	*/
-	function radioButtonOnUpDownKey(event, formElementId) {
-		var e;
-		if (event) { e = event; }  else { e = window.event; }
-        var current = e.target || e.srcElement;
-        
-        // theoretically  should stop the further event propagation...
-        // use onkeypress not onkeydown to prevent IE from
-        // jumping 2 radiobuttons at a time.
-        e.cancelBubble = true;
-        if (e.stopPropagation) e.stopPropagation();
-       
-        if (e.keyCode) {
-            keyCode = e.keyCode; // ie, opera
-        } else if (xDef(e.which)) { keyCode = e.which; } // moz/fb
 
-        // extract the prefix & suffix(integer) from radiobutton ID
-        for (var i = 0; i< current.id.length; i++) {
-            c = current.id.toUpperCase().charAt(i);
-            if (c < 'A' || c > 'Z')
-                break;
-        }
-        var idPrefix = current.id.substring(0,i);
-        var pos = current.id.substring(i);
-
-        // navigate to next button if up/down keys pressed...
-        if (e.keyCode == 40 || e.keyCode == 38) { // DOWN || UP
-            var nextpos = e.keyCode == 40 ? parseInt(pos) + 1 : parseInt(pos) - 1;
-            var nextbutton = document.getElementById(idPrefix + nextpos.toString());
-            if (nextbutton) {
-                unCheckRadioButton(current);
-                checkRadioButton(nextbutton);
-                nextbutton.focus();
-            }
-        } else {
-        	uiHandleKeypress(e, formElementId)
-        }
-    }
-
-    function checkRadioButton(b) {
-        b.checked = true;
-    }
-
-    function unCheckRadioButton(b) {
-        b.checked = false;
-    }
 
  /**
   * Registers a handler for the keypress event.
