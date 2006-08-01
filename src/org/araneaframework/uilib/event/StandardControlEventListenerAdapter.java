@@ -48,6 +48,10 @@ public class StandardControlEventListenerAdapter implements EventListener {
   public void addOnChangeEventListener(OnChangeEventListener onChangeEventListener) {
     onChangeEventListeners.add(onChangeEventListener);
   }
+  
+  public void clearOnChangeEventListeners() {
+    onChangeEventListeners.clear();
+  }
 
   /**
    * Returns whether there are any {@link OnChangeEventListener}s registered.
@@ -77,6 +81,10 @@ public class StandardControlEventListenerAdapter implements EventListener {
    */
   public void addOnClickEventListener(OnClickEventListener onClickEventListener) {
     onClickEventListeners.add(onClickEventListener);
+  }
+  
+  public void clearOnClickEventListeners() {
+    onClickEventListeners.clear();
   }
 
   /**

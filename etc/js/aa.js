@@ -1,5 +1,8 @@
 /*
-Copyright 2005  Vitaliy Shevchuk (shevit@users.sourceforge.net)
+	 The file has been changed extensively.
+	 Copyright 2006  Webmedia Ltd. http://www.webmedia.ee
+	 
+	 Copyright 2005  Vitaliy Shevchuk (shevit@users.sourceforge.net)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -97,7 +100,7 @@ AjaxAnywhere.prototype.submitAJAX = function() {
     this.req.open("POST", url, true);
     this.req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
-    var postData = "&" + this.preparePostData();
+    var postData = "&" + this.preparePostData() + "&updateRegions=" + this.updateRegions;
     this.sendPreparedRequest(postData);
 	return true;
 }
@@ -194,19 +197,9 @@ AjaxAnywhere.prototype.callback = function() {
       text = this.req.responseText;
 			
 			if (this.req.status == 200) {
-				// sess expired got account choosing as response
-				if ( /\/\/CHOOSEACCOUNT/.test(text)
-				     || /\/\/LOGINPAGE/.test(text)) {
-					window.location.href = window.location.href;
-				}
-				else {
-					updateRegions(this.updateRegions, text);
-					updateInfoRegions(text);
-					araneaSystemForm = this.systemForm?this.systemForm:"system_form_0";
-					
-					document.forms[araneaSystemForm].transactionId.value = extractTransactionId(text);			
-				}
+				updateRegions(this.updateRegions, text);
 
+				this.systemForm.transactionId.value = extractTransactionId(text);
 			} 
 			else if (this.req.status == 302) {
 				window.location.href = window.location.href;
@@ -241,7 +234,7 @@ AjaxAnywhere.prototype.showLoadingMessage = function() {
 	        div.style.position = "absolute";
 	        div.style.border = "1 solid black";
 	        div.style.color = "white";
-	        div.style.backgroundColor = "blue";
+	        div.style.backgroundColor = "#e01601";
 	        div.style.width = "100px";
 	        div.style.heigth = "50px";
 	        div.style.fontFamily = "Arial, Helvetica, sans-serif";
@@ -352,11 +345,11 @@ function updateRegions(updateRegions, str) {
 	}
 }
 
-function extractContentsById(elemId, str) {
+function getOpeningTag(elemId, str) {
 	var index = str.indexOf("id=" + '"' + elemId + '"');
 	
 	if (index == -1) {
-		return "";
+		return undefined;
 		//throw "Cannot find update region '" + elemId + "'!";		
 	}
 
@@ -364,81 +357,44 @@ function extractContentsById(elemId, str) {
 	for(var i = index; i > 0; i--) {
 		if (str.charAt(i)=='<') {
 			tmp = /^<([^ ]+) /.exec(str.substr(i));
-			openingTag = tmp[1];
-			break;
+			return tmp[1];
 		}
-	}	
+	}
+
+	return undefined;	
+}
+
+function extractContentsById(elemId, str) {
+	var blockStart = "<!--BEGIN:"+elemId+"-->";
+	var index = str.indexOf(blockStart);
 	
-	var openingTagIndex = str.indexOf(">", index) + 1;		
-	if (openingTagIndex == 0)
-		return false;
+	if (index == -1) {
+		return "";
+		//throw "Cannot find update region '" + elemId + "'!";		
+	}
 
-	var tmp, tmp1, i,j, result = "";
-				
-	// find the closing tag, counting opening tags + closing tags
-	var opening = 1;
-	for (i=openingTagIndex;i<str.length;i++) {			
-		if (str.substr(i,openingTag.length+1)=='<'+openingTag) {	
-			opening++;
-		}
+	var startIndex = index+blockStart.length;
 
-		if (str.substr(i, openingTag.length + 2) == '</'+openingTag) {
-			opening--;		
-		}
-			
-		if (opening == 0) {			
-			return str.substr(openingTagIndex, i-openingTagIndex);
-		}			
-	}		
+	var blockEnd = "<!--END:"+elemId+"-->";
+	index = str.indexOf(blockEnd);
 	
-	return "";
-}	
+	if (index == -1) {
+		return "";
+		//throw "Cannot find update region '" + elemId + "'!";		
+	}
 
-function updateInfoRegions(text) {
-	// find the message region from the text 
-	var errorMessages = extractContentsById('errorMessages', text);
-	var infoMessages = extractContentsById('infoMessages', text);
-	var positiveMessages = extractContentsById('positiveMessages', text);
+	var endIndex = index;
 
-	var targetError = document.getElementById('errorMessages');
-	var targetInfo = document.getElementById('infoMessages');
-	var targetPositive = document.getElementById('positiveMessages');
-
-   if (trim(errorMessages).length>0) {
-      targetError.innerHTML = errorMessages;
-      targetError.className = "visible";
-   }
-   else if (targetError && targetError.className!="hidden") {
-      targetError.innerHTML = '';
-      targetError.className = "hidden";
-   }
-   
-   if (trim(infoMessages).length>0) {
-      targetInfo.innerHTML = infoMessages;
-      targetInfo.className = 'visible';   
-   }
-   else if (targetInfo && targetInfo.className!="hidden"){
-      targetInfo.innerHTML = '';
-      targetInfo.className = 'hidden';   
-   }
-   
-   if (trim(positiveMessages).length>0) {
-      targetPositive.innerHTML = positiveMessages;
-      targetPositive.className = 'visible';   
-   }
-   else if (targetPositive && targetPositive.className!="hidden") {
-      targetPositive.innerHTML = '';
-      targetPositive.className = 'hidden';   
-   }
+	return str.substring(startIndex, endIndex);
 }
 
 function updateRegion(updateRegionId, str) {		
 		extracted = extractContentsById(updateRegionId, str);
 
-	//if (extracted != "") {
     target = document.getElementById(updateRegionId);	
 
-		if (document.all && target) {// && openingTag == "tbody") {
+		if (document.all && target) {
+		// && getOpeningTag(updateRegionId, str) == "tbody"
 			//Emptying <tbody>
 			while( target.firstChild ) {
 				target.removeChild( target.firstChild );
@@ -465,49 +421,21 @@ function updateRegion(updateRegionId, str) {
 	 
 			tempDiv.removeNode(true);			 				 
     }
-    // to be replaced region is not a tbody, just inserting the new html of the region
     else if (target) {
 	  	target.innerHTML = extracted;
 	  }
-	  
 		// execute all the scripts
 		var scripts = extractScripts(extracted);
 		for(var i=0;i<scripts.length;i++) {
-			var script = scripts[i].replace(/uiWidgetContext\(/gm,'uiWidgetContext2(');
+			var script = scripts[i];
 			script = "try{"+script+"}catch(e){alert(e);}";
 			eval(script);
-		}
+		}	  
 }
    
    
 function trim(str) { 
    return str.replace(/^\s+|\s+$/, ''); 
-}
-
-function printString(str) {
-	var result="";
-	// not string, assuming array, this IS a debug function :)
-	if (typeof str.replace == 'undefined') {
-		for(var i=0;i<str.length;i++)
-			result+=str[i]+"\n";
-	}
-	else {
-		result = str.replace(/</mg,'&lt;');
-		result = result.replace(/>/mg,'&gt;');
-	}
-	newWin = window.open('','debug','');	
-	newWin.document.write('<textarea cols=100 rows=50>'+result+'</textarea>');
-}
-
-function printObject(obj) {
-	newWin = window.open('','new','');
-	for (i in obj)
-		newWin.document.write(i+" = '"+eval("obj."+i)+"'<br>");
-}
-
-function printValue(value) {
-	newWin = window.open('','new','');
-	newWin.document.write(value);
 }
 
 // default instance.

@@ -16,7 +16,7 @@
       <ref bean="topServiceRouter" />
     </property>
     <property name="exceptionHandlerFactory">
-    	<bean class="org.araneaframework.template.error.TemplateCriticalErrorHandlerFactory" singleton="false"/>
+    	<bean class="org.araneaframework.example.common.error.TemplateCriticalErrorHandlerFactory" singleton="false"/>
     </property>
   </bean>
 
