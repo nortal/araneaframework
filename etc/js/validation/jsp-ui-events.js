@@ -15,17 +15,13 @@
 **/
 
 /**
- * Jsp-Ui-Events.js
- *
  * Jsp-Ui event handlers.
  * 
- * The functions presented here are invoked from the custom tags of
- * JSP-UI.
+ * The functions presented here are invoked from Aranea JSP tags.
  * Therefore you CAN'T be too liberal with them unless you know what you are doing.
  *
  * Created: 29.12.2004
  * Author: Konstantin Tretyakov.
- *
  * 
  * The general idea here is extremely simple. When an event happens for a certain form element,
  * a certain 'top-level event handler function' defined here is invoked. This handler looks
@@ -37,7 +33,6 @@
  *                                                    for other events)
  *   - subhandler registration routines. (uiRegisterKeypressHandler)
  *   - helper structure for holding registered handlers (UiHandlerRegistry)
- *
  */
  
  // ------------------------------- Keyboard Events ---------------------------------- //
@@ -62,7 +57,7 @@
 	 	 result = uiKeypressHandlerRegistry.invokeHandlers(formElementId, keyCode, event);	 	 
  	 }
  	 catch (e) { 	
- 	 		//Keyboard handler errors may be thrown after AJAX region updates.
+        //Keyboard handler errors may be thrown after AJAX region updates.
  	  	window.status = "Keyboard handler error (non-critical): " + e;
  	 }
  	 
