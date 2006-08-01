@@ -23,7 +23,7 @@
 	
 	<!-- Clean up build system results -->
 	<target name="clean-all" depends="clean"  description="Clean up build system results">
-		<ant dir="template" target="clean" inheritall="false"/>
+		<ant dir="examples/common" target="clean" inheritall="false"/>
 		<ant dir="examples/main" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloWorld" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="clean" inheritall="false"/>
@@ -46,7 +46,7 @@
 	</target>
 	
 	<target name="build-all" depends="build" description="Build the code and examples">
-		<ant dir="template" target="build" inheritall="false"/>
+		<ant dir="examples/common" target="build" inheritall="false"/>
 		<ant dir="examples/main" target="build" inheritall="false"/>	
 		<ant dir="examples/serviceHelloWorld" target="build" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="build" inheritall="false"/>
@@ -255,7 +255,7 @@
 				<include name="tests/**/*"/>
 				<include name="etc/**/*"/>
 				<include name="examples/**/*"/>
-				<include name="template/**/*"/>
+				<include name="examples/common/**/*"/>
 				<include name="tests/**/*"/>
 				<include name="lib/**/*"/>
 				<include name="build.xml"/>
@@ -290,10 +290,10 @@
 			</fileset>     
 		</copy>
 		
-		<mkdir dir="build/tmp/dist/template/dist"/>
+		<mkdir dir="build/tmp/dist/examples/common/dist"/>
 		
-		<copy todir="build/tmp/dist/template/dist">
-			<fileset dir="template/dist">
+		<copy todir="build/tmp/dist/examples/common/dist">
+			<fileset dir="examples/common/dist">
 				<include name="*"/>
 			</fileset>     
 		</copy>
