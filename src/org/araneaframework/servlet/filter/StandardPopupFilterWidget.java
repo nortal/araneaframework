@@ -122,8 +122,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     Service service = threadServiceFactory.buildService(getEnvironment());
     startThreadPopupService(threadId, service);
 
-    open(url  + "?" + ThreadContext.THREAD_SERVICE_KEY + "=" + threadId, properties);
-    
     //add new, not yet opened popup to popup map
     popups.put(threadId, new PopupServiceInfo() {
       public PopupWindowProperties getPopupProperties() {
