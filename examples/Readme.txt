@@ -1,6 +1,8 @@
 This folder contains small standalone web-apps built on Aranea
 framework - examples demonstrating how to use the framework.
 
+* common/
+Contains common classes that are used by various examples. 
 
 * main/
 
