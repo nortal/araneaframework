@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.uilib.form;				
 
 import java.io.Writer;
-import javax.servlet.jsp.PageContext;
+import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.tag.uilib.UiWidgetTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.FormWidget;
@@ -35,35 +35,31 @@ import org.araneaframework.uilib.form.FormWidget;
            Makes available following page scope variables: 
            <ul>
              <li><i>form</i> - UiLib form view model.
-             <li><i>formId</i> - UiLib form id.
            </ul> "
  */
 public class UiFormTag extends UiWidgetTag {
-	public final static String FORM_ID_KEY_REQUEST = "formId";
-	public final static String FORM_SCOPED_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.SCOPED_FULL_ID";
-	public final static String FORM_FULL_ID_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FULL_ID";
-	public final static String FORM_VIEW_MODEL_KEY_REQUEST = "form";
-	public final static String FORM_KEY_REQUEST = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FORM";    
-  
-  //
-  // Implementation
-  //
-  
-	public int before(Writer out) throws Exception {
-		super.before(out);
+	public final static String FORM_SCOPED_FULL_ID_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.SCOPED_FULL_ID";
+	public final static String FORM_FULL_ID_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FULL_ID";
+	public final static String FORM_VIEW_MODEL_KEY = "form";
+	public final static String FORM_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FORM";
+	
+	protected FormWidget.ViewModel formViewModel;
+
+	public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
-		// Get form data		
-		formViewModel = (FormWidget.ViewModel) viewModel;		
+		// Get form data
+		try {
+			formViewModel = (FormWidget.ViewModel) viewModel;
+		} catch (ClassCastException e) {
+			throw new UiException("Could not acquire form view model. <ui:form> should have an id specified or should be in context of real FormWidget.", e);
+		}
 
 		// Set variables
-		pushAttribute(FORM_ID_KEY_REQUEST, id, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_SCOPED_FULL_ID_KEY_REQUEST, scopedFullId, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_FULL_ID_KEY_REQUEST, fullId, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_VIEW_MODEL_KEY_REQUEST, formViewModel, PageContext.REQUEST_SCOPE);
-		pushAttribute(FORM_KEY_REQUEST, widget, PageContext.REQUEST_SCOPE);
-        
-    UiUtil.writeHiddenInputElement(out, scopedFullId + ".__present", "true");        
-		writeJavascript(out);
+		addContextEntry(FORM_SCOPED_FULL_ID_KEY, scopedFullId);
+		addContextEntry(FORM_FULL_ID_KEY, fullId);
+		addContextEntry(FORM_VIEW_MODEL_KEY, formViewModel);
+		addContextEntry(FORM_KEY, widget);
 	
 		// Continue
 	  return EVAL_BODY_INCLUDE;		
@@ -78,12 +74,11 @@ public class UiFormTag extends UiWidgetTag {
   protected void writeJavascript(Writer out) throws Exception{
     // Append a property to the global uiSystemFormProperties object
     // this property's property "validator" will be our form's validator
-    UiUtil.writeStartTag(out, "script");
+    UiUtil.writeStartTag_SS(out, "script");
     out.write("uiFormContext(");
     UiUtil.writeScriptString(out, fullId);
-    out.write(");\n");
-    UiUtil.writeEndTag(out, "script");
+    out.write(");");
+    UiUtil.writeEndTag_SS(out, "script");
+    out.write('\n');
   }
-  
-	protected FormWidget.ViewModel formViewModel;		
 }

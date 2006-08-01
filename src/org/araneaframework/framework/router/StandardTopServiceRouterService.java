@@ -18,7 +18,7 @@ package org.araneaframework.framework.router;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
+
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.StandardEnvironment;
@@ -31,39 +31,20 @@ import org.araneaframework.framework.TopServiceContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardTopServiceRouterService extends BaseServiceRouterService {
-  private static final Logger log = Logger.getLogger(StandardTopServiceRouterService.class);
-  
-  /**
-   * The key of the top-service's id in the request.
-   */
-  public static final String TOP_SERVICE_KEY = "topServiceId";
-  
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Top service router service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Top service router service destroyed.");
-  }
-  
   protected Object getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get(TOP_SERVICE_KEY);
+    return input.getGlobalData().get(TopServiceContext.TOP_SERVICE_KEY);
   }
   
   protected Object getServiceKey() throws Exception {
-    return TOP_SERVICE_KEY;
+    return TopServiceContext.TOP_SERVICE_KEY;
   }
 
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
     Map entries = new HashMap();    
     entries.put(TopServiceContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
-  
+    
   private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements TopServiceContext {
     protected ServiceRouterContextImpl(Object serviceId) {
       super(serviceId);

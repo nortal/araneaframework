@@ -38,16 +38,28 @@ var systemLoadEvents = new Array();
 /** array for system events that should happen when page unload event occurs */
 var systemUnloadEvents = new Array();
 
+/** standard parameters, sent to widget container submit function upon event */
+function getStandardParameterObject(systemForm, widgetId, eventId, eventParam) {
+  result = new Object();
+  result.systemForm = systemForm;
+  result.widgetId = widgetId;
+  result.eventId = eventId;
+  result.eventParam = eventParam;
+  return result;
+}
+
 /**
  * Submit event in a given system form
  *
- * @author Oleg M?rk
+ * @author Oleg Mürk
  */
 function uiStandardSubmitEvent(systemForm, widgetId, eventId, eventParam, call, precondition) {
 	if (!pageActive) return false;
 	
 	if (precondition && !precondition()) return false;
 	
+	standardParams = getStandardParameterObject(systemForm, widgetId, eventId, eventParam);
+
 	call();
 	
 	return false;
@@ -57,7 +69,7 @@ function uiStandardSubmitEvent(systemForm, widgetId, eventId, eventParam, call, 
 /**
  * Submit form event in a given system form. Validates form if needed.
  *
- * @author Oleg M?rk
+ * @author Oleg Mürk
  */
 function uiStandardSubmitFormEvent(systemForm, formId, elementId, eventId, eventParam, validate, call, precondition) {	
 	if (!pageActive) return false;
@@ -68,24 +80,12 @@ function uiStandardSubmitFormEvent(systemForm, formId, elementId, eventId, event
 	}
 
 	if(precondition && !precondition()) return false;
+	
+	standardParams = getStandardParameterObject(systemForm, formId+"."+elementId, eventId, eventParam);
 
 	call();
 	
 	return false;	
-}
-
-/**
- * Pops up calendar.
- *
- * @param ititiator - object that initiated the function
- * @param srcObject - input element that contains date to use
- * @param dstObject - input element to store selected date to
- * @param format - date format.
- *
- * @author Oleg M?rk
- */
-function uiPopUpCalendar(initiator, srcObject, dstObject, format, callback) {
-	popUpCalendar(initiator, srcObject, dstObject, format, callback);
 }
 
 /**
@@ -120,17 +120,20 @@ function addSystemUnloadEvent(eventFunction) {
  *
  * @author Maksim Boiko
  */
-function processLoadEvents() {
-	
-	//process firstly system events 
+function processLoadEvents() {	
+  //process firstly system events 
   for(var i=0; i<systemLoadEvents.length; i++) {
   	processEvent(systemLoadEvents[i]);
   }
+  
+  systemLoadEvents = new Array();
   
   //client events
   for(var i=0; i<clientLoadEvents.length; i++) {
   	processEvent(clientLoadEvents[i]);
   }
+  
+  clientLoadEvents = new Array();
 }
 
 function processUnloadEvents() {
@@ -138,9 +141,9 @@ function processUnloadEvents() {
   for(var i=0; i<systemUnloadEvents.length; i++) {
   	processEvent(systemUnloadEvents[i]);
   }
+  
+  systemUnloadEvents = new Array();
 }
-
-
 
 function processEvent(event) {
 	if (typeof event != 'function') {

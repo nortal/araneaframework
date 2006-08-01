@@ -24,10 +24,12 @@ public class UiLibMessages {
 	public static final String RANGE_CHECK_FAILED = "uilib.form.rangecheckfailed";
   public static final String DATE_BEFORE_TODAY = "uilib.form.date.beforetoday";
   public static final String ELEMENT_EMPTY = "uilib.form.element.empty";
+  //XXX
   public static final String INVALID_ESTONIAN_PERSONAL_ID = "uilib.form.invalid.socialsecurityid";  
   public static final String STRING_NOT_IN_RANGE = "uilib.form.string.notinrange";  
   public static final String MANDATORY_FIELD = "uilib.form.mandatoryfield";  
   public static final String WRONG_DATE_FORMAT = "uilib.form.date.wrongformat";  
+  public static final String WRONG_DECIMAL_FORMAT = "uilib.form.decimal.wrongformat";  
   public static final String NOT_A_NUMBER = "uilib.form.number.notanumber";    
   public static final String NUMBER_NOT_BETWEEN = "uilib.form.number.notbetween";
   public static final String NUMBER_NOT_GREATER = "uilib.form.number.notgreater";
