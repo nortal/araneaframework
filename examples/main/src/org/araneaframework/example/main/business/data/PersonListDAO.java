@@ -47,6 +47,7 @@ public class PersonListDAO {
 		helper.setColumnMapping("surname", "SURNAME");
 		helper.setColumnMapping("phone", "PHONE");
 		helper.setColumnMapping("birthdate", "BIRTHDATE");
+		helper.setColumnMapping("salary", "SALARY");
 
 		StringBuffer query = new StringBuffer();
 		query.append(helper.getDatabaseFields());

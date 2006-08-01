@@ -51,6 +51,17 @@
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
+					
+					<ui:row>
+						<ui:formElement id="salary">
+							<ui:cell styleClass="name">
+								<ui:label />
+							</ui:cell>
+							<ui:cell styleClass="data">
+								<ui:floatInputDisplay />
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>					
 				</ui:componentForm>
 
 				<ui:componentActions>

@@ -21,13 +21,14 @@ import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DisplayControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 
 
 /**
  * This widget is for displaying a person.
  * It cancels current call only.
  * 
- * @author Rein Raudjärv <reinra@ut.ee>*
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class PersonViewWidget extends TemplateBaseWidget {
 	private Long personId = null;
@@ -50,7 +51,8 @@ public class PersonViewWidget extends TemplateBaseWidget {
 		personForm.addBeanElement("surname", "#Last name", new DisplayControl(), false);
 		personForm.addBeanElement("phone", "#Phone no", new DisplayControl(), true);
 		personForm.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
-		personForm.writeBean((PersonMO) getGeneralDAO().getById(PersonMO.class, personId));
+		personForm.addBeanElement("salary", "#Salary", new FloatControl(), false);
+		personForm.writeBean(getGeneralDAO().getById(PersonMO.class, personId));
 
 		addWidget("personForm", personForm);
 	}

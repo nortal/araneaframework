@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
@@ -26,7 +27,9 @@ import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
@@ -66,10 +69,15 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
 		
 		/* Set up the custom range filter for birthdate column. */
-		RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
-		list.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
-		list.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
-		list.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
+		RangeColumnFilter birthdayFilter = new RangeColumnFilter.DateNonStrict();
+		list.addBeanColumn("birthdate", "#Birthdate", true, birthdayFilter, null);
+		list.addFilterFormElement(birthdayFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
+		list.addFilterFormElement(birthdayFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
+
+		RangeColumnFilter salaryFilter = new RangeColumnFilter.NonStrict();
+		list.addBeanColumn("salary", "#Salary", true, salaryFilter, null);
+		list.addFilterFormElement(salaryFilter.getStartFilterInfoKey(), "#Salary Start", new FloatControl(), new BigDecimalData());
+		list.addFilterFormElement(salaryFilter.getEndFilterInfoKey(), "#Salary End", new FloatControl(), new BigDecimalData());
 		
 		/* Dummy column which holds no data. 
 		 * Added here because we want <ui:componentListHeader/> tag to draw an extra column, which 
@@ -205,6 +213,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			form.addBeanElement("surname", "#Last name", new TextControl(),  true);
 			form.addBeanElement("phone", "#Phone no", new TextControl(), false);
 			form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+			form.addBeanElement("salary", "#Salary", new FloatControl(), false);
 		}
 	}
 }

@@ -51,6 +51,12 @@
                   </ui:cell>							
 
                   <ui:cell>
+                    <ui:floatInput id="salary_start"/>
+                    <br/>
+                    <ui:floatInput id="salary_end"/>
+                  </ui:cell>		
+                  
+                  <ui:cell>
                     <ui:filterButton/>
                   </ui:cell>
                 </ui:row>
@@ -87,6 +93,10 @@
                       <ui:cell>
                         <ui:dateInput id="birthdate"/>
                       </ui:cell>																																			
+
+                      <ui:cell>
+                        <ui:floatInput id="salary"/>
+                      </ui:cell>																																			
                     </c:when>
                     <c:otherwise>
                       <!-- When formRow is "closed", render the fields as displays. -->
@@ -104,6 +114,10 @@
 
                       <ui:cell>
                         <fmt:formatDate value="${row.birthdate}" pattern="dd.MM.yyyy"/>
+                      </ui:cell>
+
+                      <ui:cell>
+                        <c:out value="${row.salary}"/>
                       </ui:cell>
                     </c:otherwise>						
                   </c:choose>
@@ -156,6 +170,10 @@
 
                 <ui:cell>
                   <ui:dateInput id="birthdate"/>
+                </ui:cell>							
+
+                <ui:cell>
+                  <ui:floatInput id="salary"/>
                 </ui:cell>							
 
                 <ui:cell>
