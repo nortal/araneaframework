@@ -8,7 +8,7 @@
     <fileset dir="../../lib" includes="**/*.jar" excludes="cobertura//**/*"/>
 	<fileset dir="../lib" includes="**/*.jar"/>
     <fileset dir="../.." includes="dist/aranea.jar"/>
-    <fileset dir="../.." includes="examples/common/dist/aranea-aranea-examples-common.jar"/>
+    <fileset dir="../.." includes="examples/common/dist/aranea-examples-common.jar"/>
 	</path>
 	
 	<!--Set the Jetty classpath-->
@@ -46,7 +46,7 @@
 				<exclude name="jetty/*jar" />				
 			</fileset>
 			<fileset dir="../../dist" includes="aranea.jar"/>	
-			<fileset dir="../../examples/common/dist" includes="aranea-aranea-examples-common.jar"/>						
+			<fileset dir="../../examples/common/dist" includes="aranea-examples-common.jar"/>						
 		</copy>
 		<copy todir="war/WEB-INF/classes">
 			<fileset dir=".." includes="log4j.xml"/>

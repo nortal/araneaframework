@@ -9,7 +9,7 @@
 	    <fileset dir="../lib" includes="**/*.jar"/>
 		
 		<fileset dir="../.." includes="dist/aranea.jar"/>
-		<fileset dir="../.." includes="examples/common/dist/aranea-aranea-examples-common.jar"/>
+		<fileset dir="../.." includes="examples/common/dist/aranea-examples-common.jar"/>
 	</path>
 	
 	<!--Set the Jetty classpath-->

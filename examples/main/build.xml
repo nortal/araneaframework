@@ -80,7 +80,7 @@
 				<exclude name="j2ee.jar" />
 			</fileset>
 			<fileset file="../../dist/aranea.jar"/>
-			<fileset file="../../examples/common/dist/aranea-aranea-examples-common.jar"/>					
+			<fileset file="../../examples/common/dist/aranea-examples-common.jar"/>					
 		</copy>
 		<copy todir="war/WEB-INF/classes">
 			<fileset dir=".." includes="log4j.xml"/>
