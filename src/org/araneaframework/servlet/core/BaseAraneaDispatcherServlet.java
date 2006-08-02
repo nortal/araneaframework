@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
+import org.araneaframework.AraneaVersion;
 import org.araneaframework.Environment;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.servlet.ServletServiceAdapterComponent;
@@ -58,11 +59,11 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
       serviceAdapter._getComponent().init(env);
     } 
     catch (Exception e) {
-      log.error("Unable to start Aranea.", e);
+      log.info("Unable to start " + AraneaVersion.getTitle() + " " + AraneaVersion.getVersion(), e);
       throw new ServletException(e.getMessage(), e);
     }
     
-    log.info("Aranea started");    
+    log.info(AraneaVersion.getTitle() + " " + AraneaVersion.getVersion() + " started");        
   }
   
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

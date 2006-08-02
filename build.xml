@@ -5,10 +5,7 @@
 	</description>
 	
 	<property file="version.properties"/>
-	<property name="project.title" value="Aranea"/>
-	
-	<property name="framework.version" value="aranea-framework-version"/>
-	<property name="framework.changelogic.version" value="aranea-framework-changelogic-version-id"/>
+	<property name="project.title" value="Aranea Web Framework"/>
 	
 	<!--Set the classpath-->
 	<path id="classpath">
@@ -23,7 +20,7 @@
 	
 	<!-- Clean up build system results -->
 	<target name="clean-all" depends="clean"  description="Clean up build system results">
-		<ant dir="template" target="clean" inheritall="false"/>
+		<ant dir="examples/common" target="clean" inheritall="false"/>
 		<ant dir="examples/main" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloWorld" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="clean" inheritall="false"/>
@@ -46,7 +43,7 @@
 	</target>
 	
 	<target name="build-all" depends="build" description="Build the code and examples">
-		<ant dir="template" target="build" inheritall="false"/>
+		<ant dir="examples/common" target="build" inheritall="false"/>
 		<ant dir="examples/main" target="build" inheritall="false"/>	
 		<ant dir="examples/serviceHelloWorld" target="build" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="build" inheritall="false"/>
@@ -54,7 +51,7 @@
 	</target>
 	
 	<target name="tld-check">
-		<uptodate property="tld-check.uptodate" targetfile="build/tmp/presentation/META-INF/taglib.tld">
+		<uptodate property="tld-check.uptodate" targetfile="build/tmp/presentation/META-INF/aranea-standard.tld">
 			<srcfiles dir="src/org/araneaframework/jsp/tag"/>
 		</uptodate>
 	</target>
@@ -68,7 +65,7 @@
 			
 			<jsptaglib validatexml="true"
 				shortName="aui"
-				filename="taglib.tld"
+				filename="aranea-standard.tld"
 				uri="http://araneaframework.org/tag-library/standard"
 				description="Aranea User Interface Tag Library"
 			/>
@@ -103,9 +100,10 @@
 			</fileset>
 			
 			<manifest>
-				<attribute name="${framework.version}" value="${araneaframework.version}"/>
-				<attribute name="${framework.changelogic.version}" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
-			</manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>
 		
 		<jar destfile="dist/aranea-framework.jar" compress="true">
@@ -114,9 +112,10 @@
 			</fileset>
 			
 			<manifest>
-				<attribute name="${framework.version}" value="${araneaframework.version}"/>
-				<attribute name="${framework.changelogic.version}" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
-			</manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>		
 		
 		<jar destfile="dist/aranea-servlet.jar" compress="true">
@@ -125,9 +124,10 @@
 			</fileset>
 			
 			<manifest>
-				<attribute name="${framework.version}" value="${araneaframework.version}"/>
-				<attribute name="${framework.changelogic.version}" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
-			</manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>			
 		
 		<jar destfile="dist/aranea-backend.jar" compress="true">
@@ -136,9 +136,10 @@
 			</fileset>
 			
 			<manifest>
-				<attribute name="${framework.version}" value="${araneaframework.version}"/>
-				<attribute name="${framework.changelogic.version}" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
-			</manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>
 		
 		<jar destfile="dist/aranea-uilib.jar" compress="true">
@@ -148,9 +149,10 @@
       	<fileset dir="etc" includes="resource/**/*"/>  
 
 			<manifest>
-				<attribute name="${framework.version}" value="${araneaframework.version}"/>
-				<attribute name="${framework.changelogic.version}" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
-			</manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>	
 		
 		<jar destfile="dist/aranea-spring.jar" compress="true">
@@ -160,9 +162,10 @@
 			<fileset dir="etc" includes="conf/**/*"/>
 			
 			<manifest>
-				<attribute name="${framework.version}" value="${araneaframework.version}"/>
-				<attribute name="${framework.changelogic.version}" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
-			</manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>	
 		
 		<jar destfile="dist/aranea-jsp.jar" compress="true">
@@ -176,9 +179,10 @@
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 
 			<manifest>
-				<attribute name="${framework.version}" value="${araneaframework.version}"/>
-				<attribute name="${framework.changelogic.version}" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
-			</manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>	
 		
 		<jar destfile="dist/aranea-jsp-engine.jar" compress="true">
@@ -189,12 +193,13 @@
 			<fileset dir="etc" includes="cache/**/*"/>      
 			
 			<manifest>
-				<attribute name="${framework.version}" value="${araneaframework.version}"/>
-				<attribute name="${framework.changelogic.version}" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
-			</manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>			
 	
-		<jar destfile="dist/aranea.jar" compress="true">
+		<jar destfile="dist/aranea.jar" compress="true" >
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/**/*"/>		
 			</fileset>
@@ -202,9 +207,10 @@
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 
 			<manifest>
-				<attribute name="${framework.version}" value="${araneaframework.version}"/>
-				<attribute name="${framework.changelogic.version}" value="ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version}"/>
-			</manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>	
 	</target>
 	
@@ -255,7 +261,7 @@
 				<include name="tests/**/*"/>
 				<include name="etc/**/*"/>
 				<include name="examples/**/*"/>
-				<include name="template/**/*"/>
+				<include name="examples/common/**/*"/>
 				<include name="tests/**/*"/>
 				<include name="lib/**/*"/>
 				<include name="build.xml"/>
@@ -290,10 +296,10 @@
 			</fileset>     
 		</copy>
 		
-		<mkdir dir="build/tmp/dist/template/dist"/>
+		<mkdir dir="build/tmp/dist/examples/common/dist"/>
 		
-		<copy todir="build/tmp/dist/template/dist">
-			<fileset dir="template/dist">
+		<copy todir="build/tmp/dist/examples/common/dist">
+			<fileset dir="examples/common/dist">
 				<include name="*"/>
 			</fileset>     
 		</copy>

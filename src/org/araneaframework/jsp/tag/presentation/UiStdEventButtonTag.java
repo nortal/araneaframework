@@ -61,7 +61,8 @@ public class UiStdEventButtonTag extends UiEventButtonBaseTag {
           eventId, 
           eventParam, 
           onClickPrecondition,
-          updateRegionNames);
+          updateRegionNames,
+          false);
     if (labelId != null && renderMode.equals(UiStdEventButtonTag.RENDER_INPUT)) {
       UiUtil.writeAttribute(out, "value", localizedLabel);      
     }

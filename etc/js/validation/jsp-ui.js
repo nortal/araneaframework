@@ -15,15 +15,12 @@
 **/
 
 /**
- * Jsp-Ui.js
- *
  * A layer of indirection over the UiFormValidator class presented in
  * jsp-ui-form-validation.js
  * 
  * You should put local customization for the validation logic in this file.
  *
- * The functions presented here are invoked from the custom tags of
- * JSP-UI.
+ * The functions presented here are invoked from the Aranea JSP.
  * Therefore you CAN'T be too liberal with them unless you know what you are doing.
  *
  * Created: 31.05.2004
@@ -33,13 +30,6 @@
  */
 
  // ---------------------------------- Validation ------------------------------------ //
- // Override UiFormValidator createDefaultValidatorAction function
- /*
-  UiFormValidator.prototype.createDefaultValidatorAction = function(elementName, elementLabel) {
-   return new MyVeryOwnAction(elementName);
-  }
-  */
-
  
  /** 
   * An object of type UiSystemFormProperties will be assigned to each system form
