@@ -33,11 +33,6 @@ public interface ConfigurationContext extends Serializable {
   public static final String CUSTOM_TIME_FORMAT = "uilib.widgets.forms.controls.CustomTimeFormat";  
   
   /**
-   * <code>List&gt;DecimalPattern&lt;</code> containing the patterns for <code>BigDecimal</code> decimal validation.
-   */
-  public static final String CUSTOM_DECIMAL_FORMAT = "uilib.widgets.forms.controls.CustomDecimalFormat";
-  
-  /**
    * <code>String</code> containing the format for <code>Date</code> default date output.
    */
   public static final String DEFAULT_DATE_OUTPUT_FORMAT = "uilib.widgets.forms.controls.DefaultOutputDateFormat";  
@@ -46,11 +41,6 @@ public interface ConfigurationContext extends Serializable {
    * <code>String</code> containing the format for <code>Date</code> default time output.
    */
   public static final String DEFAULT_TIME_OUTPUT_FORMAT = "uilib.widgets.forms.controls.DefaultOutputTimeFormat";  
-
-  /**
-   * <code>DecimalPattern</code> containing the pattern for <code>BigDecimal</code> default decimal output.
-   */
-  public static final String DEFAULT_DECIMAL_OUTPUT_FORMAT = "uilib.widgets.forms.controls.DefaultOutputDecimalFormat";  
   
   /**
    * The full class name of the implementation of {@link org.araneaframework.uilib.form.converter.ConverterProvider} interface

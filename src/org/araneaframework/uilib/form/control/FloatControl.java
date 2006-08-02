@@ -17,56 +17,53 @@
 package org.araneaframework.uilib.form.control;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Collection;
 
-import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.DecimalPattern;
 import org.araneaframework.uilib.util.ErrorUtil;
-import org.araneaframework.uilib.util.ValidationUtil;
 
 
 /**
  * This class represents a textbox control that accepts only valid 
  * floating-point numbers.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * This class does not support localization. It does not use @link NumberFormat
+ * class to parse and format @link BigDecimal objects because @link NumberFormat
+ * would convert @link BigDecimal objects into doubles.
  * 
+ * To customize parsing and formatting one could create a subclass of it and
+ * override @link #createBigDecimal(String) and @link #toString(BigDecimal)
+ * methods. To use the subclass in JSPs also another JSP Tag must be created
+ * to use this implementation and configure validation script.
+ * 
+ * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class FloatControl extends EmptyStringNullableControl {
-	
+
 	private BigDecimal minValue;
 	private BigDecimal maxValue;
-	
+	private Integer maxDecimalDigits;
+
 	/**
-	 * The number format used by the element for parsing.
-	 */
-	protected Collection decimalFormat;
-	protected NumberFormat currentNumberFormat;
-	
-	protected boolean confOverridden = false;  
-	
-	/**
-	 * Creates the control initializing the pattern default.
+	 * Empty.
 	 */
 	public FloatControl() {
-		this.decimalFormat = Arrays.asList(new DecimalPattern[] {new DecimalPattern(null, null)});
-		this.currentNumberFormat = NumberFormat.getNumberInstance();
+		//Empty
 	}
-	
+
 	/**
-	 * Creates the control initializing the pattern to <code>decimalFormat</code>.
-	 * @param decimalFormat the custom pattern.
+	 * Makes a float control that has minimum, maximum value and maximum decimal digits count.
+	 * 
+	 * @param minValue minimum permitted value.
+	 * @param maxValue maximum permitted value.
+	 * @param maxDecimalDigits maximum permitted decimal digits count.
 	 */
-	public FloatControl(DecimalPattern[] decimalFormat, DecimalPattern defaultOutputFormat) {
-		this.decimalFormat = Arrays.asList(decimalFormat);
-		this.currentNumberFormat = defaultOutputFormat.getNumberFormat();
-		
-		this.confOverridden = true;
-	}	
-	
+	public FloatControl(BigDecimal minValue, BigDecimal maxValue, Integer maxDecimalDigits) {
+		setMinValue(minValue);
+		setMaxValue(maxValue);
+		setMaxDecimalDigits(maxDecimalDigits);
+	}
+
 	/**
 	 * Makes a float control that has minimum and maximum value.
 	 * 
@@ -74,10 +71,8 @@ public class FloatControl extends EmptyStringNullableControl {
 	 * @param maxValue maximum permitted value.
 	 */
 	public FloatControl(BigDecimal minValue, BigDecimal maxValue) {
-		this();
-		this.minValue = minValue;
-		this.maxValue = maxValue;
-	}    
+		this(minValue, maxValue, null);
+	}
 	
 	/**
 	 * Sets the maximum value.
@@ -86,7 +81,7 @@ public class FloatControl extends EmptyStringNullableControl {
 	public void setMaxValue(BigDecimal maxValue) {
 		this.maxValue = maxValue;
 	}
-	
+
 	/**
 	 * Sets the minimum value.
 	 * @param minValue minimum value.
@@ -96,13 +91,24 @@ public class FloatControl extends EmptyStringNullableControl {
 	}
 	
 	/**
+	 * Sets the maximum decimal digits count.
+	 * @param maxDecimalDigits maximum decimal digits count.
+	 */
+	public void setMaxDecimalDigits(Integer maxDecimalDigits) {
+		if (maxDecimalDigits != null && maxDecimalDigits.intValue() < 0) {
+			throw new IllegalArgumentException("Maximum decimal digits count cannot be negative");
+		}
+		this.maxDecimalDigits = maxDecimalDigits;
+	}
+
+	/**
 	 * Returns the maxValue.
 	 * @return the maxValue.
 	 */
 	public BigDecimal getMaxValue() {
 		return maxValue;
 	}
-	
+
 	/**
 	 * Returns the minValue.
 	 * @return the minValue.
@@ -110,7 +116,15 @@ public class FloatControl extends EmptyStringNullableControl {
 	public BigDecimal getMinValue() {
 		return minValue;
 	}
-	
+
+	/**
+	 * Returns the maximum decimal digits count.
+	 * @return the maximum decimal digits count.
+	 */
+	public Integer getMaxDecimalDigits() {
+		return maxDecimalDigits;
+	}
+
 	/**
 	 * Returns "BigDecimal".
 	 * @return "BigDecimal".
@@ -118,22 +132,11 @@ public class FloatControl extends EmptyStringNullableControl {
 	public String getRawValueType() {
 		return "BigDecimal";
 	}
-	
+
 	//*********************************************************************
 	//* INTERNAL METHODS
-	//*********************************************************************
-	
-	protected void init() throws Exception {
-		super.init();
-		if (!confOverridden) {
-      Collection confFormat = (Collection) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DECIMAL_FORMAT);    
-			if (confFormat != null) decimalFormat = confFormat;
-			
-			DecimalPattern confOutputFormat = (DecimalPattern) getConfiguration().getEntry(ConfigurationContext.DEFAULT_DECIMAL_OUTPUT_FORMAT);    
-			if (confOutputFormat != null) currentNumberFormat = confOutputFormat.getNumberFormat();
-		}
-	}
-	
+	//*********************************************************************  	
+
 	/**
 	 * Trims request parameter.
 	 */
@@ -141,61 +144,69 @@ public class FloatControl extends EmptyStringNullableControl {
 		String result = super.preprocessRequestParameter(parameterValue);
 		return (result == null ? null : result.trim());
 	}
-	
+
 	/**
 	 * Checks that the submitted data is a valid floating-point number.
 	 * 
 	 */
 	protected Object fromRequest(String parameterValue) {
-		if (currentNumberFormat == null) {
-			BigDecimal result = null;
-			
-			try {
-				result = new BigDecimal(parameterValue);
-			}
-			catch (NumberFormatException e) {
-				addError(
-						ErrorUtil.localizeAndFormat(
-								UiLibMessages.NOT_A_NUMBER, 
-								ErrorUtil.localize(getLabel(), getEnvironment()),
-								getEnvironment()));          
-			}
-			
-			return result;
+		BigDecimal result = null;
+
+		try {
+			result = createBigDecimal(parameterValue);
 		}
-		
-		ValidationUtil.ParsedNumber result = ValidationUtil.parseNumber(parameterValue, decimalFormat);
-		
-		if (result != null) {
-			currentNumberFormat = result.getFormat();
-			return new BigDecimal(result.getNumber().toString());
+		catch (NumberFormatException e) {
+			addError(
+					ErrorUtil.localizeAndFormat(
+							UiLibMessages.NOT_A_NUMBER, 
+							ErrorUtil.localize(getLabel(), getEnvironment()),
+							getEnvironment()));          
 		}
-		
-		addError(
-				ErrorUtil.localizeAndFormat(
-						UiLibMessages.WRONG_DECIMAL_FORMAT, 
-						ErrorUtil.localize(getLabel(), getEnvironment()),
-						decimalFormat.toString(),
-						getEnvironment()));          
-		
-		return null;
+
+		return result;
 	}
-	
+
 	/**
 	 * 
 	 */
 	protected String toResponse(Object controlValue) {
-		if (currentNumberFormat == null) {
-			return ((BigDecimal) controlValue).toString();
-		}
-		return currentNumberFormat.format(((BigDecimal) controlValue).doubleValue());
+		return toString((BigDecimal) controlValue);
+	}
+	
+	/**
+	 * Converts String into BigDecimal. This method can be overrided in subclasses.
+	 * 
+	 * @param str String object
+	 * @return BigDecimal object
+	 * @throws NumberFormatException <tt>str</tt> is not a valid representation
+     *	       of a BigDecimal
+	 */
+	protected BigDecimal createBigDecimal(String str) throws NumberFormatException {
+        if (str == null) {
+            return null;
+        }
+		return new BigDecimal(str);
+	}
+	
+	/**
+	 * Converts BigDecimal into String. This method can be overrided in subclasses.
+	 * 
+	 * @param dec BigDecimal object
+	 * @return String object
+	 */
+	protected String toString(BigDecimal dec) {
+        if (dec == null) {
+            return null;
+        }
+		return dec.toString();
 	}
 	
 	/**
 	 * Checks that the submitted value is in permitted range.
 	 * 
 	 */
-	protected void validateNotNull() {        
+	protected void validateNotNull() {
+		// minimum and maximum permitted values
 		if (minValue != null && maxValue != null && ((((BigDecimal) value).compareTo(minValue) == -1) || ((BigDecimal) value).compareTo(maxValue) == 1)) {
 			addError(
 					ErrorUtil.localizeAndFormat(
@@ -226,9 +237,21 @@ public class FloatControl extends EmptyStringNullableControl {
 									maxValue.toString(),
 							},          
 							getEnvironment()));         
-		}    
+		}
+		
+		// maximum permitted decimal digits count
+		if (maxDecimalDigits != null && ((BigDecimal) value).scale() > maxDecimalDigits.intValue()) {
+			addError(
+					ErrorUtil.localizeAndFormat(
+							UiLibMessages.DECIMAL_DIGITS_COUNT_NOT_LESS, 
+							new Object[] {
+									ErrorUtil.localize(getLabel(), getEnvironment()),
+									maxDecimalDigits.toString(),
+							},
+							getEnvironment()));         			
+		}
 	}
-	
+
 	/**
 	 * Returns {@link ViewModel}.
 	 * @return {@link ViewModel}.
@@ -236,20 +259,20 @@ public class FloatControl extends EmptyStringNullableControl {
 	public Object getViewModel() {
 		return new ViewModel();
 	}
-	
+
 	//*********************************************************************
 	//* VIEW MODEL
 	//*********************************************************************    
-	
+
 	/**
 	 * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
 	 * 
 	 */
 	public class ViewModel extends StringArrayRequestControl.ViewModel {
-		
+
 		private BigDecimal maxValue;
 		private BigDecimal minValue;
-		
+
 		/**
 		 * Takes an outer class snapshot.     
 		 */    
@@ -257,7 +280,7 @@ public class FloatControl extends EmptyStringNullableControl {
 			this.maxValue = FloatControl.this.getMaxValue();
 			this.minValue = FloatControl.this.getMinValue();
 		}       
-		
+
 		/**
 		 * Returns maximum permitted value.
 		 * @return maximum permitted value.
@@ -265,7 +288,7 @@ public class FloatControl extends EmptyStringNullableControl {
 		public BigDecimal getMaxValue() {
 			return this.maxValue;
 		}
-		
+
 		/**
 		 * Returns minimum permitted value.
 		 * @return minimum permitted value.
