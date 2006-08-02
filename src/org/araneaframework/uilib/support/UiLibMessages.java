@@ -38,5 +38,6 @@ public class UiLibMessages {
   public static final String STRING_TOO_SHORT = "uilib.form.string.tooshort";
   public static final String STRING_TOO_LONG = "uilib.form.string.toolong";
   public static final String LIST_FILTER_BUTTON_LABEL = "uilib.list.filter.button";
+  public static final String LIST_FILTER_CLEAR_BUTTON_LABEL = "uilib.list.filter.clear.button";
   public static final String NOT_AN_EMAIL = "uilib.form.email.notanemail";
 }

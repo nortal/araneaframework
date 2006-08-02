@@ -43,6 +43,8 @@
 
 							<ui:cell>
 								<ui:filterButton/>
+								<br/>
+								<ui:filterClearButton/>
 							</ui:cell>
 						</ui:row>
 
