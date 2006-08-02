@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.uilib.list;
 
@@ -26,36 +26,36 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class EditableListWidget extends ListWidget {
-	
+
 	protected FormListWidget formList;
-	
-  //*********************************************************************
-  //* CONSTRUCTORS
-  //*********************************************************************	
-	
-  public EditableListWidget(FormRowHandler rowHandler) {
-    super();
-    
-    formList = new FormListWidget(rowHandler);
-  }
 
-  public EditableListWidget(ListDataProvider listDataProvider, ListStructure listStructure, FormWidget filterForm, FormRowHandler rowHandler) throws Exception {
-    super(listDataProvider, listStructure, filterForm);
-    
-    formList = new FormListWidget(rowHandler);
-  }
-  
-  //*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************		
+	//*********************************************************************
+	//* CONSTRUCTORS
+	//*********************************************************************	
+
+	public EditableListWidget(FormRowHandler rowHandler) {
+		super();
+
+		formList = new FormListWidget(rowHandler);
+	}
+
+	public EditableListWidget(ListDataProvider listDataProvider, ListStructure listStructure, FormWidget filterForm, FormRowHandler rowHandler) throws Exception {
+		super(listDataProvider, listStructure, filterForm);
+
+		formList = new FormListWidget(rowHandler);
+	}
+
+	//*********************************************************************
+	//* PUBLIC METHODS
+	//*********************************************************************		
 
 
-  public void refreshCurrentItemRange() throws Exception {
+	public void refreshCurrentItemRange() throws Exception {
 		super.refreshCurrentItemRange();		
-		
+
 		formList.setRows(getItemRange());
 	}
-	
+
 	/**
 	 * Returns the editable row manager.
 	 * @return the editable row manager.
@@ -63,18 +63,18 @@ public class EditableListWidget extends ListWidget {
 	public FormListWidget getFormList() {
 		return formList;
 	}
-	
+
 	public void setFormRowHandler(FormRowHandler rowHandler) {
 		formList = new FormListWidget(rowHandler);		
 	}
-	
-  //*********************************************************************
-  //* WIDGET METHODS
-  //*********************************************************************  	
-	
+
+	//*********************************************************************
+	//* WIDGET METHODS
+	//*********************************************************************  	
+
 	protected void init() throws Exception {
 		super.init();
-		
+
 		addWidget("formList", formList);
 	}
 }
