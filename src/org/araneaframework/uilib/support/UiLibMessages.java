@@ -34,7 +34,7 @@ public class UiLibMessages {
   public static final String NUMBER_NOT_BETWEEN = "uilib.form.number.notbetween";
   public static final String NUMBER_NOT_GREATER = "uilib.form.number.notgreater";
   public static final String NUMBER_NOT_LESS = "uilib.form.number.notless";  
-  public static final String DECIMAL_DIGITS_COUNT_NOT_LESS = "uilib.form.decimalDigitsCount.notless";  
+  public static final String SCALE_NOT_LESS = "uilib.form.scale.notless";  
   public static final String FORBIDDEN_MIME_TYPE = "uilib.form.forbiddenmimetype";  
   public static final String STRING_TOO_SHORT = "uilib.form.string.tooshort";
   public static final String STRING_TOO_LONG = "uilib.form.string.toolong";

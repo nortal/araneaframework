@@ -42,7 +42,7 @@ public class FloatControl extends EmptyStringNullableControl {
 
 	private BigDecimal minValue;
 	private BigDecimal maxValue;
-	private Integer maxDecimalDigits;
+	private Integer maxScale;
 
 	/**
 	 * Empty.
@@ -52,16 +52,16 @@ public class FloatControl extends EmptyStringNullableControl {
 	}
 
 	/**
-	 * Makes a float control that has minimum, maximum value and maximum decimal digits count.
+	 * Makes a float control that has minimum, maximum value and maximum scale.
 	 * 
 	 * @param minValue minimum permitted value.
 	 * @param maxValue maximum permitted value.
-	 * @param maxDecimalDigits maximum permitted decimal digits count.
+	 * @param maxScale maximum permitted scale.
 	 */
-	public FloatControl(BigDecimal minValue, BigDecimal maxValue, Integer maxDecimalDigits) {
+	public FloatControl(BigDecimal minValue, BigDecimal maxValue, Integer maxScale) {
 		setMinValue(minValue);
 		setMaxValue(maxValue);
-		setMaxDecimalDigits(maxDecimalDigits);
+		setMaxScale(maxScale);
 	}
 
 	/**
@@ -91,14 +91,14 @@ public class FloatControl extends EmptyStringNullableControl {
 	}
 	
 	/**
-	 * Sets the maximum decimal digits count.
-	 * @param maxDecimalDigits maximum decimal digits count.
+	 * Sets the maximum scale.
+	 * @param maxScale maximum scale.
 	 */
-	public void setMaxDecimalDigits(Integer maxDecimalDigits) {
-		if (maxDecimalDigits != null && maxDecimalDigits.intValue() < 0) {
-			throw new IllegalArgumentException("Maximum decimal digits count cannot be negative");
+	public void setMaxScale(Integer maxScale) {
+		if (maxScale != null && maxScale.intValue() < 0) {
+			throw new IllegalArgumentException("Maximum scale cannot be negative");
 		}
-		this.maxDecimalDigits = maxDecimalDigits;
+		this.maxScale = maxScale;
 	}
 
 	/**
@@ -118,11 +118,11 @@ public class FloatControl extends EmptyStringNullableControl {
 	}
 
 	/**
-	 * Returns the maximum decimal digits count.
-	 * @return the maximum decimal digits count.
+	 * Returns the maximum scale.
+	 * @return the maximum scale.
 	 */
-	public Integer getMaxDecimalDigits() {
-		return maxDecimalDigits;
+	public Integer getMaxScale() {
+		return maxScale;
 	}
 
 	/**
@@ -239,14 +239,14 @@ public class FloatControl extends EmptyStringNullableControl {
 							getEnvironment()));         
 		}
 		
-		// maximum permitted decimal digits count
-		if (maxDecimalDigits != null && ((BigDecimal) value).scale() > maxDecimalDigits.intValue()) {
+		// maximum permitted scale
+		if (maxScale != null && ((BigDecimal) value).scale() > maxScale.intValue()) {
 			addError(
 					ErrorUtil.localizeAndFormat(
-							UiLibMessages.DECIMAL_DIGITS_COUNT_NOT_LESS, 
+							UiLibMessages.SCALE_NOT_LESS, 
 							new Object[] {
 									ErrorUtil.localize(getLabel(), getEnvironment()),
-									maxDecimalDigits.toString(),
+									maxScale.toString(),
 							},
 							getEnvironment()));         			
 		}
@@ -272,6 +272,7 @@ public class FloatControl extends EmptyStringNullableControl {
 
 		private BigDecimal maxValue;
 		private BigDecimal minValue;
+		private Integer maxScale;
 
 		/**
 		 * Takes an outer class snapshot.     
@@ -279,6 +280,7 @@ public class FloatControl extends EmptyStringNullableControl {
 		public ViewModel() {
 			this.maxValue = FloatControl.this.getMaxValue();
 			this.minValue = FloatControl.this.getMinValue();
+			this.maxScale = FloatControl.this.getMaxScale();
 		}       
 
 		/**
@@ -295,6 +297,14 @@ public class FloatControl extends EmptyStringNullableControl {
 		 */
 		public BigDecimal getMinValue() {
 			return this.minValue;
-		}  
+		}
+
+		/**
+		 * Returns maximum permitted scale.
+		 * @return maximum permitted scale.
+		 */
+		public Integer getMaxScale() {
+			return maxScale;
+		}
 	}
 }
