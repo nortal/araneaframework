@@ -179,7 +179,8 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
     }
     
     public String getLabelForValue(String itemValue) {
-      return getSelectItemByValue(itemValue).getDisplayString();
+      DisplayItem selectItemByValue = getSelectItemByValue(itemValue);
+      return selectItemByValue != null ? selectItemByValue.getDisplayString() : "";
     }
   }  
 }
