@@ -19,7 +19,7 @@
 	<sect1>
 		<title>Introduction</title>
     <para>
-		  Aranea framework and component model are very simple and implemented purely in Plain Old Java. There are no XML mappings, code generation or bytecode enhancement. The whole component model consists mainly of four interfaces: <classname>org.araneaframework.Component</classname>, <classname>org.araneaframework.Service</classname>, <classname>org.araneaframework.Widget</classname> and <classname>org.araneaframework.Environment</classname> and some conventions regarding their usage and implementation.     
+		  Aranea framework and component model are very simple and implemented purely in Plain Old Java. There are no XML mappings, code generation or bytecode enhancement. The whole component model consists mainly of five interfaces: <classname>org.araneaframework.Component</classname>, <classname>org.araneaframework.Service</classname>, <classname>org.araneaframework.Widget</classname>, <classname>org.araneaframework.Environment</classname>, <classname>org.araneaframework.Message</classname> and some conventions regarding their usage and implementation.     
     </para>
 
     <para>
@@ -114,7 +114,7 @@
     </para>
 
     <para>
-      Aranea provides a base implementation of the <literal>Component</literal> &mdash; <literal>org.araneaframework.core.BaseComponent</literal>. This implementation mainly enforces contracts (including lifecycle and some basic synchronization). A base class for application development <literal>org.araneaframework.core.StandardComponent</literal> is also available and is described in <xref linkend="standard-component"/>.
+      Aranea provides a base implementation of the <literal>Component</literal> &mdash; <literal>org.araneaframework.core.BaseComponent</literal>. This implementation mainly enforces contracts (including lifecycle and some basic synchronization). A base class for application development <literal>org.araneaframework.core.StandardComponent</literal> is also available.
     </para>
 		
     <sect2>
@@ -136,7 +136,7 @@
   public Object next();
   public boolean hasNext();
 }</programlisting>        
-        Each <literal>next()</literal> call will return the identifier of the next child in the path to the descendant in question. Default implementation (<literal>org.araneaframework.core.StandardPath</literal>) uses simple string identifiers like "a" or "b" and combines them using dots forming full pathes like "a.b.c".
+        Each <literal>next()</literal> call will return the identifier of the next child in the path to the descendant in question. Default implementation (<literal>org.araneaframework.core.CustomPath</literal>) uses simple string identifiers like "a" or "b" and combines them using dots forming full pathes like "a.b.c".
       </para>
       
       <para>
@@ -173,7 +173,7 @@ msgContext.showInfoMessage("Hello world!");
       </para>
 
       <para>
-        A default implementation of <literal>Environment</literal> is <literal>org.araneaframework.core.StandardEnvironment</literal>. It provides for creating an <literal>Environment</literal> from a <literal>java.util.Map</literal>, or extending an existing environment with map entries.
+        A default implementation of <literal>Environment</literal> is <literal>org.araneaframework.core.CustomEnvironment</literal>. It provides for creating an <literal>Environment</literal> from a <literal>java.util.Map</literal>, or extending an existing environment with map entries.
       </para>
 		</sect2>
 		<sect2 id="components-messaging">
@@ -189,7 +189,7 @@ msgContext.showInfoMessage("Hello world!");
   
   TODO: explain double-dispatch
   
-  <para>A standard <literal>Message</literal> implementation that uses double-dispatch to visit all the components in hierarchy is <literal>org.araneaframework.core.StandardMessage</literal>. It usage can be illustrated with the following example:
+  <para>A standard <literal>Message</literal> implementation that uses double-dispatch to visit all the components in hierarchy is <literal>org.araneaframework.core.CustomMessage</literal>. It usage can be illustrated with the following example:
 <programlisting role="java">...
 Message myEvent = new StandardMessage() {
   public void execute(Component component) throws Exception {
@@ -232,7 +232,7 @@ myEvent.send(null, rootComponent);
       <title>StandardComponent</title>
 
       <para>
-        <literal>org.araneaframework.core.StandardComponent</literal> is the base class for application-specific components. It implements <emphasis>Composite</emphasis> pattern allowing to add, remove, enable and disable children and propagates messages to all the children. 
+        <literal>org.araneaframework.core.CustomComponent</literal> is the base class for application-specific components. It implements <emphasis>Composite</emphasis> pattern allowing to add, remove, enable and disable children and propagates messages to all the children. 
       </para>
     </sect2>
   </sect1>
@@ -383,7 +383,7 @@ myEvent.send(null, rootComponent);
           <varlistentry>
             <term>Self-rendering</term>
             <listitem>
-              In the most basic situation the widget will just use <literal>OutputData</literal> for rendering by casting it into e.g. <literal>ServletOutputData</literal> (see <xref linkend="???"/>). In such a case the widget will just write out markup and return from the <literal>render()</literal> method optionally rendering children as well. The data for rendering will be drawn from the widget fields as well as (possibly) <literal>OutputData</literal> attributes.
+              In the most basic situation the widget will just use <literal>OutputData</literal> for rendering by casting it into e.g. <literal>ServletOutputData</literal>. In such a case the widget will just write out markup and return from the <literal>render()</literal> method optionally rendering children as well. The data for rendering will be drawn from the widget fields as well as (possibly) <literal>OutputData</literal> attributes.
             </listitem>
           </varlistentry>
           <varlistentry>

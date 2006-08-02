@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.business.data;
 
 import javax.sql.DataSource;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.helper.HSqlListSqlHelper;
 import org.araneaframework.backend.list.model.ListItemsData;
@@ -43,10 +42,12 @@ public class PersonListDAO {
 
 		HSqlListSqlHelper helper = new HSqlListSqlHelper(request);
 
-		helper.setColumnMapping("id", "id");
-		helper.setColumnMapping("name", "name");
-		helper.setColumnMapping("surname", "surname");
-		helper.setColumnMapping("phone", "phone");
+		helper.setColumnMapping("id", "ID");
+		helper.setColumnMapping("name", "NAME");
+		helper.setColumnMapping("surname", "SURNAME");
+		helper.setColumnMapping("phone", "PHONE");
+		helper.setColumnMapping("birthdate", "BIRTHDATE");
+		helper.setColumnMapping("salary", "SALARY");
 
 		StringBuffer query = new StringBuffer();
 		query.append(helper.getDatabaseFields());
