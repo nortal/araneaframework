@@ -1,0 +1,35 @@
+<sect3>
+	<title>StandardThreadCloningFilterService</title>
+
+	<informaltable frame="all">
+		<tgroup cols="2">
+			<colspec colwidth="2*" />
+			<colspec colwidth="5*" />
+			<tbody>
+				<row>
+					<entry>Implements</entry>
+					<entry>
+						<emphasis>ThreadCloningContext</emphasis>
+					</entry>
+				</row>
+				<row>
+					<entry>Depends on</entry>
+					<entry>
+						<literal>ThreadContext</literal>
+						implementation,
+						<literal>TopServiceContext</literal>
+						implementation
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</informaltable>
+    
+    <para>
+        Implementation of a service that clones currently running session thread upon request and sends a response
+        that redirects to cloned session thread. It can be used to support "open link in new window" feature in browsers.
+        Cloning is generic and resource demanding, as whole tree of session thread components is recreated. Custom
+        applications may find that they can implement some application specific cloning strategy that demands less
+        memory and processing power.
+    </para>
+</sect3>

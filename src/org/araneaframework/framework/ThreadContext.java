@@ -31,5 +31,8 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public interface ThreadContext extends ManagedServiceContext, Serializable {
-  
+  /**
+  * The key of the thread-service's id in the request.
+  */
+  public static final String THREAD_SERVICE_KEY = "threadServiceId";
 }

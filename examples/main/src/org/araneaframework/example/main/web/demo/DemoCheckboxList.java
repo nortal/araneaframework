@@ -21,24 +21,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
-import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
+import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
-import org.araneaframework.uilib.form.data.BooleanData;
-import org.araneaframework.uilib.list.EditableListWidget;
+import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.formlist.FormListUtil;
 import org.araneaframework.uilib.list.formlist.FormRow;
+import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 
 
 /**
  * This is an example of component with a single list.
  */
-public class DemoCheckboxList extends BaseWidget {
-	private EditableListWidget checkList;
+public class DemoCheckboxList extends TemplateBaseWidget {
+	private EditableBeanListWidget checkList;
 	private Map data = new HashMap();
 
 	{
@@ -56,19 +54,22 @@ public class DemoCheckboxList extends BaseWidget {
 	public void init() throws Exception {
 		super.init();
 
-		addGlobalEventListener(new ProxyEventListener(this));
-		setViewSelector("demo/DemoCheckboxList/main");
+		setViewSelector("demo/demoCheckboxList");
 		
 		MemoryBasedListDataProvider listDataProvider = new DemoCheckboxListDataProvider();
 
-	    checkList = new EditableListWidget(new DemoCheckboxListRowHandler());
+	    checkList = new EditableBeanListWidget(DataDTO.class);
+	    checkList.setFormRowHandler(new DemoCheckboxListRowHandler());
 	    checkList.setListDataProvider(listDataProvider);
 	    
 	    checkList.addListColumn("booleanField", "#Boolean");
 	    checkList.addListColumn("stringField", "#String");
 	    checkList.addListColumn("longField", "#Long");
 		
-		FormListUtil.associateFormListWithMemoryBasedList(checkList.getFormList(), listDataProvider);
+		checkList.getFormList().setFormRowHandler(
+				new MemoryBasedListFormRowHandlerDecorator(
+					listDataProvider, 
+					checkList.getFormList().getFormRowHandler()));
 		
 		checkList.setInitialOrder("longField", false);
 
@@ -93,11 +94,9 @@ public class DemoCheckboxList extends BaseWidget {
 			rowData.setBooleanField((Boolean) editableRow.getRowForm().getValueByFullName("booleanField"));
 		}
 
-		public void initFormRow(FormRow editableRow, Object row)
-		                     throws Exception {
-			editableRow.getRowForm().addElement("booleanField", "#Boolean field", new CheckboxControl(),
-			                                    new BooleanData(), true);
-			TemplateUiLibUtil.writeDtoToForm(row, editableRow.getRowForm());
+		public void initFormRow(FormRow editableRow, Object row) throws Exception {
+			((BeanFormWidget)editableRow.getRowForm()).addBeanElement("booleanField", "#Boolean field", new CheckboxControl(), true);
+			((BeanFormWidget)editableRow.getRowForm()).writeBean(row);
 		}
 	}
 
