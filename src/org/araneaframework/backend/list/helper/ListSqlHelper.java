@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.backend.list.helper;
 
@@ -31,7 +31,6 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
@@ -65,17 +64,17 @@ import org.araneaframework.uilib.list.util.converter.DummyConverter;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  */
 public abstract class ListSqlHelper {
-	
+
 	private static final Long DEFAULT_RANGE_START = new Long(0);
 
-  private static Logger log = Logger.getLogger(ListSqlHelper.class);
-	
+	private static Logger log = Logger.getLogger(ListSqlHelper.class);
+
 	// *******************************************************************
 	// FIELDS
 	// *******************************************************************
-	
+
 	// MAPPING
-	
+
 	// Value Name ? --> Converter (Converter that is used by convert() method)
 	protected Map valueConverters = new HashMap();
 	// Bean Field Name ? --> Deconverter (Converter that is used by reverseConvert() method)
@@ -84,42 +83,42 @@ public abstract class ListSqlHelper {
 	protected Map variableToDatabaseMapping = new HashMap();
 	// Bean Field Name ? --> ResultSet Column Name
 	protected Map beanToResultSetMapping = new HashMap();
-	
+
 	// FILTER AND ORDER
-	
+
 	protected Expression filterExpr;
 	protected ComparatorExpression orderExpr;
-	
+
 	protected SqlExpression filterSqlExpr;
 	protected SqlExpression orderSqlExpr;
-	
+
 	// ITEM RANGE
-	
+
 	protected Long itemRangeStart;
 	protected Long itemRangeCount;	
-	
+
 	// CONNECTION
-	
+
 	protected DataSource ds;
 	protected Connection con;
 	protected PreparedStatement itemRangeStatement;
-	
+
 	// RESULTS
-	
+
 	protected Long totalCount;
 	protected List itemData;
 	protected ResultSet itemRangeResultSet;
-	
+
 	// RESULTSET READING
-	
+
 	protected ResultSetColumnReader resultSetReader = DefaultResultSetColumnReader
 	.getInstance();
 	protected GeneralBeanMapper beanMapper;
-	
+
 	// *********************************************************************
 	// * CONSTRUCTORS
 	// *********************************************************************
-	
+
 	/**
 	 * Creates <code>ListSqlHelper</code> initializing the appropriate fields.
 	 * 
@@ -138,18 +137,18 @@ public abstract class ListSqlHelper {
 		this.itemRangeStart = query.getItemRangeStart() != null ? query.getItemRangeStart() : DEFAULT_RANGE_START;
 		this.itemRangeCount = query.getItemRangeCount();
 	}
-	
+
 	/**
 	 * Creates <code>ListSqlHelper</code> without initializing any fields.
 	 */
 	public ListSqlHelper() {
 		// for bran creation
 	}
-	
+
 	// *********************************************************************
 	// * PUBLIC METHODS
 	// *********************************************************************
-	
+
 	public ResultSetColumnReader getResultSetReader() {
 		return this.resultSetReader;
 	}
@@ -157,7 +156,7 @@ public abstract class ListSqlHelper {
 	public void setResultSetReader(ResultSetColumnReader resultSetReader) {
 		this.resultSetReader = resultSetReader;
 	}
-	
+
 	/*
 	 * Database mapping and converters.
 	 */
@@ -175,7 +174,7 @@ public abstract class ListSqlHelper {
 	public void setConverter(String valueName, Converter converter) {
 		this.valueConverters.put(valueName, converter);
 	}
-	
+
 	/**
 	 * Sets the converter between the values in <code>ResultSet</code> and
 	 * bean fields <code>beanFieldName</code>.
@@ -189,7 +188,7 @@ public abstract class ListSqlHelper {
 	public void setDeconverter(String beanFieldName, Converter converter) {
 		this.beanDeconverters.put(beanFieldName, converter);
 	}
-	
+
 	/**
 	 * Sets the mapping between the filtering-ordering variable name
 	 * <code>variableName</code> and the database field name
@@ -205,7 +204,7 @@ public abstract class ListSqlHelper {
 			String databaseFieldName) {
 		this.variableToDatabaseMapping.put(variableName, databaseFieldName);
 	}
-	
+
 	/**
 	 * Sets the mapping between the bean field name <code>beanFieldName</code>
 	 * and the name of <code>ResultSet</code> column.
@@ -219,7 +218,7 @@ public abstract class ListSqlHelper {
 			String resultSetColumnName) {
 		this.beanToResultSetMapping.put(beanFieldName, resultSetColumnName);
 	}
-	
+
 	/**
 	 * Sets the mapping between the filtering-ordering variable / bean field
 	 * name <code>columnName</code> and the database field name
@@ -237,7 +236,7 @@ public abstract class ListSqlHelper {
 	public void setColumnMapping(String columnName, String databaseFieldName) {
 		setColumnMapping(columnName, databaseFieldName, makeFieldNameUnique(removePrefix(databaseFieldName)));
 	}
-	
+
 	private String makeFieldNameUnique(String field) {
 		String alias = field;
 		int index = 0;
@@ -246,11 +245,11 @@ public abstract class ListSqlHelper {
 		}
 		return alias;
 	}
-	
+
 	private static String removePrefix(String field) {
 		return field.substring(field.lastIndexOf('.') + 1);
 	}
-	
+
 	/**
 	 * Sets the mapping between the filtering-ordering variable / bean field
 	 * name <code>columnName</code> and the database field names
@@ -271,7 +270,7 @@ public abstract class ListSqlHelper {
 		setDatabaseFieldMapping(columnName, databaseFieldName);
 		setResultSetMapping(columnName, resultSetColumnName);
 	}
-	
+
 	/**
 	 * Sets the converter between the filtering-ordering values with the name of /
 	 * bean field with the name of <code>columnName</code> and its database
@@ -288,25 +287,25 @@ public abstract class ListSqlHelper {
 		setConverter(columnName, converter);
 		setDeconverter(columnName, converter);
 	}
-	
+
 	/*
 	 * Building SqlExpressions according to Ordering and Filtering.
 	 */
-	
+
 	/**
 	 * Sets the <code>ComparatorExpression</code> saving it for later use.
 	 */
 	public void setOrderExpression(ComparatorExpression orderExpr) {
 		this.orderExpr = orderExpr;
 	}
-	
+
 	/**
 	 * Sets the <code>Expression</code> saving it for later use.
 	 */
 	public void setFilterExpression(Expression filterExpr) {
 		this.filterExpr = filterExpr;
 	}
-	
+
 	/**
 	 * Returns the fields <code>SqlExpression</code>, which can be used in
 	 * "SELECT" clause.
@@ -316,21 +315,21 @@ public abstract class ListSqlHelper {
 	 */
 	protected SqlExpression getFieldsSqlExpression() {
 		SqlCollectionExpression fields = new SqlCollectionExpression();
-		
+
 		for (Iterator i = this.variableToDatabaseMapping.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry entry = (Entry) i.next();
-			
+
 			String variable = (String) entry.getKey();
 			String dbField = (String) entry.getValue();
 			String alias = (String) this.beanToResultSetMapping.get(variable);
-			
+
 			String sql = alias == null || alias.equals(dbField)
-				? dbField : new StringBuffer(dbField).append(" ").append(alias).toString();
+			? dbField : new StringBuffer(dbField).append(" ").append(alias).toString();
 			fields.add(new SqlStringExpression(sql));
 		}
 		return fields;
 	}
-	
+
 	/**
 	 * Returns the order <code>SqlExpression</code>, which can be used in
 	 * "ORDER BY" clause.
@@ -342,7 +341,7 @@ public abstract class ListSqlHelper {
 		if (this.orderSqlExpr != null) {
 			return this.orderSqlExpr;
 		}
-		
+
 		if (this.orderExpr == null) {
 			return null;
 		}
@@ -351,7 +350,7 @@ public abstract class ListSqlHelper {
 		this.orderSqlExpr = builder.buildSqlExpression(this.orderExpr);
 		return this.orderSqlExpr;
 	}
-	
+
 	/**
 	 * Returns the filter <code>SqlExpression</code>, which can be used in
 	 * "WHERE" clause.
@@ -363,7 +362,7 @@ public abstract class ListSqlHelper {
 		if (this.filterSqlExpr != null) {
 			return this.filterSqlExpr;
 		}
-		
+
 		if (this.filterExpr == null) {
 			return null;
 		}
@@ -373,7 +372,7 @@ public abstract class ListSqlHelper {
 		this.filterSqlExpr = builder.buildSqlExpression(this.filterExpr);
 		return this.filterSqlExpr;
 	}
-	
+
 	/**
 	 * Returns the database fields list seperated by commas, which can be used in "SELECT" clause.
 	 * 
@@ -383,7 +382,7 @@ public abstract class ListSqlHelper {
 		SqlExpression expr = this.getFieldsSqlExpression();
 		return expr != null ? expr.toSqlString() : "";
 	}
-	
+
 	/**
 	 * Returns the filter database condition, which can be used in "WHERE" clause.
 	 * 
@@ -393,7 +392,7 @@ public abstract class ListSqlHelper {
 		SqlExpression expr = this.getFilterSqlExpression();
 		return expr != null ? expr.toSqlString() : "";
 	}
-	
+
 	public String getDatabaseFilterWith(String prefix, String suffix) {
 		StringBuffer whereCondition = new StringBuffer();		
 		if (this.filterExpr != null) {
@@ -403,7 +402,7 @@ public abstract class ListSqlHelper {
 		}
 		return whereCondition.toString();
 	}  
-	
+
 	/**
 	 * Returns the <code>List</code> of parameters that should be set in the <code>PreparedStatement</code> that
 	 * belong to the filter database conditions.
@@ -415,7 +414,7 @@ public abstract class ListSqlHelper {
 		SqlExpression expr = this.getFilterSqlExpression();
 		return expr != null ? Arrays.asList(expr.getValues()) : new ArrayList();
 	}
-	
+
 	/**
 	 * Returns the order database representation, which can be used in "ORDER BY" clause.
 	 * 
@@ -425,7 +424,7 @@ public abstract class ListSqlHelper {
 		SqlExpression expr = this.getOrderSqlExpression();
 		return expr != null ? expr.toSqlString() : "";
 	}
-	
+
 	/**
 	 * Returns the database order query with <code>prefix</code> added before and 
 	 * <code>suffix</code> after it if the query is not empty.
@@ -447,7 +446,7 @@ public abstract class ListSqlHelper {
 		}
 		return orderQuery.toString();
 	}  
-	  
+
 	/**
 	 * Returns the <code>List</code> of parameters that should be set in the <code>PreparedStatement</code> that
 	 * belong to the order database representation.
@@ -459,11 +458,11 @@ public abstract class ListSqlHelper {
 		SqlExpression expr = this.getOrderSqlExpression();
 		return expr != null ? Arrays.asList(expr.getValues()) : new ArrayList();
 	}
-	
+
 	/*
 	 * Preparing database queries.
 	 */
-	
+
 	/**
 	 * Sets the count of items in the range.
 	 * 
@@ -473,7 +472,7 @@ public abstract class ListSqlHelper {
 	public void setItemRangeCount(Long itemRangeCount) {
 		this.itemRangeCount = itemRangeCount;
 	}
-	
+
 	/**
 	 * Sets the (0-based) starting index of the item range.
 	 * 
@@ -483,15 +482,15 @@ public abstract class ListSqlHelper {
 	public void setItemRangeStart(Long itemRangeStart) {
 		this.itemRangeStart = itemRangeStart;
 	}
-	
+
 	protected abstract SqlStatement getCountSqlStatement();
-	
+
 	protected abstract SqlStatement getRangeSqlStatement();	
-	
+
 	/*
 	 * Executing database queries and returning their results.
 	 */
-	
+
 	/**
 	 * Implementations should set the <code>DataSource</code> on
 	 * <code>setSessionContext</code>.
@@ -499,14 +498,15 @@ public abstract class ListSqlHelper {
 	 */
 	public void setDataSource(DataSource ds) {
 		this.ds = ds;
-    try {
-		this.con = ds.getConnection();
-    }
-    catch (SQLException ex) {
-      throw ExceptionUtil.uncheckException(ex);
-    }
+		try {
+			this.con = ds.getConnection();
+		}
+		catch (SQLException ex) {
+			throw ExceptionUtil.uncheckException(ex);
+		}
 	}
 	
+
 	/**
 	 * Executes the SQL query that should return the total count of items in the
 	 * list, retrieving the total count.
@@ -517,26 +517,26 @@ public abstract class ListSqlHelper {
 		ResultSet rs = null;
 		try {			
 			SqlStatement countSqlStatement = getCountSqlStatement();
-			
+
 			log.debug("Counting database query: " + countSqlStatement.getQuery());
 			log.debug("Counting statement parameters: " + countSqlStatement.getParams());
-			
+
 			stmt = this.con.prepareStatement(countSqlStatement.getQuery());
 			countSqlStatement.propagateStatementWithParams(stmt);
-			
+
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				this.totalCount = new Long(rs.getLong(1));
 			}
 		}
-    catch (SQLException e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
-    finally {
+		catch (SQLException e) {
+			throw ExceptionUtil.uncheckException(e);
+		}
+		finally {
 			DbHelper.closeDbObjects(null, stmt, rs);
 		}
 	}
-	
+
 	/**
 	 * Executes an SQL query that should retrieve a range of items from the
 	 * list, saves <code>ResultSet</code> for further processing.
@@ -546,22 +546,22 @@ public abstract class ListSqlHelper {
 		SqlStatement rangeSqlStatement = getRangeSqlStatement();
 		log.debug("Item range database query: " + rangeSqlStatement.getQuery());
 		log.debug("Item range statement parameters: " + rangeSqlStatement.getParams());
-		
-    try {
-		this.itemRangeStatement = this.con.prepareStatement(rangeSqlStatement.getQuery());
-		rangeSqlStatement.propagateStatementWithParams(this.itemRangeStatement);
-		
-		/*if (this.itemRangeCount != null && (this.itemRangeCount.longValue() < 1000)) {
+
+		try {
+			this.itemRangeStatement = this.con.prepareStatement(rangeSqlStatement.getQuery());
+			rangeSqlStatement.propagateStatementWithParams(this.itemRangeStatement);
+
+			/*if (this.itemRangeCount != null && (this.itemRangeCount.longValue() < 1000)) {
 			this.itemRangeStatement.setFetchSize(this.itemRangeCount.intValue());
 		}*/
-		
-		this.itemRangeResultSet = this.itemRangeStatement.executeQuery();
-    }
-    catch (SQLException e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
+
+			this.itemRangeResultSet = this.itemRangeStatement.executeQuery();
+		}
+		catch (SQLException e) {
+			throw ExceptionUtil.uncheckException(e);
+		}
 	}
-	
+
 	/**
 	 * Executes the item range and total count SQL queries.
 	 * 
@@ -571,28 +571,23 @@ public abstract class ListSqlHelper {
 			throw new RuntimeException(
 			"Please pass a DataSource to the ListSqlHelper!");
 		}
-		
+
 		executeCountSql();
 		executeItemRangeSql();
 	}
-  
-  public ListItemsData execute(DataSource ds, Class itemClass) {
-    ListItemsData data = null;
-    try {
-      setDataSource(ds);
-      execute();
-      data = getListItemsData(itemClass);
-    } catch (Exception e) {
-      if (e instanceof RuntimeException)
-        throw (RuntimeException) e;
-      else
-        throw new NestableRuntimeException(e);
-    } finally {
-      close();
-    }
-    return data;
-  }
-	
+
+	public ListItemsData execute(DataSource ds, Class itemClass) {
+		ListItemsData data = null;
+		try {
+			setDataSource(ds);
+			execute();
+			data = getListItemsData(itemClass);
+		} finally {
+			close();
+		}
+		return data;
+	}
+
 	/**
 	 * Tries to retrieve the item range from the saved <code>ResultSet</code>
 	 * and returns the <code>ListItemsData</code> containing the item range
@@ -602,40 +597,38 @@ public abstract class ListSqlHelper {
 	 *            Bean class.
 	 * @return <code>ListItemsData</code> containing the item range and total
 	 *         count.
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
 	 */
 	public ListItemsData getListItemsData(Class beanClass) {
 		ListItemsData result = new ListItemsData();
 		result.setTotalCount(this.totalCount);
-		
+
 		this.beanMapper = new RecursiveBeanMapper(beanClass, true);
-		
+
 		List itemRange = new ArrayList();
 		//XXX add capacity
-		
-    try {
-  		while (this.itemRangeResultSet.next()) {
-  			Object record = beanClass.newInstance();
-  			readBeanFields(this.itemRangeResultSet, record);
-  			itemRange.add(record);
-  		}
-    }
-    catch (SQLException e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
-    catch (InstantiationException e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
-    catch (IllegalAccessException e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
-		
+
+		try {
+			while (this.itemRangeResultSet.next()) {
+				Object record = beanClass.newInstance();
+				readBeanFields(this.itemRangeResultSet, record);
+				itemRange.add(record);
+			}
+		}
+		catch (SQLException e) {
+			throw ExceptionUtil.uncheckException(e);
+		}
+		catch (InstantiationException e) {
+			throw ExceptionUtil.uncheckException(e);
+		}
+		catch (IllegalAccessException e) {
+			throw ExceptionUtil.uncheckException(e);
+		}
+
 		result.setItemRange(itemRange);
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Returns the item range <code>ResultSet</code>.
 	 * 
@@ -644,7 +637,7 @@ public abstract class ListSqlHelper {
 	public ResultSet getItemRangeResultSet() {
 		return this.itemRangeResultSet;
 	}
-	
+
 	/**
 	 * Returns the total count of items in the list.
 	 * 
@@ -653,7 +646,7 @@ public abstract class ListSqlHelper {
 	public Long getTotalCount() {
 		return this.totalCount;
 	}
-	
+
 	/**
 	 * Closes the <code>ListSqlHelper</code> closing the opened database
 	 * objects.
@@ -662,11 +655,11 @@ public abstract class ListSqlHelper {
 		DbHelper.closeDbObjects(this.con, this.itemRangeStatement,
 				this.itemRangeResultSet);
 	}
-	
+
 	// *********************************************************************
 	// * HELPER METHODS
 	// *********************************************************************
-	
+
 	/**
 	 * Reads the bean from <code>ResultSet</code>. Implementations
 	 * may override it to read beans in a custom way.
@@ -679,21 +672,21 @@ public abstract class ListSqlHelper {
 	 */
 	protected void readBeanFields(ResultSet resultSet, Object bean) {
 		log.debug("Starting to read value object fields.");
-		
+
 		Collection fields = this.beanToResultSetMapping.keySet();
 		for (Iterator i = fields.iterator(); i.hasNext();) {
 			String field = (String) i.next();
-			
+
 			if (!this.beanMapper.fieldIsWritable(field))
 				throw new RuntimeException(
-				"The field specified in the mapping doesn't have a corresponding Value Object field!");
-			
+						"The field specified in the mapping doesn't have a corresponding Value Object field!");
+
 			readBeanField(resultSet, bean, field);
 		}
-		
+
 		log.debug("Finished reading value object fields.");
 	}
-	
+
 	/**
 	 * Reads the bean field from <code>ResultSet</code>.
 	 * Implementations may override it to read bean fields in a custom
@@ -709,32 +702,32 @@ public abstract class ListSqlHelper {
 	 *            bean field to read.
 	 */
 	protected void readBeanField(ResultSet resultSet, Object bean, String field) {
-		
+
 		String resultSetColumnName = (String) this.beanToResultSetMapping
 		.get(field);
 		Converter deconverter = (Converter) this.beanDeconverters.get(field);
-		
+
 		log.debug("Reading VO field '" + field + "' from ResultSet column '"
 				+ resultSetColumnName + "'.");
-		
+
 		Class valueType;
 		if (deconverter != null) {
 			valueType = deconverter.getDestinationType();
 		} else {
 			valueType = this.beanMapper.getBeanFieldType(field);
 		}
-		
+
 		Object value = this.resultSetReader.readFromResultSet(
 				resultSetColumnName, resultSet, valueType);
 		if (deconverter != null) {
 			value = deconverter.reverseConvert(value);
 		}
 		this.beanMapper.setBeanFieldValue(bean, field, value);
-		
+
 		log.debug("Read VO field '" + field + "' from ResultSet column '"
 				+ resultSetColumnName + "' with value '" + value + "'.");
 	}
-	
+
 	/**
 	 * Creates the ValueConverter for SqlExpressionBuilder that converts Values
 	 * according to the previously set Converters.
@@ -745,7 +738,7 @@ public abstract class ListSqlHelper {
 	protected ValueConverter createExpressionBuilderConverter() {
 		ConverterManager manager = new ConverterManager();
 		manager.addGlobalConverter(new DummyConverter());
-		
+
 		Iterator i = this.valueConverters.keySet().iterator();
 		while (i.hasNext()) {
 			String valueName = (String) i.next();
@@ -757,7 +750,7 @@ public abstract class ListSqlHelper {
 		}
 		return manager;
 	}
-	
+
 	/**
 	 * Creates the VariableResolver for SqlExpressionBuilder that converts
 	 * Variable names to their Database Field names according to the previously
@@ -769,7 +762,7 @@ public abstract class ListSqlHelper {
 	 */
 	protected VariableResolver createExpressionBuilderResolver() {
 		Map map = new HashMap();
-		
+
 		Iterator i = this.variableToDatabaseMapping.keySet().iterator();
 		while (i.hasNext()) {
 			String varName = (String) i.next();
@@ -777,5 +770,5 @@ public abstract class ListSqlHelper {
 		}
 		return new VariableMapper(map);
 	}
-	
+
 }
