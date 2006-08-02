@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.list;
 
 import java.io.Serializable;
+
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
@@ -369,6 +370,7 @@ public class SequenceHelper implements Serializable {
     private Boolean allItemsShown;
     private Long pageFirstItem;
     private Long pageLastItem;
+    private Long itemsOnPage;
 
     /**
      * Takes a snapshot of outer class state.
@@ -387,6 +389,8 @@ public class SequenceHelper implements Serializable {
       
       this.pageFirstItem = new Long(SequenceHelper.this.getCurrentPageFirstItemIndex() + 1);
       this.pageLastItem = new Long(SequenceHelper.this.getCurrentPageLastItemIndex() + 1);
+      
+      this.itemsOnPage = new Long(SequenceHelper.this.itemsOnPage);
     }
 
     /**
@@ -451,5 +455,12 @@ public class SequenceHelper implements Serializable {
     public Long getTotalItemCount() {
       return totalItemCount;
     }
+
+	/**
+	 * @return Returns the itemsOnPage.
+	 */
+	public Long getItemsOnPage() {
+		return itemsOnPage;
+	}
   }
 }

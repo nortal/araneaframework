@@ -25,5 +25,8 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public interface SessionServiceContext extends ManagedServiceContext, Serializable {
-  
+  /**
+   * The key of the service id in the request.
+   */
+  public static final String SESSION_SERVICE_KEY = "sessionServiceId";
 }

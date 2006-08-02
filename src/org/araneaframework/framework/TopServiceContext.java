@@ -25,5 +25,8 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public interface TopServiceContext extends ManagedServiceContext, Serializable {
-  
+  /**
+   * The key of the top-service's id in the request.
+   */
+  public static final String TOP_SERVICE_KEY = "topServiceId";
 }
