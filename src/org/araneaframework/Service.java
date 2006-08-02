@@ -32,6 +32,6 @@ public interface Service extends Component, Serializable {
   public Interface _getService();
   
   public interface Interface extends Serializable {
-    public void action(Path path, InputData input, OutputData output) throws Exception;
+    public void action(Path path, InputData input, OutputData output);
   }
 }

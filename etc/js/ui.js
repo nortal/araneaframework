@@ -38,6 +38,7 @@ function uiSystemFormSubmit(systemForm, updateRegions){
 	
 	if (updateRegions && updateRegions.length > 0) {
 		window[ajaxKey].updateRegions = updateRegions;
+		window[ajaxKey].systemForm = systemForm;
 		window[ajaxKey].submitAJAX();
 	}
 	else {
@@ -74,44 +75,99 @@ function uiValidateForm(systemForm, formId) {
 	return systemForm.uiProperties[formId].validator.validate();
 }
 
-function fillText(el) {
-  if (document.systemForm[el+'.select1'].value=='' && document.systemForm[el+'.select2'].value=='') {
-    document.systemForm[el+'.time'].value='';
+function fillTimeText(systemForm, el, hourSelect, minuteSelect) {
+  if (systemForm[hourSelect].value=='' && systemForm[minuteSelect].value=='') {
+    systemForm[el].value='';
   }
   else {
-    document.systemForm[el+'.time'].value=document.systemForm[el+'.select1'].value+':'+document.systemForm[el+'.select2'].value;
+    systemForm[el].value=systemForm[hourSelect].value+':'+systemForm[minuteSelect].value;
   }
-}
-    
-function fillSelect(el) {
-  separatorPos = document.systemForm[el+'.time'].value.indexOf(':');
-  if (document.systemForm[el+'.time'].value.substr(0, separatorPos).length==1) {
-    firstSelect = '0'+document.systemForm[el+'.time'].value.substr(0, separatorPos);
-  }
-  else {
-    firstSelect = document.systemForm[el+'.time'].value.substr(0, separatorPos);
-  }
-  document.systemForm[el+'.select1'].value=firstSelect;
-  document.systemForm[el+'.select2'].value=document.systemForm[el+'.time'].value.substr(separatorPos+1, document.systemForm[el+'.time'].value.length);
 }
 
-function fillTimeText(el) {
-  if (document.systemForm[el+'.select1'].value=='' && document.systemForm[el+'.select2'].value=='') {
-    document.systemForm[el].value='';
-  }
-  else {
-    document.systemForm[el].value=document.systemForm[el+'.select1'].value+':'+document.systemForm[el+'.select2'].value;
+function fillTimeSelect(systemForm, timeInput, hourSelect, minuteSelect) {
+  timestr = systemForm[timeInput].value;
+  separatorPos = timestr.indexOf(':');
+  hours = timestr.substr(0, separatorPos);
+  hourValue = hours.length==1 ? '0'+hours : hours;
+  minuteValue = timestr.substr(separatorPos+1, systemForm[timeInput].value.length);
+  systemForm[hourSelect].value=hourValue;
+  systemForm[minuteSelect].value=minuteValue;
+}
+
+// b/c braindead IE: The NAME attribute cannot be set at run time on elements dynamically 
+// created with the createElement method. To create an element with a name attribute, 
+// include the attribute and value when using the createElement method.
+// http://www.thunderguy.com/semicolon/2005/05/23/setting-the-name-attribute-in-internet-explorer/
+function createNamedElement(type, name) {
+   var element = null;
+   // Try the IE way; this fails on standards-compliant browsers
+   try {
+      element = document.createElement('<'+type+' name="'+name+'">');
+   } catch (e) {
+   }
+   if (!element || element.nodeName != type.toUpperCase()) {
+      // Non-IE browser; use canonical method to create named element
+      element = document.createElement(type);
+      element.name = name;
+   }
+   return element;
+}
+
+// adds options empty,0-(z-1) to select with option x preselected
+function addOptions(selectName, z, x) {
+  var select=document.getElementsByName(selectName).item(0);
+  var emptyOpt=document.createElement("option");
+  emptyOpt.setAttribute("value", "");
+  select.appendChild(emptyOpt);
+  for (var i = 0; i < z; i++) {
+    var opt = document.createElement("option");
+    opt.setAttribute("value", (i < 10 ? "0" : "")+ i);
+    if (i == x) { opt.setAttribute("selected", "true") };
+    var node = document.createTextNode((i < 10 ? "0" : "")+ i);
+    opt.appendChild(node);
+    select.appendChild(opt);
   }
 }
-    
-function fillTimeSelect(el) {
-  separatorPos = document.systemForm[el].value.indexOf(':');
-  if (document.systemForm[el].value.substr(0, separatorPos).length==1) {
-    firstSelect = '0'+document.systemForm[el].value.substr(0, separatorPos);
-  }
-  else {
-    firstSelect = document.systemForm[el].value.substr(0, separatorPos);
-  }
-  document.systemForm[el+'.select1'].value=firstSelect;
-  document.systemForm[el+'.select2'].value=document.systemForm[el].value.substr(separatorPos+1, document.systemForm[el].value.length);
+
+function saveValue(element) {
+  element.oldValue = element.value; 
 }
+
+function isChanged(elementId) {
+  var el = document.getElementById(elementId);
+  return (el.oldValue != el.value);
+}
+
+function setFormEncoding(formName, encoding) {
+  document.forms[formName].enctype = encoding;
+  document.forms[formName].encoding = encoding; // IE
+}
+
+//--------------- Scroll position saving/restoring --------------//
+function saveScrollCoordinates(form) {
+	var x, y;
+  
+	if (document.documentElement && document.documentElement.scrollTop) {
+		// IE 6
+		x = document.documentElement.scrollLeft;
+		y = document.documentElement.scrollTop;
+	} else if (document.body) {
+		// IE 5
+		x = document.body.scrollLeft;
+		y = document.body.scrollTop;
+	} else {
+		// Netscape, Mozilla, Firefox etc
+		x = window.pageXOffset;
+		y = window.pageYOffset;
+	}
+	
+	// alert("x = " + x + "; y = " + y);
+	
+	form.windowScrollX.value = x;
+	form.windowScrollY.value = y;
+} 
+
+function scrollToCoordinates(x, y) {
+	// alert("x = " + x + "; y = " + y);
+	window.scrollTo(x, y);
+} 

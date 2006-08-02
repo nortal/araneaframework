@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.structure;
 
 import java.util.Iterator;
-
 import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
 import org.araneaframework.uilib.list.structure.order.ColumnOrder;
