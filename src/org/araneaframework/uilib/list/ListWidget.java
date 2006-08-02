@@ -27,7 +27,6 @@ import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -176,7 +175,7 @@ public class ListWidget extends StandardPresentationWidget {
 	 * 
 	 * @return {@link ListColumn}s.
 	 */
-	public List getListColumnss() {
+	public List getListColumns() {
 		return this.listStructure.getColumnsList();
 	}
 
@@ -478,7 +477,9 @@ public class ListWidget extends StandardPresentationWidget {
 	 */
 	public void setFilterInfo(Map filterInfo) throws Exception {  	
 		if (filterInfo != null) {
-			propagateListDataProviderWithFilter(filterInfo);
+			if (isInitialized()) {
+				propagateListDataProviderWithFilter(filterInfo);				
+			}
 			MapFormWriter mapFormWriter = new MapFormWriter();
 			mapFormWriter.writeForm(this.filterForm, filterInfo);
 		}
@@ -512,9 +513,6 @@ public class ListWidget extends StandardPresentationWidget {
 	 * @param ascending whether ordering should be ascending.
 	 */
 	public void setInitialOrder(String columnName, boolean ascending) {
-		if (this.listStructure.getColumn(columnName) == null)
-			throw new AraneaRuntimeException("Column '" + columnName + "' specified for initial order does not exist!");
-
 		OrderInfo orderInfo = new OrderInfo();
 		OrderInfoField orderInfoField = new OrderInfoField(columnName, ascending);
 		orderInfo.addField(orderInfoField);
@@ -528,7 +526,9 @@ public class ListWidget extends StandardPresentationWidget {
 	 */
 	public void setOrderInfo(OrderInfo orderInfo) {  	
 		if (orderInfo != null) {
-			propagateListDataProviderWithOrderInfo(orderInfo);
+			if (isInitialized()) {
+				propagateListDataProviderWithOrderInfo(orderInfo);				
+			}
 			this.orderInfo = orderInfo;
 		}
 	}
@@ -633,7 +633,8 @@ public class ListWidget extends StandardPresentationWidget {
 		log.debug("Initilizing ListWidget.");
 
 		propagateListDataProviderWithOrderInfo(getOrderInfo());
-		propagateListDataProviderWithFilter(getFilterInfo());		
+		propagateListDataProviderWithFilter(getFilterInfo());
+		
 		this.listDataProvider.init();
 	}
 
@@ -798,7 +799,6 @@ public class ListWidget extends StandardPresentationWidget {
 	}
 
 	protected class OrderEventHandler extends StandardEventListener {
-
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			// single column ordering
 			log.debug("Processing Order event, with param = " + eventParam);
@@ -870,14 +870,12 @@ public class ListWidget extends StandardPresentationWidget {
 
 	protected class FilterEventHandler implements OnClickEventListener {
 		public void onClick() throws Exception {
-			log.debug("Processing Filter event");
 			filter();
 		}
 	}
 
 	protected class FilterClearEventHandler implements OnClickEventListener {
 		public void onClick() throws Exception {
-			log.debug("Processing Filter Clear event");
 			clearFilter();
 		}
 	}	
