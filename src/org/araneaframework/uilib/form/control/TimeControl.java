@@ -63,7 +63,8 @@ public class TimeControl extends TimestampControl {
   //* INTERNAL METHODS
   //*********************************************************************  	
 	
-	public void init() {
+	public void init() throws Exception {
+		super.init();
 		if (!confOverridden) {
 			String confFormat = (String) getConfiguration().getEntry(ConfigurationContext.CUSTOM_TIME_FORMAT);
 			if (confFormat != null) dateTimeFormat = confFormat;
