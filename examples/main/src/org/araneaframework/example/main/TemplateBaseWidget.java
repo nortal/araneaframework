@@ -25,7 +25,7 @@ import org.springframework.beans.factory.BeanFactory;
 /**
  * This is a base class for all widgets in this application.
  * 
- * @author Rein Raudjärv <reinra@ut.ee>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public abstract class TemplateBaseWidget extends StandardPresentationWidget {
   protected BeanFactory getBeanFactory() {

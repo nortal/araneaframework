@@ -16,12 +16,9 @@
 
 package org.araneaframework.uilib.util;
 
-import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.mail.internet.AddressException;
@@ -101,54 +98,6 @@ public class ValidationUtil {
 			return this.format;
 		}
 	}
-	
-	/**
-	 * Tries to parse the number according to the given {@link NumberFormat} format.
-	 * 
-	 * @param numberString number to be parsed.
-	 * @param patterns (@link NumberFormat) formats.
-	 * @return parsed (@link Number) or null if parsing fails.
-	 */	
-	public static ParsedNumber parseNumber(String numberString, Collection patterns) {
-		ParsedNumber result = null;
-		
-		// Remove all spaces
-		numberString = numberString.replaceAll(" ", "");
-		
-		for (Iterator i = patterns.iterator(); i.hasNext(); ) {
-			NumberFormat numberFormat =((DecimalPattern) i.next()).getNumberFormat();
-			ParsePosition pos = new ParsePosition(0);
-			
-			Number number = numberFormat.parse(numberString, pos);
-			
-			if (number != null && (pos.getIndex() == numberString.length())) {
-				result = new ParsedNumber(number, numberFormat);
-			}
-			
-			if (result != null) {
-				break;				
-			}
-		}
-		
-		return result;
-	}
-	
-	public static class ParsedNumber {
-		protected Number decimal;
-		protected NumberFormat format;
-	
-		public ParsedNumber(Number decimal, NumberFormat format) {
-			this.decimal = decimal;
-			this.format = format;
-		}
-		
-		public Number getNumber() {
-			return decimal;
-		}
-		public NumberFormat getFormat() {
-			return format;
-		}
-	}  
 	
 	/**
 	 * Checks whether the string is a valid email.

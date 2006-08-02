@@ -60,7 +60,18 @@
 								<ui:dateInput />
 							</ui:cell>
 						</ui:formElement>
-					</ui:row>
+					</ui:row>					
+
+					<ui:row>
+						<ui:formElement id="salary">
+							<ui:cell styleClass="name">
+								<ui:label />
+							</ui:cell>
+							<ui:cell colspan="3">
+								<ui:floatInput />
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>					
 				</ui:componentForm>
 
 				<!-- template design tag -->

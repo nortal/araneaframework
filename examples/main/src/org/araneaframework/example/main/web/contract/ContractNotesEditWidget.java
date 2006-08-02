@@ -17,7 +17,7 @@
 package org.araneaframework.example.main.web.contract;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormatSymbols;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
@@ -25,10 +25,9 @@ import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.util.DecimalPattern;
 
 /**
- * @author Rein Raudjärv <reinra@ut.ee>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class ContractNotesEditWidget extends TemplateBaseWidget {
 	
@@ -66,20 +65,7 @@ public class ContractNotesEditWidget extends TemplateBaseWidget {
 		
 		form = new FormWidget();
 		form.addElement("notes", "#Notes", new TextControl(), new StringData(), false);
-		form.addElement("total", "#Total", buildFloatControl(), new BigDecimalData(), false);
+		form.addElement("total", "#Total", new FloatControl(), new BigDecimalData(), false);
 		addWidget("form", form);
-	}
-	
-	// Builds FloatControl that accepts points and commas as decimal separator.
-	private FloatControl buildFloatControl() {		
-		DecimalFormatSymbols symbols1 = new DecimalFormatSymbols();
-		symbols1.setDecimalSeparator(',');
-		DecimalPattern format1 = new DecimalPattern("0.#", symbols1);
-		
-		DecimalFormatSymbols symbols2 = new DecimalFormatSymbols();
-		symbols2.setDecimalSeparator('.');
-		DecimalPattern format2 = new DecimalPattern("0.#", symbols2);		
-		
-		return new FloatControl(new DecimalPattern[] {format1, format2}, format1);
 	}
 }

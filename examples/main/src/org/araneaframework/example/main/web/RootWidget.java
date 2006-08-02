@@ -26,38 +26,38 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
 /**
  * This is root widget. It initializes MenuWidget with
  * 
- * @author Rein Raudjärv <reinra@ut.ee>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class RootWidget extends StandardPresentationWidget implements SecurityContext {
-  private MenuWidget menuWidget;
-  private Widget topWidget;
-  
-  public RootWidget() {}
-  
-  public RootWidget(Widget topWidget) {
-    this.topWidget = topWidget;
-  }
+	private MenuWidget menuWidget;
+	private Widget topWidget;
 
-  protected void init() throws Exception {
-    menuWidget = new MenuWidget(topWidget);
-    topWidget = null;
-    addWidget("menu", menuWidget);
-    setViewSelector("root");
-  }
+	public RootWidget() {}
 
-  protected Environment getChildWidgetEnvironment() throws Exception {
-    return new StandardEnvironment(getEnvironment(), SecurityContext.class, this);
-  }
+	public RootWidget(Widget topWidget) {
+		this.topWidget = topWidget;
+	}
 
-  public boolean hasPrivilege(String privilege) {
-    return false;
-  }
+	protected void init() throws Exception {
+		menuWidget = new MenuWidget(topWidget);
+		topWidget = null;
+		addWidget("menu", menuWidget);
+		setViewSelector("root");
+	}
 
-  public MenuWidget getMenuWidget() {
-    return menuWidget;
-  }
+	protected Environment getChildWidgetEnvironment() throws Exception {
+		return new StandardEnvironment(getEnvironment(), SecurityContext.class, this);
+	}
 
-  public void logout() throws Exception {
-    getFlowCtx().replace(new LoginWidget(), null);
-  }
+	public boolean hasPrivilege(String privilege) {
+		return false;
+	}
+
+	public MenuWidget getMenuWidget() {
+		return menuWidget;
+	}
+
+	public void logout() throws Exception {
+		getFlowCtx().replace(new LoginWidget(), null);
+	}
 }
