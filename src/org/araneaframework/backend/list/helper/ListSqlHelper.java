@@ -47,6 +47,7 @@ import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 import org.araneaframework.backend.util.GeneralBeanMapper;
 import org.araneaframework.backend.util.RecursiveBeanMapper;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.list.util.Converter;
 import org.araneaframework.uilib.list.util.converter.DummyConverter;
@@ -524,7 +525,12 @@ public abstract class ListSqlHelper {
 			stmt = this.con.prepareStatement(countSqlStatement.getQuery());
 			countSqlStatement.propagateStatementWithParams(stmt);
 
-			rs = stmt.executeQuery();
+			try {
+				rs = stmt.executeQuery();	
+			} catch (SQLException e) {
+				throw createQueryFailedException(countSqlStatement.getQuery(), countSqlStatement.getParams(), e);
+			}
+			
 			if (rs.next()) {
 				this.totalCount = new Long(rs.getLong(1));
 			}
@@ -551,11 +557,15 @@ public abstract class ListSqlHelper {
 			this.itemRangeStatement = this.con.prepareStatement(rangeSqlStatement.getQuery());
 			rangeSqlStatement.propagateStatementWithParams(this.itemRangeStatement);
 
-			/*if (this.itemRangeCount != null && (this.itemRangeCount.longValue() < 1000)) {
-			this.itemRangeStatement.setFetchSize(this.itemRangeCount.intValue());
-		}*/
+//			if (this.itemRangeCount != null && (this.itemRangeCount.longValue() < 1000)) {
+//				this.itemRangeStatement.setFetchSize(this.itemRangeCount.intValue());
+//			}			
 
-			this.itemRangeResultSet = this.itemRangeStatement.executeQuery();
+			try {
+				this.itemRangeResultSet = this.itemRangeStatement.executeQuery();
+			} catch (SQLException e) {
+				throw createQueryFailedException(rangeSqlStatement.getQuery(), rangeSqlStatement.getParams(), e);
+			}
 		}
 		catch (SQLException e) {
 			throw ExceptionUtil.uncheckException(e);
@@ -770,5 +780,13 @@ public abstract class ListSqlHelper {
 		}
 		return new VariableMapper(map);
 	}
-
+	
+	/**
+	 * Returns query failed Exception. 
+	 */
+	protected RuntimeException createQueryFailedException(String QueryString, List queryParams, SQLException nestedException) {
+		String str = new StringBuffer("Executing list query [").append(QueryString).
+			append("] with params: ").append(queryParams).append(" failed").toString();
+		return new AraneaRuntimeException(str, nestedException);
+	}
 }
