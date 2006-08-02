@@ -27,17 +27,16 @@ import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.StandardWidget;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
-import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.GenericFormElement;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.reader.MapFormReader;
 import org.araneaframework.uilib.form.reader.MapFormWriter;
@@ -57,57 +56,66 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * It uses helper classes to do ordering, filtering and sequencing (breaking the list into pages).
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class ListWidget extends StandardPresentationWidget {
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	private static final Logger log = Logger.getLogger(ListWidget.class);
-	
+
+	protected static final Logger log = Logger.getLogger(ListWidget.class);
+
 	//*******************************************************************
 	// FIELDS
 	//*******************************************************************
-	
+
 	/**
 	 * The filter form name.
 	 */
 	public static final String FILTER_FORM_NAME = "filterForm";
+
+	public static final String FILTER_BUTTON_ID = "filter";
+	public static final String FILTER_CLEAR_BUTTON_ID = "clearFilter";
+
 	/**
 	 * The multi-column ordering form name.
 	 */
 	public static final String ORDER_FORM_NAME = "orderForm";
-	
+
 	protected ListDataProvider listDataProvider;
 	protected ListStructure listStructure = new ListStructure();	// should not be accessible by public methods
 	protected SequenceHelper sequenceHelper;	// should not be accessible by public methods
-	
+
 	protected FormWidget filterForm;	// is transfomed into filter info Map and vice-versa
 	protected OrderInfo orderInfo = new OrderInfo();
-	
+
 	protected List itemRange;
 	protected Map requestIdToRow = new HashMap();
-	
+
+	protected String filterButtonLabelId;
+	protected String filterClearButtonLabelId;
+
 	//*********************************************************************
 	//* CONSTRUCTORS
 	//*********************************************************************
-	
+
 	public ListWidget(ListDataProvider listDataProvider, ListStructure listStructure, FormWidget filterForm) throws Exception {  	
 		this.listDataProvider = listDataProvider;
 		this.listStructure = listStructure;
 		this.filterForm = filterForm;
 	}
-	
+
 	public ListWidget() {
+		// empty
 	}
-	
+
 	//*********************************************************************
 	//* PUBLIC METHODS
 	//*********************************************************************
-	
+
 	/*
 	 * List configuration
 	 */	
-	
+
 	/**
 	 * Returns the {@link ListStructureInterface}used to describe the list.
 	 * 
@@ -116,7 +124,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public ListStructure getListStructure() {
 		return this.listStructure;
 	}
-	
+
 	/**
 	 * Saves the {@link ListStructure}used to fill the list with data.
 	 * 
@@ -125,7 +133,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public void setListStructure(ListStructure listStructure) {
 		this.listStructure = listStructure;
 	}
-	
+
 	/**
 	 * Returns the {@link ListDataProvider}used to fill the list with data.
 	 * 
@@ -134,7 +142,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public ListDataProvider getListDataProvider() {
 		return this.listDataProvider;
 	}
-	
+
 	/**
 	 * Sets the {@link ListDataProvider}used to fill the list with data.
 	 * 
@@ -143,7 +151,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public void setListDataProvider(ListDataProvider listDataProvider) {
 		this.listDataProvider = listDataProvider;
 	}
-	
+
 	/**
 	 * Returns the filter form.
 	 * 
@@ -152,7 +160,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public FormWidget getFilterForm() {
 		return this.filterForm;
 	}
-	
+
 	/**
 	 * Saves the filter form.
 	 * 
@@ -161,16 +169,16 @@ public class ListWidget extends StandardPresentationWidget {
 	public void setFilterForm(FormWidget filterForm) {
 		this.filterForm = filterForm;
 	}
-	
+
 	/**
 	 * Returns {@link ListColumn}s.
 	 * 
 	 * @return {@link ListColumn}s.
 	 */
-	public List getListColumnss() {
+	public List getListColumns() {
 		return this.listStructure.getColumnsList();
 	}
-	
+
 	/**
 	 * Returns {@link ListColumn}.
 	 * 
@@ -181,7 +189,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public ListColumn getListColumn(String id) {
 		return this.listStructure.getColumn(id);
 	}
-	
+
 	/**
 	 * Returns label of {@link ListColumn}.
 	 * 
@@ -192,7 +200,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public String getColumnLabel(String columnId) {
 		return getListColumn(columnId).getLabel();
 	}
-	
+
 	/**
 	 * Adds a {@link ListColumnInterface}.
 	 * 
@@ -202,26 +210,26 @@ public class ListWidget extends StandardPresentationWidget {
 	public void addListColumn(ListColumn column) {
 		this.listStructure.addColumn(column);
 	}
-	
+
 	public void addListColumn(String id, String label) {
 		this.listStructure.addColumn(id, label);
 	}
-	
+
 	public void addListColumn(String id, String label, ColumnOrder columnOrder) {
 		this.listStructure.addColumn(id, label, columnOrder, null);
 	}
-	
+
 	public void addListColumn(String id, String label, ColumnOrder columnOrder, ColumnFilter columnFilter) {
 		this.listStructure.addColumn(id, label, columnOrder, columnFilter);
 	}
-	
+
 	/**
 	 * Clears the {@link ListColumnInterface}s
 	 */
 	public void clearColumns() {
 		this.listStructure.clearColumns();
 	}
-	
+
 	/**
 	 * Returns the (@link ListOrder).
 	 * 
@@ -230,7 +238,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public ListOrder getListOrder() {
 		return this.listStructure.getListOrder();
 	}
-	
+
 	/**
 	 * Saves the (@link ListOrder).
 	 * 
@@ -240,19 +248,19 @@ public class ListWidget extends StandardPresentationWidget {
 	public void setListOrder(ListOrder order) {
 		this.listStructure.setListOrder(order);
 	}
-	
+
 	public void addColumnOrder(ColumnOrder order) {
 		this.listStructure.addColumnOrder(order);
 	}
-	
+
 	public ColumnOrder getColumnOrder(String column) {
 		return this.listStructure.getColumnOrder(column);
 	}
-	
+
 	public void clearColumnOrders() {
 		this.listStructure.clearColumnOrders();
 	}
-	
+
 	/**
 	 * Returns the (@link ListFilter).
 	 * 
@@ -261,7 +269,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public ListFilter getListFilter() {
 		return this.listStructure.getListFilter();
 	}
-	
+
 	/**
 	 * Saves the (@link ListFilter).
 	 * 
@@ -271,75 +279,101 @@ public class ListWidget extends StandardPresentationWidget {
 	public void setListFilter(ListFilter filter) {
 		this.listStructure.setListFilter(filter);
 	}
-	
+
 	public void addFilter(ListFilter subFilter) {
 		this.listStructure.addFilter(subFilter);
 	}
-	
+
 	public ColumnFilter getColumnFilter(String column) {
 		return this.listStructure.getColumnFilter(column);
 	}
-	
+
 	public void clearFilters() {
 		this.listStructure.clearFilters();
 	}
-	
+
 	/*
 	 * FormWidget proxy-methods
 	 */
-	
+
+	public void setFilterButtonLabel(String labelId) {
+		this.filterButtonLabelId = labelId;
+		if (isInitialized()) {
+			FormElement element = getFilterForm().getElementByFullName(FILTER_BUTTON_ID);		
+			element.setLabel(labelId);
+			element.getControl().setLabel(labelId);		
+		}
+	}
+
+	public void setFilterClearButtonLabel(String labelId) {
+		this.filterClearButtonLabelId = labelId;
+		if (isInitialized()) {
+			FormElement element = getFilterForm().getElementByFullName(FILTER_CLEAR_BUTTON_ID);		
+			element.setLabel(labelId);
+			element.getControl().setLabel(labelId);		
+		}
+	}	
+
+	public void addFilterFormElement(String id, FormElement element) throws Exception {
+		if (this.filterForm == null) {
+			this.filterForm = new FormWidget();
+		}
+
+		addElement(this.filterForm, id, element);
+	}	
+
 	public void addFilterFormElement(String id, String label, Control control, Data data) throws Exception {
 		if (this.filterForm == null) {
 			this.filterForm = new FormWidget();
 		}
-		
+
 		addElement(this.filterForm, id, label, control, data, false);
 	}
-	
+
 	public void addFilterFormElement(String id, Control control, Data data) throws Exception {
 		addFilterFormElement(id, getColumnLabel(id), control, data);
 	}
-	
-	private static void addElement(FormWidget form, String fullId, String label, Control control, Data data, boolean mandatory) throws Exception {
+
+	private static void addElement(FormWidget form, String fullId, FormElement element) throws Exception {
 		if (fullId.indexOf(".") != -1) {
 			String subFormId = fullId.substring(0, fullId.indexOf("."));
 			String nextFullId =  fullId.substring(subFormId.length() + 1);
-			
+
 			FormWidget subForm = null;
-			
+
 			if (form.getElement(subFormId) != null) {
 				subForm = form.getSubFormByFullName(subFormId);        	
 			} else {
 				subForm = form.addSubForm(subFormId);        	
 			}
-			
-			addElement(subForm, nextFullId, label, control, data, mandatory);
+
+			addElement(subForm, nextFullId, element);
 			return;
 		}
-		
-		form.addElement(fullId, label, control, data, mandatory);
-	}	
-	
-	private static void addBeanElement(BeanFormWidget form, String fullId, String label, Control control, boolean mandatory) throws Exception {
+
+		form.addElement(fullId, element);
+	}		
+
+	private static void addElement(FormWidget form, String fullId, String label, Control control, Data data, boolean mandatory) throws Exception {
 		if (fullId.indexOf(".") != -1) {
 			String subFormId = fullId.substring(0, fullId.indexOf("."));
 			String nextFullId =  fullId.substring(subFormId.length() + 1);
-			
-			BeanFormWidget subForm = null;
-			
+
+			FormWidget subForm = null;
+
 			if (form.getElement(subFormId) != null) {
-				subForm = (BeanFormWidget) form.getElement(subFormId);        	
+				subForm = form.getSubFormByFullName(subFormId);        	
 			} else {
-				subForm = form.addBeanSubForm(subFormId);        	
+				subForm = form.addSubForm(subFormId);        	
 			}
-			
-			addBeanElement(subForm, nextFullId, label, control, mandatory);
+
+			addElement(subForm, nextFullId, label, control, data, mandatory);
 			return;
 		}
-		
-		form.addBeanElement(fullId, label, control, mandatory);
+
+		form.addElement(fullId, label, control, data, mandatory);
 	}
-	
+
 	/**
 	 * Returns how many items will be displayed on one page.
 	 * @return how many items will be displayed on one page.
@@ -347,7 +381,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public long getItemsOnPage() {
 		return getSequenceHelper().getItemsOnPage();
 	}
-	
+
 	/**
 	 * Sets how many items will be displayed on one page.
 	 * @param itemsOnPage how many items will be displayed on one page.
@@ -355,9 +389,9 @@ public class ListWidget extends StandardPresentationWidget {
 	public void setItemsOnPage(long itemsOnPage) {
 		getSequenceHelper().setItemsOnPage(itemsOnPage);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Sets the page which will be displayed. Page index is 0-based.
 	 * 
@@ -367,8 +401,8 @@ public class ListWidget extends StandardPresentationWidget {
 	public void setCurrentPage(long currentPage) {
 		getSequenceHelper().setCurrentPage(currentPage);
 	}
-	
-	
+
+
 	/**
 	 * Gets first item to be displayed on the current page.
 	 * 
@@ -377,7 +411,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public long getCurrentPageFirstItemIndex() {
 		return getSequenceHelper().getCurrentPageFirstItemIndex();
 	}
-	
+
 	/**
 	 * Gets last item to be displayed on the current page.
 	 * 
@@ -386,25 +420,25 @@ public class ListWidget extends StandardPresentationWidget {
 	public long getCurrentPageLastItemIndex() {
 		return getSequenceHelper().getCurrentPageLastItemIndex();
 	}
-	
+
 	/**
 	 * Expands the list showing all items.
 	 */
 	public void showFullPages() {
 		getSequenceHelper().showFullPages();
 	}
-	
+
 	/**
 	 * Collapses the list, showing only the current page.
 	 */
 	public void showDefaultPages() {
 		getSequenceHelper().showDefaultPages();
 	}
-	
+
 	/*
 	 * List State reading and modifying
 	 */
-	
+
 	/**
 	 * Returns the {@link SequenceHelper}used to output pages.
 	 * 
@@ -416,7 +450,7 @@ public class ListWidget extends StandardPresentationWidget {
 		}
 		return this.sequenceHelper;
 	}
-	
+
 	/**
 	 * Resets the sequence, starting at first page with all defaults.
 	 * 
@@ -425,7 +459,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public void resetSequence() throws Exception {
 		this.sequenceHelper = new SequenceHelper(getConfiguration());
 	}
-	
+
 	/**
 	 * Returns the filter information from filter form.
 	 * @return <code>Map</code> containing filter information.
@@ -434,7 +468,7 @@ public class ListWidget extends StandardPresentationWidget {
 		MapFormReader mapFormReader = new MapFormReader(this.filterForm);
 		return mapFormReader.getMap();
 	}
-	
+
 	/**
 	 * Sets the filter information to list data provider and filter form.
 	 * 
@@ -443,12 +477,14 @@ public class ListWidget extends StandardPresentationWidget {
 	 */
 	public void setFilterInfo(Map filterInfo) throws Exception {  	
 		if (filterInfo != null) {
-			propagateListDataProviderWithFilter(filterInfo);
+			if (isInitialized()) {
+				propagateListDataProviderWithFilter(filterInfo);				
+			}
 			MapFormWriter mapFormWriter = new MapFormWriter();
 			mapFormWriter.writeForm(this.filterForm, filterInfo);
 		}
 	}
-	
+
 	private void propagateListDataProviderWithFilter(Map filterInfo) {
 		log.debug("Building FilterExpression for ListDataProvider");
 		if (this.listDataProvider != null) {
@@ -460,7 +496,7 @@ public class ListWidget extends StandardPresentationWidget {
 			this.listDataProvider.setFilterExpression(filterExpr);			
 		}
 	}
-	
+
 	/**
 	 * Returns the order info.
 	 * 
@@ -469,7 +505,7 @@ public class ListWidget extends StandardPresentationWidget {
 	public OrderInfo getOrderInfo() {
 		return this.orderInfo;
 	}
-	
+
 	/**
 	 * Sets the initial order of the list.
 	 * 
@@ -477,15 +513,12 @@ public class ListWidget extends StandardPresentationWidget {
 	 * @param ascending whether ordering should be ascending.
 	 */
 	public void setInitialOrder(String columnName, boolean ascending) {
-		if (this.listStructure.getColumn(columnName) == null)
-			throw new AraneaRuntimeException("Column '" + columnName + "' specified for initial order does not exist!");
-		
 		OrderInfo orderInfo = new OrderInfo();
 		OrderInfoField orderInfoField = new OrderInfoField(columnName, ascending);
 		orderInfo.addField(orderInfoField);
 		setOrderInfo(orderInfo);
 	}
-	
+
 	/**
 	 * Sets the order information to list data provider and list widget.
 	 * 
@@ -493,11 +526,13 @@ public class ListWidget extends StandardPresentationWidget {
 	 */
 	public void setOrderInfo(OrderInfo orderInfo) {  	
 		if (orderInfo != null) {
-			propagateListDataProviderWithOrderInfo(orderInfo);
+			if (isInitialized()) {
+				propagateListDataProviderWithOrderInfo(orderInfo);				
+			}
 			this.orderInfo = orderInfo;
 		}
 	}
-	
+
 	protected void propagateListDataProviderWithOrderInfo(OrderInfo orderInfo) {
 		log.debug("Building OrderExpression for ListDataProvider");
 		if (this.listDataProvider != null) {
@@ -506,7 +541,7 @@ public class ListWidget extends StandardPresentationWidget {
 			this.listDataProvider.setOrderExpression(orderExpr);			
 		}
 	}
-	
+
 	/**
 	 * Refreshes the current item range, reloading the shown items.
 	 * 
@@ -514,17 +549,17 @@ public class ListWidget extends StandardPresentationWidget {
 	 */
 	public void refreshCurrentItemRange() throws Exception {
 		log.debug("Refreshing current item range");
-		
+
 		ListItemsData itemRangeData;
-		
+
 		itemRangeData = this.listDataProvider.getItemRange(new Long(this.sequenceHelper
 				.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
-		
+
 		this.itemRange = itemRangeData.getItemRange();
 		this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());
 		this.sequenceHelper.validateSequence();
 	}
-	
+
 	/**
 	 * Returns the current item range.
 	 * 
@@ -533,25 +568,25 @@ public class ListWidget extends StandardPresentationWidget {
 	public List getItemRange() {
 		return this.itemRange;
 	}
-	
+
 	public Object getRowFromRequestId(String requestId) {	
 		return this.requestIdToRow.get(requestId);
 	}
-	
-	
+
+
 	//*******************************************************************
 	// WIDGET METHODS
 	//*******************************************************************  
-	
+
 	/**
 	 * Initilizes the list, initializing contained filter form and the {@link ListDataProvider}and
 	 * getting the initial item range.
 	 */
 	protected void init() throws Exception {
 		super.init();
-		
+
 		this.sequenceHelper = new SequenceHelper(getConfiguration());
-		
+
 		addEventListener("nextPage", new NextPageEventHandler());
 		addEventListener("previousPage", new PreviousPageEventHandler());
 		addEventListener("nextBlock", new NextBlockEventHandler());
@@ -561,50 +596,60 @@ public class ListWidget extends StandardPresentationWidget {
 		addEventListener("jumpToPage", new JumpToPageEventHandler());
 		addEventListener("showAll", new ShowAllEventHandler());
 		addEventListener("showSlice", new ShowSliceEventHandler());
-		
+
 		addEventListener("order", new OrderEventHandler());
-		
+
 		if (this.filterForm != null) {
-			FormElement filterButton = this.filterForm.addElement("filter",
-					UiLibMessages.LIST_FILTER_BUTTON_LABEL,
-					new ButtonControl(), null, false);
-			((ButtonControl) (filterButton.getControl()))
-			.addOnClickEventListener(new FilterEventHandler());
-			
+			String filterButtonLabelId = this.filterButtonLabelId;
+			if (filterButtonLabelId == null) {
+				filterButtonLabelId = UiLibMessages.LIST_FILTER_BUTTON_LABEL;
+			}
+			String clearButtonLabelId = this.filterClearButtonLabelId;
+			if (clearButtonLabelId == null) {
+				clearButtonLabelId = UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL;
+			}
+
+			FormElement filterButton = this.filterForm.addElement(FILTER_BUTTON_ID, filterButtonLabelId, new ButtonControl(), null, false);
+			((ButtonControl) (filterButton.getControl())).addOnClickEventListener(new FilterEventHandler());
+
+			FormElement clearButton = this.filterForm.addElement(FILTER_CLEAR_BUTTON_ID, clearButtonLabelId, new ButtonControl(), null, false);
+			((ButtonControl) (clearButton.getControl())).addOnClickEventListener(new FilterClearEventHandler());
+
 			this.filterForm.markBaseState();
 		}
 		else {
 			this.filterForm = new FormWidget();
 		}                
-		
+
 		//Configuration
-		
+
 		Long defaultListSize = (Long) getConfiguration().getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);
 		if (defaultListSize != null) {
 			this.sequenceHelper.setItemsOnPage(defaultListSize.longValue());
 		}
-		
+
 		addWidget(FILTER_FORM_NAME, this.filterForm);
-		
+
 		log.debug("Initilizing ListWidget.");
-		
+
 		propagateListDataProviderWithOrderInfo(getOrderInfo());
-		propagateListDataProviderWithFilter(getFilterInfo());		
+		propagateListDataProviderWithFilter(getFilterInfo());
+		
 		this.listDataProvider.init();
 	}
-	
+
 	/**
 	 * Destoys the list and contained data provider and filter form.
 	 * @throws Exception 
 	 */
 	protected void destroy() throws Exception {
 		super.destroy();
-		
+
 		log.debug("Destroying ListWidget.");
-		
+
 		listDataProvider.destroy();
 	}
-	
+
 	/**
 	 * Returns {@link ViewModel}- list widget view model.
 	 * 
@@ -614,10 +659,10 @@ public class ListWidget extends StandardPresentationWidget {
 	public Object getViewModel() throws Exception {
 		return new ViewModel();
 	}	  
-	
+
 	protected void handleProcess() throws Exception {
 		refreshCurrentItemRange();
-		
+
 		//Making the requestId to row mapping
 		requestIdToRow.clear();
 		for (ListIterator i = itemRange.listIterator(); i.hasNext();) {
@@ -625,76 +670,76 @@ public class ListWidget extends StandardPresentationWidget {
 			requestIdToRow.put(Integer.toString(i.previousIndex()), row);
 		}    
 	}  
-	
+
 	//*******************************************************************
 	// EVENT HANDLERS
 	//*******************************************************************
-	
+
 	/**
 	 * Handles page advancing.
 	 */
-	private class NextPageEventHandler extends StandardEventListener {
-		
+	protected class NextPageEventHandler extends StandardEventListener {
+
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToNextPage();
 		}
 	}
-	
+
 	/**
 	 * Handles page preceeding.
 	 */
-	private class PreviousPageEventHandler  extends StandardEventListener {
-		
+	protected class PreviousPageEventHandler  extends StandardEventListener {
+
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToPreviousPage();
 		}
 	}
-	
+
 	/**
 	 * Handles block advancing.
 	 */
-	private class NextBlockEventHandler  extends StandardEventListener {
-		
+	protected class NextBlockEventHandler  extends StandardEventListener {
+
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToNextBlock();
 		}
 	}
-	
+
 	/**
 	 * Handles block preceeding.
 	 */
-	private class PreviousBlockEventHandler  extends StandardEventListener {
-		
+	protected class PreviousBlockEventHandler  extends StandardEventListener {
+
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToPreviousBlock();
 		}
 	}
-	
+
 	/**
 	 * Handles going to first page
 	 */
-	private class FirstPageEventHandler  extends StandardEventListener {
-		
+	protected class FirstPageEventHandler  extends StandardEventListener {
+
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToFirstPage();
 		}
 	}
-	
+
 	/**
 	 * Handles going to last page
 	 */
-	private class LastPageEventHandler  extends StandardEventListener {
-		
+	protected class LastPageEventHandler  extends StandardEventListener {
+
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToLastPage();
 		}
 	}
-	
+
 	/**
 	 * Handles going to any page by number.
 	 */
-	private class JumpToPageEventHandler  extends StandardEventListener {
-		
+	protected class JumpToPageEventHandler  extends StandardEventListener {
+
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			int page;
 			try {
@@ -706,35 +751,35 @@ public class ListWidget extends StandardPresentationWidget {
 			sequenceHelper.goToPage(page);
 		}
 	}
-	
+
 	/**
 	 * Handles showing all records.
 	 */
-	private class ShowAllEventHandler  extends StandardEventListener {
-		
+	protected class ShowAllEventHandler  extends StandardEventListener {
+
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.showFullPages();      
 		}
 	}
-	
+
 	/**
 	 * Handles showing only current records.
 	 */
-	private class ShowSliceEventHandler extends StandardEventListener {
-		
+	protected class ShowSliceEventHandler extends StandardEventListener {
+
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {      
 			sequenceHelper.showDefaultPages();  
 		}
 	}
-	
+
 	/**
 	 * Handles single column ordering.
 	 */  
-	private void order(String fieldName) throws Exception {	  
+	protected void order(String fieldName) throws Exception {	  
 		log.debug("Processing Single Column Order");    	
-		
+
 		boolean ascending = true;
-		
+
 		List orderFields = orderInfo.getFields();
 		OrderInfoField currentOrderField = (OrderInfoField) (orderFields.size() > 0 ? orderFields.get(0) : null);
 		if (currentOrderField != null) {
@@ -742,19 +787,18 @@ public class ListWidget extends StandardPresentationWidget {
 				ascending = false;
 			}
 		}
-		
+
 		orderInfo.clearFields();
 		orderInfo.addField(new OrderInfoField(fieldName, ascending));
-		
+
 		propagateListDataProviderWithOrderInfo(orderInfo);		
-		
+
 		// listDataProvider.setOrderInfo(orderInfo);   
-		
+
 		filter();
 	}
-	
-	private class OrderEventHandler extends StandardEventListener {
-		
+
+	protected class OrderEventHandler extends StandardEventListener {
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			// single column ordering
 			log.debug("Processing Order event, with param = " + eventParam);
@@ -762,15 +806,15 @@ public class ListWidget extends StandardPresentationWidget {
 				order(eventParam);
 				return;
 			}
-			
+
 			// multi column ordering
 			log.debug("Processing Multi Column Order");    	
 			OrderInfo orderInfo = MultiOrderHelper.getOrderInfo(getOrderInfoMap(input.getScopedData()));
-			
+
 			log.debug("Building OrderExpression");
 			propagateListDataProviderWithOrderInfo(orderInfo);
 		}
-		
+
 		private Map getOrderInfoMap(Map data) {
 			Map orderInfoMap = new HashMap();    	
 			for (Iterator i = data.keySet().iterator(); i.hasNext();) {
@@ -782,37 +826,64 @@ public class ListWidget extends StandardPresentationWidget {
 			return orderInfoMap;
 		}
 	}
-	
+
 	/**
 	 * Handles filtering.
 	 */
-	private void filter() throws Exception {
+	protected void filter() throws Exception {
 		log.debug("Converting and validating FilterForm");
 		if (filterForm.convertAndValidate() && filterForm.isStateChanged()) {
-			
+
 			log.debug("Reading FilterInfo");
 			MapFormReader mapFormReader = new MapFormReader(filterForm);
 			Map filterInfo = mapFormReader.getMap();
 			log.debug("FilterInfo: " + filterInfo);
-			
+
 			propagateListDataProviderWithFilter(filterInfo);
-			
+
 			filterForm.markBaseState();
 			sequenceHelper.setCurrentPage(0);
 		}         
 	}
+
+	/**
+	 * Handles filter clearing. 
+	 */
+	protected void clearFilter() {
+		clearForm(filterForm);
+		propagateListDataProviderWithFilter(new HashMap());
+		sequenceHelper.setCurrentPage(0);
+	}
 	
-	private class FilterEventHandler implements OnClickEventListener {
+	protected static void clearForm(FormWidget compositeFormElement) {
+		for (Iterator i = compositeFormElement.getElements().values().iterator(); i.hasNext();) {
+			GenericFormElement element = (GenericFormElement) i.next();
+			
+			if (element instanceof FormElement) {
+				((FormElement) element).setValue(null);
+				element.markBaseState();
+			} else if (element instanceof FormWidget) {
+				clearForm((FormWidget) element);
+			}
+		}
+	}
+
+	protected class FilterEventHandler implements OnClickEventListener {
 		public void onClick() throws Exception {
-			log.debug("Processing Filter event");
 			filter();
 		}
 	}
-	
+
+	protected class FilterClearEventHandler implements OnClickEventListener {
+		public void onClick() throws Exception {
+			clearFilter();
+		}
+	}	
+
 	//*********************************************************************
 	//* VIEW MODEL
 	//*********************************************************************
-	
+
 	/**
 	 * Represents a list widget view model.
 	 * 
@@ -820,15 +891,15 @@ public class ListWidget extends StandardPresentationWidget {
 	 *  
 	 */
 	public class ViewModel extends StandardWidget.ViewModel {
-		
+
 		private static final long serialVersionUID = 1L;
-		
+
 		private List itemRange;
 		private SequenceHelper.ViewModel sequence;
 		private ListStructure.ViewModel listStructure;
 		private OrderInfo.ViewModel orderInfo;
 		private FormWidget.ViewModel filterForm;
-		
+
 		/**
 		 * Takes a snapshot of outer class state.
 		 * @throws Exception 
@@ -840,7 +911,7 @@ public class ListWidget extends StandardPresentationWidget {
 			this.orderInfo = ListWidget.this.getOrderInfo().getViewModel();
 			this.filterForm = (FormWidget.ViewModel) ListWidget.this.filterForm._getViewable().getViewModel();
 		}
-		
+
 		/**
 		 * Returns item range.
 		 * 
@@ -849,7 +920,7 @@ public class ListWidget extends StandardPresentationWidget {
 		public List getItemRange() {
 			return itemRange;
 		}
-		
+
 		/**
 		 * Returns sequence helper.
 		 * 
@@ -858,7 +929,7 @@ public class ListWidget extends StandardPresentationWidget {
 		public SequenceHelper.ViewModel getSequence() {
 			return sequence;
 		}
-		
+
 		/**
 		 * Returns list structure.
 		 * 
@@ -867,7 +938,7 @@ public class ListWidget extends StandardPresentationWidget {
 		public ListStructure.ViewModel getListStructure() {
 			return listStructure;
 		}
-		
+
 		/**
 		 * Returns order info.
 		 * 
@@ -876,7 +947,7 @@ public class ListWidget extends StandardPresentationWidget {
 		public OrderInfo.ViewModel getOrderInfo() {
 			return orderInfo;
 		}
-		
+
 		/**
 		 * Returns filter form view model.
 		 * 
