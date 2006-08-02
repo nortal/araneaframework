@@ -72,6 +72,9 @@ public class ListWidget extends StandardPresentationWidget {
 	 * The filter form name.
 	 */
 	public static final String FILTER_FORM_NAME = "filterForm";
+	
+	public static final String FILTER_BUTTON_ID = "filter";
+		
 	/**
 	 * The multi-column ordering form name.
 	 */
@@ -86,6 +89,8 @@ public class ListWidget extends StandardPresentationWidget {
 	
 	protected List itemRange;
 	protected Map requestIdToRow = new HashMap();
+	
+	protected String filterButtonLabelId;
 	
 	//*********************************************************************
 	//* CONSTRUCTORS
@@ -288,6 +293,15 @@ public class ListWidget extends StandardPresentationWidget {
 	/*
 	 * FormWidget proxy-methods
 	 */
+	
+	public void setFilterButtonLabel(String labelId) {
+		this.filterButtonLabelId = labelId;
+		if (isInitialized()) {
+			FormElement element = getFilterForm().getElementByFullName(FILTER_BUTTON_ID);		
+			element.setLabel(labelId);
+			element.getControl().setLabel(labelId);		
+		}
+	}
 	
 	public void addFilterFormElement(String id, FormElement element) throws Exception {
 		if (this.filterForm == null) {
@@ -574,11 +588,13 @@ public class ListWidget extends StandardPresentationWidget {
 		addEventListener("order", new OrderEventHandler());
 		
 		if (this.filterForm != null) {
-			FormElement filterButton = this.filterForm.addElement("filter",
-					UiLibMessages.LIST_FILTER_BUTTON_LABEL,
-					new ButtonControl(), null, false);
-			((ButtonControl) (filterButton.getControl()))
-			.addOnClickEventListener(new FilterEventHandler());
+			String filterButtonLabelId = this.filterButtonLabelId;
+			if (filterButtonLabelId == null) {
+				filterButtonLabelId = UiLibMessages.LIST_FILTER_BUTTON_LABEL;
+			}
+			
+			FormElement filterButton = this.filterForm.addElement(FILTER_BUTTON_ID, filterButtonLabelId, new ButtonControl(), null, false);
+			((ButtonControl) (filterButton.getControl())).addOnClickEventListener(new FilterEventHandler());
 			
 			this.filterForm.markBaseState();
 		}
@@ -642,7 +658,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles page advancing.
 	 */
-	private class NextPageEventHandler extends StandardEventListener {
+	protected class NextPageEventHandler extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToNextPage();
@@ -652,7 +668,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles page preceeding.
 	 */
-	private class PreviousPageEventHandler  extends StandardEventListener {
+	protected class PreviousPageEventHandler  extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToPreviousPage();
@@ -662,7 +678,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles block advancing.
 	 */
-	private class NextBlockEventHandler  extends StandardEventListener {
+	protected class NextBlockEventHandler  extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToNextBlock();
@@ -672,7 +688,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles block preceeding.
 	 */
-	private class PreviousBlockEventHandler  extends StandardEventListener {
+	protected class PreviousBlockEventHandler  extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToPreviousBlock();
@@ -682,7 +698,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles going to first page
 	 */
-	private class FirstPageEventHandler  extends StandardEventListener {
+	protected class FirstPageEventHandler  extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToFirstPage();
@@ -692,7 +708,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles going to last page
 	 */
-	private class LastPageEventHandler  extends StandardEventListener {
+	protected class LastPageEventHandler  extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToLastPage();
@@ -702,7 +718,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles going to any page by number.
 	 */
-	private class JumpToPageEventHandler  extends StandardEventListener {
+	protected class JumpToPageEventHandler  extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			int page;
@@ -719,7 +735,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles showing all records.
 	 */
-	private class ShowAllEventHandler  extends StandardEventListener {
+	protected class ShowAllEventHandler  extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.showFullPages();      
@@ -729,7 +745,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles showing only current records.
 	 */
-	private class ShowSliceEventHandler extends StandardEventListener {
+	protected class ShowSliceEventHandler extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {      
 			sequenceHelper.showDefaultPages();  
@@ -739,7 +755,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles single column ordering.
 	 */  
-	private void order(String fieldName) throws Exception {	  
+	protected void order(String fieldName) throws Exception {	  
 		log.debug("Processing Single Column Order");    	
 		
 		boolean ascending = true;
@@ -762,7 +778,7 @@ public class ListWidget extends StandardPresentationWidget {
 		filter();
 	}
 	
-	private class OrderEventHandler extends StandardEventListener {
+	protected class OrderEventHandler extends StandardEventListener {
 		
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			// single column ordering
@@ -795,7 +811,7 @@ public class ListWidget extends StandardPresentationWidget {
 	/**
 	 * Handles filtering.
 	 */
-	private void filter() throws Exception {
+	protected void filter() throws Exception {
 		log.debug("Converting and validating FilterForm");
 		if (filterForm.convertAndValidate() && filterForm.isStateChanged()) {
 			
@@ -811,7 +827,7 @@ public class ListWidget extends StandardPresentationWidget {
 		}         
 	}
 	
-	private class FilterEventHandler implements OnClickEventListener {
+	protected class FilterEventHandler implements OnClickEventListener {
 		public void onClick() throws Exception {
 			log.debug("Processing Filter event");
 			filter();
