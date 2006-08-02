@@ -14,7 +14,7 @@
 				
 			<ui:component>
 
-				<ui:componentList>
+				<ui:componentList width="1000px">
 					<!-- Title -->
 					<ui:componentListHeader/>
 
