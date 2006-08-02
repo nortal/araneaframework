@@ -20,13 +20,14 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 
 /**
  * This widget is for adding new or editing existing persons.
  * Upon successful completion it returns the ID of stored person. 
  * 
- * @author Rein Raudjärv <reinra@ut.ee>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class PersonAddEditWidget extends TemplateBaseWidget {
 	/* The ID field of the person data model. We don't know it before saving the object to
@@ -79,6 +80,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 		form.addBeanElement("surname", "#Last name", new TextControl(), false);
 		form.addBeanElement("phone", "#Phone no", new TextControl(), true);
 		form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+		form.addBeanElement("salary", "#Salary", new FloatControl(), false);
 		
 		if (editMode) {
 			/* fetch the person with given ID from database */

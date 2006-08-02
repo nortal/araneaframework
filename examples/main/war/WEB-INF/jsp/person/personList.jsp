@@ -14,7 +14,7 @@
 				
 			<ui:component>
 
-				<ui:componentList>
+				<ui:componentList width="1000px">
 					<!-- Title -->
 					<ui:componentListHeader/>
 
@@ -40,6 +40,12 @@
 								<br/>
 								<ui:dateInput id="birthdate_end"/> 
 							</ui:cell>
+							
+			                <ui:cell>
+			                  <ui:floatInput id="salary_start"/>
+			                  <br/>
+			                  <ui:floatInput id="salary_end"/>
+			                </ui:cell>							
 
 							<ui:cell>
 								<ui:filterButton/>
@@ -74,6 +80,10 @@
 								<fmt:formatDate value="${row.birthdate}" pattern="dd.MM.yyyy"/>
 							</ui:cell>
 
+							<ui:cell>
+								<c:out value="${row.salary}"/>
+							</ui:cell>
+							
 							<ui:cell>
 								<ui:listRowLinkButton eventId="edit">
 									<ui:image code="buttonChange" alt="Edit person" title="Edit person"/>
