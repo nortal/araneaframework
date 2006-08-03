@@ -206,6 +206,7 @@ public class SqlStatement implements Serializable, Cloneable {
 				pstmt.setNull(i, ((NullValue) parameter).getType());
 			} else {
 				// converting java.util.Date into java.sql.Date
+				// TODO is this correct?
 			    if (parameter != null && java.util.Date.class.isAssignableFrom(parameter.getClass())) {
 			    	parameter = new java.sql.Date(((java.util.Date) parameter).getTime());
 			    }

@@ -56,7 +56,7 @@ import org.araneaframework.uilib.list.util.converter.DummyConverter;
 /**
  * This class provides an SQL based implementation of the list. It takes care of
  * the filtering, ordering and returning data to the web components.
- * Implementations should override abstract methods noted in thos methods.
+ * Implementations should override abstract methods noted in those methods.
  * <p>
  * Note, that all operations on items are made on the list of "processed", that
  * is ordered and filtered items.
@@ -67,9 +67,9 @@ import org.araneaframework.uilib.list.util.converter.DummyConverter;
  */
 public abstract class ListSqlHelper {
 
-	private static final Long DEFAULT_RANGE_START = new Long(0);
-
 	protected static Logger log = Logger.getLogger(ListSqlHelper.class);
+
+	protected static final Long DEFAULT_RANGE_START = new Long(0);
 
 	// *******************************************************************
 	// FIELDS
@@ -105,9 +105,8 @@ public abstract class ListSqlHelper {
 
 	// RESULTSET READING
 
-	protected ResultSetColumnReader resultSetReader = DefaultResultSetColumnReader
-	.getInstance();
-	protected GeneralBeanMapper beanMapper;
+	protected ResultSetColumnReader resultSetColumnReader =
+		DefaultResultSetColumnReader.getInstance();
 
 	// *********************************************************************
 	// * CONSTRUCTORS
@@ -123,7 +122,8 @@ public abstract class ListSqlHelper {
 	}
 
 	/**
-	 * Creates <code>ListSqlHelper</code> provided with the <code>DataSource</code>.
+	 * Creates <code>ListSqlHelper</code> and provides it with the
+	 * <code>DataSource</code>.
 	 */
 	public ListSqlHelper(DataSource dataSource) {
 		setDataSource(dataSource);
@@ -147,24 +147,44 @@ public abstract class ListSqlHelper {
 	// * PUBLIC METHODS
 	// *********************************************************************
 
+	/**
+	 * Sets the starting index and count of items in the range and
+	 * filtering and ordering expressions. 
+	 */
 	public void setListQuery(ListQuery query) {
 		this.filterExpr = query.getFilterExpression();
 		this.orderExpr = query.getOrderExpression();
-		this.itemRangeStart = query.getItemRangeStart() != null ? query.getItemRangeStart() : DEFAULT_RANGE_START;
-		this.itemRangeCount = query.getItemRangeCount();		
-	}
-	
-	public ResultSetColumnReader getResultSetReader() {
-		return this.resultSetReader;
+		setItemRangeStart(itemRangeStart);
+		setItemRangeCount(itemRangeCount);
 	}
 
-	public void setResultSetReader(ResultSetColumnReader resultSetReader) {
-		this.resultSetReader = resultSetReader;
-	}
-
-	/*
-	 * Database mapping and converters.
+	/**
+	 * Sets the (0-based) starting index of the item range.
 	 */
+	public void setItemRangeStart(Long itemRangeStart) {
+		if (itemRangeStart == null) {
+			itemRangeStart = DEFAULT_RANGE_START;
+		}
+		this.itemRangeStart = itemRangeStart;
+	}
+
+	/**
+	 * Sets the count of items in the range.
+	 */
+	public void setItemRangeCount(Long itemRangeCount) {
+		this.itemRangeCount = itemRangeCount;
+	}
+
+	/**
+	 * Sets the <code>ResultSet</code> column reader.
+	 */
+	public void setResultSetColumnReader(ResultSetColumnReader resultSetColumnReader) {
+		this.resultSetColumnReader = resultSetColumnReader;
+	}
+
+	// *********************************************************************
+	// * DATABASE MAPPING AND CONVERTERS
+	// *********************************************************************	
 
 	/**
 	 * Sets the converter between the filtering-ordering values in
@@ -242,17 +262,20 @@ public abstract class ListSqlHelper {
 		setColumnMapping(columnName, databaseFieldName, makeFieldNameUnique(removePrefix(databaseFieldName)));
 	}
 
-	private String makeFieldNameUnique(String field) {
-		String alias = field;
+	private String makeFieldNameUnique(String databaseFieldName) {
+		String alias = databaseFieldName;
 		int index = 0;
 		while (this.beanToResultSetMapping.containsValue(alias)) {
 			alias = alias + index++;
 		}
+		if (log.isDebugEnabled()) {
+			log.debug("Using '" + alias + "' as alias for field '" + databaseFieldName + "'");
+		}
 		return alias;
 	}
 
-	private static String removePrefix(String field) {
-		return field.substring(field.lastIndexOf('.') + 1);
+	private static String removePrefix(String databaseFieldName) {
+		return databaseFieldName.substring(databaseFieldName.lastIndexOf('.') + 1);
 	}
 
 	/**
@@ -293,10 +316,10 @@ public abstract class ListSqlHelper {
 		setDeconverter(columnName, converter);
 	}
 
-	/*
-	 * Building SqlExpressions according to Ordering and Filtering.
-	 */
-
+	// *********************************************************************
+	// * BUILDING SQL EXPRESSIONS ACCORDING TO ORDERING AND FILTERING
+	// *********************************************************************	
+		
 	/**
 	 * Sets the <code>ComparatorExpression</code> saving it for later use.
 	 */
@@ -327,9 +350,13 @@ public abstract class ListSqlHelper {
 			String variable = (String) entry.getKey();
 			String dbField = (String) entry.getValue();
 			String alias = (String) this.beanToResultSetMapping.get(variable);
-
-			String sql = alias == null || alias.equals(dbField)
-			? dbField : new StringBuffer(dbField).append(" ").append(alias).toString();
+			
+			String sql;
+			if (alias == null || alias.equals(dbField)) {
+				sql = dbField;
+			} else {
+				sql = new StringBuffer(dbField).append(" ").append(alias).toString();
+			}
 			fields.add(new SqlStringExpression(sql));
 		}
 		return fields;
@@ -409,10 +436,12 @@ public abstract class ListSqlHelper {
 	}  
 
 	/**
-	 * Returns the <code>List</code> of parameters that should be set in the <code>PreparedStatement</code> that
+	 * Returns the <code>List</code> of parameters that should be set in the
+	 * <code>PreparedStatement</code> that
 	 * belong to the filter database conditions.
 	 * 
-	 * @return the <code>List</code> of parameters that should be set in the <code>PreparedStatement</code> that
+	 * @return the <code>List</code> of parameters that should be set in the
+	 * <code>PreparedStatement</code> that
 	 *         belong to the filter database conditions.
 	 */
 	public List getDatabaseFilterParams() {
@@ -453,49 +482,78 @@ public abstract class ListSqlHelper {
 	}  
 
 	/**
-	 * Returns the <code>List</code> of parameters that should be set in the <code>PreparedStatement</code> that
-	 * belong to the order database representation.
+	 * Returns the <code>List</code> of parameters that should be set in the
+	 * <code>PreparedStatement</code> that belong to the order database representation.
 	 * 
-	 * @return the <code>List</code> of parameters that should be set in the <code>PreparedStatement</code> that
-	 *         belong to the order database representation.
+	 * @return the <code>List</code> of parameters that should be set in the
+	 * <code>PreparedStatement</code> that belong to the order database representation.
 	 */
 	public List getDatabaseOrderParams() {
 		SqlExpression expr = this.getOrderSqlExpression();
 		return expr != null ? Arrays.asList(expr.getValues()) : new ArrayList();
 	}
 
-	/*
-	 * Preparing database queries.
-	 */
+	// *********************************************************************
+	// * PREPARING DATABASE QUERIES
+	// *********************************************************************		
 
 	/**
-	 * Sets the count of items in the range.
+	 * Sets the SQL query that will be used to retrieve the item range from the
+	 * list and count the items.
 	 * 
-	 * @param itemRangeCount
-	 *            the count of items in the range.
+	 * @param sqlQuery
+	 *            the SQL query that will be used to retrieve the item range
+	 *            from the list and count the items.
 	 */
-	public void setItemRangeCount(Long itemRangeCount) {
-		this.itemRangeCount = itemRangeCount;
-	}
+	public abstract void setSqlQuery(String sqlQuery);
 
 	/**
-	 * Sets the (0-based) starting index of the item range.
+	 * Sets the SQL query used to count the items in the database.
 	 * 
-	 * @param itemRangeStart
-	 *            the (0-based) starting index of the item range.
+	 * @param countSqlQuery
+	 *            the SQL query used to count the items in the database.
 	 */
-	public void setItemRangeStart(Long itemRangeStart) {
-		this.itemRangeStart = itemRangeStart;
-	}
+	public abstract void setCountSqlQuery(String countSqlQuery);
 
+	/**
+	 * Adds a <code>NULL</code> <code>PreparedStatement</code> parameter for
+	 * later setting.
+	 * 
+	 * @param valueType
+	 *            the type of the NULL value.
+	 */
+	public abstract void addNullParam(int valueType);
+
+	/**
+	 * Adds a <code>PreparedStatement</code> parameter for later setting.
+	 * 
+	 * @param param
+	 *            a <code>PreparedStatement</code> parameter.
+	 */
+	public abstract void addStatementParam(Object param);
+
+	/**
+	 * Adds <code>PreparedStatement</code> parameters for later setting.
+	 * 
+	 * @param params
+	 *            <code>PreparedStatement</code> parameters.
+	 */
+	public abstract void addStatementParams(List params);
+	
+	/**
+	 * Returns the total count SQL query String and parameters. 
+	 */
 	protected abstract SqlStatement getCountSqlStatement();
 
+	/**
+	 * Returns the itme range SQL query String and parameters. 
+	 */
 	protected abstract SqlStatement getRangeSqlStatement();	
 
-	/*
-	 * Executing database queries and returning their results.
-	 */
-
+	// *********************************************************************
+	// * EXECUTING SQL AND RETURING RESULTS
+	// *********************************************************************	
+	
 	/**
 	 * Stores the <code>DataSource</code>.
 	 */
@@ -505,8 +563,15 @@ public abstract class ListSqlHelper {
 	
 	/**
 	 * Execute a JDBC data access operation, implemented as callback action
-	 * working on a JDBC Connection. The stored <code>DataSource</code> is used
-	 * to provide JDBC connection for the action.   
+	 * working on a JDBC Connection.
+	 * 
+	 * The stored <code>DataSource</code> is used to provide JDBC connection for
+	 * the action. The connection is always closed after the action.
+	 * 
+	 * This method is used by all other <code>execute</code> methods in
+	 * <code>ListSqlHelper</code>. To override getting the connection, you
+	 * have to use one of the <code>ConnectionCallback</code> returning methods
+	 * and use your own implementation to execute it.
 	 * 
 	 * @param action callback object that specifies the action.
 	 * @return a result object returned by the action, or null.
@@ -528,10 +593,17 @@ public abstract class ListSqlHelper {
 	}
 	
 	/**
-	 * Executes the item range and total count SQL queries.
+	 * Executes SQL queries that should retrieve 1) the total count of items in
+	 * the list and 2) a range of items from the list
+	 * 
+	 * Provided <code>ResultReader</code> is used to convert the
+	 * <code>ResultSet</code> into a <code>List</code>.
+	 * 
+	 * The stored <code>DataSource</code> is used to provide JDBC connection for
+	 * the action. The connection will be closed automatically. 
 	 * 
 	 * @param reader
-	 *         ResultSet reader.
+	 *         <code>ResultSet</code> reader.
 	 * @return <code>ListItemsData</code> containing the item range and total
 	 *         count.
 	 */
@@ -540,7 +612,14 @@ public abstract class ListSqlHelper {
 	}
 
 	/**
-	 * Executes the item range and total count SQL queries.
+	 * Executes SQL queries that should retrieve 1) the total count of items in
+	 * the list and 2) a range of items from the list
+	 * 
+	 * <code>ListSqlHelper</code>'s <code>BeanResultReader</code> is used
+	 * to convert the <code>ResultSet</code> into a <code>List</code>.
+	 * 
+	 * The stored <code>DataSource</code> is used to provide JDBC connection for
+	 * the action. The connection will be closed automatically. 
 	 * 
 	 * @param itemClass
 	 *         Bean class.
@@ -552,8 +631,13 @@ public abstract class ListSqlHelper {
 	}
 	
 	/**
-	 * Executes the SQL query that should return the total count of items in the
-	 * list, retrieving the total count.
+	 * Executes a SQL query that should retrieve the total count of items in the
+	 * list.
+	 * 
+	 * The stored <code>DataSource</code> is used to provide JDBC connection for
+	 * the action. The connection will be closed automatically. 
+	 *
+	 * @return the total count of items in the list.
 	 */
 	public Long executeCountSql() {
 		return (Long) execute(getCountSqlCallback());
@@ -563,8 +647,14 @@ public abstract class ListSqlHelper {
 	 * Executes a SQL query that should retrieve a range of items from the
 	 * list.
 	 * 
+	 * Provided <code>ResultReader</code> is used to convert the
+	 * <code>ResultSet</code> into a <code>List</code>.
+	 * 
+	 * The stored <code>DataSource</code> is used to provide JDBC connection for
+	 * the action. The connection will be closed automatically.
+	 *  
 	 * @param reader
-	 *         ResultSet reader.
+	 *         <code>ResultSet</code> reader.
 	 * @return <code>List</code> containing the item range.
 	 */	
 	public List executeItemRangeSql(ResultReader reader) {
@@ -575,6 +665,12 @@ public abstract class ListSqlHelper {
 	 * Executes a SQL query that should retrieve a range of items from the
 	 * list.
 	 * 
+	 * <code>ListSqlHelper</code>'s <code>BeanResultReader</code> is used
+	 * to convert the <code>ResultSet</code> into a <code>List</code>.
+	 * 
+	 * The stored <code>DataSource</code> is used to provide JDBC connection for
+	 * the action. The connection will be closed automatically.
+	 *  
 	 * @param itemClass
 	 *         Bean class.
 	 * @return <code>List</code> containing the item range.
@@ -587,25 +683,62 @@ public abstract class ListSqlHelper {
 	// * CALLBACKS
 	// *********************************************************************	
 	
+	/**
+	 * Returns the total count and item ragne queries callback.
+	 * 
+	 * In most cases, you should not use this method directly, instead
+	 * using one of the <code>execute</code> methods is recommended.
+	 */
 	public ConnectionCallback getListItemsDataCallback(ResultReader reader) {
 		return new ListItemsDataCallback(getCountSqlCallback(), getItemRangeSqlCallback(reader));
 	}
 
+	/**
+	 * Returns the total count query callback.
+	 * 
+	 * In most cases, you should not use this method directly, instead
+	 * using one of the <code>execute</code> methods is recommended.
+	 */
 	public ConnectionCallback getCountSqlCallback() {
 		return new CountSqlCallback();
 	}
 
+	/**
+	 * Returns the item range query callback.
+	 * 
+	 * In most cases, you should not use this method directly, instead
+	 * using one of the <code>execute</code> methods is recommended.
+	 */
 	public ConnectionCallback getItemRangeSqlCallback(ResultReader reader) {
 		return new ItemRangeSqlCallback(reader);
 	}
 	
+	/**
+	 * The item range and total count querites callback that returns
+	 * <code>ListItemsData</code> object.
+	 * 
+	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 */
 	public class ListItemsDataCallback implements ConnectionCallback {
+		
 		protected ConnectionCallback countSqlCallback;
 		protected ConnectionCallback itemRangeSqlCallback;
+		
+		/**
+		 * @param countSqlCallback total count query callback.
+		 * @param itemRangeSqlCallback item range query callback.
+		 */
 		public ListItemsDataCallback(ConnectionCallback countSqlCallback, ConnectionCallback itemRangeSqlCallback) {
 			this.countSqlCallback = countSqlCallback;
 			this.itemRangeSqlCallback = itemRangeSqlCallback;
 		}
+		
+		/**
+		 * Executes both queries, creates and returns <code>ListItemsData</code>
+		 * object containing results of both queries.
+		 * 
+		 * @return the whole results as <code>ListItemsData</code> object.
+		 */
 		public Object doInConnection(Connection con) throws SQLException {			
 			ListItemsData result = new ListItemsData();
 			result.setTotalCount((Long) countSqlCallback.doInConnection(con));
@@ -614,7 +747,17 @@ public abstract class ListSqlHelper {
 		}
 	}
 	
+	/**
+	 * The total count query callback.
+	 * 
+	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 */
 	public class CountSqlCallback implements ConnectionCallback {
+		/** 
+		 * Executes total count query and returns the result.
+		 * 
+		 * @return the total count as <code>Long</code> object.  
+		 */
 		public Object doInConnection(Connection con) throws SQLException {
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
@@ -644,11 +787,27 @@ public abstract class ListSqlHelper {
 		}		
 	}
 	
+	/**
+	 * The itme range query callback that returns <code>List</code> of items.
+	 * 
+	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 */
 	public class ItemRangeSqlCallback implements ConnectionCallback {	
 		protected ResultReader reader;
+		
+		/**
+		 * @param reader <code>ResultSet</code> reader that processes the data
+		 * and returns items as <code>List</code>.
+		 */
 		public ItemRangeSqlCallback(ResultReader reader) {
 			this.reader = reader;
 		}
+		
+		/**
+		 * Executes the item range query and returns the reuslts.
+		 * 
+		 * @return list items as <code>List</code> object. 
+		 */
 		public Object doInConnection(Connection con) throws SQLException {
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
@@ -679,18 +838,46 @@ public abstract class ListSqlHelper {
 		}
 	}
 	
+	// *********************************************************************
+	// * BEAN RESULT READER
+	// *********************************************************************	
+	
+	/**
+	 * Returns Bean <code>ResultSet</code> reader.
+	 * 
+	 * In most cases, you should not use this method directly, instead
+	 * using one of the <code>execute</code> methods is recommended.
+	 */
 	public ResultReader getBeanResultReader(Class itemClass) {
 		return new BeanResultReader(itemClass);
 	}
 	
+	/**
+	 * Resultset reader that uses <code>beanToResultSetMapping</code> in
+	 * <code>ListSqlHelper</code> to construct a given type of Bean list.
+	 * 
+	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 */
 	public class BeanResultReader implements ResultReader {
+		
 		protected Class itemClass;
 		protected List results;
+		protected GeneralBeanMapper beanMapper;
+		
+		/**
+		 * @param itemClass Bean type.
+		 */
 		public BeanResultReader(Class itemClass) {
 			this.itemClass = itemClass;
 			this.results = new ArrayList();
-			beanMapper = new RecursiveBeanMapper(itemClass, true);
+			this.beanMapper = new RecursiveBeanMapper(itemClass, true);
 		}
+		
+		/** 
+		 * Processes <code>ResultSet</code> row passing it with the
+		 * new Bean instance to {@link #readBeanFields(ResultSet, Object)}
+		 * method.
+		 */
 		public void processRow(ResultSet rs) throws SQLException {
 			try {
 				while (rs.next()) {
@@ -706,6 +893,82 @@ public abstract class ListSqlHelper {
 				throw ExceptionUtil.uncheckException(e);
 			}
 		}
+
+		/**
+		 * Reads the bean from <code>ResultSet</code>. Implementations
+		 * may override it to read beans in a custom way.
+		 * 
+		 * @param resultSet
+		 *            <code>ResultSet</code> containing the results of database
+		 *            query.
+		 * @param bean
+		 *            bean to read.
+		 */
+		protected void readBeanFields(ResultSet resultSet, Object bean) {
+			log.debug("Starting to read value object fields.");
+
+			Collection fields = beanToResultSetMapping.keySet();
+			for (Iterator i = fields.iterator(); i.hasNext();) {
+				String field = (String) i.next();
+
+				if (!this.beanMapper.fieldIsWritable(field))
+					throw new RuntimeException(
+							"The field specified in the mapping doesn't have a corresponding Value Object field!");
+
+				readBeanField(resultSet, bean, field);
+			}
+
+			log.debug("Finished reading value object fields.");
+		}
+
+		/**
+		 * Reads the bean field from <code>ResultSet</code>.
+		 * Implementations may override it to read bean fields in a custom
+		 * way. A usual situation would be when a bean field is read from
+		 * more than one <code>ResultSet</code> field.
+		 * 
+		 * @param resultSet
+		 *            <code>ResultSet</code> containing the results of database
+		 *            query.
+		 * @param bean
+		 *            bean to read.
+		 * @param field
+		 *            bean field to read.
+		 */
+		protected void readBeanField(ResultSet resultSet, Object bean, String field) {
+
+			String resultSetColumnName = (String) beanToResultSetMapping
+			.get(field);
+			Converter deconverter = (Converter) beanDeconverters.get(field);
+
+			if (log.isDebugEnabled()) {
+				log.debug("Reading Bean field '" + field + "' from ResultSet column '"
+						+ resultSetColumnName + "'.");
+			}
+
+			Class valueType;
+			if (deconverter != null) {
+				valueType = deconverter.getDestinationType();
+			} else {
+				valueType = this.beanMapper.getBeanFieldType(field);
+			}
+
+			Object value = resultSetColumnReader.readFromResultSet(
+					resultSetColumnName, resultSet, valueType);
+			if (deconverter != null) {
+				value = deconverter.reverseConvert(value);
+			}
+			this.beanMapper.setBeanFieldValue(bean, field, value);
+
+			if (log.isDebugEnabled()) {
+				log.debug("Read Bean field '" + field + "' from ResultSet column '"
+						+ resultSetColumnName + "' with value '" + value + "'.");				
+			}
+		}
+		
+		/** 
+		 * Returns the results.
+		 */
 		public List getResults() {
 			return this.results;
 		}
@@ -714,74 +977,6 @@ public abstract class ListSqlHelper {
 	// *********************************************************************
 	// * HELPER METHODS
 	// *********************************************************************
-
-	/**
-	 * Reads the bean from <code>ResultSet</code>. Implementations
-	 * may override it to read beans in a custom way.
-	 * 
-	 * @param resultSet
-	 *            <code>ResultSet</code> containing the results of database
-	 *            query.
-	 * @param bean
-	 *            bean to read.
-	 */
-	protected void readBeanFields(ResultSet resultSet, Object bean) {
-		log.debug("Starting to read value object fields.");
-
-		Collection fields = this.beanToResultSetMapping.keySet();
-		for (Iterator i = fields.iterator(); i.hasNext();) {
-			String field = (String) i.next();
-
-			if (!this.beanMapper.fieldIsWritable(field))
-				throw new RuntimeException(
-						"The field specified in the mapping doesn't have a corresponding Value Object field!");
-
-			readBeanField(resultSet, bean, field);
-		}
-
-		log.debug("Finished reading value object fields.");
-	}
-
-	/**
-	 * Reads the bean field from <code>ResultSet</code>.
-	 * Implementations may override it to read bean fields in a custom
-	 * way. A usual situation would be when a bean field is read from
-	 * more than one <code>ResultSet</code> field.
-	 * 
-	 * @param resultSet
-	 *            <code>ResultSet</code> containing the results of database
-	 *            query.
-	 * @param bean
-	 *            bean to read.
-	 * @param field
-	 *            bean field to read.
-	 */
-	protected void readBeanField(ResultSet resultSet, Object bean, String field) {
-
-		String resultSetColumnName = (String) this.beanToResultSetMapping
-		.get(field);
-		Converter deconverter = (Converter) this.beanDeconverters.get(field);
-
-		log.debug("Reading VO field '" + field + "' from ResultSet column '"
-				+ resultSetColumnName + "'.");
-
-		Class valueType;
-		if (deconverter != null) {
-			valueType = deconverter.getDestinationType();
-		} else {
-			valueType = this.beanMapper.getBeanFieldType(field);
-		}
-
-		Object value = this.resultSetReader.readFromResultSet(
-				resultSetColumnName, resultSet, valueType);
-		if (deconverter != null) {
-			value = deconverter.reverseConvert(value);
-		}
-		this.beanMapper.setBeanFieldValue(bean, field, value);
-
-		log.debug("Read VO field '" + field + "' from ResultSet column '"
-				+ resultSetColumnName + "' with value '" + value + "'.");
-	}
 
 	/**
 	 * Creates the ValueConverter for SqlExpressionBuilder that converts Values
@@ -827,9 +1022,10 @@ public abstract class ListSqlHelper {
 	}
 	
 	/**
-	 * Returns query failed Exception. 
+	 * Returns query failed Exception that contains query String and params. 
 	 */
-	protected static RuntimeException createQueryFailedException(String QueryString, List queryParams, SQLException nestedException) {
+	protected static RuntimeException createQueryFailedException(
+			String QueryString, List queryParams, SQLException nestedException) {
 		String str = new StringBuffer("Executing list query [").append(QueryString).
 			append("] with params: ").append(queryParams).append(" failed").toString();
 		return new AraneaRuntimeException(str, nestedException);
