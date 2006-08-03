@@ -498,6 +498,27 @@ public abstract class ListSqlHelper {
 	// *********************************************************************		
 
 	/**
+	 * Sets the whole SQL query according to the database table name.
+	 * The format is following: SELECT (database fields) FROM (table name)
+	 * [WHERE (filter conditions)] [ORDER BY (order conditions)].
+	 * Also the filtering and ordering SQL parameters will be added. 
+	 * 
+	 * @param tableName database table name.
+	 */
+	public void setSimpleSqlQuery(String tableName) {
+		StringBuffer sb = new StringBuffer("SELECT ");
+		sb.append(getDatabaseFields());
+		sb.append(" FROM ");
+		sb.append(tableName);
+		sb.append(" ");
+		sb.append(getDatabaseFilterWith(" WHERE ", ""));
+		sb.append(getDatabaseOrderWith(" ORDER BY ", ""));
+		setSqlQuery(sb.toString());
+		addStatementParams(getDatabaseFilterParams());
+		addStatementParams(getDatabaseOrderParams());
+	}
+	
+	/**
 	 * Sets the SQL query that will be used to retrieve the item range from the
 	 * list and count the items. SQL query must start with SELECT.
 	 * 

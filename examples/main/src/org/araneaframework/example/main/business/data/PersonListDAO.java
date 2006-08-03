@@ -50,16 +50,7 @@ public class PersonListDAO {
 		helper.setColumnMapping("birthdate", "BIRTHDATE");
 		helper.setColumnMapping("salary", "SALARY");
 
-		StringBuffer query = new StringBuffer("SELECT ");
-		query.append(helper.getDatabaseFields());
-		query.append(" FROM person");
-		query.append(helper.getDatabaseFilterWith(" WHERE ", ""));
-		query.append(helper.getDatabaseOrderWith(" ORDER BY ", ""));
-
-		helper.setSqlQuery(query.toString());
-		helper.addStatementParams(helper.getDatabaseFilterParams());
-		helper.addStatementParams(helper.getDatabaseOrderParams());
-
+		helper.setSimpleSqlQuery("person");
 		helper.setDataSource(this.dataSource);
 		return helper.execute(PersonMO.class);
 	}
