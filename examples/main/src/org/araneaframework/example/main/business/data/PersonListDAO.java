@@ -50,7 +50,7 @@ public class PersonListDAO {
 		helper.setColumnMapping("birthdate", "BIRTHDATE");
 		helper.setColumnMapping("salary", "SALARY");
 
-		StringBuffer query = new StringBuffer();
+		StringBuffer query = new StringBuffer("SELECT ");
 		query.append(helper.getDatabaseFields());
 		query.append(" FROM person");
 		query.append(helper.getDatabaseFilterWith(" WHERE ", ""));
