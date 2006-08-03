@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.business.data;
 
 import javax.sql.DataSource;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.helper.HSqlListSqlHelper;
 import org.araneaframework.backend.list.model.ListItemsData;
@@ -60,18 +61,7 @@ public class PersonListDAO {
 		helper.addStatementParams(helper.getDatabaseFilterParams());
 		helper.addStatementParams(helper.getDatabaseOrderParams());
 
-		ListItemsData data;
-		try {
-			log.debug("Executing Queries");
-			helper.setDataSource(this.dataSource);
-			helper.execute();
-			data = helper.getListItemsData(PersonMO.class);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			helper.close();
-		}
-
-		return data;
+		helper.setDataSource(this.dataSource);
+		return helper.execute(PersonMO.class);
 	}
 }

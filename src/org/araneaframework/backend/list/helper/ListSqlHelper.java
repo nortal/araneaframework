@@ -63,12 +63,13 @@ import org.araneaframework.uilib.list.util.converter.DummyConverter;
  * <p>
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public abstract class ListSqlHelper {
 
 	private static final Long DEFAULT_RANGE_START = new Long(0);
 
-	private static Logger log = Logger.getLogger(ListSqlHelper.class);
+	protected static Logger log = Logger.getLogger(ListSqlHelper.class);
 
 	// *******************************************************************
 	// FIELDS
@@ -101,14 +102,6 @@ public abstract class ListSqlHelper {
 	// CONNECTION
 
 	protected DataSource ds;
-	protected Connection con;
-	protected PreparedStatement itemRangeStatement;
-
-	// RESULTS
-
-	protected Long totalCount;
-	protected List itemData;
-	protected ResultSet itemRangeResultSet;
 
 	// RESULTSET READING
 
@@ -121,22 +114,26 @@ public abstract class ListSqlHelper {
 	// *********************************************************************
 
 	/**
-	 * Creates <code>ListSqlHelper</code> initializing the appropriate fields.
-	 * 
-	 * @param filterExpr
-	 *            the filter.
-	 * @param orderExpr
-	 *            the order.
-	 * @param itemRangeStart
-	 *            start of item range.
-	 * @param itemRangeCount
-	 *            count of items in range.
+	 * Creates <code>ListSqlHelper</code> initializing the appropriate fields
+	 * and providing it with the <code>DataSource</code>.
 	 */
-	public ListSqlHelper(ListQuery query) {		
-		this.filterExpr = query.getFilterExpression();
-		this.orderExpr = query.getOrderExpression();
-		this.itemRangeStart = query.getItemRangeStart() != null ? query.getItemRangeStart() : DEFAULT_RANGE_START;
-		this.itemRangeCount = query.getItemRangeCount();
+	public ListSqlHelper(DataSource dataSource, ListQuery query) {
+		setDataSource(dataSource);
+		setListQuery(query);
+	}
+
+	/**
+	 * Creates <code>ListSqlHelper</code> provided with the <code>DataSource</code>.
+	 */
+	public ListSqlHelper(DataSource dataSource) {
+		setDataSource(dataSource);
+	}
+	
+	/**
+	 * Creates <code>ListSqlHelper</code> initializing the appropriate fields.
+	 */
+	public ListSqlHelper(ListQuery query) {
+		setListQuery(query);
 	}
 
 	/**
@@ -150,6 +147,13 @@ public abstract class ListSqlHelper {
 	// * PUBLIC METHODS
 	// *********************************************************************
 
+	public void setListQuery(ListQuery query) {
+		this.filterExpr = query.getFilterExpression();
+		this.orderExpr = query.getOrderExpression();
+		this.itemRangeStart = query.getItemRangeStart() != null ? query.getItemRangeStart() : DEFAULT_RANGE_START;
+		this.itemRangeCount = query.getItemRangeCount();		
+	}
+	
 	public ResultSetColumnReader getResultSetReader() {
 		return this.resultSetReader;
 	}
@@ -493,179 +497,220 @@ public abstract class ListSqlHelper {
 	 */
 
 	/**
-	 * Implementations should set the <code>DataSource</code> on
-	 * <code>setSessionContext</code>.
-	 * 
+	 * Stores the <code>DataSource</code>.
 	 */
 	public void setDataSource(DataSource ds) {
 		this.ds = ds;
-		try {
-			this.con = ds.getConnection();
+	}
+	
+	/**
+	 * Execute a JDBC data access operation, implemented as callback action
+	 * working on a JDBC Connection. The stored <code>DataSource</code> is used
+	 * to provide JDBC connection for the action.   
+	 * 
+	 * @param action callback object that specifies the action.
+	 * @return a result object returned by the action, or null.
+	 */
+	public Object execute(ConnectionCallback action) {		
+		if (this.ds == null) {
+			throw new RuntimeException("Please pass a DataSource to the ListSqlHelper!");
 		}
-		catch (SQLException ex) {
-			throw ExceptionUtil.uncheckException(ex);
+		
+		Connection con = null;
+		try {
+			con = ds.getConnection();
+			return action.doInConnection(con);
+		} catch (SQLException e) {
+			throw ExceptionUtil.uncheckException(e);
+		} finally {
+			DbHelper.closeDbObjects(con, null, null);
 		}
 	}
 	
-
 	/**
-	 * Executes the SQL query that should return the total count of items in the
-	 * list, retrieving the total count.
+	 * Executes the item range and total count SQL queries.
 	 * 
+	 * @param reader
+	 *         ResultSet reader.
+	 * @return <code>ListItemsData</code> containing the item range and total
+	 *         count.
 	 */
-	public void executeCountSql() {
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {			
-			SqlStatement countSqlStatement = getCountSqlStatement();
-
-			log.debug("Counting database query: " + countSqlStatement.getQuery());
-			log.debug("Counting statement parameters: " + countSqlStatement.getParams());
-
-			stmt = this.con.prepareStatement(countSqlStatement.getQuery());
-			countSqlStatement.propagateStatementWithParams(stmt);
-
-			try {
-				rs = stmt.executeQuery();	
-			} catch (SQLException e) {
-				throw createQueryFailedException(countSqlStatement.getQuery(), countSqlStatement.getParams(), e);
-			}
-			
-			if (rs.next()) {
-				this.totalCount = new Long(rs.getLong(1));
-			}
-		}
-		catch (SQLException e) {
-			throw ExceptionUtil.uncheckException(e);
-		}
-		finally {
-			DbHelper.closeDbObjects(null, stmt, rs);
-		}
-	}
-
-	/**
-	 * Executes an SQL query that should retrieve a range of items from the
-	 * list, saves <code>ResultSet</code> for further processing.
-	 * 
-	 */
-	public void executeItemRangeSql() {
-		SqlStatement rangeSqlStatement = getRangeSqlStatement();
-		log.debug("Item range database query: " + rangeSqlStatement.getQuery());
-		log.debug("Item range statement parameters: " + rangeSqlStatement.getParams());
-
-		try {
-			this.itemRangeStatement = this.con.prepareStatement(rangeSqlStatement.getQuery());
-			rangeSqlStatement.propagateStatementWithParams(this.itemRangeStatement);
-
-//			if (this.itemRangeCount != null && (this.itemRangeCount.longValue() < 1000)) {
-//				this.itemRangeStatement.setFetchSize(this.itemRangeCount.intValue());
-//			}			
-
-			try {
-				this.itemRangeResultSet = this.itemRangeStatement.executeQuery();
-			} catch (SQLException e) {
-				throw createQueryFailedException(rangeSqlStatement.getQuery(), rangeSqlStatement.getParams(), e);
-			}
-		}
-		catch (SQLException e) {
-			throw ExceptionUtil.uncheckException(e);
-		}
+	public ListItemsData execute(ResultReader reader) {
+		return (ListItemsData) execute(getListItemsDataCallback(reader));
 	}
 
 	/**
 	 * Executes the item range and total count SQL queries.
 	 * 
-	 */
-	public void execute() {
-		if (this.ds == null) {
-			throw new RuntimeException(
-			"Please pass a DataSource to the ListSqlHelper!");
-		}
-
-		executeCountSql();
-		executeItemRangeSql();
-	}
-
-	public ListItemsData execute(DataSource ds, Class itemClass) {
-		ListItemsData data = null;
-		try {
-			setDataSource(ds);
-			execute();
-			data = getListItemsData(itemClass);
-		} finally {
-			close();
-		}
-		return data;
-	}
-
-	/**
-	 * Tries to retrieve the item range from the saved <code>ResultSet</code>
-	 * and returns the <code>ListItemsData</code> containing the item range
-	 * and total count.
-	 * 
-	 * @param beanClass
-	 *            Bean class.
+	 * @param itemClass
+	 *         Bean class.
 	 * @return <code>ListItemsData</code> containing the item range and total
 	 *         count.
 	 */
-	public ListItemsData getListItemsData(Class beanClass) {
-		ListItemsData result = new ListItemsData();
-		result.setTotalCount(this.totalCount);
+	public ListItemsData execute(Class itemClass) {
+		return (ListItemsData) execute(getListItemsDataCallback(getBeanResultReader(itemClass)));
+	}
+	
+	/**
+	 * Executes the SQL query that should return the total count of items in the
+	 * list, retrieving the total count.
+	 */
+	public Long executeCountSql() {
+		return (Long) execute(getCountSqlCallback());
+	}
 
-		this.beanMapper = new RecursiveBeanMapper(beanClass, true);
+	/**
+	 * Executes a SQL query that should retrieve a range of items from the
+	 * list.
+	 * 
+	 * @param reader
+	 *         ResultSet reader.
+	 * @return <code>List</code> containing the item range.
+	 */	
+	public List executeItemRangeSql(ResultReader reader) {
+		return (List) execute(getItemRangeSqlCallback(reader));
+	}
+	
+	/**
+	 * Executes a SQL query that should retrieve a range of items from the
+	 * list.
+	 * 
+	 * @param itemClass
+	 *         Bean class.
+	 * @return <code>List</code> containing the item range.
+	 */	
+	public List executeItemRangeSql(Class itemClass) {
+		return (List) execute(getItemRangeSqlCallback(getBeanResultReader(itemClass)));
+	}
+	
+	// *********************************************************************
+	// * CALLBACKS
+	// *********************************************************************	
+	
+	public ConnectionCallback getListItemsDataCallback(ResultReader reader) {
+		return new ListItemsDataCallback(getCountSqlCallback(), getItemRangeSqlCallback(reader));
+	}
 
-		List itemRange = new ArrayList();
-		//XXX add capacity
+	public ConnectionCallback getCountSqlCallback() {
+		return new CountSqlCallback();
+	}
 
-		try {
-			while (this.itemRangeResultSet.next()) {
-				Object record = beanClass.newInstance();
-				readBeanFields(this.itemRangeResultSet, record);
-				itemRange.add(record);
+	public ConnectionCallback getItemRangeSqlCallback(ResultReader reader) {
+		return new ItemRangeSqlCallback(reader);
+	}
+	
+	public class ListItemsDataCallback implements ConnectionCallback {
+		protected ConnectionCallback countSqlCallback;
+		protected ConnectionCallback itemRangeSqlCallback;
+		public ListItemsDataCallback(ConnectionCallback countSqlCallback, ConnectionCallback itemRangeSqlCallback) {
+			this.countSqlCallback = countSqlCallback;
+			this.itemRangeSqlCallback = itemRangeSqlCallback;
+		}
+		public Object doInConnection(Connection con) throws SQLException {			
+			ListItemsData result = new ListItemsData();
+			result.setTotalCount((Long) countSqlCallback.doInConnection(con));
+			result.setItemRange((List) itemRangeSqlCallback.doInConnection(con));
+			return result;
+		}
+	}
+	
+	public class CountSqlCallback implements ConnectionCallback {
+		public Object doInConnection(Connection con) throws SQLException {
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			try {
+				SqlStatement countSqlStatement = getCountSqlStatement();
+
+				log.debug("Counting database query: " + countSqlStatement.getQuery());
+				log.debug("Counting statement parameters: " + countSqlStatement.getParams());
+
+				stmt = con.prepareStatement(countSqlStatement.getQuery());
+				countSqlStatement.propagateStatementWithParams(stmt);
+
+				try {
+					rs = stmt.executeQuery();	
+				} catch (SQLException e) {
+					throw createQueryFailedException(countSqlStatement.getQuery(), countSqlStatement.getParams(), e);
+				}
+				
+				if (rs.next()) {
+					return new Long(rs.getLong(1));
+				}
+				return null;
+			}
+			finally {
+				DbHelper.closeDbObjects(null, stmt, rs);
+			}
+		}		
+	}
+	
+	public class ItemRangeSqlCallback implements ConnectionCallback {	
+		protected ResultReader reader;
+		public ItemRangeSqlCallback(ResultReader reader) {
+			this.reader = reader;
+		}
+		public Object doInConnection(Connection con) throws SQLException {
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			
+			try {
+				SqlStatement rangeSqlStatement = getRangeSqlStatement();
+
+				log.debug("Item range database query: " + rangeSqlStatement.getQuery());
+				log.debug("Item range statement parameters: " + rangeSqlStatement.getParams());
+
+				stmt = con.prepareStatement(rangeSqlStatement.getQuery());
+				rangeSqlStatement.propagateStatementWithParams(stmt);
+
+				try {
+					rs = stmt.executeQuery();
+				} catch (SQLException e) {
+					throw createQueryFailedException(rangeSqlStatement.getQuery(), rangeSqlStatement.getParams(), e);
+				}
+				
+				while (rs.next()) {
+					reader.processRow(rs);
+				}
+				return reader.getResults();
+			}
+			finally {
+				DbHelper.closeDbObjects(null, stmt, rs);
 			}
 		}
-		catch (SQLException e) {
-			throw ExceptionUtil.uncheckException(e);
+	}
+	
+	public ResultReader getBeanResultReader(Class itemClass) {
+		return new BeanResultReader(itemClass);
+	}
+	
+	public class BeanResultReader implements ResultReader {
+		protected Class itemClass;
+		protected List results;
+		public BeanResultReader(Class itemClass) {
+			this.itemClass = itemClass;
+			this.results = new ArrayList();
+			beanMapper = new RecursiveBeanMapper(itemClass, true);
 		}
-		catch (InstantiationException e) {
-			throw ExceptionUtil.uncheckException(e);
+		public void processRow(ResultSet rs) throws SQLException {
+			try {
+				while (rs.next()) {
+					Object record = itemClass.newInstance();
+					readBeanFields(rs, record);
+					this.results.add(record);
+				}
+			}
+			catch (InstantiationException e) {
+				throw ExceptionUtil.uncheckException(e);
+			}
+			catch (IllegalAccessException e) {
+				throw ExceptionUtil.uncheckException(e);
+			}
 		}
-		catch (IllegalAccessException e) {
-			throw ExceptionUtil.uncheckException(e);
+		public List getResults() {
+			return this.results;
 		}
-
-		result.setItemRange(itemRange);
-
-		return result;
 	}
-
-	/**
-	 * Returns the item range <code>ResultSet</code>.
-	 * 
-	 * @return the item range <code>ResultSet</code>.
-	 */
-	public ResultSet getItemRangeResultSet() {
-		return this.itemRangeResultSet;
-	}
-
-	/**
-	 * Returns the total count of items in the list.
-	 * 
-	 * @return the total count of items in the list.
-	 */
-	public Long getTotalCount() {
-		return this.totalCount;
-	}
-
-	/**
-	 * Closes the <code>ListSqlHelper</code> closing the opened database
-	 * objects.
-	 */
-	public void close() {
-		DbHelper.closeDbObjects(this.con, this.itemRangeStatement,
-				this.itemRangeResultSet);
-	}
-
+	
 	// *********************************************************************
 	// * HELPER METHODS
 	// *********************************************************************
@@ -784,7 +829,7 @@ public abstract class ListSqlHelper {
 	/**
 	 * Returns query failed Exception. 
 	 */
-	protected RuntimeException createQueryFailedException(String QueryString, List queryParams, SQLException nestedException) {
+	protected static RuntimeException createQueryFailedException(String QueryString, List queryParams, SQLException nestedException) {
 		String str = new StringBuffer("Executing list query [").append(QueryString).
 			append("] with params: ").append(queryParams).append(" failed").toString();
 		return new AraneaRuntimeException(str, nestedException);
