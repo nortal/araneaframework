@@ -18,7 +18,7 @@ package org.araneaframework.example.main;
 
 import org.araneaframework.example.main.business.data.ContractDAO;
 import org.araneaframework.example.main.business.data.GeneralDAO;
-import org.araneaframework.servlet.PopupWindowContext;
+import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.springframework.beans.factory.BeanFactory;
 

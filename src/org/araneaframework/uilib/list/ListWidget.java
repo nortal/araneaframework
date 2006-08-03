@@ -28,7 +28,7 @@ import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.StandardEventListener;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
@@ -890,7 +890,7 @@ public class ListWidget extends StandardPresentationWidget {
 	 * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
 	 *  
 	 */
-	public class ViewModel extends StandardWidget.ViewModel {
+	public class ViewModel extends BaseApplicationWidget.ViewModel {
 
 		private static final long serialVersionUID = 1L;
 

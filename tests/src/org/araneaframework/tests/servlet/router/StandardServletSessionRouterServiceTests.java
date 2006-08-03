@@ -21,11 +21,11 @@ import org.araneaframework.Environment;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.ServiceFactory;
+import org.araneaframework.http.core.StandardServletInputData;
+import org.araneaframework.http.core.StandardServletOutputData;
+import org.araneaframework.http.router.StandardHttpSessionRouterService;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.mock.core.MockEventfulBaseService;
-import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.servlet.core.StandardServletOutputData;
-import org.araneaframework.servlet.router.StandardServletSessionRouterService;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -34,7 +34,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  *
  */
 public class StandardServletSessionRouterServiceTests extends TestCase {
-  private StandardServletSessionRouterService service;
+  private StandardHttpSessionRouterService service;
   private MockEventfulBaseService child;
   
   private StandardServletInputData input;
@@ -46,7 +46,7 @@ public class StandardServletSessionRouterServiceTests extends TestCase {
   private Path path;
   
   public void setUp() throws Exception {
-    service = new StandardServletSessionRouterService();
+    service = new StandardHttpSessionRouterService();
     child = new MockEventfulBaseService();
     ServiceFactory factory = new ServiceFactory() {    	
       public Service buildService(Environment env) {
@@ -67,13 +67,13 @@ public class StandardServletSessionRouterServiceTests extends TestCase {
   public void testCreatesNewSession() throws Exception {
     service._getService().action(path, input, output);
     assertTrue(child.getInitCalled());
-    assertTrue(null!=input.getRequest().getSession().getAttribute(StandardServletSessionRouterService.SESSION_SERVICE_KEY));
+    assertTrue(null!=input.getRequest().getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY));
   } 
   
   public void testReusesOldSession() throws Exception {
     service._getService().action(path, input, output);
-    Service sessService = (Service)input.getRequest().getSession().getAttribute(StandardServletSessionRouterService.SESSION_SERVICE_KEY);
+    Service sessService = (Service)input.getRequest().getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
     service._getService().action(path, input, output);
-    assertEquals(sessService, input.getRequest().getSession().getAttribute(StandardServletSessionRouterService.SESSION_SERVICE_KEY));
+    assertEquals(sessService, input.getRequest().getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY));
   }
 }

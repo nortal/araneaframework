@@ -2,7 +2,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-  <bean id="servletServiceAdapterComponent" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+  <bean id="servletServiceAdapterComponent" class="org.araneaframework.http.core.StandardServletServiceAdapterComponent"
     singleton="false">
 
     <property name="childService">
@@ -24,7 +24,7 @@
     </property>
   </bean>
   
-  <bean class="org.araneaframework.framework.container.StandardWidgetContainerWidget" id="widgetContainer"
+  <bean class="org.araneaframework.framework.container.StandardContainerWidget" id="widgetContainer"
     singleton="false">
     <property name="childWidget">
       <ref bean="rootWidget" />

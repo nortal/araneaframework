@@ -4,12 +4,12 @@
 <web-app>
 	<listener>
     <listener-class>
-      org.araneaframework.servlet.core.StandardSessionListener
+      org.araneaframework.http.core.StandardSessionListener
     </listener-class>
   </listener>
    <servlet>
       <servlet-name>araneaServlet</servlet-name>
-     	<servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+     	<servlet-class>org.araneaframework.integration.spring.AraneaSpringDispatcherServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
    </servlet>
 

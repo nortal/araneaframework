@@ -19,6 +19,7 @@ package org.araneaframework.core;
 import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
+import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 import org.araneaframework.uilib.InvalidEventException;
 
 /**
@@ -34,7 +35,7 @@ public class ProxyEventListener implements EventListener {
   }
 
   public void processEvent(Object eventId, InputData input) throws Exception {
-    String eventParameter = (String) input.getGlobalData().get(StandardWidget.EVENT_PARAMETER_KEY);    
+    String eventParameter = (String) input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);    
     String eventHandlerName = "handleEvent" + ((String) eventId).substring(0, 1).toUpperCase() + ((String) eventId).substring(1);
     
     try {

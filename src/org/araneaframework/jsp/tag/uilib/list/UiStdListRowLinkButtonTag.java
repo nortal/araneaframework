@@ -21,16 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.container.StandardWidgetContainerWidget;
+import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.http.ThreadCloningContext;
+import org.araneaframework.http.util.ClientStateUtil;
+import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
 import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.ThreadCloningContext;
-import org.araneaframework.servlet.util.ClientStateUtil;
-import org.araneaframework.servlet.util.URLUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -92,9 +92,9 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 
     Map result = new HashMap();
     result.put(ThreadContext.THREAD_SERVICE_KEY, threadId);
-    result.put(StandardWidgetContainerWidget.EVENT_PATH_KEY, contextWidgetId);
-    result.put(StandardWidget.EVENT_HANDLER_ID_KEY, eventId);
-    result.put(StandardWidget.EVENT_PARAMETER_KEY, eventParam);
+    result.put(StandardContainerWidget.EVENT_PATH_KEY, contextWidgetId);
+    result.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, eventId);
+    result.put(ApplicationWidget.EVENT_PARAMETER_KEY, eventParam);
     result.put(ThreadCloningContext.CLONING_REQUEST_KEY, "true");
 
     return result;

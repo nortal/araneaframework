@@ -20,14 +20,14 @@ import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.MountContext;
-import org.araneaframework.servlet.JspContext;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
@@ -35,7 +35,7 @@ import org.araneaframework.uilib.ConfigurationContext;
  * 
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class StandardPresentationWidget extends StandardWidget {
+public class StandardPresentationWidget extends BaseApplicationWidget {
   private String viewSelector;  
 
   protected void setViewSelector(String viewSelector) {
@@ -80,7 +80,7 @@ public class StandardPresentationWidget extends StandardWidget {
     return new ComponentImpl();
   }
   
-  protected class ComponentImpl extends StandardWidget.ComponentImpl {
+  protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
     public synchronized void init(Environment env) {
       addGlobalEventListener(new ProxyEventListener(StandardPresentationWidget.this));
 	

@@ -20,12 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.http.core.StandardServletOutputData;
+import org.araneaframework.http.filter.StandardHttpResponseFilterService;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulStandardService;
 import org.araneaframework.mock.servlet.MockOverridableOutputData;
-import org.araneaframework.servlet.core.StandardServletOutputData;
-import org.araneaframework.servlet.filter.StandardServletHttpResponseFilterService;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -35,7 +35,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  */
 public class StandardServletHttpResponseFilterServiceTests extends TestCase {
   //private StandardServletHttpFilterService parent;
-  private StandardServletHttpResponseFilterService parent;
+  private StandardHttpResponseFilterService parent;
   private MockEventfulStandardService child;
   
   private StandardServletOutputData output;
@@ -49,7 +49,7 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
     
     output = new MockOverridableOutputData(req, res);
     
-    parent = new StandardServletHttpResponseFilterService();
+    parent = new StandardHttpResponseFilterService();
     child = new MockEventfulStandardService();
     parent.setChildService(child);
     MockLifeCycle.begin(parent);

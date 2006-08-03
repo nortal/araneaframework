@@ -21,7 +21,7 @@ import java.util.Map;
 
 /**
  *  A map of attributes with a scope. As OutputData is passed to different methods
- *  of StandardComponent and derivates, the scope helps the components understand
+ *  of BaseApplicationComponent and derivates, the scope helps the components understand
  *  where they are located in the greater hirearchy. 
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>

@@ -29,8 +29,8 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ContinuationContext;
 import org.araneaframework.framework.ContinuationManagerContext;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.servlet.ServletOverridableOutputData;
-import org.araneaframework.servlet.util.AtomicResponseHelper;
+import org.araneaframework.http.ServletOverridableOutputData;
+import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>

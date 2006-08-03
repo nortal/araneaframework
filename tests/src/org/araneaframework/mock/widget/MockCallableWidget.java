@@ -17,7 +17,7 @@
 package org.araneaframework.mock.widget;
 
 import org.araneaframework.Widget;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
@@ -26,7 +26,7 @@ import org.araneaframework.framework.FlowContext.Handler;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class MockCallableWidget extends StandardWidget {
+public class MockCallableWidget extends BaseApplicationWidget {
   private boolean activateCalled = false;
   private boolean deactivateCalled = false;
   

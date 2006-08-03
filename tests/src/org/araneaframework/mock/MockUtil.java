@@ -23,8 +23,8 @@ import org.araneaframework.Environment;
 import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.servlet.core.StandardServletOutputData;
+import org.araneaframework.http.core.StandardServletInputData;
+import org.araneaframework.http.core.StandardServletOutputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 

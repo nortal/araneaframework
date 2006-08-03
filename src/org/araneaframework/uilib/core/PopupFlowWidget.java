@@ -18,9 +18,9 @@ package org.araneaframework.uilib.core;
 
 import org.araneaframework.Message;
 import org.araneaframework.Widget;
-import org.araneaframework.core.StandardWidget;
-import org.araneaframework.servlet.PopupWindowContext;
-import org.araneaframework.servlet.support.PopupWindowProperties;
+import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.http.PopupWindowContext;
+import org.araneaframework.http.support.PopupWindowProperties;
 
 /**
  * A (pseudo)widget that allows opening flows in popup windows by starting flows almost the usual way.
@@ -41,7 +41,7 @@ import org.araneaframework.servlet.support.PopupWindowProperties;
  * 
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class PopupFlowWidget extends StandardWidget {
+public class PopupFlowWidget extends BaseApplicationWidget {
   protected Message msg;
   protected PopupWindowProperties properties;
 

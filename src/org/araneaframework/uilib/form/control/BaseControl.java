@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.BaseWidget;
-import org.araneaframework.servlet.ServletInputData;
+import org.araneaframework.http.ServletInputData;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.util.ErrorUtil;

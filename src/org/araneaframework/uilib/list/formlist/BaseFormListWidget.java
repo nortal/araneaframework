@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.form.FormWidget;
 
@@ -237,7 +237,7 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 		return new ViewModel();
 	}	
 	
-	public class ViewModel extends StandardWidget.ViewModel {
+	public class ViewModel extends BaseApplicationWidget.ViewModel {
 		protected Map editableRows = new HashMap();
 		protected List rows;
 		

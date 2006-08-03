@@ -21,8 +21,8 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.araneaframework.http.ServletServiceAdapterComponent;
 import org.araneaframework.mock.servlet.MockServlet;
-import org.araneaframework.servlet.ServletServiceAdapterComponent;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 

@@ -19,17 +19,18 @@ package org.araneaframework.mock.core;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.EventListener;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 
 /**
  * @author toomas
  *
  */
-public class MockStandardWidget extends StandardWidget {
+public class MockStandardWidget extends BaseApplicationWidget {
   private boolean eventProcessed = false;
   
   protected Object getEventId(InputData input) {
-    return input.getGlobalData().get(StandardWidget.EVENT_HANDLER_ID_KEY);
+    return input.getGlobalData().get(ApplicationWidget.EVENT_HANDLER_ID_KEY);
   }
   
   public boolean getEventProcessed() {

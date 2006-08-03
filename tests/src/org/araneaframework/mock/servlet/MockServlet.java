@@ -16,8 +16,8 @@
 
 package org.araneaframework.mock.servlet;
 
-import org.araneaframework.servlet.ServletServiceAdapterComponent;
-import org.araneaframework.servlet.core.BaseAraneaDispatcherServlet;
+import org.araneaframework.http.ServletServiceAdapterComponent;
+import org.araneaframework.http.core.BaseAraneaDispatcherServlet;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;

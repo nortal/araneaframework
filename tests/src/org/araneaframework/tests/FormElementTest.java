@@ -17,7 +17,7 @@
 package org.araneaframework.tests;
 
 import junit.framework.TestCase;
-import org.araneaframework.servlet.core.StandardServletInputData;
+import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;

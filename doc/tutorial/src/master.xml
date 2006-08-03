@@ -217,14 +217,14 @@
   <!-- Aranea session cleanup listener -->
   <listener>
     <listener-class>
-      org.araneaframework.servlet.core.StandardSessionListener
+      org.araneaframework.http.core.StandardSessionListener
     </listener-class>
   </listener>
 
   <!-- Aranea dispatcher servlet -->
    <servlet>
       <servlet-name>araneaServlet</servlet-name>
-      <servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+      <servlet-class>org.araneaframework.integration.spring.AraneaSpringDispatcherServlet</servlet-class>
      	<init-param>
      		<param-name>araneaApplicationStart</param-name>
      		<param-value>example.NameWidget</param-value>
@@ -274,7 +274,7 @@
                 and maps it to a particular URL path:
 			<programlisting role="xml"><![CDATA[<servlet>
   <servlet-name>araneaServlet</servlet-name>
-  <servlet-class>org.araneaframework.ioc.spring.AraneaSpringDispatcherServlet</servlet-class>
+  <servlet-class>org.araneaframework.integration.spring.AraneaSpringDispatcherServlet</servlet-class>
   <load-on-startup>1</load-on-startup>
 </servlet>
 
@@ -287,7 +287,7 @@
 
             <programlisting role="xml"><![CDATA[<listener>
   <listener-class>
-    org.araneaframework.servlet.core.StandardSessionListener
+    org.araneaframework.http.core.StandardSessionListener
   </listener-class>
 </listener>]]></programlisting>
 

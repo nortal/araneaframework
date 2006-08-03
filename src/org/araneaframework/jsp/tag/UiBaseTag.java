@@ -28,10 +28,10 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.araneaframework.OutputData;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.JspContext;
-import org.araneaframework.servlet.filter.StandardJspFilterService;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**

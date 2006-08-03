@@ -23,7 +23,7 @@ import org.araneaframework.Path;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.MountContext.MessageFactory;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.servlet.filter.StandardServletMountingFilterService;
+import org.araneaframework.http.filter.StandardMountingFilterService;
 
 /**
  * This service serves as the entry point for mounted URLs. If the current request is sent to one of such URLs 
@@ -32,7 +32,7 @@ import org.araneaframework.servlet.filter.StandardServletMountingFilterService;
  * This service doesn't require any configuration.
  * 
  * @see MountContext
- * @see StandardServletMountingFilterService
+ * @see StandardMountingFilterService
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */

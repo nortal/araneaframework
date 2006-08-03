@@ -25,15 +25,15 @@ import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
-import org.araneaframework.servlet.PopupWindowContext;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.service.WindowClosingService;
-import org.araneaframework.servlet.util.URLUtil;
+import org.araneaframework.http.PopupWindowContext;
+import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.service.WindowClosingService;
+import org.araneaframework.http.util.URLUtil;
 
 /**
  * Wrapper around the flow that is started from new session-thread. It pretends
@@ -43,7 +43,7 @@ import org.araneaframework.servlet.util.URLUtil;
  * 
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class PopupFlowWrapperWidget extends StandardWidget implements FlowContext {
+public class PopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContext {
   Widget child;
 
   public PopupFlowWrapperWidget(Widget child) {
@@ -107,7 +107,7 @@ public class PopupFlowWrapperWidget extends StandardWidget implements FlowContex
     return getLocalFlowContext().getCurrentReference();
   }
 
-  public void addNestedEnvironmentEntry(CustomWidget scope, Object entryId, Object envEntry) {
+  public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {
     getLocalFlowContext().addNestedEnvironmentEntry(scope, entryId,
         envEntry);
   }
@@ -141,7 +141,7 @@ public class PopupFlowWrapperWidget extends StandardWidget implements FlowContex
     PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment()
         .getEntry(PopupWindowContext.class);
     // XXX
-    return (FlowContext) ((CustomWidget) popupCtx.getOpener())
+    return (FlowContext) ((ApplicationWidget) popupCtx.getOpener())
         .getChildEnvironment().getEntry(FlowContext.class);
   }
   
@@ -150,6 +150,6 @@ public class PopupFlowWrapperWidget extends StandardWidget implements FlowContex
   }
 
   protected PopupWindowContext getOpenerPopupContext() {
-    return (PopupWindowContext)((CustomWidget)getPopupContext().getOpener()).getChildEnvironment().getEntry(PopupWindowContext.class);
+    return (PopupWindowContext)((ApplicationWidget)getPopupContext().getOpener()).getChildEnvironment().getEntry(PopupWindowContext.class);
   }
 }

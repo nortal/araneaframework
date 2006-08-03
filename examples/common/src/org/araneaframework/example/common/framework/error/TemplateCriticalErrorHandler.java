@@ -22,7 +22,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.servlet.ServletOutputData;
+import org.araneaframework.http.ServletOutputData;
 
 public class TemplateCriticalErrorHandler extends BaseService  {
   protected Throwable exception;

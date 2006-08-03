@@ -19,14 +19,14 @@ package org.araneaframework.mock.core;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.TransactionContext;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class MockEventfulStandardWidget extends StandardWidget {
+public class MockEventfulStandardWidget extends BaseApplicationWidget {
   private boolean updateCalled = false;
   private boolean eventProcessed = false;
   private boolean processCalled = false;

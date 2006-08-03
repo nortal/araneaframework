@@ -19,13 +19,13 @@ package org.araneaframework.mock.core;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class MockControllableWidget extends StandardWidget {
+public class MockControllableWidget extends BaseApplicationWidget {
   private boolean keepEventBusy = true;
 
   protected Object getEventId(InputData input) {

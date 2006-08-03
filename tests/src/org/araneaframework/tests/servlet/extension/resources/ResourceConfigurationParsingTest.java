@@ -8,8 +8,8 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.araneaframework.extension.resource.ExternalResourceConfigurationHandler;
-import org.araneaframework.extension.resource.ExternalResource;
+import org.araneaframework.http.extension.ExternalResource;
+import org.araneaframework.http.extension.ExternalResourceConfigurationHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
