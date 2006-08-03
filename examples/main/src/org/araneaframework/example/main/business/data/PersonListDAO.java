@@ -55,7 +55,6 @@ public class PersonListDAO {
 		query.append(" FROM person");
 		query.append(helper.getDatabaseFilterWith(" WHERE ", ""));
 		query.append(helper.getDatabaseOrderWith(" ORDER BY ", ""));
-		log.debug("SQL Query: " + query);
 
 		helper.setSqlQuery(query.toString());
 		helper.addStatementParams(helper.getDatabaseFilterParams());

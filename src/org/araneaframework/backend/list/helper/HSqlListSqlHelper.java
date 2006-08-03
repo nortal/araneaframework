@@ -43,21 +43,25 @@ public class HSqlListSqlHelper extends ListSqlHelper {
 			return new SqlStatement(this.countSqlQuery, this.statement
 					.getParams());
 		}
-		String temp = new StringBuffer("SELECT COUNT(*) FROM (SELECT ").append(
+		String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(
 				this.statement.getQuery()).append(")").toString();
 		return new SqlStatement(temp, this.statement.getParams());
 	}
 
 	protected SqlStatement getRangeSqlStatement() {
+		if (!this.statement.getQuery().toUpperCase().startsWith("SELECT ")) {
+			throw new RuntimeException("SQL query must start with SELECT");
+		}
+		
 		SqlStatement result;
 		
 		if (isShowAll()) {
-			result = new SqlStatement("SELECT " + this.statement.getQuery());
+			result = new SqlStatement(this.statement.getQuery());
 			result.addAllParams(this.statement.getParams());
 		} else {
 			StringBuffer query = new StringBuffer();
 			query.append("SELECT LIMIT ? ? ");
-			query.append(this.statement.getQuery());
+			query.append(this.statement.getQuery().substring("SELECT ".length()));
 
 			result = new SqlStatement(query.toString());
 			result.addParam(this.itemRangeStart);

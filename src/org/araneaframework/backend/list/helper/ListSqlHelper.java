@@ -499,7 +499,7 @@ public abstract class ListSqlHelper {
 
 	/**
 	 * Sets the SQL query that will be used to retrieve the item range from the
-	 * list and count the items.
+	 * list and count the items. SQL query must start with SELECT.
 	 * 
 	 * @param sqlQuery
 	 *            the SQL query that will be used to retrieve the item range
@@ -508,7 +508,8 @@ public abstract class ListSqlHelper {
 	public abstract void setSqlQuery(String sqlQuery);
 
 	/**
-	 * Sets the SQL query used to count the items in the database.
+	 * Sets the SQL query used to count the items in the database. SQL query
+	 * must start with SELECT.
 	 * 
 	 * @param countSqlQuery
 	 *            the SQL query used to count the items in the database.
