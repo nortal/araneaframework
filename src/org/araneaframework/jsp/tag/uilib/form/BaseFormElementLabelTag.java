@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.uilib.form;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiMissingFormElementIdException;
+import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
@@ -62,7 +62,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
       derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
 
     if (derivedId == null) 
-      throw new UiMissingFormElementIdException(this);
+      throw new MissingFormElementIdAraneaJspException(this);
 
     formElementViewModel = 
       (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   

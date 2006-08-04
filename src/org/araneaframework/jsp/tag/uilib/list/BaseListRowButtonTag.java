@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.uilib.list;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.presentation.BaseSimpleButtonTag;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
@@ -43,7 +43,7 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, id);
     
     if (contextWidgetId == null)
-      throw new UiException("'listRow(Link)Button' tags can only be used in a context widget!");
+      throw new AraneaJspException("'listRow(Link)Button' tags can only be used in a context widget!");
 
     eventParam = (String) requireContextEntry(ListRowsTag.ROW_REQUEST_ID_KEY);
 

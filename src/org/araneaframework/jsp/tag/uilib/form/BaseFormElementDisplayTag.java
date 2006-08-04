@@ -18,8 +18,8 @@ package org.araneaframework.jsp.tag.uilib.form;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
-import org.araneaframework.jsp.UiMissingFormElementIdException;
+import org.araneaframework.jsp.exception.AraneaJspException;
+import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
@@ -57,7 +57,7 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
     if (derivedId == null && getContextEntry(FormElementTag.ID_KEY) != null)
     	derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
 
-    if (derivedId == null) throw new UiMissingFormElementIdException(this);
+    if (derivedId == null) throw new MissingFormElementIdAraneaJspException(this);
 
     // get control and formelement viewmodels
     formElementViewModel = 
@@ -116,6 +116,6 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
    */
   protected void assertControlType(String type) throws JspException {
     if (!controlViewModel.getControlType().equals(type))
-      throw new UiException("Control of type '" + type + "' expected in form element '" + id + "' instead of '" + controlViewModel.getControlType() + "'");
+      throw new AraneaJspException("Control of type '" + type + "' expected in form element '" + id + "' instead of '" + controlViewModel.getControlType() + "'");
   }
 }

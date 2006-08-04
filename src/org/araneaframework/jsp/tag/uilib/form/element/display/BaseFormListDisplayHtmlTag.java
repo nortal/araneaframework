@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.display;
 
 import java.io.IOException;
 import java.io.Writer;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DisplayControl;
@@ -69,7 +69,7 @@ public abstract class BaseFormListDisplayHtmlTag extends BaseFormElementDisplayT
     this.separator = separator;
   }  
 
-  protected void writeSeparator(Writer out) throws IOException, UiException {
+  protected void writeSeparator(Writer out) throws IOException, AraneaJspException {
     if (NEWLINE_SEPARATOR_CODE.equals(separator))      
       JspUtil.writeStartEndTag(out, "br");
     else 

@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.uilib.form;				
 
 import java.io.Writer;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.FormWidget;
@@ -52,7 +52,7 @@ public class FormTag extends WidgetTag {
 		try {
 			formViewModel = (FormWidget.ViewModel) viewModel;
 		} catch (ClassCastException e) {
-			throw new UiException("Could not acquire form view model. <ui:form> should have an id specified or should be in context of real FormWidget.", e);
+			throw new AraneaJspException("Could not acquire form view model. <ui:form> should have an id specified or should be in context of real FormWidget.", e);
 		}
 
 		// Set variables

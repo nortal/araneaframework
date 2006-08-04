@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.select;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.SelectControl;
@@ -56,7 +56,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     (selectedValue != null && selectedValue.equals(value));
     
     if (!viewModel.containsItem(value)) {
-      throw new UiException("Value '"+value+"' not found in values list.");
+      throw new AraneaJspException("Value '"+value+"' not found in values list.");
     }
     
     

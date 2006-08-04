@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.uilib.list;				
 
 import java.io.Writer;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.uilib.list.ListWidget;
 
@@ -49,7 +49,7 @@ public class ListTag extends WidgetTag {
 		try {
 			listViewModel = (ListWidget.ViewModel)viewModel;
 		} catch (ClassCastException e) {
-			throw new UiException("Could not acquire list view model. <ui:list> should have id specified or should be in context of real ListWidget.", e);
+			throw new AraneaJspException("Could not acquire list view model. <ui:list> should have id specified or should be in context of real ListWidget.", e);
 		}
 
 		// Set variables		

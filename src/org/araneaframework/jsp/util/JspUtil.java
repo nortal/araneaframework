@@ -30,8 +30,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
-import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.container.UiWidgetContainer;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.basic.ElementHtmlTag;
@@ -294,11 +294,11 @@ public class JspUtil {
    * @param value string value
    * @param expression expression
    * 
-   * @throws UiException if both value and expression are specified
+   * @throws AraneaJspException if both value and expression are specified
    */  
-  public static void writeScriptString_rt(Writer out, String value, String expression) throws IOException, UiException {
+  public static void writeScriptString_rt(Writer out, String value, String expression) throws IOException, AraneaJspException {
     if (value != null && expression != null)
-      throw new UiException("String value and run-time expression should not be specified at the same time"); 
+      throw new AraneaJspException("String value and run-time expression should not be specified at the same time"); 
     
     if (expression != null) {
       writeEscaped(out, expression);
@@ -424,7 +424,7 @@ public class JspUtil {
   
   /**
    * Read attribute value from request scope and ensure that it is defined.
-   * @throws UiException if key is not present in given <code>PageContext</code>
+   * @throws AraneaJspException if key is not present in given <code>PageContext</code>
    */
   public static Object requireContextEntry(PageContext pageContext, String key) throws JspException {
     Object value = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
@@ -438,7 +438,7 @@ public class JspUtil {
       message.append(" scope");
       if (errMsg != null) 
         message.append(")");
-      throw new UiException(message.toString());
+      throw new AraneaJspException(message.toString());
     }
     else
       return value;

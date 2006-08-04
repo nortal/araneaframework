@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.select;
 import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -50,7 +50,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 		assertControlType("SelectControl");		
 		
 		if (!"horizontal".equals(type) && !"vertical".equals(type))
-			throw new UiException("Attribute 'type' cna be only either 'horizontal' or 'vertical'!");
+			throw new AraneaJspException("Attribute 'type' cna be only either 'horizontal' or 'vertical'!");
 		
 		// Prepare
 		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);

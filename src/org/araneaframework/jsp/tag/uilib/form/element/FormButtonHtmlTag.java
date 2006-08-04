@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.util.JspStringUtil;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -116,7 +116,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
    */
   public void setRenderMode(String renderMode) throws JspException {
     if (!(renderMode.equals(FormButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(FormButtonHtmlTag.RENDER_INPUT)))
-      throw new UiException("<ui:button> 'renderMode' attribute must be '" + FormButtonHtmlTag.RENDER_BUTTON + "' or '"+ FormButtonHtmlTag.RENDER_INPUT+"'");
+      throw new AraneaJspException("<ui:button> 'renderMode' attribute must be '" + FormButtonHtmlTag.RENDER_BUTTON + "' or '"+ FormButtonHtmlTag.RENDER_INPUT+"'");
     this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
   }
 

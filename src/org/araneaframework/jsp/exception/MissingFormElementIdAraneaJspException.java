@@ -14,31 +14,14 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.jsp;
-
-import javax.servlet.jsp.JspException;
+package org.araneaframework.jsp.exception;
 
 
 /**
- * UI Exception.
- * 
- * @author Oleg Mürk 
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class UiException extends JspException {
-	
-	public UiException() {
-		super();
-	}
-	
-	public UiException(String message) {
-		super(message);
-	}
-	
-	public UiException(Throwable cause) {
-		super(cause);
-	}
-	
-	public UiException(String message, Throwable cause) {
-		super(message, cause);
+public class MissingFormElementIdAraneaJspException extends AraneaJspException {
+	public MissingFormElementIdAraneaJspException(Object object) {
+		super("You must set the 'id' either directly or using 'ui:formElement' for tag '" + object.getClass() + "'");
 	}
 }

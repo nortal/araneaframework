@@ -20,7 +20,7 @@ import java.io.Writer;
 import java.util.Enumeration;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -101,6 +101,6 @@ public class DebugHtmlTag extends BaseTag {
 		else if (PAGE_SCOPE.equals(scopeString))
 			this.scope = PageContext.PAGE_SCOPE;
 		else
-			throw new UiException("Wrong debug scope value '" + this.scope + "'");
+			throw new AraneaJspException("Wrong debug scope value '" + this.scope + "'");
 	}
 }

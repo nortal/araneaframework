@@ -28,7 +28,7 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.araneaframework.OutputData;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.servlet.JspContext;
 import org.araneaframework.servlet.filter.StandardJspFilterService;
@@ -199,7 +199,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 	protected Object evaluateNotNull(String attributeName, String attributeValue, Class classObject) throws JspException {
 		Object value = evaluate(attributeName, attributeValue, classObject);
 		if (value == null)
-			throw new UiException("Attribute '" + attributeName + "' should not evaluate to null");
+			throw new AraneaJspException("Attribute '" + attributeName + "' should not evaluate to null");
 		return value;
 	}
 	

@@ -21,7 +21,7 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -50,7 +50,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
 
     // Error check
     if (getContextEntry(ID_KEY) != null)
-      throw new UiException("System forms cannot be nested");                    
+      throw new AraneaJspException("System forms cannot be nested");                    
 
     // Compute new id for systemForm.
     derivedId = id == null ? BaseSystemFormHtmlTag.generateId(pageContext) : id;
@@ -127,7 +127,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
 
     if (!this.method.equals(GET_METHOD) && 
         !this.method.equals(POST_METHOD))
-      throw new UiException("Wrong form method value '" + method + "'");
+      throw new AraneaJspException("Wrong form method value '" + method + "'");
   }
 
   /**

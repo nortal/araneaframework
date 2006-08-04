@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.select;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
 import org.araneaframework.jsp.tag.uilib.form.FormSimpleLabelHtmlTag;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
@@ -45,7 +45,7 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
     MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
 
     if (viewModel.getSelectItemByValue(value) == null) 
-      throw new UiException("Value '" + value + "' not found in values list.");    
+      throw new AraneaJspException("Value '" + value + "' not found in values list.");    
 
     String label =  viewModel.getSelectItemByValue(value).getDisplayString();    
 

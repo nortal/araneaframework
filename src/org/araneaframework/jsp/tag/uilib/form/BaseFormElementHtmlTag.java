@@ -21,8 +21,8 @@ import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.jsp.UiException;
-import org.araneaframework.jsp.UiMissingFormElementIdException;
+import org.araneaframework.jsp.exception.AraneaJspException;
+import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
@@ -98,7 +98,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		derivedId = id;
 		if (derivedId == null && getContextEntry(FormElementTag.ID_KEY) != null) 
 			derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
-		if (derivedId == null) throw new UiMissingFormElementIdException(this);   
+		if (derivedId == null) throw new MissingFormElementIdAraneaJspException(this);   
 		
 		formElementViewModel = 
 			(FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
@@ -241,7 +241,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 	protected void assertControlType(String type) throws JspException {
 		if (!controlViewModel.getControlType().equals(type))
-			throw new UiException("Control of type '" + type + "' expected in form element '" + derivedId + "' instead of '" + controlViewModel.getControlType() + "'");
+			throw new AraneaJspException("Control of type '" + type + "' expected in form element '" + derivedId + "' instead of '" + controlViewModel.getControlType() + "'");
 	}
 
 

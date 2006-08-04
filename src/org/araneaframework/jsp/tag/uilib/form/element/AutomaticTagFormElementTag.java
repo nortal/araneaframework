@@ -24,7 +24,7 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 
 import org.araneaframework.core.util.ClassLoaderUtil;
-import org.araneaframework.jsp.UiMissingFormElementIdException;
+import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.support.FormElementViewSelector;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.jsp.tag.BaseTag;
@@ -78,7 +78,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
     derivedId = id;
     if (derivedId == null && getContextEntry(FormElementTag.ID_KEY) != null) 
     	derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
-    if (derivedId == null) throw new UiMissingFormElementIdException(this);
+    if (derivedId == null) throw new MissingFormElementIdAraneaJspException(this);
     formElementViewModel = 
       (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
 

@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.uilib.list.formlist;
 
 import java.io.Writer;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -55,7 +55,7 @@ public class FormListTag extends WidgetTag {
 		try {
 			formListViewModel = (FormListWidget.ViewModel) viewModel;
 		} catch (ClassCastException e) {
-			throw new UiException("Could not acquire form list view model. <ui:formList> should have id specified or should be in context of real FormListWidget.", e);
+			throw new AraneaJspException("Could not acquire form list view model. <ui:formList> should have id specified or should be in context of real FormListWidget.", e);
 		}
 		
 		// Set variables

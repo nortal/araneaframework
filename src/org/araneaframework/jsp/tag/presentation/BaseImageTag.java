@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 
 /**
@@ -36,7 +36,7 @@ public abstract class BaseImageTag extends PresentationTag {
     if (code != null) {
       Info info = (Info)getImageInfo(code);
       if (info == null)
-        throw new UiException("Missing image description with code '" + code + "'");
+        throw new AraneaJspException("Missing image description with code '" + code + "'");
       this.src = info.src;
       this.width = info.width;
       this.height = info.height;

@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -91,7 +91,7 @@ public class ButtonHtmlTag extends BaseButtonTag {
    */
   public void setRenderMode(String renderMode) throws JspException {
     if (!(renderMode.equals(ButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(ButtonHtmlTag.RENDER_INPUT)))
-      throw new UiException("<ui:basicButton> 'renderMode' attribute must be '" + ButtonHtmlTag.RENDER_BUTTON + "' or '"+ ButtonHtmlTag.RENDER_INPUT+"'");
+      throw new AraneaJspException("<ui:basicButton> 'renderMode' attribute must be '" + ButtonHtmlTag.RENDER_BUTTON + "' or '"+ ButtonHtmlTag.RENDER_INPUT+"'");
     this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
   }
 }

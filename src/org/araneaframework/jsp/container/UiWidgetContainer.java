@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 
 /**
  *
@@ -44,10 +44,10 @@ public interface UiWidgetContainer {
   /**
    * Scopes the widget full id adding a container identifier (in 
    * case there can be more than one container in one request).
-   * @throws UiException 
+   * @throws AraneaJspException 
    * @throws JspException 
    */
-  public String scopeWidgetFullId(PageContext pageContext, String fullWidgetId) throws UiException, JspException;
+  public String scopeWidgetFullId(PageContext pageContext, String fullWidgetId) throws AraneaJspException, JspException;
     
   /**
    * Returns the JavaScript string that makes the call into controller framework to a widget.

@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.updateRegion;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
@@ -35,7 +35,7 @@ public class BaseUpdateRegionTag extends BaseTag {
     super.doStartTag(out);
 
     if (id == null && globalId == null)
-      throw new UiException("'id' or 'globalId' is required!");
+      throw new AraneaJspException("'id' or 'globalId' is required!");
 
     String contextWidgetId = JspWidgetUtil.getContextWidgetFullId(pageContext);
 

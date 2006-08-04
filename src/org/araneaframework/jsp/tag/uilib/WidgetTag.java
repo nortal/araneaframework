@@ -19,8 +19,8 @@ package org.araneaframework.jsp.tag.uilib;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.Custom;
-import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.container.UiWidgetContainer;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
@@ -67,7 +67,7 @@ public class WidgetTag extends BaseTag {
     fullId = JspWidgetUtil.getWidgetFullIdFromContext(id, pageContext);    
 
     if (fullId == null) 
-      throw new UiException("Widget must have an id!");        
+      throw new AraneaJspException("Widget must have an id!");        
 
     scopedFullId = container.scopeWidgetFullId(pageContext, fullId);
 

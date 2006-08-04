@@ -21,8 +21,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.Custom;
-import org.araneaframework.jsp.UiException;
 import org.araneaframework.jsp.container.UiWidgetContainer;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
@@ -62,13 +62,13 @@ public abstract class JspWidgetUtil {
 			
 	}
 	
-	public static Custom.CustomWidget traverseToWidget(UiWidgetContainer container, String path) throws UiException {
+	public static Custom.CustomWidget traverseToWidget(UiWidgetContainer container, String path) throws AraneaJspException {
 		String pathStart = NameUtil.getNamePrefix(path);
 		String pathEnd = NameUtil.getNameSuffix(path);
 		
         Custom.CustomWidget widget = (Custom.CustomWidget) container.getWidgets().get(pathStart);
 		if (widget == null)
-			throw new UiException("Failed to traverse to widget with path '" + path + "' because widget '" + pathStart + "' was not found");
+			throw new AraneaJspException("Failed to traverse to widget with path '" + path + "' because widget '" + pathStart + "' was not found");
 				
 		if (!"".equals(pathEnd)) 
 			widget = traverseToSubWidget(widget, pathEnd);
@@ -76,11 +76,11 @@ public abstract class JspWidgetUtil {
 		return widget;
 	}
 	
-	public static Custom.CustomWidget traverseToSubWidget(Custom.CustomWidget root, String path) throws UiException {		
+	public static Custom.CustomWidget traverseToSubWidget(Custom.CustomWidget root, String path) throws AraneaJspException {		
       Custom.CustomWidget widget = root;
 		
     if ("".equals(path))
-      throw new UiException("Trying to traverse to a widget with an empty path!");
+      throw new AraneaJspException("Trying to traverse to a widget with an empty path!");
     
 		// Traverse    
 		for(StringTokenizer tokenizer = new StringTokenizer(path, "."); tokenizer.hasMoreElements();) {
@@ -88,7 +88,7 @@ public abstract class JspWidgetUtil {
 					
 			widget = (Custom.CustomWidget) widget._getComposite().getChildren().get(token);
 			if (widget == null)
-				throw new UiException("Failed to traverse widget with path '" + path + "' because widget '" + token + "' was not found");
+				throw new AraneaJspException("Failed to traverse widget with path '" + path + "' because widget '" + token + "' was not found");
 		}
 		
 		// Complete
