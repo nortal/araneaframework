@@ -36,7 +36,7 @@ public abstract class DefaultFormRowHandler implements FormRowHandler {
 	public void saveRows(Map editableRows) throws Exception {}
 	public void deleteRows(Set keys) throws Exception {}
 
-	public void openOrCloseRow(FormRow editableRow) {
+	public void openOrCloseRow(FormRow editableRow) throws Exception {
 		editableRow.setOpen(!editableRow.isOpen());
 	}
 

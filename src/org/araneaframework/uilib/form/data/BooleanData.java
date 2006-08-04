@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.data;
 
+import org.araneaframework.uilib.form.Data;
+
 
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>

@@ -17,19 +17,30 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
+
+import javax.sql.DataSource;
+
 import org.araneaframework.backend.list.model.ListQuery;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class OracleListSqlHelper extends ListSqlHelper {
 
 	protected SqlStatement statement = new SqlStatement();
 
-	protected String countSqlQuery = null;
+	protected String countSqlQuery = null;	
 	
+	public OracleListSqlHelper(DataSource dataSource, ListQuery query) {
+		super(dataSource, query);
+	}
+	public OracleListSqlHelper(DataSource dataSource) {
+		super(dataSource);
+	}
 	public OracleListSqlHelper(ListQuery query) {
 		super(query);
 	}
-
 	public OracleListSqlHelper() {
 		super();
 	}

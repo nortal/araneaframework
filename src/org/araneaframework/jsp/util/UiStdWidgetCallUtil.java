@@ -33,7 +33,7 @@ import org.araneaframework.jsp.container.UiWidgetContainer;
 public class UiStdWidgetCallUtil {
 
   public static UiWidgetContainer getContainer(PageContext pageContext) throws JspException {
-    return (UiWidgetContainer) UiUtil.readAttribute(pageContext, UiWidgetContainer.REQUEST_CONTEXT_KEY, PageContext.REQUEST_SCOPE);
+    return (UiWidgetContainer) UiUtil.requireContextEntry(pageContext, UiWidgetContainer.REQUEST_CONTEXT_KEY);
   }
 
   /**
@@ -48,10 +48,12 @@ public class UiStdWidgetCallUtil {
    * Write standard event handling attribute which submits widget event with given id to the system form.
    * @throws JspException 
    */
-  public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, String precondition, List updateRegions) throws IOException, JspException {
+  public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, String precondition, List updateRegions, boolean writePseudoURL) throws IOException, JspException {
     UiUtil.writeOpenAttribute(out, attributeName);
     
-    out.write("javascript:");
+    if (writePseudoURL)
+      out.write("javascript:");
+
     out.write("return uiStandardSubmitEvent("); 
     out.write("document.");
     UiUtil.writeEscapedAttribute(out, systemFormId);
@@ -69,6 +71,10 @@ public class UiStdWidgetCallUtil {
     out.write("});");
 
     UiUtil.writeCloseAttribute(out);
+  }
+  
+  public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, String precondition, List updateRegions) throws IOException, JspException {
+    writeEventAttributeForEvent(pageContext, out, attributeName, systemFormId, widgetId, eventId, eventParam, precondition, updateRegions, true);
   }
 
   /**
