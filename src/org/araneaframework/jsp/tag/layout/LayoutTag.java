@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Aranea's layout tag, allows placing row's and cells inside.
@@ -31,15 +31,15 @@ import org.araneaframework.jsp.util.UiUtil;
  *
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class LayoutTag extends LayoutBaseTag {
+public class LayoutTag extends BaseLayoutTag {
   protected String width;
 	
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-	UiUtil.writeOpenStartTag(out, "table");
+	JspUtil.writeOpenStartTag(out, "table");
 	writeTableAttributes(out);
-	UiUtil.writeCloseStartTag(out);
+	JspUtil.writeCloseStartTag(out);
 
     return EVAL_BODY_INCLUDE;
   }
@@ -49,11 +49,11 @@ public class LayoutTag extends LayoutBaseTag {
     addAttribute("style", getStyle());
     addAttribute("class", getStyleClass());
     addAttribute("width",  width);
-    UiUtil.writeAttributes(out, attributes);
+    JspUtil.writeAttributes(out, attributes);
   }
 
   protected int doEndTag(Writer out) throws Exception {
-    UiUtil.writeEndTag(out, "table");
+    JspUtil.writeEndTag(out, "table");
     return super.doEndTag(out);
   }
 

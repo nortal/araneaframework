@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tests;
 
 import junit.framework.TestCase;
-import org.araneaframework.jsp.tag.basic.UiKeyboardHandlerBaseTag;
+import org.araneaframework.jsp.tag.basic.BaseKeyboardHandlerTag;
 
 /**
  * @author Konstantin Tretyakov
@@ -29,23 +29,23 @@ public class KeyboardHandlerTagTest extends TestCase {
 	}
 	
 	public void testKeyToKeyCode(){
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("") == 0);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("a") == 65);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("B") == 66);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("rEtUrn") == 13);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("esCAPE") == 27);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("backSpace") == 8);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("tab") == 9);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("shift") == 16);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("control") == 17);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("sPace") == 32);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode(" ") == 32);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("1") == 49);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("5") == 53);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("somethingelse") == 0);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("f1") == 112);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("f10") == 121);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("F12") == 123);
-		assertTrue(UiKeyboardHandlerBaseTag.keyToKeyCode("F13") == 0);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("") == 0);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("a") == 65);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("B") == 66);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("rEtUrn") == 13);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("esCAPE") == 27);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("backSpace") == 8);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("tab") == 9);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("shift") == 16);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("control") == 17);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("sPace") == 32);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode(" ") == 32);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("1") == 49);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("5") == 53);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("somethingelse") == 0);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("f1") == 112);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("f10") == 121);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("F12") == 123);
+		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("F13") == 0);
 	}
 }

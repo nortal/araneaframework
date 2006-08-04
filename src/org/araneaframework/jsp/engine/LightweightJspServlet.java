@@ -27,7 +27,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.util.ClassLoaderUtil;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.util.JspUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Comment;
@@ -129,20 +129,20 @@ public class LightweightJspServlet extends HttpServlet {
       return;
     }
 
-    UiUtil.writeOpenStartTag(w, el.getTagName());
+    JspUtil.writeOpenStartTag(w, el.getTagName());
     NamedNodeMap attrs = el.getAttributes();
     for (int i = 0; i < attrs.getLength(); i++) {
       Attr attr = (Attr) attrs.item(i);
-      UiUtil.writeAttribute(w, attr.getName(), attr.getValue());
+      JspUtil.writeAttribute(w, attr.getName(), attr.getValue());
     }
     
     if (el.hasChildNodes()) {
-      UiUtil.writeCloseStartTag_SS(w);
+      JspUtil.writeCloseStartTag_SS(w);
       processChildren(el, w, pageContext, parent);
-      UiUtil.writeEndTag_SS(w, el.getTagName());
+      JspUtil.writeEndTag_SS(w, el.getTagName());
     }
     else {
-      UiUtil.writeCloseStartEndTag_SS(w);
+      JspUtil.writeCloseStartEndTag_SS(w);
     }
   }
 

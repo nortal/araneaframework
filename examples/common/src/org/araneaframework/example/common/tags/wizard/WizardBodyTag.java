@@ -21,6 +21,9 @@ import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.util.UiWidgetUtil;
+import org.araneaframework.core.Custom.CustomWidget;
+import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.util.JspWidgetUtil;
 
 
 /**
@@ -34,7 +37,7 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
  *   body-content = "JSP"
  *   description = "Includes the current wizard page."
  */
-public class WizardBodyTag extends UiBaseTag {
+public class WizardBodyTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
 	  ApplicationWidget widget = (ApplicationWidget) UiWidgetUtil.getWidgetFromContext(null, pageContext);
 		

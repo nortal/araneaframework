@@ -17,7 +17,7 @@
 package org.araneaframework.example.common.tags.example.component;
 
 import org.araneaframework.jsp.tag.layout.LayoutTag;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -32,6 +32,6 @@ public class ComponentListTag extends LayoutTag {
 
   {
     styleClass = ComponentListTag.COMPONENT_LIST_STYLE_CLASS;
-    rowClasses = UiUtil.parseMultiValuedAttribute(" ," + COMPONENT_LIST_EVEN_ROW_CLASS);
+    rowClasses = JspUtil.parseMultiValuedAttribute(" ," + COMPONENT_LIST_EVEN_ROW_CLASS);
   }
 }

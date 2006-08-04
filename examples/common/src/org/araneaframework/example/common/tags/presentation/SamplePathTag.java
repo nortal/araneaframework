@@ -17,7 +17,7 @@
 package org.araneaframework.example.common.tags.presentation;
 
 import java.io.Writer;
-import org.araneaframework.jsp.tag.UiBaseTag;
+import org.araneaframework.jsp.tag.BaseTag;
 
 
 
@@ -31,7 +31,7 @@ import org.araneaframework.jsp.tag.UiBaseTag;
  *   name = "path"
  *   body-content = "JSP"
  */
-public class SamplePathTag extends UiBaseTag {
+public class SamplePathTag extends BaseTag {
   public final static String KEY = "ee.wm.util.sample.web.jsp.ui.presentation.SamplePathTag.KEY";
   
   protected boolean hadItems = false;

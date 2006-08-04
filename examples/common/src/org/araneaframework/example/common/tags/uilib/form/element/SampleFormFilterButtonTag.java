@@ -17,10 +17,10 @@
 package org.araneaframework.example.common.tags.uilib.form.element;
 
 import java.io.Writer;
-import org.araneaframework.jsp.tag.uilib.form.UiFormEnterKeyboardHandlerTag;
-import org.araneaframework.jsp.tag.uilib.form.UiFormTag;
-import org.araneaframework.jsp.tag.uilib.form.element.UiStdFormLinkButtonTag;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.uilib.form.FormEnterKeyboardHandlerHtmlTag;
+import org.araneaframework.jsp.tag.uilib.form.FormTag;
+import org.araneaframework.jsp.tag.uilib.form.element.FormLinkButtonHtmlTag;
+import org.araneaframework.jsp.util.JspUtil;
 
 
 /**
@@ -32,7 +32,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *   name = "filterButton"
  *   body-content = "JSP"
  */
-public class SampleFormFilterButtonTag extends UiStdFormLinkButtonTag {
+public class SampleFormFilterButtonTag extends FormLinkButtonHtmlTag {
 
   public SampleFormFilterButtonTag() {
     this.id = "filter";
@@ -44,10 +44,10 @@ public class SampleFormFilterButtonTag extends UiStdFormLinkButtonTag {
   public int doStartTag(Writer out) throws Exception {
     addAttribute("style", getStyle());
     super.doStartTag(out);
-    out.write("<button type=\"button\">" + UiUtil.getResourceString(pageContext, "button.search").toUpperCase(UiUtil.getLocalizationContext(pageContext).getLocale()) + "</button>");
+    out.write("<button type=\"button\">" + JspUtil.getResourceString(pageContext, "button.search").toUpperCase(JspUtil.getLocalizationContext(pageContext).getLocale()) + "</button>");
 
-    UiFormEnterKeyboardHandlerTag tag = new UiFormEnterKeyboardHandlerTag();
-    tag.setFullElementId((String)requireContextEntry(UiFormTag.FORM_FULL_ID_KEY)+"."+id);
+    FormEnterKeyboardHandlerHtmlTag tag = new FormEnterKeyboardHandlerHtmlTag();
+    tag.setFullElementId((String)requireContextEntry(FormTag.FORM_FULL_ID_KEY)+"."+id);
     registerSubtag(tag);
     executeStartSubtag(tag);
     executeEndTagAndUnregister(tag);

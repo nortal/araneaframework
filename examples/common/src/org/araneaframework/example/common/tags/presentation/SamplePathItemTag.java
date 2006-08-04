@@ -18,8 +18,8 @@ package org.araneaframework.example.common.tags.presentation;
 
 
 import java.io.Writer;
-import org.araneaframework.jsp.tag.UiBaseTag;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.util.JspUtil;
 
 
 /**
@@ -32,7 +32,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *   name = "pathItem"
  *   body-content = "JSP"
  */
-public class SamplePathItemTag extends UiBaseTag {
+public class SamplePathItemTag extends BaseTag {
   
   //
   // Implementation
@@ -44,11 +44,11 @@ public class SamplePathItemTag extends UiBaseTag {
     parent = (SamplePathTag)requireContextEntry(SamplePathTag.KEY);
     
     if (parent.getHadItems()) {
-      UiUtil.writeOpenStartTag(out, "img");
-      UiUtil.writeAttribute(out, "src", "gfx/dot07.gif");
-      UiUtil.writeAttribute(out, "width", "17");
-      UiUtil.writeAttribute(out, "height", "9");
-      UiUtil.writeCloseStartEndTag_SS(out);
+      JspUtil.writeOpenStartTag(out, "img");
+      JspUtil.writeAttribute(out, "src", "gfx/dot07.gif");
+      JspUtil.writeAttribute(out, "width", "17");
+      JspUtil.writeAttribute(out, "height", "9");
+      JspUtil.writeCloseStartEndTag_SS(out);
     }
     
 		// Continue

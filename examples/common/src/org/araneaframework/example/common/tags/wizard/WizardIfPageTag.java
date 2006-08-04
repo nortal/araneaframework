@@ -18,7 +18,7 @@ package org.araneaframework.example.common.tags.wizard;
 
 import java.io.Writer;
 import org.araneaframework.example.common.framework.context.WizardContext;
-import org.araneaframework.jsp.tag.UiBaseTag;
+import org.araneaframework.jsp.tag.BaseTag;
 
 
 /**
@@ -33,7 +33,7 @@ import org.araneaframework.jsp.tag.UiBaseTag;
  *   body-content = "JSP"
  *   description = "Includes its body if the wizard's current page index matches specified index."
  */
-public class WizardIfPageTag extends UiBaseTag {
+public class WizardIfPageTag extends BaseTag {
   public static final String INDEX_FIRST = "first";
   public static final String INDEX_LAST = "last";
   public static final String INDEX_NOT_PREFIX = "not";

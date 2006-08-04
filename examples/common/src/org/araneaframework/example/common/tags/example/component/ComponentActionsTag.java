@@ -17,8 +17,8 @@
 package org.araneaframework.example.common.tags.example.component;
 
 import java.io.Writer;
-import org.araneaframework.jsp.tag.UiPresentationTag;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.PresentationTag;
+import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -27,7 +27,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *   body-content = "JSP"
  *   description = "Submit buttons should be put inside."
  */
-public class ComponentActionsTag extends UiPresentationTag {
+public class ComponentActionsTag extends PresentationTag {
 	public final static String COMPONENT_ACTION_STYLE_CLASS = "actions";
 
 	public ComponentActionsTag() {
@@ -37,16 +37,16 @@ public class ComponentActionsTag extends UiPresentationTag {
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-		UiUtil.writeOpenStartTag(out, "div");
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		UiUtil.writeAttribute(out, "style", getStyle());
-		UiUtil.writeCloseStartTag(out);
+		JspUtil.writeOpenStartTag(out, "div");
+		JspUtil.writeAttribute(out, "class", getStyleClass());
+		JspUtil.writeAttribute(out, "style", getStyle());
+		JspUtil.writeCloseStartTag(out);
 		
 		return EVAL_BODY_INCLUDE;
 	}
 
 	protected int doEndTag(Writer out) throws Exception {
-		UiUtil.writeEndTag(out, "div");
+		JspUtil.writeEndTag(out, "div");
 		super.doEndTag(out);
 		return EVAL_PAGE;
 	}

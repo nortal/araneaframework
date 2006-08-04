@@ -17,7 +17,7 @@
 package org.araneaframework.example.common.tags.wizard;
 
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.tag.context.UiWidgetContextTag;
+import org.araneaframework.jsp.tag.context.WidgetContextTag;
 
 /**
  * @author Rein Raudjärv <reinra@ut.ee>
@@ -26,7 +26,7 @@ import org.araneaframework.jsp.tag.context.UiWidgetContextTag;
  *   name = "wizard"
  *   body-content = "JSP"
  */
-public class WizardTag extends UiWidgetContextTag {
+public class WizardTag extends WidgetContextTag {
 /**
    * @jsp.attribute
 	 *   type = "java.lang.String"

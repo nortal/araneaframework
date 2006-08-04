@@ -19,10 +19,10 @@ package org.araneaframework.example.common.tags.wizard;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.example.common.framework.context.WizardContext;
-import org.araneaframework.jsp.tag.UiBaseTag;
-import org.araneaframework.jsp.tag.presentation.UiEventButtonBaseTag;
-import org.araneaframework.jsp.tag.presentation.UiStdEventButtonTag;
-import org.araneaframework.jsp.util.UiWidgetUtil;
+import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.tag.presentation.BaseEventButtonTag;
+import org.araneaframework.jsp.tag.presentation.EventButtonHtmlTag;
+import org.araneaframework.jsp.util.JspWidgetUtil;
 
 
 /**
@@ -35,7 +35,7 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
  *   body-content = "empty"
  *   description = "Includes navigation buttons."
  */
-public class WizardFooterTag extends UiBaseTag {
+public class WizardFooterTag extends BaseTag {
   public static final String WIZARD_GOTO_EVENT_ID = "goto";
   public static final String WIZARD_SUBMIT_EVENT_ID = "submit";
   public static final String WIZARD_CANCEL_EVENT_ID = "cancel";
@@ -47,7 +47,7 @@ public class WizardFooterTag extends UiBaseTag {
 
   protected int doStartTag(Writer out) throws Exception {
 		  	
-  	WizardContext wizard = (WizardContext) UiWidgetUtil.getWidgetFromContext(null, pageContext);
+  	WizardContext wizard = (WizardContext) JspWidgetUtil.getWidgetFromContext(null, pageContext);
 		
 		int index = wizard.getCurrentPageIndex();
 		int count = wizard.countPages();
@@ -64,7 +64,7 @@ public class WizardFooterTag extends UiBaseTag {
 	}
   
   protected void writeEventButtonTag(String eventId, String eventParam, boolean disabled, String labelId) throws JspException {
-  	UiEventButtonBaseTag buttonTag = new UiStdEventButtonTag();
+  	BaseEventButtonTag buttonTag = new EventButtonHtmlTag();
   	registerSubtag(buttonTag);
   	buttonTag.setEventId(eventId);
   	if (eventParam != null) {

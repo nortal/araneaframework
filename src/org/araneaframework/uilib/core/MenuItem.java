@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import org.araneaframework.Widget;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.support.FlowCreator;
 
 /**
@@ -142,10 +143,14 @@ public class MenuItem implements Serializable {
     String path = menuPath != null ? menuPath : "";
     MenuItem menu = this;
 
+    try {
     for (StringTokenizer st = new StringTokenizer(path, MENU_PATH_SEPARATOR); st.hasMoreTokens(); )
       menu = (MenuItem)menu.subMenu.get(st.nextToken());
 
     menu.addSubMenuItem(item);
+    } catch (Exception e) {
+      
+    }
 
     return item;
   }
@@ -161,10 +166,12 @@ public class MenuItem implements Serializable {
 
     MenuItem menu = this;
     Widget resultFlow = null;
+    String pathElement = null;
     
     try {
       for (StringTokenizer st = new StringTokenizer(menuPath, MENU_PATH_SEPARATOR); st.hasMoreTokens(); ) {
-        menu = (MenuItem)menu.subMenu.get(st.nextToken());
+        pathElement = st.nextToken();
+        menu = (MenuItem)menu.subMenu.get(pathElement);
         menu.setSelected(true);
         selectedItems.add(menu);
       }
@@ -175,7 +182,7 @@ public class MenuItem implements Serializable {
         resultFlow = menu.flowCreator.createFlow();
     } catch (Exception e) {
       clearSelection();
-      throw e;
+      throw new AraneaRuntimeException("Selection of menu item '" + menuPath + "' failed at '" + pathElement +"'.");
     }
 
     return resultFlow;

@@ -17,16 +17,16 @@
 package org.araneaframework.example.common.tags.uilib.form;
 
 import java.io.Writer;
-import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
-import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
+import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
+import org.araneaframework.jsp.util.JspUtil;
 
 
 
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  */
-public class SampleValidationFlagTag extends UiFormElementBaseTag {
+public class SampleValidationFlagTag extends BaseFormElementHtmlTag {
   
   /**
    */
@@ -34,16 +34,16 @@ public class SampleValidationFlagTag extends UiFormElementBaseTag {
     super.doStartTag(out);
     
     String imgId = "img_"+formFullId+"."+derivedId;
-    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, imgId);
+    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, imgId);
 
-    UiUtil.writeOpenStartTag(out, "img");
-    UiUtil.writeAttribute(out, "id", imgId);
+    JspUtil.writeOpenStartTag(out, "img");
+    JspUtil.writeAttribute(out, "id", imgId);
     if (formElementViewModel.isValid())
-      UiUtil.writeAttribute(out, "style", "visibility: hidden;");
+      JspUtil.writeAttribute(out, "style", "visibility: hidden;");
     else
-      UiUtil.writeAttribute(out, "style", "visibility: visible;");
-    UiUtil.writeAttribute(out, "src", "gfx/uistd_validation_error.gif");
-    UiUtil.writeCloseStartEndTag_SS(out);   
+      JspUtil.writeAttribute(out, "style", "visibility: visible;");
+    JspUtil.writeAttribute(out, "src", "gfx/uistd_validation_error.gif");
+    JspUtil.writeCloseStartEndTag_SS(out);   
     
     return SKIP_BODY;
   }

@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Aranea's row tag, represents one row in a layout.
@@ -30,13 +30,13 @@ import org.araneaframework.jsp.util.UiUtil;
  *
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class LayoutRowTag extends LayoutRowBaseTag {
+public class LayoutRowTag extends BaseLayoutRowTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    UiUtil.writeOpenStartTag(out, "tr");
+    JspUtil.writeOpenStartTag(out, "tr");
     writeRowAttributes(out);
-    UiUtil.writeCloseStartTag(out);
+    JspUtil.writeCloseStartTag(out);
 
     return EVAL_BODY_INCLUDE;
   }
@@ -45,11 +45,11 @@ public class LayoutRowTag extends LayoutRowBaseTag {
   protected void writeRowAttributes(Writer out) throws Exception {
     addAttribute("class",  getStyleClass());
     addAttribute("style",  getStyle());
-    UiUtil.writeAttributes(out, attributes);
+    JspUtil.writeAttributes(out, attributes);
   }
 
   protected int doEndTag(Writer out) throws Exception {
-    UiUtil.writeEndTag(out, "tr");
+    JspUtil.writeEndTag(out, "tr");
     return super.doEndTag(out);
   }
 }

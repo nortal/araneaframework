@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tests;
 
 import junit.framework.TestCase;
-import org.araneaframework.jsp.util.StringUtil;
+import org.araneaframework.jsp.util.JspStringUtil;
 
 /**
  * @author Konstantin Tretyakov
@@ -30,22 +30,22 @@ public class StringUtilTest extends TestCase {
 	
 	public void testStringUtils(){
 		// underlineAccessKey
-		assertEquals(StringUtil.underlineAccessKey("",""), "");
-		assertEquals(StringUtil.underlineAccessKey("aaa",""), "aaa");		
-		assertNull(StringUtil.underlineAccessKey(null, "a"));
-		assertEquals(StringUtil.underlineAccessKey("Some string", "So"), "Some string");
-		assertEquals(StringUtil.underlineAccessKey("Some string", null), "Some string");
-		assertEquals(StringUtil.underlineAccessKey("Some string", "s"), "<u>S</u>ome string");
-		assertEquals(StringUtil.underlineAccessKey("s", "s"), "<u>s</u>");
-		assertEquals(StringUtil.underlineAccessKey(" \n\tõüöä\n\t", "Õ"), " \n\t<u>õ</u>üöä\n\t");
-		assertEquals(StringUtil.underlineAccessKey("<u>this</u>","U"),"<<u>u</u>>this</u>");
+		assertEquals(JspStringUtil.underlineAccessKey("",""), "");
+		assertEquals(JspStringUtil.underlineAccessKey("aaa",""), "aaa");		
+		assertNull(JspStringUtil.underlineAccessKey(null, "a"));
+		assertEquals(JspStringUtil.underlineAccessKey("Some string", "So"), "Some string");
+		assertEquals(JspStringUtil.underlineAccessKey("Some string", null), "Some string");
+		assertEquals(JspStringUtil.underlineAccessKey("Some string", "s"), "<u>S</u>ome string");
+		assertEquals(JspStringUtil.underlineAccessKey("s", "s"), "<u>s</u>");
+		assertEquals(JspStringUtil.underlineAccessKey(" \n\tõüöä\n\t", "Õ"), " \n\t<u>õ</u>üöä\n\t");
+		assertEquals(JspStringUtil.underlineAccessKey("<u>this</u>","U"),"<<u>u</u>>this</u>");
 		
 		// escapeHtmlEntities
-		assertNull(StringUtil.escapeHtmlEntities(null));
-		assertEquals(StringUtil.escapeHtmlEntities(""), "");
-		assertEquals(StringUtil.escapeHtmlEntities(" abc def "), " abc def ");
-		assertEquals(StringUtil.escapeHtmlEntities("&"), "&amp;");
-		assertEquals(StringUtil.escapeHtmlEntities("&&&\n<<< >>>\t\"\"\""), "&amp;&amp;&amp;\n&lt;&lt;&lt; &gt;&gt;&gt;\t&quot;&quot;&quot;");
+		assertNull(JspStringUtil.escapeHtmlEntities(null));
+		assertEquals(JspStringUtil.escapeHtmlEntities(""), "");
+		assertEquals(JspStringUtil.escapeHtmlEntities(" abc def "), " abc def ");
+		assertEquals(JspStringUtil.escapeHtmlEntities("&"), "&amp;");
+		assertEquals(JspStringUtil.escapeHtmlEntities("&&&\n<<< >>>\t\"\"\""), "&amp;&amp;&amp;\n&lt;&lt;&lt; &gt;&gt;&gt;\t&quot;&quot;&quot;");
 		
 	}
 }

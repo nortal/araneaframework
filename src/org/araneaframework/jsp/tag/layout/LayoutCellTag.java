@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Aranea's cell tag, represents one cell in a layout row.
@@ -31,7 +31,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
-public class LayoutCellTag extends LayoutCellBaseTag {
+public class LayoutCellTag extends BaseLayoutCellTag {
   protected String cellTag = "td";
   protected String colspan;
   protected String rowspan;
@@ -41,9 +41,9 @@ public class LayoutCellTag extends LayoutCellBaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    UiUtil.writeOpenStartTag(out, cellTag);
+    JspUtil.writeOpenStartTag(out, cellTag);
     writeCellAttributes(out);
-    UiUtil.writeCloseStartTag(out);
+    JspUtil.writeCloseStartTag(out);
 
     return EVAL_BODY_INCLUDE;
   }
@@ -56,11 +56,11 @@ public class LayoutCellTag extends LayoutCellBaseTag {
     addAttribute("rowspan", rowspan);
     addAttribute("width", width);
     addAttribute("height", height);
-	UiUtil.writeAttributes(out, attributes);
+	JspUtil.writeAttributes(out, attributes);
   }
   
   protected int doEndTag(Writer out) throws Exception {
-    UiUtil.writeEndTag(out, cellTag);
+    JspUtil.writeEndTag(out, cellTag);
     return super.doEndTag(out);
   }
 

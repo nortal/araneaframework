@@ -18,8 +18,8 @@ package org.araneaframework.example.common.tags.wizard;
 
 import java.io.Writer;
 import org.araneaframework.example.common.framework.context.WizardContext;
-import org.araneaframework.jsp.tag.UiBaseTag;
-import org.araneaframework.jsp.util.UiWidgetUtil;
+import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.util.JspWidgetUtil;
 
 /**
  * This tag displays wizard's navigation info.
@@ -31,9 +31,9 @@ import org.araneaframework.jsp.util.UiWidgetUtil;
  *   body-content = "JSP"
  *   description = "Includes navigation info."
  */
-public class WizardHeaderTag extends UiBaseTag {
+public class WizardHeaderTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
-	  WizardContext wizard = (WizardContext) UiWidgetUtil.getWidgetFromContext(null, pageContext);
+	  WizardContext wizard = (WizardContext) JspWidgetUtil.getWidgetFromContext(null, pageContext);
 	  
 	  int index = wizard.getCurrentPageIndex();
 	  int count = wizard.countPages();
