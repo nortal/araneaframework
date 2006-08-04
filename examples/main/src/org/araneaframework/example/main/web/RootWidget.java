@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web;
 
+import org.araneaframework.AraneaVersion;
 import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
@@ -31,7 +32,7 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
 public class RootWidget extends StandardPresentationWidget implements SecurityContext {
 	private MenuWidget menuWidget;
 	private Widget topWidget;
-
+	
 	public RootWidget() {}
 
 	public RootWidget(Widget topWidget) {
@@ -42,6 +43,7 @@ public class RootWidget extends StandardPresentationWidget implements SecurityCo
 		menuWidget = new MenuWidget(topWidget);
 		topWidget = null;
 		addWidget("menu", menuWidget);
+		addWidget("footer", new FooterWidget());
 		setViewSelector("root");
 	}
 
