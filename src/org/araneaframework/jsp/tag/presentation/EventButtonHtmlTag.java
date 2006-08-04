@@ -19,8 +19,8 @@ package org.araneaframework.jsp.tag.presentation;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
-import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)

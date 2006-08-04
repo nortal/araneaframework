@@ -19,12 +19,12 @@ package org.araneaframework.jsp.tag.presentation;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
+import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
-import org.araneaframework.servlet.util.URLUtil;
 
 /**
  * Button base tag.

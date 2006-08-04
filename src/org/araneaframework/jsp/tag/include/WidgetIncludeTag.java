@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.include;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.Custom;
+import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
@@ -44,7 +44,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 	}
 
 	protected int doEndTag(Writer out) throws Exception {   
-		Custom.CustomWidget widget = JspWidgetUtil.getWidgetFromContext(widgetId, pageContext);
+		ApplicationComponent.ApplicationWidget widget = JspWidgetUtil.getWidgetFromContext(widgetId, pageContext);
 		
 		WidgetContextTag widgetContextTag = new WidgetContextTag();
 		

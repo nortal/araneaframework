@@ -17,11 +17,9 @@
 package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
-
 import javax.servlet.jsp.JspException;
-
+import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>

@@ -21,8 +21,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
-import org.araneaframework.core.StandardPath;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.ViewPortContext;
 
 /**

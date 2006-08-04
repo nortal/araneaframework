@@ -20,7 +20,7 @@ import java.io.Writer;
 import java.util.StringTokenizer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.Custom;
+import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
@@ -36,8 +36,8 @@ public class WidgetContextTag extends BaseTag {
   public final static String WIDGET_CONTEXT_ID_KEY = "contextWidgetId";
   public final static String WIDGET_CONTEXT_VIEW_MODEL_KEY = "contextWidget";
  
-  private Custom.CustomWidget widget;
-  private Custom.WidgetViewModel viewModel;
+  private ApplicationComponent.ApplicationWidget widget;
+  private ApplicationComponent.WidgetViewModel viewModel;
   private OutputData output = null;
   
   private int pathLength = 0;
@@ -76,7 +76,7 @@ public class WidgetContextTag extends BaseTag {
     }
 
     widget = JspWidgetUtil.getWidgetFromContext(null, pageContext);
-    viewModel = (Custom.WidgetViewModel) widget._getViewable().getViewModel();
+    viewModel = (ApplicationComponent.WidgetViewModel) widget._getViewable().getViewModel();
     fullId = JspWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
 
     addContextEntry(WIDGET_CONTEXT_ID_KEY, fullId);

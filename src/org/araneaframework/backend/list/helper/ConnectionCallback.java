@@ -18,6 +18,11 @@ package org.araneaframework.backend.list.helper;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import javax.resource.ResourceException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jca.cci.core.CciTemplate;
+import org.springframework.jca.cci.core.RecordCreator;
+import org.springframework.jca.cci.core.RecordExtractor;
 
 /**
  * Generic callback interface for code that operates on a CCI Connection.

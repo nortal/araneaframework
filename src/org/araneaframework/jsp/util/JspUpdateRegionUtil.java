@@ -19,10 +19,8 @@ package org.araneaframework.jsp.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-
 import org.araneaframework.uilib.util.NameUtil;
 
 /**

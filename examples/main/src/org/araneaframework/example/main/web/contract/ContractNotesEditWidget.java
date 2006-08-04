@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.contract;
 
 import java.math.BigDecimal;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;

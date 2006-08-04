@@ -20,9 +20,7 @@ import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.servlet.jsp.JspException;
-
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.support.FormElementViewSelector;

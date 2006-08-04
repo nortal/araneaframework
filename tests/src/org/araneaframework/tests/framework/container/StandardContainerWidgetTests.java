@@ -31,7 +31,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class StandardWidgetContainerWidgetTests extends TestCase {
+public class StandardContainerWidgetTests extends TestCase {
   private StandardContainerWidget parent;
   private MockEventfulStandardWidget child;
   

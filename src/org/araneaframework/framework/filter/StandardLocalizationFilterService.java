@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;

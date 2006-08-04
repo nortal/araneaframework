@@ -18,7 +18,6 @@ package org.araneaframework.backend.list.helper.builder.expression;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilder;

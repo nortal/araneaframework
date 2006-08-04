@@ -18,9 +18,8 @@ package org.araneaframework.mock.core;
 
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
-import org.araneaframework.core.EventListener;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
+import org.araneaframework.core.EventListener;
 
 /**
  * @author toomas

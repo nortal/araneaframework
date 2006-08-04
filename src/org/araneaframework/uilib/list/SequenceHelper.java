@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list;
 
 import java.io.Serializable;
-
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**

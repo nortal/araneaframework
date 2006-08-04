@@ -18,7 +18,6 @@ package org.araneaframework.example.common.framework.resource;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-
 import org.araneaframework.http.support.FallbackResourceBundle;
 import org.araneaframework.http.support.StringResourceBundle;
 

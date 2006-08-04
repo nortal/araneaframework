@@ -18,9 +18,9 @@ package org.araneaframework.jsp.tag.presentation;
 
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
+import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
-import org.araneaframework.servlet.util.URLUtil;
 
 /**
  * Button base tag.

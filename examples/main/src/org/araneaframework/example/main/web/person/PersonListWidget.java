@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;

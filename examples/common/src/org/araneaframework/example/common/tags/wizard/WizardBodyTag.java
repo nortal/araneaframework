@@ -19,9 +19,6 @@ package org.araneaframework.example.common.tags.wizard;
 import java.io.Writer;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
-import org.araneaframework.jsp.tag.UiBaseTag;
-import org.araneaframework.jsp.util.UiWidgetUtil;
-import org.araneaframework.core.Custom.CustomWidget;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
@@ -39,7 +36,7 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
  */
 public class WizardBodyTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
-	  ApplicationWidget widget = (ApplicationWidget) UiWidgetUtil.getWidgetFromContext(null, pageContext);
+	  ApplicationWidget widget = (ApplicationWidget) JspWidgetUtil.getWidgetFromContext(null, pageContext);
 		
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(

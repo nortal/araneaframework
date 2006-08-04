@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
