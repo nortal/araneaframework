@@ -24,8 +24,8 @@ import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.araneaframework.OutputData;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.servlet.JspContext;
-import org.araneaframework.servlet.filter.StandardJspFilterService;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.filter.StandardJspFilterService;
 
 /**
  * 

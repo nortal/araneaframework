@@ -17,8 +17,8 @@
 package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
-import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)

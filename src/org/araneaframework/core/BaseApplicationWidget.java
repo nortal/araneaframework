@@ -34,7 +34,6 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**

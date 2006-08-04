@@ -22,9 +22,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
-import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)

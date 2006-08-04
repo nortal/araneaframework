@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.control;
 
 import java.math.BigDecimal;
-
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
 

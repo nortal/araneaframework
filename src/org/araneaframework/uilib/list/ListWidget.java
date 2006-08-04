@@ -21,14 +21,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
-import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;

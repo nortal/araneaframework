@@ -22,7 +22,7 @@ import java.io.Serializable;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  */
 public interface JspContext extends Serializable {
-  public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.servlet.JspContext";
+  public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.http.JspContext";
 
   public String getJspPath();
 }

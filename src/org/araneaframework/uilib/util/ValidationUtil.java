@@ -20,7 +20,6 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
-
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 

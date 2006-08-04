@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.uilib;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.core.Custom;
+import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
@@ -51,8 +51,8 @@ public class WidgetTag extends BaseTag {
   protected String id;
   protected String fullId;
   protected String scopedFullId;  
-  protected Custom.CustomWidget widget;
-  protected Custom.WidgetViewModel viewModel;
+  protected ApplicationComponent.ApplicationWidget widget;
+  protected ApplicationComponent.WidgetViewModel viewModel;
   
   protected UiWidgetContainer container;
 
@@ -63,7 +63,7 @@ public class WidgetTag extends BaseTag {
 
     // Get data
     widget = JspWidgetUtil.getWidgetFromContext(id, pageContext);
-    viewModel = (Custom.WidgetViewModel) widget._getViewable().getViewModel();
+    viewModel = (ApplicationComponent.WidgetViewModel) widget._getViewable().getViewModel();
     fullId = JspWidgetUtil.getWidgetFullIdFromContext(id, pageContext);    
 
     if (fullId == null) 

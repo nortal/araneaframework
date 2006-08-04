@@ -30,8 +30,8 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.araneaframework.OutputData;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.servlet.JspContext;
-import org.araneaframework.servlet.filter.StandardJspFilterService;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**

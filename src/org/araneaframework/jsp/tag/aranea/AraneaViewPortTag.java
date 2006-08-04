@@ -19,12 +19,12 @@ package org.araneaframework.jsp.tag.aranea;
 import java.io.Writer;
 import org.araneaframework.OutputData;
 import org.araneaframework.framework.ViewPortContext;
-import org.araneaframework.framework.container.StandardWidgetContainerWidget;
+import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.jsp.container.UiAraneaWidgetContainer;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.servlet.JspContext;
-import org.araneaframework.servlet.filter.StandardJspFilterService;
 
 /**
  * @jsp.tag
@@ -38,8 +38,8 @@ public class AraneaViewPortTag extends BaseTag {
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
           OutputData.OUTPUT_DATA_KEY);
-    StandardWidgetContainerWidget rootWidget = 
-      (StandardWidgetContainerWidget) output.getAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
+    StandardContainerWidget rootWidget = 
+      (StandardContainerWidget) output.getAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
     StandardJspFilterService.JspConfiguration config = 
       (StandardJspFilterService.JspConfiguration) output.getAttribute(
           JspContext.JSP_CONFIGURATION_KEY);

@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.business.data;
 
 import javax.sql.DataSource;
-
 import org.araneaframework.backend.list.helper.HSqlListSqlHelper;
 import org.araneaframework.backend.list.helper.ListSqlHelper;
 import org.araneaframework.backend.list.model.ListItemsData;

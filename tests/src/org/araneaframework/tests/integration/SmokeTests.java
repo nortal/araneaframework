@@ -16,15 +16,7 @@
 
 package org.araneaframework.tests.integration;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import junit.framework.TestCase;
-
-import org.araneaframework.http.ServletServiceAdapterComponent;
-import org.araneaframework.mock.servlet.MockServlet;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -100,7 +92,7 @@ public class SmokeTests extends TestCase {
     MockViewPortWidget widget = (MockViewPortWidget)factory.getBean("rootWidget");
     
     req.addParameter(StandardWidget.EVENT_HANDLER_ID_KEY, event);
-    req.addParameter(StandardWidgetContainerWidget.EVENT_PATH_KEY, widgetKey);
+    req.addParameter(StandardContainerWidget.EVENT_PATH_KEY, widgetKey);
     
     // first request, transactionId will get intialized
     adapter.service(req, resp);
@@ -148,7 +140,7 @@ public class SmokeTests extends TestCase {
     widget.addWidget(childKey, childWidget);
     
     req.addParameter(StandardWidget.EVENT_HANDLER_ID_KEY, event);
-    req.addParameter(StandardWidgetContainerWidget.EVENT_PATH_KEY, childKey);    
+    req.addParameter(StandardContainerWidget.EVENT_PATH_KEY, childKey);    
     // initializes everything
     adapter.service(req, resp);
     adapter.service(req, resp);

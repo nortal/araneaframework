@@ -26,7 +26,7 @@ import org.araneaframework.mock.widget.MockCallableWidget;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class StandardCallStackWidgetTests extends TestCase {
+public class StandardFlowContainerWidgetTests extends TestCase {
   private StandardFlowContainerWidget stackWidget;
   private MockCallableWidget topWidget;
   private MockCallableWidget childWidget;
