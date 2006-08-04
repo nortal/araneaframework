@@ -1,12 +1,13 @@
 package org.araneaframework.backend.util;
 
 import java.lang.reflect.Method;
+
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * This class provides a way to manipulate Bean fields and subfields.
  * 
- * @author <a href="mailto:rein@webmedia.ee">Rein Raudjärv</a>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
  * @see org.araneaframework.backend.util.BasicBeanMapper
  */
