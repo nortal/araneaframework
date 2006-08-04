@@ -29,13 +29,13 @@ public class BeanFormListWidget extends BaseFormListWidget {
 	//*******************************************************************
 	// FIELDS
 	//*******************************************************************	
-	
+
 	protected Class beanClass;
-	
+
 	//*******************************************************************
 	// CONSTRUCTORS
 	//*******************************************************************		
-	
+
 	/**
 	 * @param id widget id.
 	 * @param enviroment resource provider.
@@ -45,30 +45,30 @@ public class BeanFormListWidget extends BaseFormListWidget {
 		this.formRowHandler = rowHandler;
 		this.beanClass = beanClass;
 	}
-	
+
 	//*******************************************************************
 	// PROTECTED METHODS
 	//*******************************************************************		
-	
+
 	/**
 	 * Creates and adds an editable row from a usual row object.
 	 */
 	protected void addFormRow(Object newRow) {
 		BeanFormWidget rowForm = (BeanFormWidget) buildAddForm();
 		String rowFormId = "rowForm" + rowFormCounter++;
-		FormRow newEditableRow = new FormRow(formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
-		
-    addWidget(rowFormId, rowForm);
+		FormRow newEditableRow = new FormRow(this, formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
+
+		addWidget(rowFormId, rowForm);
 		try {
-      formRowHandler.initFormRow(newEditableRow, newRow);
-    }
-    catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }     		
-		
+			formRowHandler.initFormRow(newEditableRow, newRow);
+		}
+		catch (Exception e) {
+			throw ExceptionUtil.uncheckException(e);
+		}     		
+
 		formRows.put(formRowHandler.getRowKey(newRow), newEditableRow);
 	}
-	
+
 	protected FormWidget buildAddForm(){
 		return new BeanFormWidget(beanClass);
 	}
