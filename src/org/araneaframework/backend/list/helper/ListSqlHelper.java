@@ -28,7 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.sql.DataSource;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
@@ -61,7 +63,7 @@ import org.araneaframework.uilib.list.util.converter.DummyConverter;
  * <p>
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
  */
 public abstract class ListSqlHelper {
 
@@ -375,7 +377,7 @@ public abstract class ListSqlHelper {
 		if (this.orderExpr == null) {
 			return null;
 		}
-		StandardCompExprToSqlExprBuilder builder = new StandardCompExprToSqlExprBuilder();
+		StandardCompExprToSqlExprBuilder builder = createOrderSqlExpressionBuilder();
 		builder.setMapper(createExpressionBuilderResolver());
 		this.orderSqlExpr = builder.buildSqlExpression(this.orderExpr);
 		return this.orderSqlExpr;
@@ -396,13 +398,27 @@ public abstract class ListSqlHelper {
 		if (this.filterExpr == null) {
 			return null;
 		}
-		StandardExpressionToSqlExprBuilder builder = new StandardExpressionToSqlExprBuilder();
+		StandardExpressionToSqlExprBuilder builder = createFilterSqlExpressionBuilder();
 		builder.setMapper(createExpressionBuilderResolver());
 		builder.setConverter(createExpressionBuilderConverter());
 		this.filterSqlExpr = builder.buildSqlExpression(this.filterExpr);
 		return this.filterSqlExpr;
 	}
+	
+	/**
+	 * Creates new ordering SQL Expression builder.
+	 */
+	protected StandardCompExprToSqlExprBuilder createOrderSqlExpressionBuilder() {
+		return new StandardCompExprToSqlExprBuilder();
+	}
 
+	/**
+	 * Creates new filtering SQL Expression builder.
+	 */
+	protected StandardExpressionToSqlExprBuilder createFilterSqlExpressionBuilder() {
+		return new StandardExpressionToSqlExprBuilder();
+	}
+	
 	/**
 	 * Returns the database fields list seperated by commas, which can be used in "SELECT" clause.
 	 * 
@@ -876,7 +892,7 @@ public abstract class ListSqlHelper {
 	 * The item range and total count querites callback that returns
 	 * <code>ListItemsData</code> object.
 	 * 
-	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
 	 */
 	public class ListItemsDataCallback implements ConnectionCallback {
 		
@@ -909,7 +925,7 @@ public abstract class ListSqlHelper {
 	/**
 	 * The total count query callback.
 	 * 
-	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
 	 */
 	public class CountSqlCallback implements ConnectionCallback {
 		/** 
@@ -949,7 +965,7 @@ public abstract class ListSqlHelper {
 	/**
 	 * The itme range query callback that returns <code>List</code> of items.
 	 * 
-	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
 	 */
 	public class ItemRangeSqlCallback implements ConnectionCallback {	
 		protected ResultReader reader;
@@ -1015,7 +1031,7 @@ public abstract class ListSqlHelper {
 	 * Resultset reader that uses <code>beanToResultSetMapping</code> in
 	 * <code>ListSqlHelper</code> to construct a given type of Bean list.
 	 * 
-	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
 	 */
 	public class BeanResultReader implements ResultReader {
 		

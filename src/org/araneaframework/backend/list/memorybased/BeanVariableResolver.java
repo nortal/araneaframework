@@ -17,18 +17,22 @@
 package org.araneaframework.backend.list.memorybased;
 
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.backend.util.BeanMapper;
+import org.araneaframework.backend.util.GeneralBeanMapper;
+import org.araneaframework.backend.util.RecursiveBeanMapper;
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
+ */
 public class BeanVariableResolver implements VariableResolver {
 
 	private static final long serialVersionUID = 1L;
 
-	private BeanMapper mapper;
+	private GeneralBeanMapper mapper;
 
 	private Object bean;
 
 	public BeanVariableResolver(Class clazz) {
-		this.mapper = new BeanMapper(clazz);
+		this.mapper = new RecursiveBeanMapper(clazz, true);
 	}
 
 	public void setBean(Object bean) {
