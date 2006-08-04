@@ -18,12 +18,12 @@ package org.araneaframework.tests.framework.container;
 
 import junit.framework.TestCase;
 import org.araneaframework.Path;
-import org.araneaframework.framework.container.StandardWidgetContainerWidget;
+import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.http.core.StandardServletInputData;
+import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulStandardWidget;
-import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.servlet.core.StandardServletOutputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -32,7 +32,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  *
  */
 public class StandardWidgetContainerWidgetTests extends TestCase {
-  private StandardWidgetContainerWidget parent;
+  private StandardContainerWidget parent;
   private MockEventfulStandardWidget child;
   
   private StandardServletInputData input;
@@ -45,8 +45,8 @@ public class StandardWidgetContainerWidgetTests extends TestCase {
   
   public void setUp() throws Exception {
     child = new MockEventfulStandardWidget();
-    parent = new StandardWidgetContainerWidget();
-    parent.setChildWidget(child);
+    parent = new StandardContainerWidget();
+    parent.setRoot(child);
     MockLifeCycle.begin(parent);
     
     req = new MockHttpServletRequest();
@@ -65,7 +65,7 @@ public class StandardWidgetContainerWidgetTests extends TestCase {
   
   public void testActionGetsCalled() throws Exception {
     String pathStr = "i.am.a.path.who.are.you";
-    req.addParameter(StandardWidgetContainerWidget.ACTION_PATH_KEY, pathStr);
+    req.addParameter(StandardContainerWidget.ACTION_PATH_KEY, pathStr);
     input = new StandardServletInputData(req);
     
     parent._getService().action(path, input, output);
@@ -75,7 +75,7 @@ public class StandardWidgetContainerWidgetTests extends TestCase {
   
   public void testActionDoesNotGetCalled() throws Exception {
     String pathStr = null;
-    req.addParameter(StandardWidgetContainerWidget.ACTION_PATH_KEY, pathStr);
+    req.addParameter(StandardContainerWidget.ACTION_PATH_KEY, pathStr);
     input = new StandardServletInputData(req);
     
     parent._getService().action(path, input, output);
@@ -84,7 +84,7 @@ public class StandardWidgetContainerWidgetTests extends TestCase {
   
   public void testEventGetsCalled() throws Exception {
     String pathStr = "i.am.a.path.who.are.you";
-    req.addParameter(StandardWidgetContainerWidget.EVENT_PATH_KEY, pathStr);
+    req.addParameter(StandardContainerWidget.EVENT_PATH_KEY, pathStr);
     input = new StandardServletInputData(req);
     
     parent._getWidget().event(path, input);
@@ -94,7 +94,7 @@ public class StandardWidgetContainerWidgetTests extends TestCase {
   
   public void testEventDoesNotGetCalled() throws Exception {
     String pathStr = null;
-    req.addParameter(StandardWidgetContainerWidget.EVENT_PATH_KEY, pathStr);
+    req.addParameter(StandardContainerWidget.EVENT_PATH_KEY, pathStr);
     input = new StandardServletInputData(req);
     
     parent._getWidget().event(path, input);

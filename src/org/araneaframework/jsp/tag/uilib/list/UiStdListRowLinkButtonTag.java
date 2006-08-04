@@ -17,6 +17,18 @@
 package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.jsp.JspException;
+import org.araneaframework.OutputData;
+import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.http.ThreadCloningContext;
+import org.araneaframework.http.util.ClientStateUtil;
+import org.araneaframework.http.util.URLUtil;
+import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
+import org.araneaframework.jsp.tag.basic.UiAttributedTagInterface;
 import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
 import org.araneaframework.jsp.util.UiUtil;
 
@@ -29,20 +41,25 @@ import org.araneaframework.jsp.util.UiUtil;
  *   description = "Represents a link with an onClick JavaScript event."
  */
 public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
-
-	protected void init() {
-		super.init();
-		styleClass = "aranea-link-button";
+	{
+		baseStyleClass = "aranea-link-button";
 	}
-	
-	protected int before(Writer out) throws Exception {
-		super.before(out);          
+
+	protected int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
 		
+	    Map parameters = getParameterMap();
+	    StringBuffer url = getRequestURL();
+	    
+	    addContextEntry(UiAttributedTagInterface.HTML_ELEMENT_KEY, id);
+
 		UiUtil.writeOpenStartTag(out, "a");
 		UiUtil.writeAttribute(out, "id", id);
 		UiUtil.writeAttribute(out, "class", getStyleClass());
+		UiUtil.writeAttribute(out, "style", getStyle());
 		UiUtil.writeAttribute(out, "border", "0");
-		UiUtil.writeAttribute(out, "href", "javascript:");
+		UiUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
+
 		if (eventId != null)
 			UiStdWidgetCallUtil.writeEventAttributeForEvent(
 					pageContext,
@@ -57,20 +74,29 @@ public class UiStdListRowLinkButtonTag extends UiListRowButtonBaseTag {
 		
 		UiUtil.writeCloseStartTag_SS(out);    
 		
-		// Continue
 		return EVAL_BODY_INCLUDE;    
 	}    
 	
-	protected int after(Writer out) throws Exception {
-		
+	protected int doEndTag(Writer out) throws Exception {
 		if (localizedLabel != null)
 			UiUtil.writeEscaped(out, localizedLabel);
+		UiUtil.writeEndTag(out, "a");
 		
-		UiUtil.writeEndTag(out, "a"); 
-		
-		// Continue
-		super.after(out);
-		return EVAL_PAGE;      
-	}  
+		return super.doEndTag(out);
+	}
 	
+  protected Map getParameterMap() throws JspException {
+    OutputData output = (OutputData) requireContextEntry(UiAraneaRootTag.OUTPUT_DATA_KEY);
+    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
+    Object threadId = state.get(ThreadContext.THREAD_SERVICE_KEY);
+
+    Map result = new HashMap();
+    result.put(ThreadContext.THREAD_SERVICE_KEY, threadId);
+    result.put(StandardContainerWidget.EVENT_PATH_KEY, contextWidgetId);
+    result.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, eventId);
+    result.put(ApplicationWidget.EVENT_PARAMETER_KEY, eventParam);
+    result.put(ThreadCloningContext.CLONING_REQUEST_KEY, "true");
+
+    return result;
+  }
 }

@@ -17,8 +17,8 @@
 package org.araneaframework.tests;
 
 import junit.framework.TestCase;
-import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.http.core.StandardServletInputData;
+import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -31,17 +31,13 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * 
  */
 public class FormElementTest extends TestCase {
-  /**
-   * Tests that {@link TextControl} return <code>null</code> on empty request.
-   * @throws Exception
-   */
   public void testDataCycling() throws Exception {
     MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
     emptyRequest.addParameter("myTextBox", "");
 
     FormElement sfe = new FormElement();
     
-    sfe._getComponent().init(new MockEnviroment());
+    sfe._getComponent().init(new MockEnvironment());
     
     TextControl tb = new TextControl();
     tb.setMandatory(true);

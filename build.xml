@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project basedir="." default="build" name="Aranea"> 
+<project basedir="." default="build-all" name="Aranea"> 
 	<description>
 		Code build script.
 	</description>
-
+	
 	<property file="version.properties"/>
-		
-	<property name="project.title" value="Aranea"/>
+	<property name="project.title" value="Aranea Web Framework"/>
 	
 	<!--Set the classpath-->
 	<path id="classpath">
@@ -19,14 +17,14 @@
 		classname="xdoclet.modules.web.WebDocletTask"
 		classpathref="classpath"
 	/>
-
+	
 	<!-- Clean up build system results -->
 	<target name="clean-all" depends="clean"  description="Clean up build system results">
-   	<ant dir="template" target="clean" inheritall="false"/>
+		<ant dir="examples/common" target="clean" inheritall="false"/>
 		<ant dir="examples/main" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloWorld" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="clean" inheritall="false"/>
-		<!--ant dir="examples/widgetQuickStart1" target="clean" inheritall="false"/ -->
+		<ant dir="examples/widgetHelloName" target="clean" inheritall="false"/>		
 	</target>
 	
 	<!-- Clean up build system results -->
@@ -44,17 +42,17 @@
 	<target name="build" depends="tld, jar" description="Build the code">
 	</target>
 	
-	<target name="build-all" depends="build" description="Build the code and template">
-  	 <ant dir="template" target="build" inheritall="false"/>
-  	 <ant dir="examples/main" target="build" inheritall="false"/>	
-    <ant dir="examples/serviceHelloWorld" target="build" inheritall="false"/>
-    <ant dir="examples/serviceHelloName" target="build" inheritall="false"/>
-    <!--ant dir="examples/widgetQuickStart1" target="build" inheritall="false"/-->    
+	<target name="build-all" depends="build" description="Build the code and examples">
+		<ant dir="examples/common" target="build" inheritall="false"/>
+		<ant dir="examples/main" target="build" inheritall="false"/>	
+		<ant dir="examples/serviceHelloWorld" target="build" inheritall="false"/>
+		<ant dir="examples/serviceHelloName" target="build" inheritall="false"/>
+		<ant dir="examples/widgetHelloName" target="build" inheritall="false"/>		
 	</target>
 	
 	<target name="tld-check">
-		<uptodate property="tld-check.uptodate" targetfile="build/tmp/presentation/META-INF/aranea-presentation.tld">						
-			<srcfiles dir="src/org/araneaframework/jsp"/>
+		<uptodate property="tld-check.uptodate" targetfile="build/tmp/presentation/META-INF/aranea-standard.tld">
+			<srcfiles dir="src/org/araneaframework/jsp/tag"/>
 		</uptodate>
 	</target>
 	
@@ -66,76 +64,13 @@
 			<fileset dir="src"/>
 			
 			<jsptaglib validatexml="true"
-				shortName="aranea-tag-library-standard"
-				filename="aranea-presentation.tld"
+				shortName="aui"
+				filename="aranea-standard.tld"
 				uri="http://araneaframework.org/tag-library/standard"
 				description="Aranea User Interface Tag Library"
 			/>
 		</webdoclet>
- 	</target>	
-	
-	<target name="dist">
-    <mkdir dir="build/tmp/dist"/> 
-   
-    <antcall target="clean-all"/>
-		<ant dir="doc/reference" target="clean" inheritall="false"/>
-		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
-		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
-		<mkdir dir="dist"/>
-
-		<copy todir="build/tmp/dist">
-      <fileset dir=".">
-        <include name="src/**/*"/>
-        <include name="tests/**/*"/>
-        <include name="etc/**/*"/>
-        <include name="examples/**/*"/>
-        <include name="template/**/*"/>
-        <include name="tests/**/*"/>
-        <include name="lib/**/*"/>
-        <include name="build.xml"/>
-        <include name="LICENSE"/>
-        <include name="NOTICE"/>
-      	<include name="README"/>
-        
-        <exclude name="CVS/**/*"/>
-        <exclude name="**/*lck"/>
-      </fileset>     
-   	</copy> 
-   
-    <antcall target="build-all"/>
-		<ant dir="doc/reference" target="clean" inheritall="false"/>
-		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
-		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
-			
-    <antcall target="doc"/>
-   
-    <mkdir dir="build/tmp/dist/dist"/>    
-     
-     <copy todir="build/tmp/dist/dist">
-        <fileset dir="build">
-          <include name="*.jar"/>
-        </fileset>     
-     </copy>     
-   
-    <copy todir="build/tmp/dist">
-       <fileset dir="build">
-         <include name="doc/**/*"/>
-       </fileset>     
-    </copy>
-		
-		<mkdir dir="build/tmp/dist/template/dist"/>
-		
-    <copy todir="build/tmp/dist/template/dist">
-       <fileset dir="template/dist">
-         <include name="*"/>
-       </fileset>     
-    </copy>
-		
-		<property name="distname" value="araneaframework-${araneaframework.version}"/>
-		<zip destfile="dist/${distname}.zip">
-				<zipfileset dir="build/tmp/dist" prefix="${distname}"/>
-		</zip>
-	</target>
+	</target>	
 	
 	<target name="compile" depends="init">
 		<mkdir dir="build/classes" />
@@ -145,10 +80,10 @@
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
-			compiler="javac1.3"
 			target="1.3"
 			source="1.3"
 			srcdir="src"
+			deprecation="yes"
 		>
 			<classpath refid="classpath"/>
 			<include name="**/*.java" />
@@ -156,76 +91,335 @@
 	</target>
 	
 	<target name="jar" depends="compile">
-		<jar destfile="build/aranea-core.jar">
+		<mkdir dir="dist" />
+		<mkdir dir="dist/modules" />
+		<mkdir dir="dist/integration" />
+		
+		<!-- MODULES -->
+		
+		<jar destfile="dist/modules/aranea-core.jar" compress="true">
 			<fileset dir="build/classes">
-			  <include name="org/araneaframework/*"/>
-				<include name="org/araneaframework/core/**/*"/>								
+				<include name="org/araneaframework/*"/>
+				<include name="org/araneaframework/core/**/*"/>
 			</fileset>
+			
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>
 		
-		<jar destfile="build/aranea-framework.jar">
+		<jar destfile="dist/modules/aranea-framework.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/framework/**/*"/>												
 			</fileset>
+			
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>		
 		
-		<jar destfile="build/aranea-servlet.jar">
+		<jar destfile="dist/modules/aranea-http.jar" compress="true">
 			<fileset dir="build/classes">							
-			  <include name="org/araneaframework/servlet/**/*"/>						
+			  <include name="org/araneaframework/http/**/*"/>						
 			</fileset>
+			
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>			
 		
-		<jar destfile="build/aranea-backend.jar">
+		<jar destfile="dist/modules/aranea-backend.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/backend/**/*"/>			
 			</fileset>
+			
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>
 		
-		<jar destfile="build/aranea-uilib.jar">
+		<jar destfile="dist/modules/aranea-uilib.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
+      	<fileset dir="etc" includes="resource/**/*"/>  
+
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>	
 		
-		<jar destfile="build/aranea-spring.jar">
-			<fileset dir="build/classes">
-				<include name="org/araneaframework/ioc/spring/**/*"/>			
-			</fileset>
-		</jar>	
-		
-		<jar destfile="build/aranea-jsp.jar">
+		<jar destfile="dist/modules/aranea-jsp.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/**/*"/>			
+				<exclude name="org/araneaframework/jsp/engine/**/*"/>			
 			</fileset>
 			<fileset dir="etc" includes="js/**/*"/>
+			<fileset dir="etc" includes="css/**/*"/>
+			<fileset dir="etc" includes="gfx/**/*"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
+
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>	
 		
-		<jar destfile="build/aranea.jar">
+		<jar destfile="dist/modules/aranea-jsp-engine.jar" compress="true">
 			<fileset dir="build/classes">
-			  <include name="org/araneaframework/**/*"/>		
+				<include name="org/araneaframework/jsp/engine/**/*"/>		        
 			</fileset>
-			<fileset dir="etc" includes="js/**/*"/>
-			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
+      	
+			<fileset dir="etc" includes="cache/**/*"/>      
+			
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
+		</jar>					
+		
+		<!-- INTEGRATION -->
+		
+		<jar destfile="dist/integration/aranea-integration-spring.jar" compress="true">
+			<fileset dir="build/classes">
+				<include name="org/araneaframework/integration/spring/**/*"/>			
+			</fileset>
+			<fileset dir="etc" includes="conf/**/*"/>
+			
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
 		</jar>	
+	
+		<!-- ALL-IN-ONE -->
 		
-		
+		<jar destfile="dist/aranea.jar" compress="true" >
+			<fileset dir="build/classes">
+			  <include name="org/araneaframework/**/*"/>	
+			</fileset>
+			<fileset dir="etc"/>
+			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
+
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
+		</jar>	
 	</target>
 	
 	<target name="javadoc">
-		<mkdir dir="build/doc/javadoc/" />
-		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="build/doc/javadoc/"/>
+		<mkdir dir="dist/doc/javadoc/" />
+		<javadoc 
+			packagenames="org.araneaframework.*" 
+			sourcepath="src"
+			destdir="dist/doc/javadoc/">
+			<tag name="jsp.tag" enabled="false"/>
+			<tag name="jsp.attribute" enabled="false"/>
+		</javadoc>
+	</target>
+	
+	<target name="javadoc-zip">
+		<mkdir dir="dist/doc/javadoc/" />
+		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="dist/doc/javadoc/"/>
+		
+		<zip destfile="dist/doc/javadoc.zip">
+				<zipfileset dir="dist/doc/javadoc" prefix="javadoc"/>
+		</zip>
 	</target>
 	
 	<!-- Build internal documentation -->
 	<target name="doc" depends="init, javadoc" description="Build internal documentation">
 		<ant target="build" dir="doc/reference" />
-    <ant target="build" dir="doc/white-paper" /> 
-    <ant target="build" dir="doc/tutorial" />     
+		<ant target="build" dir="doc/white-paper" /> 
+		<ant target="build" dir="doc/tutorial" />     
 	</target>
-  
+	
 	<!-- test the system -->
 	<target name="run-tests" depends="init, build" description="Run the junit tests">
 		<ant target="run-tests" dir="tests"/>
+	</target>
+	
+	<target name="dist" description="Builds downloadable distribution.">		
+		<mkdir dir="build/tmp/dist"/>
+
+		<antcall target="clean-all"/>
+		<ant dir="doc/reference" target="clean" inheritall="false"/>
+		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
+		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
+		<mkdir dir="dist"/>
+
+		<copy todir="build/tmp/dist">
+			<fileset dir=".">
+				<include name="src/**/*"/>
+				<include name="tests/**/*"/>
+				<include name="etc/**/*"/>
+				<include name="examples/**/*"/>
+				<include name="examples/common/**/*"/>
+				<include name="tests/**/*"/>
+				<include name="lib/**/*"/>
+				<include name="build.xml"/>
+				<include name="License.txt"/>
+				<include name="Notice.txt"/>
+				<include name="Readme.txt"/>
+				<include name="Changelog.txt"/>
+
+				<exclude name="CVS/**/*"/>
+				<exclude name="**/*lck"/>
+			</fileset>     
+		</copy> 
+
+		<antcall target="build-all"/>
+		<ant dir="doc/reference" target="clean" inheritall="false"/>
+		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
+		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
+			
+		<antcall target="doc"/>
+    
+		<mkdir dir="build/tmp/dist/dist"/>    
+
+		<copy todir="build/tmp/dist/dist">
+			<fileset dir="dist">
+				<include name="*.jar"/>
+			</fileset>     
+		</copy>     
+
+		<copy todir="build/tmp/dist">
+			<fileset dir="dist">
+				<include name="doc/**/*"/>
+			</fileset>     
+		</copy>
+		
+		<mkdir dir="build/tmp/dist/examples/common/dist"/>
+		
+		<copy todir="build/tmp/dist/examples/common/dist">
+			<fileset dir="examples/common/dist">
+				<include name="*"/>
+			</fileset>     
+		</copy>
+		
+		<property name="distname" value="araneaframework-${araneaframework.version}"/>
+		<zip destfile="dist/${distname}.zip">
+				<zipfileset dir="build/tmp/dist" prefix="${distname}"/>
+		</zip>
+	</target>
+	
+	<property name="devweb.xml" value="devweb-build.xml"/>
+
+	<!-- Most probably you'll want to copy the following targets to your own project's buildscript -->
+
+	<target name="edit" description="Switches to a change in order to start editing it">
+		<ant antfile="${devweb.xml}" target="edit_change" inheritAll="false"/>
+	</target>
+
+	<target name="edit_module" description="Retrieves a module in order to start editing it">
+		<ant antfile="${devweb.xml}" target="edit_module" inheritAll="false"/>
+	</target>
+
+	<target name="update_base" description="Updates base version of current change">
+		<ant antfile="${devweb.xml}" target="update" inheritAll="false"/>
+	</target>
+
+	<target name="update_base_continue" description="Continues updating base version of current change">
+		<ant antfile="${devweb.xml}" target="update_continue" inheritAll="false"/>
+	</target>
+
+	<target name="update_base_cancel" description="Cancels updating base version of current change">
+		<ant antfile="${devweb.xml}" target="update_cancel" inheritAll="false"/>
+	</target>
+
+	<target name="update" description="Updates files from CVS (checks if the change is in an appropriate state)">
+
+		<ant antfile="${devweb.xml}" target="refresh" inheritAll="false"/>
+	</target>
+
+	<target name="update_all" description="Updates files from CVS, including non-editable modules">
+		<ant antfile="${devweb.xml}" target="refresh_all" inheritAll="false"/>
+	</target>
+
+	<target name="commit" description="Commits files to CVS (checks if th change is in an appropriate state)">
+		<ant antfile="${devweb.xml}" target="commit" inheritAll="false"/>
+	</target>
+
+	<target name="end_edit" description="Finishes editing of current change, enlists it for reviewing">
+		<ant antfile="${devweb.xml}" target="refresh" inheritAll="false"/> <!-- Optional: update local files (recommended) -->
+
+		<!-- Any project-specific preconditions for ending development should be inserted HERE -->
+
+		<ant antfile="${devweb.xml}" target="commit_change" inheritAll="false"/>
+	</target>
+
+	<target name="integrate" description="Starts integration build of a change">
+		<ant antfile="${devweb.xml}" target="integrate" inheritAll="false"/>
+	</target>
+
+	<target name="integrate_continue" description="Continues integration of a change">
+		<ant antfile="${devweb.xml}" target="integrate_continue" inheritAll="false"/>
+	</target>
+
+	<target name="integrate_cancel" description="Cancels integration of a change">
+		<ant antfile="${devweb.xml}" target="integrate_cancel" inheritAll="false"/>
+	</target>
+
+	<target name="integrate_step" description="Continues integration of a change from step entered by integrator">
+		<ant antfile="${devweb.xml}" target="integrate_step" inheritAll="false"/>
+	</target>
+
+	<target name="upload_diff" description="Uploads diff without ending change to review the changes">
+		<ant antfile="${devweb.xml}" target="upload_diff" inheritAll="false"/>
+	</target>
+
+	<!-- End of targets to copy -->
+
+	<!-- You might also want these: -->
+	<target name="change_auth_token" description="Generates new DevWeb authentication code">
+		<ant antfile="${devweb.xml}" target="change_auth_token" inheritAll="false"/>
+	</target>
+
+	<target name="devweb_upgrade" description="Upgrades DevWeb script to current server version">
+		<ant antfile="${devweb.xml}" target="upgrade" inheritAll="false"/>
+	</target>
+
+	<target name="test_checkout" description="Tests local CVS checkout control files for inconsistencies">
+		<ant antfile="${devweb.xml}" target="test_checkout" inheritAll="false"/>
+	</target>
+
+	<target name="sync_main" description="Synchronizes repository MAIN branch and latest version">
+		<ant antfile="${devweb.xml}" target="sync_main" inheritAll="false"/>
+	</target>
+
+	<target name="sync_main_continue" description="Continues synchronizing repository MAIN branch and latest version">
+		<ant antfile="${devweb.xml}" target="sync_main_continue" inheritAll="false"/>
+	</target>
+
+	<target name="checkout_version" description="Checks out a version from repository">
+		<ant antfile="${devweb.xml}" target="checkout_version" inheritAll="false">
+			<!-- You may specify target directory by uncommenting next line (default is ".."):
+			<property name="checkout_version.dir" location=".." />
+			-->
+		</ant>
+
+	</target>
+
+	<target name="checkout_change" description="Checks out a change from repository">
+		<ant antfile="${devweb.xml}" target="checkout_change" inheritAll="false">
+			<!-- You may specify target directory by uncommenting next line (default is ".."):
+			<property name="checkout_change.dir" location=".." />
+			-->
+		</ant>
 	</target>
 </project>

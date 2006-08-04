@@ -30,7 +30,8 @@ import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.core.StandardRelocatableServiceDecorator;
+import org.araneaframework.core.RelocatableServiceDecorator;
+import org.araneaframework.framework.FilterService;
 
 /**
  * Serializes the the session during the request routing. This
@@ -43,7 +44,7 @@ import org.araneaframework.core.StandardRelocatableServiceDecorator;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class StandardSerializingAuditFilterService extends BaseService {
+public class StandardSerializingAuditFilterService extends BaseService implements FilterService {
   private static final Logger log = Logger.getLogger(StandardSerializingAuditFilterService.class);
   
   private Relocatable.RelocatableService child;
@@ -59,19 +60,15 @@ public class StandardSerializingAuditFilterService extends BaseService {
   }
   
   public void setChildService(Service child) {
-    this.child = new StandardRelocatableServiceDecorator(child);
+    this.child = new RelocatableServiceDecorator(child);
   }
 
   protected void init() throws Exception {
     child._getComponent().init(getEnvironment());
-    
-    log.debug("Serializing audit filter service initialized.");
   }
   
   protected void destroy() throws Exception {
     child._getComponent().destroy();
-    
-    log.debug("Serializing audit filter service destroyed.");
   }
   
   protected void propagate(Message message) throws Exception {
@@ -86,11 +83,14 @@ public class StandardSerializingAuditFilterService extends BaseService {
     HttpSession sess = (HttpSession) getEnvironment().getEntry(HttpSession.class);
     
     byte[] serialized = SerializationUtils.serialize(child);
-    log.debug("Session size: " + serialized.length);
+    log.debug("Serialized session size: " + serialized.length);
     
     if (testXmlSessionPath != null) {
+      String dumpPath = testXmlSessionPath + "/" + sess.getId() + ".xml";
+      log.debug("Dumping session XML to '" + dumpPath + "'");
+      
       XStream xstream = new XStream(new DomDriver());
-      PrintWriter writer = new PrintWriter(new FileWriter(testXmlSessionPath + "/" + sess.getId() + ".xml"));
+      PrintWriter writer = new PrintWriter(new FileWriter(dumpPath));
       xstream.toXML(child, writer);
       writer.close();
     }

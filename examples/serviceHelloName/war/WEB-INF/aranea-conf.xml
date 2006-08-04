@@ -3,20 +3,20 @@
 
 <beans>
 
-  <bean id="application.root" class="org.araneaframework.servlet.core.StandardServletServiceAdapterComponent"
+  <bean id="araneaApplicationRoot" class="org.araneaframework.http.core.StandardServletServiceAdapterComponent"
     singleton="false">        
     <property name="childService" ref="router"/>
   </bean>  
-  <bean class="org.araneaframework.servlet.router.PathInfoServiceRouterService" id="router"
+  <bean class="org.araneaframework.http.router.PathInfoServiceRouterService" id="router"
     singleton="false">
     <property name="defaultServiceId" value="name"/>
     <property name="serviceMap">
       <map>
         <entry key="name">
-           <bean class="org.araneaframework.example.helloname.NameService"/>
+           <bean class="example.NameService" singleton="false"/>
         </entry>
         <entry key="hello">
-           <bean class="org.araneaframework.example.helloname.HelloService"/>
+           <bean class="example.HelloService" singleton="false"/>
         </entry>        
       </map>
     </property>

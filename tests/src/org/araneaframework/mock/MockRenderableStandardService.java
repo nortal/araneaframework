@@ -19,7 +19,7 @@ package org.araneaframework.mock;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.StandardService;
+import org.araneaframework.core.BaseApplicationService;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -27,7 +27,7 @@ import org.araneaframework.core.StandardService;
  * JEV: afraid this is no more needed.
  *
  */
-public class MockRenderableStandardService extends StandardService {
+public class MockRenderableStandardService extends BaseApplicationService {
   private boolean renderCalled = false;
   private boolean actionCalled = false;
   

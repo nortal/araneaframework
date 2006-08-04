@@ -19,7 +19,7 @@ package org.araneaframework.tests;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
-import org.araneaframework.servlet.core.StandardServletOutputData;
+import org.araneaframework.http.core.StandardServletOutputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 

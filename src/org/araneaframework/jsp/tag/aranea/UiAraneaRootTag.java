@@ -23,9 +23,9 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.araneaframework.OutputData;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.jsp.tag.UiBaseTag;
-import org.araneaframework.servlet.core.StandardServletServiceAdapterComponent;
-import org.araneaframework.servlet.filter.StandardJspFilterService;
 
 /**
  * 
@@ -36,20 +36,19 @@ import org.araneaframework.servlet.filter.StandardJspFilterService;
 public class UiAraneaRootTag extends UiBaseTag {
   public static final String OUTPUT_DATA_KEY = "outputData";
   
-  protected int before(Writer out) throws Exception {
-    super.before(out);
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
     
     OutputData output = 
       (OutputData) pageContext.getRequest().getAttribute(
-          StandardServletServiceAdapterComponent.OUTPUT_DATA_REQUEST_ATTRIBUTE);
-    StandardJspFilterService.Configuration config = 
-      (StandardJspFilterService.Configuration) output.getAttribute(
-          StandardJspFilterService.JSP_CONFIGURATION_KEY);
+          OutputData.OUTPUT_DATA_KEY);
+    StandardJspFilterService.JspConfiguration config = 
+      (StandardJspFilterService.JspConfiguration) output.getAttribute(
+          JspContext.JSP_CONFIGURATION_KEY);
     
-    pushAttribute(
+    addContextEntry(
         OUTPUT_DATA_KEY, 
-        output, 
-        PageContext.REQUEST_SCOPE);
+        output);
     
     Config.set(
         pageContext, 

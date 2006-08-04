@@ -25,6 +25,9 @@ import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilde
 import org.araneaframework.backend.list.memorybased.Expression;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class BaseExpressionToSqlExprBuilder implements ExpressionToSqlExprBuilder {
 	private static final Logger log = Logger.getLogger(BaseExpressionToSqlExprBuilder.class);
 	
@@ -35,7 +38,9 @@ public class BaseExpressionToSqlExprBuilder implements ExpressionToSqlExprBuilde
 	}
 
 	public SqlExpression buildSqlExpression(Expression expression) {
-		log.debug("Expression class: " + expression.getClass());
+		if (log.isDebugEnabled()) {
+			log.debug("Expression class: " + expression.getClass().getName());			
+		}
 		ExprToSqlExprTranslator translator =
 			(ExprToSqlExprTranslator) this.translators.get(expression.getClass());
 		if (translator == null) {

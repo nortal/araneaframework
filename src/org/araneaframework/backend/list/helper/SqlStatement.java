@@ -20,11 +20,12 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.araneaframework.backend.list.SqlExpression;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class SqlStatement implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
@@ -101,22 +102,6 @@ public class SqlStatement implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Adds parameters from the given <code>SqlExpression</code> at the specified position.
-	 * 
-	 * @param index
-	 *            index at witch the specified parameters will be inserted.
-	 * @param expr
-	 *            <code>SqlExpression</code> instance.
-	 *            
-	 * @deprecated
-	 */
-	public void addAllExpressionParams(int index, SqlExpression expr) {
-		if (expr != null) {
-			this.parameters.addAll(index, Arrays.asList(expr.getValues()));			
-		}
-	}
-
-	/**
 	 * Counts all parameters.
 	 * 
 	 * @return paramaetrs count.
@@ -153,18 +138,6 @@ public class SqlStatement implements Serializable, Cloneable {
 	 */
 	public void addAllParams(List params) {
 		addAllParams(countParams(), params);
-	}
-
-	/**
-	 * Adds parameters from the given <code>SqlExpression</code>.
-	 * 
-	 * @param expr
-	 *            <code>SqlExpression</code> instance.
-	 *            
-	 * @deprecated
-	 */
-	public void addAllExpressionParams(SqlExpression expr) {
-		addAllExpressionParams(countParams(), expr);
 	}
 	
 	/**
@@ -206,6 +179,7 @@ public class SqlStatement implements Serializable, Cloneable {
 				pstmt.setNull(i, ((NullValue) parameter).getType());
 			} else {
 				// converting java.util.Date into java.sql.Date
+				// TODO is this correct?
 			    if (parameter != null && java.util.Date.class.isAssignableFrom(parameter.getClass())) {
 			    	parameter = new java.sql.Date(((java.util.Date) parameter).getTime());
 			    }

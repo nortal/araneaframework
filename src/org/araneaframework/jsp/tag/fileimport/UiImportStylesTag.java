@@ -17,10 +17,11 @@
 package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
+
 import javax.servlet.jsp.JspException;
+
+import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.filter.StandardServletFileImportFilterService;
-import org.araneaframework.servlet.filter.importer.CssFileImporter;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -31,24 +32,20 @@ import org.araneaframework.servlet.filter.importer.CssFileImporter;
  *   description = "Imports CSS files."
  */
 public class UiImportStylesTag extends UiImportFileTag {
+	public static final String DEFAULT_GROUP_NAME = "defaultStyles";
+	
 	private String media;
 	
-	public int before(Writer out) throws Exception {
+	public int doStartTag(Writer out) throws Exception {
 		// if filename specified we include the file
 		if (includeFileName != null) {
-			writeHtmlInclude(out, 
-					CssFileImporter.INCLUDE_CSS_FILE_KEY+"="+includeFileName);
+			writeContent(out, includeFileName);
+		}
+		else if (includeGroupName != null){
+			writeContent(out, includeGroupName);
 		}
 		else {
-			writeHtmlInclude(out,
-					CssFileImporter.INCLUDE_CSS_KEY+"=true");
-		}
-		
-		// if filename not specified and includeTemplates is set we include all the template
-		// css files
-		if (includeFileName==null && includeTemplates != null) {
-			writeHtmlInclude(out, 
-					CssFileImporter.INCLUDE_TMPLT_CSS_KEY+"=true");
+			writeContent(out, DEFAULT_GROUP_NAME);
 		}
 		return EVAL_BODY_INCLUDE;
 	}
@@ -63,18 +60,15 @@ public class UiImportStylesTag extends UiImportFileTag {
 		this.media = (String) evaluate("media", media, String.class);
 	}
 	 
-	protected void writeHtmlInclude(Writer out, String keyValue) throws Exception {
-		StringBuffer buf = new StringBuffer(keyValue);
-		buf.append("&");
-		buf.append(StandardServletFileImportFilterService.IMPORTER_TYPE_KEY);
-		buf.append("=");
-		buf.append(CssFileImporter.TYPE);
-		
+	protected void writeContent(Writer out, String srcFile) throws Exception {
+		srcFile = FileImportUtil.getImportString(srcFile, pageContext.getRequest(), pageContext.getResponse());
+				
 		UiUtil.writeOpenStartTag(out, "link");
 		UiUtil.writeAttribute(out, "rel", "stylesheet");
 		UiUtil.writeAttribute(out, "type", "text/css");
-		UiUtil.writeAttribute(out, "href", "?"+buf.toString(), false);
+		UiUtil.writeAttribute(out, "href", srcFile, false);
 		UiUtil.writeAttribute(out, "media", this.media);	
 		UiUtil.writeCloseStartEndTag(out);
+		out.write("\n");
 	}
 }
