@@ -28,7 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.sql.DataSource;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
@@ -375,7 +377,7 @@ public abstract class ListSqlHelper {
 		if (this.orderExpr == null) {
 			return null;
 		}
-		StandardCompExprToSqlExprBuilder builder = new StandardCompExprToSqlExprBuilder();
+		StandardCompExprToSqlExprBuilder builder = createOrderSqlExpressionBuilder();
 		builder.setMapper(createExpressionBuilderResolver());
 		this.orderSqlExpr = builder.buildSqlExpression(this.orderExpr);
 		return this.orderSqlExpr;
@@ -396,13 +398,27 @@ public abstract class ListSqlHelper {
 		if (this.filterExpr == null) {
 			return null;
 		}
-		StandardExpressionToSqlExprBuilder builder = new StandardExpressionToSqlExprBuilder();
+		StandardExpressionToSqlExprBuilder builder = createFilterSqlExpressionBuilder();
 		builder.setMapper(createExpressionBuilderResolver());
 		builder.setConverter(createExpressionBuilderConverter());
 		this.filterSqlExpr = builder.buildSqlExpression(this.filterExpr);
 		return this.filterSqlExpr;
 	}
+	
+	/**
+	 * Creates new ordering SQL Expression builder..
+	 */
+	protected StandardCompExprToSqlExprBuilder createOrderSqlExpressionBuilder() {
+		return new StandardCompExprToSqlExprBuilder();
+	}
 
+	/**
+	 * Creates new filtering SQL Expression builder.
+	 */
+	protected StandardExpressionToSqlExprBuilder createFilterSqlExpressionBuilder() {
+		return new StandardExpressionToSqlExprBuilder();
+	}
+	
 	/**
 	 * Returns the database fields list seperated by commas, which can be used in "SELECT" clause.
 	 * 
