@@ -18,7 +18,7 @@ package org.araneaframework.tests.framework.bean;
 
 import junit.framework.TestCase;
 import org.araneaframework.Service;
-import org.araneaframework.ioc.spring.SpringServiceFactory;
+import org.araneaframework.integration.spring.SpringServiceFactory;
 import org.araneaframework.mock.core.MockEventfulStandardService;
 import org.araneaframework.tests.mock.MockEnvironment;
 

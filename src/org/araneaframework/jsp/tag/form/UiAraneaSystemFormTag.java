@@ -24,12 +24,12 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 
 import org.araneaframework.OutputData;
-import org.araneaframework.core.StandardWidget;
-import org.araneaframework.framework.container.StandardWidgetContainerWidget;
+import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
+import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.filter.StandardJspFilterService;
+import org.araneaframework.http.util.ClientStateUtil;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.JspContext;
-import org.araneaframework.servlet.filter.StandardJspFilterService;
-import org.araneaframework.servlet.util.ClientStateUtil;
 
 
 /**
@@ -67,9 +67,9 @@ public class UiAraneaSystemFormTag extends UiSystemFormTag {
     }
     
     // Hidden fields: to be set
-    UiUtil.writeHiddenInputElement(out, StandardWidget.EVENT_HANDLER_ID_KEY, "");
-    UiUtil.writeHiddenInputElement(out, StandardWidgetContainerWidget.EVENT_PATH_KEY, "");
-    UiUtil.writeHiddenInputElement(out, StandardWidget.EVENT_PARAMETER_KEY, "");
+    UiUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");
+    UiUtil.writeHiddenInputElement(out, StandardContainerWidget.EVENT_PATH_KEY, "");
+    UiUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PARAMETER_KEY, "");
 
     // Continue
     return EVAL_BODY_INCLUDE;

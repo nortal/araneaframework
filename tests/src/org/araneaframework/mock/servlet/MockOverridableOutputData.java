@@ -18,8 +18,8 @@ package org.araneaframework.mock.servlet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.araneaframework.servlet.ServletOverridableOutputData;
-import org.araneaframework.servlet.core.StandardServletOutputData;
+import org.araneaframework.http.ServletOverridableOutputData;
+import org.araneaframework.http.core.StandardServletOutputData;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>

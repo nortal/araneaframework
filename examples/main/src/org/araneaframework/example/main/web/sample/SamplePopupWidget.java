@@ -24,7 +24,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.message.LoginAndMenuSelectMessage;
 import org.araneaframework.example.main.message.PopupMessageFactory;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.servlet.support.PopupWindowProperties;
+import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 
 /**

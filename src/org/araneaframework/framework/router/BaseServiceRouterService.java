@@ -32,7 +32,7 @@ import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
-import org.araneaframework.servlet.util.ClientStateUtil;
+import org.araneaframework.http.util.ClientStateUtil;
 
 /**
  * A router service consists of multiple child services, they form a service map.

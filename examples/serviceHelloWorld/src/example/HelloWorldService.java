@@ -23,8 +23,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
+import org.araneaframework.http.ServletOutputData;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.ServletOutputData;
 
 public class HelloWorldService extends BaseService {
   protected void action(Path path, InputData input, OutputData output) throws Exception {

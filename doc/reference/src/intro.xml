@@ -37,11 +37,11 @@
         </varlistentry>
         <varlistentry>
           <term>Aranea Servlet</term>
-          <listitem>Servlet module extends the <emphasis>Framework</emphasis> module with services that use a Servlet container. Servlet  module includes package <literal>org.araneaframework.servlet</literal> and its subpackages and is packaged into <literal>aranea-servlet.jar</literal> .JAR file.</listitem>
+          <listitem>Servlet module extends the <emphasis>Framework</emphasis> module with services that use a Servlet container. Servlet  module includes package <literal>org.araneaframework.http</literal> and its subpackages and is packaged into <literal>aranea-servlet.jar</literal> .JAR file.</listitem>
         </varlistentry>
         <varlistentry>
           <term>Aranea Spring</term>
-          <listitem>Spring module integrates Aranea with the <emphasis>Spring</emphasis> IoC container. Spring module includes package <literal>org.araneaframework.ioc.spring</literal> and its subpackages and is packaged into <literal>aranea-spring.jar</literal> .JAR file.</listitem>
+          <listitem>Spring module integrates Aranea with the <emphasis>Spring</emphasis> IoC container. Spring module includes package <literal>org.araneaframework.integration.spring</literal> and its subpackages and is packaged into <literal>aranea-spring.jar</literal> .JAR file.</listitem>
         </varlistentry>
         <varlistentry>
           <term>Aranea UiLib</term>

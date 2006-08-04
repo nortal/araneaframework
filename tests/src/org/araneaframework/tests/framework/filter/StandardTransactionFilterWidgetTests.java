@@ -22,9 +22,9 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.filter.StandardTransactionFilterWidget;
+import org.araneaframework.http.core.StandardServletInputData;
+import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.mock.core.MockEventfulBaseWidget;
-import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.servlet.core.StandardServletOutputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 

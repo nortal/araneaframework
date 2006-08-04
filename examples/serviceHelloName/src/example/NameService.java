@@ -20,8 +20,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
+import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.util.ServletUtil;
 
 public class NameService extends BaseService {
   protected void action(Path path, InputData input, OutputData output) throws Exception {        

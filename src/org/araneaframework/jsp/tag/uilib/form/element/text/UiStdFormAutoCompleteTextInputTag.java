@@ -4,11 +4,11 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.core.StandardService;
+import org.araneaframework.core.BaseApplicationService;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
-import org.araneaframework.framework.container.StandardWidgetContainerWidget;
+import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.util.UiUtil;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
@@ -63,8 +63,8 @@ public class UiStdFormAutoCompleteTextInputTag extends UiStdFormValidatingTextIn
     result.append(constructServiceParameter(systemFormId, TopServiceContext.TOP_SERVICE_KEY)).append(" + \"").append('&');
     result.append(constructServiceParameter(systemFormId, TransactionContext.TRANSACTION_ID_KEY)).append(" + \"").append('&');
     result.append(constructServiceParameter(systemFormId, ThreadContext.THREAD_SERVICE_KEY)).append(" + \"").append('&');
-    result.append(StandardWidgetContainerWidget.ACTION_PATH_KEY).append('=').append(getScopedFullFieldId()).append('&');
-    result.append(StandardService.ACTION_ID_ATTRIBUTE).append('=').append(AutoCompleteTextControl.LISTENER_NAME).append('&');
+    result.append(StandardContainerWidget.ACTION_PATH_KEY).append('=').append(getScopedFullFieldId()).append('&');
+    result.append(BaseApplicationService.ACTION_ID_ATTRIBUTE).append('=').append(AutoCompleteTextControl.LISTENER_NAME).append('&');
     result.append(getScopedFullFieldId()).append(".__present=true\"");
 
 	return result;

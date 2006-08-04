@@ -169,7 +169,7 @@ String globalSubmittedParameter =
       </para>
 
       <para>
-        One can also get the <literal>HttpServletRequest</literal> from the <literal>InputData</literal> by casting it to <literal>org.araneaframework.servlet.ServletInputData</literal> and calling <literal>getRequest()</literal> on it.
+        One can also get the <literal>HttpServletRequest</literal> from the <literal>InputData</literal> by casting it to <literal>org.araneaframework.http.ServletInputData</literal> and calling <literal>getRequest()</literal> on it.
       </para>
 
       <para>

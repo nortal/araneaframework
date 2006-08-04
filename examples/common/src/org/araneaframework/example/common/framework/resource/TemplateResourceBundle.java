@@ -19,8 +19,8 @@ package org.araneaframework.example.common.framework.resource;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.araneaframework.servlet.support.FallbackResourceBundle;
-import org.araneaframework.servlet.support.StringResourceBundle;
+import org.araneaframework.http.support.FallbackResourceBundle;
+import org.araneaframework.http.support.StringResourceBundle;
 
 public class TemplateResourceBundle extends FallbackResourceBundle {
 

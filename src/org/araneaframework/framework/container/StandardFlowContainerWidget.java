@@ -28,9 +28,9 @@ import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.BaseWidget;
-import org.araneaframework.core.Custom;
+import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
@@ -42,7 +42,7 @@ import org.araneaframework.framework.FlowContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
-public class StandardFlowContainerWidget extends StandardWidget implements FlowContext {
+public class StandardFlowContainerWidget extends BaseApplicationWidget implements FlowContext {
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
@@ -213,7 +213,7 @@ public class StandardFlowContainerWidget extends StandardWidget implements FlowC
     refreshGlobalEnvironment();
   }
   
-  public void addNestedEnvironmentEntry(Custom.CustomWidget scope, final Object entryId, Object envEntry) {
+  public void addNestedEnvironmentEntry(ApplicationComponent.ApplicationWidget scope, final Object entryId, Object envEntry) {
     pushGlobalEnvEntry(entryId, envEntry);
     
     BaseWidget scopeWidget = new BaseWidget() {

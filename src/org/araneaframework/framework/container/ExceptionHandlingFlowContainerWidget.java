@@ -21,8 +21,8 @@ import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.servlet.ServletOverridableOutputData;
-import org.araneaframework.servlet.util.AtomicResponseHelper;
+import org.araneaframework.http.ServletOverridableOutputData;
+import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)

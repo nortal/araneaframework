@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.core.EmptyPathStackException;
-import org.araneaframework.servlet.core.StandardServletInputData;
+import org.araneaframework.http.core.StandardServletInputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**

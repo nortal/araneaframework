@@ -1,9 +1,9 @@
 package org.araneaframework.example.main.message;
 
 import org.araneaframework.Message;
-import org.araneaframework.core.MessageSeries;
+import org.araneaframework.core.SeriesMessage;
 
-public class LoginAndMenuSelectMessage extends MessageSeries {
+public class LoginAndMenuSelectMessage extends SeriesMessage {
 
   public LoginAndMenuSelectMessage(String menuPath) {
     super(new Message[] {

@@ -49,8 +49,8 @@ import org.araneaframework.example.main.web.sample.InvisibleElementFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
+import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.support.FlowCreator;
 

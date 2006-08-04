@@ -20,13 +20,13 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.StandardService;
+import org.araneaframework.core.BaseApplicationService;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class MockControllableService extends StandardService {
+public class MockControllableService extends BaseApplicationService {
   private boolean keepActionBusy = false;
   private boolean actionCalled = false;
   private boolean destroyCalled = false;

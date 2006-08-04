@@ -18,8 +18,8 @@ package org.araneaframework.tests.servlet.util;
 
 import javax.servlet.http.Cookie;
 import junit.framework.TestCase;
-import org.araneaframework.servlet.core.StandardServletOutputData;
-import org.araneaframework.servlet.util.AtomicResponseHelper;
+import org.araneaframework.http.core.StandardServletOutputData;
+import org.araneaframework.http.util.AtomicResponseHelper;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 

@@ -18,8 +18,8 @@ package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
 
+import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>

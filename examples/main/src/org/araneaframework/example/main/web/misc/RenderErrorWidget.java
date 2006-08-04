@@ -18,8 +18,8 @@ package org.araneaframework.example.main.web.misc;
 
 import org.araneaframework.OutputData;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
+import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.util.ServletUtil;
 
 
 /**

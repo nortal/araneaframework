@@ -24,8 +24,8 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.servlet.ServletOverridableOutputData;
-import org.araneaframework.servlet.util.AtomicResponseHelper;
+import org.araneaframework.http.ServletOverridableOutputData;
+import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
  * A custom exception handling filter. If the child service's action method throws an exception,

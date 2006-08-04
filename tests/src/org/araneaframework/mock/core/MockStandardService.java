@@ -20,12 +20,12 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ActionListener;
-import org.araneaframework.core.StandardService;
+import org.araneaframework.core.BaseApplicationService;
 
 /**
  * @author Toomas Römer
  */
-public class MockStandardService extends StandardService {
+public class MockStandardService extends BaseApplicationService {
   private boolean actionCalled = false;
 
   protected Object getActionId(InputData input) {

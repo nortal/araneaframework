@@ -25,13 +25,13 @@ import org.araneaframework.Service;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService;
+import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.core.StandardServletInputData;
+import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.mock.MockRenderableStandardService;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulBaseService;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.servlet.core.StandardServletOutputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 

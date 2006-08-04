@@ -20,7 +20,7 @@ import java.io.Serializable;
 import org.araneaframework.Component;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Custom.CustomWidget;
+import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 
 /**
  * This context provides support for flow navigation and nesting. A flow is started using 
@@ -87,7 +87,7 @@ public interface FlowContext extends Serializable {
   /**
    * Adds an environment entry that is visible in all subflows.
    */
-  public void addNestedEnvironmentEntry(CustomWidget scope, final Object entryId, Object envEntry);
+  public void addNestedEnvironmentEntry(ApplicationWidget scope, final Object entryId, Object envEntry);
 
   
   public interface FlowReference extends Serializable {

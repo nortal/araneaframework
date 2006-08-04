@@ -6,7 +6,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.core.EventListener;
 import org.araneaframework.core.NoSuchEventListenerException;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 import org.araneaframework.uilib.InvalidEventException;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
@@ -31,7 +31,7 @@ public final class ValidatingProxyEventListener  implements EventListener {
     BeanFormReader reader = new BeanFormReader(form);
     Object bean = reader.getBean(modelType);
     
-    String eventParameter = (String) input.getGlobalData().get(StandardWidget.EVENT_PARAMETER_KEY);    
+    String eventParameter = (String) input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);    
     String eventHandlerName = "handleEvent" + ((String) eventId).substring(0, 1).toUpperCase() + ((String) eventId).substring(1);
     
     try {

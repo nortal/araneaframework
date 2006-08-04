@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ActionListener;
+import org.araneaframework.http.ServletOutputData;
 import org.araneaframework.jsp.util.StringUtil;
-import org.araneaframework.servlet.ServletOutputData;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.support.TextType;
 

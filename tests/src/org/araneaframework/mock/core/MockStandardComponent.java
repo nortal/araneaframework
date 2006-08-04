@@ -17,13 +17,13 @@
 package org.araneaframework.mock.core;
 
 import org.araneaframework.Environment;
-import org.araneaframework.core.StandardComponent;
+import org.araneaframework.core.BaseApplicationComponent;
 
 /**
  * @author toomas
  *
  */
-public class MockStandardComponent extends StandardComponent {
+public class MockStandardComponent extends BaseApplicationComponent {
   private boolean destroyCalled = false;
   
   public void destroy() {

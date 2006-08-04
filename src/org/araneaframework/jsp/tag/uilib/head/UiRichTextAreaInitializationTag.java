@@ -22,11 +22,11 @@ import java.util.Map;
 
 import javax.servlet.jsp.JspException;
 
+import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.tag.basic.UiElementTag;
 import org.araneaframework.jsp.tag.fileimport.UiImportScriptsTag;
 import org.araneaframework.jsp.tag.uilib.form.element.text.UiStdFormRichTextAreaTag;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
  * The rich text editor (tinyMCE at the moment) requires a global

@@ -114,7 +114,7 @@
     </para>
 
     <para>
-      Aranea provides a base implementation of the <literal>Component</literal> &mdash; <literal>org.araneaframework.core.BaseComponent</literal>. This implementation mainly enforces contracts (including lifecycle and some basic synchronization). A base class for application development <literal>org.araneaframework.core.StandardComponent</literal> is also available.
+      Aranea provides a base implementation of the <literal>Component</literal> &mdash; <literal>org.araneaframework.core.BaseComponent</literal>. This implementation mainly enforces contracts (including lifecycle and some basic synchronization). A base class for application development <literal>org.araneaframework.core.BaseApplicationComponent</literal> is also available.
     </para>
 		
     <sect2>

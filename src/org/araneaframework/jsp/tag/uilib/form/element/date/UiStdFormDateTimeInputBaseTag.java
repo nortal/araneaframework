@@ -21,9 +21,9 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.tag.uilib.form.UiFormElementBaseTag;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.util.FileImportUtil;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.TimeControl;
 

@@ -20,12 +20,12 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.OutputData;
+import org.araneaframework.http.PopupServiceInfo;
+import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.jsp.tag.UiBaseTag;
 import org.araneaframework.jsp.tag.aranea.UiAraneaRootTag;
 import org.araneaframework.jsp.tag.form.UiSystemFormTag;
 import org.araneaframework.jsp.util.UiUtil;
-import org.araneaframework.servlet.PopupServiceInfo;
-import org.araneaframework.servlet.PopupWindowContext;
 
 /**
  * Popup registering and rendering tag -- opens popups when HTML file BODY has onload event processing enabled.

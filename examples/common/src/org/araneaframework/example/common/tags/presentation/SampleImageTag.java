@@ -23,8 +23,8 @@ import java.util.Map;
 
 import javax.servlet.jsp.JspException;
 
+import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.tag.presentation.UiStdImageBaseTag;
-import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
  * SAMPLE image tag.

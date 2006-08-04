@@ -19,13 +19,13 @@ package org.araneaframework.mock.core;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class MockSimpleWidget extends StandardWidget {
+public class MockSimpleWidget extends BaseApplicationWidget {
 
   protected void render(OutputData output) throws Exception {
   }

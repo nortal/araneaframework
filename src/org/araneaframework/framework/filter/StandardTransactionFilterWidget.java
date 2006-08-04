@@ -27,7 +27,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.framework.util.TransactionHelper;
-import org.araneaframework.servlet.util.ClientStateUtil;
+import org.araneaframework.http.util.ClientStateUtil;
 
 /**
  * Filters <code>update(InputData)</code>,  <code>event(Path, InputData)</code>, 

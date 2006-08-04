@@ -5,14 +5,14 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.BroadcastMessage;
-import org.araneaframework.core.MessageSeries;
+import org.araneaframework.core.SeriesMessage;
 import org.araneaframework.example.main.web.menu.MenuWidget;
 import org.araneaframework.example.main.web.person.PersonAddEditWidget;
 import org.araneaframework.framework.MountContext.MessageFactory;
 
 public class ExamplePersonMountMessageFactory implements MessageFactory {
   public Message buildMessage(String url, final String suffix, InputData input, OutputData output) {
-    return new MessageSeries(new Message[] {
+    return new SeriesMessage(new Message[] {
         new LoginMessage(),
         new BroadcastMessage() {
           protected void execute(Component component) throws Exception {

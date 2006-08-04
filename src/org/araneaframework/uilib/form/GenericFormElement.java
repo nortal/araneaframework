@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ErrorUtil;
@@ -247,7 +247,7 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
    * 
    */
-  public class ViewModel extends StandardWidget.ViewModel{
+  public class ViewModel extends BaseApplicationWidget.ViewModel{
     
     private Map properties;
 

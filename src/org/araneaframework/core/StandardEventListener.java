@@ -17,6 +17,7 @@
 package org.araneaframework.core;
 
 import org.araneaframework.InputData;
+import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 
 /**
  * 
@@ -25,7 +26,7 @@ import org.araneaframework.InputData;
  */
 public abstract class StandardEventListener implements EventListener {	
 	public final void processEvent(Object eventId, InputData input) throws Exception {
-		String eventParameter = (String) input.getGlobalData().get(StandardWidget.EVENT_PARAMETER_KEY);
+		String eventParameter = (String) input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
 		processEvent(eventId, eventParameter, input);
 	}
   
