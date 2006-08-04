@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.constraint.BaseConstraint;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -144,7 +145,9 @@ public class FormElement extends GenericFormElement {
    * @throws ConverterNotFoundException if converter cannot be found.
    */
   public Converter findConverter() throws ConverterNotFoundException {
-    return ConverterFactory.getInstance(getConfiguration()).findConverter(getControl().getRawValueType(), getData().getValueType());
+    ConfigurationContext confCtx = 
+      (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
+    return ConverterFactory.getInstance(confCtx).findConverter(getControl().getRawValueType(), getData().getValueType());
   }
 
   /**
@@ -235,13 +238,15 @@ public class FormElement extends GenericFormElement {
    */
   protected void process() throws Exception {
     if (getControl() != null) {
-      if (getData() != null && getData().isDirty()) {
-        getControl().setRawValue(getConverter().reverseConvert(getData().getValue()));
+      if (getData() != null) {
+        if (getData().isDirty()) {
+          getControl().setRawValue(getConverter().reverseConvert(getData().getValue()));      
+          getConverter().clearErrors();
+        }
+        
         getData().setValue(null);
         getData().clean();
-        
-        getConverter().clearErrors();
-      }
+      }      
 
       getControl()._getWidget().process();
     }
@@ -303,7 +308,7 @@ public class FormElement extends GenericFormElement {
         getData().setValue(newDataValue);
         getData().clean();
         
-        errors.addAll(ErrorUtil.showErrors(getConverter().getErrors(), getEnvironment()));
+        getErrors().addAll(ErrorUtil.showErrors(getConverter().getErrors(), getEnvironment()));
         getConverter().clearErrors();        
       }
     }

@@ -22,10 +22,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.uilib.list.RowHandler;
 
 /**
@@ -41,7 +41,7 @@ public class InMemoryFormListHelper implements Serializable {
 	protected Map updated = new HashMap();
 	protected Set deleted = new HashSet();
 	
-	protected Map current = new LinkedHashMap();
+	protected Map current = new LinkedMap();
 	
 	protected RowHandler rowHandler;
 	

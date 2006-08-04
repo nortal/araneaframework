@@ -66,12 +66,15 @@ public class TimeControl extends TimestampControl {
 	public void init() throws Exception {
 		super.init();
 		if (!confOverridden) {
-			String confFormat = (String) getConfiguration().getEntry(ConfigurationContext.CUSTOM_TIME_FORMAT);
-			if (confFormat != null) dateTimeFormat = confFormat;
+      ConfigurationContext confCtx = 
+        (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
+      
+		  String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_TIME_FORMAT);
+		  if (confFormat != null) dateTimeFormat = confFormat;
 
-			String confOutputFormat = (String) getConfiguration().getEntry(
-					ConfigurationContext.DEFAULT_TIME_OUTPUT_FORMAT);
-			if (confOutputFormat != null) currentSimpleDateTimeFormat = new SimpleDateFormat(confOutputFormat);
+		  String confOutputFormat = (String) confCtx.getEntry(
+		      ConfigurationContext.DEFAULT_TIME_OUTPUT_FORMAT);
+		  if (confOutputFormat != null) currentSimpleDateTimeFormat = new SimpleDateFormat(confOutputFormat);
 		}
 	}
 

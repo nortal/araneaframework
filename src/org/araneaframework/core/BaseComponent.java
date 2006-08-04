@@ -43,10 +43,10 @@ public abstract class BaseComponent implements Component {
   private static final Logger log = Logger.getLogger(BaseComponent.class);
   
   private Environment environment;
-  private Map children = Collections.synchronizedMap(new LinkedMap());
-  private Map disabledChildren = Collections.synchronizedMap(new LinkedMap());
+  private Map children;
+  private Map disabledChildren;
   
-  private boolean wasInited = false;
+  private Boolean nullIfInited = Boolean.FALSE;
   
   private transient int callCount = 0;
   private transient int reentrantCallCount = 0;
@@ -98,7 +98,7 @@ public abstract class BaseComponent implements Component {
    * Returns true, if the BaseComponent has been initialized. 
    */
   protected boolean isInitialized() {
-    return wasInited;
+    return nullIfInited == null;
   } 
   
   /**
@@ -169,7 +169,7 @@ public abstract class BaseComponent implements Component {
    * Checks if this component is initialized. If not, throws IllegalStateException.
    */
   protected void _checkCall() throws IllegalStateException {
-    if (!wasInited) {
+    if (!isInitialized()) {
       throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
     }
   }
@@ -178,7 +178,22 @@ public abstract class BaseComponent implements Component {
    * Returns the children of this component.
    */
   protected Map _getChildren() {
+    synchronized (this) {
+      if (children == null)
+        children = Collections.synchronizedMap(new LinkedMap(1));
+    }
     return children;
+  }
+  
+  /**
+   * Returns the children of this component.
+   */
+  protected Map _getDisabledChildren() {
+    synchronized (this) {
+      if (disabledChildren == null)
+        disabledChildren = Collections.synchronizedMap(new LinkedMap(1));
+    }
+    return disabledChildren;
   }
   
   /**
@@ -189,8 +204,8 @@ public abstract class BaseComponent implements Component {
     _checkCall();
     
     // cannot add a child with key that clashes with a disabled child's key
-    if (children.containsKey(key)) {
-      if (disabledChildren.containsKey(key))
+    if (_getChildren().containsKey(key)) {
+      if (_getDisabledChildren().containsKey(key))
         _enableComponent(key);
       _removeComponent(key);
     }
@@ -198,7 +213,7 @@ public abstract class BaseComponent implements Component {
     // Sequence is very important as by the time of init 
     // component should be in place since during init the 
     // component might be overridden.
-    children.put(key, component);
+    _getChildren().put(key, component);
     component._getComponent().init(env);
   }
   
@@ -208,7 +223,7 @@ public abstract class BaseComponent implements Component {
   protected void _removeComponent(Object key) {
     _checkCall();
     
-    Component comp = (Component)children.get(key);
+    Component comp = (Component)_getChildren().get(key);
     
     if (comp == null) {
       return;
@@ -216,7 +231,7 @@ public abstract class BaseComponent implements Component {
 
     //Sequence is very important, and guarantees that there won't 
     //be a second destroy call if the first one doesn't succeed.
-    children.remove(key);
+    _getChildren().remove(key);
     comp._getComponent().destroy();
   }
 
@@ -227,12 +242,12 @@ public abstract class BaseComponent implements Component {
   protected void _disableComponent(Object key) {
     _checkCall();
     
-    if (!children.containsKey(key)) {
+    if (!_getChildren().containsKey(key)) {
       throw new NoSuchComponentException(key);
     }
     
-    ((Component) children.get(key))._getComponent().disable();
-    disabledChildren.put(key, children.remove(key));    
+    ((Component) _getChildren().get(key))._getComponent().disable();
+    _getDisabledChildren().put(key, _getChildren().remove(key));    
   }
   
   /**
@@ -242,12 +257,12 @@ public abstract class BaseComponent implements Component {
   protected void _enableComponent(Object key) {
     _checkCall();
     
-    if (!disabledChildren.containsKey(key)) {
+    if (!_getDisabledChildren().containsKey(key)) {
       throw new NoSuchComponentException(key);
     }
         
-    children.put(key, disabledChildren.remove(key));
-    ((Component) children.get(key))._getComponent().enable();
+    _getChildren().put(key, _getDisabledChildren().remove(key));
+    ((Component) _getChildren().get(key))._getComponent().enable();
   }
   
   /**
@@ -266,10 +281,13 @@ public abstract class BaseComponent implements Component {
     Relocatable comp = (Relocatable) parent._getComposite().detach(keyFrom);
     comp._getRelocatable().overrideEnvironment(newEnv);
     
-    children.put(keyTo, comp);
+    _getChildren().put(keyTo, comp);
   }
   
   protected void _propagate(Message message) {
+    if (children == null)
+      return;
+    
     Iterator ite = (new HashMap(_getChildren())).keySet().iterator();
     while(ite.hasNext()) {
       Object key = ite.next();
@@ -325,11 +343,11 @@ public abstract class BaseComponent implements Component {
         throw new AraneaRuntimeException("Environment cannot be null");
       }
       
-      if (wasInited) {
+      if (isInitialized()) {
         throw new AraneaRuntimeException("Cannot initialize a component more than once");
       }      
       BaseComponent.this._setEnvironment(env);
-      wasInited = true;
+      nullIfInited = null;
       try {
         BaseComponent.this.init();
       }
@@ -346,20 +364,22 @@ public abstract class BaseComponent implements Component {
          * Second call to destroy should fail, not wait. */
         _waitNoCall();
         synchronized (this) {
-          for (Iterator i = new HashMap(_getChildren()).keySet().iterator(); i.hasNext(); ) {
-            _removeComponent(i.next());
-          }
-          
-          for (Iterator i = new HashMap(disabledChildren).keySet().iterator(); i.hasNext(); ) {
-            Component comp = (Component) disabledChildren.get(i.next());
-            if (comp != null) {          
-              comp._getComponent().destroy();             
+          if (children != null)
+            for (Iterator i = new HashMap(_getChildren()).keySet().iterator(); i.hasNext(); ) {
+              _removeComponent(i.next());
             }
-          }    
+          
+          if (disabledChildren != null)
+            for (Iterator i =_getDisabledChildren().keySet().iterator(); i.hasNext(); ) {
+              Component comp = (Component) _getDisabledChildren().get(i.next());
+              if (comp != null) {          
+                comp._getComponent().destroy();             
+              }
+            }    
           
           BaseComponent.this.destroy();
         }
-        wasInited = false;   
+        nullIfInited = Boolean.FALSE;   
       }
       catch (Exception e) {
         ExceptionUtil.uncheckException(e);

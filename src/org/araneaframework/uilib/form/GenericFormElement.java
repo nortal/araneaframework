@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ErrorUtil;
 
@@ -32,7 +31,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * 
  */
-public abstract class GenericFormElement extends StandardPresentationWidget {
+public abstract class GenericFormElement extends BaseApplicationWidget {
 
   //*******************************************************************
   // FIELDS
@@ -44,7 +43,7 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
   protected boolean converted = false;
   protected boolean validated = false;  
   
-  protected Set errors = new HashSet();
+  private Set errors;
 
   //*********************************************************************
   //* PUBLIC METHODS
@@ -107,7 +106,7 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    * @return whether the element is valid.
    */
   public boolean isValid() {
-    return (errors.size() == 0);
+    return (errors == null || errors.size() == 0);
   }
 
   /**
@@ -163,7 +162,8 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    * Clears element errors.
    */
   public void clearErrors() {  
-    errors.clear();   
+    if (errors != null)
+      errors.clear();   
   }
 
   //*********************************************************************
@@ -230,11 +230,17 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
   protected boolean validateInternal() throws Exception {
     if (getConstraint() != null && isValid()) {
     	getConstraint().validate();    
-      errors.addAll( ErrorUtil.showErrors(getConstraint().getErrors(), getEnvironment()));
+      getErrors().addAll( ErrorUtil.showErrors(getConstraint().getErrors(), getEnvironment()));
       getConstraint().clearErrors();
     }
 
     return isValid();
+  }
+  
+  protected Set getErrors() {
+    if (errors == null)
+      errors = new HashSet();
+    return errors;
   }
   
   //*********************************************************************

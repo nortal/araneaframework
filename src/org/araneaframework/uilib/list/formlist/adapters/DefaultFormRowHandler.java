@@ -47,7 +47,7 @@ public abstract class DefaultFormRowHandler implements FormRowHandler {
 		if (editableRow.isOpen()) {
 			editableRow.reset();
 		}
-		editableRow.setOpen(!editableRow.isOpen());
+ 		editableRow.setOpen(!editableRow.isOpen());
 	}
 
 }

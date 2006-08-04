@@ -260,8 +260,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   protected void init() throws Exception {
     super.init();
             
-    if (top != null)
+    if (top != null) {
       start(top, null, null);
+      top = null;
+    }
   }
   
   protected void destroy() throws Exception {
