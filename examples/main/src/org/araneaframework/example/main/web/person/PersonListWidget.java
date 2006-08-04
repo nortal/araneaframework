@@ -17,17 +17,21 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
-import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.template.framework.context.PassthroughCallContextHandler;
 import org.araneaframework.uilib.form.control.DateControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.data.BigDecimalData;
+import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.ListColumn;
+import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
@@ -36,15 +40,16 @@ import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter
  * It returns selected person's Id or cancels current call.
  * It also allows a user to add or remove persons if it's set to edit mode.
  * 
- * @author Rein Raudjärv <reinra@ut.ee>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class PersonListWidget extends BaseWidget {
+public class PersonListWidget extends TemplateBaseWidget {
 	
 	private static final long serialVersionUID = 1L;
 
 	protected static final Logger log = Logger.getLogger(PersonListWidget.class);
 	
 	private boolean editMode = false;
+	private boolean selectOnly = false;
 	
 	private ListWidget list;
 	
@@ -64,14 +69,8 @@ public class PersonListWidget extends BaseWidget {
 		super.init();
 		setViewSelector("person/personList");
 		
-		log.debug("TemplatePersonListWidget init called");    
-		addGlobalEventListener(new ProxyEventListener(this));
-		
 		this.list = initList();
 		addWidget("personList", this.list);
-		
-		putViewData("allowAdd", new Boolean(this.editMode));    
-		putViewData("allowRemove", new Boolean(this.editMode));
 	}
 	
 	protected ListWidget initList() throws Exception {
@@ -81,7 +80,20 @@ public class PersonListWidget extends BaseWidget {
 		temp.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
 		temp.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
 		temp.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("birthdate", "#Birthdate", true, new SimpleColumnFilter.Equals(), new DateControl());
+		
+		RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
+		temp.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
+		temp.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
+		temp.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
+		
+		RangeColumnFilter salaryFilter = new RangeColumnFilter.NonStrict();
+		temp.addBeanColumn("salary", "#Salary", true, salaryFilter, null);
+		temp.addFilterFormElement(salaryFilter.getStartFilterInfoKey(), "#Salary Start", new FloatControl(), new BigDecimalData());
+		temp.addFilterFormElement(salaryFilter.getEndFilterInfoKey(), "#Salary End", new FloatControl(), new BigDecimalData());		
+		
+		// The dummy column without label (in list rows, some listRowLinkButton's will be written there).
+		// Needed to write out componentListHeader with correct number of columns. 
+		temp.addListColumn(new ListColumn("dummy"));
 		return temp;
 	}
 	
@@ -91,10 +103,8 @@ public class PersonListWidget extends BaseWidget {
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
 		log.debug("Event 'add' received!");
-		if (!this.editMode) {
-			throw new RuntimeException("Event 'add' shoud be called only in edit mode");
-		}
-		getFlowCtx().start(new PersonEditWidget(), null, new FlowContext.Handler() {
+
+		getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
 			public void onFinish(Object returnValue) throws Exception {
@@ -113,6 +123,7 @@ public class PersonListWidget extends BaseWidget {
 			throw new RuntimeException("Event 'remove' shoud be called only in edit mode");
 		}
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
+		getContractDAO().removeByPersonId(id);
 		getGeneralDAO().remove(PersonMO.class, id);
 		refreshList();
 		log.debug("Person with Id of " + id + " removed sucessfully");
@@ -121,19 +132,39 @@ public class PersonListWidget extends BaseWidget {
 	public void handleEventSelect(String eventParameter) throws Exception {
 		log.debug("Event 'select' received!");
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		log.debug("Person selected with Id of " + id);
-		PersonViewWidget newFlow = new PersonViewWidget(id);
-		getFlowCtx().start(newFlow, null, null);
+		if (!selectOnly) {
+			PersonViewWidget newFlow = new PersonViewWidget(id);
+			getFlowCtx().start(newFlow, null, null);
+		} else {
+			getFlowCtx().finish(id);
+		}
+	}
+	
+	public void handleEventEdit(String eventParameter) throws Exception {
+		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
+		PersonAddEditWidget newFlow = new PersonAddEditWidget(id);
+
+		getFlowCtx().start(newFlow, null, new FlowContext.Handler() {
+			private static final long serialVersionUID = 1L;
+			
+			public void onFinish(Object returnValue) throws Exception {
+				refreshList();
+			}
+			public void onCancel() throws Exception {
+			}
+		});
 	}
 	
 	public void handleEventCancel(String eventParameter) throws Exception {
 		log.debug("Event 'cancel' received!");
 		getFlowCtx().cancel();
-	}  
+	}
+	
+	public void setSelectOnly(boolean selectOnly) {
+		this.selectOnly = selectOnly;
+	}	
 	
 	private class TemplatePersonListDataProvider extends MemoryBasedListDataProvider {
-		private static final long serialVersionUID = 1L;
-		
 		protected TemplatePersonListDataProvider() {
 			super(PersonMO.class);
 		}

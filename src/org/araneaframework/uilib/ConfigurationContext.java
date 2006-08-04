@@ -49,12 +49,6 @@ public interface ConfigurationContext extends Serializable {
   public static final String CUSTOM_CONVERTER_PROVIDER = "uilib.widgets.forms.converters.CustomConverterProvider";
   
   /**
-   * <code>Boolean</code> that controls whether form elements will check if they have been submitted to request 
-   * before reading (this will increase request size, since every element will mark it's presence in request).
-   */
-  public static final String FORM_ELEMENT_READ_SUBMITTED_ONLY = "uilib.widgets.forms.FormElementReadSubmittedOnly"; 
-  
-  /**
    * <code>Long</code> that controls the default size of the list (i.e. how many rows are show on one page).
    */
   public static final String DEFAULT_LIST_ITEMS_ON_PAGE = "uilib.widgets.lists.DefaultListItemsOnPage";
@@ -78,6 +72,12 @@ public interface ConfigurationContext extends Serializable {
    * <code>FilterFormBuilderVisitor.Configurator</code> that configures the built filter form elements.
    */
   public static final String LIST_FILTER_CONFIGURATOR = "uilib.widgets.lists.ListFilterConfigurator";  
+  
+  /**
+   * {@link org.araneaframework.uilib.form.control.AutoCompleteTextControl.ResponseBuilder} that configures how
+   * {@link org.araneaframework.uilib.form.control.AutoCompleteTextControl} sends back the suggested completions.
+   */
+  public static final String AUTO_COMPLETE_RESPONSE_BUILDER = "uilib.widgets.AutoCompleteTextControl.DefaultResponseBuilder";
   
   /**
    * Returns a configuration entry.

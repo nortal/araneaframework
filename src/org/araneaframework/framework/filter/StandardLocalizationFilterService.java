@@ -17,11 +17,19 @@
 package org.araneaframework.framework.filter;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
 import org.apache.log4j.Logger;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
 
@@ -34,8 +42,6 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardLocalizationFilterService extends BaseFilterService implements LocalizationContext {
-  public static final String RESOURCE_BUNDLE_KEY = "org.araneaframework.framework.filter.StandardLocalizationFilterService.ResourceBundle";
-  
   private static final Logger log = Logger.getLogger(StandardLocalizationFilterService.class);
   private String resourceBundleName;
   private Locale currentLocale;
@@ -45,7 +51,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
    * language name in {@link Locale}.
    */
   public void setLanguageName(String languageName) {
-    this.currentLocale = new Locale(languageName);
+    setLocale(new Locale(languageName));
   }
   
   /**
@@ -61,6 +67,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   }
 
   public void setLocale(Locale currentLocale) {
+    log.debug("Current locale switched to:" + currentLocale);
     this.currentLocale = currentLocale;
   }
   
@@ -73,19 +80,41 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     entries.put(LocalizationContext.class, this);
     
     childService._getComponent().init(new StandardEnvironment(getChildEnvironment(), entries));
-    
-    log.debug("Synchronizing filter service initialized.");
   }
   
   /** 
-   * Gets a resource bundle using the specified resource bundle name and current locale,
-   * and the caller's class loader.
+   * Gets a resource bundle using the specified resource bundle name and current locale
+   * and the ClassLoaders provided by the ClassLoaderUtil.
    */
   public ResourceBundle getResourceBundle(Locale locale) {
-    return ResourceBundle.getBundle(resourceBundleName, locale);
+	  List loaders = ClassLoaderUtil.getClassLoaders();
+	  
+	  for (Iterator iter = loaders.iterator(); iter.hasNext();) {
+		ClassLoader loader = (ClassLoader) iter.next();
+		try {
+			return ResourceBundle.getBundle(resourceBundleName, locale, loader);
+		}
+		catch(MissingResourceException e) {
+			if (!iter.hasNext())
+				throw e;
+		}
+	  }
+     throw new MissingResourceException("No resource bundle for the specified base name can be found",
+    		 							getClass().getName(), "");
   }
 
   public String localize(String key) {
     return getResourceBundle().getString(key);
+  }
+
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+	output.pushAttribute(LOCALIZATION_CONTEXT_KEY, this);
+	
+	try {
+		super.action(path, input, output);
+	}
+	finally {
+		output.popAttribute(LOCALIZATION_CONTEXT_KEY);
+	}
   }
 }

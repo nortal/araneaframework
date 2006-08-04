@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list;
 
 import java.io.Serializable;
-import java.util.Iterator;
 
 /**
  * This class represents information about the ordering of one list column
