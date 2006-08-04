@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.uilib.list.formlist;
 
@@ -26,12 +26,12 @@ import org.araneaframework.uilib.form.FormWidget;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class FormListWidget extends BaseFormListWidget {
-	
-	
+
+
 	//*******************************************************************
 	// CONSTRUCTORS
 	//*******************************************************************		
-	
+
 	/**
 	 * @param id widget id.
 	 * @param enviroment resource provider.
@@ -40,24 +40,24 @@ public class FormListWidget extends BaseFormListWidget {
 	public FormListWidget(FormRowHandler rowHandler) {
 		this.formRowHandler = rowHandler;
 	}
-	
+
 	protected FormWidget buildAddForm(){
 		return new FormWidget();
 	}
-	
+
 	protected void addFormRow(Object newRow) {
 		FormWidget rowForm = buildAddForm();
 		String rowFormId = "rowForm" + rowFormCounter++;
-		FormRow newEditableRow = new FormRow(formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
-		
-    addWidget(rowFormId, rowForm);
+		FormRow newEditableRow = new FormRow(this, formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
+
+		addWidget(rowFormId, rowForm);
 		try {
-      formRowHandler.initFormRow(newEditableRow, newRow);
-    }
-    catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }     		
-		
+			formRowHandler.initFormRow(newEditableRow, newRow);
+		}
+		catch (Exception e) {
+			throw ExceptionUtil.uncheckException(e);
+		}     		
+
 		formRows.put(formRowHandler.getRowKey(newRow), newEditableRow);
 	}
 }

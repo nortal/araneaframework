@@ -18,6 +18,7 @@ package org.araneaframework.uilib.list.formlist.adapters;
 
 import java.util.Map;
 import java.util.Set;
+
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.formlist.FormRow;
 import org.araneaframework.uilib.list.formlist.FormRowHandler;
@@ -36,7 +37,16 @@ public abstract class DefaultFormRowHandler implements FormRowHandler {
 	public void saveRows(Map editableRows) throws Exception {}
 	public void deleteRows(Set keys) throws Exception {}
 
+	/**
+	 * Opens a closed row or closes open row and resets it. 
+	 * This method is called when the supplied row has been opened or closed.
+	 * @param formRow editable row.
+	 * @see FormRowHandler#openOrCloseRow(FormRow)
+	 */
 	public void openOrCloseRow(FormRow editableRow) throws Exception {
+		if (editableRow.isOpen()) {
+			editableRow.reset();
+		}
 		editableRow.setOpen(!editableRow.isOpen());
 	}
 
