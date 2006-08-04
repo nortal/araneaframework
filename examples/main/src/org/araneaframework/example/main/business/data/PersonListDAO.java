@@ -18,16 +18,17 @@ package org.araneaframework.example.main.business.data;
 
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.helper.HSqlListSqlHelper;
+import org.araneaframework.backend.list.helper.ListSqlHelper;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.example.main.business.model.PersonMO;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class PersonListDAO {
-
-	private static final Logger log = Logger.getLogger(PersonListDAO.class);
 
 	protected DataSource dataSource;
 
@@ -36,12 +37,7 @@ public class PersonListDAO {
 	}
 
 	public ListItemsData getItems(ListQuery request) {
-		log.debug("Getting items, start index " + request.getItemRangeStart()
-				+ ", count = " + request.getItemRangeCount() + ", filter = "
-				+ request.getFilterExpression() + ", order = "
-				+ request.getOrderExpression());
-
-		HSqlListSqlHelper helper = new HSqlListSqlHelper(request);
+		ListSqlHelper helper = new HSqlListSqlHelper(this.dataSource, request);
 
 		helper.setColumnMapping("id", "ID");
 		helper.setColumnMapping("name", "NAME");
@@ -51,7 +47,6 @@ public class PersonListDAO {
 		helper.setColumnMapping("salary", "SALARY");
 
 		helper.setSimpleSqlQuery("person");
-		helper.setDataSource(this.dataSource);
 		return helper.execute(PersonMO.class);
 	}
 }

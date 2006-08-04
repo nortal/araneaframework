@@ -18,6 +18,8 @@ package org.araneaframework.backend.list.helper;
 
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.araneaframework.backend.list.model.ListQuery;
 
 
@@ -32,10 +34,15 @@ public class HSqlListSqlHelper extends ListSqlHelper {
 
 	protected String countSqlQuery = null;
 	
+	public HSqlListSqlHelper(DataSource dataSource, ListQuery query) {
+		super(dataSource, query);
+	}
+	public HSqlListSqlHelper(DataSource dataSource) {
+		super(dataSource);
+	}
 	public HSqlListSqlHelper(ListQuery query) {
 		super(query);
 	}
-
 	public HSqlListSqlHelper() {
 		super();
 	}

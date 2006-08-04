@@ -584,7 +584,9 @@ public abstract class ListSqlHelper {
 	 * @param customOrderbySql custom ORDER BY clause String.
 	 * @param customOrderbyArgs custom ORDER BY clause arguments.
 	 */
-	public void setSimpleSqlQuery(String fromSql, String customWhereSql, Object[] customWhereArgs, String customOrderbySql, Object[] customOrderbyArgs) {
+	public void setSimpleSqlQuery(String fromSql, String customWhereSql, Object[] customWhereArgs,
+			String customOrderbySql, Object[] customOrderbyArgs) {
+		
 		if (fromSql == null) {
 			throw new IllegalArgumentException("FROM SQL String must be specified"); 
 		}
@@ -1064,8 +1066,6 @@ public abstract class ListSqlHelper {
 		 *            bean to read.
 		 */
 		protected void readBeanFields(ResultSet resultSet, Object bean) {
-			log.debug("Starting to read value object fields.");
-
 			Collection fields = beanToResultSetMapping.keySet();
 			for (Iterator i = fields.iterator(); i.hasNext();) {
 				String field = (String) i.next();
@@ -1076,8 +1076,6 @@ public abstract class ListSqlHelper {
 
 				readBeanField(resultSet, bean, field);
 			}
-
-			log.debug("Finished reading value object fields.");
 		}
 
 		/**
@@ -1095,15 +1093,9 @@ public abstract class ListSqlHelper {
 		 *            bean field to read.
 		 */
 		protected void readBeanField(ResultSet resultSet, Object bean, String field) {
-
 			String resultSetColumnName = (String) beanToResultSetMapping
 			.get(field);
 			Converter deconverter = (Converter) beanDeconverters.get(field);
-
-			if (log.isDebugEnabled()) {
-				log.debug("Reading Bean field '" + field + "' from ResultSet column '"
-						+ resultSetColumnName + "'.");
-			}
 
 			Class valueType;
 			if (deconverter != null) {
@@ -1118,11 +1110,6 @@ public abstract class ListSqlHelper {
 				value = deconverter.reverseConvert(value);
 			}
 			this.beanMapper.setBeanFieldValue(bean, field, value);
-
-			if (log.isDebugEnabled()) {
-				log.debug("Read Bean field '" + field + "' from ResultSet column '"
-						+ resultSetColumnName + "' with value '" + value + "'.");				
-			}
 		}
 		
 		/** 
