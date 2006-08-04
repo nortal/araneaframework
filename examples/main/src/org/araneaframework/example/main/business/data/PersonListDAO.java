@@ -17,16 +17,18 @@
 package org.araneaframework.example.main.business.data;
 
 import javax.sql.DataSource;
-import org.apache.log4j.Logger;
+
 import org.araneaframework.backend.list.helper.HSqlListSqlHelper;
+import org.araneaframework.backend.list.helper.ListSqlHelper;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.example.main.business.model.PersonMO;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class PersonListDAO {
-
-	private static final Logger log = Logger.getLogger(PersonListDAO.class);
 
 	protected DataSource dataSource;
 
@@ -35,12 +37,7 @@ public class PersonListDAO {
 	}
 
 	public ListItemsData getItems(ListQuery request) {
-		log.debug("Getting items, start index " + request.getItemRangeStart()
-				+ ", count = " + request.getItemRangeCount() + ", filter = "
-				+ request.getFilterExpression() + ", order = "
-				+ request.getOrderExpression());
-
-		HSqlListSqlHelper helper = new HSqlListSqlHelper(request);
+		ListSqlHelper helper = new HSqlListSqlHelper(this.dataSource, request);
 
 		helper.setColumnMapping("id", "ID");
 		helper.setColumnMapping("name", "NAME");
@@ -49,29 +46,7 @@ public class PersonListDAO {
 		helper.setColumnMapping("birthdate", "BIRTHDATE");
 		helper.setColumnMapping("salary", "SALARY");
 
-		StringBuffer query = new StringBuffer();
-		query.append(helper.getDatabaseFields());
-		query.append(" FROM person");
-		query.append(helper.getDatabaseFilterWith(" WHERE ", ""));
-		query.append(helper.getDatabaseOrderWith(" ORDER BY ", ""));
-		log.debug("SQL Query: " + query);
-
-		helper.setSqlQuery(query.toString());
-		helper.addStatementParams(helper.getDatabaseFilterParams());
-		helper.addStatementParams(helper.getDatabaseOrderParams());
-
-		ListItemsData data;
-		try {
-			log.debug("Executing Queries");
-			helper.setDataSource(this.dataSource);
-			helper.execute();
-			data = helper.getListItemsData(PersonMO.class);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			helper.close();
-		}
-
-		return data;
+		helper.setSimpleSqlQuery("person");
+		return helper.execute(PersonMO.class);
 	}
 }
