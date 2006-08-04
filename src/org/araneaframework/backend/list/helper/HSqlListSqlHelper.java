@@ -21,10 +21,12 @@ import java.util.List;
 import org.araneaframework.backend.list.model.ListQuery;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class HSqlListSqlHelper extends ListSqlHelper {
 	
-	private static final Long ZERO = new Long(0);
-	private static final Long MAX = new Long(Long.MAX_VALUE);
+	private static final String SELECT_PREFIX = "SELECT ";
 
 	protected SqlStatement statement = new SqlStatement();
 
@@ -49,32 +51,31 @@ public class HSqlListSqlHelper extends ListSqlHelper {
 	}
 
 	protected SqlStatement getRangeSqlStatement() {
-		if (!this.statement.getQuery().toUpperCase().startsWith("SELECT ")) {
+		if (!this.statement.getQuery().toUpperCase().startsWith(SELECT_PREFIX)) {
 			throw new RuntimeException("SQL query must start with SELECT");
 		}
 		
 		SqlStatement result;
 		
 		if (isShowAll()) {
-			result = new SqlStatement(this.statement.getQuery());
-			result.addAllParams(this.statement.getParams());
+			result = (SqlStatement) this.statement.clone();
 		} else {
 			StringBuffer query = new StringBuffer();
 			query.append("SELECT LIMIT ? ? ");
-			query.append(this.statement.getQuery().substring("SELECT ".length()));
+			query.append(this.statement.getQuery().substring(SELECT_PREFIX.length()));
 
 			result = new SqlStatement(query.toString());
-			result.addParam(this.itemRangeStart);
-			result.addParam(this.itemRangeCount);
+			result.addParam(itemRangeStart);
+			result.addParam(itemRangeCount);
 			result.addAllParams(this.statement.getParams());
-		}		
+		}
 		
 		return result;
 	}
 	
 	protected boolean isShowAll() {
-		return this.itemRangeStart == null || ZERO.equals(this.itemRangeStart)
-			&& (this.itemRangeCount == null || MAX.equals(this.itemRangeCount));
+		return (itemRangeStart == null || itemRangeStart.longValue() == 0)
+			&& (itemRangeCount == null || itemRangeCount.longValue() == Long.MAX_VALUE);
 	}
 
 	/**

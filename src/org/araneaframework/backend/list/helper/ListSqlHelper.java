@@ -154,14 +154,14 @@ public abstract class ListSqlHelper {
 	public void setListQuery(ListQuery query) {
 		this.filterExpr = query.getFilterExpression();
 		this.orderExpr = query.getOrderExpression();
-		setItemRangeStart(itemRangeStart);
-		setItemRangeCount(itemRangeCount);
+		setItemRangeStart(query.getItemRangeStart());
+		setItemRangeCount(query.getItemRangeCount());
 	}
 
 	/**
 	 * Sets the (0-based) starting index of the item range.
 	 */
-	public void setItemRangeStart(Long itemRangeStart) {
+	public void setItemRangeStart(Long itemRangeStart) {		
 		if (itemRangeStart == null) {
 			itemRangeStart = DEFAULT_RANGE_START;
 		}
@@ -498,29 +498,149 @@ public abstract class ListSqlHelper {
 	// *********************************************************************		
 
 	/**
-	 * Sets the whole SQL query according to the database table name.
-	 * The format is following: SELECT (database fields) FROM (table name)
-	 * [WHERE (filter conditions)] [ORDER BY (order conditions)].
-	 * Also the filtering and ordering SQL parameters will be added. 
+	 * Sets the SQL query (with arguments) that will be used to retrieve the
+	 * item range from the list and count the items.
+	 * <p>
+	 * <code>ListQuery</code> filter and order conditions are used
+	 * automatically.
+	 * </p>
+	 * <p>
+	 * To use additional custom filter (and order) conditions,
+	 * use {@link #setSimpleSqlQuery(String, String, List)} or
+	 * {@link #setSimpleSqlQuery(String, String, List, String, List)}
+	 * method. To use more complex query, use {@link #setSqlQuery(String)}
+	 * method.
+	 * </p>
+	 * <p>
+	 * The constrcuted SQL query format is following
+	 * (LQ = <ocde>ListQuery</code>):<br/>
+	 * SELECT (fromSql) [WHERE (LQ filter conditions)]
+	 * [ORDER BY (LQ order conditions)]
+	 * </p>
+	 * Query arguments are automatically added in the appropriate order. 
 	 * 
-	 * @param tableName database table name.
+	 * @param fromSql FROM clause String.
 	 */
-	public void setSimpleSqlQuery(String tableName) {
+	public void setSimpleSqlQuery(String fromSql) {
+		setSimpleSqlQuery(fromSql, null, null, null, null);
+	}
+	
+	/**
+	 * Sets the SQL query (with arguments) that will be used to retrieve the
+	 * item range from the list and count the items.
+	 * <p>
+	 * <code>ListQuery</code> filter and order conditions are used automatically
+	 * and they must not be added to this metohd's arguments. 
+	 * This method's Where arguments are only for additional
+	 * conditions that are not contained in <code>ListQuery</code> already.
+	 * </p>
+	 * <p>
+	 * In simpler cases, use {@link #setSimpleSqlQuery(String)} method.
+	 * To use also custom order by conditions, use 
+	 * {@link #setSimpleSqlQuery(String, String, List, String, List)} method.
+	 * To use more complex query, use {@link #setSqlQuery(String)} method.
+	 * </p>
+	 * <p>
+	 * The constrcuted SQL query format is following
+	 * (LQ = <ocde>ListQuery</code>):<br/>
+	 * SELECT (fromSql) [WHERE (customWhereSql) AND (LQ filter conditions)]
+	 * [ORDER BY (customOrderbySql), (LQ order conditions)]
+	 * </p>
+	 * Query arguments are automatically added in the appropriate order. 
+	 * 
+	 * @param fromSql FROM clause String.
+	 * @param customWhereSql custom WHERE clause String.
+	 * @param customWhereArgs custom WHERE clause arguments.
+	 */
+	public void setSimpleSqlQuery(String fromSql, String customWhereSql, Object[] customWhereArgs) {
+		setSimpleSqlQuery(fromSql, customWhereSql, customWhereArgs, null, null);
+	}	
+	
+	/**
+	 * Sets the SQL query (with arguments) that will be used to retrieve the
+	 * item range from the list and count the items.
+	 * <p>
+	 * <code>ListQuery</code> filter and order conditions are used automatically
+	 * and they must not be added to this metohd's arguments. 
+	 * This method's Where and Order by arguments are only for additional
+	 * conditions that are not contained in <code>ListQuery</code> already.
+	 * </p>
+	 * <p>
+	 * In simpler cases, use {@link #setSimpleSqlQuery(String)} or
+	 * {@link #setSimpleSqlQuery(String, String, List)} method.
+	 * To use more complex query, use {@link #setSqlQuery(String)} method.
+	 * </p>
+	 * <p>
+	 * The constrcuted SQL query format is following
+	 * (LQ = <ocde>ListQuery</code>):<br/>
+	 * SELECT (fromSql) [WHERE (customWhereSql) AND (LQ filter conditions)]
+	 * [ORDER BY (customOrderbySql), (LQ order conditions)]
+	 * </p>
+	 * Query arguments are automatically added in the appropriate order. 
+	 * 
+	 * @param fromSql FROM clause String.
+	 * @param customWhereSql custom WHERE clause String.
+	 * @param customWhereArgs custom WHERE clause arguments.
+	 * @param customOrderbySql custom ORDER BY clause String.
+	 * @param customOrderbyArgs custom ORDER BY clause arguments.
+	 */
+	public void setSimpleSqlQuery(String fromSql, String customWhereSql, Object[] customWhereArgs, String customOrderbySql, Object[] customOrderbyArgs) {
+		if (fromSql == null) {
+			throw new IllegalArgumentException("FROM SQL String must be specified"); 
+		}
+		if (customWhereSql == null && customWhereArgs != null) {
+			throw new IllegalArgumentException("WHERE SQL String and args must be both specified or null"); 
+		}
+		if (customOrderbySql == null && customOrderbyArgs != null) {
+			throw new IllegalArgumentException("ORDER BY SQL String and args must be both specified or null"); 
+		}
+		
+		// SQL String
 		StringBuffer sb = new StringBuffer("SELECT ");
 		sb.append(getDatabaseFields());
 		sb.append(" FROM ");
-		sb.append(tableName);
-		sb.append(" ");
-		sb.append(getDatabaseFilterWith(" WHERE ", ""));
-		sb.append(getDatabaseOrderWith(" ORDER BY ", ""));
+		sb.append(fromSql);
+		if (customWhereSql == null) {
+			sb.append(getDatabaseFilterWith(" WHERE ", ""));	
+		} else {
+			sb.append(" WHERE (");
+			sb.append(customWhereSql);
+			sb.append(")");
+			sb.append(getDatabaseFilterWith(" AND ", ""));
+		}
+		if (customWhereSql == null) {
+			sb.append(getDatabaseOrderWith(" ORDER BY ", ""));	
+		} else {
+			sb.append(" ORDER BY ");
+			sb.append(customOrderbySql);
+			sb.append(getDatabaseOrderWith(", ", ""));
+		}
 		setSqlQuery(sb.toString());
+		
+		// SQL arguments
+		if (customWhereArgs != null) {
+			addStatementParams(Arrays.asList(customWhereArgs));
+		}
 		addStatementParams(getDatabaseFilterParams());
+		if (customOrderbyArgs != null) {
+			addStatementParams(Arrays.asList(customOrderbyArgs));
+		}
 		addStatementParams(getDatabaseOrderParams());
 	}
 	
 	/**
 	 * Sets the SQL query that will be used to retrieve the item range from the
 	 * list and count the items. SQL query must start with SELECT.
+	 * All query arguments must be added additionally.
+	 * <p>
+	 * <code>ListQuery</code> filter and order conditions are not added
+	 * automatically. To add them, use <code>getDatabaseFilter*</code> and
+	 * <code>getDatabaseOrder*</code> methods.
+	 * </p>
+	 * <p>
+	 * For simpler cases, use
+	 * one of the <code>setSimpleSqlQuery</code> methods instead.
+	 * </p>
 	 * 
 	 * @param sqlQuery
 	 *            the SQL query that will be used to retrieve the item range
@@ -531,6 +651,11 @@ public abstract class ListSqlHelper {
 	/**
 	 * Sets the SQL query used to count the items in the database. SQL query
 	 * must start with SELECT.
+	 * <p>
+	 * By default, total items count and items range queries are constructed
+	 * automatically based on the original query. This method should only be
+	 * used, if it can considerably boost the perfomacne of count query. 
+	 * </p>
 	 * 
 	 * @param countSqlQuery
 	 *            the SQL query used to count the items in the database.
@@ -540,6 +665,10 @@ public abstract class ListSqlHelper {
 	/**
 	 * Adds a <code>NULL</code> <code>PreparedStatement</code> parameter for
 	 * later setting.
+	 * <p>
+	 * This method should not be used with one of the
+	 * <code>setSimpleSqlQuery</code> methods.
+	 * </p>
 	 * 
 	 * @param valueType
 	 *            the type of the NULL value.
@@ -548,6 +677,10 @@ public abstract class ListSqlHelper {
 
 	/**
 	 * Adds a <code>PreparedStatement</code> parameter for later setting.
+	 * <p>
+	 * This method should not be used with one of the
+	 * <code>setSimpleSqlQuery</code> methods.
+	 * </p>
 	 * 
 	 * @param param
 	 *            a <code>PreparedStatement</code> parameter.
@@ -556,6 +689,10 @@ public abstract class ListSqlHelper {
 
 	/**
 	 * Adds <code>PreparedStatement</code> parameters for later setting.
+	 * <p>
+	 * This method should not be used with one of the
+	 * <code>setSimpleSqlQuery</code> methods.
+	 * </p>
 	 * 
 	 * @param params
 	 *            <code>PreparedStatement</code> parameters.
