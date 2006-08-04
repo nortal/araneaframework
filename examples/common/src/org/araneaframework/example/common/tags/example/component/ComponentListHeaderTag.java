@@ -21,11 +21,11 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.araneaframework.jsp.tag.form.UiSystemFormTag;
+import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.layout.LayoutRowTag;
-import org.araneaframework.jsp.tag.uilib.list.UiListTag;
-import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.uilib.list.ListTag;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.servlet.util.FileImportUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.OrderInfo;
@@ -58,11 +58,11 @@ public class ComponentListHeaderTag extends LayoutRowTag {
   
   protected void writeHeader(Writer out) throws Exception {
     // Get system form id
-    String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY);
+    String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
     
     // Get list data
-    String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY);    
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
+    String listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
     
     // Get order data
     ListStructure.ViewModel listStructureViewModel = viewModel.getListStructure();
@@ -72,8 +72,8 @@ public class ComponentListHeaderTag extends LayoutRowTag {
       ListColumn.ViewModel columnViewModel = (ListColumn.ViewModel)i.next();
       
       // Write cell
-      UiUtil.writeOpenStartTag(out, "th");
-      UiUtil.writeCloseStartTag(out);
+      JspUtil.writeOpenStartTag(out, "th");
+      JspUtil.writeCloseStartTag(out);
       
       // Write link if needed
       if (listStructureViewModel.isColumnOrdered(columnViewModel.getId())) {
@@ -85,16 +85,16 @@ public class ComponentListHeaderTag extends LayoutRowTag {
         	StringBuffer url = ((HttpServletRequest)pageContext.getRequest()).getRequestURL();
             // Found
             if (orderInfoFieldViewModel.isAscending()) {
-              UiUtil.writeOpenStartTag(out, "img");  
-              UiUtil.writeAttribute(out, "src", 
+              JspUtil.writeOpenStartTag(out, "img");  
+              JspUtil.writeAttribute(out, "src", 
             		  url.append(FileImportUtil.getImportString("gfx/ico_sortup.gif")));
-              UiUtil.writeCloseStartEndTag(out);
+              JspUtil.writeCloseStartEndTag(out);
             }
             else {
-              UiUtil.writeOpenStartTag(out, "img");
-              UiUtil.writeAttribute(out, "src", 
+              JspUtil.writeOpenStartTag(out, "img");
+              JspUtil.writeAttribute(out, "src", 
             		  url.append(FileImportUtil.getImportString("gfx/ico_sortdown.gif")));
-              UiUtil.writeCloseStartEndTag(out);
+              JspUtil.writeCloseStartEndTag(out);
             }
             out.write("&nbsp;");
             break;
@@ -102,9 +102,9 @@ public class ComponentListHeaderTag extends LayoutRowTag {
         }
         
         // Write link        
-        UiUtil.writeOpenStartTag(out, "a");
-        UiUtil.writeAttribute(out, "href", "javascript:");        
-        UiStdWidgetCallUtil.writeEventAttributeForEvent(
+        JspUtil.writeOpenStartTag(out, "a");
+        JspUtil.writeAttribute(out, "href", "javascript:");        
+        JspWidgetCallUtil.writeEventAttributeForEvent(
             pageContext,
             out, 
             "onclick", 
@@ -113,18 +113,18 @@ public class ComponentListHeaderTag extends LayoutRowTag {
             ORDER_EVENT_ID, 
             columnViewModel.getId(),
             null);
-        UiUtil.writeCloseStartTag_SS(out);       
+        JspUtil.writeCloseStartTag_SS(out);       
       }
       if (columnViewModel.getLabel() != null)
-        UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, columnViewModel.getLabel()));
+        JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, columnViewModel.getLabel()));
       
       // Write link if needed
       if (listStructureViewModel.isColumnOrdered(columnViewModel.getId()))
-        UiUtil.writeEndTag(out, "a");
+        JspUtil.writeEndTag(out, "a");
       
       // Write cell
-      UiUtil.writeEndTag(out, "th");
+      JspUtil.writeEndTag(out, "th");
     }
-    UiUtil.writeEndTag(out, "tr");
+    JspUtil.writeEndTag(out, "tr");
   }
 }

@@ -47,7 +47,7 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
   private ServletServiceAdapterComponent serviceAdapter;
   
   public void init() throws ServletException {
-    serviceAdapter = buildRootComponent();    
+    serviceAdapter = buildRootComponent();
 
     Map entries = new HashMap();
     entries.put(ServletContext.class, getServletContext());

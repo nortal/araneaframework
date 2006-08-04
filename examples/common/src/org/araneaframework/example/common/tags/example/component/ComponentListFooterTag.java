@@ -19,12 +19,12 @@ package org.araneaframework.example.common.tags.example.component;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.tag.UiPresentationTag;
-import org.araneaframework.jsp.tag.form.UiSystemFormTag;
-import org.araneaframework.jsp.tag.uilib.list.UiListTag;
-import org.araneaframework.jsp.util.UiStdScriptUtil;
-import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.PresentationTag;
+import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
+import org.araneaframework.jsp.tag.uilib.list.ListTag;
+import org.araneaframework.jsp.util.JspScriptUtil;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.SequenceHelper;
 
@@ -37,7 +37,7 @@ import org.araneaframework.uilib.list.SequenceHelper;
  *   name = "componentListFooter"
  *   body-content = "empty"
  */
-public class ComponentListFooterTag extends UiPresentationTag {
+public class ComponentListFooterTag extends PresentationTag {
   public final static String PREVIOUS_PAGE_EVENT_ID = "previousPage";
   public final static String NEXT_PAGE_EVENT_ID = "nextPage";
   public final static String PREVIOUS_BLOCK_EVENT_ID = "previousBlock";
@@ -80,11 +80,11 @@ public class ComponentListFooterTag extends UiPresentationTag {
     super.doStartTag(out);
 
     // Get system form id 
-    systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY);
+    systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 
     // Get list data
-    listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY);    
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
+    listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
 
     // Get sequnce data
     SequenceHelper.ViewModel sequenceViewModel = viewModel.getSequence();
@@ -102,55 +102,55 @@ public class ComponentListFooterTag extends UiPresentationTag {
     long firstShown = sequenceViewModel.getPageFirstItem().longValue();
     long lastShown = sequenceViewModel.getPageLastItem().longValue();
 
-    UiUtil.writeOpenStartTag(out, "div");
-    UiUtil.writeAttribute(out, "class", getStyleClass());
-    UiUtil.writeAttribute(out, "style", getStyle());
-    UiUtil.writeCloseStartTag(out);
+    JspUtil.writeOpenStartTag(out, "div");
+    JspUtil.writeAttribute(out, "class", getStyleClass());
+    JspUtil.writeAttribute(out, "style", getStyle());
+    JspUtil.writeCloseStartTag(out);
 
     if (totalItemCount > 0 && !allItemsShown) {
       /* FIRST, PREV */
-      UiUtil.writeOpenStartTag(out, "div");
-      UiUtil.writeAttribute(out, "class", numberStyleClass);
-      UiUtil.writeCloseStartTag(out);
+      JspUtil.writeOpenStartTag(out, "div");
+      JspUtil.writeAttribute(out, "class", numberStyleClass);
+      JspUtil.writeCloseStartTag(out);
 
       writeOpenEventLink(out, FIRST_PAGE_EVENT_ID, null, firstPage != currentPage, firstClass);
       out.write("&nbsp;");
-      UiUtil.writeEndTag_SS(out, "a");
+      JspUtil.writeEndTag_SS(out, "a");
 
       writeOpenEventLink(out, PREVIOUS_PAGE_EVENT_ID, null, firstPage < currentPage, prevClass);
       out.write("&nbsp;");
-      UiUtil.writeEndTag_SS(out, "a");
+      JspUtil.writeEndTag_SS(out, "a");
 
       /* END FIRST, PREV */
 
       for(long page = blockFirstPage; page  <= blockLastPage; page++) {
         // Jump to page
         writeOpenEventLink(out, JUMP_TO_PAGE_EVENT_ID, new Long(page).toString(), page != currentPage, page == currentPage ? "active" : null);
-        UiUtil.writeEscaped(out, new Long((page - firstPage) + 1).toString());
-        UiUtil.writeEndTag_SS(out, "a");
+        JspUtil.writeEscaped(out, new Long((page - firstPage) + 1).toString());
+        JspUtil.writeEndTag_SS(out, "a");
       }
 
 
       writeOpenEventLink(out, NEXT_PAGE_EVENT_ID, null, currentPage < lastPage, nextClass);
       out.write("&nbsp;");
-      UiUtil.writeEndTag_SS(out, "a");
+      JspUtil.writeEndTag_SS(out, "a");
 
       writeOpenEventLink(out, LAST_PAGE_EVENT_ID, null, lastPage != currentPage, lastClass);
       out.write("&nbsp;");
-      UiUtil.writeEndTag_SS(out, "a");
+      JspUtil.writeEndTag_SS(out, "a");
 
-      UiUtil.writeEndTag(out, "div"); // numbers
+      JspUtil.writeEndTag(out, "div"); // numbers
 
       writeInfo(out, totalItemCount, allItemsShown, firstShown, lastShown);
     } else {
       if (totalItemCount == 0)
-        UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, noDataStringId));
+        JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, noDataStringId));
       else if (totalItemCount != 0 && allItemsShown) {
         writeInfo(out, totalItemCount, allItemsShown, firstShown, lastShown);
       }
     }
 
-    UiUtil.writeEndTag(out, "div");
+    JspUtil.writeEndTag(out, "div");
 
     return EVAL_BODY_INCLUDE;    
   }
@@ -194,23 +194,23 @@ public class ComponentListFooterTag extends UiPresentationTag {
    * ***********************************************************************************/
 
   protected void writeInfo(Writer out, long totalItemCount, boolean allItemsShown, long firstShown, long lastShown) throws IOException, JspException {
-    UiUtil.writeOpenStartTag(out, "div");
-    UiUtil.writeAttribute(out, "class", infoStyleClass);
-    UiUtil.writeCloseStartTag(out);
+    JspUtil.writeOpenStartTag(out, "div");
+    JspUtil.writeAttribute(out, "class", infoStyleClass);
+    JspUtil.writeCloseStartTag(out);
 
     out.write("Showing [");
     out.write(new Long(firstShown).toString());
     out.write("-");
     out.write(new Long(lastShown).toString());
     out.write("]. Total ");
-    UiUtil.writeEscaped(out, new Long(totalItemCount).toString());
+    JspUtil.writeEscaped(out, new Long(totalItemCount).toString());
     out.write(". ");
 
-    UiUtil.writeOpenStartTag(out, "a");
-    UiUtil.writeAttribute(out, "class", "aranea-link-button");
-    UiUtil.writeAttribute(out, "href", "javascript:");
+    JspUtil.writeOpenStartTag(out, "a");
+    JspUtil.writeAttribute(out, "class", "aranea-link-button");
+    JspUtil.writeAttribute(out, "href", "javascript:");
 
-    UiStdWidgetCallUtil.writeEventAttributeForEvent(
+    JspWidgetCallUtil.writeEventAttributeForEvent(
         pageContext,
         out, 
         "onclick", 
@@ -219,20 +219,20 @@ public class ComponentListFooterTag extends UiPresentationTag {
         allItemsShown ? SHOW_SLICE_EVENT_ID : SHOW_ALL_EVENT_ID, 
             null,
             null);
-    UiUtil.writeCloseStartTag_SS(out);
-    UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, allItemsShown ? showPartial : showAll));
-    UiUtil.writeEndTag_SS(out, "a");
+    JspUtil.writeCloseStartTag_SS(out);
+    JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, allItemsShown ? showPartial : showAll));
+    JspUtil.writeEndTag_SS(out, "a");
 
-    UiUtil.writeEndTag(out, "div"); //info
+    JspUtil.writeEndTag(out, "div"); //info
   }
 
   protected void writeOpenEventLink(Writer out, String eventId, String eventParam, boolean enabled, String styleClass) throws IOException, JspException {
-    UiUtil.writeOpenStartTag(out, "a");
-    UiUtil.writeAttribute(out, "class", styleClass);
-    UiUtil.writeAttribute(out, "href", "javascript:");
+    JspUtil.writeOpenStartTag(out, "a");
+    JspUtil.writeAttribute(out, "class", styleClass);
+    JspUtil.writeAttribute(out, "href", "javascript:");
 
     if (enabled)
-      UiStdWidgetCallUtil.writeEventAttributeForEvent(
+      JspWidgetCallUtil.writeEventAttributeForEvent(
           pageContext,
           out, 
           "onclick", 
@@ -242,7 +242,7 @@ public class ComponentListFooterTag extends UiPresentationTag {
           eventParam,
           null);
     else
-      UiStdScriptUtil.writeEmptyEventAttribute(out, "onclick");
-    UiUtil.writeCloseStartTag_SS(out);         
+      JspScriptUtil.writeEmptyEventAttribute(out, "onclick");
+    JspUtil.writeCloseStartTag_SS(out);         
   }
 }

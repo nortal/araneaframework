@@ -18,11 +18,11 @@ package org.araneaframework.example.common.tags.uilib.list;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.tag.UiBaseTag;
-import org.araneaframework.jsp.tag.form.UiSystemFormTag;
-import org.araneaframework.jsp.tag.uilib.list.UiListTag;
-import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
+import org.araneaframework.jsp.tag.uilib.list.ListTag;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.SequenceHelper;
 
@@ -37,7 +37,7 @@ import org.araneaframework.uilib.list.SequenceHelper;
  *   name = "listInfo"
  *   body-content = "JSP"
  */
-public class SampleListInfoTag extends UiBaseTag {
+public class SampleListInfoTag extends BaseTag {
   public final static String DEFAULT_TITLE_STRING_ID = "list.info.title";
   public final static String DEFAULT_RECORD_STRING_ID = "list.info.record";
   public final static String DEFAULT_NO_DATA_STRING_ID = "list.info.noData";
@@ -52,11 +52,11 @@ public class SampleListInfoTag extends UiBaseTag {
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY);
+    String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 
     // Get list data
-    String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY);    
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
+    String listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
 
     // Get sequence data
     SequenceHelper.ViewModel sequenceViewModel = viewModel.getSequence();
@@ -67,22 +67,22 @@ public class SampleListInfoTag extends UiBaseTag {
     long pageFirstItem = sequenceViewModel.getPageFirstItem().longValue();
     long pageLastItem = sequenceViewModel.getPageLastItem().longValue();
 
-    UiUtil.writeOpenStartTag(out, "span");
-    UiUtil.writeCloseStartTag(out);
+    JspUtil.writeOpenStartTag(out, "span");
+    JspUtil.writeCloseStartTag(out);
 
     if (totalItemCount > 0) {
-      UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, titleStringId));
+      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, titleStringId));
       out.write("&nbsp;");
-      UiUtil.writeStartTag(out, "b");
-      UiUtil.writeEscaped(out, new Long(pageFirstItem).toString());
+      JspUtil.writeStartTag(out, "b");
+      JspUtil.writeEscaped(out, new Long(pageFirstItem).toString());
       out.write("-");   
-      UiUtil.writeEscaped(out, new Long(pageLastItem).toString());
-      UiUtil.writeEndTag(out, "b");
+      JspUtil.writeEscaped(out, new Long(pageLastItem).toString());
+      JspUtil.writeEndTag(out, "b");
       out.write("&nbsp;[");
-      UiUtil.writeOpenStartTag(out, "a");
-      UiUtil.writeAttribute(out, "class", "aranea-link-button");
-      UiUtil.writeAttribute(out, "href", "javascript:");
-      UiStdWidgetCallUtil.writeEventAttributeForEvent(
+      JspUtil.writeOpenStartTag(out, "a");
+      JspUtil.writeAttribute(out, "class", "aranea-link-button");
+      JspUtil.writeAttribute(out, "href", "javascript:");
+      JspWidgetCallUtil.writeEventAttributeForEvent(
           pageContext,
           out, 
           "onclick", 
@@ -92,17 +92,17 @@ public class SampleListInfoTag extends UiBaseTag {
               null,
               null);
 
-      UiUtil.writeCloseStartTag_SS(out);
-      UiUtil.writeEscaped(out, new Long(totalItemCount).toString());
+      JspUtil.writeCloseStartTag_SS(out);
+      JspUtil.writeEscaped(out, new Long(totalItemCount).toString());
       out.write("&nbsp;");    
-      UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, recordStringId));
-      UiUtil.writeEndTag_SS(out, "a");
+      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, recordStringId));
+      JspUtil.writeEndTag_SS(out, "a");
       out.write("]");
     }
     else
-      UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, noDataStringId));
+      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, noDataStringId));
 
-    UiUtil.writeEndTag(out, "span");
+    JspUtil.writeEndTag(out, "span");
 
     return EVAL_BODY_INCLUDE;    
   }

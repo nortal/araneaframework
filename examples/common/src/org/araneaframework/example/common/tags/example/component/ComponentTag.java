@@ -18,8 +18,8 @@ package org.araneaframework.example.common.tags.example.component;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.tag.UiPresentationTag;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.PresentationTag;
+import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -27,7 +27,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *   name = "component"
  *   body-content = "JSP"
  */
-public class ComponentTag extends UiPresentationTag {
+public class ComponentTag extends PresentationTag {
 	public final static String COMPONENT_KEY= "example.component.key";
 	public final static String DEFAULT_COMPONENT_STYLE = "component";
 	public final static String DEFAULT_COMPONENT_WIDTH_STYLE = "w100p";
@@ -44,22 +44,22 @@ public class ComponentTag extends UiPresentationTag {
 		
 		addContextEntry(ComponentTag.COMPONENT_KEY, this);
 
-		UiUtil.writeOpenStartTag(out, "div");
-		UiUtil.writeAttribute(out, "class", getStyleClass());
-		UiUtil.writeAttribute(out, "style", getStyle());
-		UiUtil.writeCloseStartTag(out);
+		JspUtil.writeOpenStartTag(out, "div");
+		JspUtil.writeAttribute(out, "class", getStyleClass());
+		JspUtil.writeAttribute(out, "style", getStyle());
+		JspUtil.writeCloseStartTag(out);
 		
 		// second div... maybe should be moved out
-		UiUtil.writeOpenStartTag(out, "div");
-		UiUtil.writeAttribute(out, "class", widthClass);
-		UiUtil.writeCloseStartTag(out);
+		JspUtil.writeOpenStartTag(out, "div");
+		JspUtil.writeAttribute(out, "class", widthClass);
+		JspUtil.writeCloseStartTag(out);
 
 		return EVAL_BODY_INCLUDE;
 	}
 
 	protected int doEndTag(Writer out) throws Exception {
-		UiUtil.writeEndTag(out, "div");
-		UiUtil.writeEndTag(out, "div");
+		JspUtil.writeEndTag(out, "div");
+		JspUtil.writeEndTag(out, "div");
 		super.doEndTag(out);
 		return EVAL_PAGE;
 	}

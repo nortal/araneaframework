@@ -19,11 +19,11 @@ package org.araneaframework.example.common.tags.uilib.list;
 import java.io.Writer;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
-import org.araneaframework.jsp.tag.UiBaseTag;
-import org.araneaframework.jsp.tag.form.UiSystemFormTag;
-import org.araneaframework.jsp.tag.uilib.list.UiListTag;
-import org.araneaframework.jsp.util.UiStdWidgetCallUtil;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
+import org.araneaframework.jsp.tag.uilib.list.ListTag;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.OrderInfoField;
@@ -38,7 +38,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  *   name = "listOrderRow"
  *   body-content = "JSP"
  */
-public class SampleListOrderRowTag extends UiBaseTag {
+public class SampleListOrderRowTag extends BaseTag {
 	private static final Logger log = Logger.getLogger(SampleListOrderRowTag.class);
 	
 	public final static String ORDER_EVENT_ID = "order";
@@ -52,12 +52,12 @@ public class SampleListOrderRowTag extends UiBaseTag {
 		
 		// Get system form id
 		log.debug("Get system form id");
-		String systemFormId = (String)requireContextEntry(UiSystemFormTag.ID_KEY);
+		String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 		
 		// Get list data
 		log.debug("Get list data");
-		String listId = (String)requireContextEntry(UiListTag.LIST_FULL_ID_KEY);    
-		ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(UiListTag.LIST_VIEW_MODEL_KEY);
+		String listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
+		ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
 		
 		// Get order data
 		log.debug("Get order data");
@@ -66,7 +66,7 @@ public class SampleListOrderRowTag extends UiBaseTag {
 		
 		// Write
 		log.debug("Write");
-		UiUtil.writeStartTag(out, "tr");
+		JspUtil.writeStartTag(out, "tr");
 		
 		log.debug("Write ListColumns");
 		for(Iterator i = listStructureViewModel.getColumnList().iterator(); i.hasNext();) {
@@ -74,7 +74,7 @@ public class SampleListOrderRowTag extends UiBaseTag {
 			log.debug("Write ListColumn " + columnViewModel.getId());
 			
 			// Write cell
-			UiUtil.writeStartTag(out, "td");
+			JspUtil.writeStartTag(out, "td");
 			
 			// Write link if needed
 			if (listStructureViewModel.isColumnOrdered(columnViewModel.getId())) {
@@ -95,10 +95,10 @@ public class SampleListOrderRowTag extends UiBaseTag {
 				}
 				
 				// Write link        
-				UiUtil.writeOpenStartTag(out, "a");
-			//	UiUtil.writeAttribute(out, "class", UiJwlfInnerLinkTag.DEFAULT_STYLE + UiJwlfInnerLinkTag.DEFAULT_STYLE);
-				UiUtil.writeAttribute(out, "href", "javascript:");        
-				UiStdWidgetCallUtil.writeEventAttributeForEvent(
+				JspUtil.writeOpenStartTag(out, "a");
+			//	JspUtil.writeAttribute(out, "class", UiJwlfInnerLinkTag.DEFAULT_STYLE + UiJwlfInnerLinkTag.DEFAULT_STYLE);
+				JspUtil.writeAttribute(out, "href", "javascript:");        
+				JspWidgetCallUtil.writeEventAttributeForEvent(
 						pageContext,
 						out, 
 						"onclick", 
@@ -107,25 +107,25 @@ public class SampleListOrderRowTag extends UiBaseTag {
 						ORDER_EVENT_ID, 
 						columnViewModel.getId(),
 						null);
-				UiUtil.writeCloseStartTag_SS(out);       
+				JspUtil.writeCloseStartTag_SS(out);       
 			}
 			if (columnViewModel.getLabel() != null)
-				UiUtil.writeEscaped(out, UiUtil.getResourceString(pageContext, columnViewModel.getLabel()));
+				JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, columnViewModel.getLabel()));
 			
 			// Write link if needed
 			if (listStructureViewModel.isColumnOrdered(columnViewModel.getId()))
-				UiUtil.writeEndTag(out, "a");  
+				JspUtil.writeEndTag(out, "a");  
 			
 			// Write cell
-			UiUtil.writeEndTag(out, "td");
+			JspUtil.writeEndTag(out, "td");
 		} 
 		
 		// Write order button
-		UiUtil.writeStartTag(out, "td");
-		UiUtil.writeOpenStartTag(out, "a");
-	//	UiUtil.writeAttribute(out, "class", UiJwlfInnerLinkTag.DEFAULT_STYLE + UiJwlfInnerLinkTag.DEFAULT_STYLE);
-		UiUtil.writeAttribute(out, "href", "javascript:");        
-		UiStdWidgetCallUtil.writeEventAttributeForEvent(
+		JspUtil.writeStartTag(out, "td");
+		JspUtil.writeOpenStartTag(out, "a");
+	//	JspUtil.writeAttribute(out, "class", UiJwlfInnerLinkTag.DEFAULT_STYLE + UiJwlfInnerLinkTag.DEFAULT_STYLE);
+		JspUtil.writeAttribute(out, "href", "javascript:");        
+		JspWidgetCallUtil.writeEventAttributeForEvent(
 				pageContext,
 				out, 
 				"onclick", 
@@ -134,12 +134,12 @@ public class SampleListOrderRowTag extends UiBaseTag {
 				ORDER_EVENT_ID, 
 				"",
 				null);
-		UiUtil.writeCloseStartTag_SS(out);
-		UiUtil.writeEscaped(out, "SORT");
-		UiUtil.writeEndTag(out, "a");  
-		UiUtil.writeEndTag(out, "td");
+		JspUtil.writeCloseStartTag_SS(out);
+		JspUtil.writeEscaped(out, "SORT");
+		JspUtil.writeEndTag(out, "a");  
+		JspUtil.writeEndTag(out, "td");
 		
-		UiUtil.writeEndTag(out, "tr");     
+		JspUtil.writeEndTag(out, "tr");     
 		
 		// Continue
 		log.debug("Continue");

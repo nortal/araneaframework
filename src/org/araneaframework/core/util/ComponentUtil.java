@@ -25,7 +25,7 @@ import org.araneaframework.core.Custom;
  * @author Jevgeni kabanov (ekabanov@webmedia.ee)
  */
 public class ComponentUtil {
-  public static final String LISTENER_KEY = "org_araneaframework_core_ComponentUtil_LISTENER";
+  public static final String LISTENER_KEY = "org.araneaframework.core.util.ComponentUtil.LISTENER";
   
   /**
    * This method will attach the listener component to the target custom component, allowing it to receive

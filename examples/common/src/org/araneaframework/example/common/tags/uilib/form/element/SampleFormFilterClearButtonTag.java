@@ -18,8 +18,8 @@ package org.araneaframework.example.common.tags.uilib.form.element;
 
 import java.io.Writer;
 
-import org.araneaframework.jsp.tag.uilib.form.element.UiStdFormLinkButtonTag;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.tag.uilib.form.element.FormLinkButtonHtmlTag;
+import org.araneaframework.jsp.util.JspUtil;
 
 
 /**
@@ -31,7 +31,7 @@ import org.araneaframework.jsp.util.UiUtil;
  *   name = "filterClearButton"
  *   body-content = "JSP"
  */
-public class SampleFormFilterClearButtonTag extends UiStdFormLinkButtonTag {
+public class SampleFormFilterClearButtonTag extends FormLinkButtonHtmlTag {
 
   public SampleFormFilterClearButtonTag() {
     this.id = "clearFilter";
@@ -43,7 +43,7 @@ public class SampleFormFilterClearButtonTag extends UiStdFormLinkButtonTag {
   public int doStartTag(Writer out) throws Exception {
     addAttribute("style", getStyle());
     super.doStartTag(out);
-    out.write("<button type=\"button\">" + UiUtil.getResourceString(pageContext, "button.clear").toUpperCase(UiUtil.getLocalizationContext(pageContext).getLocale()) + "</button>");
+    out.write("<button type=\"button\">" + JspUtil.getResourceString(pageContext, "button.clear").toUpperCase(JspUtil.getLocalizationContext(pageContext).getLocale()) + "</button>");
     
     return EVAL_BODY_INCLUDE;    
   }

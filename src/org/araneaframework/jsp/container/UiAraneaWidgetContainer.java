@@ -22,7 +22,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.Custom;
 import org.araneaframework.core.Custom.CustomWidget;
-import org.araneaframework.jsp.util.UiUpdateRegionUtil;
+import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.servlet.filter.StandardJspFilterService;
 
 public class UiAraneaWidgetContainer implements UiWidgetContainer {
@@ -45,7 +45,7 @@ public class UiAraneaWidgetContainer implements UiWidgetContainer {
   public String buildWidgetCall(String systemFormId, String fullWidgetId, String eventId, String eventParam, List updateRegions) throws JspException {
     StringBuffer result = new StringBuffer();
     result.append("araEvent(standardParams, ");
-    result.append(UiUpdateRegionUtil.formatUpdateRegionsJS(updateRegions));
+    result.append(JspUpdateRegionUtil.formatUpdateRegionsJS(updateRegions));
     result.append(");");
     return result.toString();
   }

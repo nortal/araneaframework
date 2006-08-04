@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.servlet.jsp.JspException;
 
-import org.araneaframework.jsp.tag.presentation.UiStdImageBaseTag;
+import org.araneaframework.jsp.tag.presentation.BaseImageHtmlTag;
 import org.araneaframework.servlet.util.FileImportUtil;
 
 /**
@@ -35,7 +35,7 @@ import org.araneaframework.servlet.util.FileImportUtil;
  *   name = "image"
  *   body-content = "JSP"
  */
-public class SampleImageTag extends UiStdImageBaseTag {
+public class SampleImageTag extends BaseImageHtmlTag {
 	/**
 	 * Static method to write out image with given code with default style.
 	 */

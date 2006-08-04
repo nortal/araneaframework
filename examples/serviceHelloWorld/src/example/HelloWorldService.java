@@ -23,7 +23,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.jsp.util.UiUtil;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.servlet.ServletOutputData;
 
 public class HelloWorldService extends BaseService {
@@ -33,25 +33,25 @@ public class HelloWorldService extends BaseService {
         
     Writer out = new OutputStreamWriter(response.getOutputStream());
     try {
-      UiUtil.writeStartTag(out, "html"); {
-        UiUtil.writeStartTag(out, "head"); {
-          UiUtil.writeStartTag(out, "title"); {
+      JspUtil.writeStartTag(out, "html"); {
+        JspUtil.writeStartTag(out, "head"); {
+          JspUtil.writeStartTag(out, "title"); {
             out.write("Hello world!");
           }
-          UiUtil.writeEndTag(out, "title");
+          JspUtil.writeEndTag(out, "title");
         }
-        UiUtil.writeEndTag(out, "head");
+        JspUtil.writeEndTag(out, "head");
         
-        UiUtil.writeStartTag(out, "body"); {
-          UiUtil.writeStartTag(out, "h1"); {
+        JspUtil.writeStartTag(out, "body"); {
+          JspUtil.writeStartTag(out, "h1"); {
             out.write("Hello world!");
           }
-          UiUtil.writeEndTag(out, "h1");
+          JspUtil.writeEndTag(out, "h1");
         }
-        UiUtil.writeEndTag(out, "body");
+        JspUtil.writeEndTag(out, "body");
         
       } 
-      UiUtil.writeEndTag(out, "html");
+      JspUtil.writeEndTag(out, "html");
     
       out.flush();
     }
