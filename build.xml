@@ -92,8 +92,12 @@
 	
 	<target name="jar" depends="compile">
 		<mkdir dir="dist" />
+		<mkdir dir="dist/modules" />
+		<mkdir dir="dist/integration" />
 		
-		<jar destfile="dist/aranea-core.jar" compress="true">
+		<!-- MODULES -->
+		
+		<jar destfile="dist/modules/aranea-core.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/*"/>
 				<include name="org/araneaframework/core/**/*"/>
@@ -106,7 +110,7 @@
 			</manifest >
 		</jar>
 		
-		<jar destfile="dist/aranea-framework.jar" compress="true">
+		<jar destfile="dist/modules/aranea-framework.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/framework/**/*"/>												
 			</fileset>
@@ -118,9 +122,9 @@
 			</manifest >
 		</jar>		
 		
-		<jar destfile="dist/aranea-servlet.jar" compress="true">
+		<jar destfile="dist/modules/aranea-http.jar" compress="true">
 			<fileset dir="build/classes">							
-			  <include name="org/araneaframework/servlet/**/*"/>						
+			  <include name="org/araneaframework/http/**/*"/>						
 			</fileset>
 			
 			<manifest>
@@ -130,7 +134,7 @@
 			</manifest >
 		</jar>			
 		
-		<jar destfile="dist/aranea-backend.jar" compress="true">
+		<jar destfile="dist/modules/aranea-backend.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/backend/**/*"/>			
 			</fileset>
@@ -142,7 +146,7 @@
 			</manifest >
 		</jar>
 		
-		<jar destfile="dist/aranea-uilib.jar" compress="true">
+		<jar destfile="dist/modules/aranea-uilib.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
@@ -155,20 +159,7 @@
 			</manifest >
 		</jar>	
 		
-		<jar destfile="dist/aranea-spring.jar" compress="true">
-			<fileset dir="build/classes">
-				<include name="org/araneaframework/ioc/spring/**/*"/>			
-			</fileset>
-			<fileset dir="etc" includes="conf/**/*"/>
-			
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
-			</manifest >
-		</jar>	
-		
-		<jar destfile="dist/aranea-jsp.jar" compress="true">
+		<jar destfile="dist/modules/aranea-jsp.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/**/*"/>			
 				<exclude name="org/araneaframework/jsp/engine/**/*"/>			
@@ -185,7 +176,7 @@
 			</manifest >
 		</jar>	
 		
-		<jar destfile="dist/aranea-jsp-engine.jar" compress="true">
+		<jar destfile="dist/modules/aranea-jsp-engine.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/engine/**/*"/>		        
 			</fileset>
@@ -197,11 +188,28 @@
 				<attribute name="Implementation-Title" value="${project.title}"/>
 				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
 			</manifest >
-		</jar>			
+		</jar>					
+		
+		<!-- INTEGRATION -->
+		
+		<jar destfile="dist/integration/aranea-integration-spring.jar" compress="true">
+			<fileset dir="build/classes">
+				<include name="org/araneaframework/integration/spring/**/*"/>			
+			</fileset>
+			<fileset dir="etc" includes="conf/**/*"/>
+			
+			<manifest>
+				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+				<attribute name="Implementation-Title" value="${project.title}"/>
+				<attribute name="Implementation-Version" value="${araneaframework.version} (ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>				
+			</manifest >
+		</jar>	
 	
+		<!-- ALL-IN-ONE -->
+		
 		<jar destfile="dist/aranea.jar" compress="true" >
 			<fileset dir="build/classes">
-			  <include name="org/araneaframework/**/*"/>		
+			  <include name="org/araneaframework/**/*"/>	
 			</fileset>
 			<fileset dir="etc"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>

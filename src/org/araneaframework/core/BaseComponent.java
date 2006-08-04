@@ -53,8 +53,6 @@ public abstract class BaseComponent implements Component {
   private transient int callCount = 0;
   private transient int reentrantCallCount = 0;
   private transient ThreadLocal reentrantTLS;
-  
-  private Collection destroyers = new ArrayList();
 
   //*******************************************************************
   // PUBLIC METHODS
