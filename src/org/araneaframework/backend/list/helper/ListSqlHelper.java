@@ -28,7 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.sql.DataSource;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
@@ -1037,13 +1039,11 @@ public abstract class ListSqlHelper {
 		 * new Bean instance to {@link #readBeanFields(ResultSet, Object)}
 		 * method.
 		 */
-		public void processRow(ResultSet rs) throws SQLException {
+		public void processRow(ResultSet rs) {
 			try {
-				while (rs.next()) {
-					Object record = itemClass.newInstance();
-					readBeanFields(rs, record);
-					this.results.add(record);
-				}
+				Object record = itemClass.newInstance();
+				readBeanFields(rs, record);
+				this.results.add(record);
 			}
 			catch (InstantiationException e) {
 				throw ExceptionUtil.uncheckException(e);
