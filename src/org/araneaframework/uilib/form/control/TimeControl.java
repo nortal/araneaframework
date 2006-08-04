@@ -70,11 +70,12 @@ public class TimeControl extends TimestampControl {
         (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
       
 		  String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_TIME_FORMAT);
-		  if (confFormat != null) dateTimeFormat = confFormat;
+		  if (confFormat != null) dateTimeInputPattern = confFormat;
 
 		  String confOutputFormat = (String) confCtx.getEntry(
 		      ConfigurationContext.DEFAULT_TIME_OUTPUT_FORMAT);
-		  if (confOutputFormat != null) currentSimpleDateTimeFormat = new SimpleDateFormat(confOutputFormat);
+		  if (confOutputFormat != null) 
+        dateTimeOutputPattern = confOutputFormat;
 		}
 	}
 

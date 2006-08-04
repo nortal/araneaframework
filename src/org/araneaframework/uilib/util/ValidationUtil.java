@@ -55,7 +55,7 @@ public class ValidationUtil {
 			date = dateFormat.parse(dateTimeString, pos);
 			
 			if (date != null && (pos.getIndex() == dateTimeString.length()))
-				result = new ParsedDate(date, dateFormat);
+				result = new ParsedDate(date, patterns[i]);
 			
 			// introduce the y10k problem && ignore everything B.C
 			// needed to escape SimpleDateFormats broken guesswork that can produce corrupt Dates. 
@@ -83,18 +83,18 @@ public class ValidationUtil {
 	
 	public static class ParsedDate {
 		protected Date date;
-		protected SimpleDateFormat format;
+		protected String outputPattern;
 		
-		public ParsedDate(Date date, SimpleDateFormat format) {
+		public ParsedDate(Date date, String outputPattern) {
 			this.date = date;
-			this.format = format;
+			this.outputPattern = outputPattern;
 		}
 		
 		public Date getDate() {
 			return this.date;
 		}
-		public SimpleDateFormat getFormat() {
-			return this.format;
+		public String getOutputPattern() {
+			return this.outputPattern;
 		}
 	}
 	

@@ -17,7 +17,7 @@
     </property>
   </bean>  
   
-    <bean id="customSessionFilters" singleton="false"
+  <bean id="customSessionFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardFilterChainService">
     <property name="filterChain">     
       <list>
