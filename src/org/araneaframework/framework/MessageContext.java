@@ -57,7 +57,6 @@ public interface MessageContext extends Serializable {
    */
   public void showErrorMessage(String message);
   
-  
   /**
    * Shows an informative message of type {@link #INFO_TYPE}.
    */
@@ -67,4 +66,9 @@ public interface MessageContext extends Serializable {
    * Removes all messages currently present in this MessageContext.  
    */
   public void clearMessages();
+  
+  /** Add persistent message - message that survives update() and stays onscreen until it is explicitly cleared. */
+  public void addPersistentMessage(String type, String message);
+  public void addPersistentErrorMessage(String message);
+  public void addPersistentInfoMessage(String message);
 }

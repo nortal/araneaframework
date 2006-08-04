@@ -50,7 +50,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 	public void handleEventCreateThread() throws Exception {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
 		getPopupCtx().open(
-        new LoginAndMenuSelectMessage("Demos.#Simple.Simple_Form"), 
+        new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form"), 
         new PopupWindowProperties(), this);
 	}
 
@@ -62,7 +62,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
   public void handleEventOpenMountedPopup() throws Exception {
     String url = getMountCtx().mount(getCurrentInput(), "my/very/own/mounted/path", new MountContext.MessageFactory() {
       public Message buildMessage(String url, String suffix, InputData input, OutputData output) {
-        return new LoginAndMenuSelectMessage("Demos.#Simple.Simple_Form");
+        return new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form");
       }
     });
     

@@ -46,7 +46,8 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
-  private Map messages = new LinkedMap();
+  protected Map messages = new LinkedMap();
+  protected Map persistentMessages = new LinkedMap();
 
   protected void init() throws Exception {
     Map entries = new HashMap();
@@ -94,6 +95,19 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
       typeCol.add(entry.getKey());
     }
     
+    for (Iterator i = persistentMessages.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+        
+      Collection typeCol = (Collection) typedMessages.get(entry.getValue());
+        
+      if (typeCol == null) {
+        typeCol = new ArrayList();
+        typedMessages.put(entry.getValue(), typeCol);
+      }
+       
+      typeCol.add(entry.getKey());
+    }
+    
     output.pushAttribute(MessageContext.MESSAGE_KEY, typedMessages);
     
     try {
@@ -108,15 +122,27 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     messages.put(message, type);
   }
 
+  public void addPersistentMessage(String type, String message) {
+    persistentMessages.put(message, type);
+  }
+
   public void showErrorMessage(String message) {
     showMessage(ERROR_TYPE, message);
+  }
+  
+  public void addPersistentErrorMessage(String message) {
+    addPersistentMessage(ERROR_TYPE, message);
   }
 
   public void showInfoMessage(String message) {
     showMessage(INFO_TYPE, message);
   }
   
+  public void addPersistentInfoMessage(String message) {
+	addPersistentMessage(INFO_TYPE, message);
+  }
+  
   public void clearMessages() {
-	  messages.clear();
+    messages.clear();
   }
 }
