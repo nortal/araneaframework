@@ -574,7 +574,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * Clears all the ActionListeners with the specified eventId.
    * @param eventId the id of the EventListeners.
    */
-  public void clearActionlisteners(Object eventId) {
+  public void clearActionListeners(Object eventId) {
     getActionListeners().remove(eventId);
   }
 
