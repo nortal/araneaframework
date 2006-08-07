@@ -16,7 +16,6 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
-import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
@@ -74,8 +73,6 @@ protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag_SS(out, "textarea");
     if (!StringUtils.isBlank(accessKey))
       JspUtil.writeAttribute(out, "accesskey", accessKey);
-    if (validate) 
-      writeValidationScript(out, viewModel);
     
     super.doEndTag(out);
     return EVAL_PAGE;
@@ -104,20 +101,4 @@ protected int doEndTag(Writer out) throws Exception {
   public void setRows(String size) throws JspException {
     this.rows = (Long)evaluate("rows", size, Long.class);
   }
-  
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, StringArrayRequestControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddTextAreaValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
-  }    
 }

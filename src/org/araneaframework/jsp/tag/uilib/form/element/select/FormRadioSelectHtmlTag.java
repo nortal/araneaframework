@@ -69,7 +69,6 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 			item.setId(derivedId);
 			item.setValue(displayItem.getValue());
 			item.setEvents(events ? "true" : "false");
-			item.setValidate(validate ? "true" : "false");
 			item.setValidateOnEvent(validateOnEvent ? "true" : "false");
 			item.setStyleClass(getStyleClass());
 			if (getStyle() != null) item.setStyle(getStyle());

@@ -77,9 +77,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			boolean isMandatory,
 			boolean isValid,
 			Long size,
-			boolean validate,
 			boolean disabled,
-      String styleClass,
+			String styleClass,
 			String accessKey,      
 			DateControl.ViewModel viewModel) throws Exception {
 		// Write input tag

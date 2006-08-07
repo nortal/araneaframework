@@ -85,8 +85,6 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
     
-    if (validate) writeValidationScript(out, viewModel);
-    
     super.doEndTag(out);
     return EVAL_PAGE;  
   }
@@ -104,20 +102,4 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   public void setSize(String size) throws JspException {
     this.size = (Long)evaluate("size", size, Long.class);
   }
-  
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, MultiSelectControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddMultiselectValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
-  }    
 }

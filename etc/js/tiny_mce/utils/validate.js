@@ -41,10 +41,10 @@ function validateNumber(form_name, element_name, allow_blank) {
 	return (!allow_blank && value == '') ? false : testRegExp(form_name, element_name, '^-?[0-9]*\\.?[0-9]*$');
 }
 
-function validateSize(form_name, element_name,) {
+function validateSize(form_name, element_name) {
 	return testRegExp(form_name, element_name, '^[0-9]+(px|%)?$');
 }
 
-function validateID(form_name, element_name,) {
+function validateID(form_name, element_name) {
 	return testRegExp(form_name, element_name, '^[A-Za-z_]([A-Za-z0-9_])*$');
 }

@@ -29,7 +29,6 @@ import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 public interface FormElementTagInterface extends StyledTagInterface, AttributedTagInterface {
 	public void setId(String id) throws JspException;
 	public void setEvents(String events) throws JspException;	
-	public void setValidate(String validate) throws JspException;	
 	public void setValidateOnEvent(String validateOnEvent) throws JspException;	
 	public void setTabindex(String tabindex) throws JspException;
 	public void setUpdateRegions(String updateRegions) throws JspException;

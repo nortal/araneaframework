@@ -36,7 +36,6 @@ public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
 
   public FormHiddenInputHtmlTag() {
     // Hidden element may not be validated!
-    this.validate = false;
     this.validateOnEvent = false;
   }
 

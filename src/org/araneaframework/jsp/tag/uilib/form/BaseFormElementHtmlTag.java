@@ -64,7 +64,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	//Attributes
 	
 	protected boolean events = true;
-	protected boolean validate = true;
+	//protected boolean validate = true;
 	protected boolean validateOnEvent = false;
 		
 	protected String accessKey;
@@ -156,16 +156,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */	
 	public void setEvents(String events) throws JspException {
 		this.events = ((Boolean)evaluateNotNull("events", events, Boolean.class)).booleanValue(); 
-	}
-
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Whether the element will be validated on the client-side when the form is submitted (by default 'true')."
-	 */	
-	public void setValidate(String validate) throws JspException {
-		this.validate = ((Boolean)evaluateNotNull("validate", validate, Boolean.class)).booleanValue(); 
 	}
 
 	/**
@@ -354,27 +344,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 	protected boolean getHasElementContextSpan(){
 		return hasElementContextSpan;
-	}
-
-	//// Script writing
-
-	/**
-	 * Writes standard validation script that checks element for mandatority.
-	 * This function should not actually be ever used and its main value here
-	 * is to illustrate a typical validation script.
-	 * A specific validator should be used for every type of control.
-	 * @author Konstantin Tretyakov
-	 */	
-	private void writeValidationScript(Writer out, String name, String label, boolean isMandatory) throws IOException {
-		JspUtil.writeStartTag(out, "script");
-		out.write("uiAddDefaultValidator(");
-		JspUtil.writeScriptString(out, name);
-		out.write(", ");
-		JspUtil.writeScriptString(out, label);
-		out.write(", ");
-		out.write(isMandatory ? "true" : "false");
-		out.write(");\n");
-		JspUtil.writeEndTag_SS(out, "script");
 	}
 
 	/**

@@ -79,9 +79,6 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartEndTag_SS(out);
     
-    if (validate) 
-      writeValidationScript(out, viewModel);
-    
     super.doEndTag(out);
     return EVAL_PAGE;  
   }

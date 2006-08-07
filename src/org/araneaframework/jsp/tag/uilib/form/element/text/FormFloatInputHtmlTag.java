@@ -42,30 +42,8 @@ public class FormFloatInputHtmlTag extends BaseFormTextInputHtmlTag {
     assertControlType("FloatControl");
 
     writeTextInput(out, "text");
-    if (validate) 
-      writeValidationScript(out, ((FloatControl.ViewModel)controlViewModel));
 
     super.doEndTag(out);
     return EVAL_PAGE;
-  }
-
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, FloatControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddRealValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(", ");
-    JspScriptUtil.writeObject(out, viewModel.getMinValue());
-    out.write(", ");
-    JspScriptUtil.writeObject(out, viewModel.getMaxValue());
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
   }
 }

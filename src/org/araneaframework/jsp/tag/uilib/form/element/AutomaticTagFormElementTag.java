@@ -110,8 +110,6 @@ public class AutomaticTagFormElementTag extends BaseTag {
     controlTag.setId(derivedId);
     if(events != null)
       controlTag.setEvents(events);
-    if(validate != null)
-      controlTag.setValidate(validate);
     if(validateOnEvent != null)
       controlTag.setValidateOnEvent(validateOnEvent);
     if(styleClass != null)

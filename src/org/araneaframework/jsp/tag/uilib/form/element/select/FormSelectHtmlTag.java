@@ -16,7 +16,6 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
@@ -93,8 +92,6 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
 
-    if (validate) writeValidationScript(out, viewModel);
-
     // Continue
     super.doEndTag(out);
     return EVAL_PAGE;  
@@ -123,20 +120,4 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
   public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
     this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
-
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, SelectControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddSelectValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
-  }      
 }

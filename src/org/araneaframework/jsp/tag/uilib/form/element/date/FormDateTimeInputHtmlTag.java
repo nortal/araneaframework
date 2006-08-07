@@ -52,7 +52,6 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
         viewModel.isMandatory(), 
         formElementViewModel.isValid(),
         dateInputSize,
-        validate,
         viewModel.isDisabled(),
         getDateStyleClass(),
         accessKey,
@@ -62,9 +61,6 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     writeTimeInput(out, name, viewModel.getTime(), localizedLabel,
         timeInputSize, viewModel.isDisabled());
 
-    if (validate)
-      writeValidationScript(out, viewModel);
-    
     Date currentTime = null;
     Integer minute = null, hour = null;
     try {
@@ -149,23 +145,6 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     sb.append("</script>\n</select>\n");
     
     out.write(sb.toString());
-  }
-
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out,
-      DateTimeControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddDateTimeValidator(");
-    JspUtil.writeScriptString(out, getFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
   }
 
   /**

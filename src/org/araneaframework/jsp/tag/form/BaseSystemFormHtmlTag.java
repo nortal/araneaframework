@@ -57,6 +57,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     addContextEntry(ID_KEY, derivedId);
     addContextEntry(SYSTEM_FORM_ID_KEY, derivedId);    
 
+    out.write("<arn:systemForm>");
     // Write form 
     JspUtil.writeOpenStartTag(out, "form");
     JspUtil.writeAttribute(out, "id", derivedId);
@@ -72,6 +73,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     // Script
     // Initialize the uiProperties object for this systemform
     // This object will store validators for UiLib forms contained in this systemform.      
+    /* XXX: remove forever
     JspUtil.writeOpenStartTag(out, "script");
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeCloseStartTag(out);
@@ -79,6 +81,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     JspUtil.writeScriptString(out, derivedId);
     out.write(");\n");
     JspUtil.writeEndTag(out, "script");
+    */
 
     // Continue
     return EVAL_BODY_INCLUDE;
@@ -86,6 +89,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
 
   protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "form");
+    out.write("</arn:systemForm>");
 
     // Continue
     super.doEndTag(out);
