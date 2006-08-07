@@ -27,26 +27,26 @@ import org.araneaframework.uilib.core.MenuItem;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerWidget implements TemplateMenuContext {
-	protected MenuItem menu;  
-	
-	// CONSTRUCTOR 
-	public TemplateMenuWidget(Widget topWidget) throws Exception {
-		super(topWidget);
-		
-		menu = buildMenu();
-		addEventListener(TemplateMenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
-		putViewData(TemplateMenuContext.MENU_VIEWDATA_KEY, menu);
-	}
-	
-	// MENU SELECTION LISTENER
-	private class ItemSelectionHandler extends StandardEventListener {
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
-			TemplateMenuWidget.this.selectMenuItem(eventParam);
-		}
-	}
+  protected MenuItem menu;
 
-	public void selectMenuItem(String menuItemPath) throws Exception {
-		final Widget newFlow = menu.selectMenuItem(menuItemPath);
+  // CONSTRUCTOR 
+  public TemplateMenuWidget(Widget topWidget) throws Exception {
+    super(topWidget);
+    
+    menu = buildMenu();
+    addEventListener(TemplateMenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
+    putViewData(TemplateMenuContext.MENU_VIEWDATA_KEY, menu);
+  }
+  
+  // MENU SELECTION LISTENER
+  private class ItemSelectionHandler extends StandardEventListener {
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+      TemplateMenuWidget.this.selectMenuItem(eventParam);
+    }
+  }
+
+  public void selectMenuItem(String menuItemPath) throws Exception {
+    final Widget newFlow = menu.selectMenuItem(menuItemPath);
     
     reset(new EnvironmentAwareCallback() {
       public void call(org.araneaframework.Environment env) throws Exception {
@@ -54,11 +54,15 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
           start(newFlow, null, null);
       }
     });
-	}
+  }
+  
+  public String getFlowClassName() {
+    return ((CallFrame) callStack.getFirst()).getWidget().getClass().getName();
+  }
 
-	/**
-	 * Method that must be implemented to build the menu.
-	 * @return built menu.
-	 */
-	protected abstract MenuItem buildMenu() throws Exception;
+  /**
+   * Method that must be implemented to build the menu.
+   * @return built menu.
+   */
+  protected abstract MenuItem buildMenu() throws Exception;
 }
