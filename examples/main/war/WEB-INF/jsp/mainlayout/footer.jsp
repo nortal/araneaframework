@@ -15,7 +15,7 @@
 		 	   <c:out value="${contextWidget.data['templateSrcLink']}" escapeXml="false"/><i>|</i>
 			</c:if>
 			<ui:entity code="copy"/> <a href="http://www.webmedia.ee">Webmedia</a> 2006 <i>|</i>
-			Aranea <c:out value="${contextWidget.data['aranea-version']}"/><i>|</i> 
+			<b>Aranea <c:out value="${contextWidget.data['aranea-version']}"/></b><i>|</i> 
 			<a href="mailto:info@araneaframework.org">info@araneaframework.org</a>
 		</div>
 	</div>
