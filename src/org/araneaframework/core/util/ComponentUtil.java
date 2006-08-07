@@ -24,7 +24,7 @@ import org.araneaframework.core.ApplicationComponent;
  * 
  * @author Jevgeni kabanov (ekabanov@webmedia.ee)
  */
-public class ComponentUtil {
+public abstract class ComponentUtil {
   public static final String LISTENER_KEY = "org.araneaframework.core.util.ComponentUtil.LISTENER";
   
   /**

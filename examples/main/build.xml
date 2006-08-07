@@ -85,6 +85,9 @@
 		<copy todir="war/WEB-INF/classes">
 			<fileset dir=".." includes="log4j.xml"/>
 		</copy>
+		<copy todir="war/src/">
+			<fileset dir="src" includes="**/*"/>
+		</copy>		
 	</target>
 	
 	<target name="compile" depends="init">

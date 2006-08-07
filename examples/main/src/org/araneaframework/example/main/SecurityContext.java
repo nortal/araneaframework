@@ -22,7 +22,7 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public interface SecurityContext extends Serializable {
-  boolean hasPrivilege(String privelege);
+  boolean hasPrivilege(String privilege);
   
   void logout() throws Exception;
 }
