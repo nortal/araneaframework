@@ -22,7 +22,8 @@ import org.araneaframework.backend.list.memorybased.expression.CompositeExpressi
 import org.araneaframework.backend.list.memorybased.expression.StringExpression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.uilib.list.util.LikeUtil;
+import org.araneaframework.uilib.list.util.like.LikeConfiguration;
+import org.araneaframework.uilib.list.util.like.LikeUtil;
 
 public class LikeExpression implements CompositeExpression, StringExpression {
 	
@@ -34,7 +35,9 @@ public class LikeExpression implements CompositeExpression, StringExpression {
 	
 	private boolean ignoreCase;
 	
-	public LikeExpression(Expression expr, Value mask, boolean ignoreCase) {
+	private LikeConfiguration configuration;
+	
+	public LikeExpression(Expression expr, Value mask, boolean ignoreCase, LikeConfiguration configuration) {
 		if (expr == null) {
 			throw new IllegalArgumentException("Expression must be provided");
 		}		
@@ -44,6 +47,7 @@ public class LikeExpression implements CompositeExpression, StringExpression {
 		this.expr = expr;
 		this.mask = mask;
 		this.ignoreCase = ignoreCase;
+		this.configuration = configuration;
 	}
 	
 	public boolean getIgnoreCase() {
@@ -54,10 +58,14 @@ public class LikeExpression implements CompositeExpression, StringExpression {
 		return this.mask;
 	}
 	
+	public LikeConfiguration getConfiguration() {
+		return configuration;
+	}
+
 	public Object evaluate(VariableResolver resolver)
 	throws ExpressionEvaluationException {
 		return new Boolean(LikeUtil.isLike(convert(this.expr.evaluate(resolver)),
-				convert(this.mask.getValue()), this.ignoreCase));
+				convert(this.mask.getValue()), this.ignoreCase, this.configuration));
 	}
 	
 	private String convert(Object value) {

@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.list.structure.filter.column;
 
 import java.util.Map;
+
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
@@ -29,6 +30,7 @@ import org.araneaframework.backend.list.memorybased.expression.logical.OrExpress
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
 import org.araneaframework.uilib.list.structure.ComparableType;
 import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
+import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 
 public abstract class ConstantColumnFilter extends ComparableType implements ColumnFilter {
@@ -192,8 +194,16 @@ public abstract class ConstantColumnFilter extends ComparableType implements Col
 		public Like(Object value) {
 			super(value);
 		}
+		private LikeConfiguration configuration = new LikeConfiguration();
+		public LikeConfiguration getConfiguration() {
+			return configuration;
+		}
+		public Like setConfiguration(LikeConfiguration configuration) {
+			this.configuration = configuration;
+			return this;
+		}		
 		protected Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand) {
-			return new LikeExpression(leftOperand, (ValueExpression) rightOperand, isIgnoreCase());
+			return new LikeExpression(leftOperand, (ValueExpression) rightOperand, isIgnoreCase(), configuration);
 		}
 	}
 }
