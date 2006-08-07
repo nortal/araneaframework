@@ -6,14 +6,12 @@ of them in your own applications.
 *****************************************************************************
 * ./jakarta-commons/commons-*.jar
 - Jakarta Project Commons (http://jakarta.apache.org/commons/)
-
 - Logging is required for running sample applications.
 *****************************************************************************
 
 *****************************************************************************
 * ./xerces/*.jar
 - Apache XML project Xerces Java Parser (http://xerces.apache.org/xerces-j/)
-
 - Required for running the sample applications.
 *****************************************************************************
 
@@ -51,4 +49,12 @@ of them in your own applications.
 * ./jetty/org.mortbay.jetty.jar
 - Standalone servlet container (http://jetty.mortbay.org/jetty/)
 - Required for running the sample applications.
+*****************************************************************************
+
+*****************************************************************************
+* ./jhighlight/jhighlight-1.0.jar
+- source highlighting for various programming languages
+- Required for running main example.
+- https://jhighlight.dev.java.net/
+- license is CDDL : http://www.opensource.org/licenses/cddl1.php
 *****************************************************************************

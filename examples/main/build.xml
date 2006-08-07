@@ -27,6 +27,8 @@
 	<target name="clean" description="Clean up build system results">
         <delete dir="war/WEB-INF/classes" failonerror="false"/>
         <delete dir="war/WEB-INF/lib" failonerror="false"/>	
+		<delete dir="war/src" failonerror="false"/>	
+		<delete dir="war/jsp" failonerror="false"/>
 		<delete dir="dist" failonerror="false"/>	
         <delete dir="tmp" failonerror="false"/>
 	</target>
@@ -63,8 +65,10 @@
 		<war destfile="dist/aranea-template-app.war" webxml="war/WEB-INF/web.xml">
 			<lib dir="war/WEB-INF/lib" excludes="jasper*"/>
 			<classes dir="war/WEB-INF/classes"/>
-			<zipfileset dir="war/WEB-INF" includes="*.xml" excludes="web.xml,jetty-web.xml" prefix="WEB-INF"/>
+			<zipfileset dir="war/WEB-INF" includes="*" excludes="web.xml,jetty-web.xml" prefix="WEB-INF"/>
 			<zipfileset dir="war/WEB-INF/jsp" prefix="WEB-INF/jsp"/>
+			<zipfileset dir="war/jsp" prefix="jsp"/>
+			<zipfileset dir="war/src" prefix="src"/>
 		</war>
 	</target>
 
@@ -85,6 +89,16 @@
 		<copy todir="war/WEB-INF/classes">
 			<fileset dir=".." includes="log4j.xml"/>
 		</copy>
+		<copy todir="war/src/">
+			<fileset dir="src" includes="**/*"/>
+		</copy>
+		<copy todir="war/jsp/">
+			<fileset dir="war/WEB-INF/jsp" includes="**/*.jsp"/>
+		</copy>
+		  <move todir="war/jsp/" includeemptydirs="false">
+		    <fileset dir="war/jsp/"/>
+		    <mapper type="glob" from="*.jsp" to="*.xml"/>
+		  </move>
 	</target>
 	
 	<target name="compile" depends="init">

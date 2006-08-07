@@ -95,13 +95,25 @@ public abstract  class URLUtil {
     HttpServletRequest req = ((ServletInputData) input).getRequest();
 
     StringBuffer url = new StringBuffer();
+    url.append(getContextRequestURL(input));
+    url.append(req.getServletPath());
+    return url.toString();
+  }
+  
+  /**
+   * Returns request URL up to the context path.
+   * @return request URL up to the context path.
+   */
+  public static String getContextRequestURL(InputData input) {
+    HttpServletRequest req = ((ServletInputData) input).getRequest();
+
+    StringBuffer url = new StringBuffer();
     url.append(req.getScheme());
     url.append("://");
     url.append(req.getServerName());    
     url.append(":");
     url.append(req.getServerPort());
     url.append(req.getContextPath());
-    url.append(req.getServletPath());
     return url.toString();
   }
 }

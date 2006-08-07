@@ -45,7 +45,7 @@ public class RedirectingWidget extends TemplateBaseWidget {
   public void handleEventMountAndRedirect() throws Exception {
     String url = getMountCtx().mount(getCurrentInput(), "/mount/test", new MountContext.MessageFactory() {
       public Message buildMessage(String url, String suffix, InputData input, OutputData output) {
-        return new LoginAndMenuSelectMessage("Demos.#Simple.Simple_Form");
+        return new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form");
       }
     });
     

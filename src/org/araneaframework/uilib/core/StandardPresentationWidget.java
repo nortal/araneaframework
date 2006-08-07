@@ -36,7 +36,7 @@ import org.araneaframework.uilib.ConfigurationContext;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class StandardPresentationWidget extends BaseApplicationWidget {
-  private String viewSelector;  
+  protected String viewSelector;  
 
   protected void setViewSelector(String viewSelector) {
     this.viewSelector = viewSelector;

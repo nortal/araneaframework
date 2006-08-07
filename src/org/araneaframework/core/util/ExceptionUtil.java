@@ -24,7 +24,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * 
  * @author Jevgeni kabanov (ekabanov@webmedia.ee)
  */
-public class ExceptionUtil {
+public abstract class ExceptionUtil {
   public static RuntimeException uncheckException(Exception e) {
     if (e instanceof RuntimeException)
       throw (RuntimeException) e;

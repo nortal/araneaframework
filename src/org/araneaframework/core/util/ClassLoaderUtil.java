@@ -31,7 +31,7 @@ import java.util.List;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class ClassLoaderUtil {
+public abstract class ClassLoaderUtil {
 	/**
 	 * Returns the thread context ClassLoader, if available. Otherwise
 	 * falls back to the ClassLoader of ClassLoaderUtil.
