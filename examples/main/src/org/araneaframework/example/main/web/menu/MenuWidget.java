@@ -45,7 +45,6 @@ import org.araneaframework.example.main.web.misc.RenderErrorWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.person.PersonListWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
-import org.araneaframework.example.main.web.sample.InvisibleElementFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
@@ -106,7 +105,6 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("Simple", new MenuItem("Simple_Form", SimpleFormWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Simple_List", SimpleListWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("Invisible_Element_Form", InvisibleElementFormWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Popup_Example", SamplePopupWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("MultiSelect", DemoMultiSelect.class));
       

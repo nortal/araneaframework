@@ -66,7 +66,7 @@ public class FooterWidget extends StandardPresentationWidget {
       reqUrl.append(viewSelector);
       reqUrl.append(".xmls");
       
-      StringBuffer windowOpen = new StringBuffer("window.open('").append(reqUrl).append("', 'widgetSource', 'width=900,height=800,scrollbars=yes')");
+      StringBuffer windowOpen = new StringBuffer("window.open('").append(reqUrl).append("', 'templateSource', 'width=900,height=800,scrollbars=yes')");
       
       StringBuffer templateSrcLink = new StringBuffer("<a href=\"javascript:\" onclick=\"").append(windowOpen).append("; return false;\">");
       templateSrcLink.append("Template source").append("</a>");

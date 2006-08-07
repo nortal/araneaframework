@@ -42,6 +42,7 @@ public class RootWidget extends StandardPresentationWidget implements SecurityCo
 		menuWidget = new MenuWidget(topWidget);
 		topWidget = null;
 		addWidget("menu", menuWidget);
+		menuWidget.addWidget("footer", new FooterWidget());
 		setViewSelector("root");
 	}
 

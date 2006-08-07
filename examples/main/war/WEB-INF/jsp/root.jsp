@@ -51,7 +51,7 @@
 	                        </ui:systemForm>
 	                    </div>
 	                    
-	                    <jsp:include page="/WEB-INF/jsp/mainlayout/footer.jsp"/>
+	                    <ui:widgetInclude id="menu.footer"/>
 	
 	                </body>
 	            </html>
