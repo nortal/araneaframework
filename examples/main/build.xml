@@ -67,6 +67,8 @@
 			<classes dir="war/WEB-INF/classes"/>
 			<zipfileset dir="war/WEB-INF" includes="*" excludes="web.xml,jetty-web.xml" prefix="WEB-INF"/>
 			<zipfileset dir="war/WEB-INF/jsp" prefix="WEB-INF/jsp"/>
+			<zipfileset dir="war/jsp" prefix="jsp"/>
+			<zipfileset dir="war/src" prefix="src"/>
 		</war>
 	</target>
 
