@@ -18,10 +18,7 @@ package org.araneaframework.uilib.event;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import org.araneaframework.InputData;
 import org.araneaframework.core.EventListener;
 import org.araneaframework.uilib.InvalidEventException;
@@ -35,22 +32,23 @@ import org.araneaframework.uilib.InvalidEventException;
  */
 public class StandardControlEventListenerAdapter implements EventListener {
 
-  private Collection onClickEventListeners = new ArrayList();
-  private Collection onChangeEventListeners = new ArrayList();
-
-  private Map generalWidgetEventListeners = new HashMap();
-
+  private Collection onClickEventListeners;
+  private Collection onChangeEventListeners;
+  
   /**
    * Adds a {@link OnChangeEventListener}which is called when the control value is changing.
    * 
    * @param onChangeEventListener {@link OnChangeEventListener}which is called when the control value is changing.
    */
   public void addOnChangeEventListener(OnChangeEventListener onChangeEventListener) {
+    if (onChangeEventListeners == null)
+      onChangeEventListeners = new ArrayList();
     onChangeEventListeners.add(onChangeEventListener);
   }
   
   public void clearOnChangeEventListeners() {
-    onChangeEventListeners.clear();
+    if (onChangeEventListeners != null)
+      onChangeEventListeners.clear();
   }
 
   /**
@@ -59,19 +57,7 @@ public class StandardControlEventListenerAdapter implements EventListener {
    * @return whether there are any {@link OnChangeEventListener}s registered.
    */
   public boolean hasOnChangeEventListeners() {
-    return onChangeEventListeners.size() > 0;
-  }
-
-  /**
-   * Returns whether there are any {@link GeneralWidgetEventListener}s registered for the given event.
-   * 
-   * @param eventName widget event.
-   * 
-   * @return whether there are any {@link GeneralWidgetEventListener}s registered for the given event.
-   */
-  public boolean hasGeneralWidgetEventListeners(String eventName) {
-    List listenerList = ((List) generalWidgetEventListeners.get(eventName));
-    return listenerList != null && listenerList.size() > 0;
+    return onChangeEventListeners != null && onChangeEventListeners.size() > 0;
   }
 
   /**
@@ -80,11 +66,14 @@ public class StandardControlEventListenerAdapter implements EventListener {
    * @param onClickEventListener {@link OnClickEventListener} which is called when the control is clicked.
    */
   public void addOnClickEventListener(OnClickEventListener onClickEventListener) {
+    if (onClickEventListeners == null)
+      onClickEventListeners = new ArrayList();
     onClickEventListeners.add(onClickEventListener);
   }
   
   public void clearOnClickEventListeners() {
-    onClickEventListeners.clear();
+    if (onClickEventListeners != null)
+      onClickEventListeners.clear();
   }
 
   /**
@@ -93,19 +82,21 @@ public class StandardControlEventListenerAdapter implements EventListener {
    * @return whether there are any {@link OnClickEventListener}s registered.
    */
   public boolean hasOnClickEventListeners() {
-    return onClickEventListeners.size() > 0;
+    return onClickEventListeners != null && onClickEventListeners.size() > 0;
   }
 
   public void processEvent(Object eventId, InputData input) throws Exception {
     if (OnChangeEventListener.ON_CHANGE_EVENT.equals(eventId)) {
-      for (Iterator i = onChangeEventListeners.iterator(); i.hasNext();) {
-        ((OnChangeEventListener) i.next()).onChange();
-      }
+      if (onChangeEventListeners != null)
+        for (Iterator i = onChangeEventListeners.iterator(); i.hasNext();) {
+          ((OnChangeEventListener) i.next()).onChange();
+        }
     }
     else if (OnClickEventListener.ON_CLICK_EVENT.equals(eventId)) {
-      for (Iterator i = onClickEventListeners.iterator(); i.hasNext();) {
-        ((OnClickEventListener) i.next()).onClick();
-      }
+      if (onClickEventListeners != null)
+        for (Iterator i = onClickEventListeners.iterator(); i.hasNext();) {
+          ((OnClickEventListener) i.next()).onClick();
+        }
     }
     else {
       throw new InvalidEventException((String) eventId);

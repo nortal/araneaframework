@@ -19,10 +19,10 @@ package org.araneaframework.uilib.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.support.FlowCreator;
@@ -113,7 +113,7 @@ public class MenuItem implements Serializable {
     if (!holder)
       throw new UnsupportedOperationException("Menu items can only be added into holders.");
     if (subMenu == null)
-      subMenu = new LinkedHashMap();
+      subMenu = new LinkedMap();
     subMenu.put(item.getLabel(), item);
   }
   

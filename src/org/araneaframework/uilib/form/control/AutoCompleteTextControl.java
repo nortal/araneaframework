@@ -61,9 +61,12 @@ public class AutoCompleteTextControl extends TextControl {
     public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
       String str = innerData == null ? null : ((String[]) innerData)[0];
       List suggestions = dataProvider.getSuggestions(str);
-
+      
+      ConfigurationContext confCtx = 
+        (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
+      
       ResponseBuilder responseBuilder = 
-        (ResponseBuilder) getConfiguration().getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
+        (ResponseBuilder) confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
       if (responseBuilder == null)
         responseBuilder = new DefaultResponseBuilder();
       

@@ -17,8 +17,8 @@
 package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.uilib.form.BeanFormWidget;
@@ -46,7 +46,7 @@ import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormR
  */
 public class DemoFormList extends TemplateBaseWidget {
 	private BeanFormListWidget formList;
-	private Map data = new LinkedHashMap();
+	private Map data = new LinkedMap();
 
 	//Plays the role of a sequence
 	private Long lastId;

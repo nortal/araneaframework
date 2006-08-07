@@ -16,8 +16,11 @@
 
 package org.araneaframework.core;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.log4j.Logger;
@@ -50,8 +53,8 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private Map actionListeners = Collections.synchronizedMap(new LinkedMap());
-  protected Map viewData = new HashMap();
+  private Map actionListeners;
+  private Map viewData;
 
 //*******************************************************************
   // PROTECTED CLASSES
@@ -90,8 +93,27 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     }
     
     public Map getData() {
-      return viewData;
+      return viewData == null ? new HashMap() : viewData;
     }    
+  }
+  
+  //*******************************************************************
+  // PRIVATE METHODS
+  //*******************************************************************
+  
+  
+  private synchronized Map getActionListeners() {
+    if (actionListeners == null)
+      actionListeners = new LinkedMap(1);
+      
+    return actionListeners;
+  }
+  
+  private synchronized Map getViewData() {
+    if (viewData == null)
+      viewData = new LinkedMap(1);
+      
+    return viewData;
   }
   
   //*******************************************************************
@@ -110,14 +132,32 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * Adds the ActionListener listener with the specified action id. 
    */
   public void addActionListener(Object actionId, ActionListener listener) {
-    actionListeners.put(actionId, listener);
+    List list = (List)getActionListeners().get(actionId);
+    
+    if (list == null) {
+      list = new ArrayList(1);
+    }
+    list.add(listener);
+    
+    getActionListeners().put(actionId, list);
   }
   
   /**
    * Removes the ActionListener listener from this component.
    */
   public void removeActionListener(ActionListener listener) {
-    actionListeners.values().remove(listener);
+    Iterator ite = (new HashMap(getActionListeners())).values().iterator();
+    while(ite.hasNext()) {
+      ((List)ite.next()).remove(listener);
+    }
+  }
+  
+  /**
+   * Clears all the ActionListeners with the specified eventId.
+   * @param eventId the id of the EventListeners.
+   */
+  public void clearActionlisteners(Object eventId) {
+    getActionListeners().remove(eventId);
   }
 
   /**
@@ -125,14 +165,14 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * removed with {@link #removeViewData(String)}.
    */
   public void putViewData(String key, Object customDataItem) {
-    viewData.put(key, customDataItem);
+    getViewData().put(key, customDataItem);
   }
 
   /**
    * Removes the custom data under key.
    */
   public void removeViewData(String key) {
-    viewData.remove(key);
+    getViewData().remove(key);
   }
   
   /**
@@ -293,16 +333,20 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    */
   protected void handleAction(InputData input, OutputData output) throws Exception {
     Object actionId = getActionId(input);    
-    ActionListener listener = (ActionListener)actionListeners.get(actionId);
     
-    log.debug("Delivering action '" + actionId +"' to service '" + getClass().getName() + "'");    
+    List listener = actionListeners == null ? null : (List)actionListeners.get(actionId);  
     
-    if (listener != null ) {
-      listener.processAction(actionId, input, output);
-    }
-    else {
-      log.warn("No listener found", new NoSuchActionListenerException(actionId));
+    log.debug("Delivering action '" + actionId +"' to service '" + getClass().getName() + "'");
+    
+    if (listener != null && listener.size() > 0) {
+      Iterator ite = (new ArrayList(listener)).iterator();
+      while(ite.hasNext()) {
+        ((ActionListener)ite.next()).processAction(actionId, input, output);
+      }
+      
       return;
     }
+    
+    log.warn("No listener found", new NoSuchActionListenerException(actionId));
   }
 }

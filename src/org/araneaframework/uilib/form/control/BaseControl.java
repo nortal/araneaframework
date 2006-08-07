@@ -22,9 +22,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.http.ServletInputData;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.util.ErrorUtil;
 
@@ -36,7 +36,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * 
  */
-public abstract class BaseControl extends StandardPresentationWidget implements java.io.Serializable, Control {
+public abstract class BaseControl extends BaseApplicationWidget implements java.io.Serializable, Control {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -50,7 +50,7 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
   
   protected String label;
 
-  private Set errors = new HashSet();
+  private Set errors;
   
   //*********************************************************************
   //* PUBLIC METHODS
@@ -98,10 +98,13 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
    * @return whether the control and it's read data is valid.
    */
   public boolean isValid() {
-    return errors.size() == 0;
+    return errors == null || errors.size() == 0;
   }
   
   public void addError(String error) {
+    if (errors == null)
+      errors = new HashSet();
+    
     errors.add(ErrorUtil.showError(error, getEnvironment()));
   }
 
@@ -109,7 +112,8 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
    * Clears all control errors.
    */
   public void clearErrors() {
-    errors.clear();   
+    if (errors != null)
+      errors.clear();   
   }
   
   /**
@@ -211,15 +215,15 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
     public void update(InputData input) {
       clearErrors();
       
-      super.update(input);
-      
-      dirty = false;
+      super.update(input);            
     }
     
     public void process()  {
       if (!dirty) return; 
       
       super.process();
+      
+      dirty = false;
     }
   }
 

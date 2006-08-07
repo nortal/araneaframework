@@ -126,6 +126,8 @@ public abstract class StringArrayRequestControl extends BaseControl {
    */
   protected void process() throws Exception {
     innerData = value != null ? toResponseParameters(value) : null;
+    
+    value = null;
   }
   
   //*********************************************************************

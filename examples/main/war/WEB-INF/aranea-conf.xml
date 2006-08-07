@@ -16,4 +16,13 @@
       </map>
     </property>
   </bean>  
+  
+  <bean id="customSessionFilters" singleton="false"
+    class="org.araneaframework.framework.filter.StandardFilterChainService">
+    <property name="filterChain">     
+      <list>
+        <ref bean="araneaSerializingAudit"/>     
+      </list>
+    </property>
+  </bean>  
 </beans>

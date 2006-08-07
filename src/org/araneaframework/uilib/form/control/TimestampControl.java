@@ -39,9 +39,9 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
   /**
    * The date-time format used by the element for parsing.
    */
-  protected String dateTimeFormat;
-  protected SimpleDateFormat currentSimpleDateTimeFormat;
-  
+  protected String dateTimeInputPattern;
+  protected String dateTimeOutputPattern;
+
   protected boolean confOverridden = false;
   
   //*********************************************************************
@@ -54,8 +54,8 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
    * @param dateTimeFormat date format pattern for {@link SimpleDateFormat}.
    */
   public TimestampControl(String dateTimeFormat, String defaultOutputFormat) {
-    this.dateTimeFormat = dateTimeFormat;
-    this.currentSimpleDateTimeFormat = new SimpleDateFormat(defaultOutputFormat);
+    this.dateTimeInputPattern = dateTimeFormat;
+    this.dateTimeOutputPattern = defaultOutputFormat;
   }  
 
   
@@ -70,10 +70,10 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
    * it fails.
    */
   protected Object fromRequest(String parameterValue) {
-  	ValidationUtil.ParsedDate result = ValidationUtil.parseDate(parameterValue, dateTimeFormat);
+  	ValidationUtil.ParsedDate result = ValidationUtil.parseDate(parameterValue, dateTimeInputPattern);
     
     if (result != null) {
-    	currentSimpleDateTimeFormat = result.getFormat();
+      dateTimeOutputPattern = result.getOutputPattern();
     	return new Timestamp(result.getDate().getTime());
     }
     
@@ -81,7 +81,7 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
         ErrorUtil.localizeAndFormat(
         UiLibMessages.WRONG_DATE_FORMAT, 
         ErrorUtil.localize(getLabel(), getEnvironment()),
-        dateTimeFormat,
+        dateTimeInputPattern,
         getEnvironment()));          
     
     return null;
@@ -91,7 +91,7 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
    * Formats the value using <code>dateTimeFormat</code>.
    */
   protected String toResponse(Object controlValue) {    
-    return currentSimpleDateTimeFormat.format((Timestamp) controlValue);
+    return new SimpleDateFormat(dateTimeOutputPattern).format((Timestamp) controlValue);
   }
   
   /**
@@ -103,17 +103,17 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
   }
   
   public class ViewModel extends EmptyStringNullableControl.ViewModel {
-    private SimpleDateFormat currentSimpleDateTimeFormat;
+    private String dateTimeOutputPattern;
     
     /**
      * Takes an outer class snapshot.     
      */
     public ViewModel() {
-      this.currentSimpleDateTimeFormat = TimestampControl.this.currentSimpleDateTimeFormat;
+      this.dateTimeOutputPattern = TimestampControl.this.dateTimeOutputPattern;
     }
     
     public SimpleDateFormat getCurrentSimpleDateTimeFormat() {
-      return this.currentSimpleDateTimeFormat;
+      return new SimpleDateFormat(dateTimeOutputPattern);
     }
   }
 }

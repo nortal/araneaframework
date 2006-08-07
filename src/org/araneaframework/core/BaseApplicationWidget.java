@@ -51,13 +51,13 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private Map eventListeners = Collections.synchronizedMap(new LinkedMap());
+  private Map eventListeners;
   private EventListener globalListener;
   
-  protected Map actionListeners = Collections.synchronizedMap(new LinkedMap());
+  private Map actionListeners;
   
-  private Map viewData = new HashMap();
-  private Map viewDataOnce = new HashMap();
+  private Map viewData;
+  private Map viewDataOnce;
 
   //*******************************************************************
   // CONSTRUCTORS
@@ -123,9 +123,12 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     private Map viewData;
     
     public ViewModel() {
-      viewData = new HashMap(BaseApplicationWidget.this.viewData);
-      viewData.putAll(viewDataOnce);
+      viewData = BaseApplicationWidget.this.viewData == null ? new HashMap() : new HashMap(BaseApplicationWidget.this.viewData);
+      if (viewDataOnce != null)
+        viewData.putAll(viewDataOnce);
     }
+    
+    
     
     public Map getChildren() {
       return BaseApplicationWidget.this.getChildren();
@@ -140,6 +143,34 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   // PRIVATE METHODS
   //*******************************************************************
 
+  private Map getEventListeners() {
+    if (eventListeners == null)
+      eventListeners = new LinkedMap(1);
+    
+    return eventListeners;
+  }
+  
+  private Map getActionListeners() {
+    if (actionListeners == null)
+      actionListeners = new LinkedMap(1);
+      
+    return actionListeners;
+  }
+  
+  private Map getViewData() {
+    if (viewData == null)
+      viewData = new LinkedMap(1);
+      
+    return viewData;
+  }
+  
+  private Map getViewDataOnce() {
+    if (viewDataOnce == null)
+      viewDataOnce = new LinkedMap(1);
+      
+    return viewDataOnce;
+  }
+  
   //*******************************************************************
   // PROTECTED METHODS
   //*******************************************************************
@@ -160,7 +191,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   }
 
   protected void update(InputData input) throws Exception {
-    viewDataOnce.clear();
+    if (viewDataOnce != null)
+      viewDataOnce.clear();
 
     handleUpdate(input);
 
@@ -236,7 +268,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    */
   protected void handleEvent(InputData input) throws Exception {
     Object eventId = getEventId(input);
-    List listener = (List)eventListeners.get(eventId);  
+    List listener = eventListeners == null ? null : (List)eventListeners.get(eventId);  
     
     log.debug("Delivering event '" + eventId +"' to widget '" + getClass().getName() + "'");
     
@@ -293,18 +325,21 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    */
   protected void handleAction(InputData input, OutputData output) throws Exception {
     Object actionId = getActionId(input);    
-    ActionListener listener = (ActionListener)actionListeners.get(actionId);
     
-    if (log.isDebugEnabled())
-      log.debug("Delivering action '" + actionId +"' to service '" + getClass().getName() + "'");    
+    List listener = actionListeners == null ? null : (List)actionListeners.get(actionId);  
     
-    if (listener != null ) {
-      listener.processAction(actionId, input, output);
-    }
-    else {
-      log.warn("No listener found", new NoSuchActionListenerException(actionId));
+    log.debug("Delivering action '" + actionId +"' to widget '" + getClass().getName() + "'");
+    
+    if (listener != null && listener.size() > 0) {
+      Iterator ite = (new ArrayList(listener)).iterator();
+      while(ite.hasNext()) {
+        ((ActionListener)ite.next()).processAction(actionId, input, output);
+      }
+      
       return;
     }
+    
+    log.warn("No listener found", new NoSuchActionListenerException(actionId));
   }
   
   /**
@@ -451,14 +486,14 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * @see #removeEventListener
    */
   public void addEventListener(Object eventId, EventListener listener) {
-    List list = (List)eventListeners.get(eventId);
+    List list = (List)getEventListeners().get(eventId);
     
     if (list == null) {
-      list = new ArrayList();
+      list = new ArrayList(1);
     }
     list.add(listener);
     
-    eventListeners.put(eventId, list);
+    getEventListeners().put(eventId, list);
   }
   
   /**
@@ -467,7 +502,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * @see #addEventListener
    */
   public void removeEventListener(EventListener listener) {
-    Iterator ite = (new HashMap(eventListeners)).values().iterator();
+    Iterator ite = (new HashMap(getEventListeners())).values().iterator();
     while(ite.hasNext()) {
       ((List)ite.next()).remove(listener);
     }
@@ -478,7 +513,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * @param eventId the id of the EventListeners.
    */
   public void clearEventlisteners(Object eventId) {
-    eventListeners.remove(eventId);
+    getEventListeners().remove(eventId);
   }
   
   /**
@@ -486,14 +521,14 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * available until explicitly removed with {@link #removeViewData(String)}.
    */
   public void putViewData(String key, Object customDataItem) {
-    viewData.put(key, customDataItem);
+    getViewData().put(key, customDataItem);
   }
 
   /**
    * Removes the custom data under key.
    */
   public void removeViewData(String key) {
-    viewData.remove(key);
+    getViewData().remove(key);
   }
 
   /**
@@ -501,7 +536,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * request only. 
    */
   public void putViewDataOnce(String key, Object customDataItem) {
-    viewDataOnce.put(key, customDataItem);
+    getViewDataOnce().put(key, customDataItem);
   }
   
   /**
@@ -515,14 +550,32 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * Adds the ActionListener listener with the specified action id. 
    */
   public void addActionListener(Object actionId, ActionListener listener) {
-    actionListeners.put(actionId, listener);
+    List list = (List)getActionListeners().get(actionId);
+    
+    if (list == null) {
+      list = new ArrayList(1);
+    }
+    list.add(listener);
+    
+    getActionListeners().put(actionId, list);
   }
   
   /**
    * Removes the ActionListener listener from this component.
    */
   public void removeActionListener(ActionListener listener) {
-    actionListeners.values().remove(listener);
+    Iterator ite = (new HashMap(getActionListeners())).values().iterator();
+    while(ite.hasNext()) {
+      ((List)ite.next()).remove(listener);
+    }
+  }
+  
+  /**
+   * Clears all the ActionListeners with the specified eventId.
+   * @param eventId the id of the EventListeners.
+   */
+  public void clearActionListeners(Object eventId) {
+    getActionListeners().remove(eventId);
   }
 
 }
