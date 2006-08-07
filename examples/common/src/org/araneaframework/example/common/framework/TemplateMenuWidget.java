@@ -16,9 +16,11 @@
 
 package org.araneaframework.example.common.framework;
 
+import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 import org.araneaframework.uilib.core.MenuItem;
@@ -36,6 +38,10 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
     menu = buildMenu();
     addEventListener(TemplateMenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
     putViewData(TemplateMenuContext.MENU_VIEWDATA_KEY, menu);
+  }
+  
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), TemplateMenuContext.class, this);
   }
   
   // MENU SELECTION LISTENER
@@ -57,9 +63,25 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
   }
   
   public String getFlowClassName() {
-    return ((CallFrame) callStack.getFirst()).getWidget().getClass().getName();
-  }
+    String result = null;
 
+    try {
+      result = ((CallFrame) callStack.getFirst()).getWidget().getClass().getName();
+    } catch (Exception e) {}
+
+    return result;
+  }
+  
+  public String getFlowViewSelector() {
+    String result = null;
+
+    try {
+      result = ((ViewSelectorAware) ((CallFrame) callStack.getFirst()).getWidget()).getViewSelector();
+    } catch (Exception e) {}
+
+    return result;
+  }
+  
   /**
    * Method that must be implemented to build the menu.
    * @return built menu.
