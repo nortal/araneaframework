@@ -89,11 +89,7 @@ function AraneaPage() {
   }
 }
 
-AraneaPage.prototype.submit = function(systemForm, parameters) {
-  for (var property in parameters) {
-    // let some property provide submit functionality
-  	systemForm[property].value=property.value;
-  }
+AraneaPage.prototype.submit = function(element, submitter, scope) {
 }
 
 // new aranea page
