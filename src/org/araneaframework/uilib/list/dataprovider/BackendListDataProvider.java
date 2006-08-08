@@ -29,6 +29,8 @@ import org.araneaframework.backend.list.model.ListQuery;
  * 
  */
 public abstract class BackendListDataProvider implements ListDataProvider {
+	
+	public static final boolean USE_CACHE_BY_DEFAULT = false; 
 
 	protected ComparatorExpression orderExpr;
 	protected Expression filterExpr;
@@ -39,17 +41,28 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 	protected ListItemsData lastItemRange;
 
 	protected boolean forceReload = false;
-	protected boolean useCache = false;
+	protected boolean useCache = USE_CACHE_BY_DEFAULT;
 
+	/**
+	 * Instantiates the backend list data provider and sets whether to use caching.
+	 * 
+	 * @param useCache whether to use caching.
+	 */
 	public BackendListDataProvider(boolean useCache) {
 		this.useCache = useCache;
+	}
+	/**
+	 * Instantiates the backend list data provider with cache disabled.
+	 */
+	public BackendListDataProvider() {
+		// empty		
 	}
 
 	public void init() throws Exception {
 		// for subclasses to implement if needed
 	}
 
-	public void destroy() {
+	public void destroy() throws Exception {
 		// for subclasses to implement if needed
 	}
 
