@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -540,11 +541,16 @@ public class ListWidget extends StandardPresentationWidget {
 			this.listDataProvider.setOrderExpression(orderExpr);			
 		}
 	}
+	
+	/**
+	 * Forces the list data provider to refresh the data.
+	 */
+	public void forceRefresh() throws Exception {
+		this.listDataProvider.refreshData();		
+	}
 
 	/**
 	 * Refreshes the current item range, reloading the shown items.
-	 * 
-	 * @throws Exception if item range refreshing doesn't succeed.
 	 */
 	public void refreshCurrentItemRange() throws Exception {
 		log.debug("Refreshing current item range");

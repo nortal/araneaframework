@@ -35,15 +35,11 @@ public interface ListDataProvider extends Serializable {
 
 	/**
 	 * This method should initialize the data provider, getting all needed handles and resources.
-	 * 
-	 * @throws Exception if initialization does not succeed.
 	 */
 	public void init() throws Exception;
 
 	/**
 	 * This method should deinitialize data provider, releasing all taken handles and resources.
-	 * 
-	 * @throws Exception if destroying does not succeed. 
 	 */
 	public void destroy() throws Exception;
 
@@ -65,8 +61,6 @@ public interface ListDataProvider extends Serializable {
 	/**
 	 * This method should synchronize the list data provider data with thge storage, if any
 	 * synchronization is nessesary.
-	 * 
-	 * @throws Exception if refreshing does not succeed.
 	 */
 	public void refreshData() throws Exception;
 
@@ -76,8 +70,6 @@ public interface ListDataProvider extends Serializable {
 	 * @param startIdx the inclusive 0-based starting index of the item range.
 	 * @param count the amount of items to return.
 	 * @return a range of items from the list data provider.
-	 * 
-	 * @throws Exception item range retrieval does not succeed.
 	 */
 	public ListItemsData getItemRange(Long start, Long count) throws Exception;
 
@@ -85,8 +77,6 @@ public interface ListDataProvider extends Serializable {
 	 * This method should return the total item count in the list data.
 	 * 
 	 * @return the total item count in the list data.
-	 * 
-	 * @throws Exception item counting does not succeed.
 	 */
 	public Long getItemCount() throws Exception;
 
@@ -95,8 +85,6 @@ public interface ListDataProvider extends Serializable {
 	 * 
 	 * @param index the index of item to be returned.
 	 * @return an individual item from the list data.
-	 * 
-	 * @throws Exception item retrieval does not succeed.
 	 */
 	public Object getItem(Long index) throws Exception;
 
@@ -104,8 +92,6 @@ public interface ListDataProvider extends Serializable {
 	 * This method should return all items from the list data.
 	 * 
 	 * @return all items from the list data.
-	 * 
-	 * @throws Exception all items retrieval does not succeed.
 	 */
 	public ListItemsData getAllItems() throws Exception;
 }
