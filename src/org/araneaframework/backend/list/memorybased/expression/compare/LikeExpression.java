@@ -23,7 +23,7 @@ import org.araneaframework.backend.list.memorybased.expression.StringExpression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
-import org.araneaframework.uilib.list.util.like.LikeUtil;
+import org.araneaframework.uilib.list.util.like.RegexpLikeUtil;
 
 public class LikeExpression implements CompositeExpression, StringExpression {
 	
@@ -64,7 +64,7 @@ public class LikeExpression implements CompositeExpression, StringExpression {
 
 	public Object evaluate(VariableResolver resolver)
 	throws ExpressionEvaluationException {
-		return new Boolean(LikeUtil.isLike(convert(this.expr.evaluate(resolver)),
+		return new Boolean(RegexpLikeUtil.isLike(convert(this.expr.evaluate(resolver)),
 				convert(this.mask.getValue()), this.ignoreCase, this.configuration));
 	}
 	

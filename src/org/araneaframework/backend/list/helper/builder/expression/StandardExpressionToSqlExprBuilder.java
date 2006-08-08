@@ -16,9 +16,8 @@
 
 package org.araneaframework.backend.list.helper.builder.expression;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.araneaframework.backend.list.SqlExpression;
+import org.araneaframework.backend.list.SqlLikeUtil;
 import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilder;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -56,12 +55,11 @@ import org.araneaframework.backend.list.sqlexpr.logical.SqlOrExpression;
 import org.araneaframework.backend.list.sqlexpr.procedure.SqlProcedureExpression;
 import org.araneaframework.backend.list.sqlexpr.string.SqlConcatenationExpression;
 import org.araneaframework.backend.list.sqlexpr.string.SqlUpperExpression;
-import org.araneaframework.uilib.list.util.like.AnyStringWildcardHandler;
-import org.araneaframework.uilib.list.util.like.LikeConfiguration;
-import org.araneaframework.uilib.list.util.like.LikeUtil;
 
 public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprBuilder {
-	
+
+	public static final String ESCAPE_CHAR = "\\";		
+
 	protected VariableResolver mapper;
 	
 	protected ValueConverter converter; 
@@ -189,63 +187,18 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 	// String	
 	
 	class LikeTranslator extends CompositeExprToSqlExprTranslator {
-		private static final String ANY_STRING_WILDCARD = "%";
-		private static final String ANY_CHAR_WILDCARD = "_";
-		private static final String ESCAPE_CHAR = "\\";
-		private boolean escape = false;
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 			LikeExpression like = (LikeExpression) expr;			
-			SqlExpression var = sqlChildren[0];
+			SqlExpression var = sqlChildren[0];	
+			String value = (String) convertValue(like.getMask());
 			SqlExpression mask = new SqlValueExpression(
-					convertMask((String) convertValue(like.getMask()), like.getConfiguration()));
+					SqlLikeUtil.convertMask(value, like.getConfiguration(), ESCAPE_CHAR));
 			if (like.getIgnoreCase()) {
 				var = new SqlUpperExpression(var);
 				mask = new SqlUpperExpression(mask);
 			}
-						
 			SqlExpression sqlLike = new SqlLikeExpression(var, mask);
-			return escape ? new SqlEscapeExpression(sqlLike, ESCAPE_CHAR) : sqlLike;
-		}
-		private String convertMask(String mask, LikeConfiguration config) {
-			// Escape
-			if (!ArrayUtils.contains(config.getAnyStringWildcards(), ANY_STRING_WILDCARD)) {				
-				if (!escape) {
-					mask = StringUtils.replace(mask, ESCAPE_CHAR, ESCAPE_CHAR + ESCAPE_CHAR);				
-				}
-				mask = StringUtils.replace(mask, ANY_STRING_WILDCARD, ESCAPE_CHAR + ANY_STRING_WILDCARD);
-				escape = true;
-			}
-			if (!ArrayUtils.contains(config.getAnyCharWildcards(), ANY_CHAR_WILDCARD)) {
-				if (!escape) {
-					mask = StringUtils.replace(mask, ESCAPE_CHAR, ESCAPE_CHAR + ESCAPE_CHAR);				
-				}
-				mask = StringUtils.replace(mask, ANY_CHAR_WILDCARD, ESCAPE_CHAR + ANY_CHAR_WILDCARD);
-				escape = true;
-			}
-			
-			// Convert wildcards
-			mask = LikeUtil.replace(mask, config.getAnyStringWildcards(), ANY_STRING_WILDCARD);
-			mask = LikeUtil.replace(mask, config.getAnyCharWildcards(), ANY_CHAR_WILDCARD);
-			
-			boolean startsWith = mask.startsWith(ANY_STRING_WILDCARD);
-			boolean endsWith = mask.endsWith(ANY_STRING_WILDCARD);
-			
-			AnyStringWildcardHandler handler = config.createAnyStringWildcardHandler();
-			handler.setStartsWith(startsWith);
-			handler.setEndsWith(endsWith);
-			if (!startsWith && handler.shouldStartWith()) {
-				mask = ANY_STRING_WILDCARD + mask;
-			}
-			if (startsWith && !handler.shouldStartWith()) {
-				mask = mask.substring(ANY_STRING_WILDCARD.length());
-			}
-			if (!endsWith && handler.shouldEndWith()) {
-				mask = mask + ANY_STRING_WILDCARD;
-			}
-			if (endsWith && !handler.shouldEndWith()) {
-				mask = mask.substring(0, mask.length() - ANY_STRING_WILDCARD.length());
-			}
-			return mask;
+			return new SqlEscapeExpression(sqlLike, ESCAPE_CHAR);
 		}
 	}
 	
