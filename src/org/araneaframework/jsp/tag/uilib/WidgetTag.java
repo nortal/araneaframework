@@ -22,6 +22,7 @@ import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.tag.CustomXMLTagInterface;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
@@ -40,7 +41,7 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
              <li><i>widget</i> - UiLib widget view model.
            </ul> "
  */
-public class WidgetTag extends BaseTag {
+public class WidgetTag extends BaseTag implements CustomXMLTagInterface {
   /** Widget full dot-separated identifier starting from container (e.g. component). */
   public final static String FULL_ID_KEY = "widgetFullId";
   /** Widget full dot-separated identifier with added unique container identifier prefix (e.g. component id). */
@@ -75,11 +76,17 @@ public class WidgetTag extends BaseTag {
     addContextEntry(FULL_ID_KEY, fullId);
     addContextEntry(SCOPED_FULL_ID_KEY, scopedFullId);    
     addContextEntry(VIEW_MODEL_KEY, viewModel);
-    writeJavascript(out);
+    writeWidgetStartTag(out);
 
     // Continue
     return EVAL_BODY_INCLUDE;    
   }
+  
+  protected int doEndTag(Writer out) throws Exception {
+    int r = super.doEndTag(out);
+    writeWidgetEndTag(out);
+    return r;
+  }  
 
   /* ***********************************************************************************
    * Tag attributes
@@ -96,17 +103,24 @@ public class WidgetTag extends BaseTag {
   }
 
   /* ***********************************************************************************
-   * Writes out WidgetContext javascript
+   * Writes out widget start and end tags.
    * ***********************************************************************************/
+  protected void writeWidgetStartTag(Writer out) throws Exception {
+    JspUtil.writeStartTag_SS(out, getTagNameWithNS());
+  }
+  
+  protected void writeWidgetEndTag(Writer out) throws Exception {
+    JspUtil.writeEndTag_SS(out, getTagNameWithNS());
+  }
+  
+  /* ***********************************************************************************
+   * CustomXMLTagInterface.
+   * ***********************************************************************************/
+  public String getTagName() {
+    return "w";
+  }
 
-  /**
-   * Write javascript that accompanies this tag.
-   */
-  protected void writeJavascript(Writer out) throws Exception{
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiWidgetContext(");
-    JspUtil.writeScriptString(out, scopedFullId);
-    out.write(");\n");
-    JspUtil.writeEndTag(out, "script");
+  public String getTagNameWithNS() {
+    return new StringBuffer(getHtmlNS()).append(':').append(getTagName()).toString();
   }
 }

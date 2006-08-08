@@ -49,9 +49,13 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
+    JspUtil.writeAttribute(out, "arn:eventId", eventId);
+    JspUtil.writeAttribute(out, "arn:eventParam", eventParam);
     if (disabled != null) 
-      out.write(" DISABLED ");
-    if (eventId != null)
+      out.write(" disabled ");
+    if (eventId != null) {
+      JspWidgetCallUtil.writeTestSubmitEvent(out);
+      /*
       JspWidgetCallUtil.writeEventAttributeForEvent(
           pageContext,
           out, 
@@ -62,7 +66,8 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
           eventParam, 
           onClickPrecondition,
           updateRegionNames,
-          false);
+          false);*/
+    }
     if (labelId != null && renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)) {
       JspUtil.writeAttribute(out, "value", localizedLabel);      
     }

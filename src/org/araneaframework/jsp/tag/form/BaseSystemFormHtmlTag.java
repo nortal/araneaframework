@@ -57,7 +57,6 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     addContextEntry(ID_KEY, derivedId);
     addContextEntry(SYSTEM_FORM_ID_KEY, derivedId);    
 
-    out.write("<arn:systemForm>");
     // Write form 
     JspUtil.writeOpenStartTag(out, "form");
     JspUtil.writeAttribute(out, "id", derivedId);
@@ -68,6 +67,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     JspUtil.writeAttribute(out, "action", ((HttpServletResponse)pageContext.getResponse()).encodeURL(getFormAction()));
     JspUtil.writeAttribute(out, "style", "margin: 0px");
     JspUtil.writeAttribute(out, "onsubmit", "javascript:return false");
+    JspUtil.writeAttribute(out, getHtmlNS()+":"+"systemForm", "true");
     JspUtil.writeCloseStartTag(out);
 
     // Script
@@ -89,7 +89,6 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
 
   protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "form");
-    out.write("</arn:systemForm>");
 
     // Continue
     super.doEndTag(out);

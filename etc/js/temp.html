@@ -1,3 +1,7 @@
+<html><head>
+<meta content="application/xhtml+xml; charset=UTF-8" http-equiv="Content-Type"/>
+<title>Aranea Template Application Login Screen</title></head>
+<script>
 function AraneaStore() {
   var objects = new Array();
 
@@ -95,18 +99,20 @@ AraneaPage.prototype.submit = function(element, submitter) {
 }
 
 AraneaPage.prototype.standardSubmit = function(element) {
+/*
   var w = window.open('', 'debug', 'width=1000,height=800,scrollbars=yes');
   w.document.write(element);
-  /*
+
   w.document.write('<br />');
   for (var i in element) {
   	w.document.write("property '" + i+ "'=" + element[i]);
 	w.document.write('<br />');
   }
-  */
+
   w.document.write("----------TRAVERSING---------------------------------");
   w.document.write('<br />');
-  
+  */
+/*
 	var i = 0;
   
   var pNode = element.parentNode;
@@ -116,28 +122,52 @@ AraneaPage.prototype.standardSubmit = function(element) {
   	w.document.write('<br />');
   } 
   
-  w.document.write('searching surrounding systemform');
+  w.document.write('searching surrounding systemform');*/
   var t = new AraneaTraverser();
   var systemForm = t.findSurroundingSystemForm(element);
   
-  w.document.write('teh systemform ' + systemForm+  '<br />');
+  /*w.document.write('teh systemform ' + systemForm +  '<br />');
   
   for (var i in systemForm) {
   	w.document.write("property '" + i+ "'=" + systemForm[i]);
 	w.document.write('<br />');
-  }
+  } */
 }
   
 function AraneaTraverser() {
   this.findSurroundingSystemForm = function(element) {
     if (element.getAttributeNS("http://www.araneaframework.org/", "systemForm"))
 	  return element;
-	  
-	var pNode = element.parentNode;
-    while (pNode && pNode.length > 0) {
-      if (pNode.getAttributeNS("http://www.araneaframework.org/", "systemForm"))
-	    return pNode;
 
+    var pNode = element.parentNode;
+    while (pNode) {
+      if (pNode.tagName == 'FORM') {
+	//alert(pNode["systemForm"]);
+
+         var w = window.open('', 'aaaa', 'width=1000,height=800,scrollbars=yes');
+         for (var z in pNode) {
+   		w.document.write(z + ' = ' + pNode[z] + '<br />');
+		if (typeof pNode[z] == 'function') {
+		    try {
+ 			if (z != 'submit')
+				w.document.write('executed ' + z + '() = ' + pNode[z]() + '<br />');
+                    } catch (e) {}
+ 		}
+         }
+
+	 for (var a in pNode.attributes) {
+		w.document.write(pNode[a]);
+		}
+	  w.document.write('dom dom dom dam dam duuh' + '<br />');
+	  w.document.write("pNode['arn:systemForm]'=" + pNode['arn:systemForm']+ '<br />');
+	  w.document.write("pNode['enctype']=" + pNode['enctype']+ '<br />');
+	  w.document.write("pNode['name']=" + pNode['name']+ '<br />');
+	  w.document.write("pNode['method']=" + pNode['method']+ '<br />');
+	  w.document.write("pNode['action']=" + pNode['action']+ '<br />');
+
+         alert(pNode.hasAttribute("arn-systemForm"));
+      }
+      
   	  pNode = pNode.parentNode;
     }
 	return null;
@@ -149,64 +179,26 @@ function AraneaTraverser() {
 		eventId, 
 		eventParam, */ 
 
-
-// OLD
-
-/*
-
-function uiStandardSubmitEvent(systemForm, widgetId, eventId, eventParam, call, precondition) {
-	if (!pageActive) return false;
-	
-	if (precondition && !precondition()) return false;
-	
-	standardParams = getStandardParameterObject(systemForm, widgetId, eventId, eventParam);
-
-	call();
-	
-	return false;
-}
-
-function araneaSubmitEvent(systemForm, widgetId, eventId, eventParam, updateRegions) {
-	systemForm.widgetEventPath.value = widgetId;
-	systemForm.widgetEventHandler.value = eventId;	
-	systemForm.widgetEventParameter.value = eventParam;
-	uiSystemFormSubmit(systemForm, updateRegions);
-}
-
-function araEvent(standardParams, updateRegions) {
-	standardParams.systemForm.widgetEventPath.value = standardParams.widgetId;
-	standardParams.systemForm.widgetEventHandler.value = standardParams.eventId;
-	standardParams.systemForm.widgetEventParameter.value = standardParams.eventParam;
-	uiSystemFormSubmit(standardParams.systemForm, updateRegions);
-}
-
-function getStandardParameterObject(systemForm, widgetId, eventId, eventParam) {
-  result = new Object();
-  result.systemForm = systemForm;
-  result.widgetId = widgetId;
-  result.eventId = eventId;
-  result.eventParam = eventParam;
-  return result;
-}
-
-
-function uiStandardSubmitFormEvent(systemForm, formId, elementId, eventId, eventParam, validate, call, precondition) {	
-	if (!pageActive) return false;
-	
-	if (validate) {
-	  var valid = uiValidateForm(systemForm, formId);
-	  if (!valid) return false;
-	}
-
-	if(precondition && !precondition()) return false;
-	
-	standardParams = getStandardParameterObject(systemForm, formId+"."+elementId, eventId, eventParam);
-
-	call();
-	
-	return false;	
-}*/
-
-
 // new aranea page
 _ap = new AraneaPage();
+
+
+</script>
+<body><form id="system_form_0" name="system_form_0" method="post" accept-charset="UTF-8" action="/mainExample/main" style="margin: 0px" onsubmit="javascript:return false" arn-systemForm="true">
+<input name="topServiceId" type="hidden" value="application"/>
+<input name="transactionId" type="hidden" value="-5358051433540041611"/>
+<input name="threadServiceId" type="hidden" value="mainThread"/>
+<input name="widgetEventHandler" type="hidden" value=""/>
+<input name="widgetEventPath" type="hidden" value=""/>
+<input name="widgetEventParameter" type="hidden" value=""/>
+<div id="outer"><div id="middle"><div id="inner"><div class="login"><div id="login-logo"><img class="aranea-image" src="http://localhost:2000/mainExample/main/fileimporter/gfx/logo_aranea_login.jpg" border="0"/></div><div class="a"><arn:f><span id="fe-span-0">
+<span><label for="r.f.loginForm.username">User:</label></span>
+</span><arn:fe><span id="fe-span-1">
+<input id="r.f.loginForm.username" name="r.f.loginForm.username" class="aranea-text usr" type="text" label="User" maxLength="null"/></span></arn:fe><span id="fe-span-2">
+<span><label for="r.f.loginForm.password">Password:</label></span>
+
+</span><arn:fe><span id="fe-span-3">
+<input id="r.f.loginForm.password" name="r.f.loginForm.password" class="aranea-text pwd" type="password" label="Password" maxLength="null"/></span></arn:fe><div class="clear1">&nbsp;</div><div class="actions"><button class="aranea-button" arn:eventId="login" onclick="_ap.submit(this, _ap.standardSubmit);">Login</button>
+<button id="bypassButton" class="aranea-button" arn:eventId="bypass" onclick="_ap.submit(this, _ap.standardSubmit);">Bypass login</button>
+</div><div class="clear1">&nbsp;</div></arn:f></div></div></div></div></div></form>
+</body></html>

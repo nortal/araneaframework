@@ -23,6 +23,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
+import org.araneaframework.jsp.tag.CustomXMLTagInterface;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
@@ -40,7 +41,7 @@ import org.araneaframework.uilib.form.FormWidget;
  * 
  * @author Oleg Mürk
  */
-public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface {
+public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface, CustomXMLTagInterface {
 	public final static String COUNTER_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormElementBaseTag.COUNTER";
 
 	protected String contextWidgetId;
@@ -114,6 +115,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		}
 		if (accessKey != null && accessKey.length() != 1) accessKey = null;
 
+		JspUtil.writeStartTag_SS(out, getTagNameWithNS());
 		if (hasElementContextSpan)
             writeFormElementContextOpen(out, formScopedFullId, derivedId, true, pageContext);
 		else
@@ -131,6 +133,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	protected int doEndTag(Writer out) throws Exception {
 		if (hasElementContextSpan) 
 			writeFormElementContextClose(out);
+		JspUtil.writeEndTag_SS(out, getTagNameWithNS());
 		return super.doEndTag(out);
 	}
 
@@ -277,6 +280,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
 		// Write out form element context: sets keydown event for this element and writes out
 		// hidden element indicating that form element is present in the request.
+		/*
 		JspUtil.writeStartTag_SS(out, "script");
 		if (!isPresent)
 			out.write("uiFormElementContext_4(");
@@ -292,6 +296,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		}
 		out.write(");");
 		JspUtil.writeEndTag(out, "script");
+		*/
 	}
 
 	/**
@@ -383,5 +388,14 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 				validate, 
 				precondition, 
 				null);
+	}
+
+
+	public String getTagName() {
+		return "fe";
+	}
+
+	public String getTagNameWithNS() {
+		return new StringBuffer(getHtmlNS()).append(':').append(getTagName()).toString();
 	}
 }

@@ -44,6 +44,12 @@ public abstract class JspWidgetCallUtil {
     writeEventAttributeForEvent(pageContext, out, attributeName, systemFormId, widgetId, eventId, eventParam, "return true", updateRegions);
   }
 
+  public static void writeTestSubmitEvent(Writer out) throws IOException, JspException {
+    JspUtil.writeOpenAttribute(out, "onclick");
+    out.write("_ap.submit(this, _ap.standardSubmit);");
+    JspUtil.writeCloseAttribute(out);
+  }
+  
   /**
    * Write standard event handling attribute which submits widget event with given id to the system form.
    * @throws JspException 

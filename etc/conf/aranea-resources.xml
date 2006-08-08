@@ -27,9 +27,9 @@
 		<file path="js/aranea.js"/>
         <file path="js/jsp-ui-events.js"/>
         
-        <file path="js/scriptaculous/prototype.js"/>
+<!--        <file path="js/scriptaculous/prototype.js"/>
 		<file path="js/scriptaculous/controls.js"/>
-		<file path="js/scriptaculous/effects.js"/>
+		<file path="js/scriptaculous/effects.js"/> -->
 		
 		<file path="js/calendar/calendar.js"/>
 		<file path="js/calendar/calendar-en.js"/>

@@ -162,7 +162,15 @@ public class JspUtil {
     out.write(">");
     out.write("\n");
   }
+  
+  public static void writeStartTag(Writer out, String namespace, String tag) throws IOException {
+    writeStartTag(out, namespace+":"+tag);
+  }
     
+  public static void writeStartTag_SS(Writer out, String namespace, String tag) throws IOException {
+    writeStartTag_SS(out, namespace+":"+tag);
+  }
+  
   /**
    * Writes end tag. Space sensitive.
    */

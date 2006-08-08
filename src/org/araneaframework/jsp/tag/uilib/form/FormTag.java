@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.uilib.form;
 import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.FormWidget;
 
 
@@ -65,20 +64,7 @@ public class FormTag extends WidgetTag {
 	  return EVAL_BODY_INCLUDE;		
 	}
 
-   
-  /**
-   * Write javascript that accompanies this tag.
-   * Validation-related stuff mostly.
-   * @author Konstantin Tretyakov
-   */
-  protected void writeJavascript(Writer out) throws Exception{
-    // Append a property to the global uiSystemFormProperties object
-    // this property's property "validator" will be our form's validator
-    JspUtil.writeStartTag_SS(out, "script");
-    out.write("uiFormContext(");
-    JspUtil.writeScriptString(out, fullId);
-    out.write(");");
-    JspUtil.writeEndTag_SS(out, "script");
-    out.write('\n');
-  }
+	public String getTagName() {
+		return "f";
+	}
 }

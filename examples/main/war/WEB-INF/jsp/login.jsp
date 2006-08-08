@@ -16,7 +16,8 @@
         	widget in question. Note that all widget-related tags inside of this tag will assume that the widget in question
         	is their parent or ancestor (that is all the identifier pathes will start from it). -->
             <ui:widgetContext>
-                <html>
+	        		<![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">]]>
+                <html xmlns:arn="http://www.araneaframework.org/">
                     <head>
                         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                         <!-- Scripts -->

@@ -1,20 +1,20 @@
-BODY { font-size: 70%; font-family: Arial, Helvetica, sans-serif; }
-BODY, HTML { border: none; padding: 0; margin: 0; height: 100%; }
-INPUT, SELECT, TEXTAREA, BUTTON, TH, TD { font-family: Arial, Helvetica, sans-serif; color: #545454; font-size: 100%; }
+body { font-size: 70%; font-family: Arial, Helvetica, sans-serif; }
+body, html { border: none; padding: 0; margin: 0; height: 100%; }
+input, select, textarea, button, th, td { font-family: Arial, Helvetica, sans-serif; color: #545454; font-size: 100%; }
 
-A { text-decoration: none; color: #f61901; }
-A:hover { text-decoration: underline; color: #f61901; }
+a { text-decoration: none; color: #f61901; }
+a:hover { text-decoration: underline; color: #f61901; }
 
-IMG { border: 0; }
-FORM { padding: 0; margin: 0; }
-TABLE { border-collapse: collapse; border-spacing: 0; }
+img { border: 0; }
+form { padding: 0; margin: 0; }
+table { border-collapse: collapse; border-spacing: 0; }
 
-P { line-height: 16px; margin: 0 0 1em 0; }
-IMG.calendar { margin-top: -2px; }
-SPAN.cal { white-space: nowrap !important; }
+p { line-height: 16px; margin: 0 0 1em 0; }
+img.calendar { margin-top: -2px; }
+span.cal { white-space: nowrap !important; }
 
-H1 { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: normal; padding: 0; margin: 0 0 1em 0; color: #f61901; }
-H2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; padding: 0; margin: 1em 0; }
+h1 { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: normal; padding: 0; margin: 0 0 1em 0; color: #f61901; }
+h2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; padding: 0; margin: 1em 0; }
 
 /* Aligns */
 
@@ -87,10 +87,10 @@ H2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bo
 .clear2 { line-height: 0px; font-size: 1px; clear: both !important; height: 10px !important; float: none !important; }
 
 #logo { padding: 0 0 10px 0; border-bottom: 2px solid #333; display: block; margin-bottom: 10px; }
-#logo IMG { width: 150px; }
+#logo img { width: 150px; }
 
 #footer { padding: 5px 0 0 0; border-top: 1px solid #333; margin-top: 10px; font-size: 10px; color: #828282; text-align: center; }
-#footer A { color: #828282; }
-#footer I { padding: 0 5px; color: #c0c0c0; }
+#footer a { color: #828282; }
+#footer i { padding: 0 5px; color: #c0c0c0; }
 
-#tooltip, #menu1, DIV.stripe1, #leftcol, .actions, TR.filter { display: none; }
+#tooltip, #menu1, div.stripe1, #leftcol, .actions, TR.filter { display: none; }

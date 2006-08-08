@@ -1,20 +1,20 @@
-BODY { font-size: 70%; font-family: Arial, Helvetica, sans-serif; }
-BODY, HTML { border: none; padding: 0; margin: 0; height: 100%; }
-INPUT, SELECT, TEXTAREA, BUTTON, TH, TD { font-family: Arial, Helvetica, sans-serif; color: #545454; font-size: 100%; }
+body { font-size: 70%; font-family: Arial, Helvetica, sans-serif; }
+body, html { border: none; padding: 0; margin: 0; height: 100%; }
+input, select, textarea, button, th, td { font-family: Arial, Helvetica, sans-serif; color: #545454; font-size: 100%; }
 
-A { text-decoration: none; color: #f61901; }
-A:hover { text-decoration: underline; color: #f61901; }
+a { text-decoration: none; color: #f61901; }
+a:hover { text-decoration: underline; color: #f61901; }
 
-IMG { border: 0; }
-FORM { padding: 0; margin: 0; }
-TABLE { border-collapse: collapse; border-spacing: 0; }
+img { border: 0; }
+form { padding: 0; margin: 0; }
+table { border-collapse: collapse; border-spacing: 0; }
 
-P { line-height: 16px; margin: 0 0 1em 0; }
-IMG.calendar { margin-top: -2px; }
-SPAN.cal { white-space: nowrap !important; }
+p { line-height: 16px; margin: 0 0 1em 0; }
+img.calendar { margin-top: -2px; }
+span.cal { white-space: nowrap !important; }
 
-H1 { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: normal; padding: 0; margin: 0 0 1em 0; color: #f61901; }
-H2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; padding: 0; margin: 1em 0; }
+h1 { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: normal; padding: 0; margin: 0 0 1em 0; color: #f61901; }
+h2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; padding: 0; margin: 1em 0; }
 
 /* Aligns */
 
@@ -77,7 +77,7 @@ H2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bo
 .nowrap { white-space: nowrap !important; }
 .wrap { white-space: wrap; }
 .wrap-centered { vertical-align: middle !important; text-align: center !important; }
-.nowrap TD { white-space: nowrap; }
+.nowrap td { white-space: nowrap; }
 .hidden { display: none; }
 
 .nopadding { padding: 0 !important; }
@@ -90,93 +90,93 @@ H2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bo
 
 /* Data table */
 
-TABLE.data { margin: 0 0 0.8em 0; clear: both; width: 100%; }
-TABLE.data TH { padding: 4px 5px; text-align: left; vertical-align: bottom; font-family: Tahoma; font-weight: normal; border: 1px solid #e4e4e4; background: #FFF url(../gfx/i08.gif) 0 0 no-repeat; }
-TABLE.data TH A { text-decoration: none; color: #545454; border-bottom: 1px solid #bbb; }
-TABLE.data TH A:hover { text-decoration: none; color: #f61901; border-bottom: 1px solid #f61901; }
-TABLE.data TD { padding: 5px 5px 5px 6px; text-align: left; vertical-align: top; border: solid #e4e4e4; border-width: 1px 0; background: url(../gfx/i12.gif); }
-TABLE.data TD A { color: #545454; text-decoration: underline; }
-TABLE.data TD.actions { padding: 3px 0 1px 2px; white-space: nowrap; line-height: 0px; }
-TABLE.data TD.actions INPUT,
-TABLE.data TD.actions BUTTON { margin: 0 2px 2px 0; padding: 0 2px; overflow: visible; font-size: 90%; border: 1px solid; border-color: #cbcbcb #808080 #808080 #cbcbcb; cursor: pointer; background: #FFF url(../gfx/i11.gif); }
-TABLE.data TD.actions IMG { margin: 0 2px 2px 0; vertical-align: top; }
-TABLE.data TD.inpt { font-size: 100%; }
-TABLE.data TD.inpt SELECT { margin-top: 1px; }
-TABLE.data TH.inpt { padding: 0 0 0 1px !important; }
-TABLE.data TD.inpt { padding: 2px 1px 1px 3px !important; }
-TABLE.data TD.inpt * { vertical-align: top; }
-TABLE.data .ico { margin: 0 1px 0 0; }
-TABLE.data TR.filter TD { background: #eeeeee url(../gfx/i09.gif) repeat-x; border: 1px solid #e4e4e4; }
-TABLE.data TR.filter TD IMG { vertical-align: middle; }
-TABLE.data TR.filter TD.actions INPUT { font-family: Tahoma, Arial, Helvetica, sans-serif; padding: 2px 5px 1px 5px; }
-TABLE.data TR.filter .min { width: 40px; }
-TABLE.data TR.total-first TD { font-weight: bold; }
-TABLE.data TR.total TD { font-weight: bold; }
-TABLE.data TR.even TD { background: url(../gfx/i13.gif); }
-TABLE.data TR.total-first TD { border-top: 2px solid #cbd0c3 !important; }
+table.data { margin: 0 0 0.8em 0; clear: both; width: 100%; }
+table.data th { padding: 4px 5px; text-align: left; vertical-align: bottom; font-family: Tahoma; font-weight: normal; border: 1px solid #e4e4e4; background: #FFF url(../gfx/i08.gif) 0 0 no-repeat; }
+table.data th a { text-decoration: none; color: #545454; border-bottom: 1px solid #bbb; }
+table.data th a:hover { text-decoration: none; color: #f61901; border-bottom: 1px solid #f61901; }
+table.data td { padding: 5px 5px 5px 6px; text-align: left; vertical-align: top; border: solid #e4e4e4; border-width: 1px 0; background: url(../gfx/i12.gif); }
+table.data td a { color: #545454; text-decoration: underline; }
+table.data td.actions { padding: 3px 0 1px 2px; white-space: nowrap; line-height: 0px; }
+table.data td.actions input,
+table.data td.actions button { margin: 0 2px 2px 0; padding: 0 2px; overflow: visible; font-size: 90%; border: 1px solid; border-color: #cbcbcb #808080 #808080 #cbcbcb; cursor: pointer; background: #FFF url(../gfx/i11.gif); }
+table.data td.actions img { margin: 0 2px 2px 0; vertical-align: top; }
+table.data td.inpt { font-size: 100%; }
+table.data td.inpt select { margin-top: 1px; }
+table.data th.inpt { padding: 0 0 0 1px !important; }
+table.data td.inpt { padding: 2px 1px 1px 3px !important; }
+table.data td.inpt * { vertical-align: top; }
+table.data .ico { margin: 0 1px 0 0; }
+table.data tr.filter td { background: #eeeeee url(../gfx/i09.gif) repeat-x; border: 1px solid #e4e4e4; }
+table.data tr.filter td img { vertical-align: middle; }
+table.data tr.filter td.actions input { font-family: Tahoma, Arial, Helvetica, sans-serif; padding: 2px 5px 1px 5px; }
+table.data tr.filter .min { width: 40px; }
+table.data tr.total-first td { font-weight: bold; }
+table.data tr.total td { font-weight: bold; }
+table.data tr.even td { background: url(../gfx/i13.gif); }
+table.data tr.total-first td { border-top: 2px solid #cbd0c3 !important; }
 
 /* Form table */
 
-TABLE.form { margin-bottom: 10px; width: 100%; border-top: 1px solid #e8e8e8; }
-TABLE.form TD { padding: 0; text-align: left; vertical-align: top; border-bottom: 1px solid #e8e8e8; background: url(../gfx/i12.gif); }
-TABLE.form TD.name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; }
-TABLE.form TD.centered-name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; vertical-align: middle !important;}
-TABLE.form TD.inpt { width: 35%; padding: 3px 5px 2px 5px; }
-TABLE.form TD.data { width: 35%; padding: 6px 5px 5px 5px; }
-TABLE.form TD.tbl { width: 35%; padding: 4px 5px 4px 5px; }
-TABLE.form TR.cols4 {}
-TABLE.form TR.cols4 TD.name { width: 20%; }
-TABLE.form TR.cols4 TD.inpt { width: 30%; }
-TABLE.form TR.cols4 TD.data { width: 30%; }
-TABLE.form INPUT,
-TABLE.form SELECT,
-TABLE.form TEXTAREA { font-size: 100%; vertical-align: middle; }
-TABLE.form IMG { vertical-align: middle; margin-top: -2px; }
-TABLE.form TR.error TD { background: url(../gfx/i14.gif); color: #f61901; }
-TABLE.form TR.error TD * { color: #f61901; }
-TABLE.form TD.error { background: url(../gfx/i14.gif); color: #f61901; }
-TABLE.form TD.error * { color: #f61901; }
-TABLE.form .submit { font-size: 80%; padding: 0 5px 1px 5px; overflow: visible; margin-top: -1px; cursor: pointer; }
-TABLE.form .limit { color: #bcc2b2; }
-TABLE.form .req { color: #f61901; }
-TABLE.form .disabled { color: #e0e0e0; background: #f5f5f5; }
-TABLE.form .desc { font-size: 90%; padding: 5px 0; }
-TABLE.form TR.subheading TD { padding: 15px 5px 5px 5px; font-weight: bold; background: none; }
-TABLE.form TD.noborder { border-bottom: none; }
-TABLE.form TABLE.form { margin: 0 !important; border: none; }
-TABLE.form TABLE.form TD { border-bottom: none; }
-TABLE.form TABLE.data { width: auto; margin: 0; }
-TABLE.form TABLE.data TD.inpt { width: auto !important; }
-TABLE.form TABLE.data TD { width: auto !important;  padding: 5px 5px 5px 6px; background: none; }
-TABLE.form .max { width: 550px; }
-TABLE.form .min { width: 40px; }
-TABLE.form .norm { width: 220px; }
-TABLE.form .small { width: 100px; }
-TABLE.form TR.cols4 .max { width: 200px; }
-TABLE.form TR.cols4 .norm { width: 150px; }
+table.form { margin-bottom: 10px; width: 100%; border-top: 1px solid #e8e8e8; }
+table.form td { padding: 0; text-align: left; vertical-align: top; border-bottom: 1px solid #e8e8e8; background: url(../gfx/i12.gif); }
+table.form td.name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; }
+table.form td.centered-name { width: 15%; padding: 6px 5px 5px 5px; text-align: right; vertical-align: middle !important;}
+table.form td.inpt { width: 35%; padding: 3px 5px 2px 5px; }
+table.form td.data { width: 35%; padding: 6px 5px 5px 5px; }
+table.form td.tbl { width: 35%; padding: 4px 5px 4px 5px; }
+table.form tr.cols4 {}
+table.form tr.cols4 td.name { width: 20%; }
+table.form tr.cols4 td.inpt { width: 30%; }
+table.form tr.cols4 td.data { width: 30%; }
+table.form input,
+table.form select,
+table.form textarea { font-size: 100%; vertical-align: middle; }
+table.form img { vertical-align: middle; margin-top: -2px; }
+table.form tr.error td { background: url(../gfx/i14.gif); color: #f61901; }
+table.form tr.error td * { color: #f61901; }
+table.form td.error { background: url(../gfx/i14.gif); color: #f61901; }
+table.form td.error * { color: #f61901; }
+table.form .submit { font-size: 80%; padding: 0 5px 1px 5px; overflow: visible; margin-top: -1px; cursor: pointer; }
+table.form .limit { color: #bcc2b2; }
+table.form .req { color: #f61901; }
+table.form .disabled { color: #e0e0e0; background: #f5f5f5; }
+table.form .desc { font-size: 90%; padding: 5px 0; }
+table.form tr.subheading TD { padding: 15px 5px 5px 5px; font-weight: bold; background: none; }
+table.form td.noborder { border-bottom: none; }
+table.form table.form { margin: 0 !important; border: none; }
+table.form table.form td { border-bottom: none; }
+table.form table.data { width: auto; margin: 0; }
+table.form table.data td.inpt { width: auto !important; }
+table.form table.data td { width: auto !important;  padding: 5px 5px 5px 6px; background: none; }
+table.form .max { width: 550px; }
+table.form .min { width: 40px; }
+table.form .norm { width: 220px; }
+table.form .small { width: 100px; }
+table.form tr.cols4 .max { width: 200px; }
+table.form tr.cols4 .norm { width: 150px; }
 
 /* Page actions */
 
-DIV.actions { text-align: right; margin: 0 0 1em 0; }
-DIV.actions INPUT,
-DIV.actions BUTTON { background: url(../gfx/i10.gif); color: #FFF; padding: 2px 10px 1px 10px; overflow: visible; border: 0px none; cursor: pointer; }
+div.actions { text-align: right; margin: 0 0 1em 0; }
+div.actions input,
+div.actions button { background: url(../gfx/i10.gif); color: #FFF; padding: 2px 10px 1px 10px; overflow: visible; border: 0px none; cursor: pointer; }
 
 /* Component */
 
-DIV.component-header { background: url(../gfx/i16.gif) 0 100% repeat-x; height: 20px; }
-DIV.component-header DIV.name { float: left; border: 1px solid #b4b4b4; border-bottom: none; background: #FFF url(../gfx/i15.gif) repeat-x; padding: 3px 10px 2px 10px; font-weight: bold; }
-DIV.component { border: 1px solid #b4b4b4; border-top: none; padding: 5px; margin-bottom: 10px; }
+div.component-header { background: url(../gfx/i16.gif) 0 100% repeat-x; height: 20px; }
+div.component-header div.name { float: left; border: 1px solid #b4b4b4; border-bottom: none; background: #FFF url(../gfx/i15.gif) repeat-x; padding: 3px 10px 2px 10px; font-weight: bold; }
+div.component { border: 1px solid #b4b4b4; border-top: none; padding: 5px; margin-bottom: 10px; }
 
 /* IE Fixes */
-* HTML #cont1 { height: 100%; }
-* HTML #cont1-error { height: 100%; }
-* HTML #leftcol { height: 550px; }
-* HTML #menu2 A { height: 1px; }
-* HTML #menu2 UL LI A { height: 1px; }
-* HTML SELECT.w100 { width: 106px; }
-* HTML IMG.ico { margin-top: -2px; }
-* HTML DIV.form { height: 1px; }
-* HTML TABLE.data .ico { margin: 1px 1px 0 0; }
-* HTML TABLE.data .actions INPUT,
-* HTML TABLE.data .actions BUTTON { width: 1px; }
-* HTML DIV.login DIV.a { height: 1px; }
+* html #cont1 { height: 100%; }
+* html #cont1-error { height: 100%; }
+* html #leftcol { height: 550px; }
+* html #menu2 a { height: 1px; }
+* html #menu2 ul li a { height: 1px; }
+* html select.w100 { width: 106px; }
+* html img.ico { margin-top: -2px; }
+* html div.form { height: 1px; }
+* html table.data .ico { margin: 1px 1px 0 0; }
+* html table.data .actions input,
+* html table.data .actions button { width: 1px; }
+* html div.login div.a { height: 1px; }
