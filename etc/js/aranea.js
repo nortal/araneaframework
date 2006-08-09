@@ -105,11 +105,11 @@ function AraneaPage() {
   }
   
   this.executeCallbacks = function(systemFormId) {
-    if (that.submitCallbacks['callbacks'])
-	  that.submitCallbacks['callbacks'].execute();
+    if (submitCallbacks['callbacks'])
+	  submitCallbacks['callbacks'].execute();
     
-	if (that.submitCallbacks[systemFormId])
-	  that.submitCallbacks[systemFormId].execute();
+	if (submitCallbacks[systemFormId])
+	  submitCallbacks[systemFormId].execute();
   }
   // END SUBMIT CALLBACKS  
   
@@ -135,9 +135,9 @@ function AraneaPage() {
     systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
 	
 	// execute submit callbacks, first toplevel ones and then systemform specific
-	that.executeCallbacks(systemFormId);
+	//that.executeCallbacks(systemFormId);
 	
-	if (window[ajaxKey] && updateRegions && updateRegions.length > 0) {
+	if (updateRegions && updateRegions.length > 0) {
 		window[ajaxKey].updateRegions = updateRegions;
 		window[ajaxKey].systemForm = systemForm;
 		window[ajaxKey].submitAJAX();
@@ -151,14 +151,17 @@ function AraneaPage() {
 }
 
 function fancyRedirect(el, baseurl) {
+  var systemForm = getActiveAraneaPage().traverser.findSurroundingSystemForm(el);
   var url = new String();
   // ain?threadServiceId=mainThread&amp;pleaseClone=true&amp;widgetEventHandler=menuSelect&amp;widgetEventParameter=Demos&amp;widgetEventPath=r.f.menu
-  url = baseurl + "?pleaseClone=true";
+  url = baseurl;
+  url += "?threadServiceId=" + systemForm['threadServiceId'];
+  url += "&pleaseClone=true"
   url += "&widgetEventHandler=" + el.getAttribute('arn-evntId');
   url += "&widgetEventParameter=" + el.getAttribute('arn-evntPar');
   url += "&widgetEventPath="+ el.getAttribute('arn-trgtwdgt');
-    
-  window.redirect(url);
+  
+  window.location(url);
 }
 
 function AraneaTraverser() {

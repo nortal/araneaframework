@@ -58,7 +58,8 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 		JspUtil.writeAttribute(out, "class", getStyleClass());
 		JspUtil.writeAttribute(out, "style", getStyle());
 		JspUtil.writeAttribute(out, "border", "0");
-		JspUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
+		JspUtil.writeAttribute(out, "href", "javascript:fancyRedirect(this, '" + url.toString() + "');");
+		//JspUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
 
 		if (eventId != null)
 			JspWidgetCallUtil.writeEventAttributeForEvent(
