@@ -118,7 +118,7 @@ function AraneaPage() {
 	  return false;
     return submitter(element);
   }
-  
+
   this.standardSubmit = function(element) {
   	// systemform information
     var systemForm = this.traverser.findSurroundingSystemForm(element);
@@ -148,6 +148,17 @@ function AraneaPage() {
       return false;
 	}
   }
+}
+
+function fancyRedirect(el, baseurl) {
+  var url = new String();
+  // ain?threadServiceId=mainThread&amp;pleaseClone=true&amp;widgetEventHandler=menuSelect&amp;widgetEventParameter=Demos&amp;widgetEventPath=r.f.menu
+  url = baseurl + "?pleaseClone=true";
+  url += "&widgetEventHandler=" + el.getAttribute('arn-evntId');
+  url += "&widgetEventParameter=" + el.getAttribute('arn-evntPar');
+  url += "&widgetEventPath="+ el.getAttribute('arn-trgtwdgt');
+    
+  window.redirect(url);
 }
 
 function AraneaTraverser() {
