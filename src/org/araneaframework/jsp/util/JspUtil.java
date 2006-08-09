@@ -30,6 +30,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
+import org.araneaframework.jsp.Event;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -388,6 +389,12 @@ public class JspUtil {
           out.write(c);
       }     
     }
+  }
+  
+  public static void writeEventAttributes(Writer out, Event event) throws IOException {
+    out.write(" ");
+    out.write(event.getEventAttributes().toString());
+    out.write(" ");
   }
   
   /**

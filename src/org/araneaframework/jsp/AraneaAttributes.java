@@ -12,25 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
-package org.araneaframework.core;
+package org.araneaframework.jsp;
 
-import java.io.Serializable;
-import org.araneaframework.InputData;
-
-/**
- * A simple eventlistener which can be added to Composite Widgets.
- * 
- */
-// Events
-public interface EventListener extends Serializable {
-  /**
-   * Gets called when the event happens.
-   * 
-   * @param EVENT_ID the id of the event
-   * @param input the InputData of the event
-   * @throws Exception
-   */
-  public void processEvent(Object eventId, InputData input) throws Exception;
+public abstract class AraneaAttributes {
+  public static String TARGET_WIDGET_ID = "arn-trgtwdgt";
+  public static String EVENT_ID = "arn-evntId";
+  public static String EVENT_PARAM = "arn-evntPar";
+  public static String UPDATE_REGIONS = "arn-updrgns";
 }

@@ -55,7 +55,11 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
-    if (eventId != null)
+    JspUtil.writeEventAttributes(out, event);
+    
+    if (event.getId() != null)
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+    /*
       JspWidgetCallUtil.writeEventAttributeForEvent(
           pageContext,
           out, 
@@ -65,7 +69,7 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
           eventId, 
           eventParam, 
           onClickPrecondition,
-          updateRegionNames);       
+          updateRegionNames);*/       
     JspUtil.writeCloseStartTag_SS(out);    
 
     return EVAL_BODY_INCLUDE;    
@@ -88,8 +92,8 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
     Map result = new HashMap();
     result.put(ThreadContext.THREAD_SERVICE_KEY, threadId);
     result.put(StandardContainerWidget.EVENT_PATH_KEY, contextWidgetId);
-    result.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, eventId);
-    result.put(ApplicationWidget.EVENT_PARAMETER_KEY, eventParam);
+    result.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, event.getId());
+    result.put(ApplicationWidget.EVENT_PARAMETER_KEY, event.getParam());
     
     return result;
   }

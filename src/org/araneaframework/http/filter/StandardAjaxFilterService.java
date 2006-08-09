@@ -26,7 +26,7 @@ public class StandardAjaxFilterService extends BaseFilterService {
 	private String characterEncoding = "UTF-8";
 	private List existingRegions = null;
 
-	public static final String UPDATE_REGIONS_KEY = "updateRegions";
+	public static final String UPDATE_REGIONS_KEY = "UPDATE_REGIONS";
 
 
 	public void setCharacterEncoding(String encoding) {

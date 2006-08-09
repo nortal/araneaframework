@@ -20,7 +20,7 @@
 	                </head>
 	
 	                <body onload="_ap.onload()" onunload="_ap.onunload()">
-	
+
 	                    <div id="cont1">
 	                        <ui:systemForm method="POST">
 	                        <ui:registerPopups/>
@@ -50,9 +50,9 @@
 					
 	                        </ui:systemForm>
 	                    </div>
-	                    
+
 	                    <jsp:include page="/WEB-INF/jsp/mainlayout/footer.jsp"/>
-	
+
 	                </body>
 	            </html>
 	        </ui:widgetContext>

@@ -80,11 +80,6 @@ public interface ConfigurationContext extends Serializable {
   public static final String AUTO_COMPLETE_RESPONSE_BUILDER = "uilib.widgets.AutoCompleteTextControl.DefaultResponseBuilder";
   
   /**
-   * <code>String</code> that specifies the namespace prefix for Uilib tags and attributes.
-   */  
-  public static final String UILIB_HTML_NAMESPACE = "UiLibHtmlNameSpace";
-  
-  /**
    * Returns a configuration entry.
    */
   public Object getEntry(String entryName);

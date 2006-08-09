@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form;
 import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.FormWidget;
 
 
@@ -63,8 +64,12 @@ public class FormTag extends WidgetTag {
 		// Continue
 	  return EVAL_BODY_INCLUDE;		
 	}
+	
+	protected void writeWidgetStartTag(Writer out) throws Exception {
+		JspUtil.writeStartTag_SS(out, "div arn-form=\"" + scopedFullId + "\"");
+	}
 
-	public String getTagName() {
-		return "f";
+	protected void writeWidgetEndTag(Writer out) throws Exception {
+		JspUtil.writeEndTag_SS(out, "div");
 	}
 }

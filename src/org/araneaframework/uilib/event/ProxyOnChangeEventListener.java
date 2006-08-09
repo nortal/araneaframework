@@ -50,7 +50,7 @@ public class ProxyOnChangeEventListener implements OnChangeEventListener {
         eventHandler.invoke(eventTarget, new Object[] { null });
         return;
       } catch (NoSuchMethodException e) {/*OK*/}
-      log.warn("Was unable to deliver an event to a handler, eventId "+eventId);
+      log.warn("Was unable to deliver an event to a handler, EVENT_ID "+eventId);
     }
     catch (Exception e) {
       throw new InvalidEventException(eventId, e);

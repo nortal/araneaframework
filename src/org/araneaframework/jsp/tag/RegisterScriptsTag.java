@@ -12,25 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
-package org.araneaframework.core;
-
-import java.io.Serializable;
-import org.araneaframework.InputData;
 
 /**
- * A simple eventlistener which can be added to Composite Widgets.
- * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
-// Events
-public interface EventListener extends Serializable {
-  /**
-   * Gets called when the event happens.
-   * 
-   * @param EVENT_ID the id of the event
-   * @param input the InputData of the event
-   * @throws Exception
-   */
-  public void processEvent(Object eventId, InputData input) throws Exception;
+package org.araneaframework.jsp.tag;
+
+import org.araneaframework.jsp.tag.BaseTag;
+
+public class RegisterScriptsTag extends BaseTag {
+
 }

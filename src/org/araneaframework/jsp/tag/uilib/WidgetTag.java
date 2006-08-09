@@ -22,7 +22,6 @@ import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.tag.CustomXMLTagInterface;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
@@ -41,7 +40,7 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
              <li><i>widget</i> - UiLib widget view model.
            </ul> "
  */
-public class WidgetTag extends BaseTag implements CustomXMLTagInterface {
+public class WidgetTag extends BaseTag {
   /** Widget full dot-separated identifier starting from container (e.g. component). */
   public final static String FULL_ID_KEY = "widgetFullId";
   /** Widget full dot-separated identifier with added unique container identifier prefix (e.g. component id). */
@@ -106,21 +105,10 @@ public class WidgetTag extends BaseTag implements CustomXMLTagInterface {
    * Writes out widget start and end tags.
    * ***********************************************************************************/
   protected void writeWidgetStartTag(Writer out) throws Exception {
-    JspUtil.writeStartTag_SS(out, getTagNameWithNS());
+    JspUtil.writeStartTag_SS(out, "div arn-widget=\"" + scopedFullId + "\"");
   }
   
   protected void writeWidgetEndTag(Writer out) throws Exception {
-    JspUtil.writeEndTag_SS(out, getTagNameWithNS());
-  }
-  
-  /* ***********************************************************************************
-   * CustomXMLTagInterface.
-   * ***********************************************************************************/
-  public String getTagName() {
-    return "w";
-  }
-
-  public String getTagNameWithNS() {
-    return new StringBuffer(getHtmlNS()).append(':').append(getTagName()).toString();
+    JspUtil.writeEndTag_SS(out, "div");
   }
 }

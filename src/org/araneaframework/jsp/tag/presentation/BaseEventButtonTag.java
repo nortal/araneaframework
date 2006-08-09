@@ -19,6 +19,8 @@ package org.araneaframework.jsp.tag.presentation;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.Event;
+import org.araneaframework.jsp.DefaultEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
@@ -29,13 +31,17 @@ import org.araneaframework.jsp.util.JspUpdateRegionUtil;
  * @author Oleg Mürk
  */
 public class BaseEventButtonTag extends BaseSimpleButtonTag {
-  protected String eventId;
-  protected String eventParam;
   protected String disabled;
   protected String updateRegions;
-  protected String globalUpdateRegions;  
+  protected String globalUpdateRegions;
 
   protected List updateRegionNames;
+  
+  protected Event event;
+  
+  {
+	  event = new DefaultEvent();
+  }
 
   protected int doStartTag(Writer out) throws Exception {
     int result = super.doStartTag(out);
@@ -46,10 +52,12 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
       throw new AraneaJspException("'eventButton' tag can only be used in a context widget!");
 
     updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
+    ((DefaultEvent)event).setUpdateRegionNames(updateRegionNames);
+    event.setTarget(contextWidgetId);
 
     return result;
   }
-
+  
   /* ***********************************************************************************
    * Tag attributes
    * ***********************************************************************************/  
@@ -61,7 +69,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "Event id." 
    */
   public void setEventId(String eventId) throws JspException {
-    this.eventId = (String)evaluate("eventId", eventId, String.class);
+    ((DefaultEvent)event).setId((String)evaluate("EVENT_ID", eventId, String.class));
   }
 
   /**
@@ -71,8 +79,28 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "Event parameter." 
    */
   public void setEventParam(String eventParam) throws JspException {
-    this.eventParam = (String)evaluate("eventParam", eventParam, String.class);
-  }  
+	((DefaultEvent)event).setParam((String)evaluate("EVENT_PARAM", eventParam, String.class));
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details." 
+   */
+  public void setUpdateRegions(String updateRegions) throws JspException {
+    this.updateRegions = (String) evaluate("UPDATE_REGIONS", updateRegions, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "numerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
+   */
+  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
+    this.globalUpdateRegions = (String) evaluate("GLOBAL_UPDATE_REGIONS", globalUpdateRegions, String.class);
+  }
 
   /**
    * @jsp.attribute
@@ -83,28 +111,4 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
   public void setDisabled(String disabled) throws JspException {
     this.disabled = (String)evaluate("disabled", disabled, String.class);
   }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details." 
-   */
-  public void setUpdateRegions(String updateRegions) throws JspException {
-    this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "numerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
-   */
-  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-    this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
-  }
 }
-
-
-
-

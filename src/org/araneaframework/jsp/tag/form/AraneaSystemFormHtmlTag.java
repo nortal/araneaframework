@@ -84,15 +84,4 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
   protected String getFormAction() {
 	  return ((HttpServletRequest) pageContext.getRequest()).getContextPath() + ((HttpServletRequest) pageContext.getRequest()).getServletPath();
   }
-  
-  /* ***********************************************************************************
-   * Implementation of CustomXMLTagInterface
-   * ***********************************************************************************/
-  public String getTagName() {
-	return "systemForm";
-  }
-
-  public String getTagNameWithNS() {
-	return new StringBuffer(getHtmlNS()).append(':').append(getTagName()).toString();
-  }
 }

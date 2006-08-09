@@ -23,7 +23,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
-import org.araneaframework.jsp.tag.CustomXMLTagInterface;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
@@ -41,7 +40,7 @@ import org.araneaframework.uilib.form.FormWidget;
  * 
  * @author Oleg Mürk
  */
-public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface, CustomXMLTagInterface {
+public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface {
 	public final static String COUNTER_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormElementBaseTag.COUNTER";
 
 	protected String contextWidgetId;
@@ -115,7 +114,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		}
 		if (accessKey != null && accessKey.length() != 1) accessKey = null;
 
-		JspUtil.writeStartTag_SS(out, getTagNameWithNS());
 		if (hasElementContextSpan)
             writeFormElementContextOpen(out, formScopedFullId, derivedId, true, pageContext);
 		else
@@ -133,7 +131,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	protected int doEndTag(Writer out) throws Exception {
 		if (hasElementContextSpan) 
 			writeFormElementContextClose(out);
-		JspUtil.writeEndTag_SS(out, getTagNameWithNS());
 		return super.doEndTag(out);
 	}
 
@@ -188,7 +185,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details."
 	 */	
 	public void setUpdateRegions(String updateRegions) throws JspException {
-		this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
+		this.updateRegions = (String) evaluate("UPDATE_REGIONS", updateRegions, String.class);
 	}
 
 	/**
@@ -198,7 +195,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
 	 */	
 	public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-		this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
+		this.globalUpdateRegions = (String) evaluate("GLOBAL_UPDATE_REGIONS", globalUpdateRegions, String.class);
 	}  
 
 	/** 	
@@ -370,32 +367,4 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 				precondition,
 				updateRegions);
 	}	
-
-	/** 
-	 * Writes event handling function that is called on closeCalendar javascript function on picking date
-	 * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005
-	 * @throws JspException 
-	 */
-	protected void writeEventScriptForCalendar(Writer out, String id, boolean validate, String precondition) throws IOException, JspException {
-		JspWidgetCallUtil.writeEventScriptForFormEvent(
-				pageContext, 
-				out, 
-				systemFormId, 
-				formFullId, 
-				this.derivedId, 
-				id, 
-				null, 
-				validate, 
-				precondition, 
-				null);
-	}
-
-
-	public String getTagName() {
-		return "fe";
-	}
-
-	public String getTagNameWithNS() {
-		return new StringBuffer(getHtmlNS()).append(':').append(getTagName()).toString();
-	}
 }

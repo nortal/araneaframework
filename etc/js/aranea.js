@@ -46,6 +46,7 @@ function AraneaEventStore() {
 // AraneaPage object is present on each page served by Aranea and contains common
 // functionality for setting page related variables, events and functions.
 function AraneaPage() {
+  var that = this;
   /** Variable that shows if page is active (form has not been submitted yet). */
   var pageActive = true;
 
@@ -53,6 +54,8 @@ function AraneaPage() {
   var systemLoadEvents = new AraneaEventStore();
   var clientLoadEvents = new AraneaEventStore();
   var systemUnLoadEvents = new AraneaEventStore();
+  
+  traverser = new AraneaTraverser();
 
   loadEvents = new AraneaStore();
   loadEvents.add(systemLoadEvents);
@@ -60,6 +63,8 @@ function AraneaPage() {
   
   unloadEvents = new AraneaStore();
   unloadEvents.add(systemUnLoadEvents);
+  
+  submitCallbacks = new Object();
 
   /** Return whether this page is active (has not been submitted yet). */
   this.isPageActive = function() {
@@ -74,7 +79,6 @@ function AraneaPage() {
 
   this.addClientLoadEvent = function(event) {
   	clientLoadEvents.add(event);
-	document.getElementsbytagnamen
   }
   
   this.addSystemLoadEvent = function(event) {
@@ -88,58 +92,73 @@ function AraneaPage() {
   this.onunload = function() {
     unloadEvents.forEach(function(eventHolder) {eventHolder.execute();});
   }
+  
+  // SUBMIT CALLBACKS
+  this.addSubmitCallback = function(callback) {
+    that.addSystemFormSubmitCallback('callbacks', callback);
+  }
+  
+  this.addSystemFormSubmitCallback = function(systemFormId, callback) {
+    if (!submitCallbacks[systemFormId])
+	  submitCallbacks[systemFormId] = new AraneaEventStore();
+	submitCallbacks[systemFormId].add(callback);
+  }
+  
+  this.executeCallbacks = function(systemFormId) {
+    if (that.submitCallbacks['callbacks'])
+	  that.submitCallbacks['callbacks'].execute();
+    
+	if (that.submitCallbacks[systemFormId])
+	  that.submitCallbacks[systemFormId].execute();
+  }
+  // END SUBMIT CALLBACKS  
+  
+  this.submit = function(element, submitter) {
+    if (!that.isPageActive())
+	  return false;
+    return submitter(element);
+  }
+  
+  this.standardSubmit = function(element) {
+  	// systemform information
+    var systemForm = this.traverser.findSurroundingSystemForm(element);
+	var systemFormId = systemForm['id'];
+	
+	// event information
+    var widgetId = element.getAttribute('arn-trgtwdgt');
+    var eventId = element.getAttribute('arn-evntId');
+    var eventParam = element.getAttribute('arn-evntPar');
+	var updateRegions = element.getAttribute('arn-updrgns');
+
+    systemForm.widgetEventPath.value = widgetId ? widgetId : "";
+    systemForm.widgetEventHandler.value = eventId ? eventId : "";
+    systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+	
+	// execute submit callbacks, first toplevel ones and then systemform specific
+	that.executeCallbacks(systemFormId);
+	
+	if (window[ajaxKey] && updateRegions && updateRegions.length > 0) {
+		window[ajaxKey].updateRegions = updateRegions;
+		window[ajaxKey].systemForm = systemForm;
+		window[ajaxKey].submitAJAX();
+	}
+	else {
+      that.setPageActive(false);
+      systemForm.submit();
+      return false;
+	}
+  }
 }
 
-AraneaPage.prototype.submit = function(element, submitter) {
-  submitter(element);
-}
-
-AraneaPage.prototype.standardSubmit = function(element) {
-  var w = window.open('', 'debug', 'width=1000,height=800,scrollbars=yes');
-  w.document.write(element);
-  /*
-  w.document.write('<br />');
-  for (var i in element) {
-  	w.document.write("property '" + i+ "'=" + element[i]);
-	w.document.write('<br />');
-  }
-  */
-  w.document.write("----------TRAVERSING---------------------------------");
-  w.document.write('<br />');
-  
-	var i = 0;
-  
-  var pNode = element.parentNode;
-  while (pNode) {
-  	w.document.write(pNode.tagName);
-	pNode = pNode.parentNode;
-  	w.document.write('<br />');
-  } 
-  
-  w.document.write('searching surrounding systemform');
-  var t = new AraneaTraverser();
-  var systemForm = t.findSurroundingSystemForm(element);
-  
-  w.document.write('teh systemform ' + systemForm+  '<br />');
-  
-  for (var i in systemForm) {
-  	w.document.write("property '" + i+ "'=" + systemForm[i]);
-	w.document.write('<br />');
-  }
-}
-  
 function AraneaTraverser() {
+  /* returns FORM that is Aranea system form and surrounds given HTML element. */
   this.findSurroundingSystemForm = function(element) {
-    if (element.getAttributeNS("http://www.araneaframework.org/", "systemForm"))
-	  return element;
-	  
-	var pNode = element.parentNode;
-    while (pNode && pNode.length > 0) {
-      if (pNode.getAttributeNS("http://www.araneaframework.org/", "systemForm"))
-	    return pNode;
+    do {
+      if (element.tagName && element.tagName.toUpperCase() == 'FORM' && element.getAttribute('arn-systemForm'))
+	    return element;
+      element = element.parentNode;
+  	} while (element);
 
-  	  pNode = pNode.parentNode;
-    }
 	return null;
   }
 }
@@ -153,7 +172,31 @@ function AraneaTraverser() {
 // OLD
 
 /*
+ * function uiSystemFormSubmit(systemForm, updateRegions){
+  if (!systemForm) return;
 
+  if (systemForm.uiProperties && systemForm.uiProperties.submitCallbacks) {
+	  var callbacks = systemForm.uiProperties.submitCallbacks;
+	  
+	  var i;
+	  for (i = 0; i < callbacks.length; i++){
+	  	var f = callbacks[i];
+			f();
+	  }  
+  }
+	
+	if (updateRegions && updateRegions.length > 0) {
+		window[ajaxKey].updateRegions = updateRegions;
+		window[ajaxKey].systemForm = systemForm;
+		window[ajaxKey].submitAJAX();
+	}
+	else {
+		pageActive = false;	
+		systemForm.submit();		
+	}
+}
+ */
+/*
 function uiStandardSubmitEvent(systemForm, widgetId, eventId, eventParam, call, precondition) {
 	if (!pageActive) return false;
 	
@@ -165,30 +208,6 @@ function uiStandardSubmitEvent(systemForm, widgetId, eventId, eventParam, call, 
 	
 	return false;
 }
-
-function araneaSubmitEvent(systemForm, widgetId, eventId, eventParam, updateRegions) {
-	systemForm.widgetEventPath.value = widgetId;
-	systemForm.widgetEventHandler.value = eventId;	
-	systemForm.widgetEventParameter.value = eventParam;
-	uiSystemFormSubmit(systemForm, updateRegions);
-}
-
-function araEvent(standardParams, updateRegions) {
-	standardParams.systemForm.widgetEventPath.value = standardParams.widgetId;
-	standardParams.systemForm.widgetEventHandler.value = standardParams.eventId;
-	standardParams.systemForm.widgetEventParameter.value = standardParams.eventParam;
-	uiSystemFormSubmit(standardParams.systemForm, updateRegions);
-}
-
-function getStandardParameterObject(systemForm, widgetId, eventId, eventParam) {
-  result = new Object();
-  result.systemForm = systemForm;
-  result.widgetId = widgetId;
-  result.eventId = eventId;
-  result.eventParam = eventParam;
-  return result;
-}
-
 
 function uiStandardSubmitFormEvent(systemForm, formId, elementId, eventId, eventParam, validate, call, precondition) {	
 	if (!pageActive) return false;
@@ -210,3 +229,7 @@ function uiStandardSubmitFormEvent(systemForm, formId, elementId, eventId, event
 
 // new aranea page
 _ap = new AraneaPage();
+
+function getActiveAraneaPage() {
+  return _ap;
+}

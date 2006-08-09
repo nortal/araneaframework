@@ -40,7 +40,6 @@ import org.araneaframework.uilib.ConfigurationContext;
  * @author Oleg Mürk
  */
 public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
-	public static final String HTML_NAMESPACE="arn";
 	/* ***********************************************************************************
 	 * VARIABLES
 	 * ***********************************************************************************/
@@ -286,16 +285,6 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 			(StandardJspFilterService.JspConfiguration) output.getAttribute(
 					JspContext.JSP_CONFIGURATION_KEY);
 		return config.getConfiguration();
-	}
-	
-	public String getHtmlNS() {
-		ConfigurationContext cc = getConfiguration();
-		if (cc == null)
-			return BaseTag.HTML_NAMESPACE;
-		String result = (String)getConfiguration().getEntry(ConfigurationContext.UILIB_HTML_NAMESPACE);
-		if (result == null) 
-			return BaseTag.HTML_NAMESPACE;
-		return result;
 	}
 	
 	/* ***********************************************************************************

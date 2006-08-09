@@ -22,6 +22,7 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
 /**
@@ -81,8 +82,12 @@ public class WidgetContextTag extends BaseTag {
 
     addContextEntry(WIDGET_CONTEXT_ID_KEY, fullId);
     addContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY, viewModel);
-
+    
     return EVAL_BODY_INCLUDE;
+  }
+  
+  protected int doEndTag(Writer out) throws Exception {
+    return EVAL_PAGE;
   }
   
   public void doFinally() {
