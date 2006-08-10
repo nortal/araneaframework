@@ -26,7 +26,7 @@ import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.ThreadCloningContext;
 import org.araneaframework.http.util.ClientStateUtil;
-import org.araneaframework.http.util.URLUtil;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.util.JspUtil;
@@ -58,9 +58,12 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 		JspUtil.writeAttribute(out, "class", getStyleClass());
 		JspUtil.writeAttribute(out, "style", getStyle());
 		JspUtil.writeAttribute(out, "border", "0");
-		JspUtil.writeAttribute(out, "href", "javascript:fancyRedirect(this, '" + url.toString() + "');");
-		//JspUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
+		JspUtil.writeAttribute(out, "href", url.toString());
+		JspUtil.writeEventAttributes(out, event);
+		JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+		JspUtil.writeAttribute(out, AraneaAttributes.EVENT_PRECONDITION_PREFIX+"onclick", onClickPrecondition);
 
+		/*
 		if (eventId != null)
 			JspWidgetCallUtil.writeEventAttributeForEvent(
 					pageContext,
@@ -71,7 +74,7 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 					eventId, 
 					eventParam, 
 					onClickPrecondition,
-					updateRegionNames);      
+					updateRegionNames);*/      
 		
 		JspUtil.writeCloseStartTag_SS(out);    
 		
@@ -94,8 +97,8 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
     Map result = new HashMap();
     result.put(ThreadContext.THREAD_SERVICE_KEY, threadId);
     result.put(StandardContainerWidget.EVENT_PATH_KEY, contextWidgetId);
-    result.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, eventId);
-    result.put(ApplicationWidget.EVENT_PARAMETER_KEY, eventParam);
+    result.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, event.getId());
+    result.put(ApplicationWidget.EVENT_PARAMETER_KEY, event.getParam());
     result.put(ThreadCloningContext.CLONING_REQUEST_KEY, "true");
 
     return result;

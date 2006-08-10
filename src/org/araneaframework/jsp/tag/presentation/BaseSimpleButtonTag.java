@@ -37,7 +37,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
   protected String systemFormId;
   protected String contextWidgetId;
   protected String localizedLabel;
-  protected String onClickPrecondition = "return true;";
+  protected String onClickPrecondition;
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -83,7 +83,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
    *   description = "Precondition for deciding whether go to server side or not." 
    */
   public void setOnClickPrecondition(String onClickPrecondition) throws JspException {
-    this.onClickPrecondition = (String) evaluate("onChangePrecondition", onClickPrecondition, String.class);
+    this.onClickPrecondition = (String) evaluate("onClickPrecondition", onClickPrecondition, String.class);
   }
   
   public StringBuffer getRequestURL() throws JspException {

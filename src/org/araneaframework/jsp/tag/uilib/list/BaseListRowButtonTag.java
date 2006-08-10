@@ -19,6 +19,8 @@ package org.araneaframework.jsp.tag.uilib.list;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.DefaultEvent;
+import org.araneaframework.jsp.Event;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.presentation.BaseSimpleButtonTag;
@@ -30,13 +32,16 @@ import org.araneaframework.jsp.util.JspUpdateRegionUtil;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class BaseListRowButtonTag extends BaseSimpleButtonTag {
-
-  protected String eventId;
-  protected String eventParam;
   protected String updateRegions;
   protected String globalUpdateRegions;  
 
   protected List updateRegionNames;
+  
+  protected Event event;
+  
+  {
+    event = new DefaultEvent();
+  }
 
   protected int doStartTag(Writer out) throws Exception {
     int result = super.doStartTag(out);
@@ -45,9 +50,9 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
     if (contextWidgetId == null)
       throw new AraneaJspException("'listRow(Link)Button' tags can only be used in a context widget!");
 
-    eventParam = (String) requireContextEntry(ListRowsTag.ROW_REQUEST_ID_KEY);
-
-    updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
+    event.setParam((String) requireContextEntry(ListRowsTag.ROW_REQUEST_ID_KEY));
+    event.setTarget(contextWidgetId);
+    ((DefaultEvent)event).setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions));
 
     return result;
   }
@@ -63,7 +68,7 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
    *   description = "Event id." 
    */
   public void setEventId(String eventId) throws JspException {
-    this.eventId = (String)evaluate("EVENT_ID", eventId, String.class);
+    ((DefaultEvent)event).setId((String)evaluate("EVENT_ID", eventId, String.class));
   }
 
   /**
@@ -84,7 +89,12 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
    */
   public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
     this.globalUpdateRegions = (String) evaluate("GLOBAL_UPDATE_REGIONS", globalUpdateRegions, String.class);
-  }  
+  }
+
+  public void doFinally() {
+    super.doFinally();
+    event.reset();
+  }
 }
 
 

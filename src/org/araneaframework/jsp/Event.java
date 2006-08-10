@@ -50,4 +50,8 @@ public abstract class Event {
   
   /** returns the event attributes in form suitable for outputting to HTML */
   public abstract StringBuffer getEventAttributes();
+  
+  public void reset() {
+    id = target = param = null;
+  }
 }

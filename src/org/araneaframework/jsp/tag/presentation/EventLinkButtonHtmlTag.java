@@ -26,7 +26,6 @@ import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.ThreadCloningContext;
 import org.araneaframework.http.util.ClientStateUtil;
-import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -55,7 +54,8 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     //JspUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
-    JspUtil.writeAttribute(out, "href", "javascript:fancyRedirect(this, '" + url.toString() + "');");
+    //JspUtil.writeAttribute(out, "href", "javascript:fancyRedirect(this, '" + url.toString() + "');");
+    JspUtil.writeAttribute(out, "href", url.toString());
     JspUtil.writeEventAttributes(out, event);
     
     if (event.getId() != null)

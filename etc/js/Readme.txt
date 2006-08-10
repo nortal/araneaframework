@@ -16,6 +16,9 @@ This folder contains scripts needed by Aranea Uilib.
 - Required for using Uilib controls and tags that support autocompletion.
 - License is MIT-style license, details at http://script.aculo.us/
 
+* prototype/*
+- 
+
 * validation/*
 - Aranea Uilib support scripts.
 
@@ -23,3 +26,5 @@ This folder contains scripts needed by Aranea Uilib.
 - AjaxAnywhere (http://ajaxanywhere.sourceforge.net/)
 - Required for using Uilib Ajax support.
 - License is APL 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
+
+* aranea/

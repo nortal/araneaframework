@@ -21,4 +21,6 @@ public abstract class AraneaAttributes {
   public static String EVENT_ID = "arn-evntId";
   public static String EVENT_PARAM = "arn-evntPar";
   public static String UPDATE_REGIONS = "arn-updrgns";
+  
+  public static String EVENT_PRECONDITION_PREFIX = "arn-precond-";
 }

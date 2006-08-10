@@ -17,11 +17,25 @@
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * 
+ * @jsp.tag
+ *   name = "registerScripts"
+ *   body-content = "empty"
  */
 package org.araneaframework.jsp.tag;
 
+import java.io.Writer;
 import org.araneaframework.jsp.tag.BaseTag;
 
 public class RegisterScriptsTag extends BaseTag {
+	protected int doStartTag(Writer out) throws Exception {
+		return SKIP_BODY;
+	}
 
+	protected int doEndTag(Writer out) throws Exception {
+		out.write("<script>");
+		
+		out.write("</script>");
+		return EVAL_PAGE;
+	}
 }

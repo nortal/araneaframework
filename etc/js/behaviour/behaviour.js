@@ -65,7 +65,7 @@ var Behaviour = {
 			}
 		}
 	},
-	
+
 	addLoadEvent : function(func){
 		var oldonload = window.onload;
 		

@@ -263,6 +263,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "id", spanId);
+		JspUtil.writeAttribute(out, "class", "arn-fe-span");
 
 		// We'll also use the span around a form element for tracking keyboard events.
 		// that is, the span will call our handler on a keypress.
@@ -366,5 +367,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 				validate, 
 				precondition,
 				updateRegions);
-	}	
+	}
+
 }

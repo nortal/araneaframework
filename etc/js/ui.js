@@ -14,67 +14,8 @@
  * limitations under the License.
 **/
 
-//
-// UI basic functions
-// 
-
-/**
- * Invoke all the callbacks registered for given system form.
- * Then call systemForm.submit().
- * @author Konstantin Tretyakov
- */
-function uiSystemFormSubmit(systemForm, updateRegions){
-  if (!systemForm) return;
-
-  if (systemForm.uiProperties && systemForm.uiProperties.submitCallbacks) {
-	  var callbacks = systemForm.uiProperties.submitCallbacks;
-	  
-	  var i;
-	  for (i = 0; i < callbacks.length; i++){
-	  	var f = callbacks[i];
-			f();
-	  }  
-  }
-	
-	if (updateRegions && updateRegions.length > 0) {
-		window[ajaxKey].updateRegions = updateRegions;
-		window[ajaxKey].systemForm = systemForm;
-		window[ajaxKey].submitAJAX();
-	}
-	else {
-		pageActive = false;	
-		systemForm.submit();		
-	}
-}
-
-/**
- * Add a function that will be invoked before form is submitted
- * This is required for HtmlEditor, for example, that
- * will have the possibility to copy its contents in its formelement.
- *
- * @author Konstantin Tretyakov
- */
-function uiAddSystemFormSubmitCallback(systemForm, callbackFunction){
-  if (!systemForm) return;
-  if (!systemForm.uiProperties){
-  	systemForm.uiProperties = new Object();
-  }
-  if (!systemForm.uiProperties.submitCallbacks){
-  	systemForm.uiProperties.submitCallbacks = new Array();
-  }
-  var callbacks = systemForm.uiProperties.submitCallbacks;
-  callbacks[callbacks.length] = callbackFunction;
-}
-
-/**
- * Validates given form in a given system form
- *
- * @author Konstantin Tretyakov
- */
-function uiValidateForm(systemForm, formId) {
-	return systemForm.uiProperties[formId].validator.validate();
-}
-
+/* fillTime*() and addOptions() functions are used in *timeInputs 
+ * for hour and minute inputs/selects. */
 function fillTimeText(systemForm, el, hourSelect, minuteSelect) {
   if (systemForm[hourSelect].value=='' && systemForm[minuteSelect].value=='') {
     systemForm[el].value='';
@@ -94,6 +35,22 @@ function fillTimeSelect(systemForm, timeInput, hourSelect, minuteSelect) {
   systemForm[minuteSelect].value=minuteValue;
 }
 
+// adds options empty,0-(z-1) to select with option x preselected
+function addOptions(selectName, z, x) {
+  var select=document.getElementsByName(selectName).item(0);
+  var emptyOpt=document.createElement("option");
+  emptyOpt.setAttribute("value", "");
+  select.appendChild(emptyOpt);
+  for (var i = 0; i < z; i++) {
+    var opt = document.createElement("option");
+    opt.setAttribute("value", (i < 10 ? "0" : "")+ i);
+    if (i == x) { opt.setAttribute("selected", "true") };
+    var node = document.createTextNode((i < 10 ? "0" : "")+ i);
+    opt.appendChild(node);
+    select.appendChild(opt);
+  }
+}
+
 // b/c braindead IE: The NAME attribute cannot be set at run time on elements dynamically 
 // created with the createElement method. To create an element with a name attribute, 
 // include the attribute and value when using the createElement method.
@@ -111,22 +68,6 @@ function createNamedElement(type, name) {
       element.name = name;
    }
    return element;
-}
-
-// adds options empty,0-(z-1) to select with option x preselected
-function addOptions(selectName, z, x) {
-  var select=document.getElementsByName(selectName).item(0);
-  var emptyOpt=document.createElement("option");
-  emptyOpt.setAttribute("value", "");
-  select.appendChild(emptyOpt);
-  for (var i = 0; i < z; i++) {
-    var opt = document.createElement("option");
-    opt.setAttribute("value", (i < 10 ? "0" : "")+ i);
-    if (i == x) { opt.setAttribute("selected", "true") };
-    var node = document.createTextNode((i < 10 ? "0" : "")+ i);
-    opt.appendChild(node);
-    select.appendChild(opt);
-  }
 }
 
 function saveValue(element) {

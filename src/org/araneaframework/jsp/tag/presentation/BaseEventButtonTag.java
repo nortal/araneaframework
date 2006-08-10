@@ -36,7 +36,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
   protected String globalUpdateRegions;
 
   protected List updateRegionNames;
-  
+
   protected Event event;
   
   {
@@ -110,5 +110,10 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    */
   public void setDisabled(String disabled) throws JspException {
     this.disabled = (String)evaluate("disabled", disabled, String.class);
+  }
+
+  public void doFinally() {
+	super.doFinally();
+	event.reset();
   }
 }

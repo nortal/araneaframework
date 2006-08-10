@@ -32,7 +32,7 @@ public class DefaultEvent extends Event {
   public void setUpdateRegionNames(List updateRegionNames) {
     this.updateRegionNames = updateRegionNames;
   }
-
+  
   public StringBuffer getEventAttributes() {
     StringBuffer result = new StringBuffer();
     result.append(AraneaAttributes.EVENT_ID).append("=\"").append(getId()).append("\" ");
@@ -45,5 +45,10 @@ public class DefaultEvent extends Event {
       result.append(AraneaAttributes.UPDATE_REGIONS).append("=\"").append(JspUpdateRegionUtil.formatUpdateRegionsJS(getUpdateRegionNames())).append("\"");
 
     return result;
+  }
+
+  public void reset() {
+    super.reset();
+    updateRegionNames = null;
   }
 }

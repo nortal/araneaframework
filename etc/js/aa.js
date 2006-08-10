@@ -441,3 +441,5 @@ function trim(str) {
 // default instance.
 ajaxAnywhere = new AjaxAnywhere();
 ajaxKey = ajaxAnywhere.bindById();
+
+window.AraneaAA_Present=true;

@@ -54,6 +54,10 @@
 	                    <jsp:include page="/WEB-INF/jsp/mainlayout/footer.jsp"/>
 
 	                </body>
+	                <script type="text/javascript">
+	                    Behaviour.register(aranea_rules);
+                        Behaviour.apply();
+	                </script>
 	            </html>
 	        </ui:widgetContext>
 	

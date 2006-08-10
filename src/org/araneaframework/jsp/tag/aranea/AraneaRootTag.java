@@ -36,6 +36,8 @@ import org.araneaframework.http.filter.StandardJspFilterService;
 public class AraneaRootTag extends BaseTag {
   public static final String OUTPUT_DATA_KEY = "outputData";
   
+  public static final String REQUEST_URL = "outputData";
+  
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -49,7 +51,7 @@ public class AraneaRootTag extends BaseTag {
     addContextEntry(
         OUTPUT_DATA_KEY, 
         output);
-    
+
     Config.set(
         pageContext, 
         Config.FMT_LOCALIZATION_CONTEXT, 
@@ -63,7 +65,6 @@ public class AraneaRootTag extends BaseTag {
     return EVAL_BODY_INCLUDE;
   }
 }
-
 
 /**
  * Adapter resource bundle that converts all objects to string.

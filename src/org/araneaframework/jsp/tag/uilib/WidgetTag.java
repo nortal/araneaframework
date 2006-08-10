@@ -75,17 +75,10 @@ public class WidgetTag extends BaseTag {
     addContextEntry(FULL_ID_KEY, fullId);
     addContextEntry(SCOPED_FULL_ID_KEY, scopedFullId);    
     addContextEntry(VIEW_MODEL_KEY, viewModel);
-    writeWidgetStartTag(out);
 
     // Continue
     return EVAL_BODY_INCLUDE;    
   }
-  
-  protected int doEndTag(Writer out) throws Exception {
-    int r = super.doEndTag(out);
-    writeWidgetEndTag(out);
-    return r;
-  }  
 
   /* ***********************************************************************************
    * Tag attributes
@@ -99,16 +92,5 @@ public class WidgetTag extends BaseTag {
    */
   public void setId(String id) throws JspException {
     this.id = (String)evaluateNotNull("id", id, String.class);
-  }
-
-  /* ***********************************************************************************
-   * Writes out widget start and end tags.
-   * ***********************************************************************************/
-  protected void writeWidgetStartTag(Writer out) throws Exception {
-    JspUtil.writeStartTag_SS(out, "div arn-widget=\"" + scopedFullId + "\"");
-  }
-  
-  protected void writeWidgetEndTag(Writer out) throws Exception {
-    JspUtil.writeEndTag_SS(out, "div");
   }
 }

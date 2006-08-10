@@ -31,7 +31,7 @@ import org.araneaframework.uilib.form.control.ButtonControl;
 public class BaseFormButtonTag extends BaseFormElementHtmlTag {
   protected boolean showLabel = true;
     
-  protected String onClickPrecondition = "return true;";
+  protected String onClickPrecondition;
   protected ButtonControl.ViewModel viewModel;
 	
   

@@ -82,7 +82,11 @@
 		                    
 	                    </ui:systemForm>
                     
-                    </body>        
+                    </body>
+	                <script type="text/javascript">
+	                    Behaviour.register(aranea_rules);
+                        Behaviour.apply();
+	                </script>
                 </html>
             </ui:widgetContext>
         </ui:viewPort>
