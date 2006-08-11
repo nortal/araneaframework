@@ -12,13 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.backend.list.helper;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
 import org.apache.log4j.Logger;
 
 
@@ -30,20 +31,20 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * 
  */
-public class DbHelper {
-  private static Logger log = Logger.getLogger(DbHelper.class);
+public class DbUtil {
+	private static Logger log = Logger.getLogger(DbUtil.class);
+
+	private DbUtil() {
+		// static methods only - hide constructor
+	}
 	
-	/**
-	 * Creates new instance of <code>DbHelper</code>.
-	 */
-	 public DbHelper(){}
 	/**
 	 * Closes connection to the database along with current statement and result set.
 	 * @param con connection to be closed.
 	 * @param stmt statement to be closed.
 	 * @param rs result set to be closed.
 	 */
-  public static void closeDbObjects(Connection con, Statement stmt, ResultSet rs){		
+	public static void closeDbObjects(Connection con, Statement stmt, ResultSet rs){		
 		if (rs != null){
 			try{
 				rs.close();

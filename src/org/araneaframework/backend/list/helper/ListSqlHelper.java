@@ -22,7 +22,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +30,7 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
@@ -75,15 +75,20 @@ public abstract class ListSqlHelper {
 	// FIELDS
 	// *******************************************************************
 
+	// CONVERTERS
+
+	/** Value name --> Converter that is used by convert() method */
+	protected Map valueConverters = new HashMap();
+	/** ResultSet column name --> Converter that is used by reverseConvert() method */
+	protected Map resultSetDeconverters = new HashMap();
+	
 	// MAPPING
 
-	// Value Name ? --> Converter (Converter that is used by convert() method)
-	protected Map valueConverters = new HashMap();
-	// Bean Field Name ? --> Deconverter (Converter that is used by reverseConvert() method)
-	protected Map beanDeconverters = new HashMap();
-	// Variable Name ? --> Database Field Name
-	protected Map variableToDatabaseMapping = new HashMap();
-	// Bean Field Name ? --> ResultSet Column Name
+	/** Variable name --> Database field name */
+	protected Map variableToDbFieldMapping = new HashMap();
+	/** Variable name --> Database field alias */
+	protected Map variableToDbAliasMapping = new HashMap();
+	/** Bean field name --> ResultSet column name */
 	protected Map beanToResultSetMapping = new HashMap();
 
 	// FILTER AND ORDER
@@ -140,7 +145,7 @@ public abstract class ListSqlHelper {
 	 * Creates <code>ListSqlHelper</code> without initializing any fields.
 	 */
 	public ListSqlHelper() {
-		// for bran creation
+		// for bean creation
 	}
 
 	// *********************************************************************
@@ -152,12 +157,36 @@ public abstract class ListSqlHelper {
 	 * filtering and ordering expressions. 
 	 */
 	public void setListQuery(ListQuery query) {
-		this.filterExpr = query.getFilterExpression();
-		this.orderExpr = query.getOrderExpression();
+		setFilterExpression(query.getFilterExpression());
+		setOrderExpression(query.getOrderExpression());
 		setItemRangeStart(query.getItemRangeStart());
 		setItemRangeCount(query.getItemRangeCount());
 	}
+	
+	/**
+	 * Sets the order expression saving it for later automatic SQL query
+	 * creation.
+	 * 
+	 * @see #getDatabaseOrder()
+	 * @see #getDatabaseOrderWith(String, String)
+	 * @see #getDatabaseOrderParams()
+	 */
+	public void setOrderExpression(ComparatorExpression orderExpr) {
+		this.orderExpr = orderExpr;
+	}
 
+	/**
+	 * Sets the filter expression saving it for later automatic SQL query
+	 * creation.
+	 * 
+	 * @see #getDatabaseFilter()
+	 * @see #getDatabaseFilterWith(String, String)
+	 * @see #getDatabaseFilterParams()
+	 */
+	public void setFilterExpression(Expression filterExpr) {
+		this.filterExpr = filterExpr;
+	}
+	
 	/**
 	 * Sets the (0-based) starting index of the item range.
 	 */
@@ -186,153 +215,204 @@ public abstract class ListSqlHelper {
 	// * DATABASE MAPPING AND CONVERTERS
 	// *********************************************************************	
 
+	// Converters
+	
 	/**
-	 * Sets the converter between the filtering-ordering values in
-	 * <code>Expressions</code> and values in <code>SqlExpressions</code>.
-	 * 
-	 * @param valueName
-	 *            value name in <code>Expression</code> and
-	 *            <code>ComparatorExpression</code>.
+	 * Adds a converter for a filter/order expression value. The converter is
+	 * used by auomatic SQL query creation according to the filter/order
+	 * expressions. 
+	 *  
+	 * @param value
+	 *            filter/order expression value name.
 	 * @param converter
 	 *            converter that is used by <code>convert()</code> method.
+	 *            
+	 * @see #addResultSetDeconverterForBeanField(String, Converter)
+	 * @see #addResultSetDeconverterForColumn(String, Converter)
 	 */
-	public void setConverter(String valueName, Converter converter) {
-		this.valueConverters.put(valueName, converter);
+	public void addDatabaseFieldConverter(String value, Converter converter) {
+		this.valueConverters.put(value, converter);
 	}
 
 	/**
-	 * Sets the converter between the values in <code>ResultSet</code> and
-	 * bean fields <code>beanFieldName</code>.
+	 * Adds a deconverter for <code>ResultSet</code>. The converter is used by
+	 * {@link BeanResultReader} to reverseConvert() values from
+	 * <code>ResultSet</code> into bean field format.
 	 * 
-	 * @param beanFieldName
-	 *            bean field name.
+	 * @param beanField
+	 *            Bean field name.
 	 * @param converter
 	 *            converter that is used by <code>reverseConvert()</code>
 	 *            method.
+	 *            
+	 * @see #addDatabaseFieldConverter(String, Converter)
+	 * @see #addResultSetDeconverterForColumn(String, Converter)
+	 * @see BeanResultReader
 	 */
-	public void setDeconverter(String beanFieldName, Converter converter) {
-		this.beanDeconverters.put(beanFieldName, converter);
+	public void addResultSetDeconverterForBeanField(String beanField, Converter converter) {
+		String rsColumn = (String) beanToResultSetMapping.get(beanField);
+		addResultSetDeconverterForColumn(rsColumn, converter);
 	}
-
+	
 	/**
-	 * Sets the mapping between the filtering-ordering variable name
-	 * <code>variableName</code> and the database field name
-	 * <code>databaseField</code>.
+	 * Adds a deconverter for <code>ResultSet</code>. The converter is used by
+	 * {@link BeanResultReader} to reverseConvert() values from
+	 * <code>ResultSet</code> into bean field format.
 	 * 
-	 * @param variableName
-	 *            variable name in <code>Expression</code> and
-	 *            <code>ComparatorExpression</code>.
-	 * @param databaseFieldName
-	 *            database field name.
-	 */
-	public void setDatabaseFieldMapping(String variableName,
-			String databaseFieldName) {
-		this.variableToDatabaseMapping.put(variableName, databaseFieldName);
-	}
-
-	/**
-	 * Sets the mapping between the bean field name <code>beanFieldName</code>
-	 * and the name of <code>ResultSet</code> column.
-	 * 
-	 * @param beanFieldName
-	 *            bean field name.
-	 * @param resultSetColumnName
-	 *            <code>ResultSet</code> column name.
-	 */
-	public void setResultSetMapping(String beanFieldName,
-			String resultSetColumnName) {
-		this.beanToResultSetMapping.put(beanFieldName, resultSetColumnName);
-	}
-
-	/**
-	 * Sets the mapping between the filtering-ordering variable / bean field
-	 * name <code>columnName</code> and the database field name
-	 * <code>databaseFieldName</code>. Use this function if the names of the
-	 * <code>ResultSet</code> column and the database field name used in
-	 * "WHERE" clause coinside or if you read the <code>ResultSet</code>
-	 * manually.
-	 * 
-	 * @param columnName
-	 *            variable name in <code>Expression</code> and
-	 *            <code>ComparatorExpression</code> and the bean field name.
-	 * @param databaseFieldName
-	 *            database field name.
-	 */
-	public void setColumnMapping(String columnName, String databaseFieldName) {
-		setColumnMapping(columnName, databaseFieldName, makeFieldNameUnique(removePrefix(databaseFieldName)));
-	}
-
-	private String makeFieldNameUnique(String databaseFieldName) {
-		String alias = databaseFieldName;
-		int index = 0;
-		while (this.beanToResultSetMapping.containsValue(alias)) {
-			alias = alias + index++;
-		}
-		if (log.isDebugEnabled()) {
-			log.debug("Using '" + alias + "' as alias for field '" + databaseFieldName + "'");
-		}
-		return alias;
-	}
-
-	private static String removePrefix(String databaseFieldName) {
-		return databaseFieldName.substring(databaseFieldName.lastIndexOf('.') + 1);
-	}
-
-	/**
-	 * Sets the mapping between the filtering-ordering variable / bean field
-	 * name <code>columnName</code> and the database field names
-	 * <code>databaseFieldMapping</code>. Use this function if the names of
-	 * the <code>ResultSet</code> column and the database field name used in
-	 * "WHERE" clause differ.
-	 * 
-	 * @param columnName
-	 *            variable name in <code>Expression</code> and
-	 *            <code>ComparatorExpression</code> and the bean field name.
-	 * @param databaseFieldName
-	 *            database field name.
-	 * @param resultSetColumnName
-	 *            <code>ResultSet</code> column name.
-	 */
-	public void setColumnMapping(String columnName, String databaseFieldName,
-			String resultSetColumnName) {
-		setDatabaseFieldMapping(columnName, databaseFieldName);
-		setResultSetMapping(columnName, resultSetColumnName);
-	}
-
-	/**
-	 * Sets the converter between the filtering-ordering values with the name of /
-	 * bean field with the name of <code>columnName</code> and its database
-	 * field / <code>ResultSet</code> column.
-	 * 
-	 * @param columnName
-	 *            value name in <code>Expression</code> and
-	 *            <code>ComparatorExpression</code> and the bean field name.
+	 * @param rsColumn
+	 *            ResultSet column name.
 	 * @param converter
-	 *            converter that is used by <code>convert()</code> and
-	 *            <code>reverseConvert()</code> method.
+	 *            converter that is used by <code>reverseConvert()</code>
+	 *            method.
+	 *            
+	 * @see #addDatabaseFieldConverter(String, Converter)
+	 * @see #addResultSetDeconverterForBeanField(String, Converter)
+	 * @see BeanResultReader
 	 */
-	public void setColumnConverter(String columnName, Converter converter) {
-		setConverter(columnName, converter);
-		setDeconverter(columnName, converter);
+	public void addResultSetDeconverterForColumn(String rsColumn, Converter converter) {
+		this.resultSetDeconverters.put(rsColumn, converter);
+	}
+	
+	// Mappings
+
+	/**
+	 * Adds a mapping between a filter/order expression variable and a database
+	 * field having an alias.
+	 * 
+	 * This information is used by automatic SQL query creation according to the
+	 * filter/order expressions as well as getting the database fields list.
+	 * 
+	 * @param variable
+	 *            filter/order expression variable.
+	 * @param dbField
+	 *            database field name (with optional table prefix).
+	 * @param dbAlias
+	 *            database field alias (without table prefix).
+	 *            
+	 * @see #addDatabaseFieldMapping(String, String)
+	 */
+	public void addDatabaseFieldMapping(String variable, String dbField, String dbAlias) {
+		this.variableToDbFieldMapping.put(variable, dbField);
+		this.variableToDbAliasMapping.put(variable, dbAlias);
+	}
+	
+	/**
+	 * Adds a mapping between a filter/order expression variable and a database
+	 * field.
+	 * 
+	 * The alias for database field is generated automatically.
+	 * 
+	 * This information is used by automatic SQL query creation according to the
+	 * filter/order expressions as well as getting the database fields list.
+	 * 
+	 * @param variable
+	 *            filter/order expression variable.
+	 * @param dbField
+	 *            database field name (with optional table prefix).
+	 *            
+	 * @see #addDatabaseFieldMapping(String, String)
+	 */
+	public void addDatabaseFieldMapping(String variable, String dbField) {
+		String dbAlias = getAliasForField(dbField);
+		addDatabaseFieldMapping(variable, dbField, dbAlias);
+	}
+	
+	/**
+	 * Adds a mapping between a <code>ResultSet</code> column and a Bean field.
+	 * 
+	 * This information is used by {@link BeanResultReader} to propagate the
+	 * bean fields with <code>ResultSet</code> data.
+	 *  
+	 * @param rsColumn
+	 *            ResultSet< column name.
+	 * @param beanField
+	 *            Bean field name.
+	 *            
+	 * @see BeanResultReader
+	 */
+	public void addResultSetMapping(String rsColumn, String beanField) {
+		this.beanToResultSetMapping.put(beanField, rsColumn);
+	}
+	
+	/**
+	 * Adds a mapping between a filter/order expression variable, a database
+	 * field having an alias which as well is the ResultSet column name, and
+	 * a Bean field.
+	 * 
+	 * This method is a shortcut for calling both
+	 * {@link #addDatabaseFieldMapping(String, String, String)} and
+	 * {@link #addResultSetMapping(String, String)} methods.
+	 * 
+	 * @param variable
+	 *            filter/order expression variable name.
+	 * @param dbField
+	 *            database field name (with optional table prefix).
+	 * @param dbAlias
+	 *            database field alias (without table prefix).
+	 * @param beanField
+	 *            Bean field name.
+	 * 
+	 * @see #addDatabaseFieldMapping(String, String, String)
+	 * @see #addResultSetMapping(String, String)
+	 * @see #addMapping(String, String, String)
+	 * @see #addMapping(String, String)
+	 */
+	public void addMapping(String variable, String dbField, String dbAlias, String beanField) {
+		// ResultSet column name = Database field alias
+		addDatabaseFieldMapping(variable, dbField, dbAlias);
+		addResultSetMapping(dbAlias, beanField);
+	}
+
+	/**
+	 * Adds a mapping between a filter/order expression variable, a database
+	 * field having an alias which as well is the ResultSet column name, and
+	 * a Bean field.
+	 * 
+	 * This method is a shortcut for calling
+	 * {@link #addMapping(String, String, String, String)} with an assumption
+	 * that the Bean field name is the same as the filter/order expression
+	 * variable name.
+	 * 
+	 * @param variable
+	 *            filter/order expression variable name (the Bean field name).
+	 * @param dbField
+	 *            database field name (with optional table prefix).
+	 * @param dbAlias
+	 *            database field alias (without table prefix).
+	 * 
+	 * @see #addMapping(String, String, String, String)
+	 * @see #addMapping(String, String)
+	 */	
+	public void addMapping(String variable, String dbField, String dbAlias) {
+		// Bean field name = Filter/order expression variable name
+		addMapping(variable, dbField, dbAlias, variable);
+	}
+	
+	/**
+	 * Adds a mapping between a filter/order expression variable, a database
+	 * field having an alias which as well is the ResultSet column name, and
+	 * a Bean field.
+	 * 
+	 * This method is a shortcut for calling
+	 * {@link #addMapping(String, String, String)} but the database field alias
+	 * (as well as the ResultSet column name) is generated automatically.
+	 * 
+	 * @param variable
+	 *            filter/order expression variable name.
+	 * @param dbField
+	 *            database field name (with optional table prefix).
+	 * 
+	 * @see #addMapping(String, String, String, String)
+	 * @see #addMapping(String, String, String)
+	 */	
+	public void addMapping(String variable, String dbField) {
+		String dbAlias = getAliasForField(dbField);
+		addMapping(variable, dbField, dbAlias, variable);
 	}
 
 	// *********************************************************************
 	// * BUILDING SQL EXPRESSIONS ACCORDING TO ORDERING AND FILTERING
 	// *********************************************************************	
-		
-	/**
-	 * Sets the <code>ComparatorExpression</code> saving it for later use.
-	 */
-	public void setOrderExpression(ComparatorExpression orderExpr) {
-		this.orderExpr = orderExpr;
-	}
-
-	/**
-	 * Sets the <code>Expression</code> saving it for later use.
-	 */
-	public void setFilterExpression(Expression filterExpr) {
-		this.filterExpr = filterExpr;
-	}
 
 	/**
 	 * Returns the fields <code>SqlExpression</code>, which can be used in
@@ -344,18 +424,18 @@ public abstract class ListSqlHelper {
 	protected SqlExpression getFieldsSqlExpression() {
 		SqlCollectionExpression fields = new SqlCollectionExpression();
 
-		for (Iterator i = this.variableToDatabaseMapping.entrySet().iterator(); i.hasNext(); ) {
+		for (Iterator i = this.variableToDbFieldMapping.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry entry = (Entry) i.next();
 
 			String variable = (String) entry.getKey();
 			String dbField = (String) entry.getValue();
-			String alias = (String) this.beanToResultSetMapping.get(variable);
+			String dbAlias = (String) variableToDbAliasMapping.get(variable);
 			
 			String sql;
-			if (alias == null || alias.equals(dbField)) {
+			if (dbAlias.equals(dbField)) {
 				sql = dbField;
 			} else {
-				sql = new StringBuffer(dbField).append(" ").append(alias).toString();
+				sql = new StringBuffer(dbField).append(" ").append(dbAlias).toString();
 			}
 			fields.add(new SqlStringExpression(sql));
 		}
@@ -420,34 +500,46 @@ public abstract class ListSqlHelper {
 	}
 	
 	/**
-	 * Returns the database fields list seperated by commas, which can be used in "SELECT" clause.
+	 * Returns the database fields list seperated by commas, which can be used
+	 * in "SELECT" clause.
 	 * 
-	 * @return the database fields list seperated by commas, which can be used in "SELECT" clause.
+	 * @return the database fields list seperated by commas, which can be used
+	 * in "SELECT" clause.
 	 */
 	public String getDatabaseFields() {
-		SqlExpression expr = this.getFieldsSqlExpression();
-		return expr != null ? expr.toSqlString() : "";
+		return getSqlString(getFieldsSqlExpression());		
 	}
 
 	/**
-	 * Returns the filter database condition, which can be used in "WHERE" clause.
+	 * Returns the filter database condition, which can be used in "WHERE"
+	 * clause.
 	 * 
-	 * @return the filter database condition, which can be used in "WHERE" clause.
+	 * @return the filter database condition, which can be used in "WHERE"
+	 * clause.
+	 * 
+	 * @see #getDatabaseFilterWith(String, String)
+	 * @see #getDatabaseFilterParams()
 	 */
 	public String getDatabaseFilter() {
-		SqlExpression expr = this.getFilterSqlExpression();
-		return expr != null ? expr.toSqlString() : "";
+		return getSqlString(getFilterSqlExpression());
 	}
 
+	/**
+	 * Returns the database filter query with <code>prefix</code> added before and 
+	 * <code>suffix</code> after it if the query is not empty.
+	 * 
+	 * @param prefix Prefix added before the expression.
+	 * @param suffix Suffix added after the expression.
+	 * 
+	 * @return the database filter query with <code>prefix</code> added before and 
+	 *  <code>suffix</code> after it if the query is not empty.
+	 * 
+	 * @see #getDatabaseFilter()
+	 * @see #getDatabaseFilterParams()
+	 */
 	public String getDatabaseFilterWith(String prefix, String suffix) {
-		StringBuffer whereCondition = new StringBuffer();		
-		if (this.filterExpr != null) {
-			whereCondition.append(prefix);
-			whereCondition.append(getDatabaseFilter());
-			whereCondition.append(suffix);
-		}
-		return whereCondition.toString();
-	}  
+		return this.filterExpr != null ? getSqlStringWith(getFilterSqlExpression(), prefix, suffix) : "";		
+	}
 
 	/**
 	 * Returns the <code>List</code> of parameters that should be set in the
@@ -457,20 +549,24 @@ public abstract class ListSqlHelper {
 	 * @return the <code>List</code> of parameters that should be set in the
 	 * <code>PreparedStatement</code> that
 	 *         belong to the filter database conditions.
+	 *         
+	 * @see #getDatabaseFilter()
+	 * @see #getDatabaseFilterWith(String, String)
 	 */
 	public List getDatabaseFilterParams() {
-		SqlExpression expr = this.getFilterSqlExpression();
-		return expr != null ? Arrays.asList(expr.getValues()) : new ArrayList();
+		return getSqlParams(getFilterSqlExpression());
 	}
 
 	/**
 	 * Returns the order database representation, which can be used in "ORDER BY" clause.
 	 * 
 	 * @return the order database representation, which can be used in "ORDER BY" clause.
+	 * 
+	 * @see #getDatabaseOrderWith(String, String)
+	 * @see #getDatabaseOrderParams()
 	 */
 	public String getDatabaseOrder() {
-		SqlExpression expr = this.getOrderSqlExpression();
-		return expr != null ? expr.toSqlString() : "";
+		return getSqlString(getOrderSqlExpression());
 	}
 
 	/**
@@ -484,15 +580,10 @@ public abstract class ListSqlHelper {
 	 *  <code>suffix</code> after it if the query is not empty.
 	 * 
 	 * @see #getDatabaseOrder()
+	 * @see #getDatabaseOrderParams()
 	 */
 	public String getDatabaseOrderWith(String prefix, String suffix) {
-		StringBuffer orderQuery = new StringBuffer();
-		if (this.orderExpr != null) {
-			orderQuery.append(prefix);
-			orderQuery.append(getDatabaseOrder());
-			orderQuery.append(suffix);
-		}
-		return orderQuery.toString();
+		return this.orderExpr != null ? getSqlStringWith(getOrderSqlExpression(), prefix, suffix) : "";		
 	}  
 
 	/**
@@ -501,10 +592,12 @@ public abstract class ListSqlHelper {
 	 * 
 	 * @return the <code>List</code> of parameters that should be set in the
 	 * <code>PreparedStatement</code> that belong to the order database representation.
+	 * 
+	 * @see #getDatabaseOrder()
+	 * @see #getDatabaseOrderWith(String, String)
 	 */
 	public List getDatabaseOrderParams() {
-		SqlExpression expr = this.getOrderSqlExpression();
-		return expr != null ? Arrays.asList(expr.getValues()) : new ArrayList();
+		return getSqlParams(getOrderSqlExpression());
 	}
 
 	// *********************************************************************
@@ -763,7 +856,7 @@ public abstract class ListSqlHelper {
 		} catch (SQLException e) {
 			throw ExceptionUtil.uncheckException(e);
 		} finally {
-			DbHelper.closeDbObjects(con, null, null);
+			DbUtil.closeDbObjects(con, null, null);
 		}
 	}
 	
@@ -957,7 +1050,7 @@ public abstract class ListSqlHelper {
 				return null;
 			}
 			finally {
-				DbHelper.closeDbObjects(null, stmt, rs);
+				DbUtil.closeDbObjects(null, stmt, rs);
 			}
 		}		
 	}
@@ -1008,7 +1101,7 @@ public abstract class ListSqlHelper {
 				return reader.getResults();
 			}
 			finally {
-				DbHelper.closeDbObjects(null, stmt, rs);
+				DbUtil.closeDbObjects(null, stmt, rs);
 			}
 		}
 	}
@@ -1071,22 +1164,23 @@ public abstract class ListSqlHelper {
 		 * Reads the bean from <code>ResultSet</code>. Implementations
 		 * may override it to read beans in a custom way.
 		 * 
-		 * @param resultSet
+		 * @param rs
 		 *            <code>ResultSet</code> containing the results of database
 		 *            query.
 		 * @param bean
 		 *            bean to read.
 		 */
-		protected void readBeanFields(ResultSet resultSet, Object bean) {
-			Collection fields = beanToResultSetMapping.keySet();
-			for (Iterator i = fields.iterator(); i.hasNext();) {
-				String field = (String) i.next();
-
-				if (!this.beanMapper.fieldIsWritable(field))
+		protected void readBeanFields(ResultSet rs, Object bean) {
+			for (Iterator i = beanToResultSetMapping.entrySet().iterator(); i.hasNext();) {
+				Entry entry = (Entry) i.next();
+				String beanField = (String) entry.getKey();
+				String rsColumn = (String) entry.getValue();
+				
+				if (!this.beanMapper.fieldIsWritable(beanField))
 					throw new RuntimeException(
 							"The field specified in the mapping doesn't have a corresponding Value Object field!");
 
-				readBeanField(resultSet, bean, field);
+				readBeanField(rs, rsColumn, bean, beanField);
 			}
 		}
 
@@ -1096,32 +1190,30 @@ public abstract class ListSqlHelper {
 		 * way. A usual situation would be when a bean field is read from
 		 * more than one <code>ResultSet</code> field.
 		 * 
-		 * @param resultSet
+		 * @param rs
 		 *            <code>ResultSet</code> containing the results of database
 		 *            query.
 		 * @param bean
 		 *            bean to read.
-		 * @param field
+		 * @param beanField
 		 *            bean field to read.
 		 */
-		protected void readBeanField(ResultSet resultSet, Object bean, String field) {
-			String resultSetColumnName = (String) beanToResultSetMapping
-			.get(field);
-			Converter deconverter = (Converter) beanDeconverters.get(field);
+		protected void readBeanField(ResultSet rs, String rsColumn, Object bean, String beanField) {
+			Converter deconverter = (Converter) resultSetDeconverters.get(rsColumn);
 
 			Class valueType;
 			if (deconverter != null) {
 				valueType = deconverter.getDestinationType();
 			} else {
-				valueType = this.beanMapper.getBeanFieldType(field);
+				valueType = this.beanMapper.getBeanFieldType(beanField);
 			}
 
 			Object value = resultSetColumnReader.readFromResultSet(
-					resultSetColumnName, resultSet, valueType);
+					rsColumn, rs, valueType);
 			if (deconverter != null) {
 				value = deconverter.reverseConvert(value);
 			}
-			this.beanMapper.setBeanFieldValue(bean, field, value);
+			this.beanMapper.setBeanFieldValue(bean, beanField, value);
 		}
 		
 		/** 
@@ -1135,7 +1227,27 @@ public abstract class ListSqlHelper {
 	// *********************************************************************
 	// * HELPER METHODS
 	// *********************************************************************
-
+	
+	private String getAliasForField(String dbField) {
+		// Remove prefix
+		String tmp = dbField.substring(dbField.lastIndexOf('.') + 1);
+		if (!StringUtils.isAlphanumeric(tmp)) {
+			tmp = "alias";
+		}
+		
+		// Make unique
+		String alias = tmp;
+		int index = 0;		
+		while (this.variableToDbAliasMapping.containsValue(alias)) {
+			alias = tmp + index++;
+		}
+		
+		if (log.isDebugEnabled()) {
+			log.debug("Generated '" + alias + "' as alias for field '" + dbField + "'");
+		}
+		return alias;
+	}
+	
 	/**
 	 * Creates the ValueConverter for SqlExpressionBuilder that converts Values
 	 * according to the previously set Converters.
@@ -1171,12 +1283,34 @@ public abstract class ListSqlHelper {
 	protected VariableResolver createExpressionBuilderResolver() {
 		Map map = new HashMap();
 
-		Iterator i = this.variableToDatabaseMapping.keySet().iterator();
+		Iterator i = this.variableToDbFieldMapping.keySet().iterator();
 		while (i.hasNext()) {
 			String varName = (String) i.next();
-			map.put(varName, this.variableToDatabaseMapping.get(varName));
+			map.put(varName, this.variableToDbFieldMapping.get(varName));
 		}
 		return new VariableMapper(map);
+	}
+	
+	// *********************************************************************
+	// * UTIL METHODS
+	// *********************************************************************
+	
+	private static String getSqlString(SqlExpression expr) {
+		return expr != null ? expr.toSqlString() : "";
+	}
+	
+	private static String getSqlStringWith(SqlExpression expr, String prefix, String suffix) {
+		StringBuffer sb = new StringBuffer();
+		if (expr != null) {
+			sb.append(prefix);
+			sb.append(expr.toSqlString());				
+			sb.append(suffix);
+		}
+		return sb.toString();
+	}
+	
+	private static List getSqlParams(SqlExpression expr) {
+		return expr != null ? Arrays.asList(expr.getValues()) : new ArrayList();
 	}
 	
 	/**
