@@ -316,25 +316,17 @@ public class ListWidget extends StandardPresentationWidget {
 	}	
 
 	public void addFilterFormElement(String id, FormElement element) throws Exception {
-		addElement(this.filterForm, id, element);
+		RecursiveFormUtil.addElement(this.filterForm, id, element);
 	}	
 
 	public void addFilterFormElement(String id, String label, Control control, Data data) throws Exception {
-		addElement(this.filterForm, id, label, control, data, false);
+		RecursiveFormUtil.addElement(this.filterForm, id, label, control, data, false);
 	}
 
 	public void addFilterFormElement(String id, Control control, Data data) throws Exception {
 		addFilterFormElement(id, getColumnLabel(id), control, data);
 	}
-
-	private static void addElement(FormWidget form, String fullId, FormElement element) throws Exception {
-		RecursiveFormUtil.addElement(form, fullId, element);
-	}
-
-	private static void addElement(FormWidget form, String fullId, String label, Control control, Data data, boolean mandatory) throws Exception {
-		RecursiveFormUtil.addElement(form, fullId, label, control, data, mandatory);
-	}
-
+	
 	/**
 	 * Returns how many items will be displayed on one page.
 	 * @return how many items will be displayed on one page.

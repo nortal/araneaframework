@@ -145,7 +145,7 @@ public abstract class ListSqlHelper {
 	 * Creates <code>ListSqlHelper</code> without initializing any fields.
 	 */
 	public ListSqlHelper() {
-		// for bran creation
+		// for bean creation
 	}
 
 	// *********************************************************************
