@@ -16,7 +16,6 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
