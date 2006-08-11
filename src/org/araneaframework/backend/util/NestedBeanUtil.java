@@ -31,25 +31,19 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  */
 public class NestedBeanUtil {
 	
-	private static final String GET_PREFIX = "get";
-	private static final String SET_PREFIX = "set";
-	private static final String IS_PREFIX = "is";
-	
-	private static final String GET_CLASS_METHOD = "getClass";
-	
     /**
      * The delimiter that separates the components of a nested reference.
      */
     public static final char NESTED_DELIM = '.';
     
-    public static List getSimpleFields(Object bean) {
+    public static List getFields(Object bean) {
 		if (bean == null) {
 			throw new RuntimeException("No bean specified (use bean type as argument)");
 		}
-    	return getSimpleFields(bean.getClass());
+    	return getFields(bean.getClass());
     }
 	
-	public static List getSimpleFields(Class beanType) {
+	public static List getFields(Class beanType) {
 		if (beanType == null) {
 			throw new RuntimeException("No bean class specified");
 		}
@@ -63,15 +57,13 @@ public class NestedBeanUtil {
 			if (Modifier.isPublic(method.getModifiers())
 					&& (method.getParameterTypes().length == 0)
 					&& !(method.getReturnType().isAssignableFrom(Void.class))) {
-				// Checking that it's a getter method, and it has a corresponding
-				// setter method.
-				if (method.getName().startsWith(GET_PREFIX) && !GET_CLASS_METHOD.equals(method.getName())) {
-					// Adding the field...
-					result.add(StringUtils.uncapitalize(method.getName().substring(GET_PREFIX.length())));
+				if (method.getName().startsWith("get") && !"getClass".equals(method.getName())) {
+					//Adding the field...
+					result.add(method.getName().substring(3, 4).toLowerCase() + method.getName().substring(4));
 				}
-				else if (method.getName().startsWith(IS_PREFIX) && (Boolean.class.equals(method.getReturnType()) || boolean.class.equals(method.getReturnType()))) {
-					// Adding the field...
-					result.add(StringUtils.uncapitalize(method.getName().substring(IS_PREFIX.length())));
+				else if (method.getName().startsWith("is") && (Boolean.class.equals(method.getReturnType()) || boolean.class.equals(method.getReturnType()))) {
+					//Adding the field...
+					result.add(method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3));					
 				}
 			}
 		}
@@ -82,7 +74,7 @@ public class NestedBeanUtil {
 	/**
 	 * Returns null if no bean specified or such method found.
 	 */
-	public static Object getSimpleFieldValue(Object bean, String fieldName) {
+	private static Object getSimpleFieldValue(Object bean, String fieldName) {
 		if (bean == null) {
 			return null;
 		}
@@ -109,7 +101,7 @@ public class NestedBeanUtil {
 	/**
 	 * Returns null if no bean specified or such method found.
 	 */
-	public static Object getNestedFieldValue(Object bean, String fieldName) {
+	public static Object getFieldValue(Object bean, String fieldName) {
 		if (bean == null) {
 			return null;
 		}
@@ -128,7 +120,7 @@ public class NestedBeanUtil {
 	/**
 	 * Nothing will happen if no bean specified or such method found.
 	 */
-	public static void setSimpleFieldValue(Object bean, String fieldName, Object value) {
+	private static void setSimpleFieldValue(Object bean, String fieldName, Object value) {
 		if (bean == null) {
 			return;
 		}
@@ -153,7 +145,7 @@ public class NestedBeanUtil {
 	/**
 	 * Nothing will happen if no bean specified or such method found.
 	 */
-	public static void setNestedFieldValue(Object bean, String fieldName, Object value) {
+	public static void setFieldValue(Object bean, String fieldName, Object value) {
 		if (bean == null) {
 			return;
 		}
@@ -172,12 +164,11 @@ public class NestedBeanUtil {
 	}
 	
 	/**
-	 * Subfields that refer to null are populated with new instances of their
-	 * bean types.
+	 * Missing beans in sub-fields are created automatically.
 	 * 
 	 * Nothing will happen if no bean specified or such method found.
 	 */	
-	public static void setNestedFieldValueWithCreatingMissingBeans(Object bean, String fieldName, Object value) {
+	public static void fillFieldValue(Object bean, String fieldName, Object value) {
 		if (bean == null) {
 			return;
 		}
@@ -197,18 +188,11 @@ public class NestedBeanUtil {
 		}
 		setSimpleFieldValue(subBean, fieldNames[fieldNames.length-1], value);
 	}
-	
-    public static Class getSimpleFieldType(Object bean, String fieldName) {
-		if (bean == null) {
-			throw new RuntimeException("No bean specified (use bean type as argument)");
-		}
-    	return getSimpleFieldType(bean.getClass(), fieldName);
-    }
     
 	/**
 	 * Null is returned if no such method found.
 	 */
-	public static Class getSimpleFieldType(Class beanType, String fieldName) {
+	private static Class getSimpleFieldType(Class beanType, String fieldName) {
 		if (beanType == null) {
 			throw new RuntimeException("No bean class specified");
 		}
@@ -224,17 +208,17 @@ public class NestedBeanUtil {
 		return result;
 	}	
 
-    public static Class getNestedFieldType(Object bean, String fieldName) {
+    public static Class getFieldType(Object bean, String fieldName) {
 		if (bean == null) {
 			throw new RuntimeException("No bean specified (use bean type as argument)");
 		}
-    	return getNestedFieldType(bean.getClass(), fieldName);
+    	return getFieldType(bean.getClass(), fieldName);
     }
 	
 	/**
 	 * Null is returned if no such method found.
 	 */
-	public static Class getNestedFieldType(Class beanType, String fieldName) {
+	public static Class getFieldType(Class beanType, String fieldName) {
 		if (beanType == null) {
 			throw new RuntimeException("No bean class specified");
 		}
@@ -258,7 +242,7 @@ public class NestedBeanUtil {
     }	
 	
 	public static boolean isReadable(Class beanType, String fieldName) {
-		return (getNestedReadMethod(beanType, fieldName) != null);
+		return (getReadMethod(beanType, fieldName) != null);
 	}
 	
     public static boolean isWritable(Object bean, String fieldName) {
@@ -269,20 +253,13 @@ public class NestedBeanUtil {
     }	
 	
 	public static boolean isWritable(Class beanType, String fieldName) {
-		return (getNestedWriteMethod(beanType, fieldName) != null);
+		return (getWriteMethod(beanType, fieldName) != null);
 	}
-	
-    public static Method getSimpleWriteMethod(Object bean, String fieldName) {
-		if (bean == null) {
-			throw new RuntimeException("No bean specified (use bean type as argument)");
-		}
-    	return getSimpleWriteMethod(bean.getClass(), fieldName);
-    }
-    
+
 	/**
 	 * Null is returned if no such method found.
 	 */
-	public static Method getSimpleWriteMethod(Class beanType, String fieldName) {
+	private static Method getSimpleWriteMethod(Class beanType, String fieldName) {
 		if (beanType == null) {
 			throw new RuntimeException("No bean class specified");
 		}
@@ -290,7 +267,7 @@ public class NestedBeanUtil {
 			throw new RuntimeException("No field name specified");
 		}
 		
-		String setterName = SET_PREFIX + StringUtils.capitalize(fieldName);
+		String setterName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 		try {
 			return beanType.getMethod(setterName, new Class[] { getSimpleFieldType(beanType, fieldName)});
 		}
@@ -301,17 +278,17 @@ public class NestedBeanUtil {
 		return null;
 	}
 	
-    public static Method getNestedWriteMethod(Object bean, String fieldName) {
+    public static Method getWriteMethod(Object bean, String fieldName) {
 		if (bean == null) {
 			throw new RuntimeException("No bean specified (use bean type as argument)");
 		}
-    	return getNestedWriteMethod(bean.getClass(), fieldName);
+    	return getWriteMethod(bean.getClass(), fieldName);
     }	
 	
 	/**
 	 * Null is returned if no such method found.
 	 */
-	public static Method getNestedWriteMethod(Class beanType, String fieldName) {
+	public static Method getWriteMethod(Class beanType, String fieldName) {
 		if (beanType == null) {
 			throw new RuntimeException("No bean class specified");
 		}
@@ -328,19 +305,12 @@ public class NestedBeanUtil {
 			return getSimpleWriteMethod(subBeanType, fieldNames[fieldNames.length-1]);
 		}
 		return null;
-	}
-	
-    public static Method getSimpleReadMethod(Object bean, String fieldName) {
-		if (bean == null) {
-			throw new RuntimeException("No bean specified (use bean type as argument)");
-		}
-    	return getSimpleReadMethod(bean.getClass(), fieldName);
-    }		
+	}	
 	
 	/**
 	 * Null is returned if no such method found.
 	 */
-	public static Method getSimpleReadMethod(Class beanType, String fieldName) {
+	private static Method getSimpleReadMethod(Class beanType, String fieldName) {
 		if (beanType == null) {
 			throw new RuntimeException("No bean class specified");
 		}
@@ -348,7 +318,7 @@ public class NestedBeanUtil {
 			throw new RuntimeException("No field name specified");
 		}	
 		
-		String getterName = GET_PREFIX + StringUtils.capitalize(fieldName);
+		String getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 		try {
 			return beanType.getMethod(getterName, null);
 		}
@@ -356,7 +326,7 @@ public class NestedBeanUtil {
 			// There is not 'get' method for this field
 		}
 		
-		getterName = IS_PREFIX + StringUtils.capitalize(fieldName);
+		getterName = "is" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 		try {
 			return beanType.getMethod(getterName, null);
 		}
@@ -367,17 +337,17 @@ public class NestedBeanUtil {
 		return null;
 	}
 	
-    public static Method getNestedReadMethod(Object bean, String fieldName) {
+    public static Method getReadMethod(Object bean, String fieldName) {
 		if (bean == null) {
 			throw new RuntimeException("No bean specified (use bean type as argument)");
 		}
-    	return getNestedReadMethod(bean.getClass(), fieldName);
-    }		
+    	return getReadMethod(bean.getClass(), fieldName);
+    }
 	
 	/**
 	 * Null is returned if no such method found.
 	 */
-	public static Method getNestedReadMethod(Class beanType, String fieldName) {
+	public static Method getReadMethod(Class beanType, String fieldName) {
 		if (beanType == null) {
 			throw new RuntimeException("No bean class specified");
 		}
@@ -426,7 +396,7 @@ public class NestedBeanUtil {
 			throw new NullPointerException("You cannot convert a Bean to null or vice versa");
 		}
 		
-		List fromVoFields = getSimpleFields(from.getClass());
+		List fromVoFields = getFields(from.getClass());
 		for (Iterator i = fromVoFields.iterator(); i.hasNext();) {
 			String field = (String) i.next();
 			Class toFieldType = getSimpleFieldType(to.getClass(), field);
@@ -437,6 +407,22 @@ public class NestedBeanUtil {
 		}
 	}
 	
+	public static Object copy(Class toType, Object from) {
+		if (from == null || toType == null) {
+			throw new NullPointerException("You cannot convert a Bean to null or vice versa");
+		}
+		Object result = newInstance(toType.getClass());
+		copy(result, from);
+		return result;
+	}
+	
+	public static Object clone(Object bean) {
+		if (bean == null) {
+			throw new RuntimeException("No bean specified");
+		}
+		return copy(bean.getClass(), bean);
+	}
+	
     public static boolean isBean(Object bean) {
 		if (bean == null) {
 			throw new RuntimeException("No bean specified (use bean type as argument)");
@@ -445,6 +431,6 @@ public class NestedBeanUtil {
     }		
 
 	public static boolean isBean(Class beanType) {
-		return (getSimpleFields(beanType).size() != 0);
+		return (getFields(beanType).size() != 0);
 	}
 }
