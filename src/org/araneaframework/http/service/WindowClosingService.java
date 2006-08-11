@@ -42,7 +42,7 @@ public class WindowClosingService extends BaseService {
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ((ServletOutputData) output).getResponse();
 		
-		String scriptSrc = FileImportUtil.getImportString("js/ui-popups.js", ((ServletInputData) input).getRequest() ,((ServletOutputData) output).getResponse());
+		String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", ((ServletInputData) input).getRequest() ,((ServletOutputData) output).getResponse());
 		String responseStr = 
 			"<html>" +
 			  "<head>" +
@@ -64,7 +64,7 @@ public class WindowClosingService extends BaseService {
 		OutputStream out = response.getOutputStream();
 		byteOutputStream.writeTo(out);
 		out.flush();
-		
+
 		ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
 		mngCtx.close(mngCtx.getCurrentId());
 	}

@@ -31,7 +31,7 @@ function onWindowUnload() {
   closeOpenedPopupWindows();
 }
 
-addSystemUnloadEvent(onWindowUnload);
+getActiveAraneaPage().addSystemUnLoadEvent(onWindowUnload);
 
 //popup maps
 var popups = new Object();

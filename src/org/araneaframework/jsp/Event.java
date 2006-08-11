@@ -24,6 +24,14 @@ public abstract class Event {
   private String target;
   private String param;
 
+  public Event() {}
+  
+  public Event(String id, String target, String param) {
+    this.id = id;
+    this.target = target;
+    this.param = param;
+  }
+  
   public String getId() {
     return id;
   }

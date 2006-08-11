@@ -25,6 +25,17 @@ import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 public class DefaultEvent extends Event {
   private List updateRegionNames;
 
+  public DefaultEvent() {}
+
+  public DefaultEvent(String id, String target, String param) {
+	super(id, target, param);
+  }
+  
+  public DefaultEvent(String id, String target, String param, List updateRegionNames) {
+	super(id, target, param);
+	this.updateRegionNames = updateRegionNames;
+  }
+
   public List getUpdateRegionNames() {
     return updateRegionNames;
   }

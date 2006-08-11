@@ -67,6 +67,10 @@ function AraneaEventStore() {
 // functionality for setting page related variables, events and functions.
 function AraneaPage() {
   var that = this;
+  
+  /** Url of aranea dispatcher servlet serving current page. Set by AraneaTraverser. */ 
+  var servletURL = null;
+  
   /** Variable that shows if page is active (form has not been submitted yet). */
   var pageActive = true;
 
@@ -85,6 +89,15 @@ function AraneaPage() {
   unloadEvents.add(systemUnLoadEvents);
   
   submitCallbacks = new Object();
+  
+  /** servlet url getters and setters */
+  this.getServletURL = function() {
+  	return servletURL;
+  }
+  
+  this.setServletURL = function(url) {
+  	servletURL = new String(url);
+  }
 
   /** Return whether this page is active (has not been submitted yet). */
   this.isPageActive = function() {
@@ -103,7 +116,11 @@ function AraneaPage() {
   
   this.addSystemLoadEvent = function(event) {
   	systemLoadEvents.add(event);
-  } 
+  }
+
+  this.addSystemUnLoadEvent = function(event) {
+  	systemUnLoadEvents.add(event);
+  }
   
   this.onload = function() {
     loadEvents.forEach(function(eventHolder) {eventHolder.execute();});
@@ -168,20 +185,44 @@ function AraneaPage() {
       return false;
 	}
   }
+
+  // GETTERS
+  this.getTraverser = function() {
+  	return traverser;
+  }
 }
 
 function AraneaTraverser() {
-  /* returns FORM that is Aranea system form and surrounds given HTML element. */
+  /* Returns FORM that is Aranea system form and surrounds given HTML element. 
+   * When servlet URL is not known to current aranea page, sets it according to information from system form. 
+   * Should be overriden with fast constant function when using just one system form. */
   this.findSurroundingSystemForm = function(element) {
     do {
-      if (element.tagName && element.tagName.toUpperCase() == 'FORM' && element.getAttribute('arn-systemForm'))
+      if (element.tagName && element.tagName.toUpperCase() == 'FORM' && element.getAttribute('arn-systemForm')) {
+	  	// if aranea page is still unaware of servlet url.
+	  	if (!getActiveAraneaPage().getServletURL() && element['servletURL'])
+		  getActiveAraneaPage().setServletURL(element['servletURL'].value);
 	    return element;
+	  }
       element = element.parentNode;
   	} while (element);
 
 	return null;
   }
 }
+
+function DefaultAraneaSubmitter() {
+  this.submit = function(element) {
+
+  }
+}
+
+function DefaultAraneaAJAXSubmitter() {
+  this.submit = function(element) {
+
+  }
+}
+
   
 /*		systemForm, 
 		widgetId, 

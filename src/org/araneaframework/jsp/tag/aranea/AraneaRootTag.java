@@ -22,10 +22,13 @@ import java.util.ResourceBundle;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.filter.StandardJspFilterService;
+import org.araneaframework.http.util.ClientStateUtil;
+import org.araneaframework.http.util.URLUtil;
+import org.araneaframework.jsp.tag.BaseTag;
 
 /**
  * 
@@ -35,8 +38,7 @@ import org.araneaframework.http.filter.StandardJspFilterService;
  */
 public class AraneaRootTag extends BaseTag {
   public static final String OUTPUT_DATA_KEY = "outputData";
-  
-  public static final String REQUEST_URL = "outputData";
+  public static final String SERVLET_URL = "servletURL";
   
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -61,6 +63,11 @@ public class AraneaRootTag extends BaseTag {
           ),
           PageContext.REQUEST_SCOPE           
         );
+    
+    ClientStateUtil.put(
+    		SERVLET_URL, 
+    		URLUtil.getServletRequestURL((InputData)pageContext.getRequest().getAttribute(InputData.INPUT_DATA_KEY)), 
+    		output);
     
     return EVAL_BODY_INCLUDE;
   }

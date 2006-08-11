@@ -20,8 +20,11 @@ import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.http.util.FileImportUtil;
+import org.araneaframework.jsp.DefaultEvent;
+import org.araneaframework.jsp.Event;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.layout.LayoutRowTag;
+import org.araneaframework.jsp.tag.presentation.EventLinkButtonHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -30,6 +33,7 @@ import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.OrderInfoField;
 import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.ListStructure;
+import org.w3c.dom.events.UIEvent;
 
 /**
  * @author Oleg Mürk
@@ -99,19 +103,14 @@ public class ComponentListHeaderTag extends LayoutRowTag {
           }
         }
         
-        // Write link        
+        Event orderEvent = new DefaultEvent(ORDER_EVENT_ID, listId, columnViewModel.getId());
+      
         JspUtil.writeOpenStartTag(out, "a");
-        JspUtil.writeAttribute(out, "href", "javascript:");        
-        JspWidgetCallUtil.writeEventAttributeForEvent(
-            pageContext,
-            out, 
-            "onclick", 
-            systemFormId, 
-            listId, 
-            ORDER_EVENT_ID, 
-            columnViewModel.getId(),
-            null);
-        JspUtil.writeCloseStartTag_SS(out);       
+        JspUtil.writeAttribute(out, "class", "aranea-link-button");  
+        JspUtil.writeEventAttributes(out, orderEvent);
+        JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+
+        JspUtil.writeCloseStartTag_SS(out);
       }
       if (columnViewModel.getLabel() != null)
         JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, columnViewModel.getLabel()));

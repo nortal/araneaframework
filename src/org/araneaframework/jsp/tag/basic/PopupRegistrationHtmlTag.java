@@ -46,7 +46,7 @@ public class PopupRegistrationHtmlTag extends BaseTag {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
       JspUtil.writeCloseStartTag(out);
-      out.write("addSystemLoadEvent(processPopups);\n");
+      out.write("_ap.addSystemLoadEvent(processPopups);\n");
 
       addPopups(out, (Map)popups);
       JspUtil.writeEndTag(out, "script");

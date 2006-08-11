@@ -58,7 +58,7 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 		JspUtil.writeAttribute(out, "class", getStyleClass());
 		JspUtil.writeAttribute(out, "style", getStyle());
 		JspUtil.writeAttribute(out, "border", "0");
-		JspUtil.writeAttribute(out, "href", url.toString());
+		JspUtil.writeAttribute(out, "href", "#");
 		JspUtil.writeEventAttributes(out, event);
 		JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
 		JspUtil.writeAttribute(out, AraneaAttributes.EVENT_PRECONDITION_PREFIX+"onclick", onClickPrecondition);

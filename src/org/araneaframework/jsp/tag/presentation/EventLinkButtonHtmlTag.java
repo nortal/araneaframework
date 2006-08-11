@@ -55,7 +55,7 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeAttribute(out, "style", getStyle());
     //JspUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
     //JspUtil.writeAttribute(out, "href", "javascript:fancyRedirect(this, '" + url.toString() + "');");
-    JspUtil.writeAttribute(out, "href", url.toString());
+    JspUtil.writeAttribute(out, "href", "#");
     JspUtil.writeEventAttributes(out, event);
     
     if (event.getId() != null)

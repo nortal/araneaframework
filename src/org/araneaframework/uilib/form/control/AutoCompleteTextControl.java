@@ -53,7 +53,7 @@ public class AutoCompleteTextControl extends TextControl {
     this.dataProvider = dataProvider;
   }
 
-  public interface DataProvider {
+  public interface DataProvider extends Serializable {
     public List getSuggestions(String input);
   }
 

@@ -48,10 +48,10 @@ function writeCloningUrl(el) {
 	var eventParam = el.getAttribute('arn-evntPar');
 	var eventTarget = el.getAttribute('arn-trgtwdgt');
 
-	var systemForm = new AraneaTraverser().findSurroundingSystemForm(el);
+	var systemForm = getActiveAraneaPage().getTraverser().findSurroundingSystemForm(el);
 
     var url = new String();
-    url = el['href'];
+    url = getActiveAraneaPage().getServletURL();
 	url += "?pleaseClone=true"
     url += "&threadServiceId=" + systemForm['threadServiceId'].value;
 
@@ -67,6 +67,10 @@ function writeCloningUrl(el) {
 
 var aranea_rules = {
   'a.aranea-link-button' : function(el) {
+  	writeCloningUrl(el);
+  },
+  
+  'a.aranea-link' : function(el) {
   	writeCloningUrl(el);
   },
 
@@ -91,6 +95,18 @@ var aranea_rules = {
   },
   
   'input.aranea-checkbox' : function(el) {
+  	setFormElementContext(el);
+  },
+
+  'select.aranea-multi-select' : function(el) {
+  	setFormElementContext(el);
+  },
+  
+  'select.aranea-select' : function(el) {
+  	setFormElementContext(el);
+  },
+  
+  'input.aranea-file-upload' : function(el) {
   	setFormElementContext(el);
   },
   

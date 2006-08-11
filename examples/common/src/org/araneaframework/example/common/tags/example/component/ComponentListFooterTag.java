@@ -215,7 +215,7 @@ public class ComponentListFooterTag extends PresentationTag {
     JspUtil.writeAttribute(out, "class", "aranea-link-button");
     JspUtil.writeAttribute(out, "href", getRequestURL().toString());
     
-    Event event = allItemsShown ? getShowAllEvent() : getShowSliceEvent();
+    Event event = allItemsShown ? getShowSliceEvent() :getShowAllEvent();
     JspUtil.writeEventAttributes(out, event);
     
     JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
