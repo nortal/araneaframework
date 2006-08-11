@@ -38,8 +38,8 @@ public class BeanConverter implements Serializable {
     }
     
     //Getting mappers
-    BeanMapper fromVoMapper = new BeanMapper(from.getClass());
-    BeanMapper toVoMapper = new BeanMapper(to.getClass());
+    ConstribBeanMapper fromVoMapper = new ConstribBeanMapper(from.getClass());
+    ConstribBeanMapper toVoMapper = new ConstribBeanMapper(to.getClass());
     
     //Setting fields
     List fromVoFields = fromVoMapper.getBeanFields();

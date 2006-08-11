@@ -36,7 +36,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  * @since 1.4.1.20
  */
-public class BasicBeanMapper implements Serializable, GeneralBeanMapper {
+public class BaseBeanMapper implements Serializable, GeneralBeanMapper {
 	
 	//*******************************************************************
 	// FIELDS
@@ -57,7 +57,7 @@ public class BasicBeanMapper implements Serializable, GeneralBeanMapper {
 	 * @param beanClass
 	 *          the class implementing the Bean pattern.
 	 */
-	public BasicBeanMapper(Class beanClass) {
+	public BaseBeanMapper(Class beanClass) {
 		this.beanClass = beanClass;
 	}
 	
@@ -225,15 +225,5 @@ public class BasicBeanMapper implements Serializable, GeneralBeanMapper {
 		}
 		
 		return null;
-	}
-	
-	/**
-	 * Returns whether the given object type is a Bean type.
-	 * @param objectType object type.
-	 * @return whether the given object type is a Bean type.
-	 */
-	public static boolean isBean(Class objectType) {
-		GeneralBeanMapper beanMapper = new BasicBeanMapper(objectType);
-		return beanMapper.getBeanFields().size() != 0;
 	}
 }

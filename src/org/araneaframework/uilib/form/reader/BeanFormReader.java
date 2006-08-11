@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form.reader;
 
 import java.util.Iterator;
 import java.util.Map;
+
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.Data;
@@ -78,7 +79,7 @@ public class BeanFormReader {
 	 *          Value Object to write to.
 	 */
   public void readFormBean(Object vo) {
-    BeanMapper beanMapper = new BeanMapper(vo.getClass());
+	  BeanMapper beanMapper = new BeanMapper(vo.getClass());
     for (Iterator i = compositeFormElement.getElements().entrySet().iterator(); i.hasNext();) {
     	Map.Entry entry = (Map.Entry) i.next();
     	

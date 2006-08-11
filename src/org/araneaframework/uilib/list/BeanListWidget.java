@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.backend.util.RecursiveBeanMapper;
+import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
@@ -115,6 +115,6 @@ public class BeanListWidget extends ListWidget {
 	}	
 	
 	private static Class getBeanFieldType(Class beanClass, String fullId) {
-		return new RecursiveBeanMapper(beanClass, true).getBeanFieldType(fullId);
+		return new BeanMapper(beanClass, true).getBeanFieldType(fullId);
 	}
 }

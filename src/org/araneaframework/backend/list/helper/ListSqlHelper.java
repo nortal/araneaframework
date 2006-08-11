@@ -46,7 +46,7 @@ import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 import org.araneaframework.backend.util.GeneralBeanMapper;
-import org.araneaframework.backend.util.RecursiveBeanMapper;
+import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.list.util.Converter;
@@ -1138,7 +1138,7 @@ public abstract class ListSqlHelper {
 		public BeanResultReader(Class itemClass) {
 			this.itemClass = itemClass;
 			this.results = new ArrayList();
-			this.beanMapper = new RecursiveBeanMapper(itemClass, true);
+			this.beanMapper = new BeanMapper(itemClass, true);
 		}
 		
 		/** 

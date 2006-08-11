@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.uilib.support.DisplayItem;
 
@@ -46,7 +47,7 @@ public class DisplayItemUtil implements java.io.Serializable {
    */
   public static void addItemsFromVoCollection(DisplayItemContainer displayItems, Collection valueObjects, String valueName, String displayStringName) {
     if (valueObjects.size() == 0) return;
-  	BeanMapper beanMapper = new BeanMapper(valueObjects.iterator().next().getClass());
+    BeanMapper beanMapper = new BeanMapper(valueObjects.iterator().next().getClass());
 
     for (Iterator i = valueObjects.iterator(); i.hasNext();) {
       Object vo = i.next();
