@@ -15,7 +15,7 @@
 **/
 
 /**
- * Jsp-Ui event handlers.
+ * Aranea event handlers.
  * 
  * The functions presented here are invoked from Aranea JSP tags.
  * Therefore you CAN'T be too liberal with them unless you know what you are doing.

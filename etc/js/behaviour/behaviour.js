@@ -80,8 +80,6 @@ var Behaviour = {
 	}
 }
 
-Behaviour.start();
-
 /*
    The following code is Copyright (C) Simon Willison 2004.
 

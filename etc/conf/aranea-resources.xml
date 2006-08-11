@@ -24,7 +24,7 @@
 		<file path="js/aa.js"/>
 		<file path="js/behaviour/behaviour.js"/>
 		<file path="js/aranea.js"/>
-        <file path="js/jsp-ui-events.js"/>
+        <file path="js/aranea/aranea-events.js"/>
 		<file path="js/aranea-util.js"/>
 		<file path="js/aranea/aranea-behaviour.js"/>
 		<file path="js/aranea/aranea-popups.js"/>

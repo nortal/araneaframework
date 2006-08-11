@@ -71,8 +71,6 @@ public class JspUpdateRegionUtil {
   public static String formatUpdateRegionsJS(List updateRegions) {
     StringBuffer result = new StringBuffer();
     
-    result.append("[");
-    
     if (updateRegions != null) {
       for (Iterator i = updateRegions.iterator(); i.hasNext();) {
         String region = (String) i.next();
@@ -82,11 +80,9 @@ public class JspUpdateRegionUtil {
         result.append("'");
         
         if (i.hasNext())
-          result.append(", ");
+          result.append(",");
       }
     }
-    
-    result.append("]");
     
     return result.toString();
   }

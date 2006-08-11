@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.araneaframework.jsp.Event;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -354,6 +355,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 * event to the system form.
 	 * @throws JspException 
 	 */
+	
 	protected void writeEventAttributeForUiEvent(Writer out, String attributeName, String id, String eventId, boolean validate, String precondition, List updateRegions) throws IOException, JspException { 
 		JspWidgetCallUtil.writeEventAttributeForFormEvent(
 				pageContext, 
@@ -368,5 +370,10 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 				precondition,
 				updateRegions);
 	}
-
+	
+	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName) throws IOException {
+		JspUtil.writeOpenAttribute(out, attributeName);
+		JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
+		JspUtil.writeCloseAttribute(out);
+	}
 }

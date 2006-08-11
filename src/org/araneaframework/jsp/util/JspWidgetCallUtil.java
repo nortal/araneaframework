@@ -135,7 +135,7 @@ public abstract class JspWidgetCallUtil {
   // NEW FUNCTIONS
   public static void writeSubmitScriptForEvent(Writer out, String attributeName) throws IOException {
     JspUtil.writeOpenAttribute(out, attributeName);
-    out.write("return _ap.submit(this, _ap.standardSubmit);");
+    out.write("return _ap.submit(this);");
     JspUtil.writeCloseAttribute(out);
   }
 }

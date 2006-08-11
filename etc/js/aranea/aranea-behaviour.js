@@ -17,7 +17,6 @@
 
 /**
  * Behaviour rules required for Aranea JSP to work correctly.
- * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 
@@ -108,22 +107,7 @@ var aranea_rules = {
   
   'input.aranea-file-upload' : function(el) {
   	setFormElementContext(el);
-  },
-  
-  // FROM TEMPLATEAPP LIST FOOTER, MOVE
-  'a.first' : function(el) {
-  	writeCloningUrl(el);
-  },
-
-  'a.last' : function(el) {
-  	writeCloningUrl(el);
-  },
-  
-  'a.next' : function(el) {
-  	writeCloningUrl(el);
-  },
-  
-  'a.prev' : function(el) {
-  	writeCloningUrl(el);
   }
 };
+
+Behaviour.register(aranea_rules);
