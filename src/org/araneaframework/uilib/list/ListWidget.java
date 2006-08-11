@@ -48,6 +48,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
 import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
 import org.araneaframework.uilib.list.structure.order.ColumnOrder;
 import org.araneaframework.uilib.list.util.MapUtil;
+import org.araneaframework.uilib.list.util.RecursiveFormUtil;
 import org.araneaframework.uilib.support.UiLibMessages;
 
 /**
@@ -105,7 +106,7 @@ public class ListWidget extends StandardPresentationWidget {
 	}
 
 	public ListWidget() {
-		// empty
+		this.filterForm = new FormWidget();
 	}
 
 	//*********************************************************************
@@ -315,18 +316,10 @@ public class ListWidget extends StandardPresentationWidget {
 	}	
 
 	public void addFilterFormElement(String id, FormElement element) throws Exception {
-		if (this.filterForm == null) {
-			this.filterForm = new FormWidget();
-		}
-
 		addElement(this.filterForm, id, element);
 	}	
 
 	public void addFilterFormElement(String id, String label, Control control, Data data) throws Exception {
-		if (this.filterForm == null) {
-			this.filterForm = new FormWidget();
-		}
-
 		addElement(this.filterForm, id, label, control, data, false);
 	}
 
@@ -335,43 +328,11 @@ public class ListWidget extends StandardPresentationWidget {
 	}
 
 	private static void addElement(FormWidget form, String fullId, FormElement element) throws Exception {
-		if (fullId.indexOf(".") != -1) {
-			String subFormId = fullId.substring(0, fullId.indexOf("."));
-			String nextFullId =  fullId.substring(subFormId.length() + 1);
-
-			FormWidget subForm = null;
-
-			if (form.getElement(subFormId) != null) {
-				subForm = form.getSubFormByFullName(subFormId);        	
-			} else {
-				subForm = form.addSubForm(subFormId);        	
-			}
-
-			addElement(subForm, nextFullId, element);
-			return;
-		}
-
-		form.addElement(fullId, element);
-	}		
+		RecursiveFormUtil.addElement(form, fullId, element);
+	}
 
 	private static void addElement(FormWidget form, String fullId, String label, Control control, Data data, boolean mandatory) throws Exception {
-		if (fullId.indexOf(".") != -1) {
-			String subFormId = fullId.substring(0, fullId.indexOf("."));
-			String nextFullId =  fullId.substring(subFormId.length() + 1);
-
-			FormWidget subForm = null;
-
-			if (form.getElement(subFormId) != null) {
-				subForm = form.getSubFormByFullName(subFormId);        	
-			} else {
-				subForm = form.addSubForm(subFormId);        	
-			}
-
-			addElement(subForm, nextFullId, label, control, data, mandatory);
-			return;
-		}
-
-		form.addElement(fullId, label, control, data, mandatory);
+		RecursiveFormUtil.addElement(form, fullId, label, control, data, mandatory);
 	}
 
 	/**

@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.backend.util.BeanMapper;
+import org.araneaframework.backend.util.RecursiveBeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
@@ -24,8 +24,12 @@ import org.araneaframework.uilib.list.structure.ComparableType;
 import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
 import org.araneaframework.uilib.list.structure.order.ColumnOrder;
 import org.araneaframework.uilib.list.structure.order.SimpleColumnOrder;
+import org.araneaframework.uilib.list.util.RecursiveFormUtil;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class BeanListWidget extends ListWidget {
 	
 	private static final long serialVersionUID = 1L;
@@ -65,7 +69,7 @@ public class BeanListWidget extends ListWidget {
 		return getBeanFieldType(this.beanClass, columnId);
 	}
 	
-	public void addBeanColumn(String id, String label, ColumnOrder order, ColumnFilter filter, Control control) {
+	public void addBeanColumn(String id, String label, ColumnOrder order, ColumnFilter filter, Control control) throws Exception {
 		if (filter != null) {
 			validateFilterForm();
 			propagateValueType(filter, id);
@@ -76,7 +80,7 @@ public class BeanListWidget extends ListWidget {
 		super.addListColumn(id, label, order, filter);
 	}
 	
-	public void addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control) {
+	public void addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control) throws Exception {
 		ColumnOrder order = null;
 		if (isOrdered) {
 			order = new SimpleColumnOrder();
@@ -85,30 +89,20 @@ public class BeanListWidget extends ListWidget {
 		addBeanColumn(id, label, order, filter, control);
 	}
 	
-	public void addBeanColumn(String id, String label, ColumnOrder order) {
+	public void addBeanColumn(String id, String label, ColumnOrder order) throws Exception {
 		addBeanColumn(id, label, order, null, null);
 	}
 	
-	public void addBeanColumn(String id, String label, boolean isOrdered) {
+	public void addBeanColumn(String id, String label, boolean isOrdered) throws Exception {
 		addBeanColumn(id, label, isOrdered, null, null);
 	}
 	
-	public void addBeanFilterFormElement(String id, String label, Control control) {
+	public void addBeanFilterFormElement(String id, String label, Control control) throws Exception {
 		validateFilterForm();
 		addBeanFilterFormElementInternal(id, label, control);
 	}
 	
-	private void addBeanFilterFormElementInternal(String id, String label, Control control) {		
-		try {
-			addBeanElement(getBeanForm(), id, label, control, false);
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}	
-	
-	public void addBeanFilterFormElement(String id, Control control) {
+	public void addBeanFilterFormElement(String id, Control control) throws Exception {
 		addBeanFilterFormElement(id, getColumnLabel(id), control);
 	}
 	
@@ -116,46 +110,11 @@ public class BeanListWidget extends ListWidget {
 	 * Helper methods
 	 */
 	
-	private static void addBeanElement(BeanFormWidget form, String fullId, String label, Control control, boolean mandatory) throws Exception {
-		if (fullId.indexOf(".") != -1) {
-			String subFormId = fullId.substring(0, fullId.indexOf("."));
-			String nextFullId =  fullId.substring(subFormId.length() + 1);
-			
-			BeanFormWidget subForm = null;
-			
-			if (form.getElement(subFormId) != null) {
-				subForm = (BeanFormWidget) form.getElement(subFormId);        	
-			} else {
-				subForm = form.addBeanSubForm(subFormId);        	
-			}
-			
-			addBeanElement(subForm, nextFullId, label, control, mandatory);
-			return;
-		}
-		
-		form.addBeanElement(fullId, label, control, mandatory);
-	}
+	private void addBeanFilterFormElementInternal(String id, String labelId, Control control) throws Exception {
+		RecursiveFormUtil.addBeanElement(getBeanForm(), id, labelId, control, false);
+	}	
 	
 	private static Class getBeanFieldType(Class beanClass, String fullId) {
-		BeanMapper beanMapper = new BeanMapper(beanClass);
-		
-		String fieldId, nextFullId;
-		
-		if (fullId.indexOf(".") != -1) {
-			fieldId = fullId.substring(0, fullId.indexOf("."));
-			nextFullId = fullId.substring(fieldId.length() + 1);
-		} else {
-			fieldId = fullId;
-			nextFullId = null;
-		}
-		
-		if (!beanMapper.fieldExists(fieldId)) {
-			throw new AraneaRuntimeException("Could not infer type for bean field '" + fullId + "'!");			
-		}
-		
-		if (nextFullId != null) {
-			return getBeanFieldType(beanMapper.getBeanFieldType(fieldId), nextFullId);	
-		}
-		return beanMapper.getBeanFieldType(fullId);
+		return new RecursiveBeanMapper(beanClass, true).getBeanFieldType(fullId);
 	}
 }
