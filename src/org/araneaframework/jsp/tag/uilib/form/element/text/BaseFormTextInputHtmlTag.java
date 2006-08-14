@@ -107,8 +107,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
       if (onChangePrecondition == null)
     	  onChangePrecondition = "return isChanged('" + name + "');";
-      this.writeSubmitScriptForUiEvent(out, "onblur", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
-          updateRegionNames);
+      this.writeSubmitScriptForUiEvent(out, "onblur", derivedId, "onChanged", onChangePrecondition, updateRegionNames);
     }
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartEndTag_SS(out);

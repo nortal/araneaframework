@@ -479,9 +479,9 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
 
   /**
    * Adds an EventListener to this Widget with an EVENT_ID. Multiple listeners
-   * can be added under one EVENT_ID.
+   * can be added under one eventId.
    * 
-   * @param EVENT_ID the EVENT_ID of the listener
+   * @param eventId the eventId of the listener
    * @param listener the EventListener being added
    * @see #removeEventListener
    */

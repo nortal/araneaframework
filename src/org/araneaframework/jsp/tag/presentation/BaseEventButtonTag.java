@@ -70,7 +70,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "Event id." 
    */
   public void setEventId(String eventId) throws JspException {
-    ((DefaultEvent)event).setId((String)evaluate("EVENT_ID", eventId, String.class));
+    ((DefaultEvent)event).setId((String)evaluate("eventId", eventId, String.class));
   }
 
   /**
@@ -80,7 +80,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "Event parameter." 
    */
   public void setEventParam(String eventParam) throws JspException {
-	((DefaultEvent)event).setParam((String)evaluate("EVENT_PARAM", eventParam, String.class));
+	((DefaultEvent)event).setParam((String)evaluate("eventParam", eventParam, String.class));
   }
   
   /**
@@ -90,7 +90,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details." 
    */
   public void setUpdateRegions(String updateRegions) throws JspException {
-    this.updateRegions = (String) evaluate("UPDATE_REGIONS", updateRegions, String.class);
+    this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
   }
 
   /**
@@ -100,7 +100,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "numerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
    */
   public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-    this.globalUpdateRegions = (String) evaluate("GLOBAL_UPDATE_REGIONS", globalUpdateRegions, String.class);
+    this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }
 
   /**

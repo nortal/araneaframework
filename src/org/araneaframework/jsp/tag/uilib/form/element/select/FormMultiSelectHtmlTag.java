@@ -60,8 +60,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "label", localizedLabel);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     if (viewModel.isOnChangeEventRegistered())
-      this.writeSubmitScriptForUiEvent(out, "onchange", derivedId, "onChanged", validateOnEvent, "",
-          updateRegionNames);
+      this.writeSubmitScriptForUiEvent(out, "onchange", derivedId, "onChanged", "", updateRegionNames);
     if (viewModel.isDisabled())
       JspUtil.writeAttribute(out, "disabled", "true");
     JspUtil.writeAttributes(out, attributes);

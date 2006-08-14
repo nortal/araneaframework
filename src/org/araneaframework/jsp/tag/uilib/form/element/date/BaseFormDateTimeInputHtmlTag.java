@@ -98,8 +98,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			JspUtil.writeAttribute(out, "disabled", "true");
 		}
 		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", validateOnEvent, onChangePrecondition, 
-					updateRegionNames);
+			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
 		}
 		
 		JspUtil.writeAttributes(out, attributes);    
@@ -166,8 +165,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			JspUtil.writeAttribute(out, "disabled", "true");
 		}
 		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", validateOnEvent, onChangePrecondition,
-					updateRegionNames);
+			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
 		}
 		
 		JspUtil.writeAttributes(out, attributes);

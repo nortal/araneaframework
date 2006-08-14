@@ -28,7 +28,7 @@ public interface EventListener extends Serializable {
   /**
    * Gets called when the event happens.
    * 
-   * @param EVENT_ID the id of the event
+   * @param eventId the id of the event
    * @param input the InputData of the event
    * @throws Exception
    */

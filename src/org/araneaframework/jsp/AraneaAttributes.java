@@ -17,7 +17,7 @@
 package org.araneaframework.jsp;
 
 /**
- * Non-HTML attributes added to specific HTML tags to define
+ * Non-standard-HTML attributes added to specific HTML tags to define
  * Aranea event and content model information.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)

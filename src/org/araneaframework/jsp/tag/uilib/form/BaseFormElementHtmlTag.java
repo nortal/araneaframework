@@ -335,7 +335,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 * event to the system form.
 	 * @throws JspException 
 	 */
-	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName, String id, String eventId, boolean validate, String precondition, List updateRegions) throws IOException, JspException {
+	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName, String id, String eventId, String precondition, List updateRegions) throws IOException, JspException {
         DefaultEvent event = new DefaultEvent(eventId, formFullId + "." + id, null, updateRegions);
         event.setEventPrecondition(precondition);
         JspUtil.writeEventAttributes(out, event);

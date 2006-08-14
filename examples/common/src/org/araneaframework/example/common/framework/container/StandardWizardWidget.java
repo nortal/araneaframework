@@ -34,9 +34,9 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
  * and process() and render() to only current active child.
  * 
  * It recieves following events:
- * 1. EVENT_ID: "goto", EVENT_PARAM: pageIndex.
- * 2. EVENT_ID: "submit".
- * 3. EVENT_ID: "cancel".
+ * 1. eventId: "goto", eventParam: pageIndex.
+ * 2. eventId: "submit".
+ * 3. eventId: "cancel".
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
