@@ -74,7 +74,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     if (selected)
       JspUtil.writeAttribute(out, "checked", "true");    
     if (events && viewModel.isOnChangeEventRegistered())
-      this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
+      this.writeSubmitScriptForUiEvent(out, "onclick", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
           updateRegionNames);
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartEndTag_SS(out);

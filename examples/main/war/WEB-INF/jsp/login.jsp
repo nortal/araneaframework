@@ -67,7 +67,7 @@
 		                                            	<!-- Render buttons that will submit all systemForm data, 
 		                                            		and tie them with events defined in TemplateLoginWidget.
 		                                            	 -->
-		                                                <ui:eventButton eventId="login" labelId="#Login" onClickPrecondition="return true;"/>
+		                                                <ui:eventButton eventId="login" labelId="#Login"/>
 		                                                <ui:eventButton id="bypassButton" eventId="bypass" labelId="#Bypass login"/>
     		                                          	<ui:formEnterKeyboardHandler fullElementId="bypassButton"/>
 		                                            </div>

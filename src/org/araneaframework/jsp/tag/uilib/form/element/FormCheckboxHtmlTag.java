@@ -67,7 +67,7 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 			JspUtil.writeAttribute(out, "accesskey", accessKey);
 
 		if (events && viewModel.isOnChangeEventRegistered()) {
-			this.writeEventAttributeForUiEvent(out, "onclick", derivedId, OnChangeEventListener.ON_CHANGE_EVENT, validateOnEvent, onChangePrecondition,
+			this.writeSubmitScriptForUiEvent(out, "onclick", derivedId, OnChangeEventListener.ON_CHANGE_EVENT, validateOnEvent, onChangePrecondition,
 					updateRegionNames);
 		}
 

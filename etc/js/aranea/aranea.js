@@ -52,6 +52,9 @@ AraneaTraverser.prototype.getEventParam = function(element) {
 AraneaTraverser.prototype.getEventUpdateRegions = function(element) {
   return this.getElementAttribute(element, 'arn-updrgns');
 }
+AraneaTraverser.prototype.getEventPreCondition = function(element) {
+  return this.getElementAttribute(element, 'arn-evntCond');
+}
 
 // END AraneaTraverser
 
@@ -176,8 +179,18 @@ function AraneaPage() {
   this.submit = function(element) {
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;
+	  
+    var t = this.getTraverser();
+	var systemForm = t.findSurroundingSystemForm(element);
+    var preCondition = t.getEventPreCondition(element);
 
-	var systemForm = this.getTraverser().findSurroundingSystemForm(element);
+    if (preCondition) {
+      var f = eval("function(element) {" + preCondition + "}");
+      if (!f()) {
+        return false;
+      }
+    }
+
     if (systemForm) {
       this.executeCallbacks(systemForm['id']);
     }
@@ -186,7 +199,7 @@ function AraneaPage() {
   }
 
   /** 
-   * This function could be overwritten to support additional
+   * This function can be overwritten to support additional
    * submit methods.
    */
   this.findSubmitter = function(element, systemForm) {

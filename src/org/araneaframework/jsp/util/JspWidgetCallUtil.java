@@ -18,10 +18,8 @@ package org.araneaframework.jsp.util;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 
 /**
@@ -40,6 +38,8 @@ public abstract class JspWidgetCallUtil {
    * Write standard event handling attribute which submits widget event with given id to the system form.
    * @throws JspException 
    */
+
+  /*
   public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, String precondition, List updateRegions, boolean writePseudoURL) throws IOException, JspException {
     JspUtil.writeOpenAttribute(out, attributeName);
     
@@ -63,19 +63,14 @@ public abstract class JspWidgetCallUtil {
     out.write("});");
 
     JspUtil.writeCloseAttribute(out);
-  }
+  }*/
   
+  /*
   public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, String precondition, List updateRegions) throws IOException, JspException {
     writeEventAttributeForEvent(pageContext, out, attributeName, systemFormId, widgetId, eventId, eventParam, precondition, updateRegions, true);
-  }
+  }*/
 
-  /**
-   * Writes standard event handling script content which validates the form, if neccessary, and submits 
-   * event of form element with given id to the system form.
-   * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005 extracted from {@link #writeEventAttributeForFormEvent(Writer, String, String, String, String, String, String, String, boolean, String)}
-   * @throws JspException 
-   */  
-  public static void writeEventScriptForFormEvent(PageContext pageContext, Writer out, String systemFormId, String formId, String elementId, String eventId, String eventParam, boolean validate, String precondition, List updateRegions) throws IOException, JspException {
+  /* public static void writeEventScriptForFormEvent(PageContext pageContext, Writer out, String systemFormId, String formId, String elementId, String eventId, String eventParam, boolean validate, String precondition, List updateRegions) throws IOException, JspException {
     out.write("return uiStandardSubmitFormEvent(");
     out.write("document.");
     JspUtil.writeEscapedAttribute(out, systemFormId);
@@ -96,7 +91,7 @@ public abstract class JspWidgetCallUtil {
     if (StringUtils.isBlank(precondition)) out.write("return true;");
     else JspUtil.writeEscaped(out, precondition);    
     out.write("});"); 
-  }
+  }*/
 
   // NEW FUNCTIONS
   public static void writeSubmitScriptForEvent(Writer out, String attributeName) throws IOException {
