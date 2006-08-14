@@ -8,7 +8,7 @@
 			<ui:widgetContext>
 			<html>
      		<head>
-	        <ui:importScripts includeTemplate="true"/>
+	        <ui:importScripts/>
 	            
 	        <title>Aranea Widget Hello Name Example</title>
         </head>			
