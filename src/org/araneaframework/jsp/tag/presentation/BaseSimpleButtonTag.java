@@ -18,10 +18,7 @@ package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.OutputData;
-import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
@@ -84,11 +81,5 @@ public class BaseSimpleButtonTag extends PresentationTag {
    */
   public void setOnClickPrecondition(String onClickPrecondition) throws JspException {
     this.onClickPrecondition = (String) evaluate("onClickPrecondition", onClickPrecondition, String.class);
-  }
-  
-  public StringBuffer getRequestURL() throws JspException {
-    OutputData output = (OutputData) requireContextEntry(AraneaRootTag.OUTPUT_DATA_KEY);
-    StringBuffer sb = new StringBuffer(URLUtil.getServletRequestURL(output.getInputData()));
-    return sb;
   }
 }

@@ -13,7 +13,7 @@
     
         <file path="js/aranea/aranea-ui.js"/>
 		<file path="js/aranea/aranea.js"/>
-        <file path="js/aranea/aranea-events.js"/>
+        <file path="js/aranea/aranea-keyboard.js"/>
 		<file path="js/aranea/aranea-util.js"/>
 		<file path="js/aranea/aranea-behaviour.js"/>
 		<file path="js/aranea/aranea-popups.js"/>

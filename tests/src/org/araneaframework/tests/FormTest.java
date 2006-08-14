@@ -335,7 +335,7 @@ public class FormTest extends TestCase {
      
     testForm._getWidget().event(new StandardPath("myButton.onClicked"), new MockInputData());
     
-    assertTrue("Event succeeded", eventsWork);
+    assertTrue("UiEvent succeeded", eventsWork);
   }
 
   /**

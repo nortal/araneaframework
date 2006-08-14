@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.select;
 import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.DefaultEvent;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -67,7 +67,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     if (viewModel.isDisabled())
       JspUtil.writeAttribute(out, "disabled", "true");
     if (events && viewModel.isOnChangeEventRegistered()) {
-      DefaultEvent event = new DefaultEvent(OnChangeEventListener.ON_CHANGE_EVENT, formFullId + "." + derivedId, null, updateRegionNames);
+      UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, formFullId + "." + derivedId, null, updateRegionNames);
       event.setEventPrecondition(onChangePrecondition);
       JspUtil.writeEventAttributes(out, event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onchange");

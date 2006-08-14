@@ -25,6 +25,9 @@ function AraneaTraverser() {
    * acquired from from system form. 
    * Should be overriden with fast constant function when using just one system form. */
   this.findSurroundingSystemForm = function(element) {
+    if (document.forms.length == 1 && document.forms[0].getAttribute('arn-systemForm'))
+      return document.forms[0];
+
     do {
       if (element.tagName && element.tagName.toLowerCase() == 'form' && element.getAttribute('arn-systemForm')) {
 	    return element;
@@ -108,10 +111,6 @@ function AraneaEventStore() {
 /* AraneaPage object is present on each page served by Aranea and contains common
  * functionality for setting page related variables, events and functions. */
 function AraneaPage() {
-  /* make object accessible to private functions. */
-  var that = this;
-
-  // PRIVATE FUNCTIONS
   function executor(eventHolder) { eventHolder.execute(); }
 
   /* URL of aranea dispatcher servlet serving current page. 

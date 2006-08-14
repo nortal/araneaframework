@@ -30,7 +30,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
-import org.araneaframework.jsp.Event;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -163,15 +163,7 @@ public class JspUtil {
     out.write(">");
     out.write("\n");
   }
-  
-  public static void writeStartTag(Writer out, String namespace, String tag) throws IOException {
-    writeStartTag(out, namespace+":"+tag);
-  }
     
-  public static void writeStartTag_SS(Writer out, String namespace, String tag) throws IOException {
-    writeStartTag_SS(out, namespace+":"+tag);
-  }
-  
   /**
    * Writes end tag. Space sensitive.
    */
@@ -391,7 +383,7 @@ public class JspUtil {
     }
   }
   
-  public static void writeEventAttributes(Writer out, Event event) throws IOException {
+  public static void writeEventAttributes(Writer out, UiEvent event) throws IOException {
     out.write(" ");
     out.write(event.getEventAttributes().toString());
     out.write(" ");

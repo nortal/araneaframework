@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.DefaultEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -55,7 +54,7 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
     if (disabled != null) 
       out.write(" disabled ");
 
-    if (((DefaultEvent) event).getId() != null) {
+    if (event.getId() != null) {
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
     }
     if (labelId != null && renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)) {

@@ -19,8 +19,7 @@ package org.araneaframework.jsp.tag.uilib.list;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.DefaultEvent;
-import org.araneaframework.jsp.Event;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.presentation.BaseSimpleButtonTag;
@@ -37,10 +36,10 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
 
   protected List updateRegionNames;
   
-  protected Event event;
+  protected UiUpdateEvent event;
   
   {
-    event = new DefaultEvent();
+    event = new UiUpdateEvent();
   }
 
   protected int doStartTag(Writer out) throws Exception {
@@ -52,8 +51,8 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
 
     event.setParam((String) requireContextEntry(ListRowsTag.ROW_REQUEST_ID_KEY));
     event.setTarget(contextWidgetId);
-    ((DefaultEvent)event).setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions));
-    ((DefaultEvent)event).setEventPrecondition(onClickPrecondition);
+    event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions));
+    event.setEventPrecondition(onClickPrecondition);
     
     return result;
   }
@@ -66,10 +65,10 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Event id." 
+   *   description = "UiEvent id." 
    */
   public void setEventId(String eventId) throws JspException {
-    ((DefaultEvent)event).setId((String)evaluate("eventId", eventId, String.class));
+    event.setId((String)evaluate("eventId", eventId, String.class));
   }
 
   /**

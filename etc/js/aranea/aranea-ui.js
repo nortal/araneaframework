@@ -109,7 +109,7 @@ function setFormEncoding(formName, encoding) {
 //--------------- Scroll position saving/restoring --------------//
 function saveScrollCoordinates(form) {
 	var x, y;
-  
+
 	if (document.documentElement && document.documentElement.scrollTop) {
 		// IE 6
 		x = document.documentElement.scrollLeft;
@@ -123,14 +123,18 @@ function saveScrollCoordinates(form) {
 		x = window.pageXOffset;
 		y = window.pageYOffset;
 	}
-	
-	// alert("x = " + x + "; y = " + y);
-	
-	form.windowScrollX.value = x;
-	form.windowScrollY.value = y;
+
+    var xinput = createNamedElement("input", "windowScrollX");
+    xinput.type = 'hidden';
+    var yinput = createNamedElement("input", "windowScrollY");
+    yinput.type = 'hidden';
+    xinput.value = x;
+    yinput.value = y;
+    
+    form.appendChild(xinput);
+    form.appendChild(yinput);
 } 
 
 function scrollToCoordinates(x, y) {
-	// alert("x = " + x + "; y = " + y);
 	window.scrollTo(x, y);
 } 

@@ -50,7 +50,7 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
   }
   
   public void handleEventChooseCompany(String eventParameter) throws Exception {
-	  log.debug("Event 'chooseCompany' received!");
+	  log.debug("UiEvent 'chooseCompany' received!");
 	  getFlowCtx().start(new CompanyListWidget(false), null, new FlowContext.Handler() {
 		  public void onFinish(Object returnValue) throws Exception {
 			  Long id = (Long) returnValue;

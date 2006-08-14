@@ -19,8 +19,7 @@ package org.araneaframework.jsp.tag.presentation;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.Event;
-import org.araneaframework.jsp.DefaultEvent;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
@@ -37,10 +36,10 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
 
   protected List updateRegionNames;
 
-  protected Event event;
+  protected UiUpdateEvent event;
   
   {
-	  event = new DefaultEvent();
+	  event = new UiUpdateEvent();
   }
 
   protected int doStartTag(Writer out) throws Exception {
@@ -52,9 +51,9 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
       throw new AraneaJspException("'eventButton' tag can only be used in a context widget!");
 
     updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
-    ((DefaultEvent)event).setUpdateRegionNames(updateRegionNames);
+    event.setUpdateRegionNames(updateRegionNames);
     event.setTarget(contextWidgetId);
-    ((DefaultEvent)event).setEventPrecondition(onClickPrecondition);
+    event.setEventPrecondition(onClickPrecondition);
 
     return result;
   }
@@ -67,20 +66,20 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Event id." 
+   *   description = "UiEvent id." 
    */
   public void setEventId(String eventId) throws JspException {
-    ((DefaultEvent)event).setId((String)evaluate("eventId", eventId, String.class));
+    event.setId((String)evaluate("eventId", eventId, String.class));
   }
 
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Event parameter." 
+   *   description = "UiEvent parameter." 
    */
   public void setEventParam(String eventParam) throws JspException {
-	((DefaultEvent)event).setParam((String)evaluate("eventParam", eventParam, String.class));
+	event.setParam((String)evaluate("eventParam", eventParam, String.class));
   }
   
   /**

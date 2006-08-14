@@ -68,9 +68,9 @@ public class NameUtil implements Serializable {
   
   /**
    * Returns the event name extracted from the action parameter of the
-   * <code>"Event"</code> action. It is the part in the action parameter before the first <code>"$"</code>.
+   * <code>"UiEvent"</code> action. It is the part in the action parameter before the first <code>"$"</code>.
    * 
-   * @param eventActionParam the action parameter of the <code>"Event"</code> action
+   * @param eventActionParam the action parameter of the <code>"UiEvent"</code> action
    * @return the event name.
    */
   public static String getEventName(String eventActionParam) {
@@ -80,9 +80,9 @@ public class NameUtil implements Serializable {
   
   /**
    * Returns the event parameter extracted from the action parameter of the
-   * <code>"Event"</code> action. It is the part in the action parameter after the first <code>"$"</code>.
+   * <code>"UiEvent"</code> action. It is the part in the action parameter after the first <code>"$"</code>.
    * 
-   * @param eventActionParam the action parameter of the <code>"Event"</code> action
+   * @param eventActionParam the action parameter of the <code>"UiEvent"</code> action
    * @return the event parameter.
    */
   public static String getEventParam(String eventActionParam) {

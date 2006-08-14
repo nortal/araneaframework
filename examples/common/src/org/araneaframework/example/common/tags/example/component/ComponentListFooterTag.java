@@ -21,8 +21,8 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.http.util.URLUtil;
-import org.araneaframework.jsp.DefaultEvent;
-import org.araneaframework.jsp.Event;
+import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
@@ -226,7 +226,7 @@ public class ComponentListFooterTag extends PresentationTag {
   }
   
     protected void writeOpenEventLink(Writer out, String eventId, String eventParam, boolean enabled, String styleClass) throws IOException, JspException {
-    Event event = new DefaultEvent();
+    UiEvent event = new UiUpdateEvent();
     event.setId(eventId);
     event.setParam(eventParam);
     event.setTarget(listId);
@@ -250,15 +250,15 @@ public class ComponentListFooterTag extends PresentationTag {
     JspUtil.writeCloseStartTag_SS(out);         
   }
   
-  protected Event getShowSliceEvent() {
-    Event result = new DefaultEvent();
+  protected UiEvent getShowSliceEvent() {
+    UiEvent result = new UiUpdateEvent();
     result.setId(SHOW_SLICE_EVENT_ID);
     result.setTarget(listId);
     return result;
   }
   
-  protected Event getShowAllEvent() {
-    Event result = new DefaultEvent();
+  protected UiEvent getShowAllEvent() {
+    UiEvent result = new UiUpdateEvent();
     result.setId(SHOW_ALL_EVENT_ID);
     result.setTarget(listId);
     return result;

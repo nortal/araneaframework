@@ -19,7 +19,7 @@ package org.araneaframework.example.common.tags.uilib.list;
 import java.io.Writer;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
-import org.araneaframework.jsp.DefaultEvent;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -97,7 +97,7 @@ public class SampleListOrderRowTag extends BaseTag {
 			//	JspUtil.writeAttribute(out, "class", UiJwlfInnerLinkTag.DEFAULT_STYLE + UiJwlfInnerLinkTag.DEFAULT_STYLE);
 				JspUtil.writeAttribute(out, "href", "javascript:");
 				
-				JspUtil.writeEventAttributes(out, new DefaultEvent(ORDER_EVENT_ID, listId,  columnViewModel.getId(), null));
+				JspUtil.writeEventAttributes(out, new UiUpdateEvent(ORDER_EVENT_ID, listId,  columnViewModel.getId(), null));
 				JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
 				
 				JspUtil.writeCloseStartTag_SS(out);
@@ -119,7 +119,7 @@ public class SampleListOrderRowTag extends BaseTag {
 	//	JspUtil.writeAttribute(out, "class", UiJwlfInnerLinkTag.DEFAULT_STYLE + UiJwlfInnerLinkTag.DEFAULT_STYLE);
 		JspUtil.writeAttribute(out, "href", "javascript:");
 
-		JspUtil.writeEventAttributes(out, new DefaultEvent(ORDER_EVENT_ID, listId, "", null));
+		JspUtil.writeEventAttributes(out, new UiUpdateEvent(ORDER_EVENT_ID, listId, "", null));
 		JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
 		
 		JspUtil.writeCloseStartTag_SS(out);

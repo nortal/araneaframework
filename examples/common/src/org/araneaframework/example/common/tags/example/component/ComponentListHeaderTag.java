@@ -20,8 +20,8 @@ import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.http.util.FileImportUtil;
-import org.araneaframework.jsp.DefaultEvent;
-import org.araneaframework.jsp.Event;
+import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.tag.layout.LayoutRowTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -97,7 +97,7 @@ public class ComponentListHeaderTag extends LayoutRowTag {
           }
         }
         
-        Event orderEvent = new DefaultEvent(ORDER_EVENT_ID, listId, columnViewModel.getId());
+        UiEvent orderEvent = new UiUpdateEvent(ORDER_EVENT_ID, listId, columnViewModel.getId());
       
         JspUtil.writeOpenStartTag(out, "a");
         JspUtil.writeAttribute(out, "class", "aranea-link-button");  

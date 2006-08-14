@@ -42,7 +42,7 @@ function setFormElementContext(el) {
   }
 }
 
-function writeCloningUrl(el) {
+function setCloningUrl(el) {
     var eventId = el.getAttribute('arn-evntId');
 	var eventParam = el.getAttribute('arn-evntPar');
 	var eventTarget = el.getAttribute('arn-trgtwdgt');
@@ -66,11 +66,11 @@ function writeCloningUrl(el) {
 
 var aranea_rules = {
   'a.aranea-link-button' : function(el) {
-  	writeCloningUrl(el);
+  	setCloningUrl(el);
   },
   
   'a.aranea-link' : function(el) {
-  	writeCloningUrl(el);
+  	setCloningUrl(el);
   },
 
   'input.aranea-text' : function(el) {
@@ -123,12 +123,3 @@ var aranea_rules = {
 };
 
 Behaviour.register(aranea_rules);
-
-/*
-./src/org/araneaframework/jsp/tag/presentation/EventButtonHtmlTag.java:     baseStyleClass = "aranea-button";
-./src/org/araneaframework/jsp/tag/presentation/ButtonHtmlTag.java:    baseStyleClass = "aranea-button";
-./src/org/araneaframework/jsp/tag/uilib/form/element/FormButtonHtmlTag.java:    baseStyleClass = "aranea-button";
-./src/org/araneaframework/jsp/tag/uilib/list/ListRowButtonHtmlTag.java:    baseStyleClass = "aranea-button";
-*/
-
-

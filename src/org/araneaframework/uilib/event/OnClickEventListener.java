@@ -33,7 +33,7 @@ public interface OnClickEventListener  extends java.io.Serializable {
   public static final String ON_CLICK_EVENT = "onClicked";
 
   /**
-   * Event callback function that is called when the registered event occurs.
+   * UiEvent callback function that is called when the registered event occurs.
    * @throws Exception if something goes wrong.
    */
   public void onClick() throws Exception;

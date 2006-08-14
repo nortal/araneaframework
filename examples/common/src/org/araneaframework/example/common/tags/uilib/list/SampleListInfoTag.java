@@ -18,8 +18,8 @@ package org.araneaframework.example.common.tags.uilib.list;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.DefaultEvent;
-import org.araneaframework.jsp.Event;
+import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
@@ -83,7 +83,7 @@ public class SampleListInfoTag extends BaseTag {
       JspUtil.writeAttribute(out, "class", "aranea-link-button");
       JspUtil.writeAttribute(out, "href", "javascript:");
       
-      Event event = new DefaultEvent(allItemsShown ? SHOW_SLICE_EVENT_ID : SHOW_ALL_EVENT_ID, listId, null, null);
+      UiEvent event = new UiUpdateEvent(allItemsShown ? SHOW_SLICE_EVENT_ID : SHOW_ALL_EVENT_ID, listId, null, null);
       JspUtil.writeEventAttributes(out, event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
 

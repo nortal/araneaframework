@@ -50,7 +50,7 @@ public class OnLoadEventHtmlTag extends BaseTag{
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "true"
-   *   description = "Event to register."
+   *   description = "UiEvent to register."
    */
   public void setEvent(String event) throws JspException{
     this.event = (String) evaluate("event", event, String.class);

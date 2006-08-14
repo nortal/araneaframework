@@ -19,14 +19,14 @@ package org.araneaframework.jsp;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class Event {
+public class UiEvent {
   private String id;
   private String target;
   private String param;
 
-  public Event() {}
+  public UiEvent() {}
   
-  public Event(String id, String target, String param) {
+  public UiEvent(String id, String target, String param) {
     this.id = id;
     this.target = target;
     this.param = param;

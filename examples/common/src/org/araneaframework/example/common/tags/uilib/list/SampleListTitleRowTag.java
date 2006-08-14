@@ -20,8 +20,8 @@ import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.http.util.FileImportUtil;
-import org.araneaframework.jsp.DefaultEvent;
-import org.araneaframework.jsp.Event;
+import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -103,7 +103,7 @@ public class SampleListTitleRowTag extends BaseTag {
 				JspUtil.writeOpenStartTag(out, "a");
 				JspUtil.writeAttribute(out, "href", "javascript:");
 
-				Event event = new DefaultEvent(ORDER_EVENT_ID, listId, columnViewModel.getId(), null);
+				UiEvent event = new UiUpdateEvent(ORDER_EVENT_ID, listId, columnViewModel.getId(), null);
 				JspUtil.writeEventAttributes(out, event);
 				JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
 
