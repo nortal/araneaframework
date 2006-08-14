@@ -54,6 +54,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
     updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
     ((DefaultEvent)event).setUpdateRegionNames(updateRegionNames);
     event.setTarget(contextWidgetId);
+    ((DefaultEvent)event).setEventPrecondition(onClickPrecondition);
 
     return result;
   }
@@ -114,6 +115,6 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
 
   public void doFinally() {
 	super.doFinally();
-	event.reset();
+	event.clear();
   }
 }

@@ -16,13 +16,7 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
-import java.io.IOException;
 import java.io.Writer;
-import org.araneaframework.jsp.util.JspScriptUtil;
-import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.uilib.form.control.FloatControl;
-
-
 
 /**
  * Standard number float form element tag.

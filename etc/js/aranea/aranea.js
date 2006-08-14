@@ -199,15 +199,16 @@ function AraneaPage() {
   }
 }
 
+// Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
+  // determine Aranea servlet URL and let active page know about it.
   var ap = getActiveAraneaPage();
   var traverser = ap.getTraverser();
   var forms = document.getElementsByTagName("form");
   for (var i = 0; i < forms.length; i++ ) {
     if (traverser.getElementAttribute(forms[i], "arn-systemForm")) {
-      var servletURL = traverser.getElementAttribute(forms[i], "servletURL");
-      if (servletURL)
-        ap.setServletURL(servletURL.value);
+      if (forms[i]["arn-servletURL"])
+        ap.setServletURL(forms[i]["arn-servletURL"].value);
       break;
     }
   }
@@ -229,7 +230,6 @@ function DefaultAraneaSubmitter(form) {
     systemForm.widgetEventHandler.value = eventId ? eventId : "";
     systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
 
-    // XXX: move to main submit function?
     getActiveAraneaPage().setSubmitted(true);
     systemForm.submit();
 

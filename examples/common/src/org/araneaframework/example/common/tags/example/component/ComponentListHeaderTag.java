@@ -22,9 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.DefaultEvent;
 import org.araneaframework.jsp.Event;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.layout.LayoutRowTag;
-import org.araneaframework.jsp.tag.presentation.EventLinkButtonHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -33,7 +31,6 @@ import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.OrderInfoField;
 import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.ListStructure;
-import org.w3c.dom.events.UIEvent;
 
 /**
  * @author Oleg Mürk
@@ -59,9 +56,6 @@ public class ComponentListHeaderTag extends LayoutRowTag {
   }
   
   protected void writeHeader(Writer out) throws Exception {
-    // Get system form id
-    String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
-    
     // Get list data
     String listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
     ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);

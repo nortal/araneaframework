@@ -101,13 +101,34 @@ var aranea_rules = {
   	setFormElementContext(el);
   },
   
+  'input.aranea-multi-checkbox' : function(el) {
+  	setFormElementContext(el);
+  },
+  
+  'input.aranea-radioselect' : function(el) {
+  	setFormElementContext(el);
+  },
+
   'select.aranea-select' : function(el) {
   	setFormElementContext(el);
   },
   
   'input.aranea-file-upload' : function(el) {
   	setFormElementContext(el);
+  },
+
+  'textarea.aranea-textarea' : function(el) {
+  	setFormElementContext(el);
   }
 };
 
 Behaviour.register(aranea_rules);
+
+/*
+./src/org/araneaframework/jsp/tag/presentation/EventButtonHtmlTag.java:     baseStyleClass = "aranea-button";
+./src/org/araneaframework/jsp/tag/presentation/ButtonHtmlTag.java:    baseStyleClass = "aranea-button";
+./src/org/araneaframework/jsp/tag/uilib/form/element/FormButtonHtmlTag.java:    baseStyleClass = "aranea-button";
+./src/org/araneaframework/jsp/tag/uilib/list/ListRowButtonHtmlTag.java:    baseStyleClass = "aranea-button";
+*/
+
+

@@ -24,6 +24,7 @@ import org.araneaframework.jsp.util.JspUpdateRegionUtil;
  */
 public class DefaultEvent extends Event {
   private List updateRegionNames;
+  private String eventPrecondition;
 
   public DefaultEvent() {}
 
@@ -44,22 +45,27 @@ public class DefaultEvent extends Event {
     this.updateRegionNames = updateRegionNames;
   }
   
-  public StringBuffer getEventAttributes() {
-    StringBuffer result = new StringBuffer();
-    result.append(AraneaAttributes.EVENT_ID).append("=\"").append(getId()).append("\" ");
+  public String getEventPrecondition() {
+    return eventPrecondition;
+  }
 
-    if (getTarget() != null)
-      result.append(AraneaAttributes.TARGET_WIDGET_ID).append("=\"").append(getTarget()).append("\" ");
-    if (getParam() != null)
-      result.append(AraneaAttributes.EVENT_PARAM).append("=\"").append(getParam()).append("\" ");
+  public void setEventPrecondition(String eventPrecondition) {
+    this.eventPrecondition = eventPrecondition;
+  }
+
+  public StringBuffer getEventAttributes() {
+    StringBuffer result = super.getEventAttributes();
+    if (eventPrecondition != null)
+      result.append(' ').append(AraneaAttributes.EVENT_CONDITION).append("=\"").append(eventPrecondition).append('"');
     if (getUpdateRegionNames() != null && !getUpdateRegionNames().isEmpty())
-      result.append(AraneaAttributes.UPDATE_REGIONS).append("=\"").append(JspUpdateRegionUtil.formatUpdateRegionsJS(getUpdateRegionNames())).append("\"");
+      result.append(' ').append(AraneaAttributes.UPDATE_REGIONS).append("=\"").append(JspUpdateRegionUtil.formatUpdateRegionsJS(getUpdateRegionNames())).append("\"");
 
     return result;
   }
 
-  public void reset() {
-    super.reset();
+  public void clear() {
+    super.clear();
     updateRegionNames = null;
+    eventPrecondition = null;
   }
 }

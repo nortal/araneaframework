@@ -106,6 +106,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeCloseStartEndTag_SS(out);
 		
 		if (!disabled) {
+
 			JspUtil.writeOpenStartTag(out, "a");
 			JspUtil.writeAttribute(out, "href", "javascript:;");
 			JspUtil.writeCloseStartTag_SS(out);
@@ -179,22 +180,20 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeCloseStartTag(out);
 		
 		StringBuffer script = new StringBuffer();
-		script.append("Calendar.setup({\n");
-		script.append("inputField : \"");
+		script.append("calendarSetup('");
 		script.append(id);
-		script.append("\",\nifFormat : \"");
+		script.append("', '");
 		script.append(format);
-		script.append("\",\nshowsTime : false, ");
-		script.append("\nbutton : \"");
-		script.append(id);
-		script.append(CALENDAR_BUTTON_ID_SUFFIX);
-		script.append("\",\nsingleClick : true, ");
-		script.append("\nstep: 1, ");
-		script.append("\nfirstDay: 1");
-		if (calendarAlignment != null)
-			script.append(",\nalign:\"").append(calendarAlignment).append("\"");
-		script.append("\n});");
-
+		script.append("', ");
+		if (calendarAlignment == null)
+		  script.append("null");
+		else {
+          script.append("'");
+          script.append(calendarAlignment);
+          script.append("'");
+		}
+		script.append(");");
+		
 		out.write(script.toString());
 		JspUtil.writeEndTag_SS(out, "script");
 	}

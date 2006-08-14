@@ -21,7 +21,7 @@ import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.jsp.Event;
+import org.araneaframework.jsp.DefaultEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -65,7 +65,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	//Attributes
 	
 	protected boolean events = true;
-	//protected boolean validate = true;
 	protected boolean validateOnEvent = false;
 		
 	protected String accessKey;
@@ -261,10 +260,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 			(FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, elementId)._getViewable().getViewModel();
 		boolean isValid = formElementViewModel.isValid();
 
-
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "id", spanId);
-		JspUtil.writeAttribute(out, "class", "arn-fe-span");
 
 		// We'll also use the span around a form element for tracking keyboard events.
 		// that is, the span will call our handler on a keypress.
@@ -274,28 +271,11 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		// All events are sent to a handler called "uiHandleKeypress(event, formElementId)"
 		// We use the "keydown" event, not keypress, because this allows to
 		// catch F2 in IE.
-		// Actual onkeydown event is attached to span within uiFormElementContext() javascript.
+		// Actual onkeydown event is attached to span with javascript.
 		JspUtil.writeCloseStartTag(out);
 
 		// Write out form element context: sets keydown event for this element and writes out
 		// hidden element indicating that form element is present in the request.
-		/*
-		JspUtil.writeStartTag_SS(out, "script");
-		if (!isPresent)
-			out.write("uiFormElementContext_4(");
-		else
-			out.write("uiFormElementContext(");
-		JspUtil.writeScriptString(out, elementName);
-		out.write(", ");
-		JspUtil.writeScriptString(out, spanId);
-		out.write(", ");
-		out.write(isValid ? "true" : "false");
-		if (!isPresent) {
-			out.write(", false");
-		}
-		out.write(");");
-		JspUtil.writeEndTag(out, "script");
-		*/
 	}
 
 	/**
@@ -304,7 +284,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 * @throws IOException
 	 */
 	public static void writeFormElementContextClose(Writer out) throws IOException{
-		JspUtil.writeEndTag_SS(out, "span");    
+		JspUtil.writeEndTag_SS(out, "span");
 	}
 
 	/**
@@ -355,8 +335,13 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 * event to the system form.
 	 * @throws JspException 
 	 */
-	
-	protected void writeEventAttributeForUiEvent(Writer out, String attributeName, String id, String eventId, boolean validate, String precondition, List updateRegions) throws IOException, JspException { 
+	protected void writeEventAttributeForUiEvent(Writer out, String attributeName, String id, String eventId, boolean validate, String precondition, List updateRegions) throws IOException, JspException {
+        DefaultEvent event = new DefaultEvent(eventId, formFullId + "." + id, null, updateRegions);
+        event.setEventPrecondition(precondition);
+        JspUtil.writeEventAttributes(out, event);
+        JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
+        
+        /*
 		JspWidgetCallUtil.writeEventAttributeForFormEvent(
 				pageContext, 
 				out, 
@@ -368,7 +353,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 				null, 
 				validate, 
 				precondition,
-				updateRegions);
+				updateRegions);*/
 	}
 	
 	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName) throws IOException {

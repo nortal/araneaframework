@@ -22,7 +22,6 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
 /**

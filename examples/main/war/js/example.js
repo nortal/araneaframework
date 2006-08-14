@@ -12,25 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
-
-package org.araneaframework.jsp;
+**/
 
 /**
- * Non-HTML attributes added to specific HTML tags to define
- * Aranea event and content model information.
- * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public abstract class AraneaAttributes {
-  // attributes belonging to system form
-  public static String SYSTEM_FORM = "arn-systemForm";
-  public static String SERVLET_URL = "arn-servletURL";
-	
-  // event related attributes
-  public static String TARGET_WIDGET_ID = "arn-trgtwdgt";
-  public static String EVENT_ID = "arn-evntId";
-  public static String EVENT_PARAM = "arn-evntPar";
-  public static String UPDATE_REGIONS = "arn-updrgns";
-  public static String EVENT_CONDITION = "arn-evntCond";
+
+AraneaTraverser.prototype.findSurroundingSystemForm = function(element) {
+  return document.forms["system_form_0"];
 }

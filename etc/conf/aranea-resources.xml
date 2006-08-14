@@ -9,7 +9,7 @@
 	</files>
 		
 	<files content-type="text/javascript" group="defaultScripts">
-		<file path="js/ui.js"/>
+		<file path="js/aranea/aranea-ui.js"/>
 <!-- 
 		<file path="js/ui-aranea.js"/>
 		<file path="js/ui-handlers.js"/>
@@ -23,9 +23,9 @@
 
 		<file path="js/aa.js"/>
 		<file path="js/behaviour/behaviour.js"/>
-		<file path="js/aranea.js"/>
+		<file path="js/aranea/aranea.js"/>
         <file path="js/aranea/aranea-events.js"/>
-		<file path="js/aranea-util.js"/>
+		<file path="js/aranea/aranea-util.js"/>
 		<file path="js/aranea/aranea-behaviour.js"/>
 		<file path="js/aranea/aranea-popups.js"/>
 

@@ -74,7 +74,7 @@ public class ButtonHtmlTag extends BaseButtonTag {
     if (renderMode.equals(ButtonHtmlTag.RENDER_BUTTON)) {
       if (labelId != null)            
         JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, labelId));
-      JspUtil.writeEndTag(out, "button");       
+      JspUtil.writeEndTag(out, "button");
     }
 
     // Continue

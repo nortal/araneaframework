@@ -14,6 +14,27 @@
  * limitations under the License.
 **/
 
+/**
+ * Behaviour rules required for Aranea JSP to work correctly.
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ */
+
+/* *DateInput's calendar setup function. See js/calendar/calendar-setup.js for details. */
+function calendarSetup(inputFieldId, dateFormat, alignment) {
+  var CALENDAR_BUTTON_ID_SUFFIX = "_cbutton"; // comes from BaseFormDateTimeInputHtmlTag
+  var align = alignment == null ? "Br" : alignment;
+  Calendar.setup({
+    inputField   : inputFieldId,
+    ifFormat     : dateFormat,
+    showsTime    : false,
+    button       : inputFieldId + CALENDAR_BUTTON_ID_SUFFIX,
+    singleClick  : true,
+    step         : 1,
+    firstDay     : 1,
+    align        : align
+  });
+}
+
 /* fillTime*() and addOptions() functions are used in *timeInputs 
  * for hour and minute inputs/selects. */
 function fillTimeText(systemForm, el, hourSelect, minuteSelect) {
@@ -35,7 +56,8 @@ function fillTimeSelect(systemForm, timeInput, hourSelect, minuteSelect) {
   systemForm[minuteSelect].value=minuteValue;
 }
 
-// adds options empty,0-(z-1) to select with option x preselected
+// Adds options empty,0-(z-1) to select with option x preselected. Used for
+// *timeInput hour and minute selects.
 function addOptions(selectName, z, x) {
   var select=document.getElementsByName(selectName).item(0);
   var emptyOpt=document.createElement("option");

@@ -19,7 +19,7 @@ package org.araneaframework.jsp;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public abstract class Event {
+public class Event {
   private String id;
   private String target;
   private String param;
@@ -57,9 +57,19 @@ public abstract class Event {
   }
   
   /** returns the event attributes in form suitable for outputting to HTML */
-  public abstract StringBuffer getEventAttributes();
+  public StringBuffer getEventAttributes() {
+    StringBuffer result = new StringBuffer();
+    result.append(AraneaAttributes.EVENT_ID).append("=\"").append(getId()).append("\" ");
+
+    if (getTarget() != null)
+      result.append(AraneaAttributes.TARGET_WIDGET_ID).append("=\"").append(getTarget()).append("\" ");
+    if (getParam() != null)
+      result.append(AraneaAttributes.EVENT_PARAM).append("=\"").append(getParam()).append("\"");
+
+    return result;
+  }
   
-  public void reset() {
+  public void clear() {
     id = target = param = null;
   }
 }

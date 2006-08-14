@@ -17,10 +17,7 @@
 package org.araneaframework.jsp.tag.presentation;  
 
 import javax.servlet.jsp.JspException;
-import org.araneaframework.OutputData;
-import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 
 /**
  * Button base tag.
@@ -64,11 +61,5 @@ public class BaseButtonTag extends PresentationTag {
    */
   public void setOnclick(String onclick) throws JspException {
     this.onclick = (String)evaluate("onclick", onclick, String.class);
-  }
-  
-  public StringBuffer getRequestURL() throws JspException {
-    OutputData output = (OutputData) requireContextEntry(AraneaRootTag.OUTPUT_DATA_KEY);
-    StringBuffer sb = new StringBuffer(URLUtil.getServletRequestURL(output.getInputData()));
-    return sb;
   }
 }

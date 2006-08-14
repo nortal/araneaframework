@@ -213,11 +213,9 @@ public class ComponentListFooterTag extends PresentationTag {
 
     JspUtil.writeOpenStartTag(out, "a");
     JspUtil.writeAttribute(out, "class", "aranea-link-button");
-    JspUtil.writeAttribute(out, "href", getRequestURL().toString());
+    JspUtil.writeAttribute(out, "href", "#");
     
-    Event event = allItemsShown ? getShowSliceEvent() :getShowAllEvent();
-    JspUtil.writeEventAttributes(out, event);
-    
+    JspUtil.writeEventAttributes(out, allItemsShown ? getShowSliceEvent() : getShowAllEvent());
     JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
 
     JspUtil.writeCloseStartTag_SS(out);
@@ -234,11 +232,15 @@ public class ComponentListFooterTag extends PresentationTag {
     event.setTarget(listId);
 
     JspUtil.writeOpenStartTag(out, "a");
-    if (enabled)
+    if (enabled) {
       JspUtil.writeAttribute(out, "class", "aranea-link-button " + styleClass);
-    else
+      JspUtil.writeAttribute(out, "href", "#");
+    }
+    else {
       JspUtil.writeAttribute(out, "class", styleClass);
-    JspUtil.writeAttribute(out, "href", getRequestURL().toString());
+      JspUtil.writeAttribute(out, "href", "javascript:return false;");
+    }
+    
     JspUtil.writeEventAttributes(out, event);
 
     if (enabled)

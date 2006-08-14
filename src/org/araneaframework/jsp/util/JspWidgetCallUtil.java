@@ -40,14 +40,6 @@ public abstract class JspWidgetCallUtil {
    * Write standard event handling attribute which submits widget event with given id to the system form.
    * @throws JspException 
    */
-  public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, List updateRegions) throws IOException, JspException {
-    writeEventAttributeForEvent(pageContext, out, attributeName, systemFormId, widgetId, eventId, eventParam, "return true", updateRegions);
-  }
-
-  /**
-   * Write standard event handling attribute which submits widget event with given id to the system form.
-   * @throws JspException 
-   */
   public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, String precondition, List updateRegions, boolean writePseudoURL) throws IOException, JspException {
     JspUtil.writeOpenAttribute(out, attributeName);
     
@@ -78,32 +70,6 @@ public abstract class JspWidgetCallUtil {
   }
 
   /**
-   * Writes standard event handling attribute which validates the form, if neccessary, and submits 
-   * event of form element with given id to the system form.
-   * @throws JspException 
-   */
-  public static void writeEventAttributeForFormEvent(
-		  PageContext pageContext, 
-		  Writer out, 
-		  String attributeName, 
-		  String systemFormId, 
-		  String formId, 
-		  String elementId, 
-		  String eventId, 
-		  String eventParam, 
-		  boolean validate, 
-		  String precondition, 
-		  List updateRegions) throws IOException, JspException {
-	  
-	  
-    JspUtil.writeOpenAttribute(out, attributeName);
-    
-    out.write("javascript:");
-    writeEventScriptForFormEvent(pageContext, out, systemFormId, formId, elementId, eventId, eventParam, validate, precondition, updateRegions);
-    JspUtil.writeCloseAttribute(out);
-  }
-
-  /**
    * Writes standard event handling script content which validates the form, if neccessary, and submits 
    * event of form element with given id to the system form.
    * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005 extracted from {@link #writeEventAttributeForFormEvent(Writer, String, String, String, String, String, String, String, boolean, String)}
@@ -131,7 +97,7 @@ public abstract class JspWidgetCallUtil {
     else JspUtil.writeEscaped(out, precondition);    
     out.write("});"); 
   }
-  
+
   // NEW FUNCTIONS
   public static void writeSubmitScriptForEvent(Writer out, String attributeName) throws IOException {
     JspUtil.writeOpenAttribute(out, attributeName);

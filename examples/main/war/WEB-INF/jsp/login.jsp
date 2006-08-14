@@ -24,7 +24,7 @@
                         <title>Aranea Template Application Login Screen</title>
                     </head>
 
-                    <body>
+                    <body onload="_ap.onload()" onunload="_ap.onunload()">
                     	<!-- This tag will render an HTML form tag along with some Aranea-specific hidden fields. 
                     	It is strongly suggested to have only one system form in the template and have it submit using 
                     	POST. This will ensure that no matter what user does no data is ever lost. -->
@@ -67,7 +67,7 @@
 		                                            	<!-- Render buttons that will submit all systemForm data, 
 		                                            		and tie them with events defined in TemplateLoginWidget.
 		                                            	 -->
-		                                                <ui:eventButton eventId="login" labelId="#Login"/>
+		                                                <ui:eventButton eventId="login" labelId="#Login" onClickPrecondition="return true;"/>
 		                                                <ui:eventButton id="bypassButton" eventId="bypass" labelId="#Bypass login"/>
     		                                          	<ui:formEnterKeyboardHandler fullElementId="bypassButton"/>
 		                                            </div>
@@ -83,10 +83,7 @@
 	                    </ui:systemForm>
                     
                     </body>
-	                <script type="text/javascript">
-	                    Behaviour.register(aranea_rules);
-                        Behaviour.apply();
-	                </script>
+
                 </html>
             </ui:widgetContext>
         </ui:viewPort>

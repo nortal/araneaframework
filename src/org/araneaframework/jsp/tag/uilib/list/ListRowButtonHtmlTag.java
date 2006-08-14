@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
-import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
@@ -35,29 +34,19 @@ public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
   }
 
   protected int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);                
-    // Write button tag             
+    super.doStartTag(out);
+
+    // Write button tag
     JspUtil.writeOpenStartTag(out, "button");
     JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeEventAttributes(out, event);
-    JspUtil.writeAttribute(out, AraneaAttributes.EVENT_PRECONDITION_PREFIX+"onclick", onClickPrecondition);
-    JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+
+    if (event.getId() != null) {
+      JspUtil.writeEventAttributes(out, event);
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+    }
     
-    /*
-    if (eventId != null)
-      JspWidgetCallUtil.writeEventAttributeForEvent(
-          pageContext,
-          out,
-          "onclick",
-          systemFormId,  
-          contextWidgetId, 
-          eventId, 
-          eventParam, 
-          onClickPrecondition,
-          updateRegionNames,
-          false);*/
     JspUtil.writeCloseStartTag_SS(out);
 
     return EVAL_BODY_INCLUDE;

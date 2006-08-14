@@ -53,7 +53,8 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
     event.setParam((String) requireContextEntry(ListRowsTag.ROW_REQUEST_ID_KEY));
     event.setTarget(contextWidgetId);
     ((DefaultEvent)event).setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions));
-
+    ((DefaultEvent)event).setEventPrecondition(onClickPrecondition);
+    
     return result;
   }
 
@@ -93,7 +94,7 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
 
   public void doFinally() {
     super.doFinally();
-    event.reset();
+    event.clear();
   }
 }
 

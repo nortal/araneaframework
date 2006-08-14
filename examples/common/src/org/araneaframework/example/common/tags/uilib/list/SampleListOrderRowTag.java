@@ -19,8 +19,8 @@ package org.araneaframework.example.common.tags.uilib.list;
 import java.io.Writer;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
+import org.araneaframework.jsp.DefaultEvent;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -32,6 +32,8 @@ import org.araneaframework.uilib.list.structure.ListStructure;
 
 
 /**
+ * XXX: unused
+ * 
  * List widget multi-order row tag.
  * 
  * @jsp.tag
@@ -49,10 +51,6 @@ public class SampleListOrderRowTag extends BaseTag {
 	
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		
-		// Get system form id
-		log.debug("Get system form id");
-		String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 		
 		// Get list data
 		log.debug("Get list data");
@@ -97,17 +95,12 @@ public class SampleListOrderRowTag extends BaseTag {
 				// Write link        
 				JspUtil.writeOpenStartTag(out, "a");
 			//	JspUtil.writeAttribute(out, "class", UiJwlfInnerLinkTag.DEFAULT_STYLE + UiJwlfInnerLinkTag.DEFAULT_STYLE);
-				JspUtil.writeAttribute(out, "href", "javascript:");        
-				JspWidgetCallUtil.writeEventAttributeForEvent(
-						pageContext,
-						out, 
-						"onclick", 
-						systemFormId, 
-						listId, 
-						ORDER_EVENT_ID, 
-						columnViewModel.getId(),
-						null);
-				JspUtil.writeCloseStartTag_SS(out);       
+				JspUtil.writeAttribute(out, "href", "javascript:");
+				
+				JspUtil.writeEventAttributes(out, new DefaultEvent(ORDER_EVENT_ID, listId,  columnViewModel.getId(), null));
+				JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+				
+				JspUtil.writeCloseStartTag_SS(out);
 			}
 			if (columnViewModel.getLabel() != null)
 				JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, columnViewModel.getLabel()));
@@ -124,16 +117,11 @@ public class SampleListOrderRowTag extends BaseTag {
 		JspUtil.writeStartTag(out, "td");
 		JspUtil.writeOpenStartTag(out, "a");
 	//	JspUtil.writeAttribute(out, "class", UiJwlfInnerLinkTag.DEFAULT_STYLE + UiJwlfInnerLinkTag.DEFAULT_STYLE);
-		JspUtil.writeAttribute(out, "href", "javascript:");        
-		JspWidgetCallUtil.writeEventAttributeForEvent(
-				pageContext,
-				out, 
-				"onclick", 
-				systemFormId, 
-				listId, 
-				ORDER_EVENT_ID, 
-				"",
-				null);
+		JspUtil.writeAttribute(out, "href", "javascript:");
+
+		JspUtil.writeEventAttributes(out, new DefaultEvent(ORDER_EVENT_ID, listId, "", null));
+		JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+		
 		JspUtil.writeCloseStartTag_SS(out);
 		JspUtil.writeEscaped(out, "SORT");
 		JspUtil.writeEndTag(out, "a");  
