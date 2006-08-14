@@ -17,10 +17,7 @@ This folder contains scripts needed by Aranea Uilib.
 - License is MIT-style license, details at http://script.aculo.us/
 
 * prototype/*
-- 
-
-* validation/*
-- Aranea Uilib support scripts.
+- http://prototype.conio.net/
 
 * aa.js
 - AjaxAnywhere (http://ajaxanywhere.sourceforge.net/)
@@ -28,3 +25,4 @@ This folder contains scripts needed by Aranea Uilib.
 - License is APL 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
 
 * aranea/
+- Aranea Uilib & JSP specific scripts.
