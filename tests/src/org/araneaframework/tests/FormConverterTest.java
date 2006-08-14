@@ -17,6 +17,7 @@
 package org.araneaframework.tests;
 
 import junit.framework.TestCase;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.tests.mock.MockConfiguration;
 import org.araneaframework.uilib.ConverterNotFoundException;

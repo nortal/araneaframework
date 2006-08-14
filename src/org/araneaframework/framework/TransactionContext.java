@@ -29,6 +29,11 @@ import java.io.Serializable;
  */
 public interface TransactionContext extends Serializable {
   /**
+   * The key in the request, under which is the transaction id.
+   */
+  public static final String TRANSACTION_ID_KEY = "transactionId";
+
+  /**
    * Returns true if current request is consistent (not a rerecurring one).
    */
   public boolean isConsistent();
