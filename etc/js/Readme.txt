@@ -24,5 +24,8 @@ This folder contains scripts needed by Aranea Uilib.
 - Required for using Uilib Ajax support.
 - License is APL 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
 
+* behaviour/behaviour.js
+- http://bennolan.com/behaviour/
+
 * aranea/
 - Aranea Uilib & JSP specific scripts.
