@@ -19,7 +19,7 @@
 	                    <title>Aranea<ui:entity code="mdash"/>Java Web Framework Construction and Integration Kit</title>
 	                </head>
 	
-	                <body onload="_ap.onload()" onunload="_ap.onunload()">
+	                <ui:body>
 
 	                    <div id="cont1">
 	                        <ui:systemForm method="POST">
@@ -53,7 +53,7 @@
 
 	                    <jsp:include page="/WEB-INF/jsp/mainlayout/footer.jsp"/>
 
-	                </body>
+	                </ui:body>
 	            </html>
 	        </ui:widgetContext>
 	

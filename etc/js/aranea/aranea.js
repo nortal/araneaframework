@@ -209,21 +209,30 @@ function AraneaPage() {
 
 	return new DefaultAraneaSubmitter(systemForm);
   }
+  
+  // another submit function, takes all params that are currently possible to use.
+  // TODO: get rid of duplicated logic from: submit() and findSubmitter()
+  this.submit_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
+    var el = document.createElement();
+    if (this.isSubmitted() || !this.isLoaded())
+	  return false;
+
+    if (eventPrecondition) {
+      var f = eval("function(element) {" + eventPrecondition + "}");
+      if (!f()) {
+        return false;
+      }
+    }
+
+    if (eventUpdateRegions != null && eventUpdateRegions.length > 0) 
+      new DefaultAraneaAJAXSubmitter().submit_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
+    else
+      new DefaultAraneaSubmitter(systemForm, eventId, eventTarget, eventParam);
+  }
 }
 
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
-  // determine Aranea servlet URL and let active page know about it.
-  var ap = getActiveAraneaPage();
-  var traverser = ap.getTraverser();
-  var forms = document.getElementsByTagName("form");
-  for (var i = 0; i < forms.length; i++ ) {
-    if (traverser.getElementAttribute(forms[i], "arn-systemForm")) {
-      if (forms[i]["arn-servletURL"])
-        ap.setServletURL(forms[i]["arn-servletURL"].value);
-      break;
-    }
-  }
 }
 
 function DefaultAraneaSubmitter(form) {
@@ -237,16 +246,21 @@ function DefaultAraneaSubmitter(form) {
     var widgetId = traverser.getEventTarget(element);
     var eventId = traverser.getEventId(element);
     var eventParam = traverser.getEventParam(element);
-
-    systemForm.widgetEventPath.value = widgetId ? widgetId : "";
-    systemForm.widgetEventHandler.value = eventId ? eventId : "";
-    systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
-
-    getActiveAraneaPage().setSubmitted(true);
-    systemForm.submit();
-
-    return false;
+    
+    return this.submit_4(systemForm, eventId, widgetId, eventParam);
   }
+}
+
+DefaultAraneaSubmitter.prototype.submit_4 = function(systemForm, eventId, widgetId, eventParam) {
+  systemForm.widgetEventPath.value = widgetId ? widgetId : "";
+  systemForm.widgetEventHandler.value = eventId ? eventId : "";
+  systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+
+  getActiveAraneaPage().setSubmitted(true);
+
+  systemForm.submit();
+
+  return false;
 }
 
 function DefaultAraneaAJAXSubmitter(form) {
@@ -261,17 +275,22 @@ function DefaultAraneaAJAXSubmitter(form) {
     var eventId = traverser.getEventId(element);
     var eventParam = traverser.getEventParam(element);
 	var updateRegions = traverser.getEventUpdateRegions(element);
+	var updateRegionArray = eval("new Array(" + updateRegions + ");");
 
-    systemForm.widgetEventPath.value = widgetId ? widgetId : "";
-    systemForm.widgetEventHandler.value = eventId ? eventId : "";
-    systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
-	
-	window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
-	window[ajaxKey].systemForm = systemForm;
-	window[ajaxKey].submitAJAX();
-
-	return false;
+	return this.submit_5(systemForm, eventId, widgetId, eventParam, updateRegionArray);
   }
+}
+
+DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
+  systemForm.widgetEventPath.value = widgetId ? widgetId : "";
+  systemForm.widgetEventHandler.value = eventId ? eventId : "";
+  systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+  
+  window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
+  window[ajaxKey].systemForm = systemForm;
+  window[ajaxKey].submitAJAX();
+  
+  return false;
 }
 
 /* Initialize new Aranea page.  */

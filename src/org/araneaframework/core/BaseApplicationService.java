@@ -154,7 +154,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   
   /**
    * Clears all the ActionListeners with the specified actionId.
-   * @param actionId the id of the EventListeners.
+   * @param actionId the id of the ActionListeners.
    */
   public void clearActionlisteners(Object actionId) {
     getActionListeners().remove(actionId);

@@ -17,15 +17,12 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -139,13 +136,20 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
           event.setTarget(JspWidgetUtil.getContextWidgetFullId(pageContext));
 		}
 
-		String systemFormId = (String)JspUtil.requireContextEntry(pageContext, BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY);	
+		String systemFormId = (String)JspUtil.requireContextEntry(pageContext, BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY);
 		
-		return "function(event, elementId) { " +
-		"uiStandardSubmitEvent(" + "document.forms['" + systemFormId + "'], '" + 
-        widgetId + "', '" + eventId + "', '" + eventParam +  
-			 "', function() { " + JspWidgetCallUtil.getContainer(pageContext).buildWidgetCall(systemFormId, widgetId, eventId, eventParam,
-           updateRegionNames)
-            + "}, function() { " + precondition + "}); }";
+        // submit_6 : function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
+		StringBuffer result = new StringBuffer("function (event, elementId) { ");
+		result.append("getActiveAraneaPage().submit_6(");
+		result.append("document.forms['").append(systemFormId).append("'],");
+		result.append("'").append(event.getId()).append("',");
+		result.append("'").append(event.getTarget()).append("',");
+		result.append("'").append(event.getParam()).append("',");
+		result.append("'").append(JspUpdateRegionUtil.formatUpdateRegionsJS(event.getUpdateRegionNames())).append("',");
+
+		result.append(')');
+		result.append('}');
+		
+		return result.toString();
 	}
 }

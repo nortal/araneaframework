@@ -64,11 +64,6 @@ public class AraneaRootTag extends BaseTag {
           PageContext.REQUEST_SCOPE           
         );
     
-    ClientStateUtil.put(
-    		AraneaAttributes.SERVLET_URL, 
-    		URLUtil.getServletRequestURL((InputData)pageContext.getRequest().getAttribute(InputData.INPUT_DATA_KEY)), 
-    		output);
-    
     return EVAL_BODY_INCLUDE;
   }
 }

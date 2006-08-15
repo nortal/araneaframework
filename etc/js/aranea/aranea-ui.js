@@ -73,25 +73,6 @@ function addOptions(selectName, z, x) {
   }
 }
 
-// b/c braindead IE: The NAME attribute cannot be set at run time on elements dynamically 
-// created with the createElement method. To create an element with a name attribute, 
-// include the attribute and value when using the createElement method.
-// http://www.thunderguy.com/semicolon/2005/05/23/setting-the-name-attribute-in-internet-explorer/
-function createNamedElement(type, name) {
-   var element = null;
-   // Try the IE way; this fails on standards-compliant browsers
-   try {
-      element = document.createElement('<'+type+' name="'+name+'">');
-   } catch (e) {
-   }
-   if (!element || element.nodeName != type.toUpperCase()) {
-      // Non-IE browser; use canonical method to create named element
-      element = document.createElement(type);
-      element.name = name;
-   }
-   return element;
-}
-
 function saveValue(element) {
   element.oldValue = element.value; 
 }

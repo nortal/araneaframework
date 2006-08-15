@@ -478,7 +478,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   }
 
   /**
-   * Adds an EventListener to this Widget with an EVENT_ID. Multiple listeners
+   * Adds an EventListener to this Widget with an eventId. Multiple listeners
    * can be added under one eventId.
    * 
    * @param eventId the eventId of the listener
@@ -509,8 +509,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   }
   
   /**
-   * Clears all the EventListeners from this Widget with the specified EVENT_ID.
-   * @param EVENT_ID the id of the EventListeners.
+   * Clears all the EventListeners from this Widget with the specified eventId.
+   * @param eventId the id of the EventListeners.
    */
   public void clearEventlisteners(Object eventId) {
     getEventListeners().remove(eventId);
@@ -571,8 +571,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   }
   
   /**
-   * Clears all the ActionListeners with the specified EVENT_ID.
-   * @param EVENT_ID the id of the EventListeners.
+   * Clears all the ActionListeners with the specified eventId.
+   * @param eventId the id of the EventListeners.
    */
   public void clearActionListeners(Object eventId) {
     getActionListeners().remove(eventId);
