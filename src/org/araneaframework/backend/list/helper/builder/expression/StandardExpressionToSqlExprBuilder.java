@@ -17,6 +17,7 @@
 package org.araneaframework.backend.list.helper.builder.expression;
 
 import org.araneaframework.backend.list.SqlExpression;
+import org.araneaframework.backend.list.SqlLikeUtil;
 import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilder;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -40,6 +41,7 @@ import org.araneaframework.backend.list.memorybased.expression.string.Concatenat
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
 import org.araneaframework.backend.list.sqlexpr.SqlAlwaysTrueExpression;
 import org.araneaframework.backend.list.sqlexpr.SqlBracketsExpression;
+import org.araneaframework.backend.list.sqlexpr.SqlEscapeExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlEqualsExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlGreaterThanExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlIsNullExpression;
@@ -55,7 +57,9 @@ import org.araneaframework.backend.list.sqlexpr.string.SqlConcatenationExpressio
 import org.araneaframework.backend.list.sqlexpr.string.SqlUpperExpression;
 
 public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprBuilder {
-	
+
+	public static final String ESCAPE_CHAR = "\\";		
+
 	protected VariableResolver mapper;
 	
 	protected ValueConverter converter; 
@@ -185,14 +189,16 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 	class LikeTranslator extends CompositeExprToSqlExprTranslator {
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 			LikeExpression like = (LikeExpression) expr;			
-			SqlExpression var = sqlChildren[0];
+			SqlExpression var = sqlChildren[0];	
+			String value = (String) convertValue(like.getMask());
 			SqlExpression mask = new SqlValueExpression(
-					"%" + convertValue(like.getMask()) + "%");
+					SqlLikeUtil.convertMask(value, like.getConfiguration(), ESCAPE_CHAR));
 			if (like.getIgnoreCase()) {
 				var = new SqlUpperExpression(var);
 				mask = new SqlUpperExpression(mask);
 			}
-			return new SqlLikeExpression(var, mask);
+			SqlExpression sqlLike = new SqlLikeExpression(var, mask);
+			return new SqlEscapeExpression(sqlLike, ESCAPE_CHAR);
 		}
 	}
 	
