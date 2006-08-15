@@ -147,14 +147,9 @@ public class MenuItem implements Serializable {
     String path = menuPath != null ? menuPath : "";
     MenuItem menu = this;
 
-    try {
     for (StringTokenizer st = new StringTokenizer(path, MENU_PATH_SEPARATOR); st.hasMoreTokens(); )
       menu = (MenuItem)menu.subMenu.get(st.nextToken());
-
     menu.addSubMenuItem(item);
-    } catch (Exception e) {
-      
-    }
 
     return item;
   }
