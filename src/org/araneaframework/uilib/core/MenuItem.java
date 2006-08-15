@@ -117,15 +117,6 @@ public class MenuItem implements Serializable {
   /* **************************************************************************************************
    * PROTECTED METHODS. 
    * **************************************************************************************************/
-  public void clearSelection() {
-    setSelected(false);
-
-    if (subMenu != null) {
-      for (Iterator i = subMenu.values().iterator(); i.hasNext(); )
-        ((MenuItem)i.next()).clearSelection();
-    }
-  }
-  
   protected void setSelected(boolean isSelected) {
     selected = isSelected;
   }
@@ -198,6 +189,15 @@ public class MenuItem implements Serializable {
     }
 
     return resultFlow;
+  }
+  
+  public void clearSelection() {
+    setSelected(false);
+
+    if (subMenu != null) {
+      for (Iterator i = subMenu.values().iterator(); i.hasNext(); )
+	    ((MenuItem)i.next()).clearSelection();
+    }
   }
 
   /* **************************************************************************************************
