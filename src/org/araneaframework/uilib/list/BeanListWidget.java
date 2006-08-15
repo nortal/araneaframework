@@ -115,6 +115,6 @@ public class BeanListWidget extends ListWidget {
 	}	
 	
 	private static Class getBeanFieldType(Class beanClass, String fullId) {
-		return new BeanMapper(beanClass, true).getBeanFieldType(fullId);
+		return new BeanMapper(beanClass, true).getFieldType(fullId);
 	}
 }

@@ -52,7 +52,7 @@ public class BeanFormWriter implements Serializable {
 	 * @param vo Value Object to read from.
 	 */
   public void writeFormBean(FormWidget form, Object vo) {
-    List voFields = beanMapper.getBeanFields();
+    List voFields = beanMapper.getFields();
 
     for (Iterator i = voFields.iterator(); i.hasNext();) {
       String field = (String) i.next();
@@ -61,13 +61,13 @@ public class BeanFormWriter implements Serializable {
         if (element instanceof FormElement) {          
           Data data = ((FormElement) element).getData();
           if (data != null) {
-            data.setValue(beanMapper.getBeanFieldValue(vo, field));
+            data.setValue(beanMapper.getFieldValue(vo, field));
           }
         }
         else if (element instanceof FormWidget) {
-          BeanFormWriter subVoWriter = new BeanFormWriter(beanMapper.getBeanFieldType(field));
+          BeanFormWriter subVoWriter = new BeanFormWriter(beanMapper.getFieldType(field));
 
-          Object subVO = beanMapper.getBeanFieldValue(vo, field);
+          Object subVO = beanMapper.getFieldValue(vo, field);
           
           if (subVO != null) {
             subVoWriter.writeFormBean((FormWidget) element, subVO);

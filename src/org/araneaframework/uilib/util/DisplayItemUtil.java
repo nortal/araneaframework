@@ -51,7 +51,7 @@ public class DisplayItemUtil implements java.io.Serializable {
 
     for (Iterator i = valueObjects.iterator(); i.hasNext();) {
       Object vo = i.next();
-      displayItems.addItem(new DisplayItem(beanMapper.getBeanFieldValue(vo, valueName).toString(), beanMapper.getBeanFieldValue(vo,
+      displayItems.addItem(new DisplayItem(beanMapper.getFieldValue(vo, valueName).toString(), beanMapper.getFieldValue(vo,
           displayStringName).toString()));
     }
   }

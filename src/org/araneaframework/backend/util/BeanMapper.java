@@ -1,42 +1,65 @@
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+
 package org.araneaframework.backend.util;
 
-import java.lang.reflect.Method;
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * This class provides a way to manipulate Bean fields and subfields.
+ * This class provides a way to manipulate Bean fields. This class
+ * assumes that the class passed to constructor (<code>BeanClass</code>)
+ * implements the Bean pattern - that is to open it's fields using
+ * getters and setters (read-only fields are permitted). The only names
+ * permitted are those starting with "get", "is" and "set". Another requirement
+ * is that Beans must have a constructor that doesn't take any
+ * parameters.
  * 
- * @author <a href="mailto:rein@webmedia.ee">Rein Raudjärv</a>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
- * @see org.araneaframework.backend.util.BaseBeanMapper
+ * @see BeanUtil
  */
-public class BeanMapper extends BaseBeanMapper {
+public class BeanMapper implements Serializable {
 	
 	//*******************************************************************
 	// FIELDS
-	//*******************************************************************	
+	//*******************************************************************
 	
 	/**
-	 * Whetther to create missing beans during writing bean subfields while the
-	 * corresponding field of current bean has no sub-bean instance set. If set
-	 * to True, during writing to subfield all sub-fields that corresponds to
-	 * sub-beans are automaticallyinitialized with new instances of those beans.
-	 * Otherwise a RuntimeException is thrown.
+	 * Holds the Bean <code>Class</code>.
 	 */
-	private boolean createMissingBeans = false;
+	private Class beanClass;
+	
+	/**
+	 * Whetther to create missing beans during writing bean subfields.
+	 */
+	private boolean createMissingBeans = false;	
 	
 	//*********************************************************************
 	//* PUBLIC METHODS
-	//*********************************************************************	
-	
+	//*********************************************************************
 	
 	/**
-	 * Initializes the BeanMapper with the given type.
+	 * Initializes the BeanMapper.
 	 * 
 	 * @param beanClass
 	 *          the class implementing the Bean pattern.
 	 */
-	public BeanMapper(Class beanClass) {
-		super(beanClass);
+	public BeanMapper(Class voClass) {
+		this.beanClass = voClass;
 	}
 	
 	/**
@@ -49,8 +72,18 @@ public class BeanMapper extends BaseBeanMapper {
 	 * 			(default is false).
 	 */
 	public BeanMapper(Class beanClass, boolean createMissingBeans) {
-		super(beanClass);
+		this(beanClass);
 		this.createMissingBeans = createMissingBeans;		
+	}
+	
+	/**
+	 * Returns <code>List&lt;String&gt;</code>- the <code>List</code> of Bean
+	 *         field names.
+	 * @return <code>List&lt;String&gt;</code>- the <code>List</code> of Bean
+	 *         field names.
+	 */
+	public List getFields() {
+		return BeanUtil.getFields(beanClass);
 	}
 	
 	/**
@@ -63,18 +96,8 @@ public class BeanMapper extends BaseBeanMapper {
 	 *          The name of VO field.
 	 * @return The value of the field.
 	 */
-	public Object getBeanFieldValue(Object bean, String fieldName) {
-		Object result;
-		if (isRecursive(fieldName)) {
-			Object subBean = super.getBeanFieldValue(bean, getThisField(fieldName));
-			if (subBean == null) {
-				return null;
-			}
-			result = getSubBeanMapper(fieldName).getBeanFieldValue(subBean, getSubfields(fieldName));
-		} else {
-			result = super.getBeanFieldValue(bean, fieldName);			
-		}
-		return result;
+	public Object getFieldValue(Object bean, String fieldName) {
+		return BeanUtil.getFieldValue(bean, fieldName);
 	}
 	
 	/**
@@ -88,62 +111,46 @@ public class BeanMapper extends BaseBeanMapper {
 	 * @param value
 	 *          The new value of the field.
 	 */
-	public void setBeanFieldValue(Object bean, String fieldName, Object value) {
-		if (isRecursive(fieldName)) {
-			Object subBean = super.getBeanFieldValue(bean, getThisField(fieldName));
-			if (this.createMissingBeans && subBean == null) {				
-				subBean = BeanUtil.newInstance(super.getBeanFieldType(getThisField(fieldName)));
-				super.setBeanFieldValue(bean, getThisField(fieldName), subBean); 
-			}
-			getSubBeanMapper(fieldName).setBeanFieldValue(subBean, getSubfields(fieldName), value);			
+	public void setFieldValue(Object bean, String fieldName, Object value) {
+		if (createMissingBeans) {
+			BeanUtil.fillFieldValue(bean, fieldName, value);			
 		} else {
-			super.setBeanFieldValue(bean, fieldName, value);			
+			BeanUtil.setFieldValue(bean, fieldName, value);			
 		}
-	}
-	
-	//*********************************************************************
-	//* PRIVATE HELPER METHODS
-	//*********************************************************************
-	
-	/**
-	 * Returns getter from field name.
-	 */
-	protected Method getGetterMethod(String fieldName) {
-		Method result;
-		if (isRecursive(fieldName)) {
-			result = getSubBeanMapper(fieldName).getGetterMethod(getSubfields(fieldName));
-		} else {
-			result = super.getGetterMethod(fieldName);
-		}
-		return result;
 	}
 	
 	/**
-	 * Returns setter from field name.
+	 * Returns type of Bean field identified by name <code>field</code>.
+	 * 
+	 * @param field
+	 *          The name of Bean field.
+	 * @return The type of the field.
 	 */
-	protected Method getSetterMethod(String fieldName) {
-		Method result;
-		if (isRecursive(fieldName)) {
-			result = getSubBeanMapper(fieldName).getSetterMethod(getSubfields(fieldName));
-		} else {
-			return super.getSetterMethod(fieldName);			
-		}
-		return result;
+	public Class getFieldType(String fieldName) {
+		return BeanUtil.getFieldType(beanClass, fieldName);
 	}
 	
-	private BaseBeanMapper getSubBeanMapper(String fieldName) {
-		return new BeanMapper(getBeanFieldType(getThisField(fieldName)), this.createMissingBeans);
+	/**
+	 * Checks that the field identified by <code>fieldName</code> is a readable
+	 * Bean field.
+	 * 
+	 * @param fieldName
+	 *          Bean field name.
+	 * @return if this field is in Bean.
+	 */
+	public boolean isReadable(String fieldName) {
+		return BeanUtil.isReadable(beanClass, fieldName);
 	}
 	
-	private static boolean isRecursive(String fieldName) {
-		return fieldName.indexOf(".") != -1;
-	}
-	
-	private static String getThisField(String fieldName) {
-		return fieldName.substring(0, fieldName.indexOf("."));
-	}
-	
-	private static String getSubfields(String fieldName) {
-		return fieldName.substring(fieldName.indexOf(".") + 1);
+	/**
+	 * Checks that the field identified by <code>fieldName</code> is a writable
+	 * Bean field.
+	 * 
+	 * @param fieldName
+	 *          Bean field name.
+	 * @return if this field is in Bean.
+	 */
+	public boolean isWritable(String fieldName) {
+		return BeanUtil.isWritable(beanClass, fieldName);
 	}
 }

@@ -45,7 +45,6 @@ import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
-import org.araneaframework.backend.util.GeneralBeanMapper;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ExceptionUtil;
@@ -1130,7 +1129,7 @@ public abstract class ListSqlHelper {
 		
 		protected Class itemClass;
 		protected List results;
-		protected GeneralBeanMapper beanMapper;
+		protected BeanMapper beanMapper;
 		
 		/**
 		 * @param itemClass Bean type.
@@ -1176,7 +1175,7 @@ public abstract class ListSqlHelper {
 				String beanField = (String) entry.getKey();
 				String rsColumn = (String) entry.getValue();
 				
-				if (!this.beanMapper.fieldIsWritable(beanField))
+				if (!this.beanMapper.isWritable(beanField))
 					throw new RuntimeException(
 							"The field specified in the mapping doesn't have a corresponding Value Object field!");
 
@@ -1205,7 +1204,7 @@ public abstract class ListSqlHelper {
 			if (deconverter != null) {
 				valueType = deconverter.getDestinationType();
 			} else {
-				valueType = this.beanMapper.getBeanFieldType(beanField);
+				valueType = this.beanMapper.getFieldType(beanField);
 			}
 
 			Object value = resultSetColumnReader.readFromResultSet(
@@ -1213,7 +1212,7 @@ public abstract class ListSqlHelper {
 			if (deconverter != null) {
 				value = deconverter.reverseConvert(value);
 			}
-			this.beanMapper.setBeanFieldValue(bean, beanField, value);
+			this.beanMapper.setFieldValue(bean, beanField, value);
 		}
 		
 		/** 

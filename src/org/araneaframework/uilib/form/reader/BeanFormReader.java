@@ -87,17 +87,17 @@ public class BeanFormReader {
       String elementId = (String) entry.getKey();
       
       if (element instanceof FormElement) {
-        if (beanMapper.fieldIsWritable(elementId)) {
+        if (beanMapper.isWritable(elementId)) {
           Data data = ((FormElement) element).getData();
           if (data != null) {
-            beanMapper.setBeanFieldValue(vo, elementId, data.getValue());
+            beanMapper.setFieldValue(vo, elementId, data.getValue());
           }
         }
       }
       else if (element instanceof FormWidget) {
-        if (beanMapper.fieldIsWritable(elementId)) {
+        if (beanMapper.isWritable(elementId)) {
           BeanFormReader subVoReader = new BeanFormReader((FormWidget) element);
-          beanMapper.setBeanFieldValue(vo, elementId, subVoReader.getBean(beanMapper.getBeanFieldType(elementId)));
+          beanMapper.setFieldValue(vo, elementId, subVoReader.getBean(beanMapper.getFieldType(elementId)));
         }
       }
     }
