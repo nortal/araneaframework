@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.presentation;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
@@ -29,13 +30,17 @@ import org.araneaframework.jsp.util.JspUpdateRegionUtil;
  * @author Oleg Mürk
  */
 public class BaseEventButtonTag extends BaseSimpleButtonTag {
-  protected String eventId;
-  protected String eventParam;
   protected String disabled;
   protected String updateRegions;
-  protected String globalUpdateRegions;  
+  protected String globalUpdateRegions;
 
   protected List updateRegionNames;
+
+  protected UiUpdateEvent event;
+  
+  {
+	  event = new UiUpdateEvent();
+  }
 
   protected int doStartTag(Writer out) throws Exception {
     int result = super.doStartTag(out);
@@ -46,10 +51,13 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
       throw new AraneaJspException("'eventButton' tag can only be used in a context widget!");
 
     updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
+    event.setUpdateRegionNames(updateRegionNames);
+    event.setTarget(contextWidgetId);
+    event.setEventPrecondition(onClickPrecondition);
 
     return result;
   }
-
+  
   /* ***********************************************************************************
    * Tag attributes
    * ***********************************************************************************/  
@@ -61,7 +69,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "Event id." 
    */
   public void setEventId(String eventId) throws JspException {
-    this.eventId = (String)evaluate("eventId", eventId, String.class);
+    event.setId((String)evaluate("eventId", eventId, String.class));
   }
 
   /**
@@ -71,19 +79,9 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "Event parameter." 
    */
   public void setEventParam(String eventParam) throws JspException {
-    this.eventParam = (String)evaluate("eventParam", eventParam, String.class);
-  }  
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Disables button." 
-   */
-  public void setDisabled(String disabled) throws JspException {
-    this.disabled = (String)evaluate("disabled", disabled, String.class);
+	event.setParam((String)evaluate("eventParam", eventParam, String.class));
   }
-
+  
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -103,8 +101,19 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
   public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
     this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Disables button." 
+   */
+  public void setDisabled(String disabled) throws JspException {
+    this.disabled = (String)evaluate("disabled", disabled, String.class);
+  }
+
+  public void doFinally() {
+	super.doFinally();
+	event.clear();
+  }
 }
-
-
-
-

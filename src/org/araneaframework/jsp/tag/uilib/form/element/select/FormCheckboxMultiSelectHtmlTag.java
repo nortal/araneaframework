@@ -44,15 +44,12 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   public FormCheckboxMultiSelectHtmlTag() {
     setHasElementContextSpan(false);
   }
-
-  
   
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return EVAL_BODY_INCLUDE;
   }
-
 
 
   public int doEndTag(Writer out) throws Exception {
@@ -77,7 +74,6 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
       item.setId(derivedId);
       item.setValue(displayItem.getValue());
       item.setEvents(events ? "true" : "false");
-      item.setValidate(validate ? "true" : "false");
       item.setValidateOnEvent(validateOnEvent ? "true" : "false");
 
       if(updateRegions != null)

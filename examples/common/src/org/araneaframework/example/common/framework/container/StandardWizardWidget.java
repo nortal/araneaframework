@@ -240,7 +240,7 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 	}
 	
 	/*
-	 * Event listeners
+	 * UiEvent listeners
 	 */
 
 	private Collection eventListeners = new LinkedList();
@@ -288,15 +288,15 @@ public class StandardWizardWidget extends StandardPresentationWidget implements 
 	 */
 	
 	public void handleEventGoto(String eventParameter) throws Exception {
-		log.debug("Event 'goto' received!");
+		log.debug("UiEvent 'goto' received!");
 		gotoPage(Integer.parseInt(eventParameter));		
 	}	
 	public void handleEventSubmit(String eventParameter) throws Exception {
-		log.debug("Event 'submit' received!");
+		log.debug("UiEvent 'submit' received!");
 		submit();
 	}	
 	public void handleEventCancel(String eventParameter) throws Exception {
-		log.debug("Event 'cancel' received!");
+		log.debug("UiEvent 'cancel' received!");
 		cancel();
 	}
 }

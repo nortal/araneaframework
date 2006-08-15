@@ -19,7 +19,12 @@ package org.araneaframework.example.common.tags.example.component;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.OutputData;
+import org.araneaframework.http.util.URLUtil;
+import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.tag.PresentationTag;
+import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspScriptUtil;
@@ -32,6 +37,7 @@ import org.araneaframework.uilib.list.SequenceHelper;
  * List widget sequence footer tag.
  * 
  * @author Oleg Mürk
+ * @author Taimo Peelo (taimo@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "componentListFooter"
@@ -130,7 +136,6 @@ public class ComponentListFooterTag extends PresentationTag {
         JspUtil.writeEndTag_SS(out, "a");
       }
 
-
       writeOpenEventLink(out, NEXT_PAGE_EVENT_ID, null, currentPage < lastPage, nextClass);
       out.write("&nbsp;");
       JspUtil.writeEndTag_SS(out, "a");
@@ -208,41 +213,60 @@ public class ComponentListFooterTag extends PresentationTag {
 
     JspUtil.writeOpenStartTag(out, "a");
     JspUtil.writeAttribute(out, "class", "aranea-link-button");
-    JspUtil.writeAttribute(out, "href", "javascript:");
+    JspUtil.writeAttribute(out, "href", "#");
+    
+    JspUtil.writeEventAttributes(out, allItemsShown ? getShowSliceEvent() : getShowAllEvent());
+    JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
 
-    JspWidgetCallUtil.writeEventAttributeForEvent(
-        pageContext,
-        out, 
-        "onclick", 
-        systemFormId, 
-        listId, 
-        allItemsShown ? SHOW_SLICE_EVENT_ID : SHOW_ALL_EVENT_ID, 
-            null,
-            null);
     JspUtil.writeCloseStartTag_SS(out);
     JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, allItemsShown ? showPartial : showAll));
     JspUtil.writeEndTag_SS(out, "a");
 
     JspUtil.writeEndTag(out, "div"); //info
   }
+  
+    protected void writeOpenEventLink(Writer out, String eventId, String eventParam, boolean enabled, String styleClass) throws IOException, JspException {
+    UiEvent event = new UiUpdateEvent();
+    event.setId(eventId);
+    event.setParam(eventParam);
+    event.setTarget(listId);
 
-  protected void writeOpenEventLink(Writer out, String eventId, String eventParam, boolean enabled, String styleClass) throws IOException, JspException {
     JspUtil.writeOpenStartTag(out, "a");
-    JspUtil.writeAttribute(out, "class", styleClass);
-    JspUtil.writeAttribute(out, "href", "javascript:");
+    if (enabled) {
+      JspUtil.writeAttribute(out, "class", "aranea-link-button " + styleClass);
+      JspUtil.writeAttribute(out, "href", "#");
+    }
+    else {
+      JspUtil.writeAttribute(out, "class", styleClass);
+      JspUtil.writeAttribute(out, "href", "javascript:return false;");
+    }
+    
+    JspUtil.writeEventAttributes(out, event);
 
     if (enabled)
-      JspWidgetCallUtil.writeEventAttributeForEvent(
-          pageContext,
-          out, 
-          "onclick", 
-          systemFormId,  
-          listId, 
-          eventId, 
-          eventParam,
-          null);
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
     else
       JspScriptUtil.writeEmptyEventAttribute(out, "onclick");
     JspUtil.writeCloseStartTag_SS(out);         
+  }
+  
+  protected UiEvent getShowSliceEvent() {
+    UiEvent result = new UiUpdateEvent();
+    result.setId(SHOW_SLICE_EVENT_ID);
+    result.setTarget(listId);
+    return result;
+  }
+  
+  protected UiEvent getShowAllEvent() {
+    UiEvent result = new UiUpdateEvent();
+    result.setId(SHOW_ALL_EVENT_ID);
+    result.setTarget(listId);
+    return result;
+  }
+  
+  public StringBuffer getRequestURL() throws JspException {
+	OutputData output = (OutputData) requireContextEntry(AraneaRootTag.OUTPUT_DATA_KEY);
+	StringBuffer sb = new StringBuffer(URLUtil.getServletRequestURL(output.getInputData()));
+    return sb;
   }
 }

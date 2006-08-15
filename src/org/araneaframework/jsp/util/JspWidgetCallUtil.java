@@ -18,10 +18,8 @@ package org.araneaframework.jsp.util;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 
 /**
@@ -31,105 +29,23 @@ import org.araneaframework.jsp.container.UiWidgetContainer;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public abstract class JspWidgetCallUtil {
-
   public static UiWidgetContainer getContainer(PageContext pageContext) throws JspException {
     return (UiWidgetContainer) JspUtil.requireContextEntry(pageContext, UiWidgetContainer.REQUEST_CONTEXT_KEY);
   }
 
   /**
-   * Write standard event handling attribute which submits widget event with given id to the system form.
-   * @throws JspException 
+   * Write submit script for specified attribute.
+   * @param out 
+   * @param attributeName
+   * @throws IOException 
    */
-  public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, List updateRegions) throws IOException, JspException {
-    writeEventAttributeForEvent(pageContext, out, attributeName, systemFormId, widgetId, eventId, eventParam, "return true", updateRegions);
-  }
-
-  /**
-   * Write standard event handling attribute which submits widget event with given id to the system form.
-   * @throws JspException 
-   */
-  public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, String precondition, List updateRegions, boolean writePseudoURL) throws IOException, JspException {
+  public static void writeSubmitScriptForEvent(Writer out, String attributeName) throws IOException {
     JspUtil.writeOpenAttribute(out, attributeName);
-    
-    if (writePseudoURL)
-      out.write("javascript:");
-
-    out.write("return uiStandardSubmitEvent("); 
-    out.write("document.");
-    JspUtil.writeEscapedAttribute(out, systemFormId);
-    out.write(", ");    
-    JspUtil.writeScriptString(out, widgetId);    
-    out.write(", ");    
-    JspUtil.writeScriptString(out, eventId);
-    out.write(", ");
-    JspUtil.writeScriptString(out, eventParam);
-    out.write(", function() {");
-    JspUtil.writeEscaped(out, getContainer(pageContext).buildWidgetCall(systemFormId, widgetId, eventId, eventParam, updateRegions));    
-    out.write("}, function() {");
-      if (StringUtils.isBlank(precondition)) out.write("return true;");
-      else JspUtil.writeEscaped(out, precondition);
-    out.write("});");
-
+    out.write(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeCloseAttribute(out);
   }
   
-  public static void writeEventAttributeForEvent(PageContext pageContext, Writer out, String attributeName, String systemFormId, String widgetId, String eventId, String eventParam, String precondition, List updateRegions) throws IOException, JspException {
-    writeEventAttributeForEvent(pageContext, out, attributeName, systemFormId, widgetId, eventId, eventParam, precondition, updateRegions, true);
+  public static String getSubmitScriptForEvent() {
+    return "return _ap.submit(this);";
   }
-
-  /**
-   * Writes standard event handling attribute which validates the form, if neccessary, and submits 
-   * event of form element with given id to the system form.
-   * @throws JspException 
-   */
-  public static void writeEventAttributeForFormEvent(
-		  PageContext pageContext, 
-		  Writer out, 
-		  String attributeName, 
-		  String systemFormId, 
-		  String formId, 
-		  String elementId, 
-		  String eventId, 
-		  String eventParam, 
-		  boolean validate, 
-		  String precondition, 
-		  List updateRegions) throws IOException, JspException {
-	  
-	  
-    JspUtil.writeOpenAttribute(out, attributeName);
-    
-    out.write("javascript:");
-    writeEventScriptForFormEvent(pageContext, out, systemFormId, formId, elementId, eventId, eventParam, validate, precondition, updateRegions);
-    JspUtil.writeCloseAttribute(out);
-  }
-
-  /**
-   * Writes standard event handling script content which validates the form, if neccessary, and submits 
-   * event of form element with given id to the system form.
-   * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005 extracted from {@link #writeEventAttributeForFormEvent(Writer, String, String, String, String, String, String, String, boolean, String)}
-   * @throws JspException 
-   */  
-  public static void writeEventScriptForFormEvent(PageContext pageContext, Writer out, String systemFormId, String formId, String elementId, String eventId, String eventParam, boolean validate, String precondition, List updateRegions) throws IOException, JspException {
-    out.write("return uiStandardSubmitFormEvent(");
-    out.write("document.");
-    JspUtil.writeEscapedAttribute(out, systemFormId);
-    out.write(", ");    
-    JspUtil.writeScriptString(out, formId);    
-    out.write(", ");    
-    JspUtil.writeScriptString(out, elementId);    
-    out.write(", ");        
-    JspUtil.writeScriptString(out, eventId);
-    out.write(", ");
-    JspUtil.writeScriptString(out, eventParam);
-    out.write(", ");    
-    out.write(validate ? "true" : "false");
-
-    out.write(", function() {");
-    JspUtil.writeEscaped(out, getContainer(pageContext).buildWidgetCall(systemFormId, formId + "." + elementId, eventId, eventParam, updateRegions));
-    out.write("}, function() {");
-    if (StringUtils.isBlank(precondition)) out.write("return true;");
-    else JspUtil.writeEscaped(out, precondition);    
-    out.write("});"); 
-  }
-
 }

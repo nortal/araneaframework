@@ -20,7 +20,8 @@ import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.http.util.FileImportUtil;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
+import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.tag.layout.LayoutRowTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -55,9 +56,6 @@ public class ComponentListHeaderTag extends LayoutRowTag {
   }
   
   protected void writeHeader(Writer out) throws Exception {
-    // Get system form id
-    String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
-    
     // Get list data
     String listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
     ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
@@ -99,19 +97,14 @@ public class ComponentListHeaderTag extends LayoutRowTag {
           }
         }
         
-        // Write link        
+        UiEvent orderEvent = new UiUpdateEvent(ORDER_EVENT_ID, listId, columnViewModel.getId());
+      
         JspUtil.writeOpenStartTag(out, "a");
-        JspUtil.writeAttribute(out, "href", "javascript:");        
-        JspWidgetCallUtil.writeEventAttributeForEvent(
-            pageContext,
-            out, 
-            "onclick", 
-            systemFormId, 
-            listId, 
-            ORDER_EVENT_ID, 
-            columnViewModel.getId(),
-            null);
-        JspUtil.writeCloseStartTag_SS(out);       
+        JspUtil.writeAttribute(out, "class", "aranea-link-button");  
+        JspUtil.writeEventAttributes(out, orderEvent);
+        JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+
+        JspUtil.writeCloseStartTag_SS(out);
       }
       if (columnViewModel.getLabel() != null)
         JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, columnViewModel.getLabel()));

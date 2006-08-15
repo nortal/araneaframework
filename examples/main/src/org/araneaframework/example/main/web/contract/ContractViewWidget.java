@@ -56,19 +56,19 @@ public class ContractViewWidget extends TemplateBaseWidget {
 	}
 
 	public void handleEventViewCompany(String eventParameter) throws Exception {
-		log.debug("Event 'viewCompany' received!");
+		log.debug("UiEvent 'viewCompany' received!");
 		getFlowCtx().start(
 				new CompanyViewWidget(contract.getCompany().getId()), null, null);
 	}
 
 	public void handleEventViewPerson(String eventParameter) throws Exception {
-		log.debug("Event 'viewPerson' received!");
+		log.debug("UiEvent 'viewPerson' received!");
 		getFlowCtx().start(
 				new PersonViewWidget(contract.getPerson().getId()), null, null);
 	}
 
 	public void handleEventReturn(String eventParameter) throws Exception {
-		log.debug("Event 'return' received!");
+		log.debug("UiEvent 'return' received!");
 		getFlowCtx().cancel();
 	}
 }

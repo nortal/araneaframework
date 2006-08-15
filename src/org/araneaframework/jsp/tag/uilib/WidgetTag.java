@@ -22,7 +22,6 @@ import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
 
@@ -75,7 +74,6 @@ public class WidgetTag extends BaseTag {
     addContextEntry(FULL_ID_KEY, fullId);
     addContextEntry(SCOPED_FULL_ID_KEY, scopedFullId);    
     addContextEntry(VIEW_MODEL_KEY, viewModel);
-    writeJavascript(out);
 
     // Continue
     return EVAL_BODY_INCLUDE;    
@@ -93,20 +91,5 @@ public class WidgetTag extends BaseTag {
    */
   public void setId(String id) throws JspException {
     this.id = (String)evaluateNotNull("id", id, String.class);
-  }
-
-  /* ***********************************************************************************
-   * Writes out WidgetContext javascript
-   * ***********************************************************************************/
-
-  /**
-   * Write javascript that accompanies this tag.
-   */
-  protected void writeJavascript(Writer out) throws Exception{
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiWidgetContext(");
-    JspUtil.writeScriptString(out, scopedFullId);
-    out.write(");\n");
-    JspUtil.writeEndTag(out, "script");
   }
 }

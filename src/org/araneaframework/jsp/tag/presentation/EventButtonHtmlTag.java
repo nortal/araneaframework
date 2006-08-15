@@ -49,27 +49,21 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
+    JspUtil.writeEventAttributes(out, event);
+
     if (disabled != null) 
-      out.write(" DISABLED ");
-    if (eventId != null)
-      JspWidgetCallUtil.writeEventAttributeForEvent(
-          pageContext,
-          out, 
-          "onclick", 
-          systemFormId, 
-          contextWidgetId, 
-          eventId, 
-          eventParam, 
-          onClickPrecondition,
-          updateRegionNames,
-          false);
+      out.write(" disabled ");
+
+    if (event.getId() != null) {
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+    }
     if (labelId != null && renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)) {
       JspUtil.writeAttribute(out, "value", localizedLabel);      
     }
     if (renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON))
       JspUtil.writeCloseStartTag_SS(out);      
     if (renderMode.equals(EventButtonHtmlTag.RENDER_INPUT))
-      JspUtil.writeCloseStartEndTag(out);  
+      JspUtil.writeCloseStartEndTag(out);
 
     return EVAL_BODY_INCLUDE;    
   }    

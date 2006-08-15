@@ -19,9 +19,12 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.util.JspStringUtil;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
+import org.araneaframework.uilib.event.OnClickEventListener;
 
 /**
  * Standard button form element tag.
@@ -122,10 +125,17 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
 
   protected boolean writeEventAttribute(Writer out) throws IOException,
   JspException {
-    if (viewModel.isOnClickEventRegistered())
-      this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onClicked",
-          validateOnEvent, onClickPrecondition, updateRegionNames);
+    UiUpdateEvent event = new UiUpdateEvent();
+    event.setId(OnClickEventListener.ON_CLICK_EVENT);
+    event.setTarget(formFullId+"."+ derivedId);
+    event.setUpdateRegionNames(updateRegionNames);
+    event.setEventPrecondition(onClickPrecondition);
 
+    if (viewModel.isOnClickEventRegistered()) {
+      JspUtil.writeEventAttributes(out, event);
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+    }
+    
     return viewModel.isOnClickEventRegistered();
   }
 }

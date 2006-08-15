@@ -18,6 +18,8 @@ package org.araneaframework.example.common.tags.uilib.list;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
@@ -52,8 +54,6 @@ public class SampleListInfoTag extends BaseTag {
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
-
     // Get list data
     String listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
     ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
@@ -82,15 +82,10 @@ public class SampleListInfoTag extends BaseTag {
       JspUtil.writeOpenStartTag(out, "a");
       JspUtil.writeAttribute(out, "class", "aranea-link-button");
       JspUtil.writeAttribute(out, "href", "javascript:");
-      JspWidgetCallUtil.writeEventAttributeForEvent(
-          pageContext,
-          out, 
-          "onclick", 
-          systemFormId, 
-          listId, 
-          allItemsShown ? SHOW_SLICE_EVENT_ID : SHOW_ALL_EVENT_ID, 
-              null,
-              null);
+      
+      UiEvent event = new UiUpdateEvent(allItemsShown ? SHOW_SLICE_EVENT_ID : SHOW_ALL_EVENT_ID, listId, null, null);
+      JspUtil.writeEventAttributes(out, event);
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
 
       JspUtil.writeCloseStartTag_SS(out);
       JspUtil.writeEscaped(out, new Long(totalItemCount).toString());

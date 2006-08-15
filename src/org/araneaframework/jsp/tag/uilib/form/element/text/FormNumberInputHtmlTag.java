@@ -16,10 +16,7 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
-import java.io.IOException;
 import java.io.Writer;
-import org.araneaframework.jsp.util.JspScriptUtil;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.NumberControl;
 
 /**
@@ -43,30 +40,8 @@ public class FormNumberInputHtmlTag extends BaseFormTextInputHtmlTag {
     NumberControl.ViewModel viewModel = ((NumberControl.ViewModel)controlViewModel);
     writeTextInput(out, "text");
 
-    if (validate) 
-      writeValidationScript(out, viewModel);
-
     super.doEndTag(out);
     return EVAL_PAGE;
   }
 
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, NumberControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddIntegerValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");    
-    out.write(", ");
-    JspScriptUtil.writeObject(out, viewModel.getMinValue());
-    out.write(", ");
-    JspScriptUtil.writeObject(out, viewModel.getMaxValue());
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
-  }  
 }

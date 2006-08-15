@@ -24,7 +24,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   name = "updateRegion"
  *   body-content = "JSP"
  *   description = "Defines an update region for asynchronous updating using AJAX request. Use its "id" to select the updated regions
-               using the "updateRegions" attribute of elements capable of sending events. This attribute accepts a comma-separated
+               using the "UPDATE_REGIONS" attribute of elements capable of sending events. This attribute accepts a comma-separated
                list of regions to be updated with the request."
  * @author Jevgeni kabanov (ekabanov@webmedia.ee)
  */

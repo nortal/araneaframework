@@ -58,16 +58,15 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
      
      out.write("<script>");
      // ensure restoration of scroll position
-     out.write("addSystemLoadEvent(function() {" +
-     		"scrollToCoordinates("+
-    		"document.forms." + systemFormId + "."+ WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + ".value, " +
-     		"document.forms." + systemFormId + "."+ WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ".value)});");
+     out.write("_ap.addSystemLoadEvent(function() { var form = document.forms['" + systemFormId + "'];" +
+    		" if (form." +  WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + " && form."+WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ") "+
+     		"scrollToCoordinates("+x + ","+y+");});");
+    		//"form."+ WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + ".value, " +
+     		//"form."+ WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ".value);});");
      
      // ensure that the scroll coordinates are submitted with request
-     out.write("uiAddSystemFormSubmitCallback("+
-    		 "document.forms." + systemFormId + ", " +
-    		 "function() {saveScrollCoordinates(document.forms." + systemFormId +")});"
-    		 );
+     out.write("var form = document.forms['" + systemFormId + "'];");
+     out.write("_ap.addSubmitCallback(function() {saveScrollCoordinates(document.forms['" + systemFormId +"'])});");
      out.write("</script>");
    }
 }

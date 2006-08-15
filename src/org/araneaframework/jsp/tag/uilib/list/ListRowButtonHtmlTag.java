@@ -34,24 +34,19 @@ public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
   }
 
   protected int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);                
-    // Write button tag             
+    super.doStartTag(out);
+
+    // Write button tag
     JspUtil.writeOpenStartTag(out, "button");
     JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    if (eventId != null)
-      JspWidgetCallUtil.writeEventAttributeForEvent(
-          pageContext,
-          out,
-          "onclick",
-          systemFormId,  
-          contextWidgetId, 
-          eventId, 
-          eventParam, 
-          onClickPrecondition,
-          updateRegionNames,
-          false);       
+
+    if (event.getId() != null) {
+      JspUtil.writeEventAttributes(out, event);
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+    }
+    
     JspUtil.writeCloseStartTag_SS(out);
 
     return EVAL_BODY_INCLUDE;

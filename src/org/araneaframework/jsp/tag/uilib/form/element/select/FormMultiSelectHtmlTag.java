@@ -16,7 +16,6 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
@@ -61,8 +60,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "label", localizedLabel);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     if (viewModel.isOnChangeEventRegistered())
-      this.writeEventAttributeForUiEvent(out, "onchange", derivedId, "onChanged", validateOnEvent, "",
-          updateRegionNames);
+      this.writeSubmitScriptForUiEvent(out, "onchange", derivedId, "onChanged", "", updateRegionNames);
     if (viewModel.isDisabled())
       JspUtil.writeAttribute(out, "disabled", "true");
     JspUtil.writeAttributes(out, attributes);
@@ -85,8 +83,6 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
     
-    if (validate) writeValidationScript(out, viewModel);
-    
     super.doEndTag(out);
     return EVAL_PAGE;  
   }
@@ -104,20 +100,4 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   public void setSize(String size) throws JspException {
     this.size = (Long)evaluate("size", size, Long.class);
   }
-  
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, MultiSelectControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddMultiselectValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
-  }    
 }

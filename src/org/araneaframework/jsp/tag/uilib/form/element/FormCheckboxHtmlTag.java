@@ -20,6 +20,7 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
 
@@ -65,9 +66,9 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 		if (accessKey != null)
 			JspUtil.writeAttribute(out, "accesskey", accessKey);
 
-		if (events && viewModel.isOnChangeEventRegistered())
-			this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
-					updateRegionNames);
+		if (events && viewModel.isOnChangeEventRegistered()) {
+			this.writeSubmitScriptForUiEvent(out, "onclick", derivedId, OnChangeEventListener.ON_CHANGE_EVENT, onChangePrecondition, updateRegionNames);
+		}
 
 		JspUtil.writeAttributes(out, attributes);   
 		JspUtil.writeCloseStartEndTag_SS(out);

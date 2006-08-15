@@ -17,17 +17,6 @@
 package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.jsp.JspException;
-import org.araneaframework.OutputData;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.container.StandardContainerWidget;
-import org.araneaframework.http.ThreadCloningContext;
-import org.araneaframework.http.util.ClientStateUtil;
-import org.araneaframework.http.util.URLUtil;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
@@ -46,26 +35,16 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    StringBuffer url = getRequestURL();
-    Map parameters = getParameterMap();
-    parameters.put(ThreadCloningContext.CLONING_REQUEST_KEY, "true");
-    
     JspUtil.writeOpenStartTag(out, "a");
     JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
-    if (eventId != null)
-      JspWidgetCallUtil.writeEventAttributeForEvent(
-          pageContext,
-          out, 
-          "onclick", 
-          systemFormId,  
-          contextWidgetId, 
-          eventId, 
-          eventParam, 
-          onClickPrecondition,
-          updateRegionNames);       
+    JspUtil.writeAttribute(out, "href", "#");
+    JspUtil.writeEventAttributes(out, event);
+
+    if (event.getId() != null)
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+
     JspUtil.writeCloseStartTag_SS(out);    
 
     return EVAL_BODY_INCLUDE;    
@@ -78,19 +57,5 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeEndTag_SS(out, "a"); 
     super.doEndTag(out);
     return EVAL_PAGE;
-  }
-  
-  protected Map getParameterMap() throws JspException {
-    OutputData output = (OutputData) requireContextEntry(AraneaRootTag.OUTPUT_DATA_KEY);
-    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
-    Object threadId = state.get(ThreadContext.THREAD_SERVICE_KEY);
-
-    Map result = new HashMap();
-    result.put(ThreadContext.THREAD_SERVICE_KEY, threadId);
-    result.put(StandardContainerWidget.EVENT_PATH_KEY, contextWidgetId);
-    result.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, eventId);
-    result.put(ApplicationWidget.EVENT_PARAMETER_KEY, eventParam);
-    
-    return result;
   }
 }

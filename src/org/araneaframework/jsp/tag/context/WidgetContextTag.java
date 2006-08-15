@@ -81,8 +81,12 @@ public class WidgetContextTag extends BaseTag {
 
     addContextEntry(WIDGET_CONTEXT_ID_KEY, fullId);
     addContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY, viewModel);
-
+    
     return EVAL_BODY_INCLUDE;
+  }
+  
+  protected int doEndTag(Writer out) throws Exception {
+    return EVAL_PAGE;
   }
   
   public void doFinally() {

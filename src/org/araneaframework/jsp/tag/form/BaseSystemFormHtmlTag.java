@@ -66,21 +66,10 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     JspUtil.writeAttribute(out, "accept-charset", getAcceptCharset());
     JspUtil.writeAttribute(out, "action", ((HttpServletResponse)pageContext.getResponse()).encodeURL(getFormAction()));
     JspUtil.writeAttribute(out, "style", "margin: 0px");
-    JspUtil.writeAttribute(out, "onsubmit", "javascript:return false");
+    JspUtil.writeAttribute(out, "onsubmit", "return false;");
+    JspUtil.writeAttribute(out, "arn-systemForm", "true");
     JspUtil.writeCloseStartTag(out);
 
-    // Script
-    // Initialize the uiProperties object for this systemform
-    // This object will store validators for UiLib forms contained in this systemform.      
-    JspUtil.writeOpenStartTag(out, "script");
-    JspUtil.writeAttribute(out, "type", "text/javascript");
-    JspUtil.writeCloseStartTag(out);
-    out.write("uiSystemFormContext(");
-    JspUtil.writeScriptString(out, derivedId);
-    out.write(");\n");
-    JspUtil.writeEndTag(out, "script");
-
-    // Continue
     return EVAL_BODY_INCLUDE;
   }
 

@@ -23,9 +23,9 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.araneaframework.OutputData;
-import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.filter.StandardJspFilterService;
+import org.araneaframework.jsp.tag.BaseTag;
 
 /**
  * 
@@ -49,7 +49,7 @@ public class AraneaRootTag extends BaseTag {
     addContextEntry(
         OUTPUT_DATA_KEY, 
         output);
-    
+
     Config.set(
         pageContext, 
         Config.FMT_LOCALIZATION_CONTEXT, 
@@ -63,7 +63,6 @@ public class AraneaRootTag extends BaseTag {
     return EVAL_BODY_INCLUDE;
   }
 }
-
 
 /**
  * Adapter resource bundle that converts all objects to string.
@@ -82,5 +81,5 @@ class StringAdapterResourceBundle extends ResourceBundle {
   
   public Enumeration getKeys() {
     return bundle.getKeys();
-  } 
+  }
 }

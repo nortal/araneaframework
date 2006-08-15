@@ -315,7 +315,7 @@ AjaxAnywhere.prototype.onBeforeResponseProcessing = function () {
 * Override this method to implement a custom action
 */
 AjaxAnywhere.prototype.onAfterResponseProcessing = function () {
-	processLoadEvents();
+   getActiveAraneaPage().onload();
 };
 
 function extractScripts(str) {
@@ -441,3 +441,5 @@ function trim(str) {
 // default instance.
 ajaxAnywhere = new AjaxAnywhere();
 ajaxKey = ajaxAnywhere.bindById();
+
+window.AraneaAA_Present=true;

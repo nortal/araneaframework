@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form.control;
 
-import java.text.SimpleDateFormat;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**

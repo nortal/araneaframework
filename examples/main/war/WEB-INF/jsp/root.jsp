@@ -19,8 +19,8 @@
 	                    <title>Aranea<ui:entity code="mdash"/>Java Web Framework Construction and Integration Kit</title>
 	                </head>
 	
-	                <body onload="processLoadEvents()" onunload="processUnloadEvents()">
-	
+	                <ui:body>
+
 	                    <div id="cont1">
 	                        <ui:systemForm method="POST">
 	                        <ui:registerPopups/>
@@ -52,8 +52,8 @@
 	                    </div>
 	                    
 	                    <ui:widgetInclude id="menu.footer"/>
-	
-	                </body>
+
+	                </ui:body>
 	            </html>
 	        </ui:widgetContext>
 	

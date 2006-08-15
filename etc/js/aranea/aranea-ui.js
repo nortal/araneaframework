@@ -14,67 +14,29 @@
  * limitations under the License.
 **/
 
-//
-// UI basic functions
-// 
-
 /**
- * Invoke all the callbacks registered for given system form.
- * Then call systemForm.submit().
- * @author Konstantin Tretyakov
+ * Behaviour rules required for Aranea JSP to work correctly.
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
-function uiSystemFormSubmit(systemForm, updateRegions){
-  if (!systemForm) return;
 
-  if (systemForm.uiProperties && systemForm.uiProperties.submitCallbacks) {
-	  var callbacks = systemForm.uiProperties.submitCallbacks;
-	  
-	  var i;
-	  for (i = 0; i < callbacks.length; i++){
-	  	var f = callbacks[i];
-			f();
-	  }  
-  }
-	
-	if (updateRegions && updateRegions.length > 0) {
-		window[ajaxKey].updateRegions = updateRegions;
-		window[ajaxKey].systemForm = systemForm;
-		window[ajaxKey].submitAJAX();
-	}
-	else {
-		pageActive = false;	
-		systemForm.submit();		
-	}
+/* *DateInput's calendar setup function. See js/calendar/calendar-setup.js for details. */
+function calendarSetup(inputFieldId, dateFormat, alignment) {
+  var CALENDAR_BUTTON_ID_SUFFIX = "_cbutton"; // comes from BaseFormDateTimeInputHtmlTag
+  var align = alignment == null ? "Br" : alignment;
+  Calendar.setup({
+    inputField   : inputFieldId,
+    ifFormat     : dateFormat,
+    showsTime    : false,
+    button       : inputFieldId + CALENDAR_BUTTON_ID_SUFFIX,
+    singleClick  : true,
+    step         : 1,
+    firstDay     : 1,
+    align        : align
+  });
 }
 
-/**
- * Add a function that will be invoked before form is submitted
- * This is required for HtmlEditor, for example, that
- * will have the possibility to copy its contents in its formelement.
- *
- * @author Konstantin Tretyakov
- */
-function uiAddSystemFormSubmitCallback(systemForm, callbackFunction){
-  if (!systemForm) return;
-  if (!systemForm.uiProperties){
-  	systemForm.uiProperties = new Object();
-  }
-  if (!systemForm.uiProperties.submitCallbacks){
-  	systemForm.uiProperties.submitCallbacks = new Array();
-  }
-  var callbacks = systemForm.uiProperties.submitCallbacks;
-  callbacks[callbacks.length] = callbackFunction;
-}
-
-/**
- * Validates given form in a given system form
- *
- * @author Konstantin Tretyakov
- */
-function uiValidateForm(systemForm, formId) {
-	return systemForm.uiProperties[formId].validator.validate();
-}
-
+/* fillTime*() and addOptions() functions are used in *timeInputs 
+ * for hour and minute inputs/selects. */
 function fillTimeText(systemForm, el, hourSelect, minuteSelect) {
   if (systemForm[hourSelect].value=='' && systemForm[minuteSelect].value=='') {
     systemForm[el].value='';
@@ -94,26 +56,8 @@ function fillTimeSelect(systemForm, timeInput, hourSelect, minuteSelect) {
   systemForm[minuteSelect].value=minuteValue;
 }
 
-// b/c braindead IE: The NAME attribute cannot be set at run time on elements dynamically 
-// created with the createElement method. To create an element with a name attribute, 
-// include the attribute and value when using the createElement method.
-// http://www.thunderguy.com/semicolon/2005/05/23/setting-the-name-attribute-in-internet-explorer/
-function createNamedElement(type, name) {
-   var element = null;
-   // Try the IE way; this fails on standards-compliant browsers
-   try {
-      element = document.createElement('<'+type+' name="'+name+'">');
-   } catch (e) {
-   }
-   if (!element || element.nodeName != type.toUpperCase()) {
-      // Non-IE browser; use canonical method to create named element
-      element = document.createElement(type);
-      element.name = name;
-   }
-   return element;
-}
-
-// adds options empty,0-(z-1) to select with option x preselected
+// Adds options empty,0-(z-1) to select with option x preselected. Used for
+// *timeInput hour and minute selects.
 function addOptions(selectName, z, x) {
   var select=document.getElementsByName(selectName).item(0);
   var emptyOpt=document.createElement("option");
@@ -146,7 +90,7 @@ function setFormEncoding(formName, encoding) {
 //--------------- Scroll position saving/restoring --------------//
 function saveScrollCoordinates(form) {
 	var x, y;
-  
+
 	if (document.documentElement && document.documentElement.scrollTop) {
 		// IE 6
 		x = document.documentElement.scrollLeft;
@@ -160,14 +104,18 @@ function saveScrollCoordinates(form) {
 		x = window.pageXOffset;
 		y = window.pageYOffset;
 	}
-	
-	// alert("x = " + x + "; y = " + y);
-	
-	form.windowScrollX.value = x;
-	form.windowScrollY.value = y;
+
+    var xinput = createNamedElement("input", "windowScrollX");
+    xinput.type = 'hidden';
+    var yinput = createNamedElement("input", "windowScrollY");
+    yinput.type = 'hidden';
+    xinput.value = x;
+    yinput.value = y;
+    
+    form.appendChild(xinput);
+    form.appendChild(yinput);
 } 
 
 function scrollToCoordinates(x, y) {
-	// alert("x = " + x + "; y = " + y);
 	window.scrollTo(x, y);
 } 

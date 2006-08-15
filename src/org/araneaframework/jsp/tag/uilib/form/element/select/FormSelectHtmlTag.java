@@ -16,12 +16,14 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
+import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
 
@@ -64,9 +66,12 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
     if (viewModel.isDisabled())
       JspUtil.writeAttribute(out, "disabled", "true");
-    if (events && viewModel.isOnChangeEventRegistered())
-      this.writeEventAttributeForUiEvent(out, "onchange", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
-          updateRegionNames);
+    if (events && viewModel.isOnChangeEventRegistered()) {
+      UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, formFullId + "." + derivedId, null, updateRegionNames);
+      event.setEventPrecondition(onChangePrecondition);
+      JspUtil.writeEventAttributes(out, event);
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onchange");
+    }
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartTag(out);
 
@@ -92,8 +97,6 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
-
-    if (validate) writeValidationScript(out, viewModel);
 
     // Continue
     super.doEndTag(out);
@@ -123,20 +126,4 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
   public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
     this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
-
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, SelectControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddSelectValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
-  }      
 }

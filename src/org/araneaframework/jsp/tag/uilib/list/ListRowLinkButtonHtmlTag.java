@@ -17,17 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.jsp.JspException;
-import org.araneaframework.OutputData;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.container.StandardContainerWidget;
-import org.araneaframework.http.ThreadCloningContext;
-import org.araneaframework.http.util.ClientStateUtil;
-import org.araneaframework.http.util.URLUtil;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -48,9 +37,6 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-	    Map parameters = getParameterMap();
-	    StringBuffer url = getRequestURL();
-	    
 	    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, id);
 
 		JspUtil.writeOpenStartTag(out, "a");
@@ -58,19 +44,11 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 		JspUtil.writeAttribute(out, "class", getStyleClass());
 		JspUtil.writeAttribute(out, "style", getStyle());
 		JspUtil.writeAttribute(out, "border", "0");
-		JspUtil.writeAttribute(out, "href", URLUtil.parametrizeURI(url.toString(), parameters));
-
-		if (eventId != null)
-			JspWidgetCallUtil.writeEventAttributeForEvent(
-					pageContext,
-					out, 
-					"onclick", 
-					systemFormId, 
-					contextWidgetId, 
-					eventId, 
-					eventParam, 
-					onClickPrecondition,
-					updateRegionNames);      
+		JspUtil.writeAttribute(out, "href", "#");
+		if (event.getId() != null) {
+		  JspUtil.writeEventAttributes(out, event);
+		  JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+		}
 		
 		JspUtil.writeCloseStartTag_SS(out);    
 		
@@ -84,19 +62,4 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 		
 		return super.doEndTag(out);
 	}
-	
-  protected Map getParameterMap() throws JspException {
-    OutputData output = (OutputData) requireContextEntry(AraneaRootTag.OUTPUT_DATA_KEY);
-    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
-    Object threadId = state.get(ThreadContext.THREAD_SERVICE_KEY);
-
-    Map result = new HashMap();
-    result.put(ThreadContext.THREAD_SERVICE_KEY, threadId);
-    result.put(StandardContainerWidget.EVENT_PATH_KEY, contextWidgetId);
-    result.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, eventId);
-    result.put(ApplicationWidget.EVENT_PARAMETER_KEY, eventParam);
-    result.put(ThreadCloningContext.CLONING_REQUEST_KEY, "true");
-
-    return result;
-  }
 }

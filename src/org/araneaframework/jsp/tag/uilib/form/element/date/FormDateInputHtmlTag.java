@@ -16,11 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
-import java.io.IOException;
 import java.io.Writer;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
 
 
@@ -57,34 +54,14 @@ public class FormDateInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
         viewModel.isMandatory(), 
         formElementViewModel.isValid(),
         dateInputSize,
-        validate,
         viewModel.isDisabled(),
         getStyleClass(),
         accessKey,
         viewModel);
 
-    if (validate) 
-      writeValidationScript(out, viewModel);
-
     super.doEndTag(out);
     return EVAL_PAGE;
   }
-
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, StringArrayRequestControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddDateValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
-  }     
 }
 
 

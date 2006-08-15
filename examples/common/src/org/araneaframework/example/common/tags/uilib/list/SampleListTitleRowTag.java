@@ -20,8 +20,9 @@ import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.http.util.FileImportUtil;
+import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -50,9 +51,6 @@ public class SampleListTitleRowTag extends BaseTag {
 	
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		
-		// Get system form id
-		String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 		
 		// Get list data
 		String listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
@@ -103,16 +101,12 @@ public class SampleListTitleRowTag extends BaseTag {
 				
 				// Write link        
 				JspUtil.writeOpenStartTag(out, "a");
-				JspUtil.writeAttribute(out, "href", "javascript:");        
-				JspWidgetCallUtil.writeEventAttributeForEvent(
-						pageContext,
-						out, 
-						"onclick", 
-						systemFormId, 
-						listId, 
-						ORDER_EVENT_ID, 
-						columnViewModel.getId(),
-						null);
+				JspUtil.writeAttribute(out, "href", "javascript:");
+
+				UiEvent event = new UiUpdateEvent(ORDER_EVENT_ID, listId, columnViewModel.getId(), null);
+				JspUtil.writeEventAttributes(out, event);
+				JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+
 				JspUtil.writeCloseStartTag_SS(out);
 			}
 			if (columnViewModel.getLabel() != null)

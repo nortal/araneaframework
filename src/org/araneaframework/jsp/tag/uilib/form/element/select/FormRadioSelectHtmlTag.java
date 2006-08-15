@@ -42,7 +42,6 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 	protected boolean labelBefore = false;
 	
 	public FormRadioSelectHtmlTag() {
-		baseStyleClass = "aranea-radioselect";
 		setHasElementContextSpan(false);
 	}
 	
@@ -50,7 +49,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 		assertControlType("SelectControl");		
 		
 		if (!"horizontal".equals(type) && !"vertical".equals(type))
-			throw new AraneaJspException("Attribute 'type' cna be only either 'horizontal' or 'vertical'!");
+			throw new AraneaJspException("Attribute 'type' can be only either 'horizontal' or 'vertical'!");
 		
 		// Prepare
 		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
@@ -69,8 +68,11 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 			item.setId(derivedId);
 			item.setValue(displayItem.getValue());
 			item.setEvents(events ? "true" : "false");
-			item.setValidate(validate ? "true" : "false");
 			item.setValidateOnEvent(validateOnEvent ? "true" : "false");
+			if (updateRegions != null)
+			  item.setUpdateRegions(updateRegions);
+			if (globalUpdateRegions != null)
+			  item.setGlobalUpdateRegions(globalUpdateRegions);
 			item.setStyleClass(getStyleClass());
 			if (getStyle() != null) item.setStyle(getStyle());
 

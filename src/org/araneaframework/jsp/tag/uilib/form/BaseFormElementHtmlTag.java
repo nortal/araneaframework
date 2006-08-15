@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -64,7 +65,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	//Attributes
 	
 	protected boolean events = true;
-	protected boolean validate = true;
 	protected boolean validateOnEvent = false;
 		
 	protected String accessKey;
@@ -162,16 +162,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false"
-	 *   description = "Whether the element will be validated on the client-side when the form is submitted (by default 'true')."
-	 */	
-	public void setValidate(String validate) throws JspException {
-		this.validate = ((Boolean)evaluateNotNull("validate", validate, Boolean.class)).booleanValue(); 
-	}
-
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
 	 *   description = "Whether the form will be validated on the client-side when the element generates an event (by default "false")."
 	 */	
 	public void setValidateOnEvent(String validateOnEvent) throws JspException {
@@ -256,20 +246,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
 		//  Enclose the element in a <span id=somerandomid>
-		//  Register this span using javascript
 		String spanId = "fe-span-" + generateId(pageContext);
-		String elementName = fullFormId + "." + elementId;
-
-		// Determine whether form element with that id is valid
-
-		// This code actually prevents using validation for non-simple form elements
-		// (this may be important because simpleLabel calls this method)
-		FormWidget form = 
-			(FormWidget)JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
-		FormElement.ViewModel formElementViewModel = 
-			(FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, elementId)._getViewable().getViewModel();
-		boolean isValid = formElementViewModel.isValid();
-
 
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "id", spanId);
@@ -282,26 +259,10 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		// All events are sent to a handler called "uiHandleKeypress(event, formElementId)"
 		// We use the "keydown" event, not keypress, because this allows to
 		// catch F2 in IE.
-		// Actual onkeydown event is attached to span within uiFormElementContext() javascript.
+		// Actual onkeydown event is attached to span with behavioural javascript -- 
+		// that also takes care of adding hidden element into DOM that indicates this
+        // form element is present in request.		
 		JspUtil.writeCloseStartTag(out);
-
-		// Write out form element context: sets keydown event for this element and writes out
-		// hidden element indicating that form element is present in the request.
-		JspUtil.writeStartTag_SS(out, "script");
-		if (!isPresent)
-			out.write("uiFormElementContext_4(");
-		else
-			out.write("uiFormElementContext(");
-		JspUtil.writeScriptString(out, elementName);
-		out.write(", ");
-		JspUtil.writeScriptString(out, spanId);
-		out.write(", ");
-		out.write(isValid ? "true" : "false");
-		if (!isPresent) {
-			out.write(", false");
-		}
-		out.write(");");
-		JspUtil.writeEndTag(out, "script");
 	}
 
 	/**
@@ -310,7 +271,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 * @throws IOException
 	 */
 	public static void writeFormElementContextClose(Writer out) throws IOException{
-		JspUtil.writeEndTag_SS(out, "span");    
+		JspUtil.writeEndTag_SS(out, "span");
 	}
 
 	/**
@@ -356,63 +317,19 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		return hasElementContextSpan;
 	}
 
-	//// Script writing
-
 	/**
-	 * Writes standard validation script that checks element for mandatority.
-	 * This function should not actually be ever used and its main value here
-	 * is to illustrate a typical validation script.
-	 * A specific validator should be used for every type of control.
-	 * @author Konstantin Tretyakov
-	 */	
-	private void writeValidationScript(Writer out, String name, String label, boolean isMandatory) throws IOException {
-		JspUtil.writeStartTag(out, "script");
-		out.write("uiAddDefaultValidator(");
-		JspUtil.writeScriptString(out, name);
-		out.write(", ");
-		JspUtil.writeScriptString(out, label);
-		out.write(", ");
-		out.write(isMandatory ? "true" : "false");
-		out.write(");\n");
-		JspUtil.writeEndTag_SS(out, "script");
+	 * Writes event custom attributes and submit script for <i>attributeName</i>.  
+	 */
+	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName, String id, String eventId, String precondition, List updateRegions) throws IOException {
+        UiUpdateEvent event = new UiUpdateEvent(eventId, formFullId + "." + id, null, updateRegions);
+        event.setEventPrecondition(precondition);
+        JspUtil.writeEventAttributes(out, event);
+        JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
 	}
-
-	/**
-	 * Writes event handling attribute which validates the form, if neccessary, and submits 
-	 * event to the system form.
-	 * @throws JspException 
-	 */
-	protected void writeEventAttributeForUiEvent(Writer out, String attributeName, String id, String eventId, boolean validate, String precondition, List updateRegions) throws IOException, JspException { 
-		JspWidgetCallUtil.writeEventAttributeForFormEvent(
-				pageContext, 
-				out, 
-				attributeName, 
-				systemFormId,  
-				formFullId, 
-				id, 
-				eventId, 
-				null, 
-				validate, 
-				precondition,
-				updateRegions);
-	}	
-
-	/** 
-	 * Writes event handling function that is called on closeCalendar javascript function on picking date
-	 * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005
-	 * @throws JspException 
-	 */
-	protected void writeEventScriptForCalendar(Writer out, String id, boolean validate, String precondition) throws IOException, JspException {
-		JspWidgetCallUtil.writeEventScriptForFormEvent(
-				pageContext, 
-				out, 
-				systemFormId, 
-				formFullId, 
-				this.derivedId, 
-				id, 
-				null, 
-				validate, 
-				precondition, 
-				null);
+	
+	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName) throws IOException, JspException {
+		JspUtil.writeOpenAttribute(out, attributeName);
+		JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
+		JspUtil.writeCloseAttribute(out);
 	}
 }

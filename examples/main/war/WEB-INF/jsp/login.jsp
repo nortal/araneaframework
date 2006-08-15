@@ -24,7 +24,7 @@
                         <title>Aranea Template Application Login Screen</title>
                     </head>
 
-                    <body>
+                    <ui:body>
                     	<!-- This tag will render an HTML form tag along with some Aranea-specific hidden fields. 
                     	It is strongly suggested to have only one system form in the template and have it submit using 
                     	POST. This will ensure that no matter what user does no data is ever lost. -->
@@ -82,7 +82,8 @@
 		                    
 	                    </ui:systemForm>
                     
-                    </body>        
+                    </ui:body>
+
                 </html>
             </ui:widgetContext>
         </ui:viewPort>

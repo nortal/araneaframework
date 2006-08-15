@@ -16,10 +16,7 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
-import java.io.IOException;
 import java.io.Writer;
-import org.araneaframework.jsp.util.JspScriptUtil;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.TextControl;
 
 
@@ -37,36 +34,7 @@ public class BaseFormValidatingTextInputHtmlTag extends BaseFormTextInputHtmlTag
   protected void writeTextInputValidation(Writer out) throws Exception {
     // Prepare
     TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
-
-    // Write
-    if (validate) writeValidationScript(out, viewModel);
   }
-  
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, TextControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");    
-    
-    // Simple text validator
-    out.write("uiAddTextInputValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(", ");
-    JspUtil.writeScriptString(out, viewModel.getTextType());
-    out.write(", ");    
-    JspScriptUtil.writeObject(out, viewModel.getMinLength());
-    out.write(", ");
-    JspScriptUtil.writeObject(out, viewModel.getMaxLength()); 
-    out.write(");\n");
-    
-    JspUtil.writeEndTag_SS(out, "script");
-  }  
-  
 }
 
 

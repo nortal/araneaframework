@@ -19,7 +19,10 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
+import org.araneaframework.uilib.event.OnClickEventListener;
 
 
 /**
@@ -44,7 +47,7 @@ public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "id", this.getScopedFullFieldId());
-    JspUtil.writeAttribute(out, "href", "javascript:");    
+    JspUtil.writeAttribute(out, "href", "#");    
     JspUtil.writeAttribute(out, "label", localizedLabel);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
 
@@ -56,7 +59,7 @@ public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
     JspUtil.writeCloseStartTag_SS(out);
 
     // Continue
-    return EVAL_BODY_INCLUDE;    
+    return EVAL_BODY_INCLUDE;
   }    
 
   protected int doEndTag(Writer out) throws Exception {
@@ -71,9 +74,12 @@ public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
   }  
 
   protected boolean writeEventAttribute(Writer out) throws IOException, JspException {
-    if (viewModel.isOnClickEventRegistered())
-      this.writeEventAttributeForUiEvent(out, "onclick", derivedId, "onClicked", validateOnEvent, onClickPrecondition,
-          updateRegionNames);
+    if (viewModel.isOnClickEventRegistered()) {
+      UiUpdateEvent event = new UiUpdateEvent(OnClickEventListener.ON_CLICK_EVENT, formFullId + "." + derivedId, null, updateRegionNames);
+      event.setEventPrecondition(onClickPrecondition);
+      JspUtil.writeEventAttributes(out, event);
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+    }
 
     return viewModel.isOnClickEventRegistered();
   }

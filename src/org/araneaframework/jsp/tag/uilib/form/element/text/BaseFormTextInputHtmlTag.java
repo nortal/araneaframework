@@ -78,7 +78,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
   }
 
   protected void writeTextInput(Writer out, String inputType, boolean writeValue, Map customAttributes) throws Exception {
-    String name = this.getScopedFullFieldId();    
+    String name = this.getScopedFullFieldId();
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
 
     // Write
@@ -107,8 +107,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
       if (onChangePrecondition == null)
     	  onChangePrecondition = "return isChanged('" + name + "');";
-      this.writeEventAttributeForUiEvent(out, "onblur", derivedId, "onChanged", validateOnEvent, onChangePrecondition,
-          updateRegionNames);
+      this.writeSubmitScriptForUiEvent(out, "onblur", derivedId, "onChanged", onChangePrecondition, updateRegionNames);
     }
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartEndTag_SS(out);

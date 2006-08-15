@@ -95,7 +95,7 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
   }
   
   public void handleEventReturn(String eventParameter) throws Exception {
-	  log.debug("Event 'return' received!");
+	  log.debug("UiEvent 'return' received!");
 	  getFlowCtx().cancel();
   }	
 }

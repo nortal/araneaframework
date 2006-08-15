@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TimeControl;
 
 /**
@@ -38,9 +37,6 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     this.writeTimeInput(out, name, name, viewModel.getSimpleValue(),
         localizedLabel, timeInputSize, viewModel.isDisabled(),
         accessKey);
-
-    if (validate)
-      writeValidationScript(out, viewModel);
 
     Date currentTime = null;
     Integer minute = null, hour = null;
@@ -89,22 +85,6 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     sb.append("</script>\n</select>\n");
     
     out.write(sb.toString());
-  }
-
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, StringArrayRequestControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddTimeValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
   }
 
   /**

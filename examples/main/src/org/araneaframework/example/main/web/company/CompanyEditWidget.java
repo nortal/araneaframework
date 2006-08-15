@@ -65,7 +65,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
   }
 
   public void handleEventSave(String eventParameter) throws Exception {
-    log.debug("Event 'save' received!");
+    log.debug("UiEvent 'save' received!");
     if (form.convertAndValidate()) {
       CompanyMO company = id != null ? (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id) : new CompanyMO();
 
@@ -82,7 +82,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
   }
 
   public void handleEventCancel(String eventParameter) throws Exception {
-    log.debug("Event 'cancel' received!");
+    log.debug("UiEvent 'cancel' received!");
     getFlowCtx().cancel();
   }
 }

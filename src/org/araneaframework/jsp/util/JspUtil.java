@@ -30,6 +30,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -111,10 +112,6 @@ public class JspUtil {
   	return (LocalizationContext)Config.get(pageContext, Config.FMT_LOCALIZATION_CONTEXT, PageContext.REQUEST_SCOPE);
   }
   
-  //
-  // XHTML output methods
-  //
-
   /**
    * Writes opening of start tag
    */
@@ -380,6 +377,12 @@ public class JspUtil {
           out.write(c);
       }     
     }
+  }
+  
+  public static void writeEventAttributes(Writer out, UiEvent event) throws IOException {
+    out.write(" ");
+    out.write(event.getEventAttributes().toString());
+    out.write(" ");
   }
   
   /**
