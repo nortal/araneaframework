@@ -16,7 +16,6 @@
 
 package org.araneaframework.jsp.container;
 
-import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -48,9 +47,4 @@ public interface UiWidgetContainer {
    * @throws JspException 
    */
   public String scopeWidgetFullId(PageContext pageContext, String fullWidgetId) throws AraneaJspException, JspException;
-    
-  /**
-   * Returns the JavaScript string that makes the call into controller framework to a widget.
-   */
-  public String buildWidgetCall(String systemFormId, String fullWidgetId, String eventId, String eventParam, List updateRegions) throws JspException ;
 }

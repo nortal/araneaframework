@@ -66,7 +66,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "UiEvent id." 
+   *   description = "Event id." 
    */
   public void setEventId(String eventId) throws JspException {
     event.setId((String)evaluate("eventId", eventId, String.class));
@@ -76,7 +76,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "UiEvent parameter." 
+   *   description = "Event parameter." 
    */
   public void setEventParam(String eventParam) throws JspException {
 	event.setParam((String)evaluate("eventParam", eventParam, String.class));

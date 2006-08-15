@@ -16,14 +16,12 @@
 
 package org.araneaframework.jsp.container;
 
-import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 import org.araneaframework.http.filter.StandardJspFilterService;
-import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 
 public class UiAraneaWidgetContainer implements UiWidgetContainer {
   protected ApplicationComponent.ApplicationWidget rootWidget;
@@ -40,14 +38,6 @@ public class UiAraneaWidgetContainer implements UiWidgetContainer {
 
   public String scopeWidgetFullId(PageContext pageContext, String fullWidgetId) throws JspException {
     return fullWidgetId;
-  }
-
-  public String buildWidgetCall(String systemFormId, String fullWidgetId, String eventId, String eventParam, List updateRegions) throws JspException {
-    StringBuffer result = new StringBuffer();
-    result.append("araEvent(standardParams, ");
-    result.append(JspUpdateRegionUtil.formatUpdateRegionsJS(updateRegions));
-    result.append(");");
-    return result.toString();
   }
 
   public Map getTagMapping(PageContext pageContext, String uri) {

@@ -21,6 +21,7 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.jsp.util.JspUtil;
@@ -36,17 +37,10 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
  */
 public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	  protected String scope;
-	  protected String widgetId;
-	  protected String eventId;
-	  protected String eventParam;
-	  protected String precondition;
 	  protected String updateRegions;
-	  protected String globalUpdateRegions;  
-	  
-	  protected List updateRegionNames;
+	  protected String globalUpdateRegions;
 
-  
-  
+      protected UiUpdateEvent event = new UiUpdateEvent();
   //
   // Attributes
   //
@@ -68,7 +62,7 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 *   description = "" 
 	 */
   public void setWidgetId(String widgetId) throws JspException {
-      this.widgetId = (String) evaluate("widgetId", widgetId, String.class);
+      event.setTarget((String) evaluate("widgetId", widgetId, String.class));
   }
 	
 	/**
@@ -78,7 +72,7 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 *   description = "" 
 	 */
 	public void setEventId(String eventId) throws JspException {
-		this.eventId = (String) evaluate("eventId", eventId, String.class);
+		event.setId((String) evaluate("eventId", eventId, String.class));
 	}
 	
 	/**
@@ -88,7 +82,7 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 *   description = "" 
 	 */
 	public void setEventParam(String eventParam) throws JspException {
-		this.eventParam = (String) evaluate("eventParam", eventParam, String.class);
+		event.setParam((String) evaluate("eventParam", eventParam, String.class));
 	}
   
 	/**
@@ -113,14 +107,14 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
   
 
 	
-	/**
-	 * The default value is <code>"return true;"</code>
-	 * @see org.araneaframework.jsp.tag.uilib.form.element.BaseFormButtonTag#setOnClickPrecondition
-	 * @see #setElementId
-	 */
-	public void setPrecondition(String precondition) throws JspException {
-		this.precondition = (String) evaluate("precondition", precondition, String.class);
-	}
+  /**
+  * The default value is <code>"return true;"</code>
+  * @see org.araneaframework.jsp.tag.uilib.form.element.BaseFormButtonTag#setOnClickPrecondition
+  * @see #setElementId
+  */
+  public void setPrecondition(String precondition) throws JspException {
+    event.setEventPrecondition((String) evaluate("precondition", precondition, String.class));
+  }	
 	
 	
 	//
@@ -129,13 +123,9 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 		
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		
-		String handler = null;
-    
-    updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
-		
-		// This is a call to a form event
-		handler = createHandlerToCallEvent(pageContext, widgetId, eventId, eventParam, precondition, updateRegionNames);				
+
+		event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions));
+		String handler = createHandlerToCallEvent(pageContext, event);
 
 		// Write out.
 		KeyboardHandlerHtmlTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);				
@@ -144,16 +134,11 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
   
 	
 
-	public static final String createHandlerToCallEvent(PageContext pageContext, String widgetId,
-			String eventId, String eventParam, String precondition, List updateRegionNames) throws JspException{
-		
-		if (widgetId == null) {
-          widgetId = JspWidgetUtil.getContextWidgetFullId(pageContext);		
+	public static final String createHandlerToCallEvent(PageContext pageContext, UiUpdateEvent event) throws JspException{
+		if (event.getTarget() == null) {
+          event.setTarget(JspWidgetUtil.getContextWidgetFullId(pageContext));
 		}
-		if (eventId == null) eventId = "";
-		if (eventParam == null) eventParam = "";
-		if (StringUtils.isBlank(precondition)) precondition = "return true;";
-		
+
 		String systemFormId = (String)JspUtil.requireContextEntry(pageContext, BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY);	
 		
 		return "function(event, elementId) { " +

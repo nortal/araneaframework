@@ -112,10 +112,6 @@ public class JspUtil {
   	return (LocalizationContext)Config.get(pageContext, Config.FMT_LOCALIZATION_CONTEXT, PageContext.REQUEST_SCOPE);
   }
   
-  //
-  // XHTML output methods
-  //
-
   /**
    * Writes opening of start tag
    */

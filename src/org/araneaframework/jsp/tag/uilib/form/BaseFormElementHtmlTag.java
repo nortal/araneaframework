@@ -185,7 +185,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details."
 	 */	
 	public void setUpdateRegions(String updateRegions) throws JspException {
-		this.updateRegions = (String) evaluate("UPDATE_REGIONS", updateRegions, String.class);
+		this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
 	 */	
 	public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-		this.globalUpdateRegions = (String) evaluate("GLOBAL_UPDATE_REGIONS", globalUpdateRegions, String.class);
+		this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
 	}  
 
 	/** 	
@@ -246,19 +246,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
 		//  Enclose the element in a <span id=somerandomid>
-		//  Register this span using javascript
 		String spanId = "fe-span-" + generateId(pageContext);
-		String elementName = fullFormId + "." + elementId;
-
-		// Determine whether form element with that id is valid
-
-		// This code actually prevents using validation for non-simple form elements
-		// (this may be important because simpleLabel calls this method)
-		FormWidget form = 
-			(FormWidget)JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
-		FormElement.ViewModel formElementViewModel = 
-			(FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, elementId)._getViewable().getViewModel();
-		boolean isValid = formElementViewModel.isValid();
 
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "id", spanId);
@@ -271,11 +259,10 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		// All events are sent to a handler called "uiHandleKeypress(event, formElementId)"
 		// We use the "keydown" event, not keypress, because this allows to
 		// catch F2 in IE.
-		// Actual onkeydown event is attached to span with javascript.
+		// Actual onkeydown event is attached to span with behavioural javascript -- 
+		// that also takes care of adding hidden element into DOM that indicates this
+        // form element is present in request.		
 		JspUtil.writeCloseStartTag(out);
-
-		// Write out form element context: sets keydown event for this element and writes out
-		// hidden element indicating that form element is present in the request.
 	}
 
 	/**
@@ -331,11 +318,9 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	}
 
 	/**
-	 * Writes event handling attribute which validates the form, if neccessary, and submits 
-	 * event to the system form.
-	 * @throws JspException 
+	 * Writes event custom attributes and submit script for <i>attributeName</i>.  
 	 */
-	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName, String id, String eventId, String precondition, List updateRegions) throws IOException, JspException {
+	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName, String id, String eventId, String precondition, List updateRegions) throws IOException {
         UiUpdateEvent event = new UiUpdateEvent(eventId, formFullId + "." + id, null, updateRegions);
         event.setEventPrecondition(precondition);
         JspUtil.writeEventAttributes(out, event);

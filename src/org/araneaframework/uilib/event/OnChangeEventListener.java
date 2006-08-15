@@ -33,7 +33,7 @@ public interface OnChangeEventListener  extends java.io.Serializable {
   public static final String ON_CHANGE_EVENT = "onChanged";
 
   /**
-   * UiEvent callback function that is called when the registered event occurs.
+   * Event callback function that is called when the registered event occurs.
    * @throws Exception if something goes wrong.
 	 */
   public void onChange() throws Exception;
