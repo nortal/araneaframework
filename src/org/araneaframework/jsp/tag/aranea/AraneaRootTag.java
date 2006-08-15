@@ -22,13 +22,9 @@ import java.util.ResourceBundle;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
-import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.filter.StandardJspFilterService;
-import org.araneaframework.http.util.ClientStateUtil;
-import org.araneaframework.http.util.URLUtil;
-import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
