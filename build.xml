@@ -60,10 +60,10 @@
 	<target name="tld" depends="tld-check,init" unless="tld-check.uptodate">	
 		<mkdir dir="build/tmp/presentation/META-INF" />
 		
-		<webdoclet destdir="build/tmp/presentation/META-INF"
-		>
-			<fileset dir="src"/>
-			
+		<webdoclet destdir="build/tmp/presentation/META-INF">
+			<fileset 
+				dir="src" includes="**/*Tag.java"/>
+
 			<jsptaglib validatexml="true"
 				shortName="aui"
 				filename="aranea-standard.tld"
