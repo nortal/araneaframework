@@ -33,10 +33,10 @@ public class BeanFormWidget extends FormWidget {
   }
   
   private Data inferDataType(String fieldId, boolean mandatory) {
-    if (!beanMapper.fieldExists(fieldId))
+    if (!beanMapper.isReadable(fieldId))
       throw new AraneaRuntimeException("Could not infer type for bean field '" + fieldId + "'!");
 
-    Class type = beanMapper.getBeanFieldType(fieldId);
+    Class type = beanMapper.getFieldType(fieldId);
     
     if (type.isPrimitive()) {
       if (!mandatory) 
@@ -59,10 +59,10 @@ public class BeanFormWidget extends FormWidget {
   }
   
   public BeanFormWidget addBeanSubForm(String id) throws Exception {
-    if (!beanMapper.fieldExists(id))
+    if (!beanMapper.isReadable(id))
       throw new AraneaRuntimeException("Could not infer type for bean subform '" + id + "'!");
 
-    BeanFormWidget result = new BeanFormWidget(beanMapper.getBeanFieldType(id));
+    BeanFormWidget result = new BeanFormWidget(beanMapper.getFieldType(id));
     addElement(id, result);
     return result;
   }

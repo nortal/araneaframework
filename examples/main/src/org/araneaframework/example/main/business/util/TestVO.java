@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.business.util;
 
 import java.io.Serializable;
+
 import org.araneaframework.backend.BaseBean;
 import org.araneaframework.backend.util.BeanMapper;
 

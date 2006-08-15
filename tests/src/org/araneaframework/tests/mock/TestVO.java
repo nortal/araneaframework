@@ -19,6 +19,7 @@ package org.araneaframework.tests.mock;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.util.BeanMapper;
 
@@ -116,12 +117,12 @@ public class TestVO implements Serializable, Cloneable {
    */
   public String toString() {
     StringBuffer result = new StringBuffer();
-    List voFields = beanMapper.getBeanFields();
+    List voFields = beanMapper.getFields();
     for (Iterator i = voFields.iterator(); i.hasNext();) {
       String field = (String) i.next();
       result.append(field);
       result.append("=");
-      result.append("" + beanMapper.getBeanFieldValue(this, field));
+      result.append("" + beanMapper.getFieldValue(this, field));
       result.append("; ");
     }
     return result.toString();
@@ -139,10 +140,10 @@ public class TestVO implements Serializable, Cloneable {
 
     //Otherwise compare all fields
     boolean result = true;
-    List voFields = beanMapper.getBeanFields();
+    List voFields = beanMapper.getFields();
     for (Iterator i = voFields.iterator(); i.hasNext() && result;) {
       String field = (String) i.next();
-      result = valuesEqual(beanMapper.getBeanFieldValue(this, field), beanMapper.getBeanFieldValue(otherVo,
+      result = valuesEqual(beanMapper.getFieldValue(this, field), beanMapper.getFieldValue(otherVo,
           field));
     }
     return result;
@@ -153,10 +154,10 @@ public class TestVO implements Serializable, Cloneable {
    */
   public int hashCode() {
     int result = 17;
-    List voFields = beanMapper.getBeanFields();
+    List voFields = beanMapper.getFields();
     for (Iterator i = voFields.iterator(); i.hasNext();) {
       String field = (String) i.next();
-      result = 37 * result + beanMapper.getBeanFieldValue(this, field).hashCode();
+      result = 37 * result + beanMapper.getFieldValue(this, field).hashCode();
     }
     return result;
   }

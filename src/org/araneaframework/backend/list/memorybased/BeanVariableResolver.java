@@ -17,8 +17,7 @@
 package org.araneaframework.backend.list.memorybased;
 
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.backend.util.GeneralBeanMapper;
-import org.araneaframework.backend.util.RecursiveBeanMapper;
+import org.araneaframework.backend.util.BeanMapper;
 
 /**
  * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
@@ -27,12 +26,12 @@ public class BeanVariableResolver implements VariableResolver {
 
 	private static final long serialVersionUID = 1L;
 
-	private GeneralBeanMapper mapper;
+	private BeanMapper mapper;
 
 	private Object bean;
 
 	public BeanVariableResolver(Class clazz) {
-		this.mapper = new RecursiveBeanMapper(clazz, true);
+		this.mapper = new BeanMapper(clazz);
 	}
 
 	public void setBean(Object bean) {
@@ -40,6 +39,6 @@ public class BeanVariableResolver implements VariableResolver {
 	}
 
 	public Object resolve(Variable variable) {
-		return this.mapper.getBeanFieldValue(this.bean, variable.getName());
+		return this.mapper.getFieldValue(this.bean, variable.getName());
 	}
 }
