@@ -466,7 +466,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * 
    * @param eventListener a EventListener added as the global eventlistener.
    */
-  public void addGlobalEventListener(EventListener eventListener) {
+  public void setGlobalEventListener(EventListener eventListener) {
     this.globalListener = eventListener;
   }
   

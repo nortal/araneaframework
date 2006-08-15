@@ -212,6 +212,7 @@ function AraneaPage() {
   
   // another submit function, takes all params that are currently possible to use.
   // TODO: get rid of duplicated logic from: submit() and findSubmitter()
+
   this.submit_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
     var el = document.createElement();
     if (this.isSubmitted() || !this.isLoaded())
@@ -275,9 +276,8 @@ function DefaultAraneaAJAXSubmitter(form) {
     var eventId = traverser.getEventId(element);
     var eventParam = traverser.getEventParam(element);
 	var updateRegions = traverser.getEventUpdateRegions(element);
-	var updateRegionArray = eval("new Array(" + updateRegions + ");");
 
-	return this.submit_5(systemForm, eventId, widgetId, eventParam, updateRegionArray);
+	return this.submit_5(systemForm, eventId, widgetId, eventParam, updateRegions);
   }
 }
 
