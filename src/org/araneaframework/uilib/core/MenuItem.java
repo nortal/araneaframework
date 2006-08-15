@@ -17,9 +17,7 @@
 package org.araneaframework.uilib.core;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.commons.collections.map.LinkedMap;
@@ -49,7 +47,6 @@ public class MenuItem implements Serializable {
 
   /** Submenu of this <code>MenuItem</code> (may exist only when this <code>MenuItem</code> is a holder. */
   private Map subMenu;
-  private List selectedItems = new ArrayList();
 
   /* **************************************************************************************************
    * CONSTRUCTORS 
@@ -118,6 +115,22 @@ public class MenuItem implements Serializable {
   }
   
   /* **************************************************************************************************
+   * PROTECTED METHODS. 
+   * **************************************************************************************************/
+  public void clearSelection() {
+    setSelected(false);
+
+    if (subMenu != null) {
+      for (Iterator i = subMenu.values().iterator(); i.hasNext(); )
+        ((MenuItem)i.next()).clearSelection();
+    }
+  }
+  
+  protected void setSelected(boolean isSelected) {
+    selected = isSelected;
+  }
+
+  /* **************************************************************************************************
    * PUBLIC METHODS. 
    * **************************************************************************************************/
   /**
@@ -173,7 +186,6 @@ public class MenuItem implements Serializable {
         pathElement = st.nextToken();
         menu = (MenuItem)menu.subMenu.get(pathElement);
         menu.setSelected(true);
-        selectedItems.add(menu);
       }
 
       if (menu.flowClass != null)
@@ -187,14 +199,7 @@ public class MenuItem implements Serializable {
 
     return resultFlow;
   }
-  
-  public void clearSelection() {
-    if (!selectedItems.isEmpty()) {
-      for (Iterator i = selectedItems.iterator(); i.hasNext(); )
-        ((MenuItem)i.next()).setSelected(false);
-    }
-    selectedItems.clear();
-  }
+
   /* **************************************************************************************************
    * GETTERS. 
    * **************************************************************************************************/
@@ -212,12 +217,5 @@ public class MenuItem implements Serializable {
   
   public Map getSubMenu() {
     return subMenu;
-  }
-
-  /* **************************************************************************************************
-   * SETTERS. 
-   * **************************************************************************************************/
-  public void setSelected(boolean isSelected) {
-    selected = isSelected;
   }
 }
