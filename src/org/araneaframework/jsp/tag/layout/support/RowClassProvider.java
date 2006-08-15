@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.layout.support;
 import javax.servlet.jsp.JspException;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface RowClassProvider {
   public static final String KEY = "org.araneaframework.jsp.tag.layout.RowClassProvider.KEY";

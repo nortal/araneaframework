@@ -41,7 +41,7 @@ import org.araneaframework.http.util.URLUtil;
  * method calls to current <emphasis>real</emphasis> {@link org.araneaframework.framework.FlowContext} 
  * and/or to {@link org.araneaframework.framework.FlowContext} from which wrapped flow was started.
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContext {
   Widget child;

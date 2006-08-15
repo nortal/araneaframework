@@ -29,7 +29,7 @@ import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Popup registering and rendering tag -- opens popups when HTML file BODY has onload event processing enabled.
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "registerPopups"

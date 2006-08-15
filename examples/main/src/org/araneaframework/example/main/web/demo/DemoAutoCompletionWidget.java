@@ -12,7 +12,7 @@ import org.araneaframework.uilib.form.data.StringData;
 
 /**
  * @author Steven Jentson (steven@webmedia.ee)
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoAutoCompletionWidget extends StandardPresentationWidget {
   private FormWidget form;

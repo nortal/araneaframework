@@ -26,7 +26,7 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.core.WindowScrollPositionContext;
 /**
  * Tag that registers functions dealing with window scroll position storing and restoring.
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "registerScrollHandler"

@@ -26,7 +26,7 @@ import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWid
 import org.araneaframework.uilib.core.MenuItem;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerWidget implements TemplateMenuContext {
   protected MenuItem menu;

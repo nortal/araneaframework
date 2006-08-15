@@ -32,7 +32,7 @@ import org.araneaframework.jsp.util.JspUtil;
  * Message tag - show the messages in <code>MessageContext</code> 
  * with given type. 
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "messages"

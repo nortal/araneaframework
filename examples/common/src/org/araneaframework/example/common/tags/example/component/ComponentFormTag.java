@@ -19,7 +19,7 @@ package org.araneaframework.example.common.tags.example.component;
 import org.araneaframework.jsp.tag.layout.LayoutTag;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  * @jsp.tag
  *   name = "componentForm"
  *   body-content = "JSP"

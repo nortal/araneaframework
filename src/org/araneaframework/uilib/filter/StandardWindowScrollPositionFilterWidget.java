@@ -24,7 +24,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.uilib.core.WindowScrollPositionContext;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget implements WindowScrollPositionContext {
   protected String windowScrollX;

@@ -29,7 +29,7 @@ import org.araneaframework.uilib.support.FlowCreator;
 
 /**
  * Aranea Template Application menu(item).
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class MenuItem implements Serializable {
   public static final String MENU_PATH_SEPARATOR = ".";

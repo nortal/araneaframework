@@ -22,7 +22,7 @@ import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  * @jsp.tag
  *   name = "component"
  *   body-content = "JSP"

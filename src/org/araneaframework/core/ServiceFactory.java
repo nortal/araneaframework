@@ -23,7 +23,7 @@ import org.araneaframework.Service;
 /**
  * A simple factory interface for creating services with help from Environment.
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface ServiceFactory extends Serializable {
   /**

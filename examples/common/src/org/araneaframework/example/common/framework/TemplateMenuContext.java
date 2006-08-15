@@ -19,7 +19,7 @@ package org.araneaframework.example.common.framework;
 import java.io.Serializable;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface TemplateMenuContext extends Serializable {
   public static final String MENU_VIEWDATA_KEY = "menu";

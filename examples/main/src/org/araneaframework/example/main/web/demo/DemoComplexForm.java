@@ -31,7 +31,7 @@ import org.araneaframework.uilib.form.data.StringListData;
 import org.araneaframework.uilib.support.DisplayItem;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoComplexForm extends TemplateBaseWidget {
     /* Different controls and widgets we want to be accessible all the time are 

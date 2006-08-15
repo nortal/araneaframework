@@ -17,7 +17,7 @@ import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
  * Standard text input form element tag with autocompletion.
  * 
  * @author Steven Jentson (steven@webmedia.ee)
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  * 
  * @jsp.tag 
  *   name = "autoCompleteTextInput" 

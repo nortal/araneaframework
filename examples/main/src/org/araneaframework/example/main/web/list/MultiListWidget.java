@@ -24,7 +24,7 @@ import org.araneaframework.example.main.web.person.PersonListWidget;
  * Widget that shows both person and company lists, demonstrating basic 
  * reusing of widgets in different flows.
  *  
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class MultiListWidget extends TemplateBaseWidget {
 

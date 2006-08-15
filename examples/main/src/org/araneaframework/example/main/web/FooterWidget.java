@@ -24,7 +24,7 @@ import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class FooterWidget extends StandardPresentationWidget {
   protected void init() throws Exception {

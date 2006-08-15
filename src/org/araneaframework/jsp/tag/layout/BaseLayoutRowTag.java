@@ -29,7 +29,7 @@ import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Layout row base tag.
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseLayoutRowTag extends PresentationTag implements CellClassProvider {
   protected List cellClasses;

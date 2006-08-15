@@ -30,7 +30,7 @@ import org.araneaframework.framework.FlowContext;
  *   <li>resets the first encountered {@link org.araneaframework.framework.FlowContext}</li>
  *   <li>starts a specified flow in it</li>
  * </ul>
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardFlowContextResettingMessage implements Message {
   Widget flow;

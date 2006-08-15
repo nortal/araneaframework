@@ -29,7 +29,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   body-content = "JSP"
  *   description = "Represents a layout. Layouts allow to describe the way content will be placed on the page."
  *
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class LayoutTag extends BaseLayoutTag {
   protected String width;
