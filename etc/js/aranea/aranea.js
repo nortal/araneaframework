@@ -125,11 +125,15 @@ function AraneaPage() {
   this.isLoaded = function() { return this.loaded; }
   this.setLoaded = function(b) { if (typeof b == "boolean") { this.loaded = b; } }
   
-  /** Indicates whether some form on page is (being) submitted alread. */
+  /* Indicates whether some form on page is (being) submitted already
+   * by traditional HTTP request. */
   var submitted = false;
   this.isSubmitted = function() { return this.submitted; }
   this.setSubmitted = function(b) { if (typeof b == "boolean") { this.submitted = b; } }
   
+  /* The number of background requests that have not received completely processed response yet. */
+  pendingResponses = 0;
+
   /** Aranea JSP specific DOM tree traverser. */
   var traverser = new AraneaTraverser();
   this.getTraverser = function() { return traverser; }
@@ -288,6 +292,11 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
   
   window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
   window[ajaxKey].systemForm = systemForm;
+  
+  if (getActiveAraneaPage().pendingResponses++ > 0)
+    systemForm.transactionId.value = "";
+  
+  getActiveAraneaPage().pendingResponses++;
   window[ajaxKey].submitAJAX();
   
   return false;
