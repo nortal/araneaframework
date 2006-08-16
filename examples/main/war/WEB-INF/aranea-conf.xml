@@ -17,17 +17,12 @@
     </property>
   </bean>
   
-  <bean class="org.araneaframework.framework.filter.StandardSerializingAuditFilterService" 
-      id="araneaSerializingAudit" singleton="false">
-      <property name="testXmlSessionPath" value="/home/taimo/tmp/logs/ser"/>
-  </bean> 
-  
   <bean id="customSessionFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardFilterChainService">
     <property name="filterChain">     
       <list>
-        <ref bean="araneaSerializingAudit"/>     
+        <ref bean="araneaSerializingAudit"/>
       </list>
     </property>
-  </bean>
+  </bean>  
 </beans>
