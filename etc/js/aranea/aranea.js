@@ -125,11 +125,15 @@ function AraneaPage() {
   this.isLoaded = function() { return this.loaded; }
   this.setLoaded = function(b) { if (typeof b == "boolean") { this.loaded = b; } }
   
-  /** Indicates whether some form on page is (being) submitted alread. */
+  /* Indicates whether some form on page is (being) submitted already
+   * by traditional HTTP request. */
   var submitted = false;
   this.isSubmitted = function() { return this.submitted; }
   this.setSubmitted = function(b) { if (typeof b == "boolean") { this.submitted = b; } }
   
+  /* The number of background requests that have not received completely processed response yet. */
+  pendingResponses = 0;
+
   /** Aranea JSP specific DOM tree traverser. */
   var traverser = new AraneaTraverser();
   this.getTraverser = function() { return traverser; }
@@ -212,6 +216,7 @@ function AraneaPage() {
   
   // another submit function, takes all params that are currently possible to use.
   // TODO: get rid of duplicated logic from: submit() and findSubmitter()
+
   this.submit_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
     var el = document.createElement();
     if (this.isSubmitted() || !this.isLoaded())
@@ -275,9 +280,8 @@ function DefaultAraneaAJAXSubmitter(form) {
     var eventId = traverser.getEventId(element);
     var eventParam = traverser.getEventParam(element);
 	var updateRegions = traverser.getEventUpdateRegions(element);
-	var updateRegionArray = eval("new Array(" + updateRegions + ");");
 
-	return this.submit_5(systemForm, eventId, widgetId, eventParam, updateRegionArray);
+	return this.submit_5(systemForm, eventId, widgetId, eventParam, updateRegions);
   }
 }
 
@@ -288,8 +292,13 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
   
   window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
   window[ajaxKey].systemForm = systemForm;
-  window[ajaxKey].submitAJAX();
   
+  if (getActiveAraneaPage().pendingResponses > 0)
+    systemForm.transactionId.value = "";
+  
+  getActiveAraneaPage().pendingResponses++;
+  window[ajaxKey].submitAJAX();
+
   return false;
 }
 

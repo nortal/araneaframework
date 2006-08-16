@@ -18,7 +18,7 @@
 		<file path="js/aranea/aranea-behaviour.js"/>
 		<file path="js/aranea/aranea-popups.js"/>
         
-        <file path="js/aa.js"/>
+        <file path="js/ajaxanywhere/aa.js"/>
 
     	<file path="js/prototype/prototype.js"/>
 

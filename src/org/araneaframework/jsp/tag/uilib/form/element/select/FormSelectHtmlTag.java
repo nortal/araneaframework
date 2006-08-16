@@ -40,7 +40,7 @@ import org.araneaframework.uilib.support.DisplayItem;
  */
 public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
   protected Long size = null;
-  protected String onChangePrecondition = "return true;";
+  protected String onChangePrecondition;
 
   {
     baseStyleClass = "aranea-select";

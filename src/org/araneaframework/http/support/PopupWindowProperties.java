@@ -32,7 +32,7 @@ import java.util.Map;
  * Note that modeless and modal popups (IE proprietary extension) are not really
  * fully-functional browser windows and should only be used for displaying statical content.
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 
 public class PopupWindowProperties implements Serializable {

@@ -15,7 +15,7 @@ import org.araneaframework.uilib.support.TextType;
  * TextControl with AJAX autocompletion support.
  * 
  * @author Steven Jentson (steven@webmedia.ee)
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class AutoCompleteTextControl extends TextControl {
   public static final String LISTENER_NAME = "autocomplete";
@@ -80,7 +80,7 @@ public class AutoCompleteTextControl extends TextControl {
 
   /**
    * Autocompletion response builder interface.
-   * @author Taimo Peelo (taimo@webmedia.ee)
+   * @author Taimo Peelo (taimo@araneaframework.org)
    */
   public interface ResponseBuilder extends Serializable {
     /**

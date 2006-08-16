@@ -42,7 +42,7 @@ import org.araneaframework.http.ServletInputData;
 import org.araneaframework.http.support.PopupWindowProperties;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardPopupFilterWidget extends BaseFilterWidget implements PopupWindowContext {
   private static final Logger log = Logger.getLogger(StandardPopupFilterWidget.class);

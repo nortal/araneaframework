@@ -42,9 +42,9 @@
 							</ui:cell>
 							
 			                <ui:cell>
-			                  <ui:floatInput id="salary_start"/>
+			                  <ui:floatInput id="salary_start" styleClass="min"/>
 			                  <br/>
-			                  <ui:floatInput id="salary_end"/>
+			                  <ui:floatInput id="salary_end" styleClass="min"/>
 			                </ui:cell>							
 
 							<ui:cell>

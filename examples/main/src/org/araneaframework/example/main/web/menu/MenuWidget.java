@@ -54,7 +54,7 @@ import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.support.FlowCreator;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class MenuWidget extends TemplateMenuWidget  {
   public MenuWidget(Widget topWidget) throws Exception {

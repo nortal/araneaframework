@@ -39,7 +39,7 @@ import org.araneaframework.http.support.PopupWindowProperties;
  * </code>
  * </pre>
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupFlowWidget extends BaseApplicationWidget {
   protected Message msg;
@@ -67,7 +67,7 @@ public class PopupFlowWidget extends BaseApplicationWidget {
   }
 
   /**
-   * @author Taimo Peelo (taimo@webmedia.ee)
+   * @author Taimo Peelo (taimo@araneaframework.org)
    */
   public interface MessageFactory {
     /** 

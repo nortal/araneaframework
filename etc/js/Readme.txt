@@ -19,7 +19,7 @@ This folder contains scripts needed by Aranea Uilib.
 * prototype/*
 - http://prototype.conio.net/
 
-* aa.js
+* ajaxanywhere/aa.js
 - AjaxAnywhere (http://ajaxanywhere.sourceforge.net/)
 - Required for using Uilib Ajax support.
 - License is APL 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
@@ -29,3 +29,4 @@ This folder contains scripts needed by Aranea Uilib.
 
 * aranea/
 - Aranea Uilib & JSP specific scripts.
+

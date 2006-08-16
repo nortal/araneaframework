@@ -29,7 +29,7 @@ import org.araneaframework.uilib.support.FileInfo;
 
 /**
  * Service that allows for downloading of specified files.
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class FileDownloaderService extends BaseService {
 	protected FileInfo file;

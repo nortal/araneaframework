@@ -32,7 +32,7 @@ import org.araneaframework.uilib.core.PopupFlowWidget.MessageFactory;
  * method calls current <emphasis>real</emphasis> {@link org.araneaframework.framework.FlowContext} 
  * and to {@link org.araneaframework.framework.FlowContext} that requested starting of wrapped flow.
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupMessageFactory implements MessageFactory, Serializable {
 	public Message buildMessage(Widget widget) {

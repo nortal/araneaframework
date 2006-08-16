@@ -26,7 +26,7 @@ import org.springframework.beans.factory.BeanFactory;
  * factories. By setting a bean id via <code>setBeanId(String)</code> it is possible to 
  * construct a bean with factory found in Environment under key <code>beanFactoryClass</code>.
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class SpringServiceFactory implements ServiceFactory {
   protected Class beanFactoryClass = BeanFactory.class;

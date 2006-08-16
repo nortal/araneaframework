@@ -96,7 +96,8 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
 
     for (Iterator i = customAttributes.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry attribute = (Map.Entry) i.next();
-      JspUtil.writeAttribute(out, "" + attribute.getKey(), "" + attribute.getValue());
+      
+      JspUtil.writeAttribute(out, "" + attribute.getKey(), attribute.getValue());
     }
 
     if (viewModel.isDisabled())

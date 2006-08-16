@@ -42,7 +42,7 @@ import org.araneaframework.http.util.URLUtil;
  * Filter that clones session threads upon requests and redirects request to cloned session thread. Should 
  * always be configured as the first thread-level filter.
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardThreadCloningFilterService extends BaseFilterService implements ThreadCloningContext {
   private static final Logger log = Logger.getLogger(StandardThreadCloningFilterService.class);

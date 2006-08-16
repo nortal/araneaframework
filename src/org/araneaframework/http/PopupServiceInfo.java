@@ -23,7 +23,7 @@ import org.araneaframework.http.support.PopupWindowProperties;
  * Encapsulates info about popup window properties and URL where 
  * servicing session-thread lives.
  * 
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface PopupServiceInfo extends Serializable {
   /**

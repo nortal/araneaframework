@@ -42,8 +42,11 @@ public class BodyHtmlTag extends PresentationTag {
   
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
+
+    addContextEntry(PresentationTag.ATTRIBUTED_TAG_KEY, null);
     
     JspUtil.writeOpenStartTag(out, "body");
+    JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "onload", onload);
     JspUtil.writeAttribute(out, "onunload", onunload);

@@ -17,9 +17,7 @@
 package org.araneaframework.uilib.core;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.commons.collections.map.LinkedMap;
@@ -29,7 +27,7 @@ import org.araneaframework.uilib.support.FlowCreator;
 
 /**
  * Aranea Template Application menu(item).
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class MenuItem implements Serializable {
   public static final String MENU_PATH_SEPARATOR = ".";
@@ -49,7 +47,6 @@ public class MenuItem implements Serializable {
 
   /** Submenu of this <code>MenuItem</code> (may exist only when this <code>MenuItem</code> is a holder. */
   private Map subMenu;
-  private List selectedItems = new ArrayList();
 
   /* **************************************************************************************************
    * CONSTRUCTORS 
@@ -118,6 +115,13 @@ public class MenuItem implements Serializable {
   }
   
   /* **************************************************************************************************
+   * PROTECTED METHODS. 
+   * **************************************************************************************************/
+  protected void setSelected(boolean isSelected) {
+    selected = isSelected;
+  }
+
+  /* **************************************************************************************************
    * PUBLIC METHODS. 
    * **************************************************************************************************/
   /**
@@ -143,14 +147,9 @@ public class MenuItem implements Serializable {
     String path = menuPath != null ? menuPath : "";
     MenuItem menu = this;
 
-    try {
     for (StringTokenizer st = new StringTokenizer(path, MENU_PATH_SEPARATOR); st.hasMoreTokens(); )
       menu = (MenuItem)menu.subMenu.get(st.nextToken());
-
     menu.addSubMenuItem(item);
-    } catch (Exception e) {
-      
-    }
 
     return item;
   }
@@ -173,7 +172,6 @@ public class MenuItem implements Serializable {
         pathElement = st.nextToken();
         menu = (MenuItem)menu.subMenu.get(pathElement);
         menu.setSelected(true);
-        selectedItems.add(menu);
       }
 
       if (menu.flowClass != null)
@@ -189,12 +187,14 @@ public class MenuItem implements Serializable {
   }
   
   public void clearSelection() {
-    if (!selectedItems.isEmpty()) {
-      for (Iterator i = selectedItems.iterator(); i.hasNext(); )
-        ((MenuItem)i.next()).setSelected(false);
+    setSelected(false);
+
+    if (subMenu != null) {
+      for (Iterator i = subMenu.values().iterator(); i.hasNext(); )
+	    ((MenuItem)i.next()).clearSelection();
     }
-    selectedItems.clear();
   }
+
   /* **************************************************************************************************
    * GETTERS. 
    * **************************************************************************************************/
@@ -212,12 +212,5 @@ public class MenuItem implements Serializable {
   
   public Map getSubMenu() {
     return subMenu;
-  }
-
-  /* **************************************************************************************************
-   * SETTERS. 
-   * **************************************************************************************************/
-  public void setSelected(boolean isSelected) {
-    selected = isSelected;
   }
 }

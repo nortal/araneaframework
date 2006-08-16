@@ -49,7 +49,6 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
   }
   
 	public void handleEventChoosePerson(String eventParameter) throws Exception {
-	    log.debug("UiEvent 'choosePerson' received!");
 	    PersonListWidget newFlow = new PersonListWidget(false);
 	    newFlow.setSelectOnly(true);
 	    getFlowCtx().start(newFlow, null, new FlowContext.Handler() {

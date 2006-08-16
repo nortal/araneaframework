@@ -40,7 +40,7 @@ import org.araneaframework.uilib.support.FileInfo;
 /**
  * Demonstrates usage of file upload control.
  * @author Lauri Tulmin
- * @author Taimo Peelo (taimo@webmedia.ee) 
+ * @author Taimo Peelo (taimo@araneaframework.org) 
  */
 public class DemoFileUpload extends TemplateBaseWidget {
 	private FormWidget form;

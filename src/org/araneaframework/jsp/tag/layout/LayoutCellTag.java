@@ -29,7 +29,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   body-content = "JSP"
  *   description = "Represents a cell in layout."
  *
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class LayoutCellTag extends BaseLayoutCellTag {
   protected String cellTag = "td";

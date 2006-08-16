@@ -97,8 +97,8 @@
 		<webdoclet destdir="build/tld/META-INF"
 			force="false"
 		>
-			<fileset dir="${src.dir}"/>
-			<fileset dir="../../src"/>
+			<fileset dir="${src.dir}" includes="**/*Tag.java"/>
+			<fileset dir="../../src" includes="**/*Tag.java"/>
 			
 			<jsptaglib validatexml="true"
 				shortName="aranea-tag-library-template"

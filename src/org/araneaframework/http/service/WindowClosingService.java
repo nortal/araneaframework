@@ -32,7 +32,7 @@ import org.araneaframework.http.util.FileImportUtil;
  * Service that returns response that closes browser window that made the 
  * request; and if possible, reloads the opener of that window.
  *
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class WindowClosingService extends BaseService {
 	protected String script = 

@@ -28,7 +28,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   body-content = "JSP"
  *   description = "Represents a row in layout."
  *
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class LayoutRowTag extends BaseLayoutRowTag {
   protected int doStartTag(Writer out) throws Exception {

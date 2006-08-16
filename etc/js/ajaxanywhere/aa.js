@@ -192,9 +192,8 @@ AjaxAnywhere.prototype.callback = function() {
 		this.onBeforeResponseProcessing();
 		this.hideLoadingMessage();
 		
-		if (this.req.status) {
-
-      text = this.req.responseText;
+	 if (this.req.status) {
+      		text = this.req.responseText;
 			
 			if (this.req.status == 200) {
 				updateRegions(this.updateRegions, text);
@@ -316,6 +315,7 @@ AjaxAnywhere.prototype.onBeforeResponseProcessing = function () {
 */
 AjaxAnywhere.prototype.onAfterResponseProcessing = function () {
    getActiveAraneaPage().onload();
+   getActiveAraneaPage().pendingResponses--;
 };
 
 function extractScripts(str) {

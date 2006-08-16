@@ -23,7 +23,7 @@ import org.araneaframework.example.main.business.model.ContractMO;
 
 /**
  * Quick'n'dirty fix for the ever annoying problem with broken contracts when persons or companies are deleted.
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class ContractDAO extends GeneralDAO {
 

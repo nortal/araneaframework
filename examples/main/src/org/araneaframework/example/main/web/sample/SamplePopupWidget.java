@@ -28,7 +28,7 @@ import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class SamplePopupWidget extends TemplateBaseWidget {
 	String title;

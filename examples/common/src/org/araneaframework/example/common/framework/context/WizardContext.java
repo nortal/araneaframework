@@ -206,7 +206,7 @@ public interface WizardContext {
 	void cancel();
 
 	/*
-	 * UiEvent listeners
+	 * Event listeners
 	 */
 
 	/**

@@ -34,7 +34,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
 
 /**
  * @author Oleg Mürk
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  * @jsp.tag
  *   name = "componentListHeader"
  *   body-content = "empty"

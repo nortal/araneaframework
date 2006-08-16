@@ -82,7 +82,7 @@ public class StandardPresentationWidget extends BaseApplicationWidget {
   
   protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
     public synchronized void init(Environment env) {
-      addGlobalEventListener(new ProxyEventListener(StandardPresentationWidget.this));
+      setGlobalEventListener(new ProxyEventListener(StandardPresentationWidget.this));
 	
       super.init(env);
     }

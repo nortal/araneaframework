@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.layout.support;
 import org.apache.commons.collections.ResettableIterator;
 
 /**
- * @author Taimo Peelo (taimo@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class NullIterator implements ResettableIterator {
 	public void reset() {}

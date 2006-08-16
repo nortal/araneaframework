@@ -11,12 +11,12 @@
         <title>Hello Name Example</title>
       </head>			
              
-      <body>
+      <ui:body>
        	<ui:systemForm method="GET">
 						Insert your name: <input type="text" name="name"/><br/><br/>	        	
 						<ui:eventButton labelId="#Say hello" eventId="hello"/>			
 				</ui:systemForm>
-			</body>
+			</ui:body>
 		</html>
 		</ui:viewPort>
 	</ui:root>	

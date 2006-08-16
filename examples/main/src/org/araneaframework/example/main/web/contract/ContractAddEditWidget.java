@@ -78,7 +78,6 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
     wizard.addEventListener(new WizardContext.EventListener() {
     	public void onGoto(Widget page) throws Exception {}    	
     	public void onSubmit() throws Exception {
-    		log.debug("UiEvent 'save' received!");
     		if (validate()) {
     			ContractMO contract = id != null ? (ContractMO) getGeneralDAO().getById(ContractMO.class, id) : new ContractMO();
     			contract.setCompany(company.getCompany());
@@ -95,7 +94,6 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
     		}
     	}
     	public void onCancel() throws Exception {
-    		log.debug("UiEvent 'cancel' received!");
     		getFlowCtx().cancel();
     	}
     });
