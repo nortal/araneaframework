@@ -82,8 +82,6 @@ public class CompanyListWidget extends TemplateBaseWidget {
   }
 
   public void handleEventAdd(String eventParameter) throws Exception {
-    log.debug("UiEvent 'add' received!");
-
     getFlowCtx().start(new CompanyEditWidget(), null, new FlowContext.Handler() {
       public void onFinish(Object returnValue) throws Exception {
         log.debug("Company added with Id of " + returnValue + " sucessfully");
@@ -96,7 +94,6 @@ public class CompanyListWidget extends TemplateBaseWidget {
   }
 
   public void handleEventRemove(String eventParameter) throws Exception {
-    log.debug("UiEvent 'remove' received!");
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     getContractDAO().removeByCompanyId(id);
     getGeneralDAO().remove(CompanyMO.class, id);
@@ -105,7 +102,6 @@ public class CompanyListWidget extends TemplateBaseWidget {
   }
 
   public void handleEventSelect(String eventParameter) throws Exception {
-    log.debug("UiEvent 'select' received!");
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     log.debug("Company selected with Id of " + id);
     if (editMode)
@@ -122,7 +118,6 @@ public class CompanyListWidget extends TemplateBaseWidget {
   }
 
   public void handleEventEdit(String eventParameter) throws Exception {
-    log.debug("UiEvent 'edit' received!");
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     log.debug("Company selected with Id of " + id);
     getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
@@ -137,7 +132,6 @@ public class CompanyListWidget extends TemplateBaseWidget {
   }
 
   public void handleEventCancel(String eventParameter) throws Exception {
-    log.debug("UiEvent 'cancel' received!");
     getFlowCtx().cancel();
   }  
 

@@ -48,7 +48,6 @@ public class CompanyViewWidget extends TemplateBaseWidget {
   }
 
   public void handleEventReturn(String eventParameter) throws Exception {
-    log.debug("UiEvent 'return' received!");
     getFlowCtx().cancel();
   }
 }

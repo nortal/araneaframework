@@ -101,8 +101,6 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
-		log.debug("UiEvent 'add' received!");
-
 		getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
@@ -117,9 +115,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventRemove(String eventParameter) throws Exception {
-		log.debug("UiEvent 'remove' received!");
 		if (!this.editMode) {
-			throw new RuntimeException("UiEvent 'remove' shoud be called only in edit mode");
+			throw new RuntimeException("Event 'remove' shoud be called only in edit mode");
 		}
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		getContractDAO().removeByPersonId(id);
@@ -129,7 +126,6 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventSelect(String eventParameter) throws Exception {
-		log.debug("UiEvent 'select' received!");
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		if (!selectOnly) {
 			PersonViewWidget newFlow = new PersonViewWidget(id);
@@ -155,7 +151,6 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventCancel(String eventParameter) throws Exception {
-		log.debug("UiEvent 'cancel' received!");
 		getFlowCtx().cancel();
 	}
 	

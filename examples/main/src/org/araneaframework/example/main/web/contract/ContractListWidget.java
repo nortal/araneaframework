@@ -66,7 +66,6 @@ public class ContractListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
-		log.debug("UiEvent 'add' received!");
 		getFlowCtx().start(new ContractAddEditWidget(), 
 				null, 
 				new FlowContext.Handler() {
@@ -81,7 +80,6 @@ public class ContractListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventRemove(String eventParameter) throws Exception {
-		log.debug("UiEvent 'remove' received!");
 		Long id = ((ContractMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		getGeneralDAO().remove(ContractMO.class, id);
 		refreshList();
@@ -94,7 +92,6 @@ public class ContractListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventCancel(String eventParameter) throws Exception {
-		log.debug("UiEvent 'cancel' received!");
 		getFlowCtx().cancel();
 	}
 	
