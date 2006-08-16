@@ -293,12 +293,12 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
   window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
   window[ajaxKey].systemForm = systemForm;
   
-  if (getActiveAraneaPage().pendingResponses++ > 0)
+  if (getActiveAraneaPage().pendingResponses > 0)
     systemForm.transactionId.value = "";
   
   getActiveAraneaPage().pendingResponses++;
   window[ajaxKey].submitAJAX();
-  
+
   return false;
 }
 
