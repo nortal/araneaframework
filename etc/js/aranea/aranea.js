@@ -125,6 +125,11 @@ function AraneaPage() {
   this.isLoaded = function() { return this.loaded; }
   this.setLoaded = function(b) { if (typeof b == "boolean") { this.loaded = b; } }
   
+  /* returns the div meant for outputting debug information, if present */
+  var debugDiv = null;
+  this.setDebugDiv = function(div) { this.debugDiv = div; }
+  this.getDebugDiv = function() { return this.debugDiv; }
+
   /* Indicates whether some form on page is (being) submitted already
    * by traditional HTTP request. */
   var submitted = false;
@@ -218,7 +223,6 @@ function AraneaPage() {
   // TODO: get rid of duplicated logic from: submit() and findSubmitter()
 
   this.submit_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
-    var el = document.createElement();
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;
 
@@ -234,10 +238,23 @@ function AraneaPage() {
     else
       new DefaultAraneaSubmitter(systemForm, eventId, eventTarget, eventParam);
   }
+  
+  this.debug = function(message) {
+    if (this.debugDiv) {
+      this.debugDiv.appendChild(document.createElement("br"));
+      this.debugDiv.appendChild(document.createTextNode(message));
+    }
+  }
+}
+
+AraneaPage.getRandomRequestId = function() {
+  return Math.round(100000*Math.random());
 }
 
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
+  var div = document.getElementById("araneaDebugDiv");
+  if (div) getActiveAraneaPage().setDebugDiv(div);
 }
 
 function DefaultAraneaSubmitter(form) {
@@ -289,15 +306,15 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
   systemForm.widgetEventPath.value = widgetId ? widgetId : "";
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+  if (systemForm.transactionId) {
+    try {
+      systemForm.removeChild(systemForm.transactionId);
+    } catch(e) {}
+  }
   
   window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
   window[ajaxKey].systemForm = systemForm;
-  
-  if (getActiveAraneaPage().pendingResponses > 0)
-    systemForm.transactionId.value = "";
-  
-  getActiveAraneaPage().pendingResponses++;
-  window[ajaxKey].submitAJAX();
+  window[ajaxKey].submitAJAX(AraneaPage.getRandomRequestId());
 
   return false;
 }
