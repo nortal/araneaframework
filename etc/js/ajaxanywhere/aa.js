@@ -26,6 +26,7 @@ function AjaxAnywhere() {
     this.formName = null;
     this.notSupported = false;
     this.updateRegions = [];
+    this.processing = false;
 
     if (window.XMLHttpRequest) {
         this.req = new XMLHttpRequest();
@@ -82,7 +83,7 @@ AjaxAnywhere.findInstance = function(id) {
 * This function is used to submit all form fields by AJAX request to the server.
 * If the form is submited with &lt;input type=submit|image&gt;, submitButton should be a reference to the DHTML object. Otherwise - undefined.
 */
-AjaxAnywhere.prototype.submitAJAX = function() {
+AjaxAnywhere.prototype.submitAJAX = function(ajaxRequestId) {
 
     this.bindById();
 
@@ -96,11 +97,14 @@ AjaxAnywhere.prototype.submitAJAX = function() {
         url = location.href;
 
     this.dropPreviousRequest();
+    this.ajaxRequestId = ajaxRequestId;
 
     this.req.open("POST", url, true);
     this.req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-
-    var postData = "&" + this.preparePostData() + "&updateRegions=" + this.updateRegions;
+    
+    getActiveAraneaPage().debug("Sending AJAX request '" + ajaxRequestId + "'");
+    
+    var postData = "&" + this.preparePostData() + "&updateRegions=" + this.updateRegions + "&ajaxRequestId=" + ajaxRequestId;
     this.sendPreparedRequest(postData);
 	return true;
 }
@@ -145,6 +149,7 @@ AjaxAnywhere.prototype.sendPreparedRequest = function (postData) {
 */
 AjaxAnywhere.prototype.dropPreviousRequest = function() {
     if (this.req != null && this.req.readyState != 0 && this.req.readyState != 4) {
+        getActiveAraneaPage().debug("dropping request");
         // abort previous request if not completed
         this.req.onreadystatechange = null;
         this.req.abort();
@@ -189,6 +194,9 @@ AjaxAnywhere.prototype.preparePostData = function(submitButton) {
 */
 AjaxAnywhere.prototype.callback = function() {
    if (this.req.readyState == 4) {
+
+     this.processing = true;
+     
      this.onBeforeResponseProcessing();
      this.hideLoadingMessage();
     
@@ -196,11 +204,21 @@ AjaxAnywhere.prototype.callback = function() {
       text = this.req.responseText;
       
       if (this.req.status == 200) {
+        getActiveAraneaPage().debug("Processing ajax response '" + extractResponseId(text) + "'");
         updateRegions(this.updateRegions, text);
+        
+        var trId = extractTransactionId(text);
 
-        this.systemForm.transactionId.value = extractTransactionId(text);
+        if (this.systemForm.transactionId)
+          this.systemForm.transactionId.value = trId;
+        else {
+          var el = createNamedElement("input", "transactionId");
+          el.type = "hidden";
+          el.value = trId;
+          this.systemForm.appendChild(el);
+        }
       } 
-      else if (this.req.status == 302) {
+     else if (this.req.status == 302) {
         window.location.href = window.location.href;
       }
       else {           
@@ -297,7 +315,7 @@ AjaxAnywhere.prototype.substituteFormSubmitFunction = function() {
 * Override it if you need.
 */
 AjaxAnywhere.prototype.handlePreviousRequestAborted = function() {
-    //alert("AjaxAnywhere default error handler. INFO: previous AJAX request dropped")
+   //alert("AjaxAnywhere default error handler. INFO: previous AJAX request dropped")
 }
 
 /**
@@ -315,6 +333,7 @@ AjaxAnywhere.prototype.onBeforeResponseProcessing = function () {
 */
 AjaxAnywhere.prototype.onAfterResponseProcessing = function () {
    getActiveAraneaPage().onload();
+   this.processing = false;
    getActiveAraneaPage().pendingResponses--;
 };
 
@@ -331,6 +350,12 @@ function extractTransactionId(newContents) {
 	var re = /<input name="transactionId" type="hidden" value="(-?[0-9]+)"\/>/
 	var result = re.exec(newContents);
 	return result[1];
+}
+
+function extractResponseId(response) {
+  var re = /<input name="ajaxResponseId" type="hidden" value="(-?[0-9]+)"\/>/
+  var result = re.exec(response);
+  return result[1];
 }
 
 function extractBody(str) {
