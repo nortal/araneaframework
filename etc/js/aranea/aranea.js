@@ -141,9 +141,6 @@ function AraneaPage() {
   this.isSubmitted = function() { return submitted; }
   this.setSubmitted = function(b) { if (typeof b == "boolean") { submitted = b; } }
   
-  /* The number of background requests that have not received completely processed response yet. */
-  pendingResponses = 0;
-
   /** Aranea JSP specific DOM tree traverser. */
   var traverser = new AraneaTraverser();
   this.getTraverser = function() { return traverser; }
@@ -258,6 +255,8 @@ AraneaPage.getRandomRequestId = function() {
 
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
+  getActiveAraneaPage().addSystemLoadEvent(Behaviour.apply);
+
   var div = document.getElementById("araneaDebugDiv");
   if (div) getActiveAraneaPage().setDebugDiv(div);
 }
@@ -328,4 +327,3 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
 _ap = new AraneaPage();
 function getActiveAraneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
-_ap.addSystemLoadEvent(Behaviour.apply);

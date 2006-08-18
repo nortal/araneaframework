@@ -91,11 +91,11 @@ public class BodyHtmlTag extends PresentationTag {
     
     Locale locale = getLocalizationContext().getLocale();
 
-    out.write("getActiveAraneaPage().setLocale(new AraneaLocale(");
+    out.write("getActiveAraneaPage().setLocale(new AraneaLocale('");
     out.write(locale.getLanguage());
-    out.write(",");
+    out.write("','");
     out.write(locale.getCountry());
-    out.write("));");
+    out.write("'));");
 
     writeAdditionalAfterBodyStartScripts(out);
 

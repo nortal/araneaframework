@@ -37,7 +37,7 @@ import org.araneaframework.uilib.form.control.SelectControl;
  */
 public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   protected String value;
-  protected String onChangePrecondition = "return true;";
+  protected String onChangePrecondition;
 
   {
     baseStyleClass = "aranea-radio";
@@ -59,8 +59,6 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
       throw new AraneaJspException("Value '"+value+"' not found in values list.");
     }
     
-    
-    
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
@@ -70,9 +68,9 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     if (viewModel.isDisabled() || viewModel.getSelectItemByValue(value).isDisabled())
-      JspUtil.writeAttribute(out, "disabled", "true");
+      JspUtil.writeAttribute(out, "disabled", "disabled");
     if (selected)
-      JspUtil.writeAttribute(out, "checked", "true");    
+      JspUtil.writeAttribute(out, "checked", "checked");
     if (events && viewModel.isOnChangeEventRegistered())
       this.writeSubmitScriptForUiEvent(out, "onclick", derivedId, "onChanged", onChangePrecondition, updateRegionNames);
     JspUtil.writeAttributes(out, attributes);

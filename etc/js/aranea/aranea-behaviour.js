@@ -34,8 +34,10 @@ function setFormElementContext(el) {
     } else {
       span.onkeydown=function() { return uiHandleKeypress(event, el.name); };
     }
-	  
-    var hiddenPresent = createNamedElement('input', el.name +".__present");
+    
+    var presentName = el.name +".__present";
+
+    var hiddenPresent = createNamedElement('input', presentName);
     hiddenPresent.setAttribute('type','hidden');
     hiddenPresent.setAttribute('value','true');
     getActiveAraneaPage().addSystemLoadEvent(function() {span.appendChild(hiddenPresent);});
@@ -105,7 +107,8 @@ var aranea_rules = {
   	setFormElementContext(el);
   },
   
-  'input.aranea-radioselect' : function(el) {
+  'input.aranea-radio' : function(el) {
+  	// XXX: should only be done if tag is not renderded with ui:radioselect
   	setFormElementContext(el);
   },
 
