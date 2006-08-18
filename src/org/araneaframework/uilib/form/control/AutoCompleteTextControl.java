@@ -3,6 +3,7 @@ package org.araneaframework.uilib.form.control;
 import java.io.Serializable;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ActionListener;
@@ -106,7 +107,7 @@ public class AutoCompleteTextControl extends TextControl {
         for (int i = 0; i < suggestions.size(); i++) {
   		  xml.append("<li>");
   		  //XXX: uilib should not depend on Aranea JSP
-  		  xml.append(JspStringUtil.escapeHtmlEntities((String) suggestions.get(i)));
+  		  xml.append(StringEscapeUtils.escapeHtml(((String) suggestions.get(i))));
   		  xml.append("</li>");
         }
         xml.append("</ul>");
