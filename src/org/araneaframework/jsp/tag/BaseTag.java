@@ -24,14 +24,15 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.araneaframework.OutputData;
-import org.araneaframework.jsp.exception.AraneaJspException;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.filter.StandardJspFilterService;
+import org.araneaframework.jsp.exception.AraneaJspException;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
@@ -40,6 +41,8 @@ import org.araneaframework.uilib.ConfigurationContext;
  * @author Oleg Mürk
  */
 public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
+	public static final String OUTPUT_DATA_KEY = "outputData";
+	
 	/* ***********************************************************************************
 	 * VARIABLES
 	 * ***********************************************************************************/
@@ -277,14 +280,28 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 	// Service methods
 	//
 
-	protected ConfigurationContext getConfiguration() {
-		OutputData output = 
-			(OutputData) pageContext.getRequest().getAttribute(
-					OutputData.OUTPUT_DATA_KEY);
+	protected ConfigurationContext getConfiguration() throws JspException {
+		OutputData output = (OutputData) pageContext.getRequest().getAttribute(OutputData.OUTPUT_DATA_KEY);
 		StandardJspFilterService.JspConfiguration config = 
 			(StandardJspFilterService.JspConfiguration) output.getAttribute(
 					JspContext.JSP_CONFIGURATION_KEY);
 		return config.getConfiguration();
+	}
+	
+	/**
+	 * Returns the current <code>LocalizationContext</code>.
+	 * @return current <code>LocalizationContext</code>.
+	 */
+	protected LocalizationContext getLocalizationContext() throws JspException {
+		return JspUtil.getLocalizationContext(pageContext);
+	}
+	
+	/**
+	 * Returns the current response object.
+	 * @return the current response object.
+	 */
+	protected OutputData getOutputData() throws JspException {
+		return (OutputData) requireContextEntry(BaseTag.OUTPUT_DATA_KEY);
 	}
 	
 	/* ***********************************************************************************

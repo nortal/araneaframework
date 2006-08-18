@@ -36,15 +36,13 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
  */
 public class WizardBodyTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
-	  ApplicationWidget widget = (ApplicationWidget) JspWidgetUtil.getWidgetFromContext(null, pageContext);
+    ApplicationWidget widget = (ApplicationWidget) JspWidgetUtil.getWidgetFromContext(null, pageContext);
+
+    OutputData output = getOutputData();
+
+    out.flush();
+	widget._getWidget().render(output);	  
 		
-    OutputData output = 
-      (OutputData) pageContext.getRequest().getAttribute(
-          OutputData.OUTPUT_DATA_KEY);
-    
-	  out.flush();
-	  widget._getWidget().render(output);	  
-		
-		return SKIP_BODY;		
-	}
+    return SKIP_BODY;
+  }
 }

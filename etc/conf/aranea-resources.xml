@@ -12,6 +12,7 @@
         <file path="js/behaviour/behaviour.js"/>
     
         <file path="js/aranea/aranea-ui.js"/>
+        <file path="js/aranea/aranea-locale.js"/>
 		<file path="js/aranea/aranea.js"/>
         <file path="js/aranea/aranea-keyboard.js"/>
 		<file path="js/aranea/aranea-util.js"/>

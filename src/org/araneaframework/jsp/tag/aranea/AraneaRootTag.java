@@ -34,20 +34,16 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   body-content = "JSP"
  */
 public class AraneaRootTag extends BaseTag {
-  public static final String OUTPUT_DATA_KEY = "outputData";
-  
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    OutputData output = 
-      (OutputData) pageContext.getRequest().getAttribute(
-          OutputData.OUTPUT_DATA_KEY);
+    OutputData output = (OutputData) pageContext.getRequest().getAttribute(OutputData.OUTPUT_DATA_KEY);
     StandardJspFilterService.JspConfiguration config = 
       (StandardJspFilterService.JspConfiguration) output.getAttribute(
           JspContext.JSP_CONFIGURATION_KEY);
     
     addContextEntry(
-        OUTPUT_DATA_KEY, 
+        BaseTag.OUTPUT_DATA_KEY, 
         output);
 
     Config.set(

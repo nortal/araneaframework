@@ -116,25 +116,30 @@ function AraneaPage() {
   /* URL of aranea dispatcher servlet serving current page. 
    * Automatically set by AraneaTraverser.findSurroundingSystemForm(). */ 
   var servletURL = null;
-  this.getServletURL = function() { return this.servletURL; }
-  this.setServletURL = function(url) { this.servletURL = new String(url); }
+  this.getServletURL = function() { return servletURL; }
+  this.setServletURL = function(url) { servletURL = new String(url); }
   
   /* Indicates whether the page is completely loaded or not. Page is considered to 
    * be loaded when all onload events have completed execution. */
   var loaded = false;
-  this.isLoaded = function() { return this.loaded; }
-  this.setLoaded = function(b) { if (typeof b == "boolean") { this.loaded = b; } }
+  this.isLoaded = function() { return loaded; }
+  this.setLoaded = function(b) { if (typeof b == "boolean") { loaded = b; } }
   
-  /* returns the div meant for outputting debug information, if present */
+  /* returns the div meant for outputting debug information, if it is present */
   var debugDiv = null;
-  this.setDebugDiv = function(div) { this.debugDiv = div; }
-  this.getDebugDiv = function() { return this.debugDiv; }
+  this.setDebugDiv = function(div) { debugDiv = div; }
+  this.getDebugDiv = function() { return debugDiv; }
+  
+  /* locale - should be used only for server-side reported locale */
+  var locale = new AraneaLocale(null, null);
+  this.getLocale = function() { return locale; }
+  this.setLocale = function(loc) { locale = loc; }
 
   /* Indicates whether some form on page is (being) submitted already
    * by traditional HTTP request. */
   var submitted = false;
-  this.isSubmitted = function() { return this.submitted; }
-  this.setSubmitted = function(b) { if (typeof b == "boolean") { this.submitted = b; } }
+  this.isSubmitted = function() { return submitted; }
+  this.setSubmitted = function(b) { if (typeof b == "boolean") { submitted = b; } }
   
   /* The number of background requests that have not received completely processed response yet. */
   pendingResponses = 0;
@@ -240,9 +245,9 @@ function AraneaPage() {
   }
   
   this.debug = function(message) {
-    if (this.debugDiv) {
-      this.debugDiv.appendChild(document.createElement("br"));
-      this.debugDiv.appendChild(document.createTextNode(message));
+    if (this.getDebugDiv()) {
+      this.getDebugDiv().appendChild(document.createElement("br"));
+      this.getDebugDiv().appendChild(document.createTextNode(message));
     }
   }
 }

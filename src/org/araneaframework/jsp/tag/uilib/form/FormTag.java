@@ -37,10 +37,10 @@ import org.araneaframework.uilib.form.FormWidget;
            </ul> "
  */
 public class FormTag extends WidgetTag {
-	public final static String FORM_SCOPED_FULL_ID_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.SCOPED_FULL_ID";
-	public final static String FORM_FULL_ID_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FULL_ID";
+	public final static String FORM_SCOPED_FULL_ID_KEY = "org.araneaframework.jsp.tag.uilib.form.FormTag..SCOPED_FULL_ID";
+	public final static String FORM_FULL_ID_KEY = "org.araneaframework.jsp.tag.uilib.form.FormTag.FULL_ID";
 	public final static String FORM_VIEW_MODEL_KEY = "form";
-	public final static String FORM_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormTag.FORM";
+	public final static String FORM_KEY = "org.araneaframework.jsp.tag.uilib.form.FormTag.FORM";
 	
 	protected FormWidget.ViewModel formViewModel;
 

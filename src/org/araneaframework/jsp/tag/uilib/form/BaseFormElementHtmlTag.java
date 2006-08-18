@@ -42,7 +42,7 @@ import org.araneaframework.uilib.form.FormWidget;
  * @author Oleg Mürk
  */
 public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface {
-	public final static String COUNTER_KEY = "org.araneaframework.jsp.ui.uilib.form.UiFormElementBaseTag.COUNTER";
+	public final static String COUNTER_KEY = "org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag.KEY";
 
 	protected String contextWidgetId;
 	protected String systemFormId;

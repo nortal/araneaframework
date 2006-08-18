@@ -28,7 +28,7 @@ import org.araneaframework.jsp.tag.BaseIterationTag;
  */
 public abstract class BaseListRowsTag extends BaseIterationTag {
   public static final String ROW_REQUEST_ID_KEY = "rowRequestId";
-  public static final String ROW_KEY = "org.araneaframework.jsp.ui.uilib.list.UiListRowsTag.ROW";
+  public static final String ROW_KEY = "org.araneaframework.jsp.tag.uilib.list.BaseListRowsTag.ROW";
   
   protected Object currentRow;
   protected ListIterator rowIterator;

@@ -28,7 +28,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   body-content = "JSP"
  */
 public class ComponentTag extends PresentationTag {
-	public final static String COMPONENT_KEY= "example.component.key";
+	public final static String KEY= "example.component.key";
 	public final static String DEFAULT_COMPONENT_STYLE = "component";
 	public final static String DEFAULT_COMPONENT_WIDTH_STYLE = "w100p";
 	
@@ -42,7 +42,7 @@ public class ComponentTag extends PresentationTag {
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-		addContextEntry(ComponentTag.COMPONENT_KEY, this);
+		addContextEntry(ComponentTag.KEY, this);
 
 		JspUtil.writeOpenStartTag(out, "div");
 		JspUtil.writeAttribute(out, "class", getStyleClass());

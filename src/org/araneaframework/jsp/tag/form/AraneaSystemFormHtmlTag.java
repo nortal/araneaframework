@@ -45,9 +45,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
   private StandardJspFilterService.JspConfiguration config;
   
   protected int doStartTag(Writer out) throws Exception {
-    output = 
-      (OutputData) pageContext.getRequest().getAttribute(
-          OutputData.OUTPUT_DATA_KEY);
+    output = getOutputData(); 
 
     config = 
       (StandardJspFilterService.JspConfiguration) output.getAttribute(

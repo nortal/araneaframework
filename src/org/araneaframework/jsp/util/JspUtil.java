@@ -33,6 +33,7 @@ import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
+import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.basic.ElementHtmlTag;
@@ -53,6 +54,7 @@ import org.araneaframework.jsp.tag.uilib.list.formlist.FormListTag;
 public class JspUtil {
   private static final Map attributeErrorMap = new HashMap();  
   static {
+    attributeErrorMap.put(BaseTag.OUTPUT_DATA_KEY, "<ui:root> tag expected, but not found!");
     attributeErrorMap.put(AttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
     attributeErrorMap.put(PresentationTag.ATTRIBUTED_TAG_KEY, null);
 
@@ -106,8 +108,7 @@ public class JspUtil {
   		return null;
   	}
   }
-  
-  
+
   public static LocalizationContext getLocalizationContext(PageContext pageContext) {
   	return (LocalizationContext)Config.get(pageContext, Config.FMT_LOCALIZATION_CONTEXT, PageContext.REQUEST_SCOPE);
   }

@@ -22,10 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.OutputData;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.jsp.tag.PresentationTag;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -54,8 +52,7 @@ public class MessagesHtmlTag extends PresentationTag {
   protected int doEndTag(Writer out) throws Exception {
     super.doEndTag(out);
 
-    OutputData output = (OutputData) JspUtil.requireContextEntry(pageContext, AraneaRootTag.OUTPUT_DATA_KEY);
-    Map messageMap = (Map) output.getAttribute(MessageContext.MESSAGE_KEY);
+    Map messageMap = (Map) getOutputData().getAttribute(MessageContext.MESSAGE_KEY);
 
     List entries = new ArrayList();
     for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {

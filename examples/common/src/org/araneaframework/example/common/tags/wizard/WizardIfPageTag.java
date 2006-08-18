@@ -37,6 +37,8 @@ public class WizardIfPageTag extends BaseTag {
   public static final String INDEX_FIRST = "first";
   public static final String INDEX_LAST = "last";
   public static final String INDEX_NOT_PREFIX = "not";
+  // XXX: wrong. besides, wizardwidget does not have a viewmodel - and widgetcontexttag does not put
+  // widget itself into pagecontext.
   public static final String WIDGET_CONTEXT_KEY = "org.araneaframework.jsp.ui.context.UiWidgetContextTag.WIDGET";
 
   private String index;

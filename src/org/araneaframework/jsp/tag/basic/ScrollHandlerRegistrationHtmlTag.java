@@ -18,12 +18,11 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import org.araneaframework.OutputData;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.core.WindowScrollPositionContext;
+
 /**
  * Tag that registers functions dealing with window scroll position storing and restoring.
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -35,9 +34,8 @@ import org.araneaframework.uilib.core.WindowScrollPositionContext;
  */
 public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
    protected int doEndTag(Writer out) throws Exception {
-     OutputData output = (OutputData) requireContextEntry(AraneaRootTag.OUTPUT_DATA_KEY);
-     
-     WindowScrollPositionContext scrollHandler = (WindowScrollPositionContext)output.getAttribute(WindowScrollPositionContext.SCROLL_HANDLER_KEY);
+     WindowScrollPositionContext scrollHandler = 
+    	 (WindowScrollPositionContext)getOutputData().getAttribute(WindowScrollPositionContext.SCROLL_HANDLER_KEY);
 
      if (scrollHandler != null)
        registerScrollHandler(out, scrollHandler);
