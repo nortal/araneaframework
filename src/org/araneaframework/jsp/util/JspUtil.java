@@ -30,6 +30,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -313,25 +314,7 @@ public class JspUtil {
    */
   public static void writeEscaped(Writer out, String value) throws IOException {
     if (value == null) return;
-    
-    for(int i = 0; i < value.length(); i++) {
-      char c = value.charAt(i);  
-      writeEscaped(out, c);
-    }
-  }
-  
-  /**
-   * Writes out escaped character.
-   */
-  public static void writeEscaped(Writer out, char value) throws IOException {
-    switch (value) {
-      case '<': out.write("&lt;"); break;
-      case '>': out.write("&gt;"); break;
-      case '&': out.write("&amp;"); break;
-      case '"': out.write("&quot;"); break;
-      default:
-        out.write(value);
-    }     
+    out.write(StringEscapeUtils.escapeHtml(value));
   }
   
   /**
