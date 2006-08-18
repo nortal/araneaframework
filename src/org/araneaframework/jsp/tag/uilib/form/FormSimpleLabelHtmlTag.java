@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspStringUtil;
 import org.araneaframework.jsp.util.JspUtil;
@@ -159,7 +160,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     JspUtil.writeCloseStartTag_SS(out);
 
     // Write label itself, underlining the accesskey if there is one
-    String escapedLabel = JspStringUtil.escapeHtmlEntities(label);
+    String escapedLabel = StringEscapeUtils.escapeHtml(label);
     out.write(JspStringUtil.underlineAccessKey(escapedLabel, accessKey));
     if (showColon)
       out.write(":");

@@ -44,7 +44,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   }
 
   protected int doEndTag(Writer out) throws Exception {
-    assertControlType("SelectControl");    
+    assertControlType("SelectControl");
     
     // Prepare
     String name = this.getScopedFullFieldId();     

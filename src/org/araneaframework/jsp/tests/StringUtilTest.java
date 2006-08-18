@@ -17,6 +17,7 @@
 package org.araneaframework.jsp.tests;
 
 import junit.framework.TestCase;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.jsp.util.JspStringUtil;
 
 /**
@@ -41,11 +42,10 @@ public class StringUtilTest extends TestCase {
 		assertEquals(JspStringUtil.underlineAccessKey("<u>this</u>","U"),"<<u>u</u>>this</u>");
 		
 		// escapeHtmlEntities
-		assertNull(JspStringUtil.escapeHtmlEntities(null));
-		assertEquals(JspStringUtil.escapeHtmlEntities(""), "");
-		assertEquals(JspStringUtil.escapeHtmlEntities(" abc def "), " abc def ");
-		assertEquals(JspStringUtil.escapeHtmlEntities("&"), "&amp;");
-		assertEquals(JspStringUtil.escapeHtmlEntities("&&&\n<<< >>>\t\"\"\""), "&amp;&amp;&amp;\n&lt;&lt;&lt; &gt;&gt;&gt;\t&quot;&quot;&quot;");
-		
+		assertNull(StringEscapeUtils.escapeHtml(null));
+		assertEquals(StringEscapeUtils.escapeHtml(""), "");
+		assertEquals(StringEscapeUtils.escapeHtml(" abc def "), " abc def ");
+		assertEquals(StringEscapeUtils.escapeHtml("&"), "&amp;");
+		assertEquals(StringEscapeUtils.escapeHtml("&&&\n<<< >>>\t\"\"\""), "&amp;&amp;&amp;\n&lt;&lt;&lt; &gt;&gt;&gt;\t&quot;&quot;&quot;");
 	}
 }
