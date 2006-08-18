@@ -16,7 +16,6 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -103,20 +102,4 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   public void setOnChangePrecondition(String onChangePrecondition) throws JspException {
     this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
-  
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, SelectControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddRadioValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
-  }      
 }

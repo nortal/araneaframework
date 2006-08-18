@@ -51,7 +51,8 @@ public class DemoRadioSelect extends TemplateBaseWidget {
 	
 	public void handleEventTest(String param) throws Exception {
 		if (form.convertAndValidate()) {
-			getMessageCtx().showInfoMessage(form.getValueByFullName("select").toString());
+			String value = (String) form.getValueByFullName("select");
+			getMessageCtx().showInfoMessage(value != null ? value : "null");
 		}
 	}
 }
