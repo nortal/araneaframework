@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import org.apache.log4j.Logger;
+import org.araneaframework.uilib.list.contrib.OrderInfo;
+import org.araneaframework.uilib.list.contrib.OrderInfoField;
 
 public class MultiOrderHelper {
 	private static final Logger log = Logger.getLogger(MultiOrderHelper.class);

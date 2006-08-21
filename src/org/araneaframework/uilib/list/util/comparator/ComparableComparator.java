@@ -23,7 +23,7 @@ import java.util.Comparator;
  * Not-null comparator that compares <code>Comparable</code> objects by their
  * own (@see java.lang.Comparable#compareTo(java.lang.Object)) method.
  */
-public class ComparableComparator implements Comparator, Serializable {
+class ComparableComparator implements Comparator, Serializable {
 	public static final ComparableComparator INSTANCE = new ComparableComparator();
 
 	public int compare(Object o1, Object o2) {

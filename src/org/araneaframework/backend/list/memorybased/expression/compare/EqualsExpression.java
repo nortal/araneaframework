@@ -18,8 +18,8 @@ package org.araneaframework.backend.list.memorybased.expression.compare;
 
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class EqualsExpression implements CompositeExpression {
 
@@ -37,7 +37,7 @@ public class EqualsExpression implements CompositeExpression {
 		this.expr2 = expr2;
 	}
 
-	public Object evaluate(VariableResolver resolver)
+	public Object evaluate(Resolver resolver)
 			throws ExpressionEvaluationException {
 		Object value1 = this.expr1.evaluate(resolver);
 		Object value2 = this.expr2.evaluate(resolver);

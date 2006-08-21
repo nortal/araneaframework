@@ -17,36 +17,27 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.Map;
-import org.araneaframework.backend.list.memorybased.Variable;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+
+import org.apache.commons.lang.Validate;
+import org.araneaframework.backend.list.memorybased.Resolver;
 
 
 /**
  * VariableResolver that has a map of Variable names and their resolvable
  * values.
  */
-public class VariableMapper implements VariableResolver {
+public class VariableMapper implements Resolver {
 	private Map map;
 
 	public VariableMapper(Map map) {
-		if (map == null) {
-			throw new RuntimeException("Mapping must be provided");
-		}
+		Validate.notNull(map, "No map specified");
 		this.map = map;
 	}
 
-	public Object resolve(Variable variable) {
-		if (variable == null) {
-			throw new RuntimeException("Variable must be provided");
-		}
-		String name = variable.getName();
-		if (name == null) {
-			throw new RuntimeException("Variable name must be provided");
-		}
+	public Object resolve(String name) {
+		Validate.notNull(name, "No variable name specified");
 		Object result = this.map.get(name);
-		if (result == null) {
-			throw new RuntimeException("Variable " + name + " not supported");
-		}
+		Validate.notNull(result, "Variable " + name + "  not supported");		
 		return result;
 	}
 }

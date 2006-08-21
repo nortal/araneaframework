@@ -18,10 +18,10 @@ package org.araneaframework.backend.list.memorybased.expression.compare;
 
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
 import org.araneaframework.backend.list.memorybased.expression.StringExpression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.uilib.list.util.LikeUtil;
 
 public class LikeExpression implements CompositeExpression, StringExpression {
@@ -54,7 +54,7 @@ public class LikeExpression implements CompositeExpression, StringExpression {
 		return this.mask;
 	}
 	
-	public Object evaluate(VariableResolver resolver)
+	public Object evaluate(Resolver resolver)
 	throws ExpressionEvaluationException {
 		return new Boolean(LikeUtil.isLike(convert(this.expr.evaluate(resolver)),
 				convert(this.mask.getValue()), this.ignoreCase));

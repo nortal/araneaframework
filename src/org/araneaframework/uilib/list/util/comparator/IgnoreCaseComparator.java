@@ -23,7 +23,7 @@ import java.util.Locale;
  * Not-null comparator that compares <code>String</code> values case
  * insensitive. This comparator is not <code>Locale</code>-specific.
  */
-public class IgnoreCaseComparator implements StringComparator, Serializable {
+class IgnoreCaseComparator implements StringComparator, Serializable {
 	public static final IgnoreCaseComparator INSTANCE = new IgnoreCaseComparator();
 
 	public boolean getIgnoreCase() {

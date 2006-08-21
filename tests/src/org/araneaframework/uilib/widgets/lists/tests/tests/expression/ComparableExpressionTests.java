@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.GreaterThanExpression;
@@ -34,7 +34,7 @@ public class ComparableExpressionTests extends TestCase {
 	private static final Logger log = Logger
 			.getLogger(ComparableExpressionTests.class);
 
-	private VariableResolver resolver;
+	private Resolver resolver;
 
 	private Expression low;
 

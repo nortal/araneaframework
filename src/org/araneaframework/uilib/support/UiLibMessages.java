@@ -21,7 +21,7 @@ package org.araneaframework.uilib.support;
  * 
  */
 public class UiLibMessages {
-	public static final String RANGE_CHECK_FAILED = "uilib.form.rangecheckfailed";
+  public static final String RANGE_CHECK_FAILED = "uilib.form.rangecheckfailed";
   public static final String DATE_BEFORE_TODAY = "uilib.form.date.beforetoday";
   public static final String ELEMENT_EMPTY = "uilib.form.element.empty";
   //XXX

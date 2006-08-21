@@ -18,7 +18,7 @@ package org.araneaframework.uilib.list.structure;
 
 import java.util.Comparator;
 import java.util.Locale;
-import org.araneaframework.uilib.list.util.ComparatorFactory;
+import org.araneaframework.uilib.list.util.CompareHelper;
 import org.araneaframework.uilib.list.util.comparator.ComparableComparator;
 import org.araneaframework.uilib.list.util.comparator.NullComparator;
 
@@ -27,9 +27,9 @@ public abstract class ComparableType {
 	private Comparator comparator;
 	private Class valueType;
 	
-	private boolean ignoreCase = ComparatorFactory.IGNORE_CASE_BY_DEFAULT;
-	private boolean trueFirst = ComparatorFactory.TRUE_FIRST_BY_DEFAULT;
-	private boolean nullFirst = ComparatorFactory.NULL_FIRST_BY_DEFAULT;
+	private boolean ignoreCase = CompareHelper.IGNORE_CASE_BY_DEFAULT;
+	private boolean trueFirst = CompareHelper.TRUE_FIRST_BY_DEFAULT;
+	private boolean nullFirst = ComparatorFactory.NULLComparatorUtil;
 	private Locale locale = null;
 
 	public Comparator getComparator() {
@@ -102,16 +102,16 @@ public abstract class ComparableType {
 				
 		if (this.valueType != null) {
 			if (String.class.isAssignableFrom(this.valueType)) {
-				this.comparator = ComparatorFactory.getStringComparator(this.nullFirst,
+				this.comparator = CompareHelper.getStringComparator(this.nullFirst,
 						this.ignoreCase, this.locale);
 				return;
 			}
 			if (Boolean.class.isAssignableFrom(this.valueType)) {
-				this.comparator = ComparatorFactory.getBooleanComparator(this.nullFirst,
+				this.comparator = CompareHelper.getBooleanComparator(this.nullFirst,
 						this.trueFirst);
 				return;
 			}			
 		}
-		this.comparator = ComparatorFactory.getDefault();
+		this.comparator = CompareHelper.getDefault();
 	}
 }

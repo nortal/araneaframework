@@ -16,8 +16,8 @@
 
 package org.araneaframework.backend.list.memorybased.expression.procedure;
 
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class ProcedureExpression extends MultiExpression {
 
@@ -36,7 +36,7 @@ public class ProcedureExpression extends MultiExpression {
 		return this.name;
 	}
 
-	public Object evaluate(VariableResolver resolver) {
+	public Object evaluate(Resolver resolver) {
 		throw new RuntimeException("Evaluating not supported");
 	}
 }

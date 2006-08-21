@@ -14,24 +14,20 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.backend.list.memorybased.expression;
+package org.araneaframework.backend.list.memorybased;
 
 import java.io.Serializable;
-import org.araneaframework.backend.list.memorybased.Variable;
-
 
 /**
- * General interface for a resolver that resolves <code>Variables</code>. The
- * <code>VariableResolver</code> implementation may be used to evaluate
- * <code>Variables</code> as well as transforming their names etc.
+ * Genereal interface for resolveing types. 
  */
-public interface VariableResolver extends Serializable {
+public interface TypeResolver extends Serializable {
 	/**
-	 * Resolves a <code>Variable</code>.
+	 * Resolves type of the variable.
 	 * 
-	 * @param variable
-	 *            a <code>Variable</code> to resolve.
-	 * @return the result of resolving the <code>Variable</code>.
+	 * @param variableName
+	 *            variable name.
+	 * @return type of the variable.
 	 */
-	Object resolve(Variable variable);
+	Class resolveType(String variableName);
 }

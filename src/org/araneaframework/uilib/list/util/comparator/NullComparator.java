@@ -23,7 +23,7 @@ import java.util.Comparator;
  * Comparator that compares <code>null</code> values and uses another not-null
  * <code>Comparator</code> in other cases.
  */
-public class NullComparator implements Comparator, Serializable {
+class NullComparator implements Comparator, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

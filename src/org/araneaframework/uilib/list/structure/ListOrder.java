@@ -16,28 +16,23 @@
 
 package org.araneaframework.uilib.list.structure;
 
-import java.io.Serializable;
-import org.araneaframework.backend.list.memorybased.ComparatorExpression;
-import org.araneaframework.uilib.list.OrderInfo;
+import org.araneaframework.backend.list.memorybased.ComparableExpressionFactory;
 
 
 /**
- * Static list ordering information that can be used along with
- * <code>OrderInfo</code> to build <code>OrderExpression</code> (an
- * <code>ComparatorExpression</code> that compares the values that two
- * <code>VariableResolvers</code> provides).
+ * Base interface for List orders.
  * 
- * @see org.araneaframework.uilib.list.OrderInfo
+ * @see ComparableExpressionFactory
+ * @see ListContext
  */
-public interface ListOrder extends Serializable {
+public interface ListOrder extends ComparableExpressionFactory {
+	
 	/**
-	 * Builds <code>ComparatorExpression</code> from this
-	 * <code>ListOrder</code> according to the <code>OrderInfo</code>.
+	 * Initializes the ListOrder.
 	 * 
-	 * @param orderInfo
-	 *            Current ordered fields and their directions.
-	 * @return <code>ComparatorExpression</code> that is built according to
-	 *         the <code>OrderInfo</code>.
+	 * @param context
+	 *          List context.
 	 */
-	ComparatorExpression buildComparatorExpression(OrderInfo orderInfo);
+	void init(ListContext context);
+
 }

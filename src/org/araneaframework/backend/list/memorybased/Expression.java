@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.memorybased;
 
 import java.io.Serializable;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 
 /**
@@ -34,6 +33,6 @@ public interface Expression extends Serializable {
 	 * @throws ExpressionEvaluationException
 	 *             when the evaluating fails.
 	 */
-	Object evaluate(VariableResolver resolver)
+	Object evaluate(Resolver resolver)
 			throws ExpressionEvaluationException;
 }

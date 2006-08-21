@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure.order;
+package org.araneaframework.uilib.list.contrib.structure.order;
 
 import org.araneaframework.uilib.list.structure.ListOrder;
 

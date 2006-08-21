@@ -14,12 +14,12 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure.order;
+package org.araneaframework.uilib.list.contrib.structure.order;
 
 import java.util.Comparator;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
-import org.araneaframework.backend.list.memorybased.compexpr.VariableComparatorExpression;
-import org.araneaframework.uilib.list.OrderInfo;
+import org.araneaframework.backend.list.memorybased.compexpr.FieldComparatorExpression;
+import org.araneaframework.uilib.list.contrib.OrderInfo;
 import org.araneaframework.uilib.list.structure.ComparableType;
 
 
@@ -54,6 +54,6 @@ public class SimpleColumnOrder extends ComparableType implements ColumnOrder {
 		if (this.columnId == null) {
 			throw new RuntimeException("Column Id must be provided"); 
 		}
-		return new VariableComparatorExpression(getColumnId(), getComparator());
+		return new FieldComparatorExpression(getColumnId(), getComparator());
 	}
 }

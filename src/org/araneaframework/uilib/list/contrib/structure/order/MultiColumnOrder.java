@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure.order;
+package org.araneaframework.uilib.list.contrib.structure.order;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,8 +23,8 @@ import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.MultiComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.ReverseComparatorExpression;
-import org.araneaframework.uilib.list.OrderInfo;
-import org.araneaframework.uilib.list.OrderInfoField;
+import org.araneaframework.uilib.list.contrib.OrderInfo;
+import org.araneaframework.uilib.list.contrib.OrderInfoField;
 import org.araneaframework.uilib.list.structure.ListOrder;
 
 

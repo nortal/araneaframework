@@ -21,33 +21,36 @@ import java.text.Collator;
 import java.util.Locale;
 
 /**
- * Not-null comparator that compares <code>String</code> values according to
- * the <code>Locale</code> and case sensitive option.
+ * Comparator for not-null <code>String</code> values.
  */
-public class LocaleStringComparator implements StringComparator, Serializable {
-	private boolean ignoreCase;
-	private Locale locale;
+class LocaleStringComparator implements Serializable {
 
 	private Collator collator;
 
+	/**
+	 * Creates an instance of LocaleStringComparator.
+	 * 
+	 * @param ignoreCase
+	 *               whether to ignore case.
+	 * @param locale
+	 *               Locale.
+	 */
 	public LocaleStringComparator(boolean ignoreCase, Locale locale) {
-		this.ignoreCase = ignoreCase;
-		this.locale = locale;
-
 		this.collator = Collator.getInstance(locale);
 		this.collator.setStrength(ignoreCase ? Collator.SECONDARY
 				: Collator.TERTIARY);
 	}
 
-	public boolean getIgnoreCase() {
-		return this.ignoreCase;
-	}
-
-	public Locale getLocale() {
-		return this.locale;
-	}
-
 	public int compare(Object o1, Object o2) {
 		return this.collator.compare(o1, o2);
 	}
+	
+    public int hashCode() {
+        return collator.hashCode();
+    }
+
+    public boolean equals(Object object) {
+    	return object == this || 
+    	(object instanceof LocaleStringComparator && collator.equals(((LocaleStringComparator) object).collator));
+    }	
 }

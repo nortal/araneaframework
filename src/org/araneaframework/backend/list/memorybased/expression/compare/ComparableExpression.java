@@ -19,10 +19,10 @@ package org.araneaframework.backend.list.memorybased.expression.compare;
 import java.util.Comparator;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
 import org.araneaframework.backend.list.memorybased.expression.StringExpression;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.uilib.list.util.ComparatorFactory;
+import org.araneaframework.uilib.list.util.CompareHelper;
 import org.araneaframework.uilib.list.util.comparator.NullComparator;
 import org.araneaframework.uilib.list.util.comparator.StringComparator;
 
@@ -47,14 +47,14 @@ public abstract class ComparableExpression implements CompositeExpression,
 	}
 
 	public ComparableExpression(Expression expr1, Expression expr2) {
-		this(expr1, expr2, ComparatorFactory.getDefault());
+		this(expr1, expr2, CompareHelper.getDefault());
 	}
 
 	public Comparator getComparator() {
 		return this.comparator;
 	}
 
-	public final Object evaluate(VariableResolver resolver)
+	public final Object evaluate(Resolver resolver)
 			throws ExpressionEvaluationException {
 		Object value1 = this.expr1.evaluate(resolver);
 		Object value2 = this.expr2.evaluate(resolver);

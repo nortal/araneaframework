@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.backend.list.memorybased.Resolver;
 
 
 public class MultiComparatorExpression implements CompositeComparatorExpression {
@@ -43,7 +43,7 @@ public class MultiComparatorExpression implements CompositeComparatorExpression 
 		.toArray(new ComparatorExpression[this.children.size()]);
 	}
 	
-	public int compare(VariableResolver resolver1, VariableResolver resolver2)
+	public int compare(Resolver resolver1, Resolver resolver2)
 	throws ExpressionEvaluationException {
 		if (this.children.size() == 0) {
 			log.debug("No children specified - returning zero as the comparing result");

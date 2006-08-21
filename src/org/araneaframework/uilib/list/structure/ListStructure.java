@@ -16,101 +16,197 @@
 
 package org.araneaframework.uilib.list.structure;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
-import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
-import org.araneaframework.uilib.list.structure.order.ColumnOrder;
-import org.araneaframework.uilib.list.structure.order.MultiColumnOrder;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.araneaframework.uilib.list.contrib.structure.ListColumn;
+import org.araneaframework.uilib.list.contrib.structure.order.MultiColumnOrder;
 
-public class ListStructure extends BaseListStructure {
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
+public class ListStructure implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	/*
-	 * Columns
+	private static final Logger log = Logger.getLogger(ListStructure.class);
+
+	/**
+	 * {@link ListField} objects.. 
 	 */
+	protected LinkedHashMap columns = new LinkedHashMap(); 
+	
+	/**
+	 * (@link ListOrder) information.
+	 */
+	protected ListOrder order;
 
-	public void addColumn(String id, String label) {
-		addColumn(new ListColumn(id, label));
-	}
-	
-	public void addColumn(ListColumn column, ColumnOrder columnOrder, ColumnFilter columnFilter) {
-		String id = column.getId();
-		addColumn(column);
-		if (columnOrder != null) {
-			columnOrder.setColumnId(id);
-			addColumnOrder(columnOrder);
-		}
-		if (columnFilter != null) {
-			columnFilter.setColumnId(id);
-			addFilter(columnFilter);
-		}
-	}
-	
-	public void addColumn(String id, String label, ColumnOrder columnOrder, ColumnFilter columnFilter) {
-		addColumn(new ListColumn(id, label), columnOrder, columnFilter);
-	}
-	
-	/*
-	 * Orders
+	/**
+	 * (@link ListFilter) information.
 	 */
-	
-	protected MultiColumnOrder getMultiColumnOrder() {
-		if (this.order == null) {
-			clearColumnOrders();
-		}
-		if (!MultiColumnOrder.class.isAssignableFrom(this.order.getClass())) {
-			throw new RuntimeException("ListOrder must be a MultiColumnOrder instance");
-		}
-		return (MultiColumnOrder) this.order; 
-	}
-	
-	public void addColumnOrder(ColumnOrder columnOrder) {
-		getMultiColumnOrder().addColumnOrder(columnOrder);
-	}
-	
-	public ColumnOrder getColumnOrder(String column) {
-		return getMultiColumnOrder().getColumnOrder(column);
-	}
-	
-	public void clearColumnOrders() {
-		this.order = new MultiColumnOrder();
-	}
-	
-	/*
-	 * Filters
+	protected ListFilter filter;
+
+	/**
+	 * Returns {@link ListColumn}s.
+	 * 
+	 * @return {@link ListColumn}s.
 	 */
-	
-	protected AndFilter getAndFilter() {
-		if (this.filter == null) {
-			clearFilters();
-		}
-		if (!AndFilter.class.isAssignableFrom(this.filter.getClass())) {
-			throw new RuntimeException("ListFilter must be an AndFilter instance");
-		}
-		return (AndFilter) this.filter; 
+	public Map getColumns() {
+		return this.columns;
+	}
+
+	/**
+	 * Returns {@link ListColumn}s.
+	 * 
+	 * @return {@link ListColumn}s.
+	 */
+	public List getColumnsList() {
+		return new ArrayList(this.columns.values());
+	}
+
+	/**
+	 * Returns {@link ListColumn}.
+	 * 
+	 * @param id
+	 *            {@link ListColumn}identifier.
+	 * @return {@link ListColumn}.
+	 */
+	public ListColumn getColumn(String id) {
+		return (ListColumn) this.columns.get(id);
+	}
+
+	/**
+	 * Adds a {@link ListColumnInterface}.
+	 * 
+	 * @param column
+	 *            {@link ListColumnInterface}.
+	 */
+	public void addColumn(ListColumn column) {
+		this.columns.put(column.getId(), column);
+		this.columnList.add(column);
+	}
+
+	/**
+	 * Clears the {@link ListColumnInterface}s
+	 */
+	public void clearColumns() {
+		this.columns = new HashMap();
+		this.columnList = new ArrayList();
 	}
 	
-	public void addFilter(ListFilter subFilter) {
-		getAndFilter().addFilter(subFilter);
+	/**
+	 * Returns the (@link ListOrder).
+	 * 
+	 * @return the (@link ListOrder).
+	 */
+	public ListOrder getListOrder() {
+		return this.order;
 	}
-	
-	public ColumnFilter getColumnFilter(String column) {
-		Iterator i = getAndFilter().getFilters().iterator();
-		while (i.hasNext()) {
-			ListFilter listFilter = (ListFilter) i.next();
-			if (ColumnFilter.class.isAssignableFrom(listFilter.getClass())) {
-				ColumnFilter columnFilter = (ColumnFilter) listFilter;
-				if (columnFilter.getColumnId().equals(column)) {
-					return columnFilter;
-				}
+
+	/**
+	 * Saves the (@link ListOrder).
+	 * 
+	 * @param filter
+	 *            the (@link ListOrder).
+	 */
+	public void setListOrder(ListOrder order) {
+		this.order = order;
+	}
+
+	/**
+	 * Returns the (@link ListFilter).
+	 * 
+	 * @return the (@link ListFilter).
+	 */
+	public ListFilter getListFilter() {
+		return this.filter;
+	}
+
+	/**
+	 * Saves the (@link ListFilter).
+	 * 
+	 * @param filter
+	 *            the (@link ListFilter).
+	 */
+	public void setListFilter(ListFilter filter) {
+		this.filter = filter;
+	}
+
+	/**
+	 * Returns view model.
+	 * 
+	 * @return view model.
+	 */
+	public ViewModel getViewModel() {
+		log.debug("Getting ListStructure.ViewModel");
+		return new ViewModel();
+	}
+
+	/**
+	 * View Model.
+	 * 
+	 * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+	 */
+	public class ViewModel implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		protected Map columns = new HashMap();
+		protected List columnList = new ArrayList();
+		protected Map columnOrders = new HashMap();
+
+		/**
+		 * Takes a snapshot of outer class state.
+		 */
+		protected ViewModel() {
+			log.debug("Constructing ListStructure.ViewModel");
+			MultiColumnOrder multiOrder = getListOrder() instanceof MultiColumnOrder ? (MultiColumnOrder) getListOrder()
+					: null;
+			if (multiOrder == null) {
+				log.debug("MultiColumnOrder not found");
+			}
+
+			for (Iterator i = ListStructure.this.columnList.iterator(); i
+					.hasNext();) {
+				ListColumn.ViewModel currentColumn = ((ListColumn) i
+						.next()).getViewModel();
+				boolean isOrdered = multiOrder != null
+						&& multiOrder.isColumnOrdered(currentColumn.getId());
+
+				this.columnList.add(currentColumn);
+				this.columns.put(currentColumn.getId(), currentColumn);
+				this.columnOrders.put(currentColumn.getId(), new Boolean(
+						isOrdered));
 			}
 		}
-		return null;
-	}
-	
-	public void clearFilters() {
-		this.filter = new AndFilter();
+
+		/**
+		 * @return Returns the columnList.
+		 */
+		public List getColumnList() {
+			return this.columnList;
+		}
+
+		/**
+		 * @return Returns the columns.
+		 */
+		public Map getColumns() {
+			return this.columns;
+		}
+
+		/**
+		 * Returns <code>true</code> if the column can be ordered.
+		 * 
+		 * @param column
+		 *            the column name.
+		 * @return Returns <code>true</code> if the column can be ordered.
+		 */
+		public boolean isColumnOrdered(String column) {
+			return ((Boolean) this.columnOrders.get(column)).booleanValue();
+		}
 	}
 }

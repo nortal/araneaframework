@@ -17,10 +17,10 @@
 package org.araneaframework.uilib.list;
 
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.list.contrib.structure.ListStructure;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.formlist.FormListWidget;
 import org.araneaframework.uilib.list.formlist.FormRowHandler;
-import org.araneaframework.uilib.list.structure.ListStructure;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)

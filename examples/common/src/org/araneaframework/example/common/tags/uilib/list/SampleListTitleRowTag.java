@@ -26,10 +26,10 @@ import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.list.ListWidget;
-import org.araneaframework.uilib.list.OrderInfo;
-import org.araneaframework.uilib.list.OrderInfoField;
-import org.araneaframework.uilib.list.structure.ListColumn;
-import org.araneaframework.uilib.list.structure.ListStructure;
+import org.araneaframework.uilib.list.contrib.OrderInfo;
+import org.araneaframework.uilib.list.contrib.OrderInfoField;
+import org.araneaframework.uilib.list.contrib.structure.ListColumn;
+import org.araneaframework.uilib.list.contrib.structure.ListStructure;
 
 
 /**

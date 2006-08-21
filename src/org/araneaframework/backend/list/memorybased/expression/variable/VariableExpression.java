@@ -17,10 +17,9 @@
 package org.araneaframework.backend.list.memorybased.expression.variable;
 
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.Variable;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.backend.list.memorybased.Resolver;
 
-public class VariableExpression implements Expression, Variable {
+public class VariableExpression implements Expression {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -37,7 +36,7 @@ public class VariableExpression implements Expression, Variable {
 		return this.name;
 	}
 
-	public Object evaluate(VariableResolver resolver) {
-		return resolver.resolve(this);
+	public Object evaluate(Resolver resolver) {
+		return resolver.resolve(getName());
 	}
 }

@@ -17,8 +17,8 @@
 package org.araneaframework.backend.list.memorybased.expression.constant;
 
 import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.Value;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class ValueExpression implements Expression, Value {
 
@@ -45,7 +45,7 @@ public class ValueExpression implements Expression, Value {
 		return this.value;
 	}
 
-	public Object evaluate(VariableResolver resolver) {
+	public Object evaluate(Resolver resolver) {
 		return this.value;
 	}
 }

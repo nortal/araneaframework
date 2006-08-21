@@ -17,15 +17,15 @@
 package org.araneaframework.backend.list.helper.builder.compexpr;
 
 import java.util.Comparator;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.CompExprToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
-import org.araneaframework.backend.list.memorybased.Variable;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.compexpr.MultiComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.ReverseComparatorExpression;
-import org.araneaframework.backend.list.memorybased.compexpr.VariableComparatorExpression;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.backend.list.memorybased.compexpr.FieldComparatorExpression;
 import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 import org.araneaframework.backend.list.sqlexpr.order.SqlAscendingExpression;
@@ -39,20 +39,20 @@ public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuild
 	
 	static final Logger log = Logger.getLogger(StandardCompExprToSqlExprBuilder.class);
 	
-	protected VariableResolver mapper;
+	protected Resolver mapper;
 
 	public StandardCompExprToSqlExprBuilder() {
 		addTranslator(MultiComparatorExpression.class, new MultiComparatorTranslator());
-		addTranslator(VariableComparatorExpression.class, new VariableComparatorTranslator());
+		addTranslator(FieldComparatorExpression.class, new VariableComparatorTranslator());
 		addTranslator(ReverseComparatorExpression.class, new ReverseComparatorTranslator());
 	}
 
-	public void setMapper(VariableResolver mapper) {
+	public void setMapper(Resolver mapper) {
 		this.mapper = mapper;
 	}
 	
-	protected String resolveVariable(Variable variable) {
-		return this.mapper != null ? (String) this.mapper.resolve(variable) : variable.getName();
+	protected String resolveVariable(String variable) {
+		return this.mapper != null ? (String) this.mapper.resolve(variable) : variable;
 	}
 	
 	class MultiComparatorTranslator extends CompositeCompExprToSqlExprTranslator {
@@ -64,7 +64,7 @@ public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuild
 	class VariableComparatorTranslator implements CompExprToSqlExprTranslator {
 		public SqlExpression translate(ComparatorExpression expr, CompExprToSqlExprBuilder builder) {
 			log.debug("Translating VariableComparatorExpression");
-			VariableComparatorExpression compExpr = (VariableComparatorExpression) expr;
+			FieldComparatorExpression compExpr = (FieldComparatorExpression) expr;
 			return new SqlAscendingExpression(translateVariableComparatorInternal(compExpr));
 		}
 	}
@@ -73,13 +73,13 @@ public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuild
 		public SqlExpression translate(ComparatorExpression expr, CompExprToSqlExprBuilder builder) {
 			log.debug("Translating ReverseComparatorExpression");
 			ReverseComparatorExpression parent = (ReverseComparatorExpression) expr;
-			VariableComparatorExpression compExpr = (VariableComparatorExpression) parent.getChildren()[0];
+			FieldComparatorExpression compExpr = (FieldComparatorExpression) parent.getChildren()[0];
 			return new SqlDescendingExpression(translateVariableComparatorInternal(compExpr)); 
 		}
 	}
 	
-	SqlExpression translateVariableComparatorInternal(VariableComparatorExpression compExpr) {
-		SqlExpression temp = new SqlStringExpression(resolveVariable(compExpr));
+	SqlExpression translateVariableComparatorInternal(FieldComparatorExpression compExpr) {
+		SqlExpression temp = new SqlStringExpression(resolveVariable(compExpr.getName()));
 		Comparator comparator = compExpr.getComparator();
 		if (comparator instanceof NullComparator) {
 			comparator = ((NullComparator) comparator).getNotNullComparator();

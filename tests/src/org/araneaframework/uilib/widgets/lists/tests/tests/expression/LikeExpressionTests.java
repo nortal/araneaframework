@@ -20,8 +20,8 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.Value;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.backend.list.memorybased.expression.compare.LikeExpression;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockValueExpression;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
@@ -31,7 +31,7 @@ public class LikeExpressionTests extends TestCase {
 	private static final Logger log = Logger
 			.getLogger(LikeExpressionTests.class);
 
-	private VariableResolver resolver;
+	private Resolver resolver;
 
 	private Expression tom;
 	private Expression jerry;

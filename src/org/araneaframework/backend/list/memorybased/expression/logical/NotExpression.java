@@ -18,8 +18,8 @@ package org.araneaframework.backend.list.memorybased.expression.logical;
 
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class NotExpression implements CompositeExpression {
 
@@ -35,7 +35,7 @@ public class NotExpression implements CompositeExpression {
 		return new Expression[] { this.expr };
 	}
 
-	public Object evaluate(VariableResolver resolver)
+	public Object evaluate(Resolver resolver)
 			throws ExpressionEvaluationException {
 		Boolean childValue = (Boolean) this.expr.evaluate(resolver);
 		return new Boolean(!childValue.booleanValue());

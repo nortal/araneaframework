@@ -16,13 +16,12 @@
 
 package org.araneaframework.backend.list.memorybased;
 
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.backend.util.BeanMapper;
 
 /**
  * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
  */
-public class BeanVariableResolver implements VariableResolver {
+public class BeanVariableResolver implements Resolver {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,7 +37,7 @@ public class BeanVariableResolver implements VariableResolver {
 		this.bean = bean;
 	}
 
-	public Object resolve(Variable variable) {
-		return this.mapper.getFieldValue(this.bean, variable.getName());
+	public Object resolve(String variableName) {
+		return this.mapper.getFieldValue(this.bean, variableName);
 	}
 }

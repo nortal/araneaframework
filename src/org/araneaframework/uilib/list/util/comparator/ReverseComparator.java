@@ -23,7 +23,7 @@ import java.util.Comparator;
  * Comparator that reverses another <code>Comparator</code> by switching the
  * order of two comparable objects.
  */
-public class ReverseComparator implements Comparator, Serializable {
+class ReverseComparator implements Comparator, Serializable {
 
 	protected Comparator comparator;
 

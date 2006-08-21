@@ -31,9 +31,9 @@ import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.data.FileInfoData;
 import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.contrib.structure.ListColumn;
+import org.araneaframework.uilib.list.contrib.structure.ListStructure;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
-import org.araneaframework.uilib.list.structure.ListStructure;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.support.FileInfo;
 

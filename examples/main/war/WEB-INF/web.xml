@@ -48,8 +48,10 @@
       <url-pattern>/main/*</url-pattern>
    </servlet-mapping>
    
+   <!-- 
    <servlet-mapping>
       <servlet-name>lightweightJSP</servlet-name>
       <url-pattern>*.jsp</url-pattern>
    </servlet-mapping>
+    -->
 </web-app>

@@ -16,9 +16,12 @@
 
 package org.araneaframework.uilib.list.structure.filter.column;
 
+import java.util.Locale;
 import java.util.Map;
+
+import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
+import org.araneaframework.backend.list.memorybased.VariableResolver;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.GreaterThanExpression;
@@ -27,8 +30,11 @@ import org.araneaframework.backend.list.memorybased.expression.compare.LowerThan
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
+import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.list.structure.ComparableType;
 import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
+import org.araneaframework.uilib.list.util.CompareHelper;
 
 
 public abstract class SimpleColumnFilter extends ComparableType implements ColumnFilter {
@@ -36,7 +42,10 @@ public abstract class SimpleColumnFilter extends ComparableType implements Colum
 	private static final long serialVersionUID = 1L;
 	
 	private String columnId;
-	private String filterInfoKey;
+	
+	private ConfigurationContext conf;
+	private Locale locale;
+	private CompareHelper compareHelper;
 	
 	protected SimpleColumnFilter(String columnId) {
 		setColumnId(columnId);
@@ -51,52 +60,32 @@ public abstract class SimpleColumnFilter extends ComparableType implements Colum
 	}
 
 	public void setColumnId(String columnId) {
-		if (columnId == null) {
-			throw new RuntimeException("Column Id must be not null");
-		}
 		this.columnId = columnId;
-		if (this.filterInfoKey == null) {
-			this.filterInfoKey = columnId;
-		}
 	}
-
-	public String getFilterInfoKey() {
-		return this.filterInfoKey;
-	}
-
-	public void setFilterInfoKey(String filterInfoKey) {
-		this.filterInfoKey = filterInfoKey;
-	}	
 	
-	public Expression buildExpression(Map filterInfo) {
-		if (!isFilterActive(filterInfo)) {
-			return new AlwaysTrueExpression();
-		}
-		return buildAction(filterInfo, buildLeftOperand(filterInfo), buildRightOperand(filterInfo));
+	public void init(Environment environment) {
+		conf = (ConfigurationContext) environment.getEntry(ConfigurationContext.class);
+		locale = ((LocalizationContext) environment.getEntry(LocalizationContext.class)).getLocale();
 	}
 
-	protected boolean isFilterActive(Map filterInfo) {
-		if (this.filterInfoKey == null) {
-			throw new RuntimeException("FilterInfo key must be provided"); 
+	public Expression buildExpression(VariableResolver resolver) {
+		Object value = resolver.resolve(columnId);
+		if (value == null) {
+			return null;
 		}
-		return filterInfo.get(this.filterInfoKey) != null;
+		compareHelper = new CompareHelper(resolver.resolveType(columnId), conf, locale);		
+		return buildAction(resolver, buildLeftOperand(resolver), buildRightOperand(resolver));
 	}
 
-	protected Expression buildLeftOperand(Map filterInfo) {
-		if (this.columnId == null) {
-			throw new RuntimeException("Column Id must be provided"); 
-		}
+	protected Expression buildLeftOperand(VariableResolver resolver) {
 		return new VariableExpression(this.columnId);
 	}
-
-	protected Expression buildRightOperand(Map filterInfo) {
-		if (this.filterInfoKey == null) {
-			throw new RuntimeException("FilterInfo key must be provided"); 
-		}
-		return new ValueExpression(this.filterInfoKey, filterInfo.get(this.filterInfoKey));
+	
+	protected Expression buildRightOperand(VariableResolver resolver) {
+		return new ValueExpression(this.columnId, resolver.resolve(this.columnId));
 	}
 	
-	protected abstract Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand);
+	protected abstract Expression buildAction(VariableResolver resolver, Expression leftOperand, Expression rightOperand);
 	
 	/*
 	 * Subclasses

@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.string.ConcatenationExpression;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockValueExpression;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
@@ -30,7 +30,7 @@ public class StringExpressionTests extends TestCase {
 	private static final Logger log = Logger
 			.getLogger(StringExpressionTests.class);
 
-	private VariableResolver resolver;
+	private Resolver resolver;
 
 	private Expression part1expr;
 	private Expression part2expr;

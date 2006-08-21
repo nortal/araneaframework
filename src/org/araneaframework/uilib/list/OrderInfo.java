@@ -17,46 +17,61 @@
 package org.araneaframework.uilib.list;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang.Validate;
 
 /**
  * This class represents the ordering information supplied by user in a series
  * of UI interactions.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class OrderInfo implements Serializable {
-
-	protected List fields = new ArrayList();
+	
+	/** Ascending order */
+	public static final Boolean ASCENDING = Boolean.FALSE;
+	/** Descending order */
+	public static final Boolean DESCENDING = Boolean.TRUE;
+	
+	private LinkedHashMap fields = new LinkedHashMap();
+	
+	/**
+	 * Adds an ordering field.
+	 * 
+	 * @param fieldId
+	 *            an ordering field Id.
+	 * @param direction
+	 *            the ordering direction
+	 *            ({@link #ASCENDING} or {@value #DESCENDING}).
+	 */
+	public void addField(String fieldId, Boolean direction) {
+		Validate.notNull(fieldId, "No field Id specified");
+		Validate.notNull(direction, "No direction specified");
+		Validate.isTrue(!fields.containsKey(fieldId), "Duplicate fields are not allowed");
+		
+		this.fields.put(fieldId, direction);
+	}
 
 	/**
 	 * Returns the ordering fields.
 	 * 
-	 * @return the ordering fields.
+	 * @return <code>Map&lt;String,Boolean&gt;</code> the ordering fields.
 	 */
-	public List getFields() {
+	public LinkedHashMap getFields() {
 		return this.fields;
 	}
-
+	
 	/**
 	 * Clears ordering fields.
 	 */
-	public void clearFields() {
+	public void clear() {
 		this.fields.clear();
 	}
-
-	/**
-	 * Adds an ordering field.
-	 * 
-	 * @param field
-	 *            an ordering field.
-	 */
-	public void addField(OrderInfoField field) {
-		this.fields.add(field);
-	}
-
+	
 	/**
 	 * Returns view model.
 	 * 
@@ -72,15 +87,13 @@ public class OrderInfo implements Serializable {
 	 * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
 	 */
 	public class ViewModel {
-		private List fields = new ArrayList();
+		private LinkedHashMap fields;
 
 		/**
 		 * Takes a snapshot of outer class state.
 		 */
 		public ViewModel() {
-			for (Iterator i = OrderInfo.this.fields.iterator(); i.hasNext();) {
-				this.fields.add(((OrderInfoField) i.next()).getViewModel());
-			}
+			this.fields = OrderInfo.this.fields;
 		}
 
 		/**
@@ -88,21 +101,21 @@ public class OrderInfo implements Serializable {
 		 * 
 		 * @return the ordering fields.
 		 */
-		public List getFields() {
+		public LinkedHashMap getFields() {
 			return this.fields;
 		}
 	}
 	
 	public String toString() {
-		StringBuffer sb = new StringBuffer("OrderInfo (");
-		for (Iterator i = this.fields.iterator(); i.hasNext();) {
-			OrderInfoField field = (OrderInfoField) i.next();
-			sb.append(field.toString());
+		StringBuffer sb = new StringBuffer("OrderInfo: ");
+		for (Iterator i = this.fields.entrySet().iterator(); i.hasNext();) {
+			Map.Entry entry = (Entry) i.next();			
+			sb.append(entry.getKey().toString());			
+			sb.append(ASCENDING.equals(entry.getValue()) ? " ASC" : " DESC");
 			if (i.hasNext()) {
 				sb.append("; ");				
 			}
 		}
-		sb.append(")");
 		return sb.toString();	
 	}
 }

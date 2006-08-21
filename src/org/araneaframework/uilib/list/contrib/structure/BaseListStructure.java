@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure;
+package org.araneaframework.uilib.list.contrib.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +23,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
-import org.araneaframework.uilib.list.structure.order.MultiColumnOrder;
+import org.araneaframework.uilib.list.contrib.structure.ListColumn.ViewModel;
+import org.araneaframework.uilib.list.contrib.structure.order.MultiColumnOrder;
+import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.uilib.list.structure.ListOrder;
 
 public class BaseListStructure implements Serializable {
 

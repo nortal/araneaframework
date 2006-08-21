@@ -19,16 +19,17 @@ package org.araneaframework.uilib.widgets.lists.tests.tests;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 import junit.framework.TestCase;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.helper.builder.expression.StandardExpressionToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
-import org.araneaframework.backend.list.memorybased.Variable;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.Value;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.uilib.list.structure.ListFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
@@ -54,15 +55,15 @@ public class SimpleListFilterTest extends TestCase {
 		Expression expr = filter.buildExpression(data);
 
 		// evaluate expression in memory
-		Object value = expr.evaluate(new VariableResolver() {
-			public Object resolve(Variable variable) {
-				if (variable.getName().equals("name")) {
+		Object value = expr.evaluate(new Resolver() {
+			public Object resolve(String variableName) {
+				if (variableName.equals("name")) {
 					return "James Bond";
 				}
-				if (variable.getName().equals("age")) {
+				if (variableName.equals("age")) {
 					return new Long(30);
 				}
-				if (variable.getName().equals("licenseToKill")) {
+				if (variableName.equals("licenseToKill")) {
 					return Boolean.TRUE;
 				}
 				return null;
@@ -71,9 +72,9 @@ public class SimpleListFilterTest extends TestCase {
 		assertEquals(value, Boolean.TRUE);
 
 		// evaluate expression in memory
-		value = expr.evaluate(new VariableResolver() {
-			public Object resolve(Variable variable) {
-				if (variable.getName().equals("name")) {
+		value = expr.evaluate(new Resolver() {
+			public Object resolve(String variableName) {
+				if (variableName.equals("name")) {
 					return "Bond, James";
 				}
 				return null;
@@ -83,15 +84,15 @@ public class SimpleListFilterTest extends TestCase {
 
 		// build sql expression
 		StandardExpressionToSqlExprBuilder builder = new StandardExpressionToSqlExprBuilder();
-		builder.setMapper(new VariableResolver() {
-			public Object resolve(Variable variable) {
-				if ("name".equals(variable.getName())) {
+		builder.setMapper(new Resolver() {
+			public Object resolve(String variableName) {
+				if ("name".equals(variableName)) {
 					return "AGENT.NAME";
 				}
-				if ("age".equals(variable.getName())) {
+				if ("age".equals(variableName)) {
 					return "AGENT.AGE";
 				}
-				if ("licenseToKill".equals(variable.getName())) {
+				if ("licenseToKill".equals(variableName)) {
 					return "AGENT.KILLER";
 				}
 				return null;

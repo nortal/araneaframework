@@ -17,8 +17,8 @@
 package org.araneaframework.uilib.widgets.lists.tests.mock;
 
 import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.Value;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class MockValueExpression implements Expression, Value {
 	private static final long serialVersionUID = 1L;
@@ -37,7 +37,7 @@ public class MockValueExpression implements Expression, Value {
 		return this.value;
 	}
 
-	public Object evaluate(VariableResolver resolver) {
+	public Object evaluate(Resolver resolver) {
 		return this.value;
 	}
 }

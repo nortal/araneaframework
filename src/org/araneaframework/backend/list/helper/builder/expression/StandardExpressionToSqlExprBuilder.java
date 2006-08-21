@@ -20,11 +20,10 @@ import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilder;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.Variable;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.GreaterThanExpression;
@@ -56,7 +55,7 @@ import org.araneaframework.backend.list.sqlexpr.string.SqlUpperExpression;
 
 public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprBuilder {
 	
-	protected VariableResolver mapper;
+	protected Resolver mapper;
 	
 	protected ValueConverter converter; 
 	
@@ -81,7 +80,7 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 		this.converter = converter;
 	}
 
-	public void setMapper(VariableResolver mapper) {
+	public void setMapper(Resolver mapper) {
 		this.mapper = mapper;
 	}
 
@@ -89,8 +88,8 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 		return this.converter != null ? this.converter.convert(value) : value.getValue();
 	}
 	
-	protected String resolveVariable(Variable variable) {
-		return this.mapper != null ? (String) this.mapper.resolve(variable) : variable.getName();
+	protected String resolveVariable(String variable) {
+		return this.mapper != null ? (String) this.mapper.resolve(variable) : variable;
 	}
 	
 	// constant
@@ -103,7 +102,7 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 	
 	class VariableTranslator implements ExprToSqlExprTranslator {
 		public SqlExpression translate(Expression expr, ExpressionToSqlExprBuilder builder) { 
-			return new SqlStringExpression(resolveVariable((Variable) expr));
+			return new SqlStringExpression(resolveVariable(((VariableExpression) expr).getName()));
 		}
 	}	
 	

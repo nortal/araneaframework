@@ -17,14 +17,13 @@
 package org.araneaframework.backend.list.memorybased;
 
 import java.io.Serializable;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 
 /**
  * Expression that compares two <code>Variables</code> using two
  * <code>VariableResolvers</code> for evaluating these Variables.
  * 
- * @see org.araneaframework.backend.list.memorybased.expression.VariableResolver
+ * @see org.araneaframework.backend.list.memorybased.Resolver
  */
 public interface ComparatorExpression extends Serializable {
 	/**
@@ -44,6 +43,6 @@ public interface ComparatorExpression extends Serializable {
 	 * @throws ExpressionEvaluationException
 	 *             when the comparation fails.
 	 */
-	int compare(VariableResolver resolver1, VariableResolver resolver2)
+	int compare(Resolver resolver1, Resolver resolver2)
 			throws ExpressionEvaluationException;
 }

@@ -19,15 +19,15 @@ package org.araneaframework.backend.list.memorybased.expression.string;
 import java.util.Iterator;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 
 public class ConcatenationExpression extends MultiExpression {
 
 	private static final long serialVersionUID = 1L;
 
-	public Object evaluate(VariableResolver resolver)
+	public Object evaluate(Resolver resolver)
 			throws ExpressionEvaluationException {
 		if (this.children.size() == 0) {
 			throw new ExpressionEvaluationException(

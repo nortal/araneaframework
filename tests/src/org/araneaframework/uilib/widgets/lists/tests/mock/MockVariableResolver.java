@@ -18,11 +18,11 @@ package org.araneaframework.uilib.widgets.lists.tests.mock;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.araneaframework.backend.list.memorybased.Variable;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+
+import org.araneaframework.backend.list.memorybased.Resolver;
 
 
-public class MockVariableResolver implements VariableResolver {
+public class MockVariableResolver implements Resolver {
 	protected Map variables = new HashMap();
 
 	public MockVariableResolver(Map variables) {
@@ -38,15 +38,15 @@ public class MockVariableResolver implements VariableResolver {
 		this.variables = null;
 	}
 
-	public Object resolve(Variable variable) {
+	public Object resolve(String variableName) {
 		if (this.variables == null) {
 			throw new RuntimeException("Variable resolving not supported");
 		}
-		Object value = this.variables.get(variable.getName());
+		Object value = this.variables.get(variableName);
 		if (value != null) {
 			return value;
 		}
-		throw new RuntimeException("Variable " + variable.getName()
+		throw new RuntimeException("Variable " + variableName
 				+ " not supported");
 	}
 }

@@ -18,7 +18,7 @@ package org.araneaframework.backend.list.memorybased.compexpr;
 
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.backend.list.memorybased.Resolver;
 
 /**
  * ComparatorExpression that reverses another ComparatorExpression comparation
@@ -38,7 +38,7 @@ public class ReverseComparatorExpression implements
 		this.expression = expression;
 	}
 
-	public int compare(VariableResolver resolver1, VariableResolver resolver2)
+	public int compare(Resolver resolver1, Resolver resolver2)
 			throws ExpressionEvaluationException {
 		return this.expression.compare(resolver2, resolver1);
 	}

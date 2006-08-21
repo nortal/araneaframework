@@ -18,7 +18,7 @@ package org.araneaframework.uilib.widgets.lists.tests.tests.expression;
 
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.procedure.ProcedureExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
@@ -28,7 +28,7 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 public class ExpressionTests extends TestCase {
 	private static final Logger log = Logger.getLogger(ExpressionTests.class);
 
-	private VariableResolver resolver;
+	private Resolver resolver;
 
 	public void setUp() {
 		this.resolver = new MockVariableResolver();

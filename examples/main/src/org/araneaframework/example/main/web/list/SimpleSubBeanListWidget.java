@@ -25,8 +25,8 @@ import org.araneaframework.example.main.business.model.GeneralMO;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.contrib.structure.ListColumn;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 

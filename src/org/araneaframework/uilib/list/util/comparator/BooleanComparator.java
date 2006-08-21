@@ -22,7 +22,7 @@ import java.util.Comparator;
 /**
  * Not-null comparator that compares <code>Boolean</code> values.
  */
-public class BooleanComparator implements Comparator, Serializable {
+class BooleanComparator implements Comparator, Serializable {
 	public static final Comparator TRUE_FIRST = new BooleanComparator(true);
 	public static final Comparator FALSE_FIRST = new BooleanComparator(false);
 

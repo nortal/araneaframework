@@ -40,7 +40,7 @@ import org.araneaframework.backend.list.helper.reader.DefaultResultSetColumnRead
 import org.araneaframework.backend.list.helper.reader.ResultSetColumnReader;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
@@ -1279,7 +1279,7 @@ public abstract class ListSqlHelper {
 	 *         Variable names to their Database Field names according to the
 	 *         previously set mapping.
 	 */
-	protected VariableResolver createExpressionBuilderResolver() {
+	protected Resolver createExpressionBuilderResolver() {
 		Map map = new HashMap();
 
 		Iterator i = this.variableToDbFieldMapping.keySet().iterator();

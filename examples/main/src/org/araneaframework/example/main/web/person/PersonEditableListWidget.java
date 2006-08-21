@@ -31,6 +31,7 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
+import org.araneaframework.uilib.list.contrib.structure.ListColumn;
 import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
@@ -40,7 +41,6 @@ import org.araneaframework.uilib.list.formlist.FormRow;
 import org.araneaframework.uilib.list.formlist.FormRowHandler;
 import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
-import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 

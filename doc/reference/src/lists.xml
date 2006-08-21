@@ -21,7 +21,7 @@
 		<title>Introduction</title>
 		
 		<para>
-			A common task in web applications is displaying tables. This is a simple task if the tables are small and do not contain a lot of rows. The whole table can be visible at once and there is no need split the data into pages as well as provide an option to order the table by new column or display a search form that can be used to filter the data. In such cases where these features must be available, Aranea provides widget <classname>org.araneaframework.uilib.list.ListWidget</classname> and some support classes. In this chapter we will introduce these widgets and supporting API and show how to use and extend them.
+			A common task in web applications is displaying tables. This is a simple task if the tables are small and do not contain a lot of rows. The whole table can be visible at once and there is no need to split the data into pages as well as provide an option to order the table by new column or display a search form that can be used to filter the data. In such cases where these features must be available, Aranea provides widget <classname>org.araneaframework.uilib.list.ListWidget</classname> and some support classes. In this chapter we will introduce these widgets and supporting API and show how to use and extend them.
 		</para>
 		<para>
 			<classname>ListWidget</classname> is used to define the list columns, the way the list can be filtered and ordered, how many items are shown per pages etc. <classname>ListWidget</classname> uses <classname>org.araneaframework.uilib.list.dataprovider.ListDataProvider</classname> to get the current list items range that also match with the current filter and order conditions. <classname>ListDataProvider</classname> can cache whole table and provide the <classname>ListWidget</classname> with the apropriate item range or fetch only the specific item range from database. Aranea provides two implementations:
@@ -53,12 +53,9 @@ protected void init() {
   ...
   myList = new BeanListWidget(MyModel.class);
 
-  myList.addBeanColumn("name", "#Name", true,
-    new SimpleColumnFilter.Like(), new TextControl());
-  myList.addBeanColumn("surname", "#Last name", true,
-    new SimpleColumnFilter.Like(), new TextControl());
-  myList.addBeanColumn("phone", "#Phone no", true,
-    new SimpleColumnFilter.Like(), new TextControl());
+  myList.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
+  myList.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
+  myList.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
   ...
   myList.setInitialOrder("name", true);
   myList.setListDataProvider(new MyListDataProvider());  
@@ -231,21 +228,63 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 			</para>
 			
 			<para>
-				Notice that <classname>BackendListDataProvider</classname> actually do not depend on using databases. It just provides a simple <emphasis>query</emphasis> object and expects a simple result to be returned. Thus, you have the power to use it as you like. At the same, Aranea provides a very useful class <classname>org.araneaframework.backend.list.helper.ListSqlHelper</classname> that generate SQL statements and fetches the results from database. We strongly recommend it together with its subclasses that support different database systems. Currently <literal>Oracle</literal> and <literal>HSQL</literal> databases are supported.
+				Notice that <classname>BackendListDataProvider</classname> actually do not depend on using databases. It just provides a simple <emphasis>query</emphasis> object and expects a simple result to be returned. Thus, you have the power to use it as you like. At the same, Aranea provides a very useful class <classname>org.araneaframework.backend.list.helper.ListSqlHelper</classname> that generate SQL statements and fetches the results from database. We strongly recommend it together with its subclasses that support different database systems. Currently <literal>Oracle</literal> (<classname>OracleListSqlHelper</classname>) and <literal>HSQL</literal> (<classname>HsqlListSqlHelper</classname>) databases are supported.
 			</para>
 			
 			<para>
-				The following example discovers using an <literal>Oracle</literal>-based data providing with <classname>OracleListSqlHelper</classname> (a subclass of <classname>ListSqlHelper</classname>). The following code should be in a service class instead of previously discovered Widget:
+				The following example discovers the simplest usage of <classname>ListSqlHelper</classname>. The following code should be in a service class instead of previously discovered Widget:
 <programlisting role="java">public class MyService {
   ...
   private DataSource dataSource;
   ...
-  public ListItemsData findMyModel(ListQuery query) throws Exception {
-    OracleListSqlHelper helper = new OracleListSqlHelper(query);
+  public ListItemsData findMyModel(ListQuery query) {
+    ListSqlHelper helper = new OracleListSqlHelper(this.dataSource, query);
 
-    helper.setColumnMapping("name", "NAME");
-    helper.setColumnMapping("surname", "SURNAME");
-    helper.setColumnMapping("phone", "PHONE_NO");
+    helper.addMapping("name", "NAME");
+    helper.addMapping("surname", "SURNAME");
+    helper.addMapping("phone", "PHONE_NO");
+
+    helper.setSimpleSqlQuery("PERSON");
+    return helper.execute(MyModel.class);
+  }
+  ...
+}</programlisting>
+			</para>
+			
+			<para>
+				Method <literal>ListItemsData findMyModel(ListQuery query)</literal> does the following:
+				<variablelist spacing="compact">
+					<varlistentry>
+						<term>Constructs and initializes the helper</term>
+						<listitem>The line <literal>ListSqlHelper helper = new OracleListSqlHelper(this.dataSource, query)</literal> constructs <classname>OracleListSqlHelper</classname> - an Oracle specific <classname>ListSqlHelper</classname> - and passes it the <classname>DataSource</classname> and <classname>ListQuery</classname> data.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Adds column mappings</term>
+						<listitem>The line <literal>helper.addMapping("name", "NAME")</literal> defines that identifier of column "name" will be converted into <literal>"NAME"</literal> when used in an SQL statement. There may be lot of differnece between JavaBean properies names and database fields names. The same database identifier (<literal>"NAME"</literal>) is used when fetching data from <classname>ResultSet</classname> by default. This could also have another identifier set by providing it as the third argument.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Provides the helper with a simple SQL query</term>
+						<listitem>The line <literal>helper.setSimpleSqlQuery("PERSON")</literal> sets the whole SQL query with parameters using only the given database table name. Filtering and ordering is added automatically according to the <classname>ListQuery</classname> data.</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Executes the query and retreive the data</term>
+						<listitem>The line <literal>return helper.execute(MyModel.class)</literal> executes and retrieves data of both total count and items range queries. The <classname>ResultSet</classname> is read using the dafault <classname>BeanResultReader</classname>.</listitem>
+					</varlistentry>
+				</variablelist>
+			</para>
+			
+			<para>
+				The following example discovers the custom usage of <classname>ListSqlHelper</classname>.
+<programlisting role="java">public class MyService {
+  ...
+  private DataSource dataSource;
+  ...
+  public ListItemsData findMyModel(ListQuery query) {
+    ListSqlHelper helper = new OracleListSqlHelper(this.dataSource, query);
+
+    helper.addMapping("name", "NAME");
+    helper.addMapping("surname", "SURNAME");
+    helper.addMapping("phone", "PHONE_NO");
 
     StringBuffer s = new StringBuffer();
     s.append("SELECT ");
@@ -258,27 +297,22 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
     helper.addStatementParams(helper.getDatabaseFilterParams());
     helper.addStatementParams(helper.getDatabaseOrderParams());
 
-    ListItemsData data;
-    try {
-      helper.setDataSource(this.dataSource);
-      helper.execute();
-      data = helper.getListItemsData(MyModel.class);
-    } finally {
-      helper.close();
-    }
-    return data;
+    return helper.execute(MyModel.class);
   }
   ...
-}</programlisting>
+}</programlisting>			
+			</para>
+			
+			<para>
 				Method <literal>ListItemsData findMyModel(ListQuery query)</literal> does the following:
 				<variablelist spacing="compact">
 					<varlistentry>
-						<term>Constructs the helper</term>
-						<listitem>The line <literal>OracleListSqlHelper helper = new OracleListSqlHelper(query)</literal> constructs <classname>OracleListSqlHelper</classname> and passes it <classname>ListQuery</classname> data.</listitem>
+						<term>Constructs and initializes the helper</term>
+						<listitem>The line <literal>ListSqlHelper helper = new OracleListSqlHelper(this.dataSource, query)</literal> constructs <classname>OracleListSqlHelper</classname> - an Oracle specific <classname>ListSqlHelper</classname> - and passes it the <classname>DataSource</classname> and <classname>ListQuery</classname> data.</listitem>
 					</varlistentry>
 					<varlistentry>
 						<term>Adds column mappings</term>
-						<listitem>The line <literal>helper.setColumnMapping("name", "NAME")</literal> defines that identifier of column "name" will be converted into <literal>"NAME"</literal> when used in an SQL statement. There may be lot of differnece between JavaBean properies names and database fields names. The same database identifier (<literal>"NAME"</literal>) is used when fetching data from <classname>ResultSet</classname> by default. This could also have another identifier set by providing it as the third argument.</listitem>
+						<listitem>The line <literal>helper.addMapping("name", "NAME")</literal> defines that identifier of column "name" will be converted into <literal>"NAME"</literal> when used in an SQL statement. There may be lot of differnece between JavaBean properies names and database fields names. The same database identifier (<literal>"NAME"</literal>) is used when fetching data from <classname>ResultSet</classname> by default. This could also have another identifier set by providing it as the third argument.</listitem>
 					</varlistentry>										
 					<varlistentry>
 						<term>Gets SQL substrings from the helper</term>
@@ -297,24 +331,130 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 						<listitem>The line <literal>helper.setSqlQuery(...)</literal> sets the SQL string and the line <literal>helper.addStatementParams(...)</literal> adds the query parameters (<classname>ListSqlHelper</classname> uses <classname>PreparedStatement</classname>s). Of course, the order of parameters must match with the SQL string.</listitem>
 					</varlistentry>
 					<varlistentry>
-						<term>Provides the helper with <classname>DataSource</classname></term>
-						<listitem>This could also be done before but not later.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Executes the queries</term>
-						<listitem>The line <literal>helper.execute()</literal> executes both range count and getting range items queries. The <classname>ResultSet</classname> of the latter is let open.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Reads the results</term>
-						<listitem>The line <literal>helper.getListItemsData(MyModel.class)</literal> iterates through <classname>ResultSet</classname> and returns the JavaBean list that holds the data. It also returns the total items count. All this is encapsulated into <classname>ListItemsData</classname> object.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Close the database connection</term>
-						<listitem>This must be always done in <literal>finally</literal> clause.</listitem>
+						<term>Executes the query and retreive the data</term>
+						<listitem>The line <literal>return helper.execute(MyModel.class)</literal> executes and retrieves data of both total count and items range queries. The <classname>ResultSet</classname> is read using the dafault <classname>BeanResultReader</classname>.</listitem>
 					</varlistentry>
 				</variablelist>
-				<classname>ListSqlHelper</classname> is designed to be flexible remaining simple to be used. Note that the query that is constucted here start with the term <literal>"SELECT"</literal>. For example, <classname>HSqlListSqlHelper</classname> must be provided with the rest of <literal>SELECT</literal> clause without passing it the term <literal>"SELECT"</literal> itself. This ensures that the items count nad items range queries are always constructed correctly.
 			</para>
+			
+			<sect3>
+                <title>ListSqlHelepr mappings and converters</title>
+                
+                <para>
+                	All Aranea List filters that are propagated with values from the filter form construct an expression chain. This chain is built each time any condition is changed. E.g if one is searching for pesons whose birthday is betwwen July 6th, 1950 and Sept 2nd, 1990 then there's one value 'Birthday' and two values 'July 6th, 1950' and 'Sept 2nd, 1990' which have 'Birthday_start' and 'Birthday_end' as names.
+                	Ordering the list is done the same.
+                	When retreiving data from database all these information must be consifered to build an appropriate query. Therefore all these variables must be mapped to database fields.
+                	When reading the query results Bean fields must be mapped to <code>ResultSet</code> columns. In general, these Bean fields match exactly with the variables. But considering more specific cases, they are not assumed to be the same.
+                </para>
+                <para>
+                	The following list covers the terms that are used when configuring <code>ListSqlHelper</code>:
+                	
+                	<variablelist>
+                		<varlistentry>
+                			<term>Expression variable</term>
+	                		<listitem>Variables can be thought as list columns that are used in filtering and ordering the list. Variable's name can be for example 'Birthday'.</listitem>
+                		</varlistentry>
+                		<varlistentry>
+                			<term>Expression value</term>
+	                		<listitem>Values are the temporary information in the list filtering. '1980-08-21' is a value. 'Birthday_start' is a name of a value. In simple cases each variable matches with one value. In case of the range filter two different values (start and end of the range) are used. Also one value can be used together with two or more variables.
+	                		A value identifier is used for optional converting before using it in a query. This is done by adding a <code>Converter</code> object to <code>ListSqlHelper</code>. E.g. booleans have to be converted into numeric (0 or 1) values.</listitem>
+                		</varlistentry>
+                		<varlistentry>
+                			<term>Database field</term>
+	                		<listitem>Database field can be for example 'age' or 'company.name' as well as 'MAX(price)' or '(SELECT(COUNT(*) FROM document WHERE userId = user.id)' (an inner SELECT) - any expression that is part of a SQL string.</listitem>
+                		</varlistentry>
+                		<varlistentry>
+                			<term>Database field alias</term>
+	                		<listitem>Database field alias is for example 'name', 'total_price' etc. It's just an identifier not a whole expression. In <code>ListSqlHelper</code> one can assign an alias for each database field or have it automatically generated. The result of a query is a table - a <code>ResultSet</code> - which columns have the same names as the aliases in the query. An alias can also be used in a custom filter condition (WHERE cluase) to identify the same database field or expression that was added in the SELECT clause.</listitem>
+                		</varlistentry>
+                		<varlistentry>
+                			<term>ResultSet column</term>
+	                		<listitem><code>ResultSet</code> is a table that is retrieved from database as a result of executing the query. Generally all the columns that where added in a SELECT can be retreived from the ResultSet by their aliases. But the ResultSet can also contain additional database-specific data such as <code>rownum</code> etc.
+	                		ResultSet column can also be assigned a <code>Converter</code>. E.g. to convert numberic value into a Boolean. Here is the Converter used reversely.</listitem>
+                		</varlistentry>
+                		<varlistentry>
+                			<term>Bean field</term>
+	                		<listitem>Bean field (or property) is for example 'phone' or 'address.city' that is an instance field of a Java object. During the ResultSet reading new instance of the given type is created and its fields are propagated with values. E.g. 'phone' is assigned by calling setPhone(String phone), 'address.city' is assigned by calling setAddress(new Address()) (if getAddress() == null) and getAddress().setCity(String city).</listitem>
+                		</varlistentry>
+                	</variablelist>
+                </para>
+
+				<para>
+	                <literal>ListSqlHelepr</literal> methods for configuring mappings:
+	                
+			        <informaltable frame="all">
+			          <tgroup cols="2">
+			            <colspec colwidth="2*"/>
+			            <colspec colwidth="3*"/>
+			            <thead>
+			              <row>
+			                <entry>Method</entry>
+			                <entry>Purpose</entry>
+			              </row>
+			            </thead>
+			            <tbody>
+			              <row>
+			                <entry><literal>addMapping(String variable, String dbField, String dbAlias, String beanField)</literal></entry>
+			                <entry>Adds mapping between expression variable, database field and Bean field. Database field alias and Bean field are assigned manually.</entry>
+			              </row>
+			              <row>
+			                <entry><literal>addMapping(String variable, String dbField, String dbAlias)</literal></entry>
+			                <entry>Adds mapping between expression variable, database field and Bean field. Database field alias is assigned manually. Bean field is assigned the same as the variable.</entry>
+			              </row>
+			              <row>
+			                <entry><literal>addMapping(String variable, String dbField)</literal></entry>
+			                <entry>Adds mapping between expression variable, database field and Bean field. Database field alias is generated automatically. Bean field is assigned the same as the variable. (mostly used)</entry>
+			              </row>
+			              <row>
+			                <entry><literal>addDatabaseFieldMapping(String variable, String dbField, String dbAlias)</literal></entry>
+			                <entry>Adds mapping between expression variable and database field. Database field alias is assigned manually.</entry>
+			              </row>
+			              <row>
+			                <entry><literal>addDatabaseFieldMapping(String variable, String dbField)</literal></entry>
+			                <entry>Adds mapping between expression variable and database field. Database field alias is generated automatically.</entry>
+			              </row>
+			              <row>
+			                <entry><literal>addResultSetMapping(String rsColumn, String beanField)</literal></entry>
+			                <entry>Adds mapping between <code>ResultSet</code> column (matches with database field alias) and Bean field. (rarely used)</entry>
+			              </row>
+			            </tbody>
+			          </tgroup>
+			        </informaltable>
+				</para>
+
+				<para>
+	                <literal>ListSqlHelepr</literal> methods for configuring converters:
+	                
+			        <informaltable frame="all">
+			          <tgroup cols="2">
+			            <colspec colwidth="2*"/>
+			            <colspec colwidth="3*"/>
+			            <thead>
+			              <row>
+			                <entry>Method</entry>
+			                <entry>Purpose</entry>
+			              </row>
+			            </thead>
+			            <tbody>
+			              <row>
+			                <entry><literal>addDatabaseFieldConverter(String value, Converter converter)</literal></entry>
+			                <entry>Adds converter for expression value.</entry>
+			              </row>
+			              <row>
+			                <entry><literal>addResultSetDeconverterForBeanField(String beanField, Converter converter)</literal></entry>
+			                <entry>Adds deconverter for <code>ResultSet</code> column by Bean field that is mapped with that Column.</entry>
+			              </row>
+			              <row>
+			                <entry><literal>addResultSetDeconverterForColumn(String rsColumn, Converter converter)</literal></entry>
+			                <entry>Adds deconverter for <code>ResultSet</code> column.</entry>
+			              </row>
+			            </tbody>
+			          </tgroup>
+			        </informaltable>
+				</para>
+		        			
+			</sect3>			
+			
 		</sect2>
 	</sect1>
 

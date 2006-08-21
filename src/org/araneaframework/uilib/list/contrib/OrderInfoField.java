@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list;
+package org.araneaframework.uilib.list.contrib;
 
 import java.io.Serializable;
 

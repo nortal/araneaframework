@@ -20,10 +20,10 @@ import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
+import org.araneaframework.uilib.list.contrib.structure.order.ColumnOrder;
+import org.araneaframework.uilib.list.contrib.structure.order.SimpleColumnOrder;
 import org.araneaframework.uilib.list.structure.ComparableType;
 import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
-import org.araneaframework.uilib.list.structure.order.ColumnOrder;
-import org.araneaframework.uilib.list.structure.order.SimpleColumnOrder;
 import org.araneaframework.uilib.list.util.RecursiveFormUtil;
 
 

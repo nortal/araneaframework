@@ -69,9 +69,19 @@ public interface ConfigurationContext extends Serializable {
   public static final String LIST_PRESERVE_STARTING_ROW = "uilib.widgets.lists.DefaultPreserveStartingRow";
   
   /**
-   * <code>FilterFormBuilderVisitor.Configurator</code> that configures the built filter form elements.
+   * <code>Boolean</code> that controls whether Boolean.<code>true</code> is lower than Boolean.<code>false</code>. 
    */
-  public static final String LIST_FILTER_CONFIGURATOR = "uilib.widgets.lists.ListFilterConfigurator";  
+  public static final String COMPARATOR_TRUE_FIRST = "uilib.widgets.lists.comparators.TrueFirst";  
+  
+  /**
+   * <code>Boolean</code> that controls whether nulls are higher than not-null values. 
+   */
+  public static final String COMPARATOR_NULLS_ARE_HIGH = "uilib.widgets.lists.comparators.nullsAreHigh";  
+  
+  /**
+   * <code>Boolean</code> that controls whether to campare {@link String}s case insensitive. 
+   */
+  public static final String COMPARATOR_IGNORE_CASE = "uilib.widgets.lists.comparators.ignoreCase";  
   
   /**
    * {@link org.araneaframework.uilib.form.control.AutoCompleteTextControl.ResponseBuilder} that configures how

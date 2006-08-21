@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
-import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.backend.list.memorybased.Resolver;
 import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.NotExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
@@ -32,7 +32,7 @@ public class LogicalExpressionTests extends TestCase {
 	private static final Logger log = Logger
 			.getLogger(LogicalExpressionTests.class);
 
-	private VariableResolver resolver;
+	private Resolver resolver;
 
 	private Expression trueExpr;
 	private Expression falseExpr;
