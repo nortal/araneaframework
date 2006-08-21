@@ -32,6 +32,7 @@ public class StandardServletOutputDataTests extends TestCase {
   private MockHttpServletRequest req;
   private MockHttpServletResponse resp;
   
+  /*
   public void setUp() {
     req = new MockHttpServletRequest();
     resp = new MockHttpServletResponse();
@@ -83,5 +84,5 @@ public class StandardServletOutputDataTests extends TestCase {
   public void testGetAttributeKeys() {
     out.pushAttribute("foo","bar");
     assertEquals("foo", out.getAttributes().keySet().iterator().next());
-  }
+  }*/
 }

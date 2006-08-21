@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.dataprovider;
 
 import java.io.Serializable;
-
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;

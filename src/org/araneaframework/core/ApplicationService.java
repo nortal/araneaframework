@@ -5,7 +5,6 @@ import java.util.Map;
 import org.araneaframework.Service;
 import org.araneaframework.Composite.CompositeService;
 import org.araneaframework.Viewable.ViewableService;
-import org.araneaframework.core.ApplicationComponent.ComponentViewModel;
 
 /**
  * A Service Component.

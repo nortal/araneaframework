@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.widgets.lists.tests.tests.expression;
 
 import junit.framework.TestCase;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;

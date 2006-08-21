@@ -4,7 +4,6 @@ import java.io.Serializable;
 import org.araneaframework.Widget;
 import org.araneaframework.Composite.CompositeWidget;
 import org.araneaframework.Viewable.ViewableWidget;
-import org.araneaframework.core.ApplicationService.ServiceViewModel;
 
 /**
  * A Widget Component.

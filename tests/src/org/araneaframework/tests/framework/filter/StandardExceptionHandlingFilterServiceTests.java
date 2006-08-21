@@ -25,7 +25,7 @@ import org.araneaframework.Service;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.mock.MockLifeCycle;
@@ -94,7 +94,7 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
     service = new StandardCriticalExceptionHandlingFilterService();
     child = new MockEventfulBaseService() {
       public void action(Path path, InputData input, OutputData output) throws Exception {
-        ((ServletOutputData)output).getResponse().getOutputStream().write(new byte[] {1});
+        ((StandardServletOutputData)output).getOutputStream().write(new byte[] {1});
         throw exception;
       }
     };
