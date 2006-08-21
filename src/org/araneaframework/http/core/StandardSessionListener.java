@@ -20,8 +20,8 @@ import java.util.HashMap;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import org.apache.log4j.Logger;
-import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.RelocatableServiceDecorator;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.router.StandardHttpSessionRouterService;
 
 /**

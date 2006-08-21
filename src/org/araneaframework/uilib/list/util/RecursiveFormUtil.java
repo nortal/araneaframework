@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.util;
 
 import java.io.Serializable;
-
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;

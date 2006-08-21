@@ -26,7 +26,6 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
 import net.iharder.base64.Base64;
 
 /**

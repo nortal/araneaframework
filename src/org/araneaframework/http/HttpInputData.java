@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Locale;
-
 import org.araneaframework.InputData;
 
 public interface HttpInputData extends InputData {

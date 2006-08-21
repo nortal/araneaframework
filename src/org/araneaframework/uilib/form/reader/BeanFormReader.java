@@ -18,7 +18,6 @@ package org.araneaframework.uilib.form.reader;
 
 import java.util.Iterator;
 import java.util.Map;
-
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.Data;

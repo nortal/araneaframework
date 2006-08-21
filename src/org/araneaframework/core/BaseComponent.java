@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
-import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;

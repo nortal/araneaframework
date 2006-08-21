@@ -18,7 +18,6 @@ package org.araneaframework.http.util;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.araneaframework.OutputData;
 
 /**
