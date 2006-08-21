@@ -301,7 +301,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 	 * @return the current response object.
 	 */
 	protected OutputData getOutputData() throws JspException {
-		return (OutputData) requireContextEntry(BaseTag.OUTPUT_DATA_KEY);
+		return (OutputData) pageContext.getRequest().getAttribute(OutputData.OUTPUT_DATA_KEY);
 	}
 	
 	/* ***********************************************************************************
