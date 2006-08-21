@@ -116,24 +116,31 @@ function AraneaPage() {
   /* URL of aranea dispatcher servlet serving current page. 
    * Automatically set by AraneaTraverser.findSurroundingSystemForm(). */ 
   var servletURL = null;
-  this.getServletURL = function() { return this.servletURL; }
-  this.setServletURL = function(url) { this.servletURL = new String(url); }
+  this.getServletURL = function() { return servletURL; }
+  this.setServletURL = function(url) { servletURL = new String(url); }
   
   /* Indicates whether the page is completely loaded or not. Page is considered to 
    * be loaded when all onload events have completed execution. */
   var loaded = false;
-  this.isLoaded = function() { return this.loaded; }
-  this.setLoaded = function(b) { if (typeof b == "boolean") { this.loaded = b; } }
+  this.isLoaded = function() { return loaded; }
+  this.setLoaded = function(b) { if (typeof b == "boolean") { loaded = b; } }
   
+  /* returns the div meant for outputting debug information, if it is present */
+  var debugDiv = null;
+  this.setDebugDiv = function(div) { debugDiv = div; }
+  this.getDebugDiv = function() { return debugDiv; }
+  
+  /* locale - should be used only for server-side reported locale */
+  var locale = new AraneaLocale("", "");
+  this.getLocale = function() { return locale; }
+  this.setLocale = function(loc) { locale = loc; }
+
   /* Indicates whether some form on page is (being) submitted already
    * by traditional HTTP request. */
   var submitted = false;
-  this.isSubmitted = function() { return this.submitted; }
-  this.setSubmitted = function(b) { if (typeof b == "boolean") { this.submitted = b; } }
+  this.isSubmitted = function() { return submitted; }
+  this.setSubmitted = function(b) { if (typeof b == "boolean") { submitted = b; } }
   
-  /* The number of background requests that have not received completely processed response yet. */
-  pendingResponses = 0;
-
   /** Aranea JSP specific DOM tree traverser. */
   var traverser = new AraneaTraverser();
   this.getTraverser = function() { return traverser; }
@@ -218,7 +225,6 @@ function AraneaPage() {
   // TODO: get rid of duplicated logic from: submit() and findSubmitter()
 
   this.submit_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
-    var el = document.createElement();
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;
 
@@ -234,10 +240,27 @@ function AraneaPage() {
     else
       new DefaultAraneaSubmitter(systemForm, eventId, eventTarget, eventParam);
   }
+  
+  this.debug = function(message) {
+    if (this.getDebugDiv()) {
+      this.getDebugDiv().appendChild(document.createElement("br"));
+      this.getDebugDiv().appendChild(document.createTextNode(message));
+    }
+  }
+}
+
+// Random request id generator. Sent only with AA ajax requests.
+// Currently only purpose of it is easier debugging (identifying requests).
+AraneaPage.getRandomRequestId = function() {
+  return Math.round(100000*Math.random());
 }
 
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
+  getActiveAraneaPage().addSystemLoadEvent(Behaviour.apply);
+
+  var div = document.getElementById("araneaDebugDiv");
+  if (div) getActiveAraneaPage().setDebugDiv(div);
 }
 
 function DefaultAraneaSubmitter(form) {
@@ -289,15 +312,15 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
   systemForm.widgetEventPath.value = widgetId ? widgetId : "";
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+  if (systemForm.transactionId) {
+    try {
+      systemForm.removeChild(systemForm.transactionId);
+    } catch(e) {}
+  }
   
   window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
   window[ajaxKey].systemForm = systemForm;
-  
-  if (getActiveAraneaPage().pendingResponses > 0)
-    systemForm.transactionId.value = "";
-  
-  getActiveAraneaPage().pendingResponses++;
-  window[ajaxKey].submitAJAX();
+  window[ajaxKey].submitAJAX(AraneaPage.getRandomRequestId());
 
   return false;
 }
@@ -306,4 +329,3 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
 _ap = new AraneaPage();
 function getActiveAraneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
-_ap.addSystemLoadEvent(Behaviour.apply);

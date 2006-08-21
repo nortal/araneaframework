@@ -60,15 +60,21 @@ public class MockEventfulStandardWidget extends BaseApplicationWidget {
     eventProcessed = true;
     this.path = path;
     this.input = input;
+    super.event(path, input);
   }
   
-  public void action(Path path, InputData input, OutputData output) {
+  public void action(Path path, InputData input, OutputData output) throws Exception {
     actionCalled = true;
     this.path = path;
     this.input = input;
     this.output = output;
+    super.action(path, input, output);
   }
   
+  protected void handleAction(InputData input, OutputData output) throws Exception {}
+
+  protected void handleEvent(InputData input) throws Exception {}
+
   public void destroy() {
     destroyCalled = true;
   }

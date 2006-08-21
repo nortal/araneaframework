@@ -61,8 +61,7 @@ public class WidgetContextTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    output = (OutputData) pageContext.getRequest().getAttribute(
-        OutputData.OUTPUT_DATA_KEY);
+    output = getOutputData();
     if (id != null) {
       StringTokenizer tokenizer = new StringTokenizer(id, ".");
 

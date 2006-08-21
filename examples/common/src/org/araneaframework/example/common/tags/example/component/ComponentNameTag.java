@@ -28,7 +28,6 @@ import org.araneaframework.jsp.util.JspUtil;
  *   body-content = "JSP"
  */
 public class ComponentNameTag extends PresentationTag {
-  public final static String COMPONENT_HEADER_KEY= "example.component.header.key";
   public final static String DEFAULT_HEADER_NAME_STYLE = "name";
 
   public ComponentNameTag() {
@@ -40,7 +39,7 @@ public class ComponentNameTag extends PresentationTag {
 
     // make sure we are inside component header and fail if no header is present.
     // not strictly necessary, mainly for demonstration of attribute usage.
-    requireContextEntry(ComponentHeaderTag.COMPONENT_HEADER_KEY);
+    requireContextEntry(ComponentHeaderTag.KEY);
 
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "class", getStyleClass());

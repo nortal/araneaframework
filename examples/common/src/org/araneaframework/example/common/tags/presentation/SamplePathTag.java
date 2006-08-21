@@ -32,7 +32,7 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   body-content = "JSP"
  */
 public class SamplePathTag extends BaseTag {
-  public final static String KEY = "ee.wm.util.sample.web.jsp.ui.presentation.SamplePathTag.KEY";
+  public final static String KEY = "org.araneaframework.example.common.tags.presentation.SamplePathTag.KEY";
   
   protected boolean hadItems = false;
 

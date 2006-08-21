@@ -25,7 +25,7 @@ import org.araneaframework.uilib.support.DisplayItem;
 /**
  * Demonstrates use of multiselect control and markBaseState() isStateChanged() methods.
  * 
- * @author Taimo Peelo
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoMultiSelect extends TemplateBaseWidget {
 	private FormWidget form;

@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.util.JspStringUtil;
@@ -61,8 +62,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     JspUtil.writeAttribute(out, "style", getStyle());
     if (showLabel && renderMode.equals(FormButtonHtmlTag.RENDER_INPUT)) {
       if (accessKey != null) {
-        String escapedLabel = JspStringUtil
-        .escapeHtmlEntities(localizedLabel);
+        String escapedLabel = StringEscapeUtils.escapeHtml(localizedLabel);
         JspUtil.writeAttribute(out, "value", JspStringUtil
             .underlineAccessKey(escapedLabel, accessKey));
       } else {
@@ -94,8 +94,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     if (renderMode.equals(FormButtonHtmlTag.RENDER_BUTTON)) {
       if (showLabel) {
         if (accessKey != null) {
-          String escapedLabel = JspStringUtil
-          .escapeHtmlEntities(localizedLabel);
+          String escapedLabel = StringEscapeUtils.escapeHtml(localizedLabel);
           out.write(JspStringUtil
               .underlineAccessKey(escapedLabel, accessKey));
         } else {

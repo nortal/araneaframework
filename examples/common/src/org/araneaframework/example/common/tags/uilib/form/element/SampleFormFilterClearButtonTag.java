@@ -42,7 +42,7 @@ public class SampleFormFilterClearButtonTag extends FormLinkButtonHtmlTag {
   public int doStartTag(Writer out) throws Exception {
     addAttribute("style", getStyle());
     super.doStartTag(out);
-    out.write("<button type=\"button\">" + JspUtil.getResourceString(pageContext, "button.clear").toUpperCase(JspUtil.getLocalizationContext(pageContext).getLocale()) + "</button>");
+    out.write("<button type=\"button\">" + JspUtil.getResourceString(pageContext, "button.clear").toUpperCase(getLocalizationContext().getLocale()) + "</button>");
     
     return EVAL_BODY_INCLUDE;    
   }

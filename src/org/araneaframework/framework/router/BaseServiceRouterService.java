@@ -158,6 +158,7 @@ public abstract class BaseServiceRouterService extends BaseService {
 
     public void close(Object id) {
       ((Service)_getChildren().get(id))._getComponent().destroy();
+      _getChildren().remove(id);
     }
   }
 }

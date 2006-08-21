@@ -30,10 +30,12 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
+import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.basic.ElementHtmlTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
@@ -53,6 +55,7 @@ import org.araneaframework.jsp.tag.uilib.list.formlist.FormListTag;
 public class JspUtil {
   private static final Map attributeErrorMap = new HashMap();  
   static {
+    attributeErrorMap.put(AraneaRootTag.OUTPUT_DATA_KEY, "<ui:root> tag expected, but not found!");
     attributeErrorMap.put(AttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
     attributeErrorMap.put(PresentationTag.ATTRIBUTED_TAG_KEY, null);
 
@@ -106,8 +109,7 @@ public class JspUtil {
   		return null;
   	}
   }
-  
-  
+
   public static LocalizationContext getLocalizationContext(PageContext pageContext) {
   	return (LocalizationContext)Config.get(pageContext, Config.FMT_LOCALIZATION_CONTEXT, PageContext.REQUEST_SCOPE);
   }
@@ -312,25 +314,7 @@ public class JspUtil {
    */
   public static void writeEscaped(Writer out, String value) throws IOException {
     if (value == null) return;
-    
-    for(int i = 0; i < value.length(); i++) {
-      char c = value.charAt(i);  
-      writeEscaped(out, c);
-    }
-  }
-  
-  /**
-   * Writes out escaped character.
-   */
-  public static void writeEscaped(Writer out, char value) throws IOException {
-    switch (value) {
-      case '<': out.write("&lt;"); break;
-      case '>': out.write("&gt;"); break;
-      case '&': out.write("&amp;"); break;
-      case '"': out.write("&quot;"); break;
-      default:
-        out.write(value);
-    }     
+    out.write(StringEscapeUtils.escapeHtml(value));
   }
   
   /**

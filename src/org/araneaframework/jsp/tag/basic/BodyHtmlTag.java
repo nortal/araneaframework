@@ -17,6 +17,7 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
+import java.util.Locale;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -36,13 +37,20 @@ public class BodyHtmlTag extends PresentationTag {
   public static final String ONLOAD = "_ap.onload()";
   public static final String ONUNLOAD = "_ap.onunload()";
   
+  public static final String KEY = "org.araneaframework.jsp.tag.basic.BodyHtmlTag";
+  
   protected String onload = ONLOAD;
   protected String onunload = ONUNLOAD;
+  
+  /** Scripts registered by nested tags. */
+  protected StringBuffer afterBodyEndScripts = null;
   
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
 
     addContextEntry(PresentationTag.ATTRIBUTED_TAG_KEY, null);
+    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
+    addContextEntry(KEY, this);
     
     JspUtil.writeOpenStartTag(out, "body");
     JspUtil.writeAttribute(out, "style", getStyle());
@@ -51,7 +59,7 @@ public class BodyHtmlTag extends PresentationTag {
     JspUtil.writeAttribute(out, "onunload", onunload);
     JspUtil.writeCloseStartTag_SS(out);
     
-    writeBodyStartScripts(out);
+    writeAfterBodyStartScripts(out);
     
     return r;
   }
@@ -61,7 +69,14 @@ public class BodyHtmlTag extends PresentationTag {
     return super.doEndTag(out);
   }
   
-  protected void writeBodyStartScripts(Writer out) throws Exception {
+  /* ***********************************************************************************
+   * Methods for outputting scripts after opening and closing of HTML <body> tag.
+   * ***********************************************************************************/
+  
+  /**
+   * Writes the scripts immediately following the opening of &lt;body&gt; tag.
+   */
+  protected void writeAfterBodyStartScripts(Writer out) throws Exception {
     String servletUrl =
         ServletUtil.getInputData(pageContext.getRequest()).getContainerURL(); 
 	  
@@ -72,8 +87,55 @@ public class BodyHtmlTag extends PresentationTag {
     out.write("getActiveAraneaPage().setServletURL('");
     out.write(servletUrl);
     out.write("');");
+    
+    Locale locale = getLocalizationContext().getLocale();
+
+    out.write("getActiveAraneaPage().setLocale(new AraneaLocale('");
+    out.write(locale.getLanguage());
+    out.write("','");
+    out.write(locale.getCountry());
+    out.write("'));");
+
+    writeAdditionalAfterBodyStartScripts(out);
 
     JspUtil.writeEndTag(out, "script");
+  }
+  
+  /**
+   * Writes the scripts immediately following the closing of &lt;body&gt; tag.
+   */
+  protected void writeAfterBodyEndScripts(Writer out) throws Exception {
+    JspUtil.writeOpenStartTag(out, "script");
+    JspUtil.writeAttribute(out, "type", "text/javascript");
+    JspUtil.writeCloseStartTag_SS(out);
+    
+    writeAdditionalAfterBodyEndScripts(out);
+
+    JspUtil.writeEndTag(out, "script");
+  }
+  
+  /**
+   * Called before closing the script tag immidiately following the HTML &lt;body&gt; start, use for
+   * additional client-side page (AraneaPage) initialization.
+   */
+  protected void writeAdditionalAfterBodyStartScripts(Writer out) throws Exception {}
+  
+  /**
+   * Called before closing the script tag immidiately following the HTML &lt;body&gt; start, use for
+   * additional client-side page (AraneaPage) initialization.
+   */
+  protected void writeAdditionalAfterBodyEndScripts(Writer out) throws Exception {
+    out.write(afterBodyEndScripts.toString());
+  }
+  
+  /**
+   * Nested tags should get surrounding body tag from <code>PageContext</code> and register
+   * their body end scripts with this method.
+   */
+  public void addAfterBodyEndScript(String script) {
+    if (afterBodyEndScripts == null)
+      afterBodyEndScripts = new StringBuffer();
+    afterBodyEndScripts.append(script);
   }
 
   /* ***********************************************************************************

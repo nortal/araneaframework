@@ -35,9 +35,7 @@ public class AraneaViewPortTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    OutputData output = 
-      (OutputData) pageContext.getRequest().getAttribute(
-          OutputData.OUTPUT_DATA_KEY);
+    OutputData output = getOutputData(); 
     StandardContainerWidget rootWidget = 
       (StandardContainerWidget) output.getAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
     StandardJspFilterService.JspConfiguration config = 

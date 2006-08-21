@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.util;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 /**
  * Some simple utility routines for Strings.
  * 
@@ -54,26 +56,7 @@ public abstract class JspStringUtil {
 		return result;
 	}
 	
-	
-	
-	/**
-	 * Replaces &lt; &gt; &amp; &quot; with corresponding HTML entities.
-	 */
-	public static String escapeHtmlEntities(String s){
-		if (s == null) return null;
-		StringBuffer result = new StringBuffer(s.length() + 10);
-	    for(int i = 0; i < s.length(); i++) {
-	      char c = s.charAt(i);
-	      switch (c) {
-	        case '<': result.append("&lt;"); break;
-	        case '>': result.append("&gt;"); break;
-	        case '&': result.append("&amp;"); break;
-	        case '"': result.append("&quot;"); break;
-	        default:
-	          result.append(c);
-	      }     
-	    }
-	    return result.toString();
+	public static String escapeHtmlEntities(String s) {
+		return StringEscapeUtils.escapeHtml(s);
 	}
-	
 }

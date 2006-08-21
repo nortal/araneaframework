@@ -60,7 +60,7 @@ public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
           } 
           else {
             isPreviousNbsp = false;
-            JspUtil.writeEscaped(out, line.charAt(i));
+            JspUtil.writeEscaped(out, line.substring(i, i+1));
           }
         }
 

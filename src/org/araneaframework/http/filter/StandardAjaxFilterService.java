@@ -23,6 +23,8 @@ public class StandardAjaxFilterService extends BaseFilterService {
 	private List existingRegions = null;
 
 	public static final String UPDATE_REGIONS_KEY = "updateRegions";
+	public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
+	public static final String AJAX_RESPONSE_ID_KEY = "ajaxResponseId";
 
 
 	public void setCharacterEncoding(String encoding) {
@@ -38,22 +40,30 @@ public class StandardAjaxFilterService extends BaseFilterService {
 
 			String commaSeparatedRegions = (String)input.getGlobalData().get(UPDATE_REGIONS_KEY); 
 
-			log.debug("AjaxFilterService found regions = " + commaSeparatedRegions);
+			if (log.isDebugEnabled())
+			  log.debug("AjaxFilterService found regions = " + commaSeparatedRegions);
 
 			super.action(path, input, output);
 
 			if(commaSeparatedRegions != null) {
 				String response = new String(arUtil.getData(), characterEncoding);
+				String requestId = (String)input.getGlobalData().get(AJAX_REQUEST_ID_KEY);
 
-				log.info("It was Ajax request. Rollbacking current response.");
+				if (log.isDebugEnabled()) {
+				  log.debug("It was Ajax request with id='" + requestId + "'. Rollbacking current response.");
+				}
+
 				arUtil.rollback();
 
 				String transactionElement = getTransactionElement(response);
 				httpOutput.getOutputStream().write(transactionElement.getBytes(characterEncoding));
+				// ajax response id is the same as incoming request id. 
+				String responseIdElement = getResponseIdElement(requestId);
+				httpOutput.getOutputStream().write(responseIdElement.getBytes(characterEncoding));
 
 				String[] regions = commaSeparatedRegions.split(",");
 				// adding the regions that may appear in the response but
-				// we're not present in the request
+				// were not present in the request
 				if (existingRegions != null) {
 					for (Iterator iter = existingRegions.iterator(); iter.hasNext();) {
 						regions = (String[])ArrayUtils.add(regions, iter.next());
@@ -95,10 +105,14 @@ public class StandardAjaxFilterService extends BaseFilterService {
 	    return source.substring(startIndex, endIndex + blockEnd.length());
 	}
 	
-	private String getTransactionElement(String source) throws Exception {
+	protected String getTransactionElement(String source) throws Exception {
 		RE re = new RE("(<input name=\"transactionId\" type=\"hidden\" value=\"-?[0-9]+\"\\/>)");
 		re.match(source);
 		return re.getParen(1);
+	}
+	
+	protected String getResponseIdElement(String requestId) {
+		return "<input name=\"" + AJAX_RESPONSE_ID_KEY + "\" type=\"hidden\" value=\"" + requestId +"\"/>";
 	}
 }
 

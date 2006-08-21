@@ -16,7 +16,6 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -37,14 +36,14 @@ import org.araneaframework.uilib.form.control.SelectControl;
  */
 public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   protected String value;
-  protected String onChangePrecondition = "return true;";
+  protected String onChangePrecondition;
 
   {
     baseStyleClass = "aranea-radio";
   }
 
   protected int doEndTag(Writer out) throws Exception {
-    assertControlType("SelectControl");    
+    assertControlType("SelectControl");
     
     // Prepare
     String name = this.getScopedFullFieldId();     
@@ -59,8 +58,6 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
       throw new AraneaJspException("Value '"+value+"' not found in values list.");
     }
     
-    
-    
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
@@ -70,9 +67,9 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     if (viewModel.isDisabled() || viewModel.getSelectItemByValue(value).isDisabled())
-      JspUtil.writeAttribute(out, "disabled", "true");
+      JspUtil.writeAttribute(out, "disabled", "disabled");
     if (selected)
-      JspUtil.writeAttribute(out, "checked", "true");    
+      JspUtil.writeAttribute(out, "checked", "checked");
     if (events && viewModel.isOnChangeEventRegistered())
       this.writeSubmitScriptForUiEvent(out, "onclick", derivedId, "onChanged", onChangePrecondition, updateRegionNames);
     JspUtil.writeAttributes(out, attributes);
@@ -105,20 +102,4 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   public void setOnChangePrecondition(String onChangePrecondition) throws JspException {
     this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
-  
-  /**
-   * Write validation javascript
-   * @author Konstantin Tretyakov
-   */
-  protected void writeValidationScript(Writer out, SelectControl.ViewModel viewModel) throws IOException {
-    JspUtil.writeStartTag(out, "script");
-    out.write("uiAddRadioValidator(");
-    JspUtil.writeScriptString(out, getScopedFullFieldId());
-    out.write(", ");
-    JspUtil.writeScriptString(out, localizedLabel);
-    out.write(", ");
-    out.write(viewModel.isMandatory() ? "true" : "false");
-    out.write(");\n");
-    JspUtil.writeEndTag_SS(out, "script");
-  }      
 }

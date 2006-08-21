@@ -29,7 +29,7 @@
                     	It is strongly suggested to have only one system form in the template and have it submit using 
                     	POST. This will ensure that no matter what user does no data is ever lost. -->
 	                    <ui:systemForm method="POST">
-
+							<ui:onLoadEvent event="Form.focusFirstElement(document.forms['${systemFormId}']);"/>
 		                    <div id="outer">
 		                        <div id="middle">
 		                            <div id="inner">

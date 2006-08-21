@@ -82,7 +82,7 @@ AjaxAnywhere.findInstance = function(id) {
 * This function is used to submit all form fields by AJAX request to the server.
 * If the form is submited with &lt;input type=submit|image&gt;, submitButton should be a reference to the DHTML object. Otherwise - undefined.
 */
-AjaxAnywhere.prototype.submitAJAX = function() {
+AjaxAnywhere.prototype.submitAJAX = function(ajaxRequestId) {
 
     this.bindById();
 
@@ -96,11 +96,14 @@ AjaxAnywhere.prototype.submitAJAX = function() {
         url = location.href;
 
     this.dropPreviousRequest();
+    this.ajaxRequestId = ajaxRequestId;
 
     this.req.open("POST", url, true);
     this.req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-
-    var postData = "&" + this.preparePostData() + "&updateRegions=" + this.updateRegions;
+    
+    getActiveAraneaPage().debug("Sending AJAX request '" + ajaxRequestId + "'");
+    
+    var postData = "&" + this.preparePostData() + "&updateRegions=" + this.updateRegions + "&ajaxRequestId=" + ajaxRequestId;
     this.sendPreparedRequest(postData);
 	return true;
 }
@@ -145,6 +148,7 @@ AjaxAnywhere.prototype.sendPreparedRequest = function (postData) {
 */
 AjaxAnywhere.prototype.dropPreviousRequest = function() {
     if (this.req != null && this.req.readyState != 0 && this.req.readyState != 4) {
+        getActiveAraneaPage().debug("dropping request");
         // abort previous request if not completed
         this.req.onreadystatechange = null;
         this.req.abort();
@@ -188,28 +192,38 @@ AjaxAnywhere.prototype.preparePostData = function(submitButton) {
 * A callback. internally used
 */
 AjaxAnywhere.prototype.callback = function() {
-	 if (this.req.readyState == 4) {
-		this.onBeforeResponseProcessing();
-		this.hideLoadingMessage();
-		
-	 if (this.req.status) {
-      		text = this.req.responseText;
-			
-			if (this.req.status == 200) {
-				updateRegions(this.updateRegions, text);
+   if (this.req.readyState == 4) {
+     this.onBeforeResponseProcessing();
+     this.hideLoadingMessage();
+    
+     if (this.req.status) {
+      text = this.req.responseText;
+      
+      if (this.req.status == 200) {
+        getActiveAraneaPage().debug("Processing ajax response '" + extractResponseId(text) + "'");
+        updateRegions(this.updateRegions, text);
+        
+        var trId = extractTransactionId(text);
 
-				this.systemForm.transactionId.value = extractTransactionId(text);
-			} 
-			else if (this.req.status == 302) {
-				window.location.href = window.location.href;
-			}
-			else {		 	    
-				document.body.innerHTML = text;
-			}
-			
-			 this.onAfterResponseProcessing();
-	    }
+        if (this.systemForm.transactionId)
+          this.systemForm.transactionId.value = trId;
+        else {
+          var el = createNamedElement("input", "transactionId");
+          el.type = "hidden";
+          el.value = trId;
+          this.systemForm.appendChild(el);
+        }
+      } 
+     else if (this.req.status == 302) {
+        window.location.href = window.location.href;
+      }
+      else {           
+        document.body.innerHTML = text;
+      }
+
+      this.onAfterResponseProcessing();
     }
+  }
 }
 
 /**
@@ -297,7 +311,7 @@ AjaxAnywhere.prototype.substituteFormSubmitFunction = function() {
 * Override it if you need.
 */
 AjaxAnywhere.prototype.handlePreviousRequestAborted = function() {
-    //alert("AjaxAnywhere default error handler. INFO: previous AJAX request dropped")
+   //alert("AjaxAnywhere default error handler. INFO: previous AJAX request dropped")
 }
 
 /**
@@ -314,8 +328,8 @@ AjaxAnywhere.prototype.onBeforeResponseProcessing = function () {
 * Override this method to implement a custom action
 */
 AjaxAnywhere.prototype.onAfterResponseProcessing = function () {
+   AraneaPage.init();
    getActiveAraneaPage().onload();
-   getActiveAraneaPage().pendingResponses--;
 };
 
 function extractScripts(str) {
@@ -333,6 +347,12 @@ function extractTransactionId(newContents) {
 	return result[1];
 }
 
+function extractResponseId(response) {
+  var re = /<input name="ajaxResponseId" type="hidden" value="(-?[0-9]+)"\/>/
+  var result = re.exec(response);
+  return result[1];
+}
+
 function extractBody(str) {
 	var re = /^<body.*>(.*)<\/body>$/
 	var result = re.exec(str);
@@ -346,22 +366,19 @@ function updateRegions(updateRegions, str) {
 }
 
 function getOpeningTag(elemId, str) {
-	var index = str.indexOf("id=" + '"' + elemId + '"');
-	
-	if (index == -1) {
-		return undefined;
-		//throw "Cannot find update region '" + elemId + "'!";		
-	}
+  var b = "<!--BEGIN:"; var e = "-->";
+  var index = str.indexOf(b+elemId+e);
+  if (index == -1) {
+    return null;
+  }
 
-	// find opening tag
-	for(var i = index; i > 0; i--) {
-		if (str.charAt(i)=='<') {
-			tmp = /^<([^ ]+) /.exec(str.substr(i));
-			return tmp[1];
-		}
-	}
-
-	return undefined;	
+  for(var i = index+1; i < str.length; i++) {
+    if (str.charAt(i)=='<') {
+      tmp = /<([A-Za-z0-9\-]+)>/.exec(str.substr(i));
+        return tmp[1];
+    }
+  }
+  return null;
 }
 
 function extractContentsById(elemId, str) {
@@ -389,51 +406,49 @@ function extractContentsById(elemId, str) {
 }
 
 function updateRegion(updateRegionId, str) {		
-		extracted = extractContentsById(updateRegionId, str);
+  extracted = extractContentsById(updateRegionId, str);
 
-    target = document.getElementById(updateRegionId);	
+  target = document.getElementById(updateRegionId);	
 
-		if (document.all && target) {
-		// && getOpeningTag(updateRegionId, str) == "tbody"
-			//Emptying <tbody>
-			while( target.firstChild ) {
-				target.removeChild( target.firstChild );
-			}        		    
+  if (getOpeningTag(updateRegionId, str).toLowerCase() == "tr" && document.all && target) {
+    //Emptying <tbody>
+    while( target.firstChild ) {
+      target.removeChild( target.firstChild );
+    }        		    
 	
-			//Making temp <div> and <table>
-			var tempDiv = document.createElement("div");    	 
-			document.body.appendChild(tempDiv);
-			tempTbodyId = updateRegionId + "TempTbody";
-			tempDiv.innerHTML = "<table><tbody id=\"" + tempTbodyId + "\">" + extracted + "</tbody></table>";
+    //Making temp <div> and <table>
+    var tempDiv = document.createElement("div");    	 
+    document.body.appendChild(tempDiv);
+    tempTbodyId = updateRegionId + "TempTbody";
+    tempDiv.innerHTML = "<table><tbody id=\"" + tempTbodyId + "\">" + extracted + "</tbody></table>";
+
+    //Filling in tbody
+    var tempTbody =  document.getElementById(tempTbodyId);
 	
-			//Filling in tbody
-			var tempTbody =  document.getElementById(tempTbodyId);
-	
-			for (var i = 0; i < tempTbody.childNodes.length; i++) {
-				target.appendChild(tempTbody.childNodes[i].cloneNode(true));				
-			}			
+    for (var i = 0; i < tempTbody.childNodes.length; i++) {
+      target.appendChild(tempTbody.childNodes[i].cloneNode(true));				
+    }			
 			
-	    for (var i = 0; i < tempTbody.rows.length; i++) {
-			  for (var j = 0; j < tempTbody.rows[i].cells.length; j++) {
-				  target.rows[i].cells[j].innerHTML = tempTbody.rows[i].cells[j].innerHTML;					
-			  }
-		  }			
-	 
-			tempDiv.removeNode(true);			 				 
-    }
-    else if (target) {
-	  	target.innerHTML = extracted;
-	  }
-		// execute all the scripts
-		var scripts = extractScripts(extracted);
-		for(var i=0;i<scripts.length;i++) {
-			var script = scripts[i];
-			script = "try{"+script+"}catch(e){alert(e);}";
-			eval(script);
-		}	  
+    for (var i = 0; i < tempTbody.rows.length; i++) {
+      for (var j = 0; j < tempTbody.rows[i].cells.length; j++) {
+        target.rows[i].cells[j].innerHTML = tempTbody.rows[i].cells[j].innerHTML;					
+      }
+    }			
+
+    tempDiv.removeNode(true);			 				 
+  }
+  else if (target) {
+    target.innerHTML = extracted;
+  }
+  // execute all the scripts
+  var scripts = extractScripts(extracted);
+  for(var i=0;i<scripts.length;i++) {
+    var script = scripts[i];
+    script = "try{"+script+"}catch(e){alert(e);}";
+    eval(script);
+  }	  
 }
-   
-   
+
 function trim(str) { 
    return str.replace(/^\s+|\s+$/, ''); 
 }

@@ -37,7 +37,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Defines an HTML element."
  */
 public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
-	public final static String KEY = "org.araneaframework.jsp.ui.basic.UiElementTag.KEY";
+	public final static String KEY = "org.araneaframework.jsp.tag.basic.ElementHtmlTag.KEY";
 
 	protected String name = null;
 	protected Map attributes = new HashMap();

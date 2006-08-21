@@ -31,11 +31,11 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Oleg Mürk
  */
 public abstract class BaseSystemFormHtmlTag extends BaseTag {
-  public final static String COUNTER_KEY = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.FORM_COUNTER";  
-  public final static String ID_KEY = "org.araneaframework.jsp.ui.basic.UiSystemFormTag.ID";
+  public final static String COUNTER_KEY = "org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag.FORM_COUNTER";  
+  public final static String ID_KEY = "org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag.ID";
 
-  public final static String GET_METHOD = "GET";
-  public final static String POST_METHOD = "POST";
+  public final static String GET_METHOD = "get";
+  public final static String POST_METHOD = "post";
 
   public final static String SYSTEM_FORM_ID_KEY = "systemFormId";
 
@@ -111,7 +111,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
    *  description = "Submitting method: GET or POST." 
    */
   public void setMethod(String method) throws JspException {
-    this.method = (String)evaluateNotNull("method", method, String.class);
+    this.method = ((String)evaluateNotNull("method", method, String.class)).toLowerCase();
 
     if (!this.method.equals(GET_METHOD) && 
         !this.method.equals(POST_METHOD))

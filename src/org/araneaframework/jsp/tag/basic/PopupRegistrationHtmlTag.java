@@ -39,9 +39,7 @@ import org.araneaframework.jsp.util.JspUtil;
 public class PopupRegistrationHtmlTag extends BaseTag {
 	
   protected int doEndTag(Writer out) throws Exception {
-    OutputData output = (OutputData) requireContextEntry(AraneaRootTag.OUTPUT_DATA_KEY);
-
-    Object popups = output.getAttribute(PopupWindowContext.POPUPS_KEY);
+    Object popups = getOutputData().getAttribute(PopupWindowContext.POPUPS_KEY);
     if (popups != null && !((Map)popups).isEmpty()) {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");

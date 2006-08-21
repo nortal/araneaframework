@@ -44,7 +44,7 @@ public class SampleFormFilterButtonTag extends FormLinkButtonHtmlTag {
   public int doStartTag(Writer out) throws Exception {
     addAttribute("style", getStyle());
     super.doStartTag(out);
-    out.write("<button type=\"button\">" + JspUtil.getResourceString(pageContext, "button.search").toUpperCase(JspUtil.getLocalizationContext(pageContext).getLocale()) + "</button>");
+    out.write("<button type=\"button\">" + JspUtil.getResourceString(pageContext, "button.search").toUpperCase(getLocalizationContext().getLocale()) + "</button>");
 
     FormEnterKeyboardHandlerHtmlTag tag = new FormEnterKeyboardHandlerHtmlTag();
     tag.setFullElementId((String)requireContextEntry(FormTag.FORM_FULL_ID_KEY)+"."+id);

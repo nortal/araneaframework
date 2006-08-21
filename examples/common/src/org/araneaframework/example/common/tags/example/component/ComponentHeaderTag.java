@@ -28,7 +28,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   body-content = "JSP"
  */
 public class ComponentHeaderTag extends PresentationTag {
-	public final static String COMPONENT_HEADER_KEY= "example.component.header.key";
+	public final static String KEY= "example.component.header.key";
 	public final static String DEFAULT_HEADER_STYLE = "component-header";
 
 	public ComponentHeaderTag() {
@@ -38,7 +38,7 @@ public class ComponentHeaderTag extends PresentationTag {
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-		addContextEntry(ComponentHeaderTag.COMPONENT_HEADER_KEY, this);
+		addContextEntry(ComponentHeaderTag.KEY, this);
 
 		JspUtil.writeOpenStartTag(out, "div");
 		JspUtil.writeAttribute(out, "class", getStyleClass());

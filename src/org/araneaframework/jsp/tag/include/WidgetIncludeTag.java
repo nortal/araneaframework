@@ -52,9 +52,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 		widgetContextTag.setId(widgetId);
 		executeStartSubtag(widgetContextTag);
 		
-		OutputData output = 
-			(OutputData) pageContext.getRequest().getAttribute(
-					OutputData.OUTPUT_DATA_KEY);
+		OutputData output = getOutputData();
 		
 		try {
 			if (page == null) {

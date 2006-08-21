@@ -42,9 +42,7 @@ public class GlobalWidgetIncludeTag extends BaseIncludeTag {
     widgetId = null;
   }
   protected int doEndTag(Writer out) throws Exception {
-    OutputData output = 
-      (OutputData) pageContext.getRequest().getAttribute(
-          OutputData.OUTPUT_DATA_KEY);
+    OutputData output = getOutputData();
     
     Path currentScope = output.getScope();
     
