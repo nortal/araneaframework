@@ -60,7 +60,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 	}
   
   public void handleEventOpenMountedPopup() throws Exception {
-    String url = getMountCtx().mount(getCurrentInput(), "my/very/own/mounted/path", new MountContext.MessageFactory() {
+    String url = getMountCtx().mount(getInputData(), "my/very/own/mounted/path", new MountContext.MessageFactory() {
       public Message buildMessage(String url, String suffix, InputData input, OutputData output) {
         return new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form");
       }

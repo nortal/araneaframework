@@ -16,13 +16,15 @@
 
 package org.araneaframework.uilib.form.constraint;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import org.araneaframework.Environment;
+import org.araneaframework.core.Assert;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.Constraint;
-import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.GenericFormElementContext;
 
 /**
  * This class is the base class for form constraints. A constraint operates on the form elements
@@ -38,44 +40,36 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   // FIELDS
   //*******************************************************************
 
-  private List errors = new ArrayList();
-  
-  private FormElement field;
-  
-  protected Environment enviroment;
+  private GenericFormElementContext gfeCtx;
 
   protected String customErrorMessage;
+  
+  private Set errors;
 
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
 
   /**
-   * Sets the <code>SimpleFormElement</code> that the constraint will operate on (the constraints
-   * that operate on more than one field should ignore this function, composite constraints should
-   * propagate it down the tree).
-   * 
-   * @param field <code>SimpleFormElement</code> the field that constraint will operate on.
-   */
-  public void setField(FormElement field) {
-    this.field = field;
-  }
-
-  /**
    * This method validates the constraint conditions, providing some preconditions and
    * postconditions for the {@link #validate()}method.
    * @throws Exception 
    */
-  public void validate() throws Exception {
+  public boolean validate() throws Exception {
+    Assert.notNull(this, getGenericFormElementCtx(), "Generic form element context must be assigned to the constraint before it can function! " +
+        "Make sure that the constraint is associated with a form element or a form!");
+    
     clearErrors();
-
+    
     validateConstraint();
 
     //Putting custom message only
-    if (getErrors().size() > 0 && customErrorMessage != null) {
+    if (errors != null && customErrorMessage != null) {
     	clearErrors();
     	addError(customErrorMessage);
     }
+    
+    return isValid();
   }
 
   /**
@@ -84,7 +78,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    * @return whether the constraint is satisfied/valid (same that no errors were produced).
    */
   public boolean isValid() {
-    return getErrors().size() == 0;
+    return errors == null || errors.size() == 0;
   }
 
   /**
@@ -92,7 +86,9 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    * 
    * @return the {@link UiMessage}s produced while validationg the constraint.
    */
-  public List getErrors() {
+  public Set getErrors() {
+    if (errors == null)
+      errors = new HashSet();
     return errors;
   }
 
@@ -100,7 +96,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    * Clears the the errors produced while validationg the constraint.
    */
   public void clearErrors() {
-    errors.clear();
+    errors = null;
   }
  
   /**
@@ -113,32 +109,37 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
     this.customErrorMessage = customErrorMessage;
   }
   
-  public void setEnvironment(Environment enviroment) {
-  	this.enviroment = enviroment;
+  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
+    this.gfeCtx = feCtx;
   }
   
+  public GenericFormElementContext getGenericFormElementCtx() {
+    return this.gfeCtx;
+  }
+  
+  protected String t(String key) {
+    LocalizationContext locCtx = 
+      (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+    return locCtx.localize(key);
+  } 
   //*********************************************************************
   //* PROTECTED METHODS
   //*********************************************************************
   
   protected void addError(String error) {
-  	errors.add(error);
+    getErrors().add(error);
   }
   
   protected void addErrors(Collection errorList) {
-  	errors.addAll(errorList);
+    getErrors().addAll(errorList);
   }  
-  
-  protected FormElement getField() {
-  	return field;
-  }
   
   protected ConfigurationContext getConfiguration() {
   	return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
   }
   
   protected Environment getEnvironment() {
-  	return this.enviroment;
+  	return gfeCtx.getEnvironment();
   }
   
   //*********************************************************************

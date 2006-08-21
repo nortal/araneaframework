@@ -21,7 +21,6 @@ import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.http.ServletOverridableOutputData;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
@@ -99,8 +98,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   }
   
   protected void render(OutputData output) throws Exception {
-    AtomicResponseHelper arUtil = 
-      new AtomicResponseHelper((ServletOverridableOutputData)output);
+    AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     
     try {
       if (exception != null)

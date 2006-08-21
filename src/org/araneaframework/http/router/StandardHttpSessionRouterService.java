@@ -25,10 +25,10 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.BaseService;
+import org.araneaframework.core.RelocatableServiceDecorator;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.RelocatableServiceDecorator;
-import org.araneaframework.http.ServletInputData;
+import org.araneaframework.http.util.ServletUtil;
 
 /**
  * Associates this service with the HttpSession. Is a session does not exist, it is created.
@@ -63,10 +63,9 @@ public class StandardHttpSessionRouterService extends BaseService {
    * it is created.
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {       
-    HttpSession sess = 
-      ((ServletInputData) input).getRequest().getSession();
+    HttpSession sess = ServletUtil.getRequest(input).getSession();
     
-    boolean destroySession = ((ServletInputData)input).getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY)!=null;   
+    boolean destroySession = input.getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY)!=null;   
     
     //XXX Should we synchronize on session?
     synchronized (sess) {                  
@@ -93,8 +92,7 @@ public class StandardHttpSessionRouterService extends BaseService {
   }
   
   public void propagate(Message message, InputData input, OutputData output) {
-    HttpSession sess = 
-      ((ServletInputData) input).getRequest().getSession();
+    HttpSession sess = ServletUtil.getRequest(input).getSession();
     
     RelocatableService service = getOrCreateSessionService(sess);
     

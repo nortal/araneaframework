@@ -17,8 +17,8 @@
 package org.araneaframework.example.main.web.misc;
 
 import org.araneaframework.OutputData;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.http.ServletOutputData;
 import org.araneaframework.http.util.ServletUtil;
 
 
@@ -27,9 +27,8 @@ import org.araneaframework.http.util.ServletUtil;
  */
 public class RenderErrorWidget extends TemplateBaseWidget {
   protected void render(OutputData output) throws Exception {
-    ServletUtil.include("/WEB-INF/jsp/error/InitErrorWidget/main.jsp", getEnvironment(), 
-        (ServletOutputData) output);
+    ServletUtil.include("/WEB-INF/jsp/error/InitErrorWidget/main.jsp", getEnvironment(), output);
     
-    throw new RuntimeException("Error on render()!");
+    throw new AraneaRuntimeException("Error on render()!");
   }
 }

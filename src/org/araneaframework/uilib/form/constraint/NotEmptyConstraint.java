@@ -27,24 +27,24 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * 
  */
-public class NotEmptyConstraint extends BaseConstraint {
+public class NotEmptyConstraint extends BaseFieldConstraint {
 
   public NotEmptyConstraint() {}
   
   public NotEmptyConstraint(FormElement field) {
-    setField(field);
+    setFormElementCtx(field);
   }
   
   /**
 	 * Checks that the <code>String</code> is not empty.
 	 */
   public void validateConstraint() {
-    if (!getField().isRead()) {
+    if (!isRead()) {
     	addError(
     	    ErrorUtil.localizeAndFormat(
-    			UiLibMessages.ELEMENT_EMPTY, 
-          ErrorUtil.localize(getField().getLabel(), getEnvironment()),
-          getEnvironment()));
+      			UiLibMessages.ELEMENT_EMPTY, 
+            t(getLabel()),
+            getEnvironment()));
     }
   }
 }

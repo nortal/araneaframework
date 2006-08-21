@@ -24,7 +24,6 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.http.ServletOverridableOutputData;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
@@ -48,7 +47,7 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     AtomicResponseHelper arUtil = 
-      new AtomicResponseHelper((ServletOverridableOutputData)output);
+      new AtomicResponseHelper(output);
     
     try {
       childService._getService().action(path, input, output);

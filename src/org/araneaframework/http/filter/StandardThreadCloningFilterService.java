@@ -34,7 +34,8 @@ import org.araneaframework.core.RelocatableServiceDecorator;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.ThreadCloningContext;
 import org.araneaframework.http.util.URLUtil;
 
@@ -104,7 +105,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     clone._getService().action(path, input, output);
     
     // redirect to URL where cloned service resides
-    ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), cloneServiceId));
+    ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), cloneServiceId));
   }
 
   protected void init() throws Exception {
@@ -117,7 +118,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
   
   protected String getRequestURL() {
-    return URLUtil.getServletRequestURL(getCurrentInput());
+    return ((HttpInputData) getInputData()).getContainerURL();
   }
   
   protected String getResponseURL(String url, String topServiceId, String threadServiceId) {

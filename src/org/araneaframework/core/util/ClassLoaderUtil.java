@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import org.araneaframework.core.Assert;
 
 /**
  * Utility to determine the classloader that should be used for
@@ -42,6 +43,8 @@ public abstract class ClassLoaderUtil {
 	}
 	
 	public static InputStream getResourceAsStream(String name) {
+    Assert.notNullParam(name, "name");
+    
 		URL url = findResource(name);
 		if (url == null)
 			return null;
@@ -61,6 +64,8 @@ public abstract class ClassLoaderUtil {
 	 * @throws ClassNotFoundException
 	 */
 	public static Class loadClass(String name) throws ClassNotFoundException{
+    Assert.notNullParam(name, "name");
+    
 		List loaders = getClassLoaders();
 		for (Iterator iter = loaders.iterator(); iter.hasNext();) {
 			ClassLoader loader = (ClassLoader) iter.next();
@@ -81,6 +86,8 @@ public abstract class ClassLoaderUtil {
 	 * found resource.
 	 */
 	public static URL findResource(final String name) {
+    Assert.notNullParam(name, "name");
+    
 		List loaders = getClassLoaders();
 		for (Iterator iter = loaders.iterator(); iter.hasNext();) {
 			ClassLoader loader = (ClassLoader) iter.next();
@@ -97,6 +104,8 @@ public abstract class ClassLoaderUtil {
 	 * URLs.
 	 */
 	public static Enumeration findResources(final String name) throws IOException {
+    Assert.notNullParam(name, "name");
+    
 		List list = new ArrayList();
 		List loaders = getClassLoaders();
 		for (Iterator iter = loaders.iterator(); iter.hasNext();) {

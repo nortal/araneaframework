@@ -20,11 +20,12 @@ import org.araneaframework.InputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.container.StandardContainerService;
-import org.araneaframework.http.ServletInputData;
+import org.araneaframework.http.HttpInputData;
 
 public class PathInfoServiceContainerService extends StandardContainerService {
   protected Path getActionPath(InputData input) {
-    String pathInfo = ((ServletInputData) input).getRequest().getPathInfo().substring(1);
+    //XXX StandardPath doesn fit here, or at least pop/push should affect the path...
+    String pathInfo = ((HttpInputData) input).getPath().substring(1);
     return new StandardPath(pathInfo.replace('/', '.'));
   }
 }

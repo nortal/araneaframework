@@ -18,25 +18,21 @@ package org.araneaframework.http.core;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.araneaframework.Environment;
 import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.BaseService;
 import org.araneaframework.core.NoCurrentInputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.framework.ContinuationManagerContext;
-import org.araneaframework.http.MimeOutputData;
-import org.araneaframework.http.ServletOutputData;
-import org.araneaframework.http.ServletOverridableOutputData;
+import org.araneaframework.http.HttpOutputData;
 
 /**
  * A implementation of ServletOutputData, MimeOutputData and ServletOverridableOutputData using
@@ -44,7 +40,7 @@ import org.araneaframework.http.ServletOverridableOutputData;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardServletOutputData implements ServletOutputData, MimeOutputData, ServletOverridableOutputData {
+public class StandardServletOutputData implements HttpOutputData {
   private HttpServletRequest req;
   private HttpServletResponse res;
   
@@ -60,14 +56,8 @@ public class StandardServletOutputData implements ServletOutputData, MimeOutputD
   public StandardServletOutputData(HttpServletRequest request, HttpServletResponse response) {
     this.req = request;
     this.res = response;
-  }
-  
-  public HttpServletRequest getRequest() {
-    return this.req;
-  }
-
-  public HttpServletResponse getResponse() {
-    return this.res;
+    
+    extend(HttpServletResponse.class, res);
   }
 
   public Path getScope() {
@@ -137,6 +127,9 @@ public class StandardServletOutputData implements ServletOutputData, MimeOutputD
   }
 
   public void extend(Class interfaceClass, Object implementation) {
+    if (HttpServletResponse.class.equals(interfaceClass))
+      setResponse((HttpServletResponse) implementation);
+    
     extensions.put(interfaceClass, implementation);
   }
 
@@ -146,30 +139,10 @@ public class StandardServletOutputData implements ServletOutputData, MimeOutputD
     return extensions.get(interfaceClass);
   }
 
-  public void setMimeType(String type) {
-    getResponse().setContentType(type);
-  }
-
   public OutputStream getOutputStream() throws IOException {
-    return getResponse().getOutputStream();
+    return res.getOutputStream();
   }
   
-  public void redirect(Environment environment, final String url) throws Exception {
-  	ContinuationManagerContext continuationHandler = 
-  		(ContinuationManagerContext) environment.getEntry(ContinuationManagerContext.class);  
-  	
-		// setting the continuation
-		continuationHandler.runOnce(new BaseService() {
-			protected void action(Path path, InputData input, OutputData output) throws Exception {
-				((ServletOutputData)output).getResponse().sendRedirect(url);
-			}
-		});
-  }
-
-  public void setRequest(HttpServletRequest req) {
-    this.req = req;
-  }
-
   public void setResponse(HttpServletResponse res) {
     this.res = res;
   }
@@ -181,4 +154,32 @@ public class StandardServletOutputData implements ServletOutputData, MimeOutputD
 		else
 			return inputData;
 	}
+
+  public String encodeURL(String url) {
+    return res.encodeURL(url);
+  }
+
+  public String getCharacterEncoding() {
+    return res.getCharacterEncoding();
+  }
+
+  public Locale getLocale() {
+    return res.getLocale();
+  }
+
+  public PrintWriter getWriter() throws IOException {
+    return res.getWriter();
+  }
+
+  public void sendRedirect(String location) throws IOException {
+    res.sendRedirect(location);
+  }
+  
+  public void setContentType(String type) {
+    res.setContentType(type);
+  }
+
+  public void setCharacterEncoding(String encoding) {
+    res.setCharacterEncoding(encoding);
+  }
 }

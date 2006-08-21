@@ -27,7 +27,7 @@ public class NameWidget extends StandardPresentationWidget {
 	}
   
   public void handleEventHello() throws Exception {
-    String name = (String) getCurrentInput().getGlobalData().get("name");
+    String name = (String) getInputData().getGlobalData().get("name");
     getFlowCtx().replace(new HelloWidget(name), null);
   }  
 }

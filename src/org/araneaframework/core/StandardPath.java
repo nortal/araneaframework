@@ -16,9 +16,8 @@
 
 package org.araneaframework.core;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
 import org.araneaframework.Path;
 
@@ -28,20 +27,20 @@ import org.araneaframework.Path;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardPath implements Path {
-  private ListIterator path;
+  private LinkedList path = new LinkedList();
   
   /**
    * Constructs a path from the fullPath. Expects fullPath to be a dot-separated String.
    * @param fullPath
    */
   public StandardPath(String fullPath) {
-    List list = new ArrayList();
+    Assert.notNull(fullPath, "Path cannot be null!");
+    
     StringTokenizer tokenizer = new StringTokenizer(fullPath, ".");
     
     while (tokenizer.hasMoreElements()) {
-      list.add(tokenizer.nextElement());
+      path.add(tokenizer.nextElement());
     }
-    this.path = list.listIterator();
   }
   
 
@@ -49,23 +48,21 @@ public class StandardPath implements Path {
    * @see org.araneaframework.Path#getNext()
    */
   public Object getNext() {
-  	Object result = path.next();
-  	path.previous();
-  	return result;
+  	return path.getFirst();
   }
 
   /**
    * @see org.araneaframework.Path#next()
    */
   public Object next() {
-    return path.next();
+    return path.removeFirst();
   }
 
   /**
    * @see org.araneaframework.Path#hasNext()
    */
   public boolean hasNext() {
-    return path.hasNext();
+    return path.size() > 0;
   }
   
   /**
@@ -73,18 +70,13 @@ public class StandardPath implements Path {
    */
   public String toString() {
     StringBuffer result = new StringBuffer();
-    int counter = 0;
-    while(hasNext()) {
-      result.append((String)next()+".");
-      counter++;
+
+    for (Iterator i = path.iterator(); i.hasNext();) {  
+      result.append((String) i.next());
+      if (i.hasNext())
+        result.append('.');
     }
-    if (result.length()>0 && result.charAt(result.length()-1)=='.') {
-      result = new StringBuffer(result.substring(0, result.length()-1));
-    }
-    for (int i=0;i<counter;i++) {
-      path.previous();
-    }
-    
+
     return result.toString();
   }
 }

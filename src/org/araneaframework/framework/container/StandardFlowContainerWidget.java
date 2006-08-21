@@ -27,7 +27,8 @@ import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ApplicationComponent;
+import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
@@ -86,11 +87,9 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     this.top = topWidget;
   }
 
-  // TODO: notion of "non-renderable" widget that should take place
-  // on call stack but will not be rendered itself - instead first
-  // renderable widget on call stack is.
   public void start(Widget flow, Configurator configurator, Handler handler) {
-    flow = decorateCallableWidget((Widget) flow);
+    Assert.notNullParam(flow, "flow");
+    
     CallFrame frame = makeCallFrame((Widget) flow, configurator, handler);
     
     log.debug("Starting flow '" + flow.getClass().getName() +"'");
@@ -115,7 +114,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
   
   public void replace(Widget flow, Configurator configurator) {
-    flow = decorateCallableWidget((Widget) flow);
+    Assert.notNullParam(flow, "flow");
+    
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
     CallFrame frame = makeCallFrame((Widget) flow, configurator, previousFrame.getHandler());
     
@@ -213,15 +213,18 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     refreshGlobalEnvironment();
   }
   
-  public void addNestedEnvironmentEntry(ApplicationComponent.ApplicationWidget scope, final Object entryId, Object envEntry) {
+  public void addNestedEnvironmentEntry(ApplicationWidget scope, final Object entryId, Object envEntry) {
+    Assert.notNullParam(scope, "scope");
+    Assert.notNullParam(entryId, "entryId");
+    
     pushGlobalEnvEntry(entryId, envEntry);
     
-    BaseWidget scopeWidget = new BaseWidget() {
+    BaseWidget scopedWidget = new BaseWidget() {
       protected void destroy() throws Exception {
         popGlobalEnvEntry(entryId);
       }
     };
-    ComponentUtil.addListenerComponent(scope, scopeWidget);
+    ComponentUtil.addListenerComponent(scope, scopedWidget);
   }
   
   public boolean isNested() {
@@ -229,7 +232,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
   
   public void reset(final EnvironmentAwareCallback callback) {   
-    log.debug("Resetting all flows in '" + getClass().getName() + "'");
+    log.debug("Resetting flows '" + callStack + "'");
     
     for (Iterator i = callStack.iterator(); i.hasNext();) {
       CallFrame frame = (CallFrame) i.next();
@@ -248,11 +251,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
   }
   
-  public void setTitle(String titleLabelId) throws Exception {    
-    ((CallFrame) callStack.getFirst()).setTitle(titleLabelId);
-  }
-  
-  
   //*******************************************************************
   // PROTECTED METHODS
   //*******************************************************************
@@ -260,6 +258,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   protected void init() throws Exception {
     super.init();
             
+    refreshGlobalEnvironment();
+    
     if (top != null) {
       start(top, null, null);
       top = null;
@@ -321,8 +321,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
   
   protected Environment getChildWidgetEnvironment() throws Exception {
-    refreshGlobalEnvironment();   
-    
     return new StandardEnvironment(getEnvironment(), nestedEnvironmentEntries);
   }
   
@@ -331,13 +329,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
    */
   protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler handler) {
     return new CallFrame(callable, configurator, handler);
-  }
-  
-  /**
-   * This method may be overidden to decorate the called widget. 
-   */
-  protected Widget decorateCallableWidget(Widget widget) {
-    return widget;
   }
   
   //*******************************************************************
@@ -376,7 +367,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     Widget widget;
     Configurator configurator;
     Handler handler;
-    String title;
     
     protected CallFrame(Widget widget, Configurator configurator, Handler handler) {
       this.configurator = configurator;
@@ -395,13 +385,9 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     public Widget getWidget() {
       return widget;
     }
-
-    protected String getTitle() {
-      return title;
-    }
-
-    protected void setTitle(String title) {
-      this.title = title;
+    
+    public String toString() {
+      return widget.getClass().getName().toString();
     }
   }
 

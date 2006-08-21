@@ -24,7 +24,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.support.FileInfo;
 
 /**
@@ -93,7 +93,7 @@ public class FileDownloaderService extends BaseService {
 	}
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    HttpServletResponse response = ((ServletOutputData) output).getResponse();
+    HttpServletResponse response = ServletUtil.getResponse(output);
     
     ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(fileContent.length);
     byteOutputStream.write(fileContent);

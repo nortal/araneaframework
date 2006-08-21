@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form.converter;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
@@ -79,7 +80,7 @@ public class ConverterFactory implements ConverterProvider {
    * @throws ConverterNotFoundException
    *           if {@link BaseConverter}is not found
    */
-  public Converter findConverter(String fromType, String toType) throws ConverterNotFoundException {
+  public Converter findConverter(String fromType, String toType, Environment env) throws ConverterNotFoundException {
     if (fromType == null || toType == null) throw new ConverterNotFoundException(fromType, toType);
     if (fromType.equals(toType)) {
       return new IdenticalConverter();

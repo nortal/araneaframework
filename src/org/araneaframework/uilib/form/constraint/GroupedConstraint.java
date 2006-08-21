@@ -16,10 +16,10 @@
 
 package org.araneaframework.uilib.form.constraint;
 
-import java.util.List;
-import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
-import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormElementAware;
+import org.araneaframework.uilib.form.FormElementContext;
+import org.araneaframework.uilib.form.GenericFormElementContext;
 
 /**
  * Constraint that will be applied iff the constraint's group is active.
@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.FormElement;
  * @author Ilja Livenson (ilja@webmedia.ee)
  * 
  */
-public class GroupedConstraint extends BaseConstraint {
+public class GroupedConstraint extends BaseConstraint implements FormElementAware {
 
   private ConstraintGroupHelper conditionalConstraintHelper;
 
@@ -61,24 +61,13 @@ public class GroupedConstraint extends BaseConstraint {
     constraint.setCustomErrorMessage(customErrorMessage);
   }
 
-  public void setEnviroment(Environment enviroment) {
-    constraint.setEnvironment(enviroment);
+  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
+    constraint.setGenericFormElementCtx(feCtx);
   }
-
-  public void setField(FormElement field) {
-    constraint.setField(field);
-  }
-
-  public void clearErrors() {
-    constraint.clearErrors();
-  }
-
-  public List getErrors() {
-    return constraint.getErrors();
-  }
-
-  public boolean isValid() {
-    return constraint.isValid();
+  
+  public void setFormElementCtx(FormElementContext feCtx) {
+    if (constraint instanceof FormElementAware)
+      ((FormElementAware) constraint).setFormElementCtx(feCtx);
   }
 
 }

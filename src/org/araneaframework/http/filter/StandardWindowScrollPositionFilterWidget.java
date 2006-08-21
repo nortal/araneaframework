@@ -14,17 +14,17 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.filter;
+package org.araneaframework.http.filter;
 
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
-import org.araneaframework.uilib.core.WindowScrollPositionContext;
+import org.araneaframework.http.WindowScrollPositionContext;
 
 /**
- * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget implements WindowScrollPositionContext {
   protected String windowScrollX;
@@ -45,7 +45,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
     return windowScrollY;
   }
   
-  public void setScrollCoordinates(String x, String y) {
+  public void scrollTo(String x, String y) {
     windowScrollX = x;
     windowScrollY = y;
   }

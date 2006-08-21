@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework.container;
 
+import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -30,6 +31,10 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardContainerService extends BaseFilterService {
+  //*******************************************************************
+  // CONSTANTS
+  //*******************************************************************
+  private static final Logger log = Logger.getLogger(StandardContainerService.class);
   /**
    * The key of the action path parameter in the request.
    */
@@ -53,7 +58,9 @@ public class StandardContainerService extends BaseFilterService {
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (hasAction(input)) {
-      childService._getService().action(getActionPath(input), input, output);
+      Path actionPath = getActionPath(input);
+      log.debug("Routing action to service '" + actionPath.toString() + "'");
+      super.action(actionPath, input, output);
     }
   }
 }

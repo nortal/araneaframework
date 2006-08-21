@@ -19,9 +19,10 @@ package org.araneaframework.uilib.form.constraint;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
-import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormElementAware;
+import org.araneaframework.uilib.form.FormElementContext;
+import org.araneaframework.uilib.form.GenericFormElementContext;
 
 
 /**
@@ -31,7 +32,7 @@ import org.araneaframework.uilib.form.FormElement;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * 
  */
-public abstract class CompositeConstraint extends BaseConstraint {
+public abstract class CompositeConstraint extends BaseConstraint implements FormElementAware {
 
   protected List constraints = new ArrayList();
 
@@ -51,19 +52,20 @@ public abstract class CompositeConstraint extends BaseConstraint {
   public void clearConstraints() {
     constraints.clear();
   }
-
-  /**
-	 * Propagates the field to contained constraints.
-	 */
-  public void setField(FormElement field) {
-    for (Iterator i = constraints.iterator(); i.hasNext();) {
-      ((Constraint) i.next()).setField(field);
-    }
-  }
   
-  public void setEnvironment(Environment enviroment) {
+  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
+    super.setGenericFormElementCtx(feCtx);
     for (Iterator i = constraints.iterator(); i.hasNext();) {
-      ((Constraint) i.next()).setEnvironment(enviroment);
+      Constraint c = (Constraint) i.next();
+      c.setGenericFormElementCtx(getGenericFormElementCtx());
+    }  
+  }
+
+  public void setFormElementCtx(FormElementContext feCtx) {
+    for (Iterator i = constraints.iterator(); i.hasNext();) {
+      Constraint c = (Constraint) i.next();
+      if (c instanceof FormElementAware)
+        ((FormElementAware) c).setFormElementCtx(feCtx);
     }    
   }
 }

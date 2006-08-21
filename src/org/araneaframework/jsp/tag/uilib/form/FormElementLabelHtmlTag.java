@@ -36,7 +36,7 @@ public class FormElementLabelHtmlTag extends BaseFormElementLabelTag {
     FormSimpleLabelHtmlTag.writeLabel(
         out, 
         localizedLabel, 
-        (controlViewModel.isMandatory() && showMandatory), 
+        (formElementViewModel.isMandatory() && showMandatory), 
         getStyleClass(),
         derivedId,
         pageContext,

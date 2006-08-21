@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.core;
+package org.araneaframework.http;
 
 import java.io.Serializable;
 
@@ -42,5 +42,5 @@ public interface WindowScrollPositionContext extends Serializable {
    * @param x horizontal scroll coordinate
    * @param y vertical scroll coordinate
    */
-  public void setScrollCoordinates(String x, String y);
+  public void scrollTo(String x, String y);
 }

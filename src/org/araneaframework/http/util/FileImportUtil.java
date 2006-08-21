@@ -17,10 +17,10 @@
 package org.araneaframework.http.util;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.araneaframework.InputData;
+import org.araneaframework.core.Assert;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.filter.StandardFileImportFilterService;
 
 /**
@@ -34,29 +34,30 @@ public abstract  class FileImportUtil {
 	 * @param fileName
 	 */
 	public final static String getImportString(String fileName) {
+    Assert.notEmptyParam(fileName, "fileName");
+    
 		StringBuffer sb = new StringBuffer("/" + StandardFileImportFilterService.FILE_IMPORTER_NAME + "/");
 		sb.append(fileName);
 	
 		return sb.toString();
 	}
+  
+  public final static String getImportString(String fileName, ServletRequest req) {
+    return getImportString(fileName, ServletUtil.getInputData(req));
+  }
 	
-	public final static String getImportString(String fileName, ServletRequest req, ServletResponse res) {
-		HttpServletResponse hres = (HttpServletResponse) res;
-		HttpServletRequest hreq = (HttpServletRequest) req;
+	public final static String getImportString(String fileName, InputData input) {
+    Assert.notNullParam(input, "input");
+    Assert.notEmptyParam(fileName, "fileName");
+	  Assert.isInstanceOfParam(HttpInputData.class, input, "input");
     
     StringBuffer url = new StringBuffer();
-    url.append(hreq.getScheme());
-    url.append("://");
-    url.append(hreq.getServerName());    
-    url.append(":");
-    url.append(hreq.getServerPort());
-    url.append(hreq.getContextPath());
-    url.append(hreq.getServletPath());
+    url.append(((HttpInputData) input).getContainerURL());
     url.append("/");
     url.append(StandardFileImportFilterService.FILE_IMPORTER_NAME);
     url.append("/");
     url.append(fileName);
 		
-		return hres.encodeURL(url.toString());
+		return ((HttpOutputData) input.getOutputData()).encodeURL(url.toString());
 	}
 }

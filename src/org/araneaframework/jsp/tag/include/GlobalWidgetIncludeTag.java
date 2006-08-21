@@ -20,7 +20,7 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.ApplicationComponent;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
 
@@ -49,7 +49,7 @@ public class GlobalWidgetIncludeTag extends BaseIncludeTag {
     Path currentScope = output.getScope();
     
 	// Call
-	ApplicationComponent.ApplicationWidget widget = JspWidgetUtil.getWidgetFromContext(widgetId, pageContext);
+	ApplicationWidget widget = JspWidgetUtil.getWidgetFromContext(widgetId, pageContext);
 
     while (output.getScope().hasNext())
       output.popScope();

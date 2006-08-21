@@ -20,7 +20,7 @@ import java.io.Serializable;
 import org.araneaframework.Component;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
+import org.araneaframework.core.ApplicationWidget;
 
 /**
  * This context provides support for flow navigation and nesting. A flow is started using 

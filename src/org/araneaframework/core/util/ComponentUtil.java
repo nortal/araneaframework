@@ -18,6 +18,7 @@ package org.araneaframework.core.util;
 import org.apache.commons.lang.math.RandomUtils;
 import org.araneaframework.Component;
 import org.araneaframework.core.ApplicationComponent;
+import org.araneaframework.core.Assert;
 
 /**
  * This utility class contains methods for managing Aranea components.
@@ -36,6 +37,9 @@ public abstract class ComponentUtil {
    * is to scope something (e.g. environment entry) with the target component.
    */
   public static void addListenerComponent(ApplicationComponent target, Component listener) {
+    Assert.notNullParam(target, "target");
+    Assert.notNullParam(listener, "listener");
+    
     listener._getComponent().init(target.getChildEnvironment());
            
     String key = LISTENER_KEY;    

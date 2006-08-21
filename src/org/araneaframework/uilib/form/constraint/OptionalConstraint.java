@@ -16,10 +16,10 @@
 
 package org.araneaframework.uilib.form.constraint;
 
-import java.util.List;
-import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
-import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormElementAware;
+import org.araneaframework.uilib.form.FormElementContext;
+import org.araneaframework.uilib.form.GenericFormElementContext;
 
 /**
  * Constraint that will be applied iff the field has been read from the request.
@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.FormElement;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  * 
  */
-public class OptionalConstraint extends BaseConstraint {
+public class OptionalConstraint extends BaseFieldConstraint {
 
   private Constraint constraint;
 
@@ -36,33 +36,20 @@ public class OptionalConstraint extends BaseConstraint {
   }
 
   protected void validateConstraint() throws Exception {
-    if (getField().isRead()) 
+    if (isRead()) 
       constraint.validate();
   }
 
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
   }
-
-  public void setEnviroment(Environment enviroment) {
-    constraint.setEnvironment(enviroment);
+  
+  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
+    constraint.setGenericFormElementCtx(feCtx);
   }
-
-  public void setField(FormElement field) {
-    constraint.setField(field);
-    super.setField(field);
+  
+  public void setFormElementCtx(FormElementContext feCtx) {
+    if (constraint instanceof FormElementAware)
+      ((FormElementAware) constraint).setFormElementCtx(feCtx);
   }
-
-  public void clearErrors() {
-    constraint.clearErrors();
-  }
-
-  public List getErrors() {
-    return constraint.getErrors();
-  }
-
-  public boolean isValid() {
-    return constraint.isValid();
-  }
-
 }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.UiEvent;
@@ -266,7 +267,7 @@ public class ComponentListFooterTag extends PresentationTag {
   
   public StringBuffer getRequestURL() throws JspException {
 	OutputData output = (OutputData) requireContextEntry(AraneaRootTag.OUTPUT_DATA_KEY);
-	StringBuffer sb = new StringBuffer(URLUtil.getServletRequestURL(output.getInputData()));
+	StringBuffer sb = new StringBuffer(((HttpInputData)output.getInputData()).getContainerURL());
     return sb;
   }
 }

@@ -26,7 +26,6 @@ import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.http.ServletOutputData;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 
@@ -73,7 +72,7 @@ public class StandardPresentationWidget extends BaseApplicationWidget {
     JspContext jspCtx = (JspContext) getEnvironment().requireEntry(JspContext.class);
     
     String jsp = jspCtx.getJspPath() + "/" + viewSelector + ".jsp";
-    ServletUtil.include(jsp, getEnvironment(), (ServletOutputData) output);
+    ServletUtil.include(jsp, getEnvironment(), output);
   }
   
   public Component.Interface _getComponent() {

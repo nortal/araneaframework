@@ -22,8 +22,6 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseComponent;
-import org.araneaframework.http.ServletInputData;
-import org.araneaframework.http.ServletOutputData;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 
 /**
@@ -51,9 +49,8 @@ public class StandardServletServiceAdapterComponent extends BaseComponent
 	}
 
 	public void service(HttpServletRequest request, HttpServletResponse response) {
-		ServletInputData input = new StandardServletInputData(request);
-		ServletOutputData output = new StandardServletOutputData(request,
-				response);
+		InputData input = new StandardServletInputData(request);
+		OutputData output = new StandardServletOutputData(request, response);
 
 		request.setAttribute(InputData.INPUT_DATA_KEY, input);
 		request.setAttribute(OutputData.OUTPUT_DATA_KEY, output);

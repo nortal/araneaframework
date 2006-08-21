@@ -48,7 +48,6 @@ import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidg
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
-import org.araneaframework.http.ServletOutputData;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.support.FlowCreator;
@@ -145,7 +144,6 @@ public class MenuWidget extends TemplateMenuWidget  {
     }        
     putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
     
-    ServletUtil.include("/WEB-INF/jsp/menuError.jsp", getEnvironment(), 
-        (ServletOutputData) output);
+    ServletUtil.include("/WEB-INF/jsp/menuError.jsp", getEnvironment(), output);
   }
 }

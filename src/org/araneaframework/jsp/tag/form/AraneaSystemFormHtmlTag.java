@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.filter.StandardJspFilterService;

@@ -44,7 +44,7 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 	private static final String MCE_JS = "js/tiny_mce/tiny_mce.js";
 	
 	protected int doStartTag(Writer out) throws Exception {
-		String url = FileImportUtil.getImportString(MCE_JS, pageContext.getRequest(), pageContext.getResponse());
+		String url = FileImportUtil.getImportString(MCE_JS, pageContext.getRequest());
 		ImportScriptsHtmlTag.writeHtmlScriptsInclude(out,  url);
 		
 		setName("script");

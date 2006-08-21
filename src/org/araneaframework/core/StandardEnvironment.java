@@ -35,6 +35,8 @@ public class StandardEnvironment extends BaseEnvironment {
    * @param entries a map of the entries in the Environment
    */
   public StandardEnvironment(Environment env, Map entries) {
+    Assert.notNullParam(entries, "entries");
+    
     this.entries = entries;
     parentEnv = env;
   }
@@ -46,6 +48,8 @@ public class StandardEnvironment extends BaseEnvironment {
    * @param value a value corresponding to given key in the map of the Environment entries.
    */
   public StandardEnvironment(Environment env, Object key, Object value) {
+    Assert.notNullParam(key, "key");
+    
     entries = new HashMap();
     entries.put(key, value);
     parentEnv = env;

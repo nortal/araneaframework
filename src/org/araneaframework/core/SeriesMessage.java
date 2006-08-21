@@ -23,6 +23,8 @@ public class SeriesMessage implements Message {
   private Message[] series;
     
   public SeriesMessage(Message[] series) {
+    Assert.notNullParam(this, series, "series");
+    
     this.series = series;
   }
 

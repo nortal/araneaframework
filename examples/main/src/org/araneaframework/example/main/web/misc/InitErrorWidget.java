@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.misc;
 
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.example.main.TemplateBaseWidget;
 
 
@@ -29,6 +30,6 @@ public class InitErrorWidget extends TemplateBaseWidget {
     
     setViewSelector("misc/initError");
 
-    throw new RuntimeException("Error on init()!");
+    throw new AraneaRuntimeException("Error on init()!");
 	}
 }

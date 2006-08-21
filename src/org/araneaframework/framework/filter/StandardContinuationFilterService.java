@@ -29,7 +29,6 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ContinuationContext;
 import org.araneaframework.framework.ContinuationManagerContext;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.http.ServletOverridableOutputData;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
@@ -49,7 +48,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     AtomicResponseHelper arUtil = 
-      new AtomicResponseHelper((ServletOverridableOutputData)output);
+      new AtomicResponseHelper(output);
     
     try {
       if (isRunning()) {

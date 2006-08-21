@@ -59,7 +59,7 @@ public class ImportStylesHtmlTag extends BaseFileImportTag {
 	}
 	 
 	protected void writeContent(Writer out, String srcFile) throws Exception {
-		srcFile = FileImportUtil.getImportString(srcFile, pageContext.getRequest(), pageContext.getResponse());
+		srcFile = FileImportUtil.getImportString(srcFile, pageContext.getRequest());
 				
 		JspUtil.writeOpenStartTag(out, "link");
 		JspUtil.writeAttribute(out, "rel", "stylesheet");

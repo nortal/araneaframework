@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
-import javax.servlet.http.HttpServletRequest;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.support.UiLibMessages;
@@ -70,12 +70,12 @@ public abstract class StringArrayRequestControl extends BaseControl {
   }
   
   /**
-   * This implementation of method {@link #readFromRequest(String, HttpServletRequest)}uses the
+   * This implementation of method {@link #readFromRequest(HttpInputData)}uses the
    * methods {@link #preprocessRequestParameters(String[])}and
    * {@link #fromRequestParameters(String[])}to read the control from request.
    */
-  protected void readFromRequest(String controlName, HttpServletRequest request) {
-    String parameterValues[] = request.getParameterValues(controlName);
+  protected void readFromRequest(HttpInputData request) {
+    String parameterValues[] = request.getParameterValues(request.getScope().toString());
     innerData = preprocessRequestParameters(parameterValues);
   }
 
@@ -84,20 +84,19 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * method {@link #fromRequestParameters(String[])}and validation using method
    * {@link #validate()}.
    */
-  public void convertAndValidate() {
+  public void convert() {
     if (innerData != null)
       value = fromRequestParameters((String[]) innerData);
     else
       value = null;
-
-    validateInternal();
   }
+
 
   /**
    * Checks that the mandatory is satisfied, and if the value is not <code>null</code> calls the
    * {@link #validateNotNull()}method.
    */
-  protected void validateInternal() {
+  public void validate() {
     if (isMandatory() && !isRead()) {
       addError(
           ErrorUtil.localizeAndFormat(

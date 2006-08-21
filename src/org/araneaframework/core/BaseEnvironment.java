@@ -23,6 +23,8 @@ import org.araneaframework.Environment;
  */
 public abstract class BaseEnvironment implements Environment {
   public Object requireEntry(Object key) {
+    Assert.notNullParam(this, key, "key");
+    
     Object result = getEntry(key);
     
     if (result == null)

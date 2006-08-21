@@ -23,7 +23,7 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.message.LoginAndMenuSelectMessage;
 import org.araneaframework.framework.MountContext;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.HttpOutputData;
 
 
 /**
@@ -39,16 +39,16 @@ public class RedirectingWidget extends TemplateBaseWidget {
 	}
   
   public void handleEventRedirect() throws Exception {
-    ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect("http://www.araneaframework.org");
+    ((HttpOutputData) getOutputData()).sendRedirect("http://www.araneaframework.org");
   }
   
   public void handleEventMountAndRedirect() throws Exception {
-    String url = getMountCtx().mount(getCurrentInput(), "/mount/test", new MountContext.MessageFactory() {
+    String url = getMountCtx().mount(getInputData(), "/mount/test", new MountContext.MessageFactory() {
       public Message buildMessage(String url, String suffix, InputData input, OutputData output) {
         return new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form");
       }
     });
     
-    ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(url);
+    ((HttpOutputData) getOutputData()).sendRedirect(url);
   }
 }

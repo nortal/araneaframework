@@ -18,7 +18,7 @@ package org.araneaframework.example.common.tags.wizard;
 
 import java.io.Writer;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 

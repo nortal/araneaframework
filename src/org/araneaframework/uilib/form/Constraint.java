@@ -16,40 +16,26 @@
 
 package org.araneaframework.uilib.form;
 
+import java.io.Serializable;
 import java.util.List;
-import org.araneaframework.Environment;
+import java.util.Set;
 
-public interface Constraint {
 
-  /**
-   * Sets the <code>SimpleFormElement</code> that the constraint will operate on (the constraints
-   * that operate on more than one field should ignore this function, composite constraints should
-   * propagate it down the tree).
-   * 
-   * @param field <code>SimpleFormElement</code> the field that constraint will operate on.
-   */
-  public void setField(FormElement field);
+public interface Constraint extends Serializable, GenericFormElementAware{
 
   /**
    * This method validates the constraint conditions, providing some preconditions and
    * postconditions for the {@link #validate()}method.
    * @throws Exception 
    */
-  public void validate() throws Exception;
-
-  /**
-   * Returns whether the constraint is satisfied/valid (same that no errors were produced).
-   * 
-   * @return whether the constraint is satisfied/valid (same that no errors were produced).
-   */
-  public boolean isValid();
-
+  public boolean validate() throws Exception;
+  
   /**
    * Returns the {@link UiMessage}s produced while validationg the constraint.
    * 
    * @return the {@link UiMessage}s produced while validationg the constraint.
    */
-  public List getErrors();
+  public Set getErrors();
 
   /**
    * Clears the the errors produced while validationg the constraint.
@@ -63,7 +49,4 @@ public interface Constraint {
    * usual ones.
    */
   public void setCustomErrorMessage(String customErrorMessage);
-
-  public void setEnvironment(Environment enviroment);
-
 }

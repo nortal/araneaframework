@@ -17,10 +17,9 @@
 package org.araneaframework.uilib.form.control;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileItem;
-import org.araneaframework.OutputData;
 import org.araneaframework.http.FileUploadInputExtension;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.support.FileInfo;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
@@ -74,14 +73,12 @@ public class FileUploadControl extends BaseControl {
   /**
    * Reads the {@link FileInfo}data from request using the {@link MultipartWrapper}.
    */
-  protected void readFromRequest(String controlName, HttpServletRequest request) {
-    OutputData output = 
-      (OutputData) request.getAttribute(OutputData.OUTPUT_DATA_KEY);
+  protected void readFromRequest(HttpInputData request) {
     FileUploadInputExtension fileUpload = 
-      (FileUploadInputExtension) output.narrow(FileUploadInputExtension.class);    
+      (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);    
     
-  	if (fileUpload.getUploadedFile(controlName)!= null) {
-      FileItem file = fileUpload.getUploadedFile(controlName);
+  	if (fileUpload.getUploadedFile(request.getScope().toString())!= null) {
+      FileItem file = fileUpload.getUploadedFile(request.getScope().toString());
       String mimeType = file.getContentType();
 
       if (permittedMimeFileTypes == null || permittedMimeFileTypes.contains(mimeType)) {
@@ -101,7 +98,7 @@ public class FileUploadControl extends BaseControl {
   /**
    *  
    */
-  public void convertAndValidate() {
+  public void convert() {
     value = innerData;
 
     if (isMandatory() && !isRead()) {

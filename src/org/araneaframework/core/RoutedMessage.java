@@ -29,6 +29,8 @@ public abstract class RoutedMessage implements Message {
   private String destination;
   
   public RoutedMessage(Path path) {
+    Assert.notNullParam(this, path, "path");
+    
     this.path = path;
     destination = path.toString();
   }

@@ -40,7 +40,7 @@ public class FormElementTest extends TestCase {
     sfe._getComponent().init(new MockEnvironment());
     
     TextControl tb = new TextControl();
-    tb.setMandatory(true);
+    sfe.setMandatory(true);
     
     sfe.setControl(tb);
     sfe.setData(new LongData());

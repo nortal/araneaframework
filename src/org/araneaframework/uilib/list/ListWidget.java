@@ -302,7 +302,6 @@ public class ListWidget extends StandardPresentationWidget {
 		if (isInitialized()) {
 			FormElement element = getFilterForm().getElementByFullName(FILTER_BUTTON_ID);		
 			element.setLabel(labelId);
-			element.getControl().setLabel(labelId);		
 		}
 	}
 
@@ -311,7 +310,6 @@ public class ListWidget extends StandardPresentationWidget {
 		if (isInitialized()) {
 			FormElement element = getFilterForm().getElementByFullName(FILTER_CLEAR_BUTTON_ID);		
 			element.setLabel(labelId);
-			element.getControl().setLabel(labelId);		
 		}
 	}	
 

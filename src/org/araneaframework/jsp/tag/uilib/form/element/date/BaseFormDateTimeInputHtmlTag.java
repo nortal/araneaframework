@@ -20,6 +20,7 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.FileImportUtil;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DateControl;
@@ -113,7 +114,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			String calendarImgId = id + CALENDAR_BUTTON_ID_SUFFIX;
 			JspUtil.writeOpenStartTag(out, "img");
 			out.write(" src=\"");
-			out.write(FileImportUtil.getImportString("gfx/ico_calendar.gif", pageContext.getRequest(), pageContext.getResponse()));
+			out.write(FileImportUtil.getImportString("gfx/ico_calendar.gif", pageContext.getRequest()));
 			out.write("\" ");
 			JspUtil.writeAttribute(out, "id", calendarImgId);
 			JspUtil.writeAttribute(out, "class", calendarIconClass);
