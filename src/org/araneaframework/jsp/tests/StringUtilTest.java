@@ -40,12 +40,5 @@ public class StringUtilTest extends TestCase {
 		assertEquals(JspStringUtil.underlineAccessKey("s", "s"), "<u>s</u>");
 		assertEquals(JspStringUtil.underlineAccessKey(" \n\tõüöä\n\t", "Õ"), " \n\t<u>õ</u>üöä\n\t");
 		assertEquals(JspStringUtil.underlineAccessKey("<u>this</u>","U"),"<<u>u</u>>this</u>");
-		
-		// escapeHtmlEntities
-		assertNull(StringEscapeUtils.escapeHtml(null));
-		assertEquals(StringEscapeUtils.escapeHtml(""), "");
-		assertEquals(StringEscapeUtils.escapeHtml(" abc def "), " abc def ");
-		assertEquals(StringEscapeUtils.escapeHtml("&"), "&amp;");
-		assertEquals(StringEscapeUtils.escapeHtml("&&&\n<<< >>>\t\"\"\""), "&amp;&amp;&amp;\n&lt;&lt;&lt; &gt;&gt;&gt;\t&quot;&quot;&quot;");
 	}
 }
