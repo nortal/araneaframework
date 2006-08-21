@@ -20,6 +20,7 @@ import org.araneaframework.AraneaVersion;
 import org.araneaframework.OutputData;
 import org.araneaframework.example.common.framework.TemplateMenuContext;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
@@ -45,7 +46,7 @@ public class FooterWidget extends StandardPresentationWidget {
         path = path.substring(0, index);
       }
 
-      StringBuffer reqUrl = new StringBuffer(URLUtil.getContextRequestURL(getCurrentInput()));
+      StringBuffer reqUrl = new StringBuffer(((HttpInputData) getInputData()).getContextURL());
       reqUrl.append("/src/");
       reqUrl.append(path);
       reqUrl.append(".javas");
@@ -61,7 +62,7 @@ public class FooterWidget extends StandardPresentationWidget {
     /* view source */
     String viewSelector = menuWidget.getFlowViewSelector();
     if (viewSelector != null) {
-      StringBuffer reqUrl = new StringBuffer(URLUtil.getContextRequestURL(getCurrentInput()));
+      StringBuffer reqUrl = new StringBuffer(((HttpInputData) getInputData()).getContextURL());
       reqUrl.append("/jsp/");
       reqUrl.append(viewSelector);
       reqUrl.append(".xmls");

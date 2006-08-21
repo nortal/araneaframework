@@ -22,6 +22,7 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.framework.FilterWidget;
 
@@ -62,6 +63,8 @@ public class BaseFilterWidget extends BaseWidget  implements FilterWidget {
   }
   
   protected void init() throws Exception {
+    Assert.notNull(this, childWidget, "Filter cannot have a null child!");
+    
     this.childWidget._getComponent().init(getChildWidgetEnvironment());
   }
   

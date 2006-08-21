@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.util.Iterator;
+import org.apache.commons.lang.Validate;
 import org.araneaframework.uilib.form.Constraint;
 
 
@@ -34,21 +35,17 @@ public class OrConstraint extends CompositeConstraint {
    * @throws Exception 
 	 */
   public void validateConstraint() throws Exception {
-    
     boolean valid = false;
     
     for (Iterator i = constraints.iterator(); i.hasNext();) {
       Constraint constraint = (Constraint) i.next();
-      constraint.validate();
-      valid = valid || constraint.isValid();      
+      valid = valid || constraint.validate();
+      addErrors(constraint.getErrors());
+      constraint.clearErrors();
     }
     
-    if (!valid) {
-      for (Iterator i = constraints.iterator(); i.hasNext();) {
-      	addErrors(((Constraint) i.next()).getErrors());   
-      }    
+    if (valid) {
+      clearErrors();
     }
-    
-    
   }
 }

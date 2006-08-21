@@ -19,7 +19,6 @@ package org.araneaframework.core;
 import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 import org.araneaframework.uilib.InvalidEventException;
 
 /**

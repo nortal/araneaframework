@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.misc;
 
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 
@@ -33,6 +34,6 @@ public class EventErrorWidget extends TemplateBaseWidget {
 	}
   
   public void handleEventError() {
-    throw new RuntimeException("Error on event()!");
+    throw new AraneaRuntimeException("Error on event()!");
   }
 }

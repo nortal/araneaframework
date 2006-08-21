@@ -26,7 +26,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * 
  */
-public class StringLengthInRangeConstraint extends BaseConstraint {
+public class StringLengthInRangeConstraint extends BaseFieldConstraint {
 
   private int rangeStart;
   private int rangeEnd;
@@ -46,17 +46,17 @@ public class StringLengthInRangeConstraint extends BaseConstraint {
    * Checks that the value is between two others.
    */
   protected void validateConstraint() {
-    String value = (String) getField().getData().getValue();
+    String value = (String) getValue();
     if (value != null && (value.length() < rangeStart || value.length() > rangeEnd)) {
       addError(
           ErrorUtil.localizeAndFormat(
-          UiLibMessages.STRING_NOT_IN_RANGE, 
-          new Object[] {
-              ErrorUtil.localize(getField().getLabel(), getEnvironment()),
-              Integer.toString(rangeStart),
-              Integer.toString(rangeEnd)
-          },
-          getEnvironment()));
+            UiLibMessages.STRING_NOT_IN_RANGE, 
+            new Object[] {
+                t(getLabel()),
+                Integer.toString(rangeStart),
+                Integer.toString(rangeEnd)
+            },
+            getEnvironment()));
     }
   }
 }

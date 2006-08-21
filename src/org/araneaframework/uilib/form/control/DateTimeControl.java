@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form.control;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
 
@@ -81,17 +82,6 @@ public class DateTimeControl extends BaseControl {
     return timeControl.isRead() || dateControl.isRead();
   }
 
-  /**
-   * Sets the label of both included controls.
-   * 
-   * @param label the label of both included controls.
-   */
-  public void setLabel(String label) {
-    super.setLabel(label);
-    timeControl.setLabel(label);
-    dateControl.setLabel(label);
-  }
-
   //*******************************************************************
   // HELPER METHODS
   //*******************************************************************
@@ -130,15 +120,12 @@ public class DateTimeControl extends BaseControl {
   /**
    * 
    */
-  public void convertAndValidate() {
-    dateControl.setMandatory(false);
-    timeControl.setMandatory(false);
-
-    dateControl.convertAndValidate();
-    timeControl.convertAndValidate();
+  public void convert() {
+    dateControl.convert();
+    timeControl.convert();
 
     //Reading control data
-    if (isValid() && isRead()) {
+    if (getFormElementCtx().isValid() && isRead()) {
       value = addTimeToDate(
           (Timestamp) dateControl.getRawValue(), 
           (Timestamp) timeControl.getRawValue());
@@ -146,7 +133,9 @@ public class DateTimeControl extends BaseControl {
     else {
       value = null;
     }
-
+  }
+  
+  public void validate() {
     if (isMandatory() && !isRead()) {
       addError(
           ErrorUtil.localizeAndFormat(
@@ -169,11 +158,11 @@ public class DateTimeControl extends BaseControl {
     timeControl.setRawValue(value);
   }
   
-  public void setDisabled(boolean disabled) {
-    super.setDisabled(disabled);
+  public void setFormElementCtx(FormElementContext formElementContext) {
+    super.setFormElementCtx(formElementContext);
     
-    dateControl.setDisabled(disabled);
-    timeControl.setDisabled(disabled);
+    dateControl.setFormElementCtx(formElementContext);
+    timeControl.setFormElementCtx(formElementContext);
   }
   
   //*********************************************************************

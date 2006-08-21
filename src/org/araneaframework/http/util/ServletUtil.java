@@ -17,10 +17,15 @@
 package org.araneaframework.http.util;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
-import org.araneaframework.http.ServletInputData;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
 
 /**
  * An util for dynamically including jsp pages.
@@ -37,12 +42,13 @@ public abstract  class ServletUtil {
    * the current context root. The context root in the env under the key ServletContext.class
    * is used.
    */
-  public static void include(String filePath, Environment env, ServletOutputData output) throws Exception {
+  public static void include(String filePath, Environment env, OutputData output) throws Exception {
     log.debug("Including a resource from the absolute path '" + filePath + "'");
     
     ServletContext servletContext = 
       (ServletContext) env.getEntry(ServletContext.class);
-    servletContext.getRequestDispatcher(filePath).include(output.getRequest(), output.getResponse());
+    servletContext.getRequestDispatcher(filePath).include(
+        getRequest(output.getInputData()), getResponse(output));
   }
 
   /**
@@ -51,13 +57,39 @@ public abstract  class ServletUtil {
   * outside the current servlet context. If the path begins with a "/" it is interpreted
   * as relative to the current context root. 
   */
-  public static void includeRelative(String filePath, Environment env, ServletOutputData output) throws Exception {
+  public static void includeRelative(String filePath, Environment env, OutputData output) throws Exception {
     log.debug("Including a resource from the relative path '" + filePath + "'");
     
-    output.getRequest().getRequestDispatcher(filePath).include(output.getRequest(), output.getResponse());
+    getRequest(output.getInputData()).getRequestDispatcher(filePath).include(
+        getRequest(output.getInputData()), 
+        getResponse(output));
   }
   
-  public static void publishModel(ServletInputData input, String name, Object model) {
-    input.getRequest().setAttribute(name, model);
+  public static void publishModel(InputData input, String name, Object model) {
+    getRequest(input).setAttribute(name, model);
+  }
+  
+  public static HttpServletRequest getRequest(InputData input) {
+    return (HttpServletRequest) input.narrow(HttpServletRequest.class);
+  }
+  
+  public static void setRequest(InputData input, HttpServletRequest req) {
+    input.extend(HttpServletRequest.class, req);
+  }
+  
+  public static HttpServletResponse getResponse(OutputData output) {
+    return (HttpServletResponse) output.narrow(HttpServletResponse.class);
+  }
+  
+  public static void setResponse(OutputData output, HttpServletResponse res) {
+    output.extend(HttpServletResponse.class, res);
+  }
+  
+  public static HttpInputData getInputData(ServletRequest req) {
+    return (HttpInputData) req.getAttribute(InputData.INPUT_DATA_KEY);
+  }
+  
+  public static HttpOutputData getOutputOData(ServletRequest req) {
+    return (HttpOutputData) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
   }
 }

@@ -105,7 +105,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
 		// Get control	
 		controlViewModel = (formElementViewModel).getControl();
-		localizedLabel = JspUtil.getResourceString(pageContext, controlViewModel.getLabel());
+		localizedLabel = JspUtil.getResourceString(pageContext, formElementViewModel.getLabel());
 
 		// We shall use the accesskey HTML attribute for this form element only if the attribute "accessKey" 
 		// was explicitly set (otherwise in most common cases the label tag sets up the access key)

@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
 
@@ -32,5 +33,5 @@ public interface ConverterProvider {
    * 
    * @throws ConverterNotFoundException if {@link BaseConverter}is not found  
    */
-  public Converter findConverter(String fromType, String toType) throws ConverterNotFoundException;
+  public Converter findConverter(String fromType, String toType, Environment env) throws ConverterNotFoundException;
 }

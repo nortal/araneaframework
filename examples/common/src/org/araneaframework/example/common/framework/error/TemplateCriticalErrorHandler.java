@@ -22,7 +22,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.HttpOutputData;
 
 public class TemplateCriticalErrorHandler extends BaseService  {
   protected Throwable exception;
@@ -32,9 +32,9 @@ public class TemplateCriticalErrorHandler extends BaseService  {
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    Writer out = ((ServletOutputData) output).getResponse().getWriter();
+    Writer out = ((HttpOutputData) output).getWriter();
     
-    ((ServletOutputData) output).getResponse().setContentType("text/html; charset=UTF-8");
+    ((HttpOutputData) output).setContentType("text/html; charset=UTF-8");
     out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" + 
         "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" + 
         "<head>\n" + 

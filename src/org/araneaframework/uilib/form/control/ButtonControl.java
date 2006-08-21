@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
-import javax.servlet.http.HttpServletRequest;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 
@@ -72,7 +72,7 @@ public class ButtonControl extends BaseControl {
   /**
    * Empty method
    */
-  protected void readFromRequest(String controlName, HttpServletRequest request) {
+  protected void readFromRequest(HttpInputData request) {
     // Button control is not interested in what is submitted
   }
 

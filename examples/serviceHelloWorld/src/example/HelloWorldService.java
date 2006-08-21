@@ -16,22 +16,19 @@
 
 package example;
 
-import java.io.OutputStreamWriter;
 import java.io.Writer;
-import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.jsp.util.JspUtil;
 
 public class HelloWorldService extends BaseService {
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    HttpServletResponse response = ((ServletOutputData) output).getResponse();    
-    response.setContentType("text/html");
-        
-    Writer out = new OutputStreamWriter(response.getOutputStream());
+    ((HttpOutputData) output).setContentType("text/html");    
+    Writer out = ((HttpOutputData) output).getWriter();
+    
     try {
       JspUtil.writeStartTag(out, "html"); {
         JspUtil.writeStartTag(out, "head"); {

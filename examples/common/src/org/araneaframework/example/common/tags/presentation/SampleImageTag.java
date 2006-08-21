@@ -51,7 +51,7 @@ public class SampleImageTag extends BaseImageHtmlTag {
 	}
   
 	public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {
-		String url = FileImportUtil.getImportString(src, pageContext.getRequest(), pageContext.getResponse());
+		String url = FileImportUtil.getImportString(src, pageContext.getRequest());
 		writeImage(out, url, width, height, alt, styleClass, title);
 	}
 

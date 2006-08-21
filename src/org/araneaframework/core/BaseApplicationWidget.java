@@ -40,7 +40,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  * A full featured Widget with support for composite, eventlisteners, viewmodel.
  * 
  */
-public abstract class BaseApplicationWidget extends BaseWidget implements ApplicationComponent.ApplicationWidget {
+public abstract class BaseApplicationWidget extends BaseWidget implements ApplicationWidget {
       
   //*******************************************************************
   // CONSTANTS
@@ -119,7 +119,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   // PUBLIC CLASSES
   //*******************************************************************
   
-  public class ViewModel implements ApplicationComponent.WidgetViewModel {
+  public class ViewModel implements ApplicationWidget.WidgetViewModel {
     private Map viewData;
     
     public ViewModel() {
@@ -219,10 +219,13 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     if (path != null && path.hasNext()) {
       Object next = path.next();
       
+      Assert.notNull(this, next, "Cannot deliver event to child under null key!");
+      
       Widget pWidget = (Widget)getChildren().get(next);           
       
       if (pWidget == null ) {
-        log.warn("No widget found", new NoSuchWidgetException(next.toString()));  
+        log.warn("Widget '" + input.getScope() + 
+            "' could not deliver event as child '" + next + "' was not found!" + Assert.thisToString(this));  
         return;
       }
       
@@ -268,9 +271,16 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    */
   protected void handleEvent(InputData input) throws Exception {
     Object eventId = getEventId(input);
+    
+    if (eventId == null) {
+      log.warn("Widget '" + input.getScope() +
+          "' cannot deliver event for a null action id!" + Assert.thisToString(this));  
+      return;
+    }
+    
     List listener = eventListeners == null ? null : (List)eventListeners.get(eventId);  
     
-    log.debug("Delivering event '" + eventId +"' to widget '" + getClass().getName() + "'");
+    log.debug("Delivering event '" + eventId + "' to widget '" + getClass().getName() + "'");
     
     if (listener != null && listener.size() > 0) {
       Iterator ite = (new ArrayList(listener)).iterator();
@@ -286,7 +296,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       return;
     }
     
-    log.warn("No listener found", new NoSuchEventListenerException(eventId));
+    log.warn("Widget '" + input.getScope() +
+        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"  + Assert.thisToString(this)); 
   }
   
   /**
@@ -297,16 +308,19 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     if (path != null && path.hasNext()) {
       Object next = path.next();
       
+      Assert.notNull(this, next, "Cannot deliver action to child under null key!");
+      
       Service service = (Service)getChildren().get(next);
       if (service == null) {
-        log.warn("No service found", new NoSuchServiceException(next));  
+        log.warn("Service '" + input.getScope()+ 
+            "' could not deliver action as child '" + next + "' was not found!" + Assert.thisToString(this));  
         return;
       }
       
       try {
         input.pushScope(next);
         output.pushScope(next);
-
+        
         service._getService().action(path, input, output);
       }
       finally {
@@ -320,15 +334,20 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   }
   
   /**
-   * Calls the approriate listener, if none present throws
-   * {@link NoSuchActionListenerException}.
+   * Calls the approriate listener
    */
   protected void handleAction(InputData input, OutputData output) throws Exception {
     Object actionId = getActionId(input);    
     
+    if (actionId == null) {
+      log.warn("Service '" + input.getScope() +
+          "' cannot deliver action for a null action id!" + Assert.thisToString(this));  
+      return;
+    }
+    
     List listener = actionListeners == null ? null : (List)actionListeners.get(actionId);  
     
-    log.debug("Delivering action '" + actionId +"' to widget '" + getClass().getName() + "'");
+    log.debug("Delivering action '" + actionId +"' to service '" + getClass() + "'");
     
     if (listener != null && listener.size() > 0) {
       Iterator ite = (new ArrayList(listener)).iterator();
@@ -339,7 +358,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       return;
     }
     
-    log.warn("No listener found", new NoSuchActionListenerException(actionId));
+    log.warn("Service '" + input.getScope() +
+      "' cannot deliver action as no action listeners were registered for action id '" + actionId + "'!"  + Assert.thisToString(this));  
   }
   
   /**
@@ -467,6 +487,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * @param eventListener a EventListener added as the global eventlistener.
    */
   public void addGlobalEventListener(EventListener eventListener) {
+    Assert.notNullParam(this, eventListener, "eventListener");
     this.globalListener = eventListener;
   }
   
@@ -486,6 +507,9 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * @see #removeEventListener
    */
   public void addEventListener(Object eventId, EventListener listener) {
+    Assert.notNullParam(this, eventId, "eventId");
+    Assert.notNullParam(this, listener, "listener");
+    
     List list = (List)getEventListeners().get(eventId);
     
     if (list == null) {
@@ -502,6 +526,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * @see #addEventListener
    */
   public void removeEventListener(EventListener listener) {
+    Assert.notNullParam(this, listener, "listener");
+    
     Iterator ite = (new HashMap(getEventListeners())).values().iterator();
     while(ite.hasNext()) {
       ((List)ite.next()).remove(listener);
@@ -513,6 +539,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * @param eventId the id of the EventListeners.
    */
   public void clearEventlisteners(Object eventId) {
+    Assert.notNullParam(this, eventId, "eventId");
+    
     getEventListeners().remove(eventId);
   }
   
@@ -521,6 +549,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * available until explicitly removed with {@link #removeViewData(String)}.
    */
   public void putViewData(String key, Object customDataItem) {
+    Assert.notNullParam(this, key, "key");
+    
     getViewData().put(key, customDataItem);
   }
 
@@ -528,6 +558,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * Removes the custom data under key.
    */
   public void removeViewData(String key) {
+    Assert.notNullParam(this, key, "key");
+    
     getViewData().remove(key);
   }
 
@@ -536,6 +568,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * request only. 
    */
   public void putViewDataOnce(String key, Object customDataItem) {
+    Assert.notNullParam(this, key, "key");
+    
     getViewDataOnce().put(key, customDataItem);
   }
   
@@ -550,6 +584,9 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * Adds the ActionListener listener with the specified action id. 
    */
   public void addActionListener(Object actionId, ActionListener listener) {
+    Assert.notNullParam(this, actionId, "actionId");
+    Assert.notNullParam(this, listener, "listener");
+    
     List list = (List)getActionListeners().get(actionId);
     
     if (list == null) {
@@ -564,6 +601,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * Removes the ActionListener listener from this component.
    */
   public void removeActionListener(ActionListener listener) {
+    Assert.notNullParam(this, listener, "listener");
+    
     Iterator ite = (new HashMap(getActionListeners())).values().iterator();
     while(ite.hasNext()) {
       ((List)ite.next()).remove(listener);
@@ -574,8 +613,10 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * Clears all the ActionListeners with the specified eventId.
    * @param eventId the id of the EventListeners.
    */
-  public void clearActionListeners(Object eventId) {
-    getActionListeners().remove(eventId);
+  public void clearActionListeners(Object actionId) {
+    Assert.notNullParam(this, actionId, "actionId");
+    
+    getActionListeners().remove(actionId);
   }
 
 }

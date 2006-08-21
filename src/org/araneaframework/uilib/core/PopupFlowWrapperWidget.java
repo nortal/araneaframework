@@ -24,14 +24,16 @@ import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupWindowContext;
-import org.araneaframework.http.ServletOutputData;
 import org.araneaframework.http.service.WindowClosingService;
 import org.araneaframework.http.util.URLUtil;
 
@@ -82,7 +84,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
       String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
       // popup window is closed with redirect to a page that closes current window and reloads parent.
       threadCtx.addService(rndThreadId, new WindowClosingService());
-      ((ServletOutputData) getCurrentOutput()).getResponse().sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), rndThreadId));
+      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), rndThreadId));
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
@@ -127,7 +129,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
   
   protected String getRequestURL() {
-    return URLUtil.getServletRequestURL(getCurrentInput());
+    return ((HttpInputData) getInputData()).getContainerURL(); 
   }
   
   protected String getResponseURL(String url, String topServiceId, String threadServiceId) {

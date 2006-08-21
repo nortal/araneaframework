@@ -48,8 +48,7 @@ public class ImportScriptsHtmlTag extends BaseFileImportTag {
 	}
 	
 	protected void writeContent(Writer out, String srcFile) throws Exception {
-		writeHtmlScriptsInclude(out, FileImportUtil.getImportString(srcFile, pageContext.getRequest(),
-				pageContext.getResponse()));
+		writeHtmlScriptsInclude(out, FileImportUtil.getImportString(srcFile, pageContext.getRequest()));
 		out.write("\n");
 	}
 	

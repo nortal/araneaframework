@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.araneaframework.uilib.form.FormElementContext;
 
 
 /**
@@ -50,7 +51,6 @@ public class ListConverter extends BaseConverter {
 
     for (Iterator i = ((Collection) data).iterator(); i.hasNext();) {
       result.add(listItemConverter.convertNotNull(i.next()));
-      addErrors(listItemConverter.getErrors());
     }
 
     return result;
@@ -64,16 +64,14 @@ public class ListConverter extends BaseConverter {
 
     for (Iterator i = ((Collection) data).iterator(); i.hasNext();) {
       result.add(listItemConverter.reverseConvertNotNull(i.next()));
-	    addReverseErrors(listItemConverter.getReverseErrors());
 	  }
     return result;
   }
 
-  /**
-	 *  Sets the contained converter control label.
-	 */
-  public void setLabel(String controlLabel) {
-    listItemConverter.setLabel(controlLabel);
+  public void setFormElementCtx(FormElementContext feCtx) {
+    super.setFormElementCtx(feCtx);
+    
+    listItemConverter.setFormElementCtx(feCtx);
   }
 
   /**

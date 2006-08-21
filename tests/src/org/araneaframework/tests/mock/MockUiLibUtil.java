@@ -18,8 +18,8 @@ package org.araneaframework.tests.mock;
 
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.Widget;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 

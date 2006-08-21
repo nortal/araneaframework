@@ -25,7 +25,7 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ExceptionHandlerFactory;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.HttpOutputData;
 
 public class SimpleCriticalErrorHandlerService extends BaseService {
   protected Throwable exception;
@@ -39,9 +39,9 @@ public class SimpleCriticalErrorHandlerService extends BaseService {
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    Writer out = ((ServletOutputData) output).getResponse().getWriter();
+    Writer out = ((HttpOutputData) output).getWriter();
     
-    ((ServletOutputData) output).getResponse().setContentType("text/html; charset=UTF-8");
+    ((HttpOutputData) output).setContentType("text/html; charset=UTF-8");
     out.write("<html><head><title>Critical error occured!</title></head><body>");
     if (ExceptionUtils.getRootCause(exception) != null) {
       out.write("<b>Root cause:</b><br/>");    

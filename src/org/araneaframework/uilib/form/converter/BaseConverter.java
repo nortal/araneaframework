@@ -16,11 +16,11 @@
 
 package org.araneaframework.uilib.form.converter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import org.araneaframework.Environment;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Converter;
+import org.araneaframework.uilib.form.FormElementContext;
 
 /**
  * This class is the base class for form converters. The converters' task is to convert the value
@@ -31,29 +31,11 @@ import org.araneaframework.uilib.form.Converter;
  */
 public abstract class BaseConverter implements java.io.Serializable, Converter {
 
-  //*********************************************************************
-  // FIELDS
-  //*********************************************************************
-
-  private List errors = new ArrayList();
-  private List reverseErrors = new ArrayList();
+  private FormElementContext feCtx;
   
-  private Environment environment;
-
-  private String label;
-
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
-
-  /**
-   * Sets the label, that will be used in producing {@link org.araneaframework.uilib.support.UiMessage}s.
-   * 
-   * @param label the label, that will be used in producing {@link org.araneaframework.uilib.support.UiMessage}s.
-   */
-  public void setLabel(String label) {
-    this.label = label;
-  }
 
   /**
    * This method converts the data from one type to another. If the data is <code>null</code>
@@ -64,10 +46,12 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
    * @return Converted data.
    */
   public Object convert(Object data) {
+    Assert.notNull(this, getFormElementCtx(), 
+        "Form element context must be assigned to the converter before it can function! " +
+        "Make sure that the converter is associated with a form element!");
+    
     if (data == null)
       return null;
-
-    errors.clear();
 
     return convertNotNull(data);
   }
@@ -82,57 +66,22 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
    * @return Converted data.
    */
   public Object reverseConvert(Object data) {
+    Assert.notNull(this, getFormElementCtx(), 
+        "Form element context must be assigned to the converter before it can function! " +
+        "Make sure that the converter is associated with a form element!");
+    
     if (data == null)
       return null;
-
-    reverseErrors.clear();
     
     return reverseConvertNotNull(data);
   }
-
-  /**
-   * Returns the {@link org.araneaframework.uilib.support.UiMessage}s produced while converting the data.
-   * 
-   * @return the {@link org.araneaframework.uilib.support.UiMessage}s produced while converting the data.
-   */
-  public List getErrors() {
-    return errors;
+  
+  public void setFormElementCtx(FormElementContext feCtx) {
+    this.feCtx = feCtx;
   }
   
-  /**
-   * Returns the {@link org.araneaframework.uilib.support.UiMessage}s produced while reverse converting the data.
-   * 
-   * @return the {@link org.araneaframework.uilib.support.UiMessage}s produced while reverse converting the data.
-   */
-  public List getReverseErrors() {
-    return reverseErrors;
-  }  
-
-  /**
-   * Clears the errors produced while converting the data.
-   */
-  public void clearErrors() {
-    errors.clear();
-  }
-  
-  /**
-   * Clears the errors produced while reverse converting the data.
-   */
-  public void clearReverseErrors() {
-  	reverseErrors.clear();
-  }  
-
-  /**
-   * Returns whether the conversion was successful/valid.
-   * 
-   * @return whether the conversion was successful/valid.
-   */
-  public boolean isValid() {
-    return errors.size() == 0;
-  }
-  
-  public void setEnvironment(Environment environment) {
-    this.environment = environment;
+  public FormElementContext getFormElementCtx() {
+    return this.feCtx;
   }
 
   //*********************************************************************
@@ -140,27 +89,19 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
   //*********************************************************************
 
   protected void addError(String error) {
-  	errors.add(error);
+    feCtx.addError(error);
   }
   
-  protected void addReverseError(String error) {
-  	reverseErrors.add(error);
+  protected void addErrors(Set errors) {
+    feCtx.addErrors(errors);
   }
-  
-  protected void addErrors(Collection errorList) {
-    errors.addAll(errorList);
-  }  
-  
-  protected void addReverseErrors(Collection errorList) {
-    reverseErrors.addAll(errorList);
-  } 
   
   protected Environment getEnvironment() {
-    return this.environment;
+    return feCtx.getEnvironment();
   }
   
   protected String getLabel() {
-    return label;
+    return feCtx.getLabel();
   }
   
   //*********************************************************************

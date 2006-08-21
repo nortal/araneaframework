@@ -18,8 +18,7 @@ package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.InputData;
-import org.araneaframework.http.util.URLUtil;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -61,7 +60,7 @@ public class BodyHtmlTag extends PresentationTag {
   
   protected void writeBodyStartScripts(Writer out) throws Exception {
     String servletUrl =
-    	 URLUtil.getServletRequestURL((InputData)pageContext.getRequest().getAttribute(InputData.INPUT_DATA_KEY)); 
+        ServletUtil.getInputData(pageContext.getRequest()).getContainerURL(); 
 	  
     JspUtil.writeOpenStartTag(out, "script");
     JspUtil.writeAttribute(out, "type", "text/javascript");

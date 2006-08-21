@@ -21,6 +21,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.ViewPortContext;
@@ -68,6 +69,8 @@ public class StandardContainerWidget extends BaseApplicationWidget {
   //*******************************************************************
 
   protected void init() throws Exception {
+    Assert.notNull(this, root, "Root widget cannot be null!");
+    
     addWidget(CHILD_KEY, root);
   }
   

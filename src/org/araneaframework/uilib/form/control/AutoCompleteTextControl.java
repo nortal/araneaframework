@@ -2,11 +2,10 @@ package org.araneaframework.uilib.form.control;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ActionListener;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.jsp.util.JspStringUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.support.TextType;
@@ -70,11 +69,11 @@ public class AutoCompleteTextControl extends TextControl {
       if (responseBuilder == null)
         responseBuilder = new DefaultResponseBuilder();
       
-      HttpServletResponse response = ((ServletOutputData) output).getResponse();
+      HttpOutputData httpOutput = (HttpOutputData) output;
       String xml = responseBuilder.getResponseContent(suggestions);
 
-      response.setContentType(responseBuilder.getResponseContentType());
-      response.getWriter().write(xml);
+      httpOutput.setContentType(responseBuilder.getResponseContentType());
+      httpOutput.getWriter().write(xml);
     }
   }
 

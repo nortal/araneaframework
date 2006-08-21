@@ -81,6 +81,22 @@ public abstract class Assert {
     }
   }
   
+  public static void isInstanceOf(Object that, Class klass, Object object, String message) {
+    if (object == null) return;
+    
+    if (!klass.isAssignableFrom(object.getClass())) {
+      throw new IllegalArgumentException(message + thisToString(that));
+    }
+  }
+  
+  public static void isInstanceOf( Class klass, Object object, String message) {
+    if (object == null) return;
+    
+    if (!klass.isAssignableFrom(object.getClass())) {
+      throw new IllegalArgumentException(message);
+    }
+  }
+  
   public static void isInstanceOfParam(Object that, Class klass, Object object, String parameterName) {
     if (object == null) return;
     

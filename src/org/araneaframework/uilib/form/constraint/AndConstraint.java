@@ -38,6 +38,7 @@ public class AndConstraint extends CompositeConstraint {
       Constraint constraint = (Constraint) i.next();
       constraint.validate();
       addErrors(constraint.getErrors());
+      constraint.clearErrors();
     }
   }
 }

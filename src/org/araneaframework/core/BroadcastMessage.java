@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.core;
 
@@ -22,8 +22,8 @@ import org.araneaframework.core.util.ExceptionUtil;
 
 public abstract class BroadcastMessage implements Message {
   public final void send(Object id, Component component) {
-	component._getComponent().propagate(this);	  
-	  
+    component._getComponent().propagate(this);	  
+
     try {
       this.execute(component);
     }
@@ -31,6 +31,6 @@ public abstract class BroadcastMessage implements Message {
       throw ExceptionUtil.uncheckException(e);
     }        
   }
-  
+
   protected abstract void execute(Component component) throws Exception;
 }

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;
@@ -201,6 +202,9 @@ public abstract class BaseComponent implements Component {
    * specified Environment env. 
    */
   protected void _addComponent(Object key, Component component, Environment env){
+    Assert.notNull(this, key, 
+        "Cannot add a component of class '" + (component == null ? null : component.getClass())+ "' under a null key!");
+    
     _checkCall();
     
     // cannot add a child with key that clashes with a disabled child's key
@@ -221,6 +225,8 @@ public abstract class BaseComponent implements Component {
    * Removes the childcomponent with the specified key from the children and calls destroy on it.
    */
   protected void _removeComponent(Object key) {
+    Assert.notNullParam(this, key, "key");
+    
     _checkCall();
     
     Component comp = (Component)_getChildren().get(key);
@@ -240,6 +246,8 @@ public abstract class BaseComponent implements Component {
    * from the standard set of children 
    */
   protected void _disableComponent(Object key) {
+    Assert.notNullParam(this, key, "key");
+    
     _checkCall();
     
     if (!_getChildren().containsKey(key)) {
@@ -255,6 +263,8 @@ public abstract class BaseComponent implements Component {
    * @param key
    */
   protected void _enableComponent(Object key) {
+    Assert.notNullParam(this, key, "key");
+    
     _checkCall();
     
     if (!_getDisabledChildren().containsKey(key)) {
@@ -274,10 +284,12 @@ public abstract class BaseComponent implements Component {
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
   protected void _relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
-    if (!(parent._getComposite().getChildren().get(keyFrom) instanceof Relocatable)) {
-      throw new AraneaRuntimeException("Child with key '"+keyFrom+"' of class '" + parent._getComposite().getChildren().get(keyFrom).getClass() + "' is not Relocatable");
-    }
-    
+    Assert.notNull(this, parent, "Cannot relocate a component from under key '" + keyFrom + "' to key '" + keyTo + "' from a null parent!");
+    Assert.notNull(this, parent._getComposite().getChildren().get(keyFrom), "The component to be relocated must be a child under key '" + keyFrom + "'!");
+    Assert.isTrue(this, parent._getComposite().getChildren().get(keyFrom) instanceof Relocatable, 
+        "The component of class '" + parent._getComposite().getChildren().get(keyFrom).getClass() + "' to be relocated from under key '" + keyFrom + 
+        "' to key '" + keyTo + "' must implement Relocatable!");
+
     Relocatable comp = (Relocatable) parent._getComposite().detach(keyFrom);
     comp._getRelocatable().overrideEnvironment(newEnv);
     
@@ -285,6 +297,8 @@ public abstract class BaseComponent implements Component {
   }
   
   protected void _propagate(Message message) {
+    Assert.notNullParam(this, message, "message");
+    
     if (children == null)
       return;
     
@@ -339,13 +353,9 @@ public abstract class BaseComponent implements Component {
   protected class ComponentImpl implements Component.Interface {
     
     public synchronized void init(Environment env) {
-      if (env == null) {
-        throw new AraneaRuntimeException("Environment cannot be null");
-      }
-      
-      if (isInitialized()) {
-        throw new AraneaRuntimeException("Cannot initialize a component more than once");
-      }      
+      Assert.notNull(this, env, "Environment cannot be null!");
+      Assert.isTrue(this, !isInitialized(), "Cannot initialize the component more than once!");
+            
       BaseComponent.this._setEnvironment(env);
       nullIfInited = null;
       try {

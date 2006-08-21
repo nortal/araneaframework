@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.uilib.form.FormElementContext;
+
 /**
  * Reverses the conversion of a contained converter.
  * 
@@ -41,7 +43,6 @@ public class ReverseConverter extends BaseConverter {
 	 */
   public Object convertNotNull(Object data) {
     Object result = toReverse.reverseConvertNotNull(data);
-    addErrors(toReverse.getReverseErrors());    
   	return result;    
   }
 
@@ -50,16 +51,14 @@ public class ReverseConverter extends BaseConverter {
 	 * contained converter.
 	 */
   public Object reverseConvertNotNull(Object data) {    
-    Object result = toReverse.convertNotNull(data);
-    addReverseErrors(toReverse.getErrors());    
+    Object result = toReverse.convertNotNull(data);  
   	return result;       
   }
 
-  /**
-   * Sets the contained converter control label.
-   */
-  public void setLabel(String controlLabel) {
-    toReverse.setLabel(controlLabel);
+  public void setFormElementCtx(FormElementContext feCtx) {
+    super.setFormElementCtx(feCtx);
+    
+    toReverse.setFormElementCtx(feCtx);
   }
 
   /**

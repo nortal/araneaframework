@@ -39,7 +39,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  * A full featured Service with support for composite, eventlisteners, viewmodel.
  *
  */
-public abstract class BaseApplicationService extends BaseService implements ApplicationComponent.ApplicationService {
+public abstract class BaseApplicationService extends BaseService implements ApplicationService {
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
@@ -84,7 +84,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     }    
   }
   
-  public class ViewModel implements ApplicationComponent.ServiceViewModel {
+  public class ViewModel implements ApplicationService.ServiceViewModel {
     /**
      * Returns the children of this StandardService.
      */
@@ -132,6 +132,9 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * Adds the ActionListener listener with the specified action id. 
    */
   public void addActionListener(Object actionId, ActionListener listener) {
+    Assert.notNullParam(this, actionId, "actionId");
+    Assert.notNullParam(this, listener, "listener");
+    
     List list = (List)getActionListeners().get(actionId);
     
     if (list == null) {
@@ -146,6 +149,8 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * Removes the ActionListener listener from this component.
    */
   public void removeActionListener(ActionListener listener) {
+    Assert.notNullParam(this, listener, "listener");
+    
     Iterator ite = (new HashMap(getActionListeners())).values().iterator();
     while(ite.hasNext()) {
       ((List)ite.next()).remove(listener);
@@ -157,6 +162,8 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * @param actionId the id of the ActionListeners.
    */
   public void clearActionlisteners(Object actionId) {
+    Assert.notNullParam(this, actionId, "actionId");
+
     getActionListeners().remove(actionId);
   }
 
@@ -165,6 +172,8 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * removed with {@link #removeViewData(String)}.
    */
   public void putViewData(String key, Object customDataItem) {
+    Assert.notNullParam(this, key, "key");
+    
     getViewData().put(key, customDataItem);
   }
 
@@ -172,6 +181,8 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * Removes the custom data under key.
    */
   public void removeViewData(String key) {
+    Assert.notNullParam(this, key, "key");
+    
     getViewData().remove(key);
   }
   
@@ -289,6 +300,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * to extract it from InputData's global data.
    */
   protected Object getActionId(InputData input) {
+    Assert.notNull(this, input, "Cannot extract action id from a null input!");
     return input.getGlobalData().get(ACTION_ID_ATTRIBUTE);
   }
 
@@ -305,9 +317,12 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     if (path != null && path.hasNext()) {
       Object next = path.next();
       
+      Assert.notNull(this, next, "Cannot deliver action to child under null key!");
+      
       Service service = (Service)getChildren().get(next);
       if (service == null) {
-        log.warn("No service found", new NoSuchServiceException(next));  
+        log.warn("Service '" + input.getScope()+ 
+            "' could not deliver action as child '" + next + "' was not found!" + Assert.thisToString(this));  
         return;
       }
       
@@ -328,15 +343,20 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
   
   /**
-   * Calls the approriate listener, if none present throws
-   * {@link NoSuchActionListenerException}.
+   * Calls the approriate listener
    */
   protected void handleAction(InputData input, OutputData output) throws Exception {
     Object actionId = getActionId(input);    
     
+    if (actionId == null) {
+      log.warn("Service '" + input.getScope() +
+          "' cannot deliver action for a null action id!" + Assert.thisToString(this));  
+      return;
+    }
+    
     List listener = actionListeners == null ? null : (List)actionListeners.get(actionId);  
     
-    log.debug("Delivering action '" + actionId +"' to service '" + getClass().getName() + "'");
+    log.debug("Delivering action '" + actionId +"' to service '" + getClass() + "'");
     
     if (listener != null && listener.size() > 0) {
       Iterator ite = (new ArrayList(listener)).iterator();
@@ -347,6 +367,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
       return;
     }
     
-    log.warn("No listener found", new NoSuchActionListenerException(actionId));
+    log.warn("Service '" + input.getScope() +
+      "' cannot deliver action as no action listeners were registered for action id '" + actionId + "'!"  + Assert.thisToString(this));  
   }
 }

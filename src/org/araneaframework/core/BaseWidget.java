@@ -49,6 +49,8 @@ public abstract class BaseWidget extends BaseService implements Widget {
   protected class WidgetImpl implements Widget.Interface {
     
     public void update(InputData input) {
+      Assert.notNullParam(this, input, "input");
+
       _startCall();
       currentInputData = input;
       try {
@@ -69,6 +71,8 @@ public abstract class BaseWidget extends BaseService implements Widget {
     }
     
     public void event(Path path, InputData input) {
+      Assert.notNullParam(this, input, "input");
+      
       _startCall();
       currentInputData = input;
       try {
@@ -107,6 +111,8 @@ public abstract class BaseWidget extends BaseService implements Widget {
     }
     
     public void render(OutputData output) {
+      Assert.notNullParam(this, output, "output");
+      
       _startCall();
       currentOutputData = output;
       try {
@@ -133,25 +139,25 @@ public abstract class BaseWidget extends BaseService implements Widget {
   protected void process() throws Exception {}
   protected void render(OutputData output) throws Exception {}
   
-  protected InputData getCurrentInput() {
-  	InputData input = super.getCurrentInput();
-  	OutputData output = super.getCurrentOutput();
+  protected InputData getInputData() {
+  	InputData input = super.getInputData();
+  	OutputData output = super.getOutputData();
 
   	// lets try to give a not null answer to the user
   	if (input == null && output != null) {
   			return output.getInputData();
   	}
   	
-  	return super.getCurrentInput();
+  	return input;
   }
   
-  protected OutputData getCurrentOutput() {
-  	OutputData output = super.getCurrentOutput();
-  	InputData input = super.getCurrentInput();
+  protected OutputData getOutputData() {
+  	OutputData output = super.getOutputData();
+  	InputData input = super.getInputData();
   	if (output == null && input != null) {
   		return input.getOutputData();
   	}
   	
-  	return super.getCurrentOutput();
+  	return output;
   }
 }

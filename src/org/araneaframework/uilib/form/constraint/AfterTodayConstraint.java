@@ -24,7 +24,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  */
-public class AfterTodayConstraint extends BaseConstraint {
+public class AfterTodayConstraint extends BaseFieldConstraint {
 	protected boolean allowToday;
 
 	/**
@@ -52,12 +52,12 @@ public class AfterTodayConstraint extends BaseConstraint {
       today.set(Calendar.MILLISECOND, 999);
 		}
 
-		if (today.getTime().compareTo((Date) getField().getData().getValue()) == 1) {
+		if (today.getTime().compareTo((Date) getValue()) == 1) {
 			//TODO: Add this message!
 			addError(
 				ErrorUtil.localizeAndFormat(
 					UiLibMessages.DATE_BEFORE_TODAY, 
-          ErrorUtil.localize(getField().getLabel(), getEnvironment()), 
+          t(getLabel()), 
           getEnvironment()));
 		}
 	}

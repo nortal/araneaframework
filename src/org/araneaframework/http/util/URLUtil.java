@@ -21,9 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import javax.servlet.http.HttpServletRequest;
-import org.araneaframework.InputData;
-import org.araneaframework.http.ServletInputData;
 
 /**
  * 
@@ -42,7 +39,7 @@ public abstract  class URLUtil {
     while (uri.indexOf("/") == 0 && uri.length() > 0)
       uri = uri.substring(1);
 
-    // lose the first slashes
+    // lose the last slashes
     while (uri.lastIndexOf("/") == (uri.length() - 1) && uri.length() > 0)
       uri = uri.substring(0, uri.length() - 1);
 
@@ -77,43 +74,5 @@ public abstract  class URLUtil {
     }
 
     return sb.toString();
-  }
-  
-  /**
-   * Returns request URL up to the servlet name.
-   * 
-   * This is an utility method alike to <code>HttpServletRequest.getRequestURL</code>, but returned URL 
-   * only contains only protocol, server name, port number, web application context path,
-   * and servlet path. Query string parameters are ignored and so is everything after servlet path. 
-   * As URL might be simulated by {@link org.araneaframework.framework.MountContext} this method
-   * should usually be used instead of <code>getRequestURL</code>.
-   * 
-   * @param input request data
-   * @return request URL up to the servlet name.
-   */
-  public static String getServletRequestURL(InputData input) {
-    HttpServletRequest req = ((ServletInputData) input).getRequest();
-
-    StringBuffer url = new StringBuffer();
-    url.append(getContextRequestURL(input));
-    url.append(req.getServletPath());
-    return url.toString();
-  }
-  
-  /**
-   * Returns request URL up to the context path.
-   * @return request URL up to the context path.
-   */
-  public static String getContextRequestURL(InputData input) {
-    HttpServletRequest req = ((ServletInputData) input).getRequest();
-
-    StringBuffer url = new StringBuffer();
-    url.append(req.getScheme());
-    url.append("://");
-    url.append(req.getServerName());    
-    url.append(":");
-    url.append(req.getServerPort());
-    url.append(req.getContextPath());
-    return url.toString();
   }
 }

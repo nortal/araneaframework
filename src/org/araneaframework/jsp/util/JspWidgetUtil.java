@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ApplicationComponent;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.uilib.util.NameUtil;
@@ -47,11 +47,11 @@ public abstract class JspWidgetUtil {
 			return output.getScope().toString();
 	}
 	
-    public static ApplicationComponent.ApplicationWidget getContextWidgetFromContext(PageContext pageContext) throws JspException  {
+    public static ApplicationWidget getContextWidgetFromContext(PageContext pageContext) throws JspException  {
       return getWidgetFromContext(null, pageContext);
     }    
     
-	public static ApplicationComponent.ApplicationWidget getWidgetFromContext(String widgetId, PageContext pageContext) throws JspException {
+	public static ApplicationWidget getWidgetFromContext(String widgetId, PageContext pageContext) throws JspException {
       UiWidgetContainer container = 
         (UiWidgetContainer) JspUtil.requireContextEntry(pageContext,
             UiWidgetContainer.REQUEST_CONTEXT_KEY);
@@ -62,11 +62,11 @@ public abstract class JspWidgetUtil {
 			
 	}
 	
-	public static ApplicationComponent.ApplicationWidget traverseToWidget(UiWidgetContainer container, String path) throws AraneaJspException {
+	public static ApplicationWidget traverseToWidget(UiWidgetContainer container, String path) throws AraneaJspException {
 		String pathStart = NameUtil.getNamePrefix(path);
 		String pathEnd = NameUtil.getNameSuffix(path);
 		
-        ApplicationComponent.ApplicationWidget widget = (ApplicationComponent.ApplicationWidget) container.getWidgets().get(pathStart);
+        ApplicationWidget widget = (ApplicationWidget) container.getWidgets().get(pathStart);
 		if (widget == null)
 			throw new AraneaJspException("Failed to traverse to widget with path '" + path + "' because widget '" + pathStart + "' was not found");
 				
@@ -76,8 +76,8 @@ public abstract class JspWidgetUtil {
 		return widget;
 	}
 	
-	public static ApplicationComponent.ApplicationWidget traverseToSubWidget(ApplicationComponent.ApplicationWidget root, String path) throws AraneaJspException {		
-      ApplicationComponent.ApplicationWidget widget = root;
+	public static ApplicationWidget traverseToSubWidget(ApplicationWidget root, String path) throws AraneaJspException {		
+      ApplicationWidget widget = root;
 		
     if ("".equals(path))
       throw new AraneaJspException("Trying to traverse to a widget with an empty path!");
@@ -86,7 +86,7 @@ public abstract class JspWidgetUtil {
 		for(StringTokenizer tokenizer = new StringTokenizer(path, "."); tokenizer.hasMoreElements();) {
 			String token = tokenizer.nextToken();
 					
-			widget = (ApplicationComponent.ApplicationWidget) widget._getComposite().getChildren().get(token);
+			widget = (ApplicationWidget) widget._getComposite().getChildren().get(token);
 			if (widget == null)
 				throw new AraneaJspException("Failed to traverse widget with path '" + path + "' because widget '" + token + "' was not found");
 		}

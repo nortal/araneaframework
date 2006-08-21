@@ -69,14 +69,14 @@ public class BaseFormElementLabelTag extends PresentationTag {
 
     // Get control  
     controlViewModel = (formElementViewModel).getControl();
-    localizedLabel = JspUtil.getResourceString(pageContext, controlViewModel.getLabel());                  
+    localizedLabel = JspUtil.getResourceString(pageContext, formElementViewModel.getLabel());                  
 
     if (accessKeyId == null) {
 
       // If controlViewModel.getLabel() did not specify a resource, we 
       // assume that controlViewModel.getLabel() + ".access-key" will also 
       // _not_ specify a legal resource.
-      accessKey = JspUtil.getResourceStringOrNull(pageContext,  controlViewModel.getLabel() + ".access-key");
+      accessKey = JspUtil.getResourceStringOrNull(pageContext,  formElementViewModel.getLabel() + ".access-key");
     }
     else {
       accessKey = JspUtil.getResourceStringOrNull(pageContext, accessKeyId);

@@ -17,6 +17,7 @@
 package org.araneaframework.core.util;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.araneaframework.core.Assert;
 
 
 /**
@@ -26,6 +27,8 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  */
 public abstract class ExceptionUtil {
   public static RuntimeException uncheckException(Exception e) {
+    Assert.notNullParam(e, "e");
+    
     if (e instanceof RuntimeException)
       throw (RuntimeException) e;
     

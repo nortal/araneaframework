@@ -24,8 +24,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.log4j.Logger;
+import org.araneaframework.OutputData;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.http.ServletOverridableOutputData;
+import org.araneaframework.core.Assert;
+import org.araneaframework.http.HttpOutputData;
 
 /**
  * A helper class for providing rollback and commit functionality on an OutputData.
@@ -35,6 +37,8 @@ import org.araneaframework.http.ServletOverridableOutputData;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * 
+ * TODO: rewrite as HttpOutputData wrapper
  */
 public class AtomicResponseHelper {
 //*******************************************************************
@@ -47,9 +51,11 @@ public class AtomicResponseHelper {
   //*******************************************************************
   private ResponseWrapper atomicWrapper;
   
-  public AtomicResponseHelper(ServletOverridableOutputData outputData) {
-    atomicWrapper = new ResponseWrapper(outputData.getResponse());
-    outputData.setResponse(atomicWrapper);
+  public AtomicResponseHelper(OutputData outputData) {    
+    Assert.isInstanceOfParam(HttpOutputData.class, outputData, "outputData");
+    
+    atomicWrapper = new ResponseWrapper(ServletUtil.getResponse(outputData));
+    ServletUtil.setResponse(outputData, atomicWrapper);
   }
   
   

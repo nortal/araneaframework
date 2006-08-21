@@ -39,6 +39,9 @@ public abstract class BaseService extends BaseComponent implements Service {
   
   protected class ServiceImpl implements Service.Interface {
     public void action(Path path, InputData input, OutputData output){
+      Assert.notNullParam(this, input, "input");
+      Assert.notNullParam(this, output, "output");
+      
       _startCall();
       currentInputData = input;
       currentOutputData = output;
@@ -68,11 +71,11 @@ public abstract class BaseService extends BaseComponent implements Service {
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception{}    
   
-  protected InputData getCurrentInput() {
+  protected InputData getInputData() {
     return currentInputData;
   }
   
-  protected OutputData getCurrentOutput() {
+  protected OutputData getOutputData() {
     return currentOutputData;
   }
 }

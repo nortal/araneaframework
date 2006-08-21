@@ -17,7 +17,6 @@
 package org.araneaframework.core;
 
 import org.araneaframework.InputData;
-import org.araneaframework.core.ApplicationComponent.ApplicationWidget;
 
 /**
  * 

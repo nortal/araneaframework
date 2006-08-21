@@ -84,10 +84,10 @@ public final class RangeConstraint extends BaseConstraint {
     if (comparison > 0 || (!allowEquals && comparison == 0)){
       addError(
           ErrorUtil.localizeAndFormat(
-          UiLibMessages.RANGE_CHECK_FAILED, 
-          ErrorUtil.localize(fieldLo.getLabel(), getEnvironment()),
-          ErrorUtil.localize(fieldHi.getLabel(), getEnvironment()),
-          getEnvironment()));
+            UiLibMessages.RANGE_CHECK_FAILED, 
+            t(fieldLo.getLabel()),
+            t(fieldHi.getLabel()),
+            getEnvironment()));
     }
   }
 

@@ -22,6 +22,7 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.FilterService;
 
@@ -58,6 +59,8 @@ public class BaseFilterService extends BaseService implements FilterService{
   }
   
   protected void init() throws Exception {
+    Assert.notNull(this, childService, "Filter cannot have a null child!");
+    
 	  childService._getComponent().init(getChildEnvironment());
   }
   

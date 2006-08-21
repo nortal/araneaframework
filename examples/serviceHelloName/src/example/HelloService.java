@@ -20,13 +20,11 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.http.ServletInputData;
-import org.araneaframework.http.ServletOutputData;
 import org.araneaframework.http.util.ServletUtil;
 
 public class HelloService extends BaseService {
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    ServletUtil.publishModel(((ServletInputData) input), "helloName", input.getGlobalData().get("name"));    
-    ServletUtil.include("/WEB-INF/hello.jsp", getEnvironment(), (ServletOutputData) output);
+    ServletUtil.publishModel((input), "helloName", input.getGlobalData().get("name"));    
+    ServletUtil.include("/WEB-INF/hello.jsp", getEnvironment(), output);
   }
 }
