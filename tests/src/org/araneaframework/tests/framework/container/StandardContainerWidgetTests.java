@@ -35,6 +35,9 @@ public class StandardContainerWidgetTests extends TestCase {
   private StandardContainerWidget parent;
   private MockEventfulStandardWidget child;
   
+  private MockEventfulStandardWidget first;
+  private MockEventfulStandardWidget second;
+  
   private StandardServletInputData input;
   private StandardServletOutputData output;
   
@@ -47,7 +50,13 @@ public class StandardContainerWidgetTests extends TestCase {
     child = new MockEventfulStandardWidget();
     parent = new StandardContainerWidget();
     parent.setRoot(child);
+
     MockLifeCycle.begin(parent);
+    
+    first = new MockEventfulStandardWidget();
+    second = new MockEventfulStandardWidget();
+    child.addWidget("first", first);
+    first.addWidget("second", second);
     
     req = new MockHttpServletRequest();
     res = new MockHttpServletResponse();
@@ -64,13 +73,15 @@ public class StandardContainerWidgetTests extends TestCase {
   }
   
   public void testActionGetsCalled() throws Exception {
-    String pathStr = "i.am.a.path.who.are.you";
+    String pathStr = StandardContainerWidget.CHILD_KEY + ".first.second";
     req.addParameter(StandardContainerWidget.ACTION_PATH_KEY, pathStr);
     input = new StandardServletInputData(req);
     
     parent._getService().action(path, input, output);
     assertTrue(child.getActionCalled());
-    assertTrue(pathStr.equals(child.getPath().toString()));
+    assertTrue(first.getActionCalled());
+    assertTrue(second.getActionCalled());
+    assertTrue("first.second".equals(child.getPath().toString()));
   }
   
   public void testActionDoesNotGetCalled() throws Exception {
@@ -83,12 +94,14 @@ public class StandardContainerWidgetTests extends TestCase {
   }
   
   public void testEventGetsCalled() throws Exception {
-    String pathStr = "i.am.a.path.who.are.you";
+    String pathStr = StandardContainerWidget.CHILD_KEY + ".first.second";
     req.addParameter(StandardContainerWidget.EVENT_PATH_KEY, pathStr);
     input = new StandardServletInputData(req);
     
     parent._getWidget().event(path, input);
     assertTrue(child.getEventProcessed());
+    assertTrue(first.getEventProcessed());
+    assertTrue(second.getEventProcessed());
     assertTrue(pathStr.equals(child.getPath().toString()));
   }
   

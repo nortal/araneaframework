@@ -14,19 +14,6 @@
  * limitations under the License.
 **/
 
-// functions for window close detection, submit event notifying serverside to
-// close corresponding thread. Works only with IE and even then, not perfectly.
-// XXX: useless, to remove
-function onWindowClosingEvent() {
-   if (window.event) {
-     if (window.event.clientX < 0 && window.event.clientY < 0) {
-      var closeParam = document.createElement("<input type='hidden' name='popupClose' value='true'>");
-      document.system_form_0.appendChild(closeParam);
-      araneaSubmitEvent(document.system_form_0, "", "", "");
-     }
-   }
-}
-
 function onWindowUnload() {
   closeOpenedPopupWindows();
 }

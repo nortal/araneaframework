@@ -249,6 +249,8 @@ function AraneaPage() {
   }
 }
 
+// Random request id generator. Sent only with AA ajax requests.
+// Currently only purpose of it is easier debugging (identifying requests).
 AraneaPage.getRandomRequestId = function() {
   return Math.round(100000*Math.random());
 }

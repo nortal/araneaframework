@@ -17,14 +17,14 @@
 package org.araneaframework.tests.framework.bean;
 
 import junit.framework.TestCase;
+import org.araneaframework.Environment;
 import org.araneaframework.Service;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.integration.spring.SpringServiceFactory;
 import org.araneaframework.mock.core.MockEventfulStandardService;
-import org.araneaframework.tests.mock.MockEnvironment;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- *
  */
 public class StandardServiceBeanFactoryTests extends TestCase {
   private SpringServiceFactory factory;
@@ -42,7 +42,10 @@ public class StandardServiceBeanFactoryTests extends TestCase {
     beanFactory.setBean(service);
     
     factory.setBeanId("beanId");
-    assertEquals(service, factory.buildService(new MockEnvironment()));
+    
+    Environment env = new StandardEnvironment(null, MockBeanFactory.class, beanFactory);
+    
+    assertEquals(service, factory.buildService(env));
     assertEquals("beanId",beanFactory.getBeanId());
   }
 }

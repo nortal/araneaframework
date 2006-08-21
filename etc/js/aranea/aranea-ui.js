@@ -19,7 +19,7 @@
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 
-/* *DateInput's calendar setup function. See js/calendar/calendar-setup.js for details. */
+/** DateInput's calendar setup function. See js/calendar/calendar-setup.js for details. */
 function calendarSetup(inputFieldId, dateFormat, alignment) {
   var CALENDAR_BUTTON_ID_SUFFIX = "_cbutton"; // comes from BaseFormDateTimeInputHtmlTag
   var align = alignment == null ? "Br" : alignment;
@@ -111,7 +111,7 @@ function saveScrollCoordinates(form) {
     yinput.type = 'hidden';
     xinput.value = x;
     yinput.value = y;
-    
+
     form.appendChild(xinput);
     form.appendChild(yinput);
 } 
