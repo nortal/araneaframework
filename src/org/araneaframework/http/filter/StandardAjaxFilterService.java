@@ -2,9 +2,6 @@ package org.araneaframework.http.filter;
 
 import java.util.Iterator;
 import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.regexp.RE;
@@ -12,8 +9,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.http.ServletOutputData;
-import org.araneaframework.http.ServletOverridableOutputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
@@ -35,10 +31,10 @@ public class StandardAjaxFilterService extends BaseFilterService {
 
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		AtomicResponseHelper arUtil =
-			new AtomicResponseHelper((ServletOverridableOutputData)output);
+			new AtomicResponseHelper(output);
 
 		try {
-			HttpServletResponse servletResponse = ((ServletOutputData) output).getResponse();
+			HttpOutputData httpOutput = (HttpOutputData) output;
 
 			String commaSeparatedRegions = (String)input.getGlobalData().get(UPDATE_REGIONS_KEY); 
 
@@ -53,7 +49,7 @@ public class StandardAjaxFilterService extends BaseFilterService {
 				arUtil.rollback();
 
 				String transactionElement = getTransactionElement(response);
-				servletResponse.getOutputStream().write(transactionElement.getBytes(characterEncoding));
+				httpOutput.getOutputStream().write(transactionElement.getBytes(characterEncoding));
 
 				String[] regions = commaSeparatedRegions.split(",");
 				// adding the regions that may appear in the response but
@@ -68,7 +64,7 @@ public class StandardAjaxFilterService extends BaseFilterService {
 					String regionId = regions[i];
 					
 					String regionContent = getContentById(response, regionId);
-					servletResponse.getOutputStream().write(regionContent.getBytes(characterEncoding));
+					httpOutput.getOutputStream().write(regionContent.getBytes(characterEncoding));
 				}
 			}
 		}

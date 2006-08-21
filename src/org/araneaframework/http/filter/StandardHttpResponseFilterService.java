@@ -27,7 +27,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.util.ServletUtil;
 
 /**
  * A filter which sets all the necessary headers of the response. 
@@ -80,7 +80,7 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    HttpServletResponse response = ((ServletOutputData) output).getResponse();
+    HttpServletResponse response = ServletUtil.getResponse(output);
     
     if (contentType == null) {
       throw new AraneaRuntimeException("Content type not set!");

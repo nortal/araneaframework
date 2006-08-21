@@ -21,9 +21,7 @@ import java.util.Map;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
-import org.araneaframework.Service;
 import org.araneaframework.Viewable;
-import org.araneaframework.Widget;
 
 /**
  * An interface defining a set of standard components via its subinterfaces.
@@ -41,22 +39,6 @@ public interface ApplicationComponent extends Component, Serializable, Composite
   public Environment getChildEnvironment();
   
   /**
-   * A Service Component.
-   */
-  public interface ApplicationService extends ApplicationComponent, Service, CompositeService, ViewableService {}
-  
-  /**
-   * A Widget Component.
-   */
-  public interface ApplicationWidget extends ApplicationService, Widget, CompositeWidget, ViewableWidget {
-
-    /**
-     * The key of the event handler.
-     */
-    public static final String EVENT_HANDLER_ID_KEY = "widgetEventHandler";
-    public static final String EVENT_PARAMETER_KEY = "widgetEventParameter";}
-  
-  /**
    * A model based on which a view can be constructed.
    */
   public interface ComponentViewModel extends Serializable {
@@ -65,19 +47,4 @@ public interface ApplicationComponent extends Component, Serializable, Composite
      */
     public Map getChildren();
   }
-  
-  /**
-   * A view model for a Service.
-   */
-  public interface ServiceViewModel extends ComponentViewModel, Serializable {
-    /**
-     * Can be used to custom data from the view.
-     */
-    public Map getData();
-  }
-  
-  /**
-   * A view model for a Widget.
-   */
-  public interface WidgetViewModel extends ServiceViewModel, Serializable {}
 }

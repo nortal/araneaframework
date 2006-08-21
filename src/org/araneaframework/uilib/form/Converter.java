@@ -16,19 +16,13 @@
 
 package org.araneaframework.uilib.form;
 
-import java.util.List;
-import org.araneaframework.Environment;
+import java.io.Serializable;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 
-public interface Converter {
+public interface Converter extends Serializable, FormElementAware {
 
-  /**
-   * Sets the label, that will be used in producing {@link org.araneaframework.uilib.support.UiMessage}s.
-   * 
-   * @param label the label, that will be used in producing {@link org.araneaframework.uilib.support.UiMessage}s.
-   */
-  public void setLabel(String label);
-
+  public void setFormElementCtx(FormElementContext feCtx);
+  
   /**
    * This method converts the data from one type to another. If the data is <code>null</code>
    * then <code>null</code> is returned. Otherwise {@link #convertNotNull(Object)}method is used
@@ -49,39 +43,6 @@ public interface Converter {
    * @return Converted data.
    */
   public Object reverseConvert(Object data);
-
-  /**
-   * Returns the {@link org.araneaframework.uilib.support.UiMessage}s produced while converting the data.
-   * 
-   * @return the {@link org.araneaframework.uilib.support.UiMessage}s produced while converting the data.
-   */
-  public List getErrors();
-
-  /**
-   * Returns the {@link org.araneaframework.uilib.support.UiMessage}s produced while reverse converting the data.
-   * 
-   * @return the {@link org.araneaframework.uilib.support.UiMessage}s produced while reverse converting the data.
-   */
-  public List getReverseErrors();
-
-  /**
-   * Clears the errors produced while converting the data.
-   */
-  public void clearErrors();
-
-  /**
-   * Clears the errors produced while reverse converting the data.
-   */
-  public void clearReverseErrors();
-
-  /**
-   * Returns whether the conversion was successful/valid.
-   * 
-   * @return whether the conversion was successful/valid.
-   */
-  public boolean isValid();
-
-  public void setEnvironment(Environment environment);
 
   /**
    * This method should return a new converter, of the same type that the class that overrides it,

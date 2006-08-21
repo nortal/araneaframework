@@ -18,15 +18,14 @@ package org.araneaframework.http.router;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.router.BaseServiceRouterService;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.PathInfoServiceContext;
-import org.araneaframework.http.ServletInputData;
 
 /**
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
@@ -57,7 +56,7 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 		String serviceId  = null;
 		String pathInfo = "";
 		
-		String path = ((ServletInputData) input).getRequest().getPathInfo();
+		String path = ((HttpInputData) input).getPath();
 		if (path != null) {
 			// lose the first slashes
 			while (path.indexOf("/") == 0 && path.length() > 0)

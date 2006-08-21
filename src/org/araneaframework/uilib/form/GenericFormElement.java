@@ -31,14 +31,14 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * 
  */
-public abstract class GenericFormElement extends BaseApplicationWidget {
+public abstract class GenericFormElement extends BaseApplicationWidget implements GenericFormElementContext {
 
   //*******************************************************************
   // FIELDS
   //*******************************************************************
   protected Constraint constraint;
 
-  protected Map properties = new HashMap();
+  protected Map properties;
   
   protected boolean converted = false;
   protected boolean validated = false;  
@@ -55,6 +55,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * @return all properties as a map.
    */
   public Map getProperties() {
+    if (properties == null)
+      properties = new HashMap();
     return properties;
   }
 
@@ -65,7 +67,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * @param value value for the property.
    */
   public void setProperty(Object key, Object value) {
-    properties.put(key, value);
+    getProperties().put(key, value);
   }
 
   /**
@@ -75,7 +77,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * @return the value of the property, <code>null</code> if property is not defined.
    */
   public Object getProperty(Object key) {
-    return properties.get(key);
+    return getProperties().get(key);
   }
 
   /**
@@ -92,12 +94,10 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    * @param constraint The constraint to set.
    */
-  public void setConstraint(Constraint constraint) {
+  public void setConstraint(Constraint constraint) {    
     this.constraint = constraint;
-    
-    if (constraint != null && isInitialized()) {
-      constraint.setEnvironment(getEnvironment());
-    }
+    if (constraint != null)
+      constraint.setGenericFormElementCtx(this);
   }
 
   /**
@@ -144,7 +144,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   public boolean validate() throws Exception {
   	validated = false;  	  	
   	
-  	boolean valid = validateInternal();   
+  	boolean valid = validateInternal();
     
   	validated = valid;  	
   	return valid;
@@ -158,23 +158,14 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   	return converted && validated;
   }    
 
-  /**
-   * Clears element errors.
-   */
-  public void clearErrors() {  
-    if (errors != null)
-      errors.clear();   
-  }
-
   //*********************************************************************
   //* OVERRIDABLE METHODS
   //*********************************************************************
-  
-  protected void init() throws Exception {
-    super.init();
+
+  protected void process() throws Exception {
+    ErrorUtil.showErrors(getErrors(), getEnvironment());
     
-    if (getConstraint() != null)
-      getConstraint().setEnvironment(getEnvironment());   
+    super.process();
   }
 
   //*********************************************************************
@@ -230,17 +221,32 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   protected boolean validateInternal() throws Exception {
     if (getConstraint() != null && isValid()) {
     	getConstraint().validate();    
-      getErrors().addAll( ErrorUtil.showErrors(getConstraint().getErrors(), getEnvironment()));
+      addErrors(getConstraint().getErrors());
       getConstraint().clearErrors();
     }
 
     return isValid();
   }
   
-  protected Set getErrors() {
+  public Set getErrors() {
     if (errors == null)
       errors = new HashSet();
     return errors;
+  }
+  
+  public void addError(String error) {
+    getErrors().add(error);
+  }
+  
+  public void addErrors(Set errors) {
+    getErrors().addAll(errors);
+  }
+  
+  /**
+   * Clears element errors.
+   */
+  public void clearErrors() {  
+    errors = null;
   }
   
   //*********************************************************************

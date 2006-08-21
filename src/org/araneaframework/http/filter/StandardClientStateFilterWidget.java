@@ -18,9 +18,7 @@ package org.araneaframework.http.filter;
 
 import java.io.Serializable;
 import java.util.Arrays;
-
 import net.iharder.base64.Base64;
-
 import org.apache.commons.collections.Buffer;
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 import org.apache.log4j.Logger;

@@ -16,12 +16,11 @@
 
 package org.araneaframework.http.filter;
 
-import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.http.ServletInputData;
+import org.araneaframework.http.HttpInputData;
 
 /**
  * A filter which sets the character encoding of the request. 
@@ -39,8 +38,7 @@ public class StandardRequestEncodingFilterService extends BaseFilterService {
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-  	HttpServletRequest request = ((ServletInputData) input).getRequest();
-  	request.setCharacterEncoding(requestEncoding);
+  	((HttpInputData) input).setCharactedEncoding(requestEncoding);
   	childService._getService().action(path, input, output);
   }
 }

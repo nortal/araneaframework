@@ -33,10 +33,10 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.http.ServletInputData;
-import org.araneaframework.http.ServletOutputData;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.extension.ExternalResource;
 import org.araneaframework.http.extension.ExternalResourceInitializer;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.http.util.URLUtil;
 
 /**
@@ -68,7 +68,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 			initialize(config.getServletContext());
 		}
     
-    String uri = URLUtil.normalizeURI(((ServletInputData) input).getRequest().getPathInfo());
+    String uri = URLUtil.normalizeURI(((HttpInputData) input).getPath());
     
     if (uri == null || 
         URLUtil.splitURI(uri).length == 0 || 
@@ -92,10 +92,10 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 			groupName = fileName;
 		}
 
-		HttpServletResponse response = ((ServletOutputData)output).getResponse();
+		HttpServletResponse response = ServletUtil.getResponse(output);
 	
 		List filesToLoad = new ArrayList();
-		OutputStream out = ((ServletOutputData)output).getResponse().getOutputStream();
+		OutputStream out = response.getOutputStream();
 		try {
 			if (fileName != null) {
 				if (resources.isAllowedFile(fileName)) {

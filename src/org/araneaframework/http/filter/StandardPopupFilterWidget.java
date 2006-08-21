@@ -18,7 +18,6 @@ package org.araneaframework.http.filter;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
@@ -36,9 +35,9 @@ import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
-import org.araneaframework.http.ServletInputData;
 import org.araneaframework.http.support.PopupWindowProperties;
 
 /**
@@ -238,7 +237,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   protected String getRequestURL() {
-    return ((HttpServletRequest)((ServletInputData)getCurrentInput()).getRequest()).getRequestURL().toString();
+    return ((HttpInputData) getInputData()).getRequestURL().toString();
   }
 
   /* ************************************************************************************

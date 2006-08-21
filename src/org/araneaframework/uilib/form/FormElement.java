@@ -26,7 +26,6 @@ import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
-import org.araneaframework.uilib.util.ErrorUtil;
 
 
 /**
@@ -35,7 +34,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
  * 
  */
-public class FormElement extends GenericFormElement {
+public class FormElement extends GenericFormElement implements FormElementContext {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -44,6 +43,9 @@ public class FormElement extends GenericFormElement {
   protected Data data;
   
   protected String label;
+  
+  protected boolean mandatory = false;
+  protected boolean disabled;
 
   //*********************************************************************
   //* PUBLIC METHODS
@@ -85,7 +87,7 @@ public class FormElement extends GenericFormElement {
     this.converter = converter;
     
     if (converter != null)
-      converter.setLabel(this.getLabel());
+      converter.setFormElementCtx(this);
   }
 
   /**
@@ -96,7 +98,8 @@ public class FormElement extends GenericFormElement {
   public void setConstraint(Constraint constraint) {
     super.setConstraint(constraint);
     
-    if (constraint != null) constraint.setField(this);
+    if (constraint != null && constraint instanceof FormElementAware) 
+      ((FormElementAware) constraint).setFormElementCtx(this);
   }
 
   /**
@@ -135,6 +138,8 @@ public class FormElement extends GenericFormElement {
   public void setControl(Control control) throws Exception {
     this.control = control;
     
+    control.setFormElementCtx(this);
+    
     if (isInitialized())
       control._getComponent().init(getEnvironment());
   }
@@ -147,7 +152,10 @@ public class FormElement extends GenericFormElement {
   public Converter findConverter() throws ConverterNotFoundException {
     ConfigurationContext confCtx = 
       (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
-    return ConverterFactory.getInstance(confCtx).findConverter(getControl().getRawValueType(), getData().getValueType());
+    return ConverterFactory.getInstance(confCtx).findConverter(
+        getControl().getRawValueType(), 
+        getData().getValueType(), 
+        getEnvironment());
   }
 
   /**
@@ -160,14 +168,11 @@ public class FormElement extends GenericFormElement {
   }
   
   public void setDisabled(boolean disabled) {
-  	if (getControl() != null)
-  		getControl().setDisabled(disabled);
+  	this.disabled = disabled;
   }
 	
 	public boolean isDisabled() {
-      if (getControl() != null)
-        return getControl().isDisabled();
-      return false;
+	  return this.disabled;
 	}	  
 
 	public void markBaseState() {
@@ -191,26 +196,19 @@ public class FormElement extends GenericFormElement {
     if (getData() != null)
       getData().setValue(value);
   } 
+
+  public boolean isMandatory() {
+    return this.mandatory;
+  }
   
-  public boolean isValid() {
-    boolean result = super.isValid();
-    if (getControl() != null)
-      result &= getControl().isValid();
-    return result;
+  public void setMandatory(boolean mandatory) {
+    this.mandatory = mandatory;
   }
   
   //*********************************************************************
   //* OVERRIDABLE METHODS
   //*********************************************************************
 
-  /**
-   * Clears converter, constraint and control errors.
-   */
-  public void clearErrors() {
-    super.clearErrors();
-    
-    if (getControl() != null) getControl().clearErrors();
-  }
   
   //*********************************************************************
   //* INTERNAL METHODS
@@ -241,7 +239,6 @@ public class FormElement extends GenericFormElement {
       if (getData() != null) {
         if (getData().isDirty()) {
           getControl().setRawValue(getConverter().reverseConvert(getData().getValue()));      
-          getConverter().clearErrors();
         }
         
         getData().setValue(null);
@@ -276,9 +273,6 @@ public class FormElement extends GenericFormElement {
     if (getConverter() == null && getData() != null && getControl() != null)
       setConverter(findConverter());
     
-    if (getConverter() != null)
-      getConverter().setEnvironment(getEnvironment());  
-    
     if (getControl() != null) 
       getControl()._getComponent().init(getEnvironment());
   }
@@ -298,18 +292,15 @@ public class FormElement extends GenericFormElement {
     //There is only point to convert and set the data if it is present
     if (getData() != null && getControl() != null) {
 
-      getControl().convertAndValidate();
+      getControl().convert();
 
       //The data should be set only if control is valid
-      if (getControl().isValid()) {
+      if (isValid()) {
         //We assume that the convertor is present, if control and data are
         // here
         Object newDataValue = getConverter().convert(getControl().getRawValue());
         getData().setValue(newDataValue);
         getData().clean();
-        
-        getErrors().addAll(ErrorUtil.showErrors(getConverter().getErrors(), getEnvironment()));
-        getConverter().clearErrors();        
       }
     }
 
@@ -320,6 +311,13 @@ public class FormElement extends GenericFormElement {
     }
   }
 	
+  protected boolean validateInternal() throws Exception {
+    if (getControl() != null)
+      getControl().validate();
+    
+    return super.validateInternal();
+  }
+  
 	public void accept(String id, FormElementVisitor visitor) {
 		visitor.visit(id, this);
 	}
@@ -340,6 +338,7 @@ public class FormElement extends GenericFormElement {
     private String label;
     private boolean valid;
     private Object value;
+    protected boolean mandatory;
     
     /**
      * Takes an outer class snapshot.     
@@ -350,6 +349,7 @@ public class FormElement extends GenericFormElement {
       this.label = FormElement.this.getLabel();
       this.valid = FormElement.this.isValid();
       this.value = FormElement.this.getData() != null ? FormElement.this.getData().getValue() : null;
+      this.mandatory = FormElement.this.mandatory;
     }    
     
     /**
@@ -357,7 +357,7 @@ public class FormElement extends GenericFormElement {
      * @return control.
      */
     public Control.ViewModel getControl() {
-      return control;
+      return this.control;
     }
 
     /**
@@ -365,7 +365,7 @@ public class FormElement extends GenericFormElement {
      * @return label.
      */
     public String getLabel() {
-      return label;
+      return this.label;
     }
     
     /**
@@ -375,9 +375,13 @@ public class FormElement extends GenericFormElement {
     public boolean isValid() {
       return valid;
     }
+    
+    public boolean isMandatory() {
+      return this.mandatory;
+    }
 
     public Object getValue() {
-      return value;
+      return this.value;
     }
   }
 }

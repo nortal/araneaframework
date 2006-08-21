@@ -16,18 +16,28 @@
 
 package org.araneaframework.http.core;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.EmptyPathStackException;
 import org.araneaframework.core.NoCurrentOutputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.http.ServletOverridableInputData;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.util.ServletUtil;
 
 /**
  * A ServletInputdata implementation which uses a StandardPath for determining
@@ -35,13 +45,17 @@ import org.araneaframework.http.ServletOverridableInputData;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardServletInputData implements ServletOverridableInputData {
+public class StandardServletInputData implements HttpInputData {
   private HttpServletRequest req;
+  
   private StringBuffer scopeBuf = new StringBuffer();
   private Map extensions = new HashMap();
   
   private Map globalData = new HashMap();
   private Map scopedData = new HashMap();
+  
+  private StringBuffer path;
+  private LinkedList pathPrefixes = new LinkedList();
   
   /**
    * Constructs a StandardServletInputData from the request. 
@@ -49,6 +63,7 @@ public class StandardServletInputData implements ServletOverridableInputData {
    */
   public StandardServletInputData(HttpServletRequest request) {
     setRequest(request);
+    extend(HttpServletRequest.class, req);
   }
   
   public void setRequest(HttpServletRequest request) {
@@ -81,6 +96,13 @@ public class StandardServletInputData implements ServletOverridableInputData {
         map.put(subKey, req.getParameter(key));
       }
     }
+    
+    path = new StringBuffer(req.getPathInfo() == null ? "" : req.getPathInfo());
+    pathPrefixes = new LinkedList();
+  }
+  
+  private HttpServletRequest getRequest() {
+    return ServletUtil.getRequest(this);
   }
 
   public Path getScope() {
@@ -122,11 +144,10 @@ public class StandardServletInputData implements ServletOverridableInputData {
     }
   }
 
-  public HttpServletRequest getRequest() {
-    return this.req;
-  }
-
   public void extend(Class interfaceClass, Object implementation) {
+    if (HttpServletRequest.class.equals(interfaceClass))
+      setRequest((HttpServletRequest) implementation);
+    
     extensions.put(interfaceClass, implementation);
   }
 
@@ -144,4 +165,73 @@ public class StandardServletInputData implements ServletOverridableInputData {
 		else
 			return output;
 	}
+
+  public String getCharacterEncoding() {
+    return req.getCharacterEncoding();
+  }
+
+  public String getContainerURL() {
+    StringBuffer url = new StringBuffer();
+    url.append(req.getScheme());
+    url.append("://");
+    url.append(req.getServerName());    
+    url.append(":");
+    url.append(req.getServerPort());
+    url.append(req.getContextPath());
+    url.append(req.getServletPath());
+    return url.toString();
+  }
+  
+  public String getContextURL() {
+    StringBuffer url = new StringBuffer();
+    url.append(req.getScheme());
+    url.append("://");
+    url.append(req.getServerName());    
+    url.append(":");
+    url.append(req.getServerPort());
+    url.append(req.getContextPath());
+    return url.toString();
+  }
+  
+  public URL getRequestURL() {
+    try {
+      return new URL(req.getRequestURL().toString());
+    }
+    catch (MalformedURLException e) {
+      throw new AraneaRuntimeException(e);
+    }
+  }
+
+  public String getContentType() {
+    return req.getContentType();
+  }
+
+  public Locale getLocale() {
+    return req.getLocale();
+  }
+
+  public Iterator getParameterNames() {
+    return new EnumerationIterator(req.getParameterNames());
+  }
+
+  public String[] getParameterValues(String name) {
+    return req.getParameterValues(name);
+  }
+
+  public String getPath() {
+    return path.toString();
+  }
+
+  public void popPathPrefix() {
+    path.insert(0, (String) pathPrefixes.removeLast()); 
+  }
+
+  public void pushPathPrefix(String pathPrefix) {
+    pathPrefixes.addLast(pathPrefix);
+    path.delete(0, pathPrefix.length() - 1);
+  }
+  
+  public void setCharactedEncoding(String encoding) throws UnsupportedEncodingException {
+    req.setCharacterEncoding(encoding);
+  }
 }

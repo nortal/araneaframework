@@ -19,7 +19,6 @@
  */
 package org.araneaframework.uilib.form;
 
-import java.util.Map;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
 
@@ -27,48 +26,8 @@ import org.araneaframework.Widget;
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  *
  */
-public interface Control extends Widget, Viewable {
-
-  /**
-   * Returns control label.
-   * 
-   * @return control label.
-   */
-  public String getLabel();
-
-  /**
-   * Sets control label.
-   * 
-   * @param label control label.
-   */
-  public void setLabel(String label);
-
-  /**
-   * * Returns whether the control is mandatory, that is must be inserted by user.
-   * 
-   * @return whether the control is mandatory, that is must be inserted by user.
-   */
-  public boolean isMandatory();
-
-  /**
-   * Sets whether the control is mandatory, that is must be inserted by user.
-   * 
-   * @param mandatory whether the control is mandatory, that is must be inserted by user.
-   */
-  public void setMandatory(boolean mandatory);
-
-  /**
-   * Returns whether the control and it's read data is valid.
-   * 
-   * @return whether the control and it's read data is valid.
-   */
-  public boolean isValid();
-
-  /**
-   * Clears all control errors.
-   */
-  public void clearErrors();
-
+public interface Control extends Widget, Viewable, FormElementAware {
+  
   /**
    * Returns whether the control data was present in the HTTP request.
    * 
@@ -103,21 +62,14 @@ public interface Control extends Widget, Viewable {
   public void setRawValue(Object value);
 
   /**
-   * Converts and validates the data submitted by the user.
+   * Converts the data submitted by the user.
    */
-  public void convertAndValidate();
+  public void convert();
   
   /**
-   * Sets whether the control is disabled
-   * @param disabled whether the control is disabled
+   * Validates the data submitted by the user.
    */
-  public void setDisabled(boolean disabled);
-  
-  /**
-   * Returns whether the control is disabled.
-   * @return whether the control is disabled
-   */
-  public boolean isDisabled();
+  public void validate();
   
   /**
    * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
@@ -126,33 +78,15 @@ public interface Control extends Widget, Viewable {
   public interface ViewModel {
 
     /**
-     * Returns attributes.
-     * @return attributes.
-     */
-    public Map getAttributes();
-
-    /**
      * Returns control type.
      * @return control type.
      */
     public String getControlType();
-
-    /**
-     * Returns whether the control is mandatory.
-     * @return whether the control is mandatory.
-     */
+    
     public boolean isMandatory();
-
-    /**
-     * Returns control label.
-     * @return control label.
-     */
+    
     public String getLabel();
-
-    /**
-     * Returns whether the control is disabled.
-     * @return whether the control is disabled.
-     */
+    
     public boolean isDisabled();
 
   }

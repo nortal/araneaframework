@@ -23,7 +23,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.framework.core.BaseFilterWidget;
-import org.araneaframework.http.ServletOverridableOutputData;
+import org.araneaframework.http.util.ServletUtil;
 
 
 /**
@@ -31,11 +31,9 @@ import org.araneaframework.http.ServletOverridableOutputData;
  */
 public class StandardRedirectingFilterWidget extends BaseFilterWidget {
   protected void update(InputData input) throws Exception {
-    ServletOverridableOutputData overOutput = (ServletOverridableOutputData) input.getOutputData();
-    ResponseWrapper wrapper = new ResponseWrapper(overOutput.getResponse());    
-    overOutput.setResponse(wrapper);    
-    
-    overOutput.extend(ResponseWrapper.class, wrapper);
+    ResponseWrapper wrapper = new ResponseWrapper(ServletUtil.getResponse(getOutputData()));    
+    ServletUtil.setResponse(getOutputData(), wrapper);
+    getOutputData().extend(ResponseWrapper.class, wrapper);
     
     super.update(input);
   }

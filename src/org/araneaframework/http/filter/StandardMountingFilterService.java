@@ -19,14 +19,13 @@ package org.araneaframework.http.filter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.http.ServletInputData;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.util.URLUtil;
 
 /**
@@ -47,16 +46,10 @@ public class StandardMountingFilterService extends BaseFilterService implements 
   }
   
   public String getMountURL(InputData input, String pathPrefix) {
-    HttpServletRequest req = ((ServletInputData) input).getRequest();
+    HttpInputData req = (HttpInputData) input;
     
     StringBuffer url = new StringBuffer();
-    url.append(req.getScheme());
-    url.append("://");
-    url.append(req.getServerName());    
-    url.append(":");
-    url.append(req.getServerPort());
-    url.append(req.getContextPath());
-    url.append(req.getServletPath());
+    url.append(req.getContainerURL());
     url.append(MountContext.MOUNT_PATH);
     url.append(URLUtil.normalizeURI(pathPrefix));    
     return url.toString();    
@@ -75,9 +68,9 @@ public class StandardMountingFilterService extends BaseFilterService implements 
   }
 
   public Message getMountedMessage(InputData input) {
-    HttpServletRequest req = ((ServletInputData) input).getRequest();
+    HttpInputData req = (HttpInputData) input;
     
-    String pathInfo = req.getPathInfo();
+    String pathInfo = req.getPath();
     String maxPrefix = "";
     
     if (pathInfo != null) {
