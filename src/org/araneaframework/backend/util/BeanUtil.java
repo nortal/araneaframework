@@ -264,8 +264,8 @@ public class BeanUtil {
 			if (tmp == null) {
 				tmp = newInstance(getSimpleFieldType(subBean.getClass(), fields[i]));
 				setSimpleFieldValue(subBean, fields[i], tmp);
-				subBean = tmp;
 			}
+			subBean = tmp;
 		}
 		setSimpleFieldValue(subBean, fields[fields.length-1], value);
 	}
