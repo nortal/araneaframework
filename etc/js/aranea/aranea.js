@@ -131,7 +131,7 @@ function AraneaPage() {
   this.getDebugDiv = function() { return debugDiv; }
   
   /* locale - should be used only for server-side reported locale */
-  var locale = new AraneaLocale(null, null);
+  var locale = new AraneaLocale("", "");
   this.getLocale = function() { return locale; }
   this.setLocale = function(loc) { locale = loc; }
 
