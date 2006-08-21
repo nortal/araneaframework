@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.util;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 /**
  * Some simple utility routines for Strings.
  * 
@@ -52,5 +54,9 @@ public abstract class JspStringUtil {
 					"<u>" + s.charAt(pos) + "</u>" +
 					s.substring(pos + 1);
 		return result;
+	}
+	
+	public static String escapeHtmlEntities(String s) {
+		return StringEscapeUtils.escapeHtml(s);
 	}
 }

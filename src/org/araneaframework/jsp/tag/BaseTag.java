@@ -41,8 +41,6 @@ import org.araneaframework.uilib.ConfigurationContext;
  * @author Oleg Mürk
  */
 public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
-	public static final String OUTPUT_DATA_KEY = "outputData";
-	
 	/* ***********************************************************************************
 	 * VARIABLES
 	 * ***********************************************************************************/
