@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tests;
 
 import junit.framework.TestCase;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.jsp.util.JspStringUtil;
 
 /**
