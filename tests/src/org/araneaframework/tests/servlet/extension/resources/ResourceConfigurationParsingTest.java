@@ -1,5 +1,7 @@
 package org.araneaframework.tests.servlet.extension.resources;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -51,10 +53,9 @@ public class ResourceConfigurationParsingTest extends TestCase {
 		
 		xr.setContentHandler(handler);
 		xr.setErrorHandler(handler);
-		
-		InputStream stream = 
-			Thread.currentThread().getContextClassLoader().getResourceAsStream("extensions/resources/sample.xml");
-		
+
+		String s = new File(".").getAbsolutePath();
+		InputStream stream = new FileInputStream(s + "/etc/extensions/resources/sample.xml");
 		xr.parse(new InputSource(stream));
 		
 		struct =  handler.getResource();
