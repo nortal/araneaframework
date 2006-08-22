@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
-import org.springframework.jdbc.core.RowMapperResultReader;
 
 /**
  * Extension of RowCallbackHandler interface that saves the accumulated results
