@@ -175,16 +175,21 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	  return this.disabled;
 	}	  
 
-	public void markBaseState() {
-		if (getData() != null)
-			getData().markBaseState();
-	}
-	
-	public boolean isStateChanged() {
-		if (getData() != null)
-			return getData().isStateChanged();
-		return false;
-	}		
+  public void markBaseState() {
+    if (getData() != null)
+      getData().markBaseState();
+  }
+  
+  public void restoreBaseState() {
+    if (getData() != null)
+      getData().restoreBaseState();
+  }
+  
+  public boolean isStateChanged() {
+    if (getData() != null)
+      return getData().isStateChanged();
+    return false;
+  }    
   
   public Object getValue() {
     if (getData() != null)
