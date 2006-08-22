@@ -58,7 +58,8 @@ public class AtomicResponseHelperTests extends TestCase {
    */
   public void testRollbackWriter() throws Exception {
     fail();
-    /*res.getWriter().write("Hello, World!");
+    /*
+    res.getWriter().write("Hello, World!");
     atomic.rollback();
     System.out.println(res.getContentAsByteArray().length+" "+res.getContentAsString());
     assertTrue(res.getContentAsByteArray().length==0);*/
