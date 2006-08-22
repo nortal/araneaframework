@@ -19,6 +19,7 @@ package org.araneaframework.tests.mock;
 import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.core.BaseEnvironment;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.ConfigurationContext;
 
 
@@ -35,6 +36,7 @@ public class MockEnvironment extends BaseEnvironment {
 
   public MockEnvironment() {
     contexts.put(ConfigurationContext.class, new MockConfiguration());
+    contexts.put(LocalizationContext.class, new MockLocalizationContext());
   }
 
   public Object getEntry(Object key) {

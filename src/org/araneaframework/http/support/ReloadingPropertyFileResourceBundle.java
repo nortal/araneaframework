@@ -78,7 +78,7 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
       File propertyFile = new File(propertyURL.getFile());
 
       if (lastModified < propertyFile.lastModified()) {
-        
+
         log.debug("Reloading localization data from property file '" + propertyFile + "'.");
 
         Properties result = new Properties();

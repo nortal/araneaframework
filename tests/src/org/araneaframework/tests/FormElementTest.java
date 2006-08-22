@@ -28,7 +28,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
- * 
  */
 public class FormElementTest extends TestCase {
   public void testDataCycling() throws Exception {
