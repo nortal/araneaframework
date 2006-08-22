@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,7 +44,7 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 	protected List rows = new ArrayList();
 
 	protected FormRowHandler formRowHandler;	
-	protected Map formRows = new HashMap();
+	protected Map formRows = new LinkedHashMap();
 
 	protected int rowFormCounter = 0;
 
