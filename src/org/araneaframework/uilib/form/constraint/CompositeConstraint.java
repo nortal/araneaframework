@@ -29,7 +29,7 @@ import org.araneaframework.uilib.form.GenericFormElementContext;
  * This class is a generalization of a constraint that may contain other
  * constraints.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class CompositeConstraint extends BaseConstraint implements FormElementAware {

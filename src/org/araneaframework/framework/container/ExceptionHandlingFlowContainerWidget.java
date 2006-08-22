@@ -24,7 +24,7 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget {
   private static final Logger log = Logger.getLogger(ExceptionHandlingFlowContainerWidget.class);

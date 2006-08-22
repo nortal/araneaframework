@@ -23,7 +23,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
 /**
  * This constraint checks that the value is between two others.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class NumberInRangeConstraint extends BaseFieldConstraint {

@@ -23,7 +23,7 @@ import org.araneaframework.Component;
  * A simple factory for creating components.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ComponentFactory extends Serializable {
   /**

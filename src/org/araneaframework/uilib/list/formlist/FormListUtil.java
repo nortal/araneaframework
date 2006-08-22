@@ -27,7 +27,7 @@ import org.araneaframework.uilib.list.formlist.adapters.InMemoryFormRowHandlerDe
 import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormListUtil {
 

@@ -22,7 +22,7 @@ import java.util.Date;
 /**
  * Converts <code>Timestamp</code> to <code>Date</code> and back.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class TimestampToDateConverter extends BaseConverter {

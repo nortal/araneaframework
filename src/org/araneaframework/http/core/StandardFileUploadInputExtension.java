@@ -20,18 +20,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.fileupload.FileItem;
+import org.araneaframework.core.Assert;
 import org.araneaframework.http.FileUploadInputExtension;
 
 /**
  * A filter which parses a multipart request and extracts uploaded files.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFileUploadInputExtension implements FileUploadInputExtension {
 
   private Map fileItems = new HashMap();
 
   public StandardFileUploadInputExtension(Map fileItems) {
+    Assert.notNullParam(fileItems, "fileItems");
+    
     this.fileItems = fileItems;
   }
 

@@ -34,7 +34,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * methods. To use the subclass in JSPs also another JSP Tag must be created
  * to use this implementation and configure validation script.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class FloatControl extends EmptyStringNullableControl {
@@ -264,7 +264,7 @@ public class FloatControl extends EmptyStringNullableControl {
 	//*********************************************************************    
 
 	/**
-	 * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 	 * 
 	 */
 	public class ViewModel extends StringArrayRequestControl.ViewModel {

@@ -29,7 +29,7 @@ import org.araneaframework.framework.core.BaseFilterService;
  * statement can have a prefix namespace set via <code>setNamespace()</code>.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardStatisticFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardStatisticFilterService.class);

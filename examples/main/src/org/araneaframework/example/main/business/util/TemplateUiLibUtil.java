@@ -40,7 +40,7 @@ import org.araneaframework.uilib.form.reader.BeanFormWriter;
 
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 
 public class TemplateUiLibUtil {

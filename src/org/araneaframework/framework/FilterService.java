@@ -19,7 +19,7 @@ import java.io.Serializable;
 import org.araneaframework.Service;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FilterService extends Serializable, Service{
   public void setChildService(Service childService);

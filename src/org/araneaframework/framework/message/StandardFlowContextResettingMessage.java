@@ -21,6 +21,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Message;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 
@@ -33,13 +34,15 @@ import org.araneaframework.framework.FlowContext;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardFlowContextResettingMessage implements Message {
-  Widget flow;
+  private Widget flow;
   
   public StandardFlowContextResettingMessage(Widget flow) {
+    Assert.notNullParam(flow, "flow");
+    
     this.flow = flow;
   }
   
-  public final void send(Object id, Component component){
+  public final void send(Object id, Component component) {
     if (!(component instanceof FlowContext)) {
       component._getComponent().propagate(this);
     }

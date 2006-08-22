@@ -31,7 +31,7 @@ import org.araneaframework.http.HttpOutputData;
  * An util for dynamically including jsp pages.
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract  class ServletUtil {
   private static final Logger log = Logger.getLogger(ServletUtil.class);

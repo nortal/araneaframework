@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.InvalidFormElementNameException;
 import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
@@ -30,7 +31,7 @@ import org.araneaframework.uilib.util.NameUtil;
 /**
  * This class represents a form element that can contain other form elements.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FormWidget extends GenericFormElement {
@@ -82,6 +83,10 @@ public class FormWidget extends GenericFormElement {
    * @throws Exception 
    */
   public void addElementAfter(String id, GenericFormElement element, String afterId) throws Exception {
+    Assert.notEmptyParam(id, "id");
+    Assert.notEmptyParam(afterId, "afterId");
+    Assert.notNullParam(element, "element");
+    
     LinkedMap newElements = new LinkedMap();  
       
     if (!getElements().containsKey(afterId))
@@ -110,6 +115,10 @@ public class FormWidget extends GenericFormElement {
    * @throws Exception 
    */
   public void addElementBefore(String id, GenericFormElement element, String beforeId) throws Exception {
+    Assert.notEmptyParam(id, "id");
+    Assert.notEmptyParam(beforeId, "beforeId");
+    Assert.notNullParam(element, "element");
+    
     LinkedMap newElements = new LinkedMap();  
     
     if (!elements.containsKey(beforeId))
@@ -137,6 +146,9 @@ public class FormWidget extends GenericFormElement {
    * @throws Exception 
    */
   public void addElement(String id, GenericFormElement element) throws Exception {
+    Assert.notEmptyParam(id, "id");
+    Assert.notNullParam(element, "element");
+    
     elements.put(id, element);
     
     if (isInitialized())
@@ -148,6 +160,8 @@ public class FormWidget extends GenericFormElement {
    * @throws Exception 
    */
   public void removeElement(String id) throws Exception {
+    Assert.notEmptyParam(id, "id");
+
     elements.remove(id);
     
     if (isInitialized())
@@ -236,6 +250,8 @@ public class FormWidget extends GenericFormElement {
    * @throws Exception 
    */
   public FormWidget addSubForm(String id) throws Exception {
+    Assert.notEmptyParam(id, "id");
+    
   	FormWidget result = new FormWidget();
   	addElement(id, result);
     return result;
@@ -273,6 +289,8 @@ public class FormWidget extends GenericFormElement {
    * @throws Exception 
    */
   public FormElement createElement(String labelId, Control control, Data data, boolean mandatory) throws Exception {
+    Assert.notNullParam(control, "control");
+    
     FormElement result = new FormElement();
     
     result.setLabel(labelId);
@@ -330,6 +348,8 @@ public class FormWidget extends GenericFormElement {
    * @return form element specified by full name.
    */
   public GenericFormElement getGenericElementByFullName(String fullName) {
+    Assert.notEmptyParam(fullName, "fullName");
+    
     GenericFormElement result = null;
 
     String currentElementName = NameUtil.getNamePrefix(fullName);
@@ -429,7 +449,7 @@ public class FormWidget extends GenericFormElement {
   /**
    * Represents a composite form element view model.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends GenericFormElement.ViewModel {

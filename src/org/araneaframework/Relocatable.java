@@ -28,7 +28,7 @@ import java.io.Serializable;
  * </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Relocatable extends Serializable {
   public Relocatable.Interface _getRelocatable();

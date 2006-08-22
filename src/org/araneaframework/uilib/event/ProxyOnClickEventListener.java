@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
 import org.araneaframework.uilib.InvalidEventException;
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class ProxyOnClickEventListener implements OnClickEventListener {
 	public static final Logger log = Logger.getLogger(ProxyOnClickEventListener.class);

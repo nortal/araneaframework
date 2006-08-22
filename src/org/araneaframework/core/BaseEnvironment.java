@@ -18,7 +18,7 @@ package org.araneaframework.core;
 import org.araneaframework.Environment;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  *
  */
 public abstract class BaseEnvironment implements Environment {

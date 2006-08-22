@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.http.filter;
 
@@ -40,100 +40,100 @@ import org.araneaframework.http.util.EncodingUtil;
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
  */
 public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget {
-	private static final Logger log = Logger.getLogger(StandardClientStateFilterWidget.class);
-	
-	private Buffer digestSet = new CircularFifoBuffer(10);
-	
-	/**
-	 * Global parameter key for the client state form input.
-	 */
-	public static final String CLIENT_STATE = "clientState";
-	/**
-	 * Global parameter key for the version of the client state form input.
-	 */
-	public static final String CLIENT_STATE_VERSION = "clientStateVersion";
-	
-	private boolean compress = false;
+  private static final Logger log = Logger.getLogger(StandardClientStateFilterWidget.class);
 
-	private void refreshClientState(InputData input) throws Exception {
-		if (childWidget == null) {
-			String state = (String)input.getGlobalData().get(CLIENT_STATE);
+  private Buffer digestSet = new CircularFifoBuffer(10);
 
-			byte[] lastDigest = Base64.decode((String)input.getGlobalData().get(CLIENT_STATE_VERSION)+"");
+  /**
+   * Global parameter key for the client state form input.
+   */
+  public static final String CLIENT_STATE = "clientState";
+  /**
+   * Global parameter key for the version of the client state form input.
+   */
+  public static final String CLIENT_STATE_VERSION = "clientStateVersion";
 
-			if (!digestSet.contains(new Digest(lastDigest)))
-				throw new SecurityException("Invalid session digest!");	
-			if (!EncodingUtil.checkDigest(state.getBytes(), lastDigest))
-				throw new SecurityException("Invalid session state!");
-			
-			childWidget = (RelocatableWidget)EncodingUtil.decodeObjectBase64(state, compress);
-			((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
-		}
-	}
-	
-	protected void update(InputData input) throws Exception {
-		refreshClientState(input);
-		super.update(input);
-	}
-	
-	protected void render(OutputData output) throws Exception {
-		refreshClientState(output.getInputData());
-		
-		((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(null);
+  private boolean compress = false;
 
-		String base64 = EncodingUtil.encodeObjectBase64(this.childWidget, compress);
-		
-		log.debug("Serialized client state size: " + base64.length());
-		
-		ClientStateUtil.put(CLIENT_STATE, base64, output);
-		
-		byte[] lastDigest = EncodingUtil.buildDigest(base64.getBytes());
-		
-		ClientStateUtil.put(CLIENT_STATE_VERSION, Base64.encodeBytes(lastDigest, Base64.DONT_BREAK_LINES), output);
-		digestSet.add(new Digest(lastDigest));
-		
-		((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
-		super.render(output);
+  private void refreshClientState(InputData input) throws Exception {
+    if (childWidget == null) {
+      String state = (String)input.getGlobalData().get(CLIENT_STATE);
 
-	    childWidget = null;
-	}
-	  
-	/**
-	* Sets the child to childWidget.
-	*/
-	public void setChildWidget(Widget childWidget) {
-		this.childWidget = new RelocatableWidgetDecorator(childWidget);
-	}
-	
-	private class Digest implements Serializable {
-		private byte[] digest;
-		
-		public Digest(byte[] digest) {
-			this.digest = digest;
-		}
+      byte[] lastDigest = Base64.decode((String)input.getGlobalData().get(CLIENT_STATE_VERSION)+"");
 
-		public byte[] getDigest() {
-			return digest;
-		}
+      if (!digestSet.contains(new Digest(lastDigest)))
+        throw new SecurityException("Invalid session digest!");	
+      if (!EncodingUtil.checkDigest(state.getBytes(), lastDigest))
+        throw new SecurityException("Invalid session state!");
 
-		public boolean equals(Object obj) {
-			return Arrays.equals(digest, ((Digest) obj).getDigest());
-		}
-		
-		public int hashCode() {
-			int result = 37;
-			for (int i = 0; i < digest.length; i++) {
-				result += 11 * digest[i];
-			}
-			return result;			
-		}
-	}
+      childWidget = (RelocatableWidget)EncodingUtil.decodeObjectBase64(state, compress);
+      ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
+    }
+  }
 
-	/**
-	 * If true, the serialized state will also be GZIP'ed.
-	 * @param compress
-	 */
-	public void setCompress(boolean compress) {
-		this.compress = compress;
-	}
+  protected void update(InputData input) throws Exception {
+    refreshClientState(input);
+    super.update(input);
+  }
+
+  protected void render(OutputData output) throws Exception {
+    refreshClientState(output.getInputData());
+
+    ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(null);
+
+    String base64 = EncodingUtil.encodeObjectBase64(this.childWidget, compress);
+
+    log.debug("Serialized client state size: " + base64.length());
+
+    ClientStateUtil.put(CLIENT_STATE, base64, output);
+
+    byte[] lastDigest = EncodingUtil.buildDigest(base64.getBytes());
+
+    ClientStateUtil.put(CLIENT_STATE_VERSION, Base64.encodeBytes(lastDigest, Base64.DONT_BREAK_LINES), output);
+    digestSet.add(new Digest(lastDigest));
+
+    ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
+    super.render(output);
+
+    childWidget = null;
+  }
+
+  /**
+   * Sets the child to childWidget.
+   */
+  public void setChildWidget(Widget childWidget) {
+    this.childWidget = new RelocatableWidgetDecorator(childWidget);
+  }
+
+  private class Digest implements Serializable {
+    private byte[] digest;
+
+    public Digest(byte[] digest) {
+      this.digest = digest;
+    }
+
+    public byte[] getDigest() {
+      return digest;
+    }
+
+    public boolean equals(Object obj) {
+      return Arrays.equals(digest, ((Digest) obj).getDigest());
+    }
+
+    public int hashCode() {
+      int result = 37;
+      for (int i = 0; i < digest.length; i++) {
+        result += 11 * digest[i];
+      }
+      return result;			
+    }
+  }
+
+  /**
+   * If true, the serialized state will also be GZIP'ed.
+   * @param compress
+   */
+  public void setCompress(boolean compress) {
+    this.compress = compress;
+  }
 }

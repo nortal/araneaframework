@@ -19,7 +19,7 @@ package org.araneaframework.example.main.business.util;
 import java.io.Serializable;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DataDTO implements Serializable {
 	private Long id;

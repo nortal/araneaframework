@@ -24,7 +24,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
 /**
  * Converts <code>String</code> to <code>BigDecimal</code> and back.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class StringToBigDecimalConverter extends BaseConverter {

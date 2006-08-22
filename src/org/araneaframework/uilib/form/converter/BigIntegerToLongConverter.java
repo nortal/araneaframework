@@ -20,7 +20,7 @@ import java.math.BigInteger;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class BigIntegerToLongConverter extends BaseConverter {

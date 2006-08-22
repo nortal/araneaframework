@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.control.SelectControl;
  * {@link SelectControl} manages a list of them.
  * Each item is characterized by its value and label.
  *
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class DisplayItem implements java.io.Serializable {

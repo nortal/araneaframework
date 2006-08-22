@@ -25,7 +25,7 @@ import java.util.Map;
  *  where they are located in the greater hirearchy. 
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface OutputData extends Serializable, Extendable, Narrowable {
   

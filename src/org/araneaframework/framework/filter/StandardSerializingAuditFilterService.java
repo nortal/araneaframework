@@ -42,7 +42,7 @@ import org.araneaframework.framework.FilterService;
  * must be valid & writable.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardSerializingAuditFilterService extends BaseService implements FilterService {
   private static final Logger log = Logger.getLogger(StandardSerializingAuditFilterService.class);

@@ -23,7 +23,7 @@ import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  *
  */
 public interface Control extends Widget, Viewable, FormElementAware {
@@ -72,7 +72,7 @@ public interface Control extends Widget, Viewable, FormElementAware {
   public void validate();
   
   /**
-   * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    *
    */
   public interface ViewModel {

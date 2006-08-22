@@ -20,7 +20,7 @@ package org.araneaframework.uilib.form.converter;
  * Convert the <code>Boolean</code> to <code>Long</code>, true - 1, false -
  * 0 and back
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class BooleanToLongConverter extends BaseConverter {

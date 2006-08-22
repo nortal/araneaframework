@@ -22,7 +22,7 @@ import org.araneaframework.core.AraneaRuntimeException;
  * This exception is thrown if an event name is invalid and cannot be delivered
  * to addressee/listener.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class InvalidEventException extends AraneaRuntimeException {

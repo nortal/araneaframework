@@ -30,7 +30,7 @@ import org.araneaframework.uilib.form.FormElementContext;
  * This class is a control generalization that provides methods common to all HTML form controls.
  * The methods include XML output and error handling.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class BaseControl extends BaseApplicationWidget implements java.io.Serializable, Control {
@@ -182,7 +182,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   /**
    * Represents a general control view model.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel implements Control.ViewModel {

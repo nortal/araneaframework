@@ -26,7 +26,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
 /**
  * This class represents a control that has both date and time.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class DateTimeControl extends BaseControl {
@@ -171,7 +171,7 @@ public class DateTimeControl extends BaseControl {
   
   /**
    * Represents a date-time control view model.
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends BaseControl.ViewModel {

@@ -23,7 +23,7 @@ package org.araneaframework.uilib.event;
  * to a button. This listener will receive notification when the control is
  * being clicked by the user
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public interface OnClickEventListener  extends java.io.Serializable {

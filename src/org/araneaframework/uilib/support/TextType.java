@@ -23,7 +23,7 @@ import org.apache.commons.lang.enums.Enum;
 /**
  * Specifies the text type for {@link org.araneaframework.uilib.form.control.TextControl}.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class TextType extends Enum implements Serializable {

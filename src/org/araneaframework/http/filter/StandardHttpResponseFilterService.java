@@ -32,7 +32,7 @@ import org.araneaframework.http.util.ServletUtil;
 /**
  * A filter which sets all the necessary headers of the response. 
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardHttpResponseFilterService extends BaseFilterService {
   private String contentType = "text/html; charset=UTF-8";

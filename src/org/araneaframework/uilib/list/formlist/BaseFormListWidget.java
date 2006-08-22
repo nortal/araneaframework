@@ -32,7 +32,7 @@ import org.araneaframework.uilib.form.FormWidget;
  *  Base class for editable rows widgets that are used to handle simultenous 
  *  editing of multiple forms with same structure.
  *   
- *  @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ *  @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseFormListWidget extends StandardPresentationWidget {
 

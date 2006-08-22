@@ -31,7 +31,7 @@ import org.araneaframework.Service;
  * moved from one parent to another. 
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class RelocatableServiceDecorator extends BaseService implements Serializable, Relocatable.RelocatableService {
   //*******************************************************************

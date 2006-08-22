@@ -29,7 +29,7 @@ import org.araneaframework.uilib.form.GenericFormElement;
  * This class allows one to read <code>Map</code> s from
  * {@link org.araneaframework.uilib.form.FormWidget}s.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class MapFormReader {

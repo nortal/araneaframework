@@ -32,7 +32,7 @@ import org.araneaframework.uilib.list.RowHandler;
  * Helper that facilitates holding the editable list rows in memory without saving them to database. 
  * Useful when the editable list should be persisted only in the very end of user session. 
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class InMemoryFormListHelper implements Serializable {
 	protected List addedRows = new ArrayList();

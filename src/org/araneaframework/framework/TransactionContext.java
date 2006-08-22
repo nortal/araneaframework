@@ -25,7 +25,7 @@ import java.io.Serializable;
  * <code>isConsistent()</code>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface TransactionContext extends Serializable {
   /**

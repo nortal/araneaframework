@@ -22,7 +22,7 @@ import java.util.Set;
 import org.araneaframework.uilib.list.formlist.FormRow;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class IndividualFormRowHandler extends DefaultFormRowHandler{
 	public void saveRows(Map rowForms) throws Exception {

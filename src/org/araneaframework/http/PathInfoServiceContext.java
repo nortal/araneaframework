@@ -24,7 +24,7 @@ import org.araneaframework.framework.ManagedServiceContext;
  * corresponds to a service router that uses <code>HttpServletRequest.getPathInfo()</code> for 
  * routing the request to corresponding service.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface PathInfoServiceContext extends ManagedServiceContext, Serializable {
   

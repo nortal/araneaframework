@@ -24,7 +24,7 @@ import java.io.Serializable;
  * <code>PreparedStatement.setNull</code>. It is used to pass the information
  * about corresponding SQL type.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class NullValue implements Serializable {

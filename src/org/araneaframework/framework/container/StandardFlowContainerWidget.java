@@ -41,7 +41,7 @@ import org.araneaframework.framework.FlowContext;
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFlowContainerWidget extends BaseApplicationWidget implements FlowContext {
   //*******************************************************************

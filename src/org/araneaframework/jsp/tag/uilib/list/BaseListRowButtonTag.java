@@ -28,7 +28,7 @@ import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 /**
  * List row button base tag.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BaseListRowButtonTag extends BaseSimpleButtonTag {
   protected String updateRegions;

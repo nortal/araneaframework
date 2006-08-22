@@ -30,7 +30,7 @@ import org.araneaframework.uilib.support.DisplayItem;
 /**
  * Standard select form element tag.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @jsp.tag
  *   name = "radioSelect"

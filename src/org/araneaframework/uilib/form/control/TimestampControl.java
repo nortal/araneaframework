@@ -27,7 +27,7 @@ import org.araneaframework.uilib.util.ValidationUtil;
  * This class represents a generalization of controls that have a value
  * of type <code>Timestamp</code>. 
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class TimestampControl extends EmptyStringNullableControl {

@@ -16,6 +16,7 @@
 package org.araneaframework.core;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -105,7 +106,7 @@ public abstract class Assert {
     }
   }
   
-  public static void isInstanceOfParam( Class klass, Object object,String parameterName) {
+  public static void isInstanceOfParam( Class klass, Object object, String parameterName) {
     if (object == null) return;
     
     if (!klass.isAssignableFrom(object.getClass())) {
@@ -148,5 +149,18 @@ public abstract class Assert {
     if (string == null || string.length() == 0) {
       throw new IllegalArgumentException(message);
     }
+  }
+  
+  public static void noNullElementsParam(Collection collection, String param)
+  {
+      notNullParam(collection, param);
+      int i = 0;
+      for(Iterator it = collection.iterator(); it.hasNext();)
+      {
+          if(it.next() == null)
+              throw new IllegalArgumentException("The validated collection contains null element at index: '" + i + "'!");
+          i++;
+      }
+
   }
 }

@@ -22,7 +22,7 @@ import java.io.Serializable;
  * A top level service that is not syncrhonized and is dependent only on the request.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface TopServiceContext extends ManagedServiceContext, Serializable {
   /**

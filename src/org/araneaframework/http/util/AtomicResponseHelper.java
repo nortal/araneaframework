@@ -36,7 +36,7 @@ import org.araneaframework.http.HttpOutputData;
  * discard the contents of the buffer.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * TODO: rewrite as HttpOutputData wrapper
  */
@@ -135,11 +135,6 @@ public class AtomicResponseHelper {
       
       resetStream();
       writerOut = null;
-      
-      //XXX: this causes the session to be created on every request
-      //Uncomment or remove when bug 105 solved.
-      /*if (!isCommitted())
-        reset();*/
     }    
     
     public byte[] getData() throws Exception {

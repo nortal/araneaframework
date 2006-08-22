@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.framework.LocalizationContext;
@@ -38,7 +39,7 @@ import org.araneaframework.framework.core.BaseFilterService;
  * provide Locale specific content. 
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardLocalizationFilterService extends BaseFilterService implements LocalizationContext {
   private static final Logger log = Logger.getLogger(StandardLocalizationFilterService.class);
@@ -50,6 +51,8 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
    * language name in {@link Locale}.
    */
   public void setLanguageName(String languageName) {
+    Assert.notNullParam(languageName, "languageName");
+    
     setLocale(new Locale(languageName));
   }
   
@@ -66,7 +69,9 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   }
 
   public void setLocale(Locale currentLocale) {
-    log.debug("Current locale switched to:" + currentLocale);
+    Assert.notNullParam(currentLocale, "currentLocale");
+    
+    log.debug("Current locale switched to: '" + currentLocale + "'.");
     this.currentLocale = currentLocale;
   }
   
@@ -86,6 +91,8 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
    * and the ClassLoaders provided by the ClassLoaderUtil.
    */
   public ResourceBundle getResourceBundle(Locale locale) {
+    Assert.notNullParam(locale, "locale");
+    
 	  List loaders = ClassLoaderUtil.getClassLoaders();
 	  
 	  for (Iterator iter = loaders.iterator(); iter.hasNext();) {

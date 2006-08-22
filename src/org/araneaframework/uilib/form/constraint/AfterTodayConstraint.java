@@ -53,7 +53,6 @@ public class AfterTodayConstraint extends BaseFieldConstraint {
 		}
 
 		if (today.getTime().compareTo((Date) getValue()) == 1) {
-			//TODO: Add this message!
 			addError(
 				ErrorUtil.localizeAndFormat(
 					UiLibMessages.DATE_BEFORE_TODAY, 

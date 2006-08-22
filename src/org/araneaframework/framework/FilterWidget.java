@@ -19,7 +19,7 @@ import java.io.Serializable;
 import org.araneaframework.Widget;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FilterWidget extends Serializable, Widget{
   public void setChildWidget(Widget childService);

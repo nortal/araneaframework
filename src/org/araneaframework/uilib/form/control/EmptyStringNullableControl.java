@@ -22,7 +22,7 @@ package org.araneaframework.uilib.form.control;
  * which find that empty <code>String</code> in request is same as 
  * <code>null</code>.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class EmptyStringNullableControl extends StringRequestControl {

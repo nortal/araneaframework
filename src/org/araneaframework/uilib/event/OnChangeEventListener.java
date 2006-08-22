@@ -23,7 +23,7 @@ package org.araneaframework.uilib.event;
  * to a listbox. This listener will receive notification when the control data
  * is changing.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public interface OnChangeEventListener  extends java.io.Serializable {

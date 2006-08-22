@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
  * subsequent request to <code>getCurrentResourceBundle()</code> will use the new current Locale.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface LocalizationContext extends Serializable {
   /**

@@ -27,7 +27,7 @@ import org.araneaframework.uilib.InvalidEventException;
 /**
  * This class manages all events. It is used by widgets to manage their events.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class StandardControlEventListenerAdapter implements EventListener {

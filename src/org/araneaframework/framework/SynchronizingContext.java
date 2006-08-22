@@ -22,7 +22,7 @@ import java.io.Serializable;
  * A context providing syncrhonized calls to the child service.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface SynchronizingContext extends Serializable {
 }

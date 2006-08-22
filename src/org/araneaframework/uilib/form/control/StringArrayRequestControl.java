@@ -27,7 +27,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * This class is a generalization of controls that have a single <code>String[]</code> request
  * parameter.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class StringArrayRequestControl extends BaseControl {
@@ -179,7 +179,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
   /**
    * Represents a view model of a control with a single array request parameter.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends BaseControl.ViewModel {

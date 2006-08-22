@@ -24,7 +24,7 @@ import javax.servlet.jsp.PageContext;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class JspUpdateRegionUtil {
   public static List parseUpdateRegionNames(String updateRegions) throws JspException  {

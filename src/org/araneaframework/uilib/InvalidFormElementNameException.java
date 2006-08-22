@@ -22,7 +22,7 @@ import org.araneaframework.core.AraneaRuntimeException;
  * This exception is thrown if one of the {@link org.araneaframework.uilib.form.FormWidget}'s <code>get/setByFullNane</code>
  * methods is called and it is given an invalid or not existing form element name.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class InvalidFormElementNameException extends AraneaRuntimeException {

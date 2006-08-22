@@ -22,8 +22,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
@@ -43,22 +45,19 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  *</p>
  *
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
   private Map messages = new LinkedMap();
-
-  protected void init() throws Exception {
-    Map entries = new HashMap();
-    entries.put(MessageContext.class, this);
-    
-    childWidget._getComponent().init(new StandardEnvironment(getChildWidgetEnvironment(), entries));
-  }
   
   protected void update(InputData input) throws Exception {
     messages.clear();
     
-    childWidget._getWidget().update(input);
+    super.update(input);
+  }
+  
+  protected Environment getChildWidgetEnvironment() {
+    return new StandardEnvironment(getEnvironment(), MessageContext.class, this);
   }
   
   /**
@@ -79,6 +78,8 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
    *</p>
    */
   protected void render(OutputData output) throws Exception {
+    //TODO: Why build the typedMessages map on render, not before?
+    
     Map typedMessages = new HashMap();
     
     for (Iterator i = messages.entrySet().iterator(); i.hasNext();) {
@@ -97,7 +98,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     output.pushAttribute(MessageContext.MESSAGE_KEY, typedMessages);
     
     try {
-      childWidget._getWidget().render(output);
+      super.render(output);
     }
     finally {
       output.popAttribute(MessageContext.MESSAGE_KEY);
@@ -105,14 +106,21 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   }
   
   public void showMessage(String type, final String message) {
+    Assert.notEmptyParam(type, "type");
+    Assert.notEmptyParam(message, "message");
+    
     messages.put(message, type);
   }
 
   public void showErrorMessage(String message) {
+    Assert.notEmptyParam(message, "message");
+    
     showMessage(ERROR_TYPE, message);
   }
 
   public void showInfoMessage(String message) {
+    Assert.notEmptyParam(message, "message");
+    
     showMessage(INFO_TYPE, message);
   }
   

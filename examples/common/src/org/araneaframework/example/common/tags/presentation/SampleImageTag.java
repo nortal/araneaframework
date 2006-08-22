@@ -63,7 +63,7 @@ public class SampleImageTag extends BaseImageHtmlTag {
 	 * Map: String(image code) -> Info
 	 */
 	protected static final Map imageInfo = new HashMap();
-	//XXX: this is bullshite
+	//XXX: this is bullshit
 	static {
 		imageInfo.put("add",             new Info("gfx/ico_add3.gif",      "30",   "16"));
 	    imageInfo.put("old",             new Info("gfx/ico_old.gif",       "32",   "32"));

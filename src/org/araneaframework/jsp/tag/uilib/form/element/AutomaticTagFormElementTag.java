@@ -40,7 +40,7 @@ import org.araneaframework.uilib.form.FormWidget;
  * Automatic form element tag. Chooses the tag to draw the control based on the information supplied in the 
  * component.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @jsp.tag
  *   name = "automaticFormElement"

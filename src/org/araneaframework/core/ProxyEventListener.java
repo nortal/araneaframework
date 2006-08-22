@@ -22,7 +22,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.uilib.InvalidEventException;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class ProxyEventListener implements EventListener {
 	public static final Logger log = Logger.getLogger(ProxyEventListener.class);

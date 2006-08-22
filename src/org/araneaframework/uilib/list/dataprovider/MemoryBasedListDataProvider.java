@@ -39,7 +39,7 @@ import org.araneaframework.backend.list.model.ListItemsData;
  * Note, that all operations on items are made on the list of "processed", that
  * is ordered and filtered items.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class MemoryBasedListDataProvider implements ListDataProvider {

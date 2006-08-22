@@ -20,7 +20,7 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
  * 
- * @author Jevgeni kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  *
  */
 public class HelloWidget extends StandardPresentationWidget {

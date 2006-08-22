@@ -17,7 +17,7 @@
 package org.araneaframework.integration.spring;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 import org.apache.log4j.Logger;
 import org.araneaframework.framework.FilterService;

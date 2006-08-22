@@ -20,7 +20,7 @@ import org.araneaframework.uilib.list.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.list.formlist.FormRowHandler;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class EditableBeanListWidget extends BeanListWidget {
 

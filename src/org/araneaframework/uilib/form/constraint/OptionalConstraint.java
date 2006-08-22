@@ -24,7 +24,7 @@ import org.araneaframework.uilib.form.GenericFormElementContext;
 /**
  * Constraint that will be applied iff the field has been read from the request.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class OptionalConstraint extends BaseFieldConstraint {

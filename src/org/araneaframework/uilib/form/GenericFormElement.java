@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ErrorUtil;
@@ -28,7 +29,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
 /**
  * Represents a general form element, a node in form element hierarchy.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class GenericFormElement extends BaseApplicationWidget implements GenericFormElementContext {
@@ -67,6 +68,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
    * @param value value for the property.
    */
   public void setProperty(Object key, Object value) {
+    Assert.notNullParam(key, "key");
+    
     getProperties().put(key, value);
   }
 
@@ -77,6 +80,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
    * @return the value of the property, <code>null</code> if property is not defined.
    */
   public Object getProperty(Object key) {
+    Assert.notNullParam(key, "key");
+    
     return getProperties().get(key);
   }
 
@@ -235,10 +240,14 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
   }
   
   public void addError(String error) {
+    Assert.notNullParam(error, "error");
+    
     getErrors().add(error);
   }
   
   public void addErrors(Set errors) {
+    Assert.noNullElementsParam(errors, "errors");
+    
     getErrors().addAll(errors);
   }
   
@@ -256,7 +265,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
   /**
    * This class represents a form element view model.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel{

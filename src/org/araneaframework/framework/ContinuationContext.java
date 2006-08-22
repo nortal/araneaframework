@@ -23,7 +23,7 @@ import java.io.Serializable;
  * and allows the continuation to explicitly restore control once it is finished. 
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ContinuationContext extends Serializable {
   /**

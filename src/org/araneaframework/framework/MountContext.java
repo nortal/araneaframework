@@ -35,7 +35,7 @@ import org.araneaframework.framework.filter.StandardMountPointFilterService;
  * If we now submit an URL <code>http://server/main/mount/clients/3331</code> then 
  * the <code>3331</code> will be passed as the suffix to the message factory and may be used to show the particular client. 
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @see StandardMountPointFilterService
  */

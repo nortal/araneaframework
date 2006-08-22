@@ -25,7 +25,7 @@ import org.araneaframework.uilib.form.converter.ConverterFactory;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FormConverterTest extends TestCase {

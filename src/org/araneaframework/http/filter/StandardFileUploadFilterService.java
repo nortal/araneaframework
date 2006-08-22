@@ -41,7 +41,7 @@ import org.araneaframework.http.util.ServletUtil;
  * This filter uses Commons FileUpload to parse the request and upload the <code>multipart/form-data</code> 
  * encoded files to a temporary directory.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFileUploadFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardFileUploadFilterService.class);
@@ -152,7 +152,7 @@ public class StandardFileUploadFilterService extends BaseFilterService {
   
   /**
    * 
-   * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   private static class MultipartWrapper extends HttpServletRequestWrapper {
     Map parameters = new HashMap();

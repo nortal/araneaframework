@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
  * NB! Every and one class and/or method that utilizes database connection, statement and/or result set
  * should use this class.
  *
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class DbUtil {
