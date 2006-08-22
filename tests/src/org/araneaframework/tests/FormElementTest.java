@@ -35,6 +35,7 @@ public class FormElementTest extends TestCase {
     emptyRequest.addParameter("myTextBox", "");
 
     FormElement sfe = new FormElement();
+    sfe.setLabel("textbox");
     
     sfe._getComponent().init(new MockEnvironment());
     
