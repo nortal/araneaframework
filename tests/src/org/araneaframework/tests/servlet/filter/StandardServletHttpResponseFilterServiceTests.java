@@ -23,7 +23,6 @@ import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.http.filter.StandardHttpResponseFilterService;
 import org.araneaframework.mock.MockLifeCycle;
-import org.araneaframework.mock.MockOutputData;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulStandardService;
 import org.springframework.mock.web.MockHttpServletRequest;
