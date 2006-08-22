@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.xml.parsers.SAXParserFactory;
 import junit.framework.TestCase;
 import org.araneaframework.http.extension.ExternalResource;
 import org.araneaframework.http.extension.ExternalResourceConfigurationHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public class ResourceConfigurationParsingTest extends TestCase {
 	private ExternalResource struct;
@@ -46,7 +46,7 @@ public class ResourceConfigurationParsingTest extends TestCase {
 	}
 	
 	public void setUp() throws Exception {
-		XMLReader xr = XMLReaderFactory.createXMLReader();
+		XMLReader xr = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 		ExternalResourceConfigurationHandler handler = new ExternalResourceConfigurationHandler();
 		
 		xr.setContentHandler(handler);
