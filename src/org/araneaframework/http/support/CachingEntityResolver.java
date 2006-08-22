@@ -12,7 +12,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class CachingEntityResolver implements EntityResolver {
-
+  public static final CachingEntityResolver INSTANCE = new CachingEntityResolver();
+  
+  private CachingEntityResolver() {}
+  
   // Logger
   private Log log = LogFactory.getLog(CachingEntityResolver.class);
 
@@ -34,5 +37,9 @@ public class CachingEntityResolver implements EntityResolver {
     if (log.isDebugEnabled())
       log.debug("Entity resolving failed '" + publicId + " " + systemId + "'.");
     return null;
+  }
+  
+  public static CachingEntityResolver getInstance() {
+    return INSTANCE;
   }
 }

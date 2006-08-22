@@ -26,6 +26,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.http.core.Constants;
+import org.araneaframework.http.support.CachingEntityResolver;
 import org.araneaframework.jsp.util.JspUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
@@ -103,6 +104,7 @@ public class LightweightJspServlet extends HttpServlet {
       factory.setNamespaceAware(true);
 
       DocumentBuilder builder = factory.newDocumentBuilder();
+      builder.setEntityResolver(CachingEntityResolver.getInstance());
 
       Document jspDom = builder.parse(getServletContext().getResourceAsStream(jspUri));
 
@@ -290,6 +292,7 @@ public class LightweightJspServlet extends HttpServlet {
     Document tldDoc = null;
     try {
       DocumentBuilder builder = factory.newDocumentBuilder();
+      builder.setEntityResolver(CachingEntityResolver.getInstance());
       tldDoc = builder.parse(tldStream);
     }
     catch (ParserConfigurationException e) {

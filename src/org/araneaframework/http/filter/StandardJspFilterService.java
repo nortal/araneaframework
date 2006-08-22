@@ -160,7 +160,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     Document tldDoc = null;
     try {
       DocumentBuilder builder = factory.newDocumentBuilder();
-      builder.setEntityResolver(new CachingEntityResolver());
+      builder.setEntityResolver(CachingEntityResolver.getInstance());
       tldDoc = builder.parse(tldStream);
     }
     catch (ParserConfigurationException e) {

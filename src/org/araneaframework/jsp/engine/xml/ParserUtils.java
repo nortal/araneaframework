@@ -57,7 +57,7 @@ public class ParserUtils {
     /**
      * An entity resolver for use when parsing XML documents.
      */
-    static EntityResolver entityResolver = new CachingEntityResolver();
+    static EntityResolver entityResolver = CachingEntityResolver.getInstance();
 
     // Turn off for JSP 2.0 until switch over to using xschema.
     public static boolean validating = false;
