@@ -14,35 +14,23 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.form.converter;
-
-import java.math.BigInteger;
+package org.araneaframework.core;
 
 
 /**
+ * This exception is thrown if an expetion is raised inside an event listener.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class BigIntegerToLongConverter extends BaseConverter {
-  /**
-   * Returns a <code>new BigIntegerToLongConverter()</code>.
-   */
-  public BaseConverter newConverter() {
-    return new BigIntegerToLongConverter();
-  }
+public class EventException extends AraneaRuntimeException {
   
   /**
-   * Converts <code>BigInteger</code> to <code>Long</code>.
+   * Creates an exception, which means that the event could not be developed to the addressee (widget, form control, etc) 
+   * or listener.
+   * @param eventName the suffix of the event name that could not be delivered.
    */
-  protected Object convertNotNull(Object data) {
-    return new Long(((BigInteger) data).longValue());
-  }
-  
-  /**
-   * Converts <code>Long</code> to <code>BigInteger</code>.
-   */
-  protected Object reverseConvertNotNull(Object data) {
-    return new BigInteger(((Long) data).toString());
-  }
-
+  public EventException(Object that, String widgetId, String eventId, Exception cause) {
+    super("Widget '" + widgetId + "' could not deliver event '" + eventId + "'." + Assert.thisToString(that), cause);
+  } 
 }

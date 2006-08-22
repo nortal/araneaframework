@@ -23,7 +23,7 @@ import org.araneaframework.core.Assert;
 /**
  * This utility class contains methods for managing Aranea components.
  * 
- * @author Jevgeni kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ComponentUtil {
   public static final String LISTENER_KEY = "org.araneaframework.core.util.ComponentUtil.LISTENER";

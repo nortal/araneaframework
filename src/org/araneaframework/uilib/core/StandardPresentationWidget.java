@@ -32,7 +32,7 @@ import org.araneaframework.uilib.ConfigurationContext;
 /**
  * Base widget class, has an id, can have children widgets and can process general widget events.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardPresentationWidget extends BaseApplicationWidget {
   protected String viewSelector;  

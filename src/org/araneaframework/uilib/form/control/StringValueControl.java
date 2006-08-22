@@ -24,7 +24,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * This class represents controls, that have a value of type <code>String</code>
  * and a single request parameter of same type. 
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class StringValueControl extends EmptyStringNullableControl {

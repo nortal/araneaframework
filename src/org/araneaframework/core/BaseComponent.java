@@ -34,7 +34,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  * and only provide some very basic services (mainly syncronization and messaging service)
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseComponent implements Component {
   //*******************************************************************
@@ -203,7 +203,9 @@ public abstract class BaseComponent implements Component {
   protected void _addComponent(Object key, Component component, Environment env){
     Assert.notNull(this, key, 
         "Cannot add a component of class '" + (component == null ? null : component.getClass())+ "' under a null key!");
-    
+    //Only Strings are supported by this implementation
+    Assert.isInstanceOfParam(String.class, key, "key");
+
     _checkCall();
     
     // cannot add a child with key that clashes with a disabled child's key
@@ -225,6 +227,8 @@ public abstract class BaseComponent implements Component {
    */
   protected void _removeComponent(Object key) {
     Assert.notNullParam(this, key, "key");
+    //Only Strings are supported by this implementation
+    Assert.isInstanceOfParam(String.class, key, "key");
     
     _checkCall();
     
@@ -246,6 +250,8 @@ public abstract class BaseComponent implements Component {
    */
   protected void _disableComponent(Object key) {
     Assert.notNullParam(this, key, "key");
+    //Only Strings are supported by this implementation
+    Assert.isInstanceOfParam(String.class, key, "key");
     
     _checkCall();
     
@@ -263,6 +269,8 @@ public abstract class BaseComponent implements Component {
    */
   protected void _enableComponent(Object key) {
     Assert.notNullParam(this, key, "key");
+    //Only Strings are supported by this implementation
+    Assert.isInstanceOfParam(String.class, key, "key");
     
     _checkCall();
     
@@ -288,7 +296,10 @@ public abstract class BaseComponent implements Component {
     Assert.isTrue(this, parent._getComposite().getChildren().get(keyFrom) instanceof Relocatable, 
         "The component of class '" + parent._getComposite().getChildren().get(keyFrom).getClass() + "' to be relocated from under key '" + keyFrom + 
         "' to key '" + keyTo + "' must implement Relocatable!");
-
+    //Only Strings are supported by this implementation
+    Assert.isInstanceOfParam(String.class, keyFrom, "keyFrom");
+    Assert.isInstanceOfParam(String.class, keyTo, "keyTo");
+    
     Relocatable comp = (Relocatable) parent._getComposite().detach(keyFrom);
     comp._getRelocatable().overrideEnvironment(newEnv);
     

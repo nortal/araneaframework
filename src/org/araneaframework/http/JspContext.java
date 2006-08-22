@@ -19,7 +19,7 @@ package org.araneaframework.http;
 import java.io.Serializable;
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface JspContext extends Serializable {
   public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.http.JspContext";

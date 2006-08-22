@@ -28,7 +28,7 @@ import org.araneaframework.Service;
  * <br><br>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ManagedServiceContext extends Serializable {
   /**

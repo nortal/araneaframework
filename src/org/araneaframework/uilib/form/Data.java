@@ -23,7 +23,7 @@ import org.araneaframework.uilib.DataItemTypeViolatedException;
  * {@link org.araneaframework.uilib.form.converter.ConverterFactory} to find the appropriate
  * {@link org.araneaframework.uilib.form.converter.BaseConverter} and a value.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class Data implements java.io.Serializable {
@@ -114,7 +114,6 @@ public class Data implements java.io.Serializable {
    * {@link #isStateChanged()}. 
    */
   public void markBaseState() {
-  	//TODO: maybe deep copy?
   	markedBaseValue = value;
   }
   

@@ -42,7 +42,7 @@ import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormR
  * Seperate forms are used for individual rows, so that client-side validation
  * would work on the same separate rows.
  *
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DemoDisplayableEditableList extends TemplateBaseWidget {
 	public DemoDisplayableEditableList() {		

@@ -22,6 +22,7 @@ import java.util.Map;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.core.BaseFilterService;
@@ -29,12 +30,16 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.util.URLUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMountingFilterService extends BaseFilterService implements MountContext {
   private Map mounts = new HashMap();    
   
   public String mount(InputData input, String pathPrefix, MessageFactory messageFactory) {
+    Assert.notNullParam(input, "input");
+    Assert.notEmptyParam(pathPrefix, "pathPrefix");
+    Assert.notNullParam(messageFactory, "messageFactory");
+    
     pathPrefix = URLUtil.normalizeURI(pathPrefix);
     mounts.put(pathPrefix, messageFactory);
 
@@ -42,10 +47,15 @@ public class StandardMountingFilterService extends BaseFilterService implements 
   }
   
   public void unmount(String pathPrefix) {
+    Assert.notEmptyParam(pathPrefix, "pathPrefix");
+    
     mounts.remove(URLUtil.normalizeURI(pathPrefix));
   }
   
   public String getMountURL(InputData input, String pathPrefix) {
+    Assert.notNullParam(input, "input");
+    Assert.notEmptyParam(pathPrefix, "pathPrefix");
+    
     HttpInputData req = (HttpInputData) input;
     
     StringBuffer url = new StringBuffer();
@@ -68,6 +78,8 @@ public class StandardMountingFilterService extends BaseFilterService implements 
   }
 
   public Message getMountedMessage(InputData input) {
+    Assert.notNullParam(input, "input");
+    
     HttpInputData req = (HttpInputData) input;
     
     String pathInfo = req.getPath();

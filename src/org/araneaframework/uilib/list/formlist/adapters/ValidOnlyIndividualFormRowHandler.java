@@ -22,7 +22,7 @@ import java.util.Set;
 import org.araneaframework.uilib.list.formlist.FormRow;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ValidOnlyIndividualFormRowHandler extends ValidOnlyFormRowHandler{
 	public void saveValidRows(Map rowForms) throws Exception {
@@ -37,10 +37,6 @@ public abstract class ValidOnlyIndividualFormRowHandler extends ValidOnlyFormRow
 			deleteRow(i.next());
 	}
 	
-	//XXX: why is this FINAL method even here? seems not needed by any interfaces!
-	// it should probably be removed or at least throw UnsupportedOperationException or similar!
-    public final void saveRow(FormRow formRow) throws Exception  {}
-  
 	public void saveValidRow(FormRow formRow) throws Exception  {}
 	public void deleteRow(Object key) throws Exception {}
 }

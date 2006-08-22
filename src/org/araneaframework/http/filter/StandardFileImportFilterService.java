@@ -41,7 +41,7 @@ import org.araneaframework.http.util.URLUtil;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 */
 public class StandardFileImportFilterService  extends BaseFilterService {
 	private static final Logger log = Logger.getLogger(StandardFileImportFilterService.class);

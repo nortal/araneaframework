@@ -22,7 +22,7 @@ import org.araneaframework.framework.FilterService;
 import org.araneaframework.framework.core.BaseFilterService;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFilterChainService extends BaseFilterService {
   private List filterChain;  
@@ -32,12 +32,15 @@ public class StandardFilterChainService extends BaseFilterService {
   }
   
   protected void init() throws Exception {      
-    for (ListIterator i = filterChain.listIterator(filterChain.size()); i.hasPrevious();) {
-      FilterService filter = (FilterService) i.previous();
-      
-      filter.setChildService(childService);
-      childService = filter;
-    }
+    if (filterChain != null)
+      for (ListIterator i = filterChain.listIterator(filterChain.size()); i.hasPrevious();) {
+        FilterService filter = (FilterService) i.previous();
+        
+        filter.setChildService(childService);
+        childService = filter;
+      }
+    
+    filterChain = null;
     
     super.init();       
   }

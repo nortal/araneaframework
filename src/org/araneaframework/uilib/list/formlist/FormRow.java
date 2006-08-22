@@ -22,7 +22,7 @@ import org.araneaframework.uilib.form.FormWidget;
 /**
  * Represents one editable row. 
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormRow implements Serializable {
 

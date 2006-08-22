@@ -24,7 +24,7 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DisplayControl;
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseFormListDisplayHtmlTag extends BaseFormElementDisplayTag {
   protected static final String NEWLINE_SEPARATOR_CODE ="\n";

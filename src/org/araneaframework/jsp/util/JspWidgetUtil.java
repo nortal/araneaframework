@@ -26,7 +26,7 @@ import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class JspWidgetUtil {
     public static String getContextWidgetFullId(PageContext pageContext) throws JspException  {

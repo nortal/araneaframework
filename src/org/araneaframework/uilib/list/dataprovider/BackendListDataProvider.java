@@ -25,7 +25,7 @@ import org.araneaframework.backend.list.model.ListQuery;
  * This class provides a basic list data provider implementation that may be
  * used with SQL- or PL/SQL-based lists.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class BackendListDataProvider implements ListDataProvider {

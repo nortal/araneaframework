@@ -24,7 +24,7 @@ import org.araneaframework.uilib.list.RowHandler;
 /**
  * This class represents the callback interface provided by the programmer to the {@link org.araneaframework.uilib.list.formlist.FormListWidget}. 
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FormRowHandler extends RowHandler {
   /**

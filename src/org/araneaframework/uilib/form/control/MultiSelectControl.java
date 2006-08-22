@@ -33,7 +33,7 @@ import org.araneaframework.uilib.util.DisplayItemUtil;
 /**
  * This class represents a multiselect control (aka list).
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class MultiSelectControl extends StringArrayRequestControl implements DisplayItemContainer {
@@ -215,7 +215,7 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
   /**
    * Represents a multiselect control view model.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends StringArrayRequestControl.ViewModel {

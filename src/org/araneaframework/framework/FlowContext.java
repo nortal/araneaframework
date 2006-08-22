@@ -29,7 +29,7 @@ import org.araneaframework.core.ApplicationWidget;
  * {@link #cancel()}. 
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FlowContext extends Serializable {
   /**

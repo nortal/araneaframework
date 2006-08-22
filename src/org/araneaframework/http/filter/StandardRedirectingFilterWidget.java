@@ -27,7 +27,7 @@ import org.araneaframework.http.util.ServletUtil;
 
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardRedirectingFilterWidget extends BaseFilterWidget {
   protected void update(InputData input) throws Exception {

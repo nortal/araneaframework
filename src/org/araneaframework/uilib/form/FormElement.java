@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.constraint.BaseConstraint;
@@ -31,7 +32,7 @@ import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 /**
  * Represents a simple "leaf" form element that holds a control and its data.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FormElement extends GenericFormElement implements FormElementContext {
@@ -136,6 +137,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * @throws Exception 
    */
   public void setControl(Control control) throws Exception {
+    Assert.notNullParam(control, "control");
+    
     this.control = control;
     
     control.setFormElementCtx(this);
@@ -252,6 +255,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   }
   
   protected void handleAction(InputData input, OutputData output) throws Exception {
+    //TODO: is it really this way?
     update(input);
     if (control != null)
       control._getService().action(null, input, output);
@@ -329,7 +333,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   /**
    * Represents a simple form element view model.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends GenericFormElement.ViewModel {

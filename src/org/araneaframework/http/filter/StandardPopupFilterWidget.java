@@ -28,6 +28,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
@@ -64,7 +65,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   /* ************************************************************************************
    * PopupWindowContext interface methods
    * ************************************************************************************/
-  public String open(Message startMessage, PopupWindowProperties properties) throws Exception {
+  public String open(Message startMessage, PopupWindowProperties properties) throws Exception {    
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
 

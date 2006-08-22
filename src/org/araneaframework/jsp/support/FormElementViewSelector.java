@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormElementViewSelector implements Serializable {
 	public static final String FORM_ELEMENT_VIEW_SELECTOR_PROPERTY = "form.element.view.selector";

@@ -22,7 +22,7 @@ import org.araneaframework.framework.FilterWidget;
 import org.araneaframework.framework.core.BaseFilterWidget;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFilterChainWidget extends BaseFilterWidget {
   private List filterChain;  
@@ -31,13 +31,16 @@ public class StandardFilterChainWidget extends BaseFilterWidget {
     this.filterChain = filterChain;
   }
   
-  protected void init() throws Exception {            
-    for (ListIterator i = filterChain.listIterator(filterChain.size()); i.hasPrevious();) {
-      FilterWidget filter = (FilterWidget) i.previous();
-      
-      filter.setChildWidget(childWidget);
-      childWidget = filter;
-    }
+  protected void init() throws Exception {    
+    if (filterChain != null)
+      for (ListIterator i = filterChain.listIterator(filterChain.size()); i.hasPrevious();) {
+        FilterWidget filter = (FilterWidget) i.previous();
+        
+        filter.setChildWidget(childWidget);
+        childWidget = filter;
+      }
+    
+    filterChain = null;
     
     super.init();   
   }

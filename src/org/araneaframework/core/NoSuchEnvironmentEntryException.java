@@ -18,7 +18,7 @@ package org.araneaframework.core;
 
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class NoSuchEnvironmentEntryException extends AraneaRuntimeException {
   public NoSuchEnvironmentEntryException(Object key) {

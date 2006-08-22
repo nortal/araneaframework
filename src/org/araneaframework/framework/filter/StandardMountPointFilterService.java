@@ -34,7 +34,7 @@ import org.araneaframework.http.filter.StandardMountingFilterService;
  * @see MountContext
  * @see StandardMountingFilterService
  * 
- * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMountPointFilterService extends BaseFilterService {
   protected void action(Path path, InputData input, OutputData output) throws Exception {

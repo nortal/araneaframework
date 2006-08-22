@@ -25,7 +25,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * This class represents a textbox control that accepts only valid 
  * integer numbers.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class NumberControl extends EmptyStringNullableControl {
@@ -182,7 +182,7 @@ public class NumberControl extends EmptyStringNullableControl {
   //*********************************************************************    
   
   /**
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends StringArrayRequestControl.ViewModel {

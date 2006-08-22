@@ -24,7 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.jsp.engine.Constants;
+import org.araneaframework.http.support.CachingEntityResolver;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -57,7 +57,7 @@ public class ParserUtils {
     /**
      * An entity resolver for use when parsing XML documents.
      */
-    static EntityResolver entityResolver = new MyEntityResolver();
+    static EntityResolver entityResolver = CachingEntityResolver.getInstance();
 
     // Turn off for JSP 2.0 until switch over to using xschema.
     public static boolean validating = false;
@@ -180,32 +180,6 @@ public class ParserUtils {
 
 
 // ------------------------------------------------------------ Private Classes
-
-class MyEntityResolver implements EntityResolver {
-
-    // Logger
-    private Log log = LogFactory.getLog(MyEntityResolver.class);
-
-    public InputSource resolveEntity(String publicId, String systemId)
-            throws SAXException {   
-        for (int i = 0; i < Constants.CACHED_DTD_PUBLIC_IDS.length; i++) {
-            String cachedDtdPublicId = Constants.CACHED_DTD_PUBLIC_IDS[i];
-            if (cachedDtdPublicId.equals(publicId)) {
-                String resourcePath = Constants.CACHED_DTD_RESOURCE_PATHS[i];
-                InputStream input = this.getClass().getResourceAsStream(
-                        resourcePath);
-                if (input == null) {
-                    throw new SAXException("Resource not found: " + resourcePath);
-                }
-                InputSource isrc = new InputSource(input);
-                return isrc;
-            }
-        }
-        if (log.isDebugEnabled())
-            log.debug("Resolve entity failed" + publicId + " " + systemId);
-        return null;
-    }
-}
 
 class MyErrorHandler implements ErrorHandler {
 

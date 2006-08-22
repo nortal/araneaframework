@@ -21,7 +21,7 @@ import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * 
- * @author Jevgeni kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @jsp.tag
  *   name = "updateRegionRows" 

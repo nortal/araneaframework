@@ -25,7 +25,7 @@ import org.apache.commons.fileupload.FileItem;
  * common file attributes (name, original name, size and type) this class also provides a {@link #readFileContent()} method, 
  * which allows to read the file content as a <code>byte[]</code>
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FileInfo implements Serializable {

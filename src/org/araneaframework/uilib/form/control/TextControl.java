@@ -24,7 +24,7 @@ import org.araneaframework.uilib.util.ValidationUtil;
 /**
  * This class represents a Textbox control.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class TextControl extends StringValueControl {

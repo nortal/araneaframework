@@ -54,7 +54,7 @@ public class TransactionHelper implements Serializable {
    * equal the current transaction id. 
    */
   public boolean isConsistent(Object transactionId) {
-    if (currentTransactionId==null) {
+    if (currentTransactionId == null) {
       return true;
     }
     

@@ -24,7 +24,7 @@ import org.araneaframework.uilib.form.Constraint;
  * This constraint implements "AND" Boolean logic (checks that all
  * contained constraits are satisfied).
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class AndConstraint extends CompositeConstraint {

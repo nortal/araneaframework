@@ -19,13 +19,14 @@ package org.araneaframework.http.filter;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.Assert;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.HttpInputData;
 
 /**
  * A filter which sets the character encoding of the request. 
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardRequestEncodingFilterService extends BaseFilterService {
   private String requestEncoding = "UTF-8";
@@ -34,6 +35,8 @@ public class StandardRequestEncodingFilterService extends BaseFilterService {
    * Sets the request encoding.
    */
   public void setRequestEncoding(String encoding) {
+    Assert.notEmptyParam(encoding, "encoding");
+    
     this.requestEncoding = encoding;
   }
   

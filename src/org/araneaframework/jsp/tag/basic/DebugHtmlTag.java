@@ -44,7 +44,6 @@ import org.araneaframework.jsp.util.JspUtil;
         The default scope is <i>page</i>."
  */
 
-//FIXME: does not work with request scope?
 public class DebugHtmlTag extends BaseTag {
 	public final static String APPLICATION_SCOPE = "application";
 	public final static String SESSION_SCOPE = "session";

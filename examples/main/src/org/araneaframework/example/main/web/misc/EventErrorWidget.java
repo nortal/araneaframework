@@ -22,7 +22,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class EventErrorWidget extends TemplateBaseWidget {
 

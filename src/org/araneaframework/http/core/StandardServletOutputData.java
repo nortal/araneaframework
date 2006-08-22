@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.NoCurrentInputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.StandardPath;
@@ -54,6 +55,9 @@ public class StandardServletOutputData implements HttpOutputData {
    * Constructs a StandardServletOutputData with the request and response. 
    */
   public StandardServletOutputData(HttpServletRequest request, HttpServletResponse response) {
+    Assert.notNullParam(request, "request");
+    Assert.notNullParam(response, "response");
+    
     this.req = request;
     this.res = response;
     
@@ -65,6 +69,9 @@ public class StandardServletOutputData implements HttpOutputData {
   }
 
   public void pushScope(Object step) {
+    Assert.isInstanceOfParam(String.class, step, "step");
+    Assert.notEmptyParam((String) step, "step");
+    
     if (scopeBuf.length()>0) {
       scopeBuf.append("."+step);
     }
@@ -83,6 +90,8 @@ public class StandardServletOutputData implements HttpOutputData {
   }
   
   public void restoreScope(Path scope) {
+    Assert.notNullParam(scope, "scope");
+    
     scopeBuf = new StringBuffer(scope.toString());
   }
 

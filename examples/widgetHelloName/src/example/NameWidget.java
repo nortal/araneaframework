@@ -19,7 +19,7 @@ package example;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
- * @author Jevgeni kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class NameWidget extends StandardPresentationWidget {
 	protected void init() throws Exception {        

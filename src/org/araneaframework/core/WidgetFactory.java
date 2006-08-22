@@ -24,7 +24,7 @@ import org.araneaframework.Widget;
  * A simple factory for creating widgets.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface WidgetFactory extends Serializable {
   /**

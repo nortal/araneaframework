@@ -31,7 +31,7 @@ import org.araneaframework.uilib.form.FormWidget;
 /**
  * Base form element tag.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BaseFormElementDisplayTag extends PresentationTag implements FormElementTagInterface {
   protected FormWidget.ViewModel formViewModel;

@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
  * Callback handler that is used to query for the key of the row object.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface RowHandler extends Serializable {
 	/**

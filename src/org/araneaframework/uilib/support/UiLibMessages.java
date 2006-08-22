@@ -17,15 +17,13 @@
 package org.araneaframework.uilib.support;
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class UiLibMessages {
 	public static final String RANGE_CHECK_FAILED = "uilib.form.rangecheckfailed";
   public static final String DATE_BEFORE_TODAY = "uilib.form.date.beforetoday";
   public static final String ELEMENT_EMPTY = "uilib.form.element.empty";
-  //XXX
-  public static final String INVALID_ESTONIAN_PERSONAL_ID = "uilib.form.invalid.socialsecurityid";  
   public static final String STRING_NOT_IN_RANGE = "uilib.form.string.notinrange";  
   public static final String MANDATORY_FIELD = "uilib.form.mandatoryfield";  
   public static final String WRONG_DATE_FORMAT = "uilib.form.date.wrongformat";  

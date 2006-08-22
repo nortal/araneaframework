@@ -31,6 +31,7 @@ import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.EmptyPathStackException;
 import org.araneaframework.core.NoCurrentOutputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
@@ -61,11 +62,13 @@ public class StandardServletInputData implements HttpInputData {
    * @param request
    */
   public StandardServletInputData(HttpServletRequest request) {
+    Assert.notNullParam(request, "request");
+    
     setRequest(request);
     extend(HttpServletRequest.class, req);
   }
   
-  public void setRequest(HttpServletRequest request) {
+  private void setRequest(HttpServletRequest request) {
     req = request;
     
     globalData.clear();
@@ -109,6 +112,9 @@ public class StandardServletInputData implements HttpInputData {
   }
 
   public void pushScope(Object step) {
+    Assert.isInstanceOfParam(String.class, step, "step");
+    Assert.notEmptyParam((String) step, "step");
+    
     if (scopeBuf.length()>0) {
       scopeBuf.append("."+step);
     }
@@ -144,7 +150,7 @@ public class StandardServletInputData implements HttpInputData {
   }
 
   public void extend(Class interfaceClass, Object implementation) {
-    if (HttpServletRequest.class.equals(interfaceClass))
+    if (HttpServletRequest.class.equals(interfaceClass) && implementation != null)
       setRequest((HttpServletRequest) implementation);
     
     extensions.put(interfaceClass, implementation);
@@ -226,11 +232,15 @@ public class StandardServletInputData implements HttpInputData {
   }
 
   public void pushPathPrefix(String pathPrefix) {
+    Assert.notEmptyParam(pathPrefix, "pathPrefix");
+    
     pathPrefixes.addLast(pathPrefix);
     path.delete(0, pathPrefix.length() - 1);
   }
   
   public void setCharactedEncoding(String encoding) throws UnsupportedEncodingException {
+    Assert.notEmptyParam(encoding, "encoding");
+    
     req.setCharacterEncoding(encoding);
   }
 }

@@ -25,7 +25,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 
 /**
  * 
- * @author Jevgeni kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardContextMapFilterWidget extends BaseFilterWidget {
   private static final Logger log = Logger.getLogger(StandardContextMapFilterWidget.class);
@@ -35,19 +35,20 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
   protected void init() throws Exception {
     Map entries = new HashMap();
     
-    for (Iterator i = contexts.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      
-      String key = (String) entry.getKey();
-      
-      if (key.endsWith(".class")) {
-        String className =  key.substring(0, key.lastIndexOf('.'));
-        Class contextKey = Class.forName(className);
-        entries.put(contextKey, entry.getValue());
+    if (contexts != null)
+      for (Iterator i = contexts.entrySet().iterator(); i.hasNext();) {
+        Map.Entry entry = (Map.Entry) i.next();
+        
+        String key = (String) entry.getKey();
+        
+        if (key.endsWith(".class")) {
+          String className =  key.substring(0, key.lastIndexOf('.'));
+          Class contextKey = Class.forName(className);
+          entries.put(contextKey, entry.getValue());
+        }
+        else
+          entries.put(key, entry.getValue());
       }
-      else
-        entries.put(key, entry.getValue());
-    }
     
     childWidget._getComponent().init(new StandardEnvironment(getEnvironment(), entries));
            

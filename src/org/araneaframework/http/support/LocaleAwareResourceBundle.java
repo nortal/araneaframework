@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class LocaleAwareResourceBundle extends ResourceBundle implements Serializable {
   private Locale locale;

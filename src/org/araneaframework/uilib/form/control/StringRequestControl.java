@@ -22,7 +22,7 @@ package org.araneaframework.uilib.form.control;
  * This class represents a further concretezation of {@link org.araneaframework.uilib.form.control.StringArrayRequestControl},
  * that is it represents controls, that have a single <code>String</code> request parameter.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class StringRequestControl extends StringArrayRequestControl {

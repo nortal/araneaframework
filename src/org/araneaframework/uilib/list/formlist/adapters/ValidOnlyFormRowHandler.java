@@ -21,7 +21,7 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.formlist.FormListUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ValidOnlyFormRowHandler extends DefaultFormRowHandler {
 

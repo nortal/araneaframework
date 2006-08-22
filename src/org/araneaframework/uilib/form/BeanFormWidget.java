@@ -85,6 +85,8 @@ public class BeanFormWidget extends FormWidget {
     BeanFormWriter writer = new BeanFormWriter(beanClass);
     writer.writeFormBean(this, bean);
   }
-  
-  
+
+  public Class getBeanClass() {
+    return beanClass;
+  }  
 }

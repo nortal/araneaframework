@@ -24,7 +24,7 @@ import java.io.Serializable;
  * convertor between <code>Control</code> and <code>DataItem</code>. It
  * contains both <code>Control</code> and <code>DataItem</code> types.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class ConverterKey implements Serializable {

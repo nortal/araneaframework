@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.data.StringData;
 /**
  * Simple form component. A form with one checkbox, one textbox and a button.
  *
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DemoDisplayForm extends TemplateBaseWidget {
 

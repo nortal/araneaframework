@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Service;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseComponent;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 
@@ -49,6 +50,9 @@ public class StandardServletServiceAdapterComponent extends BaseComponent
 	}
 
 	public void service(HttpServletRequest request, HttpServletResponse response) {
+    Assert.notNullParam(response, "response");
+    Assert.notNullParam(request, "request");
+    
 		InputData input = new StandardServletInputData(request);
 		OutputData output = new StandardServletOutputData(request, response);
 

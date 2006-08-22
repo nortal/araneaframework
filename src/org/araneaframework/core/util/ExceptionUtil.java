@@ -23,7 +23,7 @@ import org.araneaframework.core.Assert;
 /**
  * This utility class contains methods for managing exceptions.
  * 
- * @author Jevgeni kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ExceptionUtil {
   public static RuntimeException uncheckException(Exception e) {

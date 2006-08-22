@@ -17,7 +17,7 @@ package org.araneaframework;
 
 
 /**
- * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class AraneaVersion {
   public static String getTitle() {

@@ -39,6 +39,7 @@ import org.apache.commons.el.ExpressionEvaluatorImpl;
 import org.apache.commons.el.VariableResolverImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.araneaframework.http.core.Constants;
 
 /**
  * Implementation of the PageContext class from the JSP spec. Also doubles as a VariableResolver for the EL.

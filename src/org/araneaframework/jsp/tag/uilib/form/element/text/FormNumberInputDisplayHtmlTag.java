@@ -20,7 +20,7 @@ import java.io.Writer;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormSimpleElementDisplayHtmlTag;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @jsp.tag
  *   name = "numberInputDisplay"

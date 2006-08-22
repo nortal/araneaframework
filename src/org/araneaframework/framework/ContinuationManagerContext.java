@@ -25,7 +25,7 @@ import org.araneaframework.Service;
  * will end the continuation and restore control back.  
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ContinuationManagerContext extends Serializable {
   /**

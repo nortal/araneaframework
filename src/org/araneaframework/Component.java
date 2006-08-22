@@ -37,7 +37,7 @@ import java.io.Serializable;
  * which returns the implementation.
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Component extends Serializable {
   

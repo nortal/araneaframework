@@ -40,15 +40,16 @@ public class StandardSessionListener implements HttpSessionListener {
     if (sessEvent.getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY) != null ) {
       RelocatableServiceDecorator service = 
         (RelocatableServiceDecorator) sessEvent.getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
-
-      try {
-        if (service._getRelocatable().getCurrentEnvironment() == null)
-          service._getRelocatable().overrideEnvironment(new StandardEnvironment(null, new HashMap()));
-        service._getComponent().destroy();
-      }
-      catch(Exception e) {
-        log.error("Exception while destroying service in an expired session", e);
-      }
+      
+      if (service != null)
+        try {
+          if (service._getRelocatable().getCurrentEnvironment() == null)
+            service._getRelocatable().overrideEnvironment(new StandardEnvironment(null, new HashMap()));
+          service._getComponent().destroy();
+        }
+        catch(Exception e) {
+          log.error("Exception while destroying service in an expired session", e);
+        }
     }
     log.debug("Session "+sessEvent.getSession().getId()+" destroyed");
   }

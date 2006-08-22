@@ -26,7 +26,7 @@ import org.araneaframework.jsp.container.UiWidgetContainer;
  * Standard util for producing calls to UiLib widgets in various
  * container frameworks. 
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class JspWidgetCallUtil {
   public static UiWidgetContainer getContainer(PageContext pageContext) throws JspException {

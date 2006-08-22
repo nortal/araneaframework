@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.FormWidget;
 /**
  * Editable rows widget that is used to handle simultenous editing of multiple forms with same structure.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BeanFormListWidget extends BaseFormListWidget {
 	//*******************************************************************

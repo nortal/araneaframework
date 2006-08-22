@@ -23,7 +23,7 @@ import java.io.Serializable;
  * This class is a general helper, which is used throughout UiLib to parse <code>String</code>s like
  * events and hierarchical names. 
  * 
-* @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+* @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 * 
 */
 public class NameUtil implements Serializable {

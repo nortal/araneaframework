@@ -32,7 +32,7 @@ import org.araneaframework.http.util.AtomicResponseHelper;
  * request routed to the handler.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardCriticalExceptionHandlingFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardCriticalExceptionHandlingFilterService.class);

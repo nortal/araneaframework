@@ -19,7 +19,7 @@ package org.araneaframework.uilib.form.converter;
 /**
  * Does not change the data.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class IdenticalConverter extends BaseConverter {

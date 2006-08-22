@@ -140,11 +140,11 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
   
   private FlowContext getOpenerFlowContext() {
-    PopupWindowContext popupCtx = (PopupWindowContext) getEnvironment()
-        .getEntry(PopupWindowContext.class);
+    PopupWindowContext popupCtx = 
+      (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
     // XXX
     return (FlowContext) ((ApplicationWidget) popupCtx.getOpener())
-        .getChildEnvironment().getEntry(FlowContext.class);
+      .getChildEnvironment().getEntry(FlowContext.class);
   }
   
   protected PopupWindowContext getPopupContext() {

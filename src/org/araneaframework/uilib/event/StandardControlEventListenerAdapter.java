@@ -19,18 +19,20 @@ package org.araneaframework.uilib.event;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.core.EventListener;
-import org.araneaframework.uilib.InvalidEventException;
 
 
 /**
  * This class manages all events. It is used by widgets to manage their events.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class StandardControlEventListenerAdapter implements EventListener {
+  
+  private static final Logger log = Logger.getLogger(StandardControlEventListenerAdapter.class);
 
   private Collection onClickEventListeners;
   private Collection onChangeEventListeners;
@@ -99,7 +101,8 @@ public class StandardControlEventListenerAdapter implements EventListener {
         }
     }
     else {
-      throw new InvalidEventException((String) eventId);
+      log.warn("Widget '" + input.getScope() +
+          "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"); 
     }    
   }
 }

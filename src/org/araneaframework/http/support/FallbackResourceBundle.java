@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @since {since}
  */
 public class FallbackResourceBundle extends ResourceBundle implements Serializable {

@@ -24,7 +24,7 @@ import org.araneaframework.uilib.ConfigurationContext;
  * This class represents a {@link org.araneaframework.uilib.form.control.TimestampControl},
  * that holds only date - that is it's default pattern is "dd.MM.yyyy".
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class DateControl extends TimestampControl {

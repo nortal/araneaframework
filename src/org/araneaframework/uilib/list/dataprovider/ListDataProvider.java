@@ -27,7 +27,7 @@ import org.araneaframework.backend.list.model.ListItemsData;
  * This interface defines the behaviour of a list data provider, that is used by the
  * {@link org.araneaframework.contrib.uilib.lists.ListWidget}to retrieve the list data.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public interface ListDataProvider extends Serializable {

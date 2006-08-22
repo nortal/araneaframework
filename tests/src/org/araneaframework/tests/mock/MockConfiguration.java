@@ -24,7 +24,7 @@ import org.araneaframework.uilib.ConfigurationContext;
  * providing a straightforward implementation, which basicly returns the
  * arguments passed without any specific processing. It is used primarily for testing.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class MockConfiguration implements ConfigurationContext {

@@ -21,7 +21,7 @@ package org.araneaframework.uilib.form.control;
  * This class represents a read only control, that is technically it is not a 
  * true control, but just a label displaying the text to the user.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class DisplayControl extends BaseControl {
@@ -60,7 +60,7 @@ public class DisplayControl extends BaseControl {
   //*********************************************************************    
   
   /**
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends BaseControl.ViewModel {

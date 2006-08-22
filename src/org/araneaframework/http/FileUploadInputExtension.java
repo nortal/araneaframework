@@ -23,7 +23,7 @@ import org.apache.commons.fileupload.FileItem;
 /**
  * Extension to {@link org.araneaframework.OutputData} that allows to access the uploaded files.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FileUploadInputExtension extends Serializable {
   public FileItem getUploadedFile(String fieldName);

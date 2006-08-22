@@ -28,7 +28,7 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
 /**
  * Widget base tag.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @jsp.tag
  *   name = "widget"
