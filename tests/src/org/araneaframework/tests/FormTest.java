@@ -145,11 +145,15 @@ public class FormTest extends TestCase {
 
     validRequest.addParameter("testForm.__present", "true");
     validRequest.addParameter("testForm.myCheckBox", (String) null);
+    validRequest.addParameter("testForm.myCheckBox.__present", "true");
     validRequest.addParameter("testForm.myLongText", "108");
+    validRequest.addParameter("testForm.myLongText.__present", "true");
+    validRequest.addParameter("testForm.myDateTime.__present", "true");
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
     validRequest.addParameter("testForm.myDateTime.time", "01:01");
-    validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    validRequest.addParameter("testForm.hierarchyTest.myTextarea.__present", "true");
     validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    validRequest.addParameter("testForm.hierarchyTest.mySelect.__present", "true");
 
     //Trying to read from a valid request
     StandardServletInputData input = new StandardServletInputData(validRequest);
