@@ -43,14 +43,14 @@ import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {   
-  private static boolean springWebPresent = true;
+  private static boolean isSpringWebPresent = true;
   
   static {
     try {
       Class.forName("org.springframework.web.context.WebApplicationContext");
     }
     catch (ClassNotFoundException e) {
-      springWebPresent = false;
+      isSpringWebPresent = false;
     }
   }
   
@@ -81,7 +81,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     if (getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER) != null)
       araneaCustomConfXml = getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER);    
 
-    if (springWebPresent) {
+    if (isSpringWebPresent) {
       //Getting the Spring loaded main web application context
       beanFactory = rootApplicationCtx = WebApplicationContextUtils.getWebApplicationContext(getServletContext());                     
     }
@@ -138,7 +138,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
       ((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(ARANEA_START, new RootBeanDefinition(startClass));
     }
     
-    if (springWebPresent) {
+    if (isSpringWebPresent) {
       //Making a resulting web application context    
       beanFactory = new GenericWebApplicationContext((DefaultListableBeanFactory) beanFactory);
       ((GenericWebApplicationContext) beanFactory).setParent((ApplicationContext) rootApplicationCtx);
@@ -163,7 +163,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   protected Map getEnvironmentEntries() { 
     Map result = new HashMap();
     result.put(BeanFactory.class, beanFactory);   
-    if (springWebPresent) {
+    if (isSpringWebPresent) {
       result.put(ApplicationContext.class, beanFactory);
       result.put(WebApplicationContext.class, beanFactory);
     }
