@@ -70,8 +70,10 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
         propertyURL = ClassLoaderUtil.findResource(resourceName);
       }
       
-      if (propertyURL == null)
-        return;     
+      if (propertyURL == null) {
+        log.warn("Localization resources for '" + getLocale().getLanguage() + "' were not found!");
+        return;
+      }
 
       File propertyFile = new File(propertyURL.getFile());
 
