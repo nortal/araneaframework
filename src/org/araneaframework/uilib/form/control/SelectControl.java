@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemContainer;
 import org.araneaframework.uilib.util.DisplayItemUtil;
@@ -46,6 +47,8 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * @param item the item to be added.
    */
   public void addItem(DisplayItem item) {
+    Assert.notNullParam(item, "item");
+    
     items.add(item);
   }
   
@@ -55,6 +58,8 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * @param items the items to be added.
    */
   public void addItems(Collection items) {
+    Assert.noNullElementsParam(items, "items");
+    
     this.items.addAll(items);
   }  
   

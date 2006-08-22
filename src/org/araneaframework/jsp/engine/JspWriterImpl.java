@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.ServletResponse;
 import javax.servlet.jsp.JspWriter;
+import org.araneaframework.http.core.Constants;
 
 /**
  * Write text to a character-output stream, buffering characters so as

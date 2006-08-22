@@ -39,6 +39,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.JspContext;
+import org.araneaframework.http.support.CachingEntityResolver;
 import org.araneaframework.jsp.engine.TldLocationsCache;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -159,6 +160,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     Document tldDoc = null;
     try {
       DocumentBuilder builder = factory.newDocumentBuilder();
+      builder.setEntityResolver(new CachingEntityResolver());
       tldDoc = builder.parse(tldStream);
     }
     catch (ParserConfigurationException e) {

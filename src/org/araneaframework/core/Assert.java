@@ -33,11 +33,11 @@ import java.util.Map;
  * <p>Copied from Jakarta Commons Lang for framework internal use. 
  * Please use the original from <a href="http://jakarta.apache.org/commons/lang/">http://jakarta.apache.org/commons/lang/</a>.</p>
  *
- * @author <a href="mailto:ola.berg@arkitema.se">Ola Berg</a>
+ * @author Ola Berg
  * @author Stephen Colebourne
  * @author Gary Gregory
  * @author Norm Deane
- * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class Assert {
 
@@ -55,6 +55,12 @@ public abstract class Assert {
   public static void isTrue(boolean expression, String message) {
     if (expression == false) {
       throw new IllegalArgumentException(message);
+    }
+  }
+  
+  public static void notNull(Object object) {
+    if (object == null) {
+      throw new IllegalArgumentException("The object under assertion was null!");
     }
   }
 
@@ -151,16 +157,43 @@ public abstract class Assert {
     }
   }
   
-  public static void noNullElementsParam(Collection collection, String param)
-  {
-      notNullParam(collection, param);
-      int i = 0;
-      for(Iterator it = collection.iterator(); it.hasNext();)
-      {
-          if(it.next() == null)
-              throw new IllegalArgumentException("The validated collection contains null element at index: '" + i + "'!");
-          i++;
-      }
-
+  public static void noNullElementsParam(Collection collection, String param) {
+    notNullParam(collection, param);
+    int i = 0;
+    for (Iterator it = collection.iterator(); it.hasNext();) {
+      if (it.next() == null)
+        throw new IllegalArgumentException("The validated collection contains null element at index: '" + i + "'!");
+      i++;
+    }
+  }
+  
+  public static void noNullElements(Collection collection, String message) {
+    notNull(collection);
+    int i = 0;
+    for (Iterator it = collection.iterator(); it.hasNext();) {
+      if (it.next() == null)
+        throw new IllegalArgumentException(message);
+      i++;
+    }
+  }
+  
+  public static void noNullElementsParam(Object that, Collection collection, String param) {
+    notNullParam(collection, param);
+    int i = 0;
+    for (Iterator it = collection.iterator(); it.hasNext();) {
+      if (it.next() == null)
+        throw new IllegalArgumentException("The validated collection contains null element at index: '" + i + "'!" + thisToString(that));
+      i++;
+    }
+  }
+  
+  public static void noNullElements(Object that, Collection collection, String message) {
+    notNull(collection);
+    int i = 0;
+    for (Iterator it = collection.iterator(); it.hasNext();) {
+      if (it.next() == null)
+        throw new IllegalArgumentException(message + thisToString(that));
+      i++;
+    }
   }
 }

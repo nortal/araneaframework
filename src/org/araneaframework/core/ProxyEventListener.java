@@ -19,7 +19,6 @@ package org.araneaframework.core;
 import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
-import org.araneaframework.uilib.InvalidEventException;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -37,32 +36,28 @@ public class ProxyEventListener implements EventListener {
     String eventParameter = (String) input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);    
     String eventHandlerName = "handleEvent" + ((String) eventId).substring(0, 1).toUpperCase() + ((String) eventId).substring(1);
     
-    try {
-      Method eventHandler;
-      // lets try to find a handle method with an empty argument
-      try {               
-	      eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] {});
-        
-        log.debug("Calling method '" + eventHandlerName + "()' of class '" + eventTarget.getClass().getName() + "'.");       
-	      eventHandler.invoke(eventTarget, new Object[] {});
-                      
-	      return;
-      } catch (NoSuchMethodException e) {/*OK*/}
+    Method eventHandler;
+    // lets try to find a handle method with an empty argument
+    try {               
+      eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] {});
       
-      // lets try to find a method with a String type argument
-      try {               
-        eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] { String.class });
-        
-        log.debug("Calling method '" + eventHandlerName + "(String)' of class '" + eventTarget.getClass().getName() + "'.");       
-        eventHandler.invoke(eventTarget, new Object[] { eventParameter });                
-        
-        return;
-      } catch (NoSuchMethodException e) {/*OK*/}
+      log.debug("Calling method '" + eventHandlerName + "()' of class '" + eventTarget.getClass().getName() + "'.");       
+      eventHandler.invoke(eventTarget, new Object[] {});
+                    
+      return;
+    } catch (NoSuchMethodException e) {/*OK*/}
+    
+    // lets try to find a method with a String type argument
+    try {               
+      eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] { String.class });
       
-      log.warn("No listener method found", new NoSuchEventListenerException(eventId));
-    }
-    catch (Exception e) {
-      throw new InvalidEventException((String) eventId, e);
-    }     
+      log.debug("Calling method '" + eventHandlerName + "(String)' of class '" + eventTarget.getClass().getName() + "'.");       
+      eventHandler.invoke(eventTarget, new Object[] { eventParameter });                
+      
+      return;
+    } catch (NoSuchMethodException e) {/*OK*/}
+    
+    log.warn("Widget '" + input.getScope() +
+        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget)); 
   }
 }

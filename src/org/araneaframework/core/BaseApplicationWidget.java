@@ -266,11 +266,10 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   protected void handleProcess() throws Exception {}
   
   /**
-   * If no listeners are registered for the <code>getEventId(input)</code> event, throws
-   * a {@link NoSuchEventListenerException}, otherwise calls the respective listeners. 
+   * Calls the respective listeners. 
    */
   protected void handleEvent(InputData input) throws Exception {
-    Object eventId = getEventId(input);
+    String eventId = getEventId(input);
     
     if (eventId == null) {
       log.warn("Widget '" + input.getScope() +
@@ -282,20 +281,24 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     
     log.debug("Delivering event '" + eventId + "' to widget '" + getClass().getName() + "'");
     
-    if (listener != null && listener.size() > 0) {
-      Iterator ite = (new ArrayList(listener)).iterator();
-      while(ite.hasNext()) {
-        ((EventListener)ite.next()).processEvent(eventId, input);
+    try {
+      if (listener != null && listener.size() > 0) {
+        Iterator ite = (new ArrayList(listener)).iterator();
+        while(ite.hasNext()) {
+          ((EventListener)ite.next()).processEvent(eventId, input);
+        }
+
+        return;
       }
-      
-      return;
+
+      if (globalListener != null) {
+        globalListener.processEvent(eventId, input);
+        return;
+      }
     }
-    
-    if (globalListener != null) {
-      globalListener.processEvent(eventId, input);
-      return;
+    catch (Exception e) {
+      throw new EventException(this, input.getScope().toString(), eventId, e);
     }
-    
     log.warn("Widget '" + input.getScope() +
         "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"  + Assert.thisToString(this)); 
   }
@@ -371,8 +374,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * Returns the id of the event in InputData. By default returns EVENT_HANDLER_ID_KEY from
    * the input's global data.
    */
-  protected Object getEventId(InputData input) {
-    return input.getGlobalData().get(ApplicationWidget.EVENT_HANDLER_ID_KEY);
+  protected String getEventId(InputData input) {
+    return (String) input.getGlobalData().get(ApplicationWidget.EVENT_HANDLER_ID_KEY);
   }
   
   /**

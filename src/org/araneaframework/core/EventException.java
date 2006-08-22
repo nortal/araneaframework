@@ -14,34 +14,23 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib;
+package org.araneaframework.core;
 
-import org.araneaframework.core.AraneaRuntimeException;
 
 /**
- * This exception is thrown if an event name is invalid and cannot be delivered
- * to addressee/listener.
+ * This exception is thrown if an expetion is raised inside an event listener.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class InvalidEventException extends AraneaRuntimeException {
+public class EventException extends AraneaRuntimeException {
   
   /**
    * Creates an exception, which means that the event could not be developed to the addressee (widget, form control, etc) 
    * or listener.
    * @param eventName the suffix of the event name that could not be delivered.
    */
-  public InvalidEventException(String eventName) {
-    super("Could not deliver event with suffix '" + eventName + "' to addressee.");
-  }
-  
-  /**
-   * Creates an exception, which means that the event could not be developed to the addressee (widget, form control, etc) 
-   * or listener.
-   * @param eventName the suffix of the event name that could not be delivered.
-   */
-  public InvalidEventException(String eventName, Exception cause) {
-    super("Could not deliver event with suffix '" + eventName + "' to addressee.", cause);
-  }  
+  public EventException(Object that, String widgetId, String eventId, Exception cause) {
+    super("Widget '" + widgetId + "' could not deliver event '" + eventId + "'." + Assert.thisToString(that), cause);
+  } 
 }

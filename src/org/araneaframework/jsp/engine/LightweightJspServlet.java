@@ -25,6 +25,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.util.ClassLoaderUtil;
+import org.araneaframework.http.core.Constants;
 import org.araneaframework.jsp.util.JspUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
