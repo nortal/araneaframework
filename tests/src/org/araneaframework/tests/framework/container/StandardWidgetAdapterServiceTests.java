@@ -16,9 +16,13 @@
 
 package org.araneaframework.tests.framework.container;
 
+import java.util.HashMap;
+import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.InputData;
+import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.framework.container.StandardWidgetAdapterService;
+import org.araneaframework.mock.MockInputData;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulStandardWidget;
@@ -44,15 +48,23 @@ public class StandardWidgetAdapterServiceTests extends TestCase {
     
     assertTrue(widget.getUpdateCalled());
     assertTrue(widget.getEventProcessed());
+    assertTrue(widget.getRenderCalled());
+    assertTrue(widget.isProcessCalled());
+
     assertFalse(widget.getActionCalled());
   }
   
   public void testDoesNotActionUpdatesEventsRendersOnFirstRequest() throws Exception {
-    adapter._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
+    Map globalData = new HashMap();
+    globalData.put(StandardContainerWidget.ACTION_PATH_KEY, "");
+    MockInputData input = new MockInputData(globalData);
+    adapter._getService().action(MockUtil.getPath(), input, MockUtil.getOutput());
     
+    assertTrue(widget.getActionCalled());
     assertFalse(widget.getUpdateCalled());
     assertFalse(widget.getEventProcessed());
-    assertFalse(widget.getActionCalled());
+    assertFalse(widget.getRenderCalled());
+    assertFalse(widget.isProcessCalled());
   }
   
   public void testActionPropagates() throws Exception {

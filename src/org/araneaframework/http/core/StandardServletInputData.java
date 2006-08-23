@@ -238,9 +238,9 @@ public class StandardServletInputData implements HttpInputData {
     path.delete(0, pathPrefix.length() - 1);
   }
   
-  public void setCharactedEncoding(String encoding) throws UnsupportedEncodingException {
+  public void setCharacterEncoding(String encoding) throws UnsupportedEncodingException {
     Assert.notEmptyParam(encoding, "encoding");
-    
+
     req.setCharacterEncoding(encoding);
   }
 }

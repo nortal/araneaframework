@@ -48,7 +48,6 @@ public class WidgetTest extends TestCase {
 
     //Creating form :-)
     FormWidget testForm = new FormWidget();
-    testForm._getComponent().init(new MockEnvironment());
     
     //Adding elements to form
     testForm.addElement("myCheckBox", "my checkbox", new CheckboxControl(), new BooleanData(), true);
@@ -67,6 +66,8 @@ public class WidgetTest extends TestCase {
     mySelect.addItem(new DisplayItem("2", "two"));
     mySelect.addItem(new DisplayItem("3", "three"));
     mySelect.addItem(new DisplayItem("4", "four"));
+    
+    testForm._getComponent().init(new MockEnvironment());
 
     return testForm;
   }
@@ -75,23 +76,25 @@ public class WidgetTest extends TestCase {
    * Testing reading from valid request.
    */
   public void testFormRequestHandling() throws Exception {
-
     FormWidget testForm = makeUsualForm();
-    
     Widget currentWidget = testForm;
-    
     MockHttpServletRequest validRequest = new MockHttpServletRequest();
 
+    //TODO: implement task 202 and remove __presents
     validRequest.addParameter("testForm.myCheckBox", "true");
+    validRequest.addParameter("testForm.myCheckBox.__present", "true");
     validRequest.addParameter("testForm.myLongText", "108");
+    validRequest.addParameter("testForm.myLongText.__present", "true");
+    validRequest.addParameter("testForm.myDateTime.__present", "true");
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
     validRequest.addParameter("testForm.myDateTime.time", "01:01");
+    validRequest.addParameter("testForm.hierarchyTest.myTextarea.__present", "true");
     validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    validRequest.addParameter("testForm.hierarchyTest.mySelect.__present", "true");
     validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");    
     
-    
     MockUiLibUtil.emulateHandleRequest(currentWidget, "testForm", validRequest);
-    currentWidget._getWidget().process();              
+    currentWidget._getWidget().process();
 
     assertTrue(((StringArrayRequestControl.ViewModel) testForm.getControlByFullName("myCheckBox")._getViewable().getViewModel()).getSimpleValue().equals("true"));
     assertTrue(((StringArrayRequestControl.ViewModel) testForm.getControlByFullName("myLongText")._getViewable().getViewModel()).getSimpleValue().equals("108"));

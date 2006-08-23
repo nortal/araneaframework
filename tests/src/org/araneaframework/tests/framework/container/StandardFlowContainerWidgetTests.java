@@ -16,6 +16,7 @@
 
 package org.araneaframework.tests.framework.container;
 
+import java.util.HashMap;
 import junit.framework.TestCase;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.FlowContext;
@@ -38,7 +39,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     childWidget = new MockCallableWidget();
     childWidget2 = new MockCallableWidget();
     
-    env = new StandardEnvironment(null, null);
+    env = new StandardEnvironment(null, new HashMap());
     
     stackWidget = new StandardFlowContainerWidget(topWidget);
     stackWidget._getComponent().init(env);

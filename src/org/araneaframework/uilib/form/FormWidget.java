@@ -198,7 +198,12 @@ public class FormWidget extends GenericFormElement {
   public void markBaseState() {
     for (Iterator i = elements.values().iterator(); i.hasNext();)
       ((GenericFormElement) i.next()).markBaseState();
-  }   
+  }
+  
+  public void restoreBaseState() {
+    for (Iterator i = elements.values().iterator(); i.hasNext();)
+       ((GenericFormElement) i.next()).restoreBaseState();
+  }
   
   public boolean isStateChanged() {
   	boolean result = false;

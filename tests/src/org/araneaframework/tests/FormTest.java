@@ -18,8 +18,11 @@ package org.araneaframework.tests;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.mock.MockInputData;
@@ -143,13 +146,19 @@ public class FormTest extends TestCase {
 
     MockHttpServletRequest validRequest = new MockHttpServletRequest();
 
+    //TODO: implement task 202 and remove __presents
     validRequest.addParameter("testForm.__present", "true");
     validRequest.addParameter("testForm.myCheckBox", (String) null);
+    validRequest.addParameter("testForm.myCheckBox.__present", "true");
     validRequest.addParameter("testForm.myLongText", "108");
+    validRequest.addParameter("testForm.myLongText.__present", "true");
+    validRequest.addParameter("testForm.myDateTime.__present", "true");
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
     validRequest.addParameter("testForm.myDateTime.time", "01:01");
+    validRequest.addParameter("testForm.hierarchyTest.myTextarea.__present", "true");
     validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
     validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    validRequest.addParameter("testForm.hierarchyTest.mySelect.__present", "true");
 
     //Trying to read from a valid request
     StandardServletInputData input = new StandardServletInputData(validRequest);
@@ -225,9 +234,13 @@ public class FormTest extends TestCase {
 
     notMandatoryMissingRequest.addParameter("testForm.__present", "true");
     notMandatoryMissingRequest.addParameter("testForm.myCheckBox", (String) null);
+    notMandatoryMissingRequest.addParameter("testForm.myCheckBox.__present", "true");
     notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
+    notMandatoryMissingRequest.addParameter("testForm.myLongText.__present", "true");
     notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea.__present", "true");
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "3");
+    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect.__present", "true");
 
     StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
     input.pushScope("testForm");
@@ -327,17 +340,20 @@ public class FormTest extends TestCase {
    * Testing events.
    */
   public void testFormEventProcessing() throws Exception {
-
     FormWidget testForm = makeUsualForm();
 
     //Simple event
      ((ButtonControl) ((FormElement) testForm.getElement("myButton")).getControl()).addOnClickEventListener(new TestOnClickEventHandler());
      
-    testForm._getWidget().event(new StandardPath("myButton.onClicked"), new MockInputData());
+    Map data = new HashMap();
+    data.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, "onClicked");
+    MockInputData input = new MockInputData(data);
+     
+    testForm._getWidget().event(new StandardPath("myButton"), input);
     
     assertTrue("Event succeeded", eventsWork);
   }
-
+  
   /**
    * Tests helper functions that access form parts by their full name.
    */
