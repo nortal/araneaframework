@@ -100,6 +100,9 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 			derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
 		if (derivedId == null) throw new MissingFormElementIdAraneaJspException(this);   
 		
+		FormElement fe = ((FormElement)JspWidgetUtil.traverseToSubWidget(form, derivedId));
+		fe.rendered();
+
 		formElementViewModel = 
 			(FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
 
@@ -116,8 +119,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
 		if (hasElementContextSpan)
             writeFormElementContextOpen(out, formScopedFullId, derivedId, true, pageContext);
-		else
-			JspUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
 
 		updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 		

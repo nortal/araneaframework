@@ -139,7 +139,7 @@ public class StandardFileUploadFilterService extends BaseFilterService {
       log.debug("Parsed multipart request, found '" + fileItems.size() + 
           "' file items and '" + parameterLists.size() + "' request parameters");
       
-      output.extend(
+      input.extend(
           FileUploadInputExtension.class, 
           new StandardFileUploadInputExtension(fileItems));
       

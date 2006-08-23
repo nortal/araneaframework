@@ -73,7 +73,6 @@ public interface Control extends Widget, Viewable, FormElementAware {
   
   /**
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
-   *
    */
   public interface ViewModel {
 

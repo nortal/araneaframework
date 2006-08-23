@@ -175,10 +175,6 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   // PROTECTED METHODS
   //*******************************************************************
   
-  protected boolean isWidgetPresent(InputData input) {
-    return (input.getScopedData().get("__present") != null);
-  }
-  
   /**
    * Returns the widget's Environment by default. Usually overridden.
    */

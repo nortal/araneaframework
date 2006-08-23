@@ -21,10 +21,6 @@
  */
 
 function setFormElementContext(el) {
-  var alreadyPresent = function(form, name) {
-    return form.elements[name] ? true : false;
-  }
-
   var span = el.parentNode;
   do {
     if (span.tagName && span.tagName.toUpperCase() == 'SPAN')
@@ -32,22 +28,11 @@ function setFormElementContext(el) {
     span = span.parentNode;
   } while (span);
 
-  var systemForm = getActiveAraneaPage().getTraverser().findSurroundingSystemForm(el);
-
   if (span && span.tagName && span.tagName.toUpperCase() == 'SPAN' && el.name) {
     if (document.addEventListener) { // Moz
       span.onkeydown=function(event) { return uiHandleKeypress(event, el.name); };
     } else {
       span.onkeydown=function() { return uiHandleKeypress(event, el.name); };
-    }
-    
-    var presentName = el.name +".__present";
-    
-    if (!alreadyPresent(systemForm, presentName)) {
-      var hiddenPresent = createNamedElement('input', presentName);
-      hiddenPresent.setAttribute('type','hidden');
-      hiddenPresent.setAttribute('value','true');
-      getActiveAraneaPage().addSystemLoadEvent(function() {span.appendChild(hiddenPresent);});
     }
   }
 }
@@ -116,7 +101,6 @@ var aranea_rules = {
   },
   
   'input.aranea-radio' : function(el) {
-  	// XXX: should only be done if tag is not renderded with ui:radioselect
   	setFormElementContext(el);
   },
 

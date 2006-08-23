@@ -40,7 +40,6 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
     Long dateInputSize = DEFAULT_DATE_INPUT_SIZE;
-    JspUtil.writeHiddenInputElement(out, getScopedFullFieldId() + ".__present", "true");
 
     // Write
     out.write("<table border='0' cellpadding='0' cellspacing='0'><tr><td nowrap='true'>\n");

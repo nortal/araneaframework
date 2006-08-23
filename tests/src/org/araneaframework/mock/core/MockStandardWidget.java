@@ -24,13 +24,12 @@ import org.araneaframework.core.EventListener;
 
 /**
  * @author toomas
- *
  */
 public class MockStandardWidget extends BaseApplicationWidget {
   private boolean eventProcessed = false;
   
-  protected Object getEventId(InputData input) {
-    return input.getGlobalData().get(ApplicationWidget.EVENT_HANDLER_ID_KEY);
+  protected String getEventId(InputData input) {
+    return (String)input.getGlobalData().get(ApplicationWidget.EVENT_HANDLER_ID_KEY);
   }
   
   public boolean getEventProcessed() {

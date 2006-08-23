@@ -105,6 +105,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   public String open(Service service, PopupWindowProperties properties, Widget opener) {
+    Assert.notNullParam(this, service, "service");
+
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
 
@@ -117,6 +119,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   public String openMounted(final String url, final PopupWindowProperties properties) {
+    Assert.notNullParam(this, url, "url");
     final String threadId = getRandomServiceId();
 
     Service service = threadServiceFactory.buildService(getEnvironment());
@@ -140,6 +143,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   public void open(final String url, final PopupWindowProperties properties) {
+    Assert.notNullParam(this, url, "url");
     popups.put(url, new PopupServiceInfo() {
       public PopupWindowProperties getPopupProperties() {
         return properties;
@@ -152,6 +156,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   public boolean close(String id) {
+    Assert.notNullParam(this, id, "id");
     if (!allPopups.containsKey(id)) {
       log.warn("Attempt to close non-owned, unopened or already closed popup service with ID '" + id + "'.");
       return false;

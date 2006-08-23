@@ -45,6 +45,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
   
   protected String label;
   
+  private boolean rendered = false;
+  
   protected boolean mandatory = false;
   protected boolean disabled;
 
@@ -223,10 +225,9 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************  	
   
   protected void update(InputData input) throws Exception {
+    if (isDisabled() || !isRendered()) return;
+	  
     super.update(input);
-    
-    boolean presentInRequest = "true".equals(input.getScopedData().get("__present"));      
-    if (isDisabled() || !presentInRequest) return;
     
     //There is only point to read from request if we have a control
     if (getControl() != null) {
@@ -234,8 +235,19 @@ public class FormElement extends GenericFormElement implements FormElementContex
       getControl()._getWidget().update(input);
     }
   }
+
+  protected void handleProcess() throws Exception {
+    super.handleProcess();
+	this.rendered = false;
+  }
+	  
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    if (!isDisabled() && isRendered())
+      super.action(path, input, output);
+  }
+
   protected void event(Path path, InputData input) throws Exception {
-    if (!path.hasNext())
+    if (!path.hasNext() && !isDisabled() && isRendered())
       getControl()._getWidget().event(path, input);
   }
 
@@ -266,7 +278,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
       control._getService().action(null, input, output);
     process();
   }
-
+  
   /**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
@@ -330,7 +342,23 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	public void accept(String id, FormElementVisitor visitor) {
 		visitor.visit(id, this);
 	}
-  
+	
+	  /**
+	   * Returns whether this {@link GenericFormElement} was rendered
+	   * in response. Only formelements that were rendered should be read from request.
+	   * @return whether this {@link GenericFormElement} was rendered
+	   */
+	  public boolean isRendered() {
+	    return this.rendered;
+	  }
+	  
+	  /**
+	   * Marks status of this {@link GenericFormElement} rendered.
+	   */
+	  public void rendered() {
+	    this.rendered = true;
+	  }
+	
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    

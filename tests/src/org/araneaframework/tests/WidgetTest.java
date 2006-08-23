@@ -80,18 +80,20 @@ public class WidgetTest extends TestCase {
     Widget currentWidget = testForm;
     MockHttpServletRequest validRequest = new MockHttpServletRequest();
 
-    //TODO: implement task 202 and remove __presents
     validRequest.addParameter("testForm.myCheckBox", "true");
-    validRequest.addParameter("testForm.myCheckBox.__present", "true");
+    ((FormElement)testForm.getElement("myCheckBox")).rendered();
+
     validRequest.addParameter("testForm.myLongText", "108");
-    validRequest.addParameter("testForm.myLongText.__present", "true");
-    validRequest.addParameter("testForm.myDateTime.__present", "true");
+    ((FormElement)testForm.getElement("myLongText")).rendered();
+    
+    ((FormElement)testForm.getElement("myDateTime")).rendered();
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
     validRequest.addParameter("testForm.myDateTime.time", "01:01");
-    validRequest.addParameter("testForm.hierarchyTest.myTextarea.__present", "true");
+    
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
     validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
-    validRequest.addParameter("testForm.hierarchyTest.mySelect.__present", "true");
-    validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");    
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
+    validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
     
     MockUiLibUtil.emulateHandleRequest(currentWidget, "testForm", validRequest);
     currentWidget._getWidget().process();

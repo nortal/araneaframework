@@ -17,6 +17,8 @@
 package org.araneaframework.uilib.form.control;
 
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -115,6 +117,11 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
         "Make sure that the control is associated with a form element!");
   }
   
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    if (!isDisabled())
+      super.action(path, input, output);
+  }
+
   protected void update(InputData input) throws Exception {
     super.update(input);
     
@@ -126,7 +133,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     if (!isDisabled())
       super.handleEvent(input);
   }
-
+  
   public Widget.Interface _getWidget() {
     return new WidgetImpl();
   }
@@ -174,7 +181,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   protected boolean isValid() {
     return feCtx.isValid();
   }
-
+  
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
@@ -183,7 +190,6 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
    * Represents a general control view model.
    * 
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
-   * 
    */
   public class ViewModel implements Control.ViewModel {
     protected String controlType;

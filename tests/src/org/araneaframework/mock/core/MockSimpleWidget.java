@@ -30,7 +30,7 @@ public class MockSimpleWidget extends BaseApplicationWidget {
   protected void render(OutputData output) throws Exception {
   }
 
-  protected Object getEventId(InputData input) {
+  protected String getEventId(InputData input) {
     return null;
   }
   
