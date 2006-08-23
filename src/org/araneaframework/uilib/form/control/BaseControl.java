@@ -17,6 +17,8 @@
 package org.araneaframework.uilib.form.control;
 
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -42,6 +44,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   protected Object innerData;
   
   private boolean dirty = false;
+  private boolean rendered = false;
 
   private FormElementContext feCtx;
   
@@ -115,16 +118,25 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
         "Make sure that the control is associated with a form element!");
   }
   
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    if (!isDisabled() && isRendered())
+      super.action(path, input, output);
+  }
+
   protected void update(InputData input) throws Exception {
     super.update(input);
     
-    if (!isDisabled())
+    if (!isDisabled() && isRendered())
       readFromRequest((HttpInputData) input);
   }
   
   protected void handleEvent(InputData input) throws Exception {
-    if (!isDisabled())
+    if (!isDisabled() && isRendered())
       super.handleEvent(input);
+  }
+  
+  protected void handleProcess() throws Exception {
+    setRendered(false);
   }
 
   public Widget.Interface _getWidget() {
@@ -174,6 +186,23 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   protected boolean isValid() {
     return feCtx.isValid();
   }
+  
+  /**
+   * Returns whether this {@link org.araneaframework.uilib.form.Control} was rendered
+   * in response. Only controls that were rendered should be read from request.
+   * @return whether this {@link org.araneaframework.uilib.form.Control} was rendered
+   */
+  public boolean isRendered() {
+    return rendered;
+  }
+  
+  /**
+   * Sets the rendering status of this {@link org.araneaframework.uilib.form.Control}.
+   * @param rendered rendering status.
+   */
+  public void setRendered(boolean rendered) {
+    this.rendered = rendered;
+  }
 
   //*********************************************************************
   //* VIEW MODEL
@@ -183,7 +212,6 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
    * Represents a general control view model.
    * 
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
-   * 
    */
   public class ViewModel implements Control.ViewModel {
     protected String controlType;

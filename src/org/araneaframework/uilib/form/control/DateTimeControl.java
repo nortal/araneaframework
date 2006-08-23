@@ -165,6 +165,16 @@ public class DateTimeControl extends BaseControl {
     timeControl.setFormElementCtx(formElementContext);
   }
   
+  public boolean isRendered() {
+	return super.isRendered() && dateControl.isRendered() && timeControl.isRendered();
+  }
+
+  public void setRendered(boolean rendered) {
+	super.setRendered(rendered);
+	dateControl.setRendered(rendered);
+	timeControl.setRendered(rendered);
+  }
+  
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    

@@ -105,6 +105,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   public String open(Service service, PopupWindowProperties properties, Widget opener) {
+    Assert.notNullParam(this, service, "service");
+
     String threadId = getRandomServiceId();
     String topServiceId = (String) getTopServiceCtx().getCurrentId();
 

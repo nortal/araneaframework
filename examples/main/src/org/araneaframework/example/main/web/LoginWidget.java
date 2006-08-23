@@ -68,9 +68,10 @@ public class LoginWidget extends TemplateBaseWidget {
 		if (form.convertAndValidate()) {
 			// find out the username supplied
 			String username = (String) form.getValueByFullName("username");
+			String password = (String) form.getValueByFullName("password");
 			/* Add the message about wrong credentials to message context. 
 			 * Messages will be shown to user upon exiting this event. */
-			getMessageCtx().showErrorMessage("Wrong name or password for username '" + username + "'");
+			getMessageCtx().showErrorMessage("Username '" + username + "'" + " not allowed to log in with password '" + password + "'");
 			// do nothing (do not let anyone in :))
 		}
 	}

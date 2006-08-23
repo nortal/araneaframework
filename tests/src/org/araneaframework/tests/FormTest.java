@@ -147,18 +147,21 @@ public class FormTest extends TestCase {
     MockHttpServletRequest validRequest = new MockHttpServletRequest();
 
     //TODO: implement task 202 and remove __presents
-    validRequest.addParameter("testForm.__present", "true");
     validRequest.addParameter("testForm.myCheckBox", (String) null);
-    validRequest.addParameter("testForm.myCheckBox.__present", "true");
+    ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
+
     validRequest.addParameter("testForm.myLongText", "108");
-    validRequest.addParameter("testForm.myLongText.__present", "true");
-    validRequest.addParameter("testForm.myDateTime.__present", "true");
+    ((FormElement)testForm.getElement("myLongText")).getControl().setRendered(true);
+    
+    ((FormElement)testForm.getElement("myDateTime")).getControl().setRendered(true);
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
     validRequest.addParameter("testForm.myDateTime.time", "01:01");
-    validRequest.addParameter("testForm.hierarchyTest.myTextarea.__present", "true");
+
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).getControl().setRendered(true);
     validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).getControl().setRendered(true);
     validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
-    validRequest.addParameter("testForm.hierarchyTest.mySelect.__present", "true");
 
     //Trying to read from a valid request
     StandardServletInputData input = new StandardServletInputData(validRequest);
@@ -185,10 +188,14 @@ public class FormTest extends TestCase {
 
     MockHttpServletRequest invalidRequest = new MockHttpServletRequest();
 
-    invalidRequest.addParameter("testForm.__present", "true");
     invalidRequest.addParameter("testForm.myCheckBox", "ksjf");
+    ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
+
+    ((FormElement)testForm.getElement("myDateTime")).getControl().setRendered(true);
     invalidRequest.addParameter("testForm.myDateTime.date", "HA-HA");
     invalidRequest.addParameter("testForm.myDateTime.time", "BLAH");
+
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).getControl().setRendered(true);
     invalidRequest.addParameter("testForm.hierarchyTest.myTextarea", "");    
 
     //Testing that invalid requests are read right
@@ -208,7 +215,6 @@ public class FormTest extends TestCase {
 
     MockHttpServletRequest mandatoryMissingRequest = new MockHttpServletRequest();
 
-    mandatoryMissingRequest.addParameter("testForm.__present", "true");
     mandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
     mandatoryMissingRequest.addParameter("testForm.myLongText", "108");
     mandatoryMissingRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
@@ -232,15 +238,17 @@ public class FormTest extends TestCase {
 
     MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
 
-    notMandatoryMissingRequest.addParameter("testForm.__present", "true");
     notMandatoryMissingRequest.addParameter("testForm.myCheckBox", (String) null);
-    notMandatoryMissingRequest.addParameter("testForm.myCheckBox.__present", "true");
+    ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
+
     notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
-    notMandatoryMissingRequest.addParameter("testForm.myLongText.__present", "true");
+    ((FormElement)testForm.getElement("myLongText")).getControl().setRendered(true);
+
     notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea.__present", "true");
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).getControl().setRendered(true);
+
     notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "3");
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect.__present", "true");
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).getControl().setRendered(true);
 
     StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
     input.pushScope("testForm");
@@ -258,12 +266,19 @@ public class FormTest extends TestCase {
 
     MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
 
-    notMandatoryMissingRequest.addParameter("testForm.__present", "true");
     notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
+    ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
+
     notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
+    ((FormElement)testForm.getElement("myLongText")).getControl().setRendered(true);
+    
+    ((FormElement)testForm.getElement("myDateTime")).getControl().setRendered(true);
     notMandatoryMissingRequest.addParameter("testForm.myDateTime", (String) null);
+
     notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).getControl().setRendered(true);
     notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).getControl().setRendered(true);
 
     // create helper
     ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
@@ -343,7 +358,8 @@ public class FormTest extends TestCase {
     FormWidget testForm = makeUsualForm();
 
     //Simple event
-     ((ButtonControl) ((FormElement) testForm.getElement("myButton")).getControl()).addOnClickEventListener(new TestOnClickEventHandler());
+    ((ButtonControl) ((FormElement) testForm.getElement("myButton")).getControl()).setRendered(true);
+    ((ButtonControl) ((FormElement) testForm.getElement("myButton")).getControl()).addOnClickEventListener(new TestOnClickEventHandler());
      
     Map data = new HashMap();
     data.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, "onClicked");
