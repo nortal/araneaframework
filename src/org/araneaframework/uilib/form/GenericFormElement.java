@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
@@ -174,12 +177,27 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
     
     super.process();
   }
-  
+
   protected void handleProcess() throws Exception {
     super.handleProcess();
-    rendered();
+    this.rendered = false;
+  }
+  
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    if (!isDisabled() && isRendered())
+      super.action(path, input, output);
   }
 
+  protected void event(Path path, InputData input) throws Exception {
+	if (!isDisabled() && isRendered())
+      super.event(path, input);
+  }
+
+  protected void update(InputData input) throws Exception {
+	if (!isDisabled() && isRendered())
+      super.update(input);
+  }
+  
   //*********************************************************************
   //* ABSTRACT METHODS
   //*********************************************************************

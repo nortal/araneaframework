@@ -225,7 +225,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   protected void update(InputData input) throws Exception {
     super.update(input);
 
-    if (isDisabled()) return;
+    if (isDisabled() || !isRendered()) return;
     
     //There is only point to read from request if we have a control
     if (getControl() != null) {
@@ -234,7 +234,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
     }
   }
   protected void event(Path path, InputData input) throws Exception {
-    if (!path.hasNext())
+    if (!path.hasNext() && isRendered())
       getControl()._getWidget().event(path, input);
   }
 
