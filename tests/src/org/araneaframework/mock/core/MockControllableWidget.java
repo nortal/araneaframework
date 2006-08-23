@@ -28,7 +28,7 @@ import org.araneaframework.core.BaseApplicationWidget;
 public class MockControllableWidget extends BaseApplicationWidget {
   private boolean keepEventBusy = true;
 
-  protected Object getEventId(InputData input) {
+  protected String getEventId(InputData input) {
     return null;
   }
 
