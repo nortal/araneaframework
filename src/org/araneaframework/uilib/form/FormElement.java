@@ -225,7 +225,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************  	
   
   protected void update(InputData input) throws Exception {
-   if (isDisabled() || !isRendered()) return;
+    if (isDisabled() || !isRendered()) return;
 	  
     super.update(input);
     

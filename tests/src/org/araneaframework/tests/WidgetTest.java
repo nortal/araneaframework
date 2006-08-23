@@ -93,7 +93,8 @@ public class WidgetTest extends TestCase {
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
     validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
-    validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");    
+    validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    ((FormElement)testForm.getElement("myDateTime")).isRendered();
     
     MockUiLibUtil.emulateHandleRequest(currentWidget, "testForm", validRequest);
     currentWidget._getWidget().process();

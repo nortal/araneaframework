@@ -148,19 +148,19 @@ public class FormTest extends TestCase {
 
     //TODO: implement task 202 and remove __presents
     validRequest.addParameter("testForm.myCheckBox", (String) null);
-    ((FormElement)testForm.getElement("myCheckBox")).rendered();
+    ((FormElement) testForm.getElement("myCheckBox")).rendered();
 
     validRequest.addParameter("testForm.myLongText", "108");
-    ((FormElement)testForm.getElement("myLongText")).rendered();
+    ((FormElement) testForm.getElement("myLongText")).rendered();
     
-    ((FormElement)testForm.getElement("myDateTime")).rendered();
+    ((FormElement) testForm.getElement("myDateTime")).rendered();
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
     validRequest.addParameter("testForm.myDateTime.time", "01:01");
 
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
+    (((FormElement) ((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
     validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
 
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
+    (((FormElement) ((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
     validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
 
     //Trying to read from a valid request
@@ -189,9 +189,9 @@ public class FormTest extends TestCase {
     MockHttpServletRequest invalidRequest = new MockHttpServletRequest();
 
     invalidRequest.addParameter("testForm.myCheckBox", "ksjf");
-    ((FormElement)testForm.getElement("myCheckBox")).rendered();
+    ((FormElement) testForm.getElement("myCheckBox")).rendered();
 
-    ((FormElement)testForm.getElement("myDateTime")).rendered();
+    ((FormElement) testForm.getElement("myDateTime")).rendered();
     invalidRequest.addParameter("testForm.myDateTime.date", "HA-HA");
     invalidRequest.addParameter("testForm.myDateTime.time", "BLAH");
 

@@ -34,7 +34,6 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.GenericFormElement;
 
 
 /**
