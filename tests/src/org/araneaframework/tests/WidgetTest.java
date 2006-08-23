@@ -80,7 +80,6 @@ public class WidgetTest extends TestCase {
     Widget currentWidget = testForm;
     MockHttpServletRequest validRequest = new MockHttpServletRequest();
 
-    //TODO: implement task 202 and remove __presents
     validRequest.addParameter("testForm.myCheckBox", "true");
     ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
 
