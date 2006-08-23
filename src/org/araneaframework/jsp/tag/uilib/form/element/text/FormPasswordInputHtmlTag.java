@@ -32,28 +32,22 @@ import org.araneaframework.uilib.form.control.TextControl;
  *   body-content = "JSP"
  *   description = "Form password input field, represents UiLib "TextControl"."
  */
-public class FormPasswordInputHtmlTag extends BaseFormValidatingTextInputHtmlTag {
-  
-  //
-  // Implementation
-  //  
-  
+public class FormPasswordInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected int doEndTag(Writer out) throws Exception {
-		// Type check
-		assertControlType("TextControl");
-    
-		TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
-		
+    // Type check
+    assertControlType("TextControl");
+
+    TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
+
     // Write
-		Map attributes = new HashMap();
-		attributes.put("maxLength", viewModel.getMaxLength());
+    Map attributes = new HashMap();
+    attributes.put("maxLength", viewModel.getMaxLength());
     writeTextInput(out, "password", false, attributes);
-    writeTextInputValidation(out);      
-    
+
     // Continue
     super.doEndTag(out);
     return EVAL_PAGE;
-	}
+  }
 }
 
 

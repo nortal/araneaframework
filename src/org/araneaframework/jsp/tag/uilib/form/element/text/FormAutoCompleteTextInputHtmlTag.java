@@ -24,7 +24,7 @@ import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
  * 	 body-content = "JSP" 
  *   description = "Form text input field, represents UiLib &quot;AutoCompleteTextControl&quot;."
  */
-public class FormAutoCompleteTextInputHtmlTag extends BaseFormValidatingTextInputHtmlTag {
+public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected String divClass = "autocompletediv";  
 
   protected int doEndTag(Writer out) throws Exception {
@@ -41,7 +41,6 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormValidatingTextInpu
     JspUtil.writeAttribute(out, "class", divClass);
     JspUtil.writeCloseStartTag(out);
     JspUtil.writeEndTag(out, "div");
-    writeTextInputValidation(out);
 
     String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY);
     StringBuffer acRequestUrl = constructACUrl(systemFormId);

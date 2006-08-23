@@ -18,7 +18,6 @@ package org.araneaframework.uilib.event;
 
 import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
-import org.araneaframework.core.EventException;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
