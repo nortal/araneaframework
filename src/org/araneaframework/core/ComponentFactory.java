@@ -18,6 +18,7 @@ package org.araneaframework.core;
 
 import java.io.Serializable;
 import org.araneaframework.Component;
+import org.araneaframework.Environment;
 
 /**
  * A simple factory for creating components.
@@ -29,5 +30,5 @@ public interface ComponentFactory extends Serializable {
   /**
    * Builds a Component.
    */
-  public Component buildComponent();
+  public Component buildComponent(Environment env);
 }

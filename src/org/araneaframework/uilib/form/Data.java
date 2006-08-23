@@ -118,6 +118,14 @@ public class Data implements java.io.Serializable {
   }
   
   /**
+   * Restores the value of the data item from the marked base state.
+   */
+  public void restoreBaseState() {
+    // TODO: maybe deep copy?
+    value = markedBaseValue;
+  }
+  
+  /**
    * Returns whether data item state has changed after it was marked.
    * @return whether data item state has changed after it was marked.
    */

@@ -21,6 +21,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.core.EmptyPathStackException;
 import org.araneaframework.http.core.StandardServletInputData;
+import org.araneaframework.http.util.ServletUtil;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
@@ -123,7 +124,7 @@ public class StandardServletInputDataTests extends TestCase {
   }
   
   public void testGetRequest() {
-    assertEquals(input.getRequest(), request);
+    assertEquals(ServletUtil.getRequest(input), request);
   }
   
   public void testExtendNarrow() {

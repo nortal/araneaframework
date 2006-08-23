@@ -82,10 +82,10 @@ public class BaseListStructure implements Serializable {
 	}
 
 	/**
-	 * Adds a {@link ListColumnInterface}.
+	 * Adds a {@link ListColumn}.
 	 * 
 	 * @param column
-	 *            {@link ListColumnInterface}.
+	 *            {@link ListColumn}.
 	 */
 	public void addColumn(ListColumn column) {
 		this.columns.put(column.getId(), column);
@@ -93,7 +93,7 @@ public class BaseListStructure implements Serializable {
 	}
 
 	/**
-	 * Clears the {@link ListColumnInterface}s
+	 * Clears the {@link ListColumn}s
 	 */
 	public void clearColumns() {
 		this.columns = new HashMap();

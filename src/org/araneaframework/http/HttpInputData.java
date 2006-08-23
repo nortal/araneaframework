@@ -7,7 +7,7 @@ import java.util.Locale;
 import org.araneaframework.InputData;
 
 public interface HttpInputData extends InputData {
-	String getPath();
+  String getPath();
   void pushPathPrefix(String pathPrefix);
   void popPathPrefix();
   
@@ -19,7 +19,7 @@ public interface HttpInputData extends InputData {
   String getContextURL();
   
   String getCharacterEncoding() ;
-  void setCharactedEncoding(String encoding) throws UnsupportedEncodingException;
+  void setCharacterEncoding(String encoding) throws UnsupportedEncodingException;
   
   String getContentType();
   Locale getLocale();

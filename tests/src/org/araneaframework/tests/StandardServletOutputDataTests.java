@@ -19,7 +19,10 @@ package org.araneaframework.tests;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.araneaframework.InputData;
+import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.core.StandardServletOutputData;
+import org.araneaframework.http.util.ServletUtil;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -32,20 +35,22 @@ public class StandardServletOutputDataTests extends TestCase {
   private MockHttpServletRequest req;
   private MockHttpServletResponse resp;
   
-  /*
+  
   public void setUp() {
     req = new MockHttpServletRequest();
+    StandardServletInputData inputData = new StandardServletInputData(req);
+    req.setAttribute(InputData.INPUT_DATA_KEY, inputData);
     resp = new MockHttpServletResponse();
     
     out = new StandardServletOutputData(req, resp);
   }
   
   public void testGetRequest() {
-    assertEquals(req, out.getRequest());
+    assertEquals(req, ServletUtil.getRequest(out.getInputData()));
   }
   
   public void testGetResponse() {
-    assertEquals(resp, out.getResponse());
+    assertEquals(resp, ServletUtil.getResponse(out));
   }
   
   public void testSetGetAttribute() {
@@ -61,7 +66,7 @@ public class StandardServletOutputDataTests extends TestCase {
   
   public void testSetMimeType() {
     String mime = "application/xhtml+xml";
-    out.setMimeType(mime);
+    out.setContentType(mime);
     assertEquals(mime, resp.getContentType());
   }
   
@@ -69,20 +74,8 @@ public class StandardServletOutputDataTests extends TestCase {
     assertEquals(resp.getOutputStream(), out.getOutputStream());
   }
   
-  public void testSetRequest() {
-    req = new MockHttpServletRequest();
-    out.setRequest(req);
-    assertEquals(req, out.getRequest());
-  }
-  
-  public void testSetResponse() {
-    resp = new MockHttpServletResponse();
-    out.setResponse(resp);
-    assertEquals(resp, out.getResponse());
-  }
-  
   public void testGetAttributeKeys() {
     out.pushAttribute("foo","bar");
     assertEquals("foo", out.getAttributes().keySet().iterator().next());
-  }*/
+  }
 }

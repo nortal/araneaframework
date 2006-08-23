@@ -28,7 +28,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class FormElementTest extends TestCase {
   public void testDataCycling() throws Exception {
@@ -36,6 +35,7 @@ public class FormElementTest extends TestCase {
     emptyRequest.addParameter("myTextBox", "");
 
     FormElement sfe = new FormElement();
+    sfe.setLabel("textbox");
     
     sfe._getComponent().init(new MockEnvironment());
     

@@ -185,6 +185,11 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
   public abstract void markBaseState();
   
   /**
+   * Restores the value of the data item from the marked base state.
+   */
+  public abstract void restoreBaseState();
+  
+  /**
    * Returns whether data item state has changed after it was marked.
    * @return whether data item state has changed after it was marked.
    */
