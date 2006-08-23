@@ -52,7 +52,6 @@
 	                    </div>
 	                    
 	                    <ui:widgetInclude id="menu.footer"/>
-						<div id="araneaDebugDiv"><ui:nbsp/></div>
 	                </ui:body>
 	            </html>
 	        </ui:widgetContext>
