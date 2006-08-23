@@ -41,6 +41,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
 
   protected Map properties;
   
+  private boolean rendered = false;
+  
   protected boolean converted = false;
   protected boolean validated = false;  
   
@@ -172,6 +174,11 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
     
     super.process();
   }
+  
+  protected void handleProcess() throws Exception {
+    super.handleProcess();
+    rendered();
+  }
 
   //*********************************************************************
   //* ABSTRACT METHODS
@@ -261,6 +268,22 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
    */
   public void clearErrors() {  
     errors = null;
+  }
+  
+  /**
+   * Returns whether this {@link GenericFormElement} was rendered
+   * in response. Only formelements that were rendered should be read from request.
+   * @return whether this {@link GenericFormElement} was rendered
+   */
+  public boolean isRendered() {
+    return rendered;
+  }
+  
+  /**
+   * Marks status of this {@link GenericFormElement} rendered.
+   */
+  public void rendered() {
+    rendered = false;
   }
   
   //*********************************************************************

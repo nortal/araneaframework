@@ -81,18 +81,18 @@ public class WidgetTest extends TestCase {
     MockHttpServletRequest validRequest = new MockHttpServletRequest();
 
     validRequest.addParameter("testForm.myCheckBox", "true");
-    ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myCheckBox")).rendered();
 
     validRequest.addParameter("testForm.myLongText", "108");
-    ((FormElement)testForm.getElement("myLongText")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myLongText")).rendered();
     
-    ((FormElement)testForm.getElement("myDateTime")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myDateTime")).rendered();
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
     validRequest.addParameter("testForm.myDateTime.time", "01:01");
     
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).getControl().setRendered(true);
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
     validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).getControl().setRendered(true);
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
     validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");    
     
     MockUiLibUtil.emulateHandleRequest(currentWidget, "testForm", validRequest);

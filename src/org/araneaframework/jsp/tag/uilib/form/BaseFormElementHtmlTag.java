@@ -49,7 +49,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	protected String formFullId;
 	protected String formScopedFullId;
 	
-	private Control control;
 	protected FormWidget.ViewModel formViewModel;
 	protected FormElement.ViewModel formElementViewModel;
 	protected Control.ViewModel controlViewModel;
@@ -101,8 +100,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 			derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
 		if (derivedId == null) throw new MissingFormElementIdAraneaJspException(this);   
 		
-		control = ((FormElement)JspWidgetUtil.traverseToSubWidget(form, derivedId)).getControl();
-		control.setRendered(true);
+		FormElement fe = ((FormElement)JspWidgetUtil.traverseToSubWidget(form, derivedId));
+		fe.rendered();
 
 		formElementViewModel = 
 			(FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   

@@ -72,19 +72,6 @@ public interface Control extends Widget, Viewable, FormElementAware {
   public void validate();
   
   /**
-   * Returns whether this {@link org.araneaframework.uilib.form.Control} was rendered
-   * in response. Only controls that were rendered should be read from request.
-   * @return whether this {@link org.araneaframework.uilib.form.Control} was rendered
-   */
-  public boolean isRendered();
-  
-  /**
-   * Sets the rendering status of this {@link org.araneaframework.uilib.form.Control}.
-   * @param rendered rendering status.
-   */
-  public void setRendered(boolean rendered);
-  
-  /**
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   public interface ViewModel {

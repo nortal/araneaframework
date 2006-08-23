@@ -265,7 +265,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
       control._getService().action(null, input, output);
     process();
   }
-
+  
   /**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
@@ -329,7 +329,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	public void accept(String id, FormElementVisitor visitor) {
 		visitor.visit(id, this);
 	}
-  
+	
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    

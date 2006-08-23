@@ -148,19 +148,19 @@ public class FormTest extends TestCase {
 
     //TODO: implement task 202 and remove __presents
     validRequest.addParameter("testForm.myCheckBox", (String) null);
-    ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myCheckBox")).rendered();
 
     validRequest.addParameter("testForm.myLongText", "108");
-    ((FormElement)testForm.getElement("myLongText")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myLongText")).rendered();
     
-    ((FormElement)testForm.getElement("myDateTime")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myDateTime")).rendered();
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
     validRequest.addParameter("testForm.myDateTime.time", "01:01");
 
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).getControl().setRendered(true);
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
     validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
 
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).getControl().setRendered(true);
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
     validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
 
     //Trying to read from a valid request
@@ -189,13 +189,13 @@ public class FormTest extends TestCase {
     MockHttpServletRequest invalidRequest = new MockHttpServletRequest();
 
     invalidRequest.addParameter("testForm.myCheckBox", "ksjf");
-    ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myCheckBox")).rendered();
 
-    ((FormElement)testForm.getElement("myDateTime")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myDateTime")).rendered();
     invalidRequest.addParameter("testForm.myDateTime.date", "HA-HA");
     invalidRequest.addParameter("testForm.myDateTime.time", "BLAH");
 
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).getControl().setRendered(true);
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
     invalidRequest.addParameter("testForm.hierarchyTest.myTextarea", "");    
 
     //Testing that invalid requests are read right
@@ -239,16 +239,16 @@ public class FormTest extends TestCase {
     MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
 
     notMandatoryMissingRequest.addParameter("testForm.myCheckBox", (String) null);
-    ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myCheckBox")).rendered();
 
     notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
-    ((FormElement)testForm.getElement("myLongText")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myLongText")).rendered();
 
     notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).getControl().setRendered(true);
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
 
     notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "3");
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).getControl().setRendered(true);
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
 
     StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
     input.pushScope("testForm");
@@ -267,18 +267,18 @@ public class FormTest extends TestCase {
     MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
 
     notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
-    ((FormElement)testForm.getElement("myCheckBox")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myCheckBox")).rendered();
 
     notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
-    ((FormElement)testForm.getElement("myLongText")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myLongText")).rendered();
     
-    ((FormElement)testForm.getElement("myDateTime")).getControl().setRendered(true);
+    ((FormElement)testForm.getElement("myDateTime")).rendered();
     notMandatoryMissingRequest.addParameter("testForm.myDateTime", (String) null);
 
     notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).getControl().setRendered(true);
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
     notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
-    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).getControl().setRendered(true);
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
 
     // create helper
     ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
@@ -358,7 +358,7 @@ public class FormTest extends TestCase {
     FormWidget testForm = makeUsualForm();
 
     //Simple event
-    ((ButtonControl) ((FormElement) testForm.getElement("myButton")).getControl()).setRendered(true);
+    ((FormElement) testForm.getElement("myButton")).rendered();
     ((ButtonControl) ((FormElement) testForm.getElement("myButton")).getControl()).addOnClickEventListener(new TestOnClickEventHandler());
      
     Map data = new HashMap();

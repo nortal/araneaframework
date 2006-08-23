@@ -44,7 +44,6 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   protected Object innerData;
   
   private boolean dirty = false;
-  private boolean rendered = false;
 
   private FormElementContext feCtx;
   
@@ -119,26 +118,22 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (!isDisabled() && isRendered())
+    if (!isDisabled())
       super.action(path, input, output);
   }
 
   protected void update(InputData input) throws Exception {
     super.update(input);
     
-    if (!isDisabled() && isRendered())
+    if (!isDisabled())
       readFromRequest((HttpInputData) input);
   }
   
   protected void handleEvent(InputData input) throws Exception {
-    if (!isDisabled() && isRendered())
+    if (!isDisabled())
       super.handleEvent(input);
   }
   
-  protected void handleProcess() throws Exception {
-    setRendered(false);
-  }
-
   public Widget.Interface _getWidget() {
     return new WidgetImpl();
   }
@@ -187,23 +182,6 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     return feCtx.isValid();
   }
   
-  /**
-   * Returns whether this {@link org.araneaframework.uilib.form.Control} was rendered
-   * in response. Only controls that were rendered should be read from request.
-   * @return whether this {@link org.araneaframework.uilib.form.Control} was rendered
-   */
-  public boolean isRendered() {
-    return rendered;
-  }
-  
-  /**
-   * Sets the rendering status of this {@link org.araneaframework.uilib.form.Control}.
-   * @param rendered rendering status.
-   */
-  public void setRendered(boolean rendered) {
-    this.rendered = rendered;
-  }
-
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
