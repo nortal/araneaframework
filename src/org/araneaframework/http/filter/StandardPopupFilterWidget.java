@@ -119,7 +119,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   public String openMounted(final String url, final PopupWindowProperties properties) {
-	Assert.notNullParam(this, url, "url");
+    Assert.notNullParam(this, url, "url");
     final String threadId = getRandomServiceId();
 
     Service service = threadServiceFactory.buildService(getEnvironment());
