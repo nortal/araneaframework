@@ -225,8 +225,9 @@ public class FormElement extends GenericFormElement implements FormElementContex
   protected void update(InputData input) throws Exception {
     super.update(input);
     
-    boolean presentInRequest = "true".equals(input.getScopedData().get("__present"));      
-    if (isDisabled() || !presentInRequest) return;
+//    boolean presentInRequest = "true".equals(input.getScopedData().get("__present"));      
+//    if (isDisabled() || !presentInRequest) return;
+    if (isDisabled()) return;
     
     //There is only point to read from request if we have a control
     if (getControl() != null) {
