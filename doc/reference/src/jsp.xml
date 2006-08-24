@@ -56,7 +56,7 @@
     <ui:viewPort>
       <html>
         <head>
-          <title>Aranea Template Application</title>        
+          <title>Aranea Template Application</title>
           
           <ui:importScripts/>      
           <ui:importStyles/>      
@@ -212,6 +212,45 @@
       </sect3> 
     </sect2>   
     
+    <sect2>
+      <title><![CDATA[<ui:body>]]></title>
+      <para>
+        This tag will render an HTML &lt;body&gt; tag with Aranea JSP specific <emphasis>onload</emphasis> and <emphasis>onunload</emphasis>
+        events attached.
+      </para>
+      
+      <sect3>
+        <title>Attributes</title>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>onload</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Overwrite the standard Aranea JSP HTML body onload event. Use with caution.</entry>
+              </row>
+              <row>
+                <entry>onUnload</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Overwrite the standard Aranea JSP HTML body onload event. Use with caution.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>      
+    </sect2>    
+
+
     <sect2>
       <title><![CDATA[<ui:systemForm>]]></title>
       <para>
@@ -814,9 +853,8 @@
     <sect2>
       <title><![CDATA[<ui:onLoadEvent>]]></title>
       <para>
-        This tag will register events that are executed when HTML page body has completely loaded and body tag has
-        attribute <literal>onload="processLoadEvents()"</literal>. This tag can be used multiple times, all specified events
-        will be added to event queue and executed in order of addition.
+        This tag will register events that are executed when HTML page body has completely loaded. This tag can be used multiple times, 
+        all specified events will be added to event queue and executed in order of addition.
       </para>
 
       <sect3>

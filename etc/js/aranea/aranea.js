@@ -139,7 +139,7 @@ function AraneaPage() {
    * by traditional HTTP request. */
   var submitted = false;
   this.isSubmitted = function() { return submitted; }
-  this.setSubmitted = function(b) { if (typeof b == "boolean") { submitted = b; } }
+  this.setSubmitted = function() { submitted = true; }
   
   /** Aranea JSP specific DOM tree traverser. */
   var traverser = new AraneaTraverser();
@@ -284,7 +284,7 @@ DefaultAraneaSubmitter.prototype.submit_4 = function(systemForm, eventId, widget
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
 
-  getActiveAraneaPage().setSubmitted(true);
+  getActiveAraneaPage().setSubmitted();
 
   systemForm.submit();
 

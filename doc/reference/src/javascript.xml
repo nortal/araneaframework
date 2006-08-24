@@ -166,12 +166,6 @@ function AraneaPage.getRandomRequestId();
 /** Page initialization function, should be called upon page load. */
 AraneaPage.init();</programlisting>
       </para>
-      <para>
-         By default aranea jsp tags output eventcalls that use the uiStandardSubmit and uiStandardSubmitFormEvent.
-         For the <literal>call</literal> function <literal>araneaSubmitEvent</literal> and <literal>araneaStandardSubmitEvent</literal>
-         functions are used. The <emphasis>real</emphasis> submitting takes place in <literal>uiSystemFormSubmit</literal>.
-         For providing custom handling the <literal>araneaSubmitEvent</literal>,<literal>araneaStandardSubmitEvent</literal>
-         should be overloaded. Please consult the <literal>/etc/js/aranea-ui.js</literal> prior.
-      </para>
+
 	</sect1>
 </chapter>
