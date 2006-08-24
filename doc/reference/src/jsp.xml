@@ -1604,10 +1604,79 @@
   </sect1>
   
   <sect1>
-    <title>Making New Tags</title>
+    <title>Making New JSP Tags</title>
+    JSP tags are very application specific, need for additional or modified JSP tags arises quite often.
+    Due to presentational nature of HTML and Javascript, extending the tags that really output HTML instead
+    of providing some information to subtags is messy. We look here at some more general tags and contracts
+    that should be followed when writing Aranea JSP tags.
 
     <sect2>
       <title>Utilities and base classes</title>
+      <para>
+      Custom tags should extend at least <emphasis>org.araneaframework.jsp.tag.BaseTag</emphasis> that provides
+      methods for registering subtags, manipulation of pagecontext and attribute evaluation.
+      <programlisting role="java"><![CDATA[import java.io.Writer;
+import org.araneaframework.jsp.tag.entity.NbspEntityHtmlTag;
+import org.araneaframework.jsp.util.JspUtil;
+
+public class DummyTag extends BaseTag {
+  public static String KEY = "org.araneaframework.jsp.tag.DummyTag";
+  
+  BaseTag subTag;
+  
+  @Override
+  protected int doStartTag(Writer out) throws Exception {
+    int result = super.doStartTag(out);
+
+    // make this tag implementation accessible to subtags which 
+    // is quite pointless since this tag does not implement any useful interface.
+    addContextEntry(KEY, this);
+    
+    // write some real output that ends up right at the served web page
+    JspUtil.writeOpenStartTag(out, "div");
+    JspUtil.writeAttribute(out, "id", "dummyDivId");
+    JspUtil.writeCloseStartTag(out);
+    
+    // it is possible to register subtags too, this just writes out nbsp entity.
+    subTag = new NbspEntityHtmlTag();
+    registerSubtag(subTag);
+    executeStartSubtag(subTag);
+    
+    return result;
+  }
+
+  @Override
+  protected int doEndTag(Writer out) throws Exception {
+    executeEndTagAndUnregister(subTag);
+    
+    JspUtil.writeEndTag(out, "div");
+    
+    return super.doEndTag(out);
+        // Now everything about this tag ceases to exist, 
+        // context entries are removed, souls are purged.
+  }
+}]]></programlisting>
+    </para>
+
+    <para>
+      <emphasis>org.araneaframework.jsp.util.JspUtil</emphasis> is an utility class containing some functions for 
+      writing out (XML) tags with somewhat more comfort than just <emphasis>out.write()</emphasis>. Other notable methods
+      provided by <emphasis>BaseTag</emphasis> are <emphasis>getOutputData()</emphasis> that returns response data, 
+      <emphasis>getConfiguration()</emphasis> and <emphasis>getLocalizationContext()</emphasis>.
+      
+      For tags with attributes, attribute evaluation functions that support <emphasis>Expression Language (EL)</emphasis> 
+      expressions are provided in <emphasis>BaseTag</emphasis>. Typical usage of these functions is following:
+      <programlisting role="java"><![CDATA[public void setWidth(String width) throws JspException {
+  this.width = (String)evaluate("width", width, String.class);
+}]]></programlisting>
+    </para>
+    
+    <para>
+        Another common base tag for tags that output real HTML is <emphasis>org.araneaframework.jsp.PresentationTag</emphasis>.
+        The <emphasis>DummyTag</emphasis> should really extend it too, since it outputs some HTML. <emphasis>PresentationTag</emphasis>
+        defines <emphasis>style</emphasis> and <emphasis>styleClass</emphasis> attributes that can be applied to most HTML tags.
+    </para>
+
     </sect2>
     
     <sect2>
