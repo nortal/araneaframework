@@ -10,7 +10,7 @@ import javax.servlet.jsp.JspException;
  * @author Toomas Römer
  * 
  * @jsp.tag
- *   name = "richtextarea"
+ *   name = "richTextarea"
  *   body-content = "JSP"
  *   description = "Form text input field (textarea) wrapped with rich text editor capabilities."
  */
