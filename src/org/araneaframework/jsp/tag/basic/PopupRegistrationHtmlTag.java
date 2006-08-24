@@ -32,7 +32,7 @@ import org.araneaframework.jsp.util.JspUtil;
  * @jsp.tag
  *   name = "registerPopups"
  *   body-content = "empty"
- *   description = "Registers popups present in current popupcontext for opening. For this tag to work, produced HTML file BODY should have attribute onload='processLoadEvents()'".
+ *   description = "Registers popups present in current popupcontext for opening."
  */
 public class PopupRegistrationHtmlTag extends BaseTag {
 	

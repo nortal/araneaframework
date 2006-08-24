@@ -85,7 +85,7 @@
           
     </sect1>
 
-	<sect1>
+	<sect1 id="aranea_clientside_js" xreflabel="Aranea Clientside Javascript">
 		<title>Aranea Clientside Javascript</title>
 		<para>
 			Aranea uses javascript to do form submits. This provides AJAX enabled webapps and more control over

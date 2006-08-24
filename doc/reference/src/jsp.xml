@@ -63,7 +63,7 @@
    
         </head>
     
-          <body>
+          <ui:body>
             <ui:systemForm method="POST">
               <h1>Aranea Template Application</h1>
               
@@ -72,7 +72,7 @@
               <ui:widgetInclude id="root"/>
             </ui:systemForm>
           
-        </body>   
+        </ui:body>   
       </html>
     </ui:viewPort>
   </ui:root>
@@ -897,7 +897,7 @@
         <para>
             This tag checks presence of serverside session-threads that represent popups and adds system loadevent for opening them
             in new browser window at client-side. For tag to have an effect, HTML page <literal>BODY</literal> tag must have attribute
-            <literal>onload="processLoadEvents()"</literal>. Also, this tag only works inside &lt;ui:systemForm&gt; tag.
+            onload event set to <emphasis>AraneaPage</emphasis> (See <xref linkend="aranea_clientside_js"/>) onload event. Also, this tag only works inside &lt;ui:systemForm&gt; tag.
         </para>
         
       <sect3>
@@ -909,11 +909,11 @@
         <title>Examples</title>
 <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 ...
-<body onload="processLoadEvents()">
+<ui:body>
   <ui:systemForm method="POST">
     <ui:registerPopups/>
   </ui:systemForm>
-</body>
+</ui:body>
 ...]]></programlisting>
       </sect3>
     </sect2>
