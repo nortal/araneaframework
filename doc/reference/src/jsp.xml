@@ -240,7 +240,7 @@
                 <entry>Overwrite the standard Aranea JSP HTML body onload event. Use with caution.</entry>
               </row>
               <row>
-                <entry>onUnload</entry>
+                <entry>onunload</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Overwrite the standard Aranea JSP HTML body onload event. Use with caution.</entry>
               </row>

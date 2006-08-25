@@ -158,7 +158,7 @@ public class BodyHtmlTag extends PresentationTag {
    * required = "false"
    * description = "Overwrite the standard Aranea JSP HTML body onunload event. Use with caution."
    */
-  public void setOnUnload(String onunload) throws JspException {
+  public void setOnunload(String onunload) throws JspException {
     this.onunload = (String) evaluate("onunload", onunload, String.class);
   }
 }
