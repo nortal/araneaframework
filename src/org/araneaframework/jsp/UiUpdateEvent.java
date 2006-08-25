@@ -20,6 +20,10 @@ import java.util.List;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 
 /**
+ * More advanced event that can be sent to widgets, includes event precondition 
+ * (script that will be executed and only if returns true is event actually sent)
+ * and updateregions that should be updated each time when event is processed.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class UiUpdateEvent extends UiEvent {

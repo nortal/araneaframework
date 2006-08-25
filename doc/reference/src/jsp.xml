@@ -1681,6 +1681,12 @@ public class DummyTag extends BaseTag {
     
     <sect2>
       <title>Widgets and events</title>
+      Sending events to widgets is accomplished with javascript submit functions, helpful
+      utility being <emphasis>org.araneaframework.jsp.util.JspUtil</emphasis> and 
+      <emphasis>org.araneaframework.jsp.util.JspWidgetCallUtil</emphasis>. First one would construct
+      <emphasis>org.araneaframework.jsp.UiEvent</emphasis> and (in case of HTML element which
+      receives only one event) calls JspUtil.writeEventAttributes(Writer out, UiEvent event) and afterwards
+      writeSubmitScriptForEvent(Writer out, String attributeName).
     </sect2>
     
     <sect2>
