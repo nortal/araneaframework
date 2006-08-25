@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.uilib.form;
 
 import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
+import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.uilib.form.FormWidget;
 
@@ -36,7 +37,7 @@ import org.araneaframework.uilib.form.FormWidget;
              <li><i>form</i> - UiLib form view model.
            </ul> "
  */
-public class FormTag extends WidgetTag {
+public class FormTag extends BaseWidgetTag {
 	public final static String FORM_SCOPED_FULL_ID_KEY = "org.araneaframework.jsp.tag.uilib.form.FormTag..SCOPED_FULL_ID";
 	public final static String FORM_FULL_ID_KEY = "org.araneaframework.jsp.tag.uilib.form.FormTag.FULL_ID";
 	public final static String FORM_VIEW_MODEL_KEY = "form";

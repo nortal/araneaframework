@@ -17,12 +17,7 @@
 package org.araneaframework.jsp.tag.uilib;        
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
-import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.jsp.container.UiWidgetContainer;
-import org.araneaframework.jsp.exception.AraneaJspException;
-import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.util.JspWidgetUtil;
+
 
 
 /**
@@ -39,58 +34,24 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
              <li><i>widget</i> - UiLib widget view model.
            </ul> "
  */
-public class WidgetTag extends BaseTag {
-  public final static String WIDGET_SCOPED_ID_KEY = "scopedWidgetId";
-  public final static String WIDGET_ID_KEY = "widgetId";
-  public final static String WIDGET_KEY = "widget";
-  public final static String WIDGET_VIEW_MODEL_KEY = "viewModel";
-  public final static String WIDGET_VIEW_DATA_KEY = "viewData";
+public class WidgetTag extends BaseWidgetTag {
+  public static final String WIDGET_SCOPED_ID_KEY = "scopedWidgetId";
+  public static final String WIDGET_ID_KEY = "widgetId";
+  public static final String WIDGET_KEY = "widget";
+  public static final String WIDGET_VIEW_MODEL_KEY = "viewModel";
+  public static final String WIDGET_VIEW_DATA_KEY = "viewData";
   
-  protected String id;
-  protected String fullId;
-  protected String scopedFullId;  
-  protected ApplicationWidget widget;
-  protected ApplicationWidget.WidgetViewModel viewModel;
-  
-  protected UiWidgetContainer container;
-
   public int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);
-
-    container = (UiWidgetContainer) requireContextEntry(UiWidgetContainer.REQUEST_CONTEXT_KEY);
-
-    // Get data
-    widget = JspWidgetUtil.getWidgetFromContext(id, pageContext);
-    viewModel = (ApplicationWidget.WidgetViewModel) widget._getViewable().getViewModel();
-    fullId = JspWidgetUtil.getWidgetFullIdFromContext(id, pageContext);    
-
-    if (fullId == null) 
-      throw new AraneaJspException("Widget must have an id!");        
-
-    scopedFullId = container.scopeWidgetFullId(pageContext, fullId);
-
-    // Set variables
-    addContextEntry(WIDGET_ID_KEY, fullId);
-    addContextEntry(WIDGET_SCOPED_ID_KEY, scopedFullId);    
-    addContextEntry(WIDGET_VIEW_MODEL_KEY, viewModel);
-    addContextEntry(WIDGET_KEY, widget);
-    addContextEntry(WIDGET_VIEW_DATA_KEY, viewModel.getData());
-
-    // Continue
-    return EVAL_BODY_INCLUDE;    
-  }
-
-  /* ***********************************************************************************
-   * Tag attributes
-   * ***********************************************************************************/
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "UiLib widget id." 
-   */
-  public void setId(String id) throws JspException {
-    this.id = (String)evaluateNotNull("id", id, String.class);
+     super.doStartTag(out);
+     
+     // Set variables
+     addContextEntry(WIDGET_ID_KEY, fullId);
+     addContextEntry(WIDGET_SCOPED_ID_KEY, scopedFullId);    
+     addContextEntry(WIDGET_VIEW_MODEL_KEY, viewModel);
+     addContextEntry(WIDGET_KEY, widget);
+     addContextEntry(WIDGET_VIEW_DATA_KEY, viewModel.getData());
+     
+     // Continue
+     return EVAL_BODY_INCLUDE;    
   }
 }
