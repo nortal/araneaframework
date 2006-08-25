@@ -100,6 +100,14 @@ public class TldLocationsCache {
     private boolean initialized;
     private ServletContext ctxt;
     private boolean redeployMode;
+    
+    private static TldLocationsCache instance;
+    
+    public static synchronized TldLocationsCache getInstance(ServletContext ctxt) {
+      if (instance == null)
+        instance = new TldLocationsCache(ctxt);
+      return instance;
+    }
 
     //*********************************************************************
     // Constructor and Initilizations
@@ -160,7 +168,7 @@ public class TldLocationsCache {
         noTldJars.add("dnsns.jar");
     }
     
-    public TldLocationsCache(ServletContext ctxt) {
+    private TldLocationsCache(ServletContext ctxt) {
         this(ctxt, true);
     }
 
@@ -174,7 +182,7 @@ public class TldLocationsCache {
      * because of JDK bug 4211817 fixed in this release.
      * If redeployMode is false, a faster but less capable mode will be used.
      */
-    public TldLocationsCache(ServletContext ctxt, boolean redeployMode) {
+    private TldLocationsCache(ServletContext ctxt, boolean redeployMode) {
         this.ctxt = ctxt;
         this.redeployMode = redeployMode;
         mappings = new Hashtable();
