@@ -21,7 +21,6 @@ import org.araneaframework.OutputData;
 import org.araneaframework.example.common.framework.TemplateMenuContext;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.http.HttpInputData;
-import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
