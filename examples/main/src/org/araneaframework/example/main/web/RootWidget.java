@@ -24,7 +24,8 @@ import org.araneaframework.example.main.web.menu.MenuWidget;
 import org.araneaframework.uilib.core.StandardPresentationWidget;
 
 /**
- * This is root widget. It initializes MenuWidget with
+ * This is root widget, always rendered after user has 'logged on'.
+ * It consists only of menu widget. 
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
@@ -42,7 +43,6 @@ public class RootWidget extends StandardPresentationWidget implements SecurityCo
 		menuWidget = new MenuWidget(topWidget);
 		topWidget = null;
 		addWidget("menu", menuWidget);
-		menuWidget.addWidget("footer", new FooterWidget());
 		setViewSelector("root");
 	}
 
