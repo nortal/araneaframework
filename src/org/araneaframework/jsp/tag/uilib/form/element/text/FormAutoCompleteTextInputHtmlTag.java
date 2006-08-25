@@ -92,7 +92,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     script.append(getScopedFullFieldId());
     script.append("\", ");
     script.append(acRequestUrl);
-    script.append(", {minChars: ");
+    script.append("\", {minChars: ");
     script.append(viewModel.getMinCompletionLength());
     script.append("});");
 
