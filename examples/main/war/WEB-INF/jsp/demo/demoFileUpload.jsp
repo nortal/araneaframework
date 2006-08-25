@@ -36,7 +36,7 @@
                                </ui:componentForm>
                            </ui:form>
                              
-                       <c:if test="${not empty contextWidget.children['uploadList']}">
+                       <c:if test="${not empty widget.children['uploadList']}">
 	                       	<ui:list id="uploadList">
 	                       		<ui:componentList>
 	                       			<ui:componentListHeader/>

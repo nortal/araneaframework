@@ -29,7 +29,7 @@ import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.uilib.ConfigurationContext;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
@@ -58,7 +58,7 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class ListWidget extends StandardPresentationWidget {
+public class ListWidget extends BaseUIWidget {
 
 	private static final long serialVersionUID = 1L;
 

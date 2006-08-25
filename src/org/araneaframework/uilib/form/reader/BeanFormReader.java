@@ -24,6 +24,8 @@ import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
+import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
+import org.araneaframework.uilib.form.formlist.FormListWidget;
 
 
 /**
@@ -97,6 +99,12 @@ public class BeanFormReader {
         if (beanMapper.isWritable(elementId)) {
           BeanFormReader subVoReader = new BeanFormReader((FormWidget) element);
           beanMapper.setFieldValue(vo, elementId, subVoReader.getBean(beanMapper.getFieldType(elementId)));
+        }
+      }
+      else if (element instanceof BaseFormListWidget) {
+        if (beanMapper.isWritable(elementId)) {
+          ListFormReader subVoReader = new ListFormReader((BaseFormListWidget) element);
+          beanMapper.setFieldValue(vo, elementId, subVoReader.getList());
         }
       }
     }

@@ -238,6 +238,7 @@ function AraneaPage() {
     if (eventUpdateRegions != null && eventUpdateRegions.length > 0) 
       new DefaultAraneaAJAXSubmitter().submit_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
     else
+      //XXX: something is weird for me here, shouldn't gere be a submit_4 call or smth?
       new DefaultAraneaSubmitter(systemForm, eventId, eventTarget, eventParam);
   }
   

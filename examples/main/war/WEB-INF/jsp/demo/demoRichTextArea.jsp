@@ -20,7 +20,7 @@
 		</ui:form>
 		
 			<div style="border-style: solid; border-width: 1px; padding: 7px">
-				<c:out value="${contextWidget.data.preview}" escapeXml="false" />
+				<c:out value="${viewData.preview}" escapeXml="false" />
 			</div>
 				
 		

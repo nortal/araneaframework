@@ -558,12 +558,21 @@
             </thead>
             <tbody>
               <row>
-                <entry>contextWidget</entry>
-                <entry>The view model of the context widget. View data can be accessed as <literal>${contextWidget.data}</literal>.</entry>
-              </row>
+                <entry>widget</entry>
+                <entry>The context widget instance. Can be used to access JavaBean property data from the widget 
+                (e.g. <literal>${widget.foo}</literal> will translate to a <literal>getFoo()</literal> widget call}.</entry>
+              </row>            
               <row>
-                <entry>contextWidgetId</entry>
+                <entry>widgetId</entry>
                 <entry>The full dot-separated identifier of the context widget.</entry>
+              </row>         
+              <row>
+                <entry>viewData</entry>
+                <entry>The view data of the context widget (see <literal>BaseApplicationWidget.putViewData()</literal>).</entry>
+              </row>                   
+              <row>
+                <entry>viewModel</entry>
+                <entry>The view model of the context widget.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -577,7 +586,7 @@
 ...
   <ui:widgetContext>
     ...
-    <c:out value="${contextWidget.data.myMessage}"/>
+    <c:out value="${viewData.myMessage}"/>
     ...
   </ui:widgetContext>
 ...]]></programlisting> 
@@ -587,7 +596,7 @@
   <ui:widgetContext>
     ...
     <ui:widgetContext id="child.ofMyChild">
-      <c:out value="${contextWidget.data.messageFromChildOfMyChild}"
+      <c:out value="${viewData.messageFromChildOfMyChild}"
     </ui:widgetContext>
     ...
   </ui:widgetContext>
@@ -598,7 +607,9 @@
     <sect2>
       <title><![CDATA[<ui:widget>]]></title>
       <para>
-        This tag is used when one needs to render a child or descendant widget while still retaining in both current widget context and JSP. It publishes the widget view model and full identifier as EL variables, but does little else and does not setup a widget context (e.g. <literal>&lt;ui:widgetInclude&gt;</literal> tag will not take it into account).
+        This tag is used when one needs to render a child or descendant widget while still retaining in both current widget context and JSP. 
+        It publishes the widget view model and full identifier as EL variables, but does little else and does not setup a widget context 
+        (e.g. <literal>&lt;ui:widgetInclude&gt;</literal> tag will not take it into account).
       </para>
 
       <sect3>
@@ -634,18 +645,21 @@
             <colspec colwidth="5*"/>
             <thead>
               <row>
-                <entry>Variable</entry>
-                <entry>Description</entry>
-              </row>
-            </thead>
-            <tbody>
-              <row>
                 <entry>widget</entry>
-                <entry>The view model of the specified widget. View data can be accessed as <literal>${widget.data}</literal>.</entry>
-              </row>
+                <entry>The widget instance. Can be used to access JavaBean property data from the widget 
+                (e.g. <literal>${widget.foo}</literal> will translate to a <literal>getFoo()</literal> widget call}.</entry>
+              </row>            
               <row>
                 <entry>widgetId</entry>
-                <entry>The full dot-separated identifier of the specified widget.</entry>
+                <entry>The full dot-separated identifier of the widget.</entry>
+              </row>         
+              <row>
+                <entry>viewData</entry>
+                <entry>The view data of the widget (see <literal>BaseApplicationWidget.putViewData()</literal>).</entry>
+              </row>                   
+              <row>
+                <entry>viewModel</entry>
+                <entry>The view model of the widget.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -659,8 +673,8 @@
   <ui:widgetContext>
     ...
     <ui:widget id="child.ofMyChild">
-      <c:out value="${widget.data.messageFromChildOfMyChild}"
-      <c:out value="${contextWidget.data.myMessage}"
+      <c:out value="${viewData.messageFromChildOfMyChild}"
+	  <ui:widgetInclude id="child"/>
     </ui:widget>
     ...
   </ui:widgetContext>

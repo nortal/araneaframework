@@ -29,12 +29,11 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.LongData;
 import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.list.formlist.BeanFormListWidget;
-import org.araneaframework.uilib.list.formlist.FormListUtil;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.InMemoryFormListHelper;
-import org.araneaframework.uilib.list.formlist.adapters.MapFormRowHandlerDecorator;
-import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
+import org.araneaframework.uilib.form.formlist.FormListUtil;
+import org.araneaframework.uilib.form.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
+import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 
 
 /**
@@ -69,15 +68,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 		setViewSelector("demo/demoInMemoryEditableList");		
 		
 		formList = new BeanFormListWidget(new DemoEditableRowHandler(), DataDTO.class);
-		inMemoryHelper = new InMemoryFormListHelper(data, formList.getFormRowHandler());
-		
-		FormListUtil.keepFormListChangesInMemory(formList, inMemoryHelper);
-		formList.setFormRowHandler(
-				new MapFormRowHandlerDecorator(
-					inMemoryHelper.getCurrent(), 
-					formList, 
-					formList.getFormRowHandler()));
-		formList.setRows(new ArrayList(inMemoryHelper.getCurrent().values()));
+		inMemoryHelper = new InMemoryFormListHelper(formList, data);
 		
 		addWidget("editableList", formList);
 	}
@@ -111,11 +102,11 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new DataDTO()); 
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).readBean(editableRow.getRow()); 
 
 			//Saving data
-			inMemoryHelper.update(editableRow.getRowKey(), rowData);
-			editableRow.getRowForm().markBaseState();
+			inMemoryHelper.update(editableRow.getKey(), rowData);
+			editableRow.getForm().markBaseState();
 		}
 
 		public void deleteRow(Object key) throws Exception {
@@ -131,15 +122,15 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
 		public void initFormRow(FormRow editableRow, Object row)
 		                     throws Exception {
-			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
+			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
 
 			addCommonFormFields(rowForm);
 
-			FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getRowKey());
-			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getRowKey());
+			FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getKey());
 
 			rowForm.writeBean(row);
-			editableRow.getRowForm().markBaseState();
+			editableRow.getForm().markBaseState();
 		}
 
 		public void initAddForm(FormWidget addForm) throws Exception {

@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-package org.araneaframework.uilib.list.formlist;
+package org.araneaframework.uilib.form.formlist;
 
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.BeanFormWidget;
@@ -45,6 +45,14 @@ public class BeanFormListWidget extends BaseFormListWidget {
 		this.formRowHandler = rowHandler;
 		this.beanClass = beanClass;
 	}
+  
+  //*******************************************************************
+  // PUBLIC METHODS
+  //*******************************************************************   
+  
+  public Class getBeanClass() {
+    return this.beanClass;
+  }
 
 	//*******************************************************************
 	// PROTECTED METHODS

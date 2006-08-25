@@ -16,12 +16,12 @@
 
 package example;
 
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
  * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class NameWidget extends StandardPresentationWidget {
+public class NameWidget extends BaseUIWidget {
 	protected void init() throws Exception {        
     setViewSelector("name");
 	}

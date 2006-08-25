@@ -21,14 +21,14 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.menu.MenuWidget;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
  * This is root widget. It initializes MenuWidget with
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class RootWidget extends StandardPresentationWidget implements SecurityContext {
+public class RootWidget extends BaseUIWidget implements SecurityContext {
 	private MenuWidget menuWidget;
 	private Widget topWidget;
 

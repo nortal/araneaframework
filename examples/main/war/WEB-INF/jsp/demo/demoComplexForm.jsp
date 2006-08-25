@@ -10,7 +10,7 @@
 			<ui:componentHeader>
 				<ui:componentName>
 					<!-- The label, defined in DemoComplexForm class. -->
-					<fmt:message key="${contextWidget.data.formLabel}"/>
+					<fmt:message key="${viewData.formLabel}"/>
 				</ui:componentName>
 			</ui:componentHeader>
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-package org.araneaframework.uilib.list.formlist;
+package org.araneaframework.uilib.form.formlist;
 
 import java.io.Serializable;
 import org.araneaframework.uilib.form.FormWidget;
@@ -51,14 +51,14 @@ public class FormRow implements Serializable {
 	}
 	
 	public void reset() throws Exception {
-		getFormList().resetFormRow(getRowKey());
+		getFormList().resetFormRow(getKey());
 	}
 
 	/**
 	 * Returns editable row form.
 	 * @return editable row form.
 	 */
-	public FormWidget getRowForm() {
+	public FormWidget getForm() {
 		return rowForm;
 	}
 
@@ -66,7 +66,7 @@ public class FormRow implements Serializable {
 	 * Returns editable row key.
 	 * @return editable row key.
 	 */
-	public Object getRowKey() {
+	public Object getKey() {
 		return rowKey;
 	}
 
@@ -90,7 +90,7 @@ public class FormRow implements Serializable {
 	 * Returns editable row form id.
 	 * @return editable row form id.
 	 */
-	public String getRowFormId() {
+	public String getFormId() {
 		return rowFormId;
 	}
 

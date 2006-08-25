@@ -23,12 +23,12 @@
 	</ul>
 	<div class="msg-error">
 		<div id="crashinfo" style="width: 100%; height: 300px; overflow: auto;">
-			<c:if test="${not empty contextWidget.data.rootStackTrace}">
+			<c:if test="${not empty viewData.rootStackTrace}">
 				<b>Root cause:</b><br/>
-				<pre style="font-size: 10pt"><c:out value="${contextWidget.data.rootStackTrace}"/></pre>
+				<pre style="font-size: 10pt"><c:out value="${viewData.rootStackTrace}"/></pre>
 			</c:if>
 			<b>Stack trace:</b><br/>
-			<pre style="font-size: 10pt"><c:out value="${contextWidget.data.fullStackTrace}"/></pre>					
+			<pre style="font-size: 10pt"><c:out value="${viewData.fullStackTrace}"/></pre>					
 		</div>
 	</div>
 	</ui:widgetContext>

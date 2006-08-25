@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
 import org.araneaframework.uilib.form.data.StringData;
@@ -14,7 +14,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author Steven Jentson (steven@webmedia.ee)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class DemoAutoCompletionWidget extends StandardPresentationWidget {
+public class DemoAutoCompletionWidget extends BaseUIWidget {
   private FormWidget form;
   
   public void init() throws Exception {

@@ -25,11 +25,11 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
+import org.araneaframework.uilib.form.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
+import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
-import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 
 
 /**
@@ -90,13 +90,13 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 		}
 
 		public void saveValidRow(FormRow editableRow) {
-			DataDTO rowData = (DataDTO) data.get(editableRow.getRowKey());
-			rowData.setBooleanField((Boolean) editableRow.getRowForm().getValueByFullName("booleanField"));
+			DataDTO rowData = (DataDTO) data.get(editableRow.getKey());
+			rowData.setBooleanField((Boolean) editableRow.getForm().getValueByFullName("booleanField"));
 		}
 
 		public void initFormRow(FormRow editableRow, Object row) throws Exception {
-			((BeanFormWidget)editableRow.getRowForm()).addBeanElement("booleanField", "#Boolean field", new CheckboxControl(), true);
-			((BeanFormWidget)editableRow.getRowForm()).writeBean(row);
+			((BeanFormWidget)editableRow.getForm()).addBeanElement("booleanField", "#Boolean field", new CheckboxControl(), true);
+			((BeanFormWidget)editableRow.getForm()).writeBean(row);
 		}
 	}
 
