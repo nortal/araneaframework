@@ -10,7 +10,7 @@ Features and Improvements
         in dev/aranea-development-guide.odt and many packages and classes     | See #134, #204, #206, #207, #209
         were named accordingly 
         Javascript API was rewritten, outdated validation scripts removed     | See #151
-        Memory use decreased up to 60%, some memory leaks fixed  			  | See #197, #211, #210                
+        Memory use decreased up to 60%, some memory leaks fixed               | See #197, #211, #210                
 
 Bugfixes
         Removed the nonworking FloatControl validation                        | See #38, #124, #166
