@@ -40,13 +40,12 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
            </ul> "
  */
 public class WidgetTag extends BaseTag {
-  /** Widget full dot-separated identifier starting from container (e.g. component). */
-  public final static String FULL_ID_KEY = "widgetFullId";
-  /** Widget full dot-separated identifier with added unique container identifier prefix (e.g. component id). */
-  public final static String SCOPED_FULL_ID_KEY = "widgetScopedFullId";    
-  /** Widget view model. */
-  public final static String VIEW_MODEL_KEY = "widget";  
-
+  public final static String WIDGET_SCOPED_ID_KEY = "scopedWidgetId";
+  public final static String WIDGET_ID_KEY = "widgetId";
+  public final static String WIDGET_KEY = "widget";
+  public final static String WIDGET_VIEW_MODEL_KEY = "viewModel";
+  public final static String WIDGET_VIEW_DATA_KEY = "viewData";
+  
   protected String id;
   protected String fullId;
   protected String scopedFullId;  
@@ -71,9 +70,11 @@ public class WidgetTag extends BaseTag {
     scopedFullId = container.scopeWidgetFullId(pageContext, fullId);
 
     // Set variables
-    addContextEntry(FULL_ID_KEY, fullId);
-    addContextEntry(SCOPED_FULL_ID_KEY, scopedFullId);    
-    addContextEntry(VIEW_MODEL_KEY, viewModel);
+    addContextEntry(WIDGET_ID_KEY, fullId);
+    addContextEntry(WIDGET_SCOPED_ID_KEY, scopedFullId);    
+    addContextEntry(WIDGET_VIEW_MODEL_KEY, viewModel);
+    addContextEntry(WIDGET_KEY, widget);
+    addContextEntry(WIDGET_VIEW_DATA_KEY, viewModel.getData());
 
     // Continue
     return EVAL_BODY_INCLUDE;    

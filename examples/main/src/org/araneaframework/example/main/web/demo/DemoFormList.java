@@ -29,11 +29,11 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.LongData;
 import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.list.formlist.BeanFormListWidget;
-import org.araneaframework.uilib.list.formlist.FormListUtil;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.adapters.MapFormRowHandlerDecorator;
-import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
+import org.araneaframework.uilib.form.formlist.FormListUtil;
+import org.araneaframework.uilib.form.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.adapters.MapFormRowHandlerDecorator;
+import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 
 
 /**
@@ -92,11 +92,11 @@ public class DemoFormList extends TemplateBaseWidget {
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new DataDTO()); 
-			rowData.setId((Long) editableRow.getRowKey());
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).readBean(new DataDTO()); 
+			rowData.setId((Long) editableRow.getKey());
 
 			//Saving data
-			data.put(editableRow.getRowKey(), rowData);
+			data.put(editableRow.getKey(), rowData);
 		}
 
 		public void deleteRow(Object key) throws Exception {
@@ -115,7 +115,7 @@ public class DemoFormList extends TemplateBaseWidget {
 
 		public void initFormRow(FormRow editableRow, Object row)
 		                     throws Exception {
-			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
+			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
 
 			addCommonFormFields(rowForm);
 

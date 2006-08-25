@@ -14,7 +14,7 @@
 		        </head>			
 	        
 		        <ui:body>
-		        	Hello <c:out value="${contextWidget.data.name}"/>!
+		        	Hello <c:out value="${widget.name}"/>!
 				</ui:body>
 			</html>				
 			</ui:widgetContext>

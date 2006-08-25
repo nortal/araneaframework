@@ -20,8 +20,8 @@ import java.io.Writer;
 import java.util.ListIterator;
 import org.araneaframework.jsp.tag.uilib.form.FormTag;
 import org.araneaframework.jsp.tag.uilib.list.BaseListRowsTag;
-import org.araneaframework.uilib.list.formlist.FormListWidget;
-import org.araneaframework.uilib.list.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.FormListWidget;
+import org.araneaframework.uilib.form.formlist.FormRow;
 
 
 /**

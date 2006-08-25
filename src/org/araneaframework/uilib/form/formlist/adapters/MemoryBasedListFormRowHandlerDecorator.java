@@ -14,45 +14,40 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.formlist.adapters;
+package org.araneaframework.uilib.form.formlist.adapters;
 
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.FormRowHandler;
-import org.araneaframework.uilib.list.formlist.InMemoryFormListHelper;
+import org.araneaframework.uilib.form.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.FormRowHandler;
+import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 /**
- * Decorator that uses the {@link InMemoryFormListHelper} to
- * assign temporary keys to new objects.
- * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class InMemoryFormRowHandlerDecorator implements FormRowHandler {
+public class MemoryBasedListFormRowHandlerDecorator implements FormRowHandler {
+
 	protected FormRowHandler rowHandler;
-	protected InMemoryFormListHelper inMemoryRowHelper;
+	protected MemoryBasedListDataProvider listDataProvider;
 	
-	public InMemoryFormRowHandlerDecorator(
-			FormRowHandler rowHandler, 
-			InMemoryFormListHelper editableMemoryBasedHelper) {
+	public MemoryBasedListFormRowHandlerDecorator(MemoryBasedListDataProvider listDataProvider, FormRowHandler rowHandler) {
 		this.rowHandler = rowHandler;
-		this.inMemoryRowHelper = editableMemoryBasedHelper;
+		this.listDataProvider = listDataProvider;
 	}
 	
 	public Object getRowKey(Object row) {
-		Object result = rowHandler.getRowKey(row);
-		if (result != null) return result;
-		
-		return inMemoryRowHelper.getTempKey(row);
+		return rowHandler.getRowKey(row);
 	}
 
 	public void saveRows(Map rowForms) throws Exception {
 		rowHandler.saveRows(rowForms);
+		listDataProvider.refreshData();
 	}
 
 	public void deleteRows(Set keys) throws Exception {
 		rowHandler.deleteRows(keys);
+		listDataProvider.refreshData();
 	}
 
 	public void initFormRow(FormRow editableRow, Object row) throws Exception {
@@ -65,9 +60,11 @@ public class InMemoryFormRowHandlerDecorator implements FormRowHandler {
 
 	public void addRow(FormWidget rowForm) throws Exception {
 		rowHandler.addRow(rowForm);
+		listDataProvider.refreshData();
 	}
 
 	public void openOrCloseRow(FormRow editableRow) throws Exception {
 		rowHandler.openOrCloseRow(editableRow);
 	}
+
 }

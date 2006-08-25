@@ -14,46 +14,45 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.formlist.adapters;
+package org.araneaframework.uilib.form.formlist.adapters;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.list.formlist.BaseFormListWidget;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.FormRowHandler;
+import org.araneaframework.uilib.form.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.FormRowHandler;
+import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
 
 /**
+ * Decorator that uses the {@link InMemoryFormListHelper} to
+ * assign temporary keys to new objects.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class MapFormRowHandlerDecorator implements FormRowHandler {
-
+public class InMemoryFormRowHandlerDecorator implements FormRowHandler {
 	protected FormRowHandler rowHandler;
-	protected BaseFormListWidget rowsWidget;
-	protected Map data;
+	protected InMemoryFormListHelper inMemoryRowHelper;
 	
-	/**
-	 * @param data
-	 */
-	public MapFormRowHandlerDecorator(Map data, BaseFormListWidget rowsWidget, FormRowHandler rowHandler) {
+	public InMemoryFormRowHandlerDecorator(
+			FormRowHandler rowHandler, 
+			InMemoryFormListHelper editableMemoryBasedHelper) {
 		this.rowHandler = rowHandler;
-		this.rowsWidget = rowsWidget;
-		this.data = data;
+		this.inMemoryRowHelper = editableMemoryBasedHelper;
 	}
-	
-	public Object getRowKey(Object row) {
-		return rowHandler.getRowKey(row);
+
+  public Object getRowKey(Object row) {
+		Object result = rowHandler.getRowKey(row);
+		if (result != null) return result;
+		
+		return inMemoryRowHelper.getTempKey(row);
 	}
 
 	public void saveRows(Map rowForms) throws Exception {
 		rowHandler.saveRows(rowForms);
-		rowsWidget.setRows(new ArrayList(data.values()));
 	}
 
 	public void deleteRows(Set keys) throws Exception {
 		rowHandler.deleteRows(keys);
-		rowsWidget.setRows(new ArrayList(data.values()));
 	}
 
 	public void initFormRow(FormRow editableRow, Object row) throws Exception {
@@ -62,15 +61,13 @@ public class MapFormRowHandlerDecorator implements FormRowHandler {
 
 	public void initAddForm(FormWidget addForm) throws Exception {
 		rowHandler.initAddForm(addForm);
-	}	
+	}
 
 	public void addRow(FormWidget rowForm) throws Exception {
 		rowHandler.addRow(rowForm);
-		rowsWidget.setRows(new ArrayList(data.values()));
 	}
 
 	public void openOrCloseRow(FormRow editableRow) throws Exception {
 		rowHandler.openOrCloseRow(editableRow);
 	}
-
 }

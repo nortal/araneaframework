@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.formlist;
+package org.araneaframework.uilib.form.formlist;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,11 +22,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.collections.map.LinkedMap;
-import org.araneaframework.uilib.list.RowHandler;
+import org.araneaframework.core.Assert;
+import org.araneaframework.uilib.form.formlist.adapters.InMemoryFormRowHandlerDecorator;
+import org.araneaframework.uilib.form.formlist.adapters.MapFormRowHandlerDecorator;
 
 /**
  * Helper that facilitates holding the editable list rows in memory without saving them to database. 
@@ -35,7 +36,7 @@ import org.araneaframework.uilib.list.RowHandler;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class InMemoryFormListHelper implements Serializable {
-	protected List addedRows = new ArrayList();
+	protected Map tempKeys = new HashMap();
 	
 	protected Map added = new HashMap();
 	protected Map updated = new HashMap();
@@ -43,19 +44,26 @@ public class InMemoryFormListHelper implements Serializable {
 	
 	protected Map current = new LinkedMap();
 	
-	protected RowHandler rowHandler;
+	protected BaseFormListWidget formList;
 	
 	/**
 	 * @param initalData initial row objects.
 	 * @param rowHandler row handler used to query row object ids.
 	 */
-	public InMemoryFormListHelper(Collection initalData, RowHandler rowHandler) {
-		this.rowHandler = rowHandler;
-		
-		for (Iterator i = initalData.iterator(); i.hasNext();) {
-			Object row = (Object) i.next();
-			current.put(rowHandler.getRowKey(row), row);
-		}
+	public InMemoryFormListHelper(BaseFormListWidget formList, Collection initalData) {
+    this.formList = formList;
+    
+    for (Iterator i = initalData.iterator(); i.hasNext();) {
+      Object row = (Object) i.next();
+      current.put(formList.getFormRowHandler().getRowKey(row), row);
+    }
+    
+    formList.setFormRowHandler(
+        new MapFormRowHandlerDecorator(
+            current, formList, 
+            new InMemoryFormRowHandlerDecorator(formList.getFormRowHandler(), this)));
+    
+    formList.setRows(new ArrayList(current.values()));
 	}
 	
 	/**
@@ -106,10 +114,10 @@ public class InMemoryFormListHelper implements Serializable {
 		current.remove(id);
 	}
 	
-	protected static class RowTempId implements Serializable {
+	protected static class RowWrapper implements Serializable {
 		private Object row;
 		
-		public RowTempId(Object row) {
+		public RowWrapper(Object row) {
 			this.row = row;
 		}
 		
@@ -118,24 +126,37 @@ public class InMemoryFormListHelper implements Serializable {
 		}
 		
 		public String toString() {
-			return "tempId@" + Integer.toHexString(super.hashCode());
+			return "tempId@" + Integer.toHexString(System.identityHashCode(getRow()));
 		}
+    
+    public boolean equals(Object obj) {
+      Assert.notNullParam(obj, "obj");
+      Assert.isInstanceOfParam(RowWrapper.class, obj, "obj");
+      
+      RowWrapper that = (RowWrapper) obj;
+      return that.getRow() == this.getRow();
+    }
+    
+    public int hashCode() {
+      return System.identityHashCode(getRow());
+    }
 	}
+  
+  protected static class RowTempId implements Serializable {
+  }
 	
 	/**
 	 * Returns a temporary key for the object (if object is new, assigns a new temporary key). 
 	 */
 	public Object getTempKey(Object row) {
-		for (Iterator i = addedRows.iterator(); i.hasNext();) {
-			RowTempId elem = (RowTempId) i.next();
-			if (elem.getRow() == row) {
-				return elem;
-			}
-		}
-		
-		Object result = new RowTempId(row);
-		addedRows.add(result);
-		
+    Object rowWrapper = new RowWrapper(row);
+    
+    if (tempKeys.containsKey(rowWrapper))
+      return tempKeys.get(rowWrapper);
+    
+    Object result = new RowTempId();
+    tempKeys.put(rowWrapper, result);
+    
 		return result;
 	}
 	

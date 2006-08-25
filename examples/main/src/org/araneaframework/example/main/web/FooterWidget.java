@@ -22,12 +22,12 @@ import org.araneaframework.example.common.framework.TemplateMenuContext;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.util.URLUtil;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class FooterWidget extends StandardPresentationWidget {
+public class FooterWidget extends BaseUIWidget {
   protected void init() throws Exception {
     super.init();
     putViewData("aranea-version", AraneaVersion.getVersion());

@@ -14,15 +14,14 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.formlist;
+package org.araneaframework.uilib.form.formlist;
 
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.list.RowHandler;
 
 /**
- * This class represents the callback interface provided by the programmer to the {@link org.araneaframework.uilib.list.formlist.FormListWidget}. 
+ * This class represents the callback interface provided by the programmer to the {@link org.araneaframework.uilib.form.formlist.FormListWidget}. 
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

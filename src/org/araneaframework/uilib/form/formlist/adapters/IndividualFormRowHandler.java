@@ -14,12 +14,12 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.formlist.adapters;
+package org.araneaframework.uilib.form.formlist.adapters;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import org.araneaframework.uilib.list.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.FormRow;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)

@@ -18,11 +18,8 @@ package org.araneaframework.jsp.tag.context;
 
 import java.io.Writer;
 import java.util.StringTokenizer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.util.JspWidgetUtil;
+import org.araneaframework.jsp.tag.uilib.WidgetTag;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -32,33 +29,13 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
  *   body-content = "JSP"
  *   description = "Initializes the widget context."
  */
-public class WidgetContextTag extends BaseTag {
-  public final static String WIDGET_CONTEXT_ID_KEY = "contextWidgetId";
-  public final static String WIDGET_CONTEXT_VIEW_MODEL_KEY = "contextWidget";
- 
-  private ApplicationWidget widget;
-  private ApplicationWidget.WidgetViewModel viewModel;
+public class WidgetContextTag extends WidgetTag {
+
   private OutputData output = null;
   
   private int pathLength = 0;
-
-  private String fullId;
   
-  //Attributes
-  
-  private String id;
-
-  /**
-   * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Widget id."
-   */
-  public void setId(String widgetId) throws JspException {
-    this.id = (String) evaluateNotNull("widgetId", widgetId, String.class);
-  }
-
-  protected int doStartTag(Writer out) throws Exception {
+  public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
     output = getOutputData();
@@ -72,14 +49,7 @@ public class WidgetContextTag extends BaseTag {
         String token = tokenizer.nextToken();
         output.pushScope(token);
       }
-    }
-
-    widget = JspWidgetUtil.getWidgetFromContext(null, pageContext);
-    viewModel = (ApplicationWidget.WidgetViewModel) widget._getViewable().getViewModel();
-    fullId = JspWidgetUtil.getWidgetFullIdFromContext(null, pageContext);
-
-    addContextEntry(WIDGET_CONTEXT_ID_KEY, fullId);
-    addContextEntry(WIDGET_CONTEXT_VIEW_MODEL_KEY, viewModel);
+    }    
     
     return EVAL_BODY_INCLUDE;
   }

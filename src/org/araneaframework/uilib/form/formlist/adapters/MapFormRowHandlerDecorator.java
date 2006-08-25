@@ -14,26 +14,32 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.formlist.adapters;
+package org.araneaframework.uilib.form.formlist.adapters;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.FormRowHandler;
+import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
+import org.araneaframework.uilib.form.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.FormRowHandler;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class MemoryBasedListFormRowHandlerDecorator implements FormRowHandler {
+public class MapFormRowHandlerDecorator implements FormRowHandler {
 
 	protected FormRowHandler rowHandler;
-	protected MemoryBasedListDataProvider listDataProvider;
+	protected BaseFormListWidget rowsWidget;
+	protected Map data;
 	
-	public MemoryBasedListFormRowHandlerDecorator(MemoryBasedListDataProvider listDataProvider, FormRowHandler rowHandler) {
+	/**
+	 * @param data
+	 */
+	public MapFormRowHandlerDecorator(Map data, BaseFormListWidget rowsWidget, FormRowHandler rowHandler) {
 		this.rowHandler = rowHandler;
-		this.listDataProvider = listDataProvider;
+		this.rowsWidget = rowsWidget;
+		this.data = data;
 	}
 	
 	public Object getRowKey(Object row) {
@@ -42,12 +48,12 @@ public class MemoryBasedListFormRowHandlerDecorator implements FormRowHandler {
 
 	public void saveRows(Map rowForms) throws Exception {
 		rowHandler.saveRows(rowForms);
-		listDataProvider.refreshData();
+		rowsWidget.setRows(new ArrayList(data.values()));
 	}
 
 	public void deleteRows(Set keys) throws Exception {
 		rowHandler.deleteRows(keys);
-		listDataProvider.refreshData();
+		rowsWidget.setRows(new ArrayList(data.values()));
 	}
 
 	public void initFormRow(FormRow editableRow, Object row) throws Exception {
@@ -56,11 +62,11 @@ public class MemoryBasedListFormRowHandlerDecorator implements FormRowHandler {
 
 	public void initAddForm(FormWidget addForm) throws Exception {
 		rowHandler.initAddForm(addForm);
-	}
+	}	
 
 	public void addRow(FormWidget rowForm) throws Exception {
 		rowHandler.addRow(rowForm);
-		listDataProvider.refreshData();
+		rowsWidget.setRows(new ArrayList(data.values()));
 	}
 
 	public void openOrCloseRow(FormRow editableRow) throws Exception {

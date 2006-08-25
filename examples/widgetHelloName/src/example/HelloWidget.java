@@ -16,14 +16,12 @@
 
 package example;
 
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
- * 
  * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- *
  */
-public class HelloWidget extends StandardPresentationWidget {
+public class HelloWidget extends BaseUIWidget {
   private String name;
   
   public HelloWidget(String name) {
@@ -31,7 +29,10 @@ public class HelloWidget extends StandardPresentationWidget {
   }
 
   protected void init() throws Exception {
-    putViewData("name", name);    
     setViewSelector("hello");        
 	}
+  
+  public String getName() {
+    return this.name;
+  }
 }

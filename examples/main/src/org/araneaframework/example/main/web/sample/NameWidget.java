@@ -16,7 +16,7 @@
 
 package org.araneaframework.example.main.web.sample;
 
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
@@ -24,7 +24,7 @@ import org.araneaframework.uilib.form.data.StringData;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class NameWidget extends StandardPresentationWidget {
+public class NameWidget extends BaseUIWidget {
   private FormWidget form;
   
   protected void init() throws Exception {

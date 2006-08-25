@@ -15,7 +15,7 @@
 
 			<ui:componentHeader>
 				<ui:componentName>
-					<fmt:message key="${contextWidget.data.label}"/>
+					<fmt:message key="${viewData.label}"/>
 				</ui:componentName>
 			</ui:componentHeader>
 

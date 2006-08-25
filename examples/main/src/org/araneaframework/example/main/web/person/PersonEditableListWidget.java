@@ -30,16 +30,16 @@ import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.DateData;
+import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
+import org.araneaframework.uilib.form.formlist.FormListUtil;
+import org.araneaframework.uilib.form.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.FormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
+import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.formlist.BeanFormListWidget;
-import org.araneaframework.uilib.list.formlist.FormListUtil;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.FormRowHandler;
-import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
-import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
@@ -158,8 +158,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			 * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
 			 * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
 			 * we can cast the return type accordingly. */
-			PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new PersonMO());
-			rowData.setId((Long) editableRow.getRowKey());
+			PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).readBean(new PersonMO());
+			rowData.setId((Long) editableRow.getKey());
 			
 			// Save modified object.
 			getGeneralDAO().edit(rowData);
@@ -187,7 +187,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			editableRow.close();
 			
 			// Get the rowForm (this is the formwidget holding row object data). 
-			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
+			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
 			// See below.
 			addCommonFormFields(rowForm);
 			/* A button that opens row for editing upon receiving onClick event.

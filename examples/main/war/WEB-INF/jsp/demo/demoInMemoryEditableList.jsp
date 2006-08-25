@@ -55,9 +55,9 @@
 
 			<ui:componentActions>
 				<ui:eventButton labelId="#Test" eventId="test" />
-				<c:if test="${contextWidget.data.askCloseConfirmation == 'true'}">
+				<c:if test="${viewData.askCloseConfirmation == 'true'}">
 					<ui:onLoadEvent
-						event="if (confirm('Do you wish to lose unsaved changes?')) araneaStandardSubmitEvent(${systemFormId}, '${contextWidgetId}', 'close', 'true');" />
+						event="if (confirm('Do you wish to lose unsaved changes?')) araneaStandardSubmitEvent(${systemFormId}, '${widgetId}', 'close', 'true');" />
 				</c:if>
 				<ui:eventButton labelId="#Close" eventId="close" />
 			</ui:componentActions>

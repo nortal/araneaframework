@@ -15,7 +15,7 @@
  **/
 
 
-package org.araneaframework.uilib.list.formlist;
+package org.araneaframework.uilib.form.formlist;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.GenericFormElement;
+import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 
 /**
  *  Base class for editable rows widgets that are used to handle simultenous 
@@ -35,7 +36,7 @@ import org.araneaframework.uilib.form.FormWidget;
  *   
  *  @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class BaseFormListWidget extends StandardPresentationWidget {
+public abstract class BaseFormListWidget extends GenericFormElement {
 
 	//*******************************************************************
 	// FIELDS
@@ -114,6 +115,8 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 	public void setFormRowHandler(FormRowHandler editableRowHandler) {
 		this.formRowHandler = editableRowHandler;
 	}
+  
+  
 
 	//*******************************************************************
 	// PROTECTED METHODS
@@ -150,7 +153,7 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 
 		for (Iterator i = formRows.values().iterator(); i.hasNext();) {
 			FormRow editableRow = (FormRow) i.next();
-			rowsToSave.put(editableRow.getRowKey(), editableRow);
+			rowsToSave.put(editableRow.getKey(), editableRow);
 		}
 
 		formRowHandler.saveRows(rowsToSave);
@@ -166,7 +169,7 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 			Object row = i.next();
 
 			FormRow editableRow = (FormRow) formRows.get(formRowHandler.getRowKey(row));
-			rowsToSave.put(editableRow.getRowKey(), editableRow);
+			rowsToSave.put(editableRow.getKey(), editableRow);
 		}
 
 		formRowHandler.saveRows(rowsToSave);
@@ -180,7 +183,7 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 		Map rowsToSave = new HashMap();
 
 		FormRow editableRow = (FormRow) formRows.get(key);
-		rowsToSave.put(editableRow.getRowKey(), editableRow);
+		rowsToSave.put(editableRow.getKey(), editableRow);
 
 		formRowHandler.saveRows(rowsToSave);
 	}		
@@ -277,6 +280,88 @@ public abstract class BaseFormListWidget extends StandardPresentationWidget {
 		public List getRows() {
 			return rows;
 		}
-	}	
+	}
+
+
+  protected void convertInternal() throws Exception {
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();) {
+      ((FormRow) i.next()).getForm().convert();
+    }
+  }
+  
+  protected boolean validateInternal() throws Exception {
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();) {
+      ((FormRow) i.next()).getForm().validate();
+    }
+    
+    return super.validateInternal();
+  }
+
+  public boolean isStateChanged() {
+    boolean result = false;
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();)
+      result |= ((FormRow) i.next()).getForm().isStateChanged();
+    return result;
+  }   
+  
+  public boolean isDisabled() {
+    boolean result = false;
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();)
+      result &= ((FormRow) i.next()).getForm().isDisabled();
+    return result;
+  }
+  
+  public void accept(String id, FormElementVisitor visitor) {
+    visitor.visit(id, this);
+
+    visitor.pushContext(id, this);
+
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();) {
+      FormRow entry = (FormRow) i.next();
+
+      String elementId = (String) entry.getKey();
+      FormWidget element = entry.getForm();
+
+      element.accept(elementId, visitor);
+    }
+
+    visitor.popContext();
+  }
+  public void markBaseState() {
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();) {
+      ((FormRow) i.next()).getForm().markBaseState();
+    }
+  }
+
+  public void restoreBaseState() {
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();) {
+      ((FormRow) i.next()).getForm().restoreBaseState();
+    }
+  }
+
+  public void setDisabled(boolean disabled) {
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();) {
+      ((FormRow) i.next()).getForm().setDisabled(disabled);
+    }
+  }	
+  
+  public void clearErrors() {
+    super.clearErrors();
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();) {
+     ((FormRow) i.next()).getForm().clearErrors();
+    }
+  }
+  
+  public boolean isValid() {
+    boolean result = super.isValid();
+    
+    for (Iterator i = getFormRows().values().iterator(); i.hasNext();) {
+      if (!result) 
+        break;
+      result &= ((FormRow) i.next()).getForm().isValid();   
+    }
+    
+    return result;
+  }
 
 }

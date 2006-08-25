@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-package org.araneaframework.uilib.list.formlist;
+package org.araneaframework.uilib.form.formlist;
 
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.FormWidget;

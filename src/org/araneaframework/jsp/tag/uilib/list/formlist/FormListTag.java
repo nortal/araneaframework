@@ -21,7 +21,7 @@ import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.uilib.list.formlist.FormListWidget;
+import org.araneaframework.uilib.form.formlist.FormListWidget;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)

@@ -7,7 +7,7 @@
 	<ui:widgetContext>
 		<ui:componentHeader>
 			<ui:componentName>
-				<fmt:message key="${contextWidget.data.formLabel}"/>
+				<fmt:message key="${viewData.formLabel}"/>
 			</ui:componentName>
 		</ui:componentHeader>
 

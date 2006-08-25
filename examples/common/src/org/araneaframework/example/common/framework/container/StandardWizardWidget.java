@@ -26,7 +26,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.example.common.framework.context.WizardContext;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
  * This widget may contain other widgets (called pages) as children.
@@ -40,7 +40,7 @@ import org.araneaframework.uilib.core.StandardPresentationWidget;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class StandardWizardWidget extends StandardPresentationWidget implements WizardContext {
+public class StandardWizardWidget extends BaseUIWidget implements WizardContext {
 	
 	private static final Logger log = Logger.getLogger(StandardWizardWidget.class);
 	

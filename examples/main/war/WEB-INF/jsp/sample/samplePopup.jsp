@@ -8,12 +8,12 @@
 	<!-- Component starts here -->
 	<ui:widgetContext>
 		<ui:componentHeader>
-			<ui:componentName><fmt:message key="${contextWidget.data.title}"/></ui:componentName>
+			<ui:componentName><fmt:message key="${viewData.title}"/></ui:componentName>
 		</ui:componentHeader>
 		
 		<ui:component>
-			<c:if test="${contextWidget.data.returnValue != null}">
-				<c:out value="${contextWidget.data.returnValue}"/>
+			<c:if test="${viewData.returnValue != null}">
+				<c:out value="${viewData.returnValue}"/>
 			</c:if>
 		
 			<ui:componentActions>

@@ -20,7 +20,7 @@ import org.araneaframework.example.common.framework.ViewSelectorAware;
 import org.araneaframework.example.main.business.data.ContractDAO;
 import org.araneaframework.example.main.business.data.GeneralDAO;
 import org.araneaframework.http.PopupWindowContext;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.beans.factory.BeanFactory;
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public abstract class TemplateBaseWidget extends StandardPresentationWidget implements ViewSelectorAware {
+public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSelectorAware {
   protected BeanFactory getBeanFactory() {
     return (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
   }

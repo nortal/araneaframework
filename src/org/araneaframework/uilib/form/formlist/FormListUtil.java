@@ -14,17 +14,16 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.formlist;
+package org.araneaframework.uilib.form.formlist;
 
 import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
+import org.araneaframework.uilib.form.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
 import org.araneaframework.uilib.list.EditableListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.formlist.adapters.InMemoryFormRowHandlerDecorator;
-import org.araneaframework.uilib.list.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -121,7 +120,7 @@ public class FormListUtil {
 		
 		for (Iterator i = editableRows.values().iterator(); i.hasNext();) {
 			FormRow editableRow = (FormRow) i.next();
-			result |= editableRow.getRowForm().isStateChanged();
+			result |= editableRow.getForm().isStateChanged();
 		}
 		
 		return result;
@@ -139,7 +138,7 @@ public class FormListUtil {
 		
 		for (Iterator i = editableRows.values().iterator(); i.hasNext();) {
 			FormRow editableRow = (FormRow) i.next();
-			result &= editableRow.getRowForm().convertAndValidate();
+			result &= editableRow.getForm().convertAndValidate();
 		}
 		
 		return result;
@@ -158,23 +157,6 @@ public class FormListUtil {
 						new MemoryBasedListFormRowHandlerDecorator(
 							listDataProvider, 
 							editableRows.getFormRowHandler()));
-	}		
-	
-	/**
-	 * Decorates the current {@link FormRowHandler} using the {@link InMemoryFormListHelper} to
-	 * assign temporary keys to new objects.
-	 * 
-	 * 
-	 * @param editableRows editable rows widget.
-	 * @param inMemoryEditableListHelper helper that manages editable list rows in memory.
-	 */	
-	public static void keepFormListChangesInMemory(
-			BaseFormListWidget editableRows,
-			InMemoryFormListHelper inMemoryEditableListHelper) {
-		editableRows.setFormRowHandler(
-						new InMemoryFormRowHandlerDecorator(
-							editableRows.getFormRowHandler(),
-							inMemoryEditableListHelper));
 	}		
 	
 	public static class ButtonSaveOnClickEventListener implements OnClickEventListener {

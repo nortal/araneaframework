@@ -10,12 +10,12 @@
 		
 		<p>
 			<jsp:text>Name: </jsp:text>
-			<c:out value="${contextWidget.data.company.name}"/>
+			<c:out value="${viewData.company.name}"/>
 		</p>
 		
 		<p>
 			<jsp:text>Address: </jsp:text>
-			<c:out value="${contextWidget.data.company.address}"/>
+			<c:out value="${viewData.company.address}"/>
 		</p>
 	</ui:widgetContext>		
 </jsp:root>

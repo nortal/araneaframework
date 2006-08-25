@@ -10,8 +10,8 @@
 		
 		<p>
 			<jsp:text>Company: </jsp:text>
-			<c:if test="${contextWidget.data.company != null}">
-				<c:out value="${contextWidget.data.company.name}"/>
+			<c:if test="${viewData.company != null}">
+				<c:out value="${viewData.company.name}"/>
 			</c:if>
 			<ui:eventButton eventId="chooseCompany" labelId="#Choose"/>			
 		</p>

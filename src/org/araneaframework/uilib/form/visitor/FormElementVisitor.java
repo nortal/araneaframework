@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.GenericFormElement;
+import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
@@ -38,7 +40,7 @@ public abstract class FormElementVisitor implements Serializable {
 	/**
 	 * Pushes the context element to stack. 
 	 */
-	public void pushContext(String id, FormWidget element) {
+	public void pushContext(String id, GenericFormElement element) {
 		contextStack.add(new IdElementPair(id, element));
 	}
 	
@@ -56,14 +58,14 @@ public abstract class FormElementVisitor implements Serializable {
 	 */
 	private class IdElementPair implements Serializable {
 		private String id;
-		private FormWidget element;
+		private GenericFormElement element;
 		
-		public IdElementPair(String id, FormWidget element) {
+		public IdElementPair(String id, GenericFormElement element) {
 			this.id = id;
 			this.element = element;
 		}
 		
-		public FormWidget getElement() {
+		public GenericFormElement getElement() {
 			return element;
 		}
 		public String getId() {
@@ -78,7 +80,7 @@ public abstract class FormElementVisitor implements Serializable {
 	/**
 	 * Returns the current context element that should be the parent of the element being visited.  
 	 */
-	public FormWidget getParent() {
+	public GenericFormElement getParent() {
 		return ((IdElementPair) contextStack.get(contextStack.size() - 1)).getElement();
 	}
 	
@@ -111,7 +113,7 @@ public abstract class FormElementVisitor implements Serializable {
 	/**
 	 * Visits all elements and subelements of the given composite element.
 	 */
-	public void visitAll(FormWidget form) {
+	public void visitAll(GenericFormElement form) {
 		form.accept("", this);
 	}
 	
@@ -128,4 +130,9 @@ public abstract class FormElementVisitor implements Serializable {
 	 * Visits a composite element.
 	 */
 	public abstract void visit(String id, FormWidget element);
+  
+  /**
+   * Visits a composite element.
+   */
+  public abstract void visit(String id, BaseFormListWidget element);
 }
