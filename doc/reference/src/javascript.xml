@@ -101,7 +101,7 @@ function AraneaPage() {
   function setServletURL(url);
   
   /** Indicates whether the page is completely loaded or not. Page is considered to 
-   * be loaded when all onload events have completed execution. */
+   * be loaded when all system onload events have completed execution. */
   function isLoaded();
   function setLoaded(loaded);
   
@@ -126,7 +126,8 @@ function AraneaPage() {
   function addClientLoadEvent(event);
   function addSystemUnLoadEvent(event);
 
-  /** Called on page load, executes registered system and client load events. */
+  /** Called on page load, executes registered system -- after which page is considered 
+    * loaded and client load events are executed too. */
   function onload();
   /** Called on page load, executes registered unload events. */
   function onunload();

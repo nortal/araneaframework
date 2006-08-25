@@ -111,8 +111,6 @@ function AraneaEventStore() {
 /* AraneaPage object is present on each page served by Aranea and contains common
  * functionality for setting page related variables, events and functions. */
 function AraneaPage() {
-  function executor(eventHolder) { eventHolder.execute(); }
-
   /* URL of aranea dispatcher servlet serving current page. 
    * Automatically set by AraneaTraverser.findSurroundingSystemForm(). */ 
   var servletURL = null;
@@ -120,7 +118,7 @@ function AraneaPage() {
   this.setServletURL = function(url) { servletURL = new String(url); }
   
   /* Indicates whether the page is completely loaded or not. Page is considered to 
-   * be loaded when all onload events have completed execution. */
+   * be loaded when all system onload events have completed execution. */
   var loaded = false;
   this.isLoaded = function() { return loaded; }
   this.setLoaded = function(b) { if (typeof b == "boolean") { loaded = b; } }
@@ -150,21 +148,14 @@ function AraneaPage() {
   var clientLoadEvents = new AraneaEventStore();
   var systemUnLoadEvents = new AraneaEventStore();
   
-  loadEvents = new AraneaStore();
-  loadEvents.add(systemLoadEvents);
-  loadEvents.add(clientLoadEvents);
-  
-  unloadEvents = new AraneaStore();
-  unloadEvents.add(systemUnLoadEvents);
-
   submitCallbacks = new Object();
 
   this.addSystemLoadEvent = function(event) { systemLoadEvents.add(event); }
   this.addClientLoadEvent = function(event) { clientLoadEvents.add(event); }
   this.addSystemUnLoadEvent = function(event) { systemUnLoadEvents.add(event); }
 
-  this.onload = function() { loadEvents.forEach(executor); this.setLoaded(true); }
-  this.onunload = function() { unloadEvents.forEach(executor); }
+  this.onload = function() { systemLoadEvents.execute(); this.setLoaded(true); clientLoadEvents.execute(); }
+  this.onunload = function() { systemUnLoadEvents.execute(); }
   
   // General callbacks executed before each form submit.
   this.addSubmitCallback = function(callback) {
@@ -223,7 +214,6 @@ function AraneaPage() {
   
   // another submit function, takes all params that are currently possible to use.
   // TODO: get rid of duplicated logic from: submit() and findSubmitter()
-
   this.submit_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;
@@ -238,7 +228,7 @@ function AraneaPage() {
     if (eventUpdateRegions != null && eventUpdateRegions.length > 0) 
       new DefaultAraneaAJAXSubmitter().submit_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
     else
-      new DefaultAraneaSubmitter(systemForm, eventId, eventTarget, eventParam);
+      new DefaultAraneaSubmitter().submit_4(systemForm, eventId, eventTarget, eventParam);
   }
   
   this.debug = function(message) {
