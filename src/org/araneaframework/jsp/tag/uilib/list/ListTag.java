@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
+import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.uilib.list.ListWidget;
 
@@ -35,7 +36,7 @@ import org.araneaframework.uilib.list.ListWidget;
              <li><i>listId</i> - UiLib list id.
            </ul> "
  */
-public class ListTag extends WidgetTag {
+public class ListTag extends BaseWidgetTag {
 	public final static String LIST_ID_KEY = "listId";
 	public final static String LIST_VIEW_MODEL_KEY = "list";  
 	public final static String LIST_FULL_ID_KEY = "listFullId";

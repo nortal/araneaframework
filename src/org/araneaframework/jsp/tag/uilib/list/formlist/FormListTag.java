@@ -18,7 +18,7 @@ package org.araneaframework.jsp.tag.uilib.list.formlist;
 
 import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
-import org.araneaframework.jsp.tag.uilib.WidgetTag;
+import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
@@ -36,7 +36,7 @@ import org.araneaframework.uilib.form.formlist.FormListWidget;
              <li><i>formListId</i> - UiLib editable list id.
            </ul> "
  */
-public class FormListTag extends WidgetTag {
+public class FormListTag extends BaseWidgetTag {
 	protected FormListWidget.ViewModel formListViewModel;
 	
 	public final static String FORM_LIST_ID_KEY = "formListId";

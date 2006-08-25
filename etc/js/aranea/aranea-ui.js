@@ -79,7 +79,7 @@ function saveValue(element) {
 
 function isChanged(elementId) {
   var el = document.getElementById(elementId);
-  return (el.oldValue != el.value);
+  return ((el.oldValue) && (el.oldValue != el.value));
 }
 
 function setFormEncoding(formName, encoding) {
