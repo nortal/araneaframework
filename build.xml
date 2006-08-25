@@ -295,7 +295,7 @@
 
 		<copy todir="build/tmp/dist/dist">
 			<fileset dir="dist">
-				<include name="*.jar"/>
+				<include name="**/*.jar"/>
 			</fileset>     
 		</copy>     
 

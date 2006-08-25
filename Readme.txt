@@ -1,7 +1,7 @@
-***************************************************
-* THE ARANEA FRAMEWORK, release 1.0 M4 (July 2006) *
-*        http://www.araneaframework.org/          *
-***************************************************
+*******************************************************
+* THE ARANEA FRAMEWORK, release 1.0 RC1 (August 2006) *
+*        http://www.araneaframework.org/              *
+*******************************************************
 
 INTRODUCTION
 
@@ -58,10 +58,3 @@ Documentation can be found in the "doc" directory.
 	doc/tutorial is a tutorial using the Aranea Web Framework
 	doc/reference includes the reference manual.
 	doc/javadoc includes the javadoc
-
-KNOWN ISSUES
- 
- * Saving user session on the client side is difficult to configure
-  at the moment. The filter should be added to the main configuration
-  file (it is there right now but commented out) and then a new
-  aranea.jar should be built.
