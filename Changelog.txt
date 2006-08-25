@@ -18,6 +18,8 @@ Bugfixes
         Aranea should not download DTD-s and TLDs anymore                     | See #196
         A security issue concerning DisplayTags was fixed                     | See #202
 
+API Changes
+        Numerous, because of package renames and established naming policy
 
 2006.07.07    | Aranea 1.0-M4
 
