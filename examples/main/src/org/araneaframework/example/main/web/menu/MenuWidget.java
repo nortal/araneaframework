@@ -22,6 +22,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
+import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
@@ -64,6 +65,7 @@ public class MenuWidget extends TemplateMenuWidget  {
   protected void init() throws Exception {
     super.init();
     
+    addWidget("footer", new FooterWidget());
     addEventListener("logout", new ProxyEventListener(this));
     addEventListener("mainPage", new ProxyEventListener(this));
   }

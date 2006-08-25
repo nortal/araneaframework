@@ -57,7 +57,7 @@
 				<ui:eventButton labelId="#Test" eventId="test" />
 				<c:if test="${viewData.askCloseConfirmation == 'true'}">
 					<ui:onLoadEvent
-						event="if (confirm('Do you wish to lose unsaved changes?')) araneaStandardSubmitEvent(${systemFormId}, '${widgetId}', 'close', 'true');" />
+						event="if (confirm('Do you wish to lose unsaved changes?')) getActiveAraneaPage().submit_6(document.forms['${systemFormId}'], 'close', '${widgetId}', 'true', null, null);"/>
 				</c:if>
 				<ui:eventButton labelId="#Close" eventId="close" />
 			</ui:componentActions>

@@ -17,6 +17,8 @@
 package org.araneaframework.jsp;
 
 /**
+ * Basic event that can be sent to widgets.
+ *  
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class UiEvent {

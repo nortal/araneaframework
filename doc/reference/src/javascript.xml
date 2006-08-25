@@ -15,583 +15,158 @@
 -->
 
 <chapter id="javascript">
-	<title>Javascript libraries</title>
-  
-	<sect1>
-    <title>Clientside validation</title>
-	 	<para>
-			The formvalidation library provides means of validating the contents of HTML forms and defining actions that should
-			trigger depending on the validation results. The different formelement validation functions let you
-			test the contents of a form element (does it match a pattern, is it of correct type, has user entered text or numbers, etc.)
-			and the library provides means of grouping the different validation functions to provide a clean way of defining validation
-			rules to a form.
-    	</para>
+	<title>Javascript Libraries</title>
+    
+    <sect1>
+       <title>Third-party Javascript Libraries</title>
+           <para>
+           Aranea distribution includes some third party Javascript libraries. Most of these are not needed for using Aranea 
+           functionality, but extend the functionality of both framework and <emphasis>UiLib</emphasis>.
+           </para>
 
-      <para>
-         The javascript validation library is located under <literal>/etc/js/validation</literal>. For more information check
-         the README.txt in the validation directory. If importing the library without using the jsp tag <literal>importScripts</literal>
-         then consult the README.txt for the order in which the javascript files should be included.
-      </para>
-
-	  <sect2>
-		<title>General validation functions</title>
-			<para>
-				The general validation functions are grouped under a namespace <literal>JSValidation</literal>. After including
-				the validation library all the validation functions will be accessible in the following way.
-			<programlisting role="javascript">JSValidation.functionName( argument )</programlisting> 
-			</para>
-		
-		  <informaltable frame="all">
-			 <tgroup cols="2">
-				<colspec colwidth="2*"/>
-				<colspec colwidth="1*"/>
-				<thead>
-				  <row>
-					 <entry>Function</entry>
-					 <entry>Description</entry>
-				  </row>
-				</thead>
-				<tbody>
-				  <row>
-					 <entry><programlisting role="javascript">checkNotEmpty( String )</programlisting></entry>
-					 <entry><literal>Returns true if the string is not empty.</literal></entry>
-				  </row>
-				  
-				  <row>
-					 <entry><programlisting role="javascript">checkRegexpMatch( String, RegExp )</programlisting></entry>
-					 <entry><literal>Returns true if string matches given regexp.</literal></entry>
-				  </row>
-				  
-				  <row>
-					 <entry><programlisting role="javascript">checkMinMaxLength( String, int min, int max)</programlisting></entry>
-					 <entry><literal>Returns true if string length is between given bounds.</literal></entry>
-				  </row>
-				  
-				  <row>
-					 <entry>
-						<programlisting role="javascript" class="programListing2">checkNumber( no, min, max, reqInt, allowCcomma)</programlisting>
-					</entry>
-					<entry>
-						<literal> Returns true if no is a number between given bounds. If reqInt is true then the number if checked to be an integer. If
-							allowComma is true then the comma in the float is converted to a point (,->.).
-						</literal>
-					</entry>
-				  </row>
-
-				  <row>
-					 <entry><programlisting role="javascript">checkEmail (String email)</programlisting></entry>
-					 <entry><literal>Returns true if email is a valid email.</literal></entry>
-				  </row>
-
-				</tbody>
-			 </tgroup>
-		  </informaltable>
-	  </sect2>
-	  
-	  <sect2>
-		<title>Date-Time validation</title>
-			  
-		  <informaltable frame="all">
-			 <tgroup cols="2">
-				<colspec colwidth="1*"/>
-				<colspec colwidth="1*"/>
-				<thead>
-				  <row>
-					 <entry>Function</entry>
-					 <entry>Description</entry>
-				  </row>
-				</thead>
-				<tbody>
-				  <row>
-					 <entry><programlisting role="javascript">checkDateFormat( dateString, pattern )</programlisting></entry>
-					 <entry><literal>Checks that given value is a date in a given format. Pattern must be specified in a format like "DD.MM.YYYY".
-											The dateString parameter will be matched against that pattern in the following way:</literal>
-											<itemizedlist mark="bullet">
-												<listitem><literal>symbols D, M and Y in the pattern must correspond to numbers in the same positions
-													of the dateString.</literal></listitem>
-												<listitem><literal>any other symbols must correspond to exactly the same symbols in the dateString.</literal></listitem>
-											</itemizedlist>
-											<literal>
-											If dateString matches the pattern, the day, month and year are stripped from it
-											by concatenating the symbols at appropriate positions, and a check is performed that the
-											resulting values represent a valid date.
-											Pattern MUST contain D and M characters, but may lack the Y. Then current year will be used to check the
-											date.
-								</literal></entry>
-				  </row>
-				  
-				  <row>
-					 <entry><programlisting role="javascript">checkTimeFormat (timeString, pattern)</programlisting></entry>
-					 <entry><literal>Similar to checkDateFormat. This time special symbols in the pattern are 'H', 'M' and 'S'. A typical pattern is therefore
-						"HH:MM:SS" H and M must be present in the pattern, S may be omitted. Only 24-h format is supported. (i.e. the check is that 
-						23 >= HH >= 00)</literal></entry>
-				  </row>
-				  
-				  <row>
-					 <entry><programlisting role="javascript">isValidDate (year, month, day)</programlisting></entry>
-					 <entry><literal>Returns true if y/m/d is a valid date.</literal></entry>
-				  </row>
-				  
-				  <row>
-					 <entry><programlisting role="javascript">isValidTime24 (hour, minute, second)</programlisting></entry>
-					 <entry><literal>Returns true if h/m/s is valid time in 24-h format</literal></entry>
-				  </row>
-				</tbody>
-			 </tgroup>
-		  </informaltable>
-	  </sect2>
-	  
-	  <sect2>
-		 <title>Validation framework</title>
-			<para>
-				Framework presented there consists of four kinds of classes:
-				Rule, Action, Validator and FormValidator class.
-
-				The idea of the framework is the following: 
-				The FormValidator class manages several instances of Validator class,
-				and uses the validate() function of these instances to perform
-				form validation. 
-				Each Validator is meant to perform a small 'piece' of validation
-				(e.g. validate a single form element). It contains a set of Rules 
-				that it checks when its  "validate()" method is invoked, and a set 
-				Actions that it performs after checking the rules.
-
-				Each Rule presents a single "check()" method, that tells whether the 
-				condition of a rule holds.
-				Each Action presents a single "execute(..)" method, that performs that
-				action.
-			</para>
-			
-			<para> Javascript is type-free, and therefore does not provide facilities
-					to require a certain interface. So the best we can do is provide 
-					textual descriptions of these interfaces here. We employ Java-like syntax.
-			</para>
-
-			<para> Rule is a class used to check some condition.</para>
-				<programlisting role="javascript">interface Rule {
-	// The function that performs the check. It may not have side-effects.
-	boolean check();
-	
-	// If the check failed, an explanatory message is provided by this property.
-	String errorMessage;
-}				</programlisting>
-
-				<para>
-				Action is a class encapsulating an action that should be performed after
-				a sequence of rule checks was performed. It is a kind of Listener for the Validator.
-				</para>
-
-				<programlisting role="javascript">interface Action { 
-	// The function that performs the action.
-	// Parameters: 
-	//   checkPassed  - indicates whether the rule check was successful
-	//                  (i.e. it is true, if the check() method of all 
-	//                  the rules in the sequence returned true)
-	//   errorMessage - The errorMessage of the first rule in the sequence,
-                       that failed.
-	void execute(boolean checkPassed, String errorMessage);
-}					</programlisting>
-
-				<para>
-					Validator is a class that manages a set of Rules and a set of Actions.
-				</para>
-				<programlisting role="javascript">
-class Validator {
-
-	void addRule(Rule r);
-	
-	void addAction(Action a);
-	
-	// validate() returns true, if all the rules passed the check.
-	boolean validate();
-	
-	// This is the errorMessage of the first rule in the sequence, that failed.
-	String errorMessage;
-}				</programlisting>
-
-				<para>
-				FormValidator is to Validators same as Validator is to Rules.
-				</para>
-				<programlisting role="javascript">class FormValidator {
-				
-	void addValidator();
-	
-	void addPreprocessAction(Action a);
-	
-	void addAction(Action a);
-	
-	boolean validate();
-	
-	// This error message is the concatenation of errorMessage-s of the
-   // validators that failed.
-	String errorMessage;
-}				</programlisting>
-			</sect2>
-
-			<sect2>
-				<title>Validation rules</title>
-
-				<para>
-					Although validation rules can be used independetly, the framework offers a way to group them into rules.
-					Remember that rules are objects that implement the Rule interface (they have the check method). First we define
-					a general Rule class FormElementRule and a little bit more specific ElementFormatRule which extends the FormElementRule.
-					Using these two baseclasses we define all the others.
-					
-<programlisting role="javascript">
-/**
-  * A base class for all Rule-s that check properties of form elements
-  * (i.e., practically all rules)
-  * Parameters:
-  *   formName, elementName - the name of the form and the element within it that
-  *                           identify the form element to be checked.
-  *   elementLabel          - string to be used in error message to refer to that
-  *                           element.
-  */
-  function FormElementRule(formName, elementName, elementLabel)
-					</programlisting>
-					 
-					 <programlisting role="javascript">
-
-/**
-   * A base class for all FormElementRules that check that the contents of an
-   * element satisfies some certain function. That is, the rule returns true, if 
-   *    checkerFunction(element.value, param1, param2, param3, ...)
-   * returns true.
-   * Practically all the rules may be expressed in this way, and having this
-   * rule allows to separate condition checking function (that takes a
-   * string and a condition) from rule-specific things (like obtaining element's
-   * value and returning an error message).
-   * Parameters:
-   *    formName, elementName, elementLabel - see FormElementRule
-   *    allowEmpty           - Setting this parameter to true will allow empty
-   *                           input to pass the test.
-   *                           (i.e. when allowEmpty=true and then the element
-   *                           will pass the test EITHER if its value is empty
-   *                           OR if it is not empty and satisfies the
-   *                           condition.
-   *    message              - Specifies the message to be displayed. 
-   *                           Default is like "Field {0} must match format {1}"
-   *
-   *    formatCheckFunction  -  a function: (string, param1, param2, ...) ->
-   *                            boolean that checks that
-   *                            given string satisfies given conditions.
-   *                            Examples are checkMinMaxLength, checkDateInFormat,
-   *                            checkTimeInFormat, checkRegexpMatch, ...
-   *    param1, param2, .... -  the parameters that are passed to
-   *                            formatCheckFunction
-   */
-  function ElementFormatRule(formName, elementName, elementLabel, allowEmpty, 
-                             message, formatCheckFunction, param1, param2)
-
-					</programlisting>
-						
-					</para>
-					<para>
-							Using these two baseclasses we define all the others.
-							<programlisting role="javascript">
- /**
-  * Checks that the length of the text element is within minLength and maxLength
-  * Any of these values may also be left undefined (then corresponding length
-  * restriction does not hold). Setting the allowEmpty parameter to true (or
-  * omitting it) will allow empty input to pass the test. (i.e. when
-  * allowEmpty=true and minLength=3, then in order to pass the test,
-  * element's value should be either empty, or no shorter than 3.)
-  *
-  * Actually in most cases you should omit the allowEmpty parameter,
-  * and use the NonEmptyRule for mandatory form elements.
-  */
- function MinMaxLengthRule(formName, elementName, elementLabel,
-                              minLength, maxLength, allowEmpty)
-							</programlisting>
-							
-<programlisting role="javascript">
-  /**
-   * Checks that the value of the element matches given regular expression.
-   * A customization of the ElementFormatRule.
-   */
-  function RegExpRule(formName, elementName, elementLabel,
-                        regExp, message, allowEmpty)
-</programlisting>
-							
-							<programlisting role="javascript">
-  /**
-   * Checks that the value of an element is a number between two given
-   * bounds. Note that this check should be used only to check that the
-   * number is within the bounds, not that this field "is a number",
-   * because this rule will accept any input that javascript understands
-   * as a number. You should use the RegExpRule to check that the field 
-   * "is a number" in your certain format. Also note, that if there is no
-   * value in the element, the check always passes.
-   *
-   * Parameters:
-   *   minValue, maxValue - the bounds on the number. Any of them may be omitted.
-   *   requireInteger     - accept only integers (i.e. round(v) == v must hold).
-   *   allowComma         - allow ',' as the decimal separator (default: no)
-   *                        (if you use this rule together with the RegExpRule
-   *                        for validating number format
-   *                        then keep this property consistent with your regexp)
-   */
-  function NumberRule(formName, elementName, elementLabel, requireInteger,
-                        minValue, maxValue, allowComma)							
-							</programlisting>
-							
-							<programlisting role="javascript">
-   /**
-    * Checks that element is not empty
-    */
-   function NonEmptyRule(formName, elementName, elementLabel)
-							</programlisting>
-							
-							<programlisting role="javascript">
-   /**
-    * Unfortunately NonEmptyRule is not applicable to radio-type elements, so
-    * we have to create a separate version for them
-    */
-   function NonEmptyRadioRule(formName, elementName, elementLabel)
-							</programlisting>
-						</para>
-			</sect2>
-
-         <sect2>
-            <title>Validation actions</title>
-
+          <sect2>
+            <title>Behaviour (<ulink url="http://bennolan.com/behaviour/">http://bennolan.com/behaviour/</ulink>)</title>
             <para>
-               In order to give feedback on a rule we have to define Action
-               objects. Action is
-               an object which implements the Action interface, thus it has the
-               <literal>execute</literal> method. There are three predefined
-               Action objects.
+              Neat little library allowing usage of CSS selectors for applying behaviour to HTML page elements. It is required
+              for full function of Aranea pages rendered with Aranea JSP tags. With standard Behaviour rules, following
+              functionality is provided:
+
+              <itemizedlist spacing="compact">
+                <listitem>
+                  keyboard handlers for form elements.
+                </listitem>
+                <listitem>
+                  addition of urls (&lt;href=&quot;...&quot;) to page elements that allow cloning of the session thread (opening
+                  link in new window&mdash;and in different session thread).
+                </listitem>
+              </itemizedlist>
             </para>
-			
-            <programlisting role="javascript">
- /**
-  * Change the Css class of a given element according to whether the
-  * check passed or not.
-  */
-  function ChangeCssClassAction(elementId, validClass, invalidClass)            
-            </programlisting> 
-            
-            <programlisting role="javascript">
-  /**
-   * If the element was valid, replaces regexpToReplace with replaceWith
-   * Perhaps the only usage for it is to replace ',' with '.' in number fields.
-   */
-  function ReplaceIfValidAction(formName, elementName, regexpToReplace, replaceWith) 
-            </programlisting> 
-            
-            <programlisting role="javascript">
-  /**
-   * This action is suitable for FormValidator.
-   * If errors occured, a given DIV will be shown with errorMessages on it.
-   * Otherwise, that DIV will be hidden
-   */
-  function ShowErrorMessagesDivAction(divId) 
-            </programlisting> 
-         </sect2>
-
-			<sect2>
-				<title>Validation simple sample</title>
-				<para>
-					Here is a simple example of how the utilities in this class could be used.
-					First, an instance of the FormValidator class should be constructed:
-
-					<programlisting role="javascript">formValidator = new FormValidator();</programlisting>
-    			</para>
-
-				<para>
-				Then, several Validators could be added to it. Each Validator should contain
-				some Rules and Actions:
-				
-				<programlisting role="javascript">elementValidator = new Validator();
-elementValidator.addRule(
-	new MinMaxLengthRule('formName', 'elementName', 'Some Element', 3, 64)
-);
-elementValidator.addAction(
-	new ChangeCssClassAction('elementSpan', 'class-valid', 'class-invalid')
-);
-formValidator.addValidator(elementValidator);</programlisting>
-				</para>
-            <para> 
-					Afterwards, form validation can be performed in the following way:
-				</para>
-				<programlisting role="javascript">if (!formValidator.validate()) alert(formValidator.errorMessage);</programlisting>
-			</sect2>
-
-
-			<sect2>
-				<title>Validation example</title>
-
-				<para>
-					We'll take a look at the example which is accessible from <literal>/etc/js/validation/validation.html</literal>.
-					In jsp-ui-form-validation.js a subclass of Formvalidator is defined, UiFormValidator. The subclass adds
-					many helper functions for adding different validators with some more specific rules. We'll take a look at a few.
-				</para>
-				
-				<para>
-					The following method combines different rules and an action into a validator. It checks if the element is
-               not empty, that it corresponds to a date format and a time format. It also adds the default validator action.
-               Finally it adds the validator to a formvalidator.
-					<programlisting role="javascript">UiFormValidator.prototype.addDateTimeValidator = 
-function(elementName, elementLabel, mandatory){
-   var v = new Validator();
-   if (mandatory &amp;&amp; mandatory == true)
-     v.addRule(new NonEmptyRule(this.formName, elementName+".date", elementLabel));
-   v.addRule(new DateFormatRule(this.formName, elementName+".date", elementLabel, 
-     "DD.MM.YYYY|DD.MM.YY|DDMMYYYY|DDMMYY|DD,MM,YYYY|DD,MM,YY|DDMM"));
-   v.addRule(new TimeFormatRule(this.formName, elementName + ".time", elementLabel, 
-     "HH:MM|HHMM|HH,MM|HH.MM|H:MM|HMM|H,MM|H.MM"));
-   v.addAction(this.createDefaultValidatorAction(elementName, elementLabel));
-   this.addValidator(v);
-}
-					</programlisting>
-				</para>
-
+          </sect2> 
+          
+          <sect2>
+            <title>AjaxAnywhere (<ulink url="http://ajaxanywhere.sourceforge.net/">http://ajaxanywhere.sourceforge.net/</ulink>)</title>
             <para>
-               A function which adds real number validator to the formvalidator. 
-               <programlisting role="javascript">
-/**
-  * Add an real number validator (note: it does not allow exponent notation like 1.0E+6)
-  */
- UiFormValidator.prototype.addRealValidator = function(elementName, elementLabel, minValue, maxValue, mandatory) {
-   var v = new Validator();
-   if (mandatory &amp;&amp; mandatory == true)
-     v.addRule(new NonEmptyRule(this.formName, elementName, elementLabel));
-   // NB: We allow comma as decimal separator
-   v.addRule(new NumberRule(this.formName, elementName, elementLabel, false, minValue, maxValue, true));
-   v.addRule(new RegExpRule(this.formName, elementName, elementLabel, /^(\+|-)?[0-9]+((\.|,)[0-9]+)?$/, 
-             Localization.validation.FIELD_X_MUST_BE_A_REAL_NUMBER));
-   
-   // We could even have replaced comma with a point but that's not needed.
-   // We are validating, not correcting.
-   //     v.addAction(new ReplaceIfValidAction(this.formName, elementName, /,/, "."));
-   
-   v.addAction(this.createDefaultValidatorAction(elementName, elementLabel));
-   this.addValidator(v);
- }  
-               </programlisting>
+               AjaxAnywhere allows separating web page into multiple zones, and refreshing only those zones that needs to be updated.
+               Inclusion of this library is required for building AJAX capable web-page with Aranea JSP tags.
             </para>
+          </sect2> 
+          
+          <sect2>
+            <title>The DHTML Calendar (<ulink url="http://www.dynarch.com/projects/calendar/">http://www.dynarch.com/projects/calendar/</ulink>)</title>
             <para>
-               The <literal>jsp-ui-validation.js</literal> defines many other such helper functions.
-               The names of them are selfexplanatory and we will be looking at how to use them to
-               do form validation.
+               Nice DHTML calendar, required if one wants to use Aranea JSP <emphasis>&lt;ui:dateInput&gt;</emphasis> or <emphasis>&lt;ui:dateTimeInput&gt;</emphasis> tags.
             </para>
-
+          </sect2>
+          
+          <sect2>
+            <title>Prototype (<ulink url="http://prototype.conio.net/">http://prototype.conio.net/</ulink>)</title>
             <para>
-               First we have to construct a form validator object for validating the form.
-               <programlisting role="javascript">
-      UiFormValidator.createDefault = function(formName) {
-        var v = new UiFormValidator(formName, '.validationUnit', 'valid', 'invalid');
-        v.addAction(new ShowErrorMessagesDivAction('errorMessages'));
-        return v;
-      }</programlisting>
+               Prototype is a JavaScript framework that aims to ease development of dynamic web applications. Aranea JSP
+               aims to make more use of it in the future. Currently it is included as prerequisite for some 
+               script.aculo.us scripts also included with Aranea.
             </para>
+          </sect2>
+          
+          <sect2>
+            <title>script.aculo.us (<ulink url="http://script.aculo.us/">http://script.aculo.us/</ulink>)</title>
+            <para>
+               script.aculo.us provides easy-to-use, cross-browser user interface JavaScript libraries. Only subset of script.aculo.us
+               libraries are included&mdash;only JSP tag that depends on it is <emphasis>&lt;ui:autoCompleteTextInput&gt;</emphasis>.
+            </para>
+          </sect2>
 
-     <para>
-      Now lets combine all the different validators into the formvalidator. The following code assumes
-      we have corresponding HTML elements with the ids specified by the first argument of the function calls.
-      <programlisting role="javascript">
-      // In general there may be several forms on one page
-      // We store them all in one array
-      var validation = new Object();
-      
-      validation.validatedForm = UiFormValidator.createDefault('validatedForm');
-      
-      formValidator = validation['validatedForm'];
+          <sect2>
+            <title>TinyMCE (<ulink url="http://tinymce.moxiecode.com/">http://tinymce.moxiecode.com/</ulink>)</title>
+            <para>
+               TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor control. Required for using Aranea 
+               JSP <emphasis>&lt;ui:richTextarea&gt;</emphasis> tag.
+            </para>
+          </sect2>
+          
+    </sect1>
 
-      formValidator.addTextInputValidator('validatedForm.textInput', 
-                                       'TextInput', 10, 30, true);
-      formValidator.addRegExpValidator('validatedForm.textArea', 
-                                          'TextArea', /John/, 
-                                          "Field '{0}' must contain the word John", 
-                                          true);
-      formValidator.addIntegerValidator('validatedForm.integerInput',
-                                          'IntegerInput', -10);
-      formValidator.addRealValidator('validatedForm.realInput', 
-                                          'RealInput', -1.3, 1.3);
-      formValidator.addEmailValidator('validatedForm.emailInput', 
-                                          'Email Address');
-      formValidator.addSelectValidator('validatedForm.selectInput',
-                                          'Select', true);
-      formValidator.addMultiselectValidator('validatedForm.multiselectInput', 
-                                          'Multiselect', true);
-      formValidator.addRadioValidator('validatedForm.radioInput', 'Radio', true);
-      formValidator.addDateValidator('validatedForm.dateInput', 'Date', true);
-      formValidator.addTimeValidator('validatedForm.timeInput', 'Time', false);
-      formValidator.addDateTimeValidator('validatedForm.dateTimeInput',
-                                          'DateTime', true);
-      </programlisting>
-     </para>
-
-     <para>
-      By now we have constructed a formvalidator, initialized it. Combined different validators to the formvalidator. Combined
-      different rules/actions to validators. All we need to do now is use it to validate the form. First we lookup the correct
-      validator and call <literal>validate();</literal> on it. Based on the result we either submit the form or not. The
-      <literal>submitForm();</literal> can be used as a HTML form <literal>onSubmit();</literal> handler. 
-      
-      <programlisting role="javascript">
-function submitForm(){
-   result = validation['validatedForm'].validate();
-   if (result) document.forms['validatedForm'].submit();
-   return false;
-}
-      </programlisting>
-     </para>
-			</sect2>
-
-	</sect1>
-
-	<sect1>
-		<title>Aranea Clientside API</title>
+	<sect1 id="aranea_clientside_js" xreflabel="Aranea Clientside Javascript">
+		<title>Aranea Clientside Javascript</title>
 		<para>
 			Aranea uses javascript to do form submits. This provides AJAX enabled webapps and more control over
-			form submitting logic.
+			form submitting logic. Each page served with Aranea has associated <emphasis>AraneaPage</emphasis> object:
 		</para>
+
 		<para>
-			<programlisting role="javascript">
-/**
- * Submits an event with the specific widgetId, eventId, eventParams. If
- * precondition is set, then call() is called only when precondition meets.
- * call and precondition are functions.
- */
-function uiStandardSubmitEvent(systemForm, widgetId, eventId, eventParam,
-                                 call, precondition)
+<programlisting role="javascript">/* AraneaPage object is present on each page served by Aranea and contains common
+ * functionality for setting page related variables, events and functions. */
+function AraneaPage() {
+  /* Getters and setters for URL of aranea dispatcher servlet serving current page. */ 
+  function getServletURL();
+  function setServletURL(url);
+  
+  /** Indicates whether the page is completely loaded or not. Page is considered to 
+   * be loaded when all system onload events have completed execution. */
+  function isLoaded();
+  function setLoaded(loaded);
+  
+  /** Returns the div with id "araneaDebugDiv" meant for outputting 
+    * debug information, if it is present. */
+  function getDebugDiv();
+  
+  /* Returns the server-side reported locale (AraneaLocale). */
+  function getLocale();
 
-/**
- * Submits an event with the specific widgetId, eventId and eventParam using
- * the systemForm. If precondition is set, then call() is called when
- * precondition meets. Futhermore, if validate is set, then validate()
- * of the form with the formId is called. On success the call() is invoked.
- * The call and precondition are functions.
- */
-function uiStandardSubmitFormEvent(systemForm, formId, elementId, eventId, 
-                                    eventParam, validate, call, precondition) 
+  /** Indicates whether some form on page is (being) submitted already
+    * by traditional HTTP request. */
+  function isSubmitted();
+  /* Custom submit functions using plain HTTP request should call this before submit. */
+  function setSubmitted();
+  
+  /** Returns Aranea JSP specific DOM tree traverser (AraneaTraverser). */
+  function getTraverser();
 
-/**
- * Provides aranea specific submit logic.
- */
-function araneaSubmitEvent(systemForm, widgetId, eventId, eventParam,
-                           updateRegions)
+  /** Add events that should be executed upon page load/unload to execution queue. */
+  function addSystemLoadEvent(event);
+  function addClientLoadEvent(event);
+  function addSystemUnLoadEvent(event);
 
-/**
- * Provides aranea specific submit logic.
- */
-function araneaStandardSubmitEvent(systemForm, widgetId, eventId,
-                                    eventParam, precondition)
+  /** Called on page load, executes registered system -- after which page is considered 
+    * loaded and client load events are executed too. */
+  function onload();
+  /** Called on page load, executes registered unload events. */
+  function onunload();
+  
+  /** Adds general callback executed before any form submit. */
+  function addSubmitCallback(callback);
 
-/**
- * The low-level submit event. Invokes callbacks set to a form. If updateRegions
- * is set then the submit is done via AJAX. Otherwise the systemForm.submit()
- * method is used.
- */
-function uiSystemFormSubmit(systemForm, updateRegions)
-			</programlisting>
+  /** Adds general callback executed before form with given id is submitted. */
+  function addSubmitCallback(systemFormId, callback);
+
+  /** Executes all callbacks that should run before submitting the form with given id. */
+  function executeCallbacks(systemFormId);
+
+  /** 
+   * Chooses appropriate submitting method and submittable form given the HTML element
+   * that initiated the submit request. */
+  function submit(element);
+
+  /** 
+   * Called by submit() to determine the appropriate form submitter.
+   */
+  function findSubmitter(element, systemForm);
+
+  /** another submit function, takes all params that are possible to 
+    * use with Aranea JSP currently. */
+  function submit_6(systemForm, eventId, eventTarget, 
+                    eventParam, eventPrecondition, eventUpdateRegions);
+  
+  /** Attaches the message to debug div ("araneaDebugDiv") when it is present. */
+  function debug(message);
+}
+
+/** Random request id generator. Sent only with AA ajax requests.
+  * Currently only purpose of it is easier debugging (identifying requests). */
+function AraneaPage.getRandomRequestId();
+
+/** Page initialization function, should be called upon page load. */
+AraneaPage.init();</programlisting>
       </para>
-      <para>
-         By default aranea jsp tags output eventcalls that use the uiStandardSubmit and uiStandardSubmitFormEvent.
-         For the <literal>call</literal> function <literal>araneaSubmitEvent</literal> and <literal>araneaStandardSubmitEvent</literal>
-         functions are used. The <emphasis>real</emphasis> submitting takes place in <literal>uiSystemFormSubmit</literal>.
-         For providing custom handling the <literal>araneaSubmitEvent</literal>,<literal>araneaStandardSubmitEvent</literal>
-         should be overloaded. Please consult the <literal>/etc/js/aranea-ui.js</literal> prior.
-      </para>
+
 	</sect1>
 </chapter>

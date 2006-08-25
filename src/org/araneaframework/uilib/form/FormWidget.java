@@ -72,7 +72,9 @@ public class FormWidget extends GenericFormElement {
    * @return a contained element by its name.
    */
   public GenericFormElement getElement(String elementName) {
-    return (GenericFormElement) elements.get(elementName);
+    if (elementName.indexOf('.') == -1)
+      return (GenericFormElement) elements.get(elementName);
+    return getGenericElementByFullName(elementName);
   }
 
   /**

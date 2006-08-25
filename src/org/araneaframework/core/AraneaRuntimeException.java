@@ -19,7 +19,7 @@ package org.araneaframework.core;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
- * A general nestable aranea specific runtime exception.
+ * A general nestable Aranea specific runtime exception.
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */

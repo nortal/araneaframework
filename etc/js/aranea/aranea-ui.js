@@ -104,16 +104,14 @@ function saveScrollCoordinates(form) {
 		x = window.pageXOffset;
 		y = window.pageYOffset;
 	}
-
-    var xinput = createNamedElement("input", "windowScrollX");
-    xinput.type = 'hidden';
-    var yinput = createNamedElement("input", "windowScrollY");
-    yinput.type = 'hidden';
-    xinput.value = x;
-    yinput.value = y;
-
-    form.appendChild(xinput);
-    form.appendChild(yinput);
+	
+	if (form.windowScrollX) {
+		form['windowScrollX'].value = x;
+	}
+	
+	if (form.windowScrollY) {
+		form['windowScrollY'].value = y;
+	}
 } 
 
 function scrollToCoordinates(x, y) {

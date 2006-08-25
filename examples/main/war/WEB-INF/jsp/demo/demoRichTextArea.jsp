@@ -9,7 +9,7 @@
 		<ui:form id="form">
 			<ui:component>
 				<ui:formElement id="richArea">
-								<ui:richtextarea cols="100" rows="20"/>
+                    <ui:richTextarea cols="100" rows="20"/>
 				</ui:formElement>
 
 

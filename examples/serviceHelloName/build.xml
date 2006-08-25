@@ -16,6 +16,7 @@
 	<path id="classpath.jetty">
 		<fileset dir="../lib/jetty" includes="*.jar" />
 		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
+		<pathelement location="${env.ANT_HOME}/lib/ant.jar" />
 	</path>
 	
 	<taskdef

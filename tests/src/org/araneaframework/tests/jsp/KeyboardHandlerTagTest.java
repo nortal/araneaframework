@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.jsp.tests;
+package org.araneaframework.tests.jsp;
 
 import junit.framework.TestCase;
 import org.araneaframework.jsp.tag.basic.BaseKeyboardHandlerTag;

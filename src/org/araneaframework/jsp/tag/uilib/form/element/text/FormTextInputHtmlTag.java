@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.uilib.form.control.TextControl;
 
-
 /**
  * Standard text input form element tag.
  * 
@@ -32,28 +31,22 @@ import org.araneaframework.uilib.form.control.TextControl;
  *   body-content = "JSP"
  *   description = "Form text input field, represents UiLib "TextControl"."
  */
-public class FormTextInputHtmlTag extends BaseFormValidatingTextInputHtmlTag {
-        
-  //
-  // Implementation
-  //  
-  
+public class FormTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected int doEndTag(Writer out) throws Exception {
-		// Type check
-		assertControlType("TextControl");
-        
-		TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
-		
+    // Type check
+    assertControlType("TextControl");
+
+    TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
+
     // Write
-		Map attributes = new HashMap();
-		attributes.put("maxLength", viewModel.getMaxLength());
+    Map attributes = new HashMap();
+    attributes.put("maxLength", viewModel.getMaxLength());
     writeTextInput(out, "text", true, attributes);
-    writeTextInputValidation(out);		
-    
+
     // Continue
     super.doEndTag(out);
     return EVAL_PAGE;
-	}
+  }
 }
 
 
