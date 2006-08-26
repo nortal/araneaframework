@@ -40,17 +40,10 @@ import org.xml.sax.SAXException;
 
 public class LightweightJspServlet extends HttpServlet {
   private static final Logger log = Logger.getLogger(LightweightJspServlet.class);
-  
-  private TldLocationsCache tldLocationsCache;
 
   // URI -> Map<TagInfo>
   private Map taglibs = new HashMap();
 
-  public void init() throws ServletException {
-    super.init();
-
-    tldLocationsCache = new TldLocationsCache(getServletContext());
-  }
 
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     try {
@@ -272,7 +265,7 @@ public class LightweightJspServlet extends HttpServlet {
 
   private Map getTagMap(String uri) {
     if (!taglibs.containsKey(uri)) {
-      String[] locations = tldLocationsCache.getLocation(uri);
+      String[] locations = TldLocationsCache.getInstance(getServletContext()).getLocation(uri);
 
       if (locations != null) {
         String tldLoc = locations[1] == null ? locations[0] : locations[1];

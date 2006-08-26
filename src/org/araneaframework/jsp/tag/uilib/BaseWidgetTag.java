@@ -27,7 +27,7 @@ public class BaseWidgetTag extends BaseTag {
   }
 
   public int doStartTag(Writer out) throws Exception {
-    this.doStartTag(out);
+    super.doStartTag(out);
   
     container = (UiWidgetContainer) requireContextEntry(UiWidgetContainer.REQUEST_CONTEXT_KEY);
   

@@ -684,6 +684,12 @@
             <colspec colwidth="5*"/>
             <thead>
               <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
                 <entry>widget</entry>
                 <entry>The widget instance. Can be used to access JavaBean property data from the widget 
                 (e.g. <literal>${widget.foo}</literal> will translate to a <literal>getFoo()</literal> widget call}.</entry>

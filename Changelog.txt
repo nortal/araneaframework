@@ -1,5 +1,26 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2006.08.25    | Aranea 1.0-RC1
+
+Features and Improvements
+        Support for external linking (hard URL links to application parts)    | See #17
+        Support for opening application links in new window                   | See #42
+        Cleaner Lists API                                                     | See #50, #122, #160, #223
+        Aranea class naming and packaging policy was written down
+        in dev/aranea-development-guide.odt and many packages and classes     | See #134, #204, #206, #207, #209
+        were named accordingly 
+        Javascript API was rewritten, outdated validation scripts removed     | See #151
+        Memory use decreased up to 60%, some memory leaks fixed               | See #197, #211, #210                
+
+Bugfixes
+        Removed the nonworking FloatControl validation                        | See #38, #124, #166
+        SessionListener definition from tlds was removed                      | See #218
+        Aranea should not download DTD-s and TLDs anymore                     | See #196
+        A security issue concerning DisplayTags was fixed                     | See #202
+
+API Changes
+        Numerous, because of package renames and established naming policy
+
 2006.07.07    | Aranea 1.0-M4
 
 Features and Improvements

@@ -50,7 +50,6 @@ import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
   private static final Logger log = Logger.getLogger(StandardJspFilterService.class);
-  protected static TldLocationsCache tldLocationsCache;
 
   // URI -> Map<TagInfo>
   private Map taglibs = new HashMap();
@@ -77,10 +76,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   protected void init() throws Exception {
     super.init();
-    
-    if (tldLocationsCache == null)
-      tldLocationsCache = new TldLocationsCache(
-			(ServletContext) getEnvironment().getEntry(ServletContext.class));
+
     loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
   }
   
@@ -130,7 +126,9 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   public Map getTagMap(String uri) {
     if (!taglibs.containsKey(uri)) {
-      String[] locations = tldLocationsCache.getLocation(uri);
+      ServletContext ctx = 
+        (ServletContext) getEnvironment().getEntry(ServletContext.class);
+      String[] locations = TldLocationsCache.getInstance(ctx).getLocation(uri);
       if (locations != null) {
         URL realLoc = null;        
         
