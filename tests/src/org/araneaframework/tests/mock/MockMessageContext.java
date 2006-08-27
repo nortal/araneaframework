@@ -35,4 +35,13 @@ public class MockMessageContext implements MessageContext {
 
   public void clearMessages() {
   }
+
+  public void clearAllMessages() {
+  }
+
+  public void clearPermanentMessages() {
+  }
+
+  public void showPermanentMessage(String type, String message) {
+  }
 }
