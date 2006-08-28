@@ -80,9 +80,13 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
    */
   protected void render(OutputData output) throws Exception {
     if (permanentMessages != null) {
+      if (messages == null && permanentMessages.size() > 0)
+        messages = new LinkedMap();
+
       for (Iterator i = permanentMessages.entrySet().iterator(); i.hasNext();) {
         Map.Entry entry = (Map.Entry)i.next();
         Collection typedMessages = (Collection)messages.get(entry.getKey());
+
         if (typedMessages == null)
           messages.put(entry.getKey(), entry.getValue());
         else
