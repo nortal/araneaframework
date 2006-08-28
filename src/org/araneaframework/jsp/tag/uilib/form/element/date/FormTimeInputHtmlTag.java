@@ -3,7 +3,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.date;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
-import java.util.Date;
+import java.util.Calendar;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.TimeControl;
@@ -38,13 +38,14 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
         localizedLabel, timeInputSize, viewModel.isDisabled(),
         accessKey);
 
-    Date currentTime = null;
     Integer minute = null, hour = null;
     try {
       if (viewModel.getSimpleValue() != null) {
-   	    currentTime = viewModel.getCurrentSimpleDateTimeFormat().parse(viewModel.getSimpleValue());
-  	    hour = new Integer(currentTime.getHours());
-        minute = new Integer(currentTime.getMinutes());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(viewModel.getCurrentSimpleDateTimeFormat().parse(viewModel.getSimpleValue()));
+
+  	    hour = new Integer(calendar.get(Calendar.HOUR_OF_DAY));
+   	    minute = new Integer(calendar.get(Calendar.MINUTE));
       }
     } catch (ParseException e) {	}
     writeHourSelect(out, name, systemFormId, viewModel.isDisabled(), hour);
