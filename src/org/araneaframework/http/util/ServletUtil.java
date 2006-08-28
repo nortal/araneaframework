@@ -89,7 +89,7 @@ public abstract  class ServletUtil {
     return (HttpInputData) req.getAttribute(InputData.INPUT_DATA_KEY);
   }
   
-  public static HttpOutputData getOutputOData(ServletRequest req) {
+  public static HttpOutputData getOutputData(ServletRequest req) {
     return (HttpOutputData) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
   }
 }
