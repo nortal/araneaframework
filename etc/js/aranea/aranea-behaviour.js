@@ -46,16 +46,19 @@ function setCloningUrl(el) {
 
     var url = new String();
     url = getActiveAraneaPage().getServletURL();
-	url += "?pleaseClone=true"
+    url = getActiveAraneaPage().encodeURL(url);
+
+    url += "?pleaseClone=true";
+    url += "&topServiceId=" + systemForm['topServiceId'].value;
     url += "&threadServiceId=" + systemForm['threadServiceId'].value;
 
-	if (eventId)
+    if (eventId)
       url += "&widgetEventHandler=" + eventId;
-	if (eventParam)  
+    if (eventParam)  
       url += "&widgetEventParameter=" + eventParam;
-	if (eventTarget)
+    if (eventTarget)
       url += "&widgetEventPath="+ eventTarget;
-
+      
     el['href'] = "javascript:window.location='"+ url + "';";
 }
 

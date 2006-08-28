@@ -31,7 +31,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class LayoutTag extends BaseLayoutTag {
+public class LayoutHtmlTag extends BaseLayoutTag {
   protected String width;
 	
   protected int doStartTag(Writer out) throws Exception {

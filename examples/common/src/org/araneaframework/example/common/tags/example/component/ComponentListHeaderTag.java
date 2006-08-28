@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
-import org.araneaframework.jsp.tag.layout.LayoutRowTag;
+import org.araneaframework.jsp.tag.layout.LayoutRowHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -41,7 +41,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  *   description = "Inside this tag list header should be written out." 
  */
 
-public class ComponentListHeaderTag extends LayoutRowTag {
+public class ComponentListHeaderTag extends LayoutRowHtmlTag {
   public final static String ORDER_EVENT_ID = "order";
   public final static String COMPONENT_LIST_STYLE_CLASS = "data";
   

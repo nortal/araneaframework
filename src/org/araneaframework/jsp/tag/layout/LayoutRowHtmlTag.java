@@ -30,7 +30,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class LayoutRowTag extends BaseLayoutRowTag {
+public class LayoutRowHtmlTag extends BaseLayoutRowTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 

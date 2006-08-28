@@ -116,7 +116,10 @@ function AraneaPage() {
   var servletURL = null;
   this.getServletURL = function() { return servletURL; }
   this.setServletURL = function(url) { servletURL = new String(url); }
-  
+
+  /* If servlet URL is not enough for some purposes, encoding function should be overwritten. */
+  this.encodeURL = function(url) { return url; }
+
   /* Indicates whether the page is completely loaded or not. Page is considered to 
    * be loaded when all system onload events have completed execution. */
   var loaded = false;
@@ -236,6 +239,10 @@ function AraneaPage() {
       this.getDebugDiv().appendChild(document.createElement("br"));
       this.getDebugDiv().appendChild(document.createTextNode(message));
     }
+  }
+  
+  this.override = function(functionName, f) {
+  	this[functionName] = f;
   }
 }
 

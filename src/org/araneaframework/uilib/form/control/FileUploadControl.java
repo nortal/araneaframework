@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form.control;
 
 import java.util.List;
 import org.apache.commons.fileupload.FileItem;
+import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.http.FileUploadInputExtension;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.support.FileInfo;
@@ -74,8 +75,21 @@ public class FileUploadControl extends BaseControl {
    * Reads the {@link FileInfo}data from request using the {@link MultipartWrapper}.
    */
   protected void readFromRequest(HttpInputData request) {
-    FileUploadInputExtension fileUpload = 
-      (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);    
+    FileUploadInputExtension fileUpload = null;
+	try {
+       fileUpload = (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);
+	} catch (NoSuchNarrowableException e) {
+      // If no fileupload extension is present, though fileupload filter is active, control should 
+      // just sit there and be beautiful.
+      // TODO: nice way to detect whether fileupload filter is present, if not rethrow exception. 
+
+      // Motivation: when one opens fileuploaddemo in new window (cloning!), exception occurs b/c 
+      // FileUploadInputExtension extension does not exist in InputData which is 
+      // extended only when request is multipart, while cloning filter always sends ordinary GET.
+	}
+
+    if (fileUpload == null)
+      return;
     
   	if (fileUpload.getUploadedFile(request.getScope().toString())!= null) {
       FileItem file = fileUpload.getUploadedFile(request.getScope().toString());

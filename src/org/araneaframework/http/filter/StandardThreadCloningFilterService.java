@@ -105,7 +105,8 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     clone._getService().action(path, input, output);
     
     // redirect to URL where cloned service resides
-    ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), cloneServiceId));
+    HttpOutputData out = (HttpOutputData) getOutputData();
+    out.sendRedirect(out.encodeURL((getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), cloneServiceId))));
   }
 
   protected void init() throws Exception {

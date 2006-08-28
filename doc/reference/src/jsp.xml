@@ -1055,11 +1055,11 @@
   <ui:widgetContext>
     <h3>Test widget</h3>
     
-    Data field: <c:out value="${contextWidget.data.myData.field}"/>
+    Data field: <c:out value="${viewData.myData.field}"/>
     <ui:eventButton labelId="#Test" eventId="test"/>      
   </ui:widgetContext>
 </jsp:root>]]></programlisting>
-    We can use just usual JSTL Core library tags to access the widget data, as long as the <literal><![CDATA[<ui:widgetContext>]]></literal> is present via the <literal>contextWidget.data</literal> EL variable.
+    We can use just usual JSTL Core library tags to access the widget view data, as long as the <literal><![CDATA[<ui:widgetContext>]]></literal> is present via the <literal>viewData</literal> EL variable.
     </para>
   </sect1>
   
