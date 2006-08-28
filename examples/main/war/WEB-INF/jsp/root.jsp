@@ -23,6 +23,7 @@
 
 	                    <div id="cont1">
 	                        <ui:systemForm method="POST">
+	                        <ui:registerScrollHandler/>
 	                        <ui:registerPopups/>
 	                        
 							<!-- Renders the menu on top of the screen -->
