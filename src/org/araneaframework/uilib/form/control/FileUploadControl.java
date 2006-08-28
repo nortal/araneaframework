@@ -79,7 +79,10 @@ public class FileUploadControl extends BaseControl {
 	try {
        fileUpload = (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);
 	} catch (NoSuchNarrowableException e) {
-      // If no fileupload extension is present, control should just sit there and be beautiful.
+      // If no fileupload extension is present, though fileupload filter is active, control should 
+      // just sit there and be beautiful.
+      // TODO: nice way to detect whether fileupload filter is present, if not rethrow exception. 
+
       // Motivation: when one opens fileuploaddemo in new window (cloning!), exception occurs b/c 
       // FileUploadInputExtension extension does not exist in InputData which is 
       // extended only when request is multipart, while cloning filter always sends ordinary GET.
