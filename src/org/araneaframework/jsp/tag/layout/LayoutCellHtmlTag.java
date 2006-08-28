@@ -31,7 +31,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class LayoutCellTag extends BaseLayoutCellTag {
+public class LayoutCellHtmlTag extends BaseLayoutCellTag {
   protected String cellTag = "td";
   protected String colspan;
   protected String rowspan;

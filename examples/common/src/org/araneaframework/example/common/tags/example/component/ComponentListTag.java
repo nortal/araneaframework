@@ -16,7 +16,7 @@
 
 package org.araneaframework.example.common.tags.example.component;
 
-import org.araneaframework.jsp.tag.layout.LayoutTag;
+import org.araneaframework.jsp.tag.layout.LayoutHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -26,7 +26,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   body-content = "JSP"
  *   description = "Starts a container that is suitable for inserting &lt;listRows&gt;"
  */
-public class ComponentListTag extends LayoutTag {
+public class ComponentListTag extends LayoutHtmlTag {
   public final static String COMPONENT_LIST_STYLE_CLASS = "data";
   public final static String COMPONENT_LIST_EVEN_ROW_CLASS = "even";
 
