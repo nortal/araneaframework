@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.uilib.form;
 import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
-import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.uilib.form.FormWidget;
 
 

@@ -102,10 +102,6 @@ public class StandardServletInputData implements HttpInputData {
     path = new StringBuffer(req.getPathInfo() == null ? "" : req.getPathInfo());
     pathPrefixes = new LinkedList();
   }
-  
-  private HttpServletRequest getRequest() {
-    return ServletUtil.getRequest(this);
-  }
 
   public Path getScope() {
     return new StandardPath(scopeBuf.toString());

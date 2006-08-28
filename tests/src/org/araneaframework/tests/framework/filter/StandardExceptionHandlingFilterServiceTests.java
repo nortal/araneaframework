@@ -25,7 +25,6 @@ import org.araneaframework.Service;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService;
-import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.mock.MockLifeCycle;
