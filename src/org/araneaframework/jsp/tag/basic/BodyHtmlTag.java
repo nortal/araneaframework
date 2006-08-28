@@ -78,8 +78,11 @@ public class BodyHtmlTag extends PresentationTag {
    */
   protected void writeAfterBodyStartScripts(Writer out) throws Exception {
     String servletUrl =
-        ServletUtil.getInputData(pageContext.getRequest()).getContainerURL(); 
-	  
+        ServletUtil.getInputData(pageContext.getRequest()).getContainerURL();
+    
+    String encodedServletUrl = 
+    	ServletUtil.getOutputData(pageContext.getRequest()).encodeURL(servletUrl);
+
     JspUtil.writeOpenStartTag(out, "script");
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeCloseStartTag_SS(out);
@@ -88,6 +91,12 @@ public class BodyHtmlTag extends PresentationTag {
     out.write(servletUrl);
     out.write("');");
     
+    if (!servletUrl.equals(encodedServletUrl)) {
+      String urlSuffix = encodedServletUrl.substring(servletUrl.length());
+      String function = "function(url) { return (url + '" + urlSuffix + "'); }";
+      out.write("getActiveAraneaPage().override('encodeURL'," + function + ");");
+    }
+
     Locale locale = getLocalizationContext().getLocale();
 
     out.write("getActiveAraneaPage().setLocale(new AraneaLocale('");
