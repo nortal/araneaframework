@@ -34,7 +34,7 @@
 	                             <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
 	 
 	                             <div id="content">
-	                             	<ui:updateRegion globalId="messageRegion">
+	                             	<ui:updateRegion globalId="messages">
 		                               <ui:messages type="info"/>
 	                                   <ui:messages type="error" styleClass="msg-error"/>
                                     </ui:updateRegion>
