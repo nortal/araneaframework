@@ -30,14 +30,14 @@ public class NullConverter implements Converter {
 		this.notNullConverter = notNullConverter;
 	}
 
-	public Object convert(Object data) throws ConvertionException {
+	public Object convert(Object data) throws ConversionException {
 		if (data == null) {
 			return null;
 		}
 		return this.notNullConverter.convert(data);
 	}
 
-	public Object reverseConvert(Object data) throws ConvertionException {
+	public Object reverseConvert(Object data) throws ConversionException {
 		if (data == null) {
 			return null;
 		}
