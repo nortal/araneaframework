@@ -1152,6 +1152,11 @@
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Cell css class, defines the way the cell will be rendered.</entry>
               </row>
+              <row>
+                <entry>overrideLayout</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that determines whether row's own styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
@@ -1204,7 +1209,12 @@
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Cell css class, defines the way the cell will be rendered.</entry>
-              </row> 
+              </row>
+              <row>
+                <entry>overrideLayout</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that determines whether cells's own styleClass completely overrides styleClass provided by surrounding layout or row (default behaviour), or is appended to layout's or row's styleClass.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>

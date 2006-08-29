@@ -19,10 +19,12 @@ package org.araneaframework.jsp.tag.layout.support;
 import javax.servlet.jsp.JspException;
 
 /**
+ * Interface that is implemented by tags that provide class to cells inside them.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface CellClassProvider {
-  public static final String KEY = "org.araneaframework.jsp.tag.layout.CellClassProvider.KEY";
+  public static final String KEY = "org.araneaframework.jsp.tag.layout.support.CellClassProvider.KEY";
 
   public String getCellClass() throws JspException;
 }
