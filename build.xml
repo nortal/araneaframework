@@ -226,6 +226,7 @@
 	<target name="javadoc">
 		<mkdir dir="dist/doc/javadoc/" />
 		<javadoc 
+			encoding="UTF-8"
 			packagenames="org.araneaframework.*" 
 			sourcepath="src"
 			destdir="dist/doc/javadoc/">

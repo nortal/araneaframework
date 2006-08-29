@@ -269,7 +269,7 @@ public class PopupWindowProperties implements Serializable {
 	/**
 	 * Sets the width of the dialog window (see Remarks for default unit of measure).
 	 * Applicable to modal and modeless popups.
-	 * @param dialogHeight
+	 * @param dialogWidth
 	 */
 	public void setDialogWidth(String dialogWidth) {
 		propertyMap.put("dialogWidth", dialogWidth);
@@ -282,7 +282,7 @@ public class PopupWindowProperties implements Serializable {
 	/**
 	 * Sets the left position of the dialog window relative to the upper-left corner of the desktop.
 	 * Applicable to modal and modeless popups.
-	 * @param dialogHeight
+	 * @param dialogLeft
 	 */
 	public void setDialogLeft(String dialogLeft) {
 		propertyMap.put("dialogLeft", dialogLeft);
@@ -295,7 +295,7 @@ public class PopupWindowProperties implements Serializable {
 	/**
 	 * Sets the left position of the dialog window relative to the upper-left corner of the desktop.
 	 * Applicable to modal and modeless popups.
-	 * @param dialogHeight
+	 * @param dialogTop
 	 */
 	public void setDialogTop(String dialogTop) {
 		propertyMap.put("dialogTop", dialogTop);

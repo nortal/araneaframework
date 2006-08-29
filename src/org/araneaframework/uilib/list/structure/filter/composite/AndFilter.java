@@ -26,18 +26,19 @@ import org.araneaframework.uilib.list.structure.filter.MultiFilter;
 
 
 public class AndFilter extends MultiFilter {
-	private static final long serialVersionUID = 1L;
-	
-	private static final Logger log = Logger.getLogger(AndFilter.class);
+  private static final long serialVersionUID = 1L;
+  
+  private static final Logger log = Logger.getLogger(AndFilter.class);
 
-	public Expression buildExpression(Map data) {
-		log.debug("Building Expression, data = " + data);
-		AndExpression expr = new AndExpression();
-		for (Iterator i = this.children.iterator(); i.hasNext();) {
-			ListFilter filter = (ListFilter) i.next();
-			Expression childExpr = filter.buildExpression(data);
-			expr.add(childExpr);
-		}
-		return expr;
-	}
+  public Expression buildExpression(Map data) {
+    if (log.isDebugEnabled())
+      log.debug("Building Expression, data = " + data);
+    AndExpression expr = new AndExpression();
+    for (Iterator i = this.children.iterator(); i.hasNext();) {
+      ListFilter filter = (ListFilter) i.next();
+      Expression childExpr = filter.buildExpression(data);
+      expr.add(childExpr);
+    }
+    return expr;
+  }
 }

@@ -16,6 +16,9 @@
 
 package org.araneaframework.uilib.list.util.converter;
 
+/**
+ * Exception thrown when conversion fails, thrown by {@link org.araneaframework.uilib.list.util.Converter}.
+ */
 public class ConversionException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	public ConversionException() {

@@ -61,12 +61,12 @@ public class UiEvent {
   /** returns the event attributes in form suitable for outputting to HTML */
   public StringBuffer getEventAttributes() {
     StringBuffer result = new StringBuffer();
-    result.append(AraneaAttributes.EVENT_ID).append("=\"").append(getId()).append("\" ");
+    result.append(AraneaAttributes.Event.ID).append("=\"").append(getId()).append("\" ");
 
     if (getTarget() != null)
-      result.append(AraneaAttributes.TARGET_WIDGET_ID).append("=\"").append(getTarget()).append("\" ");
+      result.append(AraneaAttributes.Event.TARGET_WIDGET_ID).append("=\"").append(getTarget()).append("\" ");
     if (getParam() != null)
-      result.append(AraneaAttributes.EVENT_PARAM).append("=\"").append(getParam()).append("\"");
+      result.append(AraneaAttributes.Event.PARAM).append("=\"").append(getParam()).append("\"");
 
     return result;
   }

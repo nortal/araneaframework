@@ -19,6 +19,10 @@ import java.io.Serializable;
 import org.araneaframework.Widget;
 
 /**
+ * Widget that has at least single child and acts as a guardian, deciding
+ * which data should be let through to children and what services should
+ * they be allowed to use.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FilterWidget extends Serializable, Widget{
