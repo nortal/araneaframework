@@ -19,6 +19,9 @@ package org.araneaframework.uilib;
 import java.io.Serializable;
 
 /**
+ * Configuration context for Uilib widgets Aranea JSP tags. Defined constants
+ * are the keys under which some existing widgets or tags search their configuration.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ConfigurationContext extends Serializable {
@@ -80,7 +83,7 @@ public interface ConfigurationContext extends Serializable {
   public static final String AUTO_COMPLETE_RESPONSE_BUILDER = "uilib.widgets.AutoCompleteTextControl.DefaultResponseBuilder";
   
   /**
-   * Returns a configuration entry.
+   * Returns a configuration entry with given name.
    */
   public Object getEntry(String entryName);
 }

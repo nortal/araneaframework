@@ -18,14 +18,12 @@ package org.araneaframework.jsp.exception;
 
 import javax.servlet.jsp.JspException;
 
-
 /**
- * UI Exception.
+ * Exception thrown by Aranea JSP tags.
  * 
  * @author Oleg Mürk 
  */
 public class AraneaJspException extends JspException {
-	
 	public AraneaJspException() {
 		super();
 	}

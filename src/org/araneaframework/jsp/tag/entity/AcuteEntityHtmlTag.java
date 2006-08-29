@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.entity;
 
 /**
- * Entity tag.
+ * Acute Entity &acute; tag. 
  * 
  * @author Oleg Mürk
  * 

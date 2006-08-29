@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.entity;
 
 /**
- * Entity tag.
+ * Copyright entity &copyright; tag.
  * 
  * @author Oleg Mürk
  * 

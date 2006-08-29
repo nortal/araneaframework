@@ -16,8 +16,10 @@
 
 package org.araneaframework.jsp.exception;
 
-
 /**
+ * Exception thrown when some tat that expects to operate with form element has not been given
+ * formelement id, nor cannot the id deduced from pagecontext. 
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class MissingFormElementIdAraneaJspException extends AraneaJspException {
