@@ -26,7 +26,7 @@ import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.support.FlowCreator;
 
 /**
- * Aranea Template Application menu(item).
+ * Aranea UiLib menu(item).
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class MenuItem implements Serializable {
