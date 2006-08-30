@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.backend.list.helper;
 
@@ -28,27 +28,26 @@ import java.io.Serializable;
  * 
  */
 public class NullValue implements Serializable {
-  private int type;
-  
-  public NullValue(int type) {
-    this.type = type;
-  }
-  
-  
-  /**
-   * Returns the type.
-   * @return the type.
-   */
-  public int getType() {
-    return this.type;
-  }
+	private int type;
 
-  /**
-   * Sets the type.
-   * @param type type.
-   */
-  public void setType(int type) {
-    this.type = type;
-  }
+	public NullValue(int type) {
+		this.type = type;
+	}
+
+	/**
+	 * Returns the type.
+	 * @return the type.
+	 */
+	public int getType() {
+		return this.type;
+	}
+
+	/**
+	 * Sets the type.
+	 * @param type type.
+	 */
+	public void setType(int type) {
+		this.type = type;
+	}
 
 }
