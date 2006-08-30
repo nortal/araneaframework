@@ -64,7 +64,7 @@
 					<!-- another row, and we just keep on going until all form elements have been described. -->
 					<ui:row>
 						<ui:formElement id="dateTime">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 

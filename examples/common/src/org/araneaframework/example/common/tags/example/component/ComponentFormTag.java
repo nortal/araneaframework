@@ -16,7 +16,12 @@
 
 package org.araneaframework.example.common.tags.example.component;
 
+import java.io.Writer;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.layout.LayoutHtmlTag;
+import org.araneaframework.jsp.tag.layout.support.CellClassProvider;
+import org.araneaframework.jsp.tag.uilib.form.FormElementTag;
+import org.araneaframework.uilib.form.FormElement;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -29,5 +34,37 @@ public class ComponentFormTag extends LayoutHtmlTag {
 
   {
     styleClass = ComponentFormTag.COMPONENT_FORM_STYLE_CLASS;
+  }
+  
+  protected int doStartTag(Writer out) throws Exception {
+    int result = super.doStartTag(out);
+    addContextEntry(CellClassProvider.KEY, new ErrorMarkingCellClassProvider());
+
+    return result;
+  }
+
+  /**
+   * CellClassProvider that marks cells containing non-valid FormElements with "error" class.
+   * This depends on <ui:formElement> tags used outside of cells:
+   * <pre>
+   *    &lt;ui:formElement id="someId"&gt;&lt;ui:cell&lt;...&gt;/ui:cell&lt;&gt;/ui:formElement&lt;
+   * </pre>
+   * 
+   * and not
+   * 
+   * <pre>
+   *    &lt;ui:cell&gt; &lt;ui:formElement id="someId"&gt;... &lt;/ui:formElement&gt;&lt;ui:cell&gt;
+   * </pre>
+   * 
+   * @author Taimo Peelo
+   */
+  public class ErrorMarkingCellClassProvider implements CellClassProvider {
+    public String getCellClass() throws JspException {
+      FormElement.ViewModel formElementViewModel = (FormElement.ViewModel)ComponentFormTag.this.getContextEntry(FormElementTag.VIEW_MODEL_KEY);
+      if (formElementViewModel != null && !formElementViewModel.isValid()) 
+        return ComponentFormTag.this.getCellClass() + " error";
+
+      return ComponentFormTag.this.getCellClass();
+    }
   }
 }
