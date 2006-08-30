@@ -19,8 +19,8 @@ package org.araneaframework.uilib;
 import java.io.Serializable;
 
 /**
- * Configuration context for Uilib widgets Aranea JSP tags. Defined constants
- * are the keys under which some existing widgets or tags search their configuration.
+ * Configuration context for Uilib widgets. Defined constants
+ * are the keys under which some existing widgets search their configuration.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
