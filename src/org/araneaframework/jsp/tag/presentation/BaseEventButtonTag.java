@@ -35,6 +35,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
   protected String globalUpdateRegions;
 
   protected List updateRegionNames;
+  protected String target;
 
   protected UiUpdateEvent event;
   
@@ -52,7 +53,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
 
     updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
     event.setUpdateRegionNames(updateRegionNames);
-    event.setTarget(contextWidgetId);
+    event.setTarget(target == null ? contextWidgetId : target);
     event.setEventPrecondition(onClickPrecondition);
 
     return result;
@@ -101,6 +102,16 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
   public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
     this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Widget where event should be routed, default is contextwidget." 
+   */
+  public void setTarget(String target) throws JspException {
+    this.target = (String) evaluate("target", target, String.class);
+  }
 
   /**
    * @jsp.attribute
@@ -111,7 +122,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
   public void setDisabled(String disabled) throws JspException {
     this.disabled = (String)evaluate("disabled", disabled, String.class);
   }
-
+  
   public void doFinally() {
 	super.doFinally();
 	event.clear();
