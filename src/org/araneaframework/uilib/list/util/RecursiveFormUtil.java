@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.list.util;
 
 import java.io.Serializable;
+
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
@@ -151,7 +152,7 @@ public class RecursiveFormUtil {
 				subForm = form.addSubForm(subFormId);        	
 			}
 
-			return adder.addFormElement(subForm, nextFullId);
+			return addElement(subForm, nextFullId, adder);
 		}
 
 		return adder.addFormElement(form, fullId);
@@ -171,7 +172,7 @@ public class RecursiveFormUtil {
 				subForm = form.addBeanSubForm(subFormId);        	
 			}
 
-			return adder.addFormElement(subForm, nextFullId);
+			return addBeanElement(subForm, nextFullId, adder);
 		}
 
 		return adder.addFormElement(form, fullId);
