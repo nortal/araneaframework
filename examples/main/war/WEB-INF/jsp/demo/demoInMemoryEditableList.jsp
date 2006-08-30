@@ -16,9 +16,11 @@
 							<ui:cell styleClass="center">
 								<ui:checkbox id="booleanField" />
 							</ui:cell>
-							<ui:cell>
-								<ui:textInput id="stringField" />
-							</ui:cell>
+							<ui:formElement id="stringField">
+								<ui:cell>
+									<ui:textInput/>
+								</ui:cell>
+							</ui:formElement>
 							<ui:formElement id="longField">
 								<ui:cell>
 									<ui:numberInput/>
@@ -39,9 +41,11 @@
 							<ui:cell styleClass="center">
 								<ui:checkbox id="booleanField" />
 							</ui:cell>
-							<ui:cell>
-								<ui:textInput id="stringField" size="40" />
-							</ui:cell>
+							<ui:formElement id="stringField">
+								<ui:cell>
+									<ui:textInput size="40" />
+								</ui:cell>
+							</ui:formElement>
 							<ui:formElement id="longField">
 								<ui:cell>
 									<ui:numberInput size="5" />
