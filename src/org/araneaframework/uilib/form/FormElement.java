@@ -20,6 +20,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.constraint.BaseConstraint;
@@ -225,8 +227,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************  	
   
   protected void update(InputData input) throws Exception {
-    if (isDisabled() || !isRendered()) return;
-	  
+    if (isDisabled() || !isRendered() || !wasFormSubmitted(input)) return;
+
     super.update(input);
     
     //There is only point to read from request if we have a control
@@ -234,6 +236,13 @@ public class FormElement extends GenericFormElement implements FormElementContex
       //Read the control
       getControl()._getWidget().update(input);
     }
+  }
+  
+  private static boolean wasFormSubmitted(InputData input) {
+    return 
+      input.getGlobalData().containsKey(TopServiceContext.TOP_SERVICE_KEY)
+        ||
+      input.getGlobalData().containsKey(ThreadContext.THREAD_SERVICE_KEY);
   }
 
   protected void handleProcess() throws Exception {
@@ -261,7 +270,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
           getControl().setRawValue(getConverter().reverseConvert(getData().getValue()));      
         }
         
-        getData().setValue(null);
+        // XXX: why would anyone want to set Data to null here
+        // getData().setValue(null);
         getData().clean();
       }      
 
