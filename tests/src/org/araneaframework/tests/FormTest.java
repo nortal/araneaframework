@@ -20,12 +20,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.StandardPath;
+import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.mock.MockInputData;
+import org.araneaframework.mock.MockOutputData;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.Control;
@@ -37,6 +40,7 @@ import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.control.TextareaControl;
 import org.araneaframework.uilib.form.converter.IdenticalConverter;
@@ -62,6 +66,11 @@ public class FormTest extends TestCase {
   
   public FormTest(String name) {
     super(name);
+  }
+  
+  private MockHttpServletRequest markRequestSubmitted(MockHttpServletRequest request) {
+    request.addParameter(ThreadContext.THREAD_SERVICE_KEY, "");
+    return request;
   }
 
   private FormWidget makeUsualForm() throws Exception {
@@ -145,6 +154,7 @@ public class FormTest extends TestCase {
     FormWidget hierarchyTest = (FormWidget) testForm.getElement("hierarchyTest");
 
     MockHttpServletRequest validRequest = new MockHttpServletRequest();
+    markRequestSubmitted(validRequest);
 
     //TODO: implement task 202 and remove __presents
     validRequest.addParameter("testForm.myCheckBox", (String) null);
@@ -165,13 +175,40 @@ public class FormTest extends TestCase {
 
     //Trying to read from a valid request
     StandardServletInputData input = new StandardServletInputData(validRequest);
+    
     input.pushScope("testForm");
+
+    // Test in lifecycle order, without calling event and render.
     testForm._getWidget().update(input);
+    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
+    testForm._getWidget().process();
+    testForm._getWidget().render(new MockOutputData());
+
+    input.popScope();
     
     Date reqDate = (new SimpleDateFormat("dd.MM.yyyy hh:mm")).parse("11.10.2015 01:01");
 
     //Checking that reading from request works
-    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
+    
+    assertTrue(testForm.getValueByFullName("myCheckBox").equals(Boolean.FALSE));
+    assertTrue(testForm.getValueByFullName("myLongText").equals(new Long(108)));
+    assertTrue(testForm.getValueByFullName("myDateTime").equals(reqDate));
+    assertTrue(hierarchyTest.getValueByFullName("mySelect").equals(new Long(2)));
+    assertTrue(hierarchyTest.getValueByFullName("myTextarea").equals("blah"));
+    
+    StringArrayRequestControl.ViewModel vm1 = 
+    	((StringArrayRequestControl.ViewModel)((CheckboxControl)testForm.getControlByFullName("myCheckBox")).getViewModel());
+    
+    assertTrue((Boolean.valueOf(vm1.getSimpleValue()).equals(Boolean.FALSE)));
+    
+    TextControl.ViewModel vm2 = 
+    	((TextControl.ViewModel)((TextControl)testForm.getControlByFullName("myLongText")).getViewModel());
+    assertTrue(Long.valueOf(vm2.getSimpleValue()).equals(new Long(108)));
+    
+    DateTimeControl.ViewModel vm3 = 
+    	((DateTimeControl.ViewModel)((DateTimeControl)testForm.getControlByFullName("myDateTime")).getViewModel());
+    //...
+    
 
     assertTrue(((FormElement) testForm.getElement("myCheckBox")).getData().getValue().equals(Boolean.FALSE));
     assertTrue(((FormElement) testForm.getElement("myLongText")).getData().getValue().equals(new Long(108)));
@@ -187,6 +224,7 @@ public class FormTest extends TestCase {
     FormWidget testForm = makeUsualForm();
 
     MockHttpServletRequest invalidRequest = new MockHttpServletRequest();
+    markRequestSubmitted(invalidRequest);
 
     invalidRequest.addParameter("testForm.myCheckBox", "ksjf");
     ((FormElement) testForm.getElement("myCheckBox")).rendered();
@@ -214,6 +252,8 @@ public class FormTest extends TestCase {
     FormWidget testForm = makeUsualForm();
 
     MockHttpServletRequest mandatoryMissingRequest = new MockHttpServletRequest();
+    
+    markRequestSubmitted(mandatoryMissingRequest);
 
     mandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
     mandatoryMissingRequest.addParameter("testForm.myLongText", "108");
@@ -237,6 +277,7 @@ public class FormTest extends TestCase {
     FormWidget testForm = makeUsualForm();
 
     MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
+    markRequestSubmitted(notMandatoryMissingRequest);
 
     notMandatoryMissingRequest.addParameter("testForm.myCheckBox", (String) null);
     ((FormElement)testForm.getElement("myCheckBox")).rendered();
@@ -265,6 +306,7 @@ public class FormTest extends TestCase {
     FormWidget testForm = makeUsualForm();
 
     MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
+    markRequestSubmitted(notMandatoryMissingRequest);
 
     notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
     ((FormElement)testForm.getElement("myCheckBox")).rendered();
@@ -302,6 +344,7 @@ public class FormTest extends TestCase {
     FormWidget testForm = makeUsualForm();
 
     MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
+    markRequestSubmitted(notMandatoryMissingRequest);
 
     notMandatoryMissingRequest.addParameter("testForm.__present", "true");
     notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
@@ -331,6 +374,7 @@ public class FormTest extends TestCase {
     FormWidget testForm = makeUsualForm();
 
     MockHttpServletRequest notMandatoryMissingRequest = new MockHttpServletRequest();
+    markRequestSubmitted(notMandatoryMissingRequest);
 
     notMandatoryMissingRequest.addParameter("testForm.__present", "true");
     notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
