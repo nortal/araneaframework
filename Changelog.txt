@@ -1,5 +1,26 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2006.09.01    | Aranea 1.0-RC2
+
+Features and Improvements
+        Additional methods in MessageContext                                  | See #233
+        javadoc has been cleaned up and updated                               | See #221
+
+Bugfixes
+        Opening links in new window did not work with url-encoded session IDs | See #234
+        Some buggy addElement methods were fixed (concerned list filters)     | See change #100
+        SqlStatement did not work with any DB besides HSQLDB anymore          | See change #101
+        FormElements erroneously lost state on page reload                    | See #237
+        FormElement action() marked FormElement as non-rendered               | See #232
+
+API Changes
+        LayoutTag -> LayoutHtmlTag
+        LayoutRowTag -> LayoutRowTag
+        LayoutCellTag -> LayoutCellTag
+        ConvertionException -> ConversionException
+        
+        ServletUtil.getOutputOData -> ServletUtil.getOutputData
+        
 2006.08.25    | Aranea 1.0-RC1
 
 Features and Improvements
