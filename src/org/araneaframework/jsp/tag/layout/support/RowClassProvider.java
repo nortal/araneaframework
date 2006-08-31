@@ -20,6 +20,7 @@ import javax.servlet.jsp.JspException;
 
 /**
  * Interface that is implemented by tags that provide class to rows inside them.
+ * Rows search {@link RowClassProvider} from {@link javax.servlet.jsp.PageContext} under {@link RowClassProvider#KEY}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
