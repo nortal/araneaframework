@@ -26,6 +26,7 @@ import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.mock.MockInputData;
+import org.araneaframework.mock.MockOutputData;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.Control;
@@ -37,6 +38,7 @@ import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.control.TextareaControl;
 import org.araneaframework.uilib.form.converter.IdenticalConverter;
@@ -165,13 +167,40 @@ public class FormTest extends TestCase {
 
     //Trying to read from a valid request
     StandardServletInputData input = new StandardServletInputData(validRequest);
+    
     input.pushScope("testForm");
+
+    // Test in lifecycle order, without calling event and render.
     testForm._getWidget().update(input);
+    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
+    testForm._getWidget().process();
+    testForm._getWidget().render(new MockOutputData());
+
+    input.popScope();
     
     Date reqDate = (new SimpleDateFormat("dd.MM.yyyy hh:mm")).parse("11.10.2015 01:01");
 
     //Checking that reading from request works
-    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
+    
+    assertTrue(testForm.getValueByFullName("myCheckBox").equals(Boolean.FALSE));
+    assertTrue(testForm.getValueByFullName("myLongText").equals(new Long(108)));
+    assertTrue(testForm.getValueByFullName("myDateTime").equals(reqDate));
+    assertTrue(hierarchyTest.getValueByFullName("mySelect").equals(new Long(2)));
+    assertTrue(hierarchyTest.getValueByFullName("myTextarea").equals("blah"));
+    
+    StringArrayRequestControl.ViewModel vm1 = 
+    	((StringArrayRequestControl.ViewModel)((CheckboxControl)testForm.getControlByFullName("myCheckBox")).getViewModel());
+    
+    assertTrue((Boolean.valueOf(vm1.getSimpleValue()).equals(Boolean.FALSE)));
+    
+    TextControl.ViewModel vm2 = 
+    	((TextControl.ViewModel)((TextControl)testForm.getControlByFullName("myLongText")).getViewModel());
+    assertTrue(Long.valueOf(vm2.getSimpleValue()).equals(new Long(108)));
+    
+    DateTimeControl.ViewModel vm3 = 
+    	((DateTimeControl.ViewModel)((DateTimeControl)testForm.getControlByFullName("myDateTime")).getViewModel());
+    //...
+    
 
     assertTrue(((FormElement) testForm.getElement("myCheckBox")).getData().getValue().equals(Boolean.FALSE));
     assertTrue(((FormElement) testForm.getElement("myLongText")).getData().getValue().equals(new Long(108)));
