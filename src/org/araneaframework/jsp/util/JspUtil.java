@@ -371,8 +371,6 @@ public class JspUtil {
   
   /**
    * Writes out hidden html input element with give name and value.
-   * 
-   * @author Nikita Salnikov-Tarnovski
    */ 
   public static void writeHiddenInputElement(Writer out, String name, String value) throws IOException {
     JspUtil.writeOpenStartTag(out, "input");
@@ -381,8 +379,7 @@ public class JspUtil {
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeCloseStartEndTag(out);
   }
-  
-  
+
   /**
    * Parses multi-valued attribute, where attributes are separated by commas.
    * Empty attribute values are allowed, they are specified by including whitespace

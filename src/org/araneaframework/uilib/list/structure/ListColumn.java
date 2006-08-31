@@ -20,8 +20,7 @@ import java.io.Serializable;
 
 
 /**
- * Base implementation of the (@link
- * org.araneaframework.uilib.widgets.lists.refactor.presentation.ListColumn).
+ * Base implementation of the {@link ListColumn}.
  */
 public class ListColumn implements Serializable {
 

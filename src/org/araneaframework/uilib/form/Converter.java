@@ -19,15 +19,17 @@ package org.araneaframework.uilib.form;
 import java.io.Serializable;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 
+/**
+ * Form data converter interface, for converting from one data type to another.
+ * See {@link BaseConverter} for description of {@link Converter} purpose in forms.
+ */
 public interface Converter extends Serializable, FormElementAware {
 
   public void setFormElementCtx(FormElementContext feCtx);
   
   /**
-   * This method converts the data from one type to another. If the data is <code>null</code>
-   * then <code>null</code> is returned. Otherwise {@link #convertNotNull(Object)}method is used
-   * for actual conversion.
-   * 
+   * This method converts the data from one type to another.
+   *  
    * @param data Data to convert.
    * @return Converted data.
    */
@@ -35,9 +37,7 @@ public interface Converter extends Serializable, FormElementAware {
 
   /**
    * This method converts the data from one type to another (though the types are exchanged in
-   * comparison with {@link #convert(Object)}). If the data is <code>null</code> then <code>null</code>
-   * is returned. Otherwise {@link #reverseConvertNotNull(Object)}method is used for actual
-   * conversion.
+   * comparison with {@link #convert(Object)}).
    * 
    * @param data Data to convert.
    * @return Converted data.

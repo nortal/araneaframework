@@ -26,7 +26,6 @@ import org.araneaframework.backend.util.BeanMapper;
 
 /**
  * Base class for value objects. Implements some general properties and methods.
- * <P/>
  * 
  * @author Jevgeni Kabanov
  * @since 1.4.1.20
@@ -146,7 +145,7 @@ public abstract class BaseBean implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Marks field of the value object as changed e.g. this field was changed after loading it from the database.
+	 * Marks field of the value object as changed eg this field was changed after loading it from the database.
 	 * <P/>
 	 * Useful when value objects are used for insert/update procedures written in PL/SQL instead of EJB methods.
 	 * <P/>

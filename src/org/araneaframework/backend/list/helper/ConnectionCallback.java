@@ -18,7 +18,6 @@ package org.araneaframework.backend.list.helper;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.resource.ResourceException;
 
 /**
  * Generic callback interface for code that operates on a CCI Connection.
@@ -32,10 +31,6 @@ import javax.resource.ResourceException;
  *
  * @author Thierry Templier
  * @author Juergen Hoeller
- * @since 1.2
- * @see CciTemplate#execute(ConnectionCallback)
- * @see CciTemplate#execute(javax.resource.cci.InteractionSpec, javax.resource.cci.Record)
- * @see CciTemplate#execute(javax.resource.cci.InteractionSpec, RecordCreator, RecordExtractor)
  */
 public interface ConnectionCallback {
 	/**
@@ -55,18 +50,7 @@ public interface ConnectionCallback {
 	 * variants. A thrown RuntimeException is treated as application exception:
 	 * it gets propagated to the caller of the template.
 	 *
-	 * @param connection active CCI Connection
-	 * @param connectionFactory the CCI ConnectionFactory that the Connection was
-	 * created with (gives access to RecordFactory and ResourceAdapterMetaData)
-	 * @return a result object, or null if none
-	 * @throws ResourceException if thrown by a CCI method, to be auto-converted
-	 * to a DataAccessException
-	 * @throws SQLException if thrown by a ResultSet method, to be auto-converted
-	 * to a DataAccessException
-	 * @throws DataAccessException in case of custom exceptions
-	 * @see javax.resource.cci.ConnectionFactory#getRecordFactory()
-	 * @see javax.resource.cci.ConnectionFactory#getMetaData()
-	 * @see CciTemplate#execute(javax.resource.cci.InteractionSpec, RecordCreator, RecordExtractor)
+	 * @param con active CCI Connection
 	 */
 	Object doInConnection(Connection con) throws SQLException;
 }

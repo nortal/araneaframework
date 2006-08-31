@@ -226,12 +226,14 @@
 	<target name="javadoc">
 		<mkdir dir="dist/doc/javadoc/" />
 		<javadoc 
-			encoding="UTF-8"
+			classpathref="classpath"
+			encoding="UTF8"
+			docencoding="UTF8"
 			packagenames="org.araneaframework.*" 
 			sourcepath="src"
 			destdir="dist/doc/javadoc/">
-			<tag name="jsp.tag" enabled="false"/>
-			<tag name="jsp.attribute" enabled="false"/>
+			<tag name="jsp.tag" enabled="false" casesensitive="false"/>
+			<tag name="jsp.attribute" enabled="false" casesensitive="false"/>
 		</javadoc>
 	</target>
 	
@@ -240,7 +242,7 @@
 		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="dist/doc/javadoc/"/>
 		
 		<zip destfile="dist/doc/javadoc.zip">
-				<zipfileset dir="dist/doc/javadoc" prefix="javadoc"/>
+			<zipfileset dir="dist/doc/javadoc" prefix="javadoc"/>
 		</zip>
 	</target>
 	

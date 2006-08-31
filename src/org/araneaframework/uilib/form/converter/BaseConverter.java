@@ -26,8 +26,7 @@ import org.araneaframework.uilib.form.FormElementContext;
  * This class is the base class for form converters. The converters' task is to convert the value
  * of form control to the value of form element data and back.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
- *  
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseConverter implements java.io.Serializable, Converter {
 

@@ -52,12 +52,12 @@ public interface ConfigurationContext extends Serializable {
   public static final String CUSTOM_CONVERTER_PROVIDER = "uilib.widgets.forms.converters.CustomConverterProvider";
   
   /**
-   * <code>Long</code> that controls the default size of the list (i.e. how many rows are show on one page).
+   * <code>Long</code> that controls the default size of the list (eg how many rows are shown on one page).
    */
   public static final String DEFAULT_LIST_ITEMS_ON_PAGE = "uilib.widgets.lists.DefaultListItemsOnPage";
   
   /**
-   * <code>Long</code> that controls the full size of the list (i.e. how many rows maximum may be shown at once).
+   * <code>Long</code> that controls the full size of the list (eg how many rows maximum may be shown at once).
    */
   public static final String FULL_LIST_ITEMS_ON_PAGE = "uilib.widgets.lists.FullListItemsOnPage";
   

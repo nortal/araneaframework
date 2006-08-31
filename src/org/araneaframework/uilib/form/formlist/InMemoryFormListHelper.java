@@ -47,15 +47,19 @@ public class InMemoryFormListHelper implements Serializable {
 	protected BaseFormListWidget formList;
 	
 	/**
-	 * @param initalData initial row objects.
-	 * @param rowHandler row handler used to query row object ids.
+	 * Constructs the helper for given <i>formList</i>, filling it with initial values.
+	 * 
+	 * @param formList
+	 * @param initialData initial row objects.
 	 */
-	public InMemoryFormListHelper(BaseFormListWidget formList, Collection initalData) {
+	public InMemoryFormListHelper(BaseFormListWidget formList, Collection initialData) {
     this.formList = formList;
     
-    for (Iterator i = initalData.iterator(); i.hasNext();) {
-      Object row = (Object) i.next();
-      current.put(formList.getFormRowHandler().getRowKey(row), row);
+    if (initialData != null) {
+      for (Iterator i = initialData.iterator(); i.hasNext();) {
+        Object row = (Object) i.next();
+        current.put(formList.getFormRowHandler().getRowKey(row), row);
+      }
     }
     
     formList.setFormRowHandler(

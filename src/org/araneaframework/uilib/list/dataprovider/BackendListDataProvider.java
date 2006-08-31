@@ -26,7 +26,6 @@ import org.araneaframework.backend.list.model.ListQuery;
  * used with SQL- or PL/SQL-based lists.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public abstract class BackendListDataProvider implements ListDataProvider {
 	
@@ -67,10 +66,7 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 	}
 
 	/**
-	 * This method should be used to receive the filter of the list.
-	 * 
-	 * @param filterExpr
-	 *            the filter of the list.
+	 * Sets the filter of the list.
 	 */
 	public void setFilterExpression(Expression filterExpr) {
 		this.filterExpr = filterExpr;
@@ -79,10 +75,7 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 	}
 
 	/**
-	 * This method should be used to receive the current ordering info.
-	 * 
-	 * @param orderInfo
-	 *            the current ordering info.
+	 * Sets the order of the list.
 	 */
 	public void setOrderExpression(ComparatorExpression orderExpr) {
 		this.orderExpr = orderExpr;
@@ -143,22 +136,8 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 	}
 
 	/**
-	 * This method should be overidden to return a range of items from the list
-	 * data.
+	 * This method should be overidden to return a range of items from the list data.
 	 * 
-	 * @param startIdx
-	 *            the inclusive 0-based starting index of the item range.
-	 * @param count
-	 *            the amount of items to return.
-	 * @param filter
-	 *            the basic filter to use for range retrieval.
-	 * @param order
-	 *            the basic order to use for range retrieval.
-	 * @return a range of items from the list data provider.
-	 * 
-	 * @throws Exception
-	 *             item range retrieval does not succeed.
 	 */
-	protected abstract ListItemsData getItemRange(ListQuery query)
-			throws Exception;
+	protected abstract ListItemsData getItemRange(ListQuery query) throws Exception;
 }

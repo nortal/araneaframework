@@ -41,13 +41,13 @@ public interface PopupWindowContext extends Serializable {
    * @param startMessage - message sent to newly created service (thread).
    * @param properties - properties specifying behaviour and appearance of creatable popup window.
    * @param opener - widget that is registered as opener of created thread.
-   * @return
+   * @return threadlevel id of created and registered service
    */
   public String open(Message startMessage, PopupWindowProperties properties, Widget opener);
   
   /** 
    * Method for registering already created service under {@link org.araneaframework.framework.ThreadContext} as popup.
-   * @param idPrefix prefix for service id that will be associated with created window
+   * @param service to register.
    * @param properties properties specifying behaviour and appearance of creatable popup window. 
    * @param opener - widget that is registered as opener of created thread.
    * @return ID of created service.

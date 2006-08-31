@@ -546,14 +546,15 @@ public class BeanUtil {
 	}
 	
 	/**
-	 * Sets all the fields with same names to same values of a new 
-	 * <code>toType</code> instance.
+	 * Creates a new instance of Class <code>toType</code> and sets its field values to be
+	 * the same as given <code>from</code> Object. Only fields with same names that exist in
+	 * both <code>from</code> object and <code>toType</code> class are affected.
 	 * 
 	 * @param from
-	 *          <code>Bean</code> from which to convert.
-	 * @param to
-	 *          <code>Bean</code> to which to convert.
-	 * @return new instance of <code>toType</code> with <codefrom</code> values
+	 *          <code>Bean</code> from which to read field values.
+	 * @param toType
+	 *          <code>Class</code> which object instance to create.
+	 * @return new instance of <code>toType</code> with <code>from</code> values
 	 * 
 	 * @see #copy(Object, Object)
 	 * @see #clone() 

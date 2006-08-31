@@ -37,8 +37,6 @@ public abstract class JspScriptUtil {
   
   /**
    * Writes 'undefined' or object's string representation. 
-   *
-   * @author Konstantin Tretyakov
    */
   public static void writeObject(Writer out, Object o) throws IOException {
     out.write(o == null ? "undefined" : o.toString());

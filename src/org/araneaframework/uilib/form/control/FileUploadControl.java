@@ -28,16 +28,13 @@ import org.araneaframework.uilib.util.ErrorUtil;
 /**
  * This class represents an HTML form file upload control.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  *  
  */
 public class FileUploadControl extends BaseControl {
 
   protected List permittedMimeFileTypes;
 
-  /**
-   *  
-   */
   public boolean isRead() {
     return innerData != null;
   }
@@ -72,7 +69,7 @@ public class FileUploadControl extends BaseControl {
   }
 
   /**
-   * Reads the {@link FileInfo}data from request using the {@link MultipartWrapper}.
+   * Reads the {@link FileInfo}data from request {@link HttpInputData}.
    */
   protected void readFromRequest(HttpInputData request) {
     FileUploadInputExtension fileUpload = null;
@@ -109,9 +106,6 @@ public class FileUploadControl extends BaseControl {
     }
   }
 
-  /**
-   *  
-   */
   public void convert() {
     value = innerData;
 
@@ -138,8 +132,7 @@ public class FileUploadControl extends BaseControl {
   //*********************************************************************
 
   /**
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
-   *  
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   public class ViewModel extends BaseControl.ViewModel {
 

@@ -32,9 +32,9 @@ public interface AnyStringWildcardHandler {
 	void setStartsWith(boolean startsWith);
 	
 	/**
-	 * Must be set as the Like pattern emds with any string wildcard or not.
+	 * Must be set as the Like pattern ends with any string wildcard or not.
 	 * 
-	 * @param startsWith Like pattern ends with any string wildcard or not.
+	 * @param endsWith Like pattern ends with any string wildcard or not.
 	 */
 	void setEndsWith(boolean endsWith);
 	

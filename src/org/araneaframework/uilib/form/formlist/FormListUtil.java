@@ -145,12 +145,12 @@ public class FormListUtil {
 	}		
 	
 	/**
-	 * Decorates the current {@link FormRowHandler}
+	 * Decorates the current form lists {@link FormRowHandler}
 	 * propagating all changes to the specified {@link MemoryBasedListDataProvider} making them 
 	 * visible in the {@link EditableListWidget}. 
 	 * 
 	 * @param editableRows editable rows widget.
-	 * @param data data <code>Map</code>.
+	 * @param listDataProvider memory based data provider
 	 */	
 	public static void associateFormListWithMemoryBasedList(FormListWidget editableRows, MemoryBasedListDataProvider listDataProvider) {
 		editableRows.setFormRowHandler(

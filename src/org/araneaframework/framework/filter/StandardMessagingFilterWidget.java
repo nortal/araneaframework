@@ -62,7 +62,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   
   /**
    * Adds all the messages to the output as Map under the key 
-   * {@link org.araneaframework.framework.MessageContext.MESSAGE_KEY}. The keys
+   * {@link org.araneaframework.framework.MessageContext#MESSAGE_KEY}. The keys
    * of the Map are the different message types encountered so far and under the keys
    * are the messages in a Collection.
    *<p>

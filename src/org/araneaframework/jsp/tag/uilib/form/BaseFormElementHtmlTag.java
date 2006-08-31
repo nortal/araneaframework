@@ -241,10 +241,11 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	}
 	
 	/** 
-	 * Write a span with random id around the element, and register this span with javascript
-	 * @param elementName the name of the element for which the uiFormElementContext function will be invoked
-	 * @throws Exception 
+	 * Write a span with random id around the element, and register this span with javascript 
+	 * (done by external behaviour scripts, span functions as keyboard handler).
+	 * Default implementation does not use any parameters except <code>Writer</code> and <code>PageContext</code>.
 	 */
+
 	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
 		//  Enclose the element in a <span id=somerandomid>
 		String spanId = "fe-span-" + generateId(pageContext);
@@ -276,9 +277,9 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	}
 
 	/**
-	 * Generates an id, that is unique in request scope.
+	 * Generates an id, that is unique in PageContext.REQUEST_SCOPE.
 	 * @param pageContext
-	 * @return
+	 * @return generated id
 	 */
 	public static Long generateId(PageContext pageContext){
 		Long counter = (Long)pageContext.getAttribute(COUNTER_KEY, PageContext.REQUEST_SCOPE);

@@ -92,7 +92,7 @@ public class TextControl extends StringValueControl {
   //*********************************************************************  	
 	
   /**
-   * In case text control type is other than {@link UiTextType#TEXT} makes custom checks. 
+   * In case text control type is other than {@link TextType#TEXT} makes custom checks. 
    */
   protected void validateNotNull() {
     super.validateNotNull();

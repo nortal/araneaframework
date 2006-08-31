@@ -37,9 +37,8 @@ public class BeanFormListWidget extends BaseFormListWidget {
 	//*******************************************************************		
 
 	/**
-	 * @param id widget id.
-	 * @param enviroment resource provider.
 	 * @param rowHandler row handler.
+	 * @param beanClass Class of beans in form
 	 */
 	public BeanFormListWidget(FormRowHandler rowHandler, Class beanClass) {
 		this.formRowHandler = rowHandler;

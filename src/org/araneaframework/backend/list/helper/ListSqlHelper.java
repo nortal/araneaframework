@@ -59,8 +59,8 @@ import org.araneaframework.uilib.list.util.converter.DummyConverter;
  * is ordered and filtered items.
  * <p>
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
- * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public abstract class ListSqlHelper {
 
@@ -610,8 +610,8 @@ public abstract class ListSqlHelper {
 	 * </p>
 	 * <p>
 	 * To use additional custom filter (and order) conditions,
-	 * use {@link #setSimpleSqlQuery(String, String, List)} or
-	 * {@link #setSimpleSqlQuery(String, String, List, String, List)}
+	 * use {@link #setSimpleSqlQuery(String, String, Object[])} or
+	 * {@link #setSimpleSqlQuery(String, String, Object[], String, Object[])}
 	 * method. To use more complex query, use {@link #setSqlQuery(String)}
 	 * method.
 	 * </p>
@@ -641,7 +641,7 @@ public abstract class ListSqlHelper {
 	 * <p>
 	 * In simpler cases, use {@link #setSimpleSqlQuery(String)} method.
 	 * To use also custom order by conditions, use 
-	 * {@link #setSimpleSqlQuery(String, String, List, String, List)} method.
+	 * {@link #setSimpleSqlQuery(String, String, Object[], String, Object[])} method.
 	 * To use more complex query, use {@link #setSqlQuery(String)} method.
 	 * </p>
 	 * <p>
@@ -671,7 +671,7 @@ public abstract class ListSqlHelper {
 	 * </p>
 	 * <p>
 	 * In simpler cases, use {@link #setSimpleSqlQuery(String)} or
-	 * {@link #setSimpleSqlQuery(String, String, List)} method.
+	 * {@link #setSimpleSqlQuery(String, String, Object[])} method.
 	 * To use more complex query, use {@link #setSqlQuery(String)} method.
 	 * </p>
 	 * <p>

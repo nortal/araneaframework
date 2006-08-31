@@ -32,23 +32,23 @@ public class BaseListStructure implements Serializable {
 	private static final Logger log = Logger.getLogger(BaseListStructure.class);
 
 	/**
-	 * Map of ($link ListColumn)s where the column Ids are the keys and columns
+	 * Map of {@link ListColumn}s where the column Ids are the keys and columns
 	 * are the values.
 	 */
 	protected Map columns = new HashMap();
 
 	/**
-	 * List of ($link ListColumn)s.
+	 * List of {@link ListColumn}s.
 	 */
 	protected List columnList = new ArrayList();
 
 	/**
-	 * (@link ListOrder) information.
+	 * {@link ListOrder} information.
 	 */
 	protected ListOrder order;
 
 	/**
-	 * (@link ListFilter) information.
+	 * {@link ListFilter} information.
 	 */
 	protected ListFilter filter;
 
@@ -101,38 +101,37 @@ public class BaseListStructure implements Serializable {
 	}
 	
 	/**
-	 * Returns the (@link ListOrder).
+	 * Returns the {@link ListOrder}.
 	 * 
-	 * @return the (@link ListOrder).
+	 * @return the {@link ListOrder}.
 	 */
 	public ListOrder getListOrder() {
 		return this.order;
 	}
 
 	/**
-	 * Saves the (@link ListOrder).
-	 * 
-	 * @param filter
-	 *            the (@link ListOrder).
+	 * Sets the {@link ListOrder}.
+	 * @param order
+	 *            the {@link ListOrder}.
 	 */
 	public void setListOrder(ListOrder order) {
 		this.order = order;
 	}
 
 	/**
-	 * Returns the (@link ListFilter).
+	 * Returns the {@link ListFilter}.
 	 * 
-	 * @return the (@link ListFilter).
+	 * @return the {@link ListFilter}.
 	 */
 	public ListFilter getListFilter() {
 		return this.filter;
 	}
 
 	/**
-	 * Saves the (@link ListFilter).
+	 * Saves the {@link ListFilter}.
 	 * 
 	 * @param filter
-	 *            the (@link ListFilter).
+	 *            the {@link ListFilter}.
 	 */
 	public void setListFilter(ListFilter filter) {
 		this.filter = filter;

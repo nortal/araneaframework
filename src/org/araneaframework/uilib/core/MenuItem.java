@@ -61,7 +61,7 @@ public class MenuItem implements Serializable {
 
   /**
    * Creates a new menuitem that serves as holder to other menu items.
-   * @label label name assigned to created menuitem. May not contain dots.
+   * @param label localizable name assigned to created menuitem. May not contain dots.
    */
   public MenuItem(String label) {
     checkLabelLegality(label);
