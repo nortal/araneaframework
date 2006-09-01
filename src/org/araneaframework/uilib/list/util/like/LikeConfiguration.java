@@ -30,14 +30,14 @@ public class LikeConfiguration implements Serializable {
 	/** Default custom any character wildcards. */
 	public static final String[] DEFAULT_ANY_CHAR_WILDCARDS = {".","_","?"};
 	/** Default line start/end any string wildcard handler. */
-	public static final AnyStringWildcardHandler DEFAULT_HANDLER = new AutomaticAnyStringWildcardHandler();
+	public static final WildcardHandler DEFAULT_HANDLER = new AutomaticWildcardHandler();
 	
 	/** Custom any string wildcards (e.g. *). */
 	private String[] anyStringWildcards = DEFAULT_ANY_STRING_WILDCARDS;
 	/** Custom any character wildcards (e.g. ?). */
 	private String[] anyCharWildcards = DEFAULT_ANY_CHAR_WILDCARDS;
 	/** Custom line start/end any string wildcard handler. */
-	private AnyStringWildcardHandler anyStringWildcardHandler = DEFAULT_HANDLER;
+	private WildcardHandler wildcardHandler = DEFAULT_HANDLER;
 	
 	/**
 	 * Returns the custom any character wildcard.
@@ -62,11 +62,11 @@ public class LikeConfiguration implements Serializable {
 	 * 
 	 * @return new instance of the line start/end any string wildcard handler.
 	 */
-	public AnyStringWildcardHandler createAnyStringWildcardHandler() {
-		if (this.anyStringWildcardHandler == null) {
+	public WildcardHandler createWildcardHandler() {
+		if (this.wildcardHandler == null) {
 			throw new IllegalStateException("anyStringWildcardHandler must be set first");
 		}
-		return anyStringWildcardHandler.newInstance();
+		return wildcardHandler.newInstance();
 	}
 	
 	/**
@@ -74,9 +74,9 @@ public class LikeConfiguration implements Serializable {
 	 * 
 	 * @param anyStringWildcardHandler line start/end any string wildcard handler.
 	 */
-	public void setAnyStringWildcardHandler(
-			AnyStringWildcardHandler anyStringWildcardHandler) {
-		this.anyStringWildcardHandler = anyStringWildcardHandler;
+	public void setWildcardHandler(
+			WildcardHandler anyStringWildcardHandler) {
+		this.wildcardHandler = anyStringWildcardHandler;
 	}
 	
 	/**
