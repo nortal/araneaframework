@@ -20,13 +20,16 @@ import java.io.Writer;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
+ * Defines the update region in the HTML page that can be updated via AJAX requests.
+ * Should be used when not updating content inside HTML <code>table</code> rows.
+ * 
  * @jsp.tag
  *   name = "updateRegion"
  *   body-content = "JSP"
  *   description = "Defines an update region for asynchronous updating using AJAX request. Use its "id" to select the updated regions
                using the "updateRegions" attribute of elements capable of sending events. This attribute accepts a comma-separated
                list of regions to be updated with the request."
- * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
   protected int doStartTag(Writer out) throws Exception {

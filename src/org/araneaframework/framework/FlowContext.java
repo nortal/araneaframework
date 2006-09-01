@@ -27,6 +27,8 @@ import org.araneaframework.core.ApplicationWidget;
  * and continues to be active until it explicitly returns control to the caller using {@link #finish(Object)} or
  * {@link #cancel()}. 
  * 
+ * @see org.araneaframework.framework.container.StandardFlowContainerWidget
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
@@ -97,12 +99,18 @@ public interface FlowContext extends Serializable {
     public void reset(EnvironmentAwareCallback callback) throws Exception;
   }
   
+  /**
+   * Callback that will be run when flow has finished some way. 
+   */
   public interface Handler extends Serializable {
     public void onFinish(Object returnValue) throws Exception;   
     public void onCancel() throws Exception;
   }
   
+  /**
+   * Configurator runs when {@link FlowContext} starts flow.
+   */
   public interface Configurator extends Serializable {
-    public void configure(Widget comp) throws Exception;
+    public void configure(Widget flow) throws Exception;
   }
 }

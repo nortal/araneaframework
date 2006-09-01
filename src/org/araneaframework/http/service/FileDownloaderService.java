@@ -28,7 +28,9 @@ import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.support.FileInfo;
 
 /**
- * Service that allows for downloading of specified files.
+ * Service that serves content (allows downloading) of specified files. It is a suicidal service that
+ * kills itself after having served file content once.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class FileDownloaderService extends BaseService {
@@ -53,6 +55,7 @@ public class FileDownloaderService extends BaseService {
 	}
 	
 	/**
+	 * Returns value of currently used content-disposition response header.
 	 * @return false if content-disposition header is set to "attachment"
 	 */
 	public boolean isContentDispositionInline() {
@@ -66,12 +69,12 @@ public class FileDownloaderService extends BaseService {
 		this.contentDispositionInline = contentDispositionInline;
 	}
 	
-	// declare non-static in case derived classes wish to override
-	public String normalizeFileName(String fileName) {
+	/** Used internally to extract only file name from supplied filename (no file path). */
+	protected String normalizeFileName(String fileName) {
 		return FileDownloaderService.staticNormalizeFileName(fileName);
 	}
 
-	// as IE provides full names for uploaded files, we use some heuristics
+	// as IE (6) provides full names for uploaded files, we use some heuristics
 	// to ensure filename does not include the full path. By no means bulletproof
 	// as it does some harm to filenames containing slashes/backslashes.
 	public static String staticNormalizeFileName(String fileName) {

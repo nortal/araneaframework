@@ -24,7 +24,7 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
 /**
- * Button base tag.
+ * Base tag for simple button which has label but not much more.
  * 
  * @author Oleg Mürk
  */

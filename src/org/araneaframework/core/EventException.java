@@ -18,7 +18,7 @@ package org.araneaframework.core;
 
 
 /**
- * This exception is thrown if an expetion is raised inside an event listener.
+ * Exception thrown when event could not be delivered to receiver.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

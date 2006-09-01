@@ -20,6 +20,10 @@ import java.io.Writer;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
+ * The content of this tag will be displayed when value acquired from <code>PageContext</code>
+ * under the {org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionalDisplayTag#CONDITION_KEY}
+ * was true.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @jsp.tag

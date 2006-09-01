@@ -24,8 +24,6 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.http.FileUploadInputExtension;
 
 /**
- * A filter which parses a multipart request and extracts uploaded files.
- * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFileUploadInputExtension implements FileUploadInputExtension {

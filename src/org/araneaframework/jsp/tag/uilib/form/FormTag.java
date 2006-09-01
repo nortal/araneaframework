@@ -23,7 +23,10 @@ import org.araneaframework.uilib.form.FormWidget;
 
 
 /**
- * FormWidget widget tag.
+ * {@link org.araneaframework.uilib.form.FormWidget} tag.
+ * Specifies form context for inner tags, makes 
+ * {@link org.araneaframework.uilib.form.FormWidget.ViewModel} and 
+ * widget id accessible to inner tags as EL variables.
  * 
  * @author Oleg Mürk
  * 

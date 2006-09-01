@@ -23,7 +23,12 @@ import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 
 /**
- * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * Base tag for tags that allow defining updatable regions within HTML page.
+ * 
+ * @see org.araneaframework.jsp.tag.updateRegion.UpdateRegionHtmlTag
+ * @see org.araneaframework.jsp.tag.updateRegion.UpdateRegionRowsHtmlTag
+ * 
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BaseUpdateRegionTag extends BaseTag {
   protected String id;

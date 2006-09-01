@@ -25,7 +25,8 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
 
 
 /**
- * Standard form element label tag.
+ * Form checkbox label, represents label of one item from 
+ * {@link org.araneaframework.uilib.form.control.MultiSelectControl}. It will be rendered with HTML &lt;span&gt; tag.
  * 
  * @author Marko Muts 
  * @author Jevgeni Kabanov
