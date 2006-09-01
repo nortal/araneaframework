@@ -17,24 +17,31 @@
 package org.araneaframework.uilib.list.util.like;
 
 /**
- * Regular expressions implementation of {@link AnyStringWildcardHandler}.
+ * Automatic implementation of {@link WildcardHandler}.
+ * 
+ * Wildcard is added at the start if there was no wildcard at the end
+ *   and it is added at the end if there was no wildcard at the start.
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
- * @see AnyStringWildcardHandler
+ * @see WildcardHandler
  */
-public class RegExpAnyStringWildcardHandler extends BaseAnyStringWildcardHandler {
+public class AutomaticWildcardHandler extends BaseWildcardHandler {
 
-	public boolean shouldStartWith() {
-		return true;
+	public int shouldStartWith() {
+		return noWildcards() ? ANY_STRING_WILDCARD : this.startsWith;
 	}
 
-	public boolean shouldEndWith() {
-		return true;
+	public int shouldEndWith() {
+		return noWildcards() ? ANY_STRING_WILDCARD : this.endsWith;
+	}
+	
+	private boolean noWildcards() {
+		return this.startsWith == NO_WILDCARD && this.endsWith == NO_WILDCARD;
 	}
 
-	public AnyStringWildcardHandler newInstance() {
-		return new RegExpAnyStringWildcardHandler();
+	public WildcardHandler newInstance() {
+		return new AutomaticWildcardHandler();
 	}
 
 }

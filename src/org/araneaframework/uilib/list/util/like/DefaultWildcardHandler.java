@@ -16,26 +16,25 @@
 
 package org.araneaframework.uilib.list.util.like;
 
-import java.io.Serializable;
-
 /**
- * Base implementation of {@link AnyStringWildcardHandler}.
+ * SQL Like implementation of {@link WildcardHandler}.
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
- * @see AnyStringWildcardHandler
+ * @see WildcardHandler
  */
-public abstract class BaseAnyStringWildcardHandler implements AnyStringWildcardHandler, Serializable {
-	
-	protected Boolean startsWith;
-	protected Boolean endsWith;
+public class DefaultWildcardHandler extends BaseWildcardHandler {
 
-	public void setStartsWith(boolean startsWith) {
-		this.startsWith = new Boolean(startsWith);
+	public int shouldStartWith() {
+		return startsWith;
 	}
 
-	public void setEndsWith(boolean endsWith) {
-		this.endsWith = new Boolean(endsWith);
+	public int shouldEndWith() {
+		return endsWith;
 	}
+
+	public WildcardHandler newInstance() {
+		return new DefaultWildcardHandler();
+	}	
 
 }
