@@ -17,24 +17,24 @@
 package org.araneaframework.uilib.list.util.like;
 
 /**
- * SQL Like implementation of {@link AnyStringWildcardHandler}.
+ * Regular expressions implementation of {@link WildcardHandler}.
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
- * @see AnyStringWildcardHandler
+ * @see WildcardHandler
  */
-public class DefaultAnyStringWildcardHandler extends BaseAnyStringWildcardHandler {
+public class RegExpWildcardHandler extends BaseWildcardHandler {
 
-	public boolean shouldStartWith() {
-		return this.startsWith.booleanValue();
+	public int shouldStartWith() {
+		return ANY_STRING_WILDCARD;
 	}
 
-	public boolean shouldEndWith() {
-		return this.endsWith.booleanValue();
+	public int shouldEndWith() {
+		return ANY_STRING_WILDCARD;
 	}
 
-	public AnyStringWildcardHandler newInstance() {
-		return new DefaultAnyStringWildcardHandler();
-	}	
+	public WildcardHandler newInstance() {
+		return new RegExpWildcardHandler();
+	}
 
 }

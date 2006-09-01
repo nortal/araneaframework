@@ -18,9 +18,10 @@ package org.araneaframework.backend.list;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.araneaframework.uilib.list.util.like.AnyStringWildcardHandler;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 import org.araneaframework.uilib.list.util.like.RegexpLikeUtil;
+import org.araneaframework.uilib.list.util.like.WildcardHandler;
+import org.araneaframework.uilib.list.util.like.WildcardUtil;
 
 /**
  * Helper class for database <code>LIKE</code> expression.
@@ -71,24 +72,34 @@ public class SqlLikeUtil {
 		mask = replace(mask, config.getAnyStringWildcards(), SQL_LIKE_ANY_STRING_WILDCARD);
 		mask = replace(mask, config.getAnyCharWildcards(), SQL_LIKE_ANY_CHAR_WILDCARD);
 		
-		// Handle any string wildcards at the start and the end  
-		boolean startsWith = mask.startsWith(SQL_LIKE_ANY_STRING_WILDCARD);
-		boolean endsWith = mask.endsWith(SQL_LIKE_ANY_STRING_WILDCARD);
-		
-		AnyStringWildcardHandler handler = config.createAnyStringWildcardHandler();
-		handler.setStartsWith(startsWith);
-		handler.setEndsWith(endsWith);
-		if (!startsWith && handler.shouldStartWith()) {
-			mask = SQL_LIKE_ANY_STRING_WILDCARD + mask;
+		// Handle wildcards at the start and end
+		WildcardHandler handler = config.createWildcardHandler();
+		WildcardUtil.setWildcards(handler, mask, SQL_LIKE_ANY_STRING_WILDCARD, SQL_LIKE_ANY_CHAR_WILDCARD);
+		if (handler.getStartsWith() != handler.shouldStartWith()) {
+			if (handler.getStartsWith() == WildcardHandler.ANY_STRING_WILDCARD) {
+				mask = mask.substring(SQL_LIKE_ANY_STRING_WILDCARD.length());
+			} else if (handler.getStartsWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+				mask = mask.substring(SQL_LIKE_ANY_CHAR_WILDCARD.length());
+			}
+			
+			if (handler.shouldStartWith() == WildcardHandler.ANY_STRING_WILDCARD) {
+				mask = SQL_LIKE_ANY_STRING_WILDCARD + mask;
+			} else if (handler.shouldStartWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+				mask = SQL_LIKE_ANY_CHAR_WILDCARD + mask;
+			}
 		}
-		if (startsWith && !handler.shouldStartWith()) {
-			mask = mask.substring(SQL_LIKE_ANY_STRING_WILDCARD.length());
-		}
-		if (!endsWith && handler.shouldEndWith()) {
-			mask = mask + SQL_LIKE_ANY_STRING_WILDCARD;
-		}
-		if (endsWith && !handler.shouldEndWith()) {
-			mask = mask.substring(0, mask.length() - SQL_LIKE_ANY_STRING_WILDCARD.length());
+		if (handler.getEndsWith() != handler.shouldEndWith()) {
+			if (handler.getEndsWith() == WildcardHandler.ANY_STRING_WILDCARD) {
+				mask = mask.substring(0, mask.length() - SQL_LIKE_ANY_STRING_WILDCARD.length());
+			} else if (handler.getEndsWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+				mask = mask.substring(0, mask.length() - SQL_LIKE_ANY_CHAR_WILDCARD.length());
+			}
+			
+			if (handler.shouldEndWith() == WildcardHandler.ANY_STRING_WILDCARD) {
+				mask = mask + SQL_LIKE_ANY_STRING_WILDCARD;
+			} else if (handler.shouldEndWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+				mask = mask + SQL_LIKE_ANY_CHAR_WILDCARD;
+			}
 		}
 		return mask;
 	}

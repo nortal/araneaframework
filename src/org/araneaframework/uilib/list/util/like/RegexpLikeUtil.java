@@ -19,6 +19,7 @@ package org.araneaframework.uilib.list.util.like;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
@@ -75,24 +76,36 @@ public class RegexpLikeUtil {
 		// Convert wildcards
 		mask = replace(mask, config.getAnyStringWildcards(), RE_ANY_STRING_WILDCARD);
 		mask = replace(mask, config.getAnyCharWildcards(), RE_ANY_CHAR_WILDCARD);
-
-		// Handle any string wildcards at the start and the end
-		boolean startsWith = mask.startsWith(RE_ANY_STRING_WILDCARD);
-		boolean endsWith = mask.endsWith(RE_ANY_STRING_WILDCARD);
 		
-		AnyStringWildcardHandler handler = config.createAnyStringWildcardHandler();
-		handler.setStartsWith(startsWith);
-		handler.setEndsWith(endsWith);		
-		if (!handler.shouldStartWith()) {
-			if (startsWith) {
+		// Handle wildcards at the start and end
+		WildcardHandler handler = config.createWildcardHandler();
+		WildcardUtil.setWildcards(handler, mask, RE_ANY_STRING_WILDCARD, RE_ANY_CHAR_WILDCARD);
+		if (handler.getStartsWith() != handler.shouldStartWith()) {
+			if (handler.getStartsWith() == WildcardHandler.ANY_STRING_WILDCARD) {
 				mask = mask.substring(RE_ANY_STRING_WILDCARD.length());
+			} else if (handler.getStartsWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+				mask = mask.substring(RE_ANY_CHAR_WILDCARD.length());
 			}
+			
+			if (handler.shouldStartWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+				mask = RE_ANY_CHAR_WILDCARD + mask;
+			}
+		}
+		if (handler.shouldStartWith() != WildcardHandler.ANY_STRING_WILDCARD) {
 			mask = RE_LINE_START + mask;
 		}
-		if (!handler.shouldEndWith()) {
-			if (endsWith) {
+		if (handler.getEndsWith() != handler.shouldEndWith()) {
+			if (handler.getEndsWith() == WildcardHandler.ANY_STRING_WILDCARD) {
 				mask = mask.substring(0, mask.length() - RE_ANY_STRING_WILDCARD.length());
+			} else if (handler.getEndsWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+				mask = mask.substring(0, mask.length() - RE_ANY_CHAR_WILDCARD.length());
 			}
+			
+			if (handler.shouldEndWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+				mask = mask + RE_ANY_CHAR_WILDCARD;
+			}
+		}
+		if (handler.shouldEndWith() != WildcardHandler.ANY_STRING_WILDCARD) {
 			mask = mask + RE_LINE_END;
 		}
 		return mask;		
