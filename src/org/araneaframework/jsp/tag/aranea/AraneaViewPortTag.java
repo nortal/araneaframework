@@ -27,6 +27,11 @@ import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
+ * Tag that makes renderable Aranea widget hierarchy accessible to its inner tags
+ * in a {@link org.araneaframework.jsp.container.UiWidgetContainer} that can be 
+ * found from <code>PageContext</code> under the  
+ * {@link org.araneaframework.jsp.container.UiWidgetContainer#KEY}.
+ * 
  * @jsp.tag
  *   name = "viewPort"
  *   body-content = "JSP"
@@ -43,7 +48,7 @@ public class AraneaViewPortTag extends BaseTag {
           JspContext.JSP_CONFIGURATION_KEY);
 
     addContextEntry(
-        UiWidgetContainer.REQUEST_CONTEXT_KEY, 
+        UiWidgetContainer.KEY, 
         new UiAraneaWidgetContainer(rootWidget, config));  
     
     return EVAL_BODY_INCLUDE;

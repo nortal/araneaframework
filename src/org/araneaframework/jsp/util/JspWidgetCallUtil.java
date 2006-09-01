@@ -30,7 +30,7 @@ import org.araneaframework.jsp.container.UiWidgetContainer;
  */
 public abstract class JspWidgetCallUtil {
   public static UiWidgetContainer getContainer(PageContext pageContext) throws JspException {
-    return (UiWidgetContainer) JspUtil.requireContextEntry(pageContext, UiWidgetContainer.REQUEST_CONTEXT_KEY);
+    return (UiWidgetContainer) JspUtil.requireContextEntry(pageContext, UiWidgetContainer.KEY);
   }
 
   /**

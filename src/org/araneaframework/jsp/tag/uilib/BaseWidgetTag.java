@@ -29,7 +29,7 @@ public class BaseWidgetTag extends BaseTag {
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
   
-    container = (UiWidgetContainer) requireContextEntry(UiWidgetContainer.REQUEST_CONTEXT_KEY);
+    container = (UiWidgetContainer) requireContextEntry(UiWidgetContainer.KEY);
   
     // Get data
     widget = JspWidgetUtil.getWidgetFromContext(id, pageContext);

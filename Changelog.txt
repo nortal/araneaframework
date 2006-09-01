@@ -22,6 +22,7 @@ API Changes
         ConvertionException -> ConversionException
         
         ServletUtil.getOutputOData -> ServletUtil.getOutputData
+        UiWidgetContainer.REQUEST_CONTEXT_KEY --> UiWidgetContainer.KEY
         
 2006.08.25    | Aranea 1.0-RC1
 

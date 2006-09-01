@@ -54,7 +54,7 @@ public abstract class JspWidgetUtil {
 	public static ApplicationWidget getWidgetFromContext(String widgetId, PageContext pageContext) throws JspException {
       UiWidgetContainer container = 
         (UiWidgetContainer) JspUtil.requireContextEntry(pageContext,
-            UiWidgetContainer.REQUEST_CONTEXT_KEY);
+            UiWidgetContainer.KEY);
       
       String widgetFullId = getWidgetFullIdFromContext(widgetId, pageContext);
       
