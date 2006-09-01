@@ -189,8 +189,8 @@ function AraneaPage() {
     var preCondition = t.getEventPreCondition(element);
 
     if (preCondition) {
-      var f = eval("function(element) {" + preCondition + "}");
-      if (!f()) {
+      var f = new Function("element", preCondition);
+      if (!f(element)) {
         return false;
       }
     }
@@ -222,7 +222,7 @@ function AraneaPage() {
 	  return false;
 
     if (eventPrecondition) {
-      var f = eval("function(element) {" + eventPrecondition + "}");
+      var f = new Function(eventPrecondition);
       if (!f()) {
         return false;
       }
