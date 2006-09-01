@@ -6,7 +6,6 @@ Features and Improvements
         Additional methods in MessageContext                                  | See #233
         Javadoc has been cleaned up and updated                               | See #221
         Highlighting of invalid form fields in main example application
-        
 
 Bugfixes
         Opening links in new window did not work with url-encoded session IDs | See #234
@@ -14,6 +13,7 @@ Bugfixes
         SqlStatement did not work with any DB besides HSQLDB anymore          | See change #101
         FormElements erroneously lost state on page reload                    | See #237
         FormElement action() marked FormElement as non-rendered               | See #232
+        Event preconditions did not work with IE                              | See #238
 
 API Changes
         LayoutTag -> LayoutHtmlTag
