@@ -5,7 +5,7 @@ ARANEA FRAMEWORK CHANGELOG
 Features and Improvements
         Additional methods in MessageContext                                  | See #233
         Javadoc has been cleaned up and updated                               | See #221
-        Highlighting of invalid form fields in main example application
+        Invalid form fields highlighting in main example application
 
 Bugfixes
         Opening links in new window did not work with url-encoded session IDs | See #234
@@ -13,7 +13,7 @@ Bugfixes
         SqlStatement did not work with any DB besides HSQLDB anymore          | See change #101
         FormElements erroneously lost state on page reload                    | See #237
         FormElement action() marked FormElement as non-rendered               | See #232
-        Event preconditions did not work with IE                              | See #238
+        Event preconditions evaluation did not work with IE                   | See #238
 
 API Changes
         LayoutTag -> LayoutHtmlTag
@@ -24,6 +24,9 @@ API Changes
         ServletUtil.getOutputOData -> ServletUtil.getOutputData
         UiWidgetContainer.REQUEST_CONTEXT_KEY --> UiWidgetContainer.KEY
         
+        org.araneaframework.uilib.list.util.like package changed much, as
+        it was released week ago it should not cause any problems.
+
 2006.08.25    | Aranea 1.0-RC1
 
 Features and Improvements
