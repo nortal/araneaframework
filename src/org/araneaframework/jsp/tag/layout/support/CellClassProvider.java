@@ -25,7 +25,7 @@ import javax.servlet.jsp.JspException;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface CellClassProvider {
-  public static final String KEY = "org.araneaframework.jsp.tag.layout.support.CellClassProvider.KEY";
+  public static final String KEY = "cellClassProvider";
 
   public String getCellClass() throws JspException;
 }

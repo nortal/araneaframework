@@ -20,6 +20,11 @@ import java.io.Serializable;
 import java.util.Set;
 
 
+/**
+ * A constraint operates on the form elements providing means to define form element validity.
+ * 
+ * @see org.araneaframework.uilib.form.constraint.BaseConstraint
+ */
 public interface Constraint extends Serializable, GenericFormElementAware{
 
   /**
@@ -35,7 +40,7 @@ public interface Constraint extends Serializable, GenericFormElementAware{
   public Set getErrors();
 
   /**
-   * Clears the the errors produced while validationg the constraint.
+   * Clears the the errors produced while validating the constraint.
    */
   public void clearErrors();
 

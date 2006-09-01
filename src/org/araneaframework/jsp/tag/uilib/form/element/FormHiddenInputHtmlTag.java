@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
 
 /**
- * Represents a hidden input html control.
+ * Renders concealed {@link org.araneaframework.uilib.form.control.HiddenControl} in an HTML page.
  * 
  * @author Konstantin Tretyakov
  * 

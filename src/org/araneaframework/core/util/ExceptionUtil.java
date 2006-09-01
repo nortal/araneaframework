@@ -19,13 +19,22 @@ package org.araneaframework.core.util;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.araneaframework.core.Assert;
 
-
 /**
  * This utility class contains methods for managing exceptions.
  * 
- * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ExceptionUtil {
+
+  /**
+   * Unchecks the exception by rethrowing
+   * unchecked exceptions and wrapping checked exceptions inside 
+   * <code>NestableRuntimeException</code>.
+   * 
+   * @param e exception
+   * 
+   * @return nothing really, just rethrows suitable <code>Exception</code>
+   */
   public static RuntimeException uncheckException(Exception e) {
     Assert.notNullParam(e, "e");
     

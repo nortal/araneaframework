@@ -21,30 +21,31 @@ import java.io.Serializable;
 
 /**
  * This class defines the <code>Map</code> key, that is used to find a
- * convertor between <code>Control</code> and <code>DataItem</code>. It
- * contains both <code>Control</code> and <code>DataItem</code> types.
+ * converter between data held in {@link org.araneaframework.uilib.form.Control} and 
+ * corresponding {@link org.araneaframework.uilib.form.Data}.
+ * 
+ * @see org.araneaframework.uilib.form.converter.ConverterFactory
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class ConverterKey implements Serializable {
   private String fromType;
   private String toType;
 
   /**
-	 * Returns the type from which the conversion goes.
-	 * 
-	 * @return the type from which the conversion goes.
-	 */
+   * Returns the type from which the conversion goes.
+   * 
+   * @return the type from which the conversion goes.
+   */
   public String getFromType() {
     return fromType;
   }
 
   /**
-	 * Returns the type to which the conversion goes.
-	 * 
-	 * @return the type to which the conversion goes.
-	 */
+   * Returns the type to which the conversion goes.
+   * 
+   * @return the type to which the conversion goes.
+   */
   public String getToType() {
     return toType;
   }
@@ -63,11 +64,9 @@ public class ConverterKey implements Serializable {
   }
 
   /**
-	 * Implemets the {@link Object#equals(java.lang.Object)}method, using both
-	 * types.
-   * 
-   * 
-	 */
+   * Implements the {@link Object#equals(java.lang.Object)} method, using both
+   * types.
+   */
   public boolean equals(Object o) {
     if (!(o instanceof ConverterKey))
       return false;

@@ -28,7 +28,7 @@ import org.araneaframework.uilib.form.GenericFormElementContext;
 
 /**
  * This class is the base class for form constraints. A constraint operates on the form elements
- * providing means to constrain form element validity. That is using a constraint you can put
+ * providing means to define form element validity. That is using a constraint you can put
  * additional (and/or custom) conditions for the form elements to be valid.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)

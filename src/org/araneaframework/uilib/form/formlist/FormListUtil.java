@@ -26,6 +26,8 @@ import org.araneaframework.uilib.list.EditableListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 /**
+ * Utility methods for adding buttons to {@link FormListWidget} rows and tracking state changes.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormListUtil {
