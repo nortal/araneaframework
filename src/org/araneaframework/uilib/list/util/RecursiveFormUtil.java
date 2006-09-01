@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.list.util;
 
 import java.io.Serializable;
+
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
@@ -92,6 +93,61 @@ public class RecursiveFormUtil {
 	// BeanFormWidget
 	
 	/**
+	 * Adds a contained element.
+	 * 
+	 * @param form form.
+	 * @param fullId full element id (separated by dots).
+	 * @param element contained element.
+	 */	
+	public static void addElement(BeanFormWidget form, String fullId, final GenericFormElement element) throws Exception {
+		addBeanElement(form, fullId, new BeanFormElementAdder() {
+			public FormElement addFormElement(BeanFormWidget form, String id) throws Exception {
+				form.addElement(id, element);
+				return null;
+			}
+		});
+	}
+	
+	/**
+	 * This method adds a {@link FormElement}.
+	 * 
+	 * @param form form.
+	 * @param fullId full element id (separated by dots).
+	 * @param labelId id of the localized label.
+	 * @param control the type of control data.
+	 * @param data the type of data.
+	 * @param mandatory whether the element must be present in request.
+	 * @return FormElement that was just added.
+	 */
+	public static FormElement addElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final Data data, final boolean mandatory) throws Exception {
+		return addBeanElement(form, fullId, new BeanFormElementAdder() {
+			public FormElement addFormElement(BeanFormWidget form, String id) throws Exception {
+				return form.addElement(id, labelId, control, data, mandatory);
+			}
+		});
+	}
+
+	/**
+	 * This method adds a {@link FormElement}.
+	 * 
+	 * @param form form.
+	 * @param fullId full element id (separated by dots).
+	 * @param labelId id of the localized label.
+	 * @param control the type of control data.
+	 * @param data the type of data.
+	 * @param initialValue initial value.
+	 * @param mandatory whether the element must be present in request.
+	 * @return FormElement that was just added.
+	 */
+	public static FormElement addElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final Data data, final Object initialValue, final boolean mandatory) throws Exception {
+		return addBeanElement(form, fullId, new BeanFormElementAdder() {
+			public FormElement addFormElement(BeanFormWidget form, String id) throws Exception {
+				return form.addElement(id, labelId, control, data, initialValue, mandatory);
+			}
+		});
+	}	
+
+	/**
 	 * This method adds a {@link FormElement}.
 	 * 
 	 * @param form form.
@@ -128,16 +184,32 @@ public class RecursiveFormUtil {
 		});
 	}
 
-	// Private
-
+	/**
+	 * FormWidget element adder.
+	 * 
+	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 */
 	private static interface FormElementAdder extends Serializable {
 		FormElement addFormElement(FormWidget form, String id) throws Exception;
 	}
 
+	/**
+	 * BeanFormWidget element adder.
+	 * 
+	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 */
 	private static interface BeanFormElementAdder extends Serializable {
 		FormElement addFormElement(BeanFormWidget form, String id) throws Exception;
 	}
 
+	/**
+	 * This method adds a {@link FormElement} to {@link FormWidget}.
+	 * 
+	 * @param form form.
+	 * @param fullId full element id (separated by dots).
+	 * @param adder element adder.
+	 * @return the element returned from the adder.
+	 */
 	private static FormElement addElement(FormWidget form, String fullId, FormElementAdder adder) throws Exception {
 		if (fullId.indexOf(".") != -1) {
 			String subFormId = fullId.substring(0, fullId.indexOf("."));
@@ -151,13 +223,21 @@ public class RecursiveFormUtil {
 				subForm = form.addSubForm(subFormId);        	
 			}
 
-			return adder.addFormElement(subForm, nextFullId);
+			return addElement(subForm, nextFullId, adder);
 		}
 
 		return adder.addFormElement(form, fullId);
 	}
 
 
+	/**
+	 * This method adds a {@link FormElement} to {@link BeanFormWidget}.
+	 * 
+	 * @param form form.
+	 * @param fullId full element id (separated by dots).
+	 * @param adder element adder.
+	 * @return the element returned from the adder.
+	 */
 	private static FormElement addBeanElement(BeanFormWidget form, String fullId, BeanFormElementAdder adder) throws Exception {
 		if (fullId.indexOf(".") != -1) {
 			String subFormId = fullId.substring(0, fullId.indexOf("."));
@@ -171,7 +251,7 @@ public class RecursiveFormUtil {
 				subForm = form.addBeanSubForm(subFormId);        	
 			}
 
-			return adder.addFormElement(subForm, nextFullId);
+			return addBeanElement(subForm, nextFullId, adder);
 		}
 
 		return adder.addFormElement(form, fullId);

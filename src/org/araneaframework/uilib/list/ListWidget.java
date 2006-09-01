@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -314,7 +315,7 @@ public class ListWidget extends BaseUIWidget {
 
 	public void addFilterFormElement(String id, FormElement element) throws Exception {
 		RecursiveFormUtil.addElement(this.filterForm, id, element);
-	}	
+	}
 
 	public void addFilterFormElement(String id, String label, Control control, Data data) throws Exception {
 		RecursiveFormUtil.addElement(this.filterForm, id, label, control, data, false);
