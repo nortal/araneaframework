@@ -19,14 +19,14 @@
                 <html>
                     <head>
                         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                        <!-- Scripts -->
+                        <!-- Include script and style definitions from another file -->
                         <jsp:include page="scripts.jsp"/>
                         <title>Aranea Template Application Login Screen</title>
                     </head>
 
                     <ui:body>
                     	<!-- This tag will render an HTML form tag along with some Aranea-specific hidden fields. 
-                    	It is strongly suggested to have only one system form in the template and have it submit using 
+                    	It is strongly suggested to have only one system form in the template and have it submitted using 
                     	POST. This will ensure that no matter what user does no data is ever lost. -->
 	                    <ui:systemForm method="POST">
 							<ui:onLoadEvent event="Form.focusFirstElement(document.forms['${systemFormId}']);"/>

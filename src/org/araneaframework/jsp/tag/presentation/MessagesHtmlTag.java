@@ -28,6 +28,7 @@ import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
+ * TODO: add ajax updateregion for messages.
  * Message tag - show the messages in <code>MessageContext</code> 
  * with given type. 
  * 
