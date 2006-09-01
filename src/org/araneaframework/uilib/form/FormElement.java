@@ -27,9 +27,8 @@ import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 
-
 /**
- * Represents a simple "leaf" form element that holds a control and its data.
+ * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

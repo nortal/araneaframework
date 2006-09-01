@@ -127,8 +127,6 @@ public class ListWidget extends BaseUIWidget {
 
 	/**
 	 * Saves the {@link ListStructure}used to fill the list with data.
-	 * 
-	 * @return the {@link ListStructure}used to fill the list with data.
 	 */
 	public void setListStructure(ListStructure listStructure) {
 		this.listStructure = listStructure;
@@ -163,8 +161,6 @@ public class ListWidget extends BaseUIWidget {
 
 	/**
 	 * Saves the filter form.
-	 * 
-	 * @return the filter form.
 	 */
 	public void setFilterForm(FormWidget filterForm) {
 		this.filterForm = filterForm;

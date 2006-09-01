@@ -18,6 +18,7 @@ package org.araneaframework.http;
 
 import java.io.Serializable;
 import org.araneaframework.Message;
+import org.araneaframework.OutputData;
 import org.araneaframework.Service;
 import org.araneaframework.Widget;
 import org.araneaframework.http.support.PopupWindowProperties;
@@ -29,10 +30,11 @@ import org.araneaframework.http.support.PopupWindowProperties;
  * @author Taimo Peelo
  */
 public interface PopupWindowContext extends Serializable {
-  /** keys for accessing the popup maps from viewmodels */
+  /** Key under which popup info is made available in response {@link OutputData}. */
   public static final String POPUPS_KEY = "popupWindows";
 
-  /** closing key for popups, if window receives response containing that key, it should close and take serverside service with it. */
+  /** Popup closing key, when session-thread in a window receives response containing 
+   * that key, it should close and take serverside service with it. */
   public static final String POPUPS_CLOSE_KEY = "popupClose";
   
   /**

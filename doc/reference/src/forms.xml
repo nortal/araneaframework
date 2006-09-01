@@ -31,7 +31,7 @@
     <title>Controls</title>
 
     <para>
-      At the core of the data binding API lies the notion of <emphasis>controls</emphasis> (<literal>org.araneaframework.uilib.form.Control</literal>). Controls are the widgets that do the actual parsing of the request parameters and correspond to the controls found in HTML forms, like textbox, textarea, selectbox, button, ... Additionally controls also do a bit of validating the submitted data, to the extend that is doubled on the client-side, thus providing the support for client-side validation. For example textbox control validates the minimum and maximum string length, since the HTML tag can do the same. Also one can ensure that a control is definitely filled in by the user by making it <emphasis>mandatory</emphasis>.
+      At the core of the data binding API lies the notion of <emphasis>controls</emphasis> (<literal>org.araneaframework.uilib.form.Control</literal>). Controls are the widgets that do the actual parsing of the request parameters and correspond to the controls found in HTML forms, like textbox, textarea, selectbox, button, ... Additionally controls also do a bit of validating the submitted data. For example textbox control validates the minimum and maximum string length, since the HTML tag can do the same.
     </para>
 
     <para>

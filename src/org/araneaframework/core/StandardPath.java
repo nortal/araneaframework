@@ -22,7 +22,9 @@ import java.util.StringTokenizer;
 import org.araneaframework.Path;
 
 /**
- * Path is represented as a dot-separated String. 
+ * Default implementation of {@link org.araneaframework.Path}, uses simple string 
+ * identifiers like "a" or "b" and combines them using dots forming full 
+ * pathes like "a.b.c".
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
@@ -66,7 +68,8 @@ public class StandardPath implements Path {
   }
   
   /**
-   * Returns a dot-separated String of the Path.
+   * Returns this {@link org.araneaframework.Path} as a dot-separated String.
+   * @return this {@link org.araneaframework.Path} as a dot-separated String
    */
   public String toString() {
     StringBuffer result = new StringBuffer();

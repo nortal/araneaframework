@@ -22,7 +22,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
 
 /**
- * This class represents a Textbox control.
+ * Class that represents a textbox control.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 

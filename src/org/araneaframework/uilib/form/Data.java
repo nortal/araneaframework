@@ -24,7 +24,6 @@ import org.araneaframework.uilib.DataItemTypeViolatedException;
  * {@link org.araneaframework.uilib.form.converter.BaseConverter} and a value.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class Data implements java.io.Serializable {
   protected String type;
