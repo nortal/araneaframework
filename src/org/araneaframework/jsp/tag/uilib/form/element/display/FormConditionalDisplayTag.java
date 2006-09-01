@@ -21,6 +21,14 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.uilib.form.control.DisplayControl;
 
 /**
+ * Depending whether form element boolean value is true or false display one or other content, 
+ * represents {@link org.araneaframework.uilib.form.control.DisplayControl}. 
+ * {@link org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionFalseTag} 
+ * and {@link org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionTrueTag} tags 
+ * are meant to be used 
+ * inside this tag to define alternative contents. This tag itself does not render anything, it just
+ * makes <code>Boolean</code> available to inner tags.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @jsp.tag

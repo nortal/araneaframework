@@ -25,7 +25,7 @@ import javax.servlet.jsp.JspException;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface RowClassProvider {
-  public static final String KEY = "org.araneaframework.jsp.tag.layout.support.RowClassProvider.KEY";
+  public static final String KEY = "rowClassProvider";
 
   public String getRowClass() throws JspException;
 }

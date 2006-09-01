@@ -25,16 +25,18 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-
 /**
+ * ResourceBundle that which {@link FallbackResourceBundle#handleGetObject(String)} searches
+ * for <code>key</code> from all added <code>ResourceBundles</code>.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * @since {since}
  */
 public class FallbackResourceBundle extends ResourceBundle implements Serializable {
   protected Locale locale;
   protected List resourceBundles = new ArrayList();
   
   /**
+   * Adds a <code>ResourceBundle</code> from which resources are searched.
    * @param resourceBundle
    */
   public void addResourceBundle(ResourceBundle resourceBundle) {
@@ -52,6 +54,13 @@ public class FallbackResourceBundle extends ResourceBundle implements Serializab
     return null;
   }
 
+  /** 
+   * Returns the resource under the <code>key</code>. Resource is searched
+   * among all <code>ResourceBundles</code> this {@link FallbackResourceBundle}
+   * knows about, in same order as <code>ResourceBundles</code> were added.
+   * 
+   * @return the resource under the <code>key</code>
+   */
   protected Object handleGetObject(String key) {
     if (locale == null)
       setLocale(getLocale());

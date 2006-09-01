@@ -34,12 +34,12 @@ import org.araneaframework.uilib.form.FormWidget;
  *   name = "formElement"
  *   body-content = "JSP"
  *   description = "UiLib form element tag.  <br/>                 
-           Makes available following page scope variables: 
+           Makes available following variables: 
            <ul>
              <li><i>formElement</i> - UiLib form element view model.
              <li><i>formElementId</i> - UiLib form element id.
              <li><i>formElementValue</i> - UiLib form element value.
-           </ul> "
+           </ul>"
  */
 public class FormElementTag extends BaseTag {
   public static final String ID_KEY = "formElementId";

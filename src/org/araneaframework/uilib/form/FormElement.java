@@ -282,10 +282,10 @@ public class FormElement extends GenericFormElement implements FormElementContex
     update(input);
     if (control != null)
       control._getService().action(null, input, output);
-    // XXX: render state should not be updated on action!!
+    // render state should not be updated on action
     boolean savedRenderState = this.rendered;
     process();
-    //XXX: quickfix, messy - look for (or create) better place to put rendering state reset instead of process().
+    //XXX: better place to put rendering state reset instead of process()?
     this.rendered = savedRenderState;
   }
   

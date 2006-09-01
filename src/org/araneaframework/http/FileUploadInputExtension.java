@@ -21,11 +21,19 @@ import java.util.Map;
 import org.apache.commons.fileupload.FileItem;
 
 /**
- * Extension to {@link org.araneaframework.OutputData} that allows to access the uploaded files.
+ * Extension to {@link org.araneaframework.OutputData} that allows access the uploaded files.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FileUploadInputExtension extends Serializable {
+  /**
+   * @param fieldName upload field name from which to read file content
+   * @return file content and information
+   */
   public FileItem getUploadedFile(String fieldName);
+  
+  /**
+   * @return Map of &lt;fileName, fileContent&gt;
+   */
   public Map getUploadedFiles();
 }
