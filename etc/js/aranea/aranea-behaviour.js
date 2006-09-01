@@ -19,7 +19,6 @@
  * Behaviour rules required for Aranea JSP to work correctly.
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-
 function setFormElementContext(el) {
   var span = el.parentNode;
   do {
@@ -45,8 +44,7 @@ function setCloningUrl(el) {
 	var systemForm = getActiveAraneaPage().getTraverser().findSurroundingSystemForm(el);
 
     var url = new String();
-    url = getActiveAraneaPage().getServletURL();
-    url = getActiveAraneaPage().encodeURL(url);
+    url = getActiveAraneaPage().encodeURL(getActiveAraneaPage().getServletURL());
 
     url += "?pleaseClone=true";
     url += "&topServiceId=" + systemForm['topServiceId'].value;
