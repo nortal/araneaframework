@@ -30,8 +30,8 @@ import org.araneaframework.uilib.form.control.TextControl;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class PersonAddEditWidget extends TemplateBaseWidget {
-	/* The ID field of the person data model. We don't know it before saving the object to
-	   database, so we initialize it to null here. */
+    /* The ID field of the person data model, only has value if object has already
+    been saved to/loaded from database. */
 	private Long personId = null;
 	// Whether the person is being edited or added
 	private boolean editMode;
