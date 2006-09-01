@@ -19,9 +19,15 @@ package org.araneaframework.uilib.form;
 import org.araneaframework.uilib.DataItemTypeViolatedException;
 
 /**
- * This class represents the form element data. It has a type, used by the
+ * This class represents typed form element data. Type is used by the
  * {@link org.araneaframework.uilib.form.converter.ConverterFactory} to find the appropriate
- * {@link org.araneaframework.uilib.form.converter.BaseConverter} and a value.
+ * {@link org.araneaframework.uilib.form.Converter} for converting {@link Data} held in 
+ * {@link org.araneaframework.uilib.form.FormElement} to plain object type held in 
+ * {@link org.araneaframework.uilib.form.Control}. Reverse converting happens much
+ * the same, both object type in {@link org.araneaframework.uilib.form.Control} 
+ * and supposed {@link org.araneaframework.uilib.form.FormElement} {@link Data} are
+ * considered and appropriate {@link org.araneaframework.uilib.form.Converter} 
+ * chosen.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

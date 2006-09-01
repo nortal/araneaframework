@@ -24,7 +24,8 @@ import org.araneaframework.uilib.form.FormElementContext;
 
 /**
  * This class is the base class for form converters. The converters' task is to convert the value
- * of form control to the value of form element data and back.
+ * of form {@link org.araneaframework.uilib.form.Control} to the value of {@link org.araneaframework.uilib.form.FormElement} 
+ * {@link org.araneaframework.uilib.form.Data} and back.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

@@ -4,7 +4,9 @@ ARANEA FRAMEWORK CHANGELOG
 
 Features and Improvements
         Additional methods in MessageContext                                  | See #233
-        javadoc has been cleaned up and updated                               | See #221
+        Javadoc has been cleaned up and updated                               | See #221
+        Highlighting of invalid form fields in main example application
+        
 
 Bugfixes
         Opening links in new window did not work with url-encoded session IDs | See #234
