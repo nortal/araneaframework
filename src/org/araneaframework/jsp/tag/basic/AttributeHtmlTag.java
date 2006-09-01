@@ -24,7 +24,15 @@ import org.araneaframework.jsp.tag.PresentationTag;
 
 
 /**
- * Attribute tag.
+ * Attribute tag, tries to define attribute of the containing tag (element).
+ * First searches for HTML element from <code>PageContext</code> under the 
+ * {@link org.araneaframework.jsp.tag.basic.AttributedTagInterface.HTML_ELEMENT_KEY}
+ * and if it is found writes out javascript that should set elements attribute.
+ * 
+ * When this does not succeed, searches {@link org.araneaframework.jsp.tag.basic.AttributedTagInterface.ATTRIBUTED_TAG_KEY}
+ * and tries to attach attribute to found {@link org.araneaframework.jsp.tag.basic.AttributedTagInterface}, if any.
+ * This only works when {@link org.araneaframework.jsp.tag.basic.AttributedTagInterface} has been implemented 
+ * correctly by containing tag and whole HTML for containing tag is written out in <code>doEndTag()</code> method.
  * 
  * @author Oleg Mürk
  * 
