@@ -145,8 +145,7 @@ public class FormRow implements Serializable {
 		}
 
 		/**
-		 * Sets whether the row is open.
-		 * @param open whether the row is open.
+		 * Gets whether the row is open.
 		 */		
 		public Boolean getOpen() {
 			return this.open;

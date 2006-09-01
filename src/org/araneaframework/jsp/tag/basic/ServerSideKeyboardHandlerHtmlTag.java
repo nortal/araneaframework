@@ -105,9 +105,8 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 
 	
   /**
-  * The default value is <code>"return true;"</code>
+  * Sets the precondition, default value is <code>null</code>
   * @see org.araneaframework.jsp.tag.uilib.form.element.BaseFormButtonTag#setOnClickPrecondition
-  * @see #setElementId
   */
   public void setPrecondition(String precondition) throws JspException {
     event.setEventPrecondition((String) evaluate("precondition", precondition, String.class));

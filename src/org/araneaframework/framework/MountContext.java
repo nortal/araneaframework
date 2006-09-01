@@ -71,7 +71,7 @@ public interface MountContext extends Serializable {
    * URL can be further modified by appending the path or query parameters.
    * 
    * @param input Input data representing the current HTTP request.
-   * @param uriPrefix Mounted URI prefix.
+   * @param uri Mounted URI prefix.
    * @return The assembled full URL pointing to the mounted path prefix.
    */
   public String getMountURL(InputData input, String uri);

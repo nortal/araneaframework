@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.list.util;
 
-import org.araneaframework.uilib.list.util.converter.ConvertionException;
+import org.araneaframework.uilib.list.util.converter.ConversionException;
 
 /**
  * Data converter between <code>source</code> and <code>destination</code>
@@ -29,10 +29,10 @@ public interface Converter {
 	 * @param data
 	 *            Source typed data.
 	 * @return Destination typed data.
-	 * @throws ConvertionException
+	 * @throws ConversionException
 	 *             when convertion fails.
 	 */
-	Object convert(Object data) throws ConvertionException;
+	Object convert(Object data) throws ConversionException;
 
 	/**
 	 * Converts data from destination type into source type.
@@ -40,10 +40,10 @@ public interface Converter {
 	 * @param data
 	 *            Destination typed data.
 	 * @return Source typed data.
-	 * @throws ConvertionException
+	 * @throws ConversionException
 	 *             when convertion fails.
 	 */
-	Object reverseConvert(Object data) throws ConvertionException;
+	Object reverseConvert(Object data) throws ConversionException;
 
 	/**
 	 * Returns the source data type.

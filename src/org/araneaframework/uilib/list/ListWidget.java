@@ -52,10 +52,10 @@ import org.araneaframework.uilib.support.UiLibMessages;
 
 /**
  * This class is the base widget for lists. It interacts with the user and uses the data from
- * {@link org.araneaframework.contrib.uilib.lists.dataproviders.ListDataProvider}to make a user view into the list.
+ * {@link org.araneaframework.uilib.list.dataprovider.ListDataProvider}to make a user view into the list.
  * It uses helper classes to do ordering, filtering and sequencing (breaking the list into pages).
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class ListWidget extends BaseUIWidget {
@@ -117,9 +117,9 @@ public class ListWidget extends BaseUIWidget {
 	 */	
 
 	/**
-	 * Returns the {@link ListStructureInterface}used to describe the list.
+	 * Returns the {@link ListStructure}used to describe the list.
 	 * 
-	 * @return the {@link ListStructureInterface}used to describe the list.
+	 * @return the {@link ListStructure}used to describe the list.
 	 */
 	public ListStructure getListStructure() {
 		return this.listStructure;
@@ -127,8 +127,6 @@ public class ListWidget extends BaseUIWidget {
 
 	/**
 	 * Saves the {@link ListStructure}used to fill the list with data.
-	 * 
-	 * @return the {@link ListStructure}used to fill the list with data.
 	 */
 	public void setListStructure(ListStructure listStructure) {
 		this.listStructure = listStructure;
@@ -163,8 +161,6 @@ public class ListWidget extends BaseUIWidget {
 
 	/**
 	 * Saves the filter form.
-	 * 
-	 * @return the filter form.
 	 */
 	public void setFilterForm(FormWidget filterForm) {
 		this.filterForm = filterForm;
@@ -202,10 +198,10 @@ public class ListWidget extends BaseUIWidget {
 	}
 
 	/**
-	 * Adds a {@link ListColumnInterface}.
+	 * Adds a {@link ListColumn}.
 	 * 
 	 * @param column
-	 *            {@link ListColumnInterface}.
+	 *            {@link ListColumn}.
 	 */
 	public void addListColumn(ListColumn column) {
 		this.listStructure.addColumn(column);
@@ -224,26 +220,25 @@ public class ListWidget extends BaseUIWidget {
 	}
 
 	/**
-	 * Clears the {@link ListColumnInterface}s
+	 * Clears the {@link ListColumn}s
 	 */
 	public void clearColumns() {
 		this.listStructure.clearColumns();
 	}
 
 	/**
-	 * Returns the (@link ListOrder).
-	 * 
-	 * @return the (@link ListOrder).
+	 * Returns the {@link ListOrder}.
+	 * @return the {@link ListOrder}.
 	 */
 	public ListOrder getListOrder() {
 		return this.listStructure.getListOrder();
 	}
 
 	/**
-	 * Saves the (@link ListOrder).
+	 * Saves the {@link ListOrder}.
 	 * 
-	 * @param filter
-	 *            the (@link ListOrder).
+	 * @param order
+	 *            the {@link ListOrder}.
 	 */
 	public void setListOrder(ListOrder order) {
 		this.listStructure.setListOrder(order);
@@ -262,19 +257,19 @@ public class ListWidget extends BaseUIWidget {
 	}
 
 	/**
-	 * Returns the (@link ListFilter).
+	 * Returns the {@link ListFilter}.
 	 * 
-	 * @return the (@link ListFilter).
+	 * @return the {@link ListFilter}.
 	 */
 	public ListFilter getListFilter() {
 		return this.listStructure.getListFilter();
 	}
 
 	/**
-	 * Saves the (@link ListFilter).
+	 * Saves the {@link ListFilter}.
 	 * 
 	 * @param filter
-	 *            the (@link ListFilter).
+	 *            the {@link ListFilter}.
 	 */
 	public void setListFilter(ListFilter filter) {
 		this.listStructure.setListFilter(filter);

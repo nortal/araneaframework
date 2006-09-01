@@ -20,10 +20,8 @@ package org.araneaframework.backend.list;
  * SQL Expression that can be evaluated into SQL <code>String</code> and SQL
  * arguments <code>Object[]</code>. One SQL Expression can contain other SQL
  * Expressions and return their SQL Strings and arguments as part of itselves.
- * SQL Expressions are usually built from (@link
- * org.araneaframework.uilib.widgets.lists.refactor.presentation.memorybased.Expression)s
- * using an (@link
- * org.araneaframework.uilib.widgets.lists.refactor.backend.builder.ExpressionToSqlExprBuilder).
+ * SQL Expressions are usually built from {@link org.araneaframework.backend.list.memorybased.Expression}s
+ * using an {@link org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilder}.
  */
 public interface SqlExpression {
 	/**

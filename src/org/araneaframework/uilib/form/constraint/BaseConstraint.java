@@ -31,8 +31,7 @@ import org.araneaframework.uilib.form.GenericFormElementContext;
  * providing means to constrain form element validity. That is using a constraint you can put
  * additional (and/or custom) conditions for the form elements to be valid.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
- *  
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseConstraint implements java.io.Serializable, Constraint {
 
@@ -49,12 +48,6 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
-
-  /**
-   * This method validates the constraint conditions, providing some preconditions and
-   * postconditions for the {@link #validate()}method.
-   * @throws Exception 
-   */
   public boolean validate() throws Exception {
     Assert.notNull(this, getGenericFormElementCtx(), "Generic form element context must be assigned to the constraint before it can function! " +
         "Make sure that the constraint is associated with a form element or a form!");
@@ -73,38 +66,24 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   }
 
   /**
-   * Returns whether the constraint is satisfied/valid (same that no errors were produced).
-   * 
-   * @return whether the constraint is satisfied/valid (same that no errors were produced).
+   * Returns whether the constraint is satisfied/valid. Constraint is valid
+   * when no validation errors were produced.
    */
   public boolean isValid() {
+    //XXX: should it throw NotValidatedYetException if called before validation
     return errors == null || errors.size() == 0;
   }
 
-  /**
-   * Returns the {@link UiMessage}s produced while validationg the constraint.
-   * 
-   * @return the {@link UiMessage}s produced while validationg the constraint.
-   */
   public Set getErrors() {
     if (errors == null)
       errors = new HashSet();
     return errors;
   }
 
-  /**
-   * Clears the the errors produced while validationg the constraint.
-   */
   public void clearErrors() {
     errors = null;
   }
- 
-  /**
-   * Sets the custom {@link UiMessage}, that will be returned instead of the usual ones.
-   * 
-   * @param customErrorMessage custom {@link UiMessage} that will be returned instead of the
-   * usual ones.
-   */
+
   public void setCustomErrorMessage(String customErrorMessage) {
     this.customErrorMessage = customErrorMessage;
   }
@@ -147,9 +126,8 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   //*********************************************************************
 
   /**
-   * This method should validate the constraint conditions adding {@link UiMessage}s if some
-   * condition is not satisfied.
-   * @throws Exception 
+   * This method should validate the constraint conditions adding error messages
+   * and add messages about unsatisfied conditions.
    */
   protected abstract void validateConstraint() throws Exception;
 }

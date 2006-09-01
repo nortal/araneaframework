@@ -155,7 +155,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
 		<para>
 			External resources, such as javascript, style and image files of Aranea components are managed through different configuration files.
-			The resources are listed in XML files and can be accessed through <literal>StandardServletFileImportFilterService</literal>. This approach
+			The resources are listed in XML files and can be accessed through <literal>StandardFileImportFilterService</literal>. This approach
 			makes it possible to package all the resources into the aranea <literal>jar</literal> archives and no manual copying of necessary files to
 			fixed locations is needed.
 		</para>

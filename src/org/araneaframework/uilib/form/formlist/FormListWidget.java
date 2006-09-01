@@ -33,8 +33,6 @@ public class FormListWidget extends BaseFormListWidget {
 	//*******************************************************************		
 
 	/**
-	 * @param id widget id.
-	 * @param enviroment resource provider.
 	 * @param rowHandler row handler.
 	 */
 	public FormListWidget(FormRowHandler rowHandler) {

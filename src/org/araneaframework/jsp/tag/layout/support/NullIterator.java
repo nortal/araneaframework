@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.layout.support;
 import org.apache.commons.collections.ResettableIterator;
 
 /**
+ * Dummy <i>resettable</i> iterator.
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class NullIterator implements ResettableIterator {
@@ -26,10 +27,18 @@ public class NullIterator implements ResettableIterator {
 
 	public void remove() {}
 
+	/** 
+	 * Returns <code>false</code>.
+	 * @return <code>false</code>
+	 */
 	public boolean hasNext() {
 		return false;
 	}
 
+	/** 
+	 * Returns <code>null</code>.
+	 * @return <code>null</code>
+	 */
 	public Object next() {
 		return null;
 	}

@@ -28,6 +28,7 @@ import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
+ * Aranea JSP root tag, all other Aranea JSP tags must be used inside it. 
  * 
  * @jsp.tag
  *   name = "root"

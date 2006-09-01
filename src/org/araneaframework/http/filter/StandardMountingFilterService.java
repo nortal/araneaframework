@@ -71,7 +71,7 @@ public class StandardMountingFilterService extends BaseFilterService implements 
 
   /**
    * This setter allows to configure the default mounts using dependency injection. 
-   * It expects as keys the mounting path prefixes and as valued {@link MountContext.MessageFactory}.
+   * It expects as keys the mounting path prefixes and as values {@link org.araneaframework.framework.MountContext.MessageFactory}.
    */
   public void setMounts(Map mounts) {
     this.mounts = mounts;

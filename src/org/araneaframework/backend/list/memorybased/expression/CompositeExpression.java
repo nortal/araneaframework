@@ -19,7 +19,9 @@ package org.araneaframework.backend.list.memorybased.expression;
 import org.araneaframework.backend.list.memorybased.Expression;
 
 
-
+/**
+ * Composite Expression containing other expressions.
+ */
 public interface CompositeExpression extends Expression {
 	Expression[] getChildren();
 }

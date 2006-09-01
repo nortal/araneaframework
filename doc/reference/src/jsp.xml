@@ -814,7 +814,7 @@
               <row>
                 <entry>labelId</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>The key of the label that will be displayed on the button.</entry>
+                <entry>The key of the localizable label that will be displayed on the button.</entry>
               </row>
               <row>
                 <entry>eventId</entry>
@@ -825,6 +825,11 @@
                 <entry>eventParam</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry><literal>String</literal> event parameter that will accompany the event.</entry>
+              </row>
+              <row>
+                <entry>eventTarget</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>ID of receiving widget. Almost never set directly. Defaults to current contextwidget.</entry>
               </row>
               <row>
                 <entry>disabled</entry>
@@ -1152,6 +1157,11 @@
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Cell css class, defines the way the cell will be rendered.</entry>
               </row>
+              <row>
+                <entry>overrideLayout</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that determines whether row's own styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
@@ -1204,7 +1214,12 @@
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Cell css class, defines the way the cell will be rendered.</entry>
-              </row> 
+              </row>
+              <row>
+                <entry>overrideLayout</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that determines whether cells's own styleClass completely overrides styleClass provided by surrounding layout or row (default behaviour), or is appended to layout's or row's styleClass.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>

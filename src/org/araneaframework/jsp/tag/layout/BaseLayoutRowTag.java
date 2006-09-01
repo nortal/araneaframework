@@ -32,6 +32,8 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseLayoutRowTag extends PresentationTag implements CellClassProvider {
+  protected boolean overrideLayout = true;
+
   protected List cellClasses;
   private ResettableIterator cellIter;
 
@@ -55,9 +57,17 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
   public String getStyleClass() throws JspException {
     cellIter.reset();
     String result = ((RowClassProvider)requireContextEntry(RowClassProvider.KEY)).getRowClass();
-    if (styleClass != null)
-      return super.getStyleClass();
-    return (result != null && result.length() == 0) ? null : result;
+    result = (result != null && result.length() == 0) ? null : result;
+
+    if (styleClass != null) {
+      StringBuffer sb = new StringBuffer(super.getStyleClass());
+      if (!overrideLayout && result != null)
+        sb.append(' ').append(result);
+
+      result = sb.toString();
+    }
+
+    return result;
   }
   
   /* ***********************************************************************************
@@ -72,5 +82,15 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
    */
   public void setCellClasses(String cellClasses) throws JspException {
     this.cellClasses = JspUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Whether row's styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass."
+   */
+  public void setOverrideLayout(String overrideLayout) throws JspException {
+    this.overrideLayout = ((Boolean)evaluate("overrideLayout", overrideLayout, Boolean.class)).booleanValue();
   }
 }

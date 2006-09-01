@@ -165,10 +165,7 @@ public class SqlStatement implements Serializable, Cloneable {
 	 * Helper method that sets the parameters to the
 	 * <code>PreparedStatement</code>.
 	 * 
-	 * @param statement
-	 *            <code>PreparedStatement</code> which parameters will be set.
-	 * @param parameters
-	 *            parameters for the <code>PreparedStatement</code>.
+	 * @param pstmt <code>PreparedStatement</code> which parameters will be set.
 	 * @throws SQLException
 	 */
 	protected void propagateStatementWithParams(PreparedStatement pstmt)

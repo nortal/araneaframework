@@ -34,7 +34,7 @@ public final class RangeConstraint extends BaseConstraint {
 
 	protected boolean allowEquals;
 	protected FormElement fieldLo, fieldHi;
-	
+
 	/**
 	 * @param fieldLo The value of this field is checked to be less than the value of fieldHi (or null)
 	 * @param fieldHi The value of this field is checked to be greater than the value of fieldLo (or null)

@@ -25,9 +25,8 @@ import java.util.StringTokenizer;
 /**
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
-public abstract  class URLUtil {
+public abstract class URLUtil {
   /**
    * Removes all leading and trailing slashes.
    */

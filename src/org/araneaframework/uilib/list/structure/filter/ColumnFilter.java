@@ -19,27 +19,19 @@ package org.araneaframework.uilib.list.structure.filter;
 import org.araneaframework.uilib.list.structure.ListFilter;
 
 /**
- * Static list filtering information that relates to one (@link
- * org.araneaframework.uilib.widgets.lists.refactor.presentation.ListColumn).
+ * Static list filtering information that relates to one {@link org.araneaframework.uilib.list.structure.ListColumn}.
  */
 public interface ColumnFilter extends ListFilter {
 	/**
-	 * Returns the (@link
-	 * org.araneaframework.uilib.widgets.lists.refactor.presentation.ListColumn) Id.
-	 * 
-	 * @return the (@link
-	 *         org.araneaframework.uilib.widgets.lists.refactor.presentation.ListColumn) Id.
+	 * Returns the {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
+	 * @return {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
 	 */
 	String getColumnId();
 
 	/**
-	 * saves the (@link
-	 * org.araneaframework.uilib.widgets.lists.refactor.presentation.ListColumn) Id.
+	 * Saves the {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
 	 * 
-	 * @param id
-	 *            the (@link
-	 *            org.araneaframework.uilib.widgets.lists.refactor.presentation.ListColumn)
-	 *            Id.
+	 * @param id {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
 	 */
 	void setColumnId(String id);
 }

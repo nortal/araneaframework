@@ -246,6 +246,8 @@
     </property>    
   </bean>
   
-  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
+  <bean class="org.araneaframework.http.filter.StandardWindowScrollPositionFilterWidget" singleton="false"
+    id="araneaScrollingFilter"/>
   
+  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
 </beans>

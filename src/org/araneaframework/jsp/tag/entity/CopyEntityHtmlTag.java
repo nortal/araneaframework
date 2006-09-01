@@ -17,14 +17,14 @@
 package org.araneaframework.jsp.tag.entity;
 
 /**
- * Entity tag.
+ * Copyright entity &copy; tag.
  * 
  * @author Oleg Mürk
  * 
  * @jsp.tag
  *   name = "copyright"
  *   body-content = "empty"
- *   description = "HTML <i>&amp;copyright;</i> entity."
+ *   description = "HTML <i>&amp;copy;</i> entity."
  */
 public class CopyEntityHtmlTag extends EntityHtmlTag {
 	public CopyEntityHtmlTag() {

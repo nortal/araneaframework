@@ -17,6 +17,9 @@ package org.araneaframework;
 
 
 /**
+ * Allows to acquire information about running Aranea version. 
+ * It depends on jar file manifest having this information.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class AraneaVersion {

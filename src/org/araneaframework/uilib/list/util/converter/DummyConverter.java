@@ -24,11 +24,11 @@ import org.araneaframework.uilib.list.util.Converter;
  */
 public class DummyConverter implements Converter {
 
-	public Object convert(Object data) throws ConvertionException {
+	public Object convert(Object data) throws ConversionException {
 		return data;
 	}
 
-	public Object reverseConvert(Object data) throws ConvertionException {
+	public Object reverseConvert(Object data) throws ConversionException {
 		return data;
 	}
 

@@ -22,7 +22,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
 
 /**
- * This class represents a Textbox control.
+ * Class that represents a textbox control.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
@@ -92,7 +92,7 @@ public class TextControl extends StringValueControl {
   //*********************************************************************  	
 	
   /**
-   * In case text control type is other than {@link UiTextType#TEXT} makes custom checks. 
+   * In case text control type is other than {@link TextType#TEXT} makes custom checks. 
    */
   protected void validateNotNull() {
     super.validateNotNull();

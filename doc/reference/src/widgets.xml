@@ -41,10 +41,10 @@
 	
   </sect1>
 	<sect1>
-		<title>StandardWidget &amp; StandardPresentationWidget</title>
+		<title>StandardWidget &amp; BaseUIWidget</title>
 
     <para>
-      A typical widget class will extend <literal>org.araneaframework.uilib.core.StandardPresentationWidget</literal>. This widget represents the usual custom application component that is rendered using Aranea custom JSP tags. <literal>StandardPresentationWidget</literal> inherits most of its functionality from <literal>org.araneaframework.core.CustomWidget</literal> the difference between the two being only that <literal>StandardPresentationWidget</literal> assumes to be connected with a JSP page.
+      A typical widget class will extend <literal>org.araneaframework.uilib.core.BaseUIWidget</literal>. This widget represents the usual custom application component that is rendered using Aranea custom JSP tags. <literal>BaseUIWidget</literal> inherits most of its functionality from <literal>org.araneaframework.core.BaseApplicationWidget</literal> the difference between the two being only that <literal>BaseUIWidget</literal> assumes to be connected with a JSP page.
     </para>
 
     <sect2>
@@ -72,7 +72,7 @@
       </para>
       <para>
         A usual idiom is to save a reference to the newly created and added child using a parent widget field:
-        <programlisting role="java">public class MyWidget extends StandardPresentationWidget {
+        <programlisting role="java">public class MyWidget extends BaseUIWidget {
   private MyChildWidget myChildWidget;
   
   protected void init() {
@@ -123,7 +123,7 @@ public void handleEventMyEvent(String parameter) {
       </para>
 
       <para>
-        A useful feature is the method <literal>addGlobalEventListener(EventListener listener)</literal> that allows to register a listener that will receive all events sent to the widget. In fact <literal>StandardPresentationWidget</literal> does that by default, and typically you will use the individual event listeners only when you want to override this default behaviour. This allows to just define correct method names (<literal>handleEvent&lt;event&gt;</literal>) and all events will be translated to the calls to these methods. Certainly this can also be cancelled by calling <literal>clearGlobalEventListener()</literal>, or overridden by adding your own global event listener.
+        A useful feature is the method <literal>addGlobalEventListener(EventListener listener)</literal> that allows to register a listener that will receive all events sent to the widget. In fact <literal>BaseUIWidget</literal> does that by default, and typically you will use the individual event listeners only when you want to override this default behaviour. This allows to just define correct method names (<literal>handleEvent&lt;event&gt;</literal>) and all events will be translated to the calls to these methods. Certainly this can also be cancelled by calling <literal>clearGlobalEventListener()</literal>, or overridden by adding your own global event listener.
 
       </para>
     </sect2>
@@ -197,7 +197,7 @@ putViewDataOnce("now", new Date());
       </para>
 
       <para>
-        <literal>StandardPresentationWidget</literal> allows to render the current widget using a JSP page. To do that one needs to select a view as follows:
+        <literal>BaseUIWidget</literal> allows to render the current widget using a JSP page. To do that one needs to select a view as follows:
 <programlisting role="java">...
 setViewSelector("myWidget/form");
 ...</programlisting>        
@@ -209,7 +209,7 @@ setViewSelector("myWidget/form");
 
       <para>
         A typical application custom widget will look like that:
-<programlisting role="java">public class TestWidget extends StandardPresentationWidget {
+<programlisting role="java">public class TestWidget extends BaseUIWidget {
 
   private static final Logger log = Logger.getLogger(TestWidget.class);
   
@@ -240,14 +240,14 @@ setViewSelector("myWidget/form");
     <title>Standard Contexts</title>    
 
     <para>
-      Contexts are the Aranea way to access framework services. They can be looked up from the environment as shown in <xref linkend="widgets-environment"/>. This section describes the most common Aranea contexts that should be available in any typical configuration. All these contexts are also available directly through <literal>StandardPresentationWidget</literal> methods as shown further on.
+      Contexts are the Aranea way to access framework services. They can be looked up from the environment as shown in <xref linkend="widgets-environment"/>. This section describes the most common Aranea contexts that should be available in any typical configuration. All these contexts are also available directly through <literal>BaseUIWidget</literal> methods as shown further on.
     </para>
     
     <sect2>
       <title>MessageContext</title>
 
       <para>
-        <literal>org.araneaframework.framework.MessageContext</literal> allows to show messages to the user. The messages can be of several types, inluding predefined error and informative types. Typically messages will be shown somewhere in the application (exact way is application-specific). <literal>MessageContext</literal> is available through a <literal>StandardPresentationWidget</literal> method <literal>getMessageCtx()</literal> and is typically used as follows:
+        <literal>org.araneaframework.framework.MessageContext</literal> allows to show messages to the user. The messages can be of several types, inluding predefined error and informative types. Typically messages will be shown somewhere in the application (exact way is application-specific). <literal>MessageContext</literal> is available through a <literal>BaseUIWidget</literal> method <literal>getMessageCtx()</literal> and is typically used as follows:
 <programlisting role="java">getMessageCtx().showInfoMessage("Hello world!");</programlisting>        
       More info is available in the JavaDoc.
       </para>
@@ -257,7 +257,7 @@ setViewSelector("myWidget/form");
       <title>LocalizationContext</title>
 
       <para>
-        <literal>org.araneaframework.framework.LocalizationContext</literal> allows to get and set current session locale, localize strings and lookup resource bundles. The context is available through the <literal>StandardPresentationWidget</literal> method <literal>getL10nCtx()</literal>. Typically it is used as following:
+        <literal>org.araneaframework.framework.LocalizationContext</literal> allows to get and set current session locale, localize strings and lookup resource bundles. The context is available through the <literal>BaseUIWidget</literal> method <literal>getL10nCtx()</literal>. Typically it is used as following:
 <programlisting role="java">
 ...
 String message = getL10nCtx().localize("my.message.key");
@@ -275,7 +275,7 @@ getMessageCtx().showInfoMessage(message);
       </para>
       
       <para>
-       <literal>org.araneaframework.framework.FlowContext</literal> is the Aranea context that provides support for nested flow navigation. Aranea flow is a widget that is running in the flow container (using the <literal>FlowContext.start()</literal> method. Aranea abstraction for the nested state is that of a function&mdash;the nested <emphasis>flow</emphasis> takes in some parameters and when finished may return some value or signal that no value can be returned. The context is available as <literal>getFlowCtx()</literal> method of <literal>StandardPresentationWidget</literal> and allows to start flows, finish flows and return the resulting value.
+       <literal>org.araneaframework.framework.FlowContext</literal> is the Aranea context that provides support for nested flow navigation. Aranea flow is a widget that is running in the flow container (using the <literal>FlowContext.start()</literal> method. Aranea abstraction for the nested state is that of a function&mdash;the nested <emphasis>flow</emphasis> takes in some parameters and when finished may return some value or signal that no value can be returned. The context is available as <literal>getFlowCtx()</literal> method of <literal>BaseUIWidget</literal> and allows to start flows, finish flows and return the resulting value.
       </para>
 
       <para>

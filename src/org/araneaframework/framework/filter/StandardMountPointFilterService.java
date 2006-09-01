@@ -21,13 +21,12 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.framework.MountContext;
-import org.araneaframework.framework.MountContext.MessageFactory;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.filter.StandardMountingFilterService;
 
 /**
  * This service serves as the entry point for mounted URLs. If the current request is sent to one of such URLs 
- * it will send the mounting message produced by the mounting {@link MessageFactory}. 
+ * it will send the mounting message produced by the mounting {@link org.araneaframework.framework.MountContext.MessageFactory}. 
  * <p>
  * This service doesn't require any configuration.
  * 
@@ -45,7 +44,7 @@ public class StandardMountPointFilterService extends BaseFilterService {
     
     if (mountMsg != null)
       mountMsg.send(null, childService);
-    
+
     super.action(path, input, output);
   }
 }

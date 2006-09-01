@@ -25,7 +25,6 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
 import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
-import org.araneaframework.uilib.form.formlist.FormListWidget;
 
 
 /**

@@ -17,7 +17,7 @@
 package org.araneaframework.jsp.tag.entity;
 
 /**
- * Entity tag.
+ * Lower-than entity &lt; tag.
  * 
  * @author Oleg Mürk
  * 

@@ -24,5 +24,14 @@
         <ref bean="araneaSerializingAudit"/>
       </list>
     </property>
-  </bean>  
+  </bean>
+
+  <bean id="customWidgetFilters" singleton="false"
+    class="org.araneaframework.framework.filter.StandardFilterChainWidget">
+    <property name="filterChain">     
+      <list>
+        <ref bean="araneaScrollingFilter"/>
+      </list>
+    </property>
+  </bean>
 </beans>

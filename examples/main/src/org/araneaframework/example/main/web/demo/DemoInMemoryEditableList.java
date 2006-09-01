@@ -90,8 +90,8 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 	}
 	
   protected void handleProcess() throws Exception {
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded());
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated());
+	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded().values());
+	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated().values());
 	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Deleted: " + inMemoryHelper.getDeleted());
   }
   

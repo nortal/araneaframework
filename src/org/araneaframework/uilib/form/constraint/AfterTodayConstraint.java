@@ -22,13 +22,16 @@ import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
 
 /**
+ * Constraint that fails when checked java.util.Date is not after current date.
+ * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  */
 public class AfterTodayConstraint extends BaseFieldConstraint {
 	protected boolean allowToday;
 
 	/**
-	 * @param allowToday
+	 * Whether today should be allowed as valid. 
+	 * @param allowToday when set, all dates from today are considered valid.
 	 */
 	public AfterTodayConstraint(boolean allowToday) {
 		this.allowToday = allowToday;

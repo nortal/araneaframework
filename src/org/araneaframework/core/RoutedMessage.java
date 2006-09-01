@@ -22,6 +22,10 @@ import org.araneaframework.Message;
 import org.araneaframework.Path;
 import org.araneaframework.core.util.ExceptionUtil;
 
+/**
+ * {@link Message} that is sent to exactly one {@link Component} in hierarchy.
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ */
 public abstract class RoutedMessage implements Message {
   private static final Logger log = Logger.getLogger(RoutedMessage.class);
   
@@ -34,7 +38,12 @@ public abstract class RoutedMessage implements Message {
     this.path = path;
     destination = path.toString();
   }
-
+  /**
+   * Sends method that causes {@link RoutedMessage#execute(Component)} to be called for 
+   * {@link Component} identified in hierarchy by the given <code>id</code>. 
+   * 
+   * @see org.araneaframework.Message#send(java.lang.Object, org.araneaframework.Component)
+   */
   public final void send(Object id, Component component) {
     //After routing finished
     if (!path.hasNext())
@@ -61,6 +70,10 @@ public abstract class RoutedMessage implements Message {
       }
     }
   }
-  
+
+  /**
+   * Method that is called on {@link Component} that is target of this {@link RoutedMessage}.
+   * @param component {@link Component} this {@link RoutedMessage} has reached
+   */
   protected abstract void execute(Component component) throws Exception;
 }

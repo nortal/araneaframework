@@ -60,9 +60,9 @@ public class UiUpdateEvent extends UiEvent {
   public StringBuffer getEventAttributes() {
     StringBuffer result = super.getEventAttributes();
     if (eventPrecondition != null)
-      result.append(' ').append(AraneaAttributes.EVENT_CONDITION).append("=\"").append(eventPrecondition).append('"');
+      result.append(' ').append(AraneaAttributes.Event.CONDITION).append("=\"").append(eventPrecondition).append('"');
     if (getUpdateRegionNames() != null && !getUpdateRegionNames().isEmpty())
-      result.append(' ').append(AraneaAttributes.UPDATE_REGIONS).append("=\"").append(JspUpdateRegionUtil.formatUpdateRegionsJS(getUpdateRegionNames())).append("\"");
+      result.append(' ').append(AraneaAttributes.Event.UPDATE_REGIONS).append("=\"").append(JspUpdateRegionUtil.formatUpdateRegionsJS(getUpdateRegionNames())).append("\"");
 
     return result;
   }

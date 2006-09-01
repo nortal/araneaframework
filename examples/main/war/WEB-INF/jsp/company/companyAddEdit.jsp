@@ -14,24 +14,24 @@
 		<ui:component>
 
 			<ui:form id="form">
-				<ui:componentForm>
+				<ui:componentForm rowClasses="cols4" cellClasses="name,inpt">
 					<ui:formElement id="name">
-						<ui:row styleClass="cols4">
-							<ui:cell styleClass="name">
+						<ui:row>
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
-							<ui:cell styleClass="inpt">
+							<ui:cell>
 								<ui:textInput />
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
 
 					<ui:formElement id="address">
-						<ui:row styleClass="cols4">
-							<ui:cell styleClass="name">
+						<ui:row>
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
-							<ui:cell styleClass="inpt">
+							<ui:cell>
 								<ui:textInput />
 							</ui:cell>
 						</ui:row>

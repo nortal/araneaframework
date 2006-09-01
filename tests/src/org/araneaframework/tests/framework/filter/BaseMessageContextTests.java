@@ -16,6 +16,7 @@
 
 package org.araneaframework.tests.framework.filter;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
@@ -66,7 +67,7 @@ public abstract class BaseMessageContextTests extends TestCase {
     Object messages = output.getAttribute(MessageContext.MESSAGE_KEY);
     assertTrue("Messages must be typed java.util.Map or be null.", isMap(messages));
     if (messages != null)   
-      assertTrue("Messages must be empty.", ((Map)messages).size() == 0);
+      assertTrue("MessageMap must be empty.", ((Map)messages).size() == 0);
   }
   
   // add something, clear, test emptiness
@@ -79,7 +80,7 @@ public abstract class BaseMessageContextTests extends TestCase {
     Object messages = output.getAttribute(MessageContext.MESSAGE_KEY);
     assertTrue("Messages must be typed java.util.Map or be null.", isMap(messages));
     if (messages != null)
-        assertTrue("Messages must be empty.", ((Map)messages).size() == 0);
+        assertTrue("MessageMap must be empty.", ((Map)messages).size() == 0);
   }
   
   // test that non-permanent messages do not survive update(), map must be empty;
@@ -92,7 +93,7 @@ public abstract class BaseMessageContextTests extends TestCase {
     Object messages = output.getAttribute(MessageContext.MESSAGE_KEY);
     assertTrue("Messages must be typed java.util.Map or be null.", isMap(messages));
     if (messages != null)
-        assertTrue("Messages must be empty.", ((Map)messages).size() == 0);
+        assertTrue("MessageMap must be empty.", ((Map)messages).size() == 0);
   }
 
   // test that added messages really are present after render();
@@ -102,7 +103,7 @@ public abstract class BaseMessageContextTests extends TestCase {
     
     Object messages = output.getAttribute(MessageContext.MESSAGE_KEY);
     assertTrue("messages must not be null", messages != null);
-    assertTrue("Messages must contain ONE element!", ((Map)messages).size() == 1);
+    assertTrue("MessageMap must contain ONE element!", ((Map)messages).size() == 1);
   }
   
   // test that added permanent messages survive the update();
@@ -111,11 +112,30 @@ public abstract class BaseMessageContextTests extends TestCase {
     
     ((Widget)msgCtx)._getWidget().update(new MockInputData());
     ((Widget)msgCtx)._getWidget().render(output);
+
+    Object messages = output.getAttribute(MessageContext.MESSAGE_KEY);
+    assertTrue("messages must not be null", messages != null);
+    assertTrue("MessageMap must contain ONE element!", ((Map)messages).size() == 1);
+  }
+
+  // test that permanent messages and messages for current render come together nicely in a Collection
+  public void testNonEmpty_3() throws Exception {
+    msgCtx.showPermanentMessage(MessageContext.ERROR_TYPE, "permanent message");
+    msgCtx.showMessage(MessageContext.ERROR_TYPE, "one-time message");
+    msgCtx.showErrorMessage("Another error message added with defined interface method.");
+    
+    ((Widget)msgCtx)._getWidget().render(output);
     
     Object messages = output.getAttribute(MessageContext.MESSAGE_KEY);
     assertTrue("messages must not be null", messages != null);
-    assertTrue("Messages must contain ONE element!", ((Map)messages).size() == 1);
+    assertTrue("Messages must contain ONE elements!", ((Map)messages).size() == 1);
+    
+    Object errorMessages = ((Map)messages).get(MessageContext.ERROR_TYPE);
+    assertTrue("Messages must be in java.util.Collection", errorMessages instanceof Collection);
+
+    assertTrue("There must be THREE error messages", ((Collection)errorMessages).size() == 3);
   }
+  
 
   // Dummy OutputData which popAttribute() does not pop values, so that after 
   // calling render(OutputData) it is possible to check what went into it.

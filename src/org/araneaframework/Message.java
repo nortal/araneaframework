@@ -17,7 +17,24 @@
 package org.araneaframework;
 
 import java.io.Serializable;
+import org.araneaframework.core.BroadcastMessage;
+import org.araneaframework.core.RoutedMessage;
 
+/**
+ * {@link Message} interface allows to send any events to any component in the component hierarchy.
+ * 
+ * @see BroadcastMessage
+ * @see RoutedMessage
+ * 
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ */
 public interface Message extends Serializable {
+  /**
+   * Used to send message into component hierarchy whose root node is <code>component</code>.
+   * Propagation within the component hierarchy is done by {@link org.araneaframework.Component.Interface#propagate(Message)} method.
+   * 
+   * @param id id of component in hierarchy that should react to this {@link Message}.
+   * @param component {@link Component} who should start propagating the {@link Message} further
+   */
   public void send(Object id, Component component);
 }

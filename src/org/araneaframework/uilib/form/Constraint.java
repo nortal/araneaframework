@@ -24,15 +24,13 @@ public interface Constraint extends Serializable, GenericFormElementAware{
 
   /**
    * This method validates the constraint conditions, providing some preconditions and
-   * postconditions for the {@link #validate()}method.
-   * @throws Exception 
+   * postconditions for the {@link #validate()} method.
    */
   public boolean validate() throws Exception;
   
   /**
-   * Returns the {@link UiMessage}s produced while validationg the constraint.
-   * 
-   * @return the {@link UiMessage}s produced while validationg the constraint.
+   * Returns the validation errors.
+   * @return validation errors.
    */
   public Set getErrors();
 
@@ -42,10 +40,8 @@ public interface Constraint extends Serializable, GenericFormElementAware{
   public void clearErrors();
 
   /**
-   * Sets the custom {@link UiMessage}, that will be returned instead of the usual ones.
-   * 
-   * @param customErrorMessage custom {@link UiMessage} that will be returned instead of the
-   * usual ones.
+   * Sets the custom error message, that will be used in place of default ones.
+   * @param customErrorMessage custom error message
    */
   public void setCustomErrorMessage(String customErrorMessage);
 }

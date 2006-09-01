@@ -24,18 +24,15 @@ import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
-import org.araneaframework.uilib.form.constraint.BaseConstraint;
 import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 
-
 /**
- * Represents a simple "leaf" form element that holds a control and its data.
+ * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class FormElement extends GenericFormElement implements FormElementContext {
   //*******************************************************************
@@ -96,9 +93,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
   }
 
   /**
-   * After setting the constraint sets the constraint field.
-   * 
-   * @see BaseConstraint#setField(FormElement)
+   * Sets the constraint on this form element.
+   * @param constraint constraint to set
    */
   public void setConstraint(Constraint constraint) {
     super.setConstraint(constraint);

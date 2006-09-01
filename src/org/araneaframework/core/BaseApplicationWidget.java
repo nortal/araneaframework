@@ -609,8 +609,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   }
   
   /**
-   * Clears all the ActionListeners with the specified eventId.
-   * @param eventId the id of the EventListeners.
+   * Clears all the ActionListeners with the specified actionId.
+   * @param actionId the actionId
    */
   public void clearActionListeners(Object actionId) {
     Assert.notNullParam(this, actionId, "actionId");

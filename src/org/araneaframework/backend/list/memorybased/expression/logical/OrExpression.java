@@ -22,11 +22,17 @@ import org.araneaframework.backend.list.memorybased.ExpressionEvaluationExceptio
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
-
+/**
+ * Composite OR Expression.
+ */
 public class OrExpression extends MultiExpression {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 
+	 * Returns Boolean.TRUE if at least one expressions evaluates to Boolean.TRUE, Boolean.FALSE otherwise.
+	 * @return whether any of the expression evaluated to true
+	 */
 	public Object evaluate(VariableResolver resolver)
 			throws ExpressionEvaluationException {
 		if (this.children.size() == 0) {
