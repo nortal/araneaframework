@@ -16,28 +16,34 @@
 
 package org.araneaframework.uilib.list.util.like;
 
+import java.io.Serializable;
+
 /**
- * Automatic implementation of {@link AnyStringWildcardHandler}.
- * 
- * Wildcard is added at the start if there was no wildcard at the end
- *   and it is added at the end if there was no wildcard at the start.
+ * Base implementation of {@link WildcardHandler}.
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
- * @see AnyStringWildcardHandler
+ * @see WildcardHandler
  */
-public class AutomaticAnyStringWildcardHandler extends BaseAnyStringWildcardHandler {
+public abstract class BaseWildcardHandler implements WildcardHandler, Serializable {
+	
+	protected int startsWith;
+	protected int endsWith;
 
-	public boolean shouldStartWith() {
-		return this.startsWith.booleanValue() || !this.endsWith.booleanValue();
+	public void setStartsWith(int startsWith) {
+		this.startsWith = startsWith;
 	}
 
-	public boolean shouldEndWith() {
-		return this.endsWith.booleanValue() || !this.startsWith.booleanValue();
+	public void setEndsWith(int endsWith) {
+		this.endsWith = endsWith;
 	}
 
-	public AnyStringWildcardHandler newInstance() {
-		return new AutomaticAnyStringWildcardHandler();
+	public int getEndsWith() {
+		return endsWith;
+	}
+
+	public int getStartsWith() {
+		return startsWith;
 	}
 
 }

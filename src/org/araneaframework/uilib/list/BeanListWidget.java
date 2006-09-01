@@ -16,10 +16,12 @@
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.backend.util.BeanMapper;
+import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
+import org.araneaframework.uilib.form.Data;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.list.structure.ComparableType;
 import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
 import org.araneaframework.uilib.list.structure.order.ColumnOrder;
@@ -75,7 +77,7 @@ public class BeanListWidget extends ListWidget {
 			propagateValueType(filter, id);
 		}
 		if (control != null) {
-			addBeanFilterFormElementInternal(id, label, control);						
+			addBeanFilterFormElement(id, label, control);
 		}
 		super.addListColumn(id, label, order, filter);
 	}
@@ -96,10 +98,25 @@ public class BeanListWidget extends ListWidget {
 	public void addBeanColumn(String id, String label, boolean isOrdered) throws Exception {
 		addBeanColumn(id, label, isOrdered, null, null);
 	}
+		
+	/*
+	 * Filter Form
+	 */
+	
+	public void addFilterFormElement(String id, FormElement element) throws Exception {
+		RecursiveFormUtil.addElement(getBeanForm(), id, element);
+	}
+
+	public void addFilterFormElement(String id, String label, Control control, Data data) throws Exception {
+		RecursiveFormUtil.addElement(getBeanForm(), id, label, control, data, false);
+	}
+
+	public void addFilterFormElement(String id, Control control, Data data) throws Exception {
+		addFilterFormElement(id, getColumnLabel(id), control, data);
+	}
 	
 	public void addBeanFilterFormElement(String id, String label, Control control) throws Exception {
-		validateFilterForm();
-		addBeanFilterFormElementInternal(id, label, control);
+		RecursiveFormUtil.addBeanElement(getBeanForm(), id, label, control, false);
 	}
 	
 	public void addBeanFilterFormElement(String id, Control control) throws Exception {
@@ -110,11 +127,7 @@ public class BeanListWidget extends ListWidget {
 	 * Helper methods
 	 */
 	
-	private void addBeanFilterFormElementInternal(String id, String labelId, Control control) throws Exception {
-		RecursiveFormUtil.addBeanElement(getBeanForm(), id, labelId, control, false);
-	}	
-	
 	private static Class getBeanFieldType(Class beanClass, String fullId) {
-		return new BeanMapper(beanClass, true).getFieldType(fullId);
+		return BeanUtil.getFieldType(beanClass, fullId);
 	}
 }
