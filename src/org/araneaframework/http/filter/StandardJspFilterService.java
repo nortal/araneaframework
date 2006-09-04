@@ -61,7 +61,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   private LocalizationContext loc;
   
   // Spring injection parameters  
-  
   public void setSubmitCharset(String submitCharset) {
     this.submitCharset = submitCharset;
   }
@@ -81,10 +80,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
   protected Environment getChildEnvironment() {
-    Map entries = new HashMap();  
-    entries.put(JspContext.class, this);
-    
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(getEnvironment(), JspContext.class, this);
   }
   
  protected void action(Path path, InputData input, OutputData output) throws Exception {

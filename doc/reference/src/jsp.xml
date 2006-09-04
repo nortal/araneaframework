@@ -251,7 +251,7 @@
     </sect2>    
 
 
-    <sect2>
+    <sect2 id="systemForm" xreflabel="systemForm">
       <title><![CDATA[<ui:systemForm>]]></title>
       <para>
         This tag will render an HTML &lt;form&gt; tag along with some Aranea-specific hidden fields. When making custom web applications it is strongly suggested to have only one system form in the template and have it submit using <emphasis>POST</emphasis>. This will ensure that no matter what user does no data is ever lost. However Aranea does not impose this idiom and one may just as well submit using <emphasis>GET</emphasis>, define system forms in widgets and use usual HTML links instead of JavaScript.

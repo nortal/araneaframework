@@ -13,6 +13,8 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
+ * 
+ * 
  * @author Nikita Salnikov-Tarnovski
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
@@ -25,7 +27,6 @@ public class StandardAjaxFilterService extends BaseFilterService {
 	public static final String UPDATE_REGIONS_KEY = "updateRegions";
 	public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
 	public static final String AJAX_RESPONSE_ID_KEY = "ajaxResponseId";
-
 
 	public void setCharacterEncoding(String encoding) {
 		characterEncoding = encoding;
@@ -56,10 +57,14 @@ public class StandardAjaxFilterService extends BaseFilterService {
 				arUtil.rollback();
 
 				String transactionElement = getTransactionElement(response);
-				httpOutput.getOutputStream().write(transactionElement.getBytes(characterEncoding));
-				// ajax response id is the same as incoming request id. 
-				String responseIdElement = getResponseIdElement(requestId);
-				httpOutput.getOutputStream().write(responseIdElement.getBytes(characterEncoding));
+				if (transactionElement != null)
+				  httpOutput.getOutputStream().write(transactionElement.getBytes(characterEncoding));
+
+				// ajax response id is the same as incoming request id.
+				if (requestId != null) {
+				  String responseIdElement = getResponseIdElement(requestId);
+                  httpOutput.getOutputStream().write(responseIdElement.getBytes(characterEncoding));
+                }
 
 				String[] regions = commaSeparatedRegions.split(",");
 				// adding the regions that may appear in the response but

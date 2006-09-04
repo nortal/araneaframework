@@ -41,9 +41,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
   private Service continuation;
   
   protected Environment getChildEnvironment() {
-    Map entries = new HashMap();
-    entries.put(ContinuationManagerContext.class, this);        
-    return new StandardEnvironment(super.getChildEnvironment(), entries);
+    return new StandardEnvironment(super.getChildEnvironment(), ContinuationManagerContext.class, this);
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {

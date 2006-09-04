@@ -1,0 +1,61 @@
+<sect3 id="StandardFileUploadFilterService">
+    <title>StandardFileUploadFilterService</title>
+
+    <para>
+      Enriches child environment with <literal>FileUploadContext</literal> (which is just marker interface). When incoming request is 
+      multi-part request, children's <literal>InputData</literal> is extended with <literal>FileUploadInputExtension</literal>
+      that allows children easy access to uploaded files.
+    </para>
+    
+   <informaltable frame="all">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>multipartEncoding</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>
+                        character encoding that will be used to decode the <literal>multipart/form-data</literal>
+                        encoded strings. The default encoding is determined by <emphasis>Apache Commons</emphasis> <literal>FileUpload</literal> class.
+                    </entry>
+                </row>
+                <row>
+                    <entry>useRequestEncoding</entry>
+                    <entry><literal>boolean</literal></entry>
+                    <entry>
+                        when set to "true" request character encoding will be used to parse the 
+                        <literal>multipart/form-data</literal> encoded strings.
+                    </entry>
+                </row>
+                <row>
+                    <entry>maximumCachedSize</entry>
+                    <entry><literal>java.lang.Integer</literal></entry>
+                    <entry>
+                        maximum size of file that may be cached in memory.
+                    </entry>
+                </row>
+                <row>
+                    <entry>maximumSize</entry>
+                    <entry><literal>java.lang.Integer</literal></entry>
+                    <entry>maximum size of file that may be uploaded to server.
+                    </entry>
+                </row>
+                <row>
+                    <entry>tempDirectory</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>temporary directory to use when uploading files.</entry>
+                </row>
+            </tbody>
+        </tgroup>
+   </informaltable>
+    
+</sect3>

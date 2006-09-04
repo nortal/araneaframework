@@ -43,7 +43,7 @@
             </para>
           </sect2> 
           
-          <sect2>
+          <sect2 id="ajaxanywhere">
             <title>AjaxAnywhere (<ulink url="http://ajaxanywhere.sourceforge.net/">http://ajaxanywhere.sourceforge.net/</ulink>)</title>
             <para>
                AjaxAnywhere allows separating web page into multiple zones, and refreshing only those zones that needs to be updated.

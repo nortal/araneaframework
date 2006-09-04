@@ -14,6 +14,21 @@
 	
 	<!ENTITY popupfilter 	 SYSTEM "framework/components/filters/StandardPopupFilterWidget.xml">
 	<!ENTITY threadcloningfilter 	 SYSTEM "framework/components/filters/StandardThreadCloningFilterService.xml">
+	<!ENTITY messagefilter 	 SYSTEM "framework/components/filters/StandardMessagingFilterWidget.xml">
+	<!ENTITY synchronizingfilter 	 SYSTEM "framework/components/filters/StandardSynchronizingFilterService.xml">
+	<!ENTITY transactionfilter 	 SYSTEM "framework/components/filters/StandardTransactionFilterWidget.xml">
+	<!ENTITY localizationfilter 	 SYSTEM "framework/components/filters/StandardLocalizationFilterService.xml">
+	<!ENTITY serializingauditfilter 	 SYSTEM "framework/components/filters/StandardSerializingAuditFilterService.xml">
+	<!ENTITY fileuploadfilter 	 SYSTEM "framework/components/filters/StandardFileUploadFilterService.xml">
+	<!ENTITY httpresponsefilter 	 SYSTEM "framework/components/filters/StandardHttpResponseFilterService.xml">
+	<!ENTITY statisticfilter 	 SYSTEM "framework/components/filters/StandardStatisticFilterService.xml">
+	<!ENTITY contextmapfilter 	 SYSTEM "framework/components/filters/StandardContextMapFilterWidget.xml">
+	<!ENTITY ajaxfilter 	 SYSTEM "framework/components/filters/StandardAjaxFilterService.xml">
+	<!ENTITY criticalexceptionfilter 	 SYSTEM "framework/components/filters/StandardCriticalExceptionHandlingFilterService.xml">
+	<!ENTITY jspfilter 	 SYSTEM "framework/components/filters/StandardJspFilterService.xml">
+	
+	
+	<!ENTITY flowcontainer 	 SYSTEM "framework/components/containers/StandardFlowContainerWidget.xml">
 ]>
 
 <!--

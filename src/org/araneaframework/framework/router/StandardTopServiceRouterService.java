@@ -16,8 +16,6 @@
 
 package org.araneaframework.framework.router;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.StandardEnvironment;
@@ -39,9 +37,7 @@ public class StandardTopServiceRouterService extends BaseServiceRouterService {
   }
 
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    Map entries = new HashMap();    
-    entries.put(TopServiceContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), TopServiceContext.class, new ServiceRouterContextImpl(serviceId));
   }
     
   private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements TopServiceContext {

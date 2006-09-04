@@ -307,7 +307,7 @@ myEvent.send(null, rootComponent);
       Services are the basic working horses of the Aranea framework. They  can generally be both synchronized and unsynchronized depending on the context. Services may also have persistent state and their lifetime is explicitly managed by their parent (see <xref linkend="components-persistence"/>). The service lifecycle is very simple&mdash;as long as the service is live and enabled it can receive <literal>action()</literal> calls, possibly several at a time. 
     </para>
     
-		<sect2>
+		<sect2 id="services-as-framework-plugins">
 			<title>Services as Framework Plug-ins</title>
 
       <para>
