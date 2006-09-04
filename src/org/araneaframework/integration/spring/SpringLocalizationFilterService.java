@@ -1,8 +1,6 @@
 package org.araneaframework.integration.spring;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 import org.araneaframework.Environment;
 import org.araneaframework.core.StandardEnvironment;
@@ -30,10 +28,7 @@ public class SpringLocalizationFilterService extends StandardLocalizationFilterS
 	}
 	
 	protected Environment getChildEnvironment() {
-		Map entries = new HashMap();
-		entries.put(SpringLocalizationContext.class, this);
-		
-		return new StandardEnvironment(super.getChildEnvironment(), entries);
+		return new StandardEnvironment(super.getChildEnvironment(), SpringLocalizationContext.class, this);
 	}
 	
 	/* Resource Bundle Localization Context */
