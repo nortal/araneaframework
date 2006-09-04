@@ -62,7 +62,7 @@
 								<ui:listRowLinkButton eventId="edit">
 									<ui:image code="buttonChange" alt="Edit company" title="Edit company"/>
 								</ui:listRowLinkButton>
-								<ui:listRowLinkButton eventId="remove">
+								<ui:listRowLinkButton eventId="remove" onClickPrecondition="return window.confirm('Are you sure?');">
 									<ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
 								</ui:listRowLinkButton>
 							</ui:cell>
