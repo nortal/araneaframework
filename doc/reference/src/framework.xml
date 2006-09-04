@@ -279,11 +279,11 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     <sect2>
       <title>Containers</title>
       &flowcontainer;
+      
 <!-- 
       ExceptionHandlingFlowContainerWidget
       StandardServiceAdapterWidget
       StandardContainerService
-      StandardViewPortWidget
       StandardWidgetAdapterService
       StandardContainerWidget
       PathInfoServiceContainerService -->
