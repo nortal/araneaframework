@@ -123,6 +123,19 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     
     return messageMap;
   }
+  
+  /** Removes the given message from given messageMap. */
+  protected Map removeMessage(final String message, Map messageMap) {
+    if (messageMap == null)
+      return null;
+
+    for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+      Collection messages = (Collection)((Map.Entry)i.next()).getValue();
+      messages.remove(message);
+    }
+
+    return messageMap;
+  }
 
   public void showMessage(String type, final String message) {
     messages = storeMessage(type, message, messages);
@@ -131,8 +144,12 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   public void showPermanentMessage(String type, final String message) {
     permanentMessages = storeMessage(type, message, permanentMessages);
   }
+  
+  public void hidePermanentMessage(String message) {
+    permanentMessages = removeMessage(message, permanentMessages);
+  }
 
-  public void showErrorMessage(String message) {
+public void showErrorMessage(String message) {
     showMessage(ERROR_TYPE, message);
   }
 

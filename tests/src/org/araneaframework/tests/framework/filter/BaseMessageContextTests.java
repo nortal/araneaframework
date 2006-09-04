@@ -136,6 +136,25 @@ public abstract class BaseMessageContextTests extends TestCase {
     assertTrue("There must be THREE error messages", ((Collection)errorMessages).size() == 3);
   }
   
+  // test that hiding of permanent messages works
+  public void testPermanentMessageHiding() throws Exception {
+    msgCtx.showPermanentMessage(MessageContext.ERROR_TYPE, "permanent message");
+    msgCtx.showMessage(MessageContext.ERROR_TYPE, "one-time message");
+    msgCtx.showErrorMessage("Another error message added with defined interface method.");
+    
+    msgCtx.hidePermanentMessage("permanent message");
+    
+    ((Widget)msgCtx)._getWidget().render(output);
+    
+    Object messages = output.getAttribute(MessageContext.MESSAGE_KEY);
+    assertTrue("messages must not be null", messages != null);
+    assertTrue("Messages must contain ONE elements!", ((Map)messages).size() == 1);
+    
+    Object errorMessages = ((Map)messages).get(MessageContext.ERROR_TYPE);
+    assertTrue("Messages must be in java.util.Collection", errorMessages instanceof Collection);
+
+    assertTrue("There must be TWO error messages", ((Collection)errorMessages).size() == 2);
+  }
 
   // Dummy OutputData which popAttribute() does not pop values, so that after 
   // calling render(OutputData) it is possible to check what went into it.

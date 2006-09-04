@@ -78,6 +78,13 @@ public interface MessageContext extends Serializable {
    * {@link org.araneaframework.Widget}'s <code>update()</code> is called.
    */
   public void clearMessages();
+
+  
+  /**
+   * Clears the specific permanent message.
+   * @param message to be removed from permanent messages
+   */
+  public void hidePermanentMessage(String message);
   
   /**
    * Clears the permanent messages present in this {@link org.araneaframework.framework.MessageContext}.
