@@ -1,0 +1,65 @@
+<sect3 id="StandardContainers">
+    <title>StandardContainerService, StandardContainerWidget</title>
+    
+    <para>
+      Although classified as container, <literal>StandardContainerService</literal> is really a filter.
+      It acts as intelligent container, by routing an <literal>action()</literal> to its child service only 
+      when the request <literal>InputData</literal> is such that demands it.
+    </para>
+    
+    <para>
+        <literal>StandardContainerWidget</literal> is also much like filter, it contains one child
+        widget&mdash;but unlike in <literal>FilterWidgets</literal>, this child is named. Child
+        contained in <literal>StandardContainerWidget</literal> is often referred to as root widget, as in
+        standard Aranea configuration it starts the hierarchy of real application widgets.
+    </para>
+    
+    <informaltable frame="all">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>FlowContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        no dependencies among standard contexts.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+    
+    <para>
+        See <xref linkend="FlowContext"/> for purpose and philosophy behind <emphasis>FlowContext</emphasis>.
+    </para>
+    
+    <informaltable frame="all">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>top</entry>
+                    <entry>
+                        <literal>
+                            org.araneaframework.Widget
+                        </literal>
+                        First widget to be started in this container.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>

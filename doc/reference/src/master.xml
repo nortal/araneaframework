@@ -27,8 +27,8 @@
 	<!ENTITY criticalexceptionfilter 	 SYSTEM "framework/components/filters/StandardCriticalExceptionHandlingFilterService.xml">
 	<!ENTITY jspfilter 	 SYSTEM "framework/components/filters/StandardJspFilterService.xml">
 	
-	
 	<!ENTITY flowcontainer 	 SYSTEM "framework/components/containers/StandardFlowContainerWidget.xml">
+    <!ENTITY standardcontainers   SYSTEM "framework/components/containers/StandardContainers.xml">
 ]>
 
 <!--
