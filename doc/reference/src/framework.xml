@@ -295,6 +295,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     <sect2>
       <title>Containers</title>
       &flowcontainer;
+      &standardcontainers;
       
 <!-- 
       ExceptionHandlingFlowContainerWidget
