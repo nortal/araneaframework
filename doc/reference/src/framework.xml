@@ -219,6 +219,12 @@ class MyServlet extends BaseAraneaDispatcherServlet {
   
     <sect1>
     <title>Components</title>
+    <para>
+        Aranea configuration is determined by request-processing components that can be assembled in many different ways.
+        Following sections are a brief reference for pre-existing standard components, most of which are also used
+        in Aranea framework default configuration.
+    </para>
+    
 
     <sect2>
       <title>Core Components</title>
@@ -242,6 +248,14 @@ class MyServlet extends BaseAraneaDispatcherServlet {
             and the service key names (these are the keys read from request that identify the top level or thread level service
             to which request should be routed).
         </para>
+        
+        <para>
+            It is easily possible to add more service levels, when the need should arise. Every service-level router
+            should enrich <literal>Environment</literal> with <literal>ManagedServiceContext</literal> and service-level specific 
+            context. Specific context provided by <literal>StandardTopServiceRouterService</literal> is <literal>TopServiceContext</literal>
+            and by <literal>StandardThreadServiceRouterService</literal>&mdash;<literal>ThreadContext</literal>.
+        </para>
+
       </sect3>
 
 		<!--  
