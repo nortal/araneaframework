@@ -7,7 +7,7 @@
             <colspec colwidth="5*" />
             <tbody>
                 <row>
-                    <entry>Implements</entry>
+                    <entry>Provides</entry>
                     <entry>
                         <emphasis>JspContext</emphasis>
                     </entry>

@@ -1,5 +1,26 @@
 <sect3 id="StandardFileUploadFilterService">
     <title>StandardFileUploadFilterService</title>
+    
+    <informaltable frame="all">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>FileUploadContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        no dependencies among standard contexts.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
 
     <para>
       Enriches child environment with <literal>FileUploadContext</literal> (which is just marker interface). When incoming request is 

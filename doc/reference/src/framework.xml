@@ -265,6 +265,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     
     <sect2>
       <title>Filters</title>
+      For explanation of filter pattern, refer to <xref linkend="services-as-framework-plugins"/>
+      
       <para>
         All filters have injectable properties for setting filter's child. For services, 
         this property is <literal>childService</literal>, for widgets <literal>childWidget</literal>.
