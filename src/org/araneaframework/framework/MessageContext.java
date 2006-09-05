@@ -81,7 +81,7 @@ public interface MessageContext extends Serializable {
 
   
   /**
-   * Clears the specific permanent message.
+   * Clears the specific permanent message, under all message types where it might be present.
    * @param message to be removed from permanent messages
    */
   public void hidePermanentMessage(String message);

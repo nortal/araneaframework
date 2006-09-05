@@ -44,4 +44,7 @@ public class MockMessageContext implements MessageContext {
 
   public void showPermanentMessage(String type, String message) {
   }
+
+  public void hidePermanentMessage(String message) {
+  }
 }

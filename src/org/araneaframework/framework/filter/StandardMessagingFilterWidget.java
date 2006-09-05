@@ -126,6 +126,8 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   
   /** Removes the given message from given messageMap. */
   protected Map removeMessage(final String message, Map messageMap) {
+    Assert.notEmptyParam(message, "message");
+
     if (messageMap == null)
       return null;
 
@@ -149,7 +151,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     permanentMessages = removeMessage(message, permanentMessages);
   }
 
-public void showErrorMessage(String message) {
+  public void showErrorMessage(String message) {
     showMessage(ERROR_TYPE, message);
   }
 
