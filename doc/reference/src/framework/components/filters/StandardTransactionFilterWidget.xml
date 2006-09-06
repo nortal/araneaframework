@@ -1,0 +1,31 @@
+<sect3 id="StandardTransactionFilterWidget">
+    <title>StandardTransactionFilterWidget</title>
+
+    <informaltable frame="all">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>TransactionContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        no dependencies among standard contexts.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+    
+    <para>
+      <emphasis>TransactionContext</emphasis> implementation that filters routing of duplicate requests. The detection of
+      duplicate requests is achieved through defining new transaction ID in each response and checking that next request
+      submits the consistent transaction ID. For purposes of asynchronous requests, <emphasis>null</emphasis> transaction IDs are
+      always considered consistent.
+    </para>
+</sect3>

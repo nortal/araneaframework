@@ -219,6 +219,12 @@ class MyServlet extends BaseAraneaDispatcherServlet {
   
     <sect1>
     <title>Components</title>
+    <para>
+        Aranea configuration is determined by request-processing components that can be assembled in many different ways.
+        Following sections are a brief reference for pre-existing standard components, most of which are also used
+        in Aranea framework default configuration.
+    </para>
+    
 
     <sect2>
       <title>Core Components</title>
@@ -229,10 +235,29 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     
     <sect2>
       <title>Routers</title>
-      
+      For explanation of router pattern, refer to <xref linkend="services-as-framework-plugins"/>
+
       <sect3>
-        <title>BaseServiceRouterService, StandardTopServiceRouterService and StandardThreadServiceRouterService</title>
+        <title>StandardTopServiceRouterService and StandardThreadServiceRouterService</title>
+        
+        <para>
+            Top services and thread services are service levels specific to Aranea default configuration model.
+            Motivation behind them is desire to let one user have more than one servant (service) at time.
+            Implementations of <literal>StandardTopServiceRouterService</literal> and <literal>StandardThreadServiceRouterService</literal>
+            are almost identical, only differences are the context under which these routers are made accessible in <literal>Environment</literal>
+            and the service key names (these are the keys read from request that identify the top level or thread level service
+            to which request should be routed).
+        </para>
+        
+        <para>
+            It is easily possible to add more service levels, when the need should arise. Every service-level router
+            should enrich <literal>Environment</literal> with <literal>ManagedServiceContext</literal> and service-level specific 
+            context. Specific context provided by <literal>StandardTopServiceRouterService</literal> is <literal>TopServiceContext</literal>
+            and by <literal>StandardThreadServiceRouterService</literal>&mdash;<literal>ThreadContext</literal>.
+        </para>
+
       </sect3>
+
 		<!--  
       PathInfoServiceRouterService
       StandardServletSessionRouterService -->
@@ -240,37 +265,42 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     
     <sect2>
       <title>Filters</title>
+      For explanation of filter pattern, refer to <xref linkend="services-as-framework-plugins"/>
+      
+      <para>
+        All filters have injectable properties for setting filter's child. For services, 
+        this property is <literal>childService</literal>, for widgets <literal>childWidget</literal>.
+      </para>
+      
       
       &popupfilter;
       &threadcloningfilter;
+      &messagefilter;
+      &synchronizingfilter;
+      &transactionfilter;
+      &serializingauditfilter;
+      &localizationfilter;
+      &fileuploadfilter;
+      &httpresponsefilter;
+      &statisticfilter;
+      &contextmapfilter;
+      &ajaxfilter;
+      &criticalexceptionfilter;
+      &jspfilter;
       
-<!--  
-      StandardContextMapFilterWidget
-      StandardContinuationFilterService
-      StandardCriticalExceptionHandlingFilterService
-      StandardLocalizationFilterService
-      StandardMessagingFilterWidget
-      StandardSerializingAuditFilterService
-      StandardStatisticFilterService
-      StandardSynchronizingFilterService
-      StandardTransactionFilterWidget
-      StandardJspFilterService
-      StandardPopupFilterWidget
-      StandardServletFileImportFilterService
-      StandardServletFileUploadFilterService
-      StandardServletHttpFilterService -->
+<!--  StandardContinuationFilterService
+      StandardFileImportFilterService -->
     </sect2>
     
     <sect2>
       <title>Containers</title>
+      &flowcontainer;
+      &standardcontainers;
+      
 <!-- 
-      StandardFlowContainerWidget
       ExceptionHandlingFlowContainerWidget
       StandardServiceAdapterWidget
-      StandardServiceContainerService
-      StandardViewPortWidget
       StandardWidgetAdapterService
-      StandardWidgetContainerWidget
       PathInfoServiceContainerService -->
     </sect2>
     

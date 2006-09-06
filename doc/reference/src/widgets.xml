@@ -243,7 +243,7 @@ setViewSelector("myWidget/form");
       Contexts are the Aranea way to access framework services. They can be looked up from the environment as shown in <xref linkend="widgets-environment"/>. This section describes the most common Aranea contexts that should be available in any typical configuration. All these contexts are also available directly through <literal>BaseUIWidget</literal> methods as shown further on.
     </para>
     
-    <sect2>
+    <sect2 id="MessageContext">
       <title>MessageContext</title>
 
       <para>
@@ -253,7 +253,7 @@ setViewSelector("myWidget/form");
       </para>
     </sect2>
     
-    <sect2>
+    <sect2 id="LocalizationContext">
       <title>LocalizationContext</title>
 
       <para>
@@ -267,7 +267,7 @@ getMessageCtx().showInfoMessage(message);
       More info is available in the JavaDoc.
       </para>
     </sect2>
-    <sect2>
+    <sect2 id="FlowContext">
       <title>FlowContext</title>
       
       <para>
@@ -323,6 +323,10 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 
       <para>
         Finally <literal>FlowContext</literal> also allows to replace the current flow instead of deactivating it by using the <literal>replace()</literal> method and to cancel the current flow by using the <literal>cancel()</literal> method.
+      </para>
+      
+      <para>
+        For standard implementation, please see <xref linkend="StandardFlowContainerWidget"/>
       </para>
     </sect2>
   </sect1>

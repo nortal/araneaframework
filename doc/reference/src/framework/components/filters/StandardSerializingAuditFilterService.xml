@@ -1,0 +1,35 @@
+<sect3 id="StandardSerializingAuditFilterService">
+    <title>StandardSerializingAuditFilterService</title>
+
+    <para>
+      Serializes the the session during the request routing. This
+      filter helps to be aware of serializing issues during development as when the
+      session does not serialize, exception is always thrown. In production configuration,
+      this filter should never be enabled.
+    </para>
+    
+    <informaltable frame="all">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>testXmlSessionPath</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>the path where the serialized
+                        sessions should be logged in XML format. If not specified, serialization tests
+                        are performed in-memory.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>

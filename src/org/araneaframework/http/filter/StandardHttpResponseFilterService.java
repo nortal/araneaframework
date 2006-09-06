@@ -43,14 +43,14 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
   private Map headers = new HashMap();
   
   /**
-   * Sets if the response is cacheable or not. By default it is cacheable.
+   * Sets if the response is cacheable or not. By default it is not cacheable.
    */
   public void setCacheable(boolean cacheable) {
     this.cacheable = cacheable;
   }
   
   /**
-   * Sets the content type of the request. This is a required field of the response.
+   * Sets the content type of the response. This is a required field of the response.
    */
   public void setContentType(String contentType) {
     this.contentType = contentType;

@@ -16,14 +16,13 @@
 
 package org.araneaframework.framework.filter;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -75,15 +74,16 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     this.currentLocale = currentLocale;
   }
   
+  protected Environment getChildEnvironment() {
+    return new StandardEnvironment(super.getChildEnvironment(), LocalizationContext.class, this);
+  }
+  
   public ResourceBundle getResourceBundle() {
     return getResourceBundle(currentLocale);
   }
 
   protected void init() throws Exception {
-    Map entries = new HashMap();
-    entries.put(LocalizationContext.class, this);
-    
-    childService._getComponent().init(new StandardEnvironment(getChildEnvironment(), entries));
+    childService._getComponent().init(getChildEnvironment());
   }
   
   /** 

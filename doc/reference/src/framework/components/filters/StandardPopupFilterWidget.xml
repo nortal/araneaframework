@@ -1,4 +1,4 @@
-<sect3>
+<sect3 id="StandardPopupFilterWidget">
 	<title>StandardPopupFilterWidget</title>
 
 	<informaltable frame="all">
@@ -7,7 +7,7 @@
 			<colspec colwidth="5*" />
 			<tbody>
 				<row>
-					<entry>Implements</entry>
+					<entry>Provides</entry>
 					<entry>
 						<emphasis>PopupWindowContext</emphasis>
 					</entry>
@@ -31,23 +31,23 @@
     </para>
     
 	<informaltable frame="all">
-		<tgroup cols="2">
-			<colspec colwidth="2*" />
-			<colspec colwidth="5*" />
+		<tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
 			<thead>
 				<row>
-					<entry>Injectable property</entry>
+					<entry>Injectable properties</entry>
+                     <entry>Type</entry>
 					<entry>Purpose</entry>
 				</row>
 			</thead>
 			<tbody>
 				<row>
 					<entry>threadServiceFactory</entry>
+                     <entry><literal>org.araneaframework.core.ServiceFactory</literal></entry>
 					<entry>
-						<literal>
-							org.araneaframework.core.ServiceFactory
-						</literal>
-						that should build the component chain according
+						factory that should build the component chain according
 						to effective Aranea configuration, beginning
 						with sessionthread-level filters.
 					</entry>

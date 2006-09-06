@@ -29,9 +29,12 @@ import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.log4j.Logger;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.FileUploadContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.FileUploadInputExtension;
 import org.araneaframework.http.core.StandardFileUploadInputExtension;
@@ -88,6 +91,10 @@ public class StandardFileUploadFilterService extends BaseFilterService {
    */
   public void setTempDirectory(String tempDirectory) {
     this.tempDirectory = tempDirectory;
+  }
+  
+  protected Environment getChildEnvironment() {
+    return new StandardEnvironment(super.getChildEnvironment(), FileUploadContext.class, new FileUploadContext() {});
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
