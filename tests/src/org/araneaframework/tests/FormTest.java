@@ -20,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ApplicationWidget;
@@ -205,11 +204,6 @@ public class FormTest extends TestCase {
     	((TextControl.ViewModel)((TextControl)testForm.getControlByFullName("myLongText")).getViewModel());
     assertTrue(Long.valueOf(vm2.getSimpleValue()).equals(new Long(108)));
     
-    DateTimeControl.ViewModel vm3 = 
-    	((DateTimeControl.ViewModel)((DateTimeControl)testForm.getControlByFullName("myDateTime")).getViewModel());
-    //...
-    
-
     assertTrue(((FormElement) testForm.getElement("myCheckBox")).getData().getValue().equals(Boolean.FALSE));
     assertTrue(((FormElement) testForm.getElement("myLongText")).getData().getValue().equals(new Long(108)));
     assertTrue(((FormElement) testForm.getElement("myDateTime")).getData().getValue().equals(reqDate));
