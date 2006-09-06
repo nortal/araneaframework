@@ -22,6 +22,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -561,7 +562,7 @@ public class BeanUtil {
 	 */
 	public static Object copy(Object from, Class toType) {
     	Validate.isTrue(from != null && from != null, "You cannot convert a Bean to null or vice versa");		
-		return copy(from, newInstance(toType.getClass()));
+		return copy(from, newInstance(toType));
 	}
 	
 	/**
