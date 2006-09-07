@@ -209,7 +209,7 @@ function AraneaPage() {
   this.findSubmitter = function(element, systemForm) {
     var updateRegions = element.getAttribute('arn-updrgns');
 
-	if (window.AraneaAA_Present && updateRegions && updateRegions.length > 0)
+	if (window['ajaxanywhere/aa.js'] && updateRegions && updateRegions.length > 0)
 	  return new DefaultAraneaAJAXSubmitter(systemForm);
 
 	return new DefaultAraneaSubmitter(systemForm);
