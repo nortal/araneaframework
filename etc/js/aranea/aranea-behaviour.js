@@ -49,6 +49,7 @@ function setCloningUrl(el) {
     url += "?pleaseClone=true";
     url += "&topServiceId=" + systemForm['topServiceId'].value;
     url += "&threadServiceId=" + systemForm['threadServiceId'].value;
+    url += "&transactionId=override";
 
     if (eventId)
       url += "&widgetEventHandler=" + eventId;

@@ -35,6 +35,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.PopupServiceInfo;
@@ -295,6 +296,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
         url.append("&" + ThreadContext.THREAD_SERVICE_KEY + "=");
         url.append(threadServiceId);
       }
+      url.append('&').append((TransactionContext.TRANSACTION_ID_KEY + "=")).append(TransactionContext.OVERRIDE_KEY);
       return url.toString();
     }
 
