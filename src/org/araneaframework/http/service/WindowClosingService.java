@@ -34,6 +34,7 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class WindowClosingService extends BaseService {
+	//XXX: move scripts to server side???
 	protected String script = 
 		"reloadParentWindow();" +
 		"closeWindow(50);";

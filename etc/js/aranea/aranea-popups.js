@@ -42,8 +42,8 @@ function submitThreadCloseRequest(win) {
     closeParam.setAttribute("type", "hidden");
     closeParam.setAttribute("value", "true");
     //TODO: find the systemform reliably
-    win.document.system_form_0.appendChild(closeParam);
-    araneaSubmitEvent(win.document.system_form_0, "", "", "", "");
+    win.document.forms['system_form_0'].appendChild(closeParam);
+    win.document.getActiveAraneaPage().submit_6(win.document.system_form_0, null, null, null, null, null);
   }
 }
 
@@ -73,7 +73,9 @@ function processPopups() {
 
 function reloadParentWindow() {
   if (window.opener) {
-    window.opener.document.location.href=window.opener.document.location.href;
+    var url = window.opener.document.location.href;
+    url += (url.indexOf('?') >= 0) ? "&transactionId=override" : "?transactionId=override";
+    window.opener.document.location.href=url;
   }
 }
 
