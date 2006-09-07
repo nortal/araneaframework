@@ -324,3 +324,5 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
 _ap = new AraneaPage();
 function getActiveAraneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
+
+window['aranea.js'] = true;

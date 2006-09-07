@@ -18,7 +18,8 @@ function onWindowUnload() {
   closeOpenedPopupWindows();
 }
 
-getActiveAraneaPage().addSystemUnLoadEvent(onWindowUnload);
+if (window['aranea.js'])
+  getActiveAraneaPage().addSystemUnLoadEvent(onWindowUnload);
 
 //popup maps
 var popups = new Object();
@@ -37,7 +38,7 @@ function addPopup(popupId, windowProperties, url) {
 }
 
 function submitThreadCloseRequest(win) {
-  if (win.document) {
+  if (win && win.document) {
     var closeParam = createNamedElement("input", "popupClose");
     closeParam.setAttribute("type", "hidden");
     closeParam.setAttribute("value", "true");
@@ -71,10 +72,11 @@ function processPopups() {
   }
 }
 
-function reloadParentWindow() {
+function reloadParentWindow(url) {
   if (window.opener) {
+  	/*
     var url = window.opener.document.location.href;
-    url += (url.indexOf('?') >= 0) ? "&transactionId=override" : "?transactionId=override";
+    url += (url.indexOf('?') >= 0) ? "&transactionId=override" : "?transactionId=override";*/
     window.opener.document.location.href=url;
   }
 }

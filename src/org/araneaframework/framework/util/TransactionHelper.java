@@ -57,7 +57,8 @@ public class TransactionHelper implements Serializable {
   public boolean isConsistent(Object transactionId) {
     if (currentTransactionId == null)
       return true;
-    if (currentTransactionId.equals(TransactionContext.OVERRIDE_KEY))
+
+    if (TransactionContext.OVERRIDE_KEY.equals(transactionId))
       return true;
 
     return currentTransactionId.toString().equals(transactionId);

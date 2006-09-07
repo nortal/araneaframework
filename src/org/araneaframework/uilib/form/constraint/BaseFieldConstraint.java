@@ -20,7 +20,7 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   }
 
   protected FormElement getField() {
-    return getConstrainable() != null ? (FormElement)getConstrainable() : (FormElement) null;
+    return (FormElement)getConstrainable();
   }
   
   protected Environment getEnvironment() {
