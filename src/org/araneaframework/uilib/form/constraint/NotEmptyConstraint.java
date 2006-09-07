@@ -28,11 +28,11 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * 
  */
 public class NotEmptyConstraint extends BaseFieldConstraint {
-
-  public NotEmptyConstraint() {}
-  
+  public NotEmptyConstraint() {
+  }
+	
   public NotEmptyConstraint(FormElement field) {
-    setFormElementCtx(field);
+    super(field);
   }
   
   /**

@@ -16,29 +16,28 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.uilib.form.Constrainable;
 import org.araneaframework.uilib.form.Constraint;
-import org.araneaframework.uilib.form.FormElementAware;
-import org.araneaframework.uilib.form.FormElementContext;
-import org.araneaframework.uilib.form.GenericFormElementContext;
 
 /**
  * Constraint that will be applied iff the constraint's group is active.
  * 
  * @author Ilja Livenson (ilja@webmedia.ee)
- * 
  */
-public class GroupedConstraint extends BaseConstraint implements FormElementAware {
-
+public class GroupedConstraint extends BaseConstraint {
   private ConstraintGroupHelper conditionalConstraintHelper;
-
   private Constraint constraint;
-
   private String group;
 
   public GroupedConstraint(ConstraintGroupHelper helper, Constraint constraint, String group) {
     this.conditionalConstraintHelper = helper;
     this.constraint = constraint;
     this.group = group;
+  }
+  
+  public void constrain(Constrainable constrainable) {
+    super.constrain(constrainable);
+    constraint.constrain(constrainable);
   }
 
   protected void validateConstraint() throws Exception {
@@ -47,6 +46,12 @@ public class GroupedConstraint extends BaseConstraint implements FormElementAwar
       return;
     else
       this.constraint.validate();
+  }
+  
+  public boolean isValid() {
+   if (!this.conditionalConstraintHelper.isGroupActive(this.group))
+     return true;
+    return (this.constraint.getErrors() == null || this.constraint.getErrors().isEmpty());
   }
 
   public ConstraintGroupHelper getConditionalConstraintHelper() {
@@ -60,14 +65,4 @@ public class GroupedConstraint extends BaseConstraint implements FormElementAwar
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
   }
-
-  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
-    constraint.setGenericFormElementCtx(feCtx);
-  }
-  
-  public void setFormElementCtx(FormElementContext feCtx) {
-    if (constraint instanceof FormElementAware)
-      ((FormElementAware) constraint).setFormElementCtx(feCtx);
-  }
-
 }

@@ -59,9 +59,13 @@ public class FormConstraintTest extends TestCase {
     
     //Adding elements to form
     testForm.addElement("myCheckBox", "my checkbox", new CheckboxControl(), new BooleanData(), true);
+    ((FormElement)testForm.getElement("myCheckBox")).rendered();
     testForm.addElement("myLongText", "my long text", new TextControl(), new LongData(), false);
+    ((FormElement)testForm.getElement("myLongText")).rendered();
     testForm.addElement("myDateTime", "my date and time", new DateTimeControl(), new DateData(), false);
+    ((FormElement)testForm.getElement("myDateTime")).rendered();
     testForm.addElement("myButton", "my button", new ButtonControl(), null, false);
+    ((FormElement)testForm.getElement("myButton")).rendered();
 
     return testForm;
   }
@@ -98,7 +102,6 @@ public class FormConstraintTest extends TestCase {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
 
-    request.addParameter("testForm.__present", "true");
     request.addParameter("testForm.myCheckBox", "true");
     request.addParameter("testForm.myLongText", "108");
     request.addParameter("testForm.myDateTime", (String) null);

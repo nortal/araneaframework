@@ -17,7 +17,9 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.text.Collator;
+import org.araneaframework.Environment;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
@@ -82,13 +84,20 @@ public final class RangeConstraint extends BaseConstraint {
     }
     
     if (comparison > 0 || (!allowEquals && comparison == 0)){
+    	//XXX: ooogogogo
       addError(
           ErrorUtil.localizeAndFormat(
             UiLibMessages.RANGE_CHECK_FAILED, 
-            t(fieldLo.getLabel()),
-            t(fieldHi.getLabel()),
-            getEnvironment()));
+            t(fieldLo.getLabel(), fieldLo.getEnvironment()),
+            t(fieldHi.getLabel(), fieldHi.getEnvironment()),
+            fieldHi.getEnvironment()));
     }
   }
+  
+  private String t(String key, Environment env) {
+	    LocalizationContext locCtx = 
+	     (LocalizationContext) env.getEntry(LocalizationContext.class);
+	    return locCtx.localize(key);
+	  }
 
 }

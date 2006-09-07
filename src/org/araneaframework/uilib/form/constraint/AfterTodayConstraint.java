@@ -28,12 +28,13 @@ import org.araneaframework.uilib.util.ErrorUtil;
  */
 public class AfterTodayConstraint extends BaseFieldConstraint {
 	protected boolean allowToday;
-
+	
 	/**
 	 * Whether today should be allowed as valid. 
 	 * @param allowToday when set, all dates from today are considered valid.
 	 */
 	public AfterTodayConstraint(boolean allowToday) {
+		super(null);
 		this.allowToday = allowToday;
 	}
 

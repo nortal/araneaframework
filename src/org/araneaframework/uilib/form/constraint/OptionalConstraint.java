@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.constraint;
 
 import org.araneaframework.uilib.form.Constraint;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementAware;
 import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.form.GenericFormElementContext;
@@ -28,10 +29,16 @@ import org.araneaframework.uilib.form.GenericFormElementContext;
  * 
  */
 public class OptionalConstraint extends BaseFieldConstraint {
-
   private Constraint constraint;
 
   public OptionalConstraint(Constraint constraint) {
+    //XXX: what about it?
+    super(null); // do not set immidiately, just to allow the usage of old constructor
+    this.constraint = constraint;
+  }
+  
+  public OptionalConstraint(FormElement field, Constraint constraint) {
+    super(field);
     this.constraint = constraint;
   }
 
@@ -42,14 +49,5 @@ public class OptionalConstraint extends BaseFieldConstraint {
 
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
-  }
-  
-  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
-    constraint.setGenericFormElementCtx(feCtx);
-  }
-  
-  public void setFormElementCtx(FormElementContext feCtx) {
-    if (constraint instanceof FormElementAware)
-      ((FormElementAware) constraint).setFormElementCtx(feCtx);
   }
 }

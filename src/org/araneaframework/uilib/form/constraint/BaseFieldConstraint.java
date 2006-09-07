@@ -1,45 +1,72 @@
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
-import org.araneaframework.uilib.form.FormElementAware;
-import org.araneaframework.uilib.form.FormElementContext;
+import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.Constrainable;
+import org.araneaframework.uilib.form.FormElement;
 
-public abstract class BaseFieldConstraint extends BaseConstraint implements FormElementAware {
-  private FormElementContext feCtx;
-  
-  public void setFormElementCtx(FormElementContext feCtx) {
-    this.feCtx = feCtx;
+public abstract class BaseFieldConstraint extends BaseConstraint {
+  public BaseFieldConstraint() {
   }
-  
-  protected FormElementContext getFormElementCtx() {
-    return this.feCtx;
+	
+  public BaseFieldConstraint(FormElement field) {
+    constrain(field);
   }
-  
+
   public boolean validate() throws Exception {
-    Assert.notNull(this, getFormElementCtx(), 
+	//XXX: add assertion
+    /*Assert.notNull(this, getFormElementCtx(), 
         "Form element context must be assigned to the constraint before it can function! " +
-        "Make sure that the constraint is associated with a form element!");
+        "Make sure that the constraint is associated with a form element!");*/
     
     return super.validate();
   }
+
+  public void constrain(Constrainable constrainable) {
+    //XXX: add message
+    Assert.isInstanceOf(FormElement.class, constrainable, "BaseFieldConstraint can only constrain FormElements!");
+    super.constrain(constrainable);
+  }
   
+  //XXX: how about getField() NULL Cehckss
+  
+  protected FormElement getField() {
+    return getConstrainable() != null ? (FormElement)getConstrainable() : (FormElement) null;
+  }
+  
+  protected Environment getEnvironment() {
+    return getField().getEnvironment();
+  }
+
   protected String getLabel() {
-    return getFormElementCtx().getLabel();
+    return getField().getLabel();
   }
   
   protected Object getValue() {
-    return getFormElementCtx().getValue();
+    return getField().getValue();
   }
   
   public boolean isRead() {
-    return getFormElementCtx().isRead();
+    return getField().isRead();
   }
   
   public boolean isDisabled() {
-    return getFormElementCtx().isDisabled();
+    return getField().isDisabled();
   }
 
   public boolean isMandatory() {
-    return getFormElementCtx().isMandatory();
+    return getField().isMandatory();
+  }
+  
+  protected ConfigurationContext getConfiguration() {
+    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+  }
+  
+  protected String t(String key) {
+    LocalizationContext locCtx = 
+     (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+    return locCtx.localize(key);
   }
 }

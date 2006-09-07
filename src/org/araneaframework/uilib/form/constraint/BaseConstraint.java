@@ -19,12 +19,9 @@ package org.araneaframework.uilib.form.constraint;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
-import org.araneaframework.framework.LocalizationContext;
-import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.Constrainable;
 import org.araneaframework.uilib.form.Constraint;
-import org.araneaframework.uilib.form.GenericFormElementContext;
 
 /**
  * This class is the base class for form constraints. A constraint operates on the form elements
@@ -38,8 +35,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-
-  private GenericFormElementContext gfeCtx;
+  private Constrainable constrainable;
 
   protected String customErrorMessage;
   
@@ -49,8 +45,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   //* PUBLIC METHODS
   //*********************************************************************
   public boolean validate() throws Exception {
-    Assert.notNull(this, getGenericFormElementCtx(), "Generic form element context must be assigned to the constraint before it can function! " +
-        "Make sure that the constraint is associated with a form element or a form!");
+    Assert.notNull(this, constrainable, "Constraint may only be validated when constrainable is non-null. Make sure that the constraint is associated with a form element or a form!");
     
     clearErrors();
     
@@ -88,19 +83,14 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
     this.customErrorMessage = customErrorMessage;
   }
   
-  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
-    this.gfeCtx = feCtx;
+  public void constrain(Constrainable constrainable) {
+    this.constrainable = constrainable;
   }
   
-  public GenericFormElementContext getGenericFormElementCtx() {
-    return this.gfeCtx;
+  protected Constrainable getConstrainable() {
+    return this.constrainable;
   }
-  
-  protected String t(String key) {
-    LocalizationContext locCtx = 
-      (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
-    return locCtx.localize(key);
-  } 
+
   //*********************************************************************
   //* PROTECTED METHODS
   //*********************************************************************
@@ -112,14 +102,6 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   protected void addErrors(Collection errorList) {
     getErrors().addAll(errorList);
   }  
-  
-  protected ConfigurationContext getConfiguration() {
-  	return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
-  }
-  
-  protected Environment getEnvironment() {
-  	return gfeCtx.getEnvironment();
-  }
   
   //*********************************************************************
   //* ABSTRACT IMPLEMENTATION METHODS

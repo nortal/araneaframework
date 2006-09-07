@@ -93,17 +93,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
   }
 
   /**
-   * Sets the constraint on this form element.
-   * @param constraint constraint to set
-   */
-  public void setConstraint(Constraint constraint) {
-    super.setConstraint(constraint);
-    
-    if (constraint != null && constraint instanceof FormElementAware) 
-      ((FormElementAware) constraint).setFormElementCtx(this);
-  }
-
-  /**
    * Returns {@link Data}.
    * 
    * @return {@link Data}.

@@ -32,7 +32,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class GenericFormElement extends BaseApplicationWidget implements GenericFormElementContext {
+public abstract class GenericFormElement extends BaseApplicationWidget implements Constrainable {
 
   //*******************************************************************
   // FIELDS
@@ -99,10 +99,10 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
    * 
    * @param constraint The constraint to set.
    */
-  public void setConstraint(Constraint constraint) {    
+  public void setConstraint(Constraint constraint) {
     this.constraint = constraint;
     if (constraint != null)
-      constraint.setGenericFormElementCtx(this);
+      constraint.constrain(this);
   }
 
   /**
@@ -261,6 +261,10 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
    */
   public void clearErrors() {  
     errors = null;
+  }
+  
+  public Object getValue() {
+    return null;
   }
   
   //*********************************************************************

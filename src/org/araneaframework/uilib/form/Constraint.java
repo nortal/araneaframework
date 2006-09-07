@@ -25,8 +25,8 @@ import java.util.Set;
  * 
  * @see org.araneaframework.uilib.form.constraint.BaseConstraint
  */
-public interface Constraint extends Serializable, GenericFormElementAware{
-
+public interface Constraint extends Serializable {
+  public void constrain(Constrainable constrainable);
   /**
    * This method validates the constraint conditions, providing some preconditions and
    * postconditions for the {@link #validate()} method.
