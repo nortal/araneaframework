@@ -310,7 +310,7 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
   if (systemForm.transactionId) {
-    systemForm['transactionId'] = "override";
+    systemForm.transactionId.value = "override";
   }
   
   window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
