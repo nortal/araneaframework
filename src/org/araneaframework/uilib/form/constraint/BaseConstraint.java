@@ -112,4 +112,20 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    * and add messages about unsatisfied conditions.
    */
   protected abstract void validateConstraint() throws Exception;
+  
+  /**
+   * Should be used for {@link Constrainable} type checks instead 
+   * {@link Assert#isInstanceOf(Class, Object, String)} to provide better error message.
+   * 
+   * @param klass Class which instance <code>constrainable</code> should be
+   * @param constrainable
+   */
+  protected void LazyTypeAssert(Class klass, Constrainable constrainable) {
+    try {
+      Assert.isInstanceOf(klass, constrainable, null);
+    } catch (IllegalArgumentException e) {
+      String simpleClassName = this.getClass().getName().substring(this.getClass().getName().lastIndexOf('.')+1);
+      throw new IllegalArgumentException(simpleClassName + " can only constrain FormElements!");
+    }
+  }
 }

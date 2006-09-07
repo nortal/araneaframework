@@ -32,52 +32,53 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class SimpleConstraintTest extends TestCase {
-	private FormWidget form;
+  private FormWidget form;
 
-	public void setUp() throws Exception {
-		form = new FormWidget();
-		MockLifeCycle.begin(form, new MockEnvironment());
-	}
+  public void setUp() throws Exception {
+    form = new FormWidget();
+    MockLifeCycle.begin(form, new MockEnvironment());
+  }
 
-	// test that simplest constraint when used alone in various situations
-	public void testValidNonEmptyConstraint() throws Exception {
-	    FormElement el = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
-	    el.setConstraint(new NotEmptyConstraint());
-	    el.rendered();
-	    form.addElement("number", el);
-	    
-	    MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-	    request.addParameter("form.number", "123");
-	    
-	    StandardServletInputData input = new StandardServletInputData(request);
-	    input.pushScope("form");
-	    form._getWidget().update(input);
-	    input.popScope();
+  // test that simplest constraint when used alone in various situations
+  public void testValidNonEmptyConstraint() throws Exception {
+      FormElement el = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
+      el.setConstraint(new NotEmptyConstraint());
+      el.rendered();
+      form.addElement("number", el);
+      
+      MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
+      request.addParameter("form.number", "123");
+      
+      StandardServletInputData input = new StandardServletInputData(request);
+      input.pushScope("form");
+      form._getWidget().update(input);
+      input.popScope();
 
-	    assertTrue("Form is supposed to be valid", form.convertAndValidate());
-	}
-	
-	// test that simplest constraint when used alone in various situations
-	public void testInvalidNonEmptyConstraint() throws Exception {
-	    FormElement el = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
-	    el.setConstraint(new NotEmptyConstraint());
-	    form.addElement("number", el);
+      assertTrue("Form is supposed to be valid", form.convertAndValidate());
+  }
+  
+  // test that simplest constraint when used alone in various situations
+  public void testInvalidNonEmptyConstraint() throws Exception {
+      FormElement el = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
+      el.setConstraint(new NotEmptyConstraint());
+      form.addElement("number", el);
 
-	    MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-	    
-	    StandardServletInputData input = new StandardServletInputData(request);
-	    input.pushScope("form");
-	    form._getWidget().update(input);
-	    input.popScope();
-	    
-	    assertFalse("Form is supposed to be invalid", form.convertAndValidate());
-	}
-	
-	public void testInvalidConstraintSetting() throws Exception {
-		try {
-			form.setConstraint(new NotEmptyConstraint());
-			fail("Exception should have occured, because NotEmptyConstraint is not applicable to FormWidget");
-		} catch (IllegalArgumentException e) {
-		}
-	}
+      MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
+      
+      StandardServletInputData input = new StandardServletInputData(request);
+      input.pushScope("form");
+      form._getWidget().update(input);
+      input.popScope();
+      
+      assertFalse("Form is supposed to be invalid", form.convertAndValidate());
+  }
+  
+  // test that field constraints cannot be set on various other widgets.
+  public void testInvalidConstraintSetting() throws Exception {
+    try {
+      form.setConstraint(new NotEmptyConstraint());
+      fail("Exception should have occured, because NotEmptyConstraint is not applicable to FormWidget");
+    } catch (IllegalArgumentException e) {
+    }
+  }
 }

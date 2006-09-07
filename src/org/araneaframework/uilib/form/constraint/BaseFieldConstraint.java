@@ -1,7 +1,6 @@
 package org.araneaframework.uilib.form.constraint;
 
 import org.araneaframework.Environment;
-import org.araneaframework.core.Assert;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.Constrainable;
@@ -15,22 +14,12 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
     constrain(field);
   }
 
-  public boolean validate() throws Exception {
-	//XXX: add assertion
-    /*Assert.notNull(this, getFormElementCtx(), 
-        "Form element context must be assigned to the constraint before it can function! " +
-        "Make sure that the constraint is associated with a form element!");*/
-    
-    return super.validate();
-  }
-
   public void constrain(Constrainable constrainable) {
-    Assert.isInstanceOf(FormElement.class, constrainable, this.getClass().getSimpleName() + " can only constrain FormElements!");
+    LazyTypeAssert(FormElement.class, constrainable);
     super.constrain(constrainable);
   }
   
-  //XXX: how about getField() NULL Cehckss
-  
+  //XXX: how about getField().getBlaah() NULL Cehckss
   protected FormElement getField() {
     return getConstrainable() != null ? (FormElement)getConstrainable() : (FormElement) null;
   }
