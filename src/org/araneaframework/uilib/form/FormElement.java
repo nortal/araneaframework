@@ -212,7 +212,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************  	
   
   protected void update(InputData input) throws Exception {
-    if (isDisabled() || !isRendered() || !wasFormSubmitted(input)) return;
+    if (isDisabled() || !isRendered()) return;
 
     super.update(input);
     
@@ -221,13 +221,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
       //Read the control
       getControl()._getWidget().update(input);
     }
-  }
-  
-  private static boolean wasFormSubmitted(InputData input) {
-    return 
-      input.getGlobalData().containsKey(TopServiceContext.TOP_SERVICE_KEY)
-        ||
-      input.getGlobalData().containsKey(ThreadContext.THREAD_SERVICE_KEY);
   }
 
   protected void handleProcess() throws Exception {

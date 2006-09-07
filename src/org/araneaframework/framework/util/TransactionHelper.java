@@ -18,6 +18,7 @@ package org.araneaframework.framework.util;
 
 import java.io.Serializable;
 import java.util.Random;
+import org.araneaframework.framework.TransactionContext;
 
 /**
  * Helper class for determining if an id is consistent. An id is considered cosnistent
@@ -54,10 +55,11 @@ public class TransactionHelper implements Serializable {
    * equal the current transaction id. 
    */
   public boolean isConsistent(Object transactionId) {
-    if (currentTransactionId == null) {
+    if (currentTransactionId == null)
       return true;
-    }
-    
+    if (currentTransactionId.equals(TransactionContext.OVERRIDE_KEY))
+      return true;
+
     return currentTransactionId.toString().equals(transactionId);
   }
 }
