@@ -16,10 +16,12 @@
 
 package org.araneaframework.tests;
 
+import com.sun.corba.se.internal.core.Request;
 import junit.framework.TestCase;
 import org.araneaframework.Widget;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
+import org.araneaframework.tests.util.RequestUtil;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
@@ -78,7 +80,7 @@ public class WidgetTest extends TestCase {
   public void testFormRequestHandling() throws Exception {
     FormWidget testForm = makeUsualForm();
     Widget currentWidget = testForm;
-    MockHttpServletRequest validRequest = new MockHttpServletRequest();
+    MockHttpServletRequest validRequest = RequestUtil.markSubmitted(new MockHttpServletRequest());
 
     validRequest.addParameter("testForm.myCheckBox", "true");
     ((FormElement)testForm.getElement("myCheckBox")).rendered();
