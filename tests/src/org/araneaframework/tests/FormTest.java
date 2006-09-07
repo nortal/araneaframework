@@ -329,7 +329,7 @@ public class FormTest extends TestCase {
 
     groupHelper.setActiveGroup("active");
 
-    assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());				
+    assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
   }
   
   /**

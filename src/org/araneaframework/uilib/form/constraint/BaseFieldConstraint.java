@@ -25,8 +25,7 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   }
 
   public void constrain(Constrainable constrainable) {
-    //XXX: add message
-    Assert.isInstanceOf(FormElement.class, constrainable, "BaseFieldConstraint can only constrain FormElements!");
+    Assert.isInstanceOf(FormElement.class, constrainable, this.getClass().getSimpleName() + " can only constrain FormElements!");
     super.constrain(constrainable);
   }
   

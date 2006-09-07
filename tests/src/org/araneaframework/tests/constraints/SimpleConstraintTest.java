@@ -28,7 +28,6 @@ import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -72,5 +71,13 @@ public class SimpleConstraintTest extends TestCase {
 	    input.popScope();
 	    
 	    assertFalse("Form is supposed to be invalid", form.convertAndValidate());
+	}
+	
+	public void testInvalidConstraintSetting() throws Exception {
+		try {
+			form.setConstraint(new NotEmptyConstraint());
+			fail("Exception should have occured, because NotEmptyConstraint is not applicable to FormWidget");
+		} catch (IllegalArgumentException e) {
+		}
 	}
 }

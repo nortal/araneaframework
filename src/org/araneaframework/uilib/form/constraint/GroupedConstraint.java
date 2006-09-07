@@ -46,14 +46,9 @@ public class GroupedConstraint extends BaseConstraint {
       return;
     else
       this.constraint.validate();
+    addErrors(constraint.getErrors());
   }
   
-  public boolean isValid() {
-   if (!this.conditionalConstraintHelper.isGroupActive(this.group))
-     return true;
-    return (this.constraint.getErrors() == null || this.constraint.getErrors().isEmpty());
-  }
-
   public ConstraintGroupHelper getConditionalConstraintHelper() {
     return conditionalConstraintHelper;
   }
