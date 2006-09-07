@@ -96,6 +96,7 @@
       <list>
         <ref bean="araneaThreadCloningService"/>
         <ref bean="araneaSynchronizingFilter"/>
+        <ref bean="araneaAuditFilter"/>
         <ref bean="araneaMountPointFilter"/>
         <ref bean="araneaContinuationFilter"/> 
         <ref bean="araneaAjaxFilterService"/>
@@ -247,5 +248,5 @@
   </bean>
   
   <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
-  
+
 </beans>
