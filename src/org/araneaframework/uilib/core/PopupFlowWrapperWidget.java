@@ -84,7 +84,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
 
       String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
       // popup window is closed with redirect to a page that closes current window and reloads parent.
-      threadCtx.addService(rndThreadId, new WindowClosingService());
+      threadCtx.addService(rndThreadId, new WindowClosingService(getEnvironment()));
       ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), rndThreadId));
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
@@ -138,7 +138,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-    return URLUtil.parametrizeURI(url, m);
+    return ((HttpOutputData)getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
   }
   
   private FlowContext getOpenerFlowContext() {
