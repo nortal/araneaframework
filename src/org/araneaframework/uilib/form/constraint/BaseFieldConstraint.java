@@ -15,7 +15,7 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   }
 
   public void constrain(Constrainable constrainable) {
-    LazyTypeAssert(FormElement.class, constrainable);
+    lazyTypeAssert(FormElement.class, constrainable);
     super.constrain(constrainable);
   }
 

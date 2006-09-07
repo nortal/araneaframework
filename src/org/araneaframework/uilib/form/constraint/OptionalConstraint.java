@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.uilib.form.Constrainable;
 import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.FormElement;
 
@@ -38,9 +39,15 @@ public class OptionalConstraint extends BaseFieldConstraint {
   }
 
   protected void validateConstraint() throws Exception {
-    if (isRead()) 
+    if (isRead()) {
       constraint.validate();
-    addErrors(constraint.getErrors());
+      addErrors(constraint.getErrors());
+    }
+  }
+  
+  public void constrain(Constrainable constrainable) {
+    super.constrain(constrainable);
+    constraint.constrain(constrainable);
   }
 
   public void setCustomErrorMessage(String customErrorMessage) {

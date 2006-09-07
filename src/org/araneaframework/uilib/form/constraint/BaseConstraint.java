@@ -120,7 +120,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    * @param klass Class which instance <code>constrainable</code> should be
    * @param constrainable
    */
-  protected void LazyTypeAssert(Class klass, Constrainable constrainable) {
+  protected void lazyTypeAssert(Class klass, Constrainable constrainable) {
     try {
       Assert.isInstanceOf(klass, constrainable, null);
     } catch (IllegalArgumentException e) {

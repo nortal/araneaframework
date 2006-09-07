@@ -27,19 +27,15 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * 
  */
 public class NumberInRangeConstraint extends BaseFieldConstraint {
-
   private BigInteger rangeStart;
   private BigInteger rangeEnd;
   
+  public NumberInRangeConstraint() {}
+  
   public NumberInRangeConstraint(BigInteger start, BigInteger end) {
-    super(null);
     rangeStart = start;
     rangeEnd = end;
   }
-  
-  public NumberInRangeConstraint() {
-    super(null);
-  }  
   
   /**
    * Checks that the value is between two others.
