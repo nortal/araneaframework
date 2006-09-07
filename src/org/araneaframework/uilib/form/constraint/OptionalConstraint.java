@@ -18,9 +18,6 @@ package org.araneaframework.uilib.form.constraint;
 
 import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.FormElement;
-import org.araneaframework.uilib.form.FormElementAware;
-import org.araneaframework.uilib.form.FormElementContext;
-import org.araneaframework.uilib.form.GenericFormElementContext;
 
 /**
  * Constraint that will be applied iff the field has been read from the request.
@@ -32,8 +29,6 @@ public class OptionalConstraint extends BaseFieldConstraint {
   private Constraint constraint;
 
   public OptionalConstraint(Constraint constraint) {
-    //XXX: what about it?
-    super(null); // do not set immidiately, just to allow the usage of old constructor
     this.constraint = constraint;
   }
   
@@ -45,6 +40,7 @@ public class OptionalConstraint extends BaseFieldConstraint {
   protected void validateConstraint() throws Exception {
     if (isRead()) 
       constraint.validate();
+    addErrors(constraint.getErrors());
   }
 
   public void setCustomErrorMessage(String customErrorMessage) {

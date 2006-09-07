@@ -18,8 +18,7 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
     LazyTypeAssert(FormElement.class, constrainable);
     super.constrain(constrainable);
   }
-  
-  //XXX: how about getField().getBlaah() NULL Cehckss
+
   protected FormElement getField() {
     return getConstrainable() != null ? (FormElement)getConstrainable() : (FormElement) null;
   }

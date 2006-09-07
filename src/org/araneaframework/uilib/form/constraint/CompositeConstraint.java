@@ -17,11 +17,8 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import org.araneaframework.uilib.form.Constrainable;
 import org.araneaframework.uilib.form.Constraint;
-import org.araneaframework.uilib.form.FormElementAware;
 
 
 /**

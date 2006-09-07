@@ -81,4 +81,20 @@ public class SimpleConstraintTest extends TestCase {
     } catch (IllegalArgumentException e) {
     }
   }
+  
+  // test that setting field constraint to null works and does not throw exception
+  public void testNullConstraintSetting() throws Exception {
+    FormElement el = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
+    el.setConstraint(null);
+    form.addElement("number", el);
+
+    MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
+      
+    StandardServletInputData input = new StandardServletInputData(request);
+    input.pushScope("form");
+    form._getWidget().update(input);
+    input.popScope();
+      
+    assertTrue("Form is supposed to be invalid", form.convertAndValidate());
+  }
 }

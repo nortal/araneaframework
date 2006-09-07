@@ -24,14 +24,12 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.mock.MockInputData;
 import org.araneaframework.mock.MockOutputData;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.util.RequestUtil;
 import org.araneaframework.uilib.event.OnClickEventListener;
-import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -70,11 +68,6 @@ public class FormTest extends TestCase {
     super(name);
   }
   
-  private MockHttpServletRequest markRequestSubmitted(MockHttpServletRequest request) {
-    request.addParameter(ThreadContext.THREAD_SERVICE_KEY, "");
-    return request;
-  }
-
   private FormWidget makeUsualForm() throws Exception {
 
     //Creating form :-)
