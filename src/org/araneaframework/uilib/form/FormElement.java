@@ -274,10 +274,10 @@ public class FormElement extends GenericFormElement implements FormElementContex
   }
   
   protected Environment getConstraintEnvironment() {
-	return new StandardEnvironment(getEnvironment(), FormElementContext.class, this);
+	return new StandardEnvironment(super.getConstraintEnvironment(), FormElementContext.class, this);
   }
 
-/**
+  /**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
    * @throws Exception 

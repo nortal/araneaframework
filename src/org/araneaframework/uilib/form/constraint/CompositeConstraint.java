@@ -48,4 +48,24 @@ public abstract class CompositeConstraint extends BaseConstraint {
   public void clearConstraints() {
     constraints.clear();
   }
+  
+  
+  
+  /*
+  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
+	    super.setGenericFormElementCtx(feCtx);
+	    for (Iterator i = constraints.iterator(); i.hasNext();) {
+	      Constraint c = (Constraint) i.next();
+	      c.setGenericFormElementCtx(getGenericFormElementCtx());
+	    }  
+	  }
+
+	  public void setFormElementCtx(FormElementContext feCtx) {
+	    for (Iterator i = constraints.iterator(); i.hasNext();) {
+	      Constraint c = (Constraint) i.next();
+	      if (c instanceof FormElementAware)
+	        ((FormElementAware) c).setFormElementCtx(feCtx);
+	    }    
+	  }
+	  */
 }

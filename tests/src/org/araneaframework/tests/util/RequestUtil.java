@@ -24,8 +24,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
  */
 public abstract class RequestUtil {
   /** 
-   * Request is considered SUBMITTED only when some HTML form inputs
-   * are present. Aranea Form Elements are not updated (read from request) unless 
+   * Request is considered SUBMITTED only when some HTML form inputs (namely transaction id)
+   * is present. Aranea Form Elements are not updated (read from request) unless 
    * request is marked submitted.*/
   public static MockHttpServletRequest markSubmitted(MockHttpServletRequest req) {
     req.addParameter(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);

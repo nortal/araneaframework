@@ -34,7 +34,6 @@ public class AfterTodayConstraint extends BaseFieldConstraint {
 	 * @param allowToday when set, all dates from today are considered valid.
 	 */
 	public AfterTodayConstraint(boolean allowToday) {
-		super(null);
 		this.allowToday = allowToday;
 	}
 

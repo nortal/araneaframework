@@ -16,7 +16,9 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
 
@@ -32,9 +34,9 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
   }
 	
   public NotEmptyConstraint(FormElement field) {
-    super(field);
+    field.setConstraint(this);
   }
-  
+
   /**
 	 * Checks that the <code>String</code> is not empty.
 	 */

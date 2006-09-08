@@ -37,7 +37,6 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint {
    * @param rangeEnd end of the length range.
    */
   public StringLengthInRangeConstraint(int rangeStart, int rangeEnd) {
-    super(null);
     this.rangeStart = rangeStart;
     this.rangeEnd = rangeEnd;
   }

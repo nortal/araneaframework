@@ -21,7 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
-import org.araneaframework.uilib.form.Constrainable;
+import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
@@ -83,7 +84,11 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
     this.environment = environment;
   }
   
-  //*********************************************************************
+  public Environment getEnvironment() {
+    return environment;
+  }
+  
+//*********************************************************************
   //* PROTECTED METHODS
   //*********************************************************************
   
@@ -93,8 +98,18 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   
   protected void addErrors(Collection errorList) {
     getErrors().addAll(errorList);
-  }  
-  
+  }
+
+  protected ConfigurationContext getConfiguration() {
+    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+  }
+
+  protected String t(String key) {
+    LocalizationContext locCtx = 
+     (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+    return locCtx.localize(key);
+  }
+
   //*********************************************************************
   //* ABSTRACT IMPLEMENTATION METHODS
   //*********************************************************************
@@ -104,20 +119,4 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    * and add messages about unsatisfied conditions.
    */
   protected abstract void validateConstraint() throws Exception;
-  
-  /**
-   * Should be used for {@link Constrainable} type checks instead 
-   * {@link Assert#isInstanceOf(Class, Object, String)} to provide better error message.
-   * 
-   * @param klass Class which instance <code>constrainable</code> should be
-   * @param constrainable
-   */
-  protected void lazyTypeAssert(Class klass, Constrainable constrainable) {
-    try {
-      Assert.isInstanceOf(klass, constrainable, null);
-    } catch (IllegalArgumentException e) {
-      String simpleClassName = this.getClass().getName().substring(this.getClass().getName().lastIndexOf('.')+1);
-      throw new IllegalArgumentException(simpleClassName + " can only constrain FormElements!");
-    }
-  }
 }

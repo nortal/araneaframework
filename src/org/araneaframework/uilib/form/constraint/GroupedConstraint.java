@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form.constraint;
 
-import org.araneaframework.uilib.form.Constrainable;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
@@ -35,11 +34,6 @@ public class GroupedConstraint extends BaseConstraint {
     this.group = group;
   }
   
-  public void constrain(Constrainable constrainable) {
-    super.constrain(constrainable);
-    constraint.constrain(constrainable);
-  }
-
   protected void validateConstraint() throws Exception {
     // in case the constraint's group is inactive, just ignore it
     if (!this.conditionalConstraintHelper.isGroupActive(this.group))

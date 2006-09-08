@@ -33,7 +33,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class GenericFormElement extends BaseApplicationWidget implements Constrainable {
+public abstract class GenericFormElement extends BaseApplicationWidget {
 
   //*******************************************************************
   // FIELDS
@@ -46,12 +46,18 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
   protected boolean validated = false;  
   
   private Set errors;
-
+  
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
     
-  /**
+  protected void init() throws Exception {
+    super.init();
+    if (constraint != null)
+      constraint.setEnvironment(getConstraintEnvironment());
+  }
+
+/**
    * Returns all properties of the element as a map (string -&gt; string).
    * 
    * @return all properties as a map.
@@ -102,13 +108,12 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
    */
   public void setConstraint(Constraint constraint) {
     this.constraint = constraint;
-    Environment e = getConstraintEnvironment();
-    if (e != null)
+    if (constraint != null && isInitialized())
       constraint.setEnvironment(getConstraintEnvironment());
   }
   
   protected Environment getConstraintEnvironment() {
-    return null;
+    return getEnvironment();
   }
 
   /**
