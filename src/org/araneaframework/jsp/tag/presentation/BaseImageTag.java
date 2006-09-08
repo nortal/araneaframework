@@ -34,7 +34,7 @@ public abstract class BaseImageTag extends PresentationTag {
     super.doStartTag(out);
 
     if (code != null) {
-      Info info = (Info)getImageInfo(code);
+      Info info = getImageInfo(code);
       if (info == null)
         throw new AraneaJspException("Missing image description with code '" + code + "'");
       this.src = info.src;
