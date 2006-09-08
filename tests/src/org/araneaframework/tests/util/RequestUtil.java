@@ -16,7 +16,7 @@
 
 package org.araneaframework.tests.util;
 
-import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TransactionContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
@@ -28,7 +28,7 @@ public abstract class RequestUtil {
    * are present. Aranea Form Elements are not updated (read from request) unless 
    * request is marked submitted.*/
   public static MockHttpServletRequest markSubmitted(MockHttpServletRequest req) {
-    req.addParameter(ThreadContext.THREAD_SERVICE_KEY, "");
+    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
     return req;
   }
 }

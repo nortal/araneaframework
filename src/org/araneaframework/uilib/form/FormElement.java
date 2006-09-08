@@ -16,10 +16,12 @@
 
 package org.araneaframework.uilib.form;
 
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -52,7 +54,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
-
+  
   /**
    * Returns control label.
    * 
@@ -271,7 +273,11 @@ public class FormElement extends GenericFormElement implements FormElementContex
     this.rendered = savedRenderState;
   }
   
-  /**
+  protected Environment getConstraintEnvironment() {
+	return new StandardEnvironment(getEnvironment(), FormElementContext.class, this);
+  }
+
+/**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
    * @throws Exception 

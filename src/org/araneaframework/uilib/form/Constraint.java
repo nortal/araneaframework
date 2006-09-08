@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form;
 
 import java.io.Serializable;
 import java.util.Set;
+import org.araneaframework.Environment;
 
 
 /**
@@ -26,7 +27,6 @@ import java.util.Set;
  * @see org.araneaframework.uilib.form.constraint.BaseConstraint
  */
 public interface Constraint extends Serializable {
-  public void constrain(Constrainable constrainable);
   /**
    * This method validates the constraint conditions, providing some preconditions and
    * postconditions for the {@link #validate()} method.
@@ -49,4 +49,6 @@ public interface Constraint extends Serializable {
    * @param customErrorMessage custom error message
    */
   public void setCustomErrorMessage(String customErrorMessage);
+
+  public void setEnvironment(Environment env);
 }

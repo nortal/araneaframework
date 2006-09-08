@@ -16,7 +16,6 @@
 
 package org.araneaframework.tests;
 
-import com.sun.corba.se.internal.core.Request;
 import junit.framework.TestCase;
 import org.araneaframework.Widget;
 import org.araneaframework.tests.mock.MockEnvironment;

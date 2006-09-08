@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form.constraint;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Constrainable;
 import org.araneaframework.uilib.form.Constraint;
@@ -31,21 +32,16 @@ import org.araneaframework.uilib.form.Constraint;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseConstraint implements java.io.Serializable, Constraint {
-
-  //*******************************************************************
-  // FIELDS
-  //*******************************************************************
-  private Constrainable constrainable;
-
+  protected Environment environment;
   protected String customErrorMessage;
-  
   private Set errors;
 
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
   public boolean validate() throws Exception {
-    Assert.notNull(this, constrainable, "Constraint may only be validated when constrainable is non-null. Make sure that the constraint is associated with a form element or a form!");
+	 // XXX: ASSERT???
+    ///Assert.notNull(this, constrainable, "Constraint may only be validated when constrainable is non-null. Make sure that the constraint is associated with a form element or a form!");
     
     clearErrors();
     
@@ -83,14 +79,10 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
     this.customErrorMessage = customErrorMessage;
   }
   
-  public void constrain(Constrainable constrainable) {
-    this.constrainable = constrainable;
+  public void setEnvironment(Environment environment) {
+    this.environment = environment;
   }
   
-  protected Constrainable getConstrainable() {
-    return this.constrainable;
-  }
-
   //*********************************************************************
   //* PROTECTED METHODS
   //*********************************************************************

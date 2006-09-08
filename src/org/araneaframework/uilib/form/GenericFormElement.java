@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
@@ -101,8 +102,13 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
    */
   public void setConstraint(Constraint constraint) {
     this.constraint = constraint;
-    if (constraint != null)
-      constraint.constrain(this);
+    Environment e = getConstraintEnvironment();
+    if (e != null)
+      constraint.setEnvironment(getConstraintEnvironment());
+  }
+  
+  protected Environment getConstraintEnvironment() {
+    return null;
   }
 
   /**
