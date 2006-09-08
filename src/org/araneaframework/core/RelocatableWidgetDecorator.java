@@ -27,6 +27,7 @@ public class RelocatableWidgetDecorator extends BaseFilterWidget implements Seri
       catch (InterruptedException e) {
         throw new NestableRuntimeException(e);
       }      
+      
 			synchronized (this) {
 			  _setEnvironment(newEnv);
 			}
