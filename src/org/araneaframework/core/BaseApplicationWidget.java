@@ -90,25 +90,14 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
      * @see org.araneaframework.Composite.Interface#attach(java.lang.Object, org.araneaframework.Component)
      */
     public void attach(Object key, Component comp) {
-      Object obj = _getChildren().get(key);
-      if (obj == null) {
-        _getChildren().put(key, comp);
-      }
-      else {
-        throw new AraneaRuntimeException("Duplicate keys not allowed");
-      }
+      _getChildren().put(key, comp);
     }
 
     /**
      * @see org.araneaframework.Composite.Interface#detach(java.lang.Object)
      */
     public Component detach(Object key) {
-      Component comp = (Component) _getChildren().remove(key);
-      
-      if (comp == null) {
-        throw new NoSuchWidgetException(key);
-      }
-      return comp;
+      return (Component) _getChildren().remove(key);
     }    
   }
   //*******************************************************************
