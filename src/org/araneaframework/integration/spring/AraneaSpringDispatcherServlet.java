@@ -135,7 +135,9 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
         throw new AraneaRuntimeException(e);
       }
       
-      ((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(ARANEA_START, new RootBeanDefinition(startClass));
+      RootBeanDefinition startBeanDef = new RootBeanDefinition(startClass);
+      startBeanDef.setSingleton(false);
+      ((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(ARANEA_START, startBeanDef);
     }
     
     if (isSpringWebPresent) {
