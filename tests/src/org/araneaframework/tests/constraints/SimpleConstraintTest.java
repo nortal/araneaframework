@@ -16,21 +16,16 @@
 
 package org.araneaframework.tests.constraints;
 
-import java.text.SimpleDateFormat;
 import junit.framework.TestCase;
-import org.araneaframework.InputData;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.util.RequestUtil;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.constraint.AfterTodayConstraint;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
-import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
-import org.araneaframework.uilib.form.data.DateData;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
@@ -115,43 +110,5 @@ public class SimpleConstraintTest extends TestCase {
     input.popScope();
       
     assertTrue("Form is supposed to valid because constraint is not set.", form.convertAndValidate());
-  }
-  
-  public void testInvalidAfterTodayConstraint() throws Exception {
-    FormElement el = form.createElement("#date", new DateControl(), new DateData(), false);
-    el.setConstraint(new AfterTodayConstraint(false));
-    el.rendered();
-    form.addElement("date", el);
-
-    MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-
-    request.addParameter("form.date", "11.10.1015");
-
-    InputData input = new StandardServletInputData(request);
-    input.pushScope("form");
-    form._getWidget().update(input);
-    input.popScope();
-
-    assertFalse("Test form must not be valid after reading from request", form.convertAndValidate());
-  }
-  
-  public void testValidAfterTodayConstraint() throws Exception {
-    FormElement el = form.createElement("#date", new DateControl(), new DateData(), false);
-    el.setConstraint(new AfterTodayConstraint(false));
-    el.rendered();
-    form.addElement("date", el);
-
-    MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-
-    request.addParameter("form.date", "11.10.2015");
-
-    InputData input = new StandardServletInputData(request);
-    input.pushScope("form");
-    form._getWidget().update(input);
-    input.popScope();
-
-    assertTrue("Test form must be valid after reading from request", form.convertAndValidate());
   }
 }
