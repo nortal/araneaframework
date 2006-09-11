@@ -90,7 +90,7 @@ public final class RangeConstraint extends BaseConstraint {
             UiLibMessages.RANGE_CHECK_FAILED, 
             t(fieldLo.getLabel(), fieldLo.getEnvironment()),
             t(fieldHi.getLabel(), fieldHi.getEnvironment()),
-            fieldHi.getEnvironment()));
+            getEnvironment()));
     }
   }
   
