@@ -43,19 +43,31 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
    * Checks that the value is between two others.
    */
   protected void validateConstraint() {
-    // XXX: should it crash like this, when field contains nothing at all??? 
+    if (getValue() == null) {
+      addError(
+            ErrorUtil.localizeAndFormat(
+              UiLibMessages.NUMBER_NOT_BETWEEN, 
+              new Object[] {
+                  t(getLabel()),
+                  rangeStart.toString(),
+                  rangeEnd.toString()
+              },
+              getEnvironment()));     
+      return;
+    }
+    
     BigInteger value = new BigInteger(getValue().toString());
     
     if (rangeStart != null && rangeEnd != null && ((value.compareTo(rangeStart) == -1) || value.compareTo(rangeEnd) == 1)) {      
-      addError(
-          ErrorUtil.localizeAndFormat(
-            UiLibMessages.NUMBER_NOT_BETWEEN, 
-            new Object[] {
-                t(getLabel()),
-                rangeStart.toString(),
-                rangeEnd.toString()
-            },
-            getEnvironment()));     
+        addError(
+                ErrorUtil.localizeAndFormat(
+                  UiLibMessages.NUMBER_NOT_BETWEEN, 
+                  new Object[] {
+                      t(getLabel()),
+                      rangeStart.toString(),
+                      rangeEnd.toString()
+                  },
+                  getEnvironment()));
     }      
     else if (rangeStart != null && value.compareTo(rangeStart) == -1) {
       addError(

@@ -39,13 +39,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   //* PUBLIC METHODS
   //*********************************************************************
   
-  /* (non-Javadoc)
- * @see org.araneaframework.uilib.form.Constraint#validate()
- */
-public boolean validate() throws Exception {
-	 // XXX: ASSERT???
-    ///Assert.notNull(this, constrainable, "Constraint may only be validated when constrainable is non-null. Make sure that the constraint is associated with a form element or a form!");
-    
+  public boolean validate() throws Exception {
     clearErrors();
     
     validateConstraint();
