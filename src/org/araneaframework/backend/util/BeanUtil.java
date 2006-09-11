@@ -114,7 +114,7 @@ public class BeanUtil {
 		try {
 			Method getter = getSimpleReadMethod(bean.getClass(), field);
 			if (getter != null) {
-				result = getter.invoke(bean, null);
+				result = getter.invoke(bean, (Object[])null);
 			}
 		}
 		catch (InvocationTargetException e) {
@@ -440,7 +440,7 @@ public class BeanUtil {
 		
 		String getterName = "get" + field.substring(0, 1).toUpperCase() + field.substring(1);
 		try {
-			return beanClass.getMethod(getterName, null);
+			return beanClass.getMethod(getterName, (Class [])null);
 		}
 		catch (NoSuchMethodException e) {
 			// There is no 'get' method for this field
@@ -448,7 +448,7 @@ public class BeanUtil {
 		
 		getterName = "is" + field.substring(0, 1).toUpperCase() + field.substring(1);
 		try {
-			return beanClass.getMethod(getterName, null);
+			return beanClass.getMethod(getterName, (Class [])null);
 		}
 		catch (NoSuchMethodException e) {
 			// There is no 'is' method for this field

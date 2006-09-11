@@ -16,23 +16,17 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
-import org.araneaframework.uilib.form.FormElementAware;
-import org.araneaframework.uilib.form.FormElementContext;
-import org.araneaframework.uilib.form.GenericFormElementContext;
 
 /**
  * Constraint that will be applied iff the constraint's group is active.
  * 
  * @author Ilja Livenson (ilja@webmedia.ee)
- * 
  */
-public class GroupedConstraint extends BaseConstraint implements FormElementAware {
-
+public class GroupedConstraint extends BaseConstraint {
   private ConstraintGroupHelper conditionalConstraintHelper;
-
   private Constraint constraint;
-
   private String group;
 
   public GroupedConstraint(ConstraintGroupHelper helper, Constraint constraint, String group) {
@@ -40,15 +34,17 @@ public class GroupedConstraint extends BaseConstraint implements FormElementAwar
     this.constraint = constraint;
     this.group = group;
   }
-
+  
   protected void validateConstraint() throws Exception {
     // in case the constraint's group is inactive, just ignore it
     if (!this.conditionalConstraintHelper.isGroupActive(this.group))
       return;
     else
       this.constraint.validate();
+    addErrors(constraint.getErrors());
+    constraint.clearErrors();
   }
-
+  
   public ConstraintGroupHelper getConditionalConstraintHelper() {
     return conditionalConstraintHelper;
   }
@@ -56,18 +52,16 @@ public class GroupedConstraint extends BaseConstraint implements FormElementAwar
   public void setConditionalConstraintHelper(ConstraintGroupHelper conditionalConstraintHelper) {
     this.conditionalConstraintHelper = conditionalConstraintHelper;
   }
+  
+  public void setEnvironment(Environment environment) {
+    constraint.setEnvironment(environment);
+  }
 
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
   }
 
-  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
-    constraint.setGenericFormElementCtx(feCtx);
+  public void clearErrors() {
+    constraint.clearErrors();
   }
-  
-  public void setFormElementCtx(FormElementContext feCtx) {
-    if (constraint instanceof FormElementAware)
-      ((FormElementAware) constraint).setFormElementCtx(feCtx);
-  }
-
 }

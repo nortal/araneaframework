@@ -1,45 +1,81 @@
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
 package org.araneaframework.uilib.form.constraint;
 
-import org.araneaframework.core.Assert;
-import org.araneaframework.uilib.form.FormElementAware;
+import org.araneaframework.Environment;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
 
-public abstract class BaseFieldConstraint extends BaseConstraint implements FormElementAware {
-  private FormElementContext feCtx;
-  
-  public void setFormElementCtx(FormElementContext feCtx) {
-    this.feCtx = feCtx;
+/**
+ * {@link org.araneaframework.uilib.form.Constraint} that is associated with
+ * some {@link org.araneaframework.uilib.form.FormElement}.
+ * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ */
+public abstract class BaseFieldConstraint extends BaseConstraint {
+  private FormElement field;
+
+  public BaseFieldConstraint() {
   }
   
-  protected FormElementContext getFormElementCtx() {
-    return this.feCtx;
+  // Constraints environment should always be set to field environment.
+  // however there is no guarantee that field has been initialized when
+  // constructor is called, so the environment may be missing crucial entries.
+  // Just setting field constraint works (then constraints environment is set when 
+  // field is initialized). That would break constraint previously set however.
+  public BaseFieldConstraint(FormElement field) {
+    this.field = field;
   }
-  
-  public boolean validate() throws Exception {
-    Assert.notNull(this, getFormElementCtx(), 
-        "Form element context must be assigned to the constraint before it can function! " +
-        "Make sure that the constraint is associated with a form element!");
-    
-    return super.validate();
+
+  /**
+   * Returns the {@link FormElement} that 
+   * this {@link org.araneaframework.uilib.form.Constraint} is constraining.
+   * 
+   * @return constrained {@link FormElement}
+   */
+  protected FormElementContext getField() {
+    if (field != null)
+      return field;
+    return (FormElementContext) getEnvironment().requireEntry(FormElementContext.class);
   }
-  
+
+  public Environment getEnvironment() {
+    if (field == null)
+	  return super.getEnvironment();
+    return field.getConstraintEnvironment();
+  }
+
   protected String getLabel() {
-    return getFormElementCtx().getLabel();
+    return getField().getLabel();
   }
-  
+
   protected Object getValue() {
-    return getFormElementCtx().getValue();
+    return getField().getValue();
   }
-  
+
   public boolean isRead() {
-    return getFormElementCtx().isRead();
+    return getField().isRead();
   }
-  
+
   public boolean isDisabled() {
-    return getFormElementCtx().isDisabled();
+    return getField().isDisabled();
   }
 
   public boolean isMandatory() {
-    return getFormElementCtx().isMandatory();
+    return getField().isMandatory();
   }
 }

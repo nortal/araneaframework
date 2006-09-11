@@ -457,5 +457,4 @@ public class FormWidget extends GenericFormElement {
       return getChildren();
     } 
   }
-  
 }

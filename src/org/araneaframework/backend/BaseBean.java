@@ -157,7 +157,7 @@ public abstract class BaseBean implements Serializable, Cloneable {
 	public boolean addChange(String name) {
 		log.debug("Adding changed field = " + name);
 		try {
-			this.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1), null);
+			this.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1), (Class[])null);
 			changes.add(name);
 			return true;
 		}

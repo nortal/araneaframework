@@ -16,33 +16,38 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
 
-
 /**
- * This constraint checks that the value is between two others.
+ * {@link org.araneaframework.uilib.form.Constraint} that allows constraining
+ * input length in a {@link FormElement}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class StringLengthInRangeConstraint extends BaseFieldConstraint {
-
   private int rangeStart;
   private int rangeEnd;
   
+  public StringLengthInRangeConstraint() {}
+
+  public StringLengthInRangeConstraint(FormElement field) {
+    super(field);
+  }
+
   /**
    * Creates the class, initializing the corresponding fields.
    * @param rangeStart start of the length range.
    * @param rangeEnd end of the length range.
    */
   public StringLengthInRangeConstraint(int rangeStart, int rangeEnd) {
-    super();
     this.rangeStart = rangeStart;
     this.rangeEnd = rangeEnd;
   }
   
   /**
+   * XXX: not consistent, other field constraints throw exceptions when formelement current value is NULL
    * Checks that the value is between two others.
    */
   protected void validateConstraint() {
@@ -58,5 +63,13 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint {
             },
             getEnvironment()));
     }
+  }
+
+  public void setRangeEnd(int rangeEnd) {
+    this.rangeEnd = rangeEnd;
+  }
+
+  public void setRangeStart(int rangeStart) {
+    this.rangeStart = rangeStart;
   }
 }

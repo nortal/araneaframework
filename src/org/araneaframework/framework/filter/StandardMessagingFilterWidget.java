@@ -80,18 +80,8 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
    */
   protected void render(OutputData output) throws Exception {
     if (permanentMessages != null) {
-      if (messages == null && permanentMessages.size() > 0)
-        messages = new LinkedMap();
-
-      for (Iterator i = permanentMessages.entrySet().iterator(); i.hasNext();) {
-        Map.Entry entry = (Map.Entry)i.next();
-        Collection typedMessages = (Collection)messages.get(entry.getKey());
-
-        if (typedMessages == null)
-          messages.put(entry.getKey(), entry.getValue());
-        else
-          typedMessages.addAll((Collection)entry.getValue());
-      }
+      // add permanent messages to-one time messages for rendering
+      messages = addPermanentMessages(messages);
     }
 
     output.pushAttribute(MessageContext.MESSAGE_KEY, messages);
@@ -103,7 +93,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
       output.popAttribute(MessageContext.MESSAGE_KEY);
     }
   }
-  
+
   /** Stores message of given type in given messageMap (created if <code>null</code> at invocation). */
   protected Map storeMessage(final String type, final String message, Map messageMap) {
     Assert.notEmptyParam(type, "type");
@@ -137,6 +127,26 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     }
 
     return messageMap;
+  }
+  
+  /** 
+   * Adds current permanent messages to given message map.
+   * @return given message map with permanent messages added. 
+   */
+  protected Map addPermanentMessages(Map msgs) {
+    if (msgs == null && permanentMessages.size() > 0)
+      msgs = new LinkedMap();
+
+    for (Iterator i = permanentMessages.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry)i.next();
+      Collection typedMessages = (Collection)msgs.get(entry.getKey());
+
+      if (typedMessages == null)
+        msgs.put(entry.getKey(), entry.getValue());
+      else
+        typedMessages.addAll((Collection)entry.getValue());
+    }
+    return msgs;
   }
 
   public void showMessage(String type, final String message) {

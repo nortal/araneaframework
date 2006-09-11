@@ -19,11 +19,19 @@ package org.araneaframework.http.service;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.PopupWindowContext;
+import org.araneaframework.http.filter.StandardPopupFilterWidget.StandardPopupServiceInfo;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
 
@@ -34,13 +42,37 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class WindowClosingService extends BaseService {
-	protected String script = 
-		"reloadParentWindow();" +
-		"closeWindow(50);";
-
+	private Environment closableComponentEnv;
+	
+	public WindowClosingService(Environment closableComponentEnv) {
+		this.closableComponentEnv = closableComponentEnv;
+	}
+	
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ServletUtil.getResponse(output);
 		
+		PopupWindowContext popupCtx = ((PopupWindowContext)closableComponentEnv.getEntry(PopupWindowContext.class));
+		BaseApplicationWidget opener = null;
+		if (popupCtx != null)
+			opener = (BaseApplicationWidget) popupCtx.getOpener();
+		
+		StandardPopupServiceInfo serviceInfo = null;
+		if (opener != null) {
+			String threadId = (String) ((ThreadContext) opener.getEnvironment().getEntry(ThreadContext.class)).getCurrentId();
+			String topserviceId = (String) ((TopServiceContext) opener.getEnvironment().getEntry(TopServiceContext.class)).getCurrentId();
+			String url = ((HttpOutputData)getInputData().getOutputData()).encodeURL(((HttpInputData)getInputData()).getContainerURL());
+			serviceInfo = new StandardPopupServiceInfo(topserviceId, threadId, null, url);
+		}
+		
+		String script;
+		if (serviceInfo != null) {
+			script = 
+				"reloadParentWindow('" + serviceInfo.toURL() + "');" +
+				"closeWindow(50);";
+		} else {
+			script = "closeWindow(50);";
+		}
+
 		String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);
 		String responseStr = 
 			"<html>" +
