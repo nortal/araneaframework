@@ -74,9 +74,6 @@ function processPopups() {
 
 function reloadParentWindow(url) {
   if (window.opener) {
-  	/*
-    var url = window.opener.document.location.href;
-    url += (url.indexOf('?') >= 0) ? "&transactionId=override" : "?transactionId=override";*/
     window.opener.document.location.href=url;
   }
 }

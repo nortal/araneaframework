@@ -1,5 +1,19 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2006.09.11    | Aranea 1.0-RC3
+
+Features and Improvements
+        Constraints internals rewritten                                       | See change #107
+        TransactionFilterWidget does not consider NULL id valid anymore       | See change #107
+        Some standard components were documented                              | See change #106
+
+Bugfixes
+        BeanUtil.copy(Object from, Class toType) did not work                 | See change #108
+
+API Changes
+        None
+
+---------------------------------------------------------------------------------------------
 2006.09.01    | Aranea 1.0-RC2
 
 Features and Improvements
@@ -48,6 +62,7 @@ Bugfixes
 API Changes
         Numerous, because of package renames and established naming policy
 
+---------------------------------------------------------------------------------------------
 2006.07.07    | Aranea 1.0-M4
 
 Features and Improvements
