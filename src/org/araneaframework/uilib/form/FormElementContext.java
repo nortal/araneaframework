@@ -16,7 +16,18 @@
 
 package org.araneaframework.uilib.form;
 
-public interface FormElementContext extends GenericFormElementContext {
+import java.io.Serializable;
+import java.util.Set;
+import org.araneaframework.Environment;
+
+public interface FormElementContext extends Serializable {
+  public boolean isValid();
+
+  public void addError(String error);
+  public void addErrors(Set errors);
+
+  public Environment getEnvironment();
+
   public String getLabel();
   public boolean isMandatory();
   public boolean isDisabled();
