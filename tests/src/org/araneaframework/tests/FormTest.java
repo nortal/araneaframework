@@ -72,8 +72,7 @@ public class FormTest extends TestCase {
 
     //Creating form :-)
     FormWidget testForm = new FormWidget();
-    testForm._getComponent().init(new MockEnvironment());
-    
+
     //Adding elements to form
     testForm.addElement("myCheckBox", "my checkbox", new CheckboxControl(), new BooleanData(), true);
     testForm.addElement("myLongText", "my long text", new TextControl(), new LongData(), true);
@@ -91,6 +90,8 @@ public class FormTest extends TestCase {
     mySelect.addItem(new DisplayItem("2", "two"));
     mySelect.addItem(new DisplayItem("3", "three"));
     mySelect.addItem(new DisplayItem("4", "four"));
+    
+    testForm._getComponent().init(new MockEnvironment());
 
     return testForm;
   }
@@ -290,7 +291,6 @@ public class FormTest extends TestCase {
    * Testing reading from request with a grouped constraint set.
    */
   public void testFormActiveGroupedConstraintInvalidates() throws Exception {
-
     FormWidget testForm = makeUsualForm();
 
     MockHttpServletRequest notMandatoryMissingRequest =

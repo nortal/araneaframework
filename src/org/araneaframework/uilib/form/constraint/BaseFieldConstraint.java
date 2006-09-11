@@ -16,16 +16,49 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.Environment;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
 
+/**
+ * {@link org.araneaframework.uilib.form.Constraint} that is associated with
+ * some {@link org.araneaframework.uilib.form.FormElement}.
+ * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ */
 public abstract class BaseFieldConstraint extends BaseConstraint {
+  private FormElement field;
+
   public BaseFieldConstraint() {
   }
-	
-  protected FormElementContext getField() {
-    return (FormElementContext)getEnvironment().requireEntry(FormElementContext.class);
-  }
   
+  // Constraints environment should always be set to field environment.
+  // however there is no guarantee that field has been initialized when
+  // constructor is called, so the environment may be missing crucial entries.
+  // Just setting field constraint works (then constraints environment is set when 
+  // field is initialized). That would break constraint previously set however.
+  public BaseFieldConstraint(FormElement field) {
+    this.field = field;
+  }
+
+  /**
+   * Returns the {@link FormElement} that 
+   * this {@link org.araneaframework.uilib.form.Constraint} is constraining.
+   * 
+   * @return constrained {@link FormElement}
+   */
+  protected FormElementContext getField() {
+    if (field != null)
+      return field;
+    return (FormElementContext) getEnvironment().requireEntry(FormElementContext.class);
+  }
+
+  public Environment getEnvironment() {
+    if (field == null)
+	  return super.getEnvironment();
+    return field.getConstraintEnvironment();
+  }
+
   protected String getLabel() {
     return getField().getLabel();
   }
@@ -33,11 +66,11 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   protected Object getValue() {
     return getField().getValue();
   }
-  
+
   public boolean isRead() {
     return getField().isRead();
   }
-  
+
   public boolean isDisabled() {
     return getField().isDisabled();
   }

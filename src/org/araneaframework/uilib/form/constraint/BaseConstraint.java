@@ -20,27 +20,29 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.araneaframework.Environment;
-import org.araneaframework.core.Assert;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
- * This class is the base class for form constraints. A constraint operates on the form elements
- * providing means to define form element validity. That is using a constraint you can put
- * additional (and/or custom) conditions for the form elements to be valid.
+ * Base class for constraints. A {@link org.araneaframework.uilib.form.Constraint} 
+ * operates on the form elements or forms providing means to constrain their content.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseConstraint implements java.io.Serializable, Constraint {
-  protected Environment environment;
+  private Environment environment;
   protected String customErrorMessage;
   private Set errors;
 
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
-  public boolean validate() throws Exception {
+  
+  /* (non-Javadoc)
+ * @see org.araneaframework.uilib.form.Constraint#validate()
+ */
+public boolean validate() throws Exception {
 	 // XXX: ASSERT???
     ///Assert.notNull(this, constrainable, "Constraint may only be validated when constrainable is non-null. Make sure that the constraint is associated with a form element or a form!");
     
@@ -49,7 +51,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
     validateConstraint();
 
     //Putting custom message only
-    if (errors != null && customErrorMessage != null) {
+    if (errors != null && !errors.isEmpty() && customErrorMessage != null) {
     	clearErrors();
     	addError(customErrorMessage);
     }
@@ -81,12 +83,15 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   }
   
   public void setEnvironment(Environment environment) {
-    this.environment = environment;
+    // allow setting of constraint environment only once
+    if (this.environment == null)
+      this.environment = environment;
   }
   
   public Environment getEnvironment() {
     return environment;
   }
+  
   
 //*********************************************************************
   //* PROTECTED METHODS

@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.math.BigInteger;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
 
@@ -31,6 +32,7 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
   private BigInteger rangeEnd;
   
   public NumberInRangeConstraint() {}
+  public NumberInRangeConstraint(FormElement field) { super(field); }
   
   public NumberInRangeConstraint(BigInteger start, BigInteger end) {
     rangeStart = start;
@@ -41,6 +43,7 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
    * Checks that the value is between two others.
    */
   protected void validateConstraint() {
+    // XXX: should it crash like this, when field contains nothing at all??? 
     BigInteger value = new BigInteger(getValue().toString());
     
     if (rangeStart != null && rangeEnd != null && ((value.compareTo(rangeStart) == -1) || value.compareTo(rangeEnd) == 1)) {      

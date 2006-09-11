@@ -42,7 +42,7 @@ public class AfterTodayConstraintTest extends TestCase {
 
   public void setUp() throws Exception {
     form = new FormWidget();
-    dateElement = form.createElement("#date", new FakeDateControl(), new DateData(), true);
+    dateElement = form.createElement("#date", new FakeDateControl(), new DateData(), false);
     form.addElement("date", dateElement);
     MockLifeCycle.begin(form, new MockEnvironment());
   }
@@ -59,7 +59,7 @@ public class AfterTodayConstraintTest extends TestCase {
     assertEquals(valid, dateElement.validate());
     form.clearErrors();
     assertEquals(valid, form.validate());
-    form.clearErrors(); // allows using more than once per setup 
+    form.clearErrors(); // allows using more than once per setUp() 
   }
 
   public void testFuture() throws Exception {
@@ -76,6 +76,7 @@ public class AfterTodayConstraintTest extends TestCase {
         false);
   }
 
+  // test that constraint works correctly with today's date
   public void testPresent() throws Exception {
     Date now = new Date();
     // disallow today
@@ -88,5 +89,13 @@ public class AfterTodayConstraintTest extends TestCase {
         new AfterTodayConstraint(true), 
         now, 
         true);
+  }
+  
+  // in case of date being null, after today constraint should invalidate
+  public void testNull() throws Exception {
+    executeTest(
+        new AfterTodayConstraint(false), 
+        null, 
+        false);
   }
 }

@@ -16,13 +16,13 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
  * Constraint that will be applied iff the field has been read from the request.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class OptionalConstraint extends BaseFieldConstraint {
   private Constraint constraint;
@@ -35,10 +35,16 @@ public class OptionalConstraint extends BaseFieldConstraint {
     if (isRead()) {
       constraint.validate();
       addErrors(constraint.getErrors());
+      constraint.clearErrors();
     }
   }
-  
+
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
+  }
+
+  public void setEnvironment(Environment environment) {
+    super.setEnvironment(environment);
+    constraint.setEnvironment(environment);
   }
 }

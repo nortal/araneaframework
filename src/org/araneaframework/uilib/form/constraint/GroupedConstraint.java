@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
@@ -41,6 +42,7 @@ public class GroupedConstraint extends BaseConstraint {
     else
       this.constraint.validate();
     addErrors(constraint.getErrors());
+    constraint.clearErrors();
   }
   
   public ConstraintGroupHelper getConditionalConstraintHelper() {
@@ -50,8 +52,16 @@ public class GroupedConstraint extends BaseConstraint {
   public void setConditionalConstraintHelper(ConstraintGroupHelper conditionalConstraintHelper) {
     this.conditionalConstraintHelper = conditionalConstraintHelper;
   }
+  
+  public void setEnvironment(Environment environment) {
+    constraint.setEnvironment(environment);
+  }
 
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
+  }
+
+  public void clearErrors() {
+    constraint.clearErrors();
   }
 }

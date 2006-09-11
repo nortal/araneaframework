@@ -78,7 +78,6 @@ public class FormConstraintTest extends TestCase {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
 
-    request.addParameter("testForm.__present", "true");
     request.addParameter("testForm.myCheckBox", "true");
     request.addParameter("testForm.myLongText", "108");
 	request.addParameter("testForm.myDateTime", (String) null);

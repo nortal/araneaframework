@@ -32,7 +32,7 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
   }
 	
   public NotEmptyConstraint(FormElement field) {
-    field.setConstraint(this);
+    super(field);
   }
 
   /**

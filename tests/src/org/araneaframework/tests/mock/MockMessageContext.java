@@ -16,35 +16,11 @@
 
 package org.araneaframework.tests.mock;
 
-import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.filter.StandardMessagingFilterWidget;
 
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class MockMessageContext implements MessageContext {
-
-  public void showMessage(String type, String message) {
-  }
-
-  public void showErrorMessage(String message) {
-  }
-
-  public void showInfoMessage(String message) {
-  }
-
-  public void clearMessages() {
-  }
-
-  public void clearAllMessages() {
-  }
-
-  public void clearPermanentMessages() {
-  }
-
-  public void showPermanentMessage(String type, String message) {
-  }
-
-  public void hidePermanentMessage(String message) {
-  }
+public class MockMessageContext extends StandardMessagingFilterWidget {
 }

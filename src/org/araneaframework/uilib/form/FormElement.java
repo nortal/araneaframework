@@ -22,8 +22,6 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -273,7 +271,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
     this.rendered = savedRenderState;
   }
   
-  protected Environment getConstraintEnvironment() {
+  public Environment getConstraintEnvironment() {
 	return new StandardEnvironment(super.getConstraintEnvironment(), FormElementContext.class, this);
   }
 
