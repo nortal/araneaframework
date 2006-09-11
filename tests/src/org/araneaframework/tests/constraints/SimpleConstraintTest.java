@@ -97,7 +97,6 @@ public class SimpleConstraintTest extends TestCase {
     
     OrConstraint constraint = new OrConstraint();
     constraint.addConstraint(new NumberInRangeConstraint(new BigInteger("100"), new BigInteger("200")));
-    //XXX: this test fails when next line is commented out.
     constraint.addConstraint(new NotEmptyConstraint(el));
     el.setConstraint(constraint);
     form.addElement("number", el);

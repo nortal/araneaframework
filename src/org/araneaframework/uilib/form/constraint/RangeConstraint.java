@@ -29,9 +29,9 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * It assumes that the values of both form elements are of the same type and comparable.
  * 
  * TODO: Add locale support for string ranges.
- * XXX: this hurts ...
  * 
  * @author <a href="mailto:kt@webmedia.ee">Konstantin Tretyakov</a>
+ * XXX: this is one messy constraint.
  */
 public final class RangeConstraint extends BaseConstraint {
 
