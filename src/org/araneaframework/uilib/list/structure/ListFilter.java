@@ -37,7 +37,7 @@ public interface ListFilter extends Serializable {
 	 * @param filterInfo
 	 *            Filter fields and their current values.
 	 * @return <code>Expression</code> that is built according to the
-	 *         <code>FilterInfo</code>.
+	 *         <code>FilterInfo</code> or null if no expression has been built.
 	 */
 	Expression buildExpression(Map filterInfo);
 }

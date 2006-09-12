@@ -17,16 +17,13 @@
 package org.araneaframework.uilib.list.structure.filter.advanced;
 
 import java.util.Map;
+
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
-import org.araneaframework.backend.list.memorybased.expression.compare.GreaterThanExpression;
-import org.araneaframework.backend.list.memorybased.expression.compare.LowerThanExpression;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
-import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
-import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
 import org.araneaframework.uilib.list.structure.ComparableType;
 import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 
 public abstract class RangeInRangeFilter extends ComparableType implements ListFilter {
@@ -121,8 +118,10 @@ public abstract class RangeInRangeFilter extends ComparableType implements ListF
 		
 		Expression startVar = new VariableExpression(this.startColumnId);
 		Expression endVar = new VariableExpression(this.endColumnId);
-		Expression startVal = new ValueExpression(filterInfo.get(this.startFilterInfoKey));
-		Expression endVal = new ValueExpression(filterInfo.get(this.endFilterInfoKey));
+		Expression startVal = this.startFilterInfoKey == null ? null :
+			new ValueExpression(filterInfo.get(this.startFilterInfoKey));
+		Expression endVal = this.endFilterInfoKey == null ? null :
+			new ValueExpression(filterInfo.get(this.endFilterInfoKey));
 		return buildAction(startVar, endVar, startVal, endVal); 
 	}
 	
@@ -141,14 +140,9 @@ public abstract class RangeInRangeFilter extends ComparableType implements ListF
 			super();
 		}		
 		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			AndExpression expr = new AndExpression();			
-			if (startVar != null && startVal != null) {
-				expr.add(new GreaterThanExpression(startVar, startVal));
-			}
-			if (endVar != null && endVal != null) {
-				expr.add(new LowerThanExpression(endVar, endVal));
-			}
-			return expr;
+			return ExpressionUtil.and(
+					ExpressionUtil.gt(startVar, startVal, getComparator()),
+					ExpressionUtil.lt(endVar, endVal, getComparator()));			
 		}
 	}
 	
@@ -161,18 +155,9 @@ public abstract class RangeInRangeFilter extends ComparableType implements ListF
 			super();
 		}
 		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			AndExpression expr = new AndExpression();
-			if (startVar != null && startVal != null) {
-				expr.add(new OrExpression().add(
-						new GreaterThanExpression(startVar, startVal)).add(
-								new EqualsExpression(startVar, startVal)));							
-			}
-			if (endVar != null && endVal != null) {
-				expr.add(new OrExpression().add(
-						new LowerThanExpression(endVar, endVal)).add(
-								new EqualsExpression(endVar, endVal)));				
-			}
-			return expr;
+			return ExpressionUtil.and(
+					ExpressionUtil.ge(startVar, startVal, getComparator()),
+					ExpressionUtil.le(endVar, endVal, getComparator()));			
 		}
 		
 	}
@@ -186,14 +171,9 @@ public abstract class RangeInRangeFilter extends ComparableType implements ListF
 			super();
 		}
 		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			AndExpression expr = new AndExpression();			
-			if (startVar != null && startVal != null) {
-				expr.add(new LowerThanExpression(startVar, startVal));
-			}
-			if (endVar != null && endVal != null) {
-				expr.add(new GreaterThanExpression(endVar, endVal));
-			}
-			return expr;
+			return ExpressionUtil.and(
+					ExpressionUtil.lt(startVar, startVal, getComparator()),
+					ExpressionUtil.gt(endVar, endVal, getComparator()));
 		}
 	}
 	
@@ -206,18 +186,9 @@ public abstract class RangeInRangeFilter extends ComparableType implements ListF
 			super();
 		}
 		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			AndExpression expr = new AndExpression();
-			if (startVar != null && startVal != null) {
-				expr.add(new OrExpression().add(
-						new LowerThanExpression(startVar, startVal)).add(
-								new EqualsExpression(startVar, startVal)));					
-			}
-			if (endVar != null && endVal != null) {
-				expr.add(new OrExpression().add(
-						new GreaterThanExpression(endVar, endVal)).add(
-								new EqualsExpression(endVar, endVal)));
-			}
-			return expr;
+			return ExpressionUtil.and(
+					ExpressionUtil.le(startVar, startVal, getComparator()),
+					ExpressionUtil.ge(endVar, endVal, getComparator()));
 		}
 	}
 	
@@ -230,14 +201,9 @@ public abstract class RangeInRangeFilter extends ComparableType implements ListF
 			super();
 		}
 		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			AndExpression expr = new AndExpression();			
-			if (startVar != null && endVal != null) {
-				expr.add(new LowerThanExpression(startVar, endVal));
-			}
-			if (endVar != null && startVal != null) {
-				expr.add(new GreaterThanExpression(endVar, startVal));
-			}
-			return expr;
+			return ExpressionUtil.and(
+					ExpressionUtil.lt(startVar, endVal, getComparator()),
+					ExpressionUtil.gt(endVar, startVal, getComparator()));
 		}
 	}
 	
@@ -250,18 +216,9 @@ public abstract class RangeInRangeFilter extends ComparableType implements ListF
 			super();
 		}
 		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			AndExpression expr = new AndExpression();
-			if (startVar != null && endVal != null) {
-				expr.add(new OrExpression().add(
-						new LowerThanExpression(startVar, endVal)).add(
-								new EqualsExpression(startVar, endVal)));							
-			}
-			if (endVar != null && startVal != null) {
-				expr.add(new OrExpression().add(
-						new GreaterThanExpression(endVar, startVal)).add(
-								new EqualsExpression(endVar, startVal)));				
-			}
-			return expr;			
+			return ExpressionUtil.and(
+					ExpressionUtil.le(startVar, endVal, getComparator()),
+					ExpressionUtil.ge(endVar, startVal, getComparator()));		
 		}
 	}
 }

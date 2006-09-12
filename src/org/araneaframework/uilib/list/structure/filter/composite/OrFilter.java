@@ -18,7 +18,7 @@ package org.araneaframework.uilib.list.structure.filter.composite;
 
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.log4j.Logger;
+
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
 import org.araneaframework.uilib.list.structure.ListFilter;
@@ -28,16 +28,20 @@ import org.araneaframework.uilib.list.structure.filter.MultiFilter;
 public class OrFilter extends MultiFilter {
 	private static final long serialVersionUID = 1L;
 	
-	private static final Logger log = Logger.getLogger(OrFilter.class);
-	
 	public Expression buildExpression(Map data) {
-		log.debug("Building Expression, data = " + data);
-		OrExpression expr = new OrExpression();
+		OrExpression or = new OrExpression();
+		int count = 0;
 		for (Iterator i = this.children.iterator(); i.hasNext();) {
 			ListFilter filter = (ListFilter) i.next();
-			Expression childExpr = filter.buildExpression(data); 
-			expr.add(childExpr);
+			Expression child = filter.buildExpression(data);
+			if (child != null) {
+				or.add(child);
+				count++;
+			}
 		}
-		return expr;
+		if (count == 0) {
+			return null;
+		}
+		return or;
 	}
 }

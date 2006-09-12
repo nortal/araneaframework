@@ -31,7 +31,7 @@ import org.araneaframework.uilib.form.GenericFormElement;
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class RecursiveFormUtil {
+public class NestedFormUtil {
 
 	// FormWidget	
 

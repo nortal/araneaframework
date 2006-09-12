@@ -12,13 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.uilib.list.structure.filter.composite;
 
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.log4j.Logger;
+
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
 import org.araneaframework.uilib.list.structure.ListFilter;
@@ -26,19 +26,22 @@ import org.araneaframework.uilib.list.structure.filter.MultiFilter;
 
 
 public class AndFilter extends MultiFilter {
-  private static final long serialVersionUID = 1L;
-  
-  private static final Logger log = Logger.getLogger(AndFilter.class);
+	private static final long serialVersionUID = 1L;
 
-  public Expression buildExpression(Map data) {
-    if (log.isDebugEnabled())
-      log.debug("Building Expression, data = " + data);
-    AndExpression expr = new AndExpression();
-    for (Iterator i = this.children.iterator(); i.hasNext();) {
-      ListFilter filter = (ListFilter) i.next();
-      Expression childExpr = filter.buildExpression(data);
-      expr.add(childExpr);
-    }
-    return expr;
-  }
+	public Expression buildExpression(Map data) {
+		AndExpression and = new AndExpression();
+		int count = 0;
+		for (Iterator i = this.children.iterator(); i.hasNext();) {
+			ListFilter filter = (ListFilter) i.next();
+			Expression child = filter.buildExpression(data);
+			if (child != null) {
+				and.add(child);
+				count++;
+			}
+		}
+		if (count == 0) {
+			return null;
+		}
+		return and;
+	}
 }

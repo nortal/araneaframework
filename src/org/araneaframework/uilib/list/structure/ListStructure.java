@@ -17,7 +17,7 @@
 package org.araneaframework.uilib.list.structure;
 
 import java.util.Iterator;
-import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
+import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
 import org.araneaframework.uilib.list.structure.order.ColumnOrder;
 import org.araneaframework.uilib.list.structure.order.MultiColumnOrder;
@@ -35,7 +35,7 @@ public class ListStructure extends BaseListStructure {
 		addColumn(new ListColumn(id, label));
 	}
 	
-	public void addColumn(ListColumn column, ColumnOrder columnOrder, ColumnFilter columnFilter) {
+	public void addColumn(ListColumn column, ColumnOrder columnOrder, FieldFilter columnFilter) {
 		String id = column.getId();
 		addColumn(column);
 		if (columnOrder != null) {
@@ -43,12 +43,12 @@ public class ListStructure extends BaseListStructure {
 			addColumnOrder(columnOrder);
 		}
 		if (columnFilter != null) {
-			columnFilter.setColumnId(id);
+			columnFilter.setFieldId(id);
 			addFilter(columnFilter);
 		}
 	}
 	
-	public void addColumn(String id, String label, ColumnOrder columnOrder, ColumnFilter columnFilter) {
+	public void addColumn(String id, String label, ColumnOrder columnOrder, FieldFilter columnFilter) {
 		addColumn(new ListColumn(id, label), columnOrder, columnFilter);
 	}
 	
@@ -96,13 +96,13 @@ public class ListStructure extends BaseListStructure {
 		getAndFilter().addFilter(subFilter);
 	}
 	
-	public ColumnFilter getColumnFilter(String column) {
+	public FieldFilter getColumnFilter(String column) {
 		Iterator i = getAndFilter().getFilters().iterator();
 		while (i.hasNext()) {
 			ListFilter listFilter = (ListFilter) i.next();
-			if (ColumnFilter.class.isAssignableFrom(listFilter.getClass())) {
-				ColumnFilter columnFilter = (ColumnFilter) listFilter;
-				if (columnFilter.getColumnId().equals(column)) {
+			if (FieldFilter.class.isAssignableFrom(listFilter.getClass())) {
+				FieldFilter columnFilter = (FieldFilter) listFilter;
+				if (columnFilter.getFieldId().equals(column)) {
 					return columnFilter;
 				}
 			}

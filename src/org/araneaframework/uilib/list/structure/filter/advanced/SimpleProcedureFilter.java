@@ -17,22 +17,18 @@
 package org.araneaframework.uilib.list.structure.filter.advanced;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
-import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
-import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
-import org.araneaframework.backend.list.memorybased.expression.compare.GreaterThanExpression;
-import org.araneaframework.backend.list.memorybased.expression.compare.LikeExpression;
-import org.araneaframework.backend.list.memorybased.expression.compare.LowerThanExpression;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
-import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
 import org.araneaframework.backend.list.memorybased.expression.procedure.ProcedureExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
 import org.araneaframework.uilib.list.structure.ComparableType;
 import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 
@@ -41,7 +37,7 @@ public abstract class SimpleProcedureFilter extends ComparableType implements Li
 	private static final long serialVersionUID = 1L;
 
 	protected Procedure procedure = new Procedure();
-	protected SubFilter operand;	
+	protected SubFilter operand;
 		
 	public String getProcName() {
 		return this.procedure.getName();
@@ -92,15 +88,14 @@ public abstract class SimpleProcedureFilter extends ComparableType implements Li
 	}
 	
 	public Expression buildExpression(Map filterInfo) {
-		if (!isFilterActive(filterInfo)) {
-			return new AlwaysTrueExpression();
-		}
-		return buildAction(filterInfo, buildLeftOperand(filterInfo), buildRightOperand(filterInfo));
-	}
-
-	protected boolean isFilterActive(Map filterInfo) {
 		validate();
-		return this.operand.isActive(filterInfo);
+		if (!this.operand.isActive(filterInfo)) {
+			return null;
+		}
+		return buildAction(
+				filterInfo,
+				buildLeftOperand(filterInfo),
+				buildRightOperand(filterInfo));
 	}
 
 	protected Expression buildLeftOperand(Map filterInfo) {
@@ -111,7 +106,10 @@ public abstract class SimpleProcedureFilter extends ComparableType implements Li
 		return this.operand.buildExpression(filterInfo);
 	}
 	
-	protected abstract Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand);
+	protected abstract Expression buildAction(
+			Map filterInfo,
+			Expression leftOperand,
+			Expression rightOperand);
 
 	
 	/*
@@ -204,7 +202,8 @@ public abstract class SimpleProcedureFilter extends ComparableType implements Li
 		}
 
 		public Expression buildExpression(Map filterInfo) {
-			return new ValueExpression(filterInfo.get(this.filterInfoKey));
+			return ExpressionUtil.value(this.filterInfoKey,
+					filterInfo.get(this.filterInfoKey));
 		}
 		
 	}
@@ -224,7 +223,7 @@ public abstract class SimpleProcedureFilter extends ComparableType implements Li
 		}
 
 		public Expression buildExpression(Map filterInfo) {
-			return new ValueExpression(this.value);
+			return ExpressionUtil.value(this.value);
 		}
 		
 	}
@@ -236,42 +235,36 @@ public abstract class SimpleProcedureFilter extends ComparableType implements Li
 	public static class Equals extends SimpleProcedureFilter {
 		private static final long serialVersionUID = 1L;
 		protected Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand) {
-			if (isComparatorNatural()) {
-				return new EqualsExpression(leftOperand, rightOperand);
-			}
-			return new ComparedEqualsExpression(leftOperand, rightOperand, getComparator());
+			Comparator comp = isComparatorNatural() ? null : getComparator();
+			return ExpressionUtil.eq(leftOperand, rightOperand, comp);
 		}
 	}
 	
 	public static class GreaterThan extends SimpleProcedureFilter {
 		private static final long serialVersionUID = 1L;
 		protected Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand) {
-			return new GreaterThanExpression(leftOperand, rightOperand, getComparator());
+			return ExpressionUtil.gt(leftOperand, rightOperand, getComparator());
 		}
 	}
 	
 	public static class LowerThan extends SimpleProcedureFilter {
 		private static final long serialVersionUID = 1L;
 		protected Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand) {
-			return new LowerThanExpression(leftOperand, rightOperand, getComparator());
+			return ExpressionUtil.lt(leftOperand, rightOperand, getComparator());
 		}
 	}
 	
 	public static class GreaterThanOrEquals extends SimpleProcedureFilter {
 		private static final long serialVersionUID = 1L;
 		protected Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand) {
-			return new OrExpression().
-			add(new GreaterThanExpression(leftOperand, rightOperand, getComparator())).		
-			add(new ComparedEqualsExpression(leftOperand, rightOperand, getComparator()));
+			return ExpressionUtil.ge(leftOperand, rightOperand, getComparator());
 		}
 	}
 	
 	public static class LowerThanOrEquals extends SimpleProcedureFilter {
 		private static final long serialVersionUID = 1L;
 		protected Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand) {
-			return new OrExpression().
-			add(new LowerThanExpression(leftOperand, rightOperand, getComparator())).		
-			add(new ComparedEqualsExpression(leftOperand, rightOperand, getComparator()));
+			return ExpressionUtil.le(leftOperand, rightOperand, getComparator());
 		}
 	}
 	
@@ -286,7 +279,10 @@ public abstract class SimpleProcedureFilter extends ComparableType implements Li
 			return this;
 		}
 		protected Expression buildAction(Map filterInfo, Expression leftOperand, Expression rightOperand) {
-			return new LikeExpression(leftOperand, (ValueExpression) rightOperand, isIgnoreCase(), configuration);
+			return ExpressionUtil.like(leftOperand,
+					(ValueExpression) rightOperand,
+					isIgnoreCase(),
+					configuration);			
 		}
 	}
 }

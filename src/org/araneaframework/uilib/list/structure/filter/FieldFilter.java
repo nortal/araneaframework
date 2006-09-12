@@ -21,17 +21,17 @@ import org.araneaframework.uilib.list.structure.ListFilter;
 /**
  * Static list filtering information that relates to one {@link org.araneaframework.uilib.list.structure.ListColumn}.
  */
-public interface ColumnFilter extends ListFilter {
+public interface FieldFilter extends ListFilter {
 	/**
 	 * Returns the {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
 	 * @return {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
 	 */
-	String getColumnId();
+	String getFieldId();
 
 	/**
 	 * Saves the {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
 	 * 
 	 * @param id {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
 	 */
-	void setColumnId(String id);
+	void setFieldId(String id);
 }

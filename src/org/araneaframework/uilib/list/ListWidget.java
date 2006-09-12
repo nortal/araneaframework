@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -45,10 +46,10 @@ import org.araneaframework.uilib.list.structure.ListColumn;
 import org.araneaframework.uilib.list.structure.ListFilter;
 import org.araneaframework.uilib.list.structure.ListOrder;
 import org.araneaframework.uilib.list.structure.ListStructure;
-import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
+import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.structure.order.ColumnOrder;
 import org.araneaframework.uilib.list.util.MapUtil;
-import org.araneaframework.uilib.list.util.RecursiveFormUtil;
+import org.araneaframework.uilib.list.util.NestedFormUtil;
 import org.araneaframework.uilib.support.UiLibMessages;
 
 /**
@@ -199,6 +200,21 @@ public class ListWidget extends BaseUIWidget {
 	}
 
 	/**
+	 * Returns type of list column. Returns null if no such column or type for
+	 * this column is available.
+	 * 
+	 * {@link ListWidget#getColumnType(String)} returns always null.
+	 * Subclasses should override this method.
+	 * 
+	 * @param columnId
+	 *            column identifier.
+	 * @return column type
+	 */
+	public Class getColumnType(String columnId) {
+		return null;
+	}
+	
+	/**
 	 * Adds a {@link ListColumn}.
 	 * 
 	 * @param column
@@ -216,7 +232,7 @@ public class ListWidget extends BaseUIWidget {
 		this.listStructure.addColumn(id, label, columnOrder, null);
 	}
 
-	public void addListColumn(String id, String label, ColumnOrder columnOrder, ColumnFilter columnFilter) {
+	public void addListColumn(String id, String label, ColumnOrder columnOrder, FieldFilter columnFilter) {
 		this.listStructure.addColumn(id, label, columnOrder, columnFilter);
 	}
 
@@ -276,11 +292,11 @@ public class ListWidget extends BaseUIWidget {
 		this.listStructure.setListFilter(filter);
 	}
 
-	public void addFilter(ListFilter subFilter) {
-		this.listStructure.addFilter(subFilter);
+	public void addFilter(ListFilter filter) {
+		this.listStructure.addFilter(filter);
 	}
 
-	public ColumnFilter getColumnFilter(String column) {
+	public FieldFilter getColumnFilter(String column) {
 		return this.listStructure.getColumnFilter(column);
 	}
 
@@ -309,11 +325,11 @@ public class ListWidget extends BaseUIWidget {
 	}	
 
 	public void addFilterFormElement(String id, FormElement element) throws Exception {
-		RecursiveFormUtil.addElement(this.filterForm, id, element);
+		NestedFormUtil.addElement(this.filterForm, id, element);
 	}
 
 	public void addFilterFormElement(String id, String label, Control control, Data data) throws Exception {
-		RecursiveFormUtil.addElement(this.filterForm, id, label, control, data, false);
+		NestedFormUtil.addElement(this.filterForm, id, label, control, data, false);
 	}
 
 	public void addFilterFormElement(String id, Control control, Data data) throws Exception {
