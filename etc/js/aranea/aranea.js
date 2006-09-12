@@ -21,8 +21,6 @@
 /* AraneaTraverser is locator for some Aranea specific elements in DOM tree. */
 function AraneaTraverser() {
   /* Returns FORM that is Aranea system form and surrounds given HTML element. 
-   * When servlet URL is not yet known to current aranea page, sets its according to
-   * acquired from from system form. 
    * Should be overriden with fast constant function when using just one system form. */
   this.findSurroundingSystemForm = function(element) {
     if (document.forms.length == 1 && document.forms[0].getAttribute('arn-systemForm'))
@@ -40,7 +38,6 @@ function AraneaTraverser() {
 }
 
 AraneaTraverser.prototype.getElementAttribute = function (element, attributeName) {
-  //return (!element[attributeName] || element[attributeName] == "") ? null : result;
   return element.getAttribute(attributeName);
 }
 AraneaTraverser.prototype.getEventTarget = function(element) {
@@ -112,7 +109,7 @@ function AraneaEventStore() {
  * functionality for setting page related variables, events and functions. */
 function AraneaPage() {
   /* URL of aranea dispatcher servlet serving current page. 
-   * Automatically set by AraneaTraverser.findSurroundingSystemForm(). */ 
+   * This is by default set by Aranea JSP ui:body tag. */ 
   var servletURL = null;
   this.getServletURL = function() { return servletURL; }
   this.setServletURL = function(url) { servletURL = new String(url); }

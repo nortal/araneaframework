@@ -201,7 +201,7 @@ AjaxAnywhere.prototype.callback = function() {
       
       if (this.req.status == 200) {
         getActiveAraneaPage().debug("Processing ajax response '" + extractResponseId(text) + "'");
-        updateRegions(this.updateRegions, text);
+        updateRegions(text);
         
         var trId = extractTransactionId(text);
 
@@ -359,10 +359,18 @@ function extractBody(str) {
 	return result[1];
 }
 
-function updateRegions(updateRegions, str) {
-	for (var i = 0; i < updateRegions.length; i++) {
-	  updateRegion(updateRegions[i], str);
-	}
+function updateRegions(str) {
+  var regionBlockBegin = "<!--BEGIN:"; var commentEndMarker = "-->";
+  // all update regions present in response should be updated
+  var regions = new AraneaStore();
+  var i = 0;
+  for (var startIndex = str.indexOf(regionBlockBegin, i); startIndex != -1; startIndex = str.indexOf(regionBlockBegin, i)) {
+    var endIndex = str.indexOf(commentEndMarker, startIndex);
+    regions.add(str.substring(startIndex+regionBlockBegin.length, endIndex));
+    i = endIndex;
+  }
+
+  regions.forEach(function(regionName) { updateRegion(regionName, str);});
 }
 
 function isUpdateRowRegion(regionId, str) {
@@ -404,6 +412,7 @@ function updateRegion(updateRegionId, str) {
   var extracted = extractContentsById(updateRegionId, str);
   var target = document.getElementById(updateRegionId);	
   
+  // if browser is IE (6?) and this updateregion updates table HTML, just setting innerHTML does not work.
   if (isUpdateRowRegion(updateRegionId, str) && document.all && target) {
     //Emptying <tbody>
     while( target.firstChild ) {
@@ -411,7 +420,7 @@ function updateRegion(updateRegionId, str) {
     }        		    
 
     //Making temp <div> and <table>
-    var tempDiv = document.createElement("div");    	 
+    var tempDiv = document.createElement("div");
     document.body.appendChild(tempDiv);
     tempTbodyId = updateRegionId + "TempTbody";
     tempDiv.innerHTML = "<table><tbody id=\"" + tempTbodyId + "\">" + extracted + "</tbody></table>";
