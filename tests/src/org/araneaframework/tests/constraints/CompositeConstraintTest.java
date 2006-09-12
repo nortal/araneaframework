@@ -23,7 +23,6 @@ import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.util.RequestUtil;
-import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.AndConstraint;

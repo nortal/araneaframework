@@ -17,6 +17,9 @@
 package org.araneaframework.uilib.form.constraint;
 
 import org.araneaframework.Environment;
+import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.Assert;
+import org.araneaframework.core.NoSuchEnvironmentEntryException;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
 
@@ -50,7 +53,14 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   protected FormElementContext getField() {
     if (field != null)
       return field;
-    return (FormElementContext) getEnvironment().requireEntry(FormElementContext.class);
+
+    FormElementContext result;
+    try {
+      result = (FormElementContext)getEnvironment().requireEntry(FormElementContext.class);
+    } catch (NoSuchEnvironmentEntryException e) {
+      throw new FieldConstraintException(Assert.thisToString(this) + " could not determine FormElementContext, this is probably caused by applying field constraint to something other than FormElement.", e);
+    }
+    return result;
   }
 
   public Environment getEnvironment() {
@@ -78,4 +88,26 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   public boolean isMandatory() {
     return getField().isMandatory();
   }
+
+  /**
+   * Exception thrown when {@link org.araneaframework.uilib.form.FormElement} associated with 
+   * {@link BaseFieldConstraint} could not be determined.
+   */
+  public static class FieldConstraintException extends AraneaRuntimeException {
+    public FieldConstraintException() {
+      super();
+    } 
+
+    public FieldConstraintException(String message, Throwable cause) {
+      super(message, cause);
+    }
+
+    public FieldConstraintException(String message) {
+      super(message);
+    }
+
+    public FieldConstraintException(Throwable cause) {
+      super(cause);
+    }
+  };
 }

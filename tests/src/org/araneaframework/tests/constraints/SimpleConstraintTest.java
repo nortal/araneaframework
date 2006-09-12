@@ -16,18 +16,15 @@
 
 package org.araneaframework.tests.constraints;
 
-import java.math.BigInteger;
 import junit.framework.TestCase;
-import org.araneaframework.core.NoSuchEnvironmentEntryException;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.util.RequestUtil;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.constraint.BaseFieldConstraint;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
-import org.araneaframework.uilib.form.constraint.NumberInRangeConstraint;
-import org.araneaframework.uilib.form.constraint.OrConstraint;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -58,7 +55,7 @@ public class SimpleConstraintTest extends TestCase {
       form.convertAndValidate();
       
       fail("Exception should have occured, because NotEmptyConstraint is not applicable to FormWidget");
-    } catch (NoSuchEnvironmentEntryException e) {
+    } catch (BaseFieldConstraint.FieldConstraintException e) {
     }
   }
   
@@ -90,26 +87,5 @@ public class SimpleConstraintTest extends TestCase {
     input.popScope();
 
     assertTrue("Form is supposed to valid because constraint is not set.", form.convertAndValidate());
-  }
-  
-  public void testFormXXX() throws Exception {
-    FormElement el = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
-    
-    OrConstraint constraint = new OrConstraint();
-    constraint.addConstraint(new NumberInRangeConstraint(new BigInteger("100"), new BigInteger("200")));
-    constraint.addConstraint(new NotEmptyConstraint(el));
-    el.setConstraint(constraint);
-    form.addElement("number", el);
-    el.rendered();
-
-    MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-    request.addParameter("form.number", "150");
-
-    StandardServletInputData input = new StandardServletInputData(request);
-    input.pushScope("form");
-    form._getWidget().update(input);
-    input.popScope();
-
-    assertTrue("Form is supposed to valid.", form.convertAndValidate());
   }
 }
