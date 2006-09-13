@@ -203,7 +203,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 		<para>
 			For custom loading a resource, the URL to use is <literal>/fileimporter/filepath</literal>. The
 			<literal>fileimporter</literal> is 
-			<literal>StandardServletFileImportService.FILE_IMPORTER_NAME</literal> and
+			<literal>StandardFileImportFilterService.FILE_IMPORTER_NAME</literal> and
 			<literal>filepath</literal> is the path that is defined for the file in the resource
 			configuration file.
 		</para>

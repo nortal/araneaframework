@@ -238,12 +238,11 @@ function AraneaPage() {
   }
   
   this.debug = function(message) {
-    if (window['log4javascript/log4javascript.js'] && this.getLogger()) {
-      this.getLogger().debug(message);
-    }
+    this.getLogger().debug(message);
   }
   
   this.override = function(functionName, f) {
+  	this.getLogger().info("AraneaPage." +functionName + " was overriden.");
   	this[functionName] = f;
   }
 }

@@ -114,10 +114,6 @@ function AraneaPage() {
   function isLoaded();
   function setLoaded(loaded);
   
-  /** Returns the div with id "araneaDebugDiv" meant for outputting 
-    * debug information, if it is present. */
-  function getDebugDiv();
-  
   /* Returns the server-side reported locale (AraneaLocale). */
   function getLocale();
 
@@ -165,7 +161,7 @@ function AraneaPage() {
   function submit_6(systemForm, eventId, eventTarget, 
                     eventParam, eventPrecondition, eventUpdateRegions);
   
-  /** Attaches the message to debug div ("araneaDebugDiv") when it is present. */
+  /** Logs message on DEBUG level, if logger is present. */
   function debug(message);
 }
 
