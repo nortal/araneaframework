@@ -123,10 +123,16 @@ function AraneaPage() {
   this.isLoaded = function() { return loaded; }
   this.setLoaded = function(b) { if (typeof b == "boolean") { loaded = b; } }
   
-  /* returns the div meant for outputting debug information, if it is present */
-  var debugDiv = null;
-  this.setDebugDiv = function(div) { debugDiv = div; }
-  this.getDebugDiv = function() { return debugDiv; }
+  /* Logger that outputs javascript logging messages. */
+  var dummyLogger = new function() { var dummy = function() {}; this.trace = dummy; this.debug = dummy; this.info = dummy; this.warn = dummy; this.error = dummy; this.fatal = dummy;};
+  var logger = dummyLogger;
+  this.setDummyLogger = function() { logger = dummyLogger; }
+  this.setDefaultLogger = function() { 
+  	if (window['log4javascript/log4javascript.js'])
+      logger = log4javascript.getDefaultLogger();
+  }
+  this.setLogger = function(theLogger) { logger = theLogger; }
+  this.getLogger = function() { return logger; }
   
   /* locale - should be used only for server-side reported locale */
   var locale = new AraneaLocale("", "");
@@ -232,9 +238,8 @@ function AraneaPage() {
   }
   
   this.debug = function(message) {
-    if (this.getDebugDiv()) {
-      this.getDebugDiv().appendChild(document.createElement("br"));
-      this.getDebugDiv().appendChild(document.createTextNode(message));
+    if (window['log4javascript/log4javascript.js'] && this.getLogger()) {
+      this.getLogger().debug(message);
     }
   }
   
@@ -252,9 +257,6 @@ AraneaPage.getRandomRequestId = function() {
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   getActiveAraneaPage().addSystemLoadEvent(Behaviour.apply);
-
-  var div = document.getElementById("araneaDebugDiv");
-  if (div) getActiveAraneaPage().setDebugDiv(div);
 }
 
 function DefaultAraneaSubmitter(form) {

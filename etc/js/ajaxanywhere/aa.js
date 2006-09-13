@@ -101,7 +101,7 @@ AjaxAnywhere.prototype.submitAJAX = function(ajaxRequestId) {
     this.req.open("POST", url, true);
     this.req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     
-    getActiveAraneaPage().debug("Sending AJAX request '" + ajaxRequestId + "'");
+    getActiveAraneaPage().getLogger().info("Sending AJAX request '" + ajaxRequestId + "'");
     
     var postData = "&" + this.preparePostData() + "&updateRegions=" + this.updateRegions + "&ajaxRequestId=" + ajaxRequestId;
     this.sendPreparedRequest(postData);
@@ -148,7 +148,7 @@ AjaxAnywhere.prototype.sendPreparedRequest = function (postData) {
 */
 AjaxAnywhere.prototype.dropPreviousRequest = function() {
     if (this.req != null && this.req.readyState != 0 && this.req.readyState != 4) {
-        getActiveAraneaPage().debug("dropping request");
+    	getActiveAraneaPage().getLogger().warn("Dropping AA request.");
         // abort previous request if not completed
         this.req.onreadystatechange = null;
         this.req.abort();
@@ -200,7 +200,7 @@ AjaxAnywhere.prototype.callback = function() {
       text = this.req.responseText;
       
       if (this.req.status == 200) {
-        getActiveAraneaPage().debug("Processing ajax response '" + extractResponseId(text) + "'");
+        getActiveAraneaPage().getLogger().info("Processing ajax response '" + extractResponseId(text) + "'");
         updateRegions(text);
         
         var trId = extractTransactionId(text);
@@ -370,7 +370,7 @@ function updateRegions(str) {
     i = endIndex;
   }
 
-  regions.forEach(function(regionName) { updateRegion(regionName, str);});
+  regions.forEach(function(regionName) { getActiveAraneaPage().debug("Updating region '" + regionName + "'"); updateRegion(regionName, str);});
 }
 
 function isUpdateRowRegion(regionId, str) {
@@ -385,8 +385,8 @@ function extractContentsById(elemId, str) {
 	var index = str.indexOf(blockStart);
 	
 	if (index == -1) {
+        getActiveAraneaPage().getLogger.error("Failed to find start of update region '" + elemId + "'.");
 		return "";
-		//throw "Cannot find update region '" + elemId + "'!";		
 	}
 
 	var startIndex = index+blockStart.length;
@@ -399,12 +399,11 @@ function extractContentsById(elemId, str) {
 	index = str.indexOf(blockEnd);
 	
 	if (index == -1) {
+		getActiveAraneaPage().getLogger.error("Failed to determine end of update region '" + elemId + "'.");
 		return "";
-		//throw "Cannot find update region '" + elemId + "'!";		
 	}
 
 	var endIndex = index;
-
 	return str.substring(startIndex, endIndex);
 }
 

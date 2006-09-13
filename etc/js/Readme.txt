@@ -27,6 +27,12 @@ This folder contains scripts needed by Aranea Uilib.
 * behaviour/behaviour.js
 - http://bennolan.com/behaviour/
 
+* log4javascript/log4javascript.js
+- nice logging library for javascript
+- http://www.timdown.co.uk/log4javascript/
+- License is APL 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
+- Include it and set AraneaPage logger to see some JS debug output
+
 * aranea/
 - Aranea Uilib & JSP specific scripts.
 

@@ -13,7 +13,7 @@
 		<ui:importStyles file="css/calendar/calendar.css" media="screen"/>
 
 		<ui:importScripts/>
-		<script language="JavaScript1.2" type="text/javascript" src="js/example.js">//</script>
+		<!-- <ui:importScripts group="debugScripts"/> -->
 
 		<ui:richTextAreaInit>
 			<ui:attribute name="theme" value="advanced"/>

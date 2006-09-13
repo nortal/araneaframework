@@ -83,6 +83,15 @@
             </para>
           </sect2>
           
+          <sect2>
+            <title>log4javascript (<ulink url="http://www.timdown.co.uk/log4javascript/">http://www.timdown.co.uk/log4javascript/</ulink>)</title>
+            <para>
+               log4javascript is a JavaScript logging framework similar to Java logging framework log4j. Include log4javascript
+               scripts and call <emphasis>AraneaPage.setDefaultLogger()</emphasis> to receive a popup window where
+               Aranea JS debug output is logged.
+            </para>
+          </sect2>
+          
     </sect1>
 
 	<sect1 id="aranea_clientside_js" xreflabel="Aranea Clientside Javascript">
