@@ -83,3 +83,5 @@ function reloadParentWindow(url) {
 function closeWindow(delay) {
   setTimeout('window.close()', delay);
 }
+
+window['aranea-popups.js'] = true;

@@ -2312,3 +2312,5 @@ var log4javascript = (function() {
 
 	return log4javascript;
 })();
+
+window['log4javascript/log4javascript.js'] = true;

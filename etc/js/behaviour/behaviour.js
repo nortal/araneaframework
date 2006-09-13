@@ -250,3 +250,4 @@ document.getElementsBySelector = function(selector) {
     |   Attribute 
    Tag
 */
+window['behaviour/behaviour.js'] = true;

@@ -120,3 +120,5 @@ var aranea_rules = {
 };
 
 Behaviour.register(aranea_rules);
+
+window['aranea-behaviour.js'] = true;
