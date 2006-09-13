@@ -29,6 +29,7 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.structure.filter.column.EqualFilter;
 import org.araneaframework.uilib.list.structure.filter.column.LikeFilter;
+import org.araneaframework.uilib.list.structure.filter.column.RangeFilter;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
@@ -41,11 +42,15 @@ import org.araneaframework.uilib.list.util.like.LikeConfiguration;
  */
 public class FilterHelper implements FilterContext {
 	
+	public static final String LOW_SUFFIX = "_start"; 
+	public static final String HIGH_SUFFIX = "_end"; 
+	
 	private final ListWidget list;
 	
 	// Configuration that can be changed during filters creation
 	private Locale locale;
-	private boolean ignoreCase;
+	private boolean ignoreCase = true;
+	private boolean strict = false;
 	
 	private LikeConfiguration likeConfiguration;
 	
@@ -86,6 +91,14 @@ public class FilterHelper implements FilterContext {
 		return this;
 	}
 	
+	public boolean isStrict() {
+		return strict;
+	}
+
+	public void setStrict(boolean stirct) {
+		this.strict = stirct;
+	}
+
 	public LikeConfiguration getLikeConfiguration() {
 		return likeConfiguration;
 	}
@@ -106,17 +119,17 @@ public class FilterHelper implements FilterContext {
 		
 	// List fields
 	
-	public FilterContext addCustomLabel(String fieldId, String labelId) {
+	public FilterHelper addCustomLabel(String fieldId, String labelId) {
 		this.labels.put(fieldId, labelId);
 		return this;
 	}
 	
-	public FilterContext addCustomType(String fieldId, Class type) {
+	public FilterHelper addCustomType(String fieldId, Class type) {
 		this.types.put(fieldId, type);
 		return this;
 	}
 	
-	public FilterContext addCustomComparator(String fieldId, Comparator comp) {
+	public FilterHelper addCustomComparator(String fieldId, Comparator comp) {
 		this.comparators.put(fieldId, comp);
 		return this;
 	}
@@ -173,26 +186,26 @@ public class FilterHelper implements FilterContext {
 	
 	// filter with form element
 	
-	public FilterContext eq(String fieldId) throws Exception {
+	public FilterHelper eq(String fieldId) throws Exception {
 		return eq(fieldId, fieldId);
 	}
-	public FilterContext eq(String fieldId, String valueId) throws Exception {
+	public FilterHelper eq(String fieldId, String valueId) throws Exception {
 		_eq(fieldId, valueId);
 		EqualFilter.addToForm(this, valueId);
 		return this;
 	}
-	public FilterContext eq(String fieldId, Control control) throws Exception {
+	public FilterHelper eq(String fieldId, Control control) throws Exception {
 		return eq(fieldId, fieldId, control);
 	}
-	public FilterContext eq(String fieldId, String valueId, Control control) throws Exception {
+	public FilterHelper eq(String fieldId, String valueId, Control control) throws Exception {
 		_eq(fieldId, valueId);
 		EqualFilter.addToForm(this, valueId, control);
 		return this;
 	}
-	public FilterContext eq(String fieldId, FormElement element) throws Exception {
+	public FilterHelper eq(String fieldId, FormElement element) throws Exception {
 		return eq(fieldId, fieldId, element);
 	}
-	public FilterContext eq(String fieldId, String valueId, FormElement element) throws Exception {
+	public FilterHelper eq(String fieldId, String valueId, FormElement element) throws Exception {
 		_eq(fieldId, valueId);
 		EqualFilter.addToForm(this, valueId, element);
 		return this;
@@ -200,48 +213,48 @@ public class FilterHelper implements FilterContext {
 	
 	// filter
 	
-	public FilterContext _eq(String fieldId) {
+	public FilterHelper _eq(String fieldId) {
 		return _eq(fieldId, fieldId);
 	}
-	public FilterContext _eq(String fieldId, String valueId) {
+	public FilterHelper _eq(String fieldId, String valueId) {
 		list.addFilter(EqualFilter.getInstance(this, fieldId, valueId));
 		return this;
 	}
 
 	// constant filter
 
-	public FilterContext eqConst(String fieldId, Object value) {
+	public FilterHelper eqConst(String fieldId, Object value) {
 		return eqConst(fieldId, fieldId, value);
 	}
-	public FilterContext eqConst(String fieldId, String valueId, Object value) {
+	public FilterHelper eqConst(String fieldId, String valueId, Object value) {
 		list.addFilter(EqualFilter.getConstantInstance(this, fieldId, valueId, value));
 		return this;
 	}
 	
-	// ========== LIKE ========== 
+	// ========== LIKE ==========
 	
 	// filter with form element
 	
-	public FilterContext like(String fieldId) throws Exception {
+	public FilterHelper like(String fieldId) throws Exception {
 		return like(fieldId, fieldId);
 	}
-	public FilterContext like(String fieldId, String valueId) throws Exception {
+	public FilterHelper like(String fieldId, String valueId) throws Exception {
 		_like(fieldId, valueId);
 		LikeFilter.addToForm(this, valueId);
 		return this;
 	}
-	public FilterContext like(String fieldId, Control control) throws Exception {
+	public FilterHelper like(String fieldId, Control control) throws Exception {
 		return like(fieldId, fieldId, control);
 	}
-	public FilterContext like(String fieldId, String valueId, Control control) throws Exception {
+	public FilterHelper like(String fieldId, String valueId, Control control) throws Exception {
 		_like(fieldId, valueId);
 		LikeFilter.addToForm(this, valueId, control);
 		return this;
 	}
-	public FilterContext like(String fieldId, FormElement element) throws Exception {
+	public FilterHelper like(String fieldId, FormElement element) throws Exception {
 		return like(fieldId, fieldId, element);
 	}
-	public FilterContext like(String fieldId, String valueId, FormElement element) throws Exception {
+	public FilterHelper like(String fieldId, String valueId, FormElement element) throws Exception {
 		_like(fieldId, valueId);
 		LikeFilter.addToForm(this, valueId, element);
 		return this;
@@ -249,21 +262,72 @@ public class FilterHelper implements FilterContext {
 	
 	// filter
 	
-	public FilterContext _like(String fieldId) {
+	public FilterHelper _like(String fieldId) {
 		return _like(fieldId, fieldId);
 	}
-	public FilterContext _like(String fieldId, String valueId) {
+	public FilterHelper _like(String fieldId, String valueId) {
 		list.addFilter(LikeFilter.getInstance(this, fieldId, valueId));
 		return this;
 	}
 
 	// constant filter
 
-	public FilterContext likeConst(String fieldId, Object value) {
+	public FilterHelper likeConst(String fieldId, Object value) {
 		return likeConst(fieldId, fieldId, value);
 	}
-	public FilterContext likeConst(String fieldId, String valueId, Object value) {
+	public FilterHelper likeConst(String fieldId, String valueId, Object value) {
 		list.addFilter(LikeFilter.getConstantInstance(this, fieldId, valueId, value));
 		return this;
+	}
+	
+	// ========== RANGE ==========
+	
+	// filter with form element
+	
+	public FilterHelper range(String fieldId) throws Exception {
+		return range(fieldId, getLowValueId(fieldId), getHighValueId(fieldId));
+	}
+	public FilterHelper range(String fieldId, String lowValueId, String highValueId) throws Exception {
+		_range(fieldId, lowValueId, highValueId);
+		RangeFilter.addToForm(this, lowValueId, highValueId);
+		return this;
+	}
+	public FilterHelper range(String fieldId, Control lowControl, Control highControl) throws Exception {
+		return range(fieldId, getLowValueId(fieldId), getHighValueId(fieldId), lowControl, highControl);
+	}
+	public FilterHelper range(String fieldId, String lowValueId, String highValueId, Control lowControl, Control highControl) throws Exception {
+		_range(fieldId, lowValueId, highValueId);
+		RangeFilter.addToForm(this, lowValueId, highValueId, lowControl, highControl);
+		return this;
+	}
+	public FilterHelper range(String fieldId, FormElement lowElement, FormElement highElement) throws Exception {
+		return range(fieldId, getLowValueId(fieldId), getHighValueId(fieldId), lowElement, highElement);
+	}
+	public FilterHelper range(String fieldId, String lowValueId, String highValueId, FormElement lowElement, FormElement highElement) throws Exception {
+		_range(fieldId, lowValueId, highValueId);
+		RangeFilter.addToForm(this, lowValueId, highValueId, lowElement, highElement);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterHelper _range(String fieldId) {
+		return _range(fieldId, getLowValueId(fieldId), getHighValueId(fieldId));
+	}
+	public FilterHelper _range(String fieldId, String lowValueId, String highValueId) {
+		list.addFilter(RangeFilter.getInstance(this, fieldId, lowValueId, highValueId));
+		return this;
+	}
+	
+	// Value ids
+	
+	public String getValueId(String fieldId) {
+		return fieldId;
+	}
+	public String getLowValueId(String fieldId) {
+		return fieldId + LOW_SUFFIX;
+	}
+	public String getHighValueId(String fieldId) {
+		return fieldId + HIGH_SUFFIX;
 	}
 }

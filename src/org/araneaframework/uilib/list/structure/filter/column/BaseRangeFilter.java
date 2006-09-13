@@ -86,12 +86,23 @@ public abstract class BaseRangeFilter implements FieldFilter {
 	}
 	
 	protected ValueExpression buildLowValueExpression(Map filterInfo) {
-		return ExpressionUtil.value(getLowValueId(),
-				filterInfo.get(getLowValueId()));
-	}	
+		Object value = filterInfo.get(getLowValueId());
+		if (value == null) {
+			return null;
+		}
+		value = convertLowValue(value);
+		return ExpressionUtil.value(getLowValueId(), value);
+	}
 	
 	protected ValueExpression buildHighValueExpression(Map filterInfo) {
-		return ExpressionUtil.value(getHighValueId(),
-				filterInfo.get(getHighValueId()));
-	}	
+		Object value = filterInfo.get(getHighValueId());
+		if (value == null) {
+			return null;
+		}
+		value = convertHighValue(value);
+		return ExpressionUtil.value(getHighValueId(), value);
+	}
+	
+	protected Object convertLowValue(Object value) { return value; }
+	protected Object convertHighValue(Object value) { return value; }			
 }

@@ -28,13 +28,21 @@ import org.araneaframework.uilib.form.FormWidget;
  */
 public interface FilterContext {
 	
+	// General
+	
 	Environment getEnvironment();
 
 	FormWidget getForm();
+	
+	// Global confiugration
 
 	boolean isIgnoreCase();
 
+	boolean isStrict();
+	
 	Locale getLocale();
+	
+	// Fields
 
 	String getFieldLabel(String fieldId);
 
