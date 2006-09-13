@@ -59,6 +59,10 @@ public class EqualFilter extends BaseFieldFilter {
 		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id, control));
 	}
 	
+	public static void addToForm(FilterContext ctx, String id) throws Exception {
+		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id));
+	}
+	
 	private EqualFilter() {
 		// private
 	}

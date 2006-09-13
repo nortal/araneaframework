@@ -28,6 +28,7 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.structure.filter.column.EqualFilter;
+import org.araneaframework.uilib.list.structure.filter.column.LikeFilter;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
@@ -102,7 +103,7 @@ public class FilterHelper implements FilterContext {
 	public FormWidget getForm() {
 		return list.getFilterForm();
 	}
-	
+		
 	// List fields
 	
 	public FilterContext addCustomLabel(String fieldId, String labelId) {
@@ -141,50 +142,6 @@ public class FilterHelper implements FilterContext {
 		return buildComparator(getFieldType(fieldId));
 	}
 	
-	// EQUALS value filter with form element
-	
-	public FilterContext eq(String fieldId, Control control) throws Exception {
-		return eq(fieldId, fieldId, control);
-	}
-
-	public FilterContext eq(String fieldId, String valueId, Control control) throws Exception {
-		eq(fieldId, valueId);
-		EqualFilter.addToForm(this, valueId, control);
-		return this;
-	}
-
-	public FilterContext eq(String fieldId, FormElement element) throws Exception {
-		return eq(fieldId, fieldId, element);
-	}
-	
-	public FilterContext eq(String fieldId, String valueId, FormElement element) throws Exception {
-		eq(fieldId, valueId);
-		EqualFilter.addToForm(this, valueId, element);
-		return this;
-	}
-	
-	// EQUALS value filter
-	
-	public FilterContext eq(String fieldId) {
-		return eq(fieldId, fieldId);
-	}
-
-	public FilterContext eq(String fieldId, String valueId) {
-		list.addFilter(EqualFilter.getInstance(this, fieldId, valueId));
-		return this;
-	}
-
-	// EQUALS constant filter
-
-	public FilterContext eq(String fieldId, Object value) {
-		return eq(fieldId, fieldId, value);
-	}
-
-	public FilterContext eq(String fieldId, String valueId, Object value) {
-		list.addFilter(EqualFilter.getConstantInstance(this, fieldId, valueId, value));
-		return this;
-	}
-	
 	// Comparator
 	
 	protected Comparator buildComparator(Class type) {
@@ -210,5 +167,103 @@ public class FilterHelper implements FilterContext {
 	
 	protected boolean isTrueFirst() {
 		return ComparatorFactory.TRUE_FIRST_BY_DEFAULT;
+	}
+	
+	// ========== EQUALS ========== 
+	
+	// filter with form element
+	
+	public FilterContext eq(String fieldId) throws Exception {
+		return eq(fieldId, fieldId);
+	}
+	public FilterContext eq(String fieldId, String valueId) throws Exception {
+		_eq(fieldId, valueId);
+		EqualFilter.addToForm(this, valueId);
+		return this;
+	}
+	public FilterContext eq(String fieldId, Control control) throws Exception {
+		return eq(fieldId, fieldId, control);
+	}
+	public FilterContext eq(String fieldId, String valueId, Control control) throws Exception {
+		_eq(fieldId, valueId);
+		EqualFilter.addToForm(this, valueId, control);
+		return this;
+	}
+	public FilterContext eq(String fieldId, FormElement element) throws Exception {
+		return eq(fieldId, fieldId, element);
+	}
+	public FilterContext eq(String fieldId, String valueId, FormElement element) throws Exception {
+		_eq(fieldId, valueId);
+		EqualFilter.addToForm(this, valueId, element);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterContext _eq(String fieldId) {
+		return _eq(fieldId, fieldId);
+	}
+	public FilterContext _eq(String fieldId, String valueId) {
+		list.addFilter(EqualFilter.getInstance(this, fieldId, valueId));
+		return this;
+	}
+
+	// constant filter
+
+	public FilterContext eqConst(String fieldId, Object value) {
+		return eqConst(fieldId, fieldId, value);
+	}
+	public FilterContext eqConst(String fieldId, String valueId, Object value) {
+		list.addFilter(EqualFilter.getConstantInstance(this, fieldId, valueId, value));
+		return this;
+	}
+	
+	// ========== LIKE ========== 
+	
+	// filter with form element
+	
+	public FilterContext like(String fieldId) throws Exception {
+		return like(fieldId, fieldId);
+	}
+	public FilterContext like(String fieldId, String valueId) throws Exception {
+		_like(fieldId, valueId);
+		LikeFilter.addToForm(this, valueId);
+		return this;
+	}
+	public FilterContext like(String fieldId, Control control) throws Exception {
+		return like(fieldId, fieldId, control);
+	}
+	public FilterContext like(String fieldId, String valueId, Control control) throws Exception {
+		_like(fieldId, valueId);
+		LikeFilter.addToForm(this, valueId, control);
+		return this;
+	}
+	public FilterContext like(String fieldId, FormElement element) throws Exception {
+		return like(fieldId, fieldId, element);
+	}
+	public FilterContext like(String fieldId, String valueId, FormElement element) throws Exception {
+		_like(fieldId, valueId);
+		LikeFilter.addToForm(this, valueId, element);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterContext _like(String fieldId) {
+		return _like(fieldId, fieldId);
+	}
+	public FilterContext _like(String fieldId, String valueId) {
+		list.addFilter(LikeFilter.getInstance(this, fieldId, valueId));
+		return this;
+	}
+
+	// constant filter
+
+	public FilterContext likeConst(String fieldId, Object value) {
+		return likeConst(fieldId, fieldId, value);
+	}
+	public FilterContext likeConst(String fieldId, String valueId, Object value) {
+		list.addFilter(LikeFilter.getConstantInstance(this, fieldId, valueId, value));
+		return this;
 	}
 }

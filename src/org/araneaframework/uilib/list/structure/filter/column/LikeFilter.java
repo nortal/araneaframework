@@ -20,16 +20,20 @@ import java.util.Map;
 
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.Control;
+import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
+import org.araneaframework.uilib.list.util.FilterFormUtil;
+import org.araneaframework.uilib.list.util.NestedFormUtil;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 
 public class LikeFilter extends BaseFieldFilter {
 
 	private static final long serialVersionUID = 1L;
-	
-	public static final boolean IGNORE_CASE_BY_DEFAULT = true;
 	
 	private boolean ignoreCase;
 	private LikeConfiguration configuration;
@@ -39,16 +43,40 @@ public class LikeFilter extends BaseFieldFilter {
 		filter.setFieldId(fieldId);
 		filter.setValueId(valueId);
 		filter.setIgnoreCase(ctx.isIgnoreCase());
+		filter.setConfiguration(getConfiguration(ctx));
+		return filter;
+	}
+	
+	public static LikeFilter getConstantInstance(FilterContext ctx, String fieldId, String valueId, Object value) {
+		LikeFilter filter = new LikeFilter();
+		filter.setFieldId(fieldId);
+		filter.setValueId(valueId);
+		filter.setValue(value);
+		filter.setIgnoreCase(ctx.isIgnoreCase());
+		filter.setConfiguration(getConfiguration(ctx));
+		return filter;
+	}
 		
-		// Like confiugration
-		filter.configuration = (LikeConfiguration) ((ConfigurationContext)
+	private static LikeConfiguration getConfiguration(FilterContext ctx) {
+		LikeConfiguration result = (LikeConfiguration) ((ConfigurationContext)
 				ctx.getEnvironment().getEntry(ConfigurationContext.class)).
 				getEntry(ConfigurationContext.LIKE_CONFIGURATION);
-		if (filter.configuration == null) {
-			filter.configuration = new LikeConfiguration();
+		if (result == null) {
+			result = new LikeConfiguration();
 		}
-		
-		return filter;
+		return result;
+	}
+	
+	public static void addToForm(FilterContext ctx, String id, FormElement element) throws Exception {
+		NestedFormUtil.addElement(ctx.getForm(), id, element);
+	}
+	
+	public static void addToForm(FilterContext ctx, String id, Control control) throws Exception {
+		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id, control, new StringData()));
+	}
+
+	public static void addToForm(FilterContext ctx, String id) throws Exception {
+		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id, new TextControl(), new StringData()));
 	}
 
 	private LikeFilter() {
