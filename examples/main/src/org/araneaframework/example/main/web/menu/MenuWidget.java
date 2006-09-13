@@ -40,6 +40,7 @@ import org.araneaframework.example.main.web.demo.DemoRadioSelect;
 import org.araneaframework.example.main.web.demo.DemoRichTextForm;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
+import org.araneaframework.example.main.web.misc.AjaxRequestErrorWidget;
 import org.araneaframework.example.main.web.misc.EventErrorWidget;
 import org.araneaframework.example.main.web.misc.InitErrorWidget;
 import org.araneaframework.example.main.web.misc.RedirectingWidget;
@@ -135,6 +136,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("Error_on_event", EventErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("Error_on_render", RenderErrorWidget.class));
+      errorMenu.addMenuItem(new MenuItem("Error_on_ajax_request", AjaxRequestErrorWidget.class));
       errorMenu.addMenuItem(new MenuItem("Redirecting", RedirectingWidget.class));
     }   
 		
