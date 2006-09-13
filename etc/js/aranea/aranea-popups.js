@@ -70,6 +70,8 @@ function processPopups() {
   for (var popupId in popups) {
     openPopup(popupId, popupProperties[popupId]);
   }
+  popups = new Object();
+  popupProperties = new Object();
 }
 
 function reloadParentWindow(url) {
