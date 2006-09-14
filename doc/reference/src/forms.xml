@@ -280,7 +280,7 @@ private void handleEventSave() {
     Long numberOfChildren = (Long) myForm.getValueByFullName("numberOfChildren");
     //Alternative:
     //FormElement nocEl = (FormElement) myForm.getElement("numberOfChildren");
-    //numberOfChildren = nocEl.getValue();
+    //Long numberOfChildren = (Long) nocEl.getValue();
     ...
   }
 }
@@ -341,11 +341,6 @@ private void handleEventSave() {
                 <entry>events</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Whether element will send events that are registered by server-side, <literal>true</literal> by default.</entry>
-              </row>
-              <row>
-                <entry>validate</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Whether the element will be validated on the client-side when the form is <emphasis>submitted</emphasis> (by default <literal>true</literal>).</entry>
               </row>
               <row>
                 <entry>validateOnEvent</entry>
@@ -2019,8 +2014,20 @@ el.click();]]></programlisting>
         </informaltable>
         <emphasis>Also has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
       </sect3>
+      
+       <sect2>
+      <title><![CDATA[<ui:automaticFormElement>]]></title>
+      <para>
+          Sometimes the type of <literal>FormElement</literal> is not known for sure when writing JSP (it could be <literal>textInput</literal>,
+          <literal>floatInput</literal>, <literal>select</literal>, ...). For that purpose, <literal>FormElement</literal> that has some 
+          known identifier can be dynamically associated with some JSP tag in Java code and then rendered with
+          <literal><![CDATA[<ui:automaticFormElement>]]></literal> tag which uses associated tag to render <literal>FormElement</literal>.
+      </para>
 
-
+      <sect3>
+        <title>Attributes</title>
+        <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
     </sect2>    
     
   </sect1>
