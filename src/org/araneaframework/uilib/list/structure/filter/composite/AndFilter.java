@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.backend.list.memorybased.expression.LaxyExpressionIterator;
 import org.araneaframework.uilib.list.structure.filter.MultiFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
@@ -28,7 +29,7 @@ public class AndFilter extends MultiFilter {
 	private static final long serialVersionUID = 1L;
 
 	public Expression buildExpression(Map data) {
-		Iterator i = new ListFilterExpressionIterator(this.children.iterator(), data);
+		Iterator i = new LaxyExpressionIterator(this.children.iterator(), data);
 		return ExpressionUtil.and(i);
 	}
 }

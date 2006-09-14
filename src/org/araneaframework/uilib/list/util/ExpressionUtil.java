@@ -33,6 +33,7 @@ import org.araneaframework.backend.list.memorybased.expression.constant.ValueExp
 import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.NotExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
+import org.araneaframework.backend.list.memorybased.expression.procedure.ProcedureExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
@@ -73,6 +74,13 @@ public class ExpressionUtil {
 	 */
 	public static ValueExpression value(Object value) {
 		return value(null, value);
+	}
+	
+	/**
+	 * Creaters NULL value expression.
+	 */
+	public static ValueExpression nullValue(String name) {
+		return new ValueExpression(name, null);
 	}
 	
 	/**
@@ -192,6 +200,27 @@ public class ExpressionUtil {
 	}
 	
 	/**
+	 * Creaters PROCEDURE expression.
+	 */	
+	public static ProcedureExpression sqlFunction(String name, Expression[] exprs) {
+		return (ProcedureExpression) addAll(new ProcedureExpression(name), exprs, false);
+	}
+	
+	/**
+	 * Creaters PROCEDURE expression.
+	 */	
+	public static ProcedureExpression sqlFunction(String name, Collection exprs) {
+		return (ProcedureExpression) addAll(new ProcedureExpression(name), exprs, false);
+	}
+	
+	/**
+	 * Creaters PROCEDURE expression.
+	 */	
+	public static ProcedureExpression sqlFunction(String name, Iterator exprs) {
+		return (ProcedureExpression) addAll(new ProcedureExpression(name), exprs, false);
+	}
+	
+	/**
 	 * Creaters NOT expression.
 	 */	
 	public static Expression not(Expression expr) {
@@ -219,21 +248,21 @@ public class ExpressionUtil {
 	 * Creaters AND expression.
 	 */	
 	public static Expression and(Expression[] exprs) {
-		return addAll(new AndExpression(), exprs);		
+		return addAll(new AndExpression(), exprs, true);		
 	}
 	
 	/**
 	 * Creaters AND expression.
 	 */	
 	public static Expression and(Collection exprs) {
-		return addAll(new AndExpression(), exprs);		
+		return addAll(new AndExpression(), exprs, true);		
 	}
 	
 	/**
 	 * Creaters AND expression.
 	 */	
 	public static Expression and(Iterator exprs) {
-		return addAll(new AndExpression(), exprs);		
+		return addAll(new AndExpression(), exprs, true);		
 	}
 	
 	/**
@@ -254,26 +283,26 @@ public class ExpressionUtil {
 	 * Creaters OR expression.
 	 */		
 	public static Expression or(Expression[] exprs) {
-		return addAll(new OrExpression(), exprs);		
+		return addAll(new OrExpression(), exprs, true);		
 	}
 	
 	/**
 	 * Creaters OR expression.
 	 */		
 	public static Expression or(Collection exprs) {
-		return addAll(new OrExpression(), exprs);		
+		return addAll(new OrExpression(), exprs, true);		
 	}
 	
 	/**
 	 * Creaters OR expression.
 	 */		
 	public static Expression or(Iterator exprs) {
-		return addAll(new OrExpression(), exprs);		
+		return addAll(new OrExpression(), exprs, true);		
 	}
 	
 	// Private mthods
 	
-	private static Expression addAll(MultiExpression multiExpr, Expression[] children) {
+	private static Expression addAll(MultiExpression multiExpr, Expression[] children, boolean allowNulls) {
 		if (children == null || children.length == 0) {
 			return null;
 		}
@@ -283,6 +312,8 @@ public class ExpressionUtil {
 			if (children[i] != null) {
 				multiExpr.add(children[i]);				
 				count++;
+			} else if (!allowNulls) {
+				throw new IllegalArgumentException("Expression can not be null");				
 			}
 		}
 		if (count == 0) {
@@ -291,7 +322,7 @@ public class ExpressionUtil {
 		return multiExpr;
 	}
 	
-	private static Expression addAll(MultiExpression multiExpr, Collection children) {
+	private static Expression addAll(MultiExpression multiExpr, Collection children, boolean allowNulls) {
 		if (children == null || children.isEmpty()) {
 			return null;
 		}
@@ -301,6 +332,8 @@ public class ExpressionUtil {
 			Expression expr = (Expression) i.next();
 			if (expr != null) {
 				multiExpr.add(expr);				
+			} else if (!allowNulls) {
+				throw new IllegalArgumentException("Expression can not be null");				
 			}
 		}
 		if (count == 0) {
@@ -309,7 +342,7 @@ public class ExpressionUtil {
 		return multiExpr;
 	}	
 	
-	private static Expression addAll(MultiExpression multiExpr, Iterator children) {
+	private static Expression addAll(MultiExpression multiExpr, Iterator children, boolean allowNulls) {
 		if (children == null || !children.hasNext()) {
 			return null;
 		}
@@ -319,6 +352,8 @@ public class ExpressionUtil {
 			Expression expr = (Expression) children.next();
 			if (expr != null) {
 				multiExpr.add(expr);
+			} else if (!allowNulls) {
+				throw new IllegalArgumentException("Expression can not be null");				
 			}
 		}
 		if (count == 0) {

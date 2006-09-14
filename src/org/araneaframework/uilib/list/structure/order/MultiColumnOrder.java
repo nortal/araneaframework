@@ -36,12 +36,12 @@ public class MultiColumnOrder implements ListOrder {
 	
 	protected Map columnOrders = new HashMap();
 
-	public void addColumnOrder(ColumnOrder order) {
-		this.columnOrders.put(order.getColumnId(), order);
+	public void addColumnOrder(FieldOrder order) {
+		this.columnOrders.put(order.getFieldId(), order);
 	}
 
-	public ColumnOrder getColumnOrder(String column) {
-		return (ColumnOrder) this.columnOrders.get(column);
+	public FieldOrder getColumnOrder(String column) {
+		return (FieldOrder) this.columnOrders.get(column);
 	}
 
 	public boolean isColumnOrdered(String column) {
@@ -64,7 +64,7 @@ public class MultiColumnOrder implements ListOrder {
 		Iterator i = orderInfo.getFields().iterator();
 		while (i.hasNext()) {
 			OrderInfoField orderInfoField = (OrderInfoField) i.next();
-			ColumnOrder columnOrder = (ColumnOrder) this.columnOrders
+			FieldOrder columnOrder = (FieldOrder) this.columnOrders
 					.get(orderInfoField.getId());
 			if (columnOrder != null) {
 				ComparatorExpression temp = columnOrder

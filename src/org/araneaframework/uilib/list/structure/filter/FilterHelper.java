@@ -15,23 +15,21 @@
 **/
 package org.araneaframework.uilib.list.structure.filter;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.commons.lang.Validate;
-import org.araneaframework.Environment;
-import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
-import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.structure.filter.advanced.RangeInRangeFilter;
+import org.araneaframework.uilib.list.structure.filter.advanced.SqlFunctionFilter;
+import org.araneaframework.uilib.list.structure.filter.atomic.Constant;
+import org.araneaframework.uilib.list.structure.filter.atomic.Field;
+import org.araneaframework.uilib.list.structure.filter.atomic.Value;
 import org.araneaframework.uilib.list.structure.filter.field.EqualFilter;
 import org.araneaframework.uilib.list.structure.filter.field.LikeFilter;
 import org.araneaframework.uilib.list.structure.filter.field.RangeFilter;
-import org.araneaframework.uilib.list.util.ComparatorFactory;
-import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 /**
  * List filter helper.  
@@ -40,146 +38,10 @@ import org.araneaframework.uilib.list.util.like.LikeConfiguration;
  * 
  * @see ListWidget
  */
-public class FilterHelper implements FilterContext {
-	
-	public static final String LOW_SUFFIX = "_start"; 
-	public static final String HIGH_SUFFIX = "_end"; 
-	
-	private final ListWidget list;
-	
-	// Configuration that can be changed during filters creation
-	private Locale locale;
-	private boolean ignoreCase = true;
-	private boolean strict = false;
-	
-	private LikeConfiguration likeConfiguration;
-	
-	// Map<String,String> - exceptional labels for fields
-	private Map labels = new HashMap();
-	// Map<String,Comparator> - exceptional comparators for fields
-	private Map comparators = new HashMap();
-	// Map<String,Class> - exceptional types for fields
-	private Map types = new HashMap();
+public class FilterHelper extends BaseFilterHelper {
 	
 	public FilterHelper(ListWidget list) {
-		Validate.notNull(list);
-		this.list = list;
-		init(list.getEnvironment());		
-	}
-	
-	protected void init(Environment env) {
-		// Locale
-		this.locale = ((LocalizationContext)
-				env.getEntry(LocalizationContext.class)).getLocale();
-	}
-	
-	public boolean isIgnoreCase() {
-		return ignoreCase;
-	}
-
-	public FilterContext setIgnoreCase(boolean ignoreCase) {
-		this.ignoreCase = ignoreCase;
-		return this;
-	}
-
-	public Locale getLocale() {
-		return locale;
-	}
-
-	public FilterContext setLocale(Locale locale) {
-		this.locale = locale;
-		return this;
-	}
-	
-	public boolean isStrict() {
-		return strict;
-	}
-
-	public void setStrict(boolean stirct) {
-		this.strict = stirct;
-	}
-
-	public LikeConfiguration getLikeConfiguration() {
-		return likeConfiguration;
-	}
-	
-	public void setLikeConfiguration(LikeConfiguration likeConfiguration) {
-		this.likeConfiguration = likeConfiguration;
-	}
-	
-	// General
-	
-	public Environment getEnvironment() {
-		return list.getEnvironment();
-	}
-
-	public FormWidget getForm() {
-		return list.getFilterForm();
-	}
-		
-	// List fields
-	
-	public FilterHelper addCustomLabel(String fieldId, String labelId) {
-		this.labels.put(fieldId, labelId);
-		return this;
-	}
-	
-	public FilterHelper addCustomType(String fieldId, Class type) {
-		this.types.put(fieldId, type);
-		return this;
-	}
-	
-	public FilterHelper addCustomComparator(String fieldId, Comparator comp) {
-		this.comparators.put(fieldId, comp);
-		return this;
-	}
-	
-	public String getFieldLabel(String fieldId) {
-		if (this.labels.containsKey(fieldId)) {
-			return (String) this.labels.get(fieldId);
-		}
-		return list.getColumnLabel(fieldId);
-	}
-	
-	public Class getFieldType(String fieldId) {
-		if (this.types.containsKey(fieldId)) {
-			return (Class) this.types.get(fieldId);
-		}
-		return list.getColumnType(fieldId);
-	}
-	
-	public Comparator getComparator(String fieldId) {
-		if (this.comparators.containsKey(fieldId)) {
-			return (Comparator) this.comparators.get(fieldId);
-		}
-		return buildComparator(getFieldType(fieldId));
-	}
-	
-	// Comparator
-	
-	protected Comparator buildComparator(Class type) {
-		Validate.notNull(type);
-		
-		if (String.class.equals(type)) {
-			return ComparatorFactory.getStringComparator(
-					isNullFirst(),
-					isIgnoreCase(),
-					getLocale());
-		}
-		if (Boolean.class.equals(type)) {
-			return ComparatorFactory.getBooleanComparator(
-					isNullFirst(),
-					isTrueFirst());
-		}
-		return ComparatorFactory.getDefault();
-	}
-	
-	protected boolean isNullFirst() {
-		return ComparatorFactory.NULL_FIRST_BY_DEFAULT;
-	}
-	
-	protected boolean isTrueFirst() {
-		return ComparatorFactory.TRUE_FIRST_BY_DEFAULT;
+		super(list);
 	}
 	
 	// ========== EQUALS ========== 
@@ -318,16 +180,284 @@ public class FilterHelper implements FilterContext {
 		list.addFilter(RangeFilter.getInstance(this, fieldId, lowValueId, highValueId));
 		return this;
 	}
+
+	// ========== FIELD RANGE IN VALUE RANGE ==========
 	
-	// Value ids
+	// filter with form element
 	
-	public String getValueId(String fieldId) {
-		return fieldId;
+	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId) throws Exception {
+		return fieldRangeInValueRange(lowFieldId, highFieldId, lowFieldId, highFieldId);
 	}
-	public String getLowValueId(String fieldId) {
-		return fieldId + LOW_SUFFIX;
+	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId) throws Exception {
+		_fieldRangeInValueRange(lowFieldId, highFieldId, lowValueId, highFieldId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId);
+		return this;
 	}
-	public String getHighValueId(String fieldId) {
-		return fieldId + HIGH_SUFFIX;
+	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, Control lowControl, Control highControl) throws Exception {
+		return fieldRangeInValueRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowControl, highControl);
 	}
+	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, Control lowControl, Control highControl) throws Exception {
+		_fieldRangeInValueRange(lowFieldId, highFieldId, lowValueId, highFieldId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowControl, highControl);
+		return this;
+	}
+	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, FormElement lowElement, FormElement highElement) throws Exception {
+		return fieldRangeInValueRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowElement, highElement);
+	}
+	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, FormElement lowElement, FormElement highElement) throws Exception {
+		_fieldRangeInValueRange(lowFieldId, highFieldId, lowValueId, highFieldId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowElement, highElement);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterHelper _fieldRangeInValueRange(String lowFieldId, String highFieldId) {
+		return _fieldRangeInValueRange(lowFieldId, highFieldId, lowFieldId, highFieldId);
+	}
+	public FilterHelper _fieldRangeInValueRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId) {
+		list.addFilter(RangeInRangeFilter.getFieldRangeInValueRangeInstance(this, lowFieldId, highFieldId, lowValueId, highValueId));
+		return this;
+	}
+
+	// ========== VALUE RANGE IN FIELD RANGE ==========
+	
+	// filter with form element
+	
+	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId) throws Exception {
+		return valueRangeInFieldRange(lowFieldId, highFieldId, lowFieldId, highFieldId);
+	}
+	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId) throws Exception {
+		_valueRangeInFieldRange(lowFieldId, highFieldId, lowValueId, highFieldId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId);
+		return this;
+	}
+	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, Control lowControl, Control highControl) throws Exception {
+		return valueRangeInFieldRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowControl, highControl);
+	}
+	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, Control lowControl, Control highControl) throws Exception {
+		_valueRangeInFieldRange(lowFieldId, highFieldId, lowValueId, highFieldId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowControl, highControl);
+		return this;
+	}
+	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, FormElement lowElement, FormElement highElement) throws Exception {
+		return valueRangeInFieldRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowElement, highElement);
+	}
+	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, FormElement lowElement, FormElement highElement) throws Exception {
+		_valueRangeInFieldRange(lowFieldId, highFieldId, lowValueId, highFieldId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowElement, highElement);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterHelper _valueRangeInFieldRange(String lowFieldId, String highFieldId) {
+		return _fieldRangeInValueRange(lowFieldId, highFieldId, lowFieldId, highFieldId);
+	}
+	public FilterHelper _valueRangeInFieldRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId) {
+		list.addFilter(RangeInRangeFilter.getValueRangeInFieldRangeInstance(this, lowFieldId, highFieldId, lowValueId, highValueId));
+		return this;
+	}
+
+	// ========== OVERLAP RANGE ==========
+	
+	// filter with form element
+	
+	public FilterHelper overlapRange(String lowFieldId, String highFieldId) throws Exception {
+		return overlapRange(lowFieldId, highFieldId, lowFieldId, highFieldId);
+	}
+	public FilterHelper overlapRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId) throws Exception {
+		_overlapRange(lowFieldId, highFieldId, lowValueId, highFieldId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId);
+		return this;
+	}
+	public FilterHelper overlapRange(String lowFieldId, String highFieldId, Control lowControl, Control highControl) throws Exception {
+		return overlapRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowControl, highControl);
+	}
+	public FilterHelper overlapRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, Control lowControl, Control highControl) throws Exception {
+		_overlapRange(lowFieldId, highFieldId, lowValueId, highFieldId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowControl, highControl);
+		return this;
+	}
+	public FilterHelper overlapRange(String lowFieldId, String highFieldId, FormElement lowElement, FormElement highElement) throws Exception {
+		return overlapRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowElement, highElement);
+	}
+	public FilterHelper overlapRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, FormElement lowElement, FormElement highElement) throws Exception {
+		_overlapRange(lowFieldId, highFieldId, lowValueId, highFieldId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowElement, highElement);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterHelper _overlapRange(String lowFieldId, String highFieldId) {
+		return _fieldRangeInValueRange(lowFieldId, highFieldId, lowFieldId, highFieldId);
+	}
+	public FilterHelper _overlapRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId) {
+		list.addFilter(RangeInRangeFilter.getOverlapInstance(this, lowFieldId, highFieldId, lowValueId, highValueId));
+		return this;
+	}
+	
+	// ========== SQL FUNCTION ==========
+	
+	public SqlFunction sqlFunction(String name) {
+		return new SqlFunction(name);
+	}
+	
+	/**
+	 * SQL Function filter helper.
+	 * 
+	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+	 */
+	public class SqlFunction {
+		private String name;
+		private List params = new ArrayList();
+		
+		SqlFunction(String name) {
+			this.name = name;
+		}
+		
+		private ExpressionBuilder[] getParams() {
+			return (ExpressionBuilder[]) params.toArray(new ExpressionBuilder[params.size()]);
+		}
+		
+		// add params
+		
+		public SqlFunction addFieldParam(String fieldId) {
+			params.add(new Field(fieldId));
+			return this;
+		}
+		
+		public SqlFunction addValueParam(String valueId) throws Exception {
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId);
+			return _addValueParam(valueId);			
+		}
+		public SqlFunction addValueParam(String valueId, Control control) throws Exception {
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId, control);
+			return _addValueParam(valueId);			
+		}
+		public SqlFunction addValueParam(String valueId, FormElement element) throws Exception {
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId, element);
+			return _addValueParam(valueId);
+		}
+		public SqlFunction _addValueParam(String valueId) {
+			params.add(new Value(valueId));
+			return this;			
+		}
+		
+		public SqlFunction addConstParam(Object value) {
+			return addConstParam(null, value);
+		}		
+		public SqlFunction addConstParam(String valueId, Object value) {
+			params.add(new Constant(valueId, value));
+			return this;			
+		}
+		
+		// add EQUALS filter
+		
+		public FilterHelper eqField(String fieldId) {
+			list.addFilter(SqlFunctionFilter.getFieldEqualInstance(FilterHelper.this, fieldId, name, getParams()));
+			return FilterHelper.this;
+		}
+		
+		public FilterHelper eqValue(String valueId) throws Exception {
+			_eqValue(valueId);
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId);
+			return FilterHelper.this;
+		}
+		public FilterHelper eqValue(String valueId, Control control) throws Exception {
+			_eqValue(valueId);
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId, control);
+			return FilterHelper.this;
+		}
+		public FilterHelper eqValue(String valueId, FormElement element) throws Exception {
+			_eqValue(valueId);
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId, element);
+			return FilterHelper.this;
+		}
+		public FilterHelper _eqValue(String valueId) {
+			list.addFilter(SqlFunctionFilter.getValueEqualInstance(FilterHelper.this, valueId, name, getParams()));
+			return FilterHelper.this;
+		}
+		
+		public FilterHelper eqConst(String valueId) {
+			return eqConst(null, valueId);
+		}				
+		public FilterHelper eqConst(String valueId, Object value) {
+			list.addFilter(SqlFunctionFilter.getConstantEqualInstance(FilterHelper.this, valueId, value, name, getParams()));
+			return FilterHelper.this;
+		}
+		
+		// add GREATER THAN filter
+		
+		public FilterHelper gtField(String fieldId) {
+			list.addFilter(SqlFunctionFilter.getFieldGreaterThanInstance(FilterHelper.this, fieldId, name, getParams()));
+			return FilterHelper.this;
+		}
+		
+		public FilterHelper gtValue(String valueId) throws Exception {
+			_gtValue(valueId);
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId);
+			return FilterHelper.this;
+		}
+		public FilterHelper gtValue(String valueId, Control control) throws Exception {
+			_gtValue(valueId);
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId, control);
+			return FilterHelper.this;
+		}
+		public FilterHelper gtValue(String valueId, FormElement element) throws Exception {
+			_gtValue(valueId);
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId, element);
+			return FilterHelper.this;
+		}
+		public FilterHelper _gtValue(String valueId) {
+			list.addFilter(SqlFunctionFilter.getValueGreaterThanInstance(FilterHelper.this, valueId, name, getParams()));
+			return FilterHelper.this;
+		}
+		
+		public FilterHelper gtConst(String valueId) {
+			return gtConst(null, valueId);
+		}				
+		public FilterHelper gtConst(String valueId, Object value) {
+			list.addFilter(SqlFunctionFilter.getConstantGreaterThanInstance(FilterHelper.this, valueId, value, name, getParams()));
+			return FilterHelper.this;
+		}		
+		
+		// add LOWER THAN filter
+		
+		public FilterHelper ltField(String fieldId) {
+			list.addFilter(SqlFunctionFilter.getFieldLowerThanInstance(FilterHelper.this, fieldId, name, getParams()));
+			return FilterHelper.this;
+		}
+		
+		public FilterHelper ltValue(String valueId) throws Exception {
+			_ltValue(valueId);
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId);
+			return FilterHelper.this;
+		}
+		public FilterHelper ltValue(String valueId, Control control) throws Exception {
+			_ltValue(valueId);
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId, control);
+			return FilterHelper.this;
+		}
+		public FilterHelper ltValue(String valueId, FormElement element) throws Exception {
+			_ltValue(valueId);
+			SqlFunctionFilter.addToForm(FilterHelper.this, valueId, element);
+			return FilterHelper.this;
+		}
+		public FilterHelper _ltValue(String valueId) {
+			list.addFilter(SqlFunctionFilter.getValueLowerThanInstance(FilterHelper.this, valueId, name, getParams()));
+			return FilterHelper.this;
+		}
+		
+		public FilterHelper ltConst(String valueId) {
+			return ltConst(null, valueId);
+		}				
+		public FilterHelper ltConst(String valueId, Object value) {
+			list.addFilter(SqlFunctionFilter.getConstantLowerThanInstance(FilterHelper.this, valueId, value, name, getParams()));
+			return FilterHelper.this;
+		}			
+		
+	}
+	
 }

@@ -14,14 +14,29 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure.filter;
+package org.araneaframework.uilib.list.structure;
 
-import org.araneaframework.uilib.list.structure.FieldAware;
-import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.uilib.list.structure.filter.FieldFilter;
+import org.araneaframework.uilib.list.structure.order.FieldOrder;
+
 
 /**
- * Static list filtering information that relates to one field.
+ * General interface for objects that are aware of one field.
+ * 
+ * @see FieldFilter
+ * @see FieldOrder 
  */
-public interface FieldFilter extends ListFilter, FieldAware {
-	// no additional methods
+public interface FieldAware {
+	/**
+	 * Returns the field Id.
+	 * @return field Id.
+	 */
+	String getFieldId();
+
+	/**
+	 * Saves the field Id.
+	 * 
+	 * @param id field Id.
+	 */
+	void setFieldId(String id);
 }

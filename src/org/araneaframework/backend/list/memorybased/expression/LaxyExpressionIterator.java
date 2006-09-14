@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
-package org.araneaframework.uilib.list.structure.filter.composite;
+package org.araneaframework.backend.list.memorybased.expression;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -21,37 +21,37 @@ import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 
 /**
  * Iterator that iterates over {@link Expression}s using an iterator over
- * {@link ListFilter} objects and filter data.
+ * {@link ExpressionBuilder} objects and <code>data</code>.
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class ListFilterExpressionIterator implements Iterator, Serializable {
+public class LaxyExpressionIterator implements Iterator, Serializable {
 	
-	private Iterator filterIterator;
-	private Map filterData;
+	private Iterator builderIterator;
+	private Map data;
 	
-	public ListFilterExpressionIterator(Iterator filterIterator, Map filterData) {
-		Validate.notNull(filterIterator);
-		Validate.notNull(filterData);
-		this.filterIterator = filterIterator;
-		this.filterData = filterData;
+	public LaxyExpressionIterator(Iterator builderIterator, Map data) {
+		Validate.notNull(builderIterator);
+		Validate.notNull(data);
+		
+		this.builderIterator = builderIterator;
+		this.data = data;
 	}
 
 	public boolean hasNext() {
-		return filterIterator.hasNext();
+		return builderIterator.hasNext();
 	}
 
 	public Object next() {
-		ListFilter listFilter = (ListFilter) filterIterator.next();
-		return listFilter.buildExpression(filterData);
+		ExpressionBuilder builder = (ExpressionBuilder) builderIterator.next();
+		return builder.buildExpression(data);
 	}
 
 	public void remove() {
 		throw new UnsupportedOperationException("Remove is not supported");
 	}
-
 }

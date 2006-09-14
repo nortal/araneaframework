@@ -23,14 +23,14 @@ import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.structure.ComparableType;
 
 
-public class SimpleColumnOrder extends ComparableType implements ColumnOrder {
+public class SimpleColumnOrder extends ComparableType implements FieldOrder {
 
 	private static final long serialVersionUID = 1L;
 
 	private String columnId;
 	
 	public SimpleColumnOrder(String columnId, Comparator comparator) {
-		setColumnId(columnId);
+		setFieldId(columnId);
 		setComparator(comparator);
 	}
 
@@ -42,11 +42,11 @@ public class SimpleColumnOrder extends ComparableType implements ColumnOrder {
 		// for bean creation
 	}
 
-	public String getColumnId() {
+	public String getFieldId() {
 		return this.columnId;
 	}
 	
-	public void setColumnId(String id) {
+	public void setFieldId(String id) {
 		this.columnId = id;
 	}
 
@@ -54,6 +54,6 @@ public class SimpleColumnOrder extends ComparableType implements ColumnOrder {
 		if (this.columnId == null) {
 			throw new RuntimeException("Column Id must be provided"); 
 		}
-		return new VariableComparatorExpression(getColumnId(), getComparator());
+		return new VariableComparatorExpression(getFieldId(), getComparator());
 	}
 }

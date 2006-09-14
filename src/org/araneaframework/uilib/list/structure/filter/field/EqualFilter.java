@@ -38,7 +38,7 @@ public class EqualFilter extends BaseFieldFilter {
 		EqualFilter filter = new EqualFilter();
 		filter.setFieldId(fieldId);
 		filter.setValueId(valueId);
-		filter.setComparator(ctx.getComparator(fieldId));
+		filter.setComparator(ctx.getFieldComparator(fieldId));
 		return filter;
 	}
 	
@@ -47,7 +47,7 @@ public class EqualFilter extends BaseFieldFilter {
 		filter.setFieldId(fieldId);
 		filter.setValueId(valueId);
 		filter.setValue(value);
-		filter.setComparator(ctx.getComparator(fieldId));
+		filter.setComparator(ctx.getFieldComparator(fieldId));
 		return filter;
 	}
 

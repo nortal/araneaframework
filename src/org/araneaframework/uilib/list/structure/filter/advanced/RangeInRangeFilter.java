@@ -20,8 +20,14 @@ import java.util.Comparator;
 import java.util.Map;
 
 import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.uilib.form.Control;
+import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.constraint.RangeConstraint;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
+import org.araneaframework.uilib.list.util.FilterFormUtil;
+import org.araneaframework.uilib.list.util.FormUtil;
+import org.araneaframework.uilib.list.util.NestedFormUtil;
 
 
 public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
@@ -33,7 +39,7 @@ public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
 	public static RangeInRangeFilter getFieldRangeInValueRangeInstance(FilterContext ctx,
 			String lowFieldId, String highFieldId,
 			String lowValueId, String highValueId) {
-		RangeInRangeFilter filter;		
+		RangeInRangeFilter filter;
 		if (ctx.isStrict()) {
 			filter = new FieldRangeInValueRangeStrict();
 		} else {
@@ -75,6 +81,25 @@ public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
 		filter.setHighValueId(highValueId);
 		return filter;
 	}
+	
+	public static void addToForm(FilterContext ctx, String lowId, String highId, FormElement lowElement, FormElement highElement) throws Exception {
+		NestedFormUtil.addElement(ctx.getForm(), lowId, lowElement);
+		NestedFormUtil.addElement(ctx.getForm(), highId, highElement);
+		FormUtil.addConstraint(ctx.getForm(),
+				new RangeConstraint(lowElement, highElement, true));
+	}
+	
+	public static void addToForm(FilterContext ctx, String lowId, String highId, Control lowControl, Control highControl) throws Exception {
+		addToForm(ctx, lowId, highId,
+				FilterFormUtil.createElement(ctx, lowId, lowControl),
+				FilterFormUtil.createElement(ctx, highId, highControl));
+	}
+	
+	public static void addToForm(FilterContext ctx, String lowId, String highId) throws Exception {
+		addToForm(ctx, lowId, highId,
+				FilterFormUtil.createElement(ctx, lowId),
+				FilterFormUtil.createElement(ctx, highId));
+	}	
 	
 	public Comparator getComparator() {
 		return comparator;

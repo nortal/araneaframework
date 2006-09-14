@@ -16,9 +16,7 @@
 
 package org.araneaframework.uilib.list.structure;
 
-import java.io.Serializable;
-import java.util.Map;
-import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 
 
 /**
@@ -26,18 +24,9 @@ import org.araneaframework.backend.list.memorybased.Expression;
  * <code>FilterInfo</code> to build <code>FilterExpression</code> (an
  * <code>Expression</code> that evualuates into <code>Boolean.TRUE</code>
  * when the filter matches with the current record that a
- * <code>VariableResolver</code> provides and <code>Boolean.FALSE</code> if
- * not).
+ * <code>VariableResolver</code> provides and <code>Boolean.FALSE</code>
+ * otherwise).
  */
-public interface ListFilter extends Serializable {
-	/**
-	 * Builds <code>Expression</code> from this <code>ListFilter</code>
-	 * according to the <code>FilterInfo</code>.
-	 * 
-	 * @param filterInfo
-	 *            Filter fields and their current values.
-	 * @return <code>Expression</code> that is built according to the
-	 *         <code>FilterInfo</code> or null if no expression has been built.
-	 */
-	Expression buildExpression(Map filterInfo);
+public interface ListFilter extends ExpressionBuilder {
+	// no additional methods
 }

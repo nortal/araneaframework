@@ -13,41 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
-package org.araneaframework.uilib.list.structure.filter;
 
-import java.util.Comparator;
-import java.util.Locale;
+package org.araneaframework.backend.list.memorybased;
 
-import org.araneaframework.Environment;
-import org.araneaframework.uilib.form.FormWidget;
+import java.io.Serializable;
+import java.util.Map;
+
 
 /**
- * Filter context that is used by list filters for their initialization. 
+ * General interface for objects that can create an expression.
+ * 
+ * @see Expression
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public interface FilterContext {
-	
-	// General
-	
-	Environment getEnvironment();
-
-	FormWidget getForm();
-	
-	// Global confiugration
-
-	boolean isIgnoreCase();
-
-	boolean isStrict();
-	
-	Locale getLocale();
-	
-	// Fields
-
-	String getFieldLabel(String fieldId);
-
-	Class getFieldType(String fieldId);
-
-	Comparator getFieldComparator(String fieldId);
-
+public interface ExpressionBuilder extends Serializable {
+	/**
+	 * Builds <code>Expression</code>.
+	 * 
+	 * @param data
+	 *            object that can be used to configure building the expressions.
+	 * @return <code>Expression</code> that is built according to the
+	 *         <code>data</code> or null if no expression has been built.
+	 */
+	Expression buildExpression(Map data);
 }
