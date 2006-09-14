@@ -45,4 +45,12 @@ public class BaseWidgetTag extends BaseTag {
     return EVAL_BODY_INCLUDE;    
   }
 
+  public void doFinally() {
+	super.doFinally();
+    // to prevent memory leaks in containers where tags might live very long
+	id = fullId = scopedFullId = null;
+	widget = null;
+	viewModel = null;
+	container = null;
+  }
 }
