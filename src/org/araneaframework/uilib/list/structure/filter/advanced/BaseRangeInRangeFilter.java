@@ -14,42 +14,47 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure.filter.field;
+package org.araneaframework.uilib.list.structure.filter.advanced;
 
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
-import org.araneaframework.uilib.list.structure.filter.FieldFilter;
+import org.araneaframework.uilib.list.structure.ListFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 
-/**
- * Base implementation of range filter.
- * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
- */
-public abstract class BaseRangeFilter implements FieldFilter {
+public abstract class BaseRangeInRangeFilter implements ListFilter {
 	
 	private static final long serialVersionUID = 1L;
 	
-	// Field
-	private String fieldId;
+	// Fields
+	private String lowFieldId;
+	private String highFieldId;
 	
 	// Values
 	private String lowValueId;
 	private String highValueId;	
 	
-	public String getFieldId() {
-		return this.fieldId;
+	public String getLowFieldId() {
+		return this.lowFieldId;
 	}
 	
-	public void setFieldId(String fieldId) {
-		Validate.notNull(fieldId);
-		this.fieldId = fieldId;
+	public void setLowFieldId(String lowFieldId) {
+		Validate.notNull(lowFieldId);
+		this.lowFieldId = lowFieldId;
 	}
 	
+	public String getHighFieldId() {
+		return highFieldId;
+	}
+
+	public void setHighFieldId(String highFieldId) {
+		Validate.notNull(highFieldId);
+		this.highFieldId = highFieldId;
+	}
+
 	public String getHighValueId() {
 		return this.highValueId;
 	}
@@ -73,8 +78,12 @@ public abstract class BaseRangeFilter implements FieldFilter {
 			filterInfo.containsKey(getHighValueId());
 	}
 	
-	protected VariableExpression buildVariableExpression() {
-		return ExpressionUtil.var(getFieldId());
+	protected VariableExpression buildLowVariableExpression() {
+		return ExpressionUtil.var(getLowFieldId());
+	}
+	
+	protected VariableExpression buildHighVariableExpression() {
+		return ExpressionUtil.var(getHighFieldId());
 	}
 	
 	protected ValueExpression buildLowValueExpression(Map filterInfo) {
