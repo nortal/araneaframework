@@ -32,7 +32,7 @@
                     if they were not explicitly asked to be updated in request. This is useful for always updating
                     some common page regions (feedback message regions etc). Some default region names
                     that should be updated when AJAX request is made are <literal>messages</literal>, 
-                    <literal>popupRegistrationRegion</literal>, <literal>scrolling</literal>.</entry>
+                    <literal>popupRegistrationRegion</literal>.</entry>
                 </row>
             </tbody>
         </tgroup>
