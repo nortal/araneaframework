@@ -21,6 +21,7 @@ import java.io.Writer;
 import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
+import org.araneaframework.jsp.tag.updateRegion.UpdateRegionHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 /**
  * Tag that registers functions dealing with window scroll position storing and restoring.
@@ -32,12 +33,21 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Registers popups present in current popupcontext for opening. For this tag to work, produced HTML file BODY should have attribute onload='processLoadEvents()'".
  */
 public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
+   public final static String SCROLL_HANDLER_REGISTRATION_REGION = "scrolling";
+
    protected int doEndTag(Writer out) throws Exception {
      WindowScrollPositionContext scrollHandler = 
     	 (WindowScrollPositionContext)getOutputData().getAttribute(WindowScrollPositionContext.SCROLL_HANDLER_KEY);
 
-     if (scrollHandler != null)
+     if (scrollHandler != null) {
+       UpdateRegionHtmlTag updateRegionTag = new UpdateRegionHtmlTag();
+       updateRegionTag.setGlobalId(SCROLL_HANDLER_REGISTRATION_REGION);
+       registerAndExecuteStartTag(updateRegionTag);
+
        registerScrollHandler(out, scrollHandler);
+
+       executeEndTagAndUnregister(updateRegionTag);
+     }
        
 	 return EVAL_PAGE;
    }

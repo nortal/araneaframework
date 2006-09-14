@@ -29,7 +29,10 @@
                     <entry>existingRegions</entry>
                     <entry><literal>java.util.List &lt;String&gt;</literal></entry>
                     <entry>When the filter is activated, it tries to extract specified regions from response, even
-                    if they were not present in request.</entry>
+                    if they were not explicitly asked to be updated in request. This is useful for always updating
+                    some common page regions (feedback message regions etc). Some default region names
+                    that should be updated when AJAX request is made are <literal>messages</literal>, 
+                    <literal>popupRegistrationRegion</literal>, <literal>scrolling</literal>.</entry>
                 </row>
             </tbody>
         </tgroup>
