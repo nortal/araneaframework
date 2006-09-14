@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure.filter.column;
+package org.araneaframework.uilib.list.structure.filter.field;
 
 import java.util.Map;
 
@@ -25,6 +25,11 @@ import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 
+/**
+ * Base implementation for {@link FieldFilter}.
+ * 
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public abstract class BaseFieldFilter implements FieldFilter {
 
 	// Field
@@ -42,7 +47,6 @@ public abstract class BaseFieldFilter implements FieldFilter {
 	public void setFieldId(String fieldId) {
 		Validate.notNull(fieldId);
 		this.fieldId = fieldId;
-		setValueId(valueId);			
 	}
 
 	public String getValueId() {
@@ -50,9 +54,7 @@ public abstract class BaseFieldFilter implements FieldFilter {
 	}
 
 	public void setValueId(String valueId) {
-		if (valueId != null) {
-			this.valueId = valueId;			
-		}
+		this.valueId = valueId;			
 	}
 
 	public Object getValue() {

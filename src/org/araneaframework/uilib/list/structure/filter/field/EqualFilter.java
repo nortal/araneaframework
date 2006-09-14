@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-package org.araneaframework.uilib.list.structure.filter.column;
+package org.araneaframework.uilib.list.structure.filter.field;
 
 import java.util.Comparator;
 import java.util.Map;

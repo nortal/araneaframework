@@ -20,28 +20,15 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
-import org.araneaframework.uilib.list.structure.ListFilter;
 import org.araneaframework.uilib.list.structure.filter.MultiFilter;
+import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 
 public class AndFilter extends MultiFilter {
 	private static final long serialVersionUID = 1L;
 
 	public Expression buildExpression(Map data) {
-		AndExpression and = new AndExpression();
-		int count = 0;
-		for (Iterator i = this.children.iterator(); i.hasNext();) {
-			ListFilter filter = (ListFilter) i.next();
-			Expression child = filter.buildExpression(data);
-			if (child != null) {
-				and.add(child);
-				count++;
-			}
-		}
-		if (count == 0) {
-			return null;
-		}
-		return and;
+		Iterator i = new ListFilterExpressionIterator(this.children.iterator(), data);
+		return ExpressionUtil.and(i);
 	}
 }

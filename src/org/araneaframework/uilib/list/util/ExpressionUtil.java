@@ -230,6 +230,13 @@ public class ExpressionUtil {
 	}
 	
 	/**
+	 * Creaters AND expression.
+	 */	
+	public static Expression and(Iterator exprs) {
+		return addAll(new AndExpression(), exprs);		
+	}
+	
+	/**
 	 * Creaters OR expression.
 	 */		
 	public static Expression or(Expression expr1, Expression expr2) {
@@ -257,6 +264,13 @@ public class ExpressionUtil {
 		return addAll(new OrExpression(), exprs);		
 	}
 	
+	/**
+	 * Creaters OR expression.
+	 */		
+	public static Expression or(Iterator exprs) {
+		return addAll(new OrExpression(), exprs);		
+	}
+	
 	// Private mthods
 	
 	private static Expression addAll(MultiExpression multiExpr, Expression[] children) {
@@ -269,7 +283,7 @@ public class ExpressionUtil {
 			if (children[i] != null) {
 				multiExpr.add(children[i]);				
 				count++;
-			}			
+			}
 		}
 		if (count == 0) {
 			return null;
@@ -294,5 +308,22 @@ public class ExpressionUtil {
 		}
 		return multiExpr;
 	}	
+	
+	private static Expression addAll(MultiExpression multiExpr, Iterator children) {
+		if (children == null || !children.hasNext()) {
+			return null;
+		}
 		
+		int count = 0;
+		while (children.hasNext()) {
+			Expression expr = (Expression) children.next();
+			if (expr != null) {
+				multiExpr.add(expr);
+			}
+		}
+		if (count == 0) {
+			return null;
+		}
+		return multiExpr;
+	}		
 }

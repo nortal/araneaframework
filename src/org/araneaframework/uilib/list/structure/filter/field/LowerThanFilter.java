@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-package org.araneaframework.uilib.list.structure.filter.column;
+package org.araneaframework.uilib.list.structure.filter.field;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -23,7 +23,7 @@ import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 
-public abstract class GreaterThanFilter extends BaseFieldFilter {
+public abstract class LowerThanFilter extends BaseFieldFilter {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -33,29 +33,29 @@ public abstract class GreaterThanFilter extends BaseFieldFilter {
 
 	// FilterData instance
 
-	public static GreaterThanFilter getInstance() {
+	public static LowerThanFilter getInstance() {
 		return getInstance(null, null, STRICT_BY_DEFAULT);
 	}
 
-	public static GreaterThanFilter getInstance(String columnId) {
+	public static LowerThanFilter getInstance(String columnId) {
 		return getInstance(columnId, null, STRICT_BY_DEFAULT);
 	}
 
-	public static GreaterThanFilter getInstance(String columnId, String valueId) {
+	public static LowerThanFilter getInstance(String columnId, String valueId) {
 		return getInstance(columnId, valueId, STRICT_BY_DEFAULT);
 	}
 	
-	public static GreaterThanFilter getInstance(boolean strict) {
+	public static LowerThanFilter getInstance(boolean strict) {
 		return getInstance(null, null, strict);
 	}
 
-	public static GreaterThanFilter getInstance(String columnId, boolean strict) {
+	public static LowerThanFilter getInstance(String columnId, boolean strict) {
 		return getInstance(columnId, null, strict);
 	}
 
-	public static GreaterThanFilter getInstance(String columnId, String valueId,
+	public static LowerThanFilter getInstance(String columnId, String valueId,
 			boolean strict) {
-		GreaterThanFilter filter;
+		LowerThanFilter filter;
 		if (strict) {
 			filter = new Strict();
 		} else {
@@ -68,33 +68,33 @@ public abstract class GreaterThanFilter extends BaseFieldFilter {
 	
 	// Constant instance
 	
-	public static GreaterThanFilter getConstantInstance(Object value) {
+	public static LowerThanFilter getConstantInstance(Object value) {
 		return getConstantInstance(null, null, value, STRICT_BY_DEFAULT);
 	}
 
-	public static GreaterThanFilter getConstantInstance(String columnId,
+	public static LowerThanFilter getConstantInstance(String columnId,
 			Object value) {
 		return getConstantInstance(columnId, null, value, STRICT_BY_DEFAULT);
 	}
 
-	public static GreaterThanFilter getConstantInstance(String columnId,
+	public static LowerThanFilter getConstantInstance(String columnId,
 			String valueId, Object value) {
 		return getConstantInstance(columnId, valueId, value, STRICT_BY_DEFAULT);
 	}
 	
-	public static GreaterThanFilter getConstantInstance(Object value,
+	public static LowerThanFilter getConstantInstance(Object value,
 			boolean strict) {
 		return getConstantInstance(null, null, value, strict);
 	}
 
-	public static GreaterThanFilter getConstantInstance(String columnId,
+	public static LowerThanFilter getConstantInstance(String columnId,
 			Object value, boolean strict) {
 		return getConstantInstance(columnId, null, value, strict);
 	}
 
-	public static GreaterThanFilter getConstantInstance(String columnId,
+	public static LowerThanFilter getConstantInstance(String columnId,
 			String valueId, Object value, boolean strict) {
-		GreaterThanFilter filter;
+		LowerThanFilter filter;
 		if (strict) {
 			filter = new Strict();
 		} else {
@@ -114,24 +114,24 @@ public abstract class GreaterThanFilter extends BaseFieldFilter {
 		this.comparator = comparator;
 	}	
 	
-	static class Strict extends GreaterThanFilter {
+	static class Strict extends LowerThanFilter {
 		public Expression buildExpression(Map filterInfo) {
 			if (!isActive(filterInfo)) {
 				return null;
 			}
-			return ExpressionUtil.gt(
+			return ExpressionUtil.lt(
 					buildVariableExpression(),
 					buildValueExpression(filterInfo),
 					getComparator());
 		}
 	}
 	
-	static class NonStrict extends GreaterThanFilter {
+	static class NonStrict extends LowerThanFilter {
 		public Expression buildExpression(Map filterInfo) {
 			if (!isActive(filterInfo)) {
 				return null;
 			}
-			return ExpressionUtil.ge(
+			return ExpressionUtil.le(
 					buildVariableExpression(),
 					buildValueExpression(filterInfo),
 					getComparator());

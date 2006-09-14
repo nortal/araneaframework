@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure.filter.column;
+package org.araneaframework.uilib.list.structure.filter.field;
 
 import java.util.Map;
 
@@ -28,9 +28,6 @@ import org.araneaframework.uilib.list.util.ExpressionUtil;
 public abstract class BaseRangeFilter implements FieldFilter {
 	
 	private static final long serialVersionUID = 1L;
-	
-	public static final String DEFAULT_LOW_SUFIX = "_start";
-	public static final String DEFAULT_HIGH_SUFIX = "_end";	
 	
 	// Field
 	private String fieldId;
@@ -46,12 +43,6 @@ public abstract class BaseRangeFilter implements FieldFilter {
 	public void setFieldId(String fieldId) {
 		Validate.notNull(fieldId);
 		this.fieldId = fieldId;
-		if (this.lowValueId == null) {
-			this.lowValueId = fieldId + DEFAULT_LOW_SUFIX;
-		}
-		if (this.highValueId == null) {
-			this.highValueId = fieldId + DEFAULT_HIGH_SUFIX;
-		}
 	}
 	
 	public String getHighValueId() {
@@ -59,9 +50,7 @@ public abstract class BaseRangeFilter implements FieldFilter {
 	}
 	
 	public void setHighValueId(String highValueId) {
-		if (highValueId != null) {
-			this.highValueId = highValueId;			
-		}
+		this.highValueId = highValueId;			
 	}
 	
 	public String getLowValueId() {
@@ -69,9 +58,7 @@ public abstract class BaseRangeFilter implements FieldFilter {
 	}
 	
 	public void setLowValueId(String lowValueId) {
-		if (lowValueId != null) {
-			this.lowValueId = lowValueId;			
-		}
+		this.lowValueId = lowValueId;			
 	}
 	
 	// Building expressions

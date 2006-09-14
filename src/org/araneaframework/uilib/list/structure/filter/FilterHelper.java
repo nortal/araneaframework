@@ -27,9 +27,9 @@ import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.ListWidget;
-import org.araneaframework.uilib.list.structure.filter.column.EqualFilter;
-import org.araneaframework.uilib.list.structure.filter.column.LikeFilter;
-import org.araneaframework.uilib.list.structure.filter.column.RangeFilter;
+import org.araneaframework.uilib.list.structure.filter.field.EqualFilter;
+import org.araneaframework.uilib.list.structure.filter.field.LikeFilter;
+import org.araneaframework.uilib.list.structure.filter.field.RangeFilter;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
