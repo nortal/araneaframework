@@ -340,17 +340,18 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 	private void restoreAllContextEntries() {
 		if (attributeBackup == null) return;
 		
-		for(Iterator i = attributeBackup.keySet().iterator(); i.hasNext();) {
-			Integer scope = (Integer)i.next();
-			Map attributeBackupMap = (Map)attributeBackup.get(scope);
+		for(Iterator i = attributeBackup.entrySet().iterator(); i.hasNext();) {
+			Map.Entry attributeBackupEntry = (Map.Entry)i.next();
+			int scope = ((Integer)attributeBackupEntry.getKey()).intValue();
+			Map attributeBackupMap = (Map)attributeBackupEntry.getValue();
 			
-			for(Iterator j = attributeBackupMap.keySet().iterator(); j.hasNext();) {
-				String key = (String)j.next();
-				Object oldAttribute = attributeBackupMap.get(key);
+			for(Iterator j = attributeBackupMap.entrySet().iterator(); j.hasNext();) {
+				Map.Entry entry2 = (Map.Entry)j.next();
+				Object oldAttribute = entry2.getValue();
 				if (oldAttribute != null)
-					pageContext.setAttribute(key, oldAttribute, scope.intValue());
+					pageContext.setAttribute((String)entry2.getKey(), oldAttribute, scope);
 				else
-					pageContext.removeAttribute(key, scope.intValue());
+					pageContext.removeAttribute((String)entry2.getKey(), scope);
 			}
 		}
 		
