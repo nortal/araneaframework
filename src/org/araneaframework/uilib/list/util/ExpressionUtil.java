@@ -55,7 +55,7 @@ public class ExpressionUtil {
 	 * Creaters VARIABLE expression.
 	 */
 	public static VariableExpression var(String name) {
-		Validate.notNull(name);		
+		Validate.notEmpty(name);		
 		return new VariableExpression(name);
 	}
 	
@@ -316,7 +316,9 @@ public class ExpressionUtil {
 				throw new IllegalArgumentException("Expression can not be null");				
 			}
 		}
-		if (count == 0) {
+		if (count == 1) {
+			return multiExpr.getChildren()[0];
+		} else if (count == 0) {
 			return null;
 		}
 		return multiExpr;
@@ -337,9 +339,12 @@ public class ExpressionUtil {
 				throw new IllegalArgumentException("Expression can not be null");				
 			}
 		}
-		if (count == 0) {
+		if (count == 1) {
+			return multiExpr.getChildren()[0];
+		} else if (count == 0) {
 			return null;
 		}
+
 		return multiExpr;
 	}	
 	
@@ -358,9 +363,12 @@ public class ExpressionUtil {
 				throw new IllegalArgumentException("Expression can not be null");				
 			}
 		}
-		if (count == 0) {
+		if (count == 1) {
+			return multiExpr.getChildren()[0];
+		} else if (count == 0) {
 			return null;
 		}
+
 		return multiExpr;
 	}		
 }

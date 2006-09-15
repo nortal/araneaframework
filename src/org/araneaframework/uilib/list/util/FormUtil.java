@@ -17,6 +17,7 @@ package org.araneaframework.uilib.list.util;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.Validate;
 import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
@@ -50,6 +51,8 @@ public class FormUtil {
 	// Controls
 	
 	public static Control createControl(Class type) {
+		Validate.notNull(type);
+		
 		if (String.class.equals(type)) {
 			return createTextControl();
 		}

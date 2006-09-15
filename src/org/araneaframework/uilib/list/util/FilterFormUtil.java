@@ -16,6 +16,7 @@
 package org.araneaframework.uilib.list.util;
 
 import java.text.MessageFormat;
+import java.util.MissingResourceException;
 
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.form.Control;
@@ -54,15 +55,24 @@ public class FilterFormUtil {
 	
 	public static String getLabelForLowField(LocalizationContext loc, String fieldLabelId) {
 		return DO_NOT_LOCALIZE_PREFIX +
-			format(loc.localize(UiLibMessages.LOW_OF), loc.localize(fieldLabelId));
+			format(localize(loc, UiLibMessages.LOW_OF), localize(loc, fieldLabelId));
 	}
 	
 	public static String getLabelForHighField(LocalizationContext loc, String fieldLabelId) {
 		return DO_NOT_LOCALIZE_PREFIX +
-			format(loc.localize(UiLibMessages.HIGH_OF), loc.localize(fieldLabelId));
+			format(localize(loc, UiLibMessages.HIGH_OF), localize(loc, fieldLabelId));
 	}
 	
 	private static String format(String pattern, String arg) {
 		return MessageFormat.format(pattern, new Object[] {arg});
+	}
+	
+	private static String localize(LocalizationContext loc, String key) {
+		try {
+			return loc.localize(key);
+		}
+		catch (MissingResourceException e) {
+			return key;
+		}
 	}
 }

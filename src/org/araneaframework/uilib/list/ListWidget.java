@@ -76,7 +76,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public static final String FILTER_FORM_NAME = "form";
 
 	public static final String FILTER_BUTTON_ID = "filter";
-	public static final String FILTER_RESET_BUTTON_ID = "resetFilter";
+	public static final String FILTER_RESET_BUTTON_ID = "clearFilter";
 
 	/** The multi-ordering form name. */
 	public static final String ORDER_FORM_NAME = "orderForm";
@@ -106,6 +106,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return the {@link ListStructure}used to describe the list.
 	 */
 	public ListStructure getListStructure() {
+		assrtInitialized();
 		return this.listStructure;
 	}
 
@@ -129,9 +130,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Sets the {@link ListDataProvider}used to fill the list with data.
 	 * 
 	 * @param dataProvider the {@link ListDataProvider}used to fill the list with data.
+	 * @throws Exception 
 	 */
-	public void setDataProvider(ListDataProvider dataProvider) {
+	public void setDataProvider(ListDataProvider dataProvider) throws Exception {
 		this.dataProvider = dataProvider;
+		initDataProvider();
 	}
 
 	/**
@@ -223,7 +226,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @param label custom label Id.
 	 */
 	public void setFilterButtonLabel(String label) {
-		getForm().getElementByFullName(FILTER_BUTTON_ID).setLabel(label);;
+		getForm().getElementByFullName(FILTER_BUTTON_ID).setLabel(label);
 	}
 
 	/**
@@ -243,7 +246,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return <code>true</code> if all fields are added orderable by default.
 	 */
 	public boolean isOrderableByDefault() {
-		return this.listStructure.isOrderableByDefault();
+		return getListStructure().isOrderableByDefault();
 	}
 
 	/**
@@ -253,7 +256,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * default.
 	 */
 	public void setOrderableByDefault(boolean orderableByDefault) {
-		this.listStructure.setOrderableByDefault(orderableByDefault);
+		getListStructure().setOrderableByDefault(orderableByDefault);
 	}	
 	
 	/**
@@ -262,7 +265,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return {@link ListField}s.
 	 */
 	public List getFields() {
-		return this.listStructure.getFieldList();
+		return getListStructure().getFieldList();
 	}
 
 	/**
@@ -273,7 +276,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return {@link ListField}.
 	 */
 	public ListField getField(String id) {
-		return this.listStructure.getField(id);
+		return getListStructure().getField(id);
 	}
 
 	/**
@@ -284,7 +287,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return label of {@link ListField}.
 	 */
 	public String getFieldLabel(String columnId) {
-		return getField(columnId).getLabel();
+		ListField field = getField(columnId);
+		return field == null ? null : field.getLabel();
 	}
 	
 	/**
@@ -299,7 +303,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 *            list field label.
 	 */
 	public FieldFilterHelper addField(String id, String label) {
-		this.listStructure.addField(id, label);
+		getListStructure().addField(id, label);
 		return getFilterHelper(id);
 	}
 
@@ -314,7 +318,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 *            whether this list field should be orderable or not. 
 	 */
 	public FieldFilterHelper addField(String id, String label, boolean orderable) {
-		this.listStructure.addField(id, label, orderable);
+		getListStructure().addField(id, label, orderable);
 		return getFilterHelper(id);
 	}
 
@@ -332,7 +336,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 *            list field type.
 	 */
 	public FieldFilterHelper addField(String id, String label, Class type) {
-		this.listStructure.addField(id, label, type);
+		getListStructure().addField(id, label, type);
 		return getFilterHelper(id);
 	}
 
@@ -349,7 +353,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 *            whether this list field should be orderable or not. 
 	 */	
 	public FieldFilterHelper addField(String id, String label, Class type, boolean orderable) {
-		this.listStructure.addField(id, label, type, orderable);
+		getListStructure().addField(id, label, type, orderable);
 		return getFilterHelper(id);
 	}
 	
@@ -360,14 +364,14 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 *           list field order.
 	 */
 	public void addFilter(FieldOrder order) {
-		this.listStructure.addOrder(order);
+		getListStructure().addOrder(order);
 	}
 	
 	/**
 	 * Removes all list orders.
 	 */
 	public void clearOrders() {
-		this.listStructure.clearOrders();
+		getListStructure().clearOrders();
 	}	
 	
 	/**
@@ -377,14 +381,14 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 *           list filter.
 	 */
 	public void addFilter(ListFilter filter) {
-		this.listStructure.addFilter(filter);
+		getListStructure().addFilter(filter);
 	}
 	
 	/**
 	 * Removes all list filters.
 	 */
 	public void clearFilters() {
-		this.listStructure.clearFilters();
+		getListStructure().clearFilters();
 	}
 
 	/* ========== TypeHelper Proxy methods ========== */
@@ -512,7 +516,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	private void propagateListDataProviderWithFilter(Map filterInfo) {
 		log.debug("Building FilterExpression for ListDataProvider");
 		if (this.dataProvider != null) {
-			ListFilter filter = this.listStructure.getListFilter();
+			ListFilter filter = getListStructure().getListFilter();
 			Expression filterExpr = null;
 			if (filter != null) {
 				filterExpr = filter.buildExpression(MapUtil.convertToPlainMap(filterInfo));
@@ -554,7 +558,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 
 	protected void propagateListDataProviderWithOrderInfo(OrderInfo orderInfo) {
-		ListOrder order = this.listStructure.getListOrder();
+		ListOrder order = getListStructure().getListOrder();
 		ComparatorExpression orderExpr = order != null ? order.buildComparatorExpression(orderInfo) : null;
 		this.dataProvider.setOrderExpression(orderExpr);			
 	}
@@ -577,7 +581,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		this.itemRange = itemRangeData.getItemRange();
 		this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());
-		this.sequenceHelper.validateSequence();
+		this.sequenceHelper.validateSequence();			
 	}
 
 	/**
@@ -628,12 +632,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		addEventListener("order", new OrderEventHandler());
              
 		initFilterForm();
-		initSequenceHelper();
-
-		propagateListDataProviderWithOrderInfo(getOrderInfo());
-		propagateListDataProviderWithFilter(getFilterInfo());
-		
-		this.dataProvider.init();
+		initSequenceHelper();		
 	}
 	
 	protected SequenceHelper createSequenceHelper() {
@@ -672,6 +671,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		}		
 	}
 	
+	protected void initDataProvider() throws Exception {
+		propagateListDataProviderWithOrderInfo(getOrderInfo());
+		propagateListDataProviderWithFilter(getFilterInfo());		
+		this.dataProvider.init();
+	}
+	
 	/**
 	 * Destoys the list and contained data provider and filter form.
 	 * @throws Exception 
@@ -692,14 +697,16 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 
 	protected void handleProcess() throws Exception {
-		refreshCurrentItemRange();
+		if (this.dataProvider != null) {
+			refreshCurrentItemRange();
 
-		//Making the requestId to row mapping
-		requestIdToRow.clear();
-		for (ListIterator i = itemRange.listIterator(); i.hasNext();) {
-			Object row = i.next();                  
-			requestIdToRow.put(Integer.toString(i.previousIndex()), row);
-		}    
+			//Making the requestId to row mapping
+			requestIdToRow.clear();
+			for (ListIterator i = itemRange.listIterator(); i.hasNext();) {
+				Object row = i.next();                  
+				requestIdToRow.put(Integer.toString(i.previousIndex()), row);
+			}
+		}
 	}  
 
 	//*******************************************************************
@@ -986,6 +993,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		 */
 		public FormWidget.ViewModel getFilterForm() {
 			return filterForm;
+		}
+	}
+	
+	protected void assrtInitialized() throws IllegalStateException {
+		if (!isInitialized()) {
+			throw new IllegalStateException("ListWidget is not initialized");
 		}
 	}
 }

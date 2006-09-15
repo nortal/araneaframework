@@ -15,6 +15,7 @@
 **/
 package org.araneaframework.uilib.list;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
@@ -30,7 +31,7 @@ import org.araneaframework.uilib.list.util.ComparatorFactory;
  * 
  * @see ListWidget
  */
-public class TypeHelper {
+public class TypeHelper implements Serializable {
 	
 	// Configuration
 	private Locale locale;

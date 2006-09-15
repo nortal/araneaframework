@@ -15,6 +15,7 @@
  **/
 package org.araneaframework.uilib.list.structure.filter;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
@@ -36,7 +37,7 @@ import org.araneaframework.uilib.list.util.FilterFormUtil;
  * 
  * @see ListWidget
  */
-public abstract class BaseFilterHelper implements FilterContext {
+public abstract class BaseFilterHelper implements FilterContext, Serializable {
 
 	public static final String LOW_SUFFIX = "_start"; 
 	public static final String HIGH_SUFFIX = "_end"; 
@@ -111,10 +112,10 @@ public abstract class BaseFilterHelper implements FilterContext {
 		if (result == null) {
 			if (fieldId.endsWith(LOW_SUFFIX)) {				
 				result = FilterFormUtil.getLabelForLowField(getL10nCtx(),
-						StringUtils.substringBeforeLast(fieldId, LOW_SUFFIX));
+						getFieldIdFromLowValueId(fieldId));
 			} else if (fieldId.endsWith(HIGH_SUFFIX)) {
 				result = FilterFormUtil.getLabelForHighField(getL10nCtx(),
-						StringUtils.substringBeforeLast(fieldId, HIGH_SUFFIX));
+						getFieldIdFromHighValueId(fieldId));
 			}
 		}
 		return result;
@@ -125,7 +126,15 @@ public abstract class BaseFilterHelper implements FilterContext {
 		return this;
 	}
 	public Class getFieldType(String fieldId) {
-		return getTypeHelper().getFieldType(fieldId);
+		Class result = getTypeHelper().getFieldType(fieldId);
+		if (result == null) {
+			if (fieldId.endsWith(LOW_SUFFIX)) {				
+				result = getFieldType(getFieldIdFromLowValueId(fieldId));
+			} else if (fieldId.endsWith(HIGH_SUFFIX)) {
+				result = getFieldType(getFieldIdFromHighValueId(fieldId));
+			}
+		}
+		return result;
 	}
 
 	public BaseFilterHelper addCustomComparator(String fieldId, Comparator comp) {
@@ -146,5 +155,12 @@ public abstract class BaseFilterHelper implements FilterContext {
 	}
 	public String getHighValueId(String fieldId) {
 		return fieldId + HIGH_SUFFIX;
+	}
+	
+	public String getFieldIdFromLowValueId(String lowValueId) {
+		return StringUtils.substringBeforeLast(lowValueId, LOW_SUFFIX);
+	}
+	public String getFieldIdFromHighValueId(String highValueId) {
+		return StringUtils.substringBeforeLast(highValueId, HIGH_SUFFIX);
 	}
 }

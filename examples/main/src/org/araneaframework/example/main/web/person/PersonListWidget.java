@@ -59,27 +59,25 @@ public class PersonListWidget extends TemplateBaseWidget {
 	
 	protected void init() throws Exception {
 		super.init();
-		setViewSelector("person/personList");
-		
-		this.list = initList();
-		addWidget("personList", this.list);
+		setViewSelector("person/personList");		
+		initList();
 	}
 	
-	protected ListWidget initList() throws Exception {
-		BeanListWidget result = new BeanListWidget(PersonMO.class);
-		result.setDataProvider(new TemplatePersonListDataProvider());
-		result.addField("id", "#Id");
-		result.setOrderableByDefault(true);
-		result.addField("name", "#First name").like();
-		result.addField("surname", "#Last name").like();
-		result.addField("phone", "#Phone no").like();
-		result.addField("birthdate", "#Birthdate").range();
-		result.addField("salary", "#Salary").range();
+	protected void initList() throws Exception {
+		this.list = new BeanListWidget(PersonMO.class);
+		addWidget("personList", this.list);
+		list.setDataProvider(new TemplatePersonListDataProvider());
+		list.addField("id", "#Id");
+		list.setOrderableByDefault(true);
+		list.addField("name", "#First name").like();
+		list.addField("surname", "#Last name").like();
+		list.addField("phone", "#Phone no").like();
+		list.addField("birthdate", "#Birthdate").range();
+		list.addField("salary", "#Salary").range();
 		
 		// The dummy column without label (in list rows, some listRowLinkButton's will be written there).
 		// Needed to write out componentListHeader with correct number of columns. 
-		result.addField("dummy", null, false);
-		return result;
+		list.addField("dummy", null, false);
 	}
 	
 	protected void refreshList() throws Exception {  	
