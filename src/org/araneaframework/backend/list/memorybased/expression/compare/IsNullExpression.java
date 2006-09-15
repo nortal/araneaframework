@@ -36,7 +36,7 @@ public class IsNullExpression implements CompositeExpression {
 
 	public Object evaluate(VariableResolver resolver)
 			throws ExpressionEvaluationException {
-		return Boolean.valueOf(this.expr.evaluate(resolver) == null);
+		return (this.expr.evaluate(resolver) == null) ? Boolean.TRUE : Boolean.FALSE;
 	}
 
 	public Expression[] getChildren() {

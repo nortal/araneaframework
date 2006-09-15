@@ -58,7 +58,7 @@ public abstract class ComparableExpression implements CompositeExpression,
 			throws ExpressionEvaluationException {
 		Object value1 = this.expr1.evaluate(resolver);
 		Object value2 = this.expr2.evaluate(resolver);
-		return Boolean.valueOf(doEvaluate(value1, value2));
+		return doEvaluate(value1, value2) ? Boolean.TRUE : Boolean.FALSE;
 	}
 
 	protected abstract boolean doEvaluate(Object value1, Object value2);

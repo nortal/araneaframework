@@ -46,7 +46,7 @@ import org.araneaframework.http.util.ServletUtil;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardServletInputData implements HttpInputData {
-  private HttpServletRequest req;
+  private transient HttpServletRequest req;
   
   private StringBuffer scopeBuf = new StringBuffer();
   private Map extensions = new HashMap();

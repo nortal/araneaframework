@@ -38,6 +38,6 @@ public class NotExpression implements CompositeExpression {
 	public Object evaluate(VariableResolver resolver)
 			throws ExpressionEvaluationException {
 		Boolean childValue = (Boolean) this.expr.evaluate(resolver);
-		return Boolean.valueOf(!childValue.booleanValue());
+		return (!childValue.booleanValue()) ? Boolean.TRUE : Boolean.FALSE;
 	}
 }

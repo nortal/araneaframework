@@ -384,7 +384,7 @@ public class SequenceHelper implements Serializable {
       this.currentPage = new Long(SequenceHelper.this.currentPage);
       this.totalItemCount = new Long(SequenceHelper.this.totalItemCount);
       
-      this.allItemsShown = Boolean.valueOf(SequenceHelper.this.allItemsShown);
+      this.allItemsShown = SequenceHelper.this.allItemsShown ? Boolean.TRUE : Boolean.FALSE;
       
       this.pageFirstItem = new Long(SequenceHelper.this.getCurrentPageFirstItemIndex() + 1);
       this.pageLastItem = new Long(SequenceHelper.this.getCurrentPageLastItemIndex() + 1);
