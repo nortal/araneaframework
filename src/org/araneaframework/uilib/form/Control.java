@@ -19,6 +19,7 @@
  */
 package org.araneaframework.uilib.form;
 
+import java.io.Serializable;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
 
@@ -80,7 +81,7 @@ public interface Control extends Widget, Viewable, FormElementAware {
   /**
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
-  public interface ViewModel {
+  public interface ViewModel extends Serializable {
 
     /**
      * Returns control type.

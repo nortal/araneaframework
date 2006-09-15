@@ -19,7 +19,7 @@ package org.araneaframework.jsp.tag.layout.support;
 import org.apache.commons.collections.ResettableIterator;
 
 /**
- * Dummy <i>resettable</i> iterator.
+ * Dummy <i>resettable</i> iterator that walks infinite structure consisting only of <code>null</code> elements.
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class NullIterator implements ResettableIterator {
@@ -32,7 +32,7 @@ public class NullIterator implements ResettableIterator {
 	 * @return <code>false</code>
 	 */
 	public boolean hasNext() {
-		return false;
+		return true;
 	}
 
 	/** 

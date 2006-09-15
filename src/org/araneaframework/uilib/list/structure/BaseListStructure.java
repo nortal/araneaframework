@@ -180,7 +180,7 @@ public class BaseListStructure implements Serializable {
 
 				this.columnList.add(currentColumn);
 				this.columns.put(currentColumn.getId(), currentColumn);
-				this.columnOrders.put(currentColumn.getId(), new Boolean(
+				this.columnOrders.put(currentColumn.getId(), Boolean.valueOf(
 						isOrdered));
 			}
 		}

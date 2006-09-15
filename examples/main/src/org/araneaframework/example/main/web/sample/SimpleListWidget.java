@@ -48,7 +48,7 @@ public class SimpleListWidget extends TemplateBaseWidget {
     addWidget("simpleList", simpleList);
   }  
   
-  private class SimpleListDataProvider extends MemoryBasedListDataProvider {
+  private static class SimpleListDataProvider extends MemoryBasedListDataProvider {
     protected List data = new ArrayList();
     
     public SimpleListDataProvider() {

@@ -39,7 +39,7 @@ public class PopupMessageFactory implements MessageFactory, Serializable {
 		return new MainExampleMessage(widget);
 	}
 	
-	public class MainExampleMessage implements Message {
+	public static class MainExampleMessage implements Message {
 		Widget flow;
 		
 		public MainExampleMessage(Widget flow) {

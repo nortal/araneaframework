@@ -2015,7 +2015,7 @@ el.click();]]></programlisting>
         <emphasis>Also has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
       </sect3>
       
-       <sect2>
+     <sect2>
       <title><![CDATA[<ui:automaticFormElement>]]></title>
       <para>
           Sometimes the type of <literal>FormElement</literal> is not known for sure when writing JSP (it could be <literal>textInput</literal>,

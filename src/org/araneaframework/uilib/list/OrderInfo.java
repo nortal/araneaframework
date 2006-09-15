@@ -71,7 +71,7 @@ public class OrderInfo implements Serializable {
 	 * 
 	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 	 */
-	public class ViewModel {
+	public class ViewModel implements Serializable {
 		private List fields = new ArrayList();
 
 		/**

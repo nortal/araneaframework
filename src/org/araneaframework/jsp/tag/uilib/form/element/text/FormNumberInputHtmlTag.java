@@ -37,7 +37,6 @@ public class FormNumberInputHtmlTag extends BaseFormTextInputHtmlTag {
 
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("NumberControl");  
-    NumberControl.ViewModel viewModel = ((NumberControl.ViewModel)controlViewModel);
     writeTextInput(out, "text");
 
     super.doEndTag(out);

@@ -255,7 +255,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   /**
    * Message that registers opener as creator of the popup thread.
    */
-  public class OpenerRegistrationMessage extends BroadcastMessage {
+  public static class OpenerRegistrationMessage extends BroadcastMessage {
     Widget opener;
 
     public OpenerRegistrationMessage(Widget opener) {

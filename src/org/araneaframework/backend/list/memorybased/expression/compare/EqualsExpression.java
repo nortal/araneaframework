@@ -41,7 +41,7 @@ public class EqualsExpression implements CompositeExpression {
 			throws ExpressionEvaluationException {
 		Object value1 = this.expr1.evaluate(resolver);
 		Object value2 = this.expr2.evaluate(resolver);
-		return new Boolean(value1 == null ? value2 == null : value1.equals(value2));
+		return Boolean.valueOf(value1 == null ? value2 == null : value1.equals(value2));
 	}
 
 	public Expression[] getChildren() {

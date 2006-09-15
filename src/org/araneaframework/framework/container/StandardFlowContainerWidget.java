@@ -387,7 +387,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
     
     public String toString() {
-      return widget.getClass().getName().toString();
+      return widget.getClass().getName();
     }
   }
 

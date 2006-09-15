@@ -45,7 +45,7 @@ public class DefaultResultSetColumnReader implements ResultSetColumnReader {
       return new Integer(resultSet.getInt(columnName));
     
     if (Boolean.class.isAssignableFrom(javaType))
-      return new Boolean(resultSet.getBoolean(columnName));
+      return Boolean.valueOf(resultSet.getBoolean(columnName));
     
     if (BigDecimal.class.isAssignableFrom(javaType))
       return resultSet.getBigDecimal(columnName);

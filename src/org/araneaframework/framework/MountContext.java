@@ -86,7 +86,7 @@ public interface MountContext extends Serializable {
    */
   public Message getMountedMessage(InputData input);  
 
-  public interface MessageFactory {
+  public interface MessageFactory extends Serializable {
     /**
      * Creates a {@link Message} used to update the current component hierarchy in response to the user accessing this specific URL.
      * A message can for example select a menu item, start a flow or authenticate the user. After the message is applied the framework 

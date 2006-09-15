@@ -55,7 +55,7 @@ public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuild
 		return this.mapper != null ? (String) this.mapper.resolve(variable) : variable.getName();
 	}
 	
-	class MultiComparatorTranslator extends CompositeCompExprToSqlExprTranslator {
+	static class MultiComparatorTranslator extends CompositeCompExprToSqlExprTranslator {
 		protected SqlExpression translateParent(ComparatorExpression expr, SqlExpression[] sqlChildren) {
 			return new SqlCollectionExpression().setChildren(sqlChildren);
 		}

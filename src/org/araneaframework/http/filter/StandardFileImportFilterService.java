@@ -185,7 +185,8 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 		}
 	}
   
-  private class AraneaFileNotFoundException extends AraneaRuntimeException {
+  // XXX: should make public exception of that type, probably
+  private static class AraneaFileNotFoundException extends AraneaRuntimeException {
     public AraneaFileNotFoundException() {
       super();
     }

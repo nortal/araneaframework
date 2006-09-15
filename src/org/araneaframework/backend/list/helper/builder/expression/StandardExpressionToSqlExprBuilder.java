@@ -111,7 +111,7 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 		}
 	}	
 	
-	class AlwaysTrueTranslator implements ExprToSqlExprTranslator {
+	static class AlwaysTrueTranslator implements ExprToSqlExprTranslator {
 		public SqlExpression translate(Expression expr, ExpressionToSqlExprBuilder builder) {
 			return new SqlAlwaysTrueExpression();
 		}
@@ -119,7 +119,7 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 	
 	// comparing	
 
-	class EqualsTranslator implements ExprToSqlExprTranslator  {
+	static class EqualsTranslator implements ExprToSqlExprTranslator  {
 		// TODO check values to be null deeply
 		public SqlExpression translate(Expression expr, ExpressionToSqlExprBuilder builder) {
 			Expression[] children = ((CompositeExpression) expr).getChildren();
@@ -138,25 +138,25 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 		}
 	}	
 	
-	class IsNullTranslator extends CompositeExprToSqlExprTranslator {
+	static class IsNullTranslator extends CompositeExprToSqlExprTranslator {
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 			return new SqlIsNullExpression(sqlChildren[0]);
 		}
 	}
 	
-	class ComparedEqualsTranslator extends ComparingExprToSqlExprTranslator {
+	static class ComparedEqualsTranslator extends ComparingExprToSqlExprTranslator {
 		protected SqlExpression translateComparable(Expression expr, SqlExpression sql1, SqlExpression sql2) {
 			return new SqlEqualsExpression(sql1, sql2);
 		}
 	}
 	
-	class GreaterThanTranslator extends ComparingExprToSqlExprTranslator {
+	static class GreaterThanTranslator extends ComparingExprToSqlExprTranslator {
 		protected SqlExpression translateComparable(Expression expr, SqlExpression sql1, SqlExpression sql2) {
 			return new SqlGreaterThanExpression(sql1, sql2);
 		}
 	}
 	
-	class LowerThanTranslator extends ComparingExprToSqlExprTranslator {
+	static class LowerThanTranslator extends ComparingExprToSqlExprTranslator {
 		protected SqlExpression translateComparable(Expression expr, SqlExpression sql1, SqlExpression sql2) {
 			return new SqlLowerThanExpression(sql1, sql2);
 		}
@@ -164,21 +164,21 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 	
 	// logical
 	
-	class AndTranslator extends CompositeExprToSqlExprTranslator {
+	static class AndTranslator extends CompositeExprToSqlExprTranslator {
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 			SqlExpression temp = new SqlAndExpression().setChildren(sqlChildren);
 			return sqlChildren.length > 1 ? new SqlBracketsExpression(temp) : temp;
 		}
 	}
 	
-	class OrTranslator extends CompositeExprToSqlExprTranslator {
+	static class OrTranslator extends CompositeExprToSqlExprTranslator {
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 			SqlExpression temp = new SqlOrExpression().setChildren(sqlChildren);
 			return sqlChildren.length > 1 ? new SqlBracketsExpression(temp) : temp;
 		}
 	}
 	
-	class NotTranslator extends CompositeExprToSqlExprTranslator {
+	static class NotTranslator extends CompositeExprToSqlExprTranslator {
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 			return new SqlNotExpression(sqlChildren[0]);
 		}
@@ -202,7 +202,7 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 		}
 	}
 	
-	class ConcatenationTranslator extends CompositeExprToSqlExprTranslator {
+	static class ConcatenationTranslator extends CompositeExprToSqlExprTranslator {
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 			return new SqlConcatenationExpression().setChildren(sqlChildren);
 		}
@@ -210,7 +210,7 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 	
 	// procedure
 	
-	class ProcedureTranslator extends CompositeExprToSqlExprTranslator {
+	static class ProcedureTranslator extends CompositeExprToSqlExprTranslator {
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 			ProcedureExpression expr0 = (ProcedureExpression) expr;
 			return new SqlProcedureExpression(expr0.getName()).setChildren(sqlChildren);

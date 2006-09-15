@@ -133,7 +133,7 @@ public class FormRow implements Serializable {
 		public ViewModel() {
 			this.rowForm = FormRow.this.rowForm;
 			this.rowFormId = FormRow.this.rowFormId; 
-			this.open = new Boolean(FormRow.this.open);
+			this.open = Boolean.valueOf(FormRow.this.open);
 		}
 
 		/**

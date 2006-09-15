@@ -105,7 +105,7 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
     this.childWidget = new RelocatableWidgetDecorator(childWidget);
   }
 
-  private class Digest implements Serializable {
+  private static class Digest implements Serializable {
     private byte[] digest;
 
     public Digest(byte[] digest) {
