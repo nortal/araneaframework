@@ -95,20 +95,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected Map requestIdToRow = new HashMap();
 
 	//*********************************************************************
-	//* CONSTRUCTORS
-	//*********************************************************************
-
-	public ListWidget(ListDataProvider listDataProvider, ListStructure listStructure, FormWidget filterForm) throws Exception {  	
-		this.dataProvider = listDataProvider;
-		this.listStructure = listStructure;
-		this.form = filterForm;
-	}
-
-	public ListWidget() {
-		this.form = new FormWidget();
-	}
-
-	//*********************************************************************
 	//* PUBLIC METHODS
 	//*********************************************************************
 
@@ -639,30 +625,10 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		addEventListener("jumpToPage", new JumpToPageEventHandler());
 		addEventListener("showAll", new ShowAllEventHandler());
 		addEventListener("showSlice", new ShowSliceEventHandler());
-
 		addEventListener("order", new OrderEventHandler());
-
-		if (this.form != null) {
-			FormElement filterButton = this.form.addElement(FILTER_BUTTON_ID, UiLibMessages.LIST_FILTER_BUTTON_LABEL, new ButtonControl(), null, false);
-			((ButtonControl) (filterButton.getControl())).addOnClickEventListener(new FilterEventHandler());
-
-			FormElement clearButton = this.form.addElement(FILTER_RESET_BUTTON_ID, UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL, new ButtonControl(), null, false);
-			((ButtonControl) (clearButton.getControl())).addOnClickEventListener(new FilterClearEventHandler());
-
-			this.form.markBaseState();
-		}
-		else {
-			this.form = new FormWidget();
-		}                
-
-		//Configuration
-
-		Long defaultListSize = (Long) getConfiguration().getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);
-		if (defaultListSize != null) {
-			this.sequenceHelper.setItemsOnPage(defaultListSize.longValue());
-		}
-
-		addWidget(FILTER_FORM_NAME, this.form);
+             
+		initFilterForm();
+		initSequenceHelper();
 
 		propagateListDataProviderWithOrderInfo(getOrderInfo());
 		propagateListDataProviderWithFilter(getFilterInfo());
@@ -681,6 +647,29 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 	protected FilterHelper createFilterHelper() {
 		return new FilterHelper(this);
+	}
+	
+	protected void initFilterForm() throws Exception {
+		if (this.form == null) {
+			this.form = new FormWidget();
+		}
+			
+		FormElement filterButton = this.form.addElement(FILTER_BUTTON_ID, UiLibMessages.LIST_FILTER_BUTTON_LABEL, new ButtonControl(), null, false);
+		((ButtonControl) (filterButton.getControl())).addOnClickEventListener(new FilterEventHandler());
+
+		FormElement clearButton = this.form.addElement(FILTER_RESET_BUTTON_ID, UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL, new ButtonControl(), null, false);
+		((ButtonControl) (clearButton.getControl())).addOnClickEventListener(new FilterClearEventHandler());
+
+		this.form.markBaseState();
+		
+		addWidget(FILTER_FORM_NAME, this.form);		
+	}
+	
+	protected void initSequenceHelper() {
+		Long defaultListSize = (Long) getConfiguration().getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);
+		if (defaultListSize != null) {
+			this.sequenceHelper.setItemsOnPage(defaultListSize.longValue());
+		}		
 	}
 	
 	/**
