@@ -331,7 +331,8 @@ public class ExpressionUtil {
 		for (Iterator i = children.iterator(); i.hasNext();) {
 			Expression expr = (Expression) i.next();
 			if (expr != null) {
-				multiExpr.add(expr);				
+				multiExpr.add(expr);
+				count++;
 			} else if (!allowNulls) {
 				throw new IllegalArgumentException("Expression can not be null");				
 			}
@@ -352,6 +353,7 @@ public class ExpressionUtil {
 			Expression expr = (Expression) children.next();
 			if (expr != null) {
 				multiExpr.add(expr);
+				count++;
 			} else if (!allowNulls) {
 				throw new IllegalArgumentException("Expression can not be null");				
 			}
