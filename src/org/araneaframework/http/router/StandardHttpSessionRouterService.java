@@ -25,7 +25,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.core.RelocatableServiceDecorator;
+import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.util.ServletUtil;
@@ -108,7 +108,7 @@ public class StandardHttpSessionRouterService extends BaseService {
     
     if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
       log.debug("Created HTTP session '"+sess.getId()+"'");
-      result = new RelocatableServiceDecorator(serviceFactory.buildService(getEnvironment()));        
+      result = new RelocatableDecorator(serviceFactory.buildService(getEnvironment()));        
       
       result._getComponent().init(newEnv);
     }

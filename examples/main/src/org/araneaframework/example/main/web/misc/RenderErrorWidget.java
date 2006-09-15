@@ -26,6 +26,8 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class RenderErrorWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
+
   protected void render(OutputData output) throws Exception {
     ServletUtil.include("/WEB-INF/jsp/error/InitErrorWidget/main.jsp", getEnvironment(), output);
     

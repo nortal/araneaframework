@@ -58,6 +58,8 @@ import org.araneaframework.uilib.support.FlowCreator;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class MenuWidget extends TemplateMenuWidget  {
+  private static final long serialVersionUID = 1L;
+
   public MenuWidget(Widget topWidget) throws Exception {
 	super(topWidget);
   }
@@ -86,7 +88,9 @@ public class MenuWidget extends TemplateMenuWidget  {
 			result.addMenuItem("Management", new MenuItem("Persons"));
 			// example use of simple FlowCreator
 			result.addMenuItem("Management.Persons", new MenuItem("View_Add", new FlowCreator() {
-				public Widget createFlow() {
+				        private static final long serialVersionUID = 1L;
+
+        public Widget createFlow() {
 					return new PersonListWidget(true);
 				}
 			}));

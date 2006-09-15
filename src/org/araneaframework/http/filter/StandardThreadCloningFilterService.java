@@ -30,7 +30,7 @@ import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.Relocatable.RelocatableService;
-import org.araneaframework.core.RelocatableServiceDecorator;
+import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterService;
@@ -63,7 +63,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
 
   public void setChildService(Service childService) {
-    super.setChildService(new RelocatableServiceDecorator(childService));
+    super.setChildService(new RelocatableDecorator(childService));
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {

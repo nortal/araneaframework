@@ -31,7 +31,8 @@ import org.araneaframework.uilib.form.data.StringData;
  */
 public class DemoDisplayForm extends TemplateBaseWidget {
 
-	private FormWidget displayForm;
+	  private static final long serialVersionUID = 1L;
+  private FormWidget displayForm;
 
 	/**
 	 * Builds the form with one checkbox, one textbox and a button.

@@ -26,7 +26,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
-import org.araneaframework.core.RelocatableWidgetDecorator;
+import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.framework.FilterWidget;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.util.ClientStateUtil;
@@ -102,7 +102,7 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
    * Sets the child to childWidget.
    */
   public void setChildWidget(Widget childWidget) {
-    this.childWidget = new RelocatableWidgetDecorator(childWidget);
+    this.childWidget = new RelocatableDecorator(childWidget);
   }
 
   private class Digest implements Serializable {

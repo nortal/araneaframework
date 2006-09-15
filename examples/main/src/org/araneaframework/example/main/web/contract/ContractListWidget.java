@@ -34,7 +34,9 @@ import org.araneaframework.uilib.list.structure.ListColumn;
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class ContractListWidget extends TemplateBaseWidget {
-	protected static final Logger log = Logger.getLogger(ContractListWidget.class);
+	  private static final long serialVersionUID = 1L;
+
+  protected static final Logger log = Logger.getLogger(ContractListWidget.class);
 	
 	private ListWidget list;
 	
@@ -69,7 +71,8 @@ public class ContractListWidget extends TemplateBaseWidget {
 		getFlowCtx().start(new ContractAddEditWidget(), 
 				null, 
 				new FlowContext.Handler() {
-					public void onFinish(Object returnValue) throws Exception {
+					          private static final long serialVersionUID = 1L;
+          public void onFinish(Object returnValue) throws Exception {
 						log.debug("Contract added with Id of " + returnValue + " sucessfully");    
 						refreshList();
 					}
@@ -96,7 +99,8 @@ public class ContractListWidget extends TemplateBaseWidget {
 	}
 	
 	private class TemplateContractListDataProvider extends MemoryBasedListDataProvider {
-		protected TemplateContractListDataProvider() {
+		    private static final long serialVersionUID = 1L;
+    protected TemplateContractListDataProvider() {
 			super(ContractMO.class);
 		}
 		public List loadData() throws Exception {		

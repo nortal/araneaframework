@@ -30,7 +30,9 @@ import org.araneaframework.example.main.web.person.PersonViewWidget;
  */
 public class ContractViewWidget extends TemplateBaseWidget {
 
-	private static final Logger log = Logger
+	  private static final long serialVersionUID = 1L;
+
+  private static final Logger log = Logger
 			.getLogger(ContractViewWidget.class);
 
 	private Long id = null;

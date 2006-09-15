@@ -29,6 +29,8 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
  * This is an example of component with a single list.
  */
 public class SimpleListWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
+
   private static final Logger log = Logger.getLogger(SimpleFormWidget.class);
 
   protected ListWidget simpleList;
@@ -49,6 +51,7 @@ public class SimpleListWidget extends TemplateBaseWidget {
   }  
   
   private class SimpleListDataProvider extends MemoryBasedListDataProvider {
+    private static final long serialVersionUID = 1L;
     protected List data = new ArrayList();
     
     public SimpleListDataProvider() {

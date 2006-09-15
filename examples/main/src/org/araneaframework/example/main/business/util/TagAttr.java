@@ -23,7 +23,8 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class TagAttr implements Serializable {
-	protected String name;
+	  private static final long serialVersionUID = 1L;
+  protected String name;
 	protected Object value;
 
 	public TagAttr(String name, Object value) {

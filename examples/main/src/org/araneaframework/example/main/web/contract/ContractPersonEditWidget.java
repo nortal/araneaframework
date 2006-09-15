@@ -28,7 +28,8 @@ import org.araneaframework.framework.FlowContext;
  */
 public class ContractPersonEditWidget extends TemplateBaseWidget {
 	
-	private static final Logger log = Logger.getLogger(ContractPersonEditWidget.class);
+	  private static final long serialVersionUID = 1L;
+  private static final Logger log = Logger.getLogger(ContractPersonEditWidget.class);
 	private PersonMO person = null;
 
   public PersonMO getPerson() {
@@ -52,7 +53,8 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
 	    PersonListWidget newFlow = new PersonListWidget(false);
 	    newFlow.setSelectOnly(true);
 	    getFlowCtx().start(newFlow, null, new FlowContext.Handler() {
-				public void onFinish(Object returnValue) throws Exception {
+				        private static final long serialVersionUID = 1L;
+        public void onFinish(Object returnValue) throws Exception {
 					Long id = (Long) returnValue;
 					person = (PersonMO) getGeneralDAO().getById(PersonMO.class, id);
 					log.debug("Person with id of " + id + " set to this contract");

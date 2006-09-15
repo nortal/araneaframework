@@ -27,7 +27,8 @@ import java.util.Date;
  */
 public class PersonMO implements GeneralMO {
 	
-	private Long id;
+	  private static final long serialVersionUID = 1L;
+  private Long id;
 	private String name;
 	private String surname;
 	private String phone;

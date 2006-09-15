@@ -32,6 +32,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * @since {since}
  */
 public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
   private static final Logger log = Logger.getLogger(FormComplexConstraintDemoWidget.class);
   private FormWidget searchForm;
   

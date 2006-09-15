@@ -36,7 +36,8 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
  * This is an example of component with a single list.
  */
 public class DemoCheckboxList extends TemplateBaseWidget {
-	private EditableBeanListWidget checkList;
+	  private static final long serialVersionUID = 1L;
+  private EditableBeanListWidget checkList;
 	private Map data = new HashMap();
 
 	{
@@ -85,7 +86,9 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 	}
 
 	public class DemoCheckboxListRowHandler extends ValidOnlyIndividualFormRowHandler {
-		public Object getRowKey(Object row) {
+		    private static final long serialVersionUID = 1L;
+
+    public Object getRowKey(Object row) {
 			return ((DataDTO) row).getId();
 		}
 
@@ -101,7 +104,9 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 	}
 
 	public class DemoCheckboxListDataProvider extends MemoryBasedListDataProvider {
-		public DemoCheckboxListDataProvider() {
+		    private static final long serialVersionUID = 1L;
+
+    public DemoCheckboxListDataProvider() {
 			super(DataDTO.class);
 		}
 

@@ -98,7 +98,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	protected abstract FormRowHandler buildFormRowHandler() throws Exception;
 	
 	public static class Memory extends PersonEditableListWidget {
-		private MemoryBasedListDataProvider dataProvider = new DataProvider();
+		    private static final long serialVersionUID = 1L;
+    private MemoryBasedListDataProvider dataProvider = new DataProvider();
 
 		protected ListDataProvider buildListDataProvider() throws Exception {
 			return dataProvider;
@@ -112,7 +113,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		}
 		
 		private class DataProvider extends MemoryBasedListDataProvider {
-			protected DataProvider() {
+			      private static final long serialVersionUID = 1L;
+      protected DataProvider() {
 				super(PersonMO.class);
 			}
 			public List loadData() throws Exception {		
@@ -122,7 +124,9 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	}
 	
 	public static class Backend extends PersonEditableListWidget {
-		protected ListDataProvider buildListDataProvider() throws Exception {
+		    private static final long serialVersionUID = 1L;
+
+    protected ListDataProvider buildListDataProvider() throws Exception {
 			return new DataProvider();
 		}
 
@@ -131,7 +135,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		}
 		
 		private class DataProvider extends BackendListDataProvider {
-			protected DataProvider() {
+			      private static final long serialVersionUID = 1L;
+      protected DataProvider() {
 				super(false);
 			}
 			protected ListItemsData getItemRange(ListQuery query) throws Exception {
@@ -145,7 +150,9 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	 * saves only these forms (rows) which data passes validation.  
 	 */ 
 	public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-		/* Implementation of the method that must return unique key for each row
+		    private static final long serialVersionUID = 1L;
+
+    /* Implementation of the method that must return unique key for each row
 		 * in editable list. As we hold database objects (PersonMO-s) in this list, 
 		 * it is natural to use synthetic ID field for a key.*/ 
 		public Object getRowKey(Object rowData) {

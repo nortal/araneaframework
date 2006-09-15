@@ -43,7 +43,8 @@ import org.araneaframework.uilib.support.FileInfo;
  * @author Taimo Peelo (taimo@araneaframework.org) 
  */
 public class DemoFileUpload extends TemplateBaseWidget {
-	private FormWidget form;
+	  private static final long serialVersionUID = 1L;
+  private FormWidget form;
 	private ListWidget uploadList;
 
 	private List files = new ArrayList();
@@ -74,7 +75,9 @@ public class DemoFileUpload extends TemplateBaseWidget {
 
 		SelectControl select = new SelectControl();
 		select.addOnChangeEventListener(new OnChangeEventListener() {
-			public void onChange() throws Exception {
+			      private static final long serialVersionUID = 1L;
+
+      public void onChange() throws Exception {
 			}
 		});
 
@@ -107,7 +110,9 @@ public class DemoFileUpload extends TemplateBaseWidget {
 	// INNER CLASSES
 	
 	private class FileListDataProvider extends MemoryBasedListDataProvider {
-		public FileListDataProvider() {
+		    private static final long serialVersionUID = 1L;
+
+    public FileListDataProvider() {
 			super(FileInfo.class);
 		}
 
@@ -117,7 +122,9 @@ public class DemoFileUpload extends TemplateBaseWidget {
 	}
 	
 	private class FileUploadButtonListener implements OnClickEventListener {
-		public void onClick() throws Exception {
+		    private static final long serialVersionUID = 1L;
+
+    public void onClick() throws Exception {
 			form.getElementByFullName("file").convertAndValidate();
 			FileInfo fileInfo = (FileInfo) form.getValueByFullName("file");
 			if (fileInfo != null && !fileInfo.getOriginalFilename().trim().equals("") && fileInfo.getSize() > 0)  {

@@ -12,15 +12,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import javax.servlet.ServletContext;
+import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.Relocatable.RelocatableWidget;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.core.RelocatableWidgetDecorator;
+import org.araneaframework.core.RelocatableDecorator;
+import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 
 public class StandardDevelFilterWidget extends BaseApplicationWidget {
+  private static final Logger log = Logger.getLogger(StandardDevelFilterWidget.class);
+  
   private String childClassName;
-  private RelocatableWidgetDecorator wrappedChild;
+  private RelocatableWidget child;
 
   public void setChildClass(String childClass) {
     this.childClassName = childClass;
@@ -32,9 +37,9 @@ public class StandardDevelFilterWidget extends BaseApplicationWidget {
     ClassLoader cl = newClassLoader();
     Class childClass = cl.loadClass(childClassName);
 
-    wrappedChild = new RelocatableWidgetDecorator((Widget) childClass.newInstance());
-    wrappedChild._getComponent().init(getEnvironment());    
-    _getComposite().attach("c", wrappedChild.getChildWidget());
+    child = new RelocatableDecorator((Widget) childClass.newInstance());
+    child._getComponent().init(getEnvironment());    
+    _getComposite().attach("c", child);
   }
   
   private ClassLoader newClassLoader() throws MalformedURLException {
@@ -48,18 +53,24 @@ public class StandardDevelFilterWidget extends BaseApplicationWidget {
   
   protected void update(InputData input) throws Exception {
     super.update(input);
+    try {
+      child._getRelocatable().overrideEnvironment(null);
+      child = (RelocatableWidget) reload(child);      
+    }
+    catch (ClassNotFoundException e) {
+      log.error("Failed to reload widget classes", e);
+    }
+    finally {
+      child._getRelocatable().overrideEnvironment(getEnvironment());
+    }
     
-    wrappedChild._getRelocatable().overrideEnvironment(null);
-    wrappedChild = (RelocatableWidgetDecorator) reload(wrappedChild);
-    wrappedChild._getRelocatable().overrideEnvironment(getEnvironment());
-    
-    _getComposite().attach("c", wrappedChild.getChildWidget());
+    _getComposite().attach("c", child);
   }
   
   protected void render(OutputData output) throws Exception {
     try {
       output.pushScope("c");
-      wrappedChild.getChildWidget()._getWidget().render(output);
+      child._getWidget().render(output);
     }
     finally {
       output.popScope();

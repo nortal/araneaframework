@@ -35,12 +35,15 @@ import org.araneaframework.uilib.core.PopupFlowWidget.MessageFactory;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupMessageFactory implements MessageFactory, Serializable {
-	public Message buildMessage(Widget widget) {
+	  private static final long serialVersionUID = 1L;
+
+  public Message buildMessage(Widget widget) {
 		return new MainExampleMessage(widget);
 	}
 	
 	public class MainExampleMessage implements Message {
-		Widget flow;
+		    private static final long serialVersionUID = 1L;
+    Widget flow;
 		
 		public MainExampleMessage(Widget flow) {
 			this.flow = flow;

@@ -34,7 +34,8 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class DemoRichTextForm extends TemplateBaseWidget {
-	private FormWidget form;
+	  private static final long serialVersionUID = 1L;
+  private FormWidget form;
 	private StringData areaContents;
 	
 	protected void init() throws Exception {

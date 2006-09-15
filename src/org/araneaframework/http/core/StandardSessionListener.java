@@ -20,7 +20,7 @@ import java.util.HashMap;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import org.apache.log4j.Logger;
-import org.araneaframework.core.RelocatableServiceDecorator;
+import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.router.StandardHttpSessionRouterService;
 
@@ -38,8 +38,8 @@ public class StandardSessionListener implements HttpSessionListener {
 
   public void sessionDestroyed(HttpSessionEvent sessEvent) {
     if (sessEvent.getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY) != null ) {
-      RelocatableServiceDecorator service = 
-        (RelocatableServiceDecorator) sessEvent.getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
+      RelocatableDecorator service = 
+        (RelocatableDecorator) sessEvent.getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
       
       if (service != null)
         try {
