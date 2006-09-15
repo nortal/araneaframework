@@ -17,16 +17,14 @@
 package org.araneaframework.example.main.web.company;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
-import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
 /**
@@ -65,20 +63,20 @@ public class CompanyListWidget extends TemplateBaseWidget {
     // CompanyMO has fields named id, name and address.
     BeanListWidget temp = new BeanListWidget(CompanyMO.class);
     // set the data provider for the list
-    temp.setListDataProvider(new TemplateCompanyListDataProvider());
+    temp.setDataProvider(new TemplateCompanyListDataProvider());
     // add the displayed columns to list.
     // addBeanColumn(String id, String label, boolean isOrdered)
     // note that # before the label means that label is treated as unlocalized and outputted as-is
-    temp.addBeanColumn("id", "#Id", false);
+    temp.addField("id", "#Id", false);
     //addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
-    temp.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
-    temp.addBeanColumn("address", "#Address", true, new SimpleColumnFilter.Like(), new TextControl());
-    temp.addListColumn(new ListColumn("dummy"));
+    temp.addField("name", "#Name", true).like();
+    temp.addField("address", "#Address", true).like();
+    temp.addField("dummy", null);
     return temp;
   }
 
   private void refreshList() throws Exception {    
-    this.list.getListDataProvider().refreshData();
+    this.list.getDataProvider().refreshData();
   }
 
   public void handleEventAdd(String eventParameter) throws Exception {

@@ -17,21 +17,14 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.FloatControl;
-import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.form.data.BigDecimalData;
-import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
-import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
-import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
 /**
@@ -73,31 +66,24 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	protected ListWidget initList() throws Exception {
-		BeanListWidget temp = new BeanListWidget(PersonMO.class);
-		temp.setListDataProvider(new TemplatePersonListDataProvider());
-		temp.addBeanColumn("id", "#Id", false);
-		temp.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
-		
-		RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
-		temp.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
-		temp.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
-		temp.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
-		
-		RangeColumnFilter salaryFilter = new RangeColumnFilter.NonStrict();
-		temp.addBeanColumn("salary", "#Salary", true, salaryFilter, null);
-		temp.addFilterFormElement(salaryFilter.getStartFilterInfoKey(), "#Salary Start", new FloatControl(), new BigDecimalData());
-		temp.addFilterFormElement(salaryFilter.getEndFilterInfoKey(), "#Salary End", new FloatControl(), new BigDecimalData());		
+		BeanListWidget result = new BeanListWidget(PersonMO.class);
+		result.setDataProvider(new TemplatePersonListDataProvider());
+		result.addField("id", "#Id");
+		result.setOrderableByDefault(true);
+		result.addField("name", "#First name").like();
+		result.addField("surname", "#Last name").like();
+		result.addField("phone", "#Phone no").like();
+		result.addField("birthdate", "#Birthdate").range();
+		result.addField("salary", "#Salary").range();
 		
 		// The dummy column without label (in list rows, some listRowLinkButton's will be written there).
 		// Needed to write out componentListHeader with correct number of columns. 
-		temp.addListColumn(new ListColumn("dummy"));
-		return temp;
+		result.addField("dummy", null, false);
+		return result;
 	}
 	
 	protected void refreshList() throws Exception {  	
-		this.list.getListDataProvider().refreshData();
+		this.list.getDataProvider().refreshData();
 	}
 	
 	public void handleEventAdd(String eventParameter) throws Exception {

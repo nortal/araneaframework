@@ -15,10 +15,14 @@
  **/
 package org.araneaframework.uilib.list.util;
 
+import java.text.MessageFormat;
+
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
+import org.araneaframework.uilib.support.UiLibMessages;
 
 /**
  * List filters form utils.
@@ -26,6 +30,8 @@ import org.araneaframework.uilib.list.structure.filter.FilterContext;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class FilterFormUtil {
+	
+	public static final String DO_NOT_LOCALIZE_PREFIX = "#"; 
 	
 	public static FormElement createElement(FilterContext ctx, String id)
 		throws Exception {
@@ -44,5 +50,19 @@ public class FilterFormUtil {
 	public static FormElement createElement(FilterContext ctx, String id,
 			Control control, Data data) throws Exception {
 		return FormUtil.createElement(ctx.getFieldLabel(id), control, data, false);
+	}
+	
+	public static String getLabelForLowField(LocalizationContext loc, String fieldLabelId) {
+		return DO_NOT_LOCALIZE_PREFIX +
+			format(loc.localize(UiLibMessages.LOW_OF), loc.localize(fieldLabelId));
+	}
+	
+	public static String getLabelForHighField(LocalizationContext loc, String fieldLabelId) {
+		return DO_NOT_LOCALIZE_PREFIX +
+			format(loc.localize(UiLibMessages.HIGH_OF), loc.localize(fieldLabelId));
+	}
+	
+	private static String format(String pattern, String arg) {
+		return MessageFormat.format(pattern, new Object[] {arg});
 	}
 }

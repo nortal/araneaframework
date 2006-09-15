@@ -562,7 +562,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/**
 	 * Forces the list data provider to refresh the data.
 	 */
-	public void forceRefresh() throws Exception {
+	public void refresh() throws Exception {
 		this.dataProvider.refreshData();		
 	}
 

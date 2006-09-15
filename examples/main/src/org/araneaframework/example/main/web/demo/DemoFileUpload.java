@@ -18,6 +18,7 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.service.FileDownloaderService;
@@ -32,8 +33,6 @@ import org.araneaframework.uilib.form.data.FileInfoData;
 import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
-import org.araneaframework.uilib.list.structure.ListStructure;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.support.FileInfo;
 
@@ -60,13 +59,13 @@ public class DemoFileUpload extends TemplateBaseWidget {
 	}
 
 	private ListWidget buildList() throws Exception {
-		ListStructure listStructure = new ListStructure();
-		listStructure.addColumn(new ListColumn("originalFilename", "#Original filename"));
-		listStructure.addColumn(new ListColumn("size", "#File size"));
-		listStructure.addColumn(new ListColumn("contentType", "#Content Type"));
-		listStructure.addColumn(new ListColumn("dummy"));
-		
-		return new ListWidget(new FileListDataProvider(), listStructure, null);
+		ListWidget list = new ListWidget();
+		list.setDataProvider(new FileListDataProvider());
+		list.addField("originalFilename", "#Original filename");
+		list.addField("size", "#File size");
+		list.addField("contentType", "#Content Type");
+		list.addField("dummy", null);
+		return list;
 	}
 	
 	private FormWidget buildForm() throws Exception {
@@ -127,7 +126,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
 				files.add(fileInfo);
 				form.setValueByFullName("file", null);
 				// refresh the list data
-				uploadList.getListDataProvider().refreshData();
+				uploadList.getDataProvider().refreshData();
 			}
 		}
 	}

@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
@@ -28,8 +29,6 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.form.data.BigDecimalData;
-import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
@@ -40,9 +39,6 @@ import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
-import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
-import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
 public abstract class PersonEditableListWidget extends TemplateBaseWidget {
@@ -61,30 +57,18 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		/* PersonMO class is already familiar from form examples. */
 		list = new EditableBeanListWidget(PersonMO.class);
-		list.addBeanColumn("id", "#Id", false);
+		list.setOrderableByDefault(true);
+		list.addField("id", "#Id", false);
 		/* Filtering by fields other than ID is enabled. */
-		list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
-		list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
-		list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
-		
-		/* Set up the custom range filter for birthdate column. */
-		RangeColumnFilter birthdayFilter = new RangeColumnFilter.DateNonStrict();
-		list.addBeanColumn("birthdate", "#Birthdate", true, birthdayFilter, null);
-		list.addFilterFormElement(birthdayFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
-		list.addFilterFormElement(birthdayFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
-
-		RangeColumnFilter salaryFilter = new RangeColumnFilter.NonStrict();
-		list.addBeanColumn("salary", "#Salary", true, salaryFilter, null);
-		list.addFilterFormElement(salaryFilter.getStartFilterInfoKey(), "#Salary Start", new FloatControl(), new BigDecimalData());
-		list.addFilterFormElement(salaryFilter.getEndFilterInfoKey(), "#Salary End", new FloatControl(), new BigDecimalData());
-		
-		/* Dummy column which holds no data. 
-		 * Added here because we want <ui:componentListHeader/> tag to draw an extra column, which 
-		 * we will use as edit/delete button holders. */
-		list.addListColumn(new ListColumn("dummy"));
+		list.addField("name", "#First name").like();
+		list.addField("surname", "#Last name").like();
+		list.addField("phone", "#Phone no").like();		
+		list.addField("birthdate", "#Birthdate").range();
+		list.addField("salary", "#Salary").range();
+		list.addField("dummy", null);
 		
 		/* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
-		list.setListDataProvider(buildListDataProvider());
+		list.setDataProvider(buildListDataProvider());
 		/* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
 		list.setFormRowHandler(buildFormRowHandler());
 

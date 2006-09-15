@@ -17,11 +17,8 @@
 package org.araneaframework.uilib.list;
 
 import org.araneaframework.core.Assert;
-import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
 import org.araneaframework.uilib.form.formlist.FormRowHandler;
-import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
-import org.araneaframework.uilib.list.structure.ListStructure;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -35,15 +32,7 @@ public class EditableListWidget extends ListWidget {
 	//*********************************************************************	
 
 	public EditableListWidget(FormRowHandler rowHandler) {
-		super();
-
-    setFormRowHandler(rowHandler);
-	}
-
-	public EditableListWidget(ListDataProvider listDataProvider, ListStructure listStructure, FormWidget filterForm, FormRowHandler rowHandler) throws Exception {
-		super(listDataProvider, listStructure, filterForm);
-
-    setFormRowHandler(rowHandler);
+		setFormRowHandler(rowHandler);
 	}
 
 	//*********************************************************************
@@ -53,7 +42,6 @@ public class EditableListWidget extends ListWidget {
 
 	public void refreshCurrentItemRange() throws Exception {
 		super.refreshCurrentItemRange();		
-
 		formList.setRows(getItemRange());
 	}
 
@@ -76,8 +64,8 @@ public class EditableListWidget extends ListWidget {
 	protected void init() throws Exception {
 		super.init();
 
-    Assert.notNull(formList, "You must provide a form row handler to the editable list!");
-    
+		Assert.notNull(formList, "You must provide a form row handler to the editable list!");
+
 		addWidget("formList", formList);
 	}
 }

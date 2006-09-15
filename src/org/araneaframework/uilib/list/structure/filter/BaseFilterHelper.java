@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 package org.araneaframework.uilib.list.structure.filter;
 
 import java.util.Comparator;
@@ -20,11 +20,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.TypeHelper;
+import org.araneaframework.uilib.list.util.FilterFormUtil;
 
 /**
  * Base implementation of list filter helper.  
@@ -34,22 +37,22 @@ import org.araneaframework.uilib.list.TypeHelper;
  * @see ListWidget
  */
 public abstract class BaseFilterHelper implements FilterContext {
-	
+
 	public static final String LOW_SUFFIX = "_start"; 
 	public static final String HIGH_SUFFIX = "_end"; 
-	
+
 	protected final ListWidget list;
-	
+
 	private boolean strict = false;	
-	
+
 	// Map<String,String> - custom labels for fields
 	private Map labels = new HashMap();
-	
+
 	public BaseFilterHelper(ListWidget list) {
 		Validate.notNull(list);
 		this.list = list;
 	}
-	
+
 	public boolean isIgnoreCase() {
 		return getTypeHelper().isIgnoreCase();
 	}
@@ -67,7 +70,7 @@ public abstract class BaseFilterHelper implements FilterContext {
 		getTypeHelper().setLocale(locale);
 		return this;
 	}
-	
+
 	public boolean isStrict() {
 		return strict;
 	}
@@ -75,9 +78,9 @@ public abstract class BaseFilterHelper implements FilterContext {
 	public void setStrict(boolean stirct) {
 		this.strict = stirct;
 	}
-	
+
 	// General
-	
+
 	protected TypeHelper getTypeHelper() {
 		return this.list.getTypeHelper();
 	}
@@ -85,24 +88,38 @@ public abstract class BaseFilterHelper implements FilterContext {
 	public ConfigurationContext getConfiguration() {
 		return this.list.getConfiguration();
 	}
-	
+
+	protected LocalizationContext getL10nCtx() {
+		return (LocalizationContext) this.list.getEnvironment().requireEntry(LocalizationContext.class);
+	}
+
 	public FormWidget getForm() {
 		return list.getForm();
 	}
-		
+
 	// List fields
-	
+
 	public BaseFilterHelper addCustomLabel(String fieldId, String labelId) {
 		this.labels.put(fieldId, labelId);
 		return this;
 	}	
 	public String getFieldLabel(String fieldId) {
-		if (this.labels.containsKey(fieldId)) {
-			return (String) this.labels.get(fieldId);
+		String result = (String) this.labels.get(fieldId);
+		if (result == null) {
+			result = list.getFieldLabel(fieldId);
 		}
-		return list.getFieldLabel(fieldId);
+		if (result == null) {
+			if (fieldId.endsWith(LOW_SUFFIX)) {				
+				result = FilterFormUtil.getLabelForLowField(getL10nCtx(),
+						StringUtils.substringBeforeLast(fieldId, LOW_SUFFIX));
+			} else if (fieldId.endsWith(HIGH_SUFFIX)) {
+				result = FilterFormUtil.getLabelForHighField(getL10nCtx(),
+						StringUtils.substringBeforeLast(fieldId, HIGH_SUFFIX));
+			}
+		}
+		return result;
 	}
-	
+
 	public BaseFilterHelper addFieldType(String fieldId, Class type) {
 		getTypeHelper().addFieldType(fieldId, type);
 		return this;
@@ -110,7 +127,7 @@ public abstract class BaseFilterHelper implements FilterContext {
 	public Class getFieldType(String fieldId) {
 		return getTypeHelper().getFieldType(fieldId);
 	}
-	
+
 	public BaseFilterHelper addCustomComparator(String fieldId, Comparator comp) {
 		getTypeHelper().addCustomComparator(fieldId, comp);
 		return this;
@@ -118,9 +135,9 @@ public abstract class BaseFilterHelper implements FilterContext {
 	public Comparator getFieldComparator(String fieldId) {
 		return getTypeHelper().getFieldComparator(fieldId);
 	}
-	
+
 	// Value ids
-	
+
 	public String getValueId(String fieldId) {
 		return fieldId;
 	}
