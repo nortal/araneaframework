@@ -20,7 +20,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.apache.commons.lang.Validate;
-import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.TypeHelper;
 import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
@@ -33,14 +32,17 @@ public class ListStructure extends BaseListStructure {
 
 	private static final long serialVersionUID = 1L;
 	
-	private final ListWidget list;
 	private final TypeHelper typeHelper;
 	
 	private boolean orderableByDefault = false;
 
-	public ListStructure(ListWidget list) {
-		this.list = list;
-		this.typeHelper = list.getTypeHelper();
+	public ListStructure(TypeHelper typeHelper) {
+		Validate.notNull(typeHelper);
+		this.typeHelper = typeHelper;
+	}
+	
+	protected TypeHelper getTypeHelper() {
+		return this.typeHelper;
 	}
 	
 	/*
@@ -48,11 +50,11 @@ public class ListStructure extends BaseListStructure {
 	 */
 
 	public void addField(String id, String label) {
-		addField(id, label, list.getFieldType(id), isOrderableByDefault());
+		addField(id, label, getTypeHelper().getFieldType(id), isOrderableByDefault());
 	}
 
 	public void addField(String id, String label, boolean orderable) {
-		addField(id, label, list.getFieldType(id), orderable);
+		addField(id, label, getTypeHelper().getFieldType(id), orderable);
 	}
 
 	public void addField(String id, String label, Class type) {
@@ -62,7 +64,7 @@ public class ListStructure extends BaseListStructure {
 	public void addField(String id, String label, Class type, boolean orderable) {
 		addField(new ListField(id, label));
 		if (type != null) {
-			typeHelper.addCustomType(id, type);
+			getTypeHelper().addFieldType(id, type);
 		}
 		if (orderable) {
 			addFieldOrder(id);

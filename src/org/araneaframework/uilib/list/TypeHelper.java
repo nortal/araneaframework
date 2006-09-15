@@ -21,8 +21,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
-import org.araneaframework.Environment;
-import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 
 /**
@@ -34,71 +32,95 @@ import org.araneaframework.uilib.list.util.ComparatorFactory;
  */
 public class TypeHelper {
 	
-	protected final ListWidget list;
-	
 	// Configuration
 	private Locale locale;
 	private boolean ignoreCase = true;
 	
-	// Map<String,Comparator> - exceptional comparators for fields
+	// Map<String,Comparator> - custom comparators for fields
 	private Map comparators = new HashMap();
-	// Map<String,Class> - exceptional types for fields
+	// Map<String,Class> - field types
 	private Map types = new HashMap();
 	
-	public TypeHelper(ListWidget list) {
-		Validate.notNull(list);
-		this.list = list;
-		init(list.getEnvironment());		
-	}
-	
-	protected void init(Environment env) {
-		// Locale
-		this.locale = ((LocalizationContext)
-				env.getEntry(LocalizationContext.class)).getLocale();
+	public TypeHelper(Locale locale) {
+		if (locale == null) {
+			locale = Locale.getDefault();
+		}
+		this.locale = locale;
 	}
 	
 	public boolean isIgnoreCase() {
 		return ignoreCase;
 	}
 
-	public TypeHelper setIgnoreCase(boolean ignoreCase) {
+	public void setIgnoreCase(boolean ignoreCase) {
 		this.ignoreCase = ignoreCase;
-		return this;
 	}
 
 	public Locale getLocale() {
 		return locale;
 	}
 
-	public TypeHelper setLocale(Locale locale) {
+	public void setLocale(Locale locale) {
 		this.locale = locale;
-		return this;
 	}
 		
 	// List fields
 	
-	public TypeHelper addCustomType(String fieldId, Class type) {
-		this.types.put(fieldId, type);
-		return this;
-	}
-	
-	public TypeHelper addCustomComparator(String fieldId, Comparator comp) {
-		this.comparators.put(fieldId, comp);
-		return this;
-	}
-	
-	public Class getFieldType(String fieldId) {
-		if (this.types.containsKey(fieldId)) {
-			return (Class) this.types.get(fieldId);
-		}
-		return list.getFieldTypeInternal(fieldId);
-	}
-	
+	/**
+	 * Returns a comparator for the specifeid field.
+	 * <p>
+	 * First, a custom comparator is returned if found.
+	 * <p>
+	 * </p>
+	 * Otherwise a comparator is tryed to create according to the field type
+	 * returned by {@link #getFieldType(String)}.
+	 * Also {@link #isIgnoreCase()} and {@link #getLocale()} is considered for
+	 * creating the new comparator.
+	 * 
+	 * @param fieldId
+	 *                field Id.
+	 * @return comparator for this field.
+	 */
 	public Comparator getFieldComparator(String fieldId) {
-		if (this.comparators.containsKey(fieldId)) {
-			return (Comparator) this.comparators.get(fieldId);
+		Comparator result = getCustomComparator(fieldId);
+		if (result == null) {
+			result = buildComparator(getFieldType(fieldId)); 
 		}
-		return buildComparator(getFieldType(fieldId));
+		return result;
+	}
+	
+	public void addFieldType(String fieldId, Class type) {
+		this.types.put(fieldId, type);
+	}
+	
+	/**
+	 * Returns the field type.
+	 * <p>
+	 * Returns <code>null</code> if no type specifeid for this field or no
+	 * such field exists.
+	 * 
+	 * @param fieldId
+	 *                field Id.
+	 * @return type of this field.
+	 */
+	public Class getFieldType(String fieldId) {
+		return (Class) this.types.get(fieldId);
+	}
+	
+	public Class removeFieldType(String fieldId) {
+		return (Class) this.types.remove(fieldId);
+	}
+
+	public void addCustomComparator(String fieldId, Comparator comp) {
+		this.comparators.put(fieldId, comp);
+	}
+	
+	public Comparator getCustomComparator(String fieldId) {
+		return (Comparator) this.comparators.get(fieldId);
+	}
+		
+	public Comparator removeCustomComparator(String fieldId) {
+		return (Comparator) this.comparators.remove(fieldId);
 	}
 	
 	// Comparator
@@ -112,18 +134,18 @@ public class TypeHelper {
 					isIgnoreCase(),
 					getLocale());
 		}
-		if (Boolean.class.equals(type)) {
+		// Boolean is Comparable since Java 1.5
+		if (Boolean.class.equals(type) &&
+				!Boolean.class.isAssignableFrom(Comparable.class)) {
 			return ComparatorFactory.getBooleanComparator(
 					isNullFirst(),
 					isTrueFirst());
 		}
 		return ComparatorFactory.getDefault();
-	}
-	
+	}	
 	protected boolean isNullFirst() {
 		return ComparatorFactory.NULL_FIRST_BY_DEFAULT;
-	}
-	
+	}	
 	protected boolean isTrueFirst() {
 		return ComparatorFactory.TRUE_FIRST_BY_DEFAULT;
 	}

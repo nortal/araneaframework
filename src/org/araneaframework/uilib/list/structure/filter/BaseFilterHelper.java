@@ -39,38 +39,32 @@ public abstract class BaseFilterHelper implements FilterContext {
 	public static final String HIGH_SUFFIX = "_end"; 
 	
 	protected final ListWidget list;
-	protected final TypeHelper typeHelper;
 	
 	private boolean strict = false;	
 	
-	// Map<String,String> - exceptional labels for fields
+	// Map<String,String> - custom labels for fields
 	private Map labels = new HashMap();
 	
 	public BaseFilterHelper(ListWidget list) {
 		Validate.notNull(list);
 		this.list = list;
-		this.typeHelper = list.getTypeHelper();
-	}
-	
-	public ConfigurationContext getConfiguration() {
-		return this.list.getConfiguration();
 	}
 	
 	public boolean isIgnoreCase() {
-		return typeHelper.isIgnoreCase();
+		return getTypeHelper().isIgnoreCase();
 	}
 
 	public FilterContext setIgnoreCase(boolean ignoreCase) {
-		typeHelper.setIgnoreCase(ignoreCase);
+		getTypeHelper().setIgnoreCase(ignoreCase);
 		return this;
 	}
 
 	public Locale getLocale() {
-		return typeHelper.getLocale();
+		return getTypeHelper().getLocale();
 	}
 
 	public FilterContext setLocale(Locale locale) {
-		typeHelper.setLocale(locale);
+		getTypeHelper().setLocale(locale);
 		return this;
 	}
 	
@@ -83,7 +77,15 @@ public abstract class BaseFilterHelper implements FilterContext {
 	}
 	
 	// General
+	
+	protected TypeHelper getTypeHelper() {
+		return this.list.getTypeHelper();
+	}
 
+	public ConfigurationContext getConfiguration() {
+		return this.list.getConfiguration();
+	}
+	
 	public FormWidget getForm() {
 		return list.getForm();
 	}
@@ -93,18 +95,7 @@ public abstract class BaseFilterHelper implements FilterContext {
 	public BaseFilterHelper addCustomLabel(String fieldId, String labelId) {
 		this.labels.put(fieldId, labelId);
 		return this;
-	}
-	
-	public BaseFilterHelper addCustomType(String fieldId, Class type) {
-		typeHelper.addCustomType(fieldId, type);
-		return this;
-	}
-	
-	public BaseFilterHelper addCustomComparator(String fieldId, Comparator comp) {
-		typeHelper.addCustomComparator(fieldId, comp);
-		return this;
-	}
-	
+	}	
 	public String getFieldLabel(String fieldId) {
 		if (this.labels.containsKey(fieldId)) {
 			return (String) this.labels.get(fieldId);
@@ -112,12 +103,20 @@ public abstract class BaseFilterHelper implements FilterContext {
 		return list.getFieldLabel(fieldId);
 	}
 	
+	public BaseFilterHelper addFieldType(String fieldId, Class type) {
+		getTypeHelper().addFieldType(fieldId, type);
+		return this;
+	}
 	public Class getFieldType(String fieldId) {
-		return typeHelper.getFieldType(fieldId);
+		return getTypeHelper().getFieldType(fieldId);
 	}
 	
+	public BaseFilterHelper addCustomComparator(String fieldId, Comparator comp) {
+		getTypeHelper().addCustomComparator(fieldId, comp);
+		return this;
+	}	
 	public Comparator getFieldComparator(String fieldId) {
-		return typeHelper.getFieldComparator(fieldId);
+		return getTypeHelper().getFieldComparator(fieldId);
 	}
 	
 	// Value ids

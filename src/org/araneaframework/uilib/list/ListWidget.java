@@ -210,8 +210,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @throws Exception if item range refreshing doesn't succeed.
 	 */
 	public void resetSequence() {
-		this.sequenceHelper = new SequenceHelper(getConfiguration());
-	}	
+		this.sequenceHelper = createSequenceHelper();
+	}
 
 	/* ========== FormWidget proxy methods ========== */	
 	
@@ -402,28 +402,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 
 	/* ========== TypeHelper Proxy methods ========== */
-	
-	/**
-	 * Returns type of list field. Returns null if no such field or type for
-	 * this field is available.
-	 * <p>
-	 * {@link ListWidget#getFieldType(String)} returns always null.
-	 * Subclasses should override this method.
-	 * </p>
-	 * <p>
-	 * This method is for internal usage only. Use {@link #getFieldType(String)}
-	 * method instead to gain benefit from custom types defined in
-	 * {@link TypeHelper} also.  
-	 * 
-	 * @param fieldId
-	 *            field identifier.
-	 * @return field type
-	 * 
-	 * @see #getFieldType(String)
-	 */
-	Class getFieldTypeInternal(String fieldId) {
-		return null;
-	}
 	
 	/**
 	 * Returns type of list field. Returns null if no such field or type for
@@ -647,10 +625,10 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected void init() throws Exception {
 		log.debug("Initilizing ListWidget.");
 		
-		this.sequenceHelper = new SequenceHelper(getConfiguration());
-		this.typeHelper = new TypeHelper(this);
-		this.listStructure = new ListStructure(this);
-		this.filterHelper = new FilterHelper(this);	
+		this.sequenceHelper = createSequenceHelper();
+		this.typeHelper = createTypeHelper();
+		this.listStructure = createListStructure();
+		this.filterHelper = createFilterHelper();	
 
 		addEventListener("nextPage", new NextPageEventHandler());
 		addEventListener("previousPage", new PreviousPageEventHandler());
@@ -691,7 +669,20 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		
 		this.dataProvider.init();
 	}
-
+	
+	protected SequenceHelper createSequenceHelper() {
+		return new SequenceHelper(getConfiguration());
+	}	
+	protected TypeHelper createTypeHelper() {
+		return new TypeHelper(getL10nCtx().getLocale());
+	}	
+	protected ListStructure createListStructure() {
+		return new ListStructure(getTypeHelper());
+	}
+	protected FilterHelper createFilterHelper() {
+		return new FilterHelper(this);
+	}
+	
 	/**
 	 * Destoys the list and contained data provider and filter form.
 	 * @throws Exception 

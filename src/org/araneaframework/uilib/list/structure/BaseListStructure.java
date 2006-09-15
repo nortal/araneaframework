@@ -96,7 +96,7 @@ public class BaseListStructure implements Serializable {
 	/**
 	 * Clears the {@link ListField}s
 	 */
-	public void clearColumns() {
+	public void clearFields() {
 		this.fields = new HashMap();
 		this.fieldList = new ArrayList();
 	}

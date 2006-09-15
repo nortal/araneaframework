@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.list;
 
+import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.util.BeanUtil;
 
 
@@ -34,10 +35,19 @@ public class BeanListWidget extends ListWidget {
 	
 	public BeanListWidget(Class beanType) {
 		super();
+		Validate.notNull(beanType);
 		this.beanType = beanType;
 	}
 	
-	Class getFieldTypeInternal(String fieldId) {
-		return BeanUtil.getFieldType(this.beanType, fieldId);
+	public TypeHelper createTypeHelper() {
+		return new TypeHelper(getL10nCtx().getLocale()) {			
+			public Class getFieldType(String fieldId) {
+				Class result = super.getFieldType(fieldId);
+				if (result == null) {
+					result = BeanUtil.getFieldType(beanType, fieldId);
+				}
+				return result;
+			}
+		};	
 	}
 }
