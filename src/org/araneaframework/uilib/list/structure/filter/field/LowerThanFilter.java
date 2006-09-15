@@ -20,90 +20,49 @@ import java.util.Comparator;
 import java.util.Map;
 
 import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.uilib.form.Control;
+import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
+import org.araneaframework.uilib.list.util.FilterFormUtil;
+import org.araneaframework.uilib.list.util.NestedFormUtil;
 
 
 public abstract class LowerThanFilter extends BaseFieldFilter {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final boolean STRICT_BY_DEFAULT = false;
-	
 	private Comparator comparator;
-
-	// FilterData instance
-
-	public static LowerThanFilter getInstance() {
-		return getInstance(null, null, STRICT_BY_DEFAULT);
-	}
-
-	public static LowerThanFilter getInstance(String columnId) {
-		return getInstance(columnId, null, STRICT_BY_DEFAULT);
-	}
-
-	public static LowerThanFilter getInstance(String columnId, String valueId) {
-		return getInstance(columnId, valueId, STRICT_BY_DEFAULT);
-	}
 	
-	public static LowerThanFilter getInstance(boolean strict) {
-		return getInstance(null, null, strict);
-	}
-
-	public static LowerThanFilter getInstance(String columnId, boolean strict) {
-		return getInstance(columnId, null, strict);
-	}
-
-	public static LowerThanFilter getInstance(String columnId, String valueId,
-			boolean strict) {
+	public static LowerThanFilter getInstance(FilterContext ctx, String fieldId, String valueId) {
 		LowerThanFilter filter;
-		if (strict) {
+		if (ctx.isStrict()) {
 			filter = new Strict();
 		} else {
 			filter = new NonStrict();
 		}
-		filter.setFieldId(columnId);
+		filter.setFieldId(fieldId);
 		filter.setValueId(valueId);
+		filter.setComparator(ctx.getFieldComparator(fieldId));
 		return filter;
-	}	
-	
-	// Constant instance
-	
-	public static LowerThanFilter getConstantInstance(Object value) {
-		return getConstantInstance(null, null, value, STRICT_BY_DEFAULT);
-	}
-
-	public static LowerThanFilter getConstantInstance(String columnId,
-			Object value) {
-		return getConstantInstance(columnId, null, value, STRICT_BY_DEFAULT);
-	}
-
-	public static LowerThanFilter getConstantInstance(String columnId,
-			String valueId, Object value) {
-		return getConstantInstance(columnId, valueId, value, STRICT_BY_DEFAULT);
 	}
 	
-	public static LowerThanFilter getConstantInstance(Object value,
-			boolean strict) {
-		return getConstantInstance(null, null, value, strict);
-	}
-
-	public static LowerThanFilter getConstantInstance(String columnId,
-			Object value, boolean strict) {
-		return getConstantInstance(columnId, null, value, strict);
-	}
-
-	public static LowerThanFilter getConstantInstance(String columnId,
-			String valueId, Object value, boolean strict) {
-		LowerThanFilter filter;
-		if (strict) {
-			filter = new Strict();
-		} else {
-			filter = new NonStrict();
-		}
-		filter.setFieldId(columnId);
-		filter.setValueId(valueId);
+	public static LowerThanFilter getConstantInstance(FilterContext ctx, String fieldId, String valueId, Object value) {		
+		LowerThanFilter filter = getInstance(ctx, fieldId, valueId);
 		filter.setValue(value);
 		return filter;
+	}
+
+	public static void addToForm(FilterContext ctx, String id, FormElement element) throws Exception {
+		NestedFormUtil.addElement(ctx.getForm(), id, element);
+	}
+	
+	public static void addToForm(FilterContext ctx, String id, Control control) throws Exception {
+		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id, control));
+	}
+	
+	public static void addToForm(FilterContext ctx, String id) throws Exception {
+		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id));
 	}
 	
 	public Comparator getComparator() {

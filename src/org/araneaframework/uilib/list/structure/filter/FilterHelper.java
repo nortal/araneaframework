@@ -28,7 +28,10 @@ import org.araneaframework.uilib.list.structure.filter.atomic.Constant;
 import org.araneaframework.uilib.list.structure.filter.atomic.Field;
 import org.araneaframework.uilib.list.structure.filter.atomic.Value;
 import org.araneaframework.uilib.list.structure.filter.field.EqualFilter;
+import org.araneaframework.uilib.list.structure.filter.field.GreaterThanFilter;
 import org.araneaframework.uilib.list.structure.filter.field.LikeFilter;
+import org.araneaframework.uilib.list.structure.filter.field.LowerThanFilter;
+import org.araneaframework.uilib.list.structure.filter.field.NullFilter;
 import org.araneaframework.uilib.list.structure.filter.field.RangeFilter;
 
 /**
@@ -93,6 +96,104 @@ public class FilterHelper extends BaseFilterHelper {
 		return this;
 	}
 	
+	// ========== GREATER THAN ========== 
+	
+	// filter with form element
+	
+	public FilterHelper gt(String fieldId) throws Exception {
+		return gt(fieldId, fieldId);
+	}
+	public FilterHelper gt(String fieldId, String valueId) throws Exception {
+		_gt(fieldId, valueId);
+		GreaterThanFilter.addToForm(this, valueId);
+		return this;
+	}
+	public FilterHelper gt(String fieldId, Control control) throws Exception {
+		return gt(fieldId, fieldId, control);
+	}
+	public FilterHelper gt(String fieldId, String valueId, Control control) throws Exception {
+		_gt(fieldId, valueId);
+		GreaterThanFilter.addToForm(this, valueId, control);
+		return this;
+	}
+	public FilterHelper gt(String fieldId, FormElement element) throws Exception {
+		return gt(fieldId, fieldId, element);
+	}
+	public FilterHelper gt(String fieldId, String valueId, FormElement element) throws Exception {
+		_gt(fieldId, valueId);
+		GreaterThanFilter.addToForm(this, valueId, element);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterHelper _gt(String fieldId) {
+		return _gt(fieldId, fieldId);
+	}
+	public FilterHelper _gt(String fieldId, String valueId) {
+		list.addFilter(GreaterThanFilter.getInstance(this, fieldId, valueId));
+		return this;
+	}
+
+	// constant filter
+
+	public FilterHelper gtConst(String fieldId, Object value) {
+		return gtConst(fieldId, fieldId, value);
+	}
+	public FilterHelper gtConst(String fieldId, String valueId, Object value) {
+		list.addFilter(GreaterThanFilter.getConstantInstance(this, fieldId, valueId, value));
+		return this;
+	}
+	
+	// ========== LOWER THAN ========== 
+	
+	// filter with form element
+	
+	public FilterHelper lt(String fieldId) throws Exception {
+		return lt(fieldId, fieldId);
+	}
+	public FilterHelper lt(String fieldId, String valueId) throws Exception {
+		_lt(fieldId, valueId);
+		LowerThanFilter.addToForm(this, valueId);
+		return this;
+	}
+	public FilterHelper lt(String fieldId, Control control) throws Exception {
+		return lt(fieldId, fieldId, control);
+	}
+	public FilterHelper lt(String fieldId, String valueId, Control control) throws Exception {
+		_lt(fieldId, valueId);
+		LowerThanFilter.addToForm(this, valueId, control);
+		return this;
+	}
+	public FilterHelper lt(String fieldId, FormElement element) throws Exception {
+		return lt(fieldId, fieldId, element);
+	}
+	public FilterHelper lt(String fieldId, String valueId, FormElement element) throws Exception {
+		_lt(fieldId, valueId);
+		LowerThanFilter.addToForm(this, valueId, element);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterHelper _lt(String fieldId) {
+		return _lt(fieldId, fieldId);
+	}
+	public FilterHelper _lt(String fieldId, String valueId) {
+		list.addFilter(LowerThanFilter.getInstance(this, fieldId, valueId));
+		return this;
+	}
+
+	// constant filter
+
+	public FilterHelper ltConst(String fieldId, Object value) {
+		return ltConst(fieldId, fieldId, value);
+	}
+	public FilterHelper ltConst(String fieldId, String valueId, Object value) {
+		list.addFilter(LowerThanFilter.getConstantInstance(this, fieldId, valueId, value));
+		return this;
+	}
+	
 	// ========== LIKE ==========
 	
 	// filter with form element
@@ -141,6 +242,98 @@ public class FilterHelper extends BaseFilterHelper {
 		list.addFilter(LikeFilter.getConstantInstance(this, fieldId, valueId, value));
 		return this;
 	}
+	
+	// ========== IS NULL ========== 
+	
+	// filter with form element
+	
+	public FilterHelper isNull(String fieldId, Object conditionValue) throws Exception {
+		return isNull(fieldId, fieldId, conditionValue);
+	}
+	public FilterHelper isNull(String fieldId, String valueId, Object conditionValueId) throws Exception {
+		_isNull(fieldId, valueId);
+		NullFilter.addToForm(this, valueId);
+		return this;
+	}
+	public FilterHelper isNull(String fieldId, Object conditionValue, Control control) throws Exception {
+		return isNull(fieldId, fieldId, conditionValue, control);
+	}
+	public FilterHelper isNull(String fieldId, String valueId, Object conditionValue, Control control) throws Exception {
+		_isNull(fieldId, valueId);
+		NullFilter.addToForm(this, valueId, control);
+		return this;
+	}
+	public FilterHelper isNull(String fieldId, Object conditionValue, FormElement element) throws Exception {
+		return isNull(fieldId, fieldId, conditionValue, element);
+	}
+	public FilterHelper isNull(String fieldId, String valueId, Object conditionValue, FormElement element) throws Exception {
+		_isNull(fieldId, valueId);
+		NullFilter.addToForm(this, valueId, element);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterHelper _isNull(String fieldId, Object conditionValue) {
+		return _isNull(fieldId, fieldId, conditionValue);
+	}
+	public FilterHelper _isNull(String fieldId, String valueId, Object conditionValue) {
+		list.addFilter(NullFilter.getIdNullInstance(this, fieldId, valueId, conditionValue));
+		return this;
+	}
+
+	// constant filter
+
+	public FilterHelper isNullConst(String fieldId) {
+		list.addFilter(NullFilter.getIsNullConstantInstance(this, fieldId));
+		return this;
+	}
+	
+	// ========== NOT NULL ========== 
+	
+	// filter with form element
+	
+	public FilterHelper notNull(String fieldId, Object conditionValue) throws Exception {
+		return isNull(fieldId, fieldId, conditionValue);
+	}
+	public FilterHelper notNull(String fieldId, String valueId, Object conditionValueId) throws Exception {
+		_notNull(fieldId, valueId);
+		NullFilter.addToForm(this, valueId);
+		return this;
+	}
+	public FilterHelper notNull(String fieldId, Object conditionValue, Control control) throws Exception {
+		return isNull(fieldId, fieldId, conditionValue, control);
+	}
+	public FilterHelper notNull(String fieldId, String valueId, Object conditionValue, Control control) throws Exception {
+		_notNull(fieldId, valueId);
+		NullFilter.addToForm(this, valueId, control);
+		return this;
+	}
+	public FilterHelper notNull(String fieldId, Object conditionValue, FormElement element) throws Exception {
+		return isNull(fieldId, fieldId, conditionValue, element);
+	}
+	public FilterHelper notNull(String fieldId, String valueId, Object conditionValue, FormElement element) throws Exception {
+		_notNull(fieldId, valueId);
+		NullFilter.addToForm(this, valueId, element);
+		return this;
+	}
+	
+	// filter
+	
+	public FilterHelper _notNull(String fieldId, Object conditionValue) {
+		return _isNull(fieldId, fieldId, conditionValue);
+	}
+	public FilterHelper _notNull(String fieldId, String valueId, Object conditionValue) {
+		list.addFilter(NullFilter.getNotNullInstance(this, fieldId, valueId, conditionValue));
+		return this;
+	}
+
+	// constant filter
+
+	public FilterHelper notNullConst(String fieldId) {
+		list.addFilter(NullFilter.getIsNullConstantInstance(this, fieldId));
+		return this;
+	}	
 	
 	// ========== RANGE ==========
 	

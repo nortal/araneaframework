@@ -178,7 +178,7 @@ public class ExpressionUtil {
 	/**
 	 * Creaters IS NOT NULL expression.
 	 */	
-	public static Expression isNotNull(Expression expr) {
+	public static Expression notNull(Expression expr) {
 		if (expr == null) {
 			return null;
 		}

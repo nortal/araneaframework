@@ -24,6 +24,7 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.AndConstraint;
 import org.araneaframework.uilib.form.constraint.CompositeConstraint;
+import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.FloatControl;
@@ -76,6 +77,9 @@ public class FormUtil {
 				return createDateTimeControl();
 			}
 		}
+		if (Boolean.class.equals(type)) {
+			return createCheckboxControl();
+		}
 		return createTextControl();
 	}
 	
@@ -96,6 +100,9 @@ public class FormUtil {
 	}	
 	public static Control createDateTimeControl() {
 		return new DateTimeControl();
+	}
+	public static Control createCheckboxControl() {
+		return new CheckboxControl();
 	}
 	
 	// Form elements

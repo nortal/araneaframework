@@ -30,20 +30,35 @@ import org.araneaframework.backend.list.memorybased.Variable;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.uilib.list.structure.filter.FilterContext;
+import org.araneaframework.uilib.list.structure.filter.advanced.SqlFunctionFilter.GreaterThan;
 import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
+import org.araneaframework.uilib.list.structure.filter.field.EqualFilter;
 import org.araneaframework.uilib.list.util.converter.BooleanToStringConverter;
+import org.araneaframework.uilib.widgets.lists.tests.mock.MockFilterContext;
 
 
 public class SimpleListFilterTest extends TestCase {
 	private static final Logger log = Logger
 			.getLogger(SimpleListFilterTest.class);
+	
+	private FilterContext ctx;
+	
+	protected void setUp() {
+		ctx = new MockFilterContext();
+	}
+	
+	protected void tearDown() {
+		ctx = null;
+	}
 
 	public void testListFilterBuilder() throws ExpressionEvaluationException {
 		// build filter
 		ListFilter filter = new AndFilter().addFilter(
-				new SimpleColumnFilter.Equals("name")).addFilter(
-				new SimpleColumnFilter.GreaterThanOrEquals("name")).addFilter(
+				EqualFilter.getInstance(ctx, "name", "name")).addFilter(
+				GreaterThan.get
+						new SimpleColumnFilter.GreaterThanOrEquals("name")).addFilter(
 				new SimpleColumnFilter.Equals("licenseToKill"));
 
 		// build expression

@@ -48,12 +48,8 @@ public class LikeFilter extends BaseFieldFilter {
 	}
 	
 	public static LikeFilter getConstantInstance(FilterContext ctx, String fieldId, String valueId, Object value) {
-		LikeFilter filter = new LikeFilter();
-		filter.setFieldId(fieldId);
-		filter.setValueId(valueId);
+		LikeFilter filter = getInstance(ctx, fieldId, valueId);		
 		filter.setValue(value);
-		filter.setIgnoreCase(ctx.isIgnoreCase());
-		filter.setConfiguration(getConfiguration(ctx));
 		return filter;
 	}
 		

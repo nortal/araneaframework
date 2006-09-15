@@ -43,11 +43,8 @@ public class EqualFilter extends BaseFieldFilter {
 	}
 	
 	public static EqualFilter getConstantInstance(FilterContext ctx, String fieldId, String valueId, Object value) {
-		EqualFilter filter = new EqualFilter();
-		filter.setFieldId(fieldId);
-		filter.setValueId(valueId);
+		EqualFilter filter = getInstance(ctx, fieldId, valueId);
 		filter.setValue(value);
-		filter.setComparator(ctx.getFieldComparator(fieldId));
 		return filter;
 	}
 

@@ -85,6 +85,88 @@ public class FieldFilterHelper {
 		return this.helper.eqConst(fieldId, valueId, value);
 	}
 	
+	// ========== GREATER THAN ========== 
+	
+	// filter with form element
+	
+	public FilterHelper gt() throws Exception {
+		return this.helper.gt(fieldId);
+	}
+	public FilterHelper gt(String valueId) throws Exception {
+		return this.helper.gt(fieldId, valueId);
+	}
+	public FilterHelper gt(Control control) throws Exception {
+		return this.helper.gt(fieldId, control);
+	}
+	public FilterHelper gt(String valueId, Control control) throws Exception {
+		return this.helper.gt(fieldId, valueId, control);
+	}
+	public FilterHelper gt(FormElement element) throws Exception {
+		return this.helper.gt(fieldId, element);
+	}
+	public FilterHelper gt(String valueId, FormElement element) throws Exception {
+		return this.helper.gt(fieldId, valueId, element);
+	}
+	
+	// filter
+	
+	public FilterHelper _gt() {
+		return this.helper._gt(fieldId);
+	}
+	public FilterHelper _gt(String valueId) {
+		return this.helper._gt(fieldId, valueId);
+	}
+
+	// constant filter
+
+	public FilterHelper gtConst(Object value) {
+		return this.helper.gtConst(fieldId, value);
+	}
+	public FilterHelper gtConst(String valueId, Object value) {
+		return this.helper.gtConst(fieldId, valueId, value);
+	}	
+	
+	// ========== LOWER THAN ========== 
+	
+	// filter with form element
+	
+	public FilterHelper lt() throws Exception {
+		return this.helper.lt(fieldId);
+	}
+	public FilterHelper lt(String valueId) throws Exception {
+		return this.helper.lt(fieldId, valueId);
+	}
+	public FilterHelper lt(Control control) throws Exception {
+		return this.helper.lt(fieldId, control);
+	}
+	public FilterHelper lt(String valueId, Control control) throws Exception {
+		return this.helper.lt(fieldId, valueId, control);
+	}
+	public FilterHelper lt(FormElement element) throws Exception {
+		return this.helper.lt(fieldId, element);
+	}
+	public FilterHelper lt(String valueId, FormElement element) throws Exception {
+		return this.helper.lt(fieldId, valueId, element);
+	}
+	
+	// filter
+	
+	public FilterHelper _lt() {
+		return this.helper._lt(fieldId);
+	}
+	public FilterHelper _lt(String valueId) {
+		return this.helper._lt(fieldId, valueId);
+	}
+
+	// constant filter
+
+	public FilterHelper ltConst(Object value) {
+		return this.helper.ltConst(fieldId, value);
+	}
+	public FilterHelper ltConst(String valueId, Object value) {
+		return this.helper.ltConst(fieldId, valueId, value);
+	}
+		
 	// ========== LIKE ==========
 	
 	// filter with form element
@@ -126,6 +208,82 @@ public class FieldFilterHelper {
 		return this.helper.likeConst(fieldId, valueId, value);
 	}
 	
+	// ========== IS NULL ========== 
+	
+	// fiisNuller with form element
+	
+	public FilterHelper isNull(Object conditionValue) throws Exception {
+		return this.helper.isNull(fieldId, conditionValue);
+	}
+	public FilterHelper isNull(String valueId, Object conditionValue) throws Exception {
+		return this.helper.isNull(fieldId, valueId, conditionValue);
+	}
+	public FilterHelper isNull(Object conditionValue, Control control) throws Exception {
+		return this.helper.isNull(fieldId, conditionValue, control);
+	}
+	public FilterHelper isNull(String valueId, Object conditionValue, Control control) throws Exception {
+		return this.helper.isNull(fieldId, valueId, conditionValue, control);
+	}
+	public FilterHelper isNull(Object conditionValue, FormElement element) throws Exception {
+		return this.helper.isNull(fieldId, conditionValue, element);
+	}
+	public FilterHelper isNull(String valueId, Object conditionValue, FormElement element) throws Exception {
+		return this.helper.isNull(fieldId, valueId, conditionValue, element);
+	}
+	
+	// fiisNuller
+	
+	public FilterHelper _isNull(Object conditionValue) {
+		return this.helper._isNull(fieldId, conditionValue);
+	}
+	public FilterHelper _isNull(String valueId, Object conditionValue) {
+		return this.helper._isNull(fieldId, valueId, conditionValue);
+	}
+
+	// constant fiisNuller
+
+	public FilterHelper isNullConst() {
+		return this.helper.isNullConst(fieldId);
+	}
+	
+	// ========== NOT NULL ========== 
+	
+	// fiisNuller with form element
+	
+	public FilterHelper notNull(Object conditionValue) throws Exception {
+		return this.helper.notNull(fieldId, conditionValue);
+	}
+	public FilterHelper notNull(String valueId, Object conditionValue) throws Exception {
+		return this.helper.notNull(fieldId, valueId, conditionValue);
+	}
+	public FilterHelper notNull(Object conditionValue, Control control) throws Exception {
+		return this.helper.notNull(fieldId, conditionValue, control);
+	}
+	public FilterHelper notNull(String valueId, Object conditionValue, Control control) throws Exception {
+		return this.helper.notNull(fieldId, valueId, conditionValue, control);
+	}
+	public FilterHelper notNull(Object conditionValue, FormElement element) throws Exception {
+		return this.helper.notNull(fieldId, conditionValue, element);
+	}
+	public FilterHelper notNull(String valueId, Object conditionValue, FormElement element) throws Exception {
+		return this.helper.notNull(fieldId, valueId, conditionValue, element);
+	}
+	
+	// finotNuller
+	
+	public FilterHelper _notNull(Object conditionValue) {
+		return this.helper._notNull(fieldId, conditionValue);
+	}
+	public FilterHelper _notNull(String valueId, Object conditionValue) {
+		return this.helper._notNull(fieldId, valueId, conditionValue);
+	}
+
+	// constant finotNuller
+
+	public FilterHelper notNullConst() {
+		return this.helper.notNullConst(fieldId);
+	}
+		
 	// ========== RANGE ==========
 	
 	// filter with form element
