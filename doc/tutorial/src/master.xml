@@ -235,7 +235,7 @@
    <!-- Aranea dispatcher servlet mapping -->
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>
-      <url-pattern>/main</url-pattern>
+      <url-pattern>/main/*</url-pattern>
    </servlet-mapping>
 </web-app>]]></programlisting>
     </figure>
@@ -280,7 +280,7 @@
 
 <servlet-mapping>
   <servlet-name>araneaServlet</servlet-name>
-  <url-pattern>/main</url-pattern>
+  <url-pattern>/main/*</url-pattern>
 </servlet-mapping>]]></programlisting>
 				in case of framework main example this is <literal>/main</literal>. There is also a Aranea specific session listener that takes over some session cleanup functions.
 	        </para>

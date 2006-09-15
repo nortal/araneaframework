@@ -57,7 +57,7 @@ public class InMemoryFormListHelper implements Serializable {
     
     if (initialData != null) {
       for (Iterator i = initialData.iterator(); i.hasNext();) {
-        Object row = (Object) i.next();
+        Object row = i.next();
         current.put(formList.getFormRowHandler().getRowKey(row), row);
       }
     }

@@ -90,7 +90,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   public void start(Widget flow, Configurator configurator, Handler handler) {
     Assert.notNullParam(flow, "flow");
     
-    CallFrame frame = makeCallFrame((Widget) flow, configurator, handler);
+    CallFrame frame = makeCallFrame(flow, configurator, handler);
     
     log.debug("Starting flow '" + flow.getClass().getName() +"'");
     
@@ -101,7 +101,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     
     callStack.addFirst(frame);
     
-    addWidget(FlowContext.FLOW_KEY, (Widget) flow);
+    addWidget(FlowContext.FLOW_KEY, flow);
 
     if (configurator != null) {
       try {
@@ -117,7 +117,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     Assert.notNullParam(flow, "flow");
     
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
-    CallFrame frame = makeCallFrame((Widget) flow, configurator, previousFrame.getHandler());
+    CallFrame frame = makeCallFrame(flow, configurator, previousFrame.getHandler());
     
     log.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + 
         "' with flow '" + flow.getClass().getName() + "'");
@@ -126,7 +126,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     
     callStack.addFirst(frame);    
     
-    addWidget(FlowContext.FLOW_KEY, (Widget) flow);
+    addWidget(FlowContext.FLOW_KEY, flow);
     
     if (configurator != null) {
       try {

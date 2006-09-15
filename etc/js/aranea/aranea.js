@@ -209,7 +209,7 @@ function AraneaPage() {
   this.findSubmitter = function(element, systemForm) {
     var updateRegions = element.getAttribute('arn-updrgns');
 
-	if (window.AraneaAA_Present && updateRegions && updateRegions.length > 0)
+	if (window['ajaxanywhere/aa.js'] && updateRegions && updateRegions.length > 0)
 	  return new DefaultAraneaAJAXSubmitter(systemForm);
 
 	return new DefaultAraneaSubmitter(systemForm);
@@ -310,9 +310,7 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
   if (systemForm.transactionId) {
-    try {
-      systemForm.removeChild(systemForm.transactionId);
-    } catch(e) {}
+    systemForm.transactionId.value = "override";
   }
   
   window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
@@ -326,3 +324,5 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
 _ap = new AraneaPage();
 function getActiveAraneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
+
+window['aranea.js'] = true;

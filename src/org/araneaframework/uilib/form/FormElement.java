@@ -16,12 +16,12 @@
 
 package org.araneaframework.uilib.form;
 
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -52,7 +52,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
-
+  
   /**
    * Returns control label.
    * 
@@ -90,17 +90,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
     
     if (converter != null)
       converter.setFormElementCtx(this);
-  }
-
-  /**
-   * Sets the constraint on this form element.
-   * @param constraint constraint to set
-   */
-  public void setConstraint(Constraint constraint) {
-    super.setConstraint(constraint);
-    
-    if (constraint != null && constraint instanceof FormElementAware) 
-      ((FormElementAware) constraint).setFormElementCtx(this);
   }
 
   /**
@@ -223,7 +212,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************  	
   
   protected void update(InputData input) throws Exception {
-    if (isDisabled() || !isRendered() || !wasFormSubmitted(input)) return;
+    if (isDisabled() || !isRendered()) return;
 
     super.update(input);
     
@@ -232,13 +221,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
       //Read the control
       getControl()._getWidget().update(input);
     }
-  }
-  
-  private static boolean wasFormSubmitted(InputData input) {
-    return 
-      input.getGlobalData().containsKey(TopServiceContext.TOP_SERVICE_KEY)
-        ||
-      input.getGlobalData().containsKey(ThreadContext.THREAD_SERVICE_KEY);
   }
 
   protected void handleProcess() throws Exception {
@@ -289,6 +271,10 @@ public class FormElement extends GenericFormElement implements FormElementContex
     this.rendered = savedRenderState;
   }
   
+  public Environment getConstraintEnvironment() {
+	return new StandardEnvironment(super.getConstraintEnvironment(), FormElementContext.class, this);
+  }
+
   /**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.

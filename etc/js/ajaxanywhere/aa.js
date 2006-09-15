@@ -365,23 +365,14 @@ function updateRegions(updateRegions, str) {
 	}
 }
 
-function getOpeningTag(elemId, str) {
-  var b = "<!--BEGIN:"; var e = "-->";
-  var index = str.indexOf(b+elemId+e);
-  if (index == -1) {
-    return null;
-  }
-
-  for(var i = index+1; i < str.length; i++) {
-    if (str.charAt(i)=='<') {
-      tmp = /<([A-Za-z0-9\-]+)>/.exec(str.substr(i));
-        return tmp[1];
-    }
-  }
-  return null;
+function isUpdateRowRegion(regionId, str) {
+  var b = '<!--BEGINROWS:'; var e = '-->';
+  var index = str.indexOf(b+regionId+e);
+  return (index != -1)
 }
 
 function extractContentsById(elemId, str) {
+    var rowBlockMarker = "<!--BEGINROWS:" + elemId + "-->";
 	var blockStart = "<!--BEGIN:"+elemId+"-->";
 	var index = str.indexOf(blockStart);
 	
@@ -391,6 +382,10 @@ function extractContentsById(elemId, str) {
 	}
 
 	var startIndex = index+blockStart.length;
+
+	var rowBlockMarkerIndex = str.indexOf(rowBlockMarker);
+	if (rowBlockMarkerIndex != -1)
+	  startIndex = rowBlockMarkerIndex + rowBlockMarker.length;
 
 	var blockEnd = "<!--END:"+elemId+"-->";
 	index = str.indexOf(blockEnd);
@@ -406,16 +401,15 @@ function extractContentsById(elemId, str) {
 }
 
 function updateRegion(updateRegionId, str) {		
-  extracted = extractContentsById(updateRegionId, str);
-
-  target = document.getElementById(updateRegionId);	
-
-  if (getOpeningTag(updateRegionId, str).toLowerCase() == "tr" && document.all && target) {
+  var extracted = extractContentsById(updateRegionId, str);
+  var target = document.getElementById(updateRegionId);	
+  
+  if (isUpdateRowRegion(updateRegionId, str) && document.all && target) {
     //Emptying <tbody>
     while( target.firstChild ) {
       target.removeChild( target.firstChild );
     }        		    
-	
+
     //Making temp <div> and <table>
     var tempDiv = document.createElement("div");    	 
     document.body.appendChild(tempDiv);
@@ -457,4 +451,4 @@ function trim(str) {
 ajaxAnywhere = new AjaxAnywhere();
 ajaxKey = ajaxAnywhere.bindById();
 
-window.AraneaAA_Present=true;
+window['ajaxanywhere/aa.js'] = true;

@@ -17,7 +17,9 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.text.Collator;
+import org.araneaframework.Environment;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
@@ -29,6 +31,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * TODO: Add locale support for string ranges.
  * 
  * @author <a href="mailto:kt@webmedia.ee">Konstantin Tretyakov</a>
+ * XXX: this is one messy constraint.
  */
 public final class RangeConstraint extends BaseConstraint {
 
@@ -85,10 +88,16 @@ public final class RangeConstraint extends BaseConstraint {
       addError(
           ErrorUtil.localizeAndFormat(
             UiLibMessages.RANGE_CHECK_FAILED, 
-            t(fieldLo.getLabel()),
-            t(fieldHi.getLabel()),
+            t(fieldLo.getLabel(), fieldLo.getEnvironment()),
+            t(fieldHi.getLabel(), fieldHi.getEnvironment()),
             getEnvironment()));
     }
   }
+  
+  private String t(String key, Environment env) {
+	    LocalizationContext locCtx = 
+	     (LocalizationContext) env.getEntry(LocalizationContext.class);
+	    return locCtx.localize(key);
+	  }
 
 }

@@ -16,40 +16,35 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
-import org.araneaframework.uilib.form.FormElementAware;
-import org.araneaframework.uilib.form.FormElementContext;
-import org.araneaframework.uilib.form.GenericFormElementContext;
 
 /**
  * Constraint that will be applied iff the field has been read from the request.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class OptionalConstraint extends BaseFieldConstraint {
-
   private Constraint constraint;
 
   public OptionalConstraint(Constraint constraint) {
     this.constraint = constraint;
   }
-
+  
   protected void validateConstraint() throws Exception {
-    if (isRead()) 
+    if (isRead()) {
       constraint.validate();
+      addErrors(constraint.getErrors());
+      constraint.clearErrors();
+    }
   }
 
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
   }
-  
-  public void setGenericFormElementCtx(GenericFormElementContext feCtx) {
-    constraint.setGenericFormElementCtx(feCtx);
-  }
-  
-  public void setFormElementCtx(FormElementContext feCtx) {
-    if (constraint instanceof FormElementAware)
-      ((FormElementAware) constraint).setFormElementCtx(feCtx);
+
+  public void setEnvironment(Environment environment) {
+    super.setEnvironment(environment);
+    constraint.setEnvironment(environment);
   }
 }
