@@ -58,9 +58,8 @@ public class LikeFilter extends BaseFieldFilter {
 	}
 		
 	private static LikeConfiguration getConfiguration(FilterContext ctx) {
-		LikeConfiguration result = (LikeConfiguration) ((ConfigurationContext)
-				ctx.getEnvironment().getEntry(ConfigurationContext.class)).
-				getEntry(ConfigurationContext.LIKE_CONFIGURATION);
+		LikeConfiguration result = (LikeConfiguration)
+			ctx.getConfiguration().getEntry(ConfigurationContext.LIKE_CONFIGURATION);
 		if (result == null) {
 			result = new LikeConfiguration();
 		}

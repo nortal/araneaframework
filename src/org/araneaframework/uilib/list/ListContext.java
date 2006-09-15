@@ -13,31 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
-
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.backend.util.BeanUtil;
+import java.util.Comparator;
+import java.util.Locale;
 
+import org.araneaframework.uilib.ConfigurationContext;
 
 /**
- * ListWidget that is aware of field types according to the Bean type.
- * 
+ * List configuration. 
+ *  
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
- * @see ListWidget
+ * @see ConfigurationContext
  */
-public class BeanListWidget extends ListWidget {
+public interface ListContext {
 	
-	private static final long serialVersionUID = 1L;
+	// Global confiugration
 	
-	protected final Class beanType;
+	ConfigurationContext getConfiguration();
+
+	boolean isIgnoreCase();
+
+	Locale getLocale();
 	
-	public BeanListWidget(Class beanType) {
-		super();
-		this.beanType = beanType;
-	}
-	
-	Class getFieldTypeInternal(String fieldId) {
-		return BeanUtil.getFieldType(this.beanType, fieldId);
-	}
+	// Fields
+
+	String getFieldLabel(String fieldId);
+
+	Class getFieldType(String fieldId);
+
+	Comparator getFieldComparator(String fieldId);
+
 }

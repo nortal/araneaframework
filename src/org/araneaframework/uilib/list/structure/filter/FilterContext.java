@@ -15,39 +15,33 @@
 **/
 package org.araneaframework.uilib.list.structure.filter;
 
-import java.util.Comparator;
-import java.util.Locale;
-
-import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.list.ListContext;
 
 /**
  * Filter context that is used by list filters for their initialization. 
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * 
+ * @see ListContext
  */
-public interface FilterContext {
+public interface FilterContext extends ListContext {
 	
-	// General
-	
-	Environment getEnvironment();
-
+	/**
+	 * Returns the filter form.
+	 * 
+	 * @return the filter form.
+	 */
 	FormWidget getForm();
 	
-	// Global confiugration
-
-	boolean isIgnoreCase();
-
+	/**
+	 * Returns whether new filters should be strict.
+	 * <p>
+	 * E.g. when adding e GreaterThan filter, strict does not allow two values
+	 * to be equal.
+	 * 
+	 * @return whether new filters should be strict.
+	 */
 	boolean isStrict();
-	
-	Locale getLocale();
-	
-	// Fields
-
-	String getFieldLabel(String fieldId);
-
-	Class getFieldType(String fieldId);
-
-	Comparator getFieldComparator(String fieldId);
 
 }

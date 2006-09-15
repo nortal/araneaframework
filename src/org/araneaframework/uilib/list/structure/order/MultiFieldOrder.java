@@ -28,28 +28,28 @@ import org.araneaframework.uilib.list.OrderInfoField;
 import org.araneaframework.uilib.list.structure.ListOrder;
 
 
-public class MultiColumnOrder implements ListOrder {
+public class MultiFieldOrder implements ListOrder {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = Logger.getLogger(MultiColumnOrder.class);
+	private static final Logger log = Logger.getLogger(MultiFieldOrder.class);
 	
-	protected Map columnOrders = new HashMap();
+	protected Map orders = new HashMap();
 
-	public void addColumnOrder(FieldOrder order) {
-		this.columnOrders.put(order.getFieldId(), order);
+	public void addFieldOrder(FieldOrder order) {
+		this.orders.put(order.getFieldId(), order);
 	}
 
-	public FieldOrder getColumnOrder(String column) {
-		return (FieldOrder) this.columnOrders.get(column);
+	public FieldOrder getFieldOrder(String field) {
+		return (FieldOrder) this.orders.get(field);
 	}
 
-	public boolean isColumnOrdered(String column) {
-		return getColumnOrder(column) != null;
+	public boolean isFiedOrdered(String field) {
+		return getFieldOrder(field) != null;
 	}
 
-	public void clearColumnOrders() {
-		this.columnOrders = new HashMap();
+	public void clearFieldOrders() {
+		this.orders = new HashMap();
 	}
 
 	public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {
@@ -64,7 +64,7 @@ public class MultiColumnOrder implements ListOrder {
 		Iterator i = orderInfo.getFields().iterator();
 		while (i.hasNext()) {
 			OrderInfoField orderInfoField = (OrderInfoField) i.next();
-			FieldOrder columnOrder = (FieldOrder) this.columnOrders
+			FieldOrder columnOrder = (FieldOrder) this.orders
 					.get(orderInfoField.getId());
 			if (columnOrder != null) {
 				ComparatorExpression temp = columnOrder

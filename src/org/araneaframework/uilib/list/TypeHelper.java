@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
-package org.araneaframework.uilib.list.structure;
+package org.araneaframework.uilib.list;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,7 +23,6 @@ import java.util.Map;
 import org.apache.commons.lang.Validate;
 import org.araneaframework.Environment;
 import org.araneaframework.framework.LocalizationContext;
-import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 
 /**
@@ -92,7 +91,7 @@ public class TypeHelper {
 		if (this.types.containsKey(fieldId)) {
 			return (Class) this.types.get(fieldId);
 		}
-		return list.getFieldType(fieldId);
+		return list.getFieldTypeInternal(fieldId);
 	}
 	
 	public Comparator getFieldComparator(String fieldId) {

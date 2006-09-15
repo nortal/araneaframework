@@ -21,10 +21,11 @@ import java.util.Iterator;
 
 import org.apache.commons.lang.Validate;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.TypeHelper;
 import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
 import org.araneaframework.uilib.list.structure.order.FieldOrder;
-import org.araneaframework.uilib.list.structure.order.MultiColumnOrder;
+import org.araneaframework.uilib.list.structure.order.MultiFieldOrder;
 import org.araneaframework.uilib.list.structure.order.SimpleColumnOrder;
 
 
@@ -87,29 +88,27 @@ public class ListStructure extends BaseListStructure {
 	}
 	
 	protected void addFieldOrder(String fieldId, Comparator comparator) {
-		addFieldOrder(new SimpleColumnOrder(fieldId, comparator));		
+		addOrder(new SimpleColumnOrder(fieldId, comparator));		
 	}
 	
-	protected MultiColumnOrder getMultiColumnOrder() {
+	protected MultiFieldOrder getMultiFieldOrder() {
 		if (this.order == null) {
-			clearColumnOrders();
+			clearOrders();
 		}
-		if (!MultiColumnOrder.class.isAssignableFrom(this.order.getClass())) {
-			throw new RuntimeException("ListOrder must be a MultiColumnOrder instance");
-		}
-		return (MultiColumnOrder) this.order; 
+		Validate.isTrue(this.order instanceof MultiFieldOrder, "ListOrder must be a MultiColumnOrder instance");
+		return (MultiFieldOrder) this.order; 
 	}
 	
-	public void addFieldOrder(FieldOrder fieldOrder) {
-		getMultiColumnOrder().addColumnOrder(fieldOrder);
+	public void addOrder(FieldOrder fieldOrder) {
+		getMultiFieldOrder().addFieldOrder(fieldOrder);
 	}
 	
-	public FieldOrder getColumnOrder(String field) {
-		return getMultiColumnOrder().getColumnOrder(field);
+	public FieldOrder getFieldOrder(String field) {
+		return getMultiFieldOrder().getFieldOrder(field);
 	}
 	
-	public void clearColumnOrders() {
-		this.order = new MultiColumnOrder();
+	public void clearOrders() {
+		this.order = new MultiFieldOrder();
 	}
 	
 	/*
@@ -126,17 +125,17 @@ public class ListStructure extends BaseListStructure {
 		return (AndFilter) this.filter; 
 	}
 	
-	public void addFilter(ListFilter subFilter) {
-		getAndFilter().addFilter(subFilter);
+	public void addFilter(ListFilter filter) {
+		getAndFilter().addFilter(filter);
 	}
 	
-	public FieldFilter getColumnFilter(String column) {
+	public FieldFilter getFieldFilter(String field) {
 		Iterator i = getAndFilter().getFilters().iterator();
 		while (i.hasNext()) {
 			ListFilter listFilter = (ListFilter) i.next();
-			if (FieldFilter.class.isAssignableFrom(listFilter.getClass())) {
+			if (listFilter instanceof FieldFilter) {
 				FieldFilter columnFilter = (FieldFilter) listFilter;
-				if (columnFilter.getFieldId().equals(column)) {
+				if (columnFilter.getFieldId().equals(field)) {
 					return columnFilter;
 				}
 			}

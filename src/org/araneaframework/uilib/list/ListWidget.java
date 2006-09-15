@@ -16,10 +16,12 @@
 
 package org.araneaframework.uilib.list;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -43,8 +45,9 @@ import org.araneaframework.uilib.list.structure.ListField;
 import org.araneaframework.uilib.list.structure.ListFilter;
 import org.araneaframework.uilib.list.structure.ListOrder;
 import org.araneaframework.uilib.list.structure.ListStructure;
-import org.araneaframework.uilib.list.structure.TypeHelper;
+import org.araneaframework.uilib.list.structure.filter.FieldFilterHelper;
 import org.araneaframework.uilib.list.structure.filter.FilterHelper;
+import org.araneaframework.uilib.list.structure.order.FieldOrder;
 import org.araneaframework.uilib.list.util.MapUtil;
 import org.araneaframework.uilib.support.UiLibMessages;
 
@@ -59,7 +62,7 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class ListWidget extends BaseUIWidget {
+public class ListWidget extends BaseUIWidget implements ListContext {
 
 	private static final long serialVersionUID = 1L;
 
@@ -78,12 +81,12 @@ public class ListWidget extends BaseUIWidget {
 	/** The multi-ordering form name. */
 	public static final String ORDER_FORM_NAME = "orderForm";
 
-	protected ListDataProvider dDataProvider;
-	protected SequenceHelper sequenceHelper;						// should not be accessible by public methods
+	protected ListStructure listStructure;							// should not be accessible by public methods
+	protected ListDataProvider dataProvider;
 	
 	protected TypeHelper typeHelper;
-	protected ListStructure listStructure;							// should not be accessible by public methods
 	protected FilterHelper filterHelper;	
+	protected SequenceHelper sequenceHelper;						// should not be accessible by public methods	
 
 	protected FormWidget form;										// is transfomed into filter info Map and vice-versa
 	protected OrderInfo orderInfo = new OrderInfo();
@@ -96,7 +99,7 @@ public class ListWidget extends BaseUIWidget {
 	//*********************************************************************
 
 	public ListWidget(ListDataProvider listDataProvider, ListStructure listStructure, FormWidget filterForm) throws Exception {  	
-		this.dDataProvider = listDataProvider;
+		this.dataProvider = listDataProvider;
 		this.listStructure = listStructure;
 		this.form = filterForm;
 	}
@@ -109,9 +112,7 @@ public class ListWidget extends BaseUIWidget {
 	//* PUBLIC METHODS
 	//*********************************************************************
 
-	/*
-	 * List configuration
-	 */	
+	/* ========== List configuration ========== */	
 
 	/**
 	 * Returns the {@link ListStructure}used to describe the list.
@@ -135,18 +136,85 @@ public class ListWidget extends BaseUIWidget {
 	 * @return the {@link ListDataProvider}used to fill the list with data.
 	 */
 	public ListDataProvider getDataProvider() {
-		return this.dDataProvider;
+		return this.dataProvider;
 	}
 
 	/**
 	 * Sets the {@link ListDataProvider}used to fill the list with data.
 	 * 
-	 * @param dDataProvider the {@link ListDataProvider}used to fill the list with data.
+	 * @param dataProvider the {@link ListDataProvider}used to fill the list with data.
 	 */
-	public void setDataProvider(ListDataProvider dDataProvider) {
-		this.dDataProvider = dDataProvider;
+	public void setDataProvider(ListDataProvider dataProvider) {
+		this.dataProvider = dataProvider;
 	}
 
+	/**
+	 * Returns the {@link TypeHelper} used to help with field types.
+	 * 
+	 * @return the {@link TypeHelper} used to help with field types.
+	 */
+	public TypeHelper getTypeHelper() {
+		return this.typeHelper;
+	}	
+
+	/**
+	 * Sets the {@link TypeHelper} used to help with field types.
+	 * 
+	 * @param typeHelper {@link TypeHelper} used to help with field types.
+	 */
+	public void setTypeHelper(TypeHelper typeHelper) {
+		this.typeHelper = typeHelper;
+	}
+	
+	/**
+	 * Returns the {@link FilterHelper} used to help with adding filters.
+	 * 
+	 * @return the {@link FilterHelper} used to help with adding filters.
+	 */
+	public FilterHelper getFilterHelper() {
+		return filterHelper;
+	}
+	
+	/**
+	 * Sets the {@link FilterHelper} used to help with adding filters.
+	 * 
+	 * @param typeHelper {@link FilterHelper} used to help with adding filters.
+	 */
+	public void setFilterHelper(FilterHelper filterHelper) {
+		this.filterHelper = filterHelper;
+	}
+	
+	/**
+	 * Returns the {@link FieldFilterHelper} used to help with adding filters
+	 * for specified field.
+	 * 
+	 * @return the {@link FieldFilterHelper} used to help with adding filters
+	 * for specified field.
+	 */
+	public FieldFilterHelper getFilterHelper(String fieldId) {
+		return new FieldFilterHelper(filterHelper, fieldId);
+	}
+	
+	/**
+	 * Returns the {@link SequenceHelper}used to output pages.
+	 * 
+	 * @return the {@link SequenceHelper}used to output pages.
+	 */
+	public SequenceHelper getSequenceHelper() {
+		return this.sequenceHelper;
+	}
+
+	/**
+	 * Resets the sequence, starting at first page with all defaults.
+	 * 
+	 * @throws Exception if item range refreshing doesn't succeed.
+	 */
+	public void resetSequence() {
+		this.sequenceHelper = new SequenceHelper(getConfiguration());
+	}	
+
+	/* ========== FormWidget proxy methods ========== */	
+	
 	/**
 	 * Returns the filter form.
 	 * 
@@ -159,10 +227,49 @@ public class ListWidget extends BaseUIWidget {
 	/**
 	 * Saves the filter form.
 	 */
-	public void setForm(FormWidget filterForm) {
-		this.form = filterForm;
+	public void setForm(FormWidget form) {
+		this.form = form;
 	}
 
+	/**
+	 * Sets the filter button label.
+	 * 
+	 * @param label custom label Id.
+	 */
+	public void setFilterButtonLabel(String label) {
+		getForm().getElementByFullName(FILTER_BUTTON_ID).setLabel(label);;
+	}
+
+	/**
+	 * Sets the filter reset button label.
+	 * 
+	 * @param label custom label Id.
+	 */
+	public void setFilterResetButtonLabel(String label) {
+		getForm().getElementByFullName(FILTER_RESET_BUTTON_ID).setLabel(label);
+	}		
+	
+	/* ========== ListStructure Proxy methods ========== */	
+
+	/**
+	 * Returns <code>true</code> if all fields are added orderable by default. 
+	 * 
+	 * @return <code>true</code> if all fields are added orderable by default.
+	 */
+	public boolean isOrderableByDefault() {
+		return this.listStructure.isOrderableByDefault();
+	}
+
+	/**
+	 * Sets whether all fields are added orderable by default.
+	 * 
+	 * @param orderableByDefault whether all fields are added orderable by
+	 * default.
+	 */
+	public void setOrderableByDefault(boolean orderableByDefault) {
+		this.listStructure.setOrderableByDefault(orderableByDefault);
+	}	
+	
 	/**
 	 * Returns {@link ListField}s.
 	 * 
@@ -193,50 +300,6 @@ public class ListWidget extends BaseUIWidget {
 	public String getFieldLabel(String columnId) {
 		return getField(columnId).getLabel();
 	}
-
-	/**
-	 * Returns type of list column. Returns null if no such column or type for
-	 * this column is available.
-	 * 
-	 * {@link ListWidget#getFieldType(String)} returns always null.
-	 * Subclasses should override this method.
-	 * 
-	 * @param columnId
-	 *            column identifier.
-	 * @return column type
-	 */
-	public Class getFieldType(String columnId) {
-		return null;
-	}
-
-	/**
-	 * Returns the {@link TypeHelper} used to help with field types.
-	 * 
-	 * @return the {@link TypeHelper} used to help with field types.
-	 */
-	public TypeHelper getTypeHelper() {
-		return this.typeHelper;
-	}
-	
-	/**
-	 * 
-	 * Returns <code>true</code> if all fields are added orderable by default. 
-	 * 
-	 * @return <code>true</code> if all fields are added orderable by default.
-	 */
-	public boolean isOrderableByDefault() {
-		return this.listStructure.isOrderableByDefault();
-	}
-
-	/**
-	 * Sets whether all fields are added orderable by default.
-	 * 
-	 * @param orderableByDefault whether all fields are added orderable by
-	 * default.
-	 */
-	public void setOrderableByDefault(boolean orderableByDefault) {
-		this.listStructure.setOrderableByDefault(orderableByDefault);
-	}	
 	
 	/**
 	 * Adds a list field.
@@ -249,8 +312,9 @@ public class ListWidget extends BaseUIWidget {
 	 * @param label
 	 *            list field label.
 	 */
-	public void addField(String id, String label) {
+	public FieldFilterHelper addField(String id, String label) {
 		this.listStructure.addField(id, label);
+		return getFilterHelper(id);
 	}
 
 	/**
@@ -263,8 +327,9 @@ public class ListWidget extends BaseUIWidget {
 	 * @param orderable
 	 *            whether this list field should be orderable or not. 
 	 */
-	public void addField(String id, String label, boolean orderable) {
+	public FieldFilterHelper addField(String id, String label, boolean orderable) {
 		this.listStructure.addField(id, label, orderable);
+		return getFilterHelper(id);
 	}
 
 	/**
@@ -280,8 +345,9 @@ public class ListWidget extends BaseUIWidget {
 	 * @param type
 	 *            list field type.
 	 */
-	public void addField(String id, String label, Class type) {
+	public FieldFilterHelper addField(String id, String label, Class type) {
 		this.listStructure.addField(id, label, type);
+		return getFilterHelper(id);
 	}
 
 	/**
@@ -296,32 +362,104 @@ public class ListWidget extends BaseUIWidget {
 	 * @param orderable
 	 *            whether this list field should be orderable or not. 
 	 */	
-	public void addField(String id, String label, Class type, boolean orderable) {
+	public FieldFilterHelper addField(String id, String label, Class type, boolean orderable) {
 		this.listStructure.addField(id, label, type, orderable);
+		return getFilterHelper(id);
 	}
-
-	/*
-	 * FormWidget proxy-methods
-	 */
-
+	
 	/**
-	 * Sets the filter button label.
+	 * Adds a list field order.
 	 * 
-	 * @param label custom label Id.
+	 * @param order
+	 *           list field order.
 	 */
-	public void setFilterButtonLabel(String label) {
-		getForm().getElementByFullName(FILTER_BUTTON_ID).setLabel(label);;
+	public void addFilter(FieldOrder order) {
+		this.listStructure.addOrder(order);
 	}
-
+	
 	/**
-	 * Sets the filter reset button label.
-	 * 
-	 * @param label custom label Id.
+	 * Removes all list orders.
 	 */
-	public void setFilterClearButtonLabel(String label) {
-		getForm().getElementByFullName(FILTER_RESET_BUTTON_ID).setLabel(label);
+	public void clearOrders() {
+		this.listStructure.clearOrders();
 	}	
 	
+	/**
+	 * Adds a list filter.
+	 * 
+	 * @param filter
+	 *           list filter.
+	 */
+	public void addFilter(ListFilter filter) {
+		this.listStructure.addFilter(filter);
+	}
+	
+	/**
+	 * Removes all list filters.
+	 */
+	public void clearFilters() {
+		this.listStructure.clearFilters();
+	}
+
+	/* ========== TypeHelper Proxy methods ========== */
+	
+	/**
+	 * Returns type of list field. Returns null if no such field or type for
+	 * this field is available.
+	 * <p>
+	 * {@link ListWidget#getFieldType(String)} returns always null.
+	 * Subclasses should override this method.
+	 * </p>
+	 * <p>
+	 * This method is for internal usage only. Use {@link #getFieldType(String)}
+	 * method instead to gain benefit from custom types defined in
+	 * {@link TypeHelper} also.  
+	 * 
+	 * @param fieldId
+	 *            field identifier.
+	 * @return field type
+	 * 
+	 * @see #getFieldType(String)
+	 */
+	Class getFieldTypeInternal(String fieldId) {
+		return null;
+	}
+	
+	/**
+	 * Returns type of list field. Returns null if no such field or type for
+	 * this field is available.
+	 * 
+	 * @param fieldId
+	 *            field identifier.
+	 * @return field type
+	 */
+	public Class getFieldType(String fieldId) {
+		return this.typeHelper.getFieldType(fieldId);
+	}
+
+	/**
+	 * Returns {@link Comparator} for the specified field.
+	 */
+	public Comparator getFieldComparator(String fieldId) {
+		return this.typeHelper.getFieldComparator(fieldId);
+	}
+
+	/**
+	 * Returns the Locale used by memory-based filters and orders. 
+	 */
+	public Locale getLocale() {
+		return this.typeHelper.getLocale();
+	}
+
+	/**
+	 * Returns whether new filters and orders are case insensitive.
+	 */
+	public boolean isIgnoreCase() {
+		return this.typeHelper.isIgnoreCase();
+	}
+	
+	/* ========== SequenceHelper Proxy methods ========== */	
+
 	/**
 	 * Returns how many items will be displayed on one page.
 	 * @return how many items will be displayed on one page.
@@ -379,28 +517,8 @@ public class ListWidget extends BaseUIWidget {
 	public void showDefaultPages() {
 		getSequenceHelper().showDefaultPages();
 	}
-
-	/*
-	 * List State reading and modifying
-	 */
 	
-	/**
-	 * Returns the {@link SequenceHelper}used to output pages.
-	 * 
-	 * @return the {@link SequenceHelper}used to output pages.
-	 */
-	public SequenceHelper getSequenceHelper() {
-		return this.sequenceHelper;
-	}
-
-	/**
-	 * Resets the sequence, starting at first page with all defaults.
-	 * 
-	 * @throws Exception if item range refreshing doesn't succeed.
-	 */
-	public void resetSequence() throws Exception {
-		this.sequenceHelper = new SequenceHelper(getConfiguration());
-	}
+	/* ========== List State reading and modifying ========== */	
 
 	/**
 	 * Returns the filter information from filter form.
@@ -429,13 +547,13 @@ public class ListWidget extends BaseUIWidget {
 
 	private void propagateListDataProviderWithFilter(Map filterInfo) {
 		log.debug("Building FilterExpression for ListDataProvider");
-		if (this.dDataProvider != null) {
+		if (this.dataProvider != null) {
 			ListFilter filter = this.listStructure.getListFilter();
 			Expression filterExpr = null;
 			if (filter != null) {
 				filterExpr = filter.buildExpression(MapUtil.convertToPlainMap(filterInfo));
 			}
-			this.dDataProvider.setFilterExpression(filterExpr);			
+			this.dataProvider.setFilterExpression(filterExpr);			
 		}
 	}
 
@@ -467,25 +585,21 @@ public class ListWidget extends BaseUIWidget {
 	 * @param orderInfo <code>OrderInfo</code> containing order information.
 	 */
 	public void setOrderInfo(OrderInfo orderInfo) {  	
-		if (orderInfo != null) {
-			if (isInitialized()) {
-				propagateListDataProviderWithOrderInfo(orderInfo);				
-			}
-			this.orderInfo = orderInfo;
-		}
+		this.orderInfo = orderInfo;
+		propagateListDataProviderWithOrderInfo(orderInfo);				
 	}
 
 	protected void propagateListDataProviderWithOrderInfo(OrderInfo orderInfo) {
 		ListOrder order = this.listStructure.getListOrder();
 		ComparatorExpression orderExpr = order != null ? order.buildComparatorExpression(orderInfo) : null;
-		this.dDataProvider.setOrderExpression(orderExpr);			
+		this.dataProvider.setOrderExpression(orderExpr);			
 	}
 	
 	/**
 	 * Forces the list data provider to refresh the data.
 	 */
 	public void forceRefresh() throws Exception {
-		this.dDataProvider.refreshData();		
+		this.dataProvider.refreshData();		
 	}
 
 	/**
@@ -494,7 +608,7 @@ public class ListWidget extends BaseUIWidget {
 	public void refreshCurrentItemRange() throws Exception {
 		ListItemsData itemRangeData;
 
-		itemRangeData = this.dDataProvider.getItemRange(new Long(this.sequenceHelper
+		itemRangeData = this.dataProvider.getItemRange(new Long(this.sequenceHelper
 				.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
 
 		this.itemRange = itemRangeData.getItemRange();
@@ -511,6 +625,12 @@ public class ListWidget extends BaseUIWidget {
 		return this.itemRange;
 	}
 
+	/**
+	 * Returns row object according to the request identifier.
+	 * 
+	 * @param requestId request identifier.
+	 * @return list row object.
+	 */
 	public Object getRowFromRequestId(String requestId) {	
 		return this.requestIdToRow.get(requestId);
 	}
@@ -525,6 +645,8 @@ public class ListWidget extends BaseUIWidget {
 	 * getting the initial item range.
 	 */
 	protected void init() throws Exception {
+		log.debug("Initilizing ListWidget.");
+		
 		this.sequenceHelper = new SequenceHelper(getConfiguration());
 		this.typeHelper = new TypeHelper(this);
 		this.listStructure = new ListStructure(this);
@@ -564,12 +686,10 @@ public class ListWidget extends BaseUIWidget {
 
 		addWidget(FILTER_FORM_NAME, this.form);
 
-		log.debug("Initilizing ListWidget.");
-
 		propagateListDataProviderWithOrderInfo(getOrderInfo());
 		propagateListDataProviderWithFilter(getFilterInfo());
 		
-		this.dDataProvider.init();
+		this.dataProvider.init();
 	}
 
 	/**
@@ -578,7 +698,7 @@ public class ListWidget extends BaseUIWidget {
 	 */
 	protected void destroy() throws Exception {
 		log.debug("Destroying ListWidget.");
-		dDataProvider.destroy();
+		dataProvider.destroy();
 	}
 
 	/**

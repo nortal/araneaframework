@@ -21,11 +21,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
-import org.araneaframework.Environment;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.ListWidget;
-import org.araneaframework.uilib.list.structure.TypeHelper;
-import org.araneaframework.uilib.list.util.like.LikeConfiguration;
+import org.araneaframework.uilib.list.TypeHelper;
 
 /**
  * Base implementation of list filter helper.  
@@ -43,7 +42,6 @@ public abstract class BaseFilterHelper implements FilterContext {
 	protected final TypeHelper typeHelper;
 	
 	private boolean strict = false;	
-	private LikeConfiguration likeConfiguration;
 	
 	// Map<String,String> - exceptional labels for fields
 	private Map labels = new HashMap();
@@ -52,6 +50,10 @@ public abstract class BaseFilterHelper implements FilterContext {
 		Validate.notNull(list);
 		this.list = list;
 		this.typeHelper = list.getTypeHelper();
+	}
+	
+	public ConfigurationContext getConfiguration() {
+		return this.list.getConfiguration();
 	}
 	
 	public boolean isIgnoreCase() {
@@ -79,20 +81,8 @@ public abstract class BaseFilterHelper implements FilterContext {
 	public void setStrict(boolean stirct) {
 		this.strict = stirct;
 	}
-
-	public LikeConfiguration getLikeConfiguration() {
-		return likeConfiguration;
-	}
-	
-	public void setLikeConfiguration(LikeConfiguration likeConfiguration) {
-		this.likeConfiguration = likeConfiguration;
-	}
 	
 	// General
-	
-	public Environment getEnvironment() {
-		return list.getEnvironment();
-	}
 
 	public FormWidget getForm() {
 		return list.getForm();

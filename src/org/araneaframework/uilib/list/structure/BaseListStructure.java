@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.uilib.list.structure.order.MultiColumnOrder;
+import org.araneaframework.uilib.list.structure.order.MultiFieldOrder;
 
 public class BaseListStructure implements Serializable {
 
@@ -165,7 +165,7 @@ public class BaseListStructure implements Serializable {
 		 */
 		protected ViewModel() {
 			log.debug("Constructing ListStructure.ViewModel");
-			MultiColumnOrder multiOrder = getListOrder() instanceof MultiColumnOrder ? (MultiColumnOrder) getListOrder()
+			MultiFieldOrder multiOrder = getListOrder() instanceof MultiFieldOrder ? (MultiFieldOrder) getListOrder()
 					: null;
 			if (multiOrder == null) {
 				log.debug("MultiColumnOrder not found");
@@ -176,7 +176,7 @@ public class BaseListStructure implements Serializable {
 				ListField.ViewModel currentColumn = ((ListField) i
 						.next()).getViewModel();
 				boolean isOrdered = multiOrder != null
-						&& multiOrder.isColumnOrdered(currentColumn.getId());
+						&& multiOrder.isFiedOrdered(currentColumn.getId());
 
 				this.columnList.add(currentColumn);
 				this.columns.put(currentColumn.getId(), currentColumn);
