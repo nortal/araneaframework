@@ -270,6 +270,30 @@ addWidget("searchForm", searchForm);
         The example use case is a two scenario search&mdash;either both client first name and client last name fields are filled in or both town and street address fields are filled in, otherwise an error message "Not enough data for search!" is shown. The constraints will be validated when <literal>convertAndValidate()</literal> method is called on <literal>searchForm</literal>. Note that the constraint is added to the form itself, rather than to its elements&mdash;this is a typical idiom, when the constraint involves several elements.
       </para>
 
+          <para>
+        Table of standard <literal>Constraint</literal>s.
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Constraint</entry>
+                <entry>Purpose</entry>
+              </row>
+            </thead>
+            <tbody>
+               <row>
+                <entry><literal>AfterTodayConstraint</literal></entry>
+                <entry>DUUH</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+    </para>
+      
+      
       TODO: a table of constraints
     </sect2>
 

@@ -255,7 +255,7 @@ setViewSelector("myWidget/form");
       <para>
         <literal>org.araneaframework.framework.MessageContext</literal> allows to show messages to the user. The messages can be of several types, inluding predefined error and informative types. Typically messages will be shown somewhere in the application (exact way is application-specific). <literal>MessageContext</literal> is available through a <literal>BaseUIWidget</literal> method <literal>getMessageCtx()</literal> and is typically used as follows:
 <programlisting role="java">getMessageCtx().showInfoMessage("Hello world!");</programlisting>        
-      More info is available in the JavaDoc.
+      For more information, see <xref linkend="StandardMessagingFilterWidget"/> and JavaDoc.
       </para>
     </sect2>
     
