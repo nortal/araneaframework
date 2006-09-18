@@ -129,6 +129,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 		throw t;
 	}
 	
+	/** Override it to free additional resources, always call superclass method too. */
 	public void doFinally() {
 		releaseTags();
 		restoreAllContextEntries();

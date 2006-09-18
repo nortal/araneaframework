@@ -134,6 +134,13 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 			writeFormElementContextClose(out);
 		return super.doEndTag(out);
 	}
+	
+	public void doFinally() {
+		super.doFinally();
+		formViewModel = null;
+		formElementViewModel = null;
+		controlViewModel = null;
+	}	
 
 	/* ***********************************************************************************
 	 * Tag attributes

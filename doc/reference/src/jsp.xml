@@ -1710,6 +1710,10 @@ public class DummyTag extends BaseTag {
         The <literal>DummyTag</literal> should really extend it too, since it outputs some HTML. <literal>PresentationTag</literal>
         defines <emphasis>style</emphasis> and <emphasis>styleClass</emphasis> attributes that can be applied to most HTML tags.
     </para>
+    
+    <para>Important tag cleanup method is <literal>doFinally()</literal> that is called after rendering.
+    It should be used to clear references to  objects that should no longer be referenced after rendering. 
+    As in containers tag instances can live very long time, they can leak quite a lot of memory unless resources deallocated.</para>
 
     </sect2>
     
