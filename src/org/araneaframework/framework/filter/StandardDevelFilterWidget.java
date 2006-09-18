@@ -19,7 +19,6 @@ import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.RelocatableDecorator;
-import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 
 public class StandardDevelFilterWidget extends BaseApplicationWidget {
   private static final Logger log = Logger.getLogger(StandardDevelFilterWidget.class);
