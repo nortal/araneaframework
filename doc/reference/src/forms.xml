@@ -290,10 +290,8 @@ addWidget("searchForm", searchForm);
             </tbody>
           </tgroup>
         </informaltable>
+	</para>
 
-    </para>
-      
-      
       TODO: a table of constraints
     </sect2>
 
@@ -347,7 +345,7 @@ private void handleEventSave() {
               </row>
                <row>
                 <entry><literal>BigDecimalListData</literal></entry>
-                <entry>List &lt;<literal>java.math.BigDecimal</literal>&gt;</entry>
+                <entry><literal>List &lt;java.math.BigDecimal</literal>&gt;</entry>
               </row>
                <row>
                 <entry><literal>BooleanData</literal></entry>
@@ -355,7 +353,7 @@ private void handleEventSave() {
               </row>
                <row>
                 <entry><literal>BooleanListData</literal></entry>
-                <entry>List &lt;<literal>java.lang.Boolean</literal>&gt;</entry>
+                <entry><literal>List &lt;java.lang.Boolean</literal>&gt;</entry>
               </row> 
                <row>
                 <entry><literal>DateData</literal></entry>
@@ -363,7 +361,7 @@ private void handleEventSave() {
               </row>
                <row>
                 <entry><literal>DisplayItemListData</literal></entry>
-                <entry>List &lt;<literal>org.araneaframework.uilib.support.DisplayItemDisplayItem</literal>&gt;</entry>
+                <entry><literal>List &lt;org.araneaframework.uilib.support.DisplayItemDisplayItem</literal>&gt;</entry>
               </row> 
                <row>
                 <entry><literal>FileInfoData</literal></entry>
@@ -375,7 +373,7 @@ private void handleEventSave() {
               </row>
                <row>
                 <entry><literal>IntegerListData</literal></entry>
-                <entry>List &lt;<literal>java.lang.Integer</literal>&gt;</entry>
+                <entry><literal>List &lt;java.lang.Integer</literal>&gt;</entry>
               </row> 
                <row>
                 <entry><literal>LongData</literal></entry>
@@ -383,7 +381,7 @@ private void handleEventSave() {
               </row>
                <row>
                 <entry><literal>LongListData</literal></entry>
-                <entry>List &lt;<literal>java.lang.Long</literal>&gt;</entry>
+                <entry><literal>List &lt;java.lang.Long</literal>&gt;</entry>
               </row>
                <row>
                 <entry><literal>StringData</literal></entry>
@@ -391,7 +389,7 @@ private void handleEventSave() {
               </row>
                <row>
                 <entry><literal>StringListData</literal></entry>
-                <entry>List &lt;<literal>java.lang.String</literal>&gt;</entry>
+                <entry><literal>List &lt;java.lang.String</literal>&gt;</entry>
               </row>
                <row>
                 <entry><literal>TimeStampData</literal></entry>
@@ -428,7 +426,7 @@ private void handleEventSave() {
         all form element rendering tags; then proceed to explain <emphasis>context</emphasis> tags 
         and different form element rendering tags with their unique attributes.
         
-      <sect2>
+      <sect2 id="common-formelement-attributes">
       <title>Common attributes for all form element rendering tags.</title>
         <informaltable frame="all">
           <tgroup cols="3">
@@ -460,8 +458,8 @@ private void handleEventSave() {
                 <entry>validateOnEvent</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Whether the form should be validated on the client-side (or by making AJAX request to server) when 
-                <emphasis>element generates an event</emphasis> (this is <literal>false</literal> by default) and is not 
-                supported by any default Aranea JSP tags.</entry>
+                <emphasis>element generates an event</emphasis> (this is <literal>false</literal> by default and is not 
+                supported by any default Aranea JSP tags).</entry>
               </row>
               <row>
                 <entry>tabindex</entry>

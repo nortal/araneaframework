@@ -773,7 +773,9 @@
 
     <sect2>
       <title><![CDATA[<ui:globalWidgetInclude>]]></title>
-      TODO (do we even need it?)
+      Much like <literal><![CDATA[<ui:widgetInclude>]]></literal>, but this tag allows to 
+      include not only descendants of current context widget but any widget that is 
+      accessible from global scope.
     </sect2>
     
   </sect1>
@@ -781,8 +783,7 @@
   <sect1>
     <title>Event-producing Tags</title>
     <sect2 id="updateRegionAttributes">
-      <title><literal>updateRegions</literal> and <literal>globalUpdateRegions</literal> Attributes</title>$
-
+      See <xref linkend="common-formelement-attributes"/>.
     </sect2>
     
     <sect2>
