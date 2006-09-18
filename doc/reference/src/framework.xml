@@ -132,14 +132,15 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       singleton="false"/>
 </beans>]]></programlisting>        
       This seems to be more verbose, but it also allows to override Aranea filters:
-<programlisting><![CDATA[<bean class="example.LocalizationFilterService" 
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<bean class="example.LocalizationFilterService" 
   id="araneaLocalizationFilter" singleton="false">
   <property name="languageName" value="ee"/>
 </bean>]]></programlisting>        
       as well as adding one's own. 
       </para>
-
-      TODO: describe existing Aranea filters and where new ones can be added (currently one can see /etc/default-aranea-conf.xml in Aranea distribution).
+      
+      See <xref linkend="framework_filters"/> for description of some existing Aranea filters.
 
       <para>
         Aranea configuration defaults can be completely overidden by specifying a "araneaApplicationRoot" bean that will serve as the root component of the whole application.
@@ -263,7 +264,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       StandardServletSessionRouterService -->
     </sect2>
     
-    <sect2>
+    <sect2 id="framework_filters">
       <title>Filters</title>
       For explanation of filter pattern, refer to <xref linkend="services-as-framework-plugins"/>
       

@@ -435,7 +435,9 @@ private void handleEventSave() {
               <row>
                 <entry>validateOnEvent</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Whether the form will be validated on the client-side when <emphasis>element generates an event</emphasis> (by default <literal>false</literal>)</entry>
+                <entry>Whether the form should be validated on the client-side (or by making AJAX request to server) when 
+                <emphasis>element generates an event</emphasis> (this is <literal>false</literal> by default) and is not 
+                supported by any default Aranea JSP tags.</entry>
               </row>
               <row>
                 <entry>tabindex</entry>
@@ -2104,6 +2106,7 @@ el.click();]]></programlisting>
         </informaltable>
         <emphasis>Also has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
       </sect3>
+      </sect2>
       
      <sect2>
       <title><![CDATA[<ui:automaticFormElement>]]></title>
