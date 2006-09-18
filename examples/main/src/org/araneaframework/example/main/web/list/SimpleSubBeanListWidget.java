@@ -38,12 +38,12 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 		
 		setViewSelector("list/subBeanList");
 		
-		this.list = initList();
-		addWidget("list", this.list);
+		initList();
 	}
 	
-	protected ListWidget initList() throws Exception {
-		ListWidget list = new BeanListWidget(ContactMO.class);
+	protected void initList() throws Exception {
+		list = new BeanListWidget(ContactMO.class);
+		addWidget("list", list);
 		list.setDataProvider(new DataProvider());
 		list.setOrderableByDefault(true);
 		list.addField("id", "#Id", false);
@@ -51,8 +51,7 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 		list.addField("name.lastname", "#Last name").like();
 		list.addField("address.country", "#Country").like();
 		list.addField("address.city", "#City").like();
-		list.addField("dummy", null);
-		return list;
+		list.addField("dummy", null, false);
 	}
 	
 	private class DataProvider extends MemoryBasedListDataProvider {

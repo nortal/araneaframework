@@ -40,13 +40,12 @@ public class SimpleListWidget extends TemplateBaseWidget {
 	setViewSelector("sample/simpleList");
 	
 	simpleList = new ListWidget();
+	addWidget("simpleList", simpleList);
 	simpleList.setDataProvider(new SimpleListDataProvider());
 	simpleList.addField("booleanValue", "#Boolean");
 	simpleList.addField("stringValue", "#String");
 	simpleList.addField("longValue", "#Long");
 	simpleList.setInitialOrder("longValue", true);
-	
-    addWidget("simpleList", simpleList);
   }  
   
   private class SimpleListDataProvider extends MemoryBasedListDataProvider {

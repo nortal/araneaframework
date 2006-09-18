@@ -57,6 +57,9 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		/* PersonMO class is already familiar from form examples. */
 		list = new EditableBeanListWidget(PersonMO.class);
+		/* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
+		list.setFormRowHandler(buildFormRowHandler());
+		addWidget("list", list);
 		list.setOrderableByDefault(true);
 		list.addField("id", "#Id", false);
 		/* Filtering by fields other than ID is enabled. */
@@ -65,16 +68,13 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		list.addField("phone", "#Phone no").like();		
 		list.addField("birthdate", "#Birthdate").range();
 		list.addField("salary", "#Salary").range();
-		list.addField("dummy", null);
+		list.addField("dummy", null, false);
 		
 		/* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
 		list.setDataProvider(buildListDataProvider());
-		/* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
-		list.setFormRowHandler(buildFormRowHandler());
 
 		/* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
 		this.formList = list.getFormList();
-		addWidget("list", list);
 	}
 	
 	protected abstract ListDataProvider buildListDataProvider() throws Exception;

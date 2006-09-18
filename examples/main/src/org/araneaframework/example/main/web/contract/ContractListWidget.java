@@ -46,19 +46,18 @@ public class ContractListWidget extends TemplateBaseWidget {
 		setViewSelector("contract/contractList");
 		log.debug("TemplateContractListWidget init called");    
 
-		this.list = initList();
-		addWidget("contractList", this.list);
+		initList();
 	}
 	
-	protected ListWidget initList() throws Exception {
-		ListWidget temp = new ListWidget();
-		temp.setDataProvider(new TemplateContractListDataProvider());
-		temp.addField("id", "#Id");
-		temp.addField("company", "#Company");
-		temp.addField("person", "#Person");
-		temp.addField("notes", "#Notes");
-		temp.addField("dummy", null);
-		return temp;
+	protected void initList() throws Exception {
+		ListWidget list = new ListWidget();
+		addWidget("contractList", list);
+		list.setDataProvider(new TemplateContractListDataProvider());
+		list.addField("id", "#Id");
+		list.addField("company", "#Company");
+		list.addField("person", "#Person");
+		list.addField("notes", "#Notes");
+		list.addField("dummy", null, false);
 	}
 	
 	private void refreshList() throws Exception {  	

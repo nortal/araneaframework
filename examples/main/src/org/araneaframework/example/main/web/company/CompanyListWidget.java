@@ -23,7 +23,6 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.list.BeanListWidget;
-import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 
@@ -37,7 +36,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 public class CompanyListWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
   protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
-  private ListWidget list;
+  private BeanListWidget list;
   private boolean editMode = true;
 
   public CompanyListWidget() {
@@ -54,25 +53,24 @@ public class CompanyListWidget extends TemplateBaseWidget {
     setViewSelector("company/companyList");
     log.debug("TemplateCompanyListWidget init called");    
 
-    this.list = initList();
-    addWidget("companyList", this.list);
+    initList();
   }
 
-  protected ListWidget initList() throws Exception {
+  protected void initList() throws Exception {
     // Create the new list widget whose records are JavaBeans, instances of CompanyMO.
     // CompanyMO has fields named id, name and address.
-    BeanListWidget temp = new BeanListWidget(CompanyMO.class);
+    list = new BeanListWidget(CompanyMO.class);
     // set the data provider for the list
-    temp.setDataProvider(new TemplateCompanyListDataProvider());
+    list.setDataProvider(new TemplateCompanyListDataProvider());
     // add the displayed columns to list.
     // addBeanColumn(String id, String label, boolean isOrdered)
     // note that # before the label means that label is treated as unlocalized and outputted as-is
-    temp.addField("id", "#Id", false);
+    list.addField("id", "#Id", false);
     //addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
-    temp.addField("name", "#Name", true).like();
-    temp.addField("address", "#Address", true).like();
-    temp.addField("dummy", null);
-    return temp;
+    list.addField("name", "#Name", true).like();
+    list.addField("address", "#Address", true).like();
+    list.addField("dummy", null, false);
+    addWidget("companyList", this.list);
   }
 
   private void refreshList() throws Exception {    

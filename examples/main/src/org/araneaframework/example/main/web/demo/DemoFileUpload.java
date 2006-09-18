@@ -52,20 +52,20 @@ public class DemoFileUpload extends TemplateBaseWidget {
 
 		setViewSelector("demo/demoFileUpload");
 
-		form = buildForm();
-		uploadList = buildList();
+		buildList();
 
+		form = buildForm();
 		addWidget("uploadForm", form);
 	}
 
-	private ListWidget buildList() throws Exception {
-		ListWidget list = new ListWidget();
-		list.setDataProvider(new FileListDataProvider());
-		list.addField("originalFilename", "#Original filename");
-		list.addField("size", "#File size");
-		list.addField("contentType", "#Content Type");
-		list.addField("dummy", null);
-		return list;
+	private void buildList() throws Exception {
+		uploadList = new ListWidget();
+		addWidget("uploadForm", uploadList);
+		uploadList.setDataProvider(new FileListDataProvider());
+		uploadList.addField("originalFilename", "#Original filename");
+		uploadList.addField("size", "#File size");
+		uploadList.addField("contentType", "#Content Type");
+		uploadList.addField("dummy", null, false);
 	}
 	
 	private FormWidget buildForm() throws Exception {
