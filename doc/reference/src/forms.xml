@@ -267,10 +267,16 @@ searchForm.setConstraint(searchConstraint);
 //Putting the widget
 addWidget("searchForm", searchForm);    
 ...</programlisting>
-        The example use case is a two scenario search&mdash;either both client first name and client last name fields are filled in or both town and street address fields are filled in, otherwise an error message "Not enough data for search!" is shown. The constraints will be validated when <literal>convertAndValidate()</literal> method is called on <literal>searchForm</literal>. Note that the constraint is added to the form itself, rather than to its elements&mdash;this is a typical idiom, when the constraint involves several elements.
+        The example use case is a two scenario search&mdash;either both client first name 
+        and client last name fields are filled in or both town and street address fields are 
+        filled in, otherwise an error message "Not enough data for search!" is shown. The constraints 
+        will be validated when <literal>convertAndValidate()</literal> method is called on 
+        <literal>searchForm</literal>. Note that the constraint is added to the form itself, 
+        rather than to its elements&mdash;this is a typical idiom, when the constraint 
+        involves several elements.
       </para>
 
-          <para>
+     <para>
         Table of standard <literal>Constraint</literal>s.
         <informaltable frame="all">
           <tgroup cols="2">
@@ -285,14 +291,45 @@ addWidget("searchForm", searchForm);
             <tbody>
                <row>
                 <entry><literal>AfterTodayConstraint</literal></entry>
-                <entry>DUUH</entry>
+                <entry>Field constraint, checks that field contains <literal>Date</literal> later than current date.</entry>
+              </row>
+               <row>
+                <entry><literal>AndConstraint</literal></entry>
+                <entry>Composite constraint, checks that all subconstraints are satisfied.</entry>
+              </row>
+               <row>
+                <entry><literal>GroupedConstraint</literal></entry>
+                <entry></entry>
+              </row>
+               <row>
+                <entry><literal>NotEmptyConstraint</literal></entry>
+                <entry>Field constraint, checks that field contains non-empty value.</entry>
+               </row>
+               <row>
+                <entry><literal>NumberInRangeConstraint</literal></entry>
+                <entry>Field constraint, checks that number in a field belongs on given range (integer only).</entry>
+              </row>
+               <row>
+                <entry><literal>OptionalConstraint</literal></entry>
+                <entry>Field constraint that wraps another constraint which is only applied if field has some real value (is not null).</entry>
+              </row>
+               <row>
+                <entry><literal>OrConstraint</literal></entry>
+                <entry>Composite constraint, checks that at least one subconstraint is satisfied.</entry>
+              </row>
+               <row>
+                <entry><literal>RangeConstraint</literal></entry>
+                <entry>Multiple field constraint, checks that value of one field is lower than value of other field. Field
+                values must <literal>Comparable</literal>.</entry>
+              </row>
+              <row>
+                <entry><literal>StringLengthInRangeConstraint</literal></entry>
+                <entry>Field constraint, checks that length of a string in a field falls within given boundaries.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
 	</para>
-
-      TODO: a table of constraints
     </sect2>
 
     <sect2>
@@ -2138,10 +2175,28 @@ el.click();]]></programlisting>
           known identifier can be dynamically associated with some JSP tag in Java code and then rendered with
           <literal><![CDATA[<ui:automaticFormElement>]]></literal> tag which uses associated tag to render <literal>FormElement</literal>.
       </para>
-
+      
       <sect3>
         <title>Attributes</title>
         <emphasis>Has all common form element rendering attributes.</emphasis> 
+      </sect3>
+      
+      <sect3>
+        <title>Examples</title>
+              <para>
+ In Java code, setting tag that should rendering element is done by setting <literal>FormElement</literal> property.
+<programlisting role="java"><![CDATA[element.setProperty(FormElementViewSelector.FORM_ELEMENT_VIEW_SELECTOR_PROPERTY, new FormElementViewSelector(tag, attributes));]]>
+</programlisting>
+      </para>
+      <para>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:formElement id="someForm">
+  <ui:cell>
+    <ui:automaticFormElement/>
+  </ui:cell>
+</ui:formElement>]]>
+</programlisting>
+</para>
       </sect3>
     </sect2>    
     

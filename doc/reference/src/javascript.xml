@@ -33,7 +33,7 @@
 
               <itemizedlist spacing="compact">
                 <listitem>
-                  keyboard handlers for form elements.
+                  keyboard handlers are registered for form elements.
                 </listitem>
                 <listitem>
                   addition of urls (&lt;href=&quot;...&quot;) to page elements that allow cloning of the session thread (opening

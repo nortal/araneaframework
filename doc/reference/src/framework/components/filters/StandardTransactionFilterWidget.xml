@@ -25,7 +25,8 @@
     <para>
       <emphasis>TransactionContext</emphasis> implementation that filters routing of duplicate requests. The detection of
       duplicate requests is achieved through defining new transaction ID in each response and checking that next request
-      submits the consistent transaction ID. For purposes of asynchronous requests, <emphasis>null</emphasis> transaction IDs are
+      submits the consistent transaction ID. Missing (<emphasis>null</emphasis>) transaction ID is always considered 
+      inconsistent. For purposes of asynchronous requests, <literal>override</literal> transaction ID is
       always considered consistent.
     </para>
 </sect3>
