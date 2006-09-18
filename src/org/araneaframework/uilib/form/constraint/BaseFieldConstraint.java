@@ -41,6 +41,7 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   // Just setting field constraint works (then constraints environment is set when 
   // field is initialized). That would break constraint previously set however.
   public BaseFieldConstraint(FormElement field) {
+    Assert.notNullParam(this, field, "field");
     this.field = field;
   }
 

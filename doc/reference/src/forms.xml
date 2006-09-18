@@ -32,7 +32,9 @@
 
     <para>
       At the core of the data binding API lies the notion of <emphasis>controls</emphasis> (<literal>org.araneaframework.uilib.form.Control</literal>). Controls are the widgets that do the actual parsing of the request parameters and correspond to the controls found in HTML forms, like textbox, textarea, selectbox, button, ... Additionally controls also do a bit of validating the submitted data. For example textbox control validates the minimum and maximum string length, since the HTML tag can do the same.
-    </para>
+      Programmer usually does not read values from <literal>Control</literal> directly, but from <literal>FormElement</literal> that
+      takes care of converting value of <literal>Control</literal> to <literal>FormElement</literal> <literal>Data</literal>.
+   </para>
 
     <para>
       The following example shows how to create a control:
@@ -55,28 +57,17 @@ TextControl textBox = new TextControl(new Long(10), null);
               </row>
             </thead>
             <tbody>
-              <row>
-                <entry><literal>TextControl</literal></entry>
-                <entry>A simple textbox control with one row of text 
-                that can constrain the inserted text minimal and maximal length.</entry>
+               <row>
+                <entry><literal>AutoCompleteTextControl</literal></entry>
+                <entry><literal>TextControl</literal> with autocompletion capability.</entry>
               </row>
-              <row>
-                <entry><literal>TextareaControl</literal></entry>
-                <entry>A multirow textbox control that can constrain the inserted text minimal and maximal length.</entry>
+               <row>
+                <entry><literal>ButtonControl</literal></entry>
+                <entry>A control that represents a HTML form button.</entry>
               </row>
-              <row>
-                <entry><literal>NumberControl</literal></entry>
-                <entry>A textbox control that constrains the text to be integer numbers. Can also check
-                the allowed minimum and maximum limits. </entry>
-              </row>
-              <row>
-                <entry><literal>FloatControl</literal></entry>
-                <entry>A textbox control that constrains the text to be floating-point numbers. Can also check
-                the allowed minimum and maximum limits. </entry>
-              </row>
-              <row>
-                <entry><literal>TimeControl</literal></entry>
-                <entry>A time selection control that allows to choose a time of day. Supports custom formats of time input and output.</entry>
+               <row>
+                <entry><literal>CheckboxControl</literal></entry>
+                <entry>A control that represents a binary choice and is usually rendered as a checkbox.</entry>
               </row>
               <row>
                 <entry><literal>DateControl</literal></entry>
@@ -88,36 +79,57 @@ TextControl textBox = new TextControl(new Long(10), null);
                 Supports custom formats of date and time input and output.</entry>
               </row>
               <row>
-                <entry><literal>SelectControl</literal></entry>
-                <entry>A control that allows to select one of many choices (may be rendered as a dropdown list or option buttons). 
-                Ensures that the submitted value was one of the choices.</entry>
-              </row>
-              <row>
-                <entry><literal>MultiSelectControl</literal></entry>
-                <entry>A control that allows to select severl from many choices (may be rendered as a multiselect list or checkbox list). 
-                Ensures that the submitted values are a subset of the choices.</entry>
-              </row>
-              <row>
-                <entry><literal>CheckboxControl</literal></entry>
-                <entry>A control that represents a binary choice and is usually rendered as a checkbox.</entry>
-              </row>
-              <row>
                 <entry><literal>DisplayControl</literal></entry>
                 <entry>A control that can be used to render a read-only value that will not be submitted with an HTML form.</entry>
+              </row>
+              <row>
+                <entry><literal>FileUploadControl</literal></entry>
+                <entry>A control that can be used to upload files to the server.</entry>
+              </row>
+              <row>
+                <entry><literal>FloatControl</literal></entry>
+                <entry>A textbox control that constrains the text to be floating-point numbers. Can also check
+                the allowed minimum and maximum limits. </entry>
               </row>
               <row>
                 <entry><literal>HiddenControl</literal></entry>
                 <entry>A control that can be used to render an invisible value that will be submitted with an HTML form.</entry>
               </row>
               <row>
-                <entry><literal>FileUploadControl</literal></entry>
-                <entry>A control that can be used to upload files to the server.</entry>
+                <entry><literal>MultiSelectControl</literal></entry>
+                <entry>A control that allows to select several from many choices (may be rendered as a multiselect list or checkbox list). 
+                Ensures that the submitted values are a subset of the choices.</entry>
+              </row>
+              <row>
+                <entry><literal>NumberControl</literal></entry>
+                <entry>A textbox control that constrains the text to be integer numbers. Can also check
+                the allowed minimum and maximum limits. </entry>
+              </row>
+              <row>
+                <entry><literal>TimeControl</literal></entry>
+                <entry>A time selection control that allows to choose a time of day. Supports custom formats of time input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>TextareaControl</literal></entry>
+                <entry>A multirow textbox control that can constrain the inserted text minimal and maximal length.</entry>
+              </row>
+              <row>
+                <entry><literal>TextControl</literal></entry>
+                <entry>A simple textbox control with one row of text that can constrain the inserted text minimal and maximal length.</entry>
+              </row>
+              <row>
+                <entry><literal>TimeStampControl</literal></entry>
+                <entry>Similar to <literal>DateControl</literal> but works with <literal>java.sql.TimeStamp</literal>.</entry>
+              </row>              
+              <row>
+                <entry><literal>SelectControl</literal></entry>
+                <entry>A control that allows to select one of many choices (may be rendered as a dropdown list or option buttons). 
+                Ensures that the submitted value was one of the choices.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
 
-        TODO: Select controls
     </para>
   </sect1>
   <sect1>
@@ -292,7 +304,85 @@ private void handleEventSave() {
         Note that the reason for existence of <literal>Data</literal> objects is that Java types correspond poorly to some restricted types&mdash;for instance enumerations, type encodings and collections container types (this problem is somewhat solved in Java 5, but Aranea is compatible with Java 1.3).        
       </para>
 
-      TODO: a table of Data types?
+    <para>
+        Table of <literal>Data</literal> types.
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="4*"/>
+            <thead>
+              <row>
+                <entry>Data</entry>
+                <entry>Value Type</entry>
+              </row>
+            </thead>
+            <tbody>
+               <row>
+                <entry><literal>BigDecimalData</literal></entry>
+                <entry><literal>java.math.BigDecimal</literal></entry>
+              </row>
+               <row>
+                <entry><literal>BigDecimalListData</literal></entry>
+                <entry>List &lt;<literal>java.math.BigDecimal</literal>&gt;</entry>
+              </row>
+               <row>
+                <entry><literal>BooleanData</literal></entry>
+                <entry><literal>java.lang.Boolean</literal></entry>
+              </row>
+               <row>
+                <entry><literal>BooleanListData</literal></entry>
+                <entry>List &lt;<literal>java.lang.Boolean</literal>&gt;</entry>
+              </row> 
+               <row>
+                <entry><literal>DateData</literal></entry>
+                <entry><literal>java.util.Date</literal></entry>
+              </row>
+               <row>
+                <entry><literal>DisplayItemListData</literal></entry>
+                <entry>List &lt;<literal>org.araneaframework.uilib.support.DisplayItemDisplayItem</literal>&gt;</entry>
+              </row> 
+               <row>
+                <entry><literal>FileInfoData</literal></entry>
+                <entry><literal>org.araneaframework.uilib.support.FileInfo</literal></entry>
+              </row>
+               <row>
+                <entry><literal>IntegerData</literal></entry>
+                <entry><literal>java.lang.Integer</literal></entry>
+              </row>
+               <row>
+                <entry><literal>IntegerListData</literal></entry>
+                <entry>List &lt;<literal>java.lang.Integer</literal>&gt;</entry>
+              </row> 
+               <row>
+                <entry><literal>LongData</literal></entry>
+                <entry><literal>java.lang.Long</literal></entry>
+              </row>
+               <row>
+                <entry><literal>LongListData</literal></entry>
+                <entry>List &lt;<literal>java.lang.Long</literal>&gt;</entry>
+              </row>
+               <row>
+                <entry><literal>StringData</literal></entry>
+                <entry><literal>java.lang.String</literal></entry>
+              </row>
+               <row>
+                <entry><literal>StringListData</literal></entry>
+                <entry>List &lt;<literal>java.lang.String</literal>&gt;</entry>
+              </row>
+               <row>
+                <entry><literal>TimeStampData</literal></entry>
+                <entry><literal>java.sql.Timestamp</literal></entry>
+              </row>
+               <row>
+                <entry><literal>YNData</literal></entry>
+                <entry><literal>java.lang.String</literal></entry>
+              </row>              
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+    </para>
+
     </sect2>
     
     <sect2>

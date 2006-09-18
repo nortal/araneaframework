@@ -19,8 +19,8 @@ package org.araneaframework.tests.constraints;
 import java.util.Date;
 import junit.framework.TestCase;
 import org.araneaframework.mock.MockLifeCycle;
+import org.araneaframework.tests.constraints.helper.ConstraintTestHelper;
 import org.araneaframework.tests.mock.MockEnvironment;
-import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.AfterTodayConstraint;
@@ -37,55 +37,53 @@ public class AfterTodayConstraintTest extends TestCase {
 
   public static final long DAY = 1000l * 60 * 60 * 24;
 
-  protected FormWidget form;
-  protected FormElement dateElement;
+  private FormWidget form;
+  private FormElement dateElement;
+  private ConstraintTestHelper helper;
 
   public void setUp() throws Exception {
     form = new FormWidget();
     dateElement = form.createElement("#date", new FakeDateControl(), new DateData(), false);
     form.addElement("date", dateElement);
     MockLifeCycle.begin(form, new MockEnvironment());
+    
+    helper = new ConstraintTestHelper(form, dateElement);
   }
   
-  protected void executeTest(
-      Constraint constraint,
-      Date dateValue,
-      boolean valid
-      ) throws Exception {
-    dateElement.setConstraint(constraint);
-    dateElement.setValue(dateValue);
-    dateElement.getControl().setRawValue(dateValue);
-
-    assertEquals(valid, dateElement.validate());
-    form.clearErrors();
-    assertEquals(valid, form.validate());
-    form.clearErrors(); // allows using more than once per setUp() 
-  }
-
   public void testFuture() throws Exception {
-    executeTest(
+    helper.testConstraintValidness(
         new AfterTodayConstraint(false), 
         new Date(System.currentTimeMillis() + 20*AfterTodayConstraintTest.DAY), 
         true);
+
+    helper.testConstraintValidness(
+            new AfterTodayConstraint(true), 
+            new Date(System.currentTimeMillis() + 20*AfterTodayConstraintTest.DAY), 
+            true);
   }
   
   public void testPast() throws Exception {
-    executeTest(
+    helper.testConstraintValidness(
         new AfterTodayConstraint(false), 
         new Date(System.currentTimeMillis() - 20*AfterTodayConstraintTest.DAY), 
         false);
+
+    helper.testConstraintValidness(
+            new AfterTodayConstraint(true), 
+            new Date(System.currentTimeMillis() - 20*AfterTodayConstraintTest.DAY), 
+            false);
   }
 
   // test that constraint works correctly with today's date
   public void testPresent() throws Exception {
     Date now = new Date();
     // disallow today
-    executeTest(
+    helper.testConstraintValidness(
         new AfterTodayConstraint(false), 
         now, 
         false);
     // allow today
-    executeTest(
+    helper.testConstraintValidness(
         new AfterTodayConstraint(true), 
         now, 
         true);
@@ -93,7 +91,7 @@ public class AfterTodayConstraintTest extends TestCase {
   
   // in case of date being null, after today constraint should invalidate
   public void testNull() throws Exception {
-    executeTest(
+    helper.testConstraintValidness(
         new AfterTodayConstraint(false), 
         null, 
         false);

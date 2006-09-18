@@ -20,7 +20,10 @@ import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
- * Constraint that will be applied iff the field has been read from the request.
+ * Optional {@link Constraint} only applies when constrained field has some
+ * real value. This is a wrapper around {@link Constraint}, wrapped 
+ * {@link Constraint} will be  applied only if the constrained field has 
+ * been read from the request.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

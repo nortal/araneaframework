@@ -70,28 +70,6 @@ public class FormConstraintTest extends TestCase {
   }
 
   /**
-   * Testing reading from request with a primitive constraint set.
-   */
-  public void testFormPrimitiveConstraint() throws Exception {
-
-    FormWidget testForm = makeUsualForm();
-
-    MockHttpServletRequest request = new MockHttpServletRequest();
-
-    request.addParameter("testForm.myCheckBox", "true");
-    request.addParameter("testForm.myLongText", "108");
-	request.addParameter("testForm.myDateTime", (String) null);
-
-    //Testing primitive constraint
-    testForm.getElement("myDateTime").setConstraint(new NotEmptyConstraint());
-    
-    StandardServletInputData input = new StandardServletInputData(request);
-    input.pushScope("testForm");
-    testForm._getWidget().update(input);
-    assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
-  }
-
-  /**
    * Testing reading from request with a grouped constraint set.
    */
   public void testFormActiveGroupedConstraintInvalidates() throws Exception {

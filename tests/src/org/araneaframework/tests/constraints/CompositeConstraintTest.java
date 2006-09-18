@@ -126,14 +126,13 @@ public class CompositeConstraintTest extends TestCase {
   }
   
   /** test that setting composite constraint directly on formelement works */
-  public void testCompositeSettingOnFormElement() throws Exception {
+  public void testCompositeSettingOnFormElementAndConstraintClearance() throws Exception {
     OrConstraint constraint = new OrConstraint();
     constraint.addConstraint(new NumberInRangeConstraint(new BigInteger("100"), new BigInteger("200")));
     constraint.addConstraint(new NumberInRangeConstraint(new BigInteger("800"), new BigInteger("900")));
     numberInput.setConstraint(constraint);
 
     processRequest(createRequestWithNumber("400"));
-    
     assertFalse("Should be invalid as number does not fall into valid ranges.", form.convertAndValidate());
     
     processRequest(createRequestWithNumber("150"));
@@ -141,5 +140,10 @@ public class CompositeConstraintTest extends TestCase {
 
     processRequest(createRequestWithNumber("872"));
     assertTrue("Should be valid as number is in valid range.", form.convertAndValidate());
+    
+    // test that clearing composite constraint works
+    constraint.clearConstraints();
+    processRequest(createRequestWithNumber("400"));
+    assertTrue("Should be valid as composite constraint should be empty.", form.convertAndValidate());
   }
 }

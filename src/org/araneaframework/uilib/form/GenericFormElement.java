@@ -112,7 +112,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
       constraint.setEnvironment(getConstraintEnvironment());
   }
   
-  protected Environment getConstraintEnvironment() {
+  public Environment getConstraintEnvironment() {
     return getEnvironment();
   }
 
