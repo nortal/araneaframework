@@ -159,7 +159,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}	
 	
 	private class TemplatePersonListDataProvider extends MemoryBasedListDataProvider {
-		protected TemplatePersonListDataProvider() {
+		    private static final long serialVersionUID = 1L;
+    protected TemplatePersonListDataProvider() {
 			super(PersonMO.class);
 		}
 		public List loadData() throws Exception {		

@@ -30,7 +30,8 @@ import org.araneaframework.uilib.form.data.StringData;
  */
 public class ContractNotesEditWidget extends TemplateBaseWidget {
 	
-	private static final Logger log = Logger.getLogger(ContractNotesEditWidget.class);
+	  private static final long serialVersionUID = 1L;
+  private static final Logger log = Logger.getLogger(ContractNotesEditWidget.class);
 	private FormWidget form;
 	
 	public FormWidget getForm() {

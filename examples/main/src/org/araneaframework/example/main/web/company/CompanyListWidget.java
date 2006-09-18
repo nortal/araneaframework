@@ -83,6 +83,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
 
   public void handleEventAdd(String eventParameter) throws Exception {
     getFlowCtx().start(new CompanyEditWidget(), null, new FlowContext.Handler() {
+      private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {
         log.debug("Company added with Id of " + returnValue + " sucessfully");
         // trick to refresh the list data when we suspect it has changed
@@ -106,7 +107,8 @@ public class CompanyListWidget extends TemplateBaseWidget {
     log.debug("Company selected with Id of " + id);
     if (editMode)
       getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
-	    public void onFinish(Object returnValue) throws Exception {
+	        private static final long serialVersionUID = 1L;
+      public void onFinish(Object returnValue) throws Exception {
 	        log.debug("Company added with Id of " + returnValue + " sucessfully");
 	        refreshList();
 	      }
@@ -121,7 +123,8 @@ public class CompanyListWidget extends TemplateBaseWidget {
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     log.debug("Company selected with Id of " + id);
     getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
-	    public void onFinish(Object returnValue) throws Exception {
+	      private static final long serialVersionUID = 1L;
+      public void onFinish(Object returnValue) throws Exception {
 	        log.debug("Company added with Id of " + returnValue + " sucessfully");
 	        refreshList();
 	      }
@@ -136,6 +139,8 @@ public class CompanyListWidget extends TemplateBaseWidget {
   }  
 
   private class TemplateCompanyListDataProvider extends MemoryBasedListDataProvider {
+    private static final long serialVersionUID = 1L;
+
     // Overloading constructor with correct bean type.
     protected TemplateCompanyListDataProvider() {
       super(CompanyMO.class);

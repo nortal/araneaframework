@@ -25,6 +25,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class NameWidget extends BaseUIWidget {
+  private static final long serialVersionUID = 1L;
   private FormWidget form;
   
   protected void init() throws Exception {

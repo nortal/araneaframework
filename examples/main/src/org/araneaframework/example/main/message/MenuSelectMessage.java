@@ -21,7 +21,8 @@ import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.example.main.web.menu.MenuWidget;
 
 public class MenuSelectMessage extends BroadcastMessage {
-	private String menuPath;
+	  private static final long serialVersionUID = 1L;
+  private String menuPath;
 	
 	public MenuSelectMessage(String menuPath) {
 		this.menuPath = menuPath;

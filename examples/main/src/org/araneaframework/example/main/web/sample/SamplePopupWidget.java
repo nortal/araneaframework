@@ -31,7 +31,8 @@ import org.araneaframework.uilib.core.PopupFlowWidget;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class SamplePopupWidget extends TemplateBaseWidget {
-	String title;
+	  private static final long serialVersionUID = 1L;
+  String title;
 	int count = 1;
 	
 	public SamplePopupWidget() {
@@ -85,7 +86,9 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 	}
 	
 	class SampleHandler implements FlowContext.Handler {
-		public void onCancel() throws Exception {
+		    private static final long serialVersionUID = 1L;
+
+    public void onCancel() throws Exception {
 		}
 
 		public void onFinish(Object returnValue) throws Exception {

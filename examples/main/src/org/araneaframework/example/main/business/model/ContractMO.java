@@ -26,7 +26,8 @@ import java.math.BigDecimal;
  */
 public class ContractMO implements GeneralMO {
 	
-	private Long id;
+	  private static final long serialVersionUID = 1L;
+  private Long id;
 	private CompanyMO company;
 	private PersonMO person;
 	private String notes;

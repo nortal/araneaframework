@@ -2,9 +2,15 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
+        <!--
+	<bean id="araneaApplicationStart"
+		class="org.araneaframework.framework.filter.StandardDevelFilterWidget"
+		singleton="false">
+		<property name="childClass" value="org.araneaframework.example.main.web.RootWidget"/>
+	</bean> -->
 	<bean id="araneaApplicationStart"
 		class="org.araneaframework.example.main.web.LoginWidget"
-		singleton="false" />
+		singleton="false"/>
   
   <bean class="org.araneaframework.http.filter.StandardMountingFilterService" 
     id="araneaMountFilter" singleton="false">

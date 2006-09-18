@@ -30,6 +30,7 @@ import org.araneaframework.backend.util.BeanMapper;
  * 
  */
 public class TestVO extends BaseBean implements Serializable, Cloneable {
+  private static final long serialVersionUID = 1L;
   /**
    * Private VoMapper, used for <code>toString</code> and <code>equals</code> methods.
    */

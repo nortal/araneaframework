@@ -30,7 +30,8 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class RootWidget extends BaseUIWidget implements SecurityContext {
-	private MenuWidget menuWidget;
+	  private static final long serialVersionUID = 1L;
+  private MenuWidget menuWidget;
 	private Widget topWidget;
 
 	public RootWidget() {}

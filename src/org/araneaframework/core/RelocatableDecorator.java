@@ -18,6 +18,7 @@ package org.araneaframework.core;
 
 import java.io.Serializable;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.araneaframework.Composite;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
@@ -25,6 +26,10 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
+import org.araneaframework.Viewable;
+import org.araneaframework.Widget;
+import org.araneaframework.Relocatable.RelocatableService;
+import org.araneaframework.Relocatable.RelocatableWidget;
 
 /**
  * A decorator for a service making it relocatable. A relocatable service can be
@@ -33,7 +38,7 @@ import org.araneaframework.Service;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class RelocatableServiceDecorator extends BaseService implements Serializable, Relocatable.RelocatableService {
+public class RelocatableDecorator extends BaseService implements Serializable, RelocatableService, RelocatableWidget, ApplicationService,  ApplicationWidget{
   //*******************************************************************
   // FIELDS
   //*******************************************************************  
@@ -75,7 +80,7 @@ public class RelocatableServiceDecorator extends BaseService implements Serializ
    * Constructs a new StandardRelocatableServiceDecorator and sets its child service to child.
    * @param child
    */
-  public RelocatableServiceDecorator(Service child) {
+  public RelocatableDecorator(Service child) {
     this.child = child;
   }
   
@@ -108,5 +113,21 @@ public class RelocatableServiceDecorator extends BaseService implements Serializ
   
   protected void destroy() throws Exception {
     child._getComponent().destroy();
+  }
+
+  public Environment getChildEnvironment() {
+    return ((ApplicationComponent) child).getChildEnvironment();
+  }
+
+  public Composite.Interface _getComposite() {
+    return ((Composite) child)._getComposite();
+  }
+
+  public Viewable.Interface _getViewable() {
+    return ((Viewable) child)._getViewable();
+  }
+
+  public Widget.Interface _getWidget() {
+    return ((Widget) child)._getWidget();
   }
 }

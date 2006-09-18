@@ -44,6 +44,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class SimpleFormWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
   private FormWidget simpleForm;
   
   /**
@@ -75,7 +76,9 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
     FloatControl fc = new FloatControl();
     fc.addOnChangeEventListener(new OnChangeEventListener() {
-		public void onChange() throws Exception {
+		      private static final long serialVersionUID = 1L;
+
+    public void onChange() throws Exception {
 			simpleForm.setValueByFullName("textbox1", new Date().toString());
 		}
     });

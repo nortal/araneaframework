@@ -28,7 +28,8 @@ import org.araneaframework.uilib.support.DisplayItem;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoMultiSelect extends TemplateBaseWidget {
-	private FormWidget form;
+	  private static final long serialVersionUID = 1L;
+  private FormWidget form;
 	
 	protected void init() throws Exception {
 		super.init();

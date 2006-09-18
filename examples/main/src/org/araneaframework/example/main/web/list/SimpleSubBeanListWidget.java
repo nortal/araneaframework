@@ -31,7 +31,9 @@ import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter
 
 
 public class SimpleSubBeanListWidget extends TemplateBaseWidget {
-	protected static final Logger log = Logger.getLogger(SimpleSubBeanListWidget.class);
+	  private static final long serialVersionUID = 1L;
+
+  protected static final Logger log = Logger.getLogger(SimpleSubBeanListWidget.class);
 	
 	private ListWidget list;
 	
@@ -57,7 +59,8 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	}
 	
 	private class DataProvider extends MemoryBasedListDataProvider {
-		protected DataProvider() {
+		    private static final long serialVersionUID = 1L;
+    protected DataProvider() {
 			super(ContactMO.class);
 		}
 		public List loadData() throws Exception {
@@ -91,7 +94,8 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	}
 	
 	public static class ContactMO implements GeneralMO {
-		private Long id;
+		    private static final long serialVersionUID = 1L;
+    private Long id;
 		private NameMO name;
 		private AddressMO address;
 		public AddressMO getAddress() {
@@ -116,7 +120,8 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	}
 	
 	public static class NameMO implements Serializable {
-		private String firstname;
+		    private static final long serialVersionUID = 1L;
+    private String firstname;
 		private String lastname;
 		public String getFirstname() {
 			return firstname;
@@ -133,7 +138,8 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	}
 	
 	public static class AddressMO implements Serializable {
-		private String country;
+		    private static final long serialVersionUID = 1L;
+    private String country;
 		private String city;
 		public String getCity() {
 			return city;

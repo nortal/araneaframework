@@ -45,7 +45,8 @@ import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormR
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DemoFormList extends TemplateBaseWidget {
-	private BeanFormListWidget formList;
+	  private static final long serialVersionUID = 1L;
+  private BeanFormListWidget formList;
 	private Map data = new LinkedMap();
 
 	//Plays the role of a sequence
@@ -86,7 +87,9 @@ public class DemoFormList extends TemplateBaseWidget {
 	}
 
 	public class DemoFormRowHandler extends ValidOnlyIndividualFormRowHandler {
-		public Object getRowKey(Object row) {
+		    private static final long serialVersionUID = 1L;
+
+    public Object getRowKey(Object row) {
 			return ((DataDTO) row).getId();
 		}
 

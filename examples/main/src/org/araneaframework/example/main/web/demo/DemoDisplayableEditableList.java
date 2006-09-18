@@ -45,7 +45,9 @@ import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormR
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DemoDisplayableEditableList extends TemplateBaseWidget {
-	public DemoDisplayableEditableList() {		
+	  private static final long serialVersionUID = 1L;
+
+  public DemoDisplayableEditableList() {		
 	}
 
 	private BeanFormListWidget editableRows;
@@ -84,7 +86,9 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
 	}
 
 	public class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-		public Object getRowKey(Object row) {
+		    private static final long serialVersionUID = 1L;
+
+    public Object getRowKey(Object row) {
 			return ((DataDTO) row).getId();
 		}
 
