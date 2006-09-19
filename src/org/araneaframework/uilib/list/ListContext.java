@@ -21,28 +21,59 @@ import java.util.Locale;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
- * List configuration. 
+ * List context. General interface that can be used to access the current list
+ * configuration.
  *  
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
  * @see ConfigurationContext
+ * @see ListWidget
  */
 public interface ListContext {
 	
-	// Global confiugration
-	
+	/**
+	 * Retrieves the global configuration context.
+	 * 
+	 * @return the global configuration context.
+	 */
 	ConfigurationContext getConfiguration();
 
+	/**
+	 * Returns the current case sensitivity behaivor.
+	 * 
+	 * @return the current case sensitivity behaivor.
+	 */
 	boolean isIgnoreCase();
 
+	/**
+	 * Returns the current locale.
+	 * 
+	 * @return the current locale.
+	 */
 	Locale getLocale();
 	
-	// Fields
-
+	/**
+	 * Returns the label of this field. 
+	 * 
+	 * @param fieldId field id.
+	 * @return the label of this field.
+	 */
 	String getFieldLabel(String fieldId);
 
+	/**
+	 * Returns the type of this field.
+	 * 
+	 * @param fieldId field id.
+	 * @return the type of this field.
+	 */
 	Class getFieldType(String fieldId);
 
+	/**
+	 * Returns the {@link Comparator} of this field.
+	 * 
+	 * @param fieldId field id.
+	 * @return the comparator of this field.
+	 */
 	Comparator getFieldComparator(String fieldId);
 
 }

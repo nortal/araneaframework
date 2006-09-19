@@ -15,13 +15,13 @@
 **/
 package org.araneaframework.uilib.list.structure.filter;
 
-import org.apache.commons.lang.Validate;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.list.ListWidget;
 
 /**
- * List filter helper for specified field.
+ * One list field specific proxy for {@link FilterHelper}.
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
@@ -33,13 +33,27 @@ public class FieldFilterHelper {
 	private final FilterHelper helper;
 	private final String fieldId; 
 	
+	/**
+	 * Constructs a {@link FieldFilterHelper} for specified {@link FilterHelper}
+	 * and field.
+	 * 
+	 * @param helper filter helper.
+	 * @param fieldId list field id.
+	 */
 	public FieldFilterHelper(FilterHelper helper, String fieldId) {
-		Validate.notNull(helper);
-		Validate.notNull(fieldId);
+		Assert.notNullParam(helper, "helper");
+		Assert.notEmptyParam(fieldId, "fieldId");
+		
 		this.helper = helper;
 		this.fieldId = fieldId;
 	}
 	
+	/**
+	 * Returns the {@link FilterHelper} that this {@link FieldFilterHelper} is
+	 * based on.
+	 * 
+	 * @return the filter helper.
+	 */
 	public FilterHelper getFilterHelper() {
 		return this.helper;
 	}

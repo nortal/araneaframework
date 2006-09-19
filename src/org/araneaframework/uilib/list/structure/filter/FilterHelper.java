@@ -21,7 +21,10 @@ import java.util.List;
 import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.structure.ListFilter;
 import org.araneaframework.uilib.list.structure.filter.advanced.RangeInRangeFilter;
 import org.araneaframework.uilib.list.structure.filter.advanced.SqlFunctionFilter;
 import org.araneaframework.uilib.list.structure.filter.atomic.Constant;
@@ -33,16 +36,77 @@ import org.araneaframework.uilib.list.structure.filter.field.LikeFilter;
 import org.araneaframework.uilib.list.structure.filter.field.LowerThanFilter;
 import org.araneaframework.uilib.list.structure.filter.field.NullFilter;
 import org.araneaframework.uilib.list.structure.filter.field.RangeFilter;
+import org.araneaframework.uilib.list.util.FormUtil;
 
 /**
- * List filter helper.  
+ * Standard list filter helper. This class is used to add <b>filters</b> and
+ * their <b>form elements</b> to the {@link ListWidget}.
+ * <p>
+ * THe following filters can be added to the list:
+ * {@link EqualFilter},
+ * {@link GreaterThanFilter},
+ * {@link LowerThanFilter},
+ * {@link LikeFilter},
+ * {@link NullFilter},
+ * {@link RangeFilter},
+ * {@link RangeInRangeFilter},
+ * {@link SqlFunctionFilter}.
+ * </p>
+ * <p>
+ * There are many methods for adding each filter and their form elements.
+ * Note that some methods start with the <b>_</b> sign. These add filters 
+ * without adding form elements to them. Use this only if its inevitable.
+ * The default behaivor is to add the filter and its form elements at once to
+ * enable filter specific form elements (e.g {@link LikeFilter} uses
+ * {@link TextControl} ignoring the field type defined by the list) and avoid
+ * many mistakes.
+ * </p>
+ * <p>
+ * Also many filters can be added as constant filters. This means
+ * they are just part of the query but do not depend on the user. For example
+ * one would like to add constant filter to get only clients from one region
+ * without showing this filter to the user or letting it to be modified.
+ * </p>
+ * <p>
+ * In other cases, <b>filters are added with form elements</b> no matter if one
+ * pass it within the method arguments or no. For each form element (e.g 2 in
+ * case of range filter and 1 in case of like filter) one can pass a form
+ * element, just a control or none of these. Passing a control means that the
+ * form element is automatically created using the other information available
+ * for this filter's field - <b>label</b> and <b>type</b>.
+ * Not passing the control either just means that the <b>control</b> is
+ * automatically created according the the field type
+ * (using {@link FormUtil#createControl(Class)})). However if you like to define
+ * label or type for a form element, you can predefine them using
+ * {@link #addCustomLabel(String, String)} and
+ * {@link #addFieldType(String, Class)} methods.
+ * As you could expect, the <b>mandatory</b> is set to <code>false</code> and
+ * the <b>initial value</b> is set to null by default.    
+ * </p>
+ * <p>
+ * Their is one more aspect for all filter adding methods. For each method, one
+ * can define <b>valueId</b>. The term <b>value</b> is used here to mark the
+ * blank in the filter (basically the form element). By default the
+ * <b>fieldId</b> is also used as the valueId. So it's unneccesary to pass a
+ * valueId unless one would like to add more than one filter for one field. 
+ * In the case of range filter, there are already two values used for one
+ * filter and therefore original fieldId is suffixed to distinguish the two
+ * values - low and high. However for more than two range filter for one field,
+ * custom value ids must be used as well. 
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
  * @see ListWidget
+ * @see FormWidget
+ * @see ListFilter
  */
 public class FilterHelper extends BaseFilterHelper {
 	
+	/**
+	 * Constructs a {@link FilterHelper}.
+	 * 
+	 * @param list list widget.
+	 */
 	public FilterHelper(ListWidget list) {
 		super(list);
 	}

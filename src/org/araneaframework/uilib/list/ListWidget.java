@@ -72,10 +72,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	// FIELDS
 	//*******************************************************************
 
-	/** The filter form name. */
+	/** The filter form id. */
 	public static final String FILTER_FORM_NAME = "form";
 
+	/** The filter button id */
 	public static final String FILTER_BUTTON_ID = "filter";
+	/** The rest filter button id */
 	public static final String FILTER_RESET_BUTTON_ID = "clearFilter";
 
 	/** The multi-ordering form name. */

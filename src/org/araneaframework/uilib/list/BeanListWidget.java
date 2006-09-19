@@ -19,7 +19,6 @@ package org.araneaframework.uilib.list;
 import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.util.BeanUtil;
 
-
 /**
  * ListWidget that is aware of field types according to the Bean type.
  * 
@@ -33,13 +32,18 @@ public class BeanListWidget extends ListWidget {
 	
 	protected final Class beanType;
 	
+	/**
+	 * Constructs a {@link BeanListWidget} for specified Bean type.
+	 * 
+	 * @param beanType list element type.
+	 */
 	public BeanListWidget(Class beanType) {
 		super();
 		Validate.notNull(beanType);
 		this.beanType = beanType;
 	}
 	
-	public TypeHelper createTypeHelper() {
+	protected TypeHelper createTypeHelper() {
 		return new TypeHelper(getL10nCtx().getLocale()) {			
 			public Class getFieldType(String fieldId) {
 				Class result = super.getFieldType(fieldId);

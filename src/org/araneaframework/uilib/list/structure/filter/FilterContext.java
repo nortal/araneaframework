@@ -19,7 +19,8 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.ListContext;
 
 /**
- * Filter context that is used by list filters for their initialization. 
+ * Filter context. Interface that is used by list filters during their
+ * initialization to access current list and global filter configuration. 
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  * 
