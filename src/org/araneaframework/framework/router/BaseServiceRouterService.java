@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework.router;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -43,7 +44,7 @@ import org.araneaframework.http.util.ClientStateUtil;
 public abstract class BaseServiceRouterService extends BaseService {
   private static final Logger log = Logger.getLogger(BaseServiceRouterService.class);
   
-  protected Map serviceMap;
+  private Map serviceMap;
   protected Object defaultServiceId;
   
   /**
@@ -67,16 +68,18 @@ public abstract class BaseServiceRouterService extends BaseService {
    * of the service in the service map. 
    */
   protected void init() throws Exception {
-    //Initializes provided service map
+    // adds serviceMap entries as child services
     Iterator ite = serviceMap.entrySet().iterator();
     while(ite.hasNext()) {
       Map.Entry entry = (Map.Entry) ite.next();
       _addComponent(entry.getKey(), (Service) entry.getValue(), getChildEnvironment(entry.getKey()));
     }
+    // free extra references
+    serviceMap = null;
   }
   
   protected void propagate(Message message) throws Exception {
-    Iterator ite = serviceMap.entrySet().iterator();
+    Iterator ite =  _getChildren().entrySet().iterator();
     while(ite.hasNext()) {
       Map.Entry entry = (Map.Entry) ite.next();
       message.send(entry.getKey(), (Service) entry.getValue());
@@ -117,9 +120,7 @@ public abstract class BaseServiceRouterService extends BaseService {
   
   // Callbacks 
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    Map entries = new HashMap();    
-    entries.put(ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(getEnvironment(), ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
   }
   
   /**
@@ -134,7 +135,17 @@ public abstract class BaseServiceRouterService extends BaseService {
    * Every service has its own key under which the service service id can be found in the request.
    * This method returns that key. 
    */
-  protected abstract Object getServiceKey()  throws Exception;
+  protected abstract Object getServiceKey() throws Exception;
+  
+  protected void closeExpiredServices() {};
+  protected boolean isExpired(Object serviceId) {
+    return false;
+  }
+  
+  protected void closeService(Object serviceId) {
+    ((Service)_getChildren().get(serviceId))._getComponent().destroy();
+    _getChildren().remove(serviceId);
+  }
   
   protected class ServiceRouterContextImpl implements ManagedServiceContext {
     private Object currentServiceId;
@@ -160,10 +171,27 @@ public abstract class BaseServiceRouterService extends BaseService {
       }
       return service;
     }
+    
+    public Service addService(Object id, Service service, Long timeToLive) {
+      throw new UnsupportedOperationException(Assert.thisToString(this) + " does not support addService(Object id, Service service, Long timeToLive) method.");
+    }
 
-    public void close(Object id) {
-      ((Service)_getChildren().get(id))._getComponent().destroy();
-      _getChildren().remove(id);
+	public void close(Object id) {
+      closeService(id);
+    }
+  }
+  
+  public static class TTLCapsule {
+    private Long ttl;
+    private Long lastActivityTime;
+    
+    public TTLCapsule(Long ttl) {
+      this.ttl = ttl;
+      lastActivityTime = new Long(new Date().getTime());
+    }
+    
+    public boolean isExpired(long time) {
+      return (time > lastActivityTime.longValue() + ttl.longValue());
     }
   }
 }
