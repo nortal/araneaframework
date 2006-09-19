@@ -26,14 +26,14 @@ public abstract class AraneaAttributes {
   private AraneaAttributes() {}
 	
   /** Attribute identifying Aranea system form */
-  public static String SYSTEM_FORM = "arn-systemForm";
+  public static final String SYSTEM_FORM = "arn-systemForm";
 
   /** Event related non-standard HTML tag attributes */
   public interface Event {
-     public static String ID = "arn-evntId";
-     public static String TARGET_WIDGET_ID = "arn-trgtwdgt";
-     public static String PARAM = "arn-evntPar";
-     public static String UPDATE_REGIONS = "arn-updrgns";
-     public static String CONDITION = "arn-evntCond";
+     public static final String ID = "arn-evntId";
+     public static final String TARGET_WIDGET_ID = "arn-trgtwdgt";
+     public static final String PARAM = "arn-evntPar";
+     public static final String UPDATE_REGIONS = "arn-updrgns";
+     public static final String CONDITION = "arn-evntCond";
   }
 }

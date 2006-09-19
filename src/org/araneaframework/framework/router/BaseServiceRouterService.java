@@ -26,6 +26,7 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.core.StandardEnvironment;
@@ -92,9 +93,13 @@ public abstract class BaseServiceRouterService extends BaseService {
     if (currentServiceId == null)
       currentServiceId = defaultServiceId;
 
+    Assert.notNull(this, currentServiceId, 
+    		"Router found current service id to be null, which means that it could not be " +
+    		"read from request and default value is not defined too.");
+
     ClientStateUtil.put((String)getServiceKey(), currentServiceId.toString(), output);
     
-    if (currentServiceId != null && _getChildren().containsKey(currentServiceId)) {
+    if (_getChildren().containsKey(currentServiceId)) {
       output.pushAttribute(getServiceKey(), currentServiceId);
       
       try {

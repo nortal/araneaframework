@@ -67,6 +67,11 @@ public class ListTag extends BaseWidgetTag {
 		return EVAL_PAGE;		
 	}
 	
+	public void doFinally() {
+		super.doFinally();
+		listViewModel = null;
+	}
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"

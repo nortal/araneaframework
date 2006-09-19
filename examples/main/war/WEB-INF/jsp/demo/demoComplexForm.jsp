@@ -28,7 +28,7 @@
                                  that should be updated when event occurs (specifying this 
                                  attribute also means that upon listener activation AJAX
                                  request is made instead of ordinary HTTP request. -->
-								<ui:select updateRegions="ajaxBeasts" globalUpdateRegions="messages"/>
+								<ui:select updateRegions="ajaxBeasts"/>
 							</ui:cell>
 							<ui:cell width="25%"/>
 						</ui:formElement>

@@ -122,3 +122,5 @@ function saveScrollCoordinates(form) {
 function scrollToCoordinates(x, y) {
 	window.scrollTo(x, y);
 } 
+
+window['aranea-ui.js'] = true;

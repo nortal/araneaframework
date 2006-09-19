@@ -48,7 +48,7 @@ public class ErrorMarkingCellClassProviderDecorator implements CellClassProvider
 
   public String getCellClass() throws JspException {
     FormElement.ViewModel formElementViewModel = (FormElement.ViewModel)pageContext.getAttribute(FormElementTag.VIEW_MODEL_KEY, PageContext.REQUEST_SCOPE);
-    // superProvider.getCellClass() may only be called once, otherwise moves on to next style
+    // superProvider.getCellClass() may only be called once, otherwise moves on to next cell's style
     String superClass = superProvider.getCellClass();
 
     if (formElementViewModel != null && !formElementViewModel.isValid()) {

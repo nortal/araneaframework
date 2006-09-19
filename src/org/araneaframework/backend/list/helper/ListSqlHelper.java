@@ -64,7 +64,7 @@ import org.araneaframework.uilib.list.util.converter.DummyConverter;
  */
 public abstract class ListSqlHelper {
 
-	protected static Logger log = Logger.getLogger(ListSqlHelper.class);
+	protected static final Logger log = Logger.getLogger(ListSqlHelper.class);
 
 	protected static final Long DEFAULT_RANGE_START = new Long(0);
 
@@ -984,7 +984,7 @@ public abstract class ListSqlHelper {
 	 * 
 	 * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
 	 */
-	public class ListItemsDataCallback implements ConnectionCallback {
+	public static class ListItemsDataCallback implements ConnectionCallback {
 		
 		protected ConnectionCallback countSqlCallback;
 		protected ConnectionCallback itemRangeSqlCallback;

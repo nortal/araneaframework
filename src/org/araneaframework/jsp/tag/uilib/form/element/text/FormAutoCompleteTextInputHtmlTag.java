@@ -46,7 +46,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     StringBuffer acRequestUrl = constructACUrl(systemFormId);
     
     JspUtil.writeStartTag_SS(out, "script");
-    out.write(constructACRegistrationScript(viewModel, acRequestUrl).toString());
+    out.write(constructACRegistrationScript(viewModel, acRequestUrl));
     JspUtil.writeEndTag(out, "script");
 
     super.doEndTag(out);

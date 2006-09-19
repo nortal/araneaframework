@@ -31,7 +31,6 @@ import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.extension.ExternalResource;
@@ -114,11 +113,11 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 				}
 				else {
 					log.warn("Unexistent group specified for file importing, "+groupName);
-					throw new AraneaFileNotFoundException();
+					throw new FileNotFoundException();
 				}
 			}	
 		}
-		catch (AraneaFileNotFoundException e) {
+		catch (FileNotFoundException e) {
 			String notFoundName = fileName == null ? groupName : fileName;
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Imported file or group '" + notFoundName + "' not found.");
 		}
@@ -150,10 +149,10 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 					fileInputStream = new FileInputStream(fileName);
 				}
 				catch (FileNotFoundException e) {
-					// not being able to load results in AraneaFileNotFoundException, see below
+					// not being able to load results in FileNotFoundException, see below
 				}
 				catch (SecurityException e) {
-					// not being able to load results in AraneaFileNotFoundException, see below
+					// not being able to load results in FileNotFoundException, see below
 				}
 			}
 			
@@ -180,14 +179,8 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 			}
 			else {
 				log.warn("Unable to locate resource '"+fileName+"'");
-				throw new AraneaFileNotFoundException();
+				throw new FileNotFoundException("Unable to locate resource '"+fileName+"'");
 			}
 		}
 	}
-  
-  private class AraneaFileNotFoundException extends AraneaRuntimeException {
-    public AraneaFileNotFoundException() {
-      super();
-    }
-  }
 }

@@ -78,7 +78,7 @@ public class FileDownloaderService extends BaseService {
 	// to ensure filename does not include the full path. By no means bulletproof
 	// as it does some harm to filenames containing slashes/backslashes.
 	public static String staticNormalizeFileName(String fileName) {
-		fileName.trim();
+		fileName = fileName.trim();
 		// shouldn't happen, but anyway...
 		if (fileName.endsWith("\\"))
 			fileName = fileName.substring(0, fileName.length()-1);

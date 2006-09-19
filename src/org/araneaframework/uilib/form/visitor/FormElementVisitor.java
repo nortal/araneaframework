@@ -56,7 +56,7 @@ public abstract class FormElementVisitor implements Serializable {
 	 * 
 	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 	 */
-	private class IdElementPair implements Serializable {
+	private static class IdElementPair implements Serializable {
 		private String id;
 		private GenericFormElement element;
 		

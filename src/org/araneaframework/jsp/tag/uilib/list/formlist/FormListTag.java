@@ -69,7 +69,8 @@ public class FormListTag extends BaseWidgetTag {
 	 * FINALLY - reset some fields to allow safe reuse from tag pool.
 	 * ***********************************************************************************/
 	public void doFinally() {
-		id = null;
 		super.doFinally();
+		id = null;
+		formListViewModel = null;
 	}
 }

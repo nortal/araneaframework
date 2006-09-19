@@ -50,7 +50,7 @@ public class SimpleListWidget extends TemplateBaseWidget {
     addWidget("simpleList", simpleList);
   }  
   
-  private class SimpleListDataProvider extends MemoryBasedListDataProvider {
+  private static class SimpleListDataProvider extends MemoryBasedListDataProvider {
     private static final long serialVersionUID = 1L;
     protected List data = new ArrayList();
     

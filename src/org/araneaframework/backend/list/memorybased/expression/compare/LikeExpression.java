@@ -64,8 +64,9 @@ public class LikeExpression implements CompositeExpression, StringExpression {
 
 	public Object evaluate(VariableResolver resolver)
 	throws ExpressionEvaluationException {
-		return new Boolean(RegexpLikeUtil.isLike(convert(this.expr.evaluate(resolver)),
-				convert(this.mask.getValue()), this.ignoreCase, this.configuration));
+		return (RegexpLikeUtil.isLike(convert(this.expr.evaluate(resolver)),
+				convert(this.mask.getValue()), this.ignoreCase, this.configuration))
+				? Boolean.TRUE : Boolean.FALSE;
 	}
 	
 	private String convert(Object value) {

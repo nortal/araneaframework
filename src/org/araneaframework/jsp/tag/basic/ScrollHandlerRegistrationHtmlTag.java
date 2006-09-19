@@ -36,8 +36,9 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
      WindowScrollPositionContext scrollHandler = 
     	 (WindowScrollPositionContext)getOutputData().getAttribute(WindowScrollPositionContext.SCROLL_HANDLER_KEY);
 
-     if (scrollHandler != null)
+     if (scrollHandler != null) {
        registerScrollHandler(out, scrollHandler);
+     }
        
 	 return EVAL_PAGE;
    }

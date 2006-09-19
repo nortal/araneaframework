@@ -41,7 +41,7 @@
 	
   </sect1>
 	<sect1>
-		<title>StandardWidget &amp; BaseUIWidget</title>
+		<title>BaseApplicationWidget &amp; BaseUIWidget</title>
 
     <para>
       A typical widget class will extend <literal>org.araneaframework.uilib.core.BaseUIWidget</literal>. This widget represents the usual custom application component that is rendered using Aranea custom JSP tags. <literal>BaseUIWidget</literal> inherits most of its functionality from <literal>org.araneaframework.core.BaseApplicationWidget</literal> the difference between the two being only that <literal>BaseUIWidget</literal> assumes to be connected with a JSP page.
@@ -51,13 +51,13 @@
       <title>Children management</title>
 
       <para>
-        <literal>StandardWidget</literal> provides a number of methods for managing child widgets:
-        <programlisting role="java">public abstract class StandardWidget ... {
+        <literal>BaseApplicationWidget</literal> provides a number of methods for managing child widgets:
+        <programlisting role="java">public abstract class BaseApplicationWidget ... {
   ...
-  public void addWidget(Object key, Widget child) throws Exception;
-  public void removeWidget(Object key) throws Exception;
-  public void enableWidget(Object key) throws Exception;
-  public void disableWidget(Object key) throws Exception;
+  public void addWidget(Object key, Widget child);
+  public void removeWidget(Object key);
+  public void enableWidget(Object key);
+  public void disableWidget(Object key);
   ...
 }</programlisting>
         As one can see, every added child has an identifier which should be unique among its siblings. This identifier is used when rendering and sending events to the widget in question, to identify it among its peers.
@@ -102,9 +102,10 @@
     log.debug("Received event: " + eventId);
   }
 }</programlisting>      
-      Of course, the event listener does not have to be an anonymous class and can just as well be an inner or even a usual public class. A standard base implementation <literal>org.araneaframework.core.CustomEventListener</literal> is provided that receives an optional <literal>String</literal> event parameter:
+      Of course, the event listener does not have to be an anonymous class and can just as well be an inner or even a usual public class. 
+      A standard base implementation <literal>org.araneaframework.core.StandardEventListener</literal> is provided that receives an optional <literal>String</literal> event parameter:
 <programlisting role="java">addEventListener("myEvent", new StandardEventListener() {
-  public void processEvent(Object eventId, Object parameter, InputData input) throws Exception {
+  public void processEvent(Object eventId, String eventParam, InputData input) throws Exception;
     log.debug("Received event " + eventId + " with parameter " + parameter);
   }
 }</programlisting>      
@@ -144,13 +145,11 @@ msgCtx.showInfoMessage("Hello world!");</programlisting>
       </para>
 
       <para>
-        In addition to event processing it is sometimes useful to do some kind of pre- and post-processing. The <literal>StandardWidget</literal> has the following methods that may be overridden to allow this processing:
-<programlisting role="java">public class StandardWidget extends ... {
-  ...
-  protected void handleUpdate(InputData input) throws Exception;
-  protected void handleProcess() throws Exception;
-  ...
-}</programlisting>        
+        In addition to event processing it is sometimes useful to do some kind of pre- and post-processing. The <literal>BaseApplicationWidget</literal> has the following methods that may be overridden to allow this processing:
+<programlisting role="java">
+  protected void handleUpdate(InputData input) throws Exception {}
+  protected void handleProcess() throws Exception {}
+</programlisting>        
       <literal>handleUpdate()</literal> is called before event listeners are notified and allows to read and save request data preparing it for the event. More importantly, this method is called even when no event is sent to the current widget allowing one to submit some data to any widget. <literal>handleProcess()</literal> is called after the event listeners are notified and again is called event if current widgets receives no events at all. It allows to prepare the widget for rendering, post-processing the request results without concern whether or not events have been delivered.
       </para>
     </sect2>
@@ -161,22 +160,29 @@ msgCtx.showInfoMessage("Hello world!");</programlisting>
         In Aranea one usually  does not need to handle request manually in custom application widgets. Even more, the request is not accessible by default. The usual way to submit custom data to a widget and read it is using Aranea Forms (see <xref linkend="forms"/>). However, when one needs to access the submitted data, one can do that using the <literal>org.araneaframework.InputData</literal>. This class can be used as follows:
 <programlisting role="java">...
 String myData1 = 
-  (String) getCurrentInput().getScopedData().get("myData1");
+  (String) getInputData().getScopedData().get("myData1");
 String globalSubmittedParameter = 
-  (String) getCurrentInput().getGlobalData().get("globalSubmittedParameter");
+  (String) getInputData().getGlobalData().get("globalSubmittedParameter");
 ...</programlisting>        
-      <literal>getCurrentInput()</literal> is a <literal>StandardWidget</literal> method that returns the input data for the current request (one can also use  the <literal>inputData</literal> parameter given to event listener directly). <literal>getScopedData()</literal> returns a <literal>java.util.Map</literal> with data submitted to the current widget specifically (typically this will mean that the data was prefixed with the full widget id in request). <literal>getGlobalData()</literal> returns the data that was submitted globally (typically the data that was not prefixed anyhow in the request). 
+      <literal>getInputData()</literal> is a <literal>BaseApplicationWidget</literal> method that returns the input data for the current 
+      request (one can also use  the <literal>inputData</literal> parameter given to event listener directly). <literal>getScopedData()</literal> 
+      returns a <literal>java.util.Map</literal> with data submitted to the current widget specifically (typically this will mean that the data 
+      was prefixed with the full widget id in request). <literal>getGlobalData()</literal> returns the data that was submitted globally (typically the
+      data that was not prefixed anyhow in the request). 
       </para>
 
       <para>
-        One can also get the <literal>HttpServletRequest</literal> from the <literal>InputData</literal> by casting it to <literal>org.araneaframework.http.ServletInputData</literal> and calling <literal>getRequest()</literal> on it.
+        One can also obtain the <literal>HttpServletRequest</literal> from the 
+        <literal>InputData</literal> by calling <literal>ServletUtil.getRequest(InputData data)</literal>.
       </para>
 
       <para>
-        <literal>org.araneaframework.OutputData</literal> usually does not play any role in application development. It is accessible through the <literal>getCurrentOutput()</literal> method of <literal>StandardWidget</literal>.<literal>HttpServletResponse</literal> is available by casting it to <literal>ServletOutputData</literal> and calling <literal>getResponse()</literal>. Additionally <literal>ServletOutputData</literal> also has a method <literal>redirect()</literal> which should be used as follows:
+        <literal>org.araneaframework.OutputData</literal> usually does not play any role in application development.
+        It is accessible through the <literal>getOutputData()</literal> method of <literal>BaseWidget</literal>.
+        <literal>HttpServletResponse</literal> can be accessed by calling <literal>ServletUtil.getResponse(OutputData data)</literal>.
+        Additionally <literal>HttpOutputData</literal> also has a method <literal>sendRedirect(String location)</literal> which should be used as follows:
 <programlisting role="java">...
-((ServletOutputData) getCurrentOutput()).redirect(
-  getEnvironment(), "http://www.google.com");
+((HttpOutputData) getOutputData()).sendRedirect("http://www.google.com");
 ...</programlisting>        
         This method does an HTTP redirect to the specified URL.
       </para>
@@ -185,7 +191,7 @@ String globalSubmittedParameter =
       <title>View Model and Rendering</title>
 
       <para>
-        <literal>StandardWidget</literal> also contains methods that facilitate transferring data to the presentation layer. This is achieved using a <emphasis>View model</emphasis>&mdash;an object containing a snapshot of the widget current state. The most typical way to use the view model it to add data to it:
+        <literal>BaseApplicationWidget</literal> also contains methods that facilitate transferring data to the presentation layer. This is achieved using a <emphasis>View model</emphasis>&mdash;an object containing a snapshot of the widget current state. The most typical way to use the view model it to add data to it:
 <programlisting role="java">...
 putViewData("today", new Date());
 putViewData("currentUser", userBean);
@@ -249,7 +255,7 @@ setViewSelector("myWidget/form");
       <para>
         <literal>org.araneaframework.framework.MessageContext</literal> allows to show messages to the user. The messages can be of several types, inluding predefined error and informative types. Typically messages will be shown somewhere in the application (exact way is application-specific). <literal>MessageContext</literal> is available through a <literal>BaseUIWidget</literal> method <literal>getMessageCtx()</literal> and is typically used as follows:
 <programlisting role="java">getMessageCtx().showInfoMessage("Hello world!");</programlisting>        
-      More info is available in the JavaDoc.
+      For more information, see <xref linkend="StandardMessagingFilterWidget"/> and JavaDoc.
       </para>
     </sect2>
     

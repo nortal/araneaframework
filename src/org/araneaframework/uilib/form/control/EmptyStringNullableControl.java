@@ -44,7 +44,7 @@ public abstract class EmptyStringNullableControl extends StringRequestControl {
   
 
 	public boolean isRead() {
-		return innerData != null && new String(((String[]) innerData)[0]).trim().length() != 0;
+		return innerData != null && ((String[]) innerData)[0].trim().length() != 0;
 	}
 
 }

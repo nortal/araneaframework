@@ -956,3 +956,5 @@ Element.Methods.visualEffect = function(element, effect, options) {
 };
 
 Element.addMethods();
+
+window['scriptaculous/effects.js'] = true;

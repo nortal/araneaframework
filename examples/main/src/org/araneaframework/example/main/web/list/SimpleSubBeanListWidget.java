@@ -58,7 +58,7 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 		return temp;
 	}
 	
-	private class DataProvider extends MemoryBasedListDataProvider {
+	private static class DataProvider extends MemoryBasedListDataProvider {
 		    private static final long serialVersionUID = 1L;
     protected DataProvider() {
 			super(ContactMO.class);

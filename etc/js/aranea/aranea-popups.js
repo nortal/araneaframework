@@ -70,6 +70,8 @@ function processPopups() {
   for (var popupId in popups) {
     openPopup(popupId, popupProperties[popupId]);
   }
+  popups = new Object();
+  popupProperties = new Object();
 }
 
 function reloadParentWindow(url) {
@@ -81,3 +83,5 @@ function reloadParentWindow(url) {
 function closeWindow(delay) {
   setTimeout('window.close()', delay);
 }
+
+window['aranea-popups.js'] = true;

@@ -139,7 +139,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		return result;
 	}
 
-	public class SelectItem {
+	public static class SelectItem {
 		public String sampleValue;
 		public String sampleDisplayString;
 		

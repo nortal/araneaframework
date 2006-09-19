@@ -21,8 +21,6 @@
 /* AraneaTraverser is locator for some Aranea specific elements in DOM tree. */
 function AraneaTraverser() {
   /* Returns FORM that is Aranea system form and surrounds given HTML element. 
-   * When servlet URL is not yet known to current aranea page, sets its according to
-   * acquired from from system form. 
    * Should be overriden with fast constant function when using just one system form. */
   this.findSurroundingSystemForm = function(element) {
     if (document.forms.length == 1 && document.forms[0].getAttribute('arn-systemForm'))
@@ -40,7 +38,6 @@ function AraneaTraverser() {
 }
 
 AraneaTraverser.prototype.getElementAttribute = function (element, attributeName) {
-  //return (!element[attributeName] || element[attributeName] == "") ? null : result;
   return element.getAttribute(attributeName);
 }
 AraneaTraverser.prototype.getEventTarget = function(element) {
@@ -112,7 +109,7 @@ function AraneaEventStore() {
  * functionality for setting page related variables, events and functions. */
 function AraneaPage() {
   /* URL of aranea dispatcher servlet serving current page. 
-   * Automatically set by AraneaTraverser.findSurroundingSystemForm(). */ 
+   * This is by default set by Aranea JSP ui:body tag. */ 
   var servletURL = null;
   this.getServletURL = function() { return servletURL; }
   this.setServletURL = function(url) { servletURL = new String(url); }
@@ -126,10 +123,16 @@ function AraneaPage() {
   this.isLoaded = function() { return loaded; }
   this.setLoaded = function(b) { if (typeof b == "boolean") { loaded = b; } }
   
-  /* returns the div meant for outputting debug information, if it is present */
-  var debugDiv = null;
-  this.setDebugDiv = function(div) { debugDiv = div; }
-  this.getDebugDiv = function() { return debugDiv; }
+  /* Logger that outputs javascript logging messages. */
+  var dummyLogger = new function() { var dummy = function() {}; this.trace = dummy; this.debug = dummy; this.info = dummy; this.warn = dummy; this.error = dummy; this.fatal = dummy;};
+  var logger = dummyLogger;
+  this.setDummyLogger = function() { logger = dummyLogger; }
+  this.setDefaultLogger = function() { 
+  	if (window['log4javascript/log4javascript.js'])
+      logger = log4javascript.getDefaultLogger();
+  }
+  this.setLogger = function(theLogger) { logger = theLogger; }
+  this.getLogger = function() { return logger; }
   
   /* locale - should be used only for server-side reported locale */
   var locale = new AraneaLocale("", "");
@@ -235,13 +238,11 @@ function AraneaPage() {
   }
   
   this.debug = function(message) {
-    if (this.getDebugDiv()) {
-      this.getDebugDiv().appendChild(document.createElement("br"));
-      this.getDebugDiv().appendChild(document.createTextNode(message));
-    }
+    this.getLogger().debug(message);
   }
   
   this.override = function(functionName, f) {
+  	this.getLogger().info("AraneaPage." +functionName + " was overriden.");
   	this[functionName] = f;
   }
 }
@@ -255,9 +256,6 @@ AraneaPage.getRandomRequestId = function() {
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   getActiveAraneaPage().addSystemLoadEvent(Behaviour.apply);
-
-  var div = document.getElementById("araneaDebugDiv");
-  if (div) getActiveAraneaPage().setDebugDiv(div);
 }
 
 function DefaultAraneaSubmitter(form) {

@@ -82,14 +82,14 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
   public void clearItems() {
     items.clear();
   }
-    
-	public List getDisplayItems() {
-		return items;
-	}    
-	
-	public int getValueIndex(String value) {
-		return DisplayItemUtil.getValueIndex(items, value);
-	}	
+
+  public List getDisplayItems() {
+    return items;
+  }
+
+  public int getValueIndex(String value) {
+    return DisplayItemUtil.getValueIndex(items, value);
+  }	
   
   //*********************************************************************
   //* INTERNAL METHODS

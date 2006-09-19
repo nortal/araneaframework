@@ -2004,3 +2004,5 @@ if (/Konqueror|Safari|KHTML/.test(navigator.userAgent)) {
     return [valueL, valueT];
   }
 }
+
+window['prototype/prototype.js'] = true;

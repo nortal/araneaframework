@@ -16,9 +16,7 @@
 
 package org.araneaframework.example.main.web.sample;
 
-import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -74,15 +72,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
     simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
     simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
-    FloatControl fc = new FloatControl();
-    fc.addOnChangeEventListener(new OnChangeEventListener() {
-		      private static final long serialVersionUID = 1L;
-
-    public void onChange() throws Exception {
-			simpleForm.setValueByFullName("textbox1", new Date().toString());
-		}
-    });
-    simpleForm.addElement("number", "#Number", fc, new BigDecimalData(), false);
+    simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
     simpleForm.getElement("number").setConstraint(new NotEmptyConstraint());
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it

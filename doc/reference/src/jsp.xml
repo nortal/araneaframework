@@ -773,18 +773,15 @@
 
     <sect2>
       <title><![CDATA[<ui:globalWidgetInclude>]]></title>
-      TODO (do we even need it?)
+      Much like <literal><![CDATA[<ui:widgetInclude>]]></literal>, but this tag allows to 
+      include not only descendants of current context widget but any widget that is 
+      accessible from global scope.
     </sect2>
     
   </sect1>
   
   <sect1>
     <title>Event-producing Tags</title>
-    <sect2 id="updateRegionAttributes">
-      <title><literal>updateRegions</literal> and <literal>globalUpdateRegions</literal> Attributes</title>$
-
-    </sect2>
-    
     <sect2>
       <title><![CDATA[<ui:eventButton> and <ui:eventLinkButton>]]></title>
       <para>
@@ -1230,16 +1227,16 @@
       <title><![CDATA[<ui:updateRegion> and <ui:updateRegionRows>]]></title>
         <para>
            These two tags define the update regions in the output that can be updated
-           via AJAX requests. The update regions chosen to be updated is controlled via
-           all the different event tags that take the <literal>updateRegion</literal>
-           attribute. See <xref linkend="updateRegionAttributes" />
+           via AJAX requests. The update regions chosen to be updated when some event
+           occurs is decided by tags that take the <literal>updateRegion</literal>
+           attribute (See <xref linkend="common-formelement-attributes"> </xref>).
         </para>
         
         <para>
-          The <![CDATA[<ui:updateRegion>]]> should be used in most of the cases to
-          define a region. The
-          <![CDATA[<ui:updateRegionRows>]]> is for defining a region which contains
-          HTML table rows.
+          The <![CDATA[<ui:updateRegion>]]> should be used when defining updateregion
+          when the region is not contained in HTML table (layout). The
+          <![CDATA[<ui:updateRegionRows>]]> is for defining a region which is contained 
+          in HTML table and contains table rows itself. Updating just cells is not possible.
         </para>
 
         <sect3>
@@ -1277,9 +1274,7 @@
   
   <sect1>
     <title>Presentation Tags</title>
-      For convience Aranea provides abstraction over the the standard
-      HTML presentation tags.
-   
+    Aranea JSP library contains synonyms for some (deprecated) HTML presentation tags.
    <sect2>
     <title><![CDATA[<ui:bold>]]></title>
      <para>
@@ -1573,10 +1568,9 @@
       
       <para>
         Changing default tag styles can be done in two ways&mdash;modifying CSS files or extending the tag one wants to
-        customize and overwriting the tags <literal>init()</literal> method like this:
+        customize with dynamic initializer like this:
       </para>
-      <programlisting role="java"><![CDATA[protected void init() {
-    super.init();
+      <programlisting role="java"><![CDATA[{
     styleClass = "some-wanted-style";
 }]]></programlisting>
     
@@ -1611,6 +1605,11 @@
               </row>
             </thead>
             <tbody>
+              <row>
+                <entry>style</entry>
+                <entry>Inline CSS style applied to tag. Avoid.</entry>
+                <entry>Presentation tags.</entry>
+              </row>
               <row>
                 <entry>styleClass</entry>
                 <entry>CSS class applied to tag.</entry>
@@ -1694,38 +1693,106 @@ public class DummyTag extends BaseTag {
     </para>
 
     <para>
-      <emphasis>org.araneaframework.jsp.util.JspUtil</emphasis> is an utility class containing some functions for 
-      writing out (XML) tags with somewhat more comfort than just <emphasis>out.write()</emphasis>. Other notable methods
-      provided by <emphasis>BaseTag</emphasis> are <emphasis>getOutputData()</emphasis> that returns response data, 
-      <emphasis>getConfiguration()</emphasis> and <emphasis>getLocalizationContext()</emphasis>.
+      <literal>org.araneaframework.jsp.util.JspUtil</literal> is an utility class containing some functions for 
+      writing out (XML) tags with somewhat more comfort than just <literal>out.write()</literal>. Other notable methods
+      provided by <literal>BaseTag</literal> are <literal>getOutputData()</literal> that returns response data, 
+      <literal>getConfiguration()</literal> and <literal>getLocalizationContext()</literal>.
       
       For tags with attributes, attribute evaluation functions that support <emphasis>Expression Language (EL)</emphasis> 
-      expressions are provided in <emphasis>BaseTag</emphasis>. Typical usage of these functions is following:
+      expressions are provided in <literal>BaseTag</literal>. Typical usage of these functions is following:
       <programlisting role="java"><![CDATA[public void setWidth(String width) throws JspException {
   this.width = (String)evaluate("width", width, String.class);
 }]]></programlisting>
     </para>
     
     <para>
-        Another common base tag for tags that output real HTML is <emphasis>org.araneaframework.jsp.PresentationTag</emphasis>.
-        The <emphasis>DummyTag</emphasis> should really extend it too, since it outputs some HTML. <emphasis>PresentationTag</emphasis>
+        Another common base tag for tags that output real HTML is <literal>org.araneaframework.jsp.PresentationTag</literal>.
+        The <literal>DummyTag</literal> should really extend it too, since it outputs some HTML. <literal>PresentationTag</literal>
         defines <emphasis>style</emphasis> and <emphasis>styleClass</emphasis> attributes that can be applied to most HTML tags.
     </para>
+    
+    <para>Important tag cleanup method is <literal>doFinally()</literal> that is called after rendering.
+    It should be used to clear references to  objects that should no longer be referenced after rendering. 
+    As in containers tag instances can live very long time, they can leak quite a lot of memory unless resources deallocated.</para>
 
     </sect2>
     
     <sect2>
       <title>Widgets and events</title>
       Sending events to widgets is accomplished with javascript submit functions, helpful
-      utility being <emphasis>org.araneaframework.jsp.util.JspUtil</emphasis> and 
-      <emphasis>org.araneaframework.jsp.util.JspWidgetCallUtil</emphasis>. First one would construct
-      <emphasis>org.araneaframework.jsp.UiEvent</emphasis> and (in case of HTML element which
+      utility being <literal>org.araneaframework.jsp.util.JspUtil</literal> and 
+      <literal>org.araneaframework.jsp.util.JspWidgetCallUtil</literal>. First one would construct
+      <literal>org.araneaframework.jsp.UiEvent</literal> and (in case of HTML element which
       receives only one event) calls JspUtil.writeEventAttributes(Writer out, UiEvent event) and afterwards
       writeSubmitScriptForEvent(Writer out, String attributeName).
     </sect2>
     
     <sect2>
       <title>Layouts</title>
+      <para>
+      New layouts are mostly concerned with styles or render layouts with some additional tags instead plain
+      <literal>table, tr, td</literal>.
+      As simple example, we define a layout that applies a class "error" to cells which contain invalid <literal>FormElement</literal>.
+      Note that approach we use only works when cell tag is aware of the surrounding <literal>FormElement</literal> at the
+      moment of rendering, meaning that <literal>FormElement</literal> is rendered in JSP something like this:
+      </para>
+      <para>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+<ui:formElement id="someId">
+    <ui:cell>
+        <ui:label/>
+    </ui:cell>
+
+    <ui:cell>
+        <ui:textInput/>
+    </ui:cell>
+</ui:formElement>
+...]]>
+</programlisting></para>
+    <para>
+      What is needed foremost is a decorator for cells that are used inside invalid <literal>FormElement</literal>.
+<programlisting role="java"><![CDATA[public class ErrorMarkingCellClassProviderDecorator implements CellClassProvider {
+  protected CellClassProvider superProvider;
+  protected PageContext pageContext;
+
+  // constructs a decorator for superProvider, makes pageContext accessible
+  public ErrorMarkingCellClassProviderDecorator(CellClassProvider superProvider, PageContext pageContext) {
+    this.superProvider = superProvider;
+    this.pageContext = pageContext;
+  }
+
+  public String getCellClass() throws JspException {
+    FormElement.ViewModel formElementViewModel = 
+      (FormElement.ViewModel)pageContext.getAttribute(FormElementTag.VIEW_MODEL_KEY, PageContext.REQUEST_SCOPE);
+    // superProvider.getCellClass() may only be called once, otherwise moves on to next cell's style
+    String superClass = superProvider.getCellClass();
+
+    if (formElementViewModel != null && !formElementViewModel.isValid()) {
+      if (superClass != null)
+        return superClass + " error";
+      else
+        return "error";
+    }
+
+    return superClass;
+  }
+}]]>
+</programlisting>
+    </para>
+    
+    <para>
+      Actual layout tag that decorates its cells according to described logic:
+<programlisting role="java"><![CDATA[public class CustomLayoutTag extends LayoutHtmlTag {
+  protected int doStartTag(Writer out) throws Exception {
+    int result = super.doStartTag(out);
+    addContextEntry(CellClassProvider.KEY, new ErrorMarkingCellClassProviderDecorator(this, pageContext));
+
+    return result;
+  }
+}]]></programlisting>
+    </para>
+      
     </sect2>
   </sect1>
 

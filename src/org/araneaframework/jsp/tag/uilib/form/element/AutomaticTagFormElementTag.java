@@ -51,7 +51,6 @@ public class AutomaticTagFormElementTag extends BaseTag {
   protected String derivedId;
   private String id;
   protected String events;
-  protected String validate;
   protected String validateOnEvent;
   protected String tabindex;
   protected String styleClass;
@@ -156,16 +155,6 @@ public class AutomaticTagFormElementTag extends BaseTag {
    */
   public void setEvents(String events) throws JspException {
     this.events = events; 
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Whether the element will be validated on the client-side when the form is submitted (by default "true")." 
-   */
-  public void setValidate(String validate) throws JspException {
-    this.validate = validate; 
   }
 
   /**

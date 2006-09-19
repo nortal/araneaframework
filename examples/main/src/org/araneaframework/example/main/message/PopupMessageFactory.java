@@ -41,8 +41,8 @@ public class PopupMessageFactory implements MessageFactory, Serializable {
 		return new MainExampleMessage(widget);
 	}
 	
-	public class MainExampleMessage implements Message {
-		    private static final long serialVersionUID = 1L;
+	public static class MainExampleMessage implements Message {
+    private static final long serialVersionUID = 1L;
     Widget flow;
 		
 		public MainExampleMessage(Widget flow) {

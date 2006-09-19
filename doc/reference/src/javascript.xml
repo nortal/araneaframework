@@ -33,7 +33,7 @@
 
               <itemizedlist spacing="compact">
                 <listitem>
-                  keyboard handlers for form elements.
+                  keyboard handlers are registered for form elements.
                 </listitem>
                 <listitem>
                   addition of urls (&lt;href=&quot;...&quot;) to page elements that allow cloning of the session thread (opening
@@ -83,6 +83,15 @@
             </para>
           </sect2>
           
+          <sect2>
+            <title>log4javascript (<ulink url="http://www.timdown.co.uk/log4javascript/">http://www.timdown.co.uk/log4javascript/</ulink>)</title>
+            <para>
+               log4javascript is a JavaScript logging framework similar to Java logging framework log4j. Include log4javascript
+               scripts and call <emphasis>AraneaPage.setDefaultLogger()</emphasis> to receive a popup window where
+               Aranea JS debug output is logged.
+            </para>
+          </sect2>
+          
     </sect1>
 
 	<sect1 id="aranea_clientside_js" xreflabel="Aranea Clientside Javascript">
@@ -104,10 +113,6 @@ function AraneaPage() {
    * be loaded when all system onload events have completed execution. */
   function isLoaded();
   function setLoaded(loaded);
-  
-  /** Returns the div with id "araneaDebugDiv" meant for outputting 
-    * debug information, if it is present. */
-  function getDebugDiv();
   
   /* Returns the server-side reported locale (AraneaLocale). */
   function getLocale();
@@ -156,7 +161,7 @@ function AraneaPage() {
   function submit_6(systemForm, eventId, eventTarget, 
                     eventParam, eventPrecondition, eventUpdateRegions);
   
-  /** Attaches the message to debug div ("araneaDebugDiv") when it is present. */
+  /** Logs message on DEBUG level, if logger is present. */
   function debug(message);
 }
 

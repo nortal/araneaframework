@@ -52,3 +52,5 @@ function setElementAttr(elementStr, attrName, attrValue) {
     el.setAttribute(attrName, attrValue);
   }
 }
+
+window['aranea-util.js'] = true;

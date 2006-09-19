@@ -66,4 +66,9 @@ public class FormTag extends BaseWidgetTag {
 		// Continue
 	  return EVAL_BODY_INCLUDE;		
 	}
+
+	public void doFinally() {
+		super.doFinally();
+		formViewModel = null;
+	}
 }

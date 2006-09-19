@@ -37,32 +37,42 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint {
   }
 
   /**
-   * Creates the class, initializing the corresponding fields.
+   * Creates the constraint, initializing the corresponding fields.
    * @param rangeStart start of the length range.
    * @param rangeEnd end of the length range.
    */
   public StringLengthInRangeConstraint(int rangeStart, int rangeEnd) {
-    this.rangeStart = rangeStart;
-    this.rangeEnd = rangeEnd;
+    setRangeStart(rangeStart);
+    setRangeEnd(rangeEnd);
   }
   
   /**
-   * XXX: not consistent, other field constraints throw exceptions when formelement current value is NULL
-   * Checks that the value is between two others.
+   * Checks that the length of string belongs in constraint boundaries.
    */
   protected void validateConstraint() {
     String value = (String) getValue();
-    if (value != null && (value.length() < rangeStart || value.length() > rangeEnd)) {
-      addError(
-          ErrorUtil.localizeAndFormat(
-            UiLibMessages.STRING_NOT_IN_RANGE, 
-            new Object[] {
-                t(getLabel()),
-                Integer.toString(rangeStart),
-                Integer.toString(rangeEnd)
-            },
-            getEnvironment()));
+
+    if (value == null) {
+      if (rangeStart == 0)
+        return;
+      addValidationError();
+      return;
     }
+
+    if (value != null && (value.length() < rangeStart || value.length() > rangeEnd))
+      addValidationError();
+  }
+
+  private void addValidationError() {
+	addError(
+      ErrorUtil.localizeAndFormat(
+        UiLibMessages.STRING_NOT_IN_RANGE, 
+        new Object[] {
+          t(getLabel()),
+          Integer.toString(rangeStart),
+          Integer.toString(rangeEnd)
+        },
+        getEnvironment()));
   }
 
   public void setRangeEnd(int rangeEnd) {

@@ -28,7 +28,6 @@
                      componentForm here, cellclasses does the same for cells. In HTML, this tag creates a TABLE. -->
 				<ui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
-					<ui:updateRegionRows id="damnRegion">
 					<!-- As we can insert rows now, we just do that. -->
 					<ui:row>
 						<!-- ... we can insert cells too! As we defined componentForm rowClass 
@@ -61,7 +60,6 @@
 							<ui:textInput id="textbox1"/>
 						</ui:cell>
 					</ui:row>
-					</ui:updateRegionRows>
 
 					<!-- another row, and we just keep on going until all form elements have been described. -->
 					<ui:row>
@@ -103,7 +101,7 @@
 							</ui:cell>
 
 							<ui:cell>
-								<ui:floatInput updateRegions="damnRegion"/>
+								<ui:floatInput />
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
