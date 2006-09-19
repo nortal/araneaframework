@@ -446,10 +446,29 @@ private void handleEventSave() {
     
     <sect2>
       <title>Converters</title>
-
       <para>
-        
+        Converter sole purpose is conversion of values with one type to values of another type.
+        Conventionally converter which <literal>convert()</literal> method accepts object of type <emphasis>A</emphasis>
+        and returns object of type <emphasis>B</emphasis> is named <literal>AToBConverter</literal>. Converter
+        from type <emphasis>A</emphasis> to type <emphasis>B</emphasis> is obtained with
+        <literal>new ReverseConverter(new AToBConverter())</literal>.
       </para>
+      <para>
+<programlisting role="java"><![CDATA[public interface Converter extends Serializable, FormElementAware {
+    public void setFormElementCtx(FormElementContext feCtx);
+    public Object convert(Object data);
+    public Object reverseConvert(Object data);
+    public BaseConverter newConverter();
+}]]>
+</programlisting>
+</para>
+<para>
+    Converters are used to convert <literal>Control</literal> values to values of <literal>FormElement</literal> <literal>Data</literal>
+    and vice-versa. Converters are usually looked up from <literal>ConverterFactory</literal>, but each <literal>FormElement</literal> 
+    can be set explicit <literal>Converter</literal> by calling <literal>FormElement.setConverter()</literal>. 
+    Direction of <literal>Converter</literal> set this way should be from <literal>FormElement</literal> <literal>Control</literal>
+    value type to <literal>FormElement</literal> <literal>Data</literal> type.
+</para>
     </sect2>
   </sect1>
 

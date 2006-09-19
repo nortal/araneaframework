@@ -33,4 +33,12 @@ public class AjaxRequestErrorWidget extends TemplateBaseWidget {
   public void handleEventError() {
     throw new AraneaRuntimeException("Error while while responding to AJAX event.");
   }
+  
+  public void handleEventFirst() {
+    getMessageCtx().showInfoMessage("At first everything is well.");
+  }
+  
+  public void handleEventSecond() {
+    getMessageCtx().showInfoMessage("Still ok.");
+  }
 }
