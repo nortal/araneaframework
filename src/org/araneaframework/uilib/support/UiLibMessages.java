@@ -40,4 +40,6 @@ public class UiLibMessages {
   public static final String LIST_FILTER_BUTTON_LABEL = "uilib.list.filter.button";
   public static final String LIST_FILTER_CLEAR_BUTTON_LABEL = "uilib.list.filter.clear.button";
   public static final String NOT_AN_EMAIL = "uilib.form.email.notanemail";
+  public static final String LOW_OF = "uilib.list.filter.low";
+  public static final String HIGH_OF = "uilib.list.filter.high";
 }

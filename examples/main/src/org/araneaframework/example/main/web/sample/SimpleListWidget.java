@@ -19,6 +19,7 @@ package org.araneaframework.example.main.web.sample;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.TestVO;
@@ -41,13 +42,12 @@ public class SimpleListWidget extends TemplateBaseWidget {
 	setViewSelector("sample/simpleList");
 	
 	simpleList = new ListWidget();
-	simpleList.setListDataProvider(new SimpleListDataProvider());
-	simpleList.addListColumn("booleanValue", "#Boolean");
-	simpleList.addListColumn("stringValue", "#String");
-	simpleList.addListColumn("longValue", "#Long");
+	addWidget("simpleList", simpleList);
+	simpleList.setDataProvider(new SimpleListDataProvider());
+	simpleList.addField("booleanValue", "#Boolean");
+	simpleList.addField("stringValue", "#String");
+	simpleList.addField("longValue", "#Long");
 	simpleList.setInitialOrder("longValue", true);
-	
-    addWidget("simpleList", simpleList);
   }  
   
   private static class SimpleListDataProvider extends MemoryBasedListDataProvider {

@@ -37,14 +37,6 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 
 		this.ignoreCase = ignoreCase;
 		this.locale = locale;
-
-		initCollator();
-	}
-	
-	private void initCollator() {
-		this.collator = Collator.getInstance(locale);
-		this.collator.setStrength(ignoreCase ? Collator.SECONDARY
-				: Collator.TERTIARY);
 	}
 
 	public boolean getIgnoreCase() {
@@ -56,11 +48,16 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 	}
 
 	public int compare(Object o1, Object o2) {
-		return this.collator.compare(o1, o2);
+		return getCollator().compare(o1, o2);
 	}
 	
-    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-    	in.defaultReadObject();
-    	initCollator();
-    }
+	private Collator getCollator() {
+		if (this.collator == null) {
+			this.collator = Collator.getInstance(locale);
+			this.collator.setStrength(ignoreCase ? Collator.SECONDARY
+					: Collator.TERTIARY);
+		}
+		return this.collator;
+	}
+	
 }

@@ -60,7 +60,7 @@ public class EditableBeanListWidget extends BeanListWidget {
 	}
 
 	public void setFormRowHandler(FormRowHandler rowHandler) {
-		formList = new BeanFormListWidget(rowHandler, beanClass);		
+		formList = new BeanFormListWidget(rowHandler, beanType);		
 	}
 
 	//*********************************************************************

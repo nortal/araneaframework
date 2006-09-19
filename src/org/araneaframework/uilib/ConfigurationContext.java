@@ -83,6 +83,11 @@ public interface ConfigurationContext extends Serializable {
   public static final String AUTO_COMPLETE_RESPONSE_BUILDER = "uilib.widgets.AutoCompleteTextControl.DefaultResponseBuilder";
   
   /**
+   * <code>LikeConfiguration</code> that configures Like filter in lists.
+   */
+  public static final String LIKE_CONFIGURATION = "uilib.widgets.lists.LikeConfiguration";
+  
+  /**
    * Returns a configuration entry with given name.
    */
   public Object getEntry(String entryName);

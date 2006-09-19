@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
-
-package org.araneaframework.uilib.list.structure.filter.composite;
-
-import java.util.Map;
+package org.araneaframework.uilib.widgets.lists.tests.mock;
 
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.uilib.list.structure.ListFilter;
-import org.araneaframework.uilib.list.util.ExpressionUtil;
+import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
+public class MockExpression implements Expression {
 
-public class NotFilter implements ListFilter {
-	private ListFilter filter;
-	public NotFilter(ListFilter filter) {
-		this.filter = filter;
+	public Object evaluate(VariableResolver resolver) {
+		throw new UnsupportedOperationException("Evaluating is not supported");
 	}
-	public Expression buildExpression(Map data) {
-		return ExpressionUtil.not(this.filter.buildExpression(data));
-	}
+
 }

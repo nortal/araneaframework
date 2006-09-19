@@ -14,21 +14,29 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure.filter.composite;
+package org.araneaframework.uilib.list.structure;
 
-import java.util.Map;
-
-import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.uilib.list.structure.ListFilter;
-import org.araneaframework.uilib.list.util.ExpressionUtil;
+import org.araneaframework.uilib.list.structure.filter.FieldFilter;
+import org.araneaframework.uilib.list.structure.order.FieldOrder;
 
 
-public class NotFilter implements ListFilter {
-	private ListFilter filter;
-	public NotFilter(ListFilter filter) {
-		this.filter = filter;
-	}
-	public Expression buildExpression(Map data) {
-		return ExpressionUtil.not(this.filter.buildExpression(data));
-	}
+/**
+ * General interface for objects that are aware of one field.
+ * 
+ * @see FieldFilter
+ * @see FieldOrder 
+ */
+public interface FieldAware {
+	/**
+	 * Returns the field Id.
+	 * @return field Id.
+	 */
+	String getFieldId();
+
+	/**
+	 * Saves the field Id.
+	 * 
+	 * @param id field Id.
+	 */
+	void setFieldId(String id);
 }
