@@ -19,6 +19,7 @@ package org.araneaframework.tests.framework.router;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.router.StandardThreadServiceRouterService;
 import org.araneaframework.http.core.StandardServletInputData;
@@ -73,5 +74,28 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
       (ThreadContext)child1.getTheEnvironment().getEntry(ThreadContext.class);
     sess.close("child1");
     assertTrue(child1.getDestroyCalled());
+  }
+
+  public void testServiceExpiration() throws Exception {
+    ThreadContext ctx = (ThreadContext)child1.getTheEnvironment().getEntry(ThreadContext.class);
+    ctx.addService("newService", new BaseService() {}, new Long(1000));
+    Thread.currentThread().sleep(1200);
+    assertNotNull("Action is not yet called.", ctx.getService("newService"));
+    service._getService().action(MockUtil.getPath(), input, output);
+    assertNull("Action is called when service should already be expired.", ctx.getService("newService"));
+    
+    // make sure that in addition to killing expired services, their lifetimes are updated in action()
+    ctx.addService("nextService", new BaseService() {}, new Long(2000));
+    Thread.currentThread().sleep(1000);
+    service._getService().action(MockUtil.getPath(), input, output);
+    Thread.currentThread().sleep(1500);
+    service._getService().action(MockUtil.getPath(), input, output);
+
+    assertNull("Should still be alive", ctx.getService("nextService"));
+    
+    Thread.currentThread().sleep(2200);
+    service._getService().action(MockUtil.getPath(), input, output);
+
+    assertNull("Should be dead now.", ctx.getService("nextService"));
   }
 }
