@@ -22,11 +22,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 
@@ -38,6 +40,7 @@ import org.araneaframework.framework.ThreadContext;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseExpiringServiceRouterService extends BaseServiceRouterService {
+  private static final Logger log = Logger.getLogger(BaseExpiringServiceRouterService.class);
   private Map timeCapsules;
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -64,8 +67,11 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   protected synchronized void killExpiredServices(long now) {
     for (Iterator i = getTimeCapsules().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
-      if (((TimeCapsule)entry.getValue()).isExpired(now))
+      if (((TimeCapsule)entry.getValue()).isExpired(now)) {
+        if (log.isDebugEnabled())
+          log.debug(Assert.thisToString(this) + " killed expired service '" + entry.getKey().toString() + "'.");
         closeService(entry.getKey());
+      }
     }
   }
   

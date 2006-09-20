@@ -148,6 +148,9 @@ function AraneaPage() {
   /** Aranea JSP specific DOM tree traverser. */
   var traverser = new AraneaTraverser();
   this.getTraverser = function() { return traverser; }
+  
+  /** Timer that executes keepalive calls, if any. */
+  var keepAliveTimer = null;
 
   /** Variables holding different (un)load events that should be executed when page loads -- on body (un)load or alike. */
   var systemLoadEvents = new AraneaEventStore();
@@ -244,6 +247,20 @@ function AraneaPage() {
   this.override = function(functionName, f) {
   	this.getLogger().info("AraneaPage." +functionName + " was overriden.");
   	this[functionName] = f;
+  }
+  
+  this.setKeepAliveFunction = function(f, time) {
+    keepAliveTimer = setInterval("f()", time);
+  }
+
+  this.clearKeepAlive = function() {
+    clearInterval(keepAliveTimer);
+  }
+}
+
+AraneaPage.getDefaultKeepAlive = function() {
+  return new function() {
+    
   }
 }
 
