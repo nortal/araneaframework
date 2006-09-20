@@ -50,8 +50,8 @@
                     <entry>timeToLive</entry>
                     <entry><literal>java.lang.Long</literal></entry>
                     <entry>Inactivity time for cloned thread after which thread router may kill the thread service.
-                    This is specified in milliseconds. If unset, threads created by cloning service usually go
-                    unkilled until session expires.</entry>
+                    This is specified in milliseconds. If unset, threads created by cloning service usually live
+                    until HTTP session in which they were spawned expires.</entry>
                 </row>
             </tbody>
         </tgroup>
