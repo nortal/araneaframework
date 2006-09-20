@@ -16,11 +16,10 @@
 
 package org.araneaframework.framework.router;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
@@ -93,8 +92,6 @@ public abstract class BaseServiceRouterService extends BaseService {
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     Object currentServiceId = getServiceId(input);
-    if (currentServiceId == null)
-      currentServiceId = defaultServiceId;
 
     Assert.notNull(this, currentServiceId, 
     		"Router found current service id to be null, which means that it could not be " +
@@ -128,7 +125,10 @@ public abstract class BaseServiceRouterService extends BaseService {
    * under the key <code>getServiceKey()</code>.
    */
   protected Object getServiceId(InputData input) throws Exception{
-    return input.getGlobalData().get(getServiceKey());
+    Object id = input.getGlobalData().get(getServiceKey());
+    if (id == null)
+      id = defaultServiceId;
+    return id;
   }
   
   /**
@@ -173,7 +173,13 @@ public abstract class BaseServiceRouterService extends BaseService {
     }
     
     public Service addService(Object id, Service service, Long timeToLive) {
-      throw new UnsupportedOperationException(Assert.thisToString(this) + " does not support addService(Object id, Service service, Long timeToLive) method.");
+      Service result = addService(id, service);
+      if (log.isEnabledFor(Priority.WARN)) {
+        log.warn(getClass().getName() + 
+        		".addService(Object id, Service service, Long timeToLive) ignores timeToLive attribute." +
+        		"Just addService(Object id, Service service) should be used.");
+      }
+      return result;
     }
 
 	public void close(Object id) {
@@ -181,17 +187,5 @@ public abstract class BaseServiceRouterService extends BaseService {
     }
   }
   
-  public static class TTLCapsule {
-    private Long ttl;
-    private Long lastActivityTime;
-    
-    public TTLCapsule(Long ttl) {
-      this.ttl = ttl;
-      lastActivityTime = new Long(new Date().getTime());
-    }
-    
-    public boolean isExpired(long time) {
-      return (time > lastActivityTime.longValue() + ttl.longValue());
-    }
-  }
+
 }

@@ -16,15 +16,7 @@
 
 package org.araneaframework.framework.router;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
-import org.araneaframework.Path;
-import org.araneaframework.Service;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 
@@ -35,53 +27,18 @@ import org.araneaframework.framework.ThreadContext;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardThreadServiceRouterService extends BaseServiceRouterService {
-  private Map timeCapsules;
-
-  protected Object getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get(ThreadContext.THREAD_SERVICE_KEY);
-  }
-
+public class StandardThreadServiceRouterService extends BaseExpiringServiceRouterService {
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
     return new StandardEnvironment(super.getChildEnvironment(serviceId), ThreadContext.class, new ServiceRouterContextImpl(serviceId));
   }
   
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    long now = new Date().getTime();
-
-    for (Iterator i = getTimeCapsules().entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      TTLCapsule capsule = (TTLCapsule)entry.getValue();
-      if (capsule.isExpired(now)) {
-    	 closeService(entry.getKey());
-      }
-    }
-
-    super.action(path, input, output);
-  }
-  
-  private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements ThreadContext {
+  private class ServiceRouterContextImpl extends BaseExpiringServiceRouterService.ServiceRouterContextImpl implements ThreadContext {
     protected ServiceRouterContextImpl(Object serviceId) {
       super(serviceId);
-    }
-    
-    public Service addService(Object id, Service service, Long timeToLive) {
-      Service result = addService(id, service);
-      if (timeToLive != null) {
-        timeCapsules.put(id, new TTLCapsule(timeToLive));
-      }
-      return result;
     }
   }
 
   protected Object getServiceKey() throws Exception {
     return ThreadContext.THREAD_SERVICE_KEY;
-  }
-  
-  synchronized protected Map getTimeCapsules() {
-    if (timeCapsules == null)
-      timeCapsules = new HashMap();
-
-    return timeCapsules;
   }
 }
