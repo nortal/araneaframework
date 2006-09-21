@@ -249,19 +249,28 @@ function AraneaPage() {
   	this[functionName] = f;
   }
   
-  this.setKeepAliveFunction = function(f, time) {
-    keepAliveTimer = setInterval("f()", time);
+  this.setKeepAlive = function(f, time) {
+    globalkeepAliveTimer = setInterval(f, time);
   }
 
   this.clearKeepAlive = function() {
-    clearInterval(keepAliveTimer);
+    clearInterval(globalkeepAliveTimer);
   }
 }
 
 AraneaPage.getDefaultKeepAlive = function() {
-  return new function() {
-    
-  }
+  return function() {
+    if (window['prototype/prototype.js']) {
+      getActiveAraneaPage().getLogger().debug("Sending async service keepalive request.");
+      // TODO: set transaction id
+      var keepAlive = new Ajax.Request(
+          getActiveAraneaPage().getServletURL(),
+          { method: 'get' }
+      );
+    } else {
+      getActiveAraneaPage().getLogger().warn("Service keepalive calls cannot be made.");
+    }
+  };
 }
 
 // Random request id generator. Sent only with AA ajax requests.
@@ -273,6 +282,7 @@ AraneaPage.getRandomRequestId = function() {
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   getActiveAraneaPage().addSystemLoadEvent(Behaviour.apply);
+  getActiveAraneaPage().setKeepAlive(AraneaPage.getDefaultKeepAlive(), 10000);
 }
 
 function DefaultAraneaSubmitter(form) {

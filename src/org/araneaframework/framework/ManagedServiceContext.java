@@ -47,7 +47,7 @@ public interface ManagedServiceContext extends Serializable {
    * When the service is killed or whether it is killed at all is up to the 
    * implementation.
    */  
-  public Service addService(Object id, Service service, Long timeToLive) throws UnsupportedOperationException;
+  public Service addService(Object id, Service service, Long timeToLive);
   
   /**
   * @return a child service with the specified id.

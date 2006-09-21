@@ -50,7 +50,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
 
     Object serviceId = getServiceId(input);
     TimeCapsule capsule = (TimeCapsule)getTimeCapsules().get(serviceId);
-    // TODO: maybe last activity time should be set BOTH before and after calling child action
+
     if (capsule != null)
       capsule.setLastActivity(new Long(System.currentTimeMillis()));
   }

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.core.BaseService;
+import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.router.StandardThreadServiceRouterService;
 import org.araneaframework.http.core.StandardServletInputData;
@@ -31,7 +32,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- *
  */
 public class StandardThreadServiceRouterServiceTests extends TestCase {
   private StandardThreadServiceRouterService service;
@@ -68,12 +68,14 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
     service.setDefaultServiceId("child1");
   }
   
-  public void testCloseRemoves() throws Exception {
+  public void testCloseRemoves() throws Exception, Throwable {
     service._getService().action(MockUtil.getPath(), input, output);
     ThreadContext sess = 
       (ThreadContext)child1.getTheEnvironment().getEntry(ThreadContext.class);
+    assertNotNull(sess.getService("child1"));
     sess.close("child1");
     assertTrue(child1.getDestroyCalled());
+    assertNull(sess.getService("child1"));
   }
 
   public void testServiceExpiration() throws Exception {
@@ -86,15 +88,25 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
     
     // make sure that in addition to killing expired services, their lifetimes are updated in action()
     ctx.addService("nextService", new BaseService() {}, new Long(2000));
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    req.addParameter(ThreadContext.THREAD_SERVICE_KEY, "nextService");
+    input = new StandardServletInputData(req);
+    
     Thread.currentThread().sleep(1000);
     service._getService().action(MockUtil.getPath(), input, output);
     Thread.currentThread().sleep(1500);
     service._getService().action(MockUtil.getPath(), input, output);
 
-    assertNull("Should still be alive", ctx.getService("nextService"));
+    assertNotNull("Should still be alive", ctx.getService("nextService"));
     
     Thread.currentThread().sleep(2200);
-    service._getService().action(MockUtil.getPath(), input, output);
+    
+    try {
+      service._getService().action(MockUtil.getPath(), input, output);
+      fail("Routing to 'nextService' should have failed.");
+    } catch (NoSuchServiceException e) {
+       //
+    }
 
     assertNull("Should be dead now.", ctx.getService("nextService"));
   }
