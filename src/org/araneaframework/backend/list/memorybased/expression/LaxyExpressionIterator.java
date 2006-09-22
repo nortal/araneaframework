@@ -18,10 +18,9 @@ package org.araneaframework.backend.list.memorybased.expression;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
+import org.araneaframework.core.Assert;
 
 /**
  * Iterator that iterates over {@link Expression}s using an iterator over
@@ -35,8 +34,8 @@ public class LaxyExpressionIterator implements Iterator, Serializable {
 	private Map data;
 	
 	public LaxyExpressionIterator(Iterator builderIterator, Map data) {
-		Validate.notNull(builderIterator);
-		Validate.notNull(data);
+		Assert.notNullParam(this, builderIterator, "builderIterator");
+		Assert.notNullParam(this, data, "data");
 		
 		this.builderIterator = builderIterator;
 		this.data = data;

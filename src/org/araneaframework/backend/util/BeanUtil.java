@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.araneaframework.core.Assert;
 
 /**
  * This class provides methods to manipulate Bean fields.
@@ -62,8 +63,8 @@ public class BeanUtil {
 	 *         field names.
 	 */
 	public static List getFields(Class beanClass) {
-    	Validate.notNull(beanClass, "No bean class specified");
-		
+		Assert.notNull(beanClass, "No bean class specified.");
+
 		List result = new ArrayList();
 		
 		Method[] methods = beanClass.getMethods();
