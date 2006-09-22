@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -857,10 +856,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		private Map getOrderInfoMap(Map data) {
 			Map orderInfoMap = new HashMap();    	
-			for (Iterator i = data.keySet().iterator(); i.hasNext();) {
-				String key = (String) i.next();
+			for (Iterator i = data.entrySet().iterator(); i.hasNext();) {
+				Map.Entry entry = (Map.Entry) i.next();
+				String key = (String) entry.getKey();
 				if (key.startsWith(ORDER_FORM_NAME)) {
-					orderInfoMap.put(key.substring(ORDER_FORM_NAME.length()), data.get(key));
+					orderInfoMap.put(key.substring(ORDER_FORM_NAME.length()), entry.getValue());
 				}
 			}
 			return orderInfoMap;

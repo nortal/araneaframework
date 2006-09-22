@@ -15,7 +15,6 @@
 **/
 package org.araneaframework.backend.list.memorybased.expression;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -28,7 +27,7 @@ import org.araneaframework.core.Assert;
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class LaxyExpressionIterator implements Iterator, Serializable {
+public class LaxyExpressionIterator implements Iterator {
 	
 	private Iterator builderIterator;
 	private Map data;

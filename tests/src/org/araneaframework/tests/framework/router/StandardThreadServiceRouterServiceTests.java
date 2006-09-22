@@ -81,7 +81,7 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
   public void testServiceExpiration() throws Exception {
     ThreadContext ctx = (ThreadContext)child1.getTheEnvironment().getEntry(ThreadContext.class);
     ctx.addService("newService", new BaseService() {}, new Long(1000));
-    Thread.currentThread().sleep(1200);
+    Thread.sleep(1200);
     assertNotNull("Action is not yet called.", ctx.getService("newService"));
     service._getService().action(MockUtil.getPath(), input, output);
     assertNull("Action is called when service should already be expired.", ctx.getService("newService"));
@@ -92,14 +92,14 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
     req.addParameter(ThreadContext.THREAD_SERVICE_KEY, "nextService");
     input = new StandardServletInputData(req);
     
-    Thread.currentThread().sleep(1000);
+    Thread.sleep(1000);
     service._getService().action(MockUtil.getPath(), input, output);
-    Thread.currentThread().sleep(1500);
+    Thread.sleep(1500);
     service._getService().action(MockUtil.getPath(), input, output);
 
     assertNotNull("Should still be alive", ctx.getService("nextService"));
     
-    Thread.currentThread().sleep(2200);
+    Thread.sleep(2200);
     
     try {
       service._getService().action(MockUtil.getPath(), input, output);
