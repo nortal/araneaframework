@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
-
-package org.araneaframework.uilib.list.structure.filter.composite;
+package org.araneaframework.uilib.list.structure.filter.atomic;
 
 import java.util.Map;
 
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
+public class Value implements ExpressionBuilder {
+	private static final long serialVersionUID = 1L;
+	
+	private String valueId;
+	
+	public Value(String valueId) {
+		this.valueId = valueId;
+	}
 
-public class NotFilter implements ListFilter {
-	private ListFilter filter;
-	public NotFilter(ListFilter filter) {
-		this.filter = filter;
-	}
-	public Expression buildExpression(Map data) {
-		return ExpressionUtil.not(this.filter.buildExpression(data));
-	}
+	public Expression buildExpression(Map filterInfo) {		
+		return ExpressionUtil.value(this.valueId,
+				filterInfo.get(this.valueId));				
+	}		
 }

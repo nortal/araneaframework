@@ -20,9 +20,9 @@ import java.io.Serializable;
 
 
 /**
- * Base implementation of the {@link ListColumn}.
+ * Base implementation of the {@link ListField}.
  */
-public class ListColumn implements Serializable {
+public class ListField implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -45,10 +45,7 @@ public class ListColumn implements Serializable {
 	 * @param label
 	 *            ListColumn label.
 	 */
-	public ListColumn(String id, String label) {
-		if (id == null) {
-			throw new RuntimeException("Id must be provided");
-		}
+	public ListField(String id, String label) {
 		this.id = id;
 		this.label = label;
 	}
@@ -59,7 +56,7 @@ public class ListColumn implements Serializable {
 	 * @param id
 	 *            ListColumn id.
 	 */
-	public ListColumn(String id) {
+	public ListField(String id) {
 		this(id, null);
 	}
 
@@ -114,8 +111,8 @@ public class ListColumn implements Serializable {
 		 * Takes a snapshot of outer class state.
 		 */
 		protected ViewModel() {
-			this.id = ListColumn.this.id;
-			this.label = ListColumn.this.label;
+			this.id = ListField.this.id;
+			this.label = ListField.this.label;
 		}
 
 		/**

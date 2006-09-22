@@ -18,7 +18,9 @@ package org.araneaframework.example.common.tags.example.component;
 
 import java.io.Writer;
 import java.util.Iterator;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
@@ -29,7 +31,7 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.OrderInfoField;
-import org.araneaframework.uilib.list.structure.ListColumn;
+import org.araneaframework.uilib.list.structure.ListField;
 import org.araneaframework.uilib.list.structure.ListStructure;
 
 /**
@@ -65,7 +67,7 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
     OrderInfo.ViewModel orderInfoViewModel = viewModel.getOrderInfo();
     
     for(Iterator i = listStructureViewModel.getColumnList().iterator(); i.hasNext();) {
-      ListColumn.ViewModel columnViewModel = (ListColumn.ViewModel)i.next();
+      ListField.ViewModel columnViewModel = (ListField.ViewModel)i.next();
       
       // Write cell
       JspUtil.writeOpenStartTag(out, "th");

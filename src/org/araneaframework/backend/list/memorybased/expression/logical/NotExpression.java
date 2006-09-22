@@ -16,6 +16,7 @@
 
 package org.araneaframework.backend.list.memorybased.expression.logical;
 
+import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
@@ -28,6 +29,7 @@ public class NotExpression implements CompositeExpression {
 	private Expression expr;
 
 	public NotExpression(Expression expr) {
+		Validate.notNull(expr);
 		this.expr = expr;
 	}
 

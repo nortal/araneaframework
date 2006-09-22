@@ -17,13 +17,13 @@
 package org.araneaframework.example.main.web.contract;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
 
 
 /**
@@ -48,23 +48,22 @@ public class ContractListWidget extends TemplateBaseWidget {
 		setViewSelector("contract/contractList");
 		log.debug("TemplateContractListWidget init called");    
 
-		this.list = initList();
-		addWidget("contractList", this.list);
+		initList();
 	}
 	
-	protected ListWidget initList() throws Exception {
-		ListWidget temp = new ListWidget();
-		temp.setListDataProvider(new TemplateContractListDataProvider());
-		temp.addListColumn("id", "#Id");
-		temp.addListColumn("company", "#Company");
-		temp.addListColumn("person", "#Person");
-		temp.addListColumn("notes", "#Notes");
-		temp.addListColumn(new ListColumn("dummy"));
-		return temp;
+	protected void initList() throws Exception {
+		ListWidget list = new ListWidget();
+		addWidget("contractList", list);
+		list.setDataProvider(new TemplateContractListDataProvider());
+		list.addField("id", "#Id");
+		list.addField("company", "#Company");
+		list.addField("person", "#Person");
+		list.addField("notes", "#Notes");
+		list.addField("dummy", null, false);
 	}
 	
 	private void refreshList() throws Exception {  	
-		this.list.getListDataProvider().refreshData();
+		this.list.getDataProvider().refreshData();
 	}
 	
 	public void handleEventAdd(String eventParameter) throws Exception {

@@ -16,21 +16,12 @@
 
 package org.araneaframework.uilib.list.structure.order;
 
+import org.araneaframework.uilib.list.structure.FieldAware;
 import org.araneaframework.uilib.list.structure.ListOrder;
 
 /**
- * Static list ordering information about one {@link org.araneaframework.uilib.list.structure.ListColumn}.
+ * Static list ordering information about one field.
  */
-public interface ColumnOrder extends ListOrder {
-	/**
-	 * Returns the {@link org.araneaframework.uilib.list.structure.ListColumn} id.
-	 * @return {@link org.araneaframework.uilib.list.structure.ListColumn} id
-	 */
-	String getColumnId();
-
-	/**
-	 * Sets the {@link org.araneaframework.uilib.list.structure.ListColumn} id 
-	 * @param id {@link org.araneaframework.uilib.list.structure.ListColumn} id
-	 */
-	void setColumnId(String id);
+public interface FieldOrder extends ListOrder, FieldAware {
+	// no additional methods	
 }

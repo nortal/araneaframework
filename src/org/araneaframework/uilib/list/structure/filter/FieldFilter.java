@@ -16,22 +16,12 @@
 
 package org.araneaframework.uilib.list.structure.filter;
 
+import org.araneaframework.uilib.list.structure.FieldAware;
 import org.araneaframework.uilib.list.structure.ListFilter;
 
 /**
- * Static list filtering information that relates to one {@link org.araneaframework.uilib.list.structure.ListColumn}.
+ * Static list filtering information that relates to one field.
  */
-public interface ColumnFilter extends ListFilter {
-	/**
-	 * Returns the {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
-	 * @return {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
-	 */
-	String getColumnId();
-
-	/**
-	 * Saves the {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
-	 * 
-	 * @param id {@link org.araneaframework.uilib.list.structure.ListColumn} Id.
-	 */
-	void setColumnId(String id);
+public interface FieldFilter extends ListFilter, FieldAware {
+	// no additional methods
 }

@@ -17,43 +17,44 @@
 package org.araneaframework.uilib.list.structure.order;
 
 import java.util.Comparator;
+
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.VariableComparatorExpression;
 import org.araneaframework.uilib.list.OrderInfo;
-import org.araneaframework.uilib.list.structure.ComparableType;
 
 
-public class SimpleColumnOrder extends ComparableType implements ColumnOrder {
+public class SimpleColumnOrder implements FieldOrder {
 
 	private static final long serialVersionUID = 1L;
 
-	private String columnId;
+	private String fieldId;
+	private Comparator comparator;	
 	
-	public SimpleColumnOrder(String columnId, Comparator comparator) {
-		setColumnId(columnId);
+	public SimpleColumnOrder(String fieldId, Comparator comparator) {
+		setFieldId(fieldId);
 		setComparator(comparator);
 	}
-
-	public SimpleColumnOrder(Comparator comparator) {
-		setComparator(comparator);
-	}
-
-	public SimpleColumnOrder() {
-		// for bean creation
-	}
-
-	public String getColumnId() {
-		return this.columnId;
+	
+	public String getFieldId() {
+		return this.fieldId;
 	}
 	
-	public void setColumnId(String id) {
-		this.columnId = id;
+	public void setFieldId(String id) {
+		this.fieldId = id;
+	}
+	
+	public Comparator getComparator() {
+		return comparator;
+	}
+
+	public void setComparator(Comparator comparator) {
+		this.comparator = comparator;
 	}
 
 	public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {
-		if (this.columnId == null) {
+		if (this.fieldId == null) {
 			throw new RuntimeException("Column Id must be provided"); 
 		}
-		return new VariableComparatorExpression(getColumnId(), getComparator());
+		return new VariableComparatorExpression(getFieldId(), getComparator());
 	}
 }
