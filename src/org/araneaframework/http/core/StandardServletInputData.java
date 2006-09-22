@@ -37,7 +37,6 @@ import org.araneaframework.core.NoCurrentOutputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.HttpInputData;
-import org.araneaframework.http.util.ServletUtil;
 
 /**
  * A ServletInputdata implementation which uses a StandardPath for determining
@@ -46,7 +45,7 @@ import org.araneaframework.http.util.ServletUtil;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardServletInputData implements HttpInputData {
-  private transient HttpServletRequest req;
+  private HttpServletRequest req;
   
   private StringBuffer scopeBuf = new StringBuffer();
   private Map extensions = new HashMap();
