@@ -107,7 +107,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return the {@link ListStructure}used to describe the list.
 	 */
 	public ListStructure getListStructure() {
-		assrtInitialized();
+		assertInitialized();
 		return this.listStructure;
 	}
 
@@ -998,7 +998,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		}
 	}
 	
-	protected void assrtInitialized() throws IllegalStateException {
+	protected void assertInitialized() throws IllegalStateException {
 		if (!isInitialized()) {
 			throw new IllegalStateException("ListWidget is not initialized");
 		}
