@@ -22,7 +22,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -533,7 +532,7 @@ public class BeanUtil {
 	 * @see #copy(Object, Class)
 	 */
 	public static Object copy(Object from, Object to) {
-    	Validate.isTrue(from != null && to != null, "You cannot convert a Bean to null or vice versa");		
+        Assert.isTrue(from != null && to != null, "BeanUtil.copy() cannot accept NULL arguments.");
 		
 		List fromVoFields = getFields(from.getClass());
 		for (Iterator i = fromVoFields.iterator(); i.hasNext();) {

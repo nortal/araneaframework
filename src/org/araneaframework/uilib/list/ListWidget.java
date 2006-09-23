@@ -168,7 +168,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/**
 	 * Sets the {@link FilterHelper} used to help with adding filters.
 	 * 
-	 * @param typeHelper {@link FilterHelper} used to help with adding filters.
+	 * @param filterHelper {@link FilterHelper} used to help with adding filters.
 	 */
 	public void setFilterHelper(FilterHelper filterHelper) {
 		this.filterHelper = filterHelper;

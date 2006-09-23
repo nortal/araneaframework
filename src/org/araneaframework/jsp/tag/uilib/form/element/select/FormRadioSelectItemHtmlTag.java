@@ -45,7 +45,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   
   protected int doStartTag(Writer out) throws Exception {
 	int result = super.doStartTag(out);
-    addContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY, this);
+	addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 	return result;
   }
 
