@@ -282,7 +282,6 @@ AraneaPage.getRandomRequestId = function() {
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   getActiveAraneaPage().addSystemLoadEvent(Behaviour.apply);
-  getActiveAraneaPage().setKeepAlive(AraneaPage.getDefaultKeepAlive(), 10000);
 }
 
 function DefaultAraneaSubmitter(form) {
