@@ -59,8 +59,9 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
     String result = ((RowClassProvider)requireContextEntry(RowClassProvider.KEY)).getRowClass();
     result = (result != null && result.length() == 0) ? null : result;
 
-    if (styleClass != null) {
-      StringBuffer sb = new StringBuffer(super.getStyleClass());
+    String superStyleClass = super.getStyleClass();
+    if (superStyleClass != null) {
+      StringBuffer sb = new StringBuffer(superStyleClass);
       if (!overrideLayout && result != null)
         sb.append(' ').append(result);
 
