@@ -330,38 +330,15 @@
 		<sect2>
 			<title>Dependencies</title>
             <para>
-
-              Aranea webapp depends (at least) on the following libraries:
-              <itemizedlist spacing="compact">
-                  <listitem><literal>aranea.jar</literal></listitem>
-                  <listitem><literal>commons-collections.jar</literal></listitem>
-                  <listitem><literal>commons-el.jar</literal></listitem>
-                  <listitem><literal>commons-lang.jar</literal></listitem>
-                  <listitem><literal>commons-logging.jar</literal></listitem>
-                  <listitem><literal>j2ee.jar</literal></listitem>
-                  <listitem><literal>jstl.jar</literal></listitem>
-                  <listitem><literal>spring.jar</literal> (for configuration and Spring integration)</listitem>
-                  <listitem><literal>standard.jar</literal></listitem>
-                  <listitem><literal>log4j.jar</literal>&mdash;for file uploading</listitem>
-              </itemizedlist>
-              The following libraries are needed for specific features only:
-              <itemizedlist spacing="compact">
-                  <listitem><literal>commons-fileupload.jar</literal>&mdash;for file uploading</listitem>
-                  <listitem><literal>jakarta-regexp.jar</literal>&mdash;for in memory lists</listitem>                                        
-                  <listitem><literal>xstream.jar</literal>&mdash;for serializing session to XML</listitem>
-              </itemizedlist>
-              For running bundled example applications, jars in <literal>examples/lib</literal> directory are required.
+               Aranea webapp depends on a bunch of libraries that should all go under webapp's <literal>WEB-INF/lib/</literal> directory.
+               Dependencies are included in the distributions <literal>lib</literal> directory, see the <literal>lib/Readme.txt</literal>
+               for purpose of these libraries.
             </para>
 
             <para>
-               These are usually put under webapp's <literal>WEB-INF/lib/</literal> directory.
-               Aranea main example also needs <literal>aranea-template.jar</literal> (and various
-               third-party libraries) to function. The sample application's build system takes care of the dependencies
-               and you don't have to download anything.
-            </para>
-
-            <para>
-                Aranea main example uses <ulink url="http://www.hibernate.org">Hibernate</ulink> for accessing the database and <ulink url="http://logging.apache.org/log4j/docs/">Log4J</ulink> for logging. This tutorial omits the details of their configuration and usage.
+                In addition Aranea main example uses <ulink url="http://www.hibernate.org">Hibernate</ulink> for accessing the
+                database and <ulink url="http://logging.apache.org/log4j/docs/">Log4J</ulink> for logging. This tutorial omits the 
+                details of their configuration and usage.
             </para>
 		</sect2>
 		
