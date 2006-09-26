@@ -210,17 +210,16 @@ public class JspUtil {
 
   
   /**
-   * Writes out attributes contained in the map.
+   * Writes out attributes contained in the Map &lt;attributeName, attributeValue&gt;.
    * If map is <code>null</code>, writes nothing.
    */
   public static void writeAttributes(Writer out, Map attributes) throws IOException {
     if (attributes == null) return;
     
-    for(Iterator i = attributes.keySet().iterator(); i.hasNext();) {
-      String name = (String)i.next();
-      String value = attributes.get(name).toString();
-      
-      JspUtil.writeAttribute(out, name, value);
+    for(Iterator i = attributes.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String attributeName = (String)entry.getKey();
+      JspUtil.writeAttribute(out, attributeName, entry.getValue());
     }    
   }
 

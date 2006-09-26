@@ -16,8 +16,8 @@
 
 package org.araneaframework.uilib.list;
 
-import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.util.BeanUtil;
+import org.araneaframework.core.Assert;
 
 /**
  * ListWidget that is aware of field types according to the Bean type.
@@ -39,7 +39,7 @@ public class BeanListWidget extends ListWidget {
 	 */
 	public BeanListWidget(Class beanType) {
 		super();
-		Validate.notNull(beanType);
+		Assert.notNullParam(this, beanType, "beanType");
 		this.beanType = beanType;
 	}
 	

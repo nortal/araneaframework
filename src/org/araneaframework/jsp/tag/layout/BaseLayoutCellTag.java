@@ -41,6 +41,7 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
     String superStyleClass = super.getStyleClass();
     if (superStyleClass != null) {
       StringBuffer sb = new StringBuffer(superStyleClass);
+
       if (!overrideLayout && result != null)
         sb.append(' ').append(result);
       

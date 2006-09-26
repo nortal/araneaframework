@@ -20,8 +20,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import org.apache.commons.lang.Validate;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 
 /**
@@ -127,7 +126,7 @@ public class TypeHelper implements Serializable {
 	// Comparator
 	
 	protected Comparator buildComparator(Class type) {
-		Validate.notNull(type);
+		Assert.notNullParam(this, type, "type");
 		
 		if (String.class.equals(type)) {
 			return ComparatorFactory.getStringComparator(

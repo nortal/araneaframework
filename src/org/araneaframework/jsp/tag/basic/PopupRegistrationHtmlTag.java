@@ -23,7 +23,7 @@ import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
-import org.araneaframework.jsp.tag.updateRegion.UpdateRegionHtmlTag;
+import org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**

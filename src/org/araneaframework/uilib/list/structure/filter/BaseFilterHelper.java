@@ -178,7 +178,6 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @param fieldId field id.
 	 * @param labelId label id (not yet resolved).
-	 * @return
 	 */
 	public void addCustomLabel(String fieldId, String labelId) {
 		this.labels.put(fieldId, labelId);
@@ -221,11 +220,12 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	/**
 	 * Retrieves type for the specified field.
 	 * <p>
-	 * If their are no type defined for range filter's low/high value, the
-	 * range filter's field type is returned.
+	 * If type is not defined for range filter's low/high value, the
+	 * range filter field type is returned.
 	 * </p>
 	 * <p>
-	 * Otherwise {@link TypeHelper#getFieldType(String)) is just called.
+	 * Otherwise {@link TypeHelper#getFieldType(String))} is just called.
+	 * </p>
 	 * 
 	 * @see {@link TypeHelper#getFieldType(String))
 	 */

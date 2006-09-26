@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -108,7 +107,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return the {@link ListStructure}used to describe the list.
 	 */
 	public ListStructure getListStructure() {
-		assrtInitialized();
+		assertInitialized();
 		return this.listStructure;
 	}
 
@@ -169,7 +168,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/**
 	 * Sets the {@link FilterHelper} used to help with adding filters.
 	 * 
-	 * @param typeHelper {@link FilterHelper} used to help with adding filters.
+	 * @param filterHelper {@link FilterHelper} used to help with adding filters.
 	 */
 	public void setFilterHelper(FilterHelper filterHelper) {
 		this.filterHelper = filterHelper;
@@ -857,10 +856,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		private Map getOrderInfoMap(Map data) {
 			Map orderInfoMap = new HashMap();    	
-			for (Iterator i = data.keySet().iterator(); i.hasNext();) {
-				String key = (String) i.next();
+			for (Iterator i = data.entrySet().iterator(); i.hasNext();) {
+				Map.Entry entry = (Map.Entry) i.next();
+				String key = (String) entry.getKey();
 				if (key.startsWith(ORDER_FORM_NAME)) {
-					orderInfoMap.put(key.substring(ORDER_FORM_NAME.length()), data.get(key));
+					orderInfoMap.put(key.substring(ORDER_FORM_NAME.length()), entry.getValue());
 				}
 			}
 			return orderInfoMap;
@@ -998,7 +998,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		}
 	}
 	
-	protected void assrtInitialized() throws IllegalStateException {
+	protected void assertInitialized() throws IllegalStateException {
 		if (!isInitialized()) {
 			throw new IllegalStateException("ListWidget is not initialized");
 		}

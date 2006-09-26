@@ -42,8 +42,8 @@ import org.araneaframework.http.HttpOutputData;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardServletOutputData implements HttpOutputData {
-  private transient HttpServletRequest req;
-  private transient HttpServletResponse res;
+  private HttpServletRequest req;
+  private HttpServletResponse res;
   
   private StringBuffer scopeBuf = new StringBuffer();
   

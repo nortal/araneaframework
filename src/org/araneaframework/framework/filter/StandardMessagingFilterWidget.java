@@ -17,8 +17,8 @@
 package org.araneaframework.framework.filter;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Environment;
@@ -105,7 +105,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     Collection messages = (Collection)messageMap.get(type);
 
     if (messages == null) {
-      messages = new HashSet();
+      messages = new LinkedHashSet();
       messageMap.put(type, messages);
     }
 

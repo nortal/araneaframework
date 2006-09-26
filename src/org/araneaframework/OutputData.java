@@ -16,7 +16,6 @@
 
 package org.araneaframework;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -27,7 +26,7 @@ import java.util.Map;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface OutputData extends Serializable, Extendable, Narrowable {
+public interface OutputData extends Extendable, Narrowable {
   
   /**
    * The key that can be used to retrieve OutputData (as an example a request scope attribute).

@@ -148,6 +148,9 @@ function AraneaPage() {
   /** Aranea JSP specific DOM tree traverser. */
   var traverser = new AraneaTraverser();
   this.getTraverser = function() { return traverser; }
+  
+  /** Timer that executes keepalive calls, if any. */
+  var keepAliveTimer = null;
 
   /** Variables holding different (un)load events that should be executed when page loads -- on body (un)load or alike. */
   var systemLoadEvents = new AraneaEventStore();
@@ -245,6 +248,29 @@ function AraneaPage() {
   	this.getLogger().info("AraneaPage." +functionName + " was overriden.");
   	this[functionName] = f;
   }
+  
+  this.setKeepAlive = function(f, time) {
+    globalkeepAliveTimer = setInterval(f, time);
+  }
+
+  this.clearKeepAlive = function() {
+    clearInterval(globalkeepAliveTimer);
+  }
+}
+
+AraneaPage.getDefaultKeepAlive = function() {
+  return function() {
+    if (window['prototype/prototype.js']) {
+      getActiveAraneaPage().getLogger().debug("Sending async service keepalive request.");
+      // TODO: set transaction id
+      var keepAlive = new Ajax.Request(
+          getActiveAraneaPage().getServletURL(),
+          { method: 'get' }
+      );
+    } else {
+      getActiveAraneaPage().getLogger().warn("Service keepalive calls cannot be made.");
+    }
+  };
 }
 
 // Random request id generator. Sent only with AA ajax requests.
