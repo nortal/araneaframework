@@ -17,8 +17,13 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.framework.router.BaseExpiringServiceRouterService;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -77,6 +82,7 @@ public class BodyHtmlTag extends PresentationTag {
    * Writes the scripts immediately following the opening of &lt;body&gt; tag.
    */
   protected void writeAfterBodyStartScripts(Writer out) throws Exception {
+    // servlet (container) url
     String servletUrl =
         ServletUtil.getInputData(pageContext.getRequest()).getContainerURL();
     
@@ -97,6 +103,7 @@ public class BodyHtmlTag extends PresentationTag {
       out.write("getActiveAraneaPage().override('encodeURL'," + function + ");");
     }
 
+    // Locale information
     Locale locale = getLocalizationContext().getLocale();
 
     out.write("getActiveAraneaPage().setLocale(new AraneaLocale('");
@@ -106,6 +113,22 @@ public class BodyHtmlTag extends PresentationTag {
     out.write("'));");
 
     writeAdditionalAfterBodyStartScripts(out);
+    
+    // expiring service keepalives
+    Map expiringServiceMap = (Map) getOutputData().getAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP);
+    if (expiringServiceMap != null && !expiringServiceMap.isEmpty()) { // there are some expiring services
+      // register keepalive
+      Map keepAliveServices = new HashMap();
+      for (Iterator i = expiringServiceMap.entrySet().iterator(); i.hasNext();) {
+        Map.Entry entry = (Map.Entry) i.next();
+        Object serviceKey = entry.getKey();
+        Long serviceKeepAlive = (Long) entry.getValue();
+        Object serviceId = getOutputData().getAttribute(serviceKey);
+        if (serviceId == null)
+          throw new AraneaRuntimeException("Unable to acquire service id for active service under '" + serviceKey + "'");
+        out.write("\n//Following keepalives :  for '" + serviceKey +"'='" + serviceId + "' " + " = " + serviceKeepAlive.toString() + "\n");
+      }
+    }
 
     JspUtil.writeEndTag(out, "script");
   }
