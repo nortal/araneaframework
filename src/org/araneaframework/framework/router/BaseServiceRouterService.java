@@ -42,6 +42,7 @@ import org.araneaframework.http.util.ClientStateUtil;
  */
 public abstract class BaseServiceRouterService extends BaseService {
   private static final Logger log = Logger.getLogger(BaseServiceRouterService.class);
+  public static final String ROUTER_MAP_KEY = "routerMap";
   
   private Map serviceMap;
   protected Object defaultServiceId;

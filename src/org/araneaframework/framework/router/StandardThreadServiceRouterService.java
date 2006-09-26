@@ -41,4 +41,8 @@ public class StandardThreadServiceRouterService extends BaseExpiringServiceRoute
   protected Object getServiceKey() throws Exception {
     return ThreadContext.THREAD_SERVICE_KEY;
   }
+
+  public Object getKeepAliveKey() { 
+    return ThreadContext.KEEPALIVE_KEY;
+  }
 }

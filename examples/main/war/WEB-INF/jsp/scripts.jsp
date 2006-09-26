@@ -13,12 +13,10 @@
 		<ui:importStyles file="css/calendar/calendar.css" media="screen"/>
 
 		<ui:importScripts/>
-		<!-- 
 		<ui:importScripts group="debugScripts"/>
 		<script type="text/javascript">
 			getActiveAraneaPage().setDefaultLogger();
 		</script>
-		 -->
 
 		<ui:richTextAreaInit>
 			<ui:attribute name="theme" value="advanced"/>
