@@ -97,7 +97,9 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    * {@link TransactionContext#TRANSACTION_ID_KEY} from their OutputData.
    */
   protected void render(OutputData output) throws Exception {
-    transHelper.resetTransactionId();
+    // TODO: makse sure that when transactionid was overriden in request, new transaction id should not be generated
+    if (!transHelper.isOverride(getTransactionId(getInputData())))
+      transHelper.resetTransactionId();
     output.pushAttribute(TransactionContext.TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId());
     ClientStateUtil.put(TransactionContext.TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId() + "", output);
 

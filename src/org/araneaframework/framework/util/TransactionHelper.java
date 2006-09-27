@@ -51,16 +51,24 @@ public class TransactionHelper implements Serializable {
   }
   
   /**
-   * Returns true if current transaction id is null or transactionId does not
-   * equal the current transaction id. 
+   * Returns false if current transaction id is null or transactionId does not
+   * equal the current transaction id.
    */
   public boolean isConsistent(Object transactionId) {
     if (currentTransactionId == null)
-      return true;
+      return false;
 
-    if (TransactionContext.OVERRIDE_KEY.equals(transactionId))
+    if (isOverride(transactionId))
       return true;
 
     return currentTransactionId.toString().equals(transactionId);
+  }
+
+  /**
+   * Returns true if current transaction id is null or transactionId does not
+   * equal the current transaction id. 
+   */
+  public boolean isOverride(Object transactionId) {
+    return TransactionContext.OVERRIDE_KEY.equals(transactionId);
   }
 }

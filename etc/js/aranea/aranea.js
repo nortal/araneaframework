@@ -150,7 +150,7 @@ function AraneaPage() {
   this.getTraverser = function() { return traverser; }
   
   /** Timer that executes keepalive calls, if any. */
-  var keepAliveTimer = null;
+  var keepAliveTimers = new AraneaStore();
 
   /** Variables holding different (un)load events that should be executed when page loads -- on body (un)load or alike. */
   var systemLoadEvents = new AraneaEventStore();
@@ -249,26 +249,32 @@ function AraneaPage() {
   	this[functionName] = f;
   }
   
-  this.setKeepAlive = function(f, time) {
-    globalkeepAliveTimer = setInterval(f, time);
+  this.addKeepAlive = function(f, time) {
+    keepAliveTimers.add(setInterval(f, time));
   }
 
-  this.clearKeepAlive = function() {
-    clearInterval(globalkeepAliveTimer);
+  this.clearKeepAlives = function() {
+    keepAliveTimers.forEach(function(timer) {clearInterval(timer);});
   }
 }
 
-AraneaPage.getDefaultKeepAlive = function() {
+AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey) {
   return function() {
     if (window['prototype/prototype.js']) {
-      getActiveAraneaPage().getLogger().debug("Sending async service keepalive request.");
-      // TODO: set transaction id
+      var url = getActiveAraneaPage().encodeURL(getActiveAraneaPage().getServletURL());
+      url += "?transactionId=override";
+      if (topServiceId) 
+        url += "&topServiceId="+topServiceId;
+      if (threadServiceId) 
+        url += "&threadServiceId="+threadServiceId;
+      url += "&" + keepAliveKey + "=true";
+      getActiveAraneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(
-          getActiveAraneaPage().getServletURL(),
+          url,
           { method: 'get' }
       );
     } else {
-      getActiveAraneaPage().getLogger().warn("Service keepalive calls cannot be made.");
+      getActiveAraneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");
     }
   };
 }

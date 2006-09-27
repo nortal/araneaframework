@@ -23,6 +23,8 @@ import java.util.Locale;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.router.BaseExpiringServiceRouterService;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -117,16 +119,27 @@ public class BodyHtmlTag extends PresentationTag {
     // expiring service keepalives
     Map expiringServiceMap = (Map) getOutputData().getAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP);
     if (expiringServiceMap != null && !expiringServiceMap.isEmpty()) { // there are some expiring services
-      // register keepalive
-      Map keepAliveServices = new HashMap();
       for (Iterator i = expiringServiceMap.entrySet().iterator(); i.hasNext();) {
         Map.Entry entry = (Map.Entry) i.next();
         Object serviceKey = entry.getKey();
-        Long serviceKeepAlive = (Long) entry.getValue();
+        // invoke keepalive a few seconds 
+        Long serviceKeepAlive = new Long((((Long) entry.getValue()).longValue() - 4000));
         Object serviceId = getOutputData().getAttribute(serviceKey);
+        Object topServiceId =  getOutputData().getAttribute(TopServiceContext.TOP_SERVICE_KEY);
+        Object threadServiceId = getOutputData().getAttribute(ThreadContext.THREAD_SERVICE_KEY);
         if (serviceId == null)
           throw new AraneaRuntimeException("Unable to acquire service id for active service under '" + serviceKey + "'");
-        out.write("\n//Following keepalives :  for '" + serviceKey +"'='" + serviceId + "' " + " = " + serviceKeepAlive.toString() + "\n");
+
+        String sTop = topServiceId == null ? "null" : "'" + topServiceId.toString() + "'";
+        String sThread = threadServiceId == null ? "null" : "'" + threadServiceId.toString() + "'";
+        String keepAliveKey = "'" +
+        	((Map)getOutputData().getAttribute(BaseExpiringServiceRouterService.KEEPALIVE_KEYS)).get(serviceKey).toString() + "'";
+        
+        out.write("\ngetActiveAraneaPage().addKeepAlive(AraneaPage.getDefaultKeepAlive(" + 
+        		sTop + "," + 
+        		sThread + "," + keepAliveKey + ")," + serviceKeepAlive.toString() + ");\n");
+        
+        //out.write("\n//Following keepalives :  for '" + serviceKey +"'='" + serviceId + "' " + " = " + serviceKeepAlive.toString() + "\n");
       }
     }
 

@@ -40,12 +40,19 @@ import org.araneaframework.framework.ThreadContext;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseExpiringServiceRouterService extends BaseServiceRouterService {
+  /** {@link OutputData} key under which expiring service lifetime expectancies are stored. */
   public static final String SERVICE_TTL_MAP = "serviceTTLMap";
+  public static final String KEEPALIVE_KEYS = "keepAliveKeys";
 
   private static final Logger log = Logger.getLogger(BaseExpiringServiceRouterService.class);
   private Map timeCapsules;
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
+//	  java.util.ConcurrentModificationException
+//		at java.util.HashMap$HashIterator.nextEntry(HashMap.java:782)
+//		at java.util.HashMap$EntryIterator.next(HashMap.java:824)
+//		at org.araneaframework.framework.router.BaseExpiringServiceRouterService.killExpiredServices(BaseExpiringServiceRouterService.java:97)
+//		at org.araneaframework.framework.router.BaseExpiringServiceRouterService.action(BaseExpiringServiceRouterService.java:51)
     killExpiredServices(System.currentTimeMillis());
     
     TimeCapsule capsule = (TimeCapsule)getTimeCapsules().get(getServiceId(input));
@@ -60,12 +67,21 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     }
 
     if (!isKeepAlive(input)) {
+      Map keepAliveKeys = (Map)output.getAttribute(BaseExpiringServiceRouterService.KEEPALIVE_KEYS);
+      if (keepAliveKeys == null)
+        keepAliveKeys = new HashMap();
+      keepAliveKeys.put(getServiceKey(), getKeepAliveKey());
       try {
     	output.pushAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP, serviceTTLMap);
+    	output.pushAttribute(BaseExpiringServiceRouterService.KEEPALIVE_KEYS, keepAliveKeys);
     	super.action(path, input, output);
       } finally {
+    	output.popAttribute(BaseExpiringServiceRouterService.KEEPALIVE_KEYS);
         output.popAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP);
       }
+    } else {
+      if (log.isDebugEnabled())
+        log.debug(Assert.thisToString(this) + " received keepalive for service '" + getServiceId(input).toString() + "'");
     }
 
     if (capsule != null)
