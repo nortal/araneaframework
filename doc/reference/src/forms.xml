@@ -16,122 +16,15 @@
 
 <chapter id="forms">
 	<title>Forms and Data Binding</title>
-	<sect1>
-    <title>Introduction</title>
 
-    <para>
-      One of the most common tasks in web applications is gathering user input, converting it to model objects and then validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity.
-    </para>
+  <para>
+    One of the most common tasks in web applications is gathering user input, converting it to model objects and then validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity.
+  </para>
 
-    <para>
-      Unlike many other frameworks, in Aranea request processing, validating and data binding is not a separate part of the framework, but just another component. Specially it is widget <literal>org.araneaframework.uilib.form.FormWidget</literal> and some support widgets. In this chapter we will introduce this widgets and supporting API and show how to use and extend them.
-    </para>
-	</sect1>
-  <sect1>
-    <title>Controls</title>
+  <para>
+    Unlike many other frameworks, in Aranea request processing, validating and data binding is not a separate part of the framework, but just another component. Specially it is widget <literal>org.araneaframework.uilib.form.FormWidget</literal> and some support widgets. In this chapter we will introduce this widgets and supporting API and show how to use and extend them.
+  </para>
 
-    <para>
-      At the core of the data binding API lies the notion of <emphasis>controls</emphasis> (<literal>org.araneaframework.uilib.form.Control</literal>). Controls are the widgets that do the actual parsing of the request parameters and correspond to the controls found in HTML forms, like textbox, textarea, selectbox, button, ... Additionally controls also do a bit of validating the submitted data. For example textbox control validates the minimum and maximum string length, since the HTML tag can do the same.
-      Programmer usually does not read values from <literal>Control</literal> directly, but from <literal>FormElement</literal> that
-      takes care of converting value of <literal>Control</literal> to <literal>FormElement</literal> <literal>Data</literal>.
-   </para>
-
-    <para>
-      The following example shows how to create a control:
-<programlisting role="java">...
-TextControl textBox = new TextControl(new Long(10), null);
-...</programlisting>
-      This code will create a textbox with a minimal length of 10. Note that this code does not yet put the control to work, as controls are never used without forms, which are reviewed in the next section. 
-    </para>
-
-    <para>
-        Follows a table of standard controls all found in <literal>org.araneaframework.uilib.form.control</literal> package:
-        <informaltable frame="all">
-          <tgroup cols="2">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
-            <thead>
-              <row>
-                <entry>Control</entry>
-                <entry>Description</entry>
-              </row>
-            </thead>
-            <tbody>
-               <row>
-                <entry><literal>AutoCompleteTextControl</literal></entry>
-                <entry><literal>TextControl</literal> with autocompletion capability.</entry>
-              </row>
-               <row>
-                <entry><literal>ButtonControl</literal></entry>
-                <entry>A control that represents a HTML form button.</entry>
-              </row>
-               <row>
-                <entry><literal>CheckboxControl</literal></entry>
-                <entry>A control that represents a binary choice and is usually rendered as a checkbox.</entry>
-              </row>
-              <row>
-                <entry><literal>DateControl</literal></entry>
-                <entry>A date selection control that allows to choose a date. Supports custom formats of date input and output.</entry>
-              </row>
-              <row>
-                <entry><literal>DateTimeControl</literal></entry>
-                <entry>A date and time selection control that allows to choose a date with a corresponding time. 
-                Supports custom formats of date and time input and output.</entry>
-              </row>
-              <row>
-                <entry><literal>DisplayControl</literal></entry>
-                <entry>A control that can be used to render a read-only value that will not be submitted with an HTML form.</entry>
-              </row>
-              <row>
-                <entry><literal>FileUploadControl</literal></entry>
-                <entry>A control that can be used to upload files to the server.</entry>
-              </row>
-              <row>
-                <entry><literal>FloatControl</literal></entry>
-                <entry>A textbox control that constrains the text to be floating-point numbers. Can also check
-                the allowed minimum and maximum limits. </entry>
-              </row>
-              <row>
-                <entry><literal>HiddenControl</literal></entry>
-                <entry>A control that can be used to render an invisible value that will be submitted with an HTML form.</entry>
-              </row>
-              <row>
-                <entry><literal>MultiSelectControl</literal></entry>
-                <entry>A control that allows to select several from many choices (may be rendered as a multiselect list or checkbox list). 
-                Ensures that the submitted values are a subset of the choices.</entry>
-              </row>
-              <row>
-                <entry><literal>NumberControl</literal></entry>
-                <entry>A textbox control that constrains the text to be integer numbers. Can also check
-                the allowed minimum and maximum limits. </entry>
-              </row>
-              <row>
-                <entry><literal>TimeControl</literal></entry>
-                <entry>A time selection control that allows to choose a time of day. Supports custom formats of time input and output.</entry>
-              </row>
-              <row>
-                <entry><literal>TextareaControl</literal></entry>
-                <entry>A multirow textbox control that can constrain the inserted text minimal and maximal length.</entry>
-              </row>
-              <row>
-                <entry><literal>TextControl</literal></entry>
-                <entry>A simple textbox control with one row of text that can constrain the inserted text minimal and maximal length.</entry>
-              </row>
-              <row>
-                <entry><literal>TimeStampControl</literal></entry>
-                <entry>Similar to <literal>DateControl</literal> but works with <literal>java.sql.TimeStamp</literal>.</entry>
-              </row>              
-              <row>
-                <entry><literal>SelectControl</literal></entry>
-                <entry>A control that allows to select one of many choices (may be rendered as a dropdown list or option buttons). 
-                Ensures that the submitted value was one of the choices.</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-
-    </para>
-  </sect1>
   <sect1>
     <title>Forms API</title>
     
@@ -158,7 +51,7 @@ protected void init() {
   ...
 }
 ...
-</programlisting>       
+</programlisting>
   Note that here we basically do three things:
 <variablelist spacing="compact">
   <varlistentry>
@@ -203,13 +96,171 @@ private void handleEventSave() {
 myForm = new BeanFormWidget(MyModel.class);
 addWidget("myForm", myForm);
 ...
-FormWidget addrForm = myForm.addBeanSubForm("address");
+BeanFormWidget addrForm = myForm.addBeanSubForm("address");
 addrForm.addBeanElement("postalCode", "#Last name", new TextControl(), true);
 addrForm.addBeanElement("street", "#Last name", new TextControl(), true);
 ...</programlisting>
-      This of course implies that <literal>MyModel</literal> has a property "address" that contains another JavaBean corresponding to the subform fields. Note that the fields will be available from the main form using a dot-separated name, e.g. <literal>String street = myForm.getValueByFullName("address.street")</literal>.
+      This of course implies that <literal>MyModel</literal> has a property "address" that contains another JavaBean corresponding to the subform fields. Note that the fields will be available from the main form using a dot-separated name, e.g. <literal>String street = (String) myForm.getValueByFullName("address.street")</literal>.
       </para>
     </sect2>
+
+  <sect2>
+    <title>Controls</title>
+
+    <para>
+      At the core of the data binding API lies the notion of <emphasis>controls</emphasis> (<literal>org.araneaframework.uilib.form.Control</literal>). Controls are the widgets that do the actual parsing of the request parameters and correspond to the controls found in HTML forms, like textbox, textarea, selectbox, button, ... Additionally controls also do a bit of validating the submitted data. For example textbox control validates the minimum and maximum string length, since the HTML tag can do the same.
+      Programmer usually does not read values from <literal>Control</literal> directly, but from <literal>FormElement</literal> that
+      takes care of converting value of <literal>Control</literal> to <literal>FormElement</literal> <literal>Data</literal>.
+   </para>
+
+    <para>
+      The following example shows how to create a control:
+<programlisting role="java">...
+TextControl textBox = new TextControl(new Long(10), null);
+...</programlisting>
+      This code will create a textbox with a minimal length of 10. Note that this code does not yet put the control to work, as controls are never used without forms, which are reviewed in the next section. 
+    </para>
+
+    <para>
+        Follows a table of standard controls all found in <literal>org.araneaframework.uilib.form.control</literal> package:
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="3*"/>
+            <thead>
+              <row>
+                <entry>Control</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+               <row>
+                <entry><literal>ButtonControl</literal></entry>
+                <entry>A control that represents a HTML form button.</entry>
+              </row>
+               <row>
+                <entry><literal>CheckboxControl</literal></entry>
+                <entry>A control that represents a binary choice and is usually rendered as a checkbox.</entry>
+              </row>
+              <row>
+                <entry><literal>DateControl</literal></entry>
+                <entry>A date selection control that allows to choose a date. Supports custom formats of date input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>DateTimeControl</literal></entry>
+                <entry>A date and time selection control that allows to choose a date with a corresponding time. 
+                Supports custom formats of date and time input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>DisplayControl</literal></entry>
+                <entry>A control that can be used to render a read-only value that will not be submitted with an HTML form.</entry>
+              </row>
+              <row>
+                <entry><literal>FileUploadControl</literal></entry>
+                <entry>A control that can be used to upload files to the server.</entry>
+              </row>
+              <row>
+                <entry><literal>FloatControl</literal></entry>
+                <entry>A textbox control that constrains the text to be floating-point numbers. Can also check
+                the allowed minimum and maximum limits. </entry>
+              </row>
+              <row>
+                <entry><literal>HiddenControl</literal></entry>
+                <entry>A control that can be used to render an invisible value that will be submitted with an HTML form.</entry>
+              </row>
+              <row>
+                <entry><literal>NumberControl</literal></entry>
+                <entry>A textbox control that constrains the text to be integer numbers. Can also check
+                the allowed minimum and maximum limits. </entry>
+              </row>
+              <row>
+                <entry><literal>TimeControl</literal></entry>
+                <entry>A time selection control that allows to choose a time of day. Supports custom formats of time input and output.</entry>
+              </row>
+              <row>
+                <entry><literal>TextareaControl</literal></entry>
+                <entry>A multirow textbox control that can constrain the inserted text minimal and maximal length.</entry>
+              </row>
+              <row>
+                <entry><literal>TextControl</literal></entry>
+                <entry>A simple textbox control with one row of text that can constrain the inserted text minimal and maximal length.</entry>
+              </row>
+               <row>
+                <entry><literal>AutoCompleteTextControl</literal></entry>
+                <entry><literal>TextControl</literal> with autocompletion capability.</entry>
+              </row>
+              <row>
+                <entry><literal>TimestampControl</literal></entry>
+                <entry>Similar to <literal>DateControl</literal> but works with <literal>java.sql.TimeStamp</literal>.</entry>
+              </row>              
+              <row>
+                <entry><literal>SelectControl</literal></entry>
+                <entry>A control that allows to select one of many choices (may be rendered as a dropdown list or option buttons). 
+                Ensures that the submitted value was one of the choices.</entry>
+              </row>
+              <row>
+                <entry><literal>MultiSelectControl</literal></entry>
+                <entry>A control that allows to select several from many choices (may be rendered as a multiselect list or checkbox list). 
+                Ensures that the submitted values are a subset of the choices.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+    </para>
+
+    <para>
+      <literal>SelectControl</literal> and <literal>MultiSelectControl</literal> deserve a special mention, as they need a bit more handling than the rest. The difference comes from the fact that we also need to handle the selectable options, which we refer to as <literal>DisplayItem</literal>. Each <literal>DisplayItem</literal> has a label, a string value and can be disabled. Disabled display items cannot be selected in neither select box nor multiselect box.
+    </para>
+
+    <para>
+    Both <literal>SelectControl</literal> and <literal>MultiSelectControl</literal> implement the <literal>DisplayItemContainer</literal> interface that allows to manipulate the <literal>DisplayItem</literal>:
+    </para>
+    
+      <programlisting role="java">interface DisplayItemContainer {
+  void addItem(DisplayItem item);
+  void addItems(Collection items);
+  void clearItems();
+  List getDisplayItems();
+  int getValueIndex(String value);
+}</programlisting>
+
+   <para>
+     In addition to this interface we also provide a <literal>DisplayItemUtil</literal> that provides some support methods on display items. These include the method <literal>addItemsFromBeanCollection</literal> that allows to add the items to a (multi)select control from a business method returning a collection of model JavaBean objects (which is one of the most common use cases). So a typical select control will be filled as follows:
+   </para>
+   
+<programlisting role="java">control = new SelectControl();
+control.addItem(new DisplayItem(null, "- choice -"));
+DisplayItemUtil.addItemsFromBeanCollection(
+  control,
+  lookupMyService().getMyItemCollection(),
+  "value",
+  "label");</programlisting>
+
+    <para>
+      Controls can also listen to user events. For example <literal>ButtonControl</literal> can react to an <literal>onClick</literal> event, while most others can react to an <literal>onChange</literal> event. The only thing needed to receive the control events is to register an appropriate event listener:
+    </para>
+
+      <programlisting role="java">...
+SelectControl selControl = new SelectControl();
+FormElement selEl = form.addBeanElement("clientId", "#Client id", selControl, true);
+selControl.addOnChangeEventListener(new OnChangeEventListener() {
+  public void onChange() {
+    //We convert and validate one element only as the rest of the form
+    //might be invalid
+    if (selEl.convertAndValidate()) {
+      Long clientId = (Long) selEl.getValue();
+      //Now we can use the client id to do whatever we want
+      //E.g. update another select control
+    }
+  }
+});
+...</programlisting>
+
+  <para>
+    <literal>onChange</literal> events are also produced by text boxes and similar, so the user input can processed right after the user has finished it.
+  </para>
+
+  </sect2>
 
     <sect2>
       <title>Constraints</title>
@@ -281,7 +332,7 @@ addWidget("searchForm", searchForm);
         <informaltable frame="all">
           <tgroup cols="2">
             <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="3*"/>
             <thead>
               <row>
                 <entry>Constraint</entry>
@@ -294,14 +345,6 @@ addWidget("searchForm", searchForm);
                 <entry>Field constraint, checks that field contains <literal>Date</literal> later than current date.</entry>
               </row>
                <row>
-                <entry><literal>AndConstraint</literal></entry>
-                <entry>Composite constraint, checks that all subconstraints are satisfied.</entry>
-              </row>
-               <row>
-                <entry><literal>GroupedConstraint</literal></entry>
-                <entry></entry>
-              </row>
-               <row>
                 <entry><literal>NotEmptyConstraint</literal></entry>
                 <entry>Field constraint, checks that field contains non-empty value.</entry>
                </row>
@@ -309,27 +352,52 @@ addWidget("searchForm", searchForm);
                 <entry><literal>NumberInRangeConstraint</literal></entry>
                 <entry>Field constraint, checks that number in a field belongs on given range (integer only).</entry>
               </row>
-               <row>
-                <entry><literal>OptionalConstraint</literal></entry>
-                <entry>Field constraint that wraps another constraint which is only applied if field has some real value (is not null).</entry>
-              </row>
-               <row>
-                <entry><literal>OrConstraint</literal></entry>
-                <entry>Composite constraint, checks that at least one subconstraint is satisfied.</entry>
+              <row>
+                <entry><literal>StringLengthInRangeConstraint</literal></entry>
+                <entry>Field constraint, checks that length of a string in a field falls within given boundaries.</entry>
               </row>
                <row>
                 <entry><literal>RangeConstraint</literal></entry>
                 <entry>Multiple field constraint, checks that value of one field is lower than value of other field. Field
                 values must <literal>Comparable</literal>.</entry>
               </row>
+               <row>
+                <entry><literal>AndConstraint</literal></entry>
+                <entry>Composite constraint, checks that all subconstraints are satisfied.</entry>
+              </row>
               <row>
-                <entry><literal>StringLengthInRangeConstraint</literal></entry>
-                <entry>Field constraint, checks that length of a string in a field falls within given boundaries.</entry>
+                <entry><literal>OrConstraint</literal></entry>
+                <entry>Composite constraint, checks that at least one subconstraint is satisfied.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
 	</para>
+	
+     <para>
+       There are two constraints that deserve a special mention. One of them is <literal>OptionalConstraint</literal> that will only let its subconstraint to validate the field, if the field has been submitted by user (it is very useful for instance when non-mandatory fields must nevertheless follow some pattern, whereas empty input should still be allowed).
+     </para>
+     <para>
+       The other constraint os called <literal>GroupedConstraint</literal>. It is useful in cases when different constraints should be activated depending on the particular state of the component (a typical use case is that some groups of fields are made mandatory in different states of document approval).  The constraint is created using the <literal>ConstraintGroupHelper</literal> as follows:
+     </para>
+
+<programlisting role="java">...
+ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
+AndConstraint andCon = new AndConstraint();
+andCon.addConstraint(
+  groupHelper.createGroupedConstraint(new NotEmptyConstraint(field1), "group1"));
+andCon.addConstraint(
+  groupHelper.createGroupedConstraint(new NotEmptyConstraint(field2), "group1"));
+andCon.addConstraint(
+  groupHelper.createGroupedConstraint(new NotEmptyConstraint(field3), "group2"));
+andCon.addConstraint(
+  groupHelper.createGroupedConstraint(new NotEmptyConstraint(field4), "group2"));
+form.setConstraint(andCon);
+
+//Now only field1 and field2 will be required from user!
+groupHelper.setActiveGroup("group1");
+...</programlisting>
+
     </sect2>
 
     <sect2>
@@ -368,7 +436,7 @@ private void handleEventSave() {
         <informaltable frame="all">
           <tgroup cols="2">
             <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="3*"/>
             <thead>
               <row>
                 <entry>Data</entry>
@@ -429,7 +497,7 @@ private void handleEventSave() {
                 <entry><literal>List &lt;java.lang.String</literal>&gt;</entry>
               </row>
                <row>
-                <entry><literal>TimeStampData</literal></entry>
+                <entry><literal>TimestampData</literal></entry>
                 <entry><literal>java.sql.Timestamp</literal></entry>
               </row>
                <row>
@@ -440,6 +508,10 @@ private void handleEventSave() {
           </tgroup>
         </informaltable>
 
+    </para>
+    
+    <para>
+      Finally <literal>Data</literal> constructor also accepts both a <literal>Class</literal> instance and a simple string. So if you have a custom datatype with an appropriate converter (see next section) you can just assign the data with the same type (in fact if you have your own converter the type doesn't matter that much, it will just allow some checks to be done on the programmer).
     </para>
 
     </sect2>
@@ -458,7 +530,7 @@ private void handleEventSave() {
     public void setFormElementCtx(FormElementContext feCtx);
     public Object convert(Object data);
     public Object reverseConvert(Object data);
-    public BaseConverter newConverter();
+    public Converter newConverter();
 }]]>
 </programlisting>
 </para>
@@ -2149,7 +2221,7 @@ el.click();]]></programlisting>
 </ui:form>]]></programlisting>
       </sect3>
       
-    </sect2>    
+    </sect2>
     
 
     <sect2>
@@ -2217,7 +2289,7 @@ el.click();]]></programlisting>
 </programlisting>
 </para>
       </sect3>
-    </sect2>    
+    </sect2>
     
   </sect1>
 

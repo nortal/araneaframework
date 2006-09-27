@@ -4,14 +4,14 @@
 [
 	<!ENTITY components               SYSTEM "components.xml">
 	<!ENTITY intro               SYSTEM "intro.xml">
+	<!ENTITY configuration               SYSTEM "configuration.xml">
 	<!ENTITY jsp               SYSTEM "jsp.xml">
 	<!ENTITY widgets               SYSTEM "widgets.xml">
 	<!ENTITY framework               SYSTEM "framework.xml">	
 	<!ENTITY forms               SYSTEM "forms.xml">	
-	<!ENTITY lists               SYSTEM "lists.xml">	
-	<!ENTITY javascript               SYSTEM "javascript.xml">	
-	
-	
+	<!ENTITY lists               SYSTEM "lists.xml">
+	<!ENTITY javascript               SYSTEM "javascript.xml">
+
 	<!ENTITY popupfilter 	 SYSTEM "framework/components/filters/StandardPopupFilterWidget.xml">
 	<!ENTITY threadcloningfilter 	 SYSTEM "framework/components/filters/StandardThreadCloningFilterService.xml">
 	<!ENTITY messagefilter 	 SYSTEM "framework/components/filters/StandardMessagingFilterWidget.xml">
@@ -26,9 +26,10 @@
 	<!ENTITY ajaxfilter 	 SYSTEM "framework/components/filters/StandardAjaxFilterService.xml">
 	<!ENTITY criticalexceptionfilter 	 SYSTEM "framework/components/filters/StandardCriticalExceptionHandlingFilterService.xml">
 	<!ENTITY jspfilter 	 SYSTEM "framework/components/filters/StandardJspFilterService.xml">
-	
+
 	<!ENTITY flowcontainer 	 SYSTEM "framework/components/containers/StandardFlowContainerWidget.xml">
     <!ENTITY standardcontainers   SYSTEM "framework/components/containers/StandardContainers.xml">
+
 ]>
 
 <!--
@@ -39,7 +40,7 @@
   You may obtain a copy of the License at
  
    http://www.apache.org/licenses/LICENSE-2.0
- 
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,35 +76,15 @@
     </bookinfo>
 
     <toc/>
-    
-    &intro;
-    
-		<part id="user-manual">
-      <title>User Manual</title>
-      <partintro>
-        <title>Introduction</title>
 
-        <para>
-          The <emphasis>User Manual</emphasis> introduces the Aranea API used by application programmers omitting the framework inner workings. This part talks about widgets, custom jsp tag library used to render them, a data binding component and a database-backed listing component. One can both read this part through as a book, or find the necessary information using searching or lookup. This part is a must-read for any serious user of Aranea framework.
-        </para>
-      </partintro>
-      &widgets;
-      &jsp;    
-      &forms;
-      &lists;
-    </part>
-		<part id="system-manual">
-      <title>System Manual</title>
-      <partintro>
-        <title>Introduction</title>
-
-        <para>
-          The <emphasis>System Manual</emphasis> describes the core framework API, framework configuration and framework extension. It goes in depth describing the core framework interaction and may be not necessary for a novice user. This part is intended for system programmers, architects and other users that have to deal with debugging, extending or configuring the framework.
-        </para>
-      </partintro>
-      &components;
-      &framework;
-	    &javascript;
-    </part>
+    <!-- &intro;
+    &configuration;
+    &widgets;
+    &jsp; -->
+    &forms;
+    <!-- &lists;
+    &components;
+    &framework;
+    &javascript; -->
 </book>
 
