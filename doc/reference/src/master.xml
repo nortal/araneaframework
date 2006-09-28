@@ -77,14 +77,14 @@
 
     <toc/>
 
-    <!-- &intro;
+    &intro;
     &configuration;
     &widgets;
-    &jsp; -->
+    &jsp;
     &forms;
-    <!-- &lists;
+     &lists;
     &components;
     &framework;
-    &javascript; -->
+    &javascript;
 </book>
 

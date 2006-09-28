@@ -18,18 +18,29 @@
   <title>Forms and Data Binding</title>
 
   <para>
-    One of the most common tasks in web applications is gathering user input, converting it to model objects and then validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity.
-  </para>
-
-  <para>
-    Unlike many other frameworks, in Aranea request processing, validating and data binding is not a separate part of the framework, but just another component. Specially it is widget <literal>org.araneaframework.uilib.form.FormWidget</literal> and some support widgets. In this chapter we will introduce this widgets and supporting API and show how to use and extend them.
+    One of the most common tasks in web applications is gathering user input, converting it to model objects and then validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity. In this chapter we will introduce the widgets and supporting API that implement this tasks.
   </para>
 
   <sect1>
-    <title>Forms API</title>
-    
+    <title>Forms</title>
+
+      <para>
+    Unlike many other frameworks, in Aranea request processing, validating and data binding is not a separate part of the framework, but just another component. Specially it is widget <literal>org.araneaframework.uilib.form.FormWidget</literal> and some support widgets. A typical form is shown on <xref linkend="person-form"/>.
+  </para>
+
+    <figure id="person-form">
+      <title>Form example</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata 
+            fileref="images/form.png"
+            format="PNG" />
+        </imageobject>
+      </mediaobject>        
+    </figure>
+
     <sect2>
-      <title>A Typical Form</title>
+      <title>FormWidget</title>
 
       <para>
         Let's say we have a <literal>Person</literal> model JavaBean that looks like this:
@@ -2355,17 +2366,248 @@ el.click();]]></programlisting>
   <sect1>
     <title>Form Lists</title>
 
+
+
     <para>
-      A common need in handling data is allowing a user to list of data, where the number of rows is not known beforehand (a typical example being user inputting one to many addresses). Aranea supports such a use case by providing a special type of <literal>FormElement</literal> that deals an arbitrary amount of subforms. This element is called <literal>FormListWidget</literal> and it can be used both on its own or as a subelement just like a <literal>FormWidget</literal>.
+      A common need in handling data is allowing a user to list of data, where the number of rows is not known beforehand (a typical example being user inputting one to many addresses). Aranea supports such a use case by providing a special type of <literal>FormElement</literal> that deals an arbitrary amount of subforms. This element is called <literal>FormListWidget</literal> and it can be used both on its own or as a subelement just like a <literal>FormWidget</literal>. An example of a form list is shown on <xref linkend="person-form-list"/>.
     </para>
 
+    <figure id="person-form-list">
+      <title>Insert your name display</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata 
+            fileref="images/formList.png"
+            format="PNG" />
+        </imageobject>
+      </mediaobject>        
+    </figure>
+
     <sect2>
-      <title>A Typical Form List</title>
+     <title>FormListWidget</title>
+    <para>
+      Unlike usual forms, form lists are "lazy", from the point that they are tied to a model and update themselves according to it. To create a form list widget we pass it a model and a handler:
+    </para>
+    
+<programlisting role="java">... 
+  public void init() throws Exception {
+    private FormListWidget personFormList;
+    ...
+    Map persons = lookupMyService().getPersons();
+
+    personFormList = new BeanFormListWidget(
+        new PersonFormRowHandler(),
+        new MapFormListModel(persons),
+        Person.class);
+
+    addWidget("personFormList", personFormList);
+  }
+...</programlisting>
+
+   <para>
+     Note here that we have tied the form list to the model that uses a <literal>Map</literal> as the underlying storage. When we update that map, the form list will also be updated.
+     Note also that the form list widget is associated with the <literal>Person</literal> bean class, which can be used to manipulate the beans under the model.
+   </para>
+
+   <para>
+     However this code doesn't yet tell us much. The bulk of the custom logic of the form lists is hidden in the <literal>PersonFormRowHandler</literal> class. Let's inspect it step by step.
+   </para>
+
+   <para>
+     Every form row handler must implement the <literal>FormRowHandler</literal> interface. In our case we choose to extend <literal>ValidOnlyIndividualFormRowHandler</literal>, which processes only valid form rows and allows to process them one by one, not all at once:
+   </para>
+
+<programlisting role="java">class PersonFormRowHandler
+  extends ValidOnlyIndividualFormRowHandler {
+  ...
+}</programlisting>
+
+   <para>
+     The first method we have to implement is <literal>getRowKey</literal>. It is used by the form list widget to identify the row among the others. Since typically the row is just a bean we can identify it using its identifier (either a natural one or artificial, as long as its unique in this context):
+   </para>
+   
+<programlisting role="java">...
+public Object getRowKey(Object rowData) {
+  return ((Person) rowData).getId();
+}
+...</programlisting>
+
+   <para>
+     The next method is called <literal>initAddForm</literal> and it will create a form used to add new rows to the form list:
+   </para>
+
+<programlisting role="java">...
+public void initAddForm(FormWidget addForm) throws Exception {
+  addForm.addBeanElement("name", "#First name", new TextControl(), true);
+  addForm.addBeanElement("surname", "#Last name", new TextControl(),  true);
+  addForm.addBeanElement("phone", "#Phone no", new TextControl(), false);
+
+  FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+}
+...</programlisting>
+
+   <para>
+     The bulk of the logic is just adding the fields to the add form. But we also use the <literal>FormListUtil</literal> to add a button "Add" to the form, that will take care of the actual adding a new row (or at least calling the form row handler to do that). <literal>FormListUtil</literal> contains a lot of helpful methods for manipulating form lists and more on it can be found in <xref linkend="form-list-util"/>. The next step would be to handle the user clicking the add button and add a new row to the model. Since we process only valid rows the method will be named <literal>addValidRow</literal>:
+   </para>
+
+<programlisting role="java">...
+public void addValidRow(FormWidget addForm) throws Exception {
+  Person person = (Person) (((BeanFormWidget)addForm).readBean(new Person()));
+  //We want to save changes immediately
+  person = lookupPersonService.addPerson(person);
+  data.add(person.getId(), person);
+}
+...</programlisting>
+
+   <para>
+     Note that although we save the changes here immediately, form lists also support deferring this until some later point as described in <xref linkend="form-list-in-memory-helper"/>. Now that we have added a row to the model we will also have to initialize a form for that using <literal>initFormRow</literal> method:
+   </para>
+
+<programlisting role="java">...
+public void initFormRow(FormRow formRow, Object rowData) throws Exception {
+  // Set initial status of list rows to closed - they cannot be edited before opened.
+  formRow.close();
+
+  BeanFormWidget form = (BeanFormWidget)formRow.getForm();
+
+  form.addBeanElement("name", "#First name", new TextControl(), true);
+  form.addBeanElement("surname", "#Last name", new TextControl(),  true);
+  form.addBeanElement("phone", "#Phone no", new TextControl(), false);
+
+  FormListUtil.addEditSaveButtonToRowForm("#", formList, form, getRowKey(rowData));
+  FormListUtil.addDeleteButtonToRowForm("#", formList, form, getRowKey(rowData));
+
+  form.writeBean(rowData);
+}
+...</programlisting>
+
+   <para>
+     Note that most of the fields are same for add form and edit forms, so in a real setup we could easily have added a method <literal>addCommonFields(FormWidget)</literal> that would add those fields to any given form (it is actually a very common idiom to do that). Finally we have to handle the saving of row form:
+   </para>
+   
+<programlisting role="java">...
+public void saveValidRow(FormRow formRow) throws Exception {
+  BeanFormWidget form = (BeanFormWidget) formRow.getForm();
+  Person person = (Person) form.readBean(data.get(formRow.getKey()));
+
+  lookupPersonService().save(rowData);
+  data.put(person.getId(), person);
+}
+...</programlisting>
+
+   <para>
+     And the last one left is deletion:
+   </para>
+
+<programlisting role="java">...
+public void deleteRow(Object key) throws Exception {
+  Long id = (Long) key;
+  lookupPersonService().remove(id);
+  data.remove(id);
+}
+...</programlisting>
+
+    </sect2>
+
+    <sect2>
+     <title>JSP tags</title>
+   </sect2>
+
+   <sect2 id="form-list-util">
+     <title>FormListUtil</title>
+     
+     <para>
+       <literal>FormListUtil</literal> provides a couple of methods that help to handle form maps passed to some of the handler methods. However of main interest are the methods that add various buttons with ready logic to the add forms and row forms.
+     </para>
+     
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Method</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+               <row>
+                <entry><literal>addSaveButtonToRowForm()</literal></entry>
+                <entry>Button that will save the current row.</entry>
+              </row>
+               <row>
+                <entry><literal>addDeleteButtonToRowForm()</literal></entry>
+                <entry>Button that will delete the current row.</entry>
+              </row>
+               <row>
+                <entry><literal>addOpenCloseButtonToRowForm()</literal></entry>
+                <entry>Button that will open or close the current row for editing (it inverts the current state).</entry>
+              </row>
+               <row>
+                <entry><literal>addEditSaveButtonToRowForm()</literal></entry>
+                <entry>Button that will open/close the row for editing, however will also save it after editing is finished and the row is closed.</entry>
+              </row>
+               <row>
+                <entry><literal>addAddButtonToAddForm()</literal></entry>
+                <entry>Button that will add a new row, should be added to the addition form.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+   </sect2>
+
+   <sect2>
+     <title>Form Row Handlers</title>
+     
+     <para>
+       Since row form handler interface supports bulk saving/adding/deleting of row forms it is comfortable to use one of the base classes that will do some of the work for you.
+     </para>
+     
+     <informaltable frame="all">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Class</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+             <row>
+              <entry><literal>DefaultFormRowHandler</literal></entry>
+              <entry>Implements all of the menthods and default handling of opening/closing rows.</entry>
+            </row>
+             <row>
+              <entry><literal>ValidOnlyFormRowHandler</literal></entry>
+              <entry>Checks that all of the added/saved rows are valid.</entry>
+            </row>
+             <row>
+              <entry><literal>IndividualFormRowHandler</literal></entry>
+              <entry>Supports one by one processing of row saving and deleting.</entry>
+            </row>
+             <row>
+              <entry><literal>ValidOnlyIndividualFormRowHandler</literal></entry>
+              <entry>Supports one by one processing of row saving and deleting. 
+              Checks that all of the added/saved rows are valid.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
       
       <para>
-        Following a common Aranea idiom we do not extend the widget, but rather provide it with a callback interface: <literal>FormRowHandler</literal>. A common form list will also be tied to some model class, in our case <literal>Address</literal>
+        Note that row handlers also have an <literal>openOrCloseRow</literal> method that may be overridden if one wants more than just inverting the row state on user action.
       </para>
-    </sect2>
+   </sect2>
+
+   <sect2>
+     <title>Models</title>
+   </sect2>
+   
+   <sect2 id="form-list-in-memory-helper">
+     <title>In Memory Form List</title>
+   </sect2>
+
   </sect1>
 
   <sect1>
