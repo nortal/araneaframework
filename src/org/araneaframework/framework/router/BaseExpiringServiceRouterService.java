@@ -92,18 +92,15 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     return new StandardEnvironment(super.getChildEnvironment(serviceId), ThreadContext.class, new ServiceRouterContextImpl(serviceId));
   }
 
-  protected void closeService(Object serviceId) {
-    super.closeService(serviceId);
-    getTimeCapsules().remove(serviceId);
-  }
-
   protected synchronized void killExpiredServices(long now) {
     for (Iterator i = getTimeCapsules().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
       if (((TimeCapsule)entry.getValue()).isExpired(now)) {
         if (log.isDebugEnabled())
           log.debug(Assert.thisToString(this) + " killed expired service '" + entry.getKey().toString() + "'.");
+        //XXX: not normal
         closeService(entry.getKey());
+        i.remove();
       }
     }
   }

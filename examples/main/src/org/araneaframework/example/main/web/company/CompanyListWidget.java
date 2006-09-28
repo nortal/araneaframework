@@ -60,6 +60,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
     // Create the new list widget whose records are JavaBeans, instances of CompanyMO.
     // CompanyMO has fields named id, name and address.
     list = new BeanListWidget(CompanyMO.class);
+    addWidget("companyList", this.list);
     // set the data provider for the list
     list.setDataProvider(new TemplateCompanyListDataProvider());
     // add the displayed columns to list.
@@ -70,7 +71,6 @@ public class CompanyListWidget extends TemplateBaseWidget {
     list.addField("name", "#Name", true).like();
     list.addField("address", "#Address", true).like();
     list.addField("dummy", null, false);
-    addWidget("companyList", this.list);
   }
 
   private void refreshList() throws Exception {    

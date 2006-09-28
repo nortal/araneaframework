@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -122,7 +121,7 @@ public class BodyHtmlTag extends PresentationTag {
       for (Iterator i = expiringServiceMap.entrySet().iterator(); i.hasNext();) {
         Map.Entry entry = (Map.Entry) i.next();
         Object serviceKey = entry.getKey();
-        // invoke keepalive a few seconds 
+        // invoke keepalive a few (4) seconds more often from client side 
         Long serviceKeepAlive = new Long((((Long) entry.getValue()).longValue() - 4000));
         Object serviceId = getOutputData().getAttribute(serviceKey);
         Object topServiceId =  getOutputData().getAttribute(TopServiceContext.TOP_SERVICE_KEY);
@@ -138,8 +137,6 @@ public class BodyHtmlTag extends PresentationTag {
         out.write("\ngetActiveAraneaPage().addKeepAlive(AraneaPage.getDefaultKeepAlive(" + 
         		sTop + "," + 
         		sThread + "," + keepAliveKey + ")," + serviceKeepAlive.toString() + ");\n");
-        
-        //out.write("\n//Following keepalives :  for '" + serviceKey +"'='" + serviceId + "' " + " = " + serviceKeepAlive.toString() + "\n");
       }
     }
 
