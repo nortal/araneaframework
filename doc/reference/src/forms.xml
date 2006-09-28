@@ -2511,6 +2511,8 @@ public void deleteRow(Object key) throws Exception {
 
     <sect2>
      <title>JSP tags</title>
+     
+     <!-- TODO: Taimo -->
    </sect2>
 
    <sect2 id="form-list-util">
@@ -2606,6 +2608,61 @@ public void deleteRow(Object key) throws Exception {
    
    <sect2 id="form-list-in-memory-helper">
      <title>In Memory Form List</title>
+     
+     <para>
+       Often it is the case that we do not want to save the changes in the form list to the database until the user presses the "Save" button. For such a use case we provide <literal>InMemoryFormListHelper</literal>. To use the helper we first need to initialize the form list to use the helper model:
+     </para>
+
+<programlisting role="java">...
+private BeanFormListWidget personFormList;
+private InMemoryFormListHelper inMemoryHelper;
+
+public void init() throws Exception {
+  private FormListWidget personFormList;
+  ...
+  Map persons = lookupMyService().getPersons();
+
+  personFormList = new BeanFormListWidget(new PersonFormRowHandler(), Person.class);
+  inMemoryHelper = new InMemoryFormListHelper(
+    personFormList,
+    lookupPersonService().getSomePersonList());
+
+  addWidget("personFormList", personFormList);
+}
+...</programlisting>
+
+     <para>
+       Now we just have to add/save/delete the row to/from the helper:
+     </para>
+
+<programlisting role="java">...
+public void saveValidRow(FormRow editableRow) throws Exception {
+  ...
+  inMemoryHelper.update(editableRow.getKey(), rowData);
+}
+
+public void deleteRow(Object key) throws Exception {
+  ...
+  inMemoryHelper.delete(key);
+}
+
+public void addValidRow(FormWidget addForm) throws Exception {
+  ...
+  inMemoryHelper.add(rowData);
+}
+...</programlisting>
+
+     <para>
+       And when the user presses "Save" we can just process the changes:
+     </para>
+     
+<programlisting role="java">...
+protected void handleEventSave() {
+  lookupPersonService.addAll(inMemoryHelper.getAdded().values());
+  lookupPersonService.saveAll(inMemoryHelper.getUpdated().values());
+  lookupPersonService.deleteAll(inMemoryHelper.getDeleted());
+}
+...</programlisting>
    </sect2>
 
   </sect1>
