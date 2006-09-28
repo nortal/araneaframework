@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElementContext;
 
 
@@ -32,14 +33,14 @@ import org.araneaframework.uilib.form.FormElementContext;
  */
 public class ListConverter extends BaseConverter {
 
-  protected BaseConverter listItemConverter;
+  protected Converter listItemConverter;
 
   /**
 	 * Creates the converter initializing the contained converter.
 	 * 
 	 * @param listItemConverter the contained converter.
 	 */
-  public ListConverter(BaseConverter listItemConverter) {
+  public ListConverter(Converter listItemConverter) {
     this.listItemConverter = listItemConverter;
   }
 
@@ -50,7 +51,7 @@ public class ListConverter extends BaseConverter {
     List result = new ArrayList();
 
     for (Iterator i = ((Collection) data).iterator(); i.hasNext();) {
-      result.add(listItemConverter.convertNotNull(i.next()));
+      result.add(listItemConverter.convert(i.next()));
     }
 
     return result;
@@ -63,7 +64,7 @@ public class ListConverter extends BaseConverter {
     List result = new ArrayList();
 
     for (Iterator i = ((Collection) data).iterator(); i.hasNext();) {
-      result.add(listItemConverter.reverseConvertNotNull(i.next()));
+      result.add(listItemConverter.reverseConvert(i.next()));
 	  }
     return result;
   }
@@ -77,7 +78,7 @@ public class ListConverter extends BaseConverter {
   /**
 	 *  Returns a <code>new ListConverter(listItemConverter)</code>.
 	 */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new ListConverter(listItemConverter.newConverter());
   }
 

@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form.converter;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import org.araneaframework.uilib.form.Converter;
 
 /**
  * Converts <code>Timestamp</code> to <code>Date</code> and back.
@@ -44,7 +45,7 @@ public class TimestampToDateConverter extends BaseConverter {
   /**
    * Returns <code>new TimestampToDateConverter()</code>.
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new TimestampToDateConverter();
   }  
 }

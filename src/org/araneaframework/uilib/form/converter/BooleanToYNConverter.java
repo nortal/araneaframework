@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.uilib.form.Converter;
+
 /**
  * Convert the <code>Boolean</code> to <code>Long</code>, true - 1, false -
  * 0 and back
@@ -42,7 +44,7 @@ public class BooleanToYNConverter extends BaseConverter {
   /**
    * Returns a <code>new BooleanToYNConverter()</code>.
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new BooleanToYNConverter();
   }
 }

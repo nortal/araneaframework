@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
 
@@ -56,7 +57,7 @@ public class StringToIntegerConverter extends BaseConverter {
   /**
    * Returns <code>new StringToIntegerConverter()</code>
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new StringToIntegerConverter();
   }
 }

@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.converter;
 
 import java.math.BigDecimal;
+import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ErrorUtil;
 
@@ -57,7 +58,7 @@ public class StringToBigDecimalConverter extends BaseConverter {
   /**
    * Returns <code>new StringToBigDecimalConverter()</code>
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new StringToBigDecimalConverter();
   }
 }
