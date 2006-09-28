@@ -90,30 +90,6 @@ public class TemplateUiLibUtil {
 		private TemplateUiLibUtil() {}
 
 		/**
-		 * Fills the DTO with data read from the form.
-		 */
-		public static Object readDtoFromForm(Object dto, FormWidget form) {
-			if (dto == null)
-				throw new NullPointerException("The DTO that is read from the form mustn't be null!");
-
-			BeanFormReader voReader = new BeanFormReader(form);
-			voReader.readFormBean(dto);
-
-			return dto;
-		}
-
-		/**
-		 * Fills the form with DTO data.
-		 */
-		public static void writeDtoToForm(Object dto, FormWidget form) {
-			if (dto == null)
-				throw new NullPointerException("The DTO that is written to the form mustn't be null!");
-
-			BeanFormWriter writer = new BeanFormWriter(dto.getClass());
-			writer.writeFormBean(form, dto);
-		}
-
-		/**
 		 * Assigns a view selector to the specified element.
 		 *
 		 * @param form parent form or composite element.

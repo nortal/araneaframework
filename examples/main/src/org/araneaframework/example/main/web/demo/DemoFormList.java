@@ -16,11 +16,11 @@
 
 package org.araneaframework.example.main.web.demo;
 
-import java.util.ArrayList;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
+import org.araneaframework.example.main.web.demo.DemoEmbeddedDisplayableEditableList.DemoEditableRowHandler;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
@@ -32,8 +32,8 @@ import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
-import org.araneaframework.uilib.form.formlist.adapters.MapFormRowHandlerDecorator;
-import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
 
 
 /**
@@ -70,14 +70,10 @@ public class DemoFormList extends TemplateBaseWidget {
 
 		setViewSelector("demo/demoEditableList");
 		
-		formList = new BeanFormListWidget(new DemoFormRowHandler(), DataDTO.class);
-
-		formList.setFormRowHandler(
-				new MapFormRowHandlerDecorator(
-					data, 
-					formList, 
-					formList.getFormRowHandler()));
-		formList.setRows(new ArrayList(data.values()));
+    formList = new BeanFormListWidget(
+        new DemoFormRowHandler(),
+        new MapFormListModel(data),
+        DataDTO.class);
 		
 		addWidget("editableList", formList);
 	}

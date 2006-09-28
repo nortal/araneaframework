@@ -21,9 +21,6 @@ import java.util.Map;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
-import org.araneaframework.uilib.form.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
-import org.araneaframework.uilib.list.EditableListWidget;
-import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 /**
  * Utility methods for adding buttons to {@link FormListWidget} rows and tracking state changes.
@@ -144,22 +141,7 @@ public class FormListUtil {
 		}
 		
 		return result;
-	}		
-	
-	/**
-	 * Decorates the current form lists {@link FormRowHandler}
-	 * propagating all changes to the specified {@link MemoryBasedListDataProvider} making them 
-	 * visible in the {@link EditableListWidget}. 
-	 * 
-	 * @param editableRows editable rows widget.
-	 * @param listDataProvider memory based data provider
-	 */	
-	public static void associateFormListWithMemoryBasedList(FormListWidget editableRows, MemoryBasedListDataProvider listDataProvider) {
-		editableRows.setFormRowHandler(
-						new MemoryBasedListFormRowHandlerDecorator(
-							listDataProvider, 
-							editableRows.getFormRowHandler()));
-	}		
+	}				
 	
 	public static class ButtonSaveOnClickEventListener implements OnClickEventListener {
 		protected Object key;

@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
@@ -42,13 +43,18 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	// FIELDS
 	//*******************************************************************	
 
-	protected List rows = new ArrayList();
+	protected FormListModel model = null;
 
 	protected FormRowHandler formRowHandler;	
 	protected Map formRows = new LinkedHashMap();
 
 	protected int rowFormCounter = 0;
 
+  public BaseFormListWidget(FormRowHandler formRowHandler, FormListModel model) {
+    setFormRowHandler(formRowHandler);
+    setModel(model);
+  }
+  
 	//*******************************************************************
 	// PUBLIC METHODS
 	//*******************************************************************		
@@ -57,15 +63,24 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	 * Sets the list of row objects. 
 	 * @param rows the list of row objects.
 	 */
-	public void setRows(List rows) {
-		this.rows = rows;
-
-		if (isInitialized())
-			processRows();
+	public void setModel(FormListModel model) {
+		this.model = model;
 	}
+  
+  protected List getRows() {
+    if (model == null)
+      return new ArrayList();
+    
+    try {
+      return model.getRows();
+    }
+    catch (Exception e) {
+      throw new AraneaRuntimeException(e);
+    }
+  }
 
 	public void processRows() {
-		for (Iterator i = rows.iterator(); i.hasNext();) {
+		for (Iterator i = getRows().iterator(); i.hasNext();) {
 			Object row = i.next();
 
 			if (formRows.get(formRowHandler.getRowKey(row)) == null)
@@ -129,8 +144,9 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 
 	protected void init() throws Exception {
 		super.init();		
-
-		processRows();
+    
+    //XXX: the logic between lists and form lists is inconsistent
+//    processRows();    
 		resetAddForm();		
 	}
 
@@ -165,7 +181,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	public void saveCurrentRows() throws Exception {
 		Map rowsToSave = new HashMap();
 
-		for (Iterator i = rows.iterator(); i.hasNext();) {
+		for (Iterator i = getRows().iterator(); i.hasNext();) {
 			Object row = i.next();
 
 			FormRow editableRow = (FormRow) formRows.get(formRowHandler.getRowKey(row));
@@ -252,7 +268,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 				editableRows.put(ent.getKey(), ((FormRow)ent.getValue()).getViewModel());
 			}
 
-			this.rows = BaseFormListWidget.this.rows;
+			this.rows = BaseFormListWidget.this.getRows();
 		}
 
 

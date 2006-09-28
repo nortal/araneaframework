@@ -87,19 +87,19 @@ public class BodyHtmlTag extends PresentationTag {
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeCloseStartTag_SS(out);
     
-    out.write("getActiveAraneaPage().setServletURL('");
+    out.write("_ap.setServletURL('");
     out.write(servletUrl);
     out.write("');");
     
     if (!servletUrl.equals(encodedServletUrl)) {
       String urlSuffix = encodedServletUrl.substring(servletUrl.length());
       String function = "function(url) { return (url + '" + urlSuffix + "'); }";
-      out.write("getActiveAraneaPage().override('encodeURL'," + function + ");");
+      out.write("_ap.override('encodeURL'," + function + ");");
     }
 
     Locale locale = getLocalizationContext().getLocale();
 
-    out.write("getActiveAraneaPage().setLocale(new AraneaLocale('");
+    out.write("_ap.setLocale(new AraneaLocale('");
     out.write(locale.getLanguage());
     out.write("','");
     out.write(locale.getCountry());

@@ -28,6 +28,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -567,18 +568,28 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/**
 	 * Forces the list data provider to refresh the data.
 	 */
-	public void refresh() throws Exception {
-		this.dataProvider.refreshData();		
+	public void refresh() {
+		try {
+      this.dataProvider.refreshData();
+    }
+    catch (Exception e) {
+      throw new AraneaRuntimeException(e);
+    }		
 	}
 
 	/**
 	 * Refreshes the current item range, reloading the shown items.
 	 */
-	public void refreshCurrentItemRange() throws Exception {
+	public void refreshCurrentItemRange() {
 		ListItemsData itemRangeData;
 
-		itemRangeData = this.dataProvider.getItemRange(new Long(this.sequenceHelper
-				.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
+		try {
+      itemRangeData = this.dataProvider.getItemRange(new Long(this.sequenceHelper
+      		.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
+    }
+    catch (Exception e) {
+      throw new AraneaRuntimeException(e);
+    }
 
 		this.itemRange = itemRangeData.getItemRange();
 		this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());

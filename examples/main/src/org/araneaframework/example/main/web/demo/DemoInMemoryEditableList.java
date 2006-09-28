@@ -33,7 +33,7 @@ import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
 import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
-import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 
 
 /**
@@ -68,7 +68,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 		
 		setViewSelector("demo/demoInMemoryEditableList");		
 		
-		formList = new BeanFormListWidget(new DemoEditableRowHandler(), DataDTO.class);
+		formList = new BeanFormListWidget(new DemoEditableRowHandler(), null, DataDTO.class);
 		inMemoryHelper = new InMemoryFormListHelper(formList, data);
 		
 		addWidget("editableList", formList);

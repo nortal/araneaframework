@@ -35,8 +35,8 @@ public class FormListWidget extends BaseFormListWidget {
 	/**
 	 * @param rowHandler row handler.
 	 */
-	public FormListWidget(FormRowHandler rowHandler) {
-		this.formRowHandler = rowHandler;
+	public FormListWidget(FormRowHandler rowHandler, FormListModel model) {
+    super(rowHandler, model);
 	}
 
 	protected FormWidget buildAddForm(){
