@@ -162,6 +162,13 @@
           </tgroup>
         </informaltable>
       </sect3> 
+      
+             <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:importScripts/> <!-- imports files from 'defaultScripts' group -->
+<ui:importScripts group="debugScripts"/> <!-- imports additional debug scripts (js logger) -->]]></programlisting> 
+      </sect3>
     </sect2>     
 
     <sect2>
@@ -216,7 +223,7 @@
       <title><![CDATA[<ui:body>]]></title>
       <para>
         This tag will render an HTML &lt;body&gt; tag with Aranea JSP specific <emphasis>onload</emphasis> and <emphasis>onunload</emphasis>
-        events attached.
+        events attached. It may write out some page initialization scripts too, depending on the circumstances.
       </para>
       
       <sect3>
@@ -348,7 +355,7 @@
       <sect2>
        <title><![CDATA[<ui:attribute>]]></title>
        <para>
-         Defines an attribute of the containing element.
+         Defines an attribute of the containing element, where possible. See also <xref linkend="uielementTag"/>.
        </para>
       
       <para>
@@ -388,10 +395,11 @@
        </para>
       </sect2>
       
-      <sect2>
+      <sect2 id="uielementTag">
        <title><![CDATA[<ui:element>]]></title>
        <para>
-        Defines an HTML element.
+        Defines an HTML element, can be used with <literal>&lt;ui:attribute&gt;</literal> and <literal>&lt;ui:elementContent&gt;</literal>
+        to write HTML.
        </para>
       
          <para>
@@ -418,6 +426,16 @@
            </informaltable>
         </para>
       </sect2>
+      
+            <sect3 id="element_attribute_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:element name="span">
+  <ui:attribute name="class" value="fancy"/>
+  <ui:elementContent>Contents of fancy span.</ui:elementContent>
+</ui:element>
+]]></programlisting>
+      </sect3>
       
       <sect2 id="keyboardHandlerTag">
        <title><![CDATA[<ui:keyboardHandler>]]></title>
@@ -508,17 +526,17 @@
               <row>
                 <entry>widgetId</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry></entry>
+                <entry>Id of Widget that is target of event produced by keyboard handler.</entry>
               </row>
               <row>
                 <entry>eventId</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry></entry>
+                <entry>Id of event that should be sent to target widget.</entry>
               </row>
               <row>
                 <entry>eventParam</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry></entry>
+                <entry>Event parameters</entry>
               </row>
               <row>
                 <entry>updateRegions</entry>
@@ -612,6 +630,10 @@
               <row>
                 <entry>viewModel</entry>
                 <entry>The view model of the context widget.</entry>
+              </row>
+              <row>
+                <entry>scopedWidgetId</entry>
+                <entry>The scoped id of the context widget.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1221,6 +1243,21 @@
           </tgroup>
         </informaltable>
       </para>
+      
+            <sect3>
+        <title>Examples</title>
+        Layouts, rows and cells are used together like this:
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+  <ui:layout rowClasses="even,odd" cellClasses="one,two,three,four">
+    <ui:row>
+      <ui:cell>
+         <!-- cell content -->
+      </ui:cell>
+    </ui:row>
+  </ui:layout>
+...]]></programlisting> 
+      </sect3>
     </sect2>
     
     <sect2>
@@ -1664,14 +1701,15 @@ public class DummyTag extends BaseTag {
 
     // make this tag implementation accessible to subtags which 
     // is quite pointless since this tag does not implement any useful interface.
+    // it demonstrates Aranea JSP convention for providing info to subtags
     addContextEntry(KEY, this);
     
-    // write some real output that ends up right at the served web page
+    // write some real output that ends up at the served web page
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "id", "dummyDivId");
     JspUtil.writeCloseStartTag(out);
     
-    // it is possible to register subtags too, this just writes out nbsp entity.
+    // it is possible to register in JAVA code too, this one just writes out nbsp entity.
     subTag = new NbspEntityHtmlTag();
     registerSubtag(subTag);
     executeStartSubtag(subTag);
@@ -1686,15 +1724,15 @@ public class DummyTag extends BaseTag {
     JspUtil.writeEndTag(out, "div");
     
     return super.doEndTag(out);
-        // Now everything about this tag ceases to exist, 
-        // context entries are removed, souls are purged.
+    // Now everything about this tag ceases to exist, 
+    // context entries are removed, souls are purged.
   }
 }]]></programlisting>
     </para>
 
     <para>
-      <literal>org.araneaframework.jsp.util.JspUtil</literal> is an utility class containing some functions for 
-      writing out (XML) tags with somewhat more comfort than just <literal>out.write()</literal>. Other notable methods
+      <literal>org.araneaframework.jsp.util.JspUtil</literal> that was used here is an utility class containing some functions for 
+      writing out (XML) tags with somewhat less room for errors than just <literal>out.write()</literal>. Other notable methods
       provided by <literal>BaseTag</literal> are <literal>getOutputData()</literal> that returns response data, 
       <literal>getConfiguration()</literal> and <literal>getLocalizationContext()</literal>.
       
@@ -1712,19 +1750,24 @@ public class DummyTag extends BaseTag {
     </para>
     
     <para>Important tag cleanup method is <literal>doFinally()</literal> that is called after rendering.
-    It should be used to clear references to  objects that should no longer be referenced after rendering. 
-    As in containers tag instances can live very long time, they can leak quite a lot of memory unless resources deallocated.</para>
+    It should be used to clear references to objects that should no longer be referenced after rendering. 
+    As in containers tag instances can live very long time, they can leak quite a lot of memory unless resources are deallocated.</para>
 
     </sect2>
     
     <sect2>
       <title>Widgets and events</title>
+      <para>
       Sending events to widgets is accomplished with javascript submit functions, helpful
       utility being <literal>org.araneaframework.jsp.util.JspUtil</literal> and 
       <literal>org.araneaframework.jsp.util.JspWidgetCallUtil</literal>. First one would construct
       <literal>org.araneaframework.jsp.UiEvent</literal> and (in case of HTML element which
       receives only one event) calls JspUtil.writeEventAttributes(Writer out, UiEvent event) and afterwards
       writeSubmitScriptForEvent(Writer out, String attributeName).
+<programlisting role="java"><![CDATA[JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", UiEvent event)
+
+]]></programlisting>
+    </para>
     </sect2>
     
     <sect2>
