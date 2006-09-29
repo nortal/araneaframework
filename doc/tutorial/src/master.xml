@@ -1535,37 +1535,29 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
   
   protected void init() throws Exception {
     super.init();
-    
-    addGlobalEventListener(new ProxyEventListener(this));
+	
     setViewSelector("person/editableList");
-    
+	
     /* PersonMO class is already familiar from form examples. */
     list = new EditableBeanListWidget(PersonMO.class);
-    list.addBeanColumn("id", "#Id", false);
+    /* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
+    list.setFormRowHandler(buildFormRowHandler());
+    addWidget("list", list);
+    list.setOrderableByDefault(true);
+    list.addField("id", "#Id", false);
     /* Filtering by fields other than ID is enabled. */
-    list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
-    list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
-    list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
-    
-    /* Set up the custom range filter for birthdate column. */
-    RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
-    list.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
-    list.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
-    list.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
-    
-    /* Dummy column which holds no data. 
-     * Added here because we want <ui:componentListHeader/> tag to draw an extra column, which 
-     * we will use as edit/delete button holders. */
-    list.addListColumn(new ListColumn("dummy"));
+    list.addField("name", "#First name").like();
+    list.addField("surname", "#Last name").like();
+    list.addField("phone", "#Phone no").like();        
+    list.addField("birthdate", "#Birthdate").range();
+    list.addField("salary", "#Salary").range();
+    list.addField("dummy", null, false);
     
     /* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
-    list.setListDataProvider(buildListDataProvider());
-    /* Now, this is new. Set FormRowHandler class that will handle the different row operations. See below. */
-    list.setFormRowHandler(buildFormRowHandler());
+    list.setDataProvider(buildListDataProvider());
 
     /* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
     this.formList = list.getFormList();
-    addWidget("list", list);
   }
 
   /* Data provider for person list. Loads all person objects from database. */
@@ -1603,12 +1595,12 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
     
     // Implementation of method that should save EDITED rows which data passes validation.
     public void saveValidRow(FormRow editableRow) throws Exception {
-      /* Reads data from form. FormRow.getFormRow() method returns the widget that is 
+      /* Reads data from form. FormRow.getForm() method returns the widget that is 
        * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
        * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
        * we can cast the return type accordingly. */
-      PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new PersonMO());
-      rowData.setId((Long) editableRow.getRowKey());
+      PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).readBean(new PersonMO());
+      rowData.setId((Long) editableRow.getKey());
       
       // Save modified object.
       getGeneralDAO().edit(rowData);
@@ -1636,7 +1628,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
       editableRow.close();
       
       // Get the rowForm (this is the formwidget holding row object data). 
-      BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
+      BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
       // See below.
       addCommonFormFields(rowForm);
       /* A button that opens row for editing upon receiving onClick event.
@@ -1661,6 +1653,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
       form.addBeanElement("surname", "#Last name", new TextControl(),  true);
       form.addBeanElement("phone", "#Phone no", new TextControl(), false);
       form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+      form.addBeanElement("salary", "#Salary", new FloatControl(), false);
     }
   }
 }]]></programlisting>

@@ -145,7 +145,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		// Implementation of method that should save EDITED rows which data passes validation.
 		public void saveValidRow(FormRow editableRow) throws Exception {
-			/* Reads data from form. FormRow.getFormRow() method returns the widget that is 
+			/* Reads data from form. FormRow.getForm() method returns the widget that is 
 			 * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
 			 * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
 			 * we can cast the return type accordingly. */
