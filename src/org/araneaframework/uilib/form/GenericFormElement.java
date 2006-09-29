@@ -18,13 +18,15 @@ package org.araneaframework.uilib.form;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -179,8 +181,14 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   //*********************************************************************
 
   protected void process() throws Exception {
-    ErrorUtil.showErrors(getErrors(), getEnvironment());
+    MessageContext msgCtx = 
+      (MessageContext) getEnvironment().getEntry(MessageContext.class);
     
+    for (Iterator i = getErrors().iterator(); i.hasNext();) {
+      String message = (String) i.next();
+      msgCtx.showErrorMessage(message);      
+    }
+
     super.process();
   }
 
