@@ -40,21 +40,46 @@ import org.araneaframework.framework.ThreadContext;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseExpiringServiceRouterService extends BaseServiceRouterService {
+  /** {@link OutputData} key under which expiring service lifetime expectancies are stored. 
+   * This should be a <code>Map &lt;Object router_service_key, Long timeToLive&gt;</code> */
+  public static final String SERVICE_TTL_MAP = "serviceTTLMap";
+
   private static final Logger log = Logger.getLogger(BaseExpiringServiceRouterService.class);
   private Map timeCapsules;
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    killExpiredServices(System.currentTimeMillis());
+    TimeCapsule capsule = null;
+    if (timeCapsules != null) {
+      killExpiredServices(System.currentTimeMillis());
+      capsule = (TimeCapsule)getTimeCapsules().get(getServiceId(input));
+    }
+ 
+    Map serviceTTLMap = null;
+    if (capsule != null) {
+      serviceTTLMap = (Map) output.getAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP);
+      if (serviceTTLMap == null) {
+        serviceTTLMap = new HashMap();
+      }
 
-	super.action(path, input, output);
+      serviceTTLMap.put(getKeepAliveKey(), capsule.getTimeToLive());
+    }
 
-    Object serviceId = getServiceId(input);
-    TimeCapsule capsule = (TimeCapsule)getTimeCapsules().get(serviceId);
+    if (!isKeepAlive(input)) {
+      try {
+    	output.pushAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP, serviceTTLMap);
+    	super.action(path, input, output);
+      } finally {
+        output.popAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP);
+      }
+    } else {
+      if (log.isDebugEnabled())
+        log.debug(Assert.thisToString(this) + " received keepalive for service '" + getServiceId(input).toString() + "'");
+    }
 
     if (capsule != null)
       capsule.setLastActivity(new Long(System.currentTimeMillis()));
   }
-  
+
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
     return new StandardEnvironment(super.getChildEnvironment(serviceId), ThreadContext.class, new ServiceRouterContextImpl(serviceId));
   }
@@ -64,17 +89,31 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     getTimeCapsules().remove(serviceId);
   }
 
-  protected synchronized void killExpiredServices(long now) {
-    for (Iterator i = getTimeCapsules().entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      if (((TimeCapsule)entry.getValue()).isExpired(now)) {
-        if (log.isDebugEnabled())
-          log.debug(Assert.thisToString(this) + " killed expired service '" + entry.getKey().toString() + "'.");
-        closeService(entry.getKey());
+  protected void killExpiredServices(long now) {
+    synchronized (getTimeCapsules()) {
+      for (Iterator i = getTimeCapsules().entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry entry = (Map.Entry) i.next();
+        if (((TimeCapsule)entry.getValue()).isExpired(now)) {
+          super.closeService(entry.getKey());
+          i.remove();
+          if (log.isDebugEnabled())
+            log.debug(Assert.thisToString(this) + " killed expired service '" + entry.getKey().toString() + "'.");
+        }
       }
     }
   }
-  
+
+  /**
+   * Returns the key which presence in {@link InputData} indicates that request is
+   * keepalive request for this {@link BaseExpiringServiceRouterService}.
+   * @return keepalive key for this {@link BaseExpiringServiceRouterService}
+   */
+  public abstract Object getKeepAliveKey();
+
+  protected boolean isKeepAlive(InputData input) {
+    return input.getGlobalData().get(getKeepAliveKey()) != null;
+  }
+
   private synchronized Map getTimeCapsules() {
     if (timeCapsules == null)
       timeCapsules = Collections.synchronizedMap(new HashMap());
@@ -86,8 +125,8 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     private Long ttl;
     private Long lastActivity;
     
-    public TimeCapsule(Long ttl) {
-      this.ttl = ttl;
+    public TimeCapsule(Long timeToLive) {
+      this.ttl = timeToLive;
       lastActivity = new Long(new Date().getTime());
     }
     
@@ -95,6 +134,10 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
       this.lastActivity = lastActivity;
     }
     
+    public Long getTimeToLive() {
+      return this.ttl;
+    }
+
     public boolean isExpired(long time) {
       return (time > lastActivity.longValue() + ttl.longValue());
     }

@@ -31,6 +31,10 @@ public class StandardTopServiceRouterService extends BaseExpiringServiceRouterSe
     return TopServiceContext.TOP_SERVICE_KEY;
   }
 
+  public Object getKeepAliveKey() { 
+    return TopServiceContext.KEEPALIVE_KEY;
+  }
+
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
     return new StandardEnvironment(super.getChildEnvironment(serviceId), TopServiceContext.class, new ServiceRouterContextImpl(serviceId));
   }

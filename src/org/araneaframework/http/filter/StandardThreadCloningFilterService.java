@@ -109,6 +109,8 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     if (log.isDebugEnabled())
       log.debug("Attaching the cloned thread as '" + cloneServiceId + "'.");
 
+    // XXX: cloned services getEnvironment.getEntry(ThreadContext.class)).getCurrentId() returns Id of the
+    // thread that requested cloning (task 246)
     startService(threadCtx, wrappedClone, cloneServiceId);
 
     // send event to cloned service

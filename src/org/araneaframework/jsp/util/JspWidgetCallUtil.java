@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 
 /**
@@ -48,7 +49,21 @@ public abstract class JspWidgetCallUtil {
     out.write(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeCloseAttribute(out);
   }
-  
+
+  /**
+   * Write out form submit script for specified attribute of HTML element, along with Aranea 
+   * custom HTML tag attributes (See {@link org.araneaframework.jsp.AraneaAttributes}) that
+   * are determined by <code>event</code> parameter.
+   * 
+   * @param out 
+   * @param attributeName HTML attribute name, ('onclick', 'onchange', ...)
+   * @param event event that should be activated when HTML element 
+   */  
+  public static void writeSubmitScriptForEvent(Writer out, String attributeName, UiEvent event) throws IOException {
+    JspUtil.writeEventAttributes(out, event);
+	JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
+  }
+
   /** 
    * Returns simple submit script for HTML element. This should be used whenever HTML 
    * element has just one event handling attribute that causes form submit, but can also 

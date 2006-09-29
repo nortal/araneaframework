@@ -81,7 +81,7 @@ public abstract class BaseServiceRouterService extends BaseService {
     Iterator ite =  _getChildren().entrySet().iterator();
     while(ite.hasNext()) {
       Map.Entry entry = (Map.Entry) ite.next();
-      message.send(entry.getKey(), (Service) entry.getValue());
+      message.send(null, (Service) entry.getValue());
     }
   }
   
@@ -137,11 +137,6 @@ public abstract class BaseServiceRouterService extends BaseService {
    */
   protected abstract Object getServiceKey() throws Exception;
   
-  protected void closeExpiredServices() {};
-  protected boolean isExpired(Object serviceId) {
-    return false;
-  }
-  
   protected void closeService(Object serviceId) {
     ((Service)_getChildren().get(serviceId))._getComponent().destroy();
     _getChildren().remove(serviceId);
@@ -186,6 +181,4 @@ public abstract class BaseServiceRouterService extends BaseService {
       closeService(id);
     }
   }
-  
-
 }

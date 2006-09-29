@@ -49,7 +49,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     return EVAL_BODY_INCLUDE;
   }
 
-protected int doEndTag(Writer out) throws Exception {
+  protected int doEndTag(Writer out) throws Exception {
     assertControlType("TextareaControl");    
     
     String name = this.getScopedFullFieldId();     

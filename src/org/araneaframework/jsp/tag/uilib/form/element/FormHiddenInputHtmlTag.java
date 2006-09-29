@@ -17,6 +17,7 @@
 package org.araneaframework.jsp.tag.uilib.form.element;
 
 import java.io.Writer;
+import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
@@ -38,6 +39,13 @@ public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
     // Hidden element may not be validated!
     this.validateOnEvent = false;
   }
+  
+  protected int doStartTag(Writer out) throws Exception {
+    int r = super.doStartTag(out);
+    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
+    return r;
+  }
+
 
   protected int doEndTag(Writer out) throws Exception {
     // Type check
