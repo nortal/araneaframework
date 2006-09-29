@@ -1373,7 +1373,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
   // addField(String id, String label, boolean orderable)
   // note that # before the label means that label is treated as unlocalized and outputted as-is
   list.addField("id", "#Id", false);
-  // addField returns FieldFilterHelper, like() sets LIKE filter on the column
+  // addField(...) returns FieldFilterHelper, like() sets LIKE filter on the column
   list.addField("name", "#Name", true).like();
   list.addField("address", "#Address", true).like();
   list.addField("dummy", null, false);

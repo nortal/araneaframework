@@ -42,7 +42,7 @@
     </para>
   </sect1>
 
-  <sect1>
+  <sect1 id="systemTags">
     <title>System Tags</title>
 
     <para>
@@ -223,7 +223,7 @@
       <title><![CDATA[<ui:body>]]></title>
       <para>
         This tag will render an HTML &lt;body&gt; tag with Aranea JSP specific <emphasis>onload</emphasis> and <emphasis>onunload</emphasis>
-        events attached. It may write out some page initialization scripts too, depending on the circumstances.
+        events attached. It usually writes out some other page initialization scripts too, depending on the circumstances.
       </para>
       
       <sect3>
@@ -262,6 +262,7 @@
       <title><![CDATA[<ui:systemForm>]]></title>
       <para>
         This tag will render an HTML &lt;form&gt; tag along with some Aranea-specific hidden fields. When making custom web applications it is strongly suggested to have only one system form in the template and have it submit using <emphasis>POST</emphasis>. This will ensure that no matter what user does no data is ever lost. However Aranea does not impose this idiom and one may just as well submit using <emphasis>GET</emphasis>, define system forms in widgets and use usual HTML links instead of JavaScript.
+        See <xref linkend="systemTags"></xref> for usage example.
       </para>
       
       <sect3>
@@ -355,7 +356,8 @@
       <sect2>
        <title><![CDATA[<ui:attribute>]]></title>
        <para>
-         Defines an attribute of the containing element, where possible. See also <xref linkend="uielementTag"/>.
+         Defines an attribute of the containing element, where possible. See also .
+         Most formelement tags accept attributes set by this tag too, see <xref linkend="attribute_examples"/>.
        </para>
       
       <para>
@@ -386,6 +388,17 @@
           </tgroup>
         </informaltable>
        </para>
+       
+                   <sect3 id="attribute_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+  <!-- set the onkeypress attribute for HTML input produced by ui:textInput-->
+  <ui:textInput>
+    <ui:attribute name="onkeypress" value="upperCase(this);"/>
+  </ui:textInput>
+...]]></programlisting>
+      </sect3>
       </sect2>
       
       <sect2>
@@ -425,9 +438,8 @@
              </tgroup>
            </informaltable>
         </para>
-      </sect2>
-      
-            <sect3 id="element_attribute_examples">
+        
+                    <sect3 id="element_attribute_examples">
         <title>Examples</title>
 <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <ui:element name="span">
@@ -436,6 +448,9 @@
 </ui:element>
 ]]></programlisting>
       </sect3>
+      </sect2>
+      
+
       
       <sect2 id="keyboardHandlerTag">
        <title><![CDATA[<ui:keyboardHandler>]]></title>
@@ -496,6 +511,11 @@
         </informaltable>
         
        </para>
+       <sect3 id="keyboardHandler_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<!-- Globally-scoped F2 listener -->
+<ui:keyboardHandler scope="" key="f2" handler="function() { alert('You pressed F2. Do it again if you dare!');}"/>]]></programlisting>
+      </sect3>
       </sect2>
       
       <sect2>
@@ -563,6 +583,14 @@
         </informaltable>
         
        </para>
+       
+              <sect3 id="eventKeyboardHandler_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<!-- F2 listener that sends event 'add' to context widget upon activation -->
+<ui:eventKeyboardHandler eventId="add" key="f2" widgetId="${widgetId}"/>
+]]></programlisting>
+      </sect3>
+       
       </sect2>
   </sect1>
   
@@ -859,6 +887,21 @@
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>The CSS class that will override the default one.</entry>
+              </row>
+              <row>
+                <entry>updateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Comma separated list of update regions that should be updated upon button receiving event. This attribute is only needed when using AJAX features&mdash;ordinary HTTP requests always update whole page.</entry>
+              </row>
+              <row>
+                <entry>globalUpdateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Comma separated list of global update regions that should be updated upon button receiving event. This attribute is only needed when using AJAX features&mdash;ordinary HTTP requests always update whole page.</entry>
+              </row>
+              <row>
+                <entry>onClickPrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1306,6 +1349,28 @@
              </tgroup>
            </informaltable>
          </sect3>
+         
+                       <sect3 id="updateRegionTag_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- First update region, placed outside HTML table -->
+<ui:updateRegion id="outsideTable">
+</ui:updateRegion>
+
+<ui:layout>
+  <!-- Second update region, placed inside HTML table -->
+  <ui:updateRegionRows id="insideTable"/>
+    <ui:row>
+      ...
+    </ui:row>
+  </ui:updateRegionRows>
+</ui:layout>
+
+<!-- Button that makes a background submit of specified event. 
+     When response arrives specified updateregions are updated -->
+<ui:eventButton id="test" updateRegions="outsideTable,insideTable"/>]]></programlisting>
+      </sect3>
+         
     </sect2>
   </sect1>
   

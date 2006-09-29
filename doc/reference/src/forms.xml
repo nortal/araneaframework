@@ -844,7 +844,7 @@ private void handleEventSave() {
               <row>
                 <entry>onClickPrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
               <row>
                 <entry>renderMode</entry>
@@ -898,7 +898,7 @@ private void handleEventSave() {
               <row>
                 <entry>onClickPrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onclick event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1070,7 +1070,7 @@ el.click();]]></programlisting>
 	              <row>
 	                <entry>onChangePrecondition</entry>
 	                <entry><emphasis>no</emphasis></entry>
-	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
 	              </row>
 	            </tbody>
 	          </tgroup>
@@ -1123,7 +1123,7 @@ el.click();]]></programlisting>
 	              <row>
 	                <entry>onChangePrecondition</entry>
 	                <entry><emphasis>no</emphasis></entry>
-	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
 	              </row>
                   <row>
 	                <entry>divClass</entry>
@@ -1197,7 +1197,7 @@ el.click();]]></programlisting>
                       <row>
                         <entry>onChangePrecondition</entry>
                         <entry><emphasis>no</emphasis></entry>
-                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
                       </row>
                     </tbody>
                   </tgroup>
@@ -1252,7 +1252,7 @@ el.click();]]></programlisting>
                       <row>
                         <entry>onChangePrecondition</entry>
                         <entry><emphasis>no</emphasis></entry>
-                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
                       </row>
                     </tbody>
                   </tgroup>
@@ -1307,7 +1307,7 @@ el.click();]]></programlisting>
                       <row>
                         <entry>onChangePrecondition</entry>
                         <entry><emphasis>no</emphasis></entry>
-                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
                       </row>
                     </tbody>
                   </tgroup>
@@ -1527,7 +1527,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal></entry>
               </row>
             </tbody>
           </tgroup>
@@ -1601,7 +1601,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1649,7 +1649,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1695,7 +1695,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
               <row>
                 <entry>dateStyleClass</entry>
@@ -1753,7 +1753,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
               <row>
                 <entry>size</entry>
@@ -1925,7 +1925,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>.</entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
