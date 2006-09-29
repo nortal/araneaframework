@@ -111,8 +111,6 @@
   <bean class="org.araneaframework.http.filter.StandardThreadCloningFilterService" 
     id="araneaThreadCloningService" 
     singleton="false">
-    <!--XXX remove the property -->
-    <property name="timeToLive" value="60000"/>
   </bean>
 
   <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService"
