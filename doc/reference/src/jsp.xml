@@ -1764,10 +1764,18 @@ public class DummyTag extends BaseTag {
       <literal>org.araneaframework.jsp.UiEvent</literal> and (in case of HTML element which
       receives only one event) calls JspUtil.writeEventAttributes(Writer out, UiEvent event) and afterwards
       writeSubmitScriptForEvent(Writer out, String attributeName).
-<programlisting role="java"><![CDATA[JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", UiEvent event)
+<programlisting role="java"><![CDATA[//public UiEvent(String eventId, String eventTargetWidget, String eventParameter)
+UiEvent event = new UiEvent("hello", "contextWidgetId", "name");
+// long way to ouput custom attributes version
+JspUtil.writeEventAttributes(out, event);
+JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
+// short version
+JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
 
-]]></programlisting>
+// both will output something like this:
+// arn-evntId="hello" arn-trgtwdgt="contextWidgetId" arn-evntPar="name" onclick="return _ap.submit(this);"]]></programlisting>
     </para>
+    
     </sect2>
     
     <sect2>
