@@ -25,7 +25,7 @@ import org.araneaframework.http.FileUploadInputExtension;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.support.FileInfo;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class represents an HTML form file upload control.
@@ -100,9 +100,9 @@ public class FileUploadControl extends BaseControl {
       }
       else {
         addError(
-            ErrorUtil.localizeAndFormat(
+            MessageUtil.localizeAndFormat(
             UiLibMessages.FORBIDDEN_MIME_TYPE, 
-            ErrorUtil.localize(getLabel(), getEnvironment()),
+            MessageUtil.localize(getLabel(), getEnvironment()),
             getEnvironment()));        
       }
     }
@@ -113,9 +113,9 @@ public class FileUploadControl extends BaseControl {
 
     if (isMandatory() && !isRead()) {
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.MANDATORY_FIELD, 
-          ErrorUtil.localize(getLabel(), getEnvironment()),
+          MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));        
     }
   }

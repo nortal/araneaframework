@@ -50,6 +50,10 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 
 	protected int rowFormCounter = 0;
 
+  public BaseFormListWidget(FormRowHandler formRowHandler) {
+    setFormRowHandler(formRowHandler);
+  }  
+  
   public BaseFormListWidget(FormRowHandler formRowHandler, FormListModel model) {
     setFormRowHandler(formRowHandler);
     setModel(model);

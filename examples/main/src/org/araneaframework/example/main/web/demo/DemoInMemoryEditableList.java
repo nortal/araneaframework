@@ -68,7 +68,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 		
 		setViewSelector("demo/demoInMemoryEditableList");		
 		
-		formList = new BeanFormListWidget(new DemoEditableRowHandler(), null, DataDTO.class);
+		formList = new BeanFormListWidget(new DemoEditableRowHandler(), DataDTO.class);
 		inMemoryHelper = new InMemoryFormListHelper(formList, data);
 		
 		addWidget("editableList", formList);

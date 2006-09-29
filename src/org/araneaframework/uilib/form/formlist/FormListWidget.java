@@ -32,6 +32,13 @@ public class FormListWidget extends BaseFormListWidget {
 	// CONSTRUCTORS
 	//*******************************************************************		
 
+  /**
+   * @param rowHandler row handler.
+   */
+  public FormListWidget(FormRowHandler rowHandler) {
+    super(rowHandler);
+  }  
+  
 	/**
 	 * @param rowHandler row handler.
 	 */

@@ -18,7 +18,7 @@ package org.araneaframework.uilib.form.control;
 
 import org.araneaframework.uilib.support.TextType;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
 
 /**
@@ -101,9 +101,9 @@ public class TextControl extends StringValueControl {
     	for (int i = 0; i < ((String) value).length(); i++) {
     		if (!Character.isDigit(((String) value).charAt(i))) {
           addError(
-              ErrorUtil.localizeAndFormat(
+              MessageUtil.localizeAndFormat(
               UiLibMessages.NOT_A_NUMBER, 
-              ErrorUtil.localize(getLabel(), getEnvironment()),
+              MessageUtil.localize(getLabel(), getEnvironment()),
               getEnvironment()));           
     			break;
     		}
@@ -112,9 +112,9 @@ public class TextControl extends StringValueControl {
     else if (textType.equals(TextType.EMAIL)) {
       if (!ValidationUtil.isEmail((String) value)) {
         addError(
-            ErrorUtil.localizeAndFormat(
+            MessageUtil.localizeAndFormat(
             UiLibMessages.NOT_AN_EMAIL, 
-            ErrorUtil.localize(getLabel(), getEnvironment()),
+            MessageUtil.localize(getLabel(), getEnvironment()),
             getEnvironment()));             
       }  
     }

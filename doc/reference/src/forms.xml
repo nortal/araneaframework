@@ -2672,14 +2672,37 @@ protected void handleEventSave() {
 
     <sect2>
       <title>Custom Constraints</title>
+      
+      <para>
+        It is a very common need to validate some additional logic for a particular field (e.g. a field must follow some particular pattern). In this case it is comfortable to create a custom constraint. Most often the constraint is associated with one field only, so we will extend the <literal>BaseFieldConstraint</literal>, which supports this particular idiom:
+      </para>
+
+<programlisting role="java">...
+public class PersonIdentifierConstraint extends BaseFieldConstraint {
+  public void validateConstraint() {
+    if (!PersonUtil.validateIdentifier(getValue()) {
+      addError("Field '" + getLabel() + "' is not a valid personal identifier");
+    }
+  }
+}
+...</programlisting>
+
+    <para>
+      Note that we can use <literal>getValue()</literal> that contains the converted value of the field. We can also use the fields label via <literal>getLabel()</literal>. We might also want to localize the message and in such a case you will find <literal>MessageUtil</literal> to contain some helpful methods.
+    </para>
+
+    <para>
+      If we need to validate more than one field we should extend the <literal>BaseConstraint</literal> and take those fields into the constructor. In this case the developer will have to provide this fields to the constraint and the constraint should be added to the enclosing form.
+    </para>
+
+    </sect2>
+
+    <!-- sect2>
+      <title>Custom Converters</title>
     </sect2>
 
     <sect2>
-      <title>Custom Converters</title>
-    </sect2>
-    
-    <sect2>
       <title>Custom Controls</title>
-    </sect2>
+    </sect2  -->
   </sect1>
 </chapter>
