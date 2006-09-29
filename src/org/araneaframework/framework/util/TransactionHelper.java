@@ -21,8 +21,10 @@ import java.util.Random;
 import org.araneaframework.framework.TransactionContext;
 
 /**
- * Helper class for determining if an id is consistent. An id is considered cosnistent
- * if it is either null or does not equal the previously saved id.
+ * Helper class for determining if transaction id is consistent. Transaction
+ * id is considered consistent when it equals {@link TransactionContext#OVERRIDE_KEY}
+ * or current transaction id. If current transaction id is not yet set,
+ * any transaction id is considered consistent.
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
