@@ -1313,9 +1313,9 @@
         </para>
         
         <para>
-          The <![CDATA[<ui:updateRegion>]]> should be used when defining updateregion
+          The <literal><![CDATA[<ui:updateRegion>]]></literal> should be used when defining updateregion
           when the region is not contained in HTML table (layout). The
-          <![CDATA[<ui:updateRegionRows>]]> is for defining a region which is contained 
+          <literal><![CDATA[<ui:updateRegionRows>]]></literal> is for defining a region which is contained 
           in HTML table and contains table rows itself. Updating just cells is not possible.
         </para>
 
