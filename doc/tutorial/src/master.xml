@@ -1362,20 +1362,21 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                     based on their field values. Basic usage is quite simple:
                 </para>
                 
-                <programlisting role="java"><![CDATA[protected ListWidget initList() throws Exception {
-  // Create the new list widget whose records are JavaBeans, instances of CompanyMO
+                <programlisting role="java"><![CDATA[protected void initList() throws Exception {
+  // Create the new list widget whose records are JavaBeans, instances of CompanyMO.
   // CompanyMO has fields named id, name and address.
-  BeanListWidget temp = new BeanListWidget(CompanyMO.class);
+  list = new BeanListWidget(CompanyMO.class);
+  addWidget("companyList", this.list);
   // set the data provider for the list
-  temp.setListDataProvider(new TemplateCompanyListDataProvider());
-  // add the displayed columns to list 
-  // addBeanColumn(String id, String label, boolean isOrdered)
+  list.setDataProvider(new TemplateCompanyListDataProvider());
+  // add the displayed columns to list.
+  // addField(String id, String label, boolean orderable)
   // note that # before the label means that label is treated as unlocalized and outputted as-is
-  temp.addBeanColumn("id", "#Id", false);
-  //addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
-  temp.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
-  temp.addBeanColumn("address", "#Address", true, new SimpleColumnFilter.Like(), new TextControl());
-  return temp;
+  list.addField("id", "#Id", false);
+  // addField returns FieldFilterHelper, like() sets LIKE filter on the column
+  list.addField("name", "#Name", true).like();
+  list.addField("address", "#Address", true).like();
+  list.addField("dummy", null, false);
 }]]></programlisting>
 
                 <para>
@@ -1387,13 +1388,14 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 
                 <para>
                     Additionally, one can specify whether ordering and filtering by given column should be available.
-                    <literal>SimpleColumnFilter</literal> contains different filter classes that specify how the
-                    filter conditions specified should be applied&mdash;<literal>SimpleColumnFilter.Equals</literal>, 
-                    <literal>SimpleColumnFilter.GreaterThan</literal>, 
-                    <literal>SimpleColumnFilter.LowerThan</literal>, 
-                    <literal>SimpleColumnFilter.GreaterThanOrEquals</literal>, 
-                    <literal>SimpleColumnFilter.LowerThanOrEquals</literal>, 
-                    <literal>SimpleColumnFilter.Like</literal>. Their behaviour is natural, filter application
+                    <literal>FieldFilterHelper</literal> allows specifying different filters that define how the
+                    filter conditions specified should be applied&mdash;<literal>like()</literal>, 
+                    <literal>eq()</literal>, 
+                    <literal>lt()</literal>, 
+                    <literal>lt()</literal>, 
+                    <literal>isNull()</literal>, 
+                    <literal>notNull()</literal>,
+                    <literal>range()</literal>. Their behaviour is natural, filter application
                     shows only those records that satisfy the filter expression.
                 </para>
                 
