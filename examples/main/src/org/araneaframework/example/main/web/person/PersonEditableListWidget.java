@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
@@ -33,8 +32,7 @@ import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
 import org.araneaframework.uilib.form.formlist.FormRowHandler;
-import org.araneaframework.uilib.form.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
-import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
@@ -55,10 +53,10 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		setViewSelector("person/editableList");
 		
-		/* PersonMO class is already familiar from form examples. */
-		list = new EditableBeanListWidget(PersonMO.class);
-		/* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
-		list.setFormRowHandler(buildFormRowHandler());
+		/* PersonMO class is already familiar from form examples. 
+       FormRowHandler class that will handle the different row operations. */
+		list = new EditableBeanListWidget(buildFormRowHandler(), PersonMO.class);
+    
 		addWidget("list", list);
 		list.setOrderableByDefault(true);
 		list.addField("id", "#Id", false);
@@ -92,8 +90,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		protected FormRowHandler buildFormRowHandler() throws Exception {
 	        /* Implementation of FormRowHandler that also calls dataprovider's
 	         * data refresh methods when list editing events occur. */
-			return new MemoryBasedListFormRowHandlerDecorator(dataProvider,
-					new PersonEditableRowHandler());
+			return new PersonEditableRowHandler();
 		}
 		
 		private class DataProvider extends MemoryBasedListDataProvider {

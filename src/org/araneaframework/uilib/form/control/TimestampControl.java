@@ -19,7 +19,7 @@ package org.araneaframework.uilib.form.control;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
 
 
@@ -78,9 +78,9 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
     }
     
     addError(
-        ErrorUtil.localizeAndFormat(
+        MessageUtil.localizeAndFormat(
         UiLibMessages.WRONG_DATE_FORMAT, 
-        ErrorUtil.localize(getLabel(), getEnvironment()),
+        MessageUtil.localize(getLabel(), getEnvironment()),
         dateTimeInputPattern,
         getEnvironment()));          
     

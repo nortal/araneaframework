@@ -73,7 +73,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * item.
    */
   public void addDisplayItems(Collection valueObjects, String valueName, String labelName) {
-    DisplayItemUtil.addItemsFromVoCollection(this, valueObjects, valueName, labelName);
+    DisplayItemUtil.addItemsFromBeanCollection(this, valueObjects, valueName, labelName);
   }    
 
   /**

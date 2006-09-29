@@ -18,7 +18,7 @@ package org.araneaframework.uilib.form.constraint;
 
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * {@link org.araneaframework.uilib.form.Constraint} that allows constraining
@@ -65,7 +65,7 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint {
 
   private void addValidationError() {
 	addError(
-      ErrorUtil.localizeAndFormat(
+      MessageUtil.localizeAndFormat(
         UiLibMessages.STRING_NOT_IN_RANGE, 
         new Object[] {
           t(getLabel()),

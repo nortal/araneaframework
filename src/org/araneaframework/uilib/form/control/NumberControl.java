@@ -18,7 +18,7 @@ package org.araneaframework.uilib.form.control;
 
 import java.math.BigInteger;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -115,9 +115,9 @@ public class NumberControl extends EmptyStringNullableControl {
     }
     catch (NumberFormatException e) {
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.NOT_A_NUMBER, 
-          ErrorUtil.localize(getLabel(), getEnvironment()),
+          MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));             
     }
     
@@ -138,10 +138,10 @@ public class NumberControl extends EmptyStringNullableControl {
   protected void validateNotNull() {    
     if (minValue != null && maxValue != null && ((((BigInteger) value).compareTo(minValue) == -1) || ((BigInteger) value).compareTo(maxValue) == 1)) {      
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.NUMBER_NOT_BETWEEN, 
           new Object[] {
-              ErrorUtil.localize(getLabel(), getEnvironment()),
+              MessageUtil.localize(getLabel(), getEnvironment()),
               minValue.toString(),
               maxValue.toString()
           },          
@@ -149,20 +149,20 @@ public class NumberControl extends EmptyStringNullableControl {
     }      
     else if (minValue != null && ((BigInteger) value).compareTo(minValue) == -1) {      
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.NUMBER_NOT_GREATER, 
           new Object[] {
-              ErrorUtil.localize(getLabel(), getEnvironment()),
+              MessageUtil.localize(getLabel(), getEnvironment()),
               minValue.toString(),
           },          
           getEnvironment()));    
     }    
     else if (maxValue != null && ((BigInteger) value).compareTo(maxValue) == 1) {      
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.NUMBER_NOT_LESS, 
           new Object[] {
-              ErrorUtil.localize(getLabel(), getEnvironment()),
+              MessageUtil.localize(getLabel(), getEnvironment()),
               maxValue.toString(),
           },          
           getEnvironment()));  

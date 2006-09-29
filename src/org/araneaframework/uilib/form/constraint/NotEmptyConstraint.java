@@ -18,7 +18,7 @@ package org.araneaframework.uilib.form.constraint;
 
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -41,7 +41,7 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
   public void validateConstraint() {
     if (!isRead()) {
     	addError(
-    	    ErrorUtil.localizeAndFormat(
+    	    MessageUtil.localizeAndFormat(
       			UiLibMessages.ELEMENT_EMPTY, 
             t(getLabel()),
             getEnvironment()));

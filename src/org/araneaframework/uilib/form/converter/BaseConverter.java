@@ -115,7 +115,7 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
    * @return a new converter, of the same type that the class that overrides it, however freshly
    * initialized.
    */
-  public abstract BaseConverter newConverter();
+  public abstract Converter newConverter();
 
   //*********************************************************************
   //* ABSTRACT IMPLEMENTATION METHODS

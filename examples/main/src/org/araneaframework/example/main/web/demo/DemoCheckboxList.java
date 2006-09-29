@@ -26,8 +26,7 @@ import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.formlist.FormRow;
-import org.araneaframework.uilib.form.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
-import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
@@ -56,25 +55,17 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 		super.init();
 
 		setViewSelector("demo/demoCheckboxList");
-		
-		MemoryBasedListDataProvider listDataProvider = new DemoCheckboxListDataProvider();
 
-	    checkList = new EditableBeanListWidget(DataDTO.class);
-	    checkList.setFormRowHandler(new DemoCheckboxListRowHandler());
-	    checkList.setDataProvider(listDataProvider);
-	    
-	    checkList.addField("booleanField", "#Boolean");
-	    checkList.addField("stringField", "#String");
-	    checkList.addField("longField", "#Long");
-		
-		checkList.getFormList().setFormRowHandler(
-				new MemoryBasedListFormRowHandlerDecorator(
-					listDataProvider, 
-					checkList.getFormList().getFormRowHandler()));
-		
-		checkList.setInitialOrder("longField", false);
-
+		checkList = new EditableBeanListWidget(new DemoCheckboxListRowHandler(), DataDTO.class);
 		addWidget("checkList", checkList);
+
+		checkList.setDataProvider(new DemoCheckboxListDataProvider());
+
+		checkList.addField("booleanField", "#Boolean");
+		checkList.addField("stringField", "#String");
+		checkList.addField("longField", "#Long");
+
+		checkList.setInitialOrder("longField", false);		
 	}
 
 	public void handleEventSave(String parameter) throws Exception {

@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.uilib.form.Converter;
+
 /**
  * Does not change the data.
  * 
@@ -41,7 +43,7 @@ public class IdenticalConverter extends BaseConverter {
   /**
    * Returns a <code>new IdenticalConverter()</code>.
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new IdenticalConverter();
   }
 

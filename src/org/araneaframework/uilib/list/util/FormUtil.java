@@ -24,7 +24,7 @@ import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.AndConstraint;
-import org.araneaframework.uilib.form.constraint.CompositeConstraint;
+import org.araneaframework.uilib.form.constraint.BaseCompositeConstraint;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
@@ -137,7 +137,7 @@ public class FormUtil {
 		} else if (current instanceof AndConstraint) {
 			((AndConstraint) current).addConstraint(constraint);
 		} else {
-			CompositeConstraint and = new AndConstraint();
+			BaseCompositeConstraint and = new AndConstraint();
 			and.addConstraint(current);
 			and.addConstraint(constraint);
 			form.setConstraint(and);

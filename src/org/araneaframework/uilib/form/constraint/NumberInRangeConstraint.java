@@ -19,7 +19,7 @@ package org.araneaframework.uilib.form.constraint;
 import java.math.BigInteger;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This constraint checks that the value is between two others.
@@ -45,7 +45,7 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
   protected void validateConstraint() {
     if (getValue() == null) {
       addError(
-            ErrorUtil.localizeAndFormat(
+            MessageUtil.localizeAndFormat(
               UiLibMessages.NUMBER_NOT_BETWEEN, 
               new Object[] {
                   t(getLabel()),
@@ -60,7 +60,7 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
     
     if (rangeStart != null && rangeEnd != null && ((value.compareTo(rangeStart) == -1) || value.compareTo(rangeEnd) == 1)) {      
         addError(
-                ErrorUtil.localizeAndFormat(
+                MessageUtil.localizeAndFormat(
                   UiLibMessages.NUMBER_NOT_BETWEEN, 
                   new Object[] {
                       t(getLabel()),
@@ -71,7 +71,7 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
     }      
     else if (rangeStart != null && value.compareTo(rangeStart) == -1) {
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
             UiLibMessages.NUMBER_NOT_GREATER, 
             new Object[] {
                 t(getLabel()),
@@ -81,7 +81,7 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
     }    
     else if (rangeEnd != null && value.compareTo(rangeEnd) == 1) {      
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
             UiLibMessages.NUMBER_NOT_LESS, 
             new Object[] {
                 t(getLabel()),
