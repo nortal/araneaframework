@@ -2,15 +2,26 @@ ARANEA FRAMEWORK CHANGELOG
 ---------------------------
 2006.09.29    | Aranea 1.0-RC4
 Features and Improvements
-        Constraints internals were rewritten                                  | See change #107
-        TransactionFilterWidget does not consider NULL id valid anymore       | See change #107
-        Some standard components were documented                              | See change #106
+        Composite Constraints can optionally be lazy                          | See change #112
+        Managed services can be set TTL after which they may expire           | See #200
+        Experimental development filter                                       | See change #109
+        Major updates: reference manual
+        Minor updates: tutorial
 
 Bugfixes
-        BeanUtil.copy(Object from, Class toType) did not work                 | See change #108
+        Row updates sometimes breaking in IE                                  | See #241
+        NPE when layout(cell|row) was provided empty class ""                 | See change #117
+        MessageContext losing message ordering                                | See #244
+        OutputData and InputData are not Serializable anymore                 | See change #114
 
 API Changes
         Lists API did change substantially.
+        Form lists API changed quite substantially.
+        ErrorUtil -> MessageUtil
+        CompositeConstraint -> BaseCompositeConstraint
+        DisplayItemUtil.addItemsFromVoCollection -> addItemsFromBeanCollection
+        RelocatableWidgetDecorator -> RelocatableDecorator
+        RelocatableServiceDecorator -> RelocatableDecorator
 
 
 2006.09.11    | Aranea 1.0-RC3

@@ -51,12 +51,13 @@ public class TransactionHelper implements Serializable {
   }
   
   /**
-   * Returns false if current transaction id is null or transactionId does not
-   * equal the current transaction id.
+   * Returns true if current transaction id is null or transactionId 
+   * equals the current transaction id or transactionId has been
+   * overriden.
    */
   public boolean isConsistent(Object transactionId) {
     if (currentTransactionId == null)
-      return false;
+      return true;
 
     if (isOverride(transactionId))
       return true;
