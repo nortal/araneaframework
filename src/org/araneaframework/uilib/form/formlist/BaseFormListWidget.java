@@ -64,8 +64,8 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	//*******************************************************************		
 
 	/**
-	 * Sets the list of row objects. 
-	 * @param rows the list of row objects.
+	 * Sets form list model. 
+	 * @param model the form list model
 	 */
 	public void setModel(FormListModel model) {
 		this.model = model;

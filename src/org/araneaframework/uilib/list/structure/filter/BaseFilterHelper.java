@@ -224,10 +224,10 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * range filter field type is returned.
 	 * </p>
 	 * <p>
-	 * Otherwise {@link TypeHelper#getFieldType(String))} is just called.
+	 * Otherwise {@link TypeHelper#getFieldType(String)} is just called.
 	 * </p>
 	 * 
-	 * @see {@link TypeHelper#getFieldType(String))
+	 * @see TypeHelper#getFieldType(String)
 	 */
 	public Class getFieldType(String fieldId) {
 		Class result = getTypeHelper().getFieldType(fieldId);
