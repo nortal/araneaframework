@@ -19,4 +19,5 @@ package org.araneaframework.framework;
 import java.io.Serializable;
 
 public interface FileUploadContext extends Serializable {
+  public Long getFileSizeLimit();
 }
