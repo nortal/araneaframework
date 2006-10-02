@@ -28,8 +28,7 @@ import org.araneaframework.uilib.support.ConverterKey;
  * This class is a Factory pattern implementation, that provides methods to make
  * {@link org.araneaframework.uilib.form.FormElement}s and {@link org.araneaframework.uilib.form.converter.BaseConverter}s.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
- *  
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org) 
  */
 public class ConverterFactory implements ConverterProvider {
   protected static final Map converters = new HashMap();

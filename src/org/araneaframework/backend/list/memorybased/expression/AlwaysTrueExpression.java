@@ -18,12 +18,13 @@ package org.araneaframework.backend.list.memorybased.expression;
 
 import org.araneaframework.backend.list.memorybased.Expression;
 
+/**
+ * Expression that always evaluates to <code>Boolean.TRUE</code>
+ */
 public class AlwaysTrueExpression implements Expression {
-
 	private static final long serialVersionUID = 1L;
 
 	public Object evaluate(VariableResolver resolver) {
 		return Boolean.TRUE;
 	}
-
 }

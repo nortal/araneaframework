@@ -30,6 +30,11 @@ import java.io.Serializable;
  * A top level widget can use the MessageContext from the environment to output the accumulated
  * messages.
  * </p>
+ * <p>
+ * Permanent messages should stay in MessageContext until explicitly cleared, other messages should
+ * be cleared by calling <code>clearMessages()</code> each time when implementing 
+ * {@link org.araneaframework.Widget}'s <code>update()</code> is called.
+ * </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -51,20 +56,43 @@ public interface MessageContext extends Serializable {
    * Shows a message with type type and contents message to this MessageContext.
    */
   public void showMessage(String type, String message);
-  
+
+  /**
+   * Shows a permanent message that stays in this {@link org.araneaframework.framework.MessageContext} until cleared.
+   */
+  public void showPermanentMessage(String type, String message);
+
   /**
    * Shows an error message of type {@link #ERROR_TYPE}.
    */
   public void showErrorMessage(String message);
-  
-  
+
   /**
    * Shows an informative message of type {@link #INFO_TYPE}.
    */
   public void showInfoMessage(String message);
   
   /**
-   * Removes all messages currently present in this MessageContext.  
+   * Removes all messages currently present in this MessageContext.
+   * For non-permanent messages, this should always happen when implementing 
+   * {@link org.araneaframework.Widget}'s <code>update()</code> is called.
    */
   public void clearMessages();
+
+  
+  /**
+   * Clears the specific permanent message, under all message types where it might be present.
+   * @param message to be removed from permanent messages
+   */
+  public void hidePermanentMessage(String message);
+  
+  /**
+   * Clears the permanent messages present in this {@link org.araneaframework.framework.MessageContext}.
+   */
+  public void clearPermanentMessages();
+  
+  /**
+   * Clears all messages present in this {@link org.araneaframework.framework.MessageContext}.
+   */  
+  public void clearAllMessages();
 }

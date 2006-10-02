@@ -107,15 +107,10 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
    /**
    * Writes "uiRegisterKeypressHandler" javascript, surrounded by &lt;script&gt tags.
    * Throws exceptions if parameters are not consistent (e.g. keyCode not specified).
-   * 
-   * @see #setScope
-   * @see #setKeyCode
-   * @see #setHandler
    */
   public static final void writeRegisterKeypressHandlerScript(Writer out, String scope, String keyCode, String handler) throws JspException, IOException {
 	if (StringUtils.isBlank(handler)) throw new JspException("handler may not be empty in the KeyboardHandlerHtmlTag");
 	if (StringUtils.isBlank(scope)) scope = "";
-  	
 	
 	JspUtil.writeStartTag(out, "script");
 	out.write("uiRegisterKeypressHandler('");

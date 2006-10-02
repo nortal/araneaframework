@@ -64,9 +64,6 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 
 	/**
 	 * Writes out date input
-	 * The id and accessKey parameters may be null.
-	 * @see #writeTimeInput
-	 * @author <a href='mailto:margus@webmedia.ee'>Margus Väli</a> 6.05.2005 -- added callback function argument to popup-calendar
 	 */
 	protected void writeDateInput(
 			Writer out, 

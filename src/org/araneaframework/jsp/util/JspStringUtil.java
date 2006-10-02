@@ -26,7 +26,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 public abstract class JspStringUtil {
 	/**
 	 * Given a string and an accesskey, finds the first appearance of 
-	 * accessKey  in that string, and surrounds it with &lt;u&gt;..&lt/u&gt;.
+	 * accessKey  in that string, and surrounds it with &lt;u&gt;&hellip;&lt/u&gt;.
 	 * Returns the result.
 	 * 
 	 * If accessKey is null, is not present in the string or its length is not 1,
@@ -34,7 +34,7 @@ public abstract class JspStringUtil {
 	 * 
 	 * Assumes that given string has no HTML elements in it. Does case-insensitive matching.
 	 * 
-	 * @param s       String in which the access key is to be underlined. May be null.
+	 * @param s String in which the access key is to be underlined. May be null.
 	 * @param accessKey Access key to underline. May be null.
 	 * @return Given string with accesskey underlined (if possible).
 	 */

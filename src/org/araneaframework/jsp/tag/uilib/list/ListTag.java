@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.uilib.list;
 import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
-import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.uilib.list.ListWidget;
 
 /**
@@ -32,8 +31,8 @@ import org.araneaframework.uilib.list.ListWidget;
  *   body-content = "JSP"
  *   description = "Makes available following page scope variables: 
            <ul>
-             <li><i>list</i> - UiLib list view model.
-             <li><i>listId</i> - UiLib list id.
+             <li><i>list</i></li> - UiLib list view model.
+             <li><i>listId</i></li> - UiLib list id.
            </ul> "
  */
 public class ListTag extends BaseWidgetTag {
@@ -68,6 +67,11 @@ public class ListTag extends BaseWidgetTag {
 		return EVAL_PAGE;		
 	}
 	
+	public void doFinally() {
+		super.doFinally();
+		listViewModel = null;
+	}
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"

@@ -82,7 +82,7 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	
 	/**
 	 * Specifies form element which is the scope of this handler.
-	 * By default the "scope" (as in {@link UiKeyboarHandlerTag KeyboardHandlerHtmlTag}) of this keyboard handler
+	 * By default the "scope" (as in {@link KeyboardHandlerHtmlTag}) of this keyboard handler
 	 * is the form inside which the handler is defined. By specifying this string you may narrow the scope to a certain element.
 	 * For example if the handler is defined inside form "myForm", and you specify subscope as "myelement",
 	 * the scope of the handler will be "myForm.myelement", no the default "myForm".

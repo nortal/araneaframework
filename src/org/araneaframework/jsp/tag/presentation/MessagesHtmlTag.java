@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
- * Message tag - show the messages in <code>MessageContext</code> 
+ * Message tag - show the messages in {@link MessageContext} 
  * with given type. 
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -53,6 +54,8 @@ public class MessagesHtmlTag extends PresentationTag {
     super.doEndTag(out);
 
     Map messageMap = (Map) getOutputData().getAttribute(MessageContext.MESSAGE_KEY);
+    if (messageMap == null)
+      return EVAL_PAGE;
 
     List entries = new ArrayList();
     for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
@@ -77,7 +80,7 @@ public class MessagesHtmlTag extends PresentationTag {
     JspUtil.writeStartTag(out, "div");
 
     for (Iterator i = entries.iterator(); i.hasNext(); ) {
-      List messages = (List) ((Map.Entry) i.next()).getValue();
+      Collection messages = (Collection) ((Map.Entry) i.next()).getValue();
 
       for (Iterator j = messages.iterator(); j.hasNext();) {
         out.write((String) j.next());

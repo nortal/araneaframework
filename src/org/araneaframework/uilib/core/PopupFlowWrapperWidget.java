@@ -31,6 +31,7 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupWindowContext;
@@ -83,7 +84,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
 
       String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
       // popup window is closed with redirect to a page that closes current window and reloads parent.
-      threadCtx.addService(rndThreadId, new WindowClosingService());
+      threadCtx.addService(rndThreadId, new WindowClosingService(getEnvironment()));
       ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), rndThreadId));
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
@@ -136,7 +137,8 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     Map m = new HashMap();
     m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
-    return URLUtil.parametrizeURI(url, m);
+    m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
+    return ((HttpOutputData)getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
   }
   
   private FlowContext getOpenerFlowContext() {

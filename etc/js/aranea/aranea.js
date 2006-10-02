@@ -21,8 +21,6 @@
 /* AraneaTraverser is locator for some Aranea specific elements in DOM tree. */
 function AraneaTraverser() {
   /* Returns FORM that is Aranea system form and surrounds given HTML element. 
-   * When servlet URL is not yet known to current aranea page, sets its according to
-   * acquired from from system form. 
    * Should be overriden with fast constant function when using just one system form. */
   this.findSurroundingSystemForm = function(element) {
     if (document.forms.length == 1 && document.forms[0].getAttribute('arn-systemForm'))
@@ -40,7 +38,6 @@ function AraneaTraverser() {
 }
 
 AraneaTraverser.prototype.getElementAttribute = function (element, attributeName) {
-  //return (!element[attributeName] || element[attributeName] == "") ? null : result;
   return element.getAttribute(attributeName);
 }
 AraneaTraverser.prototype.getEventTarget = function(element) {
@@ -112,21 +109,30 @@ function AraneaEventStore() {
  * functionality for setting page related variables, events and functions. */
 function AraneaPage() {
   /* URL of aranea dispatcher servlet serving current page. 
-   * Automatically set by AraneaTraverser.findSurroundingSystemForm(). */ 
+   * This is by default set by Aranea JSP ui:body tag. */ 
   var servletURL = null;
   this.getServletURL = function() { return servletURL; }
   this.setServletURL = function(url) { servletURL = new String(url); }
-  
+
+  /* If servlet URL is not enough for some purposes, encoding function should be overwritten. */
+  this.encodeURL = function(url) { return url; }
+
   /* Indicates whether the page is completely loaded or not. Page is considered to 
    * be loaded when all system onload events have completed execution. */
   var loaded = false;
   this.isLoaded = function() { return loaded; }
   this.setLoaded = function(b) { if (typeof b == "boolean") { loaded = b; } }
   
-  /* returns the div meant for outputting debug information, if it is present */
-  var debugDiv = null;
-  this.setDebugDiv = function(div) { debugDiv = div; }
-  this.getDebugDiv = function() { return debugDiv; }
+  /* Logger that outputs javascript logging messages. */
+  var dummyLogger = new function() { var dummy = function() {}; this.trace = dummy; this.debug = dummy; this.info = dummy; this.warn = dummy; this.error = dummy; this.fatal = dummy;};
+  var logger = dummyLogger;
+  this.setDummyLogger = function() { logger = dummyLogger; }
+  this.setDefaultLogger = function() { 
+  	if (window['log4javascript/log4javascript.js'])
+      logger = log4javascript.getDefaultLogger();
+  }
+  this.setLogger = function(theLogger) { logger = theLogger; }
+  this.getLogger = function() { return logger; }
   
   /* locale - should be used only for server-side reported locale */
   var locale = new AraneaLocale("", "");
@@ -142,6 +148,9 @@ function AraneaPage() {
   /** Aranea JSP specific DOM tree traverser. */
   var traverser = new AraneaTraverser();
   this.getTraverser = function() { return traverser; }
+  
+  /** Timer that executes keepalive calls, if any. */
+  var keepAliveTimers = new AraneaStore();
 
   /** Variables holding different (un)load events that should be executed when page loads -- on body (un)load or alike. */
   var systemLoadEvents = new AraneaEventStore();
@@ -186,8 +195,8 @@ function AraneaPage() {
     var preCondition = t.getEventPreCondition(element);
 
     if (preCondition) {
-      var f = eval("function(element) {" + preCondition + "}");
-      if (!f()) {
+      var f = new Function("element", preCondition);
+      if (!f(element)) {
         return false;
       }
     }
@@ -206,7 +215,7 @@ function AraneaPage() {
   this.findSubmitter = function(element, systemForm) {
     var updateRegions = element.getAttribute('arn-updrgns');
 
-	if (window.AraneaAA_Present && updateRegions && updateRegions.length > 0)
+	if (window['ajaxanywhere/aa.js'] && updateRegions && updateRegions.length > 0)
 	  return new DefaultAraneaAJAXSubmitter(systemForm);
 
 	return new DefaultAraneaSubmitter(systemForm);
@@ -219,7 +228,7 @@ function AraneaPage() {
 	  return false;
 
     if (eventPrecondition) {
-      var f = eval("function(element) {" + eventPrecondition + "}");
+      var f = new Function(eventPrecondition);
       if (!f()) {
         return false;
       }
@@ -232,11 +241,42 @@ function AraneaPage() {
   }
   
   this.debug = function(message) {
-    if (this.getDebugDiv()) {
-      this.getDebugDiv().appendChild(document.createElement("br"));
-      this.getDebugDiv().appendChild(document.createTextNode(message));
-    }
+    this.getLogger().debug(message);
   }
+  
+  this.override = function(functionName, f) {
+  	this.getLogger().info("AraneaPage." +functionName + " was overriden.");
+  	this[functionName] = f;
+  }
+  
+  this.addKeepAlive = function(f, time) {
+    keepAliveTimers.add(setInterval(f, time));
+  }
+
+  this.clearKeepAlives = function() {
+    keepAliveTimers.forEach(function(timer) {clearInterval(timer);});
+  }
+}
+
+AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey) {
+  return function() {
+    if (window['prototype/prototype.js']) {
+      var url = getActiveAraneaPage().encodeURL(getActiveAraneaPage().getServletURL());
+      url += "?transactionId=override";
+      if (topServiceId) 
+        url += "&topServiceId="+topServiceId;
+      if (threadServiceId) 
+        url += "&threadServiceId="+threadServiceId;
+      url += "&" + keepAliveKey + "=true";
+      getActiveAraneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
+      var keepAlive = new Ajax.Request(
+          url,
+          { method: 'get' }
+      );
+    } else {
+      getActiveAraneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");
+    }
+  };
 }
 
 // Random request id generator. Sent only with AA ajax requests.
@@ -248,9 +288,6 @@ AraneaPage.getRandomRequestId = function() {
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   getActiveAraneaPage().addSystemLoadEvent(Behaviour.apply);
-
-  var div = document.getElementById("araneaDebugDiv");
-  if (div) getActiveAraneaPage().setDebugDiv(div);
 }
 
 function DefaultAraneaSubmitter(form) {
@@ -303,9 +340,7 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
   if (systemForm.transactionId) {
-    try {
-      systemForm.removeChild(systemForm.transactionId);
-    } catch(e) {}
+    systemForm.transactionId.value = "override";
   }
   
   window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
@@ -319,3 +354,5 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
 _ap = new AraneaPage();
 function getActiveAraneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
+
+window['aranea.js'] = true;

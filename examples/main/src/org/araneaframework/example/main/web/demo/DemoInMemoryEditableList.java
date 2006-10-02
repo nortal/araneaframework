@@ -33,7 +33,7 @@ import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
 import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
-import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 
 
 /**
@@ -46,7 +46,8 @@ import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormR
  */
 public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
-	private BeanFormListWidget formList;
+	  private static final long serialVersionUID = 1L;
+  private BeanFormListWidget formList;
 	private List data = new ArrayList();
 	
 	private InMemoryFormListHelper inMemoryHelper;
@@ -90,13 +91,15 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 	}
 	
   protected void handleProcess() throws Exception {
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded());
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated());
+	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded().values());
+	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated().values());
 	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Deleted: " + inMemoryHelper.getDeleted());
   }
   
 	public class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-		public Object getRowKey(Object row) {
+		    private static final long serialVersionUID = 1L;
+
+    public Object getRowKey(Object row) {
 			return ((DataDTO) row).getId();
 		}
 

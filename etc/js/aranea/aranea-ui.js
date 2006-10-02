@@ -15,7 +15,6 @@
 **/
 
 /**
- * Behaviour rules required for Aranea JSP to work correctly.
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 
@@ -79,7 +78,12 @@ function saveValue(element) {
 
 function isChanged(elementId) {
   var el = document.getElementById(elementId);
-  return ((el.oldValue) && (el.oldValue != el.value));
+  if (!el.oldValue) {
+  	if (el.value != '')
+      return true;
+    return false;
+  }
+  return (el.oldValue != el.value);
 }
 
 function setFormEncoding(formName, encoding) {
@@ -117,3 +121,5 @@ function saveScrollCoordinates(form) {
 function scrollToCoordinates(x, y) {
 	window.scrollTo(x, y);
 } 
+
+window['aranea-ui.js'] = true;

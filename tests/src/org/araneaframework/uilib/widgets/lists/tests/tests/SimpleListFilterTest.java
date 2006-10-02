@@ -17,9 +17,12 @@
 package org.araneaframework.uilib.widgets.lists.tests.tests;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
 import junit.framework.TestCase;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
@@ -30,9 +33,12 @@ import org.araneaframework.backend.list.memorybased.Variable;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.uilib.list.structure.ListFilter;
-import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
+import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
+import org.araneaframework.uilib.list.structure.filter.field.EqualFilter;
+import org.araneaframework.uilib.list.structure.filter.field.GreaterThanFilter;
 import org.araneaframework.uilib.list.util.converter.BooleanToStringConverter;
+import org.araneaframework.uilib.widgets.lists.tests.mock.MockFilterContext;
 
 
 public class SimpleListFilterTest extends TestCase {
@@ -40,11 +46,21 @@ public class SimpleListFilterTest extends TestCase {
 			.getLogger(SimpleListFilterTest.class);
 
 	public void testListFilterBuilder() throws ExpressionEvaluationException {
+		FilterContext ctx = new MockFilterContext() {
+			public Comparator getFieldComparator(String fieldId) {
+				// Boolean is not comparable
+				if ("licenseToKill".equals(fieldId)) {
+					return null;
+				}
+				return super.getFieldComparator(fieldId);
+			}
+		};
+		
 		// build filter
 		ListFilter filter = new AndFilter().addFilter(
-				new SimpleColumnFilter.Equals("name")).addFilter(
-				new SimpleColumnFilter.GreaterThanOrEquals("name")).addFilter(
-				new SimpleColumnFilter.Equals("licenseToKill"));
+				EqualFilter.getInstance(ctx, "name", "name")).addFilter(
+				GreaterThanFilter.getInstance(ctx, "name", "name")).addFilter(
+				EqualFilter.getInstance(ctx, "licenseToKill", "licenseToKill"));
 
 		// build expression
 		Map data = new HashMap();
@@ -52,6 +68,8 @@ public class SimpleListFilterTest extends TestCase {
 		data.put("age", new Long(25));
 		data.put("licenseToKill", Boolean.TRUE);
 		Expression expr = filter.buildExpression(data);
+		
+		assertNotNull(expr);
 
 		// evaluate expression in memory
 		Object value = expr.evaluate(new VariableResolver() {

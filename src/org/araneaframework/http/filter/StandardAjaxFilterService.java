@@ -13,6 +13,9 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
+ * AJAX filter, supporting updating of HTML page regions. It processes received request
+ * in usual way&mdash;but the response will only contain the updated regions.
+ * 
  * @author Nikita Salnikov-Tarnovski
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
@@ -25,7 +28,6 @@ public class StandardAjaxFilterService extends BaseFilterService {
 	public static final String UPDATE_REGIONS_KEY = "updateRegions";
 	public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
 	public static final String AJAX_RESPONSE_ID_KEY = "ajaxResponseId";
-
 
 	public void setCharacterEncoding(String encoding) {
 		characterEncoding = encoding;
@@ -41,7 +43,7 @@ public class StandardAjaxFilterService extends BaseFilterService {
 			String commaSeparatedRegions = (String)input.getGlobalData().get(UPDATE_REGIONS_KEY); 
 
 			if (log.isDebugEnabled())
-			  log.debug("AjaxFilterService found regions = " + commaSeparatedRegions);
+			  log.debug("Received request to update regions = " + commaSeparatedRegions);
 
 			super.action(path, input, output);
 
@@ -50,16 +52,20 @@ public class StandardAjaxFilterService extends BaseFilterService {
 				String requestId = (String)input.getGlobalData().get(AJAX_REQUEST_ID_KEY);
 
 				if (log.isDebugEnabled()) {
-				  log.debug("It was Ajax request with id='" + requestId + "'. Rollbacking current response.");
+				  log.debug("It was Ajax request with id='" + requestId + "'. Will rollback current response and attempt to extract updated page regions.");
 				}
 
 				arUtil.rollback();
 
 				String transactionElement = getTransactionElement(response);
-				httpOutput.getOutputStream().write(transactionElement.getBytes(characterEncoding));
-				// ajax response id is the same as incoming request id. 
-				String responseIdElement = getResponseIdElement(requestId);
-				httpOutput.getOutputStream().write(responseIdElement.getBytes(characterEncoding));
+				if (transactionElement != null)
+				  httpOutput.getOutputStream().write(transactionElement.getBytes(characterEncoding));
+
+				// ajax response id is the same as incoming request id.
+				if (requestId != null) {
+				  String responseIdElement = getResponseIdElement(requestId);
+                  httpOutput.getOutputStream().write(responseIdElement.getBytes(characterEncoding));
+                }
 
 				String[] regions = commaSeparatedRegions.split(",");
 				// adding the regions that may appear in the response but
@@ -79,7 +85,7 @@ public class StandardAjaxFilterService extends BaseFilterService {
 			}
 		}
 		finally {
-			log.info("Ajax filter commits response.");
+			log.info("Committing response.");
 			arUtil.commit();
 		}
 	}
@@ -100,7 +106,10 @@ public class StandardAjaxFilterService extends BaseFilterService {
 		int endIndex = source.indexOf(blockEnd);
 
 		if(endIndex == -1)
-			throw new IllegalStateException("Expected END block for AJAX update region with id '" + id + "'");
+			throw new IllegalStateException("Expected END block for AJAX update region with id '" + id + "'.");
+
+		if (log.isDebugEnabled())
+			log.debug("Successfully extracted region '" + id + "' to be included in response.");
 
 	    return source.substring(startIndex, endIndex + blockEnd.length());
 	}

@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -44,6 +45,12 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
   {
     baseStyleClass = "aranea-select";
+  }
+  
+  protected int doStartTag(Writer out) throws Exception {
+    int r = super.doStartTag(out);
+    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
+    return r;
   }
 
   public int doEndTag(Writer out) throws Exception {

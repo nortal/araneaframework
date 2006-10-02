@@ -16,10 +16,9 @@
 
 package org.araneaframework.framework.filter;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Environment;
@@ -32,7 +31,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 
 /**
  * Adds a {@link org.araneaframework.framework.MessageContext} implementation to the environment that can
- * be used to add messages for later output.
+ * be used to add messages for later output. 
  *<p>
  * An example how to add messages to the context follows:
  * <pre>
@@ -48,11 +47,12 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
-  private Map messages = new LinkedMap();
+  protected Map permanentMessages;
+  protected Map messages;
   
   protected void update(InputData input) throws Exception {
-    messages.clear();
-    
+    clearMessages();
+
     super.update(input);
   }
   
@@ -61,42 +61,31 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   }
   
   /**
-   * Adds all the messages to the output as Map under the key MESSAGE_KEY. The keys
+   * Adds all the messages to the output as Map under the key 
+   * {@link org.araneaframework.framework.MessageContext#MESSAGE_KEY}. The keys
    * of the Map are the different message types encountered so far and under the keys
-   * are the messages in a List.
+   * are the messages in a Collection.
    *<p>
    * A child service should do as follows to access the messages
    * <pre>
    * <code>
    * ...
    * Map map = output.getAttribute(MESSAGE_KEY);
-   * List list = (List)map.get(MessageContext.ERROR_TYPE); // list contains all the error messages
+   * Collection list = (Collection)map.get(MessageContext.ERROR_TYPE); // collection contains all the error messages
    * </code>
    * </pre>
-   * The map could be null if this service was not used. The list is null if no errors have
-   * been added to the messages. 
+   * The map could be null if this service was not used. The collection is null if no messages of
+   * that type been added to the messages. 
    *</p>
    */
   protected void render(OutputData output) throws Exception {
-    //TODO: Why build the typedMessages map on render, not before?
-    
-    Map typedMessages = new HashMap();
-    
-    for (Iterator i = messages.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      
-      Collection typeCol = (Collection) typedMessages.get(entry.getValue());
-      
-      if (typeCol == null) {
-        typeCol = new ArrayList();
-        typedMessages.put(entry.getValue(), typeCol);
-      }
-      
-      typeCol.add(entry.getKey());
+    if (permanentMessages != null) {
+      // add permanent messages to-one time messages for rendering
+      messages = addPermanentMessages(messages);
     }
-    
-    output.pushAttribute(MessageContext.MESSAGE_KEY, typedMessages);
-    
+
+    output.pushAttribute(MessageContext.MESSAGE_KEY, messages);
+
     try {
       super.render(output);
     }
@@ -104,27 +93,94 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
       output.popAttribute(MessageContext.MESSAGE_KEY);
     }
   }
-  
-  public void showMessage(String type, final String message) {
+
+  /** Stores message of given type in given messageMap (created if <code>null</code> at invocation). */
+  protected Map storeMessage(final String type, final String message, Map messageMap) {
     Assert.notEmptyParam(type, "type");
     Assert.notEmptyParam(message, "message");
     
-    messages.put(message, type);
+    if (messageMap == null)
+      messageMap = new LinkedMap();
+
+    Collection messages = (Collection)messageMap.get(type);
+
+    if (messages == null) {
+      messages = new LinkedHashSet();
+      messageMap.put(type, messages);
+    }
+
+    messages.add(message);
+    
+    return messageMap;
+  }
+  
+  /** Removes the given message from given messageMap. */
+  protected Map removeMessage(final String message, Map messageMap) {
+    Assert.notEmptyParam(message, "message");
+
+    if (messageMap == null)
+      return null;
+
+    for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+      Collection messages = (Collection)((Map.Entry)i.next()).getValue();
+      messages.remove(message);
+    }
+
+    return messageMap;
+  }
+  
+  /** 
+   * Adds current permanent messages to given message map.
+   * @return given message map with permanent messages added. 
+   */
+  protected Map addPermanentMessages(Map msgs) {
+    if (msgs == null && permanentMessages.size() > 0)
+      msgs = new LinkedMap();
+
+    for (Iterator i = permanentMessages.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry)i.next();
+      Collection typedMessages = (Collection)msgs.get(entry.getKey());
+
+      if (typedMessages == null)
+        msgs.put(entry.getKey(), entry.getValue());
+      else
+        typedMessages.addAll((Collection)entry.getValue());
+    }
+    return msgs;
+  }
+
+  public void showMessage(String type, final String message) {
+    messages = storeMessage(type, message, messages);
+  }
+
+  public void showPermanentMessage(String type, final String message) {
+    permanentMessages = storeMessage(type, message, permanentMessages);
+  }
+  
+  public void hidePermanentMessage(String message) {
+    permanentMessages = removeMessage(message, permanentMessages);
   }
 
   public void showErrorMessage(String message) {
-    Assert.notEmptyParam(message, "message");
-    
     showMessage(ERROR_TYPE, message);
   }
 
   public void showInfoMessage(String message) {
-    Assert.notEmptyParam(message, "message");
-    
     showMessage(INFO_TYPE, message);
   }
   
   public void clearMessages() {
-	  messages.clear();
+    if (messages != null)
+      messages.clear();
+  }
+
+  public void clearPermanentMessages() {
+    if (permanentMessages != null)
+      permanentMessages.clear();
+  }
+  
+  public void clearAllMessages() {
+    clearMessages();
+    clearPermanentMessages();
   }
 }

@@ -23,9 +23,8 @@ import org.araneaframework.Path;
 import org.araneaframework.framework.core.BaseFilterService;
 
 /**
- * A filter for calculating the time it takes for the child service to complete
- * its action method (the request). The elapsed time is available through
- * <code>getRequestTime()</code> and it is also logged with the INFO level. The logging
+ * A filter that logs the time it takes for the child service to complete
+ * its action method (serving the request). The logging
  * statement can have a prefix namespace set via <code>setNamespace()</code>.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>

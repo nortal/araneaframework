@@ -65,7 +65,7 @@ public class AtomicResponseHelper {
   /**
    * Wraps a HttpServletResponse to make it possible of resetting and commiting it.
    */
-  private class ResponseWrapper extends HttpServletResponseWrapper {
+  private static class ResponseWrapper extends HttpServletResponseWrapper {
     private ServletOutputStream out;
     private PrintWriter writerOut;
 

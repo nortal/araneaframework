@@ -19,12 +19,17 @@ package org.araneaframework.uilib.form;
 import org.araneaframework.uilib.DataItemTypeViolatedException;
 
 /**
- * This class represents the form element data. It has a type, used by the
+ * This class represents typed form element data. Type is used by the
  * {@link org.araneaframework.uilib.form.converter.ConverterFactory} to find the appropriate
- * {@link org.araneaframework.uilib.form.converter.BaseConverter} and a value.
+ * {@link org.araneaframework.uilib.form.Converter} for converting {@link Data} held in 
+ * {@link org.araneaframework.uilib.form.FormElement} to plain object type held in 
+ * {@link org.araneaframework.uilib.form.Control}. Reverse converting happens much
+ * the same, both object type in {@link org.araneaframework.uilib.form.Control} 
+ * and supposed {@link org.araneaframework.uilib.form.FormElement} {@link Data} are
+ * considered and appropriate {@link org.araneaframework.uilib.form.Converter} 
+ * chosen.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class Data implements java.io.Serializable {
   protected String type;
@@ -36,14 +41,19 @@ public class Data implements java.io.Serializable {
   protected Object markedBaseValue;
   
   /**
-   * Creates <code>DataItem</code> of type <code>type</code>.
-   * @param type the type of <code>DataItem</code>
+   * Creates {@link Data} of type <code>type</code>.
+   * @param type the type of {@link Data}
    */
   protected Data(Class typeClass, String type) {   
     this.type = type;
     this.typeClass = typeClass;
   }
-  
+
+  /**
+   * Creates {@link Data} for holding objects of given <code>Class</code>.
+   * <code>Type</code> is assumed to be simple class name of given Class.
+   * @param typeClass the <code>Class</code> of {@link Data} values.
+   */
   public Data(Class typeClass) {
     this.typeClass = typeClass;
     this.type = typeClass.toString().substring(
@@ -51,16 +61,16 @@ public class Data implements java.io.Serializable {
   }  
 
   /**
-   * Returns <code>DataItem</code> value.
-   * @return <code>DataItem</code> value.
+   * Returns {@link Data} value.
+   * @return {@link Data} value.
    */
   public Object getValue() {
     return value;
   }
 
   /**
-   * Sets <code>DataItem</code> value.
-   * @param value <code>DataItem</code> value.
+   * Sets {@link Data} value.
+   * @param value {@link Data} value.
    */
   public void setValue(Object value) {
     if (value != null && !(typeClass.isAssignableFrom(value.getClass())))
@@ -71,45 +81,42 @@ public class Data implements java.io.Serializable {
   }
 
   /**
-   * Returns <code>DataItem</code> type.
-   * @return <code>DataItem</code> type.
+   * Returns {@link Data} type.
+   * @return {@link Data} type.
    */
   public String getValueType() {
     return type;
   }
   
-  /**
-   * Returns <code>dataItem</code> display string. 
-   */
   public String toString() {
-    return "DataItem: [Type = " + getValueType() + "; Value = " + value + "]";
+    return "Data: [Type = " + getValueType() + "; Value = " + value + "]";
   }
   
   /**
-   * Invalidates the <code>DataItem</code>.
+   * Marks the {@link Data} non-dirty.
    */
   public void clean() {
     dirty = false;
   }
   
   /**
-   * Returns whether <code>DataItem</code> value has been set.
-   * @return whether <code>DataItem</code> value has been set.
+   * Returns whether {@link Data} value has been set by calling {@link #setValue(Object)}.
+   * @return whether {@link Data} value has been set by calling {@link #setValue(Object)}.
    */
   public boolean isDirty() {
     return dirty;
   }
   
   /**
-   * Returns a new instance of current DataItem.
-   * @return a new instance of current DataItem.
+   * Returns a new instance of this {@link Data}, value is not set.
+   * @return a new instance of current {@link Data}, value is not set.
    */
   public Data newData() {
     return new Data(typeClass, type);
   }
   
   /**
-   * Marks the current value of the data item as the base state
+   * Marks the current value of the {@link Data} as the base state
    * that will be used to determine whether its state has changed in
    * {@link #isStateChanged()}. 
    */
@@ -118,7 +125,7 @@ public class Data implements java.io.Serializable {
   }
   
   /**
-   * Restores the value of the data item from the marked base state.
+   * Restores the value of the {@link Data} from the marked base state.
    */
   public void restoreBaseState() {
     // TODO: maybe deep copy?
@@ -126,8 +133,8 @@ public class Data implements java.io.Serializable {
   }
   
   /**
-   * Returns whether data item state has changed after it was marked.
-   * @return whether data item state has changed after it was marked.
+   * Returns whether {@link Data} state (value) has changed after it was marked.
+   * @return whether  {@link Data} state (value) has changed after it was marked.
    */
   public boolean isStateChanged() {  	
   	if (markedBaseValue == null && value == null) return false;

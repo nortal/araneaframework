@@ -155,6 +155,9 @@ table.form .small { width: 100px; }
 table.form tr.cols4 .max { width: 200px; }
 table.form tr.cols4 .norm { width: 150px; }
 
+/* Error cells in data table just mark input red */
+table td.error * { color: #f61901; }
+
 /* Page actions */
 
 div.actions { text-align: right; margin: 0 0 1em 0; }

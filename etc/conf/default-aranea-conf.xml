@@ -81,6 +81,7 @@
     <property name="existingRegions">
       <list>
         <value>messages</value>
+        <value>popupRegistrationRegion</value>
         <value>focus</value>
         <value>scrolling</value>
       </list>
@@ -108,7 +109,10 @@
     </property>
   </bean>
   
-  <bean class="org.araneaframework.http.filter.StandardThreadCloningFilterService" id="araneaThreadCloningService" singleton="false"/>
+  <bean class="org.araneaframework.http.filter.StandardThreadCloningFilterService" 
+    id="araneaThreadCloningService" 
+    singleton="false">
+  </bean>
 
   <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService"
   	id="araneaWidgetAdapter"
@@ -247,6 +251,8 @@
     </property>    
   </bean>
   
+  <bean class="org.araneaframework.http.filter.StandardWindowScrollPositionFilterWidget" singleton="false"
+    id="araneaScrollingFilter"/>
+  
   <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
-
 </beans>

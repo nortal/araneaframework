@@ -1,0 +1,67 @@
+<sect3 id="StandardLocalizationFilterService">
+    <title>StandardLocalizationFilterService</title>
+
+    <informaltable frame="all">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>LocalizationContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        no dependencies among standard contexts.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+    
+    <para>
+       Provides localization services to children. See <xref linkend="LocalizationContext"/>.
+    </para>
+    
+    <informaltable frame="all">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>languageName</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry> must be a valid ISO Language Code. Sets
+                        <literal>Locale</literal> according to given language.
+                    </entry>
+                </row>
+                <row>
+                    <entry>resourceBundleName</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>
+                         name of the used resource bundle class.
+                    </entry>
+                </row>
+                <row>
+                    <entry>locale</entry>
+                    <entry><literal>java.util.Locale</literal></entry>
+                    <entry>
+                        <literal>Locale</literal> to use. In configuration either that or <emphasis>languageName</emphasis>
+                        should be specified, not both.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>

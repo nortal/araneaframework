@@ -31,11 +31,20 @@ import org.araneaframework.uilib.ConfigurationContext;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
+ * This widget represents the usual custom application widget that is rendered using 
+ * JSP tags. It assumes to be connected with a JSP page and allows setting its view selector.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BaseUIWidget extends BaseApplicationWidget {
   protected String viewSelector;  
 
+  /**
+   * Sets the view selector for this widget, should be path to <code>jsp</code> file
+   * without <code>jsp</code> extension.
+   * 
+   * @param viewSelector path to <code>jsp</code> file, without file extension 
+   */
   protected void setViewSelector(String viewSelector) {
     this.viewSelector = viewSelector;
   }  
@@ -64,10 +73,20 @@ public class BaseUIWidget extends BaseApplicationWidget {
     return (BeanFactory) getEnvironment().requireEntry(BeanFactory.class);
   }
   
+  /**
+   * Translates the message under the given key, 
+   * with help from widget's current {@link org.araneaframework.framework.LocalizationContext}.
+   * 
+   * @param key 
+   * @return message under the key translated into language corresponding to current <code>Locale</code>
+   */
   protected String t(String key) {
     return getL10nCtx().localize(key);
   } 
   
+  /** 
+   * Renders widget to <code>output</code> using the defined <code>viewSelector</code>.
+   */
   protected void render(OutputData output) throws Exception {
     if (viewSelector == null)
       throw new RuntimeException("Widget '" + getClass().getName() + "' does not have a view selector!"); 

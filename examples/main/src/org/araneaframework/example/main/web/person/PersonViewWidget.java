@@ -31,7 +31,8 @@ import org.araneaframework.uilib.form.control.FloatControl;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class PersonViewWidget extends TemplateBaseWidget {
-	private Long personId = null;
+	  private static final long serialVersionUID = 1L;
+  private Long personId = null;
 	
 	/**
 	 * @param personId Person's Id.

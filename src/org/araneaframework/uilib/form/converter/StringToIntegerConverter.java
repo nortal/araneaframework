@@ -16,8 +16,9 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -38,9 +39,9 @@ public class StringToIntegerConverter extends BaseConverter {
     }
     catch (NumberFormatException e) {
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.NOT_A_NUMBER, 
-          ErrorUtil.localize(getLabel(), getEnvironment()),
+          MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));      
     }
     return result;
@@ -56,7 +57,7 @@ public class StringToIntegerConverter extends BaseConverter {
   /**
    * Returns <code>new StringToIntegerConverter()</code>
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new StringToIntegerConverter();
   }
 }

@@ -16,10 +16,7 @@
 
 package org.araneaframework.framework.router;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.TopServiceContext;
 
@@ -29,22 +26,20 @@ import org.araneaframework.framework.TopServiceContext;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardTopServiceRouterService extends BaseServiceRouterService {
-  protected Object getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get(TopServiceContext.TOP_SERVICE_KEY);
-  }
-  
+public class StandardTopServiceRouterService extends BaseExpiringServiceRouterService {
   protected Object getServiceKey() throws Exception {
     return TopServiceContext.TOP_SERVICE_KEY;
   }
 
+  public Object getKeepAliveKey() { 
+    return TopServiceContext.KEEPALIVE_KEY;
+  }
+
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    Map entries = new HashMap();    
-    entries.put(TopServiceContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), TopServiceContext.class, new ServiceRouterContextImpl(serviceId));
   }
     
-  private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements TopServiceContext {
+  private class ServiceRouterContextImpl extends BaseExpiringServiceRouterService.ServiceRouterContextImpl implements TopServiceContext {
     protected ServiceRouterContextImpl(Object serviceId) {
       super(serviceId);
     }

@@ -20,6 +20,7 @@ import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.core.Assert;
 
 public class NotExpression implements CompositeExpression {
 
@@ -28,6 +29,7 @@ public class NotExpression implements CompositeExpression {
 	private Expression expr;
 
 	public NotExpression(Expression expr) {
+		Assert.notNullParam(this, expr, "expr");
 		this.expr = expr;
 	}
 
@@ -38,6 +40,6 @@ public class NotExpression implements CompositeExpression {
 	public Object evaluate(VariableResolver resolver)
 			throws ExpressionEvaluationException {
 		Boolean childValue = (Boolean) this.expr.evaluate(resolver);
-		return new Boolean(!childValue.booleanValue());
+		return (!childValue.booleanValue()) ? Boolean.TRUE : Boolean.FALSE;
 	}
 }

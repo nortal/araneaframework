@@ -12,32 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.uilib.list.structure.filter.composite;
 
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.log4j.Logger;
+
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
-import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.backend.list.memorybased.expression.LaxyExpressionIterator;
 import org.araneaframework.uilib.list.structure.filter.MultiFilter;
+import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 
 public class AndFilter extends MultiFilter {
 	private static final long serialVersionUID = 1L;
-	
-	private static final Logger log = Logger.getLogger(AndFilter.class);
 
 	public Expression buildExpression(Map data) {
-		log.debug("Building Expression, data = " + data);
-		AndExpression expr = new AndExpression();
-		for (Iterator i = this.children.iterator(); i.hasNext();) {
-			ListFilter filter = (ListFilter) i.next();
-			Expression childExpr = filter.buildExpression(data);
-			expr.add(childExpr);
-		}
-		return expr;
+		Iterator i = new LaxyExpressionIterator(this.children.iterator(), data);
+		return ExpressionUtil.and(i);
 	}
 }

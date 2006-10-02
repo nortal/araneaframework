@@ -30,7 +30,7 @@ import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.core.RelocatableServiceDecorator;
+import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.framework.FilterService;
 
 /**
@@ -60,7 +60,7 @@ public class StandardSerializingAuditFilterService extends BaseService implement
   }
   
   public void setChildService(Service child) {
-    this.child = new RelocatableServiceDecorator(child);
+    this.child = new RelocatableDecorator(child);
   }
 
   protected void init() throws Exception {

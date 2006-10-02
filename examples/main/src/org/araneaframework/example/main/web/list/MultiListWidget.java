@@ -28,9 +28,11 @@ import org.araneaframework.example.main.web.person.PersonListWidget;
  */
 public class MultiListWidget extends TemplateBaseWidget {
 
-	protected void init() throws Exception {
+	  private static final long serialVersionUID = 1L;
+
+  protected void init() throws Exception {
 		super.init();
-		addWidget("personListWdgt", new PersonListWidget());
+		addWidget("personListWdgt", new PersonListWidget(true));
 		addWidget("companyListWdgt", new CompanyListWidget());
 		
 		setViewSelector("list/multiList");

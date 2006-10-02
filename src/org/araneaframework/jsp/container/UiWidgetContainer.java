@@ -26,7 +26,7 @@ import org.araneaframework.jsp.exception.AraneaJspException;
  */
 public interface UiWidgetContainer {
   
-  public static final String REQUEST_CONTEXT_KEY = "org.araneaframework.jsp.container.UiWidgetContainer";
+  public static final String KEY = "org.araneaframework.jsp.container.UiWidgetContainer";
   
   /**
    * Returns a widget from the container.

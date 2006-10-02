@@ -71,7 +71,7 @@ public interface MountContext extends Serializable {
    * URL can be further modified by appending the path or query parameters.
    * 
    * @param input Input data representing the current HTTP request.
-   * @param uriPrefix Mounted URI prefix.
+   * @param uri Mounted URI prefix.
    * @return The assembled full URL pointing to the mounted path prefix.
    */
   public String getMountURL(InputData input, String uri);
@@ -86,7 +86,7 @@ public interface MountContext extends Serializable {
    */
   public Message getMountedMessage(InputData input);  
 
-  public interface MessageFactory {
+  public interface MessageFactory extends Serializable {
     /**
      * Creates a {@link Message} used to update the current component hierarchy in response to the user accessing this specific URL.
      * A message can for example select a menu item, start a flow or authenticate the user. After the message is applied the framework 

@@ -19,12 +19,14 @@ package org.araneaframework.jsp.tag.uilib.form;
 import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
-import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.uilib.form.FormWidget;
 
 
 /**
- * FormWidget widget tag.
+ * {@link org.araneaframework.uilib.form.FormWidget} tag.
+ * Specifies form context for inner tags, makes 
+ * {@link org.araneaframework.uilib.form.FormWidget.ViewModel} and 
+ * widget id accessible to inner tags as EL variables.
  * 
  * @author Oleg Mürk
  * 
@@ -63,5 +65,10 @@ public class FormTag extends BaseWidgetTag {
 	
 		// Continue
 	  return EVAL_BODY_INCLUDE;		
+	}
+
+	public void doFinally() {
+		super.doFinally();
+		formViewModel = null;
 	}
 }

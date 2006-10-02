@@ -94,10 +94,12 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
 
   /**
    * Generates a new transaction id and pushes it as an attribute to the output. The children can access it via
-   * TRANSACTION_ID_KEY from their OutputData.
+   * {@link TransactionContext#TRANSACTION_ID_KEY} from their OutputData.
    */
   protected void render(OutputData output) throws Exception {
-    transHelper.resetTransactionId();
+    // CONFIRM: when transactionid was overriden in request, new transaction id should not be generated
+    if (transHelper.getCurrentTransactionId() == null || !transHelper.isOverride(getTransactionId(getInputData())))
+      transHelper.resetTransactionId();
     output.pushAttribute(TransactionContext.TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId());
     ClientStateUtil.put(TransactionContext.TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId() + "", output);
 
@@ -115,7 +117,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    * {@link TransactionHelper} for determining the consistency. Can be overridden.
    */
   protected boolean isConsistent(InputData input) throws Exception {
-    return getTransactionId(input) == null || transHelper.isConsistent(getTransactionId(input));
+    return transHelper.isConsistent(getTransactionId(input));
   }
 
   /**

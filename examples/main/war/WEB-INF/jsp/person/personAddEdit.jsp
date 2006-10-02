@@ -21,10 +21,10 @@
 
 			<ui:component>
 
-				<ui:componentForm>
+				<ui:componentForm rowClasses="cols4" cellClasses="name,inpt">
 					<ui:row>
 						<ui:formElement id="name">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 							<ui:cell>
@@ -33,7 +33,7 @@
 						</ui:formElement>
 
 						<ui:formElement id="surname">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 							<ui:cell>
@@ -44,7 +44,7 @@
 
 					<ui:row>
 						<ui:formElement id="phone">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 							<ui:cell>
@@ -53,7 +53,7 @@
 						</ui:formElement>
 
 						<ui:formElement id="birthdate">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 							<ui:cell>
@@ -64,14 +64,14 @@
 
 					<ui:row>
 						<ui:formElement id="salary">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 							<ui:cell colspan="3">
 								<ui:floatInput />
 							</ui:cell>
 						</ui:formElement>
-					</ui:row>					
+					</ui:row>
 				</ui:componentForm>
 
 				<!-- template design tag -->

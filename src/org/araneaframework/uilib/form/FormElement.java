@@ -16,24 +16,23 @@
 
 package org.araneaframework.uilib.form;
 
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
-import org.araneaframework.uilib.form.constraint.BaseConstraint;
 import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 
-
 /**
- * Represents a simple "leaf" form element that holds a control and its data.
+ * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class FormElement extends GenericFormElement implements FormElementContext {
   //*******************************************************************
@@ -53,7 +52,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
-
+  
   /**
    * Returns control label.
    * 
@@ -91,18 +90,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
     
     if (converter != null)
       converter.setFormElementCtx(this);
-  }
-
-  /**
-   * After setting the constraint sets the constraint field.
-   * 
-   * @see BaseConstraint#setField(FormElement)
-   */
-  public void setConstraint(Constraint constraint) {
-    super.setConstraint(constraint);
-    
-    if (constraint != null && constraint instanceof FormElementAware) 
-      ((FormElementAware) constraint).setFormElementCtx(this);
   }
 
   /**
@@ -226,7 +213,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   
   protected void update(InputData input) throws Exception {
     if (isDisabled() || !isRendered()) return;
-	  
+
     super.update(input);
     
     //There is only point to read from request if we have a control
@@ -261,7 +248,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
           getControl().setRawValue(getConverter().reverseConvert(getData().getValue()));      
         }
         
-        getData().setValue(null);
+        // XXX: why would anyone want to set Data to null here
+        // getData().setValue(null);
         getData().clean();
       }      
 
@@ -276,9 +264,17 @@ public class FormElement extends GenericFormElement implements FormElementContex
     update(input);
     if (control != null)
       control._getService().action(null, input, output);
+    // render state should not be updated on action
+    boolean savedRenderState = this.rendered;
     process();
+    //XXX: better place to put rendering state reset instead of process()?
+    this.rendered = savedRenderState;
   }
   
+  public Environment getConstraintEnvironment() {
+	return new StandardEnvironment(super.getConstraintEnvironment(), FormElementContext.class, this);
+  }
+
   /**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.

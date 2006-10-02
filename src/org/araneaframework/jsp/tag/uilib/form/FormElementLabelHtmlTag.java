@@ -21,7 +21,8 @@ import java.io.Writer;
 
 
 /**
- * Standard form element label tag.
+ * Standard form element label tag. Renders localizable label bound to form element 
+ * with HTML <code>&lt;span&gt;</code> and <code>&lt;label&gt;</code> tags.
  * 
  * @author Oleg Mürk
  * 

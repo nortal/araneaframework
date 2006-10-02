@@ -16,10 +16,7 @@
 
 package org.araneaframework.framework.router;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 
@@ -30,24 +27,22 @@ import org.araneaframework.framework.ThreadContext;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardThreadServiceRouterService extends BaseServiceRouterService {
-  protected Object getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get(ThreadContext.THREAD_SERVICE_KEY);
-  }
-
+public class StandardThreadServiceRouterService extends BaseExpiringServiceRouterService {
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    Map entries = new HashMap();    
-    entries.put(ThreadContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), ThreadContext.class, new ServiceRouterContextImpl(serviceId));
   }
   
-  private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements ThreadContext {
+  private class ServiceRouterContextImpl extends BaseExpiringServiceRouterService.ServiceRouterContextImpl implements ThreadContext {
     protected ServiceRouterContextImpl(Object serviceId) {
       super(serviceId);
-    }    
+    }
   }
 
   protected Object getServiceKey() throws Exception {
     return ThreadContext.THREAD_SERVICE_KEY;
+  }
+
+  public Object getKeepAliveKey() { 
+    return ThreadContext.KEEPALIVE_KEY;
   }
 }

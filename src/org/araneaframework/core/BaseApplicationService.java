@@ -93,7 +93,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     }
     
     public Map getData() {
-      return viewData == null ? new HashMap() : viewData;
+      return getViewData();
     }    
   }
   

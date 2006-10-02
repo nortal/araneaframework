@@ -42,7 +42,7 @@
     </para>
   </sect1>
 
-  <sect1>
+  <sect1 id="systemTags">
     <title>System Tags</title>
 
     <para>
@@ -162,6 +162,13 @@
           </tgroup>
         </informaltable>
       </sect3> 
+      
+             <sect3>
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:importScripts/> <!-- imports files from 'defaultScripts' group -->
+<ui:importScripts group="debugScripts"/> <!-- imports additional debug scripts (js logger) -->]]></programlisting> 
+      </sect3>
     </sect2>     
 
     <sect2>
@@ -216,7 +223,7 @@
       <title><![CDATA[<ui:body>]]></title>
       <para>
         This tag will render an HTML &lt;body&gt; tag with Aranea JSP specific <emphasis>onload</emphasis> and <emphasis>onunload</emphasis>
-        events attached.
+        events attached. It usually writes out some other page initialization scripts too, depending on the circumstances.
       </para>
       
       <sect3>
@@ -251,10 +258,11 @@
     </sect2>    
 
 
-    <sect2>
+    <sect2 id="systemForm" xreflabel="systemForm">
       <title><![CDATA[<ui:systemForm>]]></title>
       <para>
         This tag will render an HTML &lt;form&gt; tag along with some Aranea-specific hidden fields. When making custom web applications it is strongly suggested to have only one system form in the template and have it submit using <emphasis>POST</emphasis>. This will ensure that no matter what user does no data is ever lost. However Aranea does not impose this idiom and one may just as well submit using <emphasis>GET</emphasis>, define system forms in widgets and use usual HTML links instead of JavaScript.
+        See <xref linkend="systemTags"></xref> for usage example.
       </para>
       
       <sect3>
@@ -348,7 +356,8 @@
       <sect2>
        <title><![CDATA[<ui:attribute>]]></title>
        <para>
-         Defines an attribute of the containing element.
+         Defines an attribute of the containing element, where possible. See also .
+         Most formelement tags accept attributes set by this tag too, see <xref linkend="attribute_examples"/>.
        </para>
       
       <para>
@@ -379,6 +388,17 @@
           </tgroup>
         </informaltable>
        </para>
+       
+                   <sect3 id="attribute_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+  <!-- set the onkeypress attribute for HTML input produced by ui:textInput-->
+  <ui:textInput>
+    <ui:attribute name="onkeypress" value="upperCase(this);"/>
+  </ui:textInput>
+...]]></programlisting>
+      </sect3>
       </sect2>
       
       <sect2>
@@ -388,10 +408,11 @@
        </para>
       </sect2>
       
-      <sect2>
+      <sect2 id="uielementTag">
        <title><![CDATA[<ui:element>]]></title>
        <para>
-        Defines an HTML element.
+        Defines an HTML element, can be used with <literal>&lt;ui:attribute&gt;</literal> and <literal>&lt;ui:elementContent&gt;</literal>
+        to write HTML.
        </para>
       
          <para>
@@ -417,7 +438,19 @@
              </tgroup>
            </informaltable>
         </para>
+        
+                    <sect3 id="element_attribute_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ui:element name="span">
+  <ui:attribute name="class" value="fancy"/>
+  <ui:elementContent>Contents of fancy span.</ui:elementContent>
+</ui:element>
+]]></programlisting>
+      </sect3>
       </sect2>
+      
+
       
       <sect2 id="keyboardHandlerTag">
        <title><![CDATA[<ui:keyboardHandler>]]></title>
@@ -478,6 +511,11 @@
         </informaltable>
         
        </para>
+       <sect3 id="keyboardHandler_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<!-- Globally-scoped F2 listener -->
+<ui:keyboardHandler scope="" key="f2" handler="function() { alert('You pressed F2. Do it again if you dare!');}"/>]]></programlisting>
+      </sect3>
       </sect2>
       
       <sect2>
@@ -508,17 +546,17 @@
               <row>
                 <entry>widgetId</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry></entry>
+                <entry>Id of Widget that is target of event produced by keyboard handler.</entry>
               </row>
               <row>
                 <entry>eventId</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry></entry>
+                <entry>Id of event that should be sent to target widget.</entry>
               </row>
               <row>
                 <entry>eventParam</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry></entry>
+                <entry>Event parameters</entry>
               </row>
               <row>
                 <entry>updateRegions</entry>
@@ -545,6 +583,14 @@
         </informaltable>
         
        </para>
+       
+              <sect3 id="eventKeyboardHandler_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<!-- F2 listener that sends event 'add' to context widget upon activation -->
+<ui:eventKeyboardHandler eventId="add" key="f2" widgetId="${widgetId}"/>
+]]></programlisting>
+      </sect3>
+       
       </sect2>
   </sect1>
   
@@ -612,6 +658,10 @@
               <row>
                 <entry>viewModel</entry>
                 <entry>The view model of the context widget.</entry>
+              </row>
+              <row>
+                <entry>scopedWidgetId</entry>
+                <entry>The scoped id of the context widget.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -773,18 +823,15 @@
 
     <sect2>
       <title><![CDATA[<ui:globalWidgetInclude>]]></title>
-      TODO (do we even need it?)
+      Much like <literal><![CDATA[<ui:widgetInclude>]]></literal>, but this tag allows to 
+      include not only descendants of current context widget but any widget that is 
+      accessible from global scope.
     </sect2>
     
   </sect1>
   
   <sect1>
     <title>Event-producing Tags</title>
-    <sect2 id="updateRegionAttributes">
-      <title><literal>updateRegions</literal> and <literal>globalUpdateRegions</literal> Attributes</title>$
-
-    </sect2>
-    
     <sect2>
       <title><![CDATA[<ui:eventButton> and <ui:eventLinkButton>]]></title>
       <para>
@@ -814,7 +861,7 @@
               <row>
                 <entry>labelId</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>The key of the label that will be displayed on the button.</entry>
+                <entry>The key of the localizable label that will be displayed on the button.</entry>
               </row>
               <row>
                 <entry>eventId</entry>
@@ -827,6 +874,11 @@
                 <entry><literal>String</literal> event parameter that will accompany the event.</entry>
               </row>
               <row>
+                <entry>eventTarget</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>ID of receiving widget. Almost never set directly. Defaults to current contextwidget.</entry>
+              </row>
+              <row>
                 <entry>disabled</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>If set to a not null value will show the button disabled.</entry>
@@ -835,6 +887,21 @@
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>The CSS class that will override the default one.</entry>
+              </row>
+              <row>
+                <entry>updateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Comma separated list of update regions that should be updated upon button receiving event. This attribute is only needed when using AJAX features&mdash;ordinary HTTP requests always update whole page.</entry>
+              </row>
+              <row>
+                <entry>globalUpdateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Comma separated list of global update regions that should be updated upon button receiving event. This attribute is only needed when using AJAX features&mdash;ordinary HTTP requests always update whole page.</entry>
+              </row>
+              <row>
+                <entry>onClickPrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1055,11 +1122,11 @@
   <ui:widgetContext>
     <h3>Test widget</h3>
     
-    Data field: <c:out value="${contextWidget.data.myData.field}"/>
+    Data field: <c:out value="${viewData.myData.field}"/>
     <ui:eventButton labelId="#Test" eventId="test"/>      
   </ui:widgetContext>
 </jsp:root>]]></programlisting>
-    We can use just usual JSTL Core library tags to access the widget data, as long as the <literal><![CDATA[<ui:widgetContext>]]></literal> is present via the <literal>contextWidget.data</literal> EL variable.
+    We can use just usual JSTL Core library tags to access the widget view data, as long as the <literal><![CDATA[<ui:widgetContext>]]></literal> is present via the <literal>viewData</literal> EL variable.
     </para>
   </sect1>
   
@@ -1152,6 +1219,11 @@
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Cell css class, defines the way the cell will be rendered.</entry>
               </row>
+              <row>
+                <entry>overrideLayout</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that determines whether row's own styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
@@ -1204,27 +1276,47 @@
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>Cell css class, defines the way the cell will be rendered.</entry>
-              </row> 
+              </row>
+              <row>
+                <entry>overrideLayout</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Boolean that determines whether cells's own styleClass completely overrides styleClass provided by surrounding layout or row (default behaviour), or is appended to layout's or row's styleClass.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
       </para>
+      
+            <sect3>
+        <title>Examples</title>
+        Layouts, rows and cells are used together like this:
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+  <ui:layout rowClasses="even,odd" cellClasses="one,two,three,four">
+    <ui:row>
+      <ui:cell>
+         <!-- cell content -->
+      </ui:cell>
+    </ui:row>
+  </ui:layout>
+...]]></programlisting> 
+      </sect3>
     </sect2>
     
     <sect2>
       <title><![CDATA[<ui:updateRegion> and <ui:updateRegionRows>]]></title>
         <para>
            These two tags define the update regions in the output that can be updated
-           via AJAX requests. The update regions chosen to be updated is controlled via
-           all the different event tags that take the <literal>updateRegion</literal>
-           attribute. See <xref linkend="updateRegionAttributes" />
+           via AJAX requests. The update regions chosen to be updated when some event
+           occurs is decided by tags that take the <literal>updateRegion</literal>
+           attribute (See <xref linkend="common-formelement-attributes"> </xref>).
         </para>
         
         <para>
-          The <![CDATA[<ui:updateRegion>]]> should be used in most of the cases to
-          define a region. The
-          <![CDATA[<ui:updateRegionRows>]]> is for defining a region which contains
-          HTML table rows.
+          The <literal><![CDATA[<ui:updateRegion>]]></literal> should be used when defining updateregion
+          when the region is not contained in HTML table (layout). The
+          <literal><![CDATA[<ui:updateRegionRows>]]></literal> is for defining a region which is contained 
+          in HTML table and contains table rows itself. Updating just cells is not possible.
         </para>
 
         <sect3>
@@ -1257,14 +1349,34 @@
              </tgroup>
            </informaltable>
          </sect3>
+         
+                       <sect3 id="updateRegionTag_examples">
+        <title>Examples</title>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- First update region, placed outside HTML table -->
+<ui:updateRegion id="outsideTable">
+</ui:updateRegion>
+
+<ui:layout>
+  <!-- Second update region, placed inside HTML table -->
+  <ui:updateRegionRows id="insideTable"/>
+    <ui:row>
+      ...
+    </ui:row>
+  </ui:updateRegionRows>
+</ui:layout>
+
+<!-- Button that makes a background submit of specified event. 
+     When response arrives specified updateregions are updated -->
+<ui:eventButton id="test" updateRegions="outsideTable,insideTable"/>]]></programlisting>
+      </sect3>
+         
     </sect2>
   </sect1>
   
   <sect1>
     <title>Presentation Tags</title>
-      For convience Aranea provides abstraction over the the standard
-      HTML presentation tags.
-   
+    Aranea JSP library contains synonyms for some (deprecated) HTML presentation tags.
    <sect2>
     <title><![CDATA[<ui:bold>]]></title>
      <para>
@@ -1558,10 +1670,9 @@
       
       <para>
         Changing default tag styles can be done in two ways&mdash;modifying CSS files or extending the tag one wants to
-        customize and overwriting the tags <literal>init()</literal> method like this:
+        customize with dynamic initializer like this:
       </para>
-      <programlisting role="java"><![CDATA[protected void init() {
-    super.init();
+      <programlisting role="java"><![CDATA[{
     styleClass = "some-wanted-style";
 }]]></programlisting>
     
@@ -1596,6 +1707,11 @@
               </row>
             </thead>
             <tbody>
+              <row>
+                <entry>style</entry>
+                <entry>Inline CSS style applied to tag. Avoid.</entry>
+                <entry>Presentation tags.</entry>
+              </row>
               <row>
                 <entry>styleClass</entry>
                 <entry>CSS class applied to tag.</entry>
@@ -1650,14 +1766,15 @@ public class DummyTag extends BaseTag {
 
     // make this tag implementation accessible to subtags which 
     // is quite pointless since this tag does not implement any useful interface.
+    // it demonstrates Aranea JSP convention for providing info to subtags
     addContextEntry(KEY, this);
     
-    // write some real output that ends up right at the served web page
+    // write some real output that ends up at the served web page
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "id", "dummyDivId");
     JspUtil.writeCloseStartTag(out);
     
-    // it is possible to register subtags too, this just writes out nbsp entity.
+    // it is possible to register in JAVA code too, this one just writes out nbsp entity.
     subTag = new NbspEntityHtmlTag();
     registerSubtag(subTag);
     executeStartSubtag(subTag);
@@ -1672,45 +1789,126 @@ public class DummyTag extends BaseTag {
     JspUtil.writeEndTag(out, "div");
     
     return super.doEndTag(out);
-        // Now everything about this tag ceases to exist, 
-        // context entries are removed, souls are purged.
+    // Now everything about this tag ceases to exist, 
+    // context entries are removed, souls are purged.
   }
 }]]></programlisting>
     </para>
 
     <para>
-      <emphasis>org.araneaframework.jsp.util.JspUtil</emphasis> is an utility class containing some functions for 
-      writing out (XML) tags with somewhat more comfort than just <emphasis>out.write()</emphasis>. Other notable methods
-      provided by <emphasis>BaseTag</emphasis> are <emphasis>getOutputData()</emphasis> that returns response data, 
-      <emphasis>getConfiguration()</emphasis> and <emphasis>getLocalizationContext()</emphasis>.
+      <literal>org.araneaframework.jsp.util.JspUtil</literal> that was used here is an utility class containing some functions for 
+      writing out (XML) tags with somewhat less room for errors than just <literal>out.write()</literal>. Other notable methods
+      provided by <literal>BaseTag</literal> are <literal>getOutputData()</literal> that returns response data, 
+      <literal>getConfiguration()</literal> and <literal>getLocalizationContext()</literal>.
       
       For tags with attributes, attribute evaluation functions that support <emphasis>Expression Language (EL)</emphasis> 
-      expressions are provided in <emphasis>BaseTag</emphasis>. Typical usage of these functions is following:
+      expressions are provided in <literal>BaseTag</literal>. Typical usage of these functions is following:
       <programlisting role="java"><![CDATA[public void setWidth(String width) throws JspException {
   this.width = (String)evaluate("width", width, String.class);
 }]]></programlisting>
     </para>
     
     <para>
-        Another common base tag for tags that output real HTML is <emphasis>org.araneaframework.jsp.PresentationTag</emphasis>.
-        The <emphasis>DummyTag</emphasis> should really extend it too, since it outputs some HTML. <emphasis>PresentationTag</emphasis>
+        Another common base tag for tags that output real HTML is <literal>org.araneaframework.jsp.PresentationTag</literal>.
+        The <literal>DummyTag</literal> should really extend it too, since it outputs some HTML. <literal>PresentationTag</literal>
         defines <emphasis>style</emphasis> and <emphasis>styleClass</emphasis> attributes that can be applied to most HTML tags.
     </para>
+    
+    <para>Important tag cleanup method is <literal>doFinally()</literal> that is called after rendering.
+    It should be used to clear references to objects that should no longer be referenced after rendering. 
+    As in containers tag instances can live very long time, they can leak quite a lot of memory unless resources are deallocated.</para>
 
     </sect2>
     
     <sect2>
       <title>Widgets and events</title>
+      <para>
       Sending events to widgets is accomplished with javascript submit functions, helpful
-      utility being <emphasis>org.araneaframework.jsp.util.JspUtil</emphasis> and 
-      <emphasis>org.araneaframework.jsp.util.JspWidgetCallUtil</emphasis>. First one would construct
-      <emphasis>org.araneaframework.jsp.UiEvent</emphasis> and (in case of HTML element which
+      utility being <literal>org.araneaframework.jsp.util.JspUtil</literal> and 
+      <literal>org.araneaframework.jsp.util.JspWidgetCallUtil</literal>. First one would construct
+      <literal>org.araneaframework.jsp.UiEvent</literal> and (in case of HTML element which
       receives only one event) calls JspUtil.writeEventAttributes(Writer out, UiEvent event) and afterwards
       writeSubmitScriptForEvent(Writer out, String attributeName).
+<programlisting role="java"><![CDATA[//public UiEvent(String eventId, String eventTargetWidget, String eventParameter)
+UiEvent event = new UiEvent("hello", "contextWidgetId", "name");
+// long way to ouput custom attributes version
+JspUtil.writeEventAttributes(out, event);
+JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
+// short version
+JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
+
+// both will output something like this:
+// arn-evntId="hello" arn-trgtwdgt="contextWidgetId" arn-evntPar="name" onclick="return _ap.submit(this);"]]></programlisting>
+    </para>
+    
     </sect2>
     
     <sect2>
       <title>Layouts</title>
+      <para>
+      New layouts are mostly concerned with styles or render layouts with some additional tags instead plain
+      <literal>table, tr, td</literal>.
+      As simple example, we define a layout that applies a class "error" to cells which contain invalid <literal>FormElement</literal>.
+      Note that approach we use only works when cell tag is aware of the surrounding <literal>FormElement</literal> at the
+      moment of rendering, meaning that <literal>FormElement</literal> is rendered in JSP something like this:
+      </para>
+      <para>
+<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+...
+<ui:formElement id="someId">
+    <ui:cell>
+        <ui:label/>
+    </ui:cell>
+
+    <ui:cell>
+        <ui:textInput/>
+    </ui:cell>
+</ui:formElement>
+...]]>
+</programlisting></para>
+    <para>
+      What is needed foremost is a decorator for cells that are used inside invalid <literal>FormElement</literal>.
+<programlisting role="java"><![CDATA[public class ErrorMarkingCellClassProviderDecorator implements CellClassProvider {
+  protected CellClassProvider superProvider;
+  protected PageContext pageContext;
+
+  // constructs a decorator for superProvider, makes pageContext accessible
+  public ErrorMarkingCellClassProviderDecorator(CellClassProvider superProvider, PageContext pageContext) {
+    this.superProvider = superProvider;
+    this.pageContext = pageContext;
+  }
+
+  public String getCellClass() throws JspException {
+    FormElement.ViewModel formElementViewModel = 
+      (FormElement.ViewModel)pageContext.getAttribute(FormElementTag.VIEW_MODEL_KEY, PageContext.REQUEST_SCOPE);
+    // superProvider.getCellClass() may only be called once, otherwise moves on to next cell's style
+    String superClass = superProvider.getCellClass();
+
+    if (formElementViewModel != null && !formElementViewModel.isValid()) {
+      if (superClass != null)
+        return superClass + " error";
+      else
+        return "error";
+    }
+
+    return superClass;
+  }
+}]]>
+</programlisting>
+    </para>
+    
+    <para>
+      Actual layout tag that decorates its cells according to described logic:
+<programlisting role="java"><![CDATA[public class CustomLayoutTag extends LayoutHtmlTag {
+  protected int doStartTag(Writer out) throws Exception {
+    int result = super.doStartTag(out);
+    addContextEntry(CellClassProvider.KEY, new ErrorMarkingCellClassProviderDecorator(this, pageContext));
+
+    return result;
+  }
+}]]></programlisting>
+    </para>
+      
     </sect2>
   </sect1>
 

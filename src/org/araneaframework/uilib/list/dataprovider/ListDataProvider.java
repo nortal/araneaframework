@@ -25,7 +25,7 @@ import org.araneaframework.backend.list.model.ListItemsData;
 
 /**
  * This interface defines the behaviour of a list data provider, that is used by the
- * {@link org.araneaframework.contrib.uilib.lists.ListWidget}to retrieve the list data.
+ * {@link org.araneaframework.uilib.list.ListWidget}to retrieve the list data.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
@@ -45,14 +45,14 @@ public interface ListDataProvider extends Serializable {
 	/**
 	 * This method should be used to receive the filter of the list.
 	 * 
-	 * @param listFilter the filter of the list.
+	 * @param filterExpression the filter of the list.
 	 */
 	public void setFilterExpression(Expression filterExpression);
 
 	/**
 	 * This method should be used to receive the current ordering info.
 	 * 
-	 * @param orderInfo the current ordering info.
+	 * @param orderExpression the current ordering info.
 	 */
 	public void setOrderExpression(ComparatorExpression orderExpression);
 
@@ -66,7 +66,7 @@ public interface ListDataProvider extends Serializable {
 	/**
 	 * This method should return a range of items from the list data.
 	 * 
-	 * @param startIdx the inclusive 0-based starting index of the item range.
+	 * @param start the inclusive 0-based starting index of the item range.
 	 * @param count the amount of items to return.
 	 * @return a range of items from the list data provider.
 	 */

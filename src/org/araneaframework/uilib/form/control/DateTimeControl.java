@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -138,9 +138,9 @@ public class DateTimeControl extends BaseControl {
   public void validate() {
     if (isMandatory() && !isRead()) {
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.MANDATORY_FIELD, 
-          ErrorUtil.localize(getLabel(), getEnvironment()),
+          MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));          
     }
   }
@@ -154,6 +154,8 @@ public class DateTimeControl extends BaseControl {
   }
   
   public void setRawValue(Object value) {
+    // mark composite control dirty
+    super.setRawValue(null);
     dateControl.setRawValue(value);    
     timeControl.setRawValue(value);
   }

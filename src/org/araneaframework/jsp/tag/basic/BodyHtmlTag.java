@@ -16,9 +16,15 @@
 
 package org.araneaframework.jsp.tag.basic;
 
+import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.router.BaseExpiringServiceRouterService;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -77,28 +83,70 @@ public class BodyHtmlTag extends PresentationTag {
    * Writes the scripts immediately following the opening of &lt;body&gt; tag.
    */
   protected void writeAfterBodyStartScripts(Writer out) throws Exception {
-    String servletUrl =
-        ServletUtil.getInputData(pageContext.getRequest()).getContainerURL(); 
-	  
     JspUtil.writeOpenStartTag(out, "script");
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeCloseStartTag_SS(out);
     
-    out.write("getActiveAraneaPage().setServletURL('");
-    out.write(servletUrl);
-    out.write("');");
-    
-    Locale locale = getLocalizationContext().getLocale();
-
-    out.write("getActiveAraneaPage().setLocale(new AraneaLocale('");
-    out.write(locale.getLanguage());
-    out.write("','");
-    out.write(locale.getCountry());
-    out.write("'));");
+    writeServletURLScript(out);
+    writeLocaleScript(out);
+    writeKeepAliveRegistrationScripts(out);
 
     writeAdditionalAfterBodyStartScripts(out);
 
     JspUtil.writeEndTag(out, "script");
+  }
+
+  /** Writes scripts that register client-side keepalive events for server-side expiring services. */
+  protected void writeKeepAliveRegistrationScripts(Writer out) throws JspException, IOException {
+	Map expiringServiceMap = (Map) getOutputData().getAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP);
+    if (expiringServiceMap != null && !expiringServiceMap.isEmpty()) { // there are some expiring services
+      for (Iterator i = expiringServiceMap.entrySet().iterator(); i.hasNext();) {
+        Map.Entry entry = (Map.Entry) i.next();
+        Object keepAliveKey = "'"+ entry.getKey() + "'";
+        // TODO: keepalives are just invoked a little (4 seconds) more often from client side,
+        // than specified in configuration, there could be a better way.
+        Long serviceTTL = new Long((((Long) entry.getValue()).longValue() - 4000));
+        Object topServiceId =  getOutputData().getAttribute(TopServiceContext.TOP_SERVICE_KEY);
+        Object threadServiceId = getOutputData().getAttribute(ThreadContext.THREAD_SERVICE_KEY);
+
+        String sTop = topServiceId == null ? "null" : "'" + topServiceId.toString() + "'";
+        String sThread = threadServiceId == null ? "null" : "'" + threadServiceId.toString() + "'";
+
+        out.write("\ngetActiveAraneaPage().addKeepAlive(AraneaPage.getDefaultKeepAlive(" + 
+        		sTop + "," + 
+        		sThread + "," + keepAliveKey + ")," + serviceTTL.toString() + ");\n");
+      }
+    }
+  }
+
+  /** Writes script that makes client-side aware of container URL. */
+  protected void writeServletURLScript(Writer out) throws IOException {
+    String servletUrl =
+        ServletUtil.getInputData(pageContext.getRequest()).getContainerURL();
+
+    String encodedServletUrl = 
+    	ServletUtil.getOutputData(pageContext.getRequest()).encodeURL(servletUrl);
+    
+    out.write("_ap.setServletURL('");
+    out.write(servletUrl);
+    out.write("');");
+    
+    if (!servletUrl.equals(encodedServletUrl)) {
+      String urlSuffix = encodedServletUrl.substring(servletUrl.length());
+      String function = "function(url) { return (url + '" + urlSuffix + "'); }";
+      out.write("_ap.override('encodeURL'," + function + ");");
+    }
+  }
+
+  /** Writes script that makes client-side aware of server-side locale. */
+  protected void writeLocaleScript(Writer out) throws JspException, IOException {
+	Locale locale = getLocalizationContext().getLocale();
+
+    out.write("_ap.setLocale(new AraneaLocale('");
+    out.write(locale.getLanguage());
+    out.write("','");
+    out.write(locale.getCountry());
+    out.write("'));");
   }
   
   /**

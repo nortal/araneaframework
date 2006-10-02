@@ -36,7 +36,7 @@ public abstract class ClassLoaderUtil {
 	/**
 	 * Returns the thread context ClassLoader, if available. Otherwise
 	 * falls back to the ClassLoader of ClassLoaderUtil.
-	 * @return
+	 * @return acquired classloader.
 	 */
 	public static ClassLoader getDefaultClassLoader() {
 		return (ClassLoader)getClassLoaders().iterator().next();

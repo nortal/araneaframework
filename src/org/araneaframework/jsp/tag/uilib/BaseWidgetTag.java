@@ -29,7 +29,7 @@ public class BaseWidgetTag extends BaseTag {
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
   
-    container = (UiWidgetContainer) requireContextEntry(UiWidgetContainer.REQUEST_CONTEXT_KEY);
+    container = (UiWidgetContainer) requireContextEntry(UiWidgetContainer.KEY);
   
     // Get data
     widget = JspWidgetUtil.getWidgetFromContext(id, pageContext);
@@ -45,4 +45,12 @@ public class BaseWidgetTag extends BaseTag {
     return EVAL_BODY_INCLUDE;    
   }
 
+  public void doFinally() {
+	super.doFinally();
+    // to prevent memory leaks in containers where tags might live very long
+	id = fullId = scopedFullId = null;
+	widget = null;
+	viewModel = null;
+	container = null;
+  }
 }

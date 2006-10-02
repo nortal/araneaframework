@@ -28,6 +28,7 @@ import org.araneaframework.example.main.business.model.CompanyMO;
  * @author Rein Raudjärv <reinra@ut.ee>*
  */
 public class CompanyViewWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
   private static final Logger log = Logger.getLogger(CompanyViewWidget.class);
   private Long id = null;
 

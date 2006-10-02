@@ -28,12 +28,14 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 
 /**
- * An util for dynamically including jsp pages.
+ * Utility methods for Aranea framework running inside a servlet container. Includes
+ * functions for rendering JSP pages and direct access to <code>HttpServletResponse</code>
+ * and <code>HttpServletRequest</code>.
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract  class ServletUtil {
+public abstract class ServletUtil {
   private static final Logger log = Logger.getLogger(ServletUtil.class);
   
   /**
@@ -89,7 +91,7 @@ public abstract  class ServletUtil {
     return (HttpInputData) req.getAttribute(InputData.INPUT_DATA_KEY);
   }
   
-  public static HttpOutputData getOutputOData(ServletRequest req) {
+  public static HttpOutputData getOutputData(ServletRequest req) {
     return (HttpOutputData) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
   }
 }

@@ -54,12 +54,10 @@ public class BeanMapper implements Serializable {
 	
 	/**
 	 * Initializes the BeanMapper.
-	 * 
-	 * @param beanClass
-	 *          the class implementing the Bean pattern.
+	 * @param beanClass the class implementing the Bean pattern.
 	 */
-	public BeanMapper(Class voClass) {
-		this.beanClass = voClass;
+	public BeanMapper(Class beanClass) {
+		this.beanClass = beanClass;
 	}
 	
 	/**
@@ -92,8 +90,8 @@ public class BeanMapper implements Serializable {
 	 * 
 	 * @param bean
 	 *          Object, which value to return.
-	 * @param field
-	 *          The name of VO field.
+	 * @param fieldName
+	 *          The name of Bean field.
 	 * @return The value of the field.
 	 */
 	public Object getFieldValue(Object bean, String fieldName) {
@@ -106,7 +104,7 @@ public class BeanMapper implements Serializable {
 	 * 
 	 * @param bean
 	 *          bean Object, which value to set.
-	 * @param field
+	 * @param fieldName
 	 *          The name of Bean field.
 	 * @param value
 	 *          The new value of the field.
@@ -122,7 +120,7 @@ public class BeanMapper implements Serializable {
 	/**
 	 * Returns type of Bean field identified by name <code>field</code>.
 	 * 
-	 * @param field
+	 * @param fieldName
 	 *          The name of Bean field.
 	 * @return The type of the field.
 	 */

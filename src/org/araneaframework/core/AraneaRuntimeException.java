@@ -24,8 +24,8 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class AraneaRuntimeException extends NestableRuntimeException {
-  public AraneaRuntimeException(String arg0, Throwable arg1) {
-    super(arg0, arg1);
+  public AraneaRuntimeException(String message, Throwable cause) {
+    super(message, cause);
   }
 
   public AraneaRuntimeException() {

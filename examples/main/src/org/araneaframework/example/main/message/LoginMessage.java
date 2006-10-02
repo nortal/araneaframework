@@ -23,7 +23,9 @@ import org.araneaframework.example.main.web.RootWidget;
 import org.araneaframework.framework.FlowContext;
 
 public class LoginMessage extends BroadcastMessage {	
-	protected void execute(Component component) throws Exception {
+	  private static final long serialVersionUID = 1L;
+
+  protected void execute(Component component) throws Exception {
 		if (component instanceof LoginWidget) {
 			LoginWidget w = (LoginWidget) component;
 			RootWidget root = new RootWidget();

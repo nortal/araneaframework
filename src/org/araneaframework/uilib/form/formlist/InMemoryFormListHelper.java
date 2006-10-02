@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.formlist;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,8 +25,8 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.core.Assert;
-import org.araneaframework.uilib.form.formlist.adapters.InMemoryFormRowHandlerDecorator;
-import org.araneaframework.uilib.form.formlist.adapters.MapFormRowHandlerDecorator;
+import org.araneaframework.uilib.form.formlist.adapter.InMemoryFormRowHandlerDecorator;
+import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
 
 /**
  * Helper that facilitates holding the editable list rows in memory without saving them to database. 
@@ -47,23 +46,25 @@ public class InMemoryFormListHelper implements Serializable {
 	protected BaseFormListWidget formList;
 	
 	/**
-	 * @param initalData initial row objects.
-	 * @param rowHandler row handler used to query row object ids.
+	 * Constructs the helper for given <i>formList</i>, filling it with initial values.
+	 * 
+	 * @param formList
+	 * @param initialData initial row objects.
 	 */
-	public InMemoryFormListHelper(BaseFormListWidget formList, Collection initalData) {
+	public InMemoryFormListHelper(BaseFormListWidget formList, Collection initialData) {
     this.formList = formList;
     
-    for (Iterator i = initalData.iterator(); i.hasNext();) {
-      Object row = (Object) i.next();
-      current.put(formList.getFormRowHandler().getRowKey(row), row);
+    if (initialData != null) {
+      for (Iterator i = initialData.iterator(); i.hasNext();) {
+        Object row = i.next();
+        current.put(formList.getFormRowHandler().getRowKey(row), row);
+      }
     }
     
     formList.setFormRowHandler(
-        new MapFormRowHandlerDecorator(
-            current, formList, 
-            new InMemoryFormRowHandlerDecorator(formList.getFormRowHandler(), this)));
+            new InMemoryFormRowHandlerDecorator(formList.getFormRowHandler(), this));
     
-    formList.setRows(new ArrayList(current.values()));
+    formList.setModel(new MapFormListModel(current));
 	}
 	
 	/**

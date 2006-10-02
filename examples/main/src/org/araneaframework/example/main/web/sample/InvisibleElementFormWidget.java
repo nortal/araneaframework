@@ -25,6 +25,7 @@ import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.StringData;
 
 public class InvisibleElementFormWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
   private FormWidget form;
   private String initialName;
   

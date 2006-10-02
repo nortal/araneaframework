@@ -32,7 +32,6 @@ import java.util.List;
  * just the RowMapperResultReader adapter is stateful.
  *
  * @author Rod Johnson
- * @see RowMapperResultReader
  */
 public interface ResultReader extends RowCallbackHandler {
 	

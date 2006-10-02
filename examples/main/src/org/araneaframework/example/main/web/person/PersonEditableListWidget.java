@@ -28,21 +28,15 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.form.data.BigDecimalData;
-import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
 import org.araneaframework.uilib.form.formlist.FormRowHandler;
-import org.araneaframework.uilib.form.formlist.adapters.MemoryBasedListFormRowHandlerDecorator;
-import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.BackendListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
-import org.araneaframework.uilib.list.structure.filter.column.RangeColumnFilter;
-import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
 public abstract class PersonEditableListWidget extends TemplateBaseWidget {
@@ -59,38 +53,26 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		setViewSelector("person/editableList");
 		
-		/* PersonMO class is already familiar from form examples. */
-		list = new EditableBeanListWidget(PersonMO.class);
-		list.addBeanColumn("id", "#Id", false);
-		/* Filtering by fields other than ID is enabled. */
-		list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
-		list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
-		list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
-		
-		/* Set up the custom range filter for birthdate column. */
-		RangeColumnFilter birthdayFilter = new RangeColumnFilter.DateNonStrict();
-		list.addBeanColumn("birthdate", "#Birthdate", true, birthdayFilter, null);
-		list.addFilterFormElement(birthdayFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
-		list.addFilterFormElement(birthdayFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
-
-		RangeColumnFilter salaryFilter = new RangeColumnFilter.NonStrict();
-		list.addBeanColumn("salary", "#Salary", true, salaryFilter, null);
-		list.addFilterFormElement(salaryFilter.getStartFilterInfoKey(), "#Salary Start", new FloatControl(), new BigDecimalData());
-		list.addFilterFormElement(salaryFilter.getEndFilterInfoKey(), "#Salary End", new FloatControl(), new BigDecimalData());
-		
-		/* Dummy column which holds no data. 
-		 * Added here because we want <ui:componentListHeader/> tag to draw an extra column, which 
-		 * we will use as edit/delete button holders. */
-		list.addListColumn(new ListColumn("dummy"));
-		
-		/* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
-		list.setListDataProvider(buildListDataProvider());
-		/* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
-		list.setFormRowHandler(buildFormRowHandler());
-
-		/* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
+		/* PersonMO class is already familiar from form examples. 
+       FormRowHandler class that will handle the different row operations. */
+		list = new EditableBeanListWidget(buildFormRowHandler(), PersonMO.class);
 		this.formList = list.getFormList();
 		addWidget("list", list);
+		list.setOrderableByDefault(true);
+		list.addField("id", "#Id", false);
+		/* Filtering by fields other than ID is enabled. */
+		list.addField("name", "#First name").like();
+		list.addField("surname", "#Last name").like();
+		list.addField("phone", "#Phone no").like();		
+		list.addField("birthdate", "#Birthdate").range();
+		list.addField("salary", "#Salary").range();
+		list.addField("dummy", null, false);
+		
+		/* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
+		list.setDataProvider(buildListDataProvider());
+
+		/* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
+		
 	}
 	
 	protected abstract ListDataProvider buildListDataProvider() throws Exception;
@@ -98,7 +80,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	protected abstract FormRowHandler buildFormRowHandler() throws Exception;
 	
 	public static class Memory extends PersonEditableListWidget {
-		private MemoryBasedListDataProvider dataProvider = new DataProvider();
+		    private static final long serialVersionUID = 1L;
+    private MemoryBasedListDataProvider dataProvider = new DataProvider();
 
 		protected ListDataProvider buildListDataProvider() throws Exception {
 			return dataProvider;
@@ -107,12 +90,12 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		protected FormRowHandler buildFormRowHandler() throws Exception {
 	        /* Implementation of FormRowHandler that also calls dataprovider's
 	         * data refresh methods when list editing events occur. */
-			return new MemoryBasedListFormRowHandlerDecorator(dataProvider,
-					new PersonEditableRowHandler());
+			return new PersonEditableRowHandler();
 		}
 		
 		private class DataProvider extends MemoryBasedListDataProvider {
-			protected DataProvider() {
+			      private static final long serialVersionUID = 1L;
+      protected DataProvider() {
 				super(PersonMO.class);
 			}
 			public List loadData() throws Exception {		
@@ -122,7 +105,9 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	}
 	
 	public static class Backend extends PersonEditableListWidget {
-		protected ListDataProvider buildListDataProvider() throws Exception {
+		    private static final long serialVersionUID = 1L;
+
+    protected ListDataProvider buildListDataProvider() throws Exception {
 			return new DataProvider();
 		}
 
@@ -131,7 +116,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		}
 		
 		private class DataProvider extends BackendListDataProvider {
-			protected DataProvider() {
+			      private static final long serialVersionUID = 1L;
+      protected DataProvider() {
 				super(false);
 			}
 			protected ListItemsData getItemRange(ListQuery query) throws Exception {
@@ -145,7 +131,9 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	 * saves only these forms (rows) which data passes validation.  
 	 */ 
 	public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-		/* Implementation of the method that must return unique key for each row
+		    private static final long serialVersionUID = 1L;
+
+    /* Implementation of the method that must return unique key for each row
 		 * in editable list. As we hold database objects (PersonMO-s) in this list, 
 		 * it is natural to use synthetic ID field for a key.*/ 
 		public Object getRowKey(Object rowData) {
@@ -154,7 +142,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		// Implementation of method that should save EDITED rows which data passes validation.
 		public void saveValidRow(FormRow editableRow) throws Exception {
-			/* Reads data from form. FormRow.getFormRow() method returns the widget that is 
+			/* Reads data from form. FormRow.getForm() method returns the widget that is 
 			 * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
 			 * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
 			 * we can cast the return type accordingly. */

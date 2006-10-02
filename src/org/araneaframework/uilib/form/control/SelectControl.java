@@ -73,7 +73,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * item.
    */
   public void addDisplayItems(Collection valueObjects, String valueName, String labelName) {
-    DisplayItemUtil.addItemsFromVoCollection(this, valueObjects, valueName, labelName);
+    DisplayItemUtil.addItemsFromBeanCollection(this, valueObjects, valueName, labelName);
   }    
 
   /**
@@ -82,14 +82,14 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
   public void clearItems() {
     items.clear();
   }
-    
-	public List getDisplayItems() {
-		return items;
-	}    
-	
-	public int getValueIndex(String value) {
-		return DisplayItemUtil.getValueIndex(items, value);
-	}	
+
+  public List getDisplayItems() {
+    return items;
+  }
+
+  public int getValueIndex(String value) {
+    return DisplayItemUtil.getValueIndex(items, value);
+  }	
   
   //*********************************************************************
   //* INTERNAL METHODS

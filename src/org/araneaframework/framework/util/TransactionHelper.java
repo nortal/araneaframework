@@ -18,10 +18,13 @@ package org.araneaframework.framework.util;
 
 import java.io.Serializable;
 import java.util.Random;
+import org.araneaframework.framework.TransactionContext;
 
 /**
- * Helper class for determining if an id is consistent. An id is considered cosnistent
- * if it is either null or does not equal the previously saved id.
+ * Helper class for determining if transaction id is consistent. Transaction
+ * id is considered consistent when it equals {@link TransactionContext#OVERRIDE_KEY}
+ * or current transaction id. If current transaction id is not yet set,
+ * any transaction id is considered consistent.
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
@@ -50,14 +53,25 @@ public class TransactionHelper implements Serializable {
   }
   
   /**
+   * Returns true if current transaction id is null or transactionId 
+   * equals the current transaction id or transactionId has been
+   * overriden.
+   */
+  public boolean isConsistent(Object transactionId) {
+    if (currentTransactionId == null)
+      return true;
+
+    if (isOverride(transactionId))
+      return true;
+
+    return currentTransactionId.toString().equals(transactionId);
+  }
+
+  /**
    * Returns true if current transaction id is null or transactionId does not
    * equal the current transaction id. 
    */
-  public boolean isConsistent(Object transactionId) {
-    if (currentTransactionId == null) {
-      return true;
-    }
-    
-    return currentTransactionId.toString().equals(transactionId);
+  public boolean isOverride(Object transactionId) {
+    return TransactionContext.OVERRIDE_KEY.equals(transactionId);
   }
 }

@@ -3,8 +3,9 @@ package org.araneaframework.jsp.tag.uilib.form.element.date;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
-import java.util.Date;
+import java.util.Calendar;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.TimestampControl.ViewModel;
@@ -62,16 +63,25 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     writeTimeInput(out, name, viewModel.getTime(), localizedLabel,
         timeInputSize, viewModel.isDisabled());
 
-    Date currentTime = null;
     Integer minute = null, hour = null;
     try {
       ViewModel timeViewModel = viewModel.getTimeViewModel();
       if (timeViewModel.getSimpleValue() != null) {
-   	    currentTime = timeViewModel.getCurrentSimpleDateTimeFormat().parse(timeViewModel.getSimpleValue());
-  	    hour = new Integer(currentTime.getHours());
-    	    minute = new Integer(currentTime.getMinutes());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeViewModel.getCurrentSimpleDateTimeFormat().parse(timeViewModel.getSimpleValue()));
+
+  	    hour = new Integer(calendar.get(Calendar.HOUR_OF_DAY));
+   	    minute = new Integer(calendar.get(Calendar.MINUTE));
       }
-    } catch (ParseException e) {	}
+    } catch (ParseException e) {
+        // try to preserve the contents of selects anyway
+    	String strHour =  ServletUtil.getRequest(getOutputData().getInputData()).getParameter(name+".select1");
+    	if (strHour != null && !(strHour.trim().length() == 0))
+     	  hour = Integer.valueOf(strHour.trim());
+    	String strMinute = ServletUtil.getRequest(getOutputData().getInputData()).getParameter(name+".select2");
+    	if (strMinute != null && !(strMinute.trim().length() == 0))
+    	  minute = Integer.valueOf(strMinute);
+    }
 
     writeHourSelect(out, name, viewModel.isDisabled(), hour);
     writeMinuteSelect(out, name, viewModel.isDisabled(), minute);

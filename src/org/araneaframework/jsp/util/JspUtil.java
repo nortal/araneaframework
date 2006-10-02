@@ -78,7 +78,7 @@ public class JspUtil {
     attributeErrorMap.put(ListTag.LIST_ID_KEY, "<ui:list> tag expected, but not found!  Make sure list tags is used inside <ui:list> tag.");
     attributeErrorMap.put(ListRowsTag.ROW_REQUEST_ID_KEY, "<ui:listRows> or another list rows tag expected, but not found!");	
     attributeErrorMap.put(BaseSystemFormHtmlTag.ID_KEY, "<ui:systemForm> tag expected, but not found! Make sure your tags are surrounded by <ui:systemForm>.");
-    attributeErrorMap.put(UiWidgetContainer.REQUEST_CONTEXT_KEY, "<ui:viewPort> or another widget container tag expected, but not found!");
+    attributeErrorMap.put(UiWidgetContainer.KEY, "<ui:viewPort> or another widget container tag expected, but not found!");
   }
 
   /**
@@ -210,17 +210,16 @@ public class JspUtil {
 
   
   /**
-   * Writes out attributes contained in the map.
+   * Writes out attributes contained in the Map &lt;attributeName, attributeValue&gt;.
    * If map is <code>null</code>, writes nothing.
    */
   public static void writeAttributes(Writer out, Map attributes) throws IOException {
     if (attributes == null) return;
     
-    for(Iterator i = attributes.keySet().iterator(); i.hasNext();) {
-      String name = (String)i.next();
-      String value = attributes.get(name).toString();
-      
-      JspUtil.writeAttribute(out, name, value);
+    for(Iterator i = attributes.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String attributeName = (String)entry.getKey();
+      JspUtil.writeAttribute(out, attributeName, entry.getValue());
     }    
   }
 
@@ -371,8 +370,6 @@ public class JspUtil {
   
   /**
    * Writes out hidden html input element with give name and value.
-   * 
-   * @author Nikita Salnikov-Tarnovski
    */ 
   public static void writeHiddenInputElement(Writer out, String name, String value) throws IOException {
     JspUtil.writeOpenStartTag(out, "input");
@@ -381,8 +378,7 @@ public class JspUtil {
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeCloseStartEndTag(out);
   }
-  
-  
+
   /**
    * Parses multi-valued attribute, where attributes are separated by commas.
    * Empty attribute values are allowed, they are specified by including whitespace

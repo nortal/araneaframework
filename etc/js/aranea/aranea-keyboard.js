@@ -154,3 +154,4 @@
   */
  var uiKeypressHandlerRegistry = new UiHandlerRegistry();
  
+window['aranea-keyboard.js'] = true;

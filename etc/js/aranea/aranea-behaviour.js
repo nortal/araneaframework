@@ -19,7 +19,6 @@
  * Behaviour rules required for Aranea JSP to work correctly.
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-
 function setFormElementContext(el) {
   var span = el.parentNode;
   do {
@@ -45,17 +44,20 @@ function setCloningUrl(el) {
 	var systemForm = getActiveAraneaPage().getTraverser().findSurroundingSystemForm(el);
 
     var url = new String();
-    url = getActiveAraneaPage().getServletURL();
-	url += "?pleaseClone=true"
+    url = getActiveAraneaPage().encodeURL(getActiveAraneaPage().getServletURL());
+
+    url += "?pleaseClone=true";
+    url += "&topServiceId=" + systemForm['topServiceId'].value;
     url += "&threadServiceId=" + systemForm['threadServiceId'].value;
+    url += "&transactionId=override";
 
-	if (eventId)
+    if (eventId)
       url += "&widgetEventHandler=" + eventId;
-	if (eventParam)  
+    if (eventParam)  
       url += "&widgetEventParameter=" + eventParam;
-	if (eventTarget)
+    if (eventTarget)
       url += "&widgetEventPath="+ eventTarget;
-
+      
     el['href'] = "javascript:window.location='"+ url + "';";
 }
 
@@ -118,3 +120,5 @@ var aranea_rules = {
 };
 
 Behaviour.register(aranea_rules);
+
+window['aranea-behaviour.js'] = true;

@@ -57,6 +57,8 @@
 				<fileset dir="${tests.build.dir}">
 					<include name="**/*Test.class"/>
 					<include name="**/*Tests.class"/>
+					<!-- exclude abstract tests -->
+					<exclude name="**/BaseMessageContextTests.class"/>
 				</fileset>
 			</batchtest>
 		</junit>
@@ -111,6 +113,8 @@
 				<fileset dir="${tests.build.dir}">
 					<include name="**/*Test.class"/>
 					<include name="**/*Tests.class"/>
+					<!-- exclude abstract tests -->
+					<exclude name="**/BaseMessageContextTests.class"/>
 				</fileset>
 			</batchtest>
 		</junit>
@@ -132,6 +136,8 @@
 				<fileset dir="${tests.build.dir}">
 					<include name="**/*Test.class"/>
 					<include name="**/*Tests.class"/>
+					<!-- exclude abstract tests -->
+					<exclude name="**/BaseMessageContextTests.class"/>
 				</fileset>
 			</batchtest>
 		</junit>

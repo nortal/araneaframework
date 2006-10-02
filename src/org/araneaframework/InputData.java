@@ -16,7 +16,6 @@
 
 package org.araneaframework;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -36,10 +35,10 @@ import java.util.Map;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface InputData extends Serializable, Extendable, Narrowable {
+public interface InputData extends Extendable, Narrowable {
   
   /**
-   * The key that can be used to retrieve InputData (e.g. as a request scope attribute).
+   * The key that can be used to retrieve InputData (as an example a request scope attribute).
    */
   public static final String INPUT_DATA_KEY = "org.araneaframework.InputData";
 

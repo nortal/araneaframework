@@ -23,14 +23,17 @@ package org.araneaframework.jsp;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class AraneaAttributes {
-  // attributes belonging to system form
-  public static String SYSTEM_FORM = "arn-systemForm";
-  public static String SERVLET_URL = "arn-servletURL";
+  private AraneaAttributes() {}
 	
-  // event related attributes
-  public static String TARGET_WIDGET_ID = "arn-trgtwdgt";
-  public static String EVENT_ID = "arn-evntId";
-  public static String EVENT_PARAM = "arn-evntPar";
-  public static String UPDATE_REGIONS = "arn-updrgns";
-  public static String EVENT_CONDITION = "arn-evntCond";
+  /** Attribute identifying Aranea system form */
+  public static final String SYSTEM_FORM = "arn-systemForm";
+
+  /** Event related non-standard HTML tag attributes */
+  public interface Event {
+     public static final String ID = "arn-evntId";
+     public static final String TARGET_WIDGET_ID = "arn-trgtwdgt";
+     public static final String PARAM = "arn-evntPar";
+     public static final String UPDATE_REGIONS = "arn-updrgns";
+     public static final String CONDITION = "arn-evntCond";
+  }
 }

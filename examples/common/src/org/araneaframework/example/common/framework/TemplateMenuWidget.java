@@ -62,6 +62,8 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
     });
   }
   
+  // returns the name of currently running flow class, 
+  // so that its source could be located and shown to user
   public String getFlowClassName() {
     String result = null;
 
@@ -71,7 +73,9 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
 
     return result;
   }
-  
+
+  // returns the name of currently running flow's view selector, 
+  // so that its source could be located and shown to user
   public String getFlowViewSelector() {
     String result = null;
 

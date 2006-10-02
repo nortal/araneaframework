@@ -1,7 +1,7 @@
-*******************************************************
-* THE ARANEA FRAMEWORK, release 1.0 RC1 (August 2006) *
-*        http://www.araneaframework.org/              *
-*******************************************************
+**********************************************************
+* THE ARANEA FRAMEWORK, release 1.0 RC4 (October 2006)   *
+*        http://www.araneaframework.org/                 *
+**********************************************************
 
 INTRODUCTION
 
@@ -30,31 +30,34 @@ Release contents:
 
 DISTRIBUTION JAR FILES
 The "dist" directory contains the following jar files for use in applications:
- * aranea-core.jar
- 	The core interfaces and base implementation.
+ * aranea.jar
+    All current Aranea classes and modules.
+
+ * modules/aranea-core.jar
+ 	Aranea core interfaces and base implementations.
  	
- * aranea-framework.jar
+ * modules/aranea-framework.jar
  	Container independent services.
  
- * aranea-servlet.jar
- 	Servlet-dependant services.
+ * modules/aranea-http.jar
+ 	Web-dependant services.
  	
- * aranea-spring.jar
- 	Integration for Spring IoC container.
- 
- * aranea-jsp.jar
+ * modules/aranea-jsp.jar
  	Custom tag library.
  
- * aranea-backend.jar
+ * modules/aranea-backend.jar
  	Supporting classes for use in the application service layer.
 
- * aranea-uilib.jar
+ * modules/aranea-uilib.jar
     Reusable user interface widgets.
+
+ * integration/aranea-spring.jar
+ 	Integration for Spring IoC container.
 
 DOCUMENTATION
 
 Documentation can be found in the "doc" directory.
 	doc/white-paper is a whitepaper on the Aranea Web Framework
-	doc/tutorial is a tutorial using the Aranea Web Framework
+	doc/tutorial is a tutorial/intro to Aranea Web Framework
 	doc/reference includes the reference manual.
 	doc/javadoc includes the javadoc

@@ -25,13 +25,13 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.core.RelocatableServiceDecorator;
+import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * Associates this service with the HttpSession. Is a session does not exist, it is created.
+ * Associates this service with the HttpSession. If a session does not exist, it is created.
  * Also handles the invalidation of the session.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -108,7 +108,7 @@ public class StandardHttpSessionRouterService extends BaseService {
     
     if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
       log.debug("Created HTTP session '"+sess.getId()+"'");
-      result = new RelocatableServiceDecorator(serviceFactory.buildService(getEnvironment()));        
+      result = new RelocatableDecorator(serviceFactory.buildService(getEnvironment()));        
       
       result._getComponent().init(newEnv);
     }

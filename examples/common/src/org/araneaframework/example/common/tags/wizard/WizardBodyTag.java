@@ -36,7 +36,7 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
  */
 public class WizardBodyTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
-    ApplicationWidget widget = (ApplicationWidget) JspWidgetUtil.getWidgetFromContext(null, pageContext);
+    ApplicationWidget widget = JspWidgetUtil.getWidgetFromContext(null, pageContext);
 
     OutputData output = getOutputData();
 

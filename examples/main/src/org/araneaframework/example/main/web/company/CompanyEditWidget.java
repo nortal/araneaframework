@@ -29,6 +29,7 @@ import org.araneaframework.uilib.form.control.TextControl;
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class CompanyEditWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
   private static final Logger log = Logger.getLogger(CompanyEditWidget.class);
   private Long id = null;
   private BeanFormWidget form;

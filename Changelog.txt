@@ -1,5 +1,72 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2006.09.29    | Aranea 1.0-RC4
+Features and Improvements
+        Composite Constraints can optionally be lazy                          | See change #112
+        Managed services can be set TTL after which they may expire           | See #200
+        Experimental development filter                                       | See change #109
+        Major updates: reference manual
+        Minor updates: tutorial
+
+Bugfixes
+        Row updates sometimes breaking in IE                                  | See #241
+        NPE when layout(cell|row) was provided empty class ""                 | See change #117
+        MessageContext losing message ordering                                | See #244
+        OutputData and InputData are not Serializable anymore                 | See change #114
+        DateTimeControl value could not be set by programmer                  | See change #120
+        Request encoding was set at the wrong time                            | See #236
+
+API Changes
+        Lists API did change substantially.
+        Form lists API changed a little.
+        ErrorUtil -> MessageUtil
+        CompositeConstraint -> BaseCompositeConstraint
+        DisplayItemUtil.addItemsFromVoCollection -> addItemsFromBeanCollection
+        RelocatableWidgetDecorator -> RelocatableDecorator
+        RelocatableServiceDecorator -> RelocatableDecorator
+
+
+2006.09.11    | Aranea 1.0-RC3
+
+Features and Improvements
+        Constraints internals were rewritten                                  | See change #107
+        TransactionFilterWidget does not consider NULL id valid anymore       | See change #107
+        Some standard components were documented                              | See change #106
+
+Bugfixes
+        BeanUtil.copy(Object from, Class toType) did not work                 | See change #108
+
+API Changes
+        None
+
+---------------------------------------------------------------------------------------------
+2006.09.01    | Aranea 1.0-RC2
+
+Features and Improvements
+        Additional methods in MessageContext                                  | See #233
+        Javadoc has been cleaned up and updated                               | See #221
+        In example application, invalid form fields are highlighted now
+
+Bugfixes
+        Opening links in new window did not work with url-encoded session IDs | See #234
+        Some buggy addElement methods were fixed (concerned list filters)     | See change #100
+        SqlStatement did not work with any DB besides HSQLDB anymore          | See change #101
+        FormElements erroneously lost state on page reload                    | See #237
+        FormElement action() marked FormElement as non-rendered               | See #232
+        Event precondition evaluation did not work with IE                    | See #238
+
+API Changes
+        LayoutTag -> LayoutHtmlTag
+        LayoutRowTag -> LayoutRowTag
+        LayoutCellTag -> LayoutCellTag
+        ConvertionException -> ConversionException
+        
+        ServletUtil.getOutputOData -> ServletUtil.getOutputData
+        UiWidgetContainer.REQUEST_CONTEXT_KEY --> UiWidgetContainer.KEY
+        
+        org.araneaframework.uilib.list.util.like package changed much, as
+        it was released week ago it should not cause any problems.
+
 2006.08.25    | Aranea 1.0-RC1
 
 Features and Improvements
@@ -21,6 +88,7 @@ Bugfixes
 API Changes
         Numerous, because of package renames and established naming policy
 
+---------------------------------------------------------------------------------------------
 2006.07.07    | Aranea 1.0-M4
 
 Features and Improvements

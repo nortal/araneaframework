@@ -1,0 +1,28 @@
+<sect3 id="StandardMessagingFilterWidget">
+    <title>StandardMessagingFilterWidget</title>
+
+    <informaltable frame="all">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>MessageContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        no dependencies among standard contexts.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+    
+    <para>
+        See <xref linkend="MessageContext"/>.
+    </para>
+</sect3>

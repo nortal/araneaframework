@@ -100,7 +100,7 @@
     <target name="pdf" depends="pdf-normal,pdf-customized"
             description="Generates the PDF documentation only for a age (set ">
         <!-- House keeping,delete temporary files. -->
-        <delete>
+        <delete failonerror="false">
             <fileset dir="${build.dir}/pdf" excludes="**/*.pdf"/>
         </delete>
         <delete  dir="${build.dir}/pdf/images"/>

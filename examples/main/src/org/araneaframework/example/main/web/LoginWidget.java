@@ -29,7 +29,8 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class LoginWidget extends TemplateBaseWidget {
-	/* Widget we will create and attach to this widget. */
+  private static final long serialVersionUID = 1L;
+  /* Widget we will create and attach to this widget. */
 	private FormWidget form;
 
 	protected void init() throws Exception {

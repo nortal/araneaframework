@@ -35,8 +35,10 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.support.PopupWindowProperties;
@@ -243,7 +245,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   protected String getRequestURL() {
-    return ((HttpInputData) getInputData()).getRequestURL().toString();
+    HttpInputData input = (HttpInputData) getInputData();
+    return ((HttpOutputData) input.getOutputData()).encodeURL(input.getContainerURL());
   }
 
   /* ************************************************************************************
@@ -252,7 +255,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   /**
    * Message that registers opener as creator of the popup thread.
    */
-  public class OpenerRegistrationMessage extends BroadcastMessage {
+  public static class OpenerRegistrationMessage extends BroadcastMessage {
     Widget opener;
 
     public OpenerRegistrationMessage(Widget opener) {
@@ -295,6 +298,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
         url.append("&" + ThreadContext.THREAD_SERVICE_KEY + "=");
         url.append(threadServiceId);
       }
+      url.append('&').append((TransactionContext.TRANSACTION_ID_KEY + "=")).append(TransactionContext.OVERRIDE_KEY);
       return url.toString();
     }
 

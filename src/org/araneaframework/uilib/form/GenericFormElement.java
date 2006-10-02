@@ -18,12 +18,15 @@ package org.araneaframework.uilib.form;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -32,7 +35,7 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class GenericFormElement extends BaseApplicationWidget implements GenericFormElementContext {
+public abstract class GenericFormElement extends BaseApplicationWidget {
 
   //*******************************************************************
   // FIELDS
@@ -45,12 +48,18 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
   protected boolean validated = false;  
   
   private Set errors;
-
+  
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
     
-  /**
+  protected void init() throws Exception {
+    super.init();
+    if (constraint != null)
+      constraint.setEnvironment(getConstraintEnvironment());
+  }
+
+/**
    * Returns all properties of the element as a map (string -&gt; string).
    * 
    * @return all properties as a map.
@@ -99,10 +108,14 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
    * 
    * @param constraint The constraint to set.
    */
-  public void setConstraint(Constraint constraint) {    
+  public void setConstraint(Constraint constraint) {
     this.constraint = constraint;
-    if (constraint != null)
-      constraint.setGenericFormElementCtx(this);
+    if (constraint != null && isInitialized())
+      constraint.setEnvironment(getConstraintEnvironment());
+  }
+  
+  public Environment getConstraintEnvironment() {
+    return getEnvironment();
   }
 
   /**
@@ -168,8 +181,14 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
   //*********************************************************************
 
   protected void process() throws Exception {
-    ErrorUtil.showErrors(getErrors(), getEnvironment());
+    MessageContext msgCtx = 
+      (MessageContext) getEnvironment().getEntry(MessageContext.class);
     
+    for (Iterator i = getErrors().iterator(); i.hasNext();) {
+      String message = (String) i.next();
+      msgCtx.showErrorMessage(message);      
+    }
+
     super.process();
   }
 
@@ -261,6 +280,10 @@ public abstract class GenericFormElement extends BaseApplicationWidget implement
    */
   public void clearErrors() {  
     errors = null;
+  }
+  
+  public Object getValue() {
+    return null;
   }
   
   //*********************************************************************

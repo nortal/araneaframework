@@ -24,22 +24,22 @@
 			
 				<!-- Custom tag, but more interesting that previous tags. It derives from
                      UiLayoutBaseTag tag, it gives one ability to put row tags inside of it. 
-                     Attribute rowClass defines the styleClass attribute for rows inserted under 
-                     componentForm here. In HTML, this tag creates a TABLE. -->
-				<ui:componentForm rowClasses="cols4">
+                     Attribute rowClasses defines the styleClass attribute for rows inserted under 
+                     componentForm here, cellclasses does the same for cells. In HTML, this tag creates a TABLE. -->
+				<ui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
 					<!-- As we can insert rows now, we just do that. -->
 					<ui:row>
 						<!-- ... we can insert cells too! As we defined componentForm rowClass 
 							to be cols4  we should insert 4 cells here... -->
-						<ui:cell styleClass="name">
+						<ui:cell>
 							<!-- label is formelement centric tag. As we are inside the form 
 							already, we provide it with form element id and corresponding 
 							form element label will be shown -->
 							<ui:label id="checkbox1" />
 						</ui:cell>
 
-						<ui:cell styleClass="inpt">
+						<ui:cell>
 							<!-- This is another approach to providing information about
 								form element that tag should apply to - instead providing
 								form element id to every single tag, tags could be enclosed
@@ -51,11 +51,11 @@
 							</ui:formElement>
 						</ui:cell>
 
-						<ui:cell styleClass="name">
+						<ui:cell>
 							<ui:label id="textbox1" />
 						</ui:cell>
 
-						<ui:cell styleClass="inpt">
+						<ui:cell>
 							<!-- As "textbox1" is TextControl, we choose the corresponding tag to render it -->
 							<ui:textInput id="textbox1"/>
 						</ui:cell>
@@ -64,21 +64,21 @@
 					<!-- another row, and we just keep on going until all form elements have been described. -->
 					<ui:row>
 						<ui:formElement id="dateTime">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 
-							<ui:cell styleClass="inpt">
+							<ui:cell>
 								<ui:dateTimeInput/>
 							</ui:cell>
 						</ui:formElement>
 
 						<ui:formElement id="time">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 
-							<ui:cell styleClass="inpt">
+							<ui:cell>
 								<ui:timeInput />
 							</ui:cell>
 						</ui:formElement>
@@ -86,22 +86,22 @@
 
 					<ui:row>
 						<ui:formElement id="date">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 
-							<ui:cell styleClass="inpt">
+							<ui:cell>
 								<ui:dateInput />
 							</ui:cell>
 						</ui:formElement>
 
 						<ui:formElement id="number">
-							<ui:cell styleClass="name">
+							<ui:cell>
 								<ui:label />
 							</ui:cell>
 
-							<ui:cell styleClass="inpt">
-								<ui:floatInput/>
+							<ui:cell>
+								<ui:floatInput />
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>

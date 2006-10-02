@@ -165,10 +165,7 @@ public class SqlStatement implements Serializable, Cloneable {
 	 * Helper method that sets the parameters to the
 	 * <code>PreparedStatement</code>.
 	 * 
-	 * @param statement
-	 *            <code>PreparedStatement</code> which parameters will be set.
-	 * @param parameters
-	 *            parameters for the <code>PreparedStatement</code>.
+	 * @param pstmt <code>PreparedStatement</code> which parameters will be set.
 	 * @throws SQLException
 	 */
 	protected void propagateStatementWithParams(PreparedStatement pstmt)
@@ -178,6 +175,10 @@ public class SqlStatement implements Serializable, Cloneable {
 			if (parameter instanceof NullValue) {
 				pstmt.setNull(i, ((NullValue) parameter).getType());
 			} else {
+				// converting java.util.Date into java.sql.Date (java.sql.Timestamp is not changed)
+			    if (parameter != null && parameter.getClass().equals(java.util.Date.class)) {
+			    	parameter = new java.sql.Date(((java.util.Date) parameter).getTime());
+			    }
 				pstmt.setObject(i, parameter);
 			}
 		}

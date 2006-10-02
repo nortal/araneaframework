@@ -16,9 +16,11 @@
 
 package org.araneaframework.uilib.list.util.comparator;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.Locale;
+import org.araneaframework.core.Assert;
 
 /**
  * Not-null comparator that compares <code>String</code> values according to
@@ -28,15 +30,13 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 	private boolean ignoreCase;
 	private Locale locale;
 
-	private Collator collator;
+	private transient Collator collator;
 
 	public LocaleStringComparator(boolean ignoreCase, Locale locale) {
+		Assert.notNullParam(locale, "locale");
+
 		this.ignoreCase = ignoreCase;
 		this.locale = locale;
-
-		this.collator = Collator.getInstance(locale);
-		this.collator.setStrength(ignoreCase ? Collator.SECONDARY
-				: Collator.TERTIARY);
 	}
 
 	public boolean getIgnoreCase() {
@@ -48,6 +48,16 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 	}
 
 	public int compare(Object o1, Object o2) {
-		return this.collator.compare(o1, o2);
+		return getCollator().compare(o1, o2);
 	}
+	
+	private Collator getCollator() {
+		if (this.collator == null) {
+			this.collator = Collator.getInstance(locale);
+			this.collator.setStrength(ignoreCase ? Collator.SECONDARY
+					: Collator.TERTIARY);
+		}
+		return this.collator;
+	}
+	
 }

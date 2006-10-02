@@ -31,7 +31,9 @@ import org.araneaframework.example.main.business.model.ContractMO;
  */
 public class ContractAddEditWidget extends TemplateBaseWidget {
 	
-	private static final Logger log = Logger.getLogger(ContractAddEditWidget.class);
+	  private static final long serialVersionUID = 1L;
+
+  private static final Logger log = Logger.getLogger(ContractAddEditWidget.class);
 	
 	private Long id = null;
 	private ContractCompanyEditWidget company;
@@ -76,7 +78,8 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
     }
     
     wizard.addEventListener(new WizardContext.EventListener() {
-    	public void onGoto(Widget page) throws Exception {}    	
+    	      private static final long serialVersionUID = 1L;
+      public void onGoto(Widget page) throws Exception {}    	
     	public void onSubmit() throws Exception {
     		if (validate()) {
     			ContractMO contract = id != null ? (ContractMO) getGeneralDAO().getById(ContractMO.class, id) : new ContractMO();

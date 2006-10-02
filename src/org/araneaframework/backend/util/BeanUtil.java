@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.araneaframework.core.Assert;
 
 /**
  * This class provides methods to manipulate Bean fields.
@@ -61,8 +62,8 @@ public class BeanUtil {
 	 *         field names.
 	 */
 	public static List getFields(Class beanClass) {
-    	Validate.notNull(beanClass, "No bean class specified");
-		
+		Assert.notNull(beanClass, "No bean class specified.");
+
 		List result = new ArrayList();
 		
 		Method[] methods = beanClass.getMethods();
@@ -113,7 +114,7 @@ public class BeanUtil {
 		try {
 			Method getter = getSimpleReadMethod(bean.getClass(), field);
 			if (getter != null) {
-				result = getter.invoke(bean, null);
+				result = getter.invoke(bean, (Object[])null);
 			}
 		}
 		catch (InvocationTargetException e) {
@@ -439,7 +440,7 @@ public class BeanUtil {
 		
 		String getterName = "get" + field.substring(0, 1).toUpperCase() + field.substring(1);
 		try {
-			return beanClass.getMethod(getterName, null);
+			return beanClass.getMethod(getterName, (Class [])null);
 		}
 		catch (NoSuchMethodException e) {
 			// There is no 'get' method for this field
@@ -447,7 +448,7 @@ public class BeanUtil {
 		
 		getterName = "is" + field.substring(0, 1).toUpperCase() + field.substring(1);
 		try {
-			return beanClass.getMethod(getterName, null);
+			return beanClass.getMethod(getterName, (Class [])null);
 		}
 		catch (NoSuchMethodException e) {
 			// There is no 'is' method for this field
@@ -531,7 +532,7 @@ public class BeanUtil {
 	 * @see #copy(Object, Class)
 	 */
 	public static Object copy(Object from, Object to) {
-    	Validate.isTrue(from != null && to != null, "You cannot convert a Bean to null or vice versa");		
+        Assert.isTrue(from != null && to != null, "BeanUtil.copy() cannot accept NULL arguments.");
 		
 		List fromVoFields = getFields(from.getClass());
 		for (Iterator i = fromVoFields.iterator(); i.hasNext();) {
@@ -546,21 +547,22 @@ public class BeanUtil {
 	}
 	
 	/**
-	 * Sets all the fields with same names to same values of a new 
-	 * <code>toType</code> instance.
+	 * Creates a new instance of Class <code>toType</code> and sets its field values to be
+	 * the same as given <code>from</code> Object. Only fields with same names that exist in
+	 * both <code>from</code> object and <code>toType</code> class are affected.
 	 * 
 	 * @param from
-	 *          <code>Bean</code> from which to convert.
-	 * @param to
-	 *          <code>Bean</code> to which to convert.
-	 * @return new instance of <code>toType</code> with <codefrom</code> values
+	 *          <code>Bean</code> from which to read field values.
+	 * @param toType
+	 *          <code>Class</code> which object instance to create.
+	 * @return new instance of <code>toType</code> with <code>from</code> values
 	 * 
 	 * @see #copy(Object, Object)
 	 * @see #clone() 
 	 */
 	public static Object copy(Object from, Class toType) {
     	Validate.isTrue(from != null && from != null, "You cannot convert a Bean to null or vice versa");		
-		return copy(from, newInstance(toType.getClass()));
+		return copy(from, newInstance(toType));
 	}
 	
 	/**

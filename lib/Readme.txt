@@ -37,9 +37,10 @@ any of them in your own applications.
 * ./jakarta-commons/commons-*.jar
 - Jakarta Project Commons (http://jakarta.apache.org/commons/)
 
-- Collections is required by the framework core.
-- Lang is required by the framework.
-- Fileupload is required by the framework's FileUpload service.
+- commons-collections is required by the framework core.
+- commons-lang is required by the framework.
+- commons-fileupload is required by the framework's file upload filter.
+- commons-io is required by commons-fileupload
 *****************************************************************************
 
 *****************************************************************************

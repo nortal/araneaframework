@@ -64,7 +64,7 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
   public void testInConsistentKeyDoesntRouteUpdate() throws Exception {
     long key = ((Long)trans.getTransactionId()).longValue();
     
-    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, (++key)+"");
+    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, (key+1)+"");
     StandardServletInputData input = new StandardServletInputData(req);
     trans._getWidget().update(input);
     
@@ -86,7 +86,7 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
   public void testInConsistentKeyDoesntRouteEvent() throws Exception {    
     long key = ((Long)trans.getTransactionId()).longValue();
     
-    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, (++key)+"");
+    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, (key+1)+"");
     StandardServletInputData input = new StandardServletInputData(req);
     trans._getWidget().update(input);
     
@@ -108,7 +108,7 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
   public void testInConsistentKeyDoesntRouteProcess() throws Exception {    
     long key = ((Long)trans.getTransactionId()).longValue();
     
-    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, (++key)+"");
+    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, (key+1)+"");
     StandardServletInputData input = new StandardServletInputData(req);
     trans._getWidget().update(input);
     

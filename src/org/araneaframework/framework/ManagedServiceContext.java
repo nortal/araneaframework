@@ -37,9 +37,17 @@ public interface ManagedServiceContext extends Serializable {
   public Object getCurrentId();
   
   /**
-   * Adds a child service service with the specified id.
+   * Adds a child service with the specified id.
    */
   public Service addService(Object id, Service service);
+  
+  /**
+   * Adds a child service with the specified id, and specifies that service may 
+   * be killed by service manager after it has been inactive for specified time.
+   * When the service is killed or whether it is killed at all is up to the 
+   * implementation.
+   */  
+  public Service addService(Object id, Service service, Long timeToLive);
   
   /**
   * @return a child service with the specified id.

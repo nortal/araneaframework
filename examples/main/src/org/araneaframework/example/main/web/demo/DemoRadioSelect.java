@@ -28,7 +28,8 @@ import org.araneaframework.uilib.support.DisplayItem;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoRadioSelect extends TemplateBaseWidget {
-	private FormWidget form;
+	  private static final long serialVersionUID = 1L;
+  private FormWidget form;
 	private SelectControl control;
 
 	protected void init() throws Exception {

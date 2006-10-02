@@ -34,7 +34,8 @@ import org.araneaframework.uilib.support.DisplayItem;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoComplexForm extends TemplateBaseWidget {
-    /* Different controls and widgets we want to be accessible all the time are 
+  private static final long serialVersionUID = 1L;
+  /* Different controls and widgets we want to be accessible all the time are 
        made instance variables by convention. */
 	private FormWidget complexForm;
 	/* SelectControl - control which provides various selections from which one must be picked. */
@@ -58,7 +59,9 @@ public class DemoComplexForm extends TemplateBaseWidget {
 
 		/* Adds the onChange event listener to selectControl */
 		beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
-			public void onChange() throws Exception {
+			      private static final long serialVersionUID = 1L;
+
+      public void onChange() throws Exception {
 				/* Form must be converted before new values can be read from form.
 				   As we want to be sure that entered data is valid (no random strings
 				   where numbers are expected, length and content constraints are met)
@@ -136,7 +139,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		return result;
 	}
 
-	public class SelectItem {
+	public static class SelectItem {
 		public String sampleValue;
 		public String sampleDisplayString;
 		

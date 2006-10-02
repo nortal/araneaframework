@@ -16,12 +16,16 @@
 							<ui:cell styleClass="center">
 								<ui:checkbox id="booleanField" />
 							</ui:cell>
-							<ui:cell>
-								<ui:textInput id="stringField" />
-							</ui:cell>
-							<ui:cell>
-								<ui:numberInput id="longField" />
-							</ui:cell>
+							<ui:formElement id="stringField">
+								<ui:cell>
+									<ui:textInput/>
+								</ui:cell>
+							</ui:formElement>
+							<ui:formElement id="longField">
+								<ui:cell>
+									<ui:numberInput/>
+								</ui:cell>
+							</ui:formElement>
 							<ui:cell width="0">
 								<ui:linkButton id="save" showLabel="false">
 									<ui:image code="buttonChange" />
@@ -37,12 +41,16 @@
 							<ui:cell styleClass="center">
 								<ui:checkbox id="booleanField" />
 							</ui:cell>
-							<ui:cell>
-								<ui:textInput id="stringField" size="40" />
-							</ui:cell>
-							<ui:cell>
-								<ui:numberInput id="longField" size="5" />
-							</ui:cell>
+							<ui:formElement id="stringField">
+								<ui:cell>
+									<ui:textInput size="40" />
+								</ui:cell>
+							</ui:formElement>
+							<ui:formElement id="longField">
+								<ui:cell>
+									<ui:numberInput size="5" />
+								</ui:cell>
+							</ui:formElement>
 							<ui:cell width="0">
 								<ui:linkButton id="add" showLabel="false">
 									<ui:image code="add" />

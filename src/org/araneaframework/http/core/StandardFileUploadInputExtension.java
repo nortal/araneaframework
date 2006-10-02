@@ -24,18 +24,17 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.http.FileUploadInputExtension;
 
 /**
- * A filter which parses a multipart request and extracts uploaded files.
- * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFileUploadInputExtension implements FileUploadInputExtension {
-
+  private Exception uploadException;
   private Map fileItems = new HashMap();
 
-  public StandardFileUploadInputExtension(Map fileItems) {
-    Assert.notNullParam(fileItems, "fileItems");
-    
+  public StandardFileUploadInputExtension(Map fileItems, Exception uploadException) {
+    Assert.isTrue(fileItems != null || uploadException != null, "FileItems should be present or uploadException non-null.");
+
     this.fileItems = fileItems;
+    this.uploadException = uploadException;
   }
 
   public FileItem getUploadedFile(String fieldName) {
@@ -44,5 +43,13 @@ public class StandardFileUploadInputExtension implements FileUploadInputExtensio
 
   public Map getUploadedFiles() {
     return Collections.unmodifiableMap(fileItems);
+  }
+  
+  public boolean uploadSucceeded() {
+    return uploadException == null;
+  }
+  
+  public Exception getUploadException() {
+    return uploadException;
   }
 }

@@ -24,8 +24,8 @@ import java.util.ResourceBundle;
  * A context for providing localization via exposing the current
  * Locale and ResourceBundles. The ResourceBundle of a different Locale
  * can be accessed without chaning the current Locale with <code>getResourceBundle(Locale)</code>.
- * The current Locale can be changed with <code>setCurrentLocale(Locale)</code> and all
- * subsequent request to <code>getCurrentResourceBundle()</code> will use the new current Locale.
+ * The current Locale can be changed with <code>setLocale(Locale)</code> and all
+ * subsequent request to <code>getResourceBundle()</code> will use the new current Locale.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)

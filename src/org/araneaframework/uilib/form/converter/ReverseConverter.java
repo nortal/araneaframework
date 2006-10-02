@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElementContext;
 
 /**
@@ -26,14 +27,14 @@ import org.araneaframework.uilib.form.FormElementContext;
  */
 public class ReverseConverter extends BaseConverter {
 
-  protected BaseConverter toReverse;
+  protected Converter toReverse;
 
   /**
 	 * Creates class initializing the contained converter.
 	 * 
 	 * @param toReverse converter that will be reversed.
 	 */
-  public ReverseConverter(BaseConverter toReverse) {
+  public ReverseConverter(Converter toReverse) {
     this.toReverse = toReverse;
   }
 
@@ -42,7 +43,7 @@ public class ReverseConverter extends BaseConverter {
 	 * contained converter.
 	 */
   public Object convertNotNull(Object data) {
-    Object result = toReverse.reverseConvertNotNull(data);
+    Object result = toReverse.reverseConvert(data);
   	return result;    
   }
 
@@ -51,7 +52,7 @@ public class ReverseConverter extends BaseConverter {
 	 * contained converter.
 	 */
   public Object reverseConvertNotNull(Object data) {    
-    Object result = toReverse.convertNotNull(data);  
+    Object result = toReverse.convert(data);  
   	return result;       
   }
 
@@ -64,7 +65,7 @@ public class ReverseConverter extends BaseConverter {
   /**
    * Returns a <code>new ReverseConverter(toReverse)</code>.
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new ReverseConverter(toReverse.newConverter());
   }
 }

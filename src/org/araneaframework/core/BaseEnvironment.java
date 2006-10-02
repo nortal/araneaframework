@@ -18,11 +18,13 @@ package org.araneaframework.core;
 import org.araneaframework.Environment;
 
 /**
+ * Base {@link org.araneaframework.Environment} with <code>requireEntry</code>
+ * implementation.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- *
  */
 public abstract class BaseEnvironment implements Environment {
-  public Object requireEntry(Object key) {
+  public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException {
     Assert.notNullParam(this, key, "key");
     
     Object result = getEntry(key);

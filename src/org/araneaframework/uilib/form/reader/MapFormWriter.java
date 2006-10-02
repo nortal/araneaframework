@@ -40,22 +40,22 @@ public class MapFormWriter implements Serializable {
    */
   public void writeForm(FormWidget form, Map map) {
 
-    for (Iterator i = map.keySet().iterator(); i.hasNext();) {
-
-      String key = (String) i.next();
+    for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String key = (String) entry.getKey();
       GenericFormElement element = form.getElement(key);
 
       if (element != null) {
         if (element instanceof FormElement) {
           Data data = ((FormElement) element).getData();
           if (data != null) {
-            data.setValue(map.get(key));
+            data.setValue(entry.getValue());
           }
         }
         else if (element instanceof FormWidget) {
           MapFormWriter subMapWriter = new MapFormWriter();
 
-          Map subMap = (Map) map.get(key);
+          Map subMap = (Map) entry.getValue();
 
           if (subMap != null) {
             subMapWriter.writeForm((FormWidget) element, subMap);

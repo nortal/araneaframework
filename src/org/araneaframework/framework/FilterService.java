@@ -19,8 +19,13 @@ import java.io.Serializable;
 import org.araneaframework.Service;
 
 /**
+ * Service that has at least single child and acts as a guardian, deciding which data should be let 
+ * through to children and what services should they be allowed to use.
+ * 
+ * @see org.araneaframework.framework.core.BaseFilterService
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface FilterService extends Serializable, Service{
+public interface FilterService extends Serializable, Service {
   public void setChildService(Service childService);
 }

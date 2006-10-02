@@ -19,6 +19,7 @@ package org.araneaframework.uilib.list;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormRowHandler;
+import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -34,23 +35,13 @@ public class EditableBeanListWidget extends BeanListWidget {
 	public EditableBeanListWidget(FormRowHandler rowHandler, Class beanClass) {
 		super(beanClass);
     
-    setFormRowHandler(rowHandler);
+    formList = new BeanFormListWidget(rowHandler, new ListWidgetFormListModel(this), beanClass);
 	}
-  
-  public EditableBeanListWidget(Class beanClass) {
-    super(beanClass);
-  }
 
 	//*********************************************************************
 	//* PUBLIC METHODS
 	//*********************************************************************		
-
-	public void refreshCurrentItemRange() throws Exception {
-		super.refreshCurrentItemRange();		
-
-		formList.setRows(getItemRange());
-	}
-
+  
 	/**
 	 * Returns the editable row manager.
 	 * @return the editable row manager.
@@ -60,7 +51,7 @@ public class EditableBeanListWidget extends BeanListWidget {
 	}
 
 	public void setFormRowHandler(FormRowHandler rowHandler) {
-		formList = new BeanFormListWidget(rowHandler, beanClass);		
+		formList.setFormRowHandler(rowHandler);	
 	}
 
 	//*********************************************************************

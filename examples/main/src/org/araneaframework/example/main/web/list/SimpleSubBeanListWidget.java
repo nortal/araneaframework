@@ -19,19 +19,19 @@ package org.araneaframework.example.main.web.list;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.GeneralMO;
-import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
-import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
 public class SimpleSubBeanListWidget extends TemplateBaseWidget {
-	protected static final Logger log = Logger.getLogger(SimpleSubBeanListWidget.class);
+	  private static final long serialVersionUID = 1L;
+
+  protected static final Logger log = Logger.getLogger(SimpleSubBeanListWidget.class);
 	
 	private ListWidget list;
 	
@@ -40,24 +40,25 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 		
 		setViewSelector("list/subBeanList");
 		
-		this.list = initList();
-		addWidget("list", this.list);
+		initList();
 	}
 	
-	protected ListWidget initList() throws Exception {
-		BeanListWidget temp = new BeanListWidget(ContactMO.class);
-		temp.setListDataProvider(new DataProvider());
-		temp.addBeanColumn("id", "#Id", false);
-		temp.addBeanColumn("name.firstname", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("name.lastname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("address.country", "#Country", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("address.city", "#City", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addListColumn(new ListColumn("dummy"));
-		return temp;
+	protected void initList() throws Exception {
+		list = new BeanListWidget(ContactMO.class);
+		addWidget("list", list);
+		list.setDataProvider(new DataProvider());
+		list.setOrderableByDefault(true);
+		list.addField("id", "#Id", false);
+		list.addField("name.firstname", "#First name").like();
+		list.addField("name.lastname", "#Last name").like();
+		list.addField("address.country", "#Country").like();
+		list.addField("address.city", "#City").like();
+		list.addField("dummy", null, false);
 	}
 	
-	private class DataProvider extends MemoryBasedListDataProvider {
-		protected DataProvider() {
+	private static class DataProvider extends MemoryBasedListDataProvider {
+		    private static final long serialVersionUID = 1L;
+    protected DataProvider() {
 			super(ContactMO.class);
 		}
 		public List loadData() throws Exception {
@@ -91,7 +92,8 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	}
 	
 	public static class ContactMO implements GeneralMO {
-		private Long id;
+		    private static final long serialVersionUID = 1L;
+    private Long id;
 		private NameMO name;
 		private AddressMO address;
 		public AddressMO getAddress() {
@@ -116,7 +118,8 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	}
 	
 	public static class NameMO implements Serializable {
-		private String firstname;
+		    private static final long serialVersionUID = 1L;
+    private String firstname;
 		private String lastname;
 		public String getFirstname() {
 			return firstname;
@@ -133,7 +136,8 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	}
 	
 	public static class AddressMO implements Serializable {
-		private String country;
+		    private static final long serialVersionUID = 1L;
+    private String country;
 		private String city;
 		public String getCity() {
 			return city;

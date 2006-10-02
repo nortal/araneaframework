@@ -68,10 +68,4 @@ public class StandardStatisticFilterServiceTests extends TestCase {
     service.setNamespace(nameSpace);
     assertEquals(nameSpace, service.getNamespace());
   }
-  
-  public void testGetRequestTime() throws Exception {
-    //XXX
-    //service._getService().action(MockUtil.getPath(), input, output);
-    //assertTrue(0<=service.getRequestTime()); 
-  }
 }

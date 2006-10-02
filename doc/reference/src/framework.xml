@@ -78,74 +78,6 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </para>
     </sect2>
   </sect1>
-  
-  <sect1 id="framework-configuration">
-    <title>Configuration</title>
-     
-    <para>
-      Aranea uses Spring to wire the independent components into a working framework. Though other IoC containers and configuration frameworks would also work we support Spring by default since it provides a very comfortable and versatile syntax for configuring beans. The dispatcher servlet that uses Spring is called <literal>org.araneaframework.integration.spring.AraneaSpringDispatcherServlet</literal>.
-    </para>
-     
-    TODO: describe servlet init parameters
-     
-      <para>
-        The simplest way to configure Aranea for a web application is to set the <literal>araneaApplicationStart</literal> init parameter of the dispatcher servlet to the starting widget or flow of the application:
-      <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE web-app PUBLIC 
-  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
-  "http://java.sun.com/dtd/web-app_2_3.dtd">
-
-<web-app>
-  <listener>
-    <listener-class>
-      org.araneaframework.http.core.StandardSessionListener
-    </listener-class>
-  </listener>
-   
-   <servlet>
-      <servlet-name>araneaServlet</servlet-name>
-      <servlet-class>org.araneaframework.integration.spring.AraneaSpringDispatcherServlet</servlet-class>
-      <init-param>
-        <param-name>araneaApplicationStart</param-name>
-        <param-value>example.StartWidget</param-value>
-      </init-param>
-      <load-on-startup>1</load-on-startup>
-   </servlet>
-   
-   <servlet-mapping>
-      <servlet-name>araneaServlet</servlet-name>
-      <url-pattern>/main</url-pattern>
-   </servlet-mapping>  
-</web-app>]]></programlisting>
-      This configuration will load Aranea using <literal>example.StartWidget</literal> as the application starting point.
-      </para>
-
-      <para>
-        Alternatively one can also specify a Spring configuration file (that should be located in <literal>/WEB-INF/aranea-conf.xml</literal>), which can also be used to configure Aranea. Particularly it may be used to set the starting widget instead of the init-parameter:
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
-  "http://www.springframework.org/dtd/spring-beans.dtd">
-
-<beans>   
-    <bean id="araneaApplicationStart" 
-      class="example.StartWidget"  
-      singleton="false"/>
-</beans>]]></programlisting>        
-      This seems to be more verbose, but it also allows to override Aranea filters:
-<programlisting><![CDATA[<bean class="example.LocalizationFilterService" 
-  id="araneaLocalizationFilter" singleton="false">
-  <property name="languageName" value="ee"/>
-</bean>]]></programlisting>        
-      as well as adding one's own. 
-      </para>
-
-      TODO: describe existing Aranea filters and where new ones can be added (currently one can see /etc/default-aranea-conf.xml in Aranea distribution).
-
-      <para>
-        Aranea configuration defaults can be completely overidden by specifying a "araneaApplicationRoot" bean that will serve as the root component of the whole application.
-      </para>
-
-  </sect1>
 
   <sect1>
   	<title>Extensions</title>
@@ -155,7 +87,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
 		<para>
 			External resources, such as javascript, style and image files of Aranea components are managed through different configuration files.
-			The resources are listed in XML files and can be accessed through <literal>StandardServletFileImportFilterService</literal>. This approach
+			The resources are listed in XML files and can be accessed through <literal>StandardFileImportFilterService</literal>. This approach
 			makes it possible to package all the resources into the aranea <literal>jar</literal> archives and no manual copying of necessary files to
 			fixed locations is needed.
 		</para>
@@ -203,7 +135,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 		<para>
 			For custom loading a resource, the URL to use is <literal>/fileimporter/filepath</literal>. The
 			<literal>fileimporter</literal> is 
-			<literal>StandardServletFileImportService.FILE_IMPORTER_NAME</literal> and
+			<literal>StandardFileImportFilterService.FILE_IMPORTER_NAME</literal> and
 			<literal>filepath</literal> is the path that is defined for the file in the resource
 			configuration file.
 		</para>
@@ -219,6 +151,12 @@ class MyServlet extends BaseAraneaDispatcherServlet {
   
     <sect1>
     <title>Components</title>
+    <para>
+        Aranea configuration is determined by request-processing components that can be assembled in many different ways.
+        Following sections are a brief reference for pre-existing standard components, most of which are also used
+        in Aranea framework default configuration.
+    </para>
+    
 
     <sect2>
       <title>Core Components</title>
@@ -229,48 +167,72 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     
     <sect2>
       <title>Routers</title>
-      
+      For explanation of router pattern, refer to <xref linkend="services-as-framework-plugins"/>
+
       <sect3>
-        <title>BaseServiceRouterService, StandardTopServiceRouterService and StandardThreadServiceRouterService</title>
+        <title>StandardTopServiceRouterService and StandardThreadServiceRouterService</title>
+        
+        <para>
+            Top services and thread services are service levels specific to Aranea default configuration model.
+            Motivation behind them is desire to let one user have more than one servant (service) at time.
+            Implementations of <literal>StandardTopServiceRouterService</literal> and <literal>StandardThreadServiceRouterService</literal>
+            are almost identical, only differences are the context under which these routers are made accessible in <literal>Environment</literal>
+            and the service key names (these are the keys read from request that identify the top level or thread level service
+            to which request should be routed).
+        </para>
+        
+        <para>
+            It is easily possible to add more service levels, when the need should arise. Every service-level router
+            should enrich <literal>Environment</literal> with <literal>ManagedServiceContext</literal> and service-level specific 
+            context. Specific context provided by <literal>StandardTopServiceRouterService</literal> is <literal>TopServiceContext</literal>
+            and by <literal>StandardThreadServiceRouterService</literal>&mdash;<literal>ThreadContext</literal>.
+        </para>
+
       </sect3>
+
 		<!--  
       PathInfoServiceRouterService
       StandardServletSessionRouterService -->
     </sect2>
     
-    <sect2>
+    <sect2 id="framework_filters">
       <title>Filters</title>
+      For explanation of filter pattern, refer to <xref linkend="services-as-framework-plugins"/>
+      
+      <para>
+        All filters have injectable properties for setting filter's child. For services, 
+        this property is <literal>childService</literal>, for widgets <literal>childWidget</literal>.
+      </para>
+      
       
       &popupfilter;
       &threadcloningfilter;
+      &messagefilter;
+      &synchronizingfilter;
+      &transactionfilter;
+      &serializingauditfilter;
+      &localizationfilter;
+      &fileuploadfilter;
+      &httpresponsefilter;
+      &statisticfilter;
+      &contextmapfilter;
+      &ajaxfilter;
+      &criticalexceptionfilter;
+      &jspfilter;
       
-<!--  
-      StandardContextMapFilterWidget
-      StandardContinuationFilterService
-      StandardCriticalExceptionHandlingFilterService
-      StandardLocalizationFilterService
-      StandardMessagingFilterWidget
-      StandardSerializingAuditFilterService
-      StandardStatisticFilterService
-      StandardSynchronizingFilterService
-      StandardTransactionFilterWidget
-      StandardJspFilterService
-      StandardPopupFilterWidget
-      StandardServletFileImportFilterService
-      StandardServletFileUploadFilterService
-      StandardServletHttpFilterService -->
+<!--  StandardContinuationFilterService
+      StandardFileImportFilterService -->
     </sect2>
     
     <sect2>
       <title>Containers</title>
+      &flowcontainer;
+      &standardcontainers;
+      
 <!-- 
-      StandardFlowContainerWidget
       ExceptionHandlingFlowContainerWidget
       StandardServiceAdapterWidget
-      StandardServiceContainerService
-      StandardViewPortWidget
       StandardWidgetAdapterService
-      StandardWidgetContainerWidget
       PathInfoServiceContainerService -->
     </sect2>
     

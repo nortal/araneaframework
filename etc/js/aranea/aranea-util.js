@@ -42,7 +42,10 @@ function getElementByIdORName(str) {
   var r = document.getElementById(str);
   if (r)
     return r;
-  r = document.getElementsByName(str).item(0);
+  var elements = document.getElementsByName(str);
+  // if more or less than one match, do not return anything
+  if (elements.length == 1)
+    r = elements[0];
   return r;
 }
 
@@ -52,3 +55,5 @@ function setElementAttr(elementStr, attrName, attrValue) {
     el.setAttribute(attrName, attrValue);
   }
 }
+
+window['aranea-util.js'] = true;

@@ -19,27 +19,36 @@ package org.araneaframework.jsp.tag.uilib.form.element.select;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
+import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 
 
 /**
- * Checkbox multi select item form element tag.
+ * Form radio button, represents one item from {@link org.araneaframework.uilib.form.control.MultiSelectControl}. 
+ * Default <code>styleClass</code> is &quot;aranea-multi-checkbox&quot;. 
+ * It will be rendered with HTML &lt;input type=&quot;checkbox&quot;&gt; tag.
  * 
- * @author Oleg Murk
+ * @author Oleg Mürk
  * @author Jevgeni Kabanov
- * 
+ * <br>
  * @jsp.tag
  *   name = "checkboxMultiSelectItem"
  *   body-content = "JSP"
- *   description = "Form radio button, represents one item from UiLib "MultiSelectControl"."
+ *   description = "Form radio button, represents one item from UiLib 'MultiSelectControl'." 
  */
 public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 	protected String value;
 
 	{
 		baseStyleClass = "aranea-multi-checkbox";
+	}
+
+	protected int doStartTag(Writer out) throws Exception {
+		int r = super.doStartTag(out);
+		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
+		return r;
 	}
 	
 	protected int doEndTag(Writer out) throws Exception {

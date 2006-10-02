@@ -18,11 +18,11 @@ package org.araneaframework.uilib.form.control;
 
 import org.araneaframework.uilib.support.TextType;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
 
 /**
- * This class represents a Textbox control.
+ * Class that represents a textbox control.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
@@ -92,7 +92,7 @@ public class TextControl extends StringValueControl {
   //*********************************************************************  	
 	
   /**
-   * In case text control type is other than {@link UiTextType#TEXT} makes custom checks. 
+   * In case text control type is other than {@link TextType#TEXT} makes custom checks. 
    */
   protected void validateNotNull() {
     super.validateNotNull();
@@ -101,9 +101,9 @@ public class TextControl extends StringValueControl {
     	for (int i = 0; i < ((String) value).length(); i++) {
     		if (!Character.isDigit(((String) value).charAt(i))) {
           addError(
-              ErrorUtil.localizeAndFormat(
+              MessageUtil.localizeAndFormat(
               UiLibMessages.NOT_A_NUMBER, 
-              ErrorUtil.localize(getLabel(), getEnvironment()),
+              MessageUtil.localize(getLabel(), getEnvironment()),
               getEnvironment()));           
     			break;
     		}
@@ -112,9 +112,9 @@ public class TextControl extends StringValueControl {
     else if (textType.equals(TextType.EMAIL)) {
       if (!ValidationUtil.isEmail((String) value)) {
         addError(
-            ErrorUtil.localizeAndFormat(
+            MessageUtil.localizeAndFormat(
             UiLibMessages.NOT_AN_EMAIL, 
-            ErrorUtil.localize(getLabel(), getEnvironment()),
+            MessageUtil.localize(getLabel(), getEnvironment()),
             getEnvironment()));             
       }  
     }

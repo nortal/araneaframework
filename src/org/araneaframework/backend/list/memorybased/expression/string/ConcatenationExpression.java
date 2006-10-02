@@ -22,11 +22,16 @@ import org.araneaframework.backend.list.memorybased.ExpressionEvaluationExceptio
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
-
+/**
+ * Concatenating composite expression, evaluates all subexpressions and concatenates results into a String.
+ */
 public class ConcatenationExpression extends MultiExpression {
-
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @return subexpressions evaluation results in a concatenated String.
+	 * @see org.araneaframework.backend.list.memorybased.Expression#evaluate(org.araneaframework.backend.list.memorybased.expression.VariableResolver)
+	 */
 	public Object evaluate(VariableResolver resolver)
 			throws ExpressionEvaluationException {
 		if (this.children.size() == 0) {

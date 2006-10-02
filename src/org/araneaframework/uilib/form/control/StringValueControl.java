@@ -17,7 +17,7 @@
 package org.araneaframework.uilib.form.control;
 
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -93,18 +93,18 @@ public abstract class StringValueControl extends EmptyStringNullableControl {
   protected void validateNotNull() {   
     if (minLength != null && ((String) value).length() < minLength.longValue()) {      
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.STRING_TOO_SHORT, 
-          ErrorUtil.localize(getLabel(), getEnvironment()),
+          MessageUtil.localize(getLabel(), getEnvironment()),
           minLength.toString(),
           getEnvironment()));        
     }
     
     if (maxLength != null && ((String) value).length() > maxLength.longValue()) {  
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.STRING_TOO_LONG, 
-          ErrorUtil.localize(getLabel(), getEnvironment()),
+          MessageUtil.localize(getLabel(), getEnvironment()),
           maxLength.toString(),
           getEnvironment()));          
     }    

@@ -21,8 +21,9 @@ package org.araneaframework.uilib.support;
  * 
  */
 public class UiLibMessages {
-	public static final String RANGE_CHECK_FAILED = "uilib.form.rangecheckfailed";
+  public static final String RANGE_CHECK_FAILED = "uilib.form.rangecheckfailed";
   public static final String DATE_BEFORE_TODAY = "uilib.form.date.beforetoday";
+  public static final String DATE_BEFORE_TODAY_TODAY_ALLOWED = "uilib.form.date.beforetoday.today.allowed";
   public static final String ELEMENT_EMPTY = "uilib.form.element.empty";
   public static final String STRING_NOT_IN_RANGE = "uilib.form.string.notinrange";  
   public static final String MANDATORY_FIELD = "uilib.form.mandatoryfield";  
@@ -33,10 +34,13 @@ public class UiLibMessages {
   public static final String NUMBER_NOT_GREATER = "uilib.form.number.notgreater";
   public static final String NUMBER_NOT_LESS = "uilib.form.number.notless";  
   public static final String SCALE_NOT_LESS = "uilib.form.scale.notless";  
-  public static final String FORBIDDEN_MIME_TYPE = "uilib.form.forbiddenmimetype";  
+  public static final String FORBIDDEN_MIME_TYPE = "uilib.form.forbiddenmimetype";
+  public static final String FILE_UPLOAD_FAILED = "uilib.form.file.upload.failure";
   public static final String STRING_TOO_SHORT = "uilib.form.string.tooshort";
   public static final String STRING_TOO_LONG = "uilib.form.string.toolong";
   public static final String LIST_FILTER_BUTTON_LABEL = "uilib.list.filter.button";
   public static final String LIST_FILTER_CLEAR_BUTTON_LABEL = "uilib.list.filter.clear.button";
   public static final String NOT_AN_EMAIL = "uilib.form.email.notanemail";
+  public static final String LOW_OF = "uilib.list.filter.low";
+  public static final String HIGH_OF = "uilib.list.filter.high";
 }

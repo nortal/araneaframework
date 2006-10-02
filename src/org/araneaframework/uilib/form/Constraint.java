@@ -18,34 +18,47 @@ package org.araneaframework.uilib.form;
 
 import java.io.Serializable;
 import java.util.Set;
+import org.araneaframework.Environment;
 
 
-public interface Constraint extends Serializable, GenericFormElementAware{
-
+/**
+ * A constraint operates on some form {@link org.araneaframework.Component} providing means 
+ * for defining the conditions under which {@link org.araneaframework.Component} is considered
+ * valid. During validation, {@link Constraint} may produce appropriate error messages.
+ * 
+ * @see org.araneaframework.uilib.form.constraint.BaseConstraint
+ */
+public interface Constraint extends Serializable {
   /**
-   * This method validates the constraint conditions, providing some preconditions and
-   * postconditions for the {@link #validate()}method.
-   * @throws Exception 
+   * This method validates this {@link Constraint} conditions.
    */
   public boolean validate() throws Exception;
   
   /**
-   * Returns the {@link UiMessage}s produced while validationg the constraint.
-   * 
-   * @return the {@link UiMessage}s produced while validationg the constraint.
+   * Returns the validation errors produced while validating this {@link Constraint}.
+   * @return validation errors.
    */
   public Set getErrors();
 
   /**
-   * Clears the the errors produced while validationg the constraint.
+   * Clears the the errors produced while validating this {@link Constraint}.
    */
   public void clearErrors();
 
   /**
-   * Sets the custom {@link UiMessage}, that will be returned instead of the usual ones.
+   * Sets the custom error message, that will be used in place of default ones when
+   * this {@link Constraint} does not hold.
    * 
-   * @param customErrorMessage custom {@link UiMessage} that will be returned instead of the
-   * usual ones.
+   * @param customErrorMessage custom error message
    */
   public void setCustomErrorMessage(String customErrorMessage);
+
+  /**
+   * Sets the {@link org.araneaframework.Environment} of this {@link Constraint}.
+   * Environment should come from whatever {@link org.araneaframework.Component} that this
+   * {@link Constraint} is operating on.
+   * 
+   * @param environment 
+   */
+  public void setEnvironment(Environment environment);
 }

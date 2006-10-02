@@ -813,3 +813,4 @@ Form.Element.DelayedObserver.prototype = {
     this.callback(this.element, $F(this.element));
   }
 };
+window['scriptaculous/controls.js'] = true;

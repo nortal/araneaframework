@@ -28,7 +28,9 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.event.OnClickEventListener;
 
 /**
- * Standard button form element tag.
+ * Button form element tag, represents {@link org.araneaframework.uilib.form.control.ButtonControl}. 
+ * Rendered with either &lt;input type=&quot;button&quot;&gt; or just &lt;button&gt;
+ * depending on <code>renderMode</code> attribute.
  * 
  * @author Oleg Mürk
  * 

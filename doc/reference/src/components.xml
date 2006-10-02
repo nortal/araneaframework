@@ -136,7 +136,7 @@
   public Object next();
   public boolean hasNext();
 }</programlisting>        
-        Each <literal>next()</literal> call will return the identifier of the next child in the path to the descendant in question. Default implementation (<literal>org.araneaframework.core.CustomPath</literal>) uses simple string identifiers like "a" or "b" and combines them using dots forming full pathes like "a.b.c".
+        Each <literal>next()</literal> call will return the identifier of the next child in the path to the descendant in question. Default implementation (<literal>org.araneaframework.core.StandardPath</literal>) uses simple string identifiers like "a" or "b" and combines them using dots forming full pathes like "a.b.c".
       </para>
       
       <para>
@@ -189,9 +189,9 @@ msgContext.showInfoMessage("Hello world!");
   
   TODO: explain double-dispatch
   
-  <para>A standard <literal>Message</literal> implementation that uses double-dispatch to visit all the components in hierarchy is <literal>org.araneaframework.core.CustomMessage</literal>. It usage can be illustrated with the following example:
+  <para>A standard <literal>Message</literal> implementation that uses double-dispatch to visit all the components in hierarchy is <literal>org.araneaframework.core.BroadcastMessage</literal>. It usage can be illustrated with the following example:
 <programlisting role="java">...
-Message myEvent = new StandardMessage() {
+Message myEvent = new BroadcastMessage() {
   public void execute(Component component) throws Exception {
   if (component instanceof MyEventListener)
     ((MyEventListener) component).onMyEvent(data);
@@ -199,13 +199,27 @@ Message myEvent = new StandardMessage() {
 }
 myEvent.send(null, rootComponent);
 ...</programlisting>
-  This code will call all the components in the hierarchy that subscribed to the event and pass them a certain <literal>data</literal> parameter. As one can see, when calling <literal>Message.send()</literal> we will typically pass <literal>null</literal> as the first parameter, since it is needed only when propagating messages further down the hierarchy. Note that messages can be used to gather data from the components just as well as for passing data to them (TODO: Elaborate?).
+  This code will call all the components in the hierarchy that subscribed to the event and pass them a certain <literal>data</literal> parameter. As one can see, when calling <literal>Message.send()</literal> we will typically pass <literal>null</literal> as the first parameter, since it is needed only when propagating messages further down the hierarchy. Note that messages can be used to gather data from the components just as well as for passing data to them.
+  For example one could construct message that gathers all <literal>FormWidget</literal>s from the widget hierarchy:
+</para>
+      <para>
+<programlisting role="java">public static class FormWidgetFinderMessage extends BroadcastMessage {
+  List formList = new ArrayList();
+
+  protected void execute(Component component) throws Exception {
+    if (component instanceof org.araneaframework.uilib.form.FormWidget) {
+      formList.add(component);
+    }
+  }
+
+  public List getAllForms() { return formList; }
+}</programlisting>
       </para>
 
       <para>
-        Another standard <literal>Message</literal> implementation is <literal>org.araneaframework.StandardRoutedMessage</literal>, which allows us to send a message to one specific component in the hierarchy as in the following example:
+        Another standard <literal>Message</literal> implementation is <literal>org.araneaframework.core.RoutedMessage</literal>, which allows us to send a message to one specific component in the hierarchy as in the following example:
 <programlisting role="java">...
-Message myEvent = new StandardRoutedMessage("a.b.c") {
+Message myEvent = new RoutedMessage("a.b.c") {
   public void execute(Component component) throws Exception {
     ((MyPersonalComponent) component).myMethod(...);
   }
@@ -232,7 +246,7 @@ myEvent.send(null, rootComponent);
       <title>StandardComponent</title>
 
       <para>
-        <literal>org.araneaframework.core.CustomComponent</literal> is the base class for application-specific components. It implements <emphasis>Composite</emphasis> pattern allowing to add, remove, enable and disable children and propagates messages to all the children. 
+        <literal>org.araneaframework.core.BaseApplicationComponent</literal> is the base class for application-specific components. It implements <emphasis>Composite</emphasis> pattern allowing to add, remove, enable and disable children and propagates messages to all the children. 
       </para>
     </sect2>
   </sect1>
@@ -307,7 +321,7 @@ myEvent.send(null, rootComponent);
       Services are the basic working horses of the Aranea framework. They  can generally be both synchronized and unsynchronized depending on the context. Services may also have persistent state and their lifetime is explicitly managed by their parent (see <xref linkend="components-persistence"/>). The service lifecycle is very simple&mdash;as long as the service is live and enabled it can receive <literal>action()</literal> calls, possibly several at a time. 
     </para>
     
-		<sect2>
+		<sect2 id="services-as-framework-plugins">
 			<title>Services as Framework Plug-ins</title>
 
       <para>

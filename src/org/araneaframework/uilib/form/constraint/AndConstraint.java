@@ -22,23 +22,37 @@ import org.araneaframework.uilib.form.Constraint;
 
 /**
  * This constraint implements "AND" Boolean logic (checks that all
- * contained constraits are satisfied).
+ * contained constraits are satisfied). It is eager by default, but can
+ * be set to act lazily, (note that subconstraints produce error messages
+ * as they are being validated, unless some custom error message has been set,
+ * it makes often sense to process all subconstraints). 
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
-public class AndConstraint extends CompositeConstraint {
+public class AndConstraint extends BaseCompositeConstraint {
+  private boolean lazy = false;
 
   /**
-	 * Checks that all contained constraits are satisfied.
-   * @throws Exception 
-	 */
+   * Checks that all contained constraits are satisfied.
+   */
   public void validateConstraint() throws Exception {
     for (Iterator i = constraints.iterator(); i.hasNext();) {
       Constraint constraint = (Constraint) i.next();
-      constraint.validate();
+      boolean valid = constraint.validate();
       addErrors(constraint.getErrors());
       constraint.clearErrors();
+      if (!valid && this.lazy)
+        break;
     }
+  }
+  
+  /**
+   * Sets whether this {@link AndConstraint} acts lazily, default is <code>false</code>.
+   * @param lazy
+   * @return this {@link AndConstraint}
+   */
+  public AndConstraint setLazy(boolean lazy) {
+    this.lazy = lazy;
+    return this;
   }
 }

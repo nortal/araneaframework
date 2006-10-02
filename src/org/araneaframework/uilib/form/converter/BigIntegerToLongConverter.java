@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.converter;
 
 import java.math.BigInteger;
+import org.araneaframework.uilib.form.Converter;
 
 
 /**
@@ -27,7 +28,7 @@ public class BigIntegerToLongConverter extends BaseConverter {
   /**
    * Returns a <code>new BigIntegerToLongConverter()</code>.
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new BigIntegerToLongConverter();
   }
   

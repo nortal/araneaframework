@@ -29,11 +29,11 @@ public class ReverseConverter implements Converter {
 		this.converter = converter;
 	}
 
-	public Object convert(Object data) throws ConvertionException {
+	public Object convert(Object data) throws ConversionException {
 		return this.converter.reverseConvert(data);
 	}
 
-	public Object reverseConvert(Object data) throws ConvertionException {
+	public Object reverseConvert(Object data) throws ConversionException {
 		return this.converter.convert(data);
 	}
 

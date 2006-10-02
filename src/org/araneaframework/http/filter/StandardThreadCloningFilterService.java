@@ -30,7 +30,7 @@ import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.Relocatable.RelocatableService;
-import org.araneaframework.core.RelocatableServiceDecorator;
+import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterService;
@@ -47,6 +47,7 @@ import org.araneaframework.http.util.URLUtil;
  */
 public class StandardThreadCloningFilterService extends BaseFilterService implements ThreadCloningContext {
   private static final Logger log = Logger.getLogger(StandardThreadCloningFilterService.class);
+  private Long timeToLive;
   private boolean initializeChildren = true;
 
   public StandardThreadCloningFilterService() {
@@ -63,7 +64,15 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
 
   public void setChildService(Service childService) {
-    super.setChildService(new RelocatableServiceDecorator(childService));
+    super.setChildService(new RelocatableDecorator(childService));
+  }
+  
+  /** 
+   * Sets the time of inactivity after which cloned service may be killed by thread router. 
+   * @param timeToLive allowed inactivity time, in milliseconds 
+   */
+  public void setTimeToLive(Long timeToLive) {
+    this.timeToLive = timeToLive;
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -99,13 +108,24 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     String cloneServiceId = RandomStringUtils.randomAlphabetic(12);
     if (log.isDebugEnabled())
       log.debug("Attaching the cloned thread as '" + cloneServiceId + "'.");
-    threadCtx.addService(cloneServiceId, wrappedClone);
+
+    // XXX: cloned services getEnvironment.getEntry(ThreadContext.class)).getCurrentId() returns Id of the
+    // thread that requested cloning (task 246)
+    startService(threadCtx, wrappedClone, cloneServiceId);
 
     // send event to cloned service
     clone._getService().action(path, input, output);
     
     // redirect to URL where cloned service resides
-    ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), cloneServiceId));
+    HttpOutputData out = (HttpOutputData) getOutputData();
+    out.sendRedirect(out.encodeURL((getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), cloneServiceId))));
+  }
+
+  private void startService(ThreadContext threadCtx, StandardThreadCloningFilterService cloneService, String cloneServiceId) {
+    if (timeToLive == null)
+      threadCtx.addService(cloneServiceId, cloneService);
+    else
+      threadCtx.addService(cloneServiceId, cloneService, timeToLive);
   }
 
   protected void init() throws Exception {

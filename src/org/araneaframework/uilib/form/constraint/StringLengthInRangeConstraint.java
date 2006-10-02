@@ -16,47 +16,70 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
-
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
- * This constraint checks that the value is between two others.
+ * {@link org.araneaframework.uilib.form.Constraint} that allows constraining
+ * input length in a {@link FormElement}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class StringLengthInRangeConstraint extends BaseFieldConstraint {
-
   private int rangeStart;
   private int rangeEnd;
   
+  public StringLengthInRangeConstraint() {}
+
+  public StringLengthInRangeConstraint(FormElement field) {
+    super(field);
+  }
+
   /**
-   * Creates the class, initializing the corresponding fields.
+   * Creates the constraint, initializing the corresponding fields.
    * @param rangeStart start of the length range.
    * @param rangeEnd end of the length range.
    */
   public StringLengthInRangeConstraint(int rangeStart, int rangeEnd) {
-    super();
-    this.rangeStart = rangeStart;
-    this.rangeEnd = rangeEnd;
+    setRangeStart(rangeStart);
+    setRangeEnd(rangeEnd);
   }
   
   /**
-   * Checks that the value is between two others.
+   * Checks that the length of string belongs in constraint boundaries.
    */
   protected void validateConstraint() {
     String value = (String) getValue();
-    if (value != null && (value.length() < rangeStart || value.length() > rangeEnd)) {
-      addError(
-          ErrorUtil.localizeAndFormat(
-            UiLibMessages.STRING_NOT_IN_RANGE, 
-            new Object[] {
-                t(getLabel()),
-                Integer.toString(rangeStart),
-                Integer.toString(rangeEnd)
-            },
-            getEnvironment()));
+
+    if (value == null) {
+      if (rangeStart == 0)
+        return;
+      addValidationError();
+      return;
     }
+
+    if (value != null && (value.length() < rangeStart || value.length() > rangeEnd))
+      addValidationError();
+  }
+
+  private void addValidationError() {
+	addError(
+      MessageUtil.localizeAndFormat(
+        UiLibMessages.STRING_NOT_IN_RANGE, 
+        new Object[] {
+          t(getLabel()),
+          Integer.toString(rangeStart),
+          Integer.toString(rangeEnd)
+        },
+        getEnvironment()));
+  }
+
+  public void setRangeEnd(int rangeEnd) {
+    this.rangeEnd = rangeEnd;
+  }
+
+  public void setRangeStart(int rangeStart) {
+    this.rangeStart = rangeStart;
   }
 }

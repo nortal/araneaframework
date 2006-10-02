@@ -17,16 +17,13 @@
 package org.araneaframework.example.main.web.company;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
-import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.ListColumn;
-import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
 /**
@@ -39,7 +36,7 @@ import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter
 public class CompanyListWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
   protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
-  private ListWidget list;
+  private BeanListWidget list;
   private boolean editMode = true;
 
   public CompanyListWidget() {
@@ -56,33 +53,33 @@ public class CompanyListWidget extends TemplateBaseWidget {
     setViewSelector("company/companyList");
     log.debug("TemplateCompanyListWidget init called");    
 
-    this.list = initList();
-    addWidget("companyList", this.list);
+    initList();
   }
 
-  protected ListWidget initList() throws Exception {
+  protected void initList() throws Exception {
     // Create the new list widget whose records are JavaBeans, instances of CompanyMO.
     // CompanyMO has fields named id, name and address.
-    BeanListWidget temp = new BeanListWidget(CompanyMO.class);
+    list = new BeanListWidget(CompanyMO.class);
+    addWidget("companyList", this.list);
     // set the data provider for the list
-    temp.setListDataProvider(new TemplateCompanyListDataProvider());
+    list.setDataProvider(new TemplateCompanyListDataProvider());
     // add the displayed columns to list.
-    // addBeanColumn(String id, String label, boolean isOrdered)
+    // addField(String id, String label, boolean orderable)
     // note that # before the label means that label is treated as unlocalized and outputted as-is
-    temp.addBeanColumn("id", "#Id", false);
-    //addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
-    temp.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
-    temp.addBeanColumn("address", "#Address", true, new SimpleColumnFilter.Like(), new TextControl());
-    temp.addListColumn(new ListColumn("dummy"));
-    return temp;
+    list.addField("id", "#Id", false);
+    // addField(...) returns FieldFilterHelper, like() sets LIKE filter on the column
+    list.addField("name", "#Name", true).like();
+    list.addField("address", "#Address", true).like();
+    list.addField("dummy", null, false);
   }
 
   private void refreshList() throws Exception {    
-    this.list.getListDataProvider().refreshData();
+    this.list.getDataProvider().refreshData();
   }
 
   public void handleEventAdd(String eventParameter) throws Exception {
     getFlowCtx().start(new CompanyEditWidget(), null, new FlowContext.Handler() {
+      private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {
         log.debug("Company added with Id of " + returnValue + " sucessfully");
         // trick to refresh the list data when we suspect it has changed
@@ -106,7 +103,8 @@ public class CompanyListWidget extends TemplateBaseWidget {
     log.debug("Company selected with Id of " + id);
     if (editMode)
       getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
-	    public void onFinish(Object returnValue) throws Exception {
+	        private static final long serialVersionUID = 1L;
+      public void onFinish(Object returnValue) throws Exception {
 	        log.debug("Company added with Id of " + returnValue + " sucessfully");
 	        refreshList();
 	      }
@@ -121,7 +119,8 @@ public class CompanyListWidget extends TemplateBaseWidget {
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     log.debug("Company selected with Id of " + id);
     getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
-	    public void onFinish(Object returnValue) throws Exception {
+	      private static final long serialVersionUID = 1L;
+      public void onFinish(Object returnValue) throws Exception {
 	        log.debug("Company added with Id of " + returnValue + " sucessfully");
 	        refreshList();
 	      }
@@ -136,6 +135,8 @@ public class CompanyListWidget extends TemplateBaseWidget {
   }  
 
   private class TemplateCompanyListDataProvider extends MemoryBasedListDataProvider {
+    private static final long serialVersionUID = 1L;
+
     // Overloading constructor with correct bean type.
     protected TemplateCompanyListDataProvider() {
       super(CompanyMO.class);

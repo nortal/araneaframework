@@ -22,8 +22,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
-import org.araneaframework.uilib.list.structure.order.MultiColumnOrder;
+import org.araneaframework.uilib.list.structure.order.MultiFieldOrder;
 
 public class BaseListStructure implements Serializable {
 
@@ -32,107 +33,106 @@ public class BaseListStructure implements Serializable {
 	private static final Logger log = Logger.getLogger(BaseListStructure.class);
 
 	/**
-	 * Map of ($link ListColumn)s where the column Ids are the keys and columns
+	 * Map of {@link ListField}s where the column Ids are the keys and columns
 	 * are the values.
 	 */
-	protected Map columns = new HashMap();
+	protected Map fields = new HashMap();
 
 	/**
-	 * List of ($link ListColumn)s.
+	 * List of {@link ListField}s.
 	 */
-	protected List columnList = new ArrayList();
+	protected List fieldList = new ArrayList();
 
 	/**
-	 * (@link ListOrder) information.
+	 * {@link ListOrder} information.
 	 */
 	protected ListOrder order;
 
 	/**
-	 * (@link ListFilter) information.
+	 * {@link ListFilter} information.
 	 */
 	protected ListFilter filter;
 
 	/**
-	 * Returns {@link ListColumn}s.
+	 * Returns {@link ListField}s.
 	 * 
-	 * @return {@link ListColumn}s.
+	 * @return {@link ListField}s.
 	 */
-	public Map getColumns() {
-		return this.columns;
+	public Map getFields() {
+		return this.fields;
 	}
 
 	/**
-	 * Returns {@link ListColumn}s.
+	 * Returns {@link ListField}s.
 	 * 
-	 * @return {@link ListColumn}s.
+	 * @return {@link ListField}s.
 	 */
-	public List getColumnsList() {
-		return this.columnList;
+	public List getFieldList() {
+		return this.fieldList;
 	}
 
 	/**
-	 * Returns {@link ListColumn}.
+	 * Returns {@link ListField}.
 	 * 
 	 * @param id
-	 *            {@link ListColumn}identifier.
-	 * @return {@link ListColumn}.
+	 *            {@link ListField}identifier.
+	 * @return {@link ListField}.
 	 */
-	public ListColumn getColumn(String id) {
-		return (ListColumn) this.columns.get(id);
+	public ListField getField(String id) {
+		return (ListField) this.fields.get(id);
 	}
 
 	/**
-	 * Adds a {@link ListColumn}.
+	 * Adds a {@link ListField}.
 	 * 
 	 * @param column
-	 *            {@link ListColumn}.
+	 *            {@link ListField}.
 	 */
-	public void addColumn(ListColumn column) {
-		this.columns.put(column.getId(), column);
-		this.columnList.add(column);
+	public void addField(ListField column) {
+		this.fields.put(column.getId(), column);
+		this.fieldList.add(column);
 	}
 
 	/**
-	 * Clears the {@link ListColumn}s
+	 * Clears the {@link ListField}s
 	 */
-	public void clearColumns() {
-		this.columns = new HashMap();
-		this.columnList = new ArrayList();
+	public void clearFields() {
+		this.fields = new HashMap();
+		this.fieldList = new ArrayList();
 	}
 	
 	/**
-	 * Returns the (@link ListOrder).
+	 * Returns the {@link ListOrder}.
 	 * 
-	 * @return the (@link ListOrder).
+	 * @return the {@link ListOrder}.
 	 */
 	public ListOrder getListOrder() {
 		return this.order;
 	}
 
 	/**
-	 * Saves the (@link ListOrder).
-	 * 
-	 * @param filter
-	 *            the (@link ListOrder).
+	 * Sets the {@link ListOrder}.
+	 * @param order
+	 *            the {@link ListOrder}.
 	 */
 	public void setListOrder(ListOrder order) {
 		this.order = order;
 	}
 
 	/**
-	 * Returns the (@link ListFilter).
+	 * Returns the {@link ListFilter}.
 	 * 
-	 * @return the (@link ListFilter).
+	 * @return the {@link ListFilter}.
 	 */
 	public ListFilter getListFilter() {
 		return this.filter;
 	}
 
 	/**
-	 * Saves the (@link ListFilter).
+	 * Saves the {@link ListFilter}.
 	 * 
 	 * @param filter
-	 *            the (@link ListFilter).
+	 *            the {@link ListFilter}.
 	 */
 	public void setListFilter(ListFilter filter) {
 		this.filter = filter;
@@ -144,7 +144,6 @@ public class BaseListStructure implements Serializable {
 	 * @return view model.
 	 */
 	public ViewModel getViewModel() {
-		log.debug("Getting ListStructure.ViewModel");
 		return new ViewModel();
 	}
 
@@ -166,23 +165,23 @@ public class BaseListStructure implements Serializable {
 		 */
 		protected ViewModel() {
 			log.debug("Constructing ListStructure.ViewModel");
-			MultiColumnOrder multiOrder = getListOrder() instanceof MultiColumnOrder ? (MultiColumnOrder) getListOrder()
+			MultiFieldOrder multiOrder = getListOrder() instanceof MultiFieldOrder ? (MultiFieldOrder) getListOrder()
 					: null;
 			if (multiOrder == null) {
 				log.debug("MultiColumnOrder not found");
 			}
 
-			for (Iterator i = BaseListStructure.this.columnList.iterator(); i
+			for (Iterator i = BaseListStructure.this.fieldList.iterator(); i
 					.hasNext();) {
-				ListColumn.ViewModel currentColumn = ((ListColumn) i
+				ListField.ViewModel currentColumn = ((ListField) i
 						.next()).getViewModel();
 				boolean isOrdered = multiOrder != null
-						&& multiOrder.isColumnOrdered(currentColumn.getId());
+						&& multiOrder.isFiedOrdered(currentColumn.getId());
 
 				this.columnList.add(currentColumn);
 				this.columns.put(currentColumn.getId(), currentColumn);
-				this.columnOrders.put(currentColumn.getId(), new Boolean(
-						isOrdered));
+				this.columnOrders.put(currentColumn.getId(),
+						isOrdered ? Boolean.TRUE : Boolean.FALSE);
 			}
 		}
 

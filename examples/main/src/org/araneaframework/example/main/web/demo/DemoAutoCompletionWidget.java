@@ -15,6 +15,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoAutoCompletionWidget extends BaseUIWidget {
+  private static final long serialVersionUID = 1L;
   private FormWidget form;
   
   public void init() throws Exception {
@@ -38,6 +39,7 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
   }
   
   private static final class DemoACDataProvider implements AutoCompleteTextControl.DataProvider {
+    private static final long serialVersionUID = 1L;
     private static final List allSuggestions = new ArrayList();
 
     static {

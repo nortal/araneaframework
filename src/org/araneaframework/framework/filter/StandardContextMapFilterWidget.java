@@ -24,8 +24,9 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
 
 /**
+ * Filter widget that enriches children's environment with specified context entries.
  * 
- * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardContextMapFilterWidget extends BaseFilterWidget {
   private static final Logger log = Logger.getLogger(StandardContextMapFilterWidget.class);
@@ -52,9 +53,14 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
     
     childWidget._getComponent().init(new StandardEnvironment(getEnvironment(), entries));
            
-    log.debug("Following contexts added to environment: " + entries);
+    if (log.isDebugEnabled())
+      log.debug("Following contexts added to environment: " + entries);
   }
   
+  /**
+   * Set the contexts that are made accessible from children's environments.
+   * @param contexts Map &lt;contextKey, contextValue&gt;
+   */
   public void setContexts(Map contexts) {
     this.contexts = contexts;
   }

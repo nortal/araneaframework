@@ -113,7 +113,7 @@ public class StandardContainerWidget extends BaseApplicationWidget {
     
   /**
    * Extracts the path from the input and returns it. This implementation uses
-   * the EVENT_PATH_KEY parameter in the request and expects the event path to be
+   * the {@link StandardContainerWidget#EVENT_PATH_KEY} parameter in the request and expects the event path to be
    * a dot-separated string. 
    */
   protected Path getEventPath(InputData input) {
@@ -129,7 +129,7 @@ public class StandardContainerWidget extends BaseApplicationWidget {
   
   /**
    * Extracts the path from the input and returns it. This implementation uses
-   * the ACTION_PATH_KEY parameter in the request and expects the action path to be
+   * the {@link StandardContainerWidget#ACTION_PATH_KEY} parameter in the request and expects the action path to be
    * a dot-separated string. 
    */
   protected Path getActionPath(InputData input) {

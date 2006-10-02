@@ -57,7 +57,7 @@ public class CheckboxControl extends StringRequestControl{
    * This method makes a <code>Boolean</code> out of a <code>String</code>.
    */
   protected Object fromRequest(String parameterValue) {
-    return new Boolean(parameterValue);
+    return Boolean.valueOf(parameterValue);
   }
   
   /**

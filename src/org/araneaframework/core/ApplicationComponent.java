@@ -24,10 +24,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.Viewable;
 
 /**
- * An interface defining a set of standard components via its subinterfaces.
- * <br><br>
- * Provides a <code>CustomComponent</code>,<code>CustomService</code> and a
- * <code>CustomWidget</code>. 
+ * A base class for application development <literal>org.araneaframework.core.BaseApplicationComponent</literal> is also available.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)

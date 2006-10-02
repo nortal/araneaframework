@@ -23,6 +23,7 @@ import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
+import org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -35,9 +36,15 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Registers popups present in current popupcontext for opening."
  */
 public class PopupRegistrationHtmlTag extends BaseTag {
+  public static final String POPUP_REGISTRATION_REGION  = "popupRegistrationRegion";
 	
   protected int doEndTag(Writer out) throws Exception {
     Object popups = getOutputData().getAttribute(PopupWindowContext.POPUPS_KEY);
+    
+    UpdateRegionHtmlTag updateRegionTag = new UpdateRegionHtmlTag();
+    updateRegionTag.setGlobalId(POPUP_REGISTRATION_REGION);
+    registerAndExecuteStartTag(updateRegionTag);
+
     if (popups != null && !((Map)popups).isEmpty()) {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
@@ -48,6 +55,7 @@ public class PopupRegistrationHtmlTag extends BaseTag {
       JspUtil.writeEndTag(out, "script");
     }
 
+    executeEndTagAndUnregister(updateRegionTag);
     return super.doEndTag(out);
   }
 

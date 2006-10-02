@@ -19,12 +19,19 @@
  */
 package org.araneaframework.uilib.form;
 
+import java.io.Serializable;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
 
 /**
+ * {@link Control} is the widget that does the actual parsing and reading of the request 
+ * parameters. It corresponds to the controls found in HTML forms, like textbox, 
+ * textarea, selectbox, button &hellip;
+ * 
+ * {@link Control} is meant to be used inside {@link FormElement} that provides
+ * type safety and additional {@link Constraint}s to request data.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- *
  */
 public interface Control extends Widget, Viewable, FormElementAware {
   
@@ -54,7 +61,7 @@ public interface Control extends Widget, Viewable, FormElementAware {
   public Object getRawValue();
 
   /**
-   * Sets the control value. Preffered way to set it is using the DataItem.
+   * Sets the control value. Preferred way to set it is using the {@link org.araneaframework.uilib.form.Data}.
    * 
    * @param value control value.
    * @see #getRawValue()
@@ -74,7 +81,7 @@ public interface Control extends Widget, Viewable, FormElementAware {
   /**
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
-  public interface ViewModel {
+  public interface ViewModel extends Serializable {
 
     /**
      * Returns control type.

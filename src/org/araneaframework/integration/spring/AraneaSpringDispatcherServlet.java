@@ -42,6 +42,10 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+/**
+ * Aranea dispatcher servlet that assembles Aranea components according
+ * to the configuration specified in Spring bean configuration files.
+ */
 public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {   
   private static boolean isSpringWebPresent = true;
   
@@ -59,7 +63,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   public static final String ARANEA_DEFAULT_CONF_XML = "conf/default-aranea-conf.xml";
   public static final String ARANEA_DEFAULT_CONF_PROPERTIES = "conf/default-aranea-conf.properties";
   
-  public static final String DEFAULT_ARANEA_ROOT = "araneaApplicationRoot";    
+  public static final String DEFAULT_ARANEA_ROOT = "araneaApplicationRoot";
   public static final String DEFAULT_ARANEA_CUSTOM_CONF_XML = "/WEB-INF/aranea-conf.xml";
   public static final String DEFAULT_ARANEA_CUSTOM_CONF_PROPERTIES = "/WEB-INF/aranea-conf.properties";
   

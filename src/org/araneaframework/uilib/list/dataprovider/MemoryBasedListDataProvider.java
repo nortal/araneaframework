@@ -158,10 +158,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 	}
 
 	/**
-	 * Saves the list order. Transforms the order information into
-	 * {@link VoOrder}using
-	 * {@link OrderFactory#getVoOrder(Class, String, boolean)}and marks that
-	 * order has changed.
+	 * Sets the list order expression. 
 	 */
 	public void setOrderExpression(ComparatorExpression orderExpr) {
 		this.doOrder = true;
@@ -173,10 +170,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 	}
 
 	/**
-	 * Transforms the filter information into {@link VoFilter}using
-	 * {@link VoFilterBuilderVisitor}.
-	 * 
-	 * @throws Exception
+	 * Sets the list filter expression. 
 	 */
 	public void setFilterExpression(Expression filterExpr) {
 		this.doFilter = true;
@@ -204,11 +198,6 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 
 	/**
 	 * Processes the list items, filtering and ordering them, if there is need.
-	 * 
-	 * @param voFilter
-	 *            Value Object filter.
-	 * @param voOrder
-	 *            Value Object order.
 	 */
 	protected void process(BeanFilter beanFilter, Comparator beanOrder,
 			List all, List processed) {
@@ -247,9 +236,6 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 
 	/**
 	 * Orders the items.
-	 * 
-	 * @param voOrder
-	 *            Value Object order.
 	 */
 	protected void order(Comparator comparator, List ordered) {
 		log.debug("Ordering list itmes");

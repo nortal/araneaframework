@@ -16,7 +16,6 @@
 
 package org.araneaframework.example.main.web.demo;
 
-import java.util.ArrayList;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.example.main.TemplateBaseWidget;
@@ -32,8 +31,8 @@ import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
-import org.araneaframework.uilib.form.formlist.adapters.MapFormRowHandlerDecorator;
-import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
 
 
 /**
@@ -45,7 +44,8 @@ import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormR
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DemoFormList extends TemplateBaseWidget {
-	private BeanFormListWidget formList;
+	  private static final long serialVersionUID = 1L;
+  private BeanFormListWidget formList;
 	private Map data = new LinkedMap();
 
 	//Plays the role of a sequence
@@ -69,14 +69,10 @@ public class DemoFormList extends TemplateBaseWidget {
 
 		setViewSelector("demo/demoEditableList");
 		
-		formList = new BeanFormListWidget(new DemoFormRowHandler(), DataDTO.class);
-
-		formList.setFormRowHandler(
-				new MapFormRowHandlerDecorator(
-					data, 
-					formList, 
-					formList.getFormRowHandler()));
-		formList.setRows(new ArrayList(data.values()));
+    formList = new BeanFormListWidget(
+        new DemoFormRowHandler(),
+        new MapFormListModel(data),
+        DataDTO.class);
 		
 		addWidget("editableList", formList);
 	}
@@ -86,7 +82,9 @@ public class DemoFormList extends TemplateBaseWidget {
 	}
 
 	public class DemoFormRowHandler extends ValidOnlyIndividualFormRowHandler {
-		public Object getRowKey(Object row) {
+		    private static final long serialVersionUID = 1L;
+
+    public Object getRowKey(Object row) {
 			return ((DataDTO) row).getId();
 		}
 

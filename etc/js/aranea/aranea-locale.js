@@ -27,3 +27,5 @@ AraneaLocale = function(lang, cntry) {
   this.getCountry = function() { return country; }
   this.setCountry = function(cntry) { country = cntry; }
 }
+
+window['aranea-locale.js'] = true;

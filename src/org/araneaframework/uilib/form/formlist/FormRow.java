@@ -133,7 +133,7 @@ public class FormRow implements Serializable {
 		public ViewModel() {
 			this.rowForm = FormRow.this.rowForm;
 			this.rowFormId = FormRow.this.rowFormId; 
-			this.open = new Boolean(FormRow.this.open);
+			this.open = FormRow.this.open ? Boolean.TRUE : Boolean.FALSE;
 		}
 
 		/**
@@ -145,8 +145,7 @@ public class FormRow implements Serializable {
 		}
 
 		/**
-		 * Sets whether the row is open.
-		 * @param open whether the row is open.
+		 * Gets whether the row is open.
 		 */		
 		public Boolean getOpen() {
 			return this.open;

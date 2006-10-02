@@ -61,14 +61,14 @@ public class ListFormReader {
     for (Iterator i = formList.getFormRows().values().iterator(); i.hasNext();) {
     	FormRow formRow = (FormRow) i.next();
 
-      FormWidget element = formRow.getForm();
+      FormWidget form = formRow.getForm();
 
       if (beanClass != null) {
-        BeanFormReader subReader = new BeanFormReader((FormWidget) element);
+        BeanFormReader subReader = new BeanFormReader(form);
         result.add(subReader.getBean(beanClass));
       }
       else {
-        MapFormReader subReader = new MapFormReader((FormWidget) element);
+        MapFormReader subReader = new MapFormReader(form);
         result.add(subReader.getMap());
       }
     }
