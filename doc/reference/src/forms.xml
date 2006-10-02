@@ -4,7 +4,7 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
- 
+
    http://www.apache.org/licenses/LICENSE-2.0
  
   Unless required by applicable law or agreed to in writing, software
@@ -174,7 +174,7 @@ TextControl textBox = new TextControl(new Long(10), null);
 
     <para>
         Follows a table of standard controls all found in <literal>org.araneaframework.uilib.form.control</literal> package:
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="2">
             <colspec colwidth="1*"/>
             <colspec colwidth="2*"/>
@@ -388,7 +388,7 @@ addWidget("searchForm", searchForm);
 
      <para>
         Table of standard <literal>Constraint</literal>s.
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="2">
             <colspec colwidth="1*"/>
             <colspec colwidth="2*"/>
@@ -500,7 +500,7 @@ private void handleEventSave() {
 
     <para>
         Table of <literal>Data</literal> types.
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="2">
             <colspec colwidth="1*"/>
             <colspec colwidth="3*"/>
@@ -624,7 +624,7 @@ private void handleEventSave() {
 
       <sect2 id="common-formelement-attributes">
       <title>Common attributes for all form element rendering tags.</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -694,7 +694,7 @@ private void handleEventSave() {
       
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -719,7 +719,7 @@ private void handleEventSave() {
       
       <sect3>
         <title>Variables</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="5*"/>
@@ -766,7 +766,7 @@ private void handleEventSave() {
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -791,7 +791,7 @@ private void handleEventSave() {
       
       <sect3>
         <title>Variables</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="5*"/>
@@ -844,7 +844,7 @@ private void handleEventSave() {
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -902,7 +902,7 @@ private void handleEventSave() {
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -963,7 +963,7 @@ private void handleEventSave() {
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1017,7 +1017,7 @@ private void handleEventSave() {
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1072,7 +1072,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1191,7 +1191,7 @@ el.click();]]></programlisting>
       
         <sect3>
         <title>Attributes</title>
-	        <informaltable frame="all">
+	        <informaltable frame="topbot">
 	          <tgroup cols="3">
 	            <colspec colwidth="2*"/>
 	            <colspec colwidth="1*"/>
@@ -1244,7 +1244,7 @@ el.click();]]></programlisting>
       
         <sect3>
         <title>Attributes</title>
-	        <informaltable frame="all">
+	        <informaltable frame="topbot">
 	          <tgroup cols="3">
 	            <colspec colwidth="2*"/>
 	            <colspec colwidth="1*"/>
@@ -1318,7 +1318,7 @@ el.click();]]></programlisting>
           
             <sect3>
             <title>Attributes</title>
-                <informaltable frame="all">
+                <informaltable frame="topbot">
                   <tgroup cols="3">
                     <colspec colwidth="2*"/>
                     <colspec colwidth="1*"/>
@@ -1373,7 +1373,7 @@ el.click();]]></programlisting>
           
             <sect3>
             <title>Attributes</title>
-                <informaltable frame="all">
+                <informaltable frame="topbot">
                   <tgroup cols="3">
                     <colspec colwidth="2*"/>
                     <colspec colwidth="1*"/>
@@ -1399,7 +1399,7 @@ el.click();]]></programlisting>
                     </tbody>
                   </tgroup>
                 </informaltable>
-                 <emphasis>Also has all common form element rendering attributes.</emphasis> 
+                 <emphasis>Also has all common form element rendering attributes.</emphasis>
             </sect3>
        </sect2>
           
@@ -1428,7 +1428,7 @@ el.click();]]></programlisting>
           
             <sect3>
             <title>Attributes</title>
-                <informaltable frame="all">
+                <informaltable frame="topbot">
                   <tgroup cols="3">
                     <colspec colwidth="2*"/>
                     <colspec colwidth="1*"/>
@@ -1484,7 +1484,7 @@ el.click();]]></programlisting>
   
     <sect3>
     <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1519,7 +1519,7 @@ el.click();]]></programlisting>
   
     <sect3>
     <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1653,7 +1653,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1727,7 +1727,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1755,7 +1755,7 @@ el.click();]]></programlisting>
         <sect2>
       <title><![CDATA[<ui:dateInputDisplay>]]></title>
       <para>
-           Form date display field, represents <literal>DateControl</literal>. Default <literal>styleClass="aranea-date-display"</literal>. 
+           Form date display field, represents <literal>DateControl</literal>. Default <literal>styleClass="aranea-date-display"</literal>.
       </para>
       
        <sect3>
@@ -1775,7 +1775,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1821,7 +1821,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1879,7 +1879,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1908,7 +1908,7 @@ el.click();]]></programlisting>
         <emphasis>Also has all common form element rendering attributes.</emphasis> 
       </sect3>
     </sect2>
-    
+
     
         <!-- SELECTDISPLAY -->
       <sect2>
@@ -1934,7 +1934,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -1959,7 +1959,7 @@ el.click();]]></programlisting>
       </sect3>
     </sect2>
     
-    
+
         <!-- MULTISELECTDISPLAY -->
       <sect2>
       <title><![CDATA[<ui:multiSelectDisplay>]]></title>
@@ -1970,7 +1970,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -2006,7 +2006,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -2046,7 +2046,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -2086,7 +2086,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -2132,7 +2132,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -2172,7 +2172,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -2207,7 +2207,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -2303,7 +2303,7 @@ el.click();]]></programlisting>
 
       <sect3>
         <title>Attributes</title>
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*"/>
             <colspec colwidth="1*"/>
@@ -2522,7 +2522,7 @@ public void deleteRow(Object key) throws Exception {
        <literal>FormListUtil</literal> provides a couple of methods that help to handle form maps passed to some of the handler methods. However of main interest are the methods that add various buttons with ready logic to the add forms and row forms.
      </para>
      
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="2">
             <colspec colwidth="1*"/>
             <colspec colwidth="2*"/>
@@ -2565,7 +2565,7 @@ public void deleteRow(Object key) throws Exception {
        Since row form handler interface supports bulk saving/adding/deleting of row forms it is comfortable to use one of the base classes that will do some of the work for you.
      </para>
      
-     <informaltable frame="all">
+     <informaltable frame="topbot">
         <tgroup cols="2">
           <colspec colwidth="2*"/>
           <colspec colwidth="3*"/>

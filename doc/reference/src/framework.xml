@@ -1,12 +1,12 @@
 <!--
   Copyright 2006 Webmedia Group Ltd.
- 
+
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
- 
+
    http://www.apache.org/licenses/LICENSE-2.0
- 
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,10 +20,10 @@
     <title>Overview</title>
 
     <para>
-      Aranea framework consists of a number of independent components each performing a single well-defined function. These classes are arranged together during deployment and usually involve an IoC container (like Spring) for configuration. These components may be simple <literal>Components</literal>, <literal>Services</literal> or <literal>Widgets</literal>. 
+      Aranea framework consists of a number of independent components each performing a single well-defined function. These classes are arranged together during deployment and usually involve an IoC container (like Spring) for configuration. These components may be simple <literal>Components</literal>, <literal>Services</literal> or <literal>Widgets</literal>.
     </para>
   </sect1>
-  
+
   <sect1>
     <title>Hosting Aranea</title>
 
@@ -46,8 +46,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 }</programlisting>
       And one can then use such a servlet to configure Aranea in a web application:
       <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE web-app PUBLIC 
-  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+<!DOCTYPE web-app PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
   "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
@@ -67,7 +67,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>
-      <url-pattern>/main</url-pattern>
+      <url-pattern>/main/*</url-pattern>
    </servlet-mapping>
 </web-app>]]></programlisting>
       This will map Aranea to the web application URL ending in "/main". <literal>org.araneaframework.http.core.StandardSessionListener</literal> is an Aranea session listener that is needed for successful widget deinitialization.
@@ -109,8 +109,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 	</files>
 	...
 </resources>
-]]></programlisting>        
-		
+]]></programlisting>
+
 		All the files listed in the configuration files are allowed to be loaded through the <literal>FileImportFilter</literal>. Some are grouped
 		by name to provide an easy access for reading files in bulk.
 		</para>
@@ -134,7 +134,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
 		<para>
 			For custom loading a resource, the URL to use is <literal>/fileimporter/filepath</literal>. The
-			<literal>fileimporter</literal> is 
+			<literal>fileimporter</literal> is
 			<literal>StandardFileImportFilterService.FILE_IMPORTER_NAME</literal> and
 			<literal>filepath</literal> is the path that is defined for the file in the resource
 			configuration file.
@@ -148,30 +148,30 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
 
   </sect1>
-  
-    <sect1>
+
+  <sect1>
     <title>Components</title>
     <para>
         Aranea configuration is determined by request-processing components that can be assembled in many different ways.
         Following sections are a brief reference for pre-existing standard components, most of which are also used
         in Aranea framework default configuration.
     </para>
-    
+
 
     <sect2>
       <title>Core Components</title>
-	<!-- 
+	<!--
       StandardServletServiceAdapterComponent
       StandardSessionListener  -->
     </sect2>
-    
+
     <sect2>
       <title>Routers</title>
       For explanation of router pattern, refer to <xref linkend="services-as-framework-plugins"/>
 
       <sect3>
         <title>StandardTopServiceRouterService and StandardThreadServiceRouterService</title>
-        
+
         <para>
             Top services and thread services are service levels specific to Aranea default configuration model.
             Motivation behind them is desire to let one user have more than one servant (service) at time.
@@ -180,62 +180,809 @@ class MyServlet extends BaseAraneaDispatcherServlet {
             and the service key names (these are the keys read from request that identify the top level or thread level service
             to which request should be routed).
         </para>
-        
+
         <para>
             It is easily possible to add more service levels, when the need should arise. Every service-level router
-            should enrich <literal>Environment</literal> with <literal>ManagedServiceContext</literal> and service-level specific 
+            should enrich <literal>Environment</literal> with <literal>ManagedServiceContext</literal> and service-level specific
             context. Specific context provided by <literal>StandardTopServiceRouterService</literal> is <literal>TopServiceContext</literal>
             and by <literal>StandardThreadServiceRouterService</literal>&mdash;<literal>ThreadContext</literal>.
         </para>
 
       </sect3>
 
-		<!--  
+		<!--
       PathInfoServiceRouterService
       StandardServletSessionRouterService -->
     </sect2>
-    
+
     <sect2 id="framework_filters">
       <title>Filters</title>
       For explanation of filter pattern, refer to <xref linkend="services-as-framework-plugins"/>
-      
+
       <para>
-        All filters have injectable properties for setting filter's child. For services, 
+        All filters have injectable properties for setting filter's child. For services,
         this property is <literal>childService</literal>, for widgets <literal>childWidget</literal>.
       </para>
-      
-      
-      &popupfilter;
-      &threadcloningfilter;
-      &messagefilter;
-      &synchronizingfilter;
-      &transactionfilter;
-      &serializingauditfilter;
-      &localizationfilter;
-      &fileuploadfilter;
-      &httpresponsefilter;
-      &statisticfilter;
-      &contextmapfilter;
-      &ajaxfilter;
-      &criticalexceptionfilter;
-      &jspfilter;
-      
+
+
+<sect3 id="StandardLocalizationFilterService">
+    <title>StandardLocalizationFilterService</title>
+
+    <informaltable frame="topbot">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>LocalizationContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        no dependencies among standard contexts.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+
+    <para>
+       Provides localization services to children. See <xref linkend="LocalizationContext"/>.
+    </para>
+
+    <informaltable frame="topbot">
+        <tgroup cols="3">
+            <colspec colwidth="1*" />
+            <colspec colwidth="2*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>languageName</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry> must be a valid ISO Language Code. Sets
+                        <literal>Locale</literal> according to given language.
+                    </entry>
+                </row>
+                <row>
+                    <entry>resourceBundleName</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>
+                         name of the used resource bundle class.
+                    </entry>
+                </row>
+                <row>
+                    <entry>locale</entry>
+                    <entry><literal>java.util.Locale</literal></entry>
+                    <entry>
+                        <literal>Locale</literal> to use. In configuration either that or <emphasis>languageName</emphasis>
+                        should be specified, not both.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>
+
+<sect3 id="StandardAjaxFilterService">
+    <title>StandardAjaxFilterService</title>
+
+    <para>
+       When serving AJAX requests made with AjaxAnywhere (see <xref linkend="ajaxanywhere"/>), extracts from
+       the initial response these page regions that need to be updated (request includes the names of these regions), then
+       modifies the response to include just these regions (not the whole page).
+    </para>
+
+    <table frame="topbot">
+        <title>Injectable properties</title>
+        <tgroup cols="2">
+            <colspec colwidth="1*" />
+            <colspec colwidth="2*" />
+            <thead>
+                <row>
+                    <entry>Name &amp; Type</entry>
+                    <entry>Description</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>characterEncoding
+                    <para><literal>java.lang.String</literal></para></entry>
+                    <entry>The character encoding for responses served by this filter, default being "UTF-8".</entry>
+                </row>
+                <row>
+                    <entry>existingRegions
+                    <para><literal>java.util.List&lt;String&gt;</literal></para></entry>
+                    <entry>When the filter is activated, it tries to extract specified regions from response, even
+                    if they were not explicitly asked to be updated in request. This is useful for always updating
+                    some common page regions (feedback message regions etc). Some default region names
+                    that should be updated when AJAX request is made are <literal>messages</literal>,
+                    <literal>popupRegistrationRegion</literal>.</entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </table>
+</sect3>
+
+<sect3 id="StandardContextMapFilterWidget">
+    <title>StandardContextMapFilterWidget</title>
+
+    <para>
+       Filter widget that enriches children's environment with specified context entries.
+    </para>
+
+    <informaltable frame="topbot">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>contexts</entry>
+                    <entry><literal>java.util.Map</literal></entry>
+                    <entry><literal>Map</literal>&lt;environmentEntryKey, environmentEntryValue&gt;</entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>
+
+<sect3 id="StandardCriticalExceptionHandlingFilterService">
+    <title>StandardCriticalExceptionHandlingFilterService</title>
+
+    <para>
+       Catches the exceptions (if any) occuring while executing children's methods; passes the exceptions on to
+       <literal>Service</literal> that deals with exception handling (obtained from <literal>ExceptionHandlerFactory</literal>).
+    </para>
+
+    <informaltable frame="topbot">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>factory</entry>
+                    <entry><literal>org.araneaframework.framework.ExceptionHandlerFactory</literal></entry>
+                    <entry>Factory that produces services dealing with exception handling.</entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>
+
+<sect3 id="StandardFileUploadFilterService">
+    <title>StandardFileUploadFilterService</title>
+
+    <informaltable frame="topbot">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>FileUploadContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        no dependencies among standard contexts.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+
+    <para>
+      Enriches child environment with <literal>FileUploadContext</literal> (which is just marker interface). When incoming request is 
+      multi-part request, children's <literal>InputData</literal> is extended with <literal>FileUploadInputExtension</literal>
+      that allows children easy access to uploaded files.
+    </para>
+    
+   <informaltable frame="topbot">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>multipartEncoding</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>
+                        character encoding that will be used to decode the <literal>multipart/form-data</literal>
+                        encoded strings. The default encoding is determined by <emphasis>Apache Commons</emphasis> <literal>FileUpload</literal> class.
+                    </entry>
+                </row>
+                <row>
+                    <entry>useRequestEncoding</entry>
+                    <entry><literal>boolean</literal></entry>
+                    <entry>
+                        when set to "true" request character encoding will be used to parse the
+                        <literal>multipart/form-data</literal> encoded strings.
+                    </entry>
+                </row>
+                <row>
+                    <entry>maximumCachedSize</entry>
+                    <entry><literal>java.lang.Integer</literal></entry>
+                    <entry>
+                        maximum size of file that may be cached in memory.
+                    </entry>
+                </row>
+                <row>
+                    <entry>maximumSize</entry>
+                    <entry><literal>java.lang.Integer</literal></entry>
+                    <entry>maximum size of file that may be uploaded to server.
+                    </entry>
+                </row>
+                <row>
+                    <entry>tempDirectory</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>temporary directory to use when uploading files.</entry>
+                </row>
+            </tbody>
+        </tgroup>
+   </informaltable>
+    
+</sect3>
+
+<sect3 id="StandardHttpResponseFilterService">
+    <title>StandardHttpResponseFilterService</title>
+
+    <para>
+       Filter that sets necessay headers of the response.
+    </para>
+
+    <informaltable frame="topbot">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>cacheable</entry>
+                    <entry><literal>boolean</literal></entry>
+                    <entry>Whether the response is cacheable or not. By default it is not cacheable.</entry>
+                </row>
+                <row>
+                    <entry>contentType</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>Sets the content type of the response. Default is "text/html; charset=UTF-8".</entry>
+                </row>
+                <row>
+                    <entry>cookies</entry>
+                    <entry><literal>java.util.Map</literal></entry>
+                    <entry>
+                        Constructs cookies from the &lt;key, value&gt; pairs in the map and sets them in response.
+                    </entry>
+                </row>
+                <row>
+                    <entry>headers</entry>
+                    <entry><literal>java.util.Map</literal></entry>
+                    <entry>
+                        Sets the headers of the response from the map of &lt;headerName, headerValue&gt;.
+                    </entry>
+                </row>
+                <row>
+                    <entry>cacheHoldingTime</entry>
+                    <entry><literal>long</literal></entry>
+                    <entry>Sets the cache-control's max-age parameter, value is in milliseconds. Response must be cacheable for
+                    this to have any effect.</entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>
+
+<sect3 id="StandardJspFilterService">
+    <title>StandardJspFilterService</title>
+
+    <informaltable frame="topbot">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>JspContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        <literal>LocalizationContext</literal> implementation
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+    
+    <para>
+       Provides JSP specific information to children.
+    </para>
+    
+    <informaltable frame="topbot">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>submitCharset</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>Sets the &quot;accept-charset&quot; attribute value that will be used for rendering
+                    Aranea JSP specific <xref linkend="systemForm"/>.</entry>
+                </row>
+                <row>
+                    <entry>jspPath</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>path where widgets rendering themselves with jsp templates should search for them. Default is "/WEB-INF/jsp".</entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>
+
+<sect3 id="StandardMessagingFilterWidget">
+    <title>StandardMessagingFilterWidget</title>
+
+    <informaltable frame="topbot">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>MessageContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        no dependencies among standard contexts.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+    
+    <para>
+        See <xref linkend="MessageContext"/>.
+    </para>
+</sect3>
+
+<sect3 id="StandardPopupFilterWidget">
+	<title>StandardPopupFilterWidget</title>
+
+	<informaltable frame="topbot">
+		<tgroup cols="2">
+			<colspec colwidth="2*" />
+			<colspec colwidth="5*" />
+			<tbody>
+				<row>
+					<entry>Provides</entry>
+					<entry>
+						<emphasis>PopupWindowContext</emphasis>
+					</entry>
+				</row>
+				<row>
+					<entry>Depends on</entry>
+					<entry>
+						<literal>ThreadContext</literal>
+						implementation,
+						<literal>TopServiceContext</literal>
+						implementation
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</informaltable>
+    
+    <para>
+        Provides methods for opening new session-threads and renders
+        these in different browser windows at client-side.
+    </para>
+    
+	<informaltable frame="topbot">
+		<tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+			<thead>
+				<row>
+					<entry>Injectable properties</entry>
+                     <entry>Type</entry>
+					<entry>Purpose</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry>threadServiceFactory</entry>
+                     <entry><literal>org.araneaframework.core.ServiceFactory</literal></entry>
+					<entry>
+						factory that should build the component chain according
+						to effective Aranea configuration, beginning
+						with sessionthread-level filters.
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</informaltable>
+</sect3>
+
+<sect3 id="StandardSerializingAuditFilterService">
+    <title>StandardSerializingAuditFilterService</title>
+
+    <para>
+      Serializes the the session during the request routing. This
+      filter helps to be aware of serializing issues during development as when the
+      session does not serialize, exception is always thrown. In production configuration,
+      this filter should never be enabled.
+    </para>
+
+    <informaltable frame="topbot">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>testXmlSessionPath</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>the path where the serialized
+                        sessions should be logged in XML format. If not specified, serialization tests
+                        are performed in-memory.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>
+
+<sect3 id="StandardStatisticFilterService">
+    <title>StandardStatisticFilterService</title>
+
+    <para>
+        Filter that logs the time it takes for the child service to serve the request (complete its action method). 
+    </para>
+    
+    <informaltable frame="topbot">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>namespace</entry>
+                    <entry><literal>java.lang.String</literal></entry>
+                    <entry>
+                        Prefix namespace for logging statement.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>
+
+<sect3 id="StandardSynchronizingFilterService">
+    <title>StandardSynchronizingFilterService</title>
+
+    <para>
+      Synchronizes the calls to its child widget. Enriches environment with <literal>SynchronizingContext</literal> (which is just marker interface).
+    </para>
+</sect3>
+
+<sect3 id="StandardThreadCloningFilterService">
+	<title>StandardThreadCloningFilterService</title>
+
+	<informaltable frame="topbot">
+		<tgroup cols="2">
+			<colspec colwidth="2*" />
+			<colspec colwidth="5*" />
+			<tbody>
+				<row>
+					<entry>Provides</entry>
+					<entry>
+						<emphasis>ThreadCloningContext</emphasis>
+					</entry>
+				</row>
+				<row>
+					<entry>Depends on</entry>
+					<entry>
+						<literal>ThreadContext</literal>
+						implementation,
+						<literal>TopServiceContext</literal>
+						implementation
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</informaltable>
+
+    <para>
+        Implementation of a service that clones currently running session thread upon request and sends a response
+        that redirects to cloned session thread. It can be used to support "open link in new window" feature in browsers.
+        Cloning is generic and resource demanding, as whole tree of session thread components is recreated. Custom
+        applications may find that they can implement some application specific cloning strategy that demands less
+        memory and processing power.
+    </para>
+
+        <informaltable frame="topbot">
+        <tgroup cols="3">
+            <colspec colwidth="2*" />
+            <colspec colwidth="1*" />
+            <colspec colwidth="4*" />
+            <thead>
+                <row>
+                    <entry>Injectable properties</entry>
+                    <entry>Type</entry>
+                    <entry>Purpose</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry>timeToLive</entry>
+                    <entry><literal>java.lang.Long</literal></entry>
+                    <entry>Inactivity time for cloned thread after which thread router may kill the thread service.
+                    This is specified in milliseconds. If unset, threads created by cloning service usually live
+                    until HTTP session in which they were spawned expires.</entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+</sect3>
+
+<sect3 id="StandardTransactionFilterWidget">
+    <title>StandardTransactionFilterWidget</title>
+
+    <informaltable frame="topbot">
+        <tgroup cols="2">
+            <colspec colwidth="2*" />
+            <colspec colwidth="5*" />
+            <tbody>
+                <row>
+                    <entry>Provides</entry>
+                    <entry>
+                        <emphasis>TransactionContext</emphasis>
+                    </entry>
+                </row>
+                <row>
+                    <entry>Depends on</entry>
+                    <entry>
+                        no dependencies among standard contexts.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </informaltable>
+
+    <para>
+      <emphasis>TransactionContext</emphasis> implementation that filters routing of duplicate requests. The detection of
+      duplicate requests is achieved through defining new transaction ID in each response and checking that next request
+      submits the consistent transaction ID. Missing (<emphasis>null</emphasis>) transaction ID is always considered
+      inconsistent. For purposes of asynchronous requests, <literal>override</literal> transaction ID is
+      always considered consistent.
+    </para>
+
+    <table frame="all">
+        <title>Request parameters</title>
+        <tgroup cols="3">
+            <colspec colwidth="1*" />
+            <colspec colwidth="2*" />
+            <thead>
+                <row>
+                    <entry>Parameter name</entry>
+                    <entry>Description</entry>
+                </row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry><literal>transactionId</literal></entry>
+                    <entry>
+                      Transaction id must be equal to the last one generated for the transaction to be consistent.
+                    </entry>
+                </row>
+            </tbody>
+        </tgroup>
+    </table>
+</sect3>
+
+
+
 <!--  StandardContinuationFilterService
       StandardFileImportFilterService -->
     </sect2>
-    
+
     <sect2>
       <title>Containers</title>
-      &flowcontainer;
-      &standardcontainers;
+
+      <sect3 id="StandardFlowContainerWidget">
+          <title>Flow Container</title>
+
+          <informaltable frame="topbot">
+              <tgroup cols="2">
+                  <colspec colwidth="2*" />
+                  <colspec colwidth="5*" />
+                  <tbody>
+                      <row>
+                          <entry>Provides</entry>
+                          <entry>
+                              <emphasis>FlowContext</emphasis>
+                          </entry>
+                      </row>
+                      <row>
+                          <entry>Depends on</entry>
+                          <entry>
+                              no dependencies among standard contexts.
+                          </entry>
+                      </row>
+                  </tbody>
+              </tgroup>
+          </informaltable>
+          
+          <para>
+              See <xref linkend="FlowContext"/> for purpose and philosophy behind <emphasis>FlowContext</emphasis>.
+          </para>
+          
+          <informaltable frame="topbot">
+              <tgroup cols="2">
+                  <colspec colwidth="2*" />
+                  <colspec colwidth="5*" />
+                  <thead>
+                      <row>
+                          <entry>Injectable properties</entry>
+                          <entry>Purpose</entry>
+                      </row>
+                  </thead>
+                  <tbody>
+                      <row>
+                          <entry>top</entry>
+                          <entry>
+                              <literal>
+                                  org.araneaframework.Widget
+                              </literal>
+                              First widget to be started in this container.
+                          </entry>
+                      </row>
+                  </tbody>
+              </tgroup>
+          </informaltable>
+      </sect3>
       
-<!-- 
+      <sect3 id="StandardContainers">
+          <title>StandardContainerService, StandardContainerWidget</title>
+          
+          <para>
+            Although classified as container, <literal>StandardContainerService</literal> is really a filter.
+            It acts as intelligent container, by routing an <literal>action()</literal> to its child service only 
+            when the request <literal>InputData</literal> is such that demands it.
+          </para>
+          
+          <para>
+              <literal>StandardContainerWidget</literal> is also much like filter, it contains one child
+              widget&mdash;but unlike in <literal>FilterWidgets</literal>, this child is named. Child
+              contained in <literal>StandardContainerWidget</literal> is often referred to as root widget, as in
+              standard Aranea configuration it starts the hierarchy of real application widgets.
+          </para>
+
+          <informaltable frame="topbot">
+              <tgroup cols="2">
+                  <colspec colwidth="2*" />
+                  <colspec colwidth="5*" />
+                  <tbody>
+                      <row>
+                          <entry>Provides</entry>
+                          <entry>
+                              <emphasis>FlowContext</emphasis>
+                          </entry>
+                      </row>
+                      <row>
+                          <entry>Depends on</entry>
+                          <entry>
+                              no dependencies among standard contexts.
+                          </entry>
+                      </row>
+                  </tbody>
+              </tgroup>
+          </informaltable>
+
+          <para>
+              See <xref linkend="FlowContext"/> for purpose and philosophy behind <emphasis>FlowContext</emphasis>.
+          </para>
+
+          <informaltable frame="topbot">
+              <tgroup cols="2">
+                  <colspec colwidth="2*" />
+                  <colspec colwidth="5*" />
+                  <thead>
+                      <row>
+                          <entry>Injectable properties</entry>
+                          <entry>Purpose</entry>
+                      </row>
+                  </thead>
+                  <tbody>
+                      <row>
+                          <entry>top</entry>
+                          <entry>
+                              <literal>
+                                  org.araneaframework.Widget
+                              </literal>
+                              First widget to be started in this container.
+                          </entry>
+                      </row>
+                  </tbody>
+              </tgroup>
+          </informaltable>
+      </sect3>
+
+
+<!--
       ExceptionHandlingFlowContainerWidget
       StandardServiceAdapterWidget
       StandardWidgetAdapterService
       PathInfoServiceContainerService -->
     </sect2>
-    
+
     <sect2>
       <title>Other</title>
     </sect2>
