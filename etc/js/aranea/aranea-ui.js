@@ -15,7 +15,6 @@
 **/
 
 /**
- * Behaviour rules required for Aranea JSP to work correctly.
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 

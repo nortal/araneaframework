@@ -33,7 +33,7 @@
       <mediaobject>
         <imageobject>
           <imagedata 
-            fileref="images/form.png"
+            fileref="../shared/images/form.png"
             format="PNG" />
         </imageobject>
       </mediaobject>        
@@ -2377,7 +2377,7 @@ el.click();]]></programlisting>
       <mediaobject>
         <imageobject>
           <imagedata 
-            fileref="images/formList.png"
+            fileref="../shared/images/formList.png"
             format="PNG" />
         </imageobject>
       </mediaobject>        

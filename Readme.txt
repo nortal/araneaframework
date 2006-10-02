@@ -1,5 +1,5 @@
 **********************************************************
-* THE ARANEA FRAMEWORK, release 1.0 RC4 (September 2006) *
+* THE ARANEA FRAMEWORK, release 1.0 RC4 (October 2006)   *
 *        http://www.araneaframework.org/                 *
 **********************************************************
 

@@ -154,6 +154,8 @@ public class DateTimeControl extends BaseControl {
   }
   
   public void setRawValue(Object value) {
+    // mark composite control dirty
+    super.setRawValue(null);
     dateControl.setRawValue(value);    
     timeControl.setRawValue(value);
   }

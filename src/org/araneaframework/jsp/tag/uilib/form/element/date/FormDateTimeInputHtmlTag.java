@@ -5,6 +5,7 @@ import java.io.Writer;
 import java.text.ParseException;
 import java.util.Calendar;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.TimestampControl.ViewModel;
@@ -72,7 +73,15 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   	    hour = new Integer(calendar.get(Calendar.HOUR_OF_DAY));
    	    minute = new Integer(calendar.get(Calendar.MINUTE));
       }
-    } catch (ParseException e) {	}
+    } catch (ParseException e) {
+        // try to preserve the contents of selects anyway
+    	String strHour =  ServletUtil.getRequest(getOutputData().getInputData()).getParameter(name+".select1");
+    	if (strHour != null && !(strHour.trim().length() == 0))
+     	  hour = Integer.valueOf(strHour.trim());
+    	String strMinute = ServletUtil.getRequest(getOutputData().getInputData()).getParameter(name+".select2");
+    	if (strMinute != null && !(strMinute.trim().length() == 0))
+    	  minute = Integer.valueOf(strMinute);
+    }
 
     writeHourSelect(out, name, viewModel.isDisabled(), hour);
     writeMinuteSelect(out, name, viewModel.isDisabled(), minute);
