@@ -43,7 +43,6 @@ public final class RangeConstraint extends BaseConstraint {
 	 * @param fieldHi The value of this field is checked to be greater than the value of fieldLo (or null)
 	 * @param allowEquals If this is true, the constraint will be considered satisfied when values of fieldLo and fieldHi are 
 	 *                    equal. Otherwise the constraint won't be satisfied in this case.
-	 * @param locale  In case the data to be compared is of type String, this locale will be used in comparison.
 	 */
 	public RangeConstraint(FormElement fieldLo, FormElement fieldHi, boolean allowEquals) {
 		this.allowEquals = allowEquals;

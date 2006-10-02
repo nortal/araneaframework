@@ -20,7 +20,6 @@ import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
-import org.araneaframework.example.main.web.demo.DemoEmbeddedDisplayableEditableList.DemoEditableRowHandler;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;

@@ -36,4 +36,18 @@ public interface FileUploadInputExtension extends Serializable {
    * @return Map of &lt;fileName, fileContent&gt;
    */
   public Map getUploadedFiles();
+
+  
+  /**
+   * Returns the exception that occured when trying to parse file upload.
+   * @return exception that occured when trying to parse file upload
+   */
+  public Exception getUploadException();
+
+  /**
+   * Returns whether file upload succeeded, this should only be true when 
+   * {@link FileUploadInputExtension#getUploadException()} is <code>null</code>.
+   * @return whether upload was successful
+   */
+  public boolean uploadSucceeded();
 }

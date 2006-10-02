@@ -13,10 +13,12 @@ Bugfixes
         NPE when layout(cell|row) was provided empty class ""                 | See change #117
         MessageContext losing message ordering                                | See #244
         OutputData and InputData are not Serializable anymore                 | See change #114
+        DateTimeControl value could not be set by programmer                  | See change #120
+        Request encoding was set at the wrong time                            | See #236
 
 API Changes
         Lists API did change substantially.
-        Form lists API changed quite substantially.
+        Form lists API changed a little.
         ErrorUtil -> MessageUtil
         CompositeConstraint -> BaseCompositeConstraint
         DisplayItemUtil.addItemsFromVoCollection -> addItemsFromBeanCollection

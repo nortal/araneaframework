@@ -23,6 +23,12 @@
     </property>
   </bean>
   
+  <!-- Set the limits for file uploads. -->
+  <bean id="araneaFileUploadFilter" class="org.araneaframework.http.filter.StandardFileUploadFilterService" singleton="false">
+    <property name="maximumSize" value="1048576"/>
+    <property name="maximumCachedSize" value="1048576"/>
+  </bean>
+  
   <bean id="customSessionFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardFilterChainService">
     <property name="filterChain">     

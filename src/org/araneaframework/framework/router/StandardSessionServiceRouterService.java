@@ -19,7 +19,6 @@ package org.araneaframework.framework.router;
 import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.SessionServiceContext;
 
@@ -31,10 +30,6 @@ import org.araneaframework.framework.SessionServiceContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardSessionServiceRouterService extends BaseServiceRouterService {
-  protected Object getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get(SessionServiceContext.SESSION_SERVICE_KEY);
-  }
-
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
     Map entries = new HashMap();    
     entries.put(SessionServiceContext.class, new ServiceRouterContextImpl(serviceId));
