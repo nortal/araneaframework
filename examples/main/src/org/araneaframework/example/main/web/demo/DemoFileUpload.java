@@ -18,7 +18,6 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.service.FileDownloaderService;
@@ -29,6 +28,7 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.FileUploadControl;
 import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.FileInfoData;
 import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.list.ListWidget;
@@ -71,6 +71,8 @@ public class DemoFileUpload extends TemplateBaseWidget {
 	
 	private FormWidget buildForm() throws Exception {
 		final FormWidget result = new FormWidget();
+		
+		result.addElement("encodingTest", "#encodingTest", new TextControl(), new StringData(), false);
 
 		SelectControl select = new SelectControl();
 		select.addOnChangeEventListener(new OnChangeEventListener() {
