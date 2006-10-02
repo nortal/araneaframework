@@ -24,8 +24,6 @@ import java.util.List;
  */
 public interface TreeDataProvider extends Serializable {
 
-	TreeNodeWidget getRoot();
-
 	List getChildren(TreeNodeWidget parent);
 
 }

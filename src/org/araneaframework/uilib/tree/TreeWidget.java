@@ -17,15 +17,14 @@
 package org.araneaframework.uilib.tree;
 
 import org.araneaframework.Environment;
+import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
  */
-public class TreeWidget extends BaseApplicationWidget implements TreeContext {
+public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,21 +35,16 @@ public class TreeWidget extends BaseApplicationWidget implements TreeContext {
 
 	public TreeWidget(TreeDataProvider dataProvider) {
 		super();
-		Assert.notNull(dataProvider);
+		Assert.notNullParam(dataProvider, "dataProvider");
 		this.dataProvider = dataProvider;
 	}
 
 	protected void init() throws Exception {
-		super.init();
-		addWidget(ROOT_KEY, loadRoot());
+		addAllNodes(loadChildren());
 	}
 
-	protected TreeNodeWidget loadRoot() {
-		return getDataProvider().getRoot();
-	}
-
-	protected Environment getChildWidgetEnvironment() throws Exception {
-		return new StandardEnvironment(getEnvironment(), TreeContext.class, this);
+	public Environment getEnvironment() {
+		return new StandardEnvironment(super.getEnvironment(), TreeContext.class, this);
 	}
 
 	public TreeDataProvider getDataProvider() {
@@ -61,20 +55,21 @@ public class TreeWidget extends BaseApplicationWidget implements TreeContext {
 		return disposeChildren;
 	}
 
-	public Object getViewModel() throws Exception {
-		return new ViewModel();
+	public Widget getDisplay() {
+		// Should never be called!
+		return null;
 	}
 
-	public class ViewModel extends BaseUIWidget.ViewModel {
+	public void expand() {
+		// Should never be called!
+	}
 
-		public TreeNodeWidget getRoot() {
-			return (TreeNodeWidget) TreeWidget.this.getChildren().get(TreeWidget.ROOT_KEY);
-		}
+	public void collapse() {
+		// Should never be called!
+	}
 
-		public String getRootId() {
-			return TreeWidget.ROOT_KEY;
-		}
-
+	public void invertCollapsed() {
+		// Should never be called!
 	}
 
 }

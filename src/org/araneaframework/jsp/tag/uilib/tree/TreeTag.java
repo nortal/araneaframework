@@ -26,7 +26,6 @@ import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.tree.TreeNodeWidget;
-import org.araneaframework.uilib.tree.TreeWidget;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -39,60 +38,54 @@ public class TreeTag extends BaseWidgetTag {
 
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		TreeWidget.ViewModel treeViewModel = (TreeWidget.ViewModel) viewModel;
+		TreeNodeWidget.ViewModel node = (TreeNodeWidget.ViewModel) viewModel;
 
 		WidgetContextTag treeWidgetContextTag = new WidgetContextTag();
 		registerSubtag(treeWidgetContextTag);
 		treeWidgetContextTag.setId(id);
 		executeStartSubtag(treeWidgetContextTag);
 
-		WidgetContextTag widgetContextTag = new WidgetContextTag();
-		registerSubtag(widgetContextTag);
-		widgetContextTag.setId(treeViewModel.getRootId());
-		executeStartSubtag(widgetContextTag);
-
-		JspUtil.writeStartTag(out, "ul");
-		renderNode(out, (TreeNodeWidget.ViewModel) treeViewModel.getRoot().getViewModel());
-		JspUtil.writeEndTag(out, "ul");
-
-		executeEndTagAndUnregister(widgetContextTag);
+		renderNodes(out, node.getNodes());
 
 		executeEndTagAndUnregister(treeWidgetContextTag);
 
 		return SKIP_BODY;
 	}
 
-	private void renderNode(Writer out, TreeNodeWidget.ViewModel node) throws Exception {
-		JspUtil.writeStartTag(out, "li");
+	private void renderNodes(Writer out, List nodes) throws Exception {
+		JspUtil.writeStartTag(out, "ul");
+		for (ListIterator i = nodes.listIterator(); i.hasNext(); ) {
+			WidgetContextTag widgetContextTag = new WidgetContextTag();
+			registerSubtag(widgetContextTag);
+			widgetContextTag.setId(Integer.toString(i.nextIndex()));
+			executeStartSubtag(widgetContextTag);
 
-		/* Render display widget of node */
-		ApplicationWidget display = JspWidgetUtil.getWidgetFromContext(node.getDisplayId(), pageContext);
-		out.flush();
-		WidgetContextTag widgetContextTag = new WidgetContextTag();
-		registerSubtag(widgetContextTag);
-		widgetContextTag.setId(node.getDisplayId());
-		executeStartSubtag(widgetContextTag);
-		display._getWidget().render(getOutputData());
-		executeEndTagAndUnregister(widgetContextTag);
 
-		/* Render child nodes */
-		if (!node.isCollapsed()) {
-			JspUtil.writeStartTag(out, "ul");
-			List nodes = node.getNodes();
-			for (ListIterator i = nodes.listIterator(); i.hasNext(); ) {
-				widgetContextTag = new WidgetContextTag();
-				registerSubtag(widgetContextTag);
-				widgetContextTag.setId(Integer.toString(i.nextIndex()));
-				executeStartSubtag(widgetContextTag);
+			JspUtil.writeStartTag(out, "li");
 
-				renderNode(out, (TreeNodeWidget.ViewModel) i.next());
+			TreeNodeWidget.ViewModel node = (TreeNodeWidget.ViewModel) i.next();
 
-				executeEndTagAndUnregister(widgetContextTag);
+			/* Render display widget of node */
+			ApplicationWidget display = JspWidgetUtil.getWidgetFromContext(node.getDisplayId(), pageContext);
+			out.flush();
+			WidgetContextTag displayWidgetContextTag = new WidgetContextTag();
+			registerSubtag(displayWidgetContextTag);
+			displayWidgetContextTag.setId(node.getDisplayId());
+			executeStartSubtag(displayWidgetContextTag);
+			display._getWidget().render(getOutputData());
+			executeEndTagAndUnregister(displayWidgetContextTag);
+
+			/* Render child nodes */
+			if (!node.isCollapsed()) {
+				renderNodes(out, node.getNodes());
 			}
-			JspUtil.writeEndTag(out, "ul");
-		}
 
-		JspUtil.writeEndTag(out, "li");
+			JspUtil.writeEndTag(out, "li");
+
+
+			executeEndTagAndUnregister(widgetContextTag);
+		}
+		JspUtil.writeEndTag(out, "ul");
 	}
 
 }

@@ -43,6 +43,11 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	private Widget display;
 	private List initNodes;
 
+	TreeNodeWidget() {
+		super();
+		this.collapsed = false;
+	}
+
 	public TreeNodeWidget(Widget display) {
 		super();
 		Assert.notNull(display);
@@ -61,8 +66,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	}
 
 	protected void init() throws Exception {
-		super.init();
-
 		addWidget(DISPLAY_KEY, display);
 		display = null;
 

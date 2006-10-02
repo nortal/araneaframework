@@ -49,10 +49,6 @@ public class SimpleTreeWidget extends BaseUIWidget {
 			return children;
 		}
 
-		public TreeNodeWidget getRoot() {
-			return new TreeNodeWidget(new TestWidget(), getChildren(null), false);
-		}
-
 	}
 
 	public static class TestWidget extends BaseUIWidget {
