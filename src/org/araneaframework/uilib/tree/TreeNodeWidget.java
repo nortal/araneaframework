@@ -16,17 +16,21 @@
 
 package org.araneaframework.uilib.tree;
 
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.araneaframework.Environment;
+import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.uilib.core.BaseUIWidget;
+import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -40,7 +44,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	private boolean collapsed = true;
 	private boolean collapsedDecide = false;
 	private int nodeCount = 0;
-	private Widget display;
+	private Widget initDisplay;
 	private List initNodes;
 
 	TreeNodeWidget() {
@@ -51,7 +55,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	public TreeNodeWidget(Widget display) {
 		super();
 		Assert.notNull(display);
-		this.display = display;
+		this.initDisplay = display;
 	}
 
 	public TreeNodeWidget(Widget display, List nodes) {
@@ -66,8 +70,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	}
 
 	protected void init() throws Exception {
-		addWidget(DISPLAY_KEY, display, getDisplayWidgetEnvironment());
-		display = null;
+		addWidget(DISPLAY_KEY, initDisplay, getDisplayWidgetEnvironment());
+		initDisplay = null;
 
 		if (this.initNodes != null) {
 			addAllNodes(initNodes);
@@ -160,6 +164,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		return (TreeNodeWidget) getChildren().get(Integer.toString(index));
 	}
 
+	// returns List<TreeNodeWidget>
 	public List getNodes() {
 		Map children = getChildren();
 		List nodes = new ArrayList(getNodeCount());
@@ -169,6 +174,10 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		return nodes;
 	}
 
+	public boolean hasNodes() {
+		return getNodeCount() > 0;
+	}
+/*
 	public Object getViewModel() throws Exception {
 		return new ViewModel();
 	}
@@ -196,6 +205,37 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 			return viewModels;
 		}
 
+	}
+*/
+	protected void render(OutputData output) throws Exception {
+		// Render display widget
+		Widget display = getDisplay();
+		if (display != null) {	// display is null if this is a TreeWidget
+			try {
+				output.pushScope(TreeNodeWidget.DISPLAY_KEY);
+				display._getWidget().render(output);
+			} finally {
+				output.popScope();
+			}
+		}
+
+		// Render child nodes
+		if (!isCollapsed() && hasNodes()) {
+			Writer out = ((HttpOutputData) output).getWriter();
+			JspUtil.writeStartTag(out, "ul");
+			List nodes = getNodes();
+			for (ListIterator i = nodes.listIterator(); i.hasNext(); ) {
+				JspUtil.writeStartTag(out, "li");
+				try {
+					output.pushScope(Integer.toString(i.nextIndex()));
+					((TreeNodeWidget) i.next()).render(output);
+				} finally {
+					output.popScope();
+				}
+				JspUtil.writeEndTag(out, "li");
+			}
+			JspUtil.writeEndTag(out, "ul");
+		}
 	}
 
 }

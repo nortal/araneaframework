@@ -31,7 +31,9 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 	public static final String ROOT_KEY = "root";
 
 	private TreeDataProvider dataProvider;
-	private boolean disposeChildren = true;
+	private boolean disposeChildren = true; // remove all children when node is collapsed
+	                                        //(implies reloading children when node is reopened)
+	//private boolean updateWholeTree = false;
 
 	public TreeWidget(TreeDataProvider dataProvider) {
 		super();
@@ -56,7 +58,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 	}
 
 	public Widget getDisplay() {
-		// Should never be called!
+		// Only called from render()
 		return null;
 	}
 
