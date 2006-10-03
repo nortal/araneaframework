@@ -66,7 +66,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	}
 
 	protected void init() throws Exception {
-		addWidget(DISPLAY_KEY, display);
+		addWidget(DISPLAY_KEY, display, getDisplayWidgetEnvironment());
 		display = null;
 
 		if (this.initNodes != null) {
@@ -79,7 +79,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		}
 	}
 
-	protected Environment getChildWidgetEnvironment() throws Exception {
+	protected Environment getDisplayWidgetEnvironment() {
 		return new StandardEnvironment(getEnvironment(), TreeNodeContext.class, this);
 	}
 
