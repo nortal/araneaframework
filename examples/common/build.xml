@@ -56,8 +56,8 @@
 
 		<!--Compile Java source files-->
 		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on" encoding="utf-8"
-			target="1.3"
-			source="1.3">
+			target="1.5"
+			source="1.5">
 			<classpath refid="classpath" />
 			<include name="**/*.java" />
 		</javac>
