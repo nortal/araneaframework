@@ -31,8 +31,8 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
  *   description = "Represents an HTML form button."
  */
 public class EventButtonHtmlTag extends BaseEventButtonTag {
-  private static final String RENDER_BUTTON = "button";
-  private static final String RENDER_INPUT = "input";
+  public static final String RENDER_BUTTON = "button";
+  public static final String RENDER_INPUT = "input";
 
   {
      baseStyleClass = "aranea-button";
