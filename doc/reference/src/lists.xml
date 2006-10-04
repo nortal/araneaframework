@@ -163,7 +163,7 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 					<varlistentry>
 						<term>Values</term>
 						<listitem>
-							Global test data provided by HTTP request, a FormWidget etc.
+							Global test data provided by the FormWidget.
 							Each Value have its own identifier ('name', 'birthday')
 							and the value itself ('A', January 1st 1970).
 							Notice the uppercased V and lowercased v.
@@ -176,14 +176,14 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 			</para>
 			<para>
 				Notice that the field Id match the data in each list row
-				and the value Id match the data provided by the HTTP request or FormWidget.
+				and the value Id match the data provided by the FormWidget.
 				It's very common to have same identifier for a field Id and a value Id, but
 				to apply several tests for one field, they have to use different value Ids or behaviours
 				and to apply several tests for one value, they have to use different field Ids or behaviours.
 			</para>
 			<para>
 				Aranea provides filters with values using the <code>FormWidget</code>.
-				By default each filter is only created along with the corresponding FormElements.
+				By default each filter is created with the corresponding FormElements.
 				Each FormElement is added to the filter form by the same element Id as the Value Id of the filter.
 				However one can add a filter without FormElements either.
 			</para>
@@ -229,7 +229,36 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 			</para>
 			
 			<para>
-				Aranea provides many filters out-of-the-box.
+				There are several methods to add a filter with the same behaivor depending on the Value Id and the FormElement.
+				By default each filter is created with the corresponding FormElements.
+				This FormElement is created according to the associated field type and label.
+			</para>
+			<para>
+				To add a filter with a FormElement using a specified label, use:
+<programlisting role="java">myList.addField("name", "#Name").useCustomLabel("#Alias").eq()</programlisting>
+				To add a filter with a FormElement using a different <code>Data</code> type, use:
+<programlisting role="java">myList.addField("name", "#Name").useFieldType(Long.class).eq()</programlisting>
+				To add a filter with a FormElement using a specified <code>Control</code>, use:
+<programlisting role="java">myList.addField("name", "#Name").eq(mySelectControl)</programlisting>
+				To use a spcified FormElement:
+<programlisting role="java">myList.addField("name", "#Name").eq(myFormElement)</programlisting>				
+				To add a filter without FormElement, use:
+<programlisting role="java">myList.addField("name", "#Name")._eq()</programlisting>
+				Notice the underscore at the start of the method name.				
+				To add a filter without FormElement but a specified constant value instead, use:
+<programlisting role="java">myList.addField("name", "#Name").eqConst("Peter")</programlisting>
+			</para>
+			
+			<para>
+				To associate filter with a different value Id than the just added field Id, use one of the following methods:
+<programlisting role="java">myList.addField("name", "#Name").eq("name2")</programlisting>				
+<programlisting role="java">myList.addField("name", "#Name").eq("name2", mySelectControl)</programlisting>
+<programlisting role="java">myList.addField("name", "#Name").eq("name2", myFormElement)</programlisting>				
+				Others filters have analogous methods.
+			</para>
+			
+			<para>
+				Aranea provides many filters:
 				<variablelist>
 					<varlistentry>
 						<term>Equal (eq)</term>
@@ -244,7 +273,7 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 						</listitem>
 					</varlistentry>
 					<varlistentry>
-						<term>Lower than</term>
+						<term>Lower than (lt)</term>
 						<listitem>
 							1 field &lt; 1 value
 						</listitem>
@@ -285,76 +314,8 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 					</varlistentry>
 				</variablelist>
 			</para>
-		</sect2>
-
-		<sect2>
-			<title>Filter with multiple values</title>
-						
-			<para>
-				Basically, each list column can be associated with one <classname>ListFilter</classname> and one <classname>FormElement</classname> (with its own identifier). However, so we can describe only very simple filtering conditions. Thus each Aranea List can contain more flexible filters, which can be associated with zero or more list columns and zero or more filter values that are binded by filter <classname>FormElement</classname> widgets that have a unique identifier for each (this is also called <emphasis>FilterInfoKey</emphasis>).
-			</para>			
-
-			<para>
-				The following example discovers adding a column with filter that is associated with two <classname>FormElement</classname> widgets. That means one filter needs two values that may be entered.
-<programlisting role="java">...
-myList.addBeanColumn("birthday", "#Birthday", true);
-RangeColumnFilter birthdayFilter = new RangeColumnFilter.NonStrict("birthday");
-myList.addFilter(birthdayFilter);
-myList.addFilterFormElement(birthdayFilter.getStartFilterInfoKey(),
-  "#Birthday From", new DateControl(), new DateData());
-myList.addFilterFormElement(birthdayFilter.getEndFilterInfoKey(),
-  "#Birthday Till", new DateControl(), new DateData());
-...</programlisting>
-				Note that here we do following things:
-				<variablelist spacing="compact">
-					<varlistentry>
-						<term>Add list column</term>
-						<listitem>The line <literal>myList.addBeanColumn("birthday", "#Birthday", true)</literal> adds a column associated with the JavaBean property "birthday" (this is also the identifier of the column), with a label "#birthday" and makes the column orderable.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Construct column filter</term>
-						<listitem>The line <literal>ListFilter birthdayFilter = new RangeColumnFilter.NonStrict("birthday")</literal> constructs <literal>Non-Strict Range</literal> filter for column "birthday". Notice that now we passed the column identifier to the filter because we did not add the filter among the column itself.</listitem>
-					</varlistentry>										
-					<varlistentry>
-						<term>Add column filter</term>
-						<listitem>The line <literal>myList.addFilter(birthdayFilter)</literal> adds the constructed filter to the list.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Add filter <classname>FormElemenet</classname> widgets</term>
-						<listitem>The line <literal>list.addFilterFormElement(birthdayFilter.getStartFilterInfoKey(), "#Birthday From", new DateControl(), new DateData())</literal> takes full arguments as adding <classname>FormElement</classname> to <classname>FormWidget</classname>. Because we need to create more than one <classname>FormElement</classname> widgets here with unique identifier, we can not use JavaBean propery "birthday" here (this could result two <classname>FormElement</classname> widgets with the same identifier). Furthermore, the identifiers of <classname>FormElement</classname> widgets must be known by the filter that they are associated. Otherwise their values are not binded to the filter. Here we use default <emphasis>FilterInfoKey</emphasis> values chosen by the filter according to the column identifier. Alternatively we could choose other keys and provide them to the filter instead.</listitem>
-					</varlistentry>					
-				</variablelist>
-				Notice that each time we have more than one <classname>FormElemenet</classname> widgets associated with one filter, we can not just pass a <classname>Control</classname> widget to the <literal>addColumn</literal> method as weel as use <classname>BeanFormWidget</classname>-like methods to avoid setting <classname>Data</classname> objects.
-			</para>
 			
-			<para>
-				In addition one could add additional <classname>Constraint</classname> to this filter <classname>FormWidget</classname> as following:
-<programlisting role="java">...
-FormWidget filterForm = myList.getFilterForm();
-filterForm.setConstraint(new RangeConstraint(
-  filterForm.getElementByFullName(birthdayFilter.getStartFilterInfoKey()),
-  filterForm.getElementByFullName(birthdayFilter.getEndFilterInfoKey()),
-  true)); 
-...</programlisting>
-				This makes sure that the provided range is valid - the first value is lower than the seoncd. Additional third parameter (here <literal>true</literal>) defines whether the equals condition is also allowed.
-			</para>
-
-			<para>
-				The following example discovers adding two columns with one filter that is associated with two <classname>FormElement</classname> widgets. That means one filter needs two values that may be entered.
-<programlisting role="java">...
-myList.addBeanColumn("start", "#Start", true);
-myList.addBeanColumn("finish", "#Finish", true);
-ListFilter dateFilter =
-  new RangeInRangeFilter.ColumnRangeInValueRangeNonStrict("startDate", "endDate");
-myList.addFilter(dateFilter);
-myList.addFilterFormElement(dateFilter.getStartFilterInfoKey(), "#Start Date",
-  new DateControl(), new DateData());
-myList.addFilterFormElement(dateFilter.getEndFilterInfoKey(), "#End Date",
-  new DateControl(), new DateData());
-...</programlisting>
-				This example differs from the previous one very little. <literal>RangeInRange</literal> filter is just constructed with two column idnetifiers.
-			</para>
-		</sect2>    	
+		</sect2>
     	
 		<sect2>
 			<title>Backend Data Provider</title>
