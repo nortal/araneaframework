@@ -23,8 +23,8 @@ import java.util.Map;
  * Composite is a component with a set of child components. In a Composite
  * children can form a hierarchially having composites as children and so on.
  * <br><br>
- * This class should not be directly implemented. ComponentInterface, ServiceInterface and
- * WidgetInterface should be used. They provide composite component, services and widgets.
+ * This class should not be directly implemented, but {@link CompositeComponent}, 
+ * {@link CompositeService} or {@link CompositeWidget} instead. 
  * <br><br>
  * The Component follows the template pattern by defining <code>_getComposite</code> which returns the
  * implementation.

@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.jsp.tag.updateRegion;
+package org.araneaframework.jsp.tag.updateregion;
 
 import java.io.Writer;
 import org.araneaframework.jsp.util.JspUtil;

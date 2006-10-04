@@ -15,19 +15,143 @@
 -->
 
 <chapter id="forms">
-	<title>Forms and Data Binding</title>
-	<sect1>
-    <title>Introduction</title>
+  <title>Forms and Data Binding</title>
 
-    <para>
-      One of the most common tasks in web applications is gathering user input, converting it to model objects and then validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity.
-    </para>
+  <para>
+    One of the most common tasks in web applications is gathering user input, converting it to model objects and then validating it. This is typically referred to as <emphasis>data binding</emphasis> and every major web framework has support for this activity. In this chapter we will introduce the widgets and supporting API that implement this tasks.
+  </para>
 
-    <para>
-      Unlike many other frameworks, in Aranea request processing, validating and data binding is not a separate part of the framework, but just another component. Specially it is widget <literal>org.araneaframework.uilib.form.FormWidget</literal> and some support widgets. In this chapter we will introduce this widgets and supporting API and show how to use and extend them.
-    </para>
-	</sect1>
   <sect1>
+    <title>Forms</title>
+
+      <para>
+    Unlike many other frameworks, in Aranea request processing, validating and data binding is not a separate part of the framework, but just another component. Specially it is widget <literal>org.araneaframework.uilib.form.FormWidget</literal> and some support widgets. A typical form is shown on <xref linkend="person-form"/>.
+  </para>
+
+    <figure id="person-form">
+      <title>Form example</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata 
+            fileref="../shared/images/form.png"
+            format="PNG" />
+        </imageobject>
+      </mediaobject>        
+    </figure>
+
+    <sect2>
+      <title>FormWidget</title>
+
+      <para>
+        Let's say we have a <literal>Person</literal> model JavaBean that looks like this:
+      </para>
+      
+<programlisting role="java">public class Person {
+  private Long id;
+  private String name;
+  private String surname;   
+  private String phone;
+
+  public Long getId() {return id;}
+  public void setId(Long id) {this.id = id;}
+  
+  public String getName() {return name;}
+  public void setName(String name) {this.name = name;}
+  
+  public String getSurname() {return surname;}
+  public void setSurname(String surname) {this.surname = surname;}
+  
+  public String getPhone() {return phone;}
+  public void setPhone(String phone) {this.phone = phone;}
+}</programlisting>
+
+      <para>
+        A typical form will be created and used like this:
+      </para>
+
+<programlisting role="java">...
+private BeanFormWidget personForm;
+private Person person;
+...
+protected void init() {
+  ...
+  personForm = new BeanFormWidget(Person.class);
+  addWidget("personForm", personForm);
+
+  personForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true);
+  personForm.addBeanElement("surname", "#Last name", new TextControl(), true);
+  personForm.addBeanElement("phone", "#Phone no", new TextControl(), true);
+  ...
+  person = lookupPersonService().getSomePerson();
+  personForm.writeBean(person);
+  ...
+}
+...
+</programlisting>
+
+<para>
+  Note that here we basically do three things:
+<variablelist spacing="compact">
+  <varlistentry>
+    <term>Create and register the form</term>
+    <listitem>The line <literal>new BeanFormWidget(Person.class)</literal> creates a new form widget that is associated with the <emphasis>JavaBean</emphasis> model class <literal>Person</literal>. The line <literal>addWidget("personForm", personForm)</literal> initializes and registers the form allowing it to function.</listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>Add form fieds</term>
+    <listitem>The line <literal>personForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true)</literal> adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (labels in Aranea are localizable by default and "#" escapes a non-localizable string), a text box control with a minimal length of 3 and that is mandatory.</listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>Write JavaBean</term>
+    <listitem>The line <literal>personForm.writeBean(person)</literal> writes the data in the JavaBean properties to the corresponding form fields.</listitem>
+  </varlistentry>
+</variablelist>
+</para>
+
+<para>
+Now that we have created the form we show how to process events, validate and read the request data. The following example code should be in the same widget as the previous:
+</para>
+
+<programlisting role="java">...
+private void handleEventSave() {
+  if (personForm.convertAndValidate()) {
+   personForm.readBean(person);
+   ...
+   lookupPersonService()().savePerson(person);
+  }
+}
+...</programlisting>
+
+<para>
+      This code will execute if an event "save" comes and will do the following:
+      <itemizedlist spacing="compact">
+        <listitem>Convert the request data to the JavaBean types and validate it according to the rules specified in controls (e.g. minimal length). Wrapping event body in <literal>if (personForm.convertAndValidate()) {...}</literal> is a generic idiom in Aranea as we believe that explicity leads to flexibility. By default the values will be just read from request without any parsing, conversion or validation and the latter will be done only after the <literal>convertAndValidate()</literal> call. This allows for example to validate only a subform or even one element, by calling only their <literal>convertAndValidate()</literal> method.</listitem>
+        <listitem>Read the <literal>person</literal> object from the form, filling it in with the user data. Note that the same object that was originally read from the business layer is used here and forms take care of merging the new data and preserving the old.</listitem>
+      </itemizedlist>
+      </para>
+
+      <para>
+        Note the use of the <literal>getValueByFullName()</literal> method. Form API contains several such methods (named <literal>*ByFullName()</literal>), which allow to access fields, controls and values using full dot-separated element names.
+      </para>
+
+      <para>
+        If you have a composite JavaBean (containing other JavaBeans) you may want to create a form with a similar structure. Let's say that our <literal>Person</literal> bean contains an <literal>Address</literal> under "address" JavaBean property:
+      </para>
+
+<programlisting role="java">...
+personForm = new BeanFormWidget(Person.class);
+addWidget("personForm", personForm);
+...
+BeanFormWidget addrForm = personForm.addBeanSubForm("address");
+addrForm.addBeanElement("postalCode", "#Postal code", new TextControl(), true);
+addrForm.addBeanElement("street", "#Street", new TextControl(), true);
+...</programlisting>
+
+      <para>
+       Note that the fields will be available from the main form using a dot-separated name, e.g. <literal>String street = (String) personForm.getValueByFullName("address.street")</literal>.
+      </para>
+    </sect2>
+
+  <sect2>
     <title>Controls</title>
 
     <para>
@@ -38,9 +162,13 @@
 
     <para>
       The following example shows how to create a control:
+    </para>
+
 <programlisting role="java">...
 TextControl textBox = new TextControl(new Long(10), null);
 ...</programlisting>
+
+    <para>
       This code will create a textbox with a minimal length of 10. Note that this code does not yet put the control to work, as controls are never used without forms, which are reviewed in the next section. 
     </para>
 
@@ -49,7 +177,7 @@ TextControl textBox = new TextControl(new Long(10), null);
         <informaltable frame="all">
           <tgroup cols="2">
             <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*"/>
             <thead>
               <row>
                 <entry>Control</entry>
@@ -57,10 +185,6 @@ TextControl textBox = new TextControl(new Long(10), null);
               </row>
             </thead>
             <tbody>
-               <row>
-                <entry><literal>AutoCompleteTextControl</literal></entry>
-                <entry><literal>TextControl</literal> with autocompletion capability.</entry>
-              </row>
                <row>
                 <entry><literal>ButtonControl</literal></entry>
                 <entry>A control that represents a HTML form button.</entry>
@@ -96,11 +220,6 @@ TextControl textBox = new TextControl(new Long(10), null);
                 <entry>A control that can be used to render an invisible value that will be submitted with an HTML form.</entry>
               </row>
               <row>
-                <entry><literal>MultiSelectControl</literal></entry>
-                <entry>A control that allows to select several from many choices (may be rendered as a multiselect list or checkbox list). 
-                Ensures that the submitted values are a subset of the choices.</entry>
-              </row>
-              <row>
                 <entry><literal>NumberControl</literal></entry>
                 <entry>A textbox control that constrains the text to be integer numbers. Can also check
                 the allowed minimum and maximum limits. </entry>
@@ -117,8 +236,12 @@ TextControl textBox = new TextControl(new Long(10), null);
                 <entry><literal>TextControl</literal></entry>
                 <entry>A simple textbox control with one row of text that can constrain the inserted text minimal and maximal length.</entry>
               </row>
+               <row>
+                <entry><literal>AutoCompleteTextControl</literal></entry>
+                <entry><literal>TextControl</literal> with autocompletion capability.</entry>
+              </row>
               <row>
-                <entry><literal>TimeStampControl</literal></entry>
+                <entry><literal>TimestampControl</literal></entry>
                 <entry>Similar to <literal>DateControl</literal> but works with <literal>java.sql.TimeStamp</literal>.</entry>
               </row>              
               <row>
@@ -126,105 +249,90 @@ TextControl textBox = new TextControl(new Long(10), null);
                 <entry>A control that allows to select one of many choices (may be rendered as a dropdown list or option buttons). 
                 Ensures that the submitted value was one of the choices.</entry>
               </row>
+              <row>
+                <entry><literal>MultiSelectControl</literal></entry>
+                <entry>A control that allows to select several from many choices (may be rendered as a multiselect list or checkbox list). 
+                Ensures that the submitted values are a subset of the choices.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
-
     </para>
-  </sect1>
-  <sect1>
-    <title>Forms API</title>
+
+    <para>
+      <literal>SelectControl</literal> and <literal>MultiSelectControl</literal> deserve a special mention, as they need a bit more handling than the rest. The difference comes from the fact that we also need to handle the selectable options, which we refer to as <literal>DisplayItem</literal>. Each <literal>DisplayItem</literal> has a label, a string value and can be disabled. Disabled display items cannot be selected in neither select box nor multiselect box.
+    </para>
+
+    <para>
+    Both <literal>SelectControl</literal> and <literal>MultiSelectControl</literal> implement the <literal>DisplayItemContainer</literal> interface that allows to manipulate the <literal>DisplayItem</literal>:
+    </para>
     
-    <sect2>
-      <title>A Typical Form</title>
+      <programlisting role="java">interface DisplayItemContainer {
+  void addItem(DisplayItem item);
+  void addItems(Collection items);
+  void clearItems();
+  List getDisplayItems();
+  int getValueIndex(String value);
+}</programlisting>
 
-      <para>
-        A typical form will be created and used like this:
-<programlisting role="java">...
-private BeanFormWidget myForm;
-private MyModel myModel;
-...
-protected void init() {
-  ...
-  myForm = new BeanFormWidget(MyModel.class);
-  addWidget("myForm", myForm);
+   <para>
+     In addition to this interface we also provide a <literal>DisplayItemUtil</literal> that provides some support methods on display items. These include the method <literal>addItemsFromBeanCollection</literal> that allows to add the items to a (multi)select control from a business method returning a collection of model JavaBean objects (which is one of the most common use cases). So a typical select control will be filled as follows:
+   </para>
+   
+<programlisting role="java">SelectControl control = new SelectControl();
+control.addItem(new DisplayItem(null, "- choice -"));
+DisplayItemUtil.addItemsFromBeanCollection(
+  control,
+  lookupMyService().getMyItemCollection(),
+  "value",
+  "label");</programlisting>
 
-  myForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true);
-  myForm.addBeanElement("surname", "#Last name", new TextControl(), true);
-  myForm.addBeanElement("phone", "#Phone no", new TextControl(), true);
-  ...
-  myModel = lookupMyService().getMyModel();
-  myForm.writeBean(myModel);
-  ...
-}
-...
-</programlisting>       
-  Note that here we basically do three things:
-<variablelist spacing="compact">
-  <varlistentry>
-    <term>Create and register the form</term>
-    <listitem>The line <literal>new BeanFormWidget(MyModel.class)</literal> creates a new form widget that is associated with the <emphasis>JavaBean</emphasis> model class <literal>MyModel</literal>. The line <literal>addWidget("myForm", myForm)</literal> initializes and registers the form allowing it to function.</listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>Add form fieds</term>
-    <listitem>The line <literal>myForm.addBeanElement("name", "#Name", new TextControl(new Long(3), null), true)</literal> adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (labels in Aranea are localizable by default and "#" escapes a non-localizable string), a text box control with a minimal length of 3 and that is mandatory.</listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>Write JavaBean</term>
-    <listitem>The line <literal>myForm.writeBean(myModel)</literal> writes the data in the JavaBean properties to the corresponding form fields.</listitem>
-  </varlistentry>
-</variablelist>  
-</para>
-<para>
-Now that we have created the form we show how to process events, validate and read the request data. The following example code should be in the same widget as the previous:
-<programlisting role="java">...
-private void handleEventSave() {
-  if (myForm.convertAndValidate()) {
-   myForm.readBean(myModel);
-   ...
-   lookupMyService().saveMyModel(myModel);
+    <para>
+      Controls can also listen to user events. For example <literal>ButtonControl</literal> can react to an <literal>onClick</literal> event, while most others can react to an <literal>onChange</literal> event. The only thing needed to receive the control events is to register an appropriate event listener:
+    </para>
+
+      <programlisting role="java">...
+SelectControl selControl = new SelectControl();
+FormElement selEl = form.addBeanElement("clientId", "#Client id", selControl, true);
+selControl.addOnChangeEventListener(new OnChangeEventListener() {
+  public void onChange() {
+    //We convert and validate one element only as the rest of the form
+    //might be invalid
+    if (selEl.convertAndValidate()) {
+      Long clientId = (Long) selEl.getValue();
+      //Now we can use the client id to do whatever we want
+      //E.g. update another select control
+    }
   }
-}
+});
 ...</programlisting>
-      This code will execute if an event "save" comes and will do the following:
-      <itemizedlist spacing="compact">
-        <listitem>Convert the request data to the JavaBean types and validate it according to the rules specified in controls (e.g. minimal length). Wrapping event body in <literal>if (myForm.convertAndValidate()) {...}</literal> is a generic idiom in Aranea as we believe that explicity leads to flexibility. By default the values will be just read from request without any parsing, conversion or validation and the latter will be done only after the <literal>convertAndValidate()</literal> call. This allows for example to validate only a subform or even one element, by calling only their <literal>convertAndValidate()</literal> method.</listitem>
-        <listitem>Read the <literal>myModel</literal> object from the form, filling it in with the user data. Note that the same object that was originally read from the business layer is used here and forms take care of merging the new data and preserving the old.</listitem>
-      </itemizedlist>
-      </para>
 
-      <para>
-        Note the use of the <literal>getValueByFullName()</literal> method. Form API contains several such methods (named <literal>*ByFullName()</literal>), which allow to access fields, controls and values using full dot-separated element names.
-      </para>
+  <para>
+    <literal>onChange</literal> events are also produced by text boxes and similar, so the user input can processed right after the user has finished it.
+  </para>
 
-      <para>
-        If you have a composite JavaBean (containing other JavaBeans) you may want to create a form with a similar structure. To do that you should create a subform like this:
-<programlisting role="java">...
-myForm = new BeanFormWidget(MyModel.class);
-addWidget("myForm", myForm);
-...
-FormWidget addrForm = myForm.addBeanSubForm("address");
-addrForm.addBeanElement("postalCode", "#Last name", new TextControl(), true);
-addrForm.addBeanElement("street", "#Last name", new TextControl(), true);
-...</programlisting>
-      This of course implies that <literal>MyModel</literal> has a property "address" that contains another JavaBean corresponding to the subform fields. Note that the fields will be available from the main form using a dot-separated name, e.g. <literal>String street = myForm.getValueByFullName("address.street")</literal>.
-      </para>
-    </sect2>
+  </sect2>
 
     <sect2>
       <title>Constraints</title>
 
       <para>
         Though controls provide some amount of validation they are limited only to the rules that can be controlled on the client-side. To support more diverse rules Aranea has <literal>org.araneaframework.uilib.form.Constraint</literal>, that allows to put any logical and/or business validation rules. Typically constraints are used as follows:
+      </para>
+
 <programlisting role="java">...
 myForm.addBeanElement("registration", "#Registration", new DateControl(), true);
 myForm.getElement("registration").setConstraint(new AfterTodayConstraint(false));
 ...</programlisting>
+
+      <para>
       The <literal>org.araneaframework.uilib.form.constraint.AfterTodayConstraint</literal> makes sure that the date is today or later, with the boolean parameter indicating wheter today is allowed. The constraint will validate if the form or the element in question is validated (e.g. <literal>convertAndValidate()</literal> is called) and will show an error message to the user, if the constraint was not satisfied. The error message is customizable using localization and involves the label of the field being validated.
       </para>
 
       <para>
         The following is a more complex example that shows how to use constraints that apply to more than one field, and how to combine constraints using logical expressions:
+      </para>
+
 <programlisting role="java">...
 searchForm = new FormWidget();
 
@@ -267,7 +375,9 @@ searchForm.setConstraint(searchConstraint);
 //Putting the widget
 addWidget("searchForm", searchForm);    
 ...</programlisting>
-        The example use case is a two scenario search&mdash;either both client first name 
+        
+      <para>
+        The example use case is a two scenario search&mdash;either both client first name
         and client last name fields are filled in or both town and street address fields are 
         filled in, otherwise an error message "Not enough data for search!" is shown. The constraints 
         will be validated when <literal>convertAndValidate()</literal> method is called on 
@@ -281,7 +391,7 @@ addWidget("searchForm", searchForm);
         <informaltable frame="all">
           <tgroup cols="2">
             <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*"/>
             <thead>
               <row>
                 <entry>Constraint</entry>
@@ -294,14 +404,6 @@ addWidget("searchForm", searchForm);
                 <entry>Field constraint, checks that field contains <literal>Date</literal> later than current date.</entry>
               </row>
                <row>
-                <entry><literal>AndConstraint</literal></entry>
-                <entry>Composite constraint, checks that all subconstraints are satisfied.</entry>
-              </row>
-               <row>
-                <entry><literal>GroupedConstraint</literal></entry>
-                <entry></entry>
-              </row>
-               <row>
                 <entry><literal>NotEmptyConstraint</literal></entry>
                 <entry>Field constraint, checks that field contains non-empty value.</entry>
                </row>
@@ -309,53 +411,86 @@ addWidget("searchForm", searchForm);
                 <entry><literal>NumberInRangeConstraint</literal></entry>
                 <entry>Field constraint, checks that number in a field belongs on given range (integer only).</entry>
               </row>
-               <row>
-                <entry><literal>OptionalConstraint</literal></entry>
-                <entry>Field constraint that wraps another constraint which is only applied if field has some real value (is not null).</entry>
-              </row>
-               <row>
-                <entry><literal>OrConstraint</literal></entry>
-                <entry>Composite constraint, checks that at least one subconstraint is satisfied.</entry>
+              <row>
+                <entry><literal>StringLengthInRangeConstraint</literal></entry>
+                <entry>Field constraint, checks that length of a string in a field falls within given boundaries.</entry>
               </row>
                <row>
                 <entry><literal>RangeConstraint</literal></entry>
                 <entry>Multiple field constraint, checks that value of one field is lower than value of other field. Field
                 values must <literal>Comparable</literal>.</entry>
               </row>
+               <row>
+                <entry><literal>AndConstraint</literal></entry>
+                <entry>Composite constraint, checks that all subconstraints are satisfied.</entry>
+              </row>
               <row>
-                <entry><literal>StringLengthInRangeConstraint</literal></entry>
-                <entry>Field constraint, checks that length of a string in a field falls within given boundaries.</entry>
+                <entry><literal>OrConstraint</literal></entry>
+                <entry>Composite constraint, checks that at least one subconstraint is satisfied.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
-	</para>
+  </para>
+  
+     <para>
+       There are two constraints that deserve a special mention. One of them is <literal>OptionalConstraint</literal> that will only let its subconstraint to validate the field, if the field has been submitted by user (it is very useful for instance when non-mandatory fields must nevertheless follow some pattern, whereas empty input should still be allowed).
+     </para>
+     <para>
+       The other constraint os called <literal>GroupedConstraint</literal>. It is useful in cases when different constraints should be activated depending on the particular state of the component (a typical use case is that some groups of fields are made mandatory in different states of document approval).  The constraint is created using the <literal>ConstraintGroupHelper</literal> as follows:
+     </para>
+
+<programlisting role="java">...
+ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
+AndConstraint andCon = new AndConstraint();
+andCon.addConstraint(
+  groupHelper.createGroupedConstraint(new NotEmptyConstraint(field1), "group1"));
+andCon.addConstraint(
+  groupHelper.createGroupedConstraint(new NotEmptyConstraint(field2), "group1"));
+andCon.addConstraint(
+  groupHelper.createGroupedConstraint(new NotEmptyConstraint(field3), "group2"));
+andCon.addConstraint(
+  groupHelper.createGroupedConstraint(new NotEmptyConstraint(field4), "group2"));
+form.setConstraint(andCon);
+
+//Now only field1 and field2 will be required from user!
+groupHelper.setActiveGroup("group1");
+...</programlisting>
+
     </sect2>
 
     <sect2>
       <title>Data</title>
       <para>
         The typical use of forms includes associating the form fields with JavaBean properties. However this is not always possible, since it is not feasible to make a JavaBean property for each and every form field. In such cases one may still want to use type conversion and data validation. To do that forms allow the <literal>org.araneaframework.uilib.form.Data</literal> and its subclasses (subclasses correspond to specific types) to be associated with the field:
+      </para>
+
 <programlisting role="java">...
-myForm = new BeanFormWidget(MyModel.class);
-addWidget("myForm", myForm);
+personForm = new BeanFormWidget(Person.class);
+addWidget("personForm", personForm);
 ...
-myForm.addElement("numberOfChildren", "#No. of chidren", 
+personForm.addElement("numberOfChildren", "#No. of chidren",
   new NumberControl(), new LongData(), true);
 ...</programlisting>
+
+     <para>
       In such a case one can retrieve the data directly from the field:
+     </para>
+
 <programlisting role="java">...
 private void handleEventSave() {
   if (myForm.convertAndValidate()) {
     ...
-    Long numberOfChildren = (Long) myForm.getValueByFullName("numberOfChildren");
+    Long numberOfChildren = (Long) personForm.getValueByFullName("numberOfChildren");
     //Alternative:
-    //FormElement nocEl = (FormElement) myForm.getElement("numberOfChildren");
+    //FormElement nocEl = (FormElement) personForm.getElement("numberOfChildren");
     //Long numberOfChildren = (Long) nocEl.getValue();
     ...
   }
 }
 ...</programlisting>
+     
+      <para>
       If there is no JavaBean to associate the form with <literal>org.araneaframework.uilib.form.FormWidget</literal> may be used instead of <literal>BeanFormWidget</literal>.
       </para>
 
@@ -368,7 +503,7 @@ private void handleEventSave() {
         <informaltable frame="all">
           <tgroup cols="2">
             <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="3*"/>
             <thead>
               <row>
                 <entry>Data</entry>
@@ -429,7 +564,7 @@ private void handleEventSave() {
                 <entry><literal>List &lt;java.lang.String</literal>&gt;</entry>
               </row>
                <row>
-                <entry><literal>TimeStampData</literal></entry>
+                <entry><literal>TimestampData</literal></entry>
                 <entry><literal>java.sql.Timestamp</literal></entry>
               </row>
                <row>
@@ -440,6 +575,10 @@ private void handleEventSave() {
           </tgroup>
         </informaltable>
 
+    </para>
+    
+    <para>
+      Finally <literal>Data</literal> constructor also accepts both a <literal>Class</literal> instance and a simple string. So if you have a custom datatype with an appropriate converter (see next section) you can just assign the data with the same type (in fact if you have your own converter the type doesn't matter that much, it will just allow some checks to be done on the programmer).
     </para>
 
     </sect2>
@@ -453,15 +592,15 @@ private void handleEventSave() {
         from type <emphasis>B</emphasis> to type <emphasis>A</emphasis> is obtained with
         <literal>new ReverseConverter(new AToBConverter())</literal>.
       </para>
-      <para>
+
 <programlisting role="java"><![CDATA[public interface Converter extends Serializable, FormElementAware {
     public void setFormElementCtx(FormElementContext feCtx);
     public Object convert(Object data);
     public Object reverseConvert(Object data);
-    public BaseConverter newConverter();
+    public Converter newConverter();
 }]]>
 </programlisting>
-</para>
+
 <para>
     Converters are used internally to convert <literal>Control</literal> values to values of <literal>FormElement</literal> <literal>Data</literal>
     and vice-versa. Converters are usually looked up from <literal>ConverterFactory</literal>, but each <literal>FormElement</literal> 
@@ -474,14 +613,15 @@ private void handleEventSave() {
 
   <sect1>
     <title>Form JSP Tags</title>
-    
-        Form JSP tags can be divided into two categories&mdash; tags providing <emphasis>contexts</emphasis> 
+      <para>
+        Form JSP tags can be divided into two categories&mdash; tags providing <emphasis>contexts</emphasis>
         (&lt;ui:form&gt;, &lt;ui:formElement&gt;) and
-        tags for <emphasis>rendering</emphasis> form elements containing different controls. We will 
+        tags for <emphasis>rendering</emphasis> form elements containing different controls. We will
         first describe the attributes that are common to
-        all form element rendering tags; then proceed to explain <emphasis>context</emphasis> tags 
+        all form element rendering tags; then proceed to explain <emphasis>context</emphasis> tags
         and different form element rendering tags with their unique attributes.
-        
+      </para>
+
       <sect2 id="common-formelement-attributes">
       <title>Common attributes for all form element rendering tags.</title>
         <informaltable frame="all">
@@ -549,7 +689,7 @@ private void handleEventSave() {
       <sect2>
       <title><![CDATA[<ui:form>]]></title>
       <para>
-      	   Specifies form context for inner tags. Form view model and id are made accessible to inner tags as EL variables.
+           Specifies form context for inner tags. Form view model and id are made accessible to inner tags as EL variables.
       </para>
       
       <sect3>
@@ -620,7 +760,7 @@ private void handleEventSave() {
       <sect2>
       <title id="uiFormElementTag">&lt;ui:formElement&gt;</title>
       <para>
-      	   Specifies form element context for inner tags. Must be surrounded by &lt;ui:form&gt; tag. Form element 
+           Specifies form element context for inner tags. Must be surrounded by &lt;ui:form&gt; tag. Form element 
            view model, id and value are made accessible to inner tags as EL variables.
       </para>
 
@@ -844,7 +984,7 @@ private void handleEventSave() {
               <row>
                 <entry>onClickPrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
               <row>
                 <entry>renderMode</entry>
@@ -898,7 +1038,7 @@ private void handleEventSave() {
               <row>
                 <entry>onClickPrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onclick event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -914,10 +1054,12 @@ private void handleEventSave() {
       <para>
         Registers a simple keyboard handler. Invokes a <literal>uiRegisterKeyboardHandler</literal> javascript.
         This is basically the same stuff as &lt;ui:keyboardHandler&gt; with a few modifications.
-        
+      </para>
+      <para>
         There is no <literal>scope</literal> attribute. Instead, the tag assumes that it is located
         inside a form, and takes the full id of that form as its scope.
-        
+      </para>
+      <para>
         As an alternative to specifying the <literal>handler</literal> attribute, you may
         specify a form element and a javascript event to invoke on that element.
         You specify the element by its id relative to the surrounding form.
@@ -1038,12 +1180,12 @@ el.click();]]></programlisting>
       </para>
     </sect2>
     
-    	
+      
     <!--  textinput,autoCompleteTextInput,textdisplay -->
     <sect2>
           <title><![CDATA[<ui:textInput>]]></title>
           <para>
-	          Form text input field, represents <literal>TextControl</literal>.
+            Form text input field, represents <literal>TextControl</literal>.
               It is rendered in HTML with <literal>&lt;input type="text" ...&gt;</literal> tag. Default <literal>styleClass="aranea-text"</literal>.
           </para>
       
@@ -1070,7 +1212,7 @@ el.click();]]></programlisting>
 	              <row>
 	                <entry>onChangePrecondition</entry>
 	                <entry><emphasis>no</emphasis></entry>
-	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
 	              </row>
 	            </tbody>
 	          </tgroup>
@@ -1094,7 +1236,7 @@ el.click();]]></programlisting>
     <sect2>
           <title><![CDATA[<ui:autoCompleteTextInput>]]></title>
           <para>
-	          Form text input field, represents <literal>AutoCompleteTextControl</literal>.
+            Form text input field, represents <literal>AutoCompleteTextControl</literal>.
               It is rendered in HTML with <literal>&lt;input type="text" ...&gt;</literal> tag. Default <literal>styleClass="aranea-text"</literal>.
               It is able to make background AJAX request to the server, fetching suggested completions to user input and displaying these to the
               user.
@@ -1123,16 +1265,16 @@ el.click();]]></programlisting>
 	              <row>
 	                <entry>onChangePrecondition</entry>
 	                <entry><emphasis>no</emphasis></entry>
-	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+	                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
 	              </row>
                   <row>
-	                <entry>divClass</entry>
-	                <entry><emphasis>no</emphasis></entry>
-	                <entry>CSS class attribute assigned to &lt;DIV&gt; inside which suggestions are presented.</entry>
-	              </row>
-	            </tbody>
-	          </tgroup>
-	        </informaltable>
+                  <entry>divClass</entry>
+                  <entry><emphasis>no</emphasis></entry>
+                  <entry>CSS class attribute assigned to &lt;DIV&gt; inside which suggestions are presented.</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable>
              <emphasis>Also has all common form element rendering attributes.</emphasis> 
         </sect3>
 
@@ -1142,14 +1284,14 @@ el.click();]]></programlisting>
     <sect2>
           <title><![CDATA[<ui:textInputDisplay>]]></title>
           <para>
-	          Form text display field, represents <literal>TextControl</literal>.
+            Form text display field, represents <literal>TextControl</literal>.
               It is rendered in HTML with <literal>&lt;span ...&gt;</literal> tag.
               Default <literal>styleClass="aranea-text-display"</literal>.
           </para>
       
         <sect3>
         <title>Attributes</title>
-	        <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
+          <emphasis>Has standard <literal>id</literal> and <literal>styleClass</literal> attributes.</emphasis> 
         </sect3>
 
               <sect3>
@@ -1197,7 +1339,7 @@ el.click();]]></programlisting>
                       <row>
                         <entry>onChangePrecondition</entry>
                         <entry><emphasis>no</emphasis></entry>
-                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
                       </row>
                     </tbody>
                   </tgroup>
@@ -1252,7 +1394,7 @@ el.click();]]></programlisting>
                       <row>
                         <entry>onChangePrecondition</entry>
                         <entry><emphasis>no</emphasis></entry>
-                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
                       </row>
                     </tbody>
                   </tgroup>
@@ -1307,7 +1449,7 @@ el.click();]]></programlisting>
                       <row>
                         <entry>onChangePrecondition</entry>
                         <entry><emphasis>no</emphasis></entry>
-                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
+                        <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>. For this tag, <emphasis>onchange</emphasis> event is simulated with <emphasis>onblur</emphasis>.</entry>
                       </row>
                     </tbody>
                   </tgroup>
@@ -1420,51 +1562,51 @@ el.click();]]></programlisting>
     
   </sect2>
    
-	<!-- textarea, textareadisplay -->  
+  <!-- textarea, textareadisplay -->  
      <sect2>
       <title><![CDATA[<ui:richtextarea>]]></title>
       <para>
           Form text input area, represents <literal>TextareaControl</literal>.
           It is rendered in HTML with <literal>&lt;textarea ...&gt;</literal> tag with <literal>styleClass="richTextEditor"</literal>.
-			 The area is displayed as a rich text editor. The configuration of the editor is done via <literal>&lt;ui:richTextAreaInit&gt;</literal>.
-			 The tag shares all the attributes of the <literal>&lt;ui:textarea&gt;</literal> except the <literal>styleClass</literal> which cannot
-			 be set for this tag.
+       The area is displayed as a rich text editor. The configuration of the editor is done via <literal>&lt;ui:richTextAreaInit&gt;</literal>.
+       The tag shares all the attributes of the <literal>&lt;ui:textarea&gt;</literal> except the <literal>styleClass</literal> which cannot
+       be set for this tag.
       </para>
-	</sect2>
+  </sect2>
      
-	  <sect2>
+    <sect2>
       <title><![CDATA[<ui:richTextAreaInit>]]></title>
       <para>
-			A tag for configuring the rich textareas. The <ulink url="http://tinymce.moxiecode.com/">tinyMCE</ulink> WYSIWYG editor 
-			is attached to the textareas defined via <literal>&lt;richtextarea&gt;</literal> . The configuration lets you choose the looks,
-			buttons, functionality of the editor. See
-			<ulink url="http://tinymce.moxiecode.com/tinymce/docs/reference_configuration.html">tinyMCE configuration reference</ulink>
-			for different configurable options.
+      A tag for configuring the rich textareas. The <ulink url="http://tinymce.moxiecode.com/">tinyMCE</ulink> WYSIWYG editor 
+      is attached to the textareas defined via <literal>&lt;richtextarea&gt;</literal> . The configuration lets you choose the looks,
+      buttons, functionality of the editor. See
+      <ulink url="http://tinymce.moxiecode.com/tinymce/docs/reference_configuration.html">tinyMCE configuration reference</ulink>
+      for different configurable options.
       </para>
 
-		<para>
-			The configuration is done via nesting key value pairs inside the <literal>&lt;richTextAreaInit&gt;</literal>. For the key value pairs the
-			<literal>&lt;ui:attribute&gt;</literal> tag is used. See the example for an overview.
-		</para>
+    <para>
+      The configuration is done via nesting key value pairs inside the <literal>&lt;richTextAreaInit&gt;</literal>. For the key value pairs the
+      <literal>&lt;ui:attribute&gt;</literal> tag is used. See the example for an overview.
+    </para>
 
-		<para>
-			The <literal>editor_selector</literal> and <literal>mode</literal> options are set by default and should not be changed. The
-			default <literal>theme</literal> is "simple".
-		</para>
+    <para>
+      The <literal>editor_selector</literal> and <literal>mode</literal> options are set by default and should not be changed. The
+      default <literal>theme</literal> is "simple".
+    </para>
 
-		<para>
-			<emphasis>Important:</emphasis> the configuration should be done in the
-			<literal>&lt;head&gt;</literal> section of the HTML document. 
- 		</para>
+    <para>
+      <emphasis>Important:</emphasis> the configuration should be done in the
+      <literal>&lt;head&gt;</literal> section of the HTML document. 
+    </para>
 
        <sect3>
         <title>Example</title>
 <programlisting role="xml"><![CDATA[<ui:richTextAreaInit>
-	<ui:attribute name="theme" value="advanced"/>
-	<ui:attribute name="theme_advanced_buttons1" value="bold,italic,underline,separator,code"/>
-	<ui:attribute name="theme_advanced_toolbar_location" value="top"/>
-	<ui:attribute name="theme_advanced_toolbar_align" value="left"/>
-	<ui:attribute name="theme_advanced_path_location" value="bottom"/>
+  <ui:attribute name="theme" value="advanced"/>
+  <ui:attribute name="theme_advanced_buttons1" value="bold,italic,underline,separator,code"/>
+  <ui:attribute name="theme_advanced_toolbar_location" value="top"/>
+  <ui:attribute name="theme_advanced_toolbar_align" value="left"/>
+  <ui:attribute name="theme_advanced_path_location" value="bottom"/>
 </ui:richTextAreaInit>]]></programlisting> 
       </sect3>
     
@@ -1527,7 +1669,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal></entry>
               </row>
             </tbody>
           </tgroup>
@@ -1601,7 +1743,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1649,7 +1791,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1695,7 +1837,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
               <row>
                 <entry>dateStyleClass</entry>
@@ -1753,7 +1895,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal></entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
               <row>
                 <entry>size</entry>
@@ -1925,7 +2067,7 @@ el.click();]]></programlisting>
               <row>
                 <entry>onChangePrecondition</entry>
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified this is set to <literal>return true;</literal>.</entry>
+                <entry>Precondition for deciding whether registered onchange event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -2149,7 +2291,7 @@ el.click();]]></programlisting>
 </ui:form>]]></programlisting>
       </sect3>
       
-    </sect2>    
+    </sect2>
     
 
     <sect2>
@@ -2217,8 +2359,312 @@ el.click();]]></programlisting>
 </programlisting>
 </para>
       </sect3>
-    </sect2>    
+    </sect2>
     
+  </sect1>
+
+  <sect1>
+    <title>Form Lists</title>
+
+
+
+    <para>
+      A common need in handling data is allowing a user to list of data, where the number of rows is not known beforehand (a typical example being user inputting one to many addresses). Aranea supports such a use case by providing a special type of <literal>FormElement</literal> that deals an arbitrary amount of subforms. This element is called <literal>FormListWidget</literal> and it can be used both on its own or as a subelement just like a <literal>FormWidget</literal>. An example of a form list is shown on <xref linkend="person-form-list"/>.
+    </para>
+
+    <figure id="person-form-list">
+      <title>Insert your name display</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata 
+            fileref="../shared/images/formList.png"
+            format="PNG" />
+        </imageobject>
+      </mediaobject>        
+    </figure>
+
+    <sect2>
+     <title>FormListWidget</title>
+    <para>
+      Unlike usual forms, form lists are "lazy", from the point that they are tied to a model and update themselves according to it. To create a form list widget we pass it a model and a handler:
+    </para>
+    
+<programlisting role="java">... 
+  public void init() throws Exception {
+    private FormListWidget personFormList;
+    ...
+    Map persons = lookupMyService().getPersons();
+
+    personFormList = new BeanFormListWidget(
+        new PersonFormRowHandler(),
+        new MapFormListModel(persons),
+        Person.class);
+
+    addWidget("personFormList", personFormList);
+  }
+...</programlisting>
+
+   <para>
+     Note here that we have tied the form list to the model that uses a <literal>Map</literal> as the underlying storage. When we update that map, the form list will also be updated.
+     Note also that the form list widget is associated with the <literal>Person</literal> bean class, which can be used to manipulate the beans under the model.
+   </para>
+
+   <para>
+     However this code doesn't yet tell us much. The bulk of the custom logic of the form lists is hidden in the <literal>PersonFormRowHandler</literal> class. Let's inspect it step by step.
+   </para>
+
+   <para>
+     Every form row handler must implement the <literal>FormRowHandler</literal> interface. In our case we choose to extend <literal>ValidOnlyIndividualFormRowHandler</literal>, which processes only valid form rows and allows to process them one by one, not all at once:
+   </para>
+
+<programlisting role="java">class PersonFormRowHandler
+  extends ValidOnlyIndividualFormRowHandler {
+  ...
+}</programlisting>
+
+   <para>
+     The first method we have to implement is <literal>getRowKey</literal>. It is used by the form list widget to identify the row among the others. Since typically the row is just a bean we can identify it using its identifier (either a natural one or artificial, as long as its unique in this context):
+   </para>
+   
+<programlisting role="java">...
+public Object getRowKey(Object rowData) {
+  return ((Person) rowData).getId();
+}
+...</programlisting>
+
+   <para>
+     The next method is called <literal>initAddForm</literal> and it will create a form used to add new rows to the form list:
+   </para>
+
+<programlisting role="java">...
+public void initAddForm(FormWidget addForm) throws Exception {
+  addForm.addBeanElement("name", "#First name", new TextControl(), true);
+  addForm.addBeanElement("surname", "#Last name", new TextControl(),  true);
+  addForm.addBeanElement("phone", "#Phone no", new TextControl(), false);
+
+  FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+}
+...</programlisting>
+
+   <para>
+     The bulk of the logic is just adding the fields to the add form. But we also use the <literal>FormListUtil</literal> to add a button "Add" to the form, that will take care of the actual adding a new row (or at least calling the form row handler to do that). <literal>FormListUtil</literal> contains a lot of helpful methods for manipulating form lists and more on it can be found in <xref linkend="form-list-util"/>. The next step would be to handle the user clicking the add button and add a new row to the model. Since we process only valid rows the method will be named <literal>addValidRow</literal>:
+   </para>
+
+<programlisting role="java">...
+public void addValidRow(FormWidget addForm) throws Exception {
+  Person person = (Person) (((BeanFormWidget)addForm).readBean(new Person()));
+  //We want to save changes immediately
+  person = lookupPersonService.addPerson(person);
+  data.add(person.getId(), person);
+}
+...</programlisting>
+
+   <para>
+     Note that although we save the changes here immediately, form lists also support deferring this until some later point as described in <xref linkend="form-list-in-memory-helper"/>. Now that we have added a row to the model we will also have to initialize a form for that using <literal>initFormRow</literal> method:
+   </para>
+
+<programlisting role="java">...
+public void initFormRow(FormRow formRow, Object rowData) throws Exception {
+  // Set initial status of list rows to closed - they cannot be edited before opened.
+  formRow.close();
+
+  BeanFormWidget form = (BeanFormWidget)formRow.getForm();
+
+  form.addBeanElement("name", "#First name", new TextControl(), true);
+  form.addBeanElement("surname", "#Last name", new TextControl(),  true);
+  form.addBeanElement("phone", "#Phone no", new TextControl(), false);
+
+  FormListUtil.addEditSaveButtonToRowForm("#", formList, form, getRowKey(rowData));
+  FormListUtil.addDeleteButtonToRowForm("#", formList, form, getRowKey(rowData));
+
+  form.writeBean(rowData);
+}
+...</programlisting>
+
+   <para>
+     Note that most of the fields are same for add form and edit forms, so in a real setup we could easily have added a method <literal>addCommonFields(FormWidget)</literal> that would add those fields to any given form (it is actually a very common idiom to do that). Finally we have to handle the saving of row form:
+   </para>
+   
+<programlisting role="java">...
+public void saveValidRow(FormRow formRow) throws Exception {
+  BeanFormWidget form = (BeanFormWidget) formRow.getForm();
+  Person person = (Person) form.readBean(data.get(formRow.getKey()));
+
+  lookupPersonService().save(rowData);
+  data.put(person.getId(), person);
+}
+...</programlisting>
+
+   <para>
+     And the last one left is deletion:
+   </para>
+
+<programlisting role="java">...
+public void deleteRow(Object key) throws Exception {
+  Long id = (Long) key;
+  lookupPersonService().remove(id);
+  data.remove(id);
+}
+...</programlisting>
+
+    </sect2>
+
+    <sect2>
+     <title>JSP tags</title>
+     
+     <!-- TODO: Taimo -->
+   </sect2>
+
+   <sect2 id="form-list-util">
+     <title>FormListUtil</title>
+     
+     <para>
+       <literal>FormListUtil</literal> provides a couple of methods that help to handle form maps passed to some of the handler methods. However of main interest are the methods that add various buttons with ready logic to the add forms and row forms.
+     </para>
+     
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*"/>
+            <colspec colwidth="2*"/>
+            <thead>
+              <row>
+                <entry>Method</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+               <row>
+                <entry><literal>addSaveButtonToRowForm()</literal></entry>
+                <entry>Button that will save the current row.</entry>
+              </row>
+               <row>
+                <entry><literal>addDeleteButtonToRowForm()</literal></entry>
+                <entry>Button that will delete the current row.</entry>
+              </row>
+               <row>
+                <entry><literal>addOpenCloseButtonToRowForm()</literal></entry>
+                <entry>Button that will open or close the current row for editing (it inverts the current state).</entry>
+              </row>
+               <row>
+                <entry><literal>addEditSaveButtonToRowForm()</literal></entry>
+                <entry>Button that will open/close the row for editing, however will also save it after editing is finished and the row is closed.</entry>
+              </row>
+               <row>
+                <entry><literal>addAddButtonToAddForm()</literal></entry>
+                <entry>Button that will add a new row, should be added to the addition form.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+   </sect2>
+
+   <sect2>
+     <title>Form Row Handlers</title>
+     
+     <para>
+       Since row form handler interface supports bulk saving/adding/deleting of row forms it is comfortable to use one of the base classes that will do some of the work for you.
+     </para>
+     
+     <informaltable frame="all">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="3*"/>
+          <thead>
+            <row>
+              <entry>Class</entry>
+              <entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+             <row>
+              <entry><literal>DefaultFormRowHandler</literal></entry>
+              <entry>Implements all of the menthods and default handling of opening/closing rows.</entry>
+            </row>
+             <row>
+              <entry><literal>ValidOnlyFormRowHandler</literal></entry>
+              <entry>Checks that all of the added/saved rows are valid.</entry>
+            </row>
+             <row>
+              <entry><literal>IndividualFormRowHandler</literal></entry>
+              <entry>Supports one by one processing of row saving and deleting.</entry>
+            </row>
+             <row>
+              <entry><literal>ValidOnlyIndividualFormRowHandler</literal></entry>
+              <entry>Supports one by one processing of row saving and deleting. 
+              Checks that all of the added/saved rows are valid.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      
+      <para>
+        Note that row handlers also have an <literal>openOrCloseRow</literal> method that may be overridden if one wants more than just inverting the row state on user action.
+      </para>
+   </sect2>
+
+   <sect2>
+     <title>Models</title>
+   </sect2>
+   
+   <sect2 id="form-list-in-memory-helper">
+     <title>In Memory Form List</title>
+     
+     <para>
+       Often it is the case that we do not want to save the changes in the form list to the database until the user presses the "Save" button. For such a use case we provide <literal>InMemoryFormListHelper</literal>. To use the helper we first need to initialize the form list to use the helper model:
+     </para>
+
+<programlisting role="java">...
+private BeanFormListWidget personFormList;
+private InMemoryFormListHelper inMemoryHelper;
+
+public void init() throws Exception {
+  private FormListWidget personFormList;
+  ...
+  Map persons = lookupMyService().getPersons();
+
+  personFormList = new BeanFormListWidget(new PersonFormRowHandler(), Person.class);
+  inMemoryHelper = new InMemoryFormListHelper(
+    personFormList,
+    lookupPersonService().getSomePersonList());
+
+  addWidget("personFormList", personFormList);
+}
+...</programlisting>
+
+     <para>
+       Now we just have to add/save/delete the row to/from the helper:
+     </para>
+
+<programlisting role="java">...
+public void saveValidRow(FormRow editableRow) throws Exception {
+  ...
+  inMemoryHelper.update(editableRow.getKey(), rowData);
+}
+
+public void deleteRow(Object key) throws Exception {
+  ...
+  inMemoryHelper.delete(key);
+}
+
+public void addValidRow(FormWidget addForm) throws Exception {
+  ...
+  inMemoryHelper.add(rowData);
+}
+...</programlisting>
+
+     <para>
+       And when the user presses "Save" we can just process the changes:
+     </para>
+     
+<programlisting role="java">...
+protected void handleEventSave() {
+  lookupPersonService.addAll(inMemoryHelper.getAdded().values());
+  lookupPersonService.saveAll(inMemoryHelper.getUpdated().values());
+  lookupPersonService.deleteAll(inMemoryHelper.getDeleted());
+}
+...</programlisting>
+   </sect2>
+
   </sect1>
 
   <sect1>
@@ -2226,14 +2672,37 @@ el.click();]]></programlisting>
 
     <sect2>
       <title>Custom Constraints</title>
+      
+      <para>
+        It is a very common need to validate some additional logic for a particular field (e.g. a field must follow some particular pattern). In this case it is comfortable to create a custom constraint. Most often the constraint is associated with one field only, so we will extend the <literal>BaseFieldConstraint</literal>, which supports this particular idiom:
+      </para>
+
+<programlisting role="java">...
+public class PersonIdentifierConstraint extends BaseFieldConstraint {
+  public void validateConstraint() {
+    if (!PersonUtil.validateIdentifier(getValue()) {
+      addError("Field '" + getLabel() + "' is not a valid personal identifier");
+    }
+  }
+}
+...</programlisting>
+
+    <para>
+      Note that we can use <literal>getValue()</literal> that contains the converted value of the field. We can also use the fields label via <literal>getLabel()</literal>. We might also want to localize the message and in such a case you will find <literal>MessageUtil</literal> to contain some helpful methods.
+    </para>
+
+    <para>
+      If we need to validate more than one field we should extend the <literal>BaseConstraint</literal> and take those fields into the constructor. In this case the developer will have to provide this fields to the constraint and the constraint should be added to the enclosing form.
+    </para>
+
+    </sect2>
+
+    <!-- sect2>
+      <title>Custom Converters</title>
     </sect2>
 
     <sect2>
-      <title>Custom Converters</title>
-    </sect2>
-    
-    <sect2>
       <title>Custom Controls</title>
-    </sect2>
+    </sect2  -->
   </sect1>
 </chapter>

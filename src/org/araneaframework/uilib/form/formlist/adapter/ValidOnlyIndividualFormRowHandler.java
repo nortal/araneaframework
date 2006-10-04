@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.form.formlist.adapters;
+package org.araneaframework.uilib.form.formlist.adapter;
 
 import java.util.Iterator;
 import java.util.Map;

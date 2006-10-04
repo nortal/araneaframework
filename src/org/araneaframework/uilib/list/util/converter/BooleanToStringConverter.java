@@ -35,7 +35,7 @@ public class BooleanToStringConverter implements Converter {
 		if (trueValue == null || falseValue == null) {
 			throw new ConversionException("Target values can not be null");
 		}
-		if (trueValue == falseValue || trueValue.equals(falseValue)) {
+		if (trueValue.equals(falseValue)) {
 			throw new ConversionException("Target values can not be the same");
 		}
 		this.trueValue = trueValue;

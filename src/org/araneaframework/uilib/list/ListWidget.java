@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -108,7 +108,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return the {@link ListStructure}used to describe the list.
 	 */
 	public ListStructure getListStructure() {
-		assrtInitialized();
+		assertInitialized();
 		return this.listStructure;
 	}
 
@@ -169,7 +169,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/**
 	 * Sets the {@link FilterHelper} used to help with adding filters.
 	 * 
-	 * @param typeHelper {@link FilterHelper} used to help with adding filters.
+	 * @param filterHelper {@link FilterHelper} used to help with adding filters.
 	 */
 	public void setFilterHelper(FilterHelper filterHelper) {
 		this.filterHelper = filterHelper;
@@ -568,18 +568,28 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/**
 	 * Forces the list data provider to refresh the data.
 	 */
-	public void refresh() throws Exception {
-		this.dataProvider.refreshData();		
+	public void refresh() {
+		try {
+      this.dataProvider.refreshData();
+    }
+    catch (Exception e) {
+      throw new AraneaRuntimeException(e);
+    }		
 	}
 
 	/**
 	 * Refreshes the current item range, reloading the shown items.
 	 */
-	public void refreshCurrentItemRange() throws Exception {
+	public void refreshCurrentItemRange() {
 		ListItemsData itemRangeData;
 
-		itemRangeData = this.dataProvider.getItemRange(new Long(this.sequenceHelper
-				.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
+		try {
+      itemRangeData = this.dataProvider.getItemRange(new Long(this.sequenceHelper
+      		.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
+    }
+    catch (Exception e) {
+      throw new AraneaRuntimeException(e);
+    }
 
 		this.itemRange = itemRangeData.getItemRange();
 		this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());
@@ -857,10 +867,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		private Map getOrderInfoMap(Map data) {
 			Map orderInfoMap = new HashMap();    	
-			for (Iterator i = data.keySet().iterator(); i.hasNext();) {
-				String key = (String) i.next();
+			for (Iterator i = data.entrySet().iterator(); i.hasNext();) {
+				Map.Entry entry = (Map.Entry) i.next();
+				String key = (String) entry.getKey();
 				if (key.startsWith(ORDER_FORM_NAME)) {
-					orderInfoMap.put(key.substring(ORDER_FORM_NAME.length()), data.get(key));
+					orderInfoMap.put(key.substring(ORDER_FORM_NAME.length()), entry.getValue());
 				}
 			}
 			return orderInfoMap;
@@ -998,7 +1009,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		}
 	}
 	
-	protected void assrtInitialized() throws IllegalStateException {
+	protected void assertInitialized() throws IllegalStateException {
 		if (!isInitialized()) {
 			throw new IllegalStateException("ListWidget is not initialized");
 		}

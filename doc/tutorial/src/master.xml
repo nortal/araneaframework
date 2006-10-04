@@ -330,38 +330,15 @@
 		<sect2>
 			<title>Dependencies</title>
             <para>
-
-              Aranea webapp depends (at least) on the following libraries:
-              <itemizedlist spacing="compact">
-                  <listitem><literal>aranea.jar</literal></listitem>
-                  <listitem><literal>commons-collections.jar</literal></listitem>
-                  <listitem><literal>commons-el.jar</literal></listitem>
-                  <listitem><literal>commons-lang.jar</literal></listitem>
-                  <listitem><literal>commons-logging.jar</literal></listitem>
-                  <listitem><literal>j2ee.jar</literal></listitem>
-                  <listitem><literal>jstl.jar</literal></listitem>
-                  <listitem><literal>spring.jar</literal> (for configuration and Spring integration)</listitem>
-                  <listitem><literal>standard.jar</literal></listitem>
-                  <listitem><literal>log4j.jar</literal>&mdash;for file uploading</listitem>
-              </itemizedlist>
-              The following libraries are needed for specific features only:
-              <itemizedlist spacing="compact">
-                  <listitem><literal>commons-fileupload.jar</literal>&mdash;for file uploading</listitem>
-                  <listitem><literal>jakarta-regexp.jar</literal>&mdash;for in memory lists</listitem>                                        
-                  <listitem><literal>xstream.jar</literal>&mdash;for serializing session to XML</listitem>
-              </itemizedlist>
-              For running bundled example applications, jars in <literal>examples/lib</literal> directory are required.
+               Aranea webapp depends on a bunch of libraries that should all go under webapp's <literal>WEB-INF/lib/</literal> directory.
+               Dependencies are included in the distributions <literal>lib</literal> directory, see the <literal>lib/Readme.txt</literal>
+               for purpose of these libraries.
             </para>
 
             <para>
-               These are usually put under webapp's <literal>WEB-INF/lib/</literal> directory.
-               Aranea main example also needs <literal>aranea-template.jar</literal> (and various
-               third-party libraries) to function. The sample application's build system takes care of the dependencies
-               and you don't have to download anything.
-            </para>
-
-            <para>
-                Aranea main example uses <ulink url="http://www.hibernate.org">Hibernate</ulink> for accessing the database and <ulink url="http://logging.apache.org/log4j/docs/">Log4J</ulink> for logging. This tutorial omits the details of their configuration and usage.
+                In addition Aranea main example uses <ulink url="http://www.hibernate.org">Hibernate</ulink> for accessing the
+                database and <ulink url="http://logging.apache.org/log4j/docs/">Log4J</ulink> for logging. This tutorial omits the 
+                details of their configuration and usage.
             </para>
 		</sect2>
 		
@@ -1298,7 +1275,9 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                    attribute also means that upon listener activation AJAX
                    request is made instead of ordinary HTTP request. globalUpdateRegions
                    refers to message regions defined in some other widgets, "messages"
-                   being standard name for region where MessageContext messages are shown. -->
+                   being standard name for region where MessageContext messages are shown. 
+                   Actually AJAX filter is configured to a update message region on each 
+                   request anyway, this attribute is set here for illustrative purpose. -->
               <ui:select updateRegions="ajaxBeasts" globalUpdateRegions="messages"/>
             </ui:cell>
             <ui:cell width="25%"/>
@@ -1346,10 +1325,8 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                     There are some things to note here&mdash;if <literal>&lt;ui:select&gt;</literal> attributes referring to its 
                     updateregions are removed (and <literal>&lt;ui:updateRegionRows&gt;</literal> tags also) this example functions just
                     like before, only smoothness of page update is lost. Secondly, <literal>&lt;ui:updateRegionRows&gt;</literal>
-                    must be placed outside of <literal>&lt;c:if&gt;</literal> tag, because it writes out some HTML tags identifying the update
-                    region, and if these are not found region update will not succeed.
-                    &mdash;it writes out some HTML tags that identify the region where updates take place and these tags are not
-                    found, response cannot be rendered.
+                    must be placed outside of <literal>&lt;c:if&gt;</literal> tag &mdash;it writes out some HTML tags that identify the 
+                    region where updates take place and when these tags are not found, response cannot be rendered.
                 </para>
                 
                 <para>
@@ -1385,20 +1362,21 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
                     based on their field values. Basic usage is quite simple:
                 </para>
                 
-                <programlisting role="java"><![CDATA[protected ListWidget initList() throws Exception {
-  // Create the new list widget whose records are JavaBeans, instances of CompanyMO
+                <programlisting role="java"><![CDATA[protected void initList() throws Exception {
+  // Create the new list widget whose records are JavaBeans, instances of CompanyMO.
   // CompanyMO has fields named id, name and address.
-  BeanListWidget temp = new BeanListWidget(CompanyMO.class);
+  list = new BeanListWidget(CompanyMO.class);
+  addWidget("companyList", this.list);
   // set the data provider for the list
-  temp.setListDataProvider(new TemplateCompanyListDataProvider());
-  // add the displayed columns to list 
-  // addBeanColumn(String id, String label, boolean isOrdered)
+  list.setDataProvider(new TemplateCompanyListDataProvider());
+  // add the displayed columns to list.
+  // addField(String id, String label, boolean orderable)
   // note that # before the label means that label is treated as unlocalized and outputted as-is
-  temp.addBeanColumn("id", "#Id", false);
-  //addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
-  temp.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
-  temp.addBeanColumn("address", "#Address", true, new SimpleColumnFilter.Like(), new TextControl());
-  return temp;
+  list.addField("id", "#Id", false);
+  // addField(...) returns FieldFilterHelper, like() sets LIKE filter on the column
+  list.addField("name", "#Name", true).like();
+  list.addField("address", "#Address", true).like();
+  list.addField("dummy", null, false);
 }]]></programlisting>
 
                 <para>
@@ -1410,13 +1388,14 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 
                 <para>
                     Additionally, one can specify whether ordering and filtering by given column should be available.
-                    <literal>SimpleColumnFilter</literal> contains different filter classes that specify how the
-                    filter conditions specified should be applied&mdash;<literal>SimpleColumnFilter.Equals</literal>, 
-                    <literal>SimpleColumnFilter.GreaterThan</literal>, 
-                    <literal>SimpleColumnFilter.LowerThan</literal>, 
-                    <literal>SimpleColumnFilter.GreaterThanOrEquals</literal>, 
-                    <literal>SimpleColumnFilter.LowerThanOrEquals</literal>, 
-                    <literal>SimpleColumnFilter.Like</literal>. Their behaviour is natural, filter application
+                    <literal>FieldFilterHelper</literal> allows specifying different filters that define how the
+                    filter conditions specified should be applied&mdash;<literal>like()</literal>, 
+                    <literal>eq()</literal>, 
+                    <literal>lt()</literal>, 
+                    <literal>lt()</literal>, 
+                    <literal>isNull()</literal>, 
+                    <literal>notNull()</literal>,
+                    <literal>range()</literal>. Their behaviour is natural, filter application
                     shows only those records that satisfy the filter expression.
                 </para>
                 
@@ -1556,37 +1535,29 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
   
   protected void init() throws Exception {
     super.init();
-    
-    addGlobalEventListener(new ProxyEventListener(this));
+	
     setViewSelector("person/editableList");
-    
+	
     /* PersonMO class is already familiar from form examples. */
     list = new EditableBeanListWidget(PersonMO.class);
-    list.addBeanColumn("id", "#Id", false);
+    /* Now, this is new. Set FormRowHandler class that will handle the different row operations. */
+    list.setFormRowHandler(buildFormRowHandler());
+    addWidget("list", list);
+    list.setOrderableByDefault(true);
+    list.addField("id", "#Id", false);
     /* Filtering by fields other than ID is enabled. */
-    list.addBeanColumn("name", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
-    list.addBeanColumn("surname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
-    list.addBeanColumn("phone", "#Phone no", true, new SimpleColumnFilter.Like(), new TextControl());
-    
-    /* Set up the custom range filter for birthdate column. */
-    RangeColumnFilter rangeFilter = new RangeColumnFilter.DateNonStrict();
-    list.addBeanColumn("birthdate", "#Birthdate", true, rangeFilter, null);
-    list.addFilterFormElement(rangeFilter.getStartFilterInfoKey(), "#Birthdate Start", new DateControl(), new DateData());
-    list.addFilterFormElement(rangeFilter.getEndFilterInfoKey(), "#Birthdate End", new DateControl(), new DateData());
-    
-    /* Dummy column which holds no data. 
-     * Added here because we want <ui:componentListHeader/> tag to draw an extra column, which 
-     * we will use as edit/delete button holders. */
-    list.addListColumn(new ListColumn("dummy"));
+    list.addField("name", "#First name").like();
+    list.addField("surname", "#Last name").like();
+    list.addField("phone", "#Phone no").like();        
+    list.addField("birthdate", "#Birthdate").range();
+    list.addField("salary", "#Salary").range();
+    list.addField("dummy", null, false);
     
     /* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
-    list.setListDataProvider(buildListDataProvider());
-    /* Now, this is new. Set FormRowHandler class that will handle the different row operations. See below. */
-    list.setFormRowHandler(buildFormRowHandler());
+    list.setDataProvider(buildListDataProvider());
 
     /* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
     this.formList = list.getFormList();
-    addWidget("list", list);
   }
 
   /* Data provider for person list. Loads all person objects from database. */
@@ -1624,12 +1595,12 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
     
     // Implementation of method that should save EDITED rows which data passes validation.
     public void saveValidRow(FormRow editableRow) throws Exception {
-      /* Reads data from form. FormRow.getFormRow() method returns the widget that is 
+      /* Reads data from form. FormRow.getForm() method returns the widget that is 
        * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
        * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
        * we can cast the return type accordingly. */
-      PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getRowForm()).readBean(new PersonMO());
-      rowData.setId((Long) editableRow.getRowKey());
+      PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).readBean(new PersonMO());
+      rowData.setId((Long) editableRow.getKey());
       
       // Save modified object.
       getGeneralDAO().edit(rowData);
@@ -1657,7 +1628,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
       editableRow.close();
       
       // Get the rowForm (this is the formwidget holding row object data). 
-      BeanFormWidget rowForm = (BeanFormWidget)editableRow.getRowForm();
+      BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
       // See below.
       addCommonFormFields(rowForm);
       /* A button that opens row for editing upon receiving onClick event.
@@ -1682,6 +1653,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
       form.addBeanElement("surname", "#Last name", new TextControl(),  true);
       form.addBeanElement("phone", "#Phone no", new TextControl(), false);
       form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+      form.addBeanElement("salary", "#Salary", new FloatControl(), false);
     }
   }
 }]]></programlisting>

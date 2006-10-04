@@ -199,7 +199,21 @@ Message myEvent = new BroadcastMessage() {
 }
 myEvent.send(null, rootComponent);
 ...</programlisting>
-  This code will call all the components in the hierarchy that subscribed to the event and pass them a certain <literal>data</literal> parameter. As one can see, when calling <literal>Message.send()</literal> we will typically pass <literal>null</literal> as the first parameter, since it is needed only when propagating messages further down the hierarchy. Note that messages can be used to gather data from the components just as well as for passing data to them (TODO: Elaborate?).
+  This code will call all the components in the hierarchy that subscribed to the event and pass them a certain <literal>data</literal> parameter. As one can see, when calling <literal>Message.send()</literal> we will typically pass <literal>null</literal> as the first parameter, since it is needed only when propagating messages further down the hierarchy. Note that messages can be used to gather data from the components just as well as for passing data to them.
+  For example one could construct message that gathers all <literal>FormWidget</literal>s from the widget hierarchy:
+</para>
+      <para>
+<programlisting role="java">public static class FormWidgetFinderMessage extends BroadcastMessage {
+  List formList = new ArrayList();
+
+  protected void execute(Component component) throws Exception {
+    if (component instanceof org.araneaframework.uilib.form.FormWidget) {
+      formList.add(component);
+    }
+  }
+
+  public List getAllForms() { return formList; }
+}</programlisting>
       </para>
 
       <para>

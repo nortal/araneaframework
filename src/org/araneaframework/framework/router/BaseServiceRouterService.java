@@ -16,10 +16,10 @@
 
 package org.araneaframework.framework.router;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
@@ -43,7 +43,7 @@ import org.araneaframework.http.util.ClientStateUtil;
 public abstract class BaseServiceRouterService extends BaseService {
   private static final Logger log = Logger.getLogger(BaseServiceRouterService.class);
   
-  protected Map serviceMap;
+  private Map serviceMap;
   protected Object defaultServiceId;
   
   /**
@@ -67,19 +67,21 @@ public abstract class BaseServiceRouterService extends BaseService {
    * of the service in the service map. 
    */
   protected void init() throws Exception {
-    //Initializes provided service map
+    // adds serviceMap entries as child services
     Iterator ite = serviceMap.entrySet().iterator();
     while(ite.hasNext()) {
       Map.Entry entry = (Map.Entry) ite.next();
       _addComponent(entry.getKey(), (Service) entry.getValue(), getChildEnvironment(entry.getKey()));
     }
+    // free extra references
+    serviceMap = null;
   }
   
   protected void propagate(Message message) throws Exception {
-    Iterator ite = serviceMap.entrySet().iterator();
+    Iterator ite =  _getChildren().entrySet().iterator();
     while(ite.hasNext()) {
       Map.Entry entry = (Map.Entry) ite.next();
-      message.send(entry.getKey(), (Service) entry.getValue());
+      message.send(null, (Service) entry.getValue());
     }
   }
   
@@ -90,8 +92,6 @@ public abstract class BaseServiceRouterService extends BaseService {
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     Object currentServiceId = getServiceId(input);
-    if (currentServiceId == null)
-      currentServiceId = defaultServiceId;
 
     Assert.notNull(this, currentServiceId, 
     		"Router found current service id to be null, which means that it could not be " +
@@ -117,9 +117,7 @@ public abstract class BaseServiceRouterService extends BaseService {
   
   // Callbacks 
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    Map entries = new HashMap();    
-    entries.put(ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(getEnvironment(), ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
   }
   
   /**
@@ -127,14 +125,22 @@ public abstract class BaseServiceRouterService extends BaseService {
    * under the key <code>getServiceKey()</code>.
    */
   protected Object getServiceId(InputData input) throws Exception{
-    return input.getGlobalData().get(getServiceKey());
+    Object id = input.getGlobalData().get(getServiceKey());
+    if (id == null)
+      id = defaultServiceId;
+    return id;
   }
   
   /**
    * Every service has its own key under which the service service id can be found in the request.
    * This method returns that key. 
    */
-  protected abstract Object getServiceKey()  throws Exception;
+  protected abstract Object getServiceKey() throws Exception;
+  
+  protected void closeService(Object serviceId) {
+    ((Service)_getChildren().get(serviceId))._getComponent().destroy();
+    _getChildren().remove(serviceId);
+  }
   
   protected class ServiceRouterContextImpl implements ManagedServiceContext {
     private Object currentServiceId;
@@ -160,10 +166,19 @@ public abstract class BaseServiceRouterService extends BaseService {
       }
       return service;
     }
+    
+    public Service addService(Object id, Service service, Long timeToLive) {
+      Service result = addService(id, service);
+      if (log.isEnabledFor(Priority.WARN)) {
+        log.warn(getClass().getName() + 
+        		".addService(Object id, Service service, Long timeToLive) ignores timeToLive attribute." +
+        		"Just addService(Object id, Service service) should be used.");
+      }
+      return result;
+    }
 
-    public void close(Object id) {
-      ((Service)_getChildren().get(id))._getComponent().destroy();
-      _getChildren().remove(id);
+	public void close(Object id) {
+      closeService(id);
     }
   }
 }

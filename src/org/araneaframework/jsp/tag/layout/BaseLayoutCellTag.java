@@ -37,9 +37,11 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
   public String getStyleClass() throws JspException {
     String result = ((CellClassProvider)requireContextEntry(CellClassProvider.KEY)).getCellClass();
     result = (result != null && result.length() == 0) ? null : result;
+    
+    String superStyleClass = super.getStyleClass();
+    if (superStyleClass != null) {
+      StringBuffer sb = new StringBuffer(superStyleClass);
 
-    if (styleClass != null) {
-      StringBuffer sb = new StringBuffer(super.getStyleClass());
       if (!overrideLayout && result != null)
         sb.append(' ').append(result);
       

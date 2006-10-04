@@ -31,8 +31,8 @@ import org.araneaframework.uilib.list.ListWidget;
  *   body-content = "JSP"
  *   description = "Makes available following page scope variables: 
            <ul>
-             <li><i>list</i> - UiLib list view model.
-             <li><i>listId</i> - UiLib list id.
+             <li><i>list</i></li> - UiLib list view model.
+             <li><i>listId</i></li> - UiLib list id.
            </ul> "
  */
 public class ListTag extends BaseWidgetTag {

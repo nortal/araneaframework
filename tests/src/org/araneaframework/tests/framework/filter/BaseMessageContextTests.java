@@ -16,11 +16,14 @@
 
 package org.araneaframework.tests.framework.filter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.apache.commons.collections.map.UnmodifiableMap;
+import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -41,16 +44,12 @@ public abstract class BaseMessageContextTests extends TestCase {
   
   protected abstract MessageContext getMessageContext();
 
-  protected OutputData getOutputData() {
-    return new MockOutputData();
-  }
-  
   protected boolean isMap(Object object) {
     return (object == null) || (object instanceof Map);
   }
   
   protected void setUp() throws Exception {
-    output = getOutputData();
+    output = new MockOutputData();
     msgCtx = getMessageContext();
 
     // assertions do not allow filter widgets without childs :)
@@ -148,12 +147,32 @@ public abstract class BaseMessageContextTests extends TestCase {
     
     Object messages = output.getAttribute(MessageContext.MESSAGE_KEY);
     assertTrue("messages must not be null", messages != null);
-    assertTrue("Messages must contain ONE elements!", ((Map)messages).size() == 1);
+    assertTrue("Messages must contain ONE element!", ((Map)messages).size() == 1);
     
     Object errorMessages = ((Map)messages).get(MessageContext.ERROR_TYPE);
     assertTrue("Messages must be in java.util.Collection", errorMessages instanceof Collection);
 
     assertTrue("There must be TWO error messages", ((Collection)errorMessages).size() == 2);
+  }
+  
+  /** Tests that message addition order is preserved on rendering. */
+  public void testMessageOrderPreservation() throws Exception {
+    ArrayList messages = new ArrayList(200);
+    for (int i = 0; i < 200; i++) {
+      String nextMessage = RandomStringUtils.randomAlphanumeric(30);
+      messages.add(i, nextMessage);
+	  msgCtx.showErrorMessage(nextMessage);
+    }
+
+    ((Widget)msgCtx)._getWidget().render(output);
+    Map renderedMessageMap = (Map)output.getAttribute(MessageContext.MESSAGE_KEY);
+    Collection renderedMessages = (Collection)renderedMessageMap.get(MessageContext.ERROR_TYPE);
+    
+    int j = 0;
+    for (Iterator i = renderedMessages.iterator(); i.hasNext(); j++)
+      assertEquals((String)messages.get(j), (String)i.next());
+
+    assertTrue("There should have been 200 error messages", j == 200);
   }
 
   // Dummy OutputData which popAttribute() does not pop values, so that after 

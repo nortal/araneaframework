@@ -60,17 +60,17 @@ public class CompanyListWidget extends TemplateBaseWidget {
     // Create the new list widget whose records are JavaBeans, instances of CompanyMO.
     // CompanyMO has fields named id, name and address.
     list = new BeanListWidget(CompanyMO.class);
+    addWidget("companyList", this.list);
     // set the data provider for the list
     list.setDataProvider(new TemplateCompanyListDataProvider());
     // add the displayed columns to list.
-    // addBeanColumn(String id, String label, boolean isOrdered)
+    // addField(String id, String label, boolean orderable)
     // note that # before the label means that label is treated as unlocalized and outputted as-is
     list.addField("id", "#Id", false);
-    //addBeanColumn(String id, String label, boolean isOrdered, ColumnFilter filter, Control control)
+    // addField(...) returns FieldFilterHelper, like() sets LIKE filter on the column
     list.addField("name", "#Name", true).like();
     list.addField("address", "#Address", true).like();
     list.addField("dummy", null, false);
-    addWidget("companyList", this.list);
   }
 
   private void refreshList() throws Exception {    

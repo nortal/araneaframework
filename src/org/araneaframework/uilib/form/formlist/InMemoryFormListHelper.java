@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.formlist;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,8 +25,8 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.core.Assert;
-import org.araneaframework.uilib.form.formlist.adapters.InMemoryFormRowHandlerDecorator;
-import org.araneaframework.uilib.form.formlist.adapters.MapFormRowHandlerDecorator;
+import org.araneaframework.uilib.form.formlist.adapter.InMemoryFormRowHandlerDecorator;
+import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
 
 /**
  * Helper that facilitates holding the editable list rows in memory without saving them to database. 
@@ -63,11 +62,9 @@ public class InMemoryFormListHelper implements Serializable {
     }
     
     formList.setFormRowHandler(
-        new MapFormRowHandlerDecorator(
-            current, formList, 
-            new InMemoryFormRowHandlerDecorator(formList.getFormRowHandler(), this)));
+            new InMemoryFormRowHandlerDecorator(formList.getFormRowHandler(), this));
     
-    formList.setRows(new ArrayList(current.values()));
+    formList.setModel(new MapFormListModel(current));
 	}
 	
 	/**

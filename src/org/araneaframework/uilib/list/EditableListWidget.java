@@ -19,6 +19,7 @@ package org.araneaframework.uilib.list;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
 import org.araneaframework.uilib.form.formlist.FormRowHandler;
+import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -32,18 +33,12 @@ public class EditableListWidget extends ListWidget {
 	//*********************************************************************	
 
 	public EditableListWidget(FormRowHandler rowHandler) {
-		setFormRowHandler(rowHandler);
+    formList = new FormListWidget(rowHandler, new ListWidgetFormListModel(this));
 	}
 
 	//*********************************************************************
 	//* PUBLIC METHODS
 	//*********************************************************************		
-
-
-	public void refreshCurrentItemRange() throws Exception {
-		super.refreshCurrentItemRange();		
-		formList.setRows(getItemRange());
-	}
 
 	/**
 	 * Returns the editable row manager.
@@ -54,7 +49,7 @@ public class EditableListWidget extends ListWidget {
 	}
 
 	public void setFormRowHandler(FormRowHandler rowHandler) {
-		formList = new FormListWidget(rowHandler);		
+		formList.setFormRowHandler(rowHandler);
 	}
 
 	//*********************************************************************

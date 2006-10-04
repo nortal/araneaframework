@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.sample;
 
+import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -74,6 +75,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
     simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
     simpleForm.getElement("number").setConstraint(new NotEmptyConstraint());
+    simpleForm.setValueByFullName("dateTime", new Date());
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.

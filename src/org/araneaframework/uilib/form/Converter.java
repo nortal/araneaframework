@@ -51,6 +51,6 @@ public interface Converter extends Serializable, FormElementAware {
    * @return a new converter, of the same type that the class that overrides it, however freshly
    * initialized.
    */
-  public BaseConverter newConverter();
+  public Converter newConverter();
 
 }

@@ -18,7 +18,9 @@ package org.araneaframework.framework.container;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.http.util.AtomicResponseHelper;
@@ -95,6 +97,26 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
     this.exception = null;
     
     super.replace(flow, configurator);
+  }
+  
+  
+  protected void update(InputData input) throws Exception {
+    if (exception == null)
+      super.update(input);    
+    else handleUpdate(input);
+  }
+  
+  protected void event(Path path, InputData input) throws Exception {
+    if (exception == null)
+      super.event(path, input);    
+    else if (path != null && !path.hasNext())
+      handleEvent(input);
+  }
+  
+  protected void process() throws Exception {
+    if (exception == null)
+      super.process();
+    else handleProcess();
   }
   
   protected void render(OutputData output) throws Exception {

@@ -18,7 +18,7 @@ package org.araneaframework.uilib.form.control;
 
 import java.math.BigDecimal;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -156,9 +156,9 @@ public class FloatControl extends EmptyStringNullableControl {
 		}
 		catch (NumberFormatException e) {
 			addError(
-					ErrorUtil.localizeAndFormat(
+					MessageUtil.localizeAndFormat(
 							UiLibMessages.NOT_A_NUMBER, 
-							ErrorUtil.localize(getLabel(), getEnvironment()),
+							MessageUtil.localize(getLabel(), getEnvironment()),
 							getEnvironment()));          
 		}
 
@@ -208,10 +208,10 @@ public class FloatControl extends EmptyStringNullableControl {
 		// minimum and maximum permitted values
 		if (minValue != null && maxValue != null && ((((BigDecimal) value).compareTo(minValue) == -1) || ((BigDecimal) value).compareTo(maxValue) == 1)) {
 			addError(
-					ErrorUtil.localizeAndFormat(
+					MessageUtil.localizeAndFormat(
 							UiLibMessages.NUMBER_NOT_BETWEEN, 
 							new Object[] {
-									ErrorUtil.localize(getLabel(), getEnvironment()),
+									MessageUtil.localize(getLabel(), getEnvironment()),
 									minValue.toString(),
 									maxValue.toString()
 							},          
@@ -219,20 +219,20 @@ public class FloatControl extends EmptyStringNullableControl {
 		}      
 		else if (minValue != null && ((BigDecimal) value).compareTo(minValue) == -1) {      
 			addError(
-					ErrorUtil.localizeAndFormat(
+					MessageUtil.localizeAndFormat(
 							UiLibMessages.NUMBER_NOT_GREATER, 
 							new Object[] {
-									ErrorUtil.localize(getLabel(), getEnvironment()),
+									MessageUtil.localize(getLabel(), getEnvironment()),
 									minValue.toString(),
 							},          
 							getEnvironment()));       
 		}    
 		else if (maxValue != null && ((BigDecimal) value).compareTo(maxValue) == 1) {
 			addError(
-					ErrorUtil.localizeAndFormat(
+					MessageUtil.localizeAndFormat(
 							UiLibMessages.NUMBER_NOT_LESS, 
 							new Object[] {
-									ErrorUtil.localize(getLabel(), getEnvironment()),
+									MessageUtil.localize(getLabel(), getEnvironment()),
 									maxValue.toString(),
 							},          
 							getEnvironment()));         
@@ -241,10 +241,10 @@ public class FloatControl extends EmptyStringNullableControl {
 		// maximum permitted scale
 		if (maxScale != null && ((BigDecimal) value).scale() > maxScale.intValue()) {
 			addError(
-					ErrorUtil.localizeAndFormat(
+					MessageUtil.localizeAndFormat(
 							UiLibMessages.SCALE_NOT_LESS, 
 							new Object[] {
-									ErrorUtil.localize(getLabel(), getEnvironment()),
+									MessageUtil.localize(getLabel(), getEnvironment()),
 									maxScale.toString(),
 							},
 							getEnvironment()));         			

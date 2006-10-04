@@ -19,7 +19,7 @@ package org.araneaframework.uilib.form.constraint;
 import java.util.Calendar;
 import java.util.Date;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * Constraint that fails when checked java.util.Date is not after current date.
@@ -58,13 +58,13 @@ public class AfterTodayConstraint extends BaseFieldConstraint {
 		if ((getValue() == null) || (today.getTime().compareTo((Date) getValue()) == 1)) {
           if (!allowToday) {
 	        addError(
-	            ErrorUtil.localizeAndFormat(
+	            MessageUtil.localizeAndFormat(
 	              UiLibMessages.DATE_BEFORE_TODAY, 
 	              t(getLabel()), 
 	              getEnvironment()));
           } else {
   	        addError(
-  		        ErrorUtil.localizeAndFormat(
+  		        MessageUtil.localizeAndFormat(
   		            UiLibMessages.DATE_BEFORE_TODAY_TODAY_ALLOWED, 
   		            t(getLabel()), 
   		            getEnvironment()));

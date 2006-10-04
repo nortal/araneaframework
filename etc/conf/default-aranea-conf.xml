@@ -108,7 +108,10 @@
     </property>
   </bean>
   
-  <bean class="org.araneaframework.http.filter.StandardThreadCloningFilterService" id="araneaThreadCloningService" singleton="false"/>
+  <bean class="org.araneaframework.http.filter.StandardThreadCloningFilterService" 
+    id="araneaThreadCloningService" 
+    singleton="false">
+  </bean>
 
   <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService"
   	id="araneaWidgetAdapter"
