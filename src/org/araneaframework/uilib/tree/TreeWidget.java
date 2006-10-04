@@ -28,8 +28,6 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String ROOT_KEY = "root";
-
 	private TreeDataProvider dataProvider;
 	private boolean disposeChildren = true; // remove all children when node is collapsed
 	                                        //(implies reloading children when node is reopened)
