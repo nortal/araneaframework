@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.list.structure;
 
+import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 
 
@@ -28,5 +29,6 @@ import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
  * otherwise).
  */
 public interface ListFilter extends ExpressionBuilder {
-	// no additional methods
+	void init(Environment env) throws Exception;
+	void destroy() throws Exception;
 }

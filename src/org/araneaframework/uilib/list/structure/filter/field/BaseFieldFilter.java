@@ -19,6 +19,7 @@ package org.araneaframework.uilib.list.structure.filter.field;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
+import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
 import org.araneaframework.uilib.list.structure.filter.FieldFilter;
@@ -39,6 +40,13 @@ public abstract class BaseFieldFilter implements FieldFilter {
 	private String valueId;
 	private Object value;
 	private boolean constant = false;
+	
+	public void init(Environment env) throws Exception {
+		// empty
+	}
+	public void destroy() throws Exception {
+		// empty
+	}
 	
 	public String getFieldId() {
 		return this.fieldId;

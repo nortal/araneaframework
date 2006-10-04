@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.apache.commons.lang.Validate;
+import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.TypeHelper;
 import org.araneaframework.uilib.list.structure.filter.FieldFilter;
@@ -36,14 +37,23 @@ public class ListStructure extends BaseListStructure {
 	private final TypeHelper typeHelper;
 	
 	private boolean orderableByDefault = false;
-
+	
 	public ListStructure(TypeHelper typeHelper) {
 		Assert.notNullParam(this, typeHelper, "typeHelper");
 		this.typeHelper = typeHelper;
+		this.filter = new AndFilter();
 	}
 	
 	protected TypeHelper getTypeHelper() {
 		return this.typeHelper;
+	}
+
+	public void init(Environment env) throws Exception {
+		this.filter.init(env);
+	}
+
+	public void destroy() throws Exception {
+		this.filter.destroy();
 	}
 	
 	/*
@@ -119,13 +129,7 @@ public class ListStructure extends BaseListStructure {
 	 */
 	
 	protected AndFilter getAndFilter() {
-		if (this.filter == null) {
-			clearFilters();
-		}
-		if (!AndFilter.class.isAssignableFrom(this.filter.getClass())) {
-			throw new RuntimeException("ListFilter must be an AndFilter instance");
-		}
-		return (AndFilter) this.filter; 
+		return (AndFilter) this.filter;
 	}
 	
 	public void addFilter(ListFilter filter) {
@@ -146,7 +150,7 @@ public class ListStructure extends BaseListStructure {
 		return null;
 	}
 	
-	public void clearFilters() {
-		this.filter = new AndFilter();
+	public void clearFilters() throws Exception {
+		getAndFilter().clearFilters();
 	}
 }

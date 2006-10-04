@@ -65,7 +65,6 @@ public class PersonListWidget extends TemplateBaseWidget {
 	
 	protected void initList() throws Exception {
 		this.list = new BeanListWidget(PersonMO.class);
-		addWidget("personList", this.list);
 		list.setDataProvider(new TemplatePersonListDataProvider());
 		list.addField("id", "#Id");
 		list.setOrderableByDefault(true);
@@ -78,6 +77,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 		// The dummy column without label (in list rows, some listRowLinkButton's will be written there).
 		// Needed to write out componentListHeader with correct number of columns. 
 		list.addField("dummy", null, false);
+
+		addWidget("personList", this.list);		
 	}
 	
 	protected void refreshList() throws Exception {  	

@@ -36,7 +36,7 @@ public interface ListContext {
 	 * 
 	 * @return the global configuration context.
 	 */
-	ConfigurationContext getConfiguration();
+	//ConfigurationContext getConfiguration();
 
 	/**
 	 * Returns the current case sensitivity behaivor.
@@ -50,7 +50,7 @@ public interface ListContext {
 	 * 
 	 * @return the current locale.
 	 */
-	Locale getLocale();
+	//Locale getLocale();
 	
 	/**
 	 * Returns the label of this field. 
