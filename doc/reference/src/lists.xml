@@ -138,6 +138,14 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 			<para>
 				Filtering is basically a proccess of testing all list items against a specific criteria.
 				This process is usually followed by ordering the remaining items and then displaying a slice of them (e.g items indexed between 10 and 19).
+			</para>
+			<para>
+				In general, the filtering can be devided into zero or more tests.
+				E.g search for persons whose names begin with 'A' and who were born on Januray 1st 1970 or later.
+				Notice two different criterias here - one associated with name and another with birthday.
+				Usually all the criterias are applied not only one of them.
+				This means we could add "AND" between them not "OR".
+				
 				
 				<variablelist>
 					<varlistentry>
