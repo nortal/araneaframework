@@ -88,7 +88,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @param ignoreCase whether to ignore case.
 	 */
-	public void setIgnoreCase(boolean ignoreCase) {
+	protected void _setIgnoreCase(boolean ignoreCase) {
 		getTypeHelper().setIgnoreCase(ignoreCase);
 	}
 
@@ -106,7 +106,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @param locale new locale.
 	 */
-	public void setLocale(Locale locale) {
+	protected void _setLocale(Locale locale) {
 		getTypeHelper().setLocale(locale);
 	}
 
@@ -127,7 +127,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @param stirct whether new filters should be strict.
 	 */
-	public void setStrict(boolean stirct) {
+	protected void _setStrict(boolean stirct) {
 		this.strict = stirct;
 	}
 
@@ -179,7 +179,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @param fieldId field id.
 	 * @param labelId label id (not yet resolved).
 	 */
-	public void addCustomLabel(String fieldId, String labelId) {
+	protected void _addCustomLabel(String fieldId, String labelId) {
 		this.labels.put(fieldId, labelId);
 	}
 	/**
@@ -214,7 +214,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @see TypeHelper#addFieldType(String, Class)
 	 */
-	public void addFieldType(String fieldId, Class type) {
+	protected void _addFieldType(String fieldId, Class type) {
 		getTypeHelper().addFieldType(fieldId, type);
 	}
 	/**

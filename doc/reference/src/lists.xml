@@ -143,22 +143,147 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				In general, the filtering can be devided into zero or more tests.
 				E.g search for persons whose names begin with 'A' and who were born on Januray 1st 1970 or later.
 				Notice two different criterias here - one associated with name and another with birthday.
-				Usually all the criterias are applied not only one of them.
-				This means we could add "AND" between them not "OR".
-				
+				Each of these tests have their own behaivor and associated data:
+				<variablelist>
+					<varlistentry>
+						<term>Behaviour</term>
+						<listitem>
+							Test actions defined in the list configuration. E.g equals, greater than.
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Fields</term>
+						<listitem>
+							The list fields that provide data for the tests.
+							Each Field have its own identifier ('name', 'birthday')
+							and value in a specific row ('John', Match 15nd 1963).							
+							Each list row may have different values for each of its fields.
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Values</term>
+						<listitem>
+							Global test data provided by HTTP request, a FormWidget etc.
+							Each Value have its own identifier ('name', 'birthday')
+							and the value itself ('A', January 1st 1970).
+							Notice the uppercased V and lowercased v.
+						</listitem>
+					</varlistentry>
+				</variablelist>
+				Each List have its own Fields and Values for each test.
+				Configurting the list, one can define a test - <emphasis>filter</emphasis> -
+				the <emphasis>behaviour</emphasis>, <emphasis>field Id</emphasis> and <emphasis>value Id</emphasis>.
+			</para>
+			<para>
+				Notice that the field Id match the data in each list row
+				and the value Id match the data provided by the HTTP request or FormWidget.
+				It's very common to have same identifier for a field Id and a value Id, but
+				to apply several tests for one field, they have to use different value Ids or behaviours
+				and to apply several tests for one value, they have to use different field Ids or behaviours.
+			</para>
+			<para>
+				Aranea provides filters with values using the <code>FormWidget</code>.
+				By default each filter is only created along with the corresponding FormElements.
+				Each FormElement is added to the filter form by the same element Id as the Value Id of the filter.
+				However one can add a filter without FormElements either.
+			</para>
+			
+			<para>				
+				To add a filter to a field, one can assign it after adding the field itself:
+<programlisting role="java">myList.addField("name", "#Name").like()</programlisting>
+				All <code>addField</code> methods return a <code>org.araneaframework.uilib.list.structure.filter.FieldFilterHelper</code>
+				associated with the new field. This helper provides methods for adding filters related to this field.
+				The <code>like()</code> method adds the Like filter that is assigned 'name' as both field Id and value Id.
+				The Like filter corresponds to the according SQL expression but is case insensitive by default.
+				To force the case sensitive behaviour, use:
+<programlisting role="java">myList.addField("name", "#Name").setIgnoreCase(false).like()</programlisting>
+				Switching the ingore-case parameter actually makes all followingly added filters act the same.
+				There are few parameters that can be set similarly:
 				
 				<variablelist>
 					<varlistentry>
-						<term>Data</term>
-						<listitem></listitem>
+						<term>Case sensitivity</term>
+						<listitem>
+							By using <code>setIgnoreCase(boolean)</code> one assigns new filters to ignore case (default) or not.
+							This applies to filters that use String comparison.
+						</listitem>
 					</varlistentry>
 					<varlistentry>
-						<term>Behaviour</term>
-						<listitem>How to </listitem>
+						<term>Locale</term>
+						<listitem>
+							By using <code>setLocale(Locale)</code> one assigns new filters to use as specific Locale.
+							This applies to filters that use String comparison and only the list with memory-based data provider.
+							By default <code>org.araneaframework.framework.LocalizationContext.getLocale()</code>
+							is used to retrieve the Locale instnace.
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Strict/non-strict</term>
+						<listitem>
+							By using <code>setStrict(boolean)</code> one assigns new filters to disallow equality or not.
+							By default equality is allowed (strict).
+							This applies to filters such as GreaterThan, LowerThan, Range etc.
+						</listitem>
 					</varlistentry>
 				</variablelist>
-				
+			</para>
+			
+			<para>
 				Aranea provides many filters out-of-the-box.
+				<variablelist>
+					<varlistentry>
+						<term>Equal (eq)</term>
+						<listitem>
+							1 field = 1 value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Greater than (gt)</term>
+						<listitem>
+							1 field 6gt; 1 value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Lower than</term>
+						<listitem>
+							1 field &lt; 1 value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Like</term>
+						<listitem>
+							1 field LIKE 1 value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Is null</term>
+						<listitem>
+							1 value = 1 constant AND 1 field IS NULL
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Not null</term>
+						<listitem>
+							1 value = 1 constant AND 1 field IS NOT NULL
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Range</term>
+						<listitem>
+							1 value BETWEEN 1. value AND 2. value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Range-in-range</term>
+						<listitem>
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>SQL function</term>
+						<listitem>
+						</listitem>
+					</varlistentry>
+				</variablelist>
 			</para>
 		</sect2>
 

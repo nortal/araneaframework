@@ -70,7 +70,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 		list.addField("id", "#Id");
 		list.setOrderableByDefault(true);
 		list.addField("name", "#First name").like();
-		list.addField("surname", "#Last name").like();
+		list.addField("surname", "#Last name").setIgnoreCase(false).like();
 		list.addField("phone", "#Phone no").like();
 		list.addField("birthdate", "#Birthdate").range();
 		list.addField("salary", "#Salary").range();

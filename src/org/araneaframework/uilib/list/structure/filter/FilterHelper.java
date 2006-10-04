@@ -17,6 +17,7 @@ package org.araneaframework.uilib.list.structure.filter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.uilib.form.Control;
@@ -24,6 +25,7 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.TypeHelper;
 import org.araneaframework.uilib.list.structure.ListFilter;
 import org.araneaframework.uilib.list.structure.filter.advanced.RangeInRangeFilter;
 import org.araneaframework.uilib.list.structure.filter.advanced.SqlFunctionFilter;
@@ -109,6 +111,62 @@ public class FilterHelper extends BaseFilterHelper {
 	 */
 	public FilterHelper(ListWidget list) {
 		super(list);
+	}
+	
+	/**
+	 * Sets the current case sensitivity behaivor.
+	 * 
+	 * @param ignoreCase whether to ignore case.
+	 */
+	public FilterHelper setIgnoreCase(boolean ignoreCase) {
+		super._setIgnoreCase(ignoreCase);
+		return this;
+	}
+	
+	/**
+	 * Sets the current locale.
+	 * 
+	 * @param locale new locale.
+	 */
+	public FilterHelper setLocale(Locale locale) {
+		super._setLocale(locale);
+		return this;
+	}
+	
+	/**
+	 * Sets the current strickness behaivor.
+	 * 
+	 * @param stirct whether new filters should be strict.
+	 */
+	public FilterHelper setStrict(boolean stirct) {
+		super._setStrict(stirct);
+		return this;
+	}
+	
+	/**
+	 * Adds custom label for specified field. This can override already defined
+	 * label of list field. Those labels are used by new filter form elements
+	 * that are automatically created for list filters. 
+	 * 
+	 * @param fieldId field id.
+	 * @param labelId label id (not yet resolved).
+	 */
+	public FilterHelper addCustomLabel(String fieldId, String labelId) {
+		super._addCustomLabel(fieldId, labelId);
+		return this;
+	}
+
+	/**
+	 * Defines type for specified field.
+	 * 
+	 * @param fieldId field id.
+	 * @param type field type.
+	 * 
+	 * @see TypeHelper#addFieldType(String, Class)
+	 */
+	public FilterHelper addFieldType(String fieldId, Class type) {
+		super._addFieldType(fieldId, type);
+		return this;
 	}
 	
 	// ========== EQUALS ========== 
