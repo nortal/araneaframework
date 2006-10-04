@@ -40,8 +40,8 @@ import org.araneaframework.uilib.event.OnClickEventListener;
  *   description = "Form button, represents UiLib "ButtonControl"."
  */
 public class FormButtonHtmlTag extends BaseFormButtonTag {
-  private static final String RENDER_BUTTON = "button";
-  private static final String RENDER_INPUT = "input";
+  public static final String RENDER_BUTTON = "button";
+  public static final String RENDER_INPUT = "input";
   protected String renderMode = FormButtonHtmlTag.RENDER_BUTTON;
 
   {
