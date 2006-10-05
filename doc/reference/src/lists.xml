@@ -52,7 +52,6 @@ private BeanListWidget myList;
 protected void init() {
   ...
   myList = new BeanListWidget(MyModel.class);
-  addWidget("myList", myList);
 
   myList.setOrderableByDefault(true);
   myList.addField("name", "#Name").like();
@@ -62,6 +61,7 @@ protected void init() {
   ...
   myList.setInitialOrder("name", true);
   myList.setListDataProvider(new MyListDataProvider());  
+  addWidget("myList", myList);
   ...
 }
 ...</programlisting>
@@ -71,10 +71,6 @@ protected void init() {
 						<term>Create the list</term>
 						<listitem>The line <literal>new BeanListWidget(MyModel.class)</literal> creates a new list widget that is associated with the <emphasis>JavaBean</emphasis> model class <literal>MyModel</literal>.</listitem>
 					</varlistentry>
-					<varlistentry>
-						<term>Register the list</term>
-						<listitem>The line <literal>addWidget("myList", myList)</literal> registers the list allowing it to use configuration from the Environment.</listitem>
-					</varlistentry>															
 					<varlistentry>
 						<term>Make fields orderable</term>
 						<listitem>The line <literal>myList.setOrderableByDefault(true)</literal> configures the following fields as orderable.</listitem>
@@ -91,6 +87,10 @@ protected void init() {
 						<term>Set the list data provider</term>
 						<listitem>The line <literal>myList.setListDataProvider(new MyListDataProvider())</literal> sets the data provider for the list.</listitem>
 					</varlistentry>
+					<varlistentry>
+						<term>Register the list</term>
+						<listitem>The line <literal>addWidget("myList", myList)</literal> initializes and registers the list allowing it to function.</listitem>
+					</varlistentry>															
 				</variablelist>
 			</para>
 
@@ -116,19 +116,278 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 		</sect2>
 
 		<sect2>
-			<title>Ordering</title>
+			<title>Fields</title>
 						
 			<para>
-				Each list field can be orderable or not. We already discovered <code>ListWidget</code>'s method <code>setOrderableByDefault(boolean)</code> that switch whether to configure fields that are added afterwards orderable or not. This method can be used several times in the list configuration.
-			</para>
-			<para>
-				Another way is to set each field individually orderable or not when they are added to the list. In such case add additional boolean argument to the <code>addField()</code> method such as:
-<programlisting role="java">myList.addField("phone", "#Phone no", false).like();</programlisting>
-				Notice the <code>false</code> as third parameter. This always overrides the current behaivor that is set by <code>setOrderableByDefault(boolean)</code> method.
+				As the list may be displayed as a table, it is basically an ordered collection of items.
+				In the previous example, we defined a list of <code>MyModel.class</code> typed items
+				that have fields 'name', 'surname', 'phone' and 'birthdate'.
+				By listing of <code>MyModel.class</code>, we also told <code>ListWidget</code>
+				the corresponding field types, e.g <code>String.class</code>, <code>String.class</code>, <code>Long.class</code> and <code>Date.class</code>.
+				In fact this feature of reflecion is the only distinction between
+				the <code>ListWidget</code> and <code>BeanListWidget</code>.
 			</para>
 			
 			<para>
-				In addition, we already used method <code>setInitialOrder(String, boolean)</code>. It sets a specified field (the first argument) to be ordered by default. The second argument tells whether it should use the ascending order.
+				Each list field have its own <emphasis>Id</emphasis>, <emphasis>label</emphasis> and <emphasis>type</emphasis>.
+				The labels are used to automatically create a corresponding title row above the displayed table.
+				The types are used to describe how to order or filter the whole data using this field.
+				E.g <code>String.class</code> is treated differently than other types, because usually
+				one would prefer to order by this field ignoring the case.
+				Both the labels and types are also used to build a corresponding search form -
+				an automatically built <code>FormWidget</code> - for the list.
+			</para>
+			
+			<para>
+				If we would like to add some list fields that are not <code>MyModel.class</code> fields,
+				we can pass it's type to the <code>ListWidget</code> like following:
+<programlisting role="java">myList.addField("income", "#Income", BigDecimal.class);</programlisting>
+				Here the <code>myList</code> could be just a <code>ListWidget</code> rather than a <code>BeanListWidget</code>.
+			</para>
+			
+			<para>
+				When adding a list field, we can also provide this field-related
+				ordering and filtering information.
+			</para>
+		</sect2>
+
+		<sect2>
+			<title>Ordering</title>
+						
+			<para>
+				Each list field can be orderable or not. We already discovered
+				<code>ListWidget</code>'s method <code>setOrderableByDefault(boolean)</code>
+				that switch whether to configure fields that are added afterwards orderable or not.
+				This method can be used several times in the list configuration.
+			</para>
+			<para>
+				Another way is to set each field individually orderable or not when they are added to the list.
+				In such case add additional boolean argument to the <code>addField()</code> method such as:
+<programlisting role="java">myList.addField("phone", "#Phone no", false);</programlisting>
+				Notice the <code>false</code> as third parameter.
+				<code>true</code> means that the list can be ordered by this field and <code>false</code> means the opposite.
+				By not providing this parameter,
+				simply the last value is used which has been set by <code>setOrderableByDefault(boolean)</code> method.
+			</para>
+			
+			<para>
+				In addition, we already used method <code>setInitialOrder(String, boolean)</code>.
+				It sets a specified field (the first argument) to be ordered by default.
+				<code>true</code> as the second argument tells the ordering should be ascending,
+				<code>false</code> would mean descending.
+				By not providing this information, the list is displayed in the original order.
+			</para>
+		</sect2>
+		
+		<sect2>
+			<title>Filtering</title>			
+			<para>
+				Filtering means that we only display a certain list items.
+				The list can be filtered using its fields and data provided
+				by the search from of this list.
+			</para>
+			<para>
+				For this, we must provide the <code>ListWidget</code> with 
+				the corresponding 
+				<code>org.araneaframework.uilib.list.structure.ListFilter</code>s
+				and <code>FormElement</code>s. As the form elements are dummy
+				"boxes" that hold search data, each <code>ListFilter</code>
+				is related to a certain filter test, e.g. equality, greater than comparison etc.
+				Each <code>ListFilter</code> also knows what information it
+				must be compare to be equal. In general, one list field is
+				compared against a value provided from the search form.
+				It's also assumed that a blank search field means that this
+				particular <code>ListWidget</code> is currently disabled.
+			</para>
+			<para>
+				Fortunately, in most cases it's unnecessary to add these search
+				fields manually.
+				Instead, if one is adding a list field, he or she can assign
+				both the <code>ListFilter</code> and <code>FormElement</code>
+				for this field very simply:
+<programlisting role="java">
+	myList.addField("address", "#Address").like();
+</programlisting>
+				Here we simply add an 'Address' field providing it with label
+				and telling there's should be a <emphasis>Like filter</emphasis> for this field.
+				By this, we automatically add a <code>TextControl</code> into the
+				search form. By filling it with value 'Paris', we will see only
+				rows which 'Address' field contain 'Paris', 'paris', 'PARIS' etc.
+			</para>
+			<para>
+				To describe, how this works, we show a longer version of the
+				previous code:
+<programlisting role="java">	
+	myList.addField("address", "#Address");
+	myList.getFilterHelper().like("address");
+</programlisting>
+				So there's a special class
+				<code>org.araneaframework.uilib.list.structure.filter.FilterHelper</code>
+				that is used to add list filters.
+				All <ocde>ListWidget.addField()</ocde> methods just return a little
+				different version of this helper class, called a <code>FieldFilterHelper</code>.
+				It's methods do not need a field Id and thus make one not to
+				repeat the same field Id for each filter.
+				In general, the shorter usage is recommended of course.
+				However some filters are more complicated and may be related to
+				more than list field. For those, one must use the <code>FilterHelper</code> instead.
+			</para>
+			<para>
+				By default all filters that deal with the Strings are case insensitive.
+				To configure some filters to be different, use the following:
+<programlisting role="java">
+	myList.addField("country", "#Country").setIgnoreCase(false).like();
+	myList.addField("city", "#City").like();
+	myList.addField("address", "#Address").setIgnoreCase(true).like();
+</programlisting>
+				This can be explained following:
+				Before adding a Like filter for the 'country' field,
+				we switched to the case sensitive mode.
+				And before adding a filter for the 'address' field,
+				we switched to the case insensitive mode.
+				Thus the city's filter is case sensitive as the
+				country's but the address' filter does ignore the case.
+			</para>
+			<para>
+				This state is hold by the <code>FilterHelper</code> abd can be
+				modified either by calling a method of the <code>FilterHelper</code>
+				or the <code>FieldFilterHelper</code>.
+				In such way, the following parameters can be set:
+				<variablelist>
+					<varlistentry>
+						<term>Case sensitivity</term>
+						<listitem>
+							By using <code>setIgnoreCase(boolean)</code> one assigns new filters to ignore case (default) or not.
+							This applies to filters that use String comparison.
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Locale</term>
+						<listitem>
+							By using <code>setLocale(Locale)</code> one assigns new filters to use as specific Locale.
+							This applies to filters that use String comparison and only the list with memory-based data provider.
+							By default <code>org.araneaframework.framework.LocalizationContext.getLocale()</code>
+							is used to retrieve the Locale instnace.
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Strict/non-strict</term>
+						<listitem>
+							By using <code>setStrict(boolean)</code> one assigns new filters to disallow equality or not.
+							By default equality is allowed (strict).
+							This applies to filters such as GreaterThan, LowerThan, Range etc.
+						</listitem>
+					</varlistentry>
+				</variablelist>				
+			</para>
+			<para>
+				Now, let's show which filters we have got:
+				
+				<informaltable frame="all">
+				  <tgroup cols="3">
+				    <colspec colwidth="1*"/>
+				    <colspec colwidth="2*"/>
+				    <colspec colwidth="3*"/>
+				    <thead>
+				      <row>
+				        <entry>Adding method</entry>
+				        <entry>Filter class</entry>
+				        <entry>Description</entry>
+				      </row>
+				    </thead>
+				    <tbody>
+				      <row>
+				        <entry><code>eq()</code></entry>
+				        <entry><code>EqualFilter</code></entry>
+				        <entry>Tests if the value of a certain list field is equal to the value of a certain search form field.</entry>
+				      </row>
+				      <row>
+				        <entry><code>gt(), lt()</code></entry>
+				        <entry><code>GreaterThanFilter, LowerThanFilter</code></entry>
+				        <entry>Tests if the value of a certain list field is greater than (lower than) to the value of a certain search form field.</entry>
+				      </row>
+				      <row>
+				        <entry><code>like()</code></entry>
+				        <entry><code>LikeFilter</code></entry>
+				        <entry>Tests if the pattern in a certain search form field matches with the value of a certain list field.
+				        	This corresponds to the <literal>LIKE</literal> expression in SQL with some modifications.
+				        	By default, it takes '%' and '*' symbols as any-string wildcards and '_', '.' and '?' as any-symbol wildcards.
+				        	In addition, the pattern does not have to match with the whole string ('%' is automatically added before and
+				        	after the pattern string). The wildcards and their automatic adding is configured by the
+				        	<code>org.araneaframework.uilib.list.util.like.LikeConfiguration</code> which is found from the
+				        	Aranea's <code>org.araneaframework.uilib.ConfigurationContext</code>.
+				        	This filter is identical in memory-based and database-backend usage.
+				        </entry>
+				      </row>
+				      <row>
+				        <entry><code>isNull(), notNull()</code></entry>
+				        <entry><code>NullFilter</code></entry>
+				        <entry></entry>
+				      </row>
+				      <row>
+				        <entry><code>range()</code></entry>
+				        <entry><code>EqualFilter</code></entry>
+				        <entry></entry>
+				      </row>
+				    </tbody>
+				  </tgroup>
+				</informaltable>				
+				
+				<variablelist>
+					<varlistentry>
+						<term>Equality (eq)</term>
+						<listitem>
+							Equal filter returns true if the value of a certain list field is equal to a Value.
+							1 field = 1 value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Greater than (gt)</term>
+						<listitem>
+							1 field 6gt; 1 value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Lower than (lt)</term>
+						<listitem>
+							1 field &lt; 1 value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Like</term>
+						<listitem>
+							1 field LIKE 1 value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Is null</term>
+						<listitem>
+							1 value = 1 constant AND 1 field IS NULL
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Not null</term>
+						<listitem>
+							1 value = 1 constant AND 1 field IS NOT NULL
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Range</term>
+						<listitem>
+							1 value BETWEEN 1. value AND 2. value
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>Range-in-range</term>
+						<listitem>
+						</listitem>
+					</varlistentry>
+					<varlistentry>
+						<term>SQL function</term>
+						<listitem>
+						</listitem>
+					</varlistentry>
+				</variablelist>				
 			</para>
 		</sect2>
 		
@@ -263,6 +522,7 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 					<varlistentry>
 						<term>Equal (eq)</term>
 						<listitem>
+							Equal filter returns true if the value of a certain list field is equal to a Value.
 							1 field = 1 value
 						</listitem>
 					</varlistentry>

@@ -416,7 +416,7 @@ public class FilterHelper extends BaseFilterHelper {
 	// filter with form element
 	
 	public FilterHelper notNull(String fieldId, Object conditionValue) throws Exception {
-		return isNull(fieldId, fieldId, conditionValue);
+		return notNull(fieldId, fieldId, conditionValue);
 	}
 	public FilterHelper notNull(String fieldId, String valueId, Object conditionValueId) throws Exception {
 		_notNull(fieldId, valueId);
@@ -424,7 +424,7 @@ public class FilterHelper extends BaseFilterHelper {
 		return this;
 	}
 	public FilterHelper notNull(String fieldId, Object conditionValue, Control control) throws Exception {
-		return isNull(fieldId, fieldId, conditionValue, control);
+		return notNull(fieldId, fieldId, conditionValue, control);
 	}
 	public FilterHelper notNull(String fieldId, String valueId, Object conditionValue, Control control) throws Exception {
 		_notNull(fieldId, valueId);
@@ -432,7 +432,7 @@ public class FilterHelper extends BaseFilterHelper {
 		return this;
 	}
 	public FilterHelper notNull(String fieldId, Object conditionValue, FormElement element) throws Exception {
-		return isNull(fieldId, fieldId, conditionValue, element);
+		return notNull(fieldId, fieldId, conditionValue, element);
 	}
 	public FilterHelper notNull(String fieldId, String valueId, Object conditionValue, FormElement element) throws Exception {
 		_notNull(fieldId, valueId);
@@ -443,7 +443,7 @@ public class FilterHelper extends BaseFilterHelper {
 	// filter
 	
 	public FilterHelper _notNull(String fieldId, Object conditionValue) {
-		return _isNull(fieldId, fieldId, conditionValue);
+		return _notNull(fieldId, fieldId, conditionValue);
 	}
 	public FilterHelper _notNull(String fieldId, String valueId, Object conditionValue) {
 		list.addFilter(NullFilter.getNotNullInstance(this, fieldId, valueId, conditionValue));
@@ -453,7 +453,7 @@ public class FilterHelper extends BaseFilterHelper {
 	// constant filter
 
 	public FilterHelper notNullConst(String fieldId) {
-		list.addFilter(NullFilter.getIsNullConstantInstance(this, fieldId));
+		list.addFilter(NullFilter.getNotNullConstantInstance(this, fieldId));
 		return this;
 	}	
 	
