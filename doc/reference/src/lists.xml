@@ -224,7 +224,7 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				So there's a special class
 				<code>org.araneaframework.uilib.list.structure.filter.FilterHelper</code>
 				that is used to add list filters.
-				All <ocde>ListWidget.addField()</ocde> methods just return a little
+				All <code>ListWidget.addField()</code> methods just return a little
 				different version of this helper class, called a <code>FieldFilterHelper</code>.
 				It's methods do not need a field Id and thus make one not to
 				repeat the same field Id for each filter.
@@ -290,8 +290,8 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				    <colspec colwidth="3*"/>
 				    <thead>
 				      <row>
-				        <entry>Adding method</entry>
-				        <entry>Filter class</entry>
+				        <entry><code>FilterHelper</code> method</entry>
+				        <entry><code>ListFilter</code> class</entry>
 				        <entry>Description</entry>
 				      </row>
 				    </thead>
@@ -299,19 +299,34 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				      <row>
 				        <entry><code>eq()</code></entry>
 				        <entry><code>EqualFilter</code></entry>
-				        <entry>Tests if the value of a certain list field is equal to the value of a certain search form field.</entry>
+				        <entry>Tests if the value of a certain list field is equal
+				        to the value of a certain search form field.</entry>
+				      </row>
+				      <row>
+				        <entry><code>eqConst()</code></entry>
+				        <entry><code>EqualFilter</code></entry>
+				        <entry>Tests if the value of a certain list field is equal
+				        to a certain constant.</entry>
 				      </row>
 				      <row>
 				        <entry><code>gt(), lt()</code></entry>
 				        <entry><code>GreaterThanFilter, LowerThanFilter</code></entry>
-				        <entry>Tests if the value of a certain list field is greater than (lower than) to the value of a certain search form field.</entry>
+				        <entry>Tests if the value of a certain list field is greater than (lower than)
+				        to the value of a certain search form field.</entry>
+				      </row>
+				      <row>
+				        <entry><code>gtConst(), ltConst()</code></entry>
+				        <entry><code>GreaterThanFilter, LowerThanFilter</code></entry>
+				        <entry>Tests if the value of a certain list field is greater than (lower than)
+				        to a certain costant.</entry>
 				      </row>
 				      <row>
 				        <entry><code>like()</code></entry>
 				        <entry><code>LikeFilter</code></entry>
 				        <entry>Tests if the pattern in a certain search form field matches with the value of a certain list field.
 				        	This corresponds to the <literal>LIKE</literal> expression in SQL with some modifications.
-				        	By default, it takes '%' and '*' symbols as any-string wildcards and '_', '.' and '?' as any-symbol wildcards.
+				        	By default, it takes '<literal>%</literal>' and '<literal>*</literal>' symbols as any-string wildcards and
+				        	'<literal>_</literal>', '<literal>.</literal>' and '<literal>?</literal>' as any-symbol wildcards.
 				        	In addition, the pattern does not have to match with the whole string ('%' is automatically added before and
 				        	after the pattern string). The wildcards and their automatic adding is configured by the
 				        	<code>org.araneaframework.uilib.list.util.like.LikeConfiguration</code> which is found from the
@@ -320,74 +335,51 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				        </entry>
 				      </row>
 				      <row>
+				        <entry><code>likeConst()</code></entry>
+				        <entry><code>LikeFilter</code></entry>
+				        <entry>Tests if a certain constant pattern matches with the value of a certain list field.
+				        </entry>
+				      </row>				      
+				      <row>
 				        <entry><code>isNull(), notNull()</code></entry>
 				        <entry><code>NullFilter</code></entry>
-				        <entry></entry>
+				        <entry>Tests if the value of a certain list field is null (is not null)
+				        if the value of a certain search form field equals to a specified value.</entry>
+				      </row>
+				      <row>
+				        <entry><code>isNullConst(), notNullConst()</code></entry>
+				        <entry><code>NullFilter</code></entry>
+				        <entry>Tests if the value of a certain list field is null (is not null).</entry>
 				      </row>
 				      <row>
 				        <entry><code>range()</code></entry>
-				        <entry><code>EqualFilter</code></entry>
-				        <entry></entry>
+				        <entry><code>RangeFilter</code></entry>
+				        <entry>Tests if the value of a certain list field is between
+				        two values of certain search form fields.</entry>
+				      </row>
+				      <row>
+				        <entry><code>fieldRangeInValueRange(),
+				        	valueRangeInFieldRange(),
+				        	overlapRange()</code></entry>
+				        <entry><code>RangeInRangeFilter</code></entry>
+				        <entry>Tests if two values of certain list fields are between
+				        two values of certain search form fields, vice-versa
+				        or do they have a non-empty intersection.</entry>
+				      </row>
+				      <row>
+				        <entry><code>sqlFunction()</code></entry>
+				        <entry><code>SqlFunctionFilter</code></entry>
+				        <entry>Tests if the value returned from a certain SQL function
+				        is equal (or is greater than or is lower than)
+				        to the value of a certain list field, search form field or a constant.
+				        The arguments of the SQL function can also be chosen
+				        among the values of list fields, search form fields and constants.
+				        This filter cannot be used moemory-based.
+				        </entry>
 				      </row>
 				    </tbody>
 				  </tgroup>
-				</informaltable>				
-				
-				<variablelist>
-					<varlistentry>
-						<term>Equality (eq)</term>
-						<listitem>
-							Equal filter returns true if the value of a certain list field is equal to a Value.
-							1 field = 1 value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Greater than (gt)</term>
-						<listitem>
-							1 field 6gt; 1 value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Lower than (lt)</term>
-						<listitem>
-							1 field &lt; 1 value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Like</term>
-						<listitem>
-							1 field LIKE 1 value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Is null</term>
-						<listitem>
-							1 value = 1 constant AND 1 field IS NULL
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Not null</term>
-						<listitem>
-							1 value = 1 constant AND 1 field IS NOT NULL
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Range</term>
-						<listitem>
-							1 value BETWEEN 1. value AND 2. value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Range-in-range</term>
-						<listitem>
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>SQL function</term>
-						<listitem>
-						</listitem>
-					</varlistentry>
-				</variablelist>				
+				</informaltable>		
 			</para>
 		</sect2>
 		
@@ -515,66 +507,6 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 <programlisting role="java">myList.addField("name", "#Name").eq("name2", myFormElement)</programlisting>				
 				Others filters have analogous methods.
 			</para>
-			
-			<para>
-				Aranea provides many filters:
-				<variablelist>
-					<varlistentry>
-						<term>Equal (eq)</term>
-						<listitem>
-							Equal filter returns true if the value of a certain list field is equal to a Value.
-							1 field = 1 value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Greater than (gt)</term>
-						<listitem>
-							1 field 6gt; 1 value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Lower than (lt)</term>
-						<listitem>
-							1 field &lt; 1 value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Like</term>
-						<listitem>
-							1 field LIKE 1 value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Is null</term>
-						<listitem>
-							1 value = 1 constant AND 1 field IS NULL
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Not null</term>
-						<listitem>
-							1 value = 1 constant AND 1 field IS NOT NULL
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Range</term>
-						<listitem>
-							1 value BETWEEN 1. value AND 2. value
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Range-in-range</term>
-						<listitem>
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>SQL function</term>
-						<listitem>
-						</listitem>
-					</varlistentry>
-				</variablelist>
-			</para>
-			
 		</sect2>
     	
 		<sect2>
