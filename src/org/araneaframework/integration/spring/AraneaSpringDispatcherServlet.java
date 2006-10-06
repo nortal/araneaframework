@@ -73,7 +73,6 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   public static final String ARANEA_ROOT_INIT_PARAMETER = "araneaApplicationRoot";
   
   protected BeanFactory beanFactory;
-  protected BeanFactory rootApplicationCtx;
   
   public void init() throws ServletException {    
     //Reading init-param's
@@ -87,7 +86,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
     if (isSpringWebPresent) {
       //Getting the Spring loaded main web application context
-      beanFactory = rootApplicationCtx = WebApplicationContextUtils.getWebApplicationContext(getServletContext());                     
+      beanFactory = WebApplicationContextUtils.getWebApplicationContext(getServletContext());                     
     }
     
     //Loading default Aranea configuration
@@ -147,7 +146,6 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     if (isSpringWebPresent) {
       //Making a resulting web application context    
       beanFactory = new GenericWebApplicationContext((DefaultListableBeanFactory) beanFactory);
-      ((GenericWebApplicationContext) beanFactory).setParent((ApplicationContext) rootApplicationCtx);
       ((GenericWebApplicationContext) beanFactory).refresh();
     }
     
