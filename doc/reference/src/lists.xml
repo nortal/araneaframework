@@ -194,8 +194,8 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				"boxes" that hold search data, each <code>ListFilter</code>
 				is related to a certain filter test, e.g. equality, greater than comparison etc.
 				Each <code>ListFilter</code> also knows what information it
-				must be compare to be equal. In general, one list field is
-				compared against a value provided from the search form.
+				must consider. In general, one list field is
+				compared against a value provided by the search form.
 				It's also assumed that a blank search field means that this
 				particular <code>ListWidget</code> is currently disabled.
 			</para>
@@ -230,7 +230,7 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				repeat the same field Id for each filter.
 				In general, the shorter usage is recommended of course.
 				However some filters are more complicated and may be related to
-				more than list field. For those, one must use the <code>FilterHelper</code> instead.
+				more than one list field. For those, one must use the <code>FilterHelper</code> instead.
 			</para>
 			<para>
 				By default all filters that deal with the Strings are case insensitive.
@@ -300,25 +300,33 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				        <entry><code>eq()</code></entry>
 				        <entry><code>EqualFilter</code></entry>
 				        <entry>Tests if the value of a certain list field is equal
-				        to the value of a certain search form field.</entry>
+				        to the value of a certain search form field.
+				        The filter is disabled if the search field is blank.
+				        </entry>
 				      </row>
 				      <row>
 				        <entry><code>eqConst()</code></entry>
 				        <entry><code>EqualFilter</code></entry>
 				        <entry>Tests if the value of a certain list field is equal
-				        to a certain constant.</entry>
+				        to a certain constant.
+           				This filter is always enabled.				        
+				        </entry>
 				      </row>
 				      <row>
 				        <entry><code>gt(), lt()</code></entry>
 				        <entry><code>GreaterThanFilter, LowerThanFilter</code></entry>
 				        <entry>Tests if the value of a certain list field is greater than (lower than)
-				        to the value of a certain search form field.</entry>
+				        the value of a certain search form field.
+  				        This filter is disabled if the search field is blank.				        
+				        </entry>				        
 				      </row>
 				      <row>
 				        <entry><code>gtConst(), ltConst()</code></entry>
 				        <entry><code>GreaterThanFilter, LowerThanFilter</code></entry>
 				        <entry>Tests if the value of a certain list field is greater than (lower than)
-				        to a certain costant.</entry>
+				        a certain costant.
+           				This filter is always enabled.
+				        </entry>
 				      </row>
 				      <row>
 				        <entry><code>like()</code></entry>
@@ -332,30 +340,39 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				        	<code>org.araneaframework.uilib.list.util.like.LikeConfiguration</code> which is found from the
 				        	Aranea's <code>org.araneaframework.uilib.ConfigurationContext</code>.
 				        	This filter is identical in memory-based and database-backend usage.
+					        This filter is disabled if the search field is blank.				        	
 				        </entry>
 				      </row>
 				      <row>
 				        <entry><code>likeConst()</code></entry>
 				        <entry><code>LikeFilter</code></entry>
 				        <entry>Tests if a certain constant pattern matches with the value of a certain list field.
+           				This filter is always enabled.
 				        </entry>
 				      </row>				      
 				      <row>
 				        <entry><code>isNull(), notNull()</code></entry>
 				        <entry><code>NullFilter</code></entry>
 				        <entry>Tests if the value of a certain list field is null (is not null)
-				        if the value of a certain search form field equals to a specified value.</entry>
+				        if the value of a certain search form field equals to a specified value.
+				        </entry>
 				      </row>
 				      <row>
 				        <entry><code>isNullConst(), notNullConst()</code></entry>
 				        <entry><code>NullFilter</code></entry>
-				        <entry>Tests if the value of a certain list field is null (is not null).</entry>
+				        <entry>Tests if the value of a certain list field is null (is not null).
+				        This filter is always enabled.				        
+				        </entry>
 				      </row>
 				      <row>
 				        <entry><code>range()</code></entry>
 				        <entry><code>RangeFilter</code></entry>
 				        <entry>Tests if the value of a certain list field is between
-				        two values of certain search form fields.</entry>
+				        two values of certain search form fields.
+				        The filter is identical to the greater than or lower than filter
+				        in case of one of the search fields is blank.
+				        This filter is disabled if both search fields are blank.				        
+				        </entry>
 				      </row>
 				      <row>
 				        <entry><code>fieldRangeInValueRange(),
@@ -364,7 +381,9 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				        <entry><code>RangeInRangeFilter</code></entry>
 				        <entry>Tests if two values of certain list fields are between
 				        two values of certain search form fields, vice-versa
-				        or do they have a non-empty intersection.</entry>
+				        or do they have a non-empty intersection.
+				        This filter is disabled if both search fields are blank.				        
+				        </entry>
 				      </row>
 				      <row>
 				        <entry><code>sqlFunction()</code></entry>
@@ -375,11 +394,29 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				        The arguments of the SQL function can also be chosen
 				        among the values of list fields, search form fields and constants.
 				        This filter cannot be used moemory-based.
+				        This filter is always enabled.
 				        </entry>
 				      </row>
 				    </tbody>
 				  </tgroup>
 				</informaltable>		
+			</para>
+			<para>
+				By default the <code>FormElement</code>s added into the
+				search form have the same identifiers as the list fields.
+				Therefore there can be only one search field per list field.
+				If one would like to override the used Id of <code>FormElement</code>,
+				any filter could be added like following:
+<programlisting role="java">
+	myList.addField("country", "#Country").like();
+	myList.getFilterHelper().like("country", "anotherCountry");
+</programlisting>
+				The first line adds a list field 'country' with a label and
+				a <emphasis>Like filter</emphasis> associated with this field
+				and a new <code>FormElement</code> with Id of 'country'.
+				The second line adds another <emphasis>Like filter</emphasis>
+				associated to the list field 'country' and a new
+				<code>FormElement</code> with Id of 'anotherCountry'.				
 			</para>
 		</sect2>
 		
