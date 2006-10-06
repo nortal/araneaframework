@@ -427,14 +427,14 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				describing their default values and showing how to customize them:
 				<informaltable frame="all">
 				<tgroup cols="3">
-			    <colspec colwidth="1"/>
-			    <colspec colwidth="3"/>
-			    <colspec colwidth="2"/>				
+			    <colspec colwidth="1*"/>
+			    <colspec colwidth="3*"/>
+			    <colspec colwidth="2*"/>				
 				<thead>
 					<row>
-						<entry>Propery</entry>
+						<entry>Property</entry>
 						<entry>Default value</entry>
-						<entry>Overriding</entry>
+						<entry>Customizing</entry>
 					</row>
 				</thead>
 				<tbody>

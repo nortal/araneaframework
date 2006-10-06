@@ -84,14 +84,14 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/** The multi-ordering form name. */
 	public static final String ORDER_FORM_NAME = "orderForm";
 
-	protected ListStructure listStructure;							// should not be accessible by public methods
+	protected ListStructure listStructure = createListStructure();	// should not be accessible by public methods
 	protected ListDataProvider dataProvider;
 
 	protected TypeHelper typeHelper;
 	protected FilterHelper filterHelper;	
 	protected SequenceHelper sequenceHelper;						// should not be accessible by public methods	
 
-	protected FormWidget form;										// is transfomed into filter info Map and vice-versa
+	protected FormWidget form = new FormWidget();					// is transfomed into filter info Map and vice-versa
 	protected OrderInfo orderInfo = new OrderInfo();
 
 	protected List itemRange;
@@ -109,7 +109,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return the {@link ListStructure}used to describe the list.
 	 */
 	public ListStructure getListStructure() {
-		assertInitialized();
 		return this.listStructure;
 	}
 
@@ -374,8 +373,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 	/**
 	 * Removes all list orders.
+	 * @throws Exception 
 	 */
-	public void clearOrders() {
+	public void clearOrders() throws Exception {
 		getListStructure().clearOrders();
 	}	
 
@@ -632,7 +632,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		this.sequenceHelper = createSequenceHelper();
 		this.typeHelper = createTypeHelper();
-		this.listStructure = createListStructure();
 		this.filterHelper = createFilterHelper();	
 
 		addEventListener("nextPage", new NextPageEventHandler());
@@ -1016,12 +1015,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		 */
 		public FormWidget.ViewModel getFilterForm() {
 			return filterForm;
-		}
-	}
-
-	protected void assertInitialized() throws IllegalStateException {
-		if (!isInitialized()) {
-			throw new IllegalStateException("ListWidget is not initialized");
 		}
 	}
 }

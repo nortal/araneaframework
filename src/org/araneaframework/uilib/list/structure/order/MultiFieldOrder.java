@@ -19,7 +19,9 @@ package org.araneaframework.uilib.list.structure.order;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
+import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.MultiComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.ReverseComparatorExpression;
@@ -48,8 +50,23 @@ public class MultiFieldOrder implements ListOrder {
 		return getFieldOrder(field) != null;
 	}
 
-	public void clearFieldOrders() {
-		this.orders = new HashMap();
+	public void clearFieldOrders() throws Exception {
+		for (Iterator i = orders.values().iterator(); i.hasNext();) {
+			ListOrder order = (ListOrder) i.next();
+			order.destroy();
+			i.remove();
+		}
+	}
+
+	public void init(Environment env) throws Exception {
+		for (Iterator i = orders.values().iterator(); i.hasNext();) {
+			ListOrder order = (ListOrder) i.next();
+			order.init(env);
+		}
+	}
+
+	public void destroy() throws Exception {
+		clearFieldOrders();
 	}
 
 	public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {

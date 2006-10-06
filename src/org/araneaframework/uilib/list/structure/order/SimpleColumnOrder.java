@@ -18,6 +18,7 @@ package org.araneaframework.uilib.list.structure.order;
 
 import java.util.Comparator;
 
+import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.VariableComparatorExpression;
 import org.araneaframework.uilib.list.OrderInfo;
@@ -28,7 +29,9 @@ public class SimpleColumnOrder implements FieldOrder {
 	private static final long serialVersionUID = 1L;
 
 	private String fieldId;
-	private Comparator comparator;	
+	private Comparator comparator;
+	
+	private Environment env;
 	
 	public SimpleColumnOrder(String fieldId, Comparator comparator) {
 		setFieldId(fieldId);
@@ -49,6 +52,14 @@ public class SimpleColumnOrder implements FieldOrder {
 
 	public void setComparator(Comparator comparator) {
 		this.comparator = comparator;
+	}
+
+	public void init(Environment env) throws Exception {
+		this.env = env;		
+	}	
+	
+	public void destroy() throws Exception {
+		this.env = null;
 	}
 
 	public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {

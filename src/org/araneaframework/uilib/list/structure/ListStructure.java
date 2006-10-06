@@ -42,6 +42,7 @@ public class ListStructure extends BaseListStructure {
 		Assert.notNullParam(this, typeHelper, "typeHelper");
 		this.typeHelper = typeHelper;
 		this.filter = new AndFilter();
+		this.order = new MultiFieldOrder();
 	}
 	
 	protected TypeHelper getTypeHelper() {
@@ -50,10 +51,12 @@ public class ListStructure extends BaseListStructure {
 
 	public void init(Environment env) throws Exception {
 		this.filter.init(env);
+		this.order.init(env);
 	}
 
 	public void destroy() throws Exception {
 		this.filter.destroy();
+		this.order.destroy();
 	}
 	
 	/*
@@ -105,10 +108,6 @@ public class ListStructure extends BaseListStructure {
 	}
 	
 	protected MultiFieldOrder getMultiFieldOrder() {
-		if (this.order == null) {
-			clearOrders();
-		}
-		Validate.isTrue(this.order instanceof MultiFieldOrder, "ListOrder must be a MultiColumnOrder instance");
 		return (MultiFieldOrder) this.order; 
 	}
 	
@@ -120,8 +119,8 @@ public class ListStructure extends BaseListStructure {
 		return getMultiFieldOrder().getFieldOrder(field);
 	}
 	
-	public void clearOrders() {
-		this.order = new MultiFieldOrder();
+	public void clearOrders() throws Exception {
+		getMultiFieldOrder().clearFieldOrders();
 	}
 	
 	/*
