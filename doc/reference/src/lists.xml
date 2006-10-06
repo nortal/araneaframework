@@ -401,148 +401,197 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 				  </tgroup>
 				</informaltable>		
 			</para>
+			
 			<para>
 				By default the <code>FormElement</code>s added into the
 				search form have the same identifiers as the list fields.
 				Therefore there can be only one search field per list field.
-				If one would like to override the used Id of <code>FormElement</code>,
+				If one would like to override the used Id for <code>FormElement</code>,
 				any filter could be added like following:
 <programlisting role="java">
 	myList.addField("country", "#Country").like();
 	myList.getFilterHelper().like("country", "anotherCountry");
 </programlisting>
-				The first line adds a list field 'country' with a label and
-				a <emphasis>Like filter</emphasis> associated with this field
-				and a new <code>FormElement</code> with Id of 'country'.
+				The first line adds a list field 'country' and
+				a <emphasis>Like filter</emphasis> associated with it
+				as well as a new <code>FormElement</code> with Id of 'country'.
 				The second line adds another <emphasis>Like filter</emphasis>
 				associated to the list field 'country' and a new
 				<code>FormElement</code> with Id of 'anotherCountry'.				
 			</para>
-		</sect2>
-		
-		<sect2>
-			<title>Filtering</title>
-						
-			<para>
-				Filtering is basically a proccess of testing all list items against a specific criteria.
-				This process is usually followed by ordering the remaining items and then displaying a slice of them (e.g items indexed between 10 and 19).
-			</para>
-			<para>
-				In general, the filtering can be devided into zero or more tests.
-				E.g search for persons whose names begin with 'A' and who were born on Januray 1st 1970 or later.
-				Notice two different criterias here - one associated with name and another with birthday.
-				Each of these tests have their own behaivor and associated data:
-				<variablelist>
-					<varlistentry>
-						<term>Behaviour</term>
-						<listitem>
-							Test actions defined in the list configuration. E.g equals, greater than.
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Fields</term>
-						<listitem>
-							The list fields that provide data for the tests.
-							Each Field have its own identifier ('name', 'birthday')
-							and value in a specific row ('John', Match 15nd 1963).							
-							Each list row may have different values for each of its fields.
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Values</term>
-						<listitem>
-							Global test data provided by the FormWidget.
-							Each Value have its own identifier ('name', 'birthday')
-							and the value itself ('A', January 1st 1970).
-							Notice the uppercased V and lowercased v.
-						</listitem>
-					</varlistentry>
-				</variablelist>
-				Each List have its own Fields and Values for each test.
-				Configurting the list, one can define a test - <emphasis>filter</emphasis> -
-				the <emphasis>behaviour</emphasis>, <emphasis>field Id</emphasis> and <emphasis>value Id</emphasis>.
-			</para>
-			<para>
-				Notice that the field Id match the data in each list row
-				and the value Id match the data provided by the FormWidget.
-				It's very common to have same identifier for a field Id and a value Id, but
-				to apply several tests for one field, they have to use different value Ids or behaviours
-				and to apply several tests for one value, they have to use different field Ids or behaviours.
-			</para>
-			<para>
-				Aranea provides filters with values using the <code>FormWidget</code>.
-				By default each filter is created with the corresponding FormElements.
-				Each FormElement is added to the filter form by the same element Id as the Value Id of the filter.
-				However one can add a filter without FormElements either.
-			</para>
-			
-			<para>				
-				To add a filter to a field, one can assign it after adding the field itself:
-<programlisting role="java">myList.addField("name", "#Name").like()</programlisting>
-				All <code>addField</code> methods return a <code>org.araneaframework.uilib.list.structure.filter.FieldFilterHelper</code>
-				associated with the new field. This helper provides methods for adding filters related to this field.
-				The <code>like()</code> method adds the Like filter that is assigned 'name' as both field Id and value Id.
-				The Like filter corresponds to the according SQL expression but is case insensitive by default.
-				To force the case sensitive behaviour, use:
-<programlisting role="java">myList.addField("name", "#Name").setIgnoreCase(false).like()</programlisting>
-				Switching the ingore-case parameter actually makes all followingly added filters act the same.
-				There are few parameters that can be set similarly:
-				
-				<variablelist>
-					<varlistentry>
-						<term>Case sensitivity</term>
-						<listitem>
-							By using <code>setIgnoreCase(boolean)</code> one assigns new filters to ignore case (default) or not.
-							This applies to filters that use String comparison.
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Locale</term>
-						<listitem>
-							By using <code>setLocale(Locale)</code> one assigns new filters to use as specific Locale.
-							This applies to filters that use String comparison and only the list with memory-based data provider.
-							By default <code>org.araneaframework.framework.LocalizationContext.getLocale()</code>
-							is used to retrieve the Locale instnace.
-						</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Strict/non-strict</term>
-						<listitem>
-							By using <code>setStrict(boolean)</code> one assigns new filters to disallow equality or not.
-							By default equality is allowed (strict).
-							This applies to filters such as GreaterThan, LowerThan, Range etc.
-						</listitem>
-					</varlistentry>
-				</variablelist>
-			</para>
 			
 			<para>
-				There are several methods to add a filter with the same behaivor depending on the Value Id and the FormElement.
-				By default each filter is created with the corresponding FormElements.
-				This FormElement is created according to the associated field type and label.
+				By adding a filter, the corresponding <code>FormElement</code>
+				is automatically created and added to the search form of the list.
+				Now we cover the properties of the aew <code>FormElement</code>
+				describing their default values and showing how to customize them:
+				<informaltable frame="all">
+				<tgroup cols="3">
+			    <colspec colwidth="1"/>
+			    <colspec colwidth="3"/>
+			    <colspec colwidth="2"/>				
+				<thead>
+					<row>
+						<entry>Propery</entry>
+						<entry>Default value</entry>
+						<entry>Overriding</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>Id</entry>
+						<entry>Same as the list field Id.</entry>
+						<entry>
+							Call <code>addField(...).xxx("myCustomId");</code>
+						</entry>
+					</row>
+					<row>
+						<entry>Label</entry>
+						<entry>Same as the label of the associated list field.</entry>
+						<entry>
+							Call <code>addField(...).useCustomLabel("myCustomLabel").xxx(...);</code>
+						</entry>
+					</row>
+					<row>
+						<entry>Control</entry>
+						<entry>
+							Is selected considering the type of the associated list field:
+							
+							<informaltable>
+							<tgroup cols="2">
+							<thead>
+								<row>
+									<entry>Type</entry>
+									<entry>Control</entry>
+								</row>
+							</thead>
+							<tbody>
+								<row>
+									<entry><code>java.lang.String</code></entry>
+									<entry><code>TextControl</code></entry>
+								</row>							     
+								<row>
+									<entry>
+										<code>java.math.BigInteger</code>,
+										<code>java.lang.Long</code>,
+										<code>java.lang.Integer</code>,
+										<code>java.lang.Short</code>,
+										<code>java.lang.Byte</code>
+									</entry>
+									<entry><code>NumberControl</code></entry>
+								</row>							     
+								<row>
+									<entry>
+										<code>java.math.BigDecimal</code>,
+										<code>java.lang.Double</code>,
+										<code>java.lang.Float</code>
+									</entry>
+									<entry><code>FloatControl</code></entry>
+								</row>
+								<row>
+									<entry>
+										Other subclasses of
+										<code>java.lang.Number</code>
+									</entry>
+									<entry><code>FloatControl</code></entry>
+								</row>								
+								<row>
+									<entry>
+										<code>java.util.Date</code>,
+										<code>java.sql.Date</code>
+									</entry>
+									<entry><code>DateControl</code></entry>
+								</row>
+								<row>
+									<entry>
+										<code>java.sql.Time</code>
+									</entry>
+									<entry><code>TimeControl</code></entry>
+								</row>
+								<row>
+									<entry>
+										<code>java.sql.Timestamp</code>
+									</entry>
+									<entry><code>DateTimeControl</code></entry>
+								</row>
+								<row>
+									<entry>
+										<code>java.lang.Boolean</code>
+									</entry>
+									<entry><code>CheckboxControl</code></entry>
+								</row>
+								<row>
+									<entry>
+										All others
+									</entry>
+									<entry><code>TextControl</code></entry>
+								</row>
+							</tbody>
+							</tgroup>
+							</informaltable>						
+						</entry>
+						<entry>
+							Call <code>addField(...).xxx(new MyCustomControl());</code>
+						</entry>
+					</row>
+					<row>
+						<entry>Data</entry>
+						<entry>Corresponds to the type of the associated list field.</entry>
+						<entry>
+							Call <code>addField(...).useFieldType(MyType.class).xxx(...);</code>
+						</entry>
+					</row>					
+					<row>
+						<entry>Initial value</entry>
+						<entry>Always <code>null</code> to disable the filter by default.</entry>
+						<entry>
+							After adding the field and the filter
+							call <code>myList.getForm().setValueByFullName("fieldId", customInitialValue);</code>
+							or add a custom <code>Formelement</code>.
+						</entry>
+					</row>
+					<row>
+						<entry>Mandatory</entry>
+						<entry>Always <code>false</code> as all search conditions are optional.</entry>
+						<entry>
+							After adding the field and the filter
+							call <code>myList.getForm().getElementByFullName("fieldId").setMandatory(true);</code>
+							or add a custom <code>Formelement</code>.
+						</entry>
+					</row>
+					<row>
+						<entry>FormElement</entry>
+						<entry>See all properties above.</entry>
+						<entry>
+							To use a custom <code>Formelement</code>, call
+							<code>addField(...).xxx(new MyCustomFormElement(...));</code>.
+							To disable adding it at all, call
+							<code>addField(...)._xxx();</code> (notice the underscore).
+						</entry>
+					</row>
+				</tbody>
+				</tgroup>
+				</informaltable>
+				The <code>xxx</code> marks any filter adding method.
+				As one can count, there are 6 overridden methods for each list filter:
+				2 versions for providing a custom Id or not
+				and 3 versions for providing a custom <code>FormElement</code>, <code>Control</code> or neither of them.
+				In addition there are methods that start with an <literal>_</literal>
+				for disabling adding a form element.
+				Using the <code>FilterHelper</code> instead of <code>FieldFilterHelper</code>
+				is analogous except all filter adding methods take the list field Id as the first argument in addition.
 			</para>
 			<para>
-				To add a filter with a FormElement using a specified label, use:
-<programlisting role="java">myList.addField("name", "#Name").useCustomLabel("#Alias").eq()</programlisting>
-				To add a filter with a FormElement using a different <code>Data</code> type, use:
-<programlisting role="java">myList.addField("name", "#Name").useFieldType(Long.class).eq()</programlisting>
-				To add a filter with a FormElement using a specified <code>Control</code>, use:
-<programlisting role="java">myList.addField("name", "#Name").eq(mySelectControl)</programlisting>
-				To use a spcified FormElement:
-<programlisting role="java">myList.addField("name", "#Name").eq(myFormElement)</programlisting>				
-				To add a filter without FormElement, use:
-<programlisting role="java">myList.addField("name", "#Name")._eq()</programlisting>
-				Notice the underscore at the start of the method name.				
-				To add a filter without FormElement but a specified constant value instead, use:
-<programlisting role="java">myList.addField("name", "#Name").eqConst("Peter")</programlisting>
-			</para>
-			
-			<para>
-				To associate filter with a different value Id than the just added field Id, use one of the following methods:
-<programlisting role="java">myList.addField("name", "#Name").eq("name2")</programlisting>				
-<programlisting role="java">myList.addField("name", "#Name").eq("name2", mySelectControl)</programlisting>
-<programlisting role="java">myList.addField("name", "#Name").eq("name2", myFormElement)</programlisting>				
-				Others filters have analogous methods.
+				It's import to notice that <code>xxxxConst</code> methods do not
+				create a form element because they are independent of the search
+				form at all - they are constant. However they can actually 
+				take a value Id for the defined constants as well. These Ids can
+				be used later to convert specific values when creating a
+				database query. Of course non-constant filters have the same
+				Ids but just use them mainly to get values from the search form.
+				<code>xxxxConst</code> filters have 2 overridden add methods
+				depending on whether the custom value Id is provided or not.
+				By default it's the same as the field Id.
 			</para>
 		</sect2>
     	

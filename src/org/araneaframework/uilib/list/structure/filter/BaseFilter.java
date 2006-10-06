@@ -14,28 +14,23 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure.filter.composite;
-
-import java.util.Map;
+package org.araneaframework.uilib.list.structure.filter;
 
 import org.araneaframework.Environment;
-import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.list.structure.ListFilter;
-import org.araneaframework.uilib.list.util.ExpressionUtil;
 
+/**
+ * Base implementation of the {@link ListFilter}.
+ * 
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
+public abstract class BaseFilter implements ListFilter {
 
-public class NotFilter implements ListFilter {
-	private ListFilter filter;
-	public NotFilter(ListFilter filter) {
-		this.filter = filter;
-	}
 	public void init(Environment env) throws Exception {
-		this.filter.init(env);
+		// empty		
 	}
+	
 	public void destroy() throws Exception {
-		this.filter.destroy();
-	}
-	public Expression buildExpression(Map data) {
-		return ExpressionUtil.not(this.filter.buildExpression(data));
+		// empty		
 	}
 }

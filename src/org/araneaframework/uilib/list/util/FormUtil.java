@@ -16,6 +16,7 @@
 package org.araneaframework.uilib.list.util;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.apache.commons.lang.Validate;
 import org.araneaframework.uilib.form.Constraint;
@@ -60,7 +61,8 @@ public class FormUtil {
 			if (BigDecimal.class.isAssignableFrom(type)) {
 				return createFloatControl();
 			}
-			if (Long.class.equals(type)
+			if (BigInteger.class.isAssignableFrom(type)
+					|| Long.class.equals(type)					
 					|| Integer.class.equals(type)
 					|| Short.class.equals(type)
 					|| Byte.class.equals(type)) {
