@@ -37,7 +37,7 @@
         </varlistentry>
         <varlistentry>
           <term>Aranea HTTP</term>
-          <listitem>Servlet module extends the <emphasis>Framework</emphasis> module with services that use a Servlet container. Servlet  module includes package <literal>org.araneaframework.http</literal> and its subpackages and is packaged into <literal>aranea-servlet.jar</literal> .JAR file.</listitem>
+          <listitem>HTTP module extends the <emphasis>Framework</emphasis> module with services that use a Servlet container. Servlet  module includes package <literal>org.araneaframework.http</literal> and its subpackages and is packaged into <literal>aranea-servlet.jar</literal> .JAR file.</listitem>
         </varlistentry>
         <varlistentry>
           <term>Aranea Integration</term>

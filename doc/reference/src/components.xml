@@ -15,15 +15,15 @@
 -->
 
 <chapter id="core">
-	<title>Core Abstractions</title>
+	<title>Components, Widgets and Services</title>
 	<sect1>
 		<title>Introduction</title>
     <para>
-		  Aranea framework and component model are very simple and implemented purely in Plain Old Java. There are no XML mappings, code generation or bytecode enhancement. The whole component model consists mainly of five interfaces: <classname>org.araneaframework.Component</classname>, <classname>org.araneaframework.Service</classname>, <classname>org.araneaframework.Widget</classname>, <classname>org.araneaframework.Environment</classname>, <classname>org.araneaframework.Message</classname> and some conventions regarding their usage and implementation.     
+		  Aranea framework and component model are very simple and implemented purely in Plain Old Java. There are no XML mappings, code generation or bytecode enhancement. The whole component model consists mainly of five interfaces: <classname>org.araneaframework.Component</classname>, <classname>org.araneaframework.Service</classname>, <classname>org.araneaframework.Widget</classname>, <classname>org.araneaframework.Environment</classname>, <classname>org.araneaframework.Message</classname> and some conventions regarding their usage and implementation.
     </para>
 
     <para>
-      
+       This chapter describes the core Aranea abstractions in detail generally not necessary to just develop application code so it can be skipped during the first reading. It is quite dry on the examples, but its understanding is crucial to develop Aranea extensions.
     </para>
 	</sect1>
 	<sect1>
@@ -33,7 +33,7 @@
       <title>Checked versus Unchecked Exceptions</title>
 
       <para>
-        It is our firm belief that checked exceptions are unnecessary in <emphasis>Controller</emphasis> and therefore Aranea will in most cases allow to just declare that your method <literal>throws Exception</literal>.
+        It is our firm belief that checked exceptions are unnecessary in <emphasis>Controller</emphasis> and therefore Aranea will in most cases allow to just declare your overriding method as <literal>throws Exception</literal>. On the other hand no framework interfaces throw checked exceptions so the exception-handling boilerplate can be delegated to a single error-handling component.
       </para>
     </sect2>
     
@@ -41,7 +41,7 @@
 			<title>Public versus Framework Interfaces</title>
 			
 			<para>
-				Since the application programmer implements the same components that are used for framework extension, it is important to discourage the access to public framework interfaces (which are necessarily visible in the overridden classes). Thus, a simple convention is applied for core framework interfaces, which is best illustrated with the following example.				
+				Since the application programmer implements the same components that are used for framework extension, it is important to discourage the access to public framework interfaces (which are necessarily visible in the overridden classes). Thus a simple convention is applied for core framework interfaces, which is best illustrated with the following example.
 			</para>
 			
 			<programlisting role="java">public interface Service extends Component, Serializable {
@@ -53,7 +53,7 @@
 }</programlisting>
 
 			<para>
-				As one can see, the real interface methods are relocated to an inner interface named <classname>Interface</classname>, that can be accessed using a method <classname>_get&lt;InterfaceName&gt;()</classname>, which starts with an underscore to discourage its use.
+				As one can see, the real interface methods are relocated to an inner interface named <classname>Interface</classname>, that can be accessed using a method <classname>_get&lt;InterfaceName&gt;()</classname>, which starts with an underscore to discourage its use. As a rule of a thumb, in Aranea the methods starting with an underscore should only be used, when one really knows what one is doing.
 			</para>
 			
       </sect2>
@@ -70,7 +70,7 @@
   interface Interface extends Serializable {
     public Object getViewModel() throws Exception;
   }
-  
+
   public interface ViewableComponent extends Viewable, Component, Serializable {}
   public interface ViewableService extends ViewableComponent, Service, Serializable {}
   public interface ViewableWidget extends ViewableService, Widget, Serializable {}
@@ -121,14 +121,24 @@
 			<title>Composite Pattern and Paths</title>
 
       <para>
-        <emphasis>Composite</emphasis> pattern refers to a design approach prominent (specifically) in the GUI modeling when objects implementing the same interface are arranged in a hierarchy by containment, where the nodes of the tree propagate calls in some way to the leafs of the tree.
+        <emphasis>Composite</emphasis> pattern refers to a design approach prominent (specifically) in the GUI modeling when objects implementing the same interface are arranged in a hierarchy by containment, where the nodes of the tree propagate calls in some way to the leafs of the tree. It is shown on <xref linkend="composite-pattern"/>.
       </para>
 
-      TODO: UML diagram...
+    <figure id="composite-pattern">
+      <title><emphasis>Composite</emphasis> design pattern</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata 
+            fileref="../shared/images/composite.png"
+            format="PNG" />
+        </imageobject>
+      </mediaobject>        
+    </figure>
 
       <para>
-       <emphasis>Composite</emphasis> is one of the main patterns used in Aranea. It is mainly used to create a <emphasis>Hierarchical Controller</emphasis> using <literal>Component</literal> containment. In terms of <literal>Component</literal> interface <emphasis>Composite</emphasis> is used to propagate lifecycle events and route messages (see <xref linkend="components-messaging" />). 
+       <emphasis>Composite</emphasis> is one of the main patterns used in Aranea. It is mainly used to create a <emphasis>Hierarchical Controller</emphasis> using <literal>Component</literal> containment. In terms of <literal>Component</literal> interface <emphasis>Composite</emphasis> is used to propagate lifecycle events and route messages (see <xref linkend="components-messaging" />).
       </para>
+
       <para>
         The flavor of the <emphasis>Composite</emphasis> pattern as used in Aranea typically means that every contained component has some kind of an identifier or name that distinguishes it from other children of the same parent (note that the child is not typically aware of its identifier). This identifiers are used to route messages and events and can be combined to form a full identifier which describes a "path" from the root component to the child in question. This paths are represented by a <emphasis>Iterator</emphasis>-like interface <literal>org.araneaframework.Path</literal>.
         <programlisting role="java">public interface Path extends Cloneable, Serializable {

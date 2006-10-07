@@ -39,7 +39,7 @@
         <title>Aranea&mdash;Java Web Framework Construction and Integration Kit</title>
         <titleabbrev>Aranea</titleabbrev>
 				<subtitle>Reference Manual</subtitle>
-				
+
         <releaseinfo>Version 1.0 RC4 (Work In Progress)</releaseinfo>
         <authorgroup>
 					<author>
@@ -64,13 +64,13 @@
     <toc/>
 
     &intro;
+    &components;
+    <!--&framework;
     &configuration;
     &widgets;
     &jsp;
     &forms;
     &lists;
-    &components;
-    &framework;
-    &javascript;
+    &javascript; -->
 </book>
 

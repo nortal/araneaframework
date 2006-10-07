@@ -46,7 +46,7 @@
     </target>
 
 
-    <target name="pdf-prepare">
+    <target name="pdf-prepare" depends="copy-shared">
 
         <!-- Copy all the images to the output location, will be removed later. -->
         <copy todir="${build.dir}/pdf/images">
