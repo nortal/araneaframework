@@ -58,6 +58,11 @@ public interface InputData extends Extendable, Narrowable {
    * Removes the last entry from the Path of this InputData. 
    */
   public void popScope();
+  
+  /**
+   * Restores the scope to the passed one.
+   */
+  public void restoreScope(Path scope);  
 
   /**
    * Returns the data with the Path prefix.

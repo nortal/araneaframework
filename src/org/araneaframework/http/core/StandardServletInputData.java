@@ -36,6 +36,7 @@ import org.araneaframework.core.EmptyPathStackException;
 import org.araneaframework.core.NoCurrentOutputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.StandardPath;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpInputData;
 
 /**
@@ -201,13 +202,8 @@ public class StandardServletInputData implements HttpInputData {
     return url.toString();
   }
   
-  public URL getRequestURL() {
-    try {
-      return new URL(req.getRequestURL().toString());
-    }
-    catch (MalformedURLException e) {
-      throw new AraneaRuntimeException(e);
-    }
+  public String getRequestURL() {
+    return req.getRequestURL().toString();
   }
 
   public String getContentType() {
@@ -241,9 +237,14 @@ public class StandardServletInputData implements HttpInputData {
     path.delete(0, pathPrefix.length() - 1);
   }
   
-  public void setCharacterEncoding(String encoding) throws UnsupportedEncodingException {
+  public void setCharacterEncoding(String encoding) {
     Assert.notEmptyParam(encoding, "encoding");
 
-    req.setCharacterEncoding(encoding);
+    try {
+      req.setCharacterEncoding(encoding);
+    }
+    catch (UnsupportedEncodingException e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
 }
