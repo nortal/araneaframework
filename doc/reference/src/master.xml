@@ -66,8 +66,9 @@
     &intro;
     &components;
     &framework;
-    <!-- &configuration; -->
-    &widgets;
+    <!-- &configuration; 
+    &widgets; -->
+
     &jsp;
     &forms;
     &lists;
