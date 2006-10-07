@@ -15,24 +15,228 @@
   limitations under the License.
 -->
 <chapter id="framework">
-  <title>Framework</title>
+  <title>Framework and Configuration</title>
 
   <sect1>
     <title>Overview</title>
 
     <para>Aranea framework consists of a number of independent components each
-    performing a single well-defined function. These classes are arranged
-    together during deployment and usually involve an IoC container (like
-    Spring) for configuration. These components may be simple
-    <literal>Components</literal>, <literal>Services</literal> or
-    <literal>Widgets</literal>.</para>
+    performing a single well-defined function. Aranea uses Spring to wire
+    these components into a working framework. Though other IoC containers and
+    configuration frameworks would also work we support Spring by default
+    since it provides a very comfortable and versatile syntax for configuring
+    beans. The dispatcher servlet that uses Spring is called
+    <literal>org.araneaframework.integration.spring.AraneaSpringDispatcherServlet</literal>.
+    Note that Aranea itself does not depend on Spring except the classes in
+    the <literal>org.araneaframework.integration.spring</literal>
+    package.</para>
   </sect1>
 
   <sect1>
-    <title>Hosting Aranea</title>
+    <title>Configuring Aranea</title>
 
     <sect2>
-      <title>Servlet Dispatcher</title>
+      <title>web.xml</title>
+
+      <para>The simplest way to configure Aranea for a web application is to
+      set the <literal>araneaApplicationStart</literal> init parameter of the
+      dispatcher servlet to the starting widget or flow of the application:
+      <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE web-app PUBLIC 
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd"&gt;
+
+&lt;web-app&gt;
+  &lt;listener&gt;
+    &lt;listener-class&gt;
+      org.araneaframework.http.core.StandardSessionListener
+    &lt;/listener-class&gt;
+  &lt;/listener&gt;
+   
+   &lt;servlet&gt;
+      &lt;servlet-name&gt;araneaServlet&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;
+        org.araneaframework.integration.spring.AraneaSpringDispatcherServlet
+      &lt;/servlet-class&gt;
+      &lt;init-param&gt;
+        &lt;param-name&gt;araneaApplicationStart&lt;/param-name&gt;
+        &lt;param-value&gt;example.StartWidget&lt;/param-value&gt;
+      &lt;/init-param&gt;
+      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+   &lt;/servlet&gt;
+   
+   &lt;servlet-mapping&gt;
+      &lt;servlet-name&gt;araneaServlet&lt;/servlet-name&gt;
+      &lt;url-pattern&gt;/main/*&lt;/url-pattern&gt;
+   &lt;/servlet-mapping&gt;  
+&lt;/web-app&gt;</programlisting></para>
+
+      <para>This configuration will load Aranea using
+      <literal>example.StartWidget</literal> as the application starting
+      point. <note>
+          <para>The servlet must be mapped to a all subpathes starting from
+          some prefix (in our case <literal>/main/*</literal>) so that Aranea
+          could do some path-dependent operations like extension file
+          importing.</para>
+        </note><note>
+          <para><literal>org.araneaframework.http.core.StandardSessionListener</literal>
+          is required to allow Aranea to process events like session
+          invalidation.</para>
+        </note></para>
+    </sect2>
+
+    <sect2>
+      <title>aranea-conf.xml</title>
+
+      <para>Aranea can also be configured using a Spring configuration file
+      located in <literal>/WEB-INF/aranea-conf.xml</literal>. Particularly it
+      may be used to set the starting widget instead of the init-parameter:
+      <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+  "http://www.springframework.org/dtd/spring-beans.dtd"&gt;
+
+&lt;beans&gt;   
+    &lt;bean id="araneaApplicationStart" 
+      class="example.StartWidget"
+      singleton="false"/&gt;
+&lt;/beans&gt;</programlisting></para>
+
+      <para>This seems to be more verbose, but it also allows to override
+      Aranea framework components: <programlisting role="xml">&lt;bean class="example.LocalizationFilterService"
+  id="araneaLocalizationFilter" singleton="false"&gt;
+  &lt;property name="languageName" value="ee"/&gt;
+&lt;/bean&gt;</programlisting></para>
+
+      <para>as well as adding custom ones. See <xref linkend="framework" />
+      for description of Aranea framework components and ways of extending and
+      overriding them.</para>
+    </sect2>
+
+    <sect2>
+      <title>aranea-conf.properties</title>
+
+      <para>Some of Aranea components can also be configured using a property
+      file located in <literal>/WEB-INF/aranea-conf.properties</literal>. The
+      following properties are recognized: <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="3*" />
+
+            <thead>
+              <row>
+                <entry>Property</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>l10n.resourceBundle</literal></entry>
+
+                <entry>The base name of the resource bundle used for
+                localization. This value isn't used if default
+                <literal>araneaLocalizationFilter</literal> is overidden (e.g.
+                by the <literal>SpringLocalizationFilterService</literal>)
+                <para><emphasis role="strong">Default value:</emphasis>
+                <literal>org.araneaframework.http.support.DefaultResourceBundle</literal></para></entry>
+              </row>
+
+              <row>
+                <entry><literal>l10n.defaultLocale</literal></entry>
+
+                <entry>The default locale to be used in the application.
+                <para><emphasis role="strong">Default value:</emphasis>
+                <literal>en</literal></para></entry>
+              </row>
+
+              <row>
+                <entry><literal>l10n.encoding</literal></entry>
+
+                <entry>The default character encoding to be used throughout
+                the application (e.g. for request and response).
+                <para><emphasis role="strong">Default value:</emphasis>
+                <literal>UTF-8</literal></para></entry>
+              </row>
+
+              <row>
+                <entry><literal>jsp.path</literal></entry>
+
+                <entry>The path from the webapp root to the directory that
+                will act as JSP root. The JSPs put there can be selected using
+                widget view selectors (see <xref linkend="TODO" />).
+                <para><emphasis role="strong">Default value:</emphasis>
+                <literal>/WEB-INF/jsp</literal></para></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+    </sect2>
+
+    <sect2>
+      <title>AraneaSpringDispatcherServlet</title>
+
+      <para><literal>AraneaSpringDispatcherServlet</literal> provides a number
+      of init-params that allow to further customize Aranea configuration:
+      <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>init-param</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>araneaCustomConfXML</literal></entry>
+
+                <entry>The custom location of a Spring XML file used to
+                configure Aranea. <para><emphasis role="strong">Default
+                value:</emphasis>
+                <literal>/WEB-INF/aranea-conf.xml</literal></para></entry>
+              </row>
+
+              <row>
+                <entry><literal>araneaCustomConfProperties</literal></entry>
+
+                <entry>The custom location of a property file used to
+                configure Aranea. <para><emphasis role="strong">Default
+                value:</emphasis>
+                <literal>/WEB-INF/aranea-conf.properties</literal></para></entry>
+              </row>
+
+              <row>
+                <entry><literal>araneaApplicationStart</literal></entry>
+
+                <entry>The class name of an Aranea widget that will serve as
+                the starting point of an Aranea application. If omitted the
+                Spring bean <literal>araneaApplicationStart</literal> will be
+                used.</entry>
+              </row>
+
+              <row>
+                <entry><literal>araneaApplicationRoot</literal></entry>
+
+                <entry>The class name of an Spring bean describing an Aranea
+                component that will serve as the framework root. If omitted
+                the Spring bean <literal>araneaApplicationRoot</literal> will
+                be used. Can be used to override the default configuration
+                altogether.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+    </sect2>
+
+    <sect2>
+      <title>Extending Dispatcher</title>
 
       <para>Currently, the most common way to put Aranea to work is to host it
       in a Servlet 2.3 or compatible container. The most generic way to do
@@ -53,40 +257,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
      return root;
    }
 }</programlisting> And one can then use such a servlet to configure Aranea in
-      a web application: <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE web-app PUBLIC
-  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-  "http://java.sun.com/dtd/web-app_2_3.dtd"&gt;
-
-&lt;web-app&gt;
-  &lt;listener&gt;
-    &lt;listener-class&gt;
-      org.araneaframework.http.core.StandardSessionListener
-    &lt;/listener-class&gt;
-  &lt;/listener&gt;
-
-   &lt;servlet&gt;
-      &lt;servlet-name&gt;araneaServlet&lt;/servlet-name&gt;
-      &lt;servlet-class&gt;
-        org.araneaframework.integration.spring.AraneaSpringDispatcherServlet
-      &lt;/servlet-class&gt;
-      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-   &lt;/servlet&gt;
-
-   &lt;servlet-mapping&gt;
-      &lt;servlet-name&gt;araneaServlet&lt;/servlet-name&gt;
-      &lt;url-pattern&gt;/main/*&lt;/url-pattern&gt;
-   &lt;/servlet-mapping&gt;
-&lt;/web-app&gt;</programlisting> This will map Aranea to the web application
-      URL ending in "/main".
-      <literal>org.araneaframework.http.core.StandardSessionListener</literal>
-      is an Aranea session listener that is needed for successful widget
-      deinitialization.</para>
-
-      <para>Aranea also includes several ready dispatcher servlets, which
-      configure the root component without the need for subclassing. They are
-      described in the next section <xref
-      linkend="framework-configuration" /></para>
+      a web application as usually replacing the standard dispatcher servlet
+      with our custom one.</para>
     </sect2>
   </sect1>
 
@@ -120,11 +292,10 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     &lt;file path="gfx/i02.gif"/&gt;
   &lt;/files&gt;
   ...
-&lt;/resources&gt;
-</programlisting> All the files listed in the configuration files are allowed
-      to be loaded through the <literal>FileImportFilter</literal>. Some are
-      grouped by name to provide an easy access for reading files in
-      bulk.</para>
+&lt;/resources&gt;</programlisting> All the files listed in the configuration
+      files are allowed to be loaded through the
+      <literal>FileImportFilter</literal>. Some are grouped by name to provide
+      an easy access for reading files in bulk.</para>
 
       <para>To <emphasis>override</emphasis> specific files in the
       configuration file, the new file should be placed in a subdirectory

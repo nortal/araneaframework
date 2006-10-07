@@ -597,6 +597,285 @@ myEvent.send(null, rootComponent);
     <literal>getInputData()</literal> methods. Note though, that the sibling
     <literal>*Data</literal> structure is not guaranteed to be scoped
     correctly.</para>
+
+    <sect2>
+      <title>Extensions</title>
+
+      <para>InputData an Outputdata both implement a way to extend their
+      functionality without wrapping or extending the objects themselves. This
+      is achieved by providing the following two methods:</para>
+
+      <para><programlisting role="java">void extend(Class interfaceClass, Object extension)
+Object narrow(Class interfaceClass);</programlisting></para>
+
+      <para>The following example should give an idea of applying these
+      methods:</para>
+
+      <para><programlisting role="java">input.extend(FileUploadExtension.class, new FileUploadExtension(input));
+
+...
+
+FileUploadExtension fileUploadExt = 
+  (FileUploadExtension) input.narrow(FileUploadExtension.class);
+if (fileUploadExt.uploadSucceeded()) {
+  //...
+}</programlisting></para>
+
+      <para>Note that both <literal>HttpServletRequest</literal> and
+      <literal>HttpServletResponse</literal> are available as
+      <literal>InputData</literal> and <literal>OutputData</literal>
+      extensions respectively.</para>
+
+      <para></para>
+    </sect2>
+
+    <sect2>
+      <title>HttpInputData and HttpOutputData</title>
+
+      <para>Although all of the core Aranea abstractions are independent of
+      the Servlet API and web in general, we also provide a way to manipulate
+      low-level HTTP constructs. To that goal we provide to interfaces,
+      <literal>HttpInputData</literal> and <literal>HttpOutputData</literal>,
+      which extend respectively <literal>InputData</literal> and
+      <literal>OutputData</literal>.</para>
+
+      <para>Let's examine the <literal>HttpInputData</literal>. First of all
+      it provides methods that are similar to the ones found in the
+      <literal>HttpServletRequest</literal>:</para>
+
+      <para><informaltable frame="topbot">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry align="left">Method</entry>
+
+                <entry align="left">Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>Iterator getParameterNames()</literal></entry>
+
+                <entry>Returns an iterator over names of the parameters
+                submitted with the current request.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String[] getParameterValues(String
+                name)</literal></entry>
+
+                <entry>Returns the array of values of the particular parameter
+                submitted with the current request.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String
+                getCharacterEncoding()</literal></entry>
+
+                <entry>Returns the character encoding that is used to decode
+                the request parameters.</entry>
+              </row>
+
+              <row>
+                <entry><literal>setCharacterEncoding(String
+                encoding)</literal></entry>
+
+                <entry>Sets the character encoding that is used to decode the
+                request parameters. Note that this must be called before any
+                parameters are read according to the Servlet
+                specification.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String getContentType()</literal></entry>
+
+                <entry>Returns the MIME content type of the request body or
+                <literal>null</literal> if the body is lacking.</entry>
+              </row>
+
+              <row>
+                <entry><literal>Locale getLocale()</literal></entry>
+
+                <entry>Returns the preferred Locale that the client will
+                accept content in, based on the Accept-Language header. If the
+                client request doesn't provide an Accept-Language header, this
+                method returns the default locale for the server.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+
+      <para>Note that unlike <literal>InputData</literal> methods the
+      parameters are presented as is and include both global and scoped
+      parameters (the scoped ones are prefixed by the full name of the
+      enclosing widget).</para>
+
+      <para>However next methods are a bit different from the
+      <literal>HttpServletRequest</literal> alternatives:</para>
+
+      <para><informaltable frame="topbot">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry align="left">Method</entry>
+
+                <entry align="left">Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>String getRequestURL()</literal></entry>
+
+                <entry>Returns the target URL of the current request.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String getContainerURL()</literal></entry>
+
+                <entry>Returns an URL pointing to the Aranea container (in
+                most cases the dispatcher servlet).</entry>
+              </row>
+
+              <row>
+                <entry><literal>String getContextURL()</literal></entry>
+
+                <entry>Returns an URL pointing to the Aranea container context
+                (in most cases the web application root).</entry>
+              </row>
+
+              <row>
+                <entry><literal>String getPath()</literal></entry>
+
+                <entry>Returns the path on the server starting from the
+                dispatcher servlet that has been submitted as the part of the
+                request target URL.</entry>
+              </row>
+
+              <row>
+                <entry><literal>pushPathPrefix(String
+                pathPrefix)</literal></entry>
+
+                <entry>Consumes the path prefix allowing children to be mapped
+                to a relative path.</entry>
+              </row>
+
+              <row>
+                <entry><literal>popPathPrefix()</literal></entry>
+
+                <entry>Restores the previously consumed path prefix.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+
+      <para>The interesting part here are the methods that deal with the path.
+      The problem is that unlike most common cases Aranea components form a
+      hierarchy. Therefore if a parent is mapped to path prefix "myPath/*" and
+      its child is mapped to a path prefix "myChildPath/*" if the path
+      handling were absolute the child would never get the mapped calles. This
+      is due to the child being really mapped to the path
+      "myPath/myChildPath". Therefore the parent must consume the prefix
+      "myPath/" using method <literal>pushPathPrefix()</literal> and then the
+      child will be correctly matched to the relative path
+      "myChildPath".</para>
+
+      <para><literal>HttpOutputData</literal> contains methods that are
+      comparable to the ones found in
+      <literal>HttpServletResponse</literal>:</para>
+
+      <para><informaltable frame="topbot">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry align="left">Method</entry>
+
+                <entry align="left">Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>String encodeURL(String url)</literal></entry>
+
+                <entry>Encodes the URL to include some additional information
+                (e.g. HTTP session identifier). Note that Aranea may include
+                some information not present in the servlet spec.</entry>
+              </row>
+
+              <row>
+                <entry><literal>sendRedirect(String
+                location)</literal></entry>
+
+                <entry>Sends an HTTP redirect to a specified location
+                URL.</entry>
+              </row>
+
+              <row>
+                <entry><literal>OutputStream
+                getOutputStream()</literal></entry>
+
+                <entry>Returns an <literal>OutputStream</literal> that can be
+                used to write to response. Note that unlike the Servlet
+                specification, Aranea permits to use stream and writer
+                interchangeably.</entry>
+              </row>
+
+              <row>
+                <entry><literal>PrintWriter getWriter()</literal></entry>
+
+                <entry>Returns a <literal>PrintWriter</literal> that can be
+                used to write to response. Note that unlike the Servlet
+                specification, Aranea permits to use stream and writer
+                interchangeably.</entry>
+              </row>
+
+              <row>
+                <entry><literal>setContentType(String type)</literal></entry>
+
+                <entry>Sets the MIME content type of the output. May include
+                the charset, e.g. "text/html; charset=UTF-8".</entry>
+              </row>
+
+              <row>
+                <entry><literal>Locale getLocale()</literal></entry>
+
+                <entry>Returns the locale associated with the
+                response.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String
+                getCharacterEncoding()</literal></entry>
+
+                <entry>Returns the character encoding used to write out the
+                response.</entry>
+              </row>
+
+              <row>
+                <entry><literal>void setCharacterEncoding(String
+                encoding)</literal></entry>
+
+                <entry>Sets the character encoding used to write out the
+                response.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+    </sect2>
   </sect1>
 
   <sect1>
@@ -865,245 +1144,5 @@ myEvent.send(null, rootComponent);
           </varlistentry>
         </variablelist></para>
     </sect2>
-  </sect1>
-
-  <sect1>
-    <title>HttpInputData and HttpOutputData</title>
-
-    <para>Although all of the core Aranea abstractions are independent of the
-    Servlet API and web in general, we also provide a way to manipulate
-    low-level HTTP constructs. To that goal we provide to interfaces,
-    <literal>HttpInputData</literal> and <literal>HttpOutputData</literal>,
-    which extend respectively <literal>InputData</literal> and
-    <literal>OutputData</literal>.</para>
-
-    <para>Let's examine the <literal>HttpInputData</literal>. First of all it
-    provides methods that are similar to the ones found in the
-    <literal>HttpServletRequest</literal>:</para>
-
-    <para><informaltable frame="topbot">
-        <tgroup cols="2">
-          <colspec colwidth="1*" />
-
-          <colspec colwidth="2*" />
-
-          <thead>
-            <row>
-              <entry align="left">Method</entry>
-
-              <entry align="left">Description</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry><literal>Iterator getParameterNames()</literal></entry>
-
-              <entry>Returns an iterator over names of the parameters
-              submitted with the current request.</entry>
-            </row>
-
-            <row>
-              <entry><literal>String[] getParameterValues(String
-              name)</literal></entry>
-
-              <entry>Returns the array of values of the particular parameter
-              submitted with the current request.</entry>
-            </row>
-
-            <row>
-              <entry><literal>String getCharacterEncoding()</literal></entry>
-
-              <entry>Returns the character encoding that is used to decode the
-              request parameters.</entry>
-            </row>
-
-            <row>
-              <entry><literal>setCharacterEncoding(String
-              encoding)</literal></entry>
-
-              <entry>Sets the character encoding that is used to decode the
-              request parameters. Note that this must be called before any
-              parameters are read according to the Servlet
-              specification.</entry>
-            </row>
-
-            <row>
-              <entry><literal>String getContentType()</literal></entry>
-
-              <entry>Returns the MIME content type of the request body or
-              <literal>null</literal> if the body is lacking.</entry>
-            </row>
-
-            <row>
-              <entry><literal>Locale getLocale()</literal></entry>
-
-              <entry>Returns the preferred Locale that the client will accept
-              content in, based on the Accept-Language header. If the client
-              request doesn't provide an Accept-Language header, this method
-              returns the default locale for the server.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>Note that unlike <literal>InputData</literal> methods
-    the parameters are presented as is and include both global and scoped
-    parameters (the scoped ones are prefixed by the full name of the enclosing
-    widget).</para>
-
-    <para>However next methods are a bit different from the
-    <literal>HttpServletRequest</literal> alternatives:</para>
-
-    <para><informaltable frame="topbot">
-        <tgroup cols="2">
-          <colspec colwidth="1*" />
-
-          <colspec colwidth="2*" />
-
-          <thead>
-            <row>
-              <entry align="left">Method</entry>
-
-              <entry align="left">Description</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry><literal>String getRequestURL()</literal></entry>
-
-              <entry>Returns the target URL of the current request.</entry>
-            </row>
-
-            <row>
-              <entry><literal>String getContainerURL()</literal></entry>
-
-              <entry>Returns an URL pointing to the Aranea container (in most
-              cases the dispatcher servlet).</entry>
-            </row>
-
-            <row>
-              <entry><literal>String getContextURL()</literal></entry>
-
-              <entry>Returns an URL pointing to the Aranea container context
-              (in most cases the web application root).</entry>
-            </row>
-
-            <row>
-              <entry><literal>String getPath()</literal></entry>
-
-              <entry>Returns the path on the server starting from the
-              dispatcher servlet that has been submitted as the part of the
-              request target URL. </entry>
-            </row>
-
-            <row>
-              <entry><literal>pushPathPrefix(String
-              pathPrefix)</literal></entry>
-
-              <entry>Consumes the path prefix allowing children to be mapped
-              to a relative path.</entry>
-            </row>
-
-            <row>
-              <entry><literal>popPathPrefix()</literal></entry>
-
-              <entry>Restores the previously consumed path prefix.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable></para>
-
-    <para>The interesting part here are the methods that deal with the path.
-    The problem is that unlike most common cases Aranea components form a
-    hierarchy. Therefore if a parent is mapped to path prefix "myPath/*" and
-    its child is mapped to a path prefix "myChildPath/*" if the path handling
-    were absolute the child would never get the mapped calles. This is due to
-    the child being really mapped to the path "myPath/myChildPath". Therefore
-    the parent must consume the prefix "myPath/" using method
-    <literal>pushPathPrefix()</literal> and then the child will be correctly
-    matched to the relative path "myChildPath".</para>
-
-    <para><literal>HttpOutputData</literal> contains methods that are
-    comparable to the ones found in
-    <literal>HttpServletResponse</literal>:</para>
-
-    <para><informaltable frame="topbot">
-        <tgroup cols="2">
-          <colspec colwidth="1*" />
-
-          <colspec colwidth="2*" />
-
-          <thead>
-            <row>
-              <entry align="left">Method</entry>
-
-              <entry align="left">Description</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry><literal>String encodeURL(String url)</literal></entry>
-
-              <entry>Encodes the URL to include some additional information
-              (e.g. HTTP session identifier). Note that Aranea may include
-              some information not present in the servlet spec.</entry>
-            </row>
-
-            <row>
-              <entry><literal>sendRedirect(String location)</literal></entry>
-
-              <entry>Sends an HTTP redirect to a specified location
-              URL.</entry>
-            </row>
-
-            <row>
-              <entry><literal>OutputStream getOutputStream()</literal></entry>
-
-              <entry>Returns an <literal>OutputStream</literal> that can be
-              used to write to response. Note that unlike the Servlet
-              specification, Aranea permits to use stream and writer
-              interchangeably.</entry>
-            </row>
-
-            <row>
-              <entry><literal>PrintWriter getWriter()</literal></entry>
-
-              <entry>Returns a <literal>PrintWriter</literal> that can be used
-              to write to response. Note that unlike the Servlet
-              specification, Aranea permits to use stream and writer
-              interchangeably.</entry>
-            </row>
-
-            <row>
-              <entry><literal>setContentType(String type)</literal></entry>
-
-              <entry>Sets the MIME content type of the output. May include the
-              charset, e.g. "text/html; charset=UTF-8".</entry>
-            </row>
-
-            <row>
-              <entry><literal>Locale getLocale()</literal></entry>
-
-              <entry>Returns the locale associated with the response.</entry>
-            </row>
-
-            <row>
-              <entry><literal>String getCharacterEncoding()</literal></entry>
-
-              <entry>Returns the character encoding used to write out the
-              response.</entry>
-            </row>
-
-            <row>
-              <entry><literal>void setCharacterEncoding(String
-              encoding)</literal></entry>
-
-              <entry>Sets the character encoding used to write out the
-              response.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable></para>
   </sect1>
 </chapter>
