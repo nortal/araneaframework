@@ -53,7 +53,7 @@ public interface OutputData extends Extendable, Narrowable {
   /**
    * Restores the scope to the passed one.
    */
-  public void restorescope(path scope);
+  public void restoreScope(Path scope);
 
   /**
    * Pushes the specified value to the stack with the specified key.

@@ -137,6 +137,12 @@ public class StandardServletInputData implements HttpInputData {
     }
   }
   
+  public void restoreScope(Path scope) {
+    Assert.notNullParam(scope, "scope");
+    
+    scopeBuf = new StringBuffer(scope.toString());
+  }
+  
   public Map getGlobalData() {
     if (!dataInited) initData();
     return Collections.unmodifiableMap(globalData);
