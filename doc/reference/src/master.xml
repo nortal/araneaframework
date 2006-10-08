@@ -4,17 +4,12 @@
 [
 	<!ENTITY components               SYSTEM "components.xml">
 	<!ENTITY intro               SYSTEM "intro.xml">
-	<!ENTITY configuration               SYSTEM "configuration.xml">
 	<!ENTITY jsp               SYSTEM "jsp.xml">
-	<!ENTITY widgets               SYSTEM "widgets.xml">
 	<!ENTITY framework               SYSTEM "framework.xml">
+	<!ENTITY integration               SYSTEM "integration.xml">
 	<!ENTITY forms               SYSTEM "forms.xml">	
 	<!ENTITY lists               SYSTEM "lists.xml">
 	<!ENTITY javascript               SYSTEM "javascript.xml">
-
-	<!ENTITY flowcontainer 	 SYSTEM "framework/components/containers/StandardFlowContainerWidget.xml">
-    <!ENTITY standardcontainers   SYSTEM "framework/components/containers/StandardContainers.xml">
-
 ]>
 
 <!--
@@ -66,12 +61,10 @@
     &intro;
     &components;
     &framework;
-    <!-- &configuration; 
-    &widgets; -->
-
     &jsp;
     &forms;
     &lists;
+    &integration;
     &javascript;
 </book>
 

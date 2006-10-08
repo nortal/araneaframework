@@ -33,6 +33,67 @@
   </sect1>
 
   <sect1>
+    <title>Framework Assembly</title>
+
+    <para>Aranea framework is made up of the same Components, Services and
+    Widgets that are also used to develop Aranea applications. Each component
+    performs a single well-defined function and may depend on other components
+    only via Environment. The framework components mostly fall in one of the
+    three following categories:</para>
+
+    <para><variablelist>
+        <varlistentry>
+          <term>Filter</term>
+
+          <listitem>
+            <para>Filter components are the simplest. The component contains a
+            single unnamed child and implements the
+            <emphasis>Filter</emphasis> pattern by either passing each call to
+            the child or not. However in addition it may enrich the child's
+            environment with contexts and provide more functionality like
+            exception handling or synchronization. Typical examples of filters
+            are localization filter (provides a localization context),
+            synchronization filter (synchronizes on
+            <literal>action()</literal> method) and transactional filter that
+            does not let through double submits. </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Router</term>
+
+          <listitem>
+            <para>Router typically contains many named children, and chooses
+            only one to propagate the calls to according to some
+            <literal>InputData</literal> parameter. Router may have the
+            children either statically preconfigured or created dynamically
+            when the request comes (the latter is the case with session
+            service router). It may also allow us to add/remove children while
+            the application is running. A typical application of a router is
+            to distinguish among major application parts by some attribute
+            (like component corresponding to a user session, or one of the
+            popup window of current user). </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Container</term>
+
+          <listitem>
+            <para>Container can have one or many children, but it typically
+            will do more with them than just passing the calls to one of them.
+            A typical example is the <emphasis>widget container</emphasis>
+            service which translates <literal>action()</literal> calls into
+            widget <literal>update()/event()/process()/render()</literal>
+            cycle. </para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+
+    <para></para>
+  </sect1>
+
+  <sect1>
     <title>Configuring Aranea</title>
 
     <sect2>
@@ -348,11 +409,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
       <title>Routers</title>
 
-       For explanation of router pattern, refer to 
-
-      <xref linkend="services-as-framework-plugins" />
-
-       
+      <para> For explanation of router pattern, refer to <xref
+      linkend="services-as-framework-plugins" /> </para>
 
       <sect3>
         <title>StandardTopServiceRouterService and
@@ -393,11 +451,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
       <title>Filters</title>
 
-       For explanation of filter pattern, refer to 
-
-      <xref linkend="services-as-framework-plugins" />
-
-       
+      <para> For explanation of filter pattern, refer to <xref
+      linkend="services-as-framework-plugins" /> </para>
 
       <para>All filters have injectable properties for setting filter's child.
       For services, this property is <literal>childService</literal>, for

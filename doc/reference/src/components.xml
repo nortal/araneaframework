@@ -109,7 +109,7 @@
     </sect2>
   </sect1>
 
-  <sect1>
+  <sect1 id="core-components-environment">
     <title>Components and Environment</title>
 
     <para><classname>org.araneaframework.Component</classname> represents the
@@ -136,7 +136,7 @@
 
           <function>init()</function>
 
-          —notifies the component that it should initialize itself passing it the 
+           —notifies the component that it should initialize itself passing it the 
 
           <classname>Environment</classname>
 
@@ -156,7 +156,7 @@
 
           <function>disable()</function>
 
-          —notifies the component that it will be disabled and will not receive any calls until it is enabled again. A component is enabled by default. 
+           —notifies the component that it will be disabled and will not receive any calls until it is enabled again. A component is enabled by default. 
         </listitem>
 
         <listitem>
@@ -164,7 +164,7 @@
 
           <function>enable()</function>
 
-          —notifies the component that it has been enabled again. This call may only be done after a 
+           —notifies the component that it has been enabled again. This call may only be done after a 
 
           <classname>disable()</classname>
 
@@ -176,7 +176,7 @@
 
           <function>destroy()</function>
 
-          —notifies the component that it has been destroyed and should release any acquired resources and such. A component can be destroyed only once and should be initialized before that. 
+           —notifies the component that it has been destroyed and should release any acquired resources and such. A component can be destroyed only once and should be initialized before that. 
         </listitem>
       </orderedlist> Further in the text we will refer to an initialized and
     not destroyed component instance that has a parent as
@@ -265,7 +265,7 @@
       but we don't really care about that at the moment).</para>
     </sect2>
 
-    <sect2>
+    <sect2 id="core-environment">
       <title>Environment</title>
 
       <para><literal>org.araneaframework.Environment</literal> is another
@@ -383,7 +383,7 @@ myEvent.send(null, rootComponent);
       gathers all <literal>FormWidget</literal>s from the widget
       hierarchy:</para>
 
-      
+       
 
       <para>
         <programlisting role="java">public static class FormWidgetFinderMessage extends BroadcastMessage {
@@ -446,7 +446,7 @@ myEvent.send(null, rootComponent);
     </sect2>
   </sect1>
 
-  <sect1 id="components-io-data">
+  <sect1 id="core-io-data">
     <title>InputData and OutputData</title>
 
     <para><literal>InputData</literal> is Aranea abstraction for a request,
@@ -514,23 +514,27 @@ myEvent.send(null, rootComponent);
     to the component. This data comes in two flavours: <itemizedlist
         spacing="compact">
         <listitem>
+           
+
           <literal>getScopedData()</literal>
 
            returns a 
 
           <literal>java.util.Map</literal>
 
-           with the data sent specially to this component, which is associated with the current scope.
+           with the data sent specially to this component, which is associated with the current scope. 
         </listitem>
 
         <listitem>
+           
+
           <literal>getGlobalData()</literal>
 
            returns a 
 
           <literal>java.util.Map</literal>
 
-           with the data sent to the application generally.
+           with the data sent to the application generally. 
         </listitem>
       </itemizedlist> In case Aranea is running on top of a servlet both these
     maps will contain only <literal>String</literal>s (or in case you
@@ -544,7 +548,7 @@ myEvent.send(null, rootComponent);
     <para>The main function of <literal>OutputData</literal> is to propagate
     attributes that are used when delegating rendering to a templating engine
     or by children to access some general information during rendering. The
-    following methods are used to propagate these attributes: </para>
+    following methods are used to propagate these attributes:</para>
 
     <informaltable frame="topbot">
       <tgroup cols="2">
@@ -599,7 +603,7 @@ myEvent.send(null, rootComponent);
     <literal>OutputData</literal> are typically connected, they can be
     retrieved from the other <literal>*Data</literal> structure using
     correspondingly <literal>getOutputData()</literal> and
-    <literal>getInputData()</literal> methods. </para>
+    <literal>getInputData()</literal> methods.</para>
 
     <warning>
       <para>Since the the sibling <literal>*Data</literal> structure is not
@@ -889,7 +893,7 @@ if (fileUploadExt.uploadSucceeded()) {
     </sect2>
   </sect1>
 
-  <sect1>
+  <sect1 id="core-services">
     <title>Services</title>
 
     <para><literal>org.araneaframework.Service</literal> is a basic
@@ -928,71 +932,44 @@ if (fileUploadExt.uploadSucceeded()) {
     for application development
     <literal>org.araneaframework.core.BaseApplicationService</literal>.</para>
 
-    <sect2 id="services-as-framework-plugins">
-      <title>Services as Framework Plug-ins</title>
+    <sect2>
+      <title>Filter Services</title>
 
-      <para>Services make up most of the actual Aranea framework. Even though
-      they are simple, they can implement the following patterns:
-      <variablelist>
-          <varlistentry>
-            <term>Filter</term>
+      <para>One of the most common ways to use the services it to create a
+      filter service, that wraps a child service and provides some additional
+      functionality and/or environment entries. To that purpose Aranea
+      provides a filter base class —
+      <literal>org.araneaframework.framework.core.BaseFilterService</literal>.
+      This class implements all of the Service methods, by default just
+      delegating them to the corresponding child methods. A common thing to do
+      is override the <literal>action()</literal> method to add functionality
+      and <literal>getChildEnvironment()</literal> to add environment entries,
+      as shown in the following example:</para>
 
-            <listitem>
-               Filter service is the simplest. It contains a single unnamed child service and implements the 
+      <para><programlisting role="java">public class StandardSynchronizingFilterService 
+  extends BaseFilterService {
+  
+  protected Environment getChildEnvironment() {
+    return new StandardEnvironment(
+        getEnvironment(), 
+        SynchronizingContext.class, 
+        new SynchronizingContext() {});
+  }
+  
+  protected synchronized void action(
+      Path path, 
+      InputData input, 
+      OutputData output) throws Exception {
+    super.action(path, input, output);
+  }
+}</programlisting></para>
 
-              <emphasis>Filter</emphasis>
-
-               pattern by either passing the call to the child or not. However in addition to that it may enrich the child environment with contexts and provide more functionality like exception handling or synchronization. Typical examples of filter services are localization service (provides a localization context), synchronization service (synchronizes on 
-
-              <literal>action()</literal>
-
-               method) and transactional service that does not let through double submits. 
-            </listitem>
-          </varlistentry>
-
-          <varlistentry>
-            <term>Router</term>
-
-            <listitem>
-               Router service typically contains many named child services, and chooses only one to propagate the 
-
-              <literal>action()</literal>
-
-               call according to some 
-
-              <literal>InputData</literal>
-
-               parameter. Router service may have the child services statically preconfigured or it may create them dynamically when the request comes (the latter is the case with session service router). It may also allow us to add/remove children while the application is running. A typical application of a router is to distinguish among major application parts by some attribute (like component corresponding to a user session, or one of the popup window of current user). 
-            </listitem>
-          </varlistentry>
-
-          <varlistentry>
-            <term>Container</term>
-
-            <listitem>
-               Container services can have one or many children, but they typically will do more with them than just calling 
-
-              <literal>action()</literal>
-
-               on one of them. A typical example is the 
-
-              <emphasis>widget container</emphasis>
-
-               service which translates 
-
-              <literal>action()</literal>
-
-               calls into widget request-response cycle calls. 
-            </listitem>
-          </varlistentry>
-        </variablelist></para>
-
-      <para>Moe information on services and other components that make up the
+      <para>More information on services and other components that make up the
       framework can be found in <xref linkend="framework" />.</para>
     </sect2>
   </sect1>
 
-  <sect1 id="components-widgets">
+  <sect1 id="core-widgets">
     <title id="core-widgets">Widgets</title>
 
     <para><emphasis>Widget</emphasis> is the main abstraction used to program
@@ -1047,7 +1024,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
           <literal>update()</literal>
 
-          —this method is called for all the widgets in the hierarchy. It allows widgets to read the data from request and possibly store some conversation state or at least temporary information to render the next view. 
+           —this method is called for all the widgets in the hierarchy. It allows widgets to read the data from request and possibly store some conversation state or at least temporary information to render the next view. 
         </listitem>
 
         <listitem>
@@ -1055,7 +1032,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
           <literal>event()</literal>
 
-          —this method is called on only one widget in the hierarchy. It allows to send widgets events from the user. The 
+           —this method is called on only one widget in the hierarchy. It allows to send widgets events from the user. The 
 
           <literal>path</literal>
 
@@ -1067,7 +1044,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
           <literal>process()</literal>
 
-          —this method is called on all the widgets in the hierarchy. It allows widgets to process the result of 
+           —this method is called on all the widgets in the hierarchy. It allows widgets to process the result of 
 
           <literal>event()</literal>
 
@@ -1083,7 +1060,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
           <literal>render()</literal>
 
-          —the way this method is called depends on how widgets are rendered (see 
+           —the way this method is called depends on how widgets are rendered (see 
 
           <xref linkend="components-render" />
 
@@ -1174,27 +1151,31 @@ if (fileUploadExt.uploadSucceeded()) {
           </varlistentry>
         </variablelist></para>
     </sect2>
+  </sect1>
+
+  <sect1 id="core-application-widgets">
+    <title>Application Widgets</title>
+
+    <para>This section explains how to program applications using widgets as
+    the main abstraction. </para>
+
+    <para>A typical application widget class will extend
+    <literal>org.araneaframework.uilib.core.BaseUIWidget</literal>. This
+    widget represents the usual custom application component that is rendered
+    using Aranea custom JSP tags. <literal>BaseUIWidget</literal> inherits
+    most of its functionality from
+    <literal>org.araneaframework.core.BaseApplicationWidget</literal> the
+    difference between the two being only that <literal>BaseUIWidget</literal>
+    assumes to be connected with a JSP page (or another templating
+    toolkit).</para>
 
     <sect2>
-      <title>Application Widgets</title>
+      <title>Children Management</title>
 
-      <para>A typical widget class will extend
-      <literal>org.araneaframework.uilib.core.BaseUIWidget</literal>. This
-      widget represents the usual custom application component that is
-      rendered using Aranea custom JSP tags. <literal>BaseUIWidget</literal>
-      inherits most of its functionality from
-      <literal>org.araneaframework.core.BaseApplicationWidget</literal> the
-      difference between the two being only that
-      <literal>BaseUIWidget</literal> assumes to be connected with a JSP
-      page.</para>
+      <para><literal>BaseApplicationWidget</literal> provides a number of
+      methods for managing child widgets:</para>
 
-      <sect3>
-        <title>Children management</title>
-
-        <para><literal>BaseApplicationWidget</literal> provides a number of
-        methods for managing child widgets:</para>
-
-        <para><programlisting role="java">public abstract class BaseApplicationWidget ... {
+      <para><programlisting role="java">public abstract class BaseApplicationWidget ... {
   ...
   public void addWidget(Object key, Widget child);
   public void removeWidget(Object key);
@@ -1203,30 +1184,30 @@ if (fileUploadExt.uploadSucceeded()) {
   ...
 }</programlisting></para>
 
-        <para>As one can see, every added child has an identifier which should
-        be unique among its siblings. This identifier is used when rendering
-        and sending events to the widget in question, to identify it among its
-        peers.</para>
+      <para>As one can see, every added child has an identifier which should
+      be unique among its siblings. This identifier is used when rendering and
+      sending events to the widget in question, to identify it among its
+      peers.</para>
 
-        <para>Typically, children are added when created:</para>
+      <para>Typically, children are added when created:</para>
 
-        <para><programlisting role="java">addWidget("myChildWidget", new MyChildWidget("String parameter", 1));</programlisting></para>
+      <para><programlisting role="java">addWidget("myChildWidget", new MyChildWidget("String parameter", 1));</programlisting></para>
 
-        <para>An added child will be initialized, will receive updates and
-        events and may be rendered. A widget can be active only if added to a
-        parent. It will live as long as the parent, unless the parent
-        explicitly removes it:</para>
+      <para>An added child will be initialized, will receive updates and
+      events and may be rendered. A widget can be active only if added to a
+      parent. It will live as long as the parent, unless the parent explicitly
+      removes it:</para>
 
-        <para><programlisting role="java">removeWidget("myChildWidget");</programlisting></para>
+      <para><programlisting role="java">removeWidget("myChildWidget");</programlisting></para>
 
-        <para>Removing a child widget will destroy it and one should also
-        dispose of any references that may be pointing to it, to allow the
-        child to be garbage collected.</para>
+      <para>Removing a child widget will destroy it and one should also
+      dispose of any references that may be pointing to it, to allow the child
+      to be garbage collected.</para>
 
-        <para>A usual idiom is to save a reference to the newly created and
-        added child using a parent widget field:</para>
+      <para>A usual idiom is to save a reference to the newly created and
+      added child using a parent widget field:</para>
 
-        <para><programlisting role="java">public class MyWidget extends BaseUIWidget {
+      <para><programlisting role="java">public class MyWidget extends BaseUIWidget {
   private MyChildWidget myChildWidget;
   
   protected void init() {
@@ -1235,58 +1216,58 @@ if (fileUploadExt.uploadSucceeded()) {
   }
 }</programlisting></para>
 
-        <para>This allows to call directly child widget methods and does not
-        anyhow significantly increase memory usage, so this technique may be
-        used everywhere when needed.</para>
+      <para>This allows to call directly child widget methods and does not
+      anyhow significantly increase memory usage, so this technique may be
+      used everywhere when needed.</para>
 
-        <para>Disabling a child
-        (<literal>disableWidget("myChildWidget")</literal>) will stop it from
-        receiving any events or rendering, but will not destroy it. It can
-        later be reenabled by calling
-        <literal>enableWidget("myChildWidget")</literal>.</para>
-      </sect3>
+      <para>Disabling a child
+      (<literal>disableWidget("myChildWidget")</literal>) will stop it from
+      receiving any events or rendering, but will not destroy it. It can later
+      be reenabled by calling
+      <literal>enableWidget("myChildWidget")</literal>.</para>
+    </sect2>
 
-      <sect3>
-        <title>Event listeners</title>
+    <sect2>
+      <title>Event Listeners</title>
 
-        <para>Registering event listeners allows widgets to subscribe to some
-        specific user events (widget will receive only events specially sent
-        to it). The distinction comes by the ``event identifier'' that is
-        assigned to an event when sending it. The events are handled by the
-        classes extending
-        <literal>org.araneaframework.core.EventListener</literal>:</para>
+      <para>Registering event listeners allows widgets to subscribe to some
+      specific user events (widget will receive only events specially sent to
+      it). The distinction comes by the "event identifier" that is assigned to
+      an event when sending it. The events are handled by the classes
+      extending
+      <literal>org.araneaframework.core.EventListener</literal>:</para>
 
-        <para><programlisting role="java">public interface EventListener extends Serializable {
+      <para><programlisting role="java">public interface EventListener extends Serializable {
   public void processEvent(Object eventId, InputData input) throws Exception;
 }</programlisting></para>
 
-        <para>The event listeners are registered as following:</para>
+      <para>The event listeners are registered as following:</para>
 
-        <para><programlisting role="java">addEventListener("myEvent", new EventListener() {
+      <para><programlisting role="java">addEventListener("myEvent", new EventListener() {
   public void processEvent(Object eventId, InputData input) throws Exception {
     log.debug("Received event: " + eventId);
   }
 }</programlisting></para>
 
-        <para>Of course, the event listener does not have to be an anonymous
-        class and can just as well be an inner or even a usual public class. A
-        standard base implementation
-        <literal>org.araneaframework.core.StandardEventListener</literal> is
-        provided that receives an optional <literal>String</literal> event
-        parameter:</para>
+      <para>Of course, the event listener does not have to be an anonymous
+      class and can just as well be an inner or even a usual public class. A
+      standard base implementation
+      <literal>org.araneaframework.core.StandardEventListener</literal> is
+      provided that receives an optional <literal>String</literal> event
+      parameter:</para>
 
-        <para><programlisting role="java">addEventListener("myEvent", new StandardEventListener() {
+      <para><programlisting role="java">addEventListener("myEvent", new StandardEventListener() {
   public void processEvent(Object eventId, String eventParam, InputData input) throws Exception;
     log.debug("Received event " + eventId + " with parameter " + parameter);
   }
 }</programlisting></para>
 
-        <para>Another useful way to process events is to register a proxy
-        event listener
-        (<literal>org.araneaframework.core.ProxyEventListener</literal>) that
-        will proxy the event to a method call, e.g.:</para>
+      <para>Another useful way to process events is to register a proxy event
+      listener
+      (<literal>org.araneaframework.core.ProxyEventListener</literal>) that
+      will proxy the event to a method call, e.g.:</para>
 
-        <para><programlisting role="java">protected void init() {
+      <para><programlisting role="java">protected void init() {
   addEventListener("myEvent", new ProxyEventListener(this));
 }
 
@@ -1294,164 +1275,161 @@ public void handleEventMyEvent(String parameter) {
     log.debug("Received event myEvent with parameter " + parameter);
 }</programlisting></para>
 
-        <para>The convention is that the proxy event listener translates an
-        event "&lt;event&gt;" into a method call
-        <literal>handleEvent&lt;event&gt;</literal> making the first letter of
-        &lt;event&gt; uppercase. The <literal>String parameter</literal> is
-        optional and can be omitted.</para>
+      <para>The convention is that the proxy event listener translates an
+      event "&lt;event&gt;" into a method call
+      <literal>handleEvent&lt;event&gt;</literal> making the first letter of
+      &lt;event&gt; uppercase. The <literal>"String parameter</literal>" is
+      optional and can be omitted.</para>
 
-        <para>A useful feature is the method
-        <literal>addGlobalEventListener(EventListener listener)</literal> that
-        allows to register a listener that will receive all events sent to the
-        widget. In fact <literal>BaseUIWidget</literal> does that by default,
-        and typically you will use the individual event listeners only when
-        you want to override this default behaviour. This allows to just
-        define correct method names
-        (<literal>handleEvent&lt;event&gt;</literal>) and all events will be
-        translated to the calls to these methods. Certainly this can also be
-        cancelled by calling <literal>clearGlobalEventListener()</literal>, or
-        overridden by adding your own global event listener.</para>
-      </sect3>
+      <para>A useful feature is the method
+      <literal>setGlobalEventListener(EventListener listener)</literal> that
+      allows to register a listener that will receive all events sent to the
+      widget. In fact <literal>BaseUIWidget</literal> does that by default,
+      and typically you will use the individual event listeners only when you
+      want to override this default behaviour. This allows to just define
+      correct method names (<literal>handleEvent&lt;event&gt;</literal>) and
+      all events will be translated to the calls to these methods. Certainly
+      this can also be cancelled by calling
+      <literal>clearGlobalEventListener()</literal>, or overridden by adding
+      your own global event listener.</para>
+    </sect2>
 
-      <sect3 id="widgets-environment">
-        <title>Environment</title>
+    <sect2 id="widgets-environment">
+      <title>Environment</title>
 
-        <para>Every initialized widget has a reference to
-        <literal>org.araneaframework.Environment</literal> available through
-        the <literal>getEnvironment()</literal> method. Environment allows to
-        look up framework services (called
-        <emphasis>contexts</emphasis>):</para>
+      <para>Every initialized widget has a reference to
+      <literal>org.araneaframework.Environment</literal> available through the
+      <literal>getEnvironment()</literal> method. Environment allows to look
+      up framework services (called <emphasis>contexts</emphasis>):</para>
 
-        <para><programlisting role="java">MessageContext msgCtx = (MessageContext) getEnvironment().getEntry(MessageContext.class);
+      <para><programlisting role="java">MessageContext msgCtx = (MessageContext) getEnvironment().getEntry(MessageContext.class);
 msgCtx.showInfoMessage("Hello world!");</programlisting></para>
 
-        <para>As one can see from the examples, contexts are looked up using
-        their interface <literal>Class</literal> object as key. All framework
-        services in Aranea are accessible only using the environment.</para>
-      </sect3>
+      <para>As one can see from the examples, contexts are looked up using
+      their interface <literal>Class</literal> object as key. All framework
+      services in Aranea are accessible only using the environment.</para>
 
-      <sect3>
-        <title>Overridable Methods</title>
+      <para>To find out more about <literal>InputData</literal> and
+      <literal>OutputData</literal> see <xref
+      linkend="core-environment" /></para>
+    </sect2>
 
-        <para>The main method that is typically overridden in a widget is
-        <literal>init()</literal>. As widget does not get an environment
-        before it is added and initialized it is impossible to access
-        framework services in the constructor, therefore most of the
-        initialization logic moves to the custom <literal>init()</literal>
-        method. A dual overridable method is <literal>destroy()</literal>,
-        though it is used much less.</para>
+    <sect2>
+      <title>Overridable Methods</title>
 
-        <para>In addition to event processing it is sometimes useful to do
-        some kind of pre- and post-processing. The
-        <literal>BaseApplicationWidget</literal> has the following methods
-        that may be overridden to allow this processing:</para>
+      <para>The main method that is typically overridden in a widget is
+      <literal>init()</literal>. As widget does not get an environment before
+      it is added and initialized it is impossible to access framework
+      services in the constructor, therefore most of the initialization logic
+      moves to the custom <literal>init()</literal> method. A dual overridable
+      method is <literal>destroy()</literal>, though it is used much
+      less.</para>
 
-        <para><programlisting role="java">protected void handleUpdate(InputData input) throws Exception {}
-protected void handleProcess() throws Exception {}
-</programlisting></para>
+      <para>In addition to event processing it is sometimes useful to do some
+      kind of pre- and post-processing. The
+      <literal>BaseApplicationWidget</literal> has the following methods that
+      may be overridden to allow this processing:</para>
 
-        <para><literal>handleUpdate()</literal> is called before event
-        listeners are notified and allows to read and save request data
-        preparing it for the event. More importantly, this method is called
-        even when no event is sent to the current widget allowing one to
-        submit some data to any widget. <literal>handleProcess()</literal> is
-        called after the event listeners are notified and again is called
-        event if current widgets receives no events at all. It allows to
-        prepare the widget for rendering, post-processing the request results
-        without concern whether or not events have been delivered.</para>
-      </sect3>
+      <para><programlisting role="java">protected void handleUpdate(InputData input) throws Exception {}
+protected void handleProcess() throws Exception {}</programlisting></para>
 
-      <sect3>
-        <title>InputData and OuputData</title>
+      <para><literal>handleUpdate()</literal> is called before event listeners
+      are notified and allows to read and save request data preparing it for
+      the event. More importantly, this method is called even when no event is
+      sent to the current widget allowing one to submit some data to any
+      widget. <literal>handleProcess()</literal> is called after the event
+      listeners are notified and again is called event if current widgets
+      receives no events at all. It allows to prepare the widget for
+      rendering, post-processing the request results without concern whether
+      or not events have been delivered.</para>
+    </sect2>
 
-        <para>In Aranea one usually does not need to handle request manually
-        in custom application widgets. Even more, the request is not
-        accessible by default. The usual way to submit custom data to a widget
-        and read it is using Aranea Forms (see <xref linkend="forms" />).
-        However, when one needs to access the submitted data, one can do that
-        using the <literal>org.araneaframework.InputData</literal>. This class
-        can be used as follows: <programlisting role="java">...
+    <sect2>
+      <title>InputData and OuputData</title>
+
+      <para>In Aranea one usually does not need to handle request manually in
+      custom application widgets. Even more, the request is not accessible by
+      default. The usual way to submit custom data to a widget and read it is
+      using Aranea Forms (see <xref linkend="forms" />). However, when one
+      needs to access the submitted data, one can do that using the
+      <literal>org.araneaframework.InputData</literal>. This class can be used
+      as follows: <programlisting role="java">...
 String myData1 = 
   (String) getInputData().getScopedData().get("myData1");
 String globalSubmittedParameter = 
   (String) getInputData().getGlobalData().get("globalSubmittedParameter");
 ...</programlisting> <literal>getInputData()</literal> is a
-        <literal>BaseApplicationWidget</literal> method that returns the input
-        data for the current request (one can also use the
-        <literal>inputData</literal> parameter given to event listener
-        directly). <literal>getScopedData()</literal> returns a
-        <literal>java.util.Map</literal> with data submitted to the current
-        widget specifically (typically this will mean that the data was
-        prefixed with the full widget id in request).
-        <literal>getGlobalData()</literal> returns the data that was submitted
-        globally (typically the data that was not prefixed anyhow in the
-        request).</para>
+      <literal>BaseApplicationWidget</literal> method that returns the input
+      data for the current request (one can also use the
+      <literal>input</literal> parameter given to event listener directly).
+      </para>
 
-        <para>One can also obtain the <literal>HttpServletRequest</literal>
-        from the <literal>InputData</literal> by calling
-        <literal>ServletUtil.getRequest(InputData data)</literal>.</para>
+      <para><literal>org.araneaframework.OutputData</literal> is accessible
+      through the <literal>getOutputData()</literal> method of
+      <literal>BaseWidget</literal> or directly as the
+      <literal>output</literal> parameter passed to
+      <literal>render()</literal> method. </para>
 
-        <para><literal>org.araneaframework.OutputData</literal> usually does
-        not play any role in application development. It is accessible through
-        the <literal>getOutputData()</literal> method of
-        <literal>BaseWidget</literal>. <literal>HttpServletResponse</literal>
-        can be accessed by calling <literal>ServletUtil.getResponse(OutputData
-        data)</literal>. Additionally <literal>HttpOutputData</literal> also
-        has a method <literal>sendRedirect(String location)</literal> which
-        should be used as follows: <programlisting role="java">...
-((HttpOutputData) getOutputData()).sendRedirect("http://www.google.com");
-...</programlisting> This method does an HTTP redirect to the specified
-        URL.</para>
-      </sect3>
+      <para>To find out more about <literal>InputData</literal> and
+      <literal>OutputData</literal> see <xref linkend="core-io-data" /></para>
+    </sect2>
 
-      <sect3>
-        <title>View Model and Rendering</title>
+    <sect2>
+      <title>View Model and Rendering</title>
 
-        <para><literal>BaseApplicationWidget</literal> also contains methods
-        that facilitate transferring data to the presentation layer. This is
-        achieved using a <emphasis>View model</emphasis>—an object containing
-        a snapshot of the widget current state. The most typical way to use
-        the view model it to add data to it:</para>
+      <para><literal>BaseApplicationWidget</literal> also contains methods
+      that facilitate transferring data to the presentation layer. This is
+      achieved using a <emphasis>View model</emphasis>—an object containing a
+      snapshot of the widget current state. The most typical way to use the
+      view model it to add data to it:</para>
 
-        <para><programlisting role="java">...
+      <para><programlisting role="java">...
 putViewData("today", new Date());
 putViewData("currentUser", userBean);
 ...</programlisting></para>
 
-        <para>View data is typically accessible in the presentation layer as
-        some kind of a variable (e.g. a JSP EL variable) for the current
-        widget. If the data becomes outdated one can override it using
-        <literal>putViewData()</literal> call or remove it using the
-        <literal>removeViewData()</literal> call. In case one needs to put
-        view data that would last one request only there is an alternative
-        method:</para>
+      <para>View data is typically accessible in the presentation layer as
+      some kind of a variable (e.g. a JSP EL variable) for the current widget.
+      If the data becomes outdated one can override it using
+      <literal>putViewData()</literal> call or remove it using the
+      <literal>removeViewData()</literal> call. In case one needs to put view
+      data that would last one request only there is an alternative
+      method:</para>
 
-        <para><programlisting role="java">...
+      <para><programlisting role="java">...
 putViewDataOnce("now", new Date());
 ...</programlisting></para>
 
-        <para><literal>BaseUIWidget</literal> allows to render the current
-        widget using a JSP page. To do that one needs to select a view as
-        follows:</para>
+      <para>Finally widget instance is also visible to the view, so one of the
+      ways to make some data accessible is just to define a JavaBean style
+      getter:</para>
 
-        <para><programlisting role="java">...
+      <para><programlisting role="java">...
+public Date getNow() {
+  return new Date();
+}
+...</programlisting><literal>BaseUIWidget</literal> allows to render the
+      current widget using a JSP page. To do that one needs to select a view
+      as follows:</para>
+
+      <para><programlisting role="java">...
 setViewSelector("myWidget/form");
 ...</programlisting></para>
 
-        <para>This code makes the widget render itself using the JSP situated
-        in <literal>WEB-INF/jsp/myWidget/form.jsp</literal> (of course the
-        exact place is configurable). It is also possible to render the widget
-        using other template technologies with the same view selector by
-        overriding the <literal>render()</literal> method in the base project
-        widget.</para>
-      </sect3>
+      <para>This code makes the widget render itself using the JSP situated in
+      <literal>WEB-INF/jsp/myWidget/form.jsp</literal> (of course the exact
+      place is configurable). It is also possible to render the widget using
+      other template technologies with the same view selector by overriding
+      the <literal>render()</literal> method in the base project
+      widget.</para>
+    </sect2>
 
-      <sect3 id="widgets-example-widget">
-        <title>Putting It All Together</title>
+    <sect2 id="widgets-example-widget">
+      <title>Putting It All Together</title>
 
-        <para>A typical application custom widget will look like that:</para>
+      <para>A typical application custom widget will look like that:</para>
 
-        <para><programlisting role="java">public class TestWidget extends BaseUIWidget {
+      <para><programlisting role="java">public class TestWidget extends BaseUIWidget {
 
   private static final Logger log = Logger.getLogger(TestWidget.class);
   
@@ -1475,7 +1453,6 @@ setViewSelector("myWidget/form");
     getMessageCtx().showInfoMessage("Test event received successfully");       
   }
 }</programlisting></para>
-      </sect3>
     </sect2>
   </sect1>
 
@@ -1503,8 +1480,106 @@ setViewSelector("myWidget/form");
 
       <para><programlisting role="java">getMessageCtx().showInfoMessage("Hello world!");</programlisting></para>
 
-      <para>For more information, see <xref
-      linkend="StandardMessagingFilterWidget" /> and JavaDoc.</para>
+      <para><literal>MessageContext</literal> divides messages by type (with
+      predefined "info", "warning" and "error" types available) and life span
+      (usual or permanent). Usual messages are shown to user once and then
+      cleared, while permanent messages will be shown to user until explicitly
+      cleared by the programmer:</para>
+
+      <para><informaltable frame="topbot">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="1*" />
+
+            <thead>
+              <row>
+                <entry align="left">Method</entry>
+
+                <entry align="left">Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>showMessage(String type, String
+                message)</literal></entry>
+
+                <entry>Shows a message <literal>message</literal> of type
+                <literal>type</literal> to the user. Message is cleared after
+                the user sees it once.</entry>
+              </row>
+
+              <row>
+                <entry><literal>showInfoMessage(String
+                message)</literal></entry>
+
+                <entry>Shows an error message to the user.</entry>
+              </row>
+
+              <row>
+                <entry><literal>showWarningMessage(String
+                message)</literal></entry>
+
+                <entry>Shows a warning message to the user.</entry>
+              </row>
+
+              <row>
+                <entry><literal>showErrorMessage(String
+                message)</literal></entry>
+
+                <entry>Shows an informative message to the user.</entry>
+              </row>
+
+              <row>
+                <entry><literal>clearMessages()</literal></entry>
+
+                <entry>Clears all non-permanent messages.</entry>
+              </row>
+
+              <row>
+                <entry><literal>showPermanentMessage(String type, String
+                message)</literal></entry>
+
+                <entry>Shows a permanent message <literal>message</literal> of
+                type <literal>type</literal> to the user. The message will be
+                shown until hidden explicitly. </entry>
+              </row>
+
+              <row>
+                <entry><literal>hidePermanentMessage(String
+                message)</literal></entry>
+
+                <entry>Clears the specific permanent message, under all
+                message types where it might be present.</entry>
+              </row>
+
+              <row>
+                <entry><literal>clearPermanentMessages()</literal></entry>
+
+                <entry>Clears all of the permanent messages.</entry>
+              </row>
+
+              <row>
+                <entry><literal>clearAllMessages()</literal></entry>
+
+                <entry>Clears all messages (both permanent and usual).</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+
+      <note>
+        <para>Messages should already be localized when passed to the
+        <literal>MessageContext</literal>, it does not do any further
+        processing. Use <literal>LocalizationContext</literal> described in
+        <xref linkend="LocalizationContext" /> to do the actual localization
+        of the added message.</para>
+      </note>
+
+      <para>For information on implementation of the
+      <literal>MessageContext</literal> see <xref
+      linkend="StandardMessagingFilterWidget" />.</para>
     </sect2>
 
     <sect2 id="LocalizationContext">
@@ -1512,18 +1587,97 @@ setViewSelector("myWidget/form");
 
       <para><literal>org.araneaframework.framework.LocalizationContext</literal>
       allows to get and set current session locale, localize strings and
-      lookup resource bundles. The context is available through the
-      <literal>BaseUIWidget</literal> method <literal>getL10nCtx()</literal>.
-      Typically it is used as following:</para>
+      messages, and lookup resource bundles. The context is available through
+      the <literal>BaseUIWidget</literal> method
+      <literal>getL10nCtx()</literal>. Typically it is used as follows:</para>
 
       <para><programlisting role="java">
 ...
 String message = getL10nCtx().localize("my.message.key");
 getMessageCtx().showInfoMessage(message);
-...
-</programlisting></para>
+...</programlisting></para>
 
-      <para>More info is available in the JavaDoc.</para>
+      <para><literal>LocalizationContext</literal> provides the following
+      methods:</para>
+
+      <para><informaltable frame="topbot">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="1*" />
+
+            <thead>
+              <row>
+                <entry align="left">Method</entry>
+
+                <entry align="left">Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>Locale getLocale()</literal></entry>
+
+                <entry>Returns the current session locale.</entry>
+              </row>
+
+              <row>
+                <entry><literal>setLocale(Locale locale)</literal></entry>
+
+                <entry>Sets the current session locale.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String localize(String key)</literal></entry>
+
+                <entry>Localizes a string returning one that corresponds to
+                the current locale.</entry>
+              </row>
+
+              <row>
+                <entry><literal>ResourceBundle
+                getResourceBundle()</literal></entry>
+
+                <entry>Returns a resource bundle corresponding to the current
+                locale.</entry>
+              </row>
+
+              <row>
+                <entry><literal>ResourceBundle getResourceBundle(Locale
+                locale)</literal></entry>
+
+                <entry>Returns a resource bundle corresponding to arbitrary
+                locale.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String getMessage(String code, Object[]
+                args)</literal></entry>
+
+                <entry>Localizes the code and uses it to format the message
+                with the passed arguments. The format of the localized message
+                should be acceptable by
+                <literal>java.text.MessageFormat</literal>.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String getMessage(String code, Object[] args,
+                String defaultMessage)</literal></entry>
+
+                <entry>Localizes the code and uses it to format the message
+                with the passed arguments. The format of the localized message
+                should be acceptable by
+                <literal>java.text.MessageFormat</literal>. If the localized
+                message cannot be resolved uses
+                <literal>defaultMessage</literal> instead.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+
+      <para>For information on implementation of the
+      <literal>LocalizationContext</literal> see <xref
+      linkend="StandardLocalizationFilterService" />.</para>
     </sect2>
 
     <sect2 id="FlowContext">
