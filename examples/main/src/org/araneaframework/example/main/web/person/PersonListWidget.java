@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.list.BeanListWidget;
@@ -42,6 +43,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 	
 	private boolean editMode = false;
 	private boolean selectOnly = false;
+  
+  private IContractDAO contractDAO;
 	
 	private ListWidget list;
 	
@@ -104,7 +107,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 			throw new RuntimeException("Event 'remove' shoud be called only in edit mode");
 		}
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		getContractDAO().removeByPersonId(id);
+    contractDAO.removeByPersonId(id);
 		getGeneralDAO().remove(PersonMO.class, id);
 		refreshList();
 		log.debug("Person with Id of " + id + " removed sucessfully");
@@ -152,4 +155,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 			return getGeneralDAO().getAll(PersonMO.class);
 		}  	
 	}
+  
+  public void injectContractDAO(IContractDAO contractDAO) {
+    this.contractDAO = contractDAO;
+  }
 }

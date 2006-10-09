@@ -23,7 +23,7 @@
     <property name="maximumCachedSize" value="1048576"/>
   </bean>
   
-  <bean id="araneaSessionFilters" singleton="false"
+  <bean id="araneaCustomSessionFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardFilterChainService">
     <property name="filterChain">     
       <list>
@@ -32,7 +32,7 @@
     </property>
   </bean>
 
-  <bean id="araneaWidgetFilters" singleton="false"
+  <bean id="araneaCustomWidgetFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardFilterChainWidget">
     <property name="filterChain">     
       <list>
