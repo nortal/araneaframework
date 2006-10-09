@@ -7,7 +7,7 @@ Features and Improvements
         Experimental development filter                                       | See change #109
         Spring bean injection utility                                         | See change #123
         Major updates: reference manual
-        Minor updates: tutorial (list section may be little out-of-date)
+        Minor updates: tutorial
 
 Bugfixes
         Row updates sometimes breaking in IE                                  | See #241
