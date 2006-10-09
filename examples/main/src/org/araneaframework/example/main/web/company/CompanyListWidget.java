@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.list.BeanListWidget;
@@ -38,6 +39,8 @@ public class CompanyListWidget extends TemplateBaseWidget {
   protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
   private BeanListWidget list;
   private boolean editMode = true;
+  
+  private IContractDAO contractDAO;
 
   public CompanyListWidget() {
     super();
@@ -92,7 +95,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
 
   public void handleEventRemove(String eventParameter) throws Exception {
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
-    getContractDAO().removeByCompanyId(id);
+    contractDAO.removeByCompanyId(id);
     getGeneralDAO().remove(CompanyMO.class, id);
     refreshList();
     log.debug("Company with Id of " + id + " removed sucessfully");
@@ -150,5 +153,9 @@ public class CompanyListWidget extends TemplateBaseWidget {
       // All that matters is that returned List really contains CompanyMO objects.
       return getGeneralDAO().getAll(CompanyMO.class);
     }      
+  }
+  
+  public void injectContractDAO(IContractDAO contractDAO) {
+    this.contractDAO = contractDAO;
   }
 }
