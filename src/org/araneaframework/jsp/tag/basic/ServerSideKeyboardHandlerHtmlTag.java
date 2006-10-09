@@ -139,7 +139,7 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 		
         // submit_6 : function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
 		StringBuffer result = new StringBuffer("function (event, elementId) { ");
-		result.append("_ap.submit_6(");
+		result.append("_ap.event_6(");
 		result.append("document.forms['").append(systemFormId).append("'],");
 		result.append("'").append(event.getId()).append("',");
 		result.append("'").append(event.getTarget()).append("',");

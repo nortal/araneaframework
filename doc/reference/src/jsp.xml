@@ -1840,7 +1840,7 @@ JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
 JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
 
 // both will output something like this:
-// arn-evntId="hello" arn-trgtwdgt="contextWidgetId" arn-evntPar="name" onclick="return _ap.submit(this);"]]></programlisting>
+// arn-evntId="hello" arn-trgtwdgt="contextWidgetId" arn-evntPar="name" onclick="return _ap.event(this);"]]></programlisting>
     </para>
     
     </sect2>
