@@ -131,15 +131,14 @@
     </target>
 
     <target name="copy-shared">
-
         <!-- Copy images and CSS for HTML documentation, age specific. -->
-        <copy todir="${build.dir}/images">
+        <copy todir="${build.dir}/shared/images">
             <fileset dir="${basedir}/images">
                 <include name="**/*.png"/>
                 <include name="**/*.gif"/>
             </fileset>
         </copy>
-        <copy todir="${build.dir}/css">
+        <copy todir="${build.dir}/shared/css">
             <fileset dir="${basedir}/styles">
                 <include name="**/*.css"/>
             </fileset>
