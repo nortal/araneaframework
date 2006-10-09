@@ -16,9 +16,9 @@
 package org.araneaframework.uilib.list;
 
 import java.util.Comparator;
-import java.util.Locale;
 
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.util.Event;
 
 /**
  * List context. General interface that can be used to access the current list
@@ -30,35 +30,6 @@ import org.araneaframework.uilib.ConfigurationContext;
  * @see ListWidget
  */
 public interface ListContext {
-	
-	/**
-	 * Retrieves the global configuration context.
-	 * 
-	 * @return the global configuration context.
-	 */
-	ConfigurationContext getConfiguration();
-
-	/**
-	 * Returns the current case sensitivity behaivor.
-	 * 
-	 * @return the current case sensitivity behaivor.
-	 */
-	boolean isIgnoreCase();
-
-	/**
-	 * Returns the current locale.
-	 * 
-	 * @return the current locale.
-	 */
-	Locale getLocale();
-	
-	/**
-	 * Returns the label of this field. 
-	 * 
-	 * @param fieldId field id.
-	 * @return the label of this field.
-	 */
-	String getFieldLabel(String fieldId);
 
 	/**
 	 * Returns the type of this field.
@@ -67,7 +38,45 @@ public interface ListContext {
 	 * @return the type of this field.
 	 */
 	Class getFieldType(String fieldId);
+	
+	/**
+	 * Returns the current case sensitivity behaivor.
+	 * 
+	 * @return the current case sensitivity behaivor.
+	 */
+	boolean isIgnoreCase();
+	
+	/**
+	 * Run an event after the initialization.
+	 * 
+	 * @param event an event.
+	 */
+	void addInitEvent(Event event);	
 
+	// ----- Available after initialization -----  
+	
+	/**
+	 * Retrieves the global configuration context.
+	 * 
+	 * @return the global configuration context.
+	 */
+	//ConfigurationContext getConfiguration();
+
+	/**
+	 * Returns the current locale.
+	 * 
+	 * @return the current locale.
+	 */
+	//Locale getLocale();
+	
+	/**
+	 * Returns the label of this field. 
+	 * 
+	 * @param fieldId field id.
+	 * @return the label of this field.
+	 */
+	String getFieldLabel(String fieldId);
+	
 	/**
 	 * Returns the {@link Comparator} of this field.
 	 * 
@@ -75,5 +84,4 @@ public interface ListContext {
 	 * @return the comparator of this field.
 	 */
 	Comparator getFieldComparator(String fieldId);
-
 }

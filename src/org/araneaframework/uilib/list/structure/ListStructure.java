@@ -16,17 +16,21 @@
 
 package org.araneaframework.uilib.list.structure;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.Validate;
+import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.TypeHelper;
 import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
 import org.araneaframework.uilib.list.structure.order.FieldOrder;
 import org.araneaframework.uilib.list.structure.order.MultiFieldOrder;
-import org.araneaframework.uilib.list.structure.order.SimpleColumnOrder;
+import org.araneaframework.uilib.list.structure.order.SimpleFieldOrder;
+import org.araneaframework.uilib.util.Event;
 
 
 public class ListStructure extends BaseListStructure {
@@ -36,16 +40,50 @@ public class ListStructure extends BaseListStructure {
 	private final TypeHelper typeHelper;
 	
 	private boolean orderableByDefault = false;
+	
+	private boolean initialized = false;
+	private List initEvents = new ArrayList();
+	
+	public void init(Environment env) throws Exception {
+		for (Iterator it = initEvents.iterator(); it.hasNext();) {
+			Runnable event = (Runnable) it.next();
+			event.run();
+		}
+		initialized = true;
+		initEvents = null;
+		
+		this.filter.init(env);
+		this.order.init(env);
+	}
+	
+	private boolean isInitialized() {
+		return this.initialized;
+	}
+	
+	private void addInitEvent(Event event) {
+		if (isInitialized()) {
+			event.run();
+		} else {
+			initEvents.add(event);
+		}		
+	}
 
+	public void destroy() throws Exception {
+		this.filter.destroy();
+		this.order.destroy();
+	}
+	
 	public ListStructure(TypeHelper typeHelper) {
 		Assert.notNullParam(this, typeHelper, "typeHelper");
 		this.typeHelper = typeHelper;
+		this.filter = new AndFilter();
+		this.order = new MultiFieldOrder();
 	}
 	
 	protected TypeHelper getTypeHelper() {
 		return this.typeHelper;
 	}
-	
+
 	/*
 	 * Fields
 	 */
@@ -84,21 +122,23 @@ public class ListStructure extends BaseListStructure {
 		this.orderableByDefault = orderableByDefault;
 	}
 	
-	protected void addFieldOrder(String fieldId) {
-		Comparator comp = typeHelper.getFieldComparator(fieldId);
-		Validate.notNull(comp, "Could not get comparator for field '" + fieldId + "'");
-		addFieldOrder(fieldId, comp);		
+	protected void addFieldOrder(final String fieldId) {
+		final SimpleFieldOrder fieldOrder = new SimpleFieldOrder(fieldId); 
+		addInitEvent(new Event() {
+			public void run() {
+				Comparator comp = typeHelper.getFieldComparator(fieldId);
+				Validate.notNull(comp, "Could not get comparator for field '" + fieldId + "'");
+				fieldOrder.setComparator(comp);
+			}
+		});
+		addOrder(fieldOrder);		
 	}
 	
 	protected void addFieldOrder(String fieldId, Comparator comparator) {
-		addOrder(new SimpleColumnOrder(fieldId, comparator));		
+		addOrder(new SimpleFieldOrder(fieldId, comparator));
 	}
 	
 	protected MultiFieldOrder getMultiFieldOrder() {
-		if (this.order == null) {
-			clearOrders();
-		}
-		Validate.isTrue(this.order instanceof MultiFieldOrder, "ListOrder must be a MultiColumnOrder instance");
 		return (MultiFieldOrder) this.order; 
 	}
 	
@@ -110,8 +150,8 @@ public class ListStructure extends BaseListStructure {
 		return getMultiFieldOrder().getFieldOrder(field);
 	}
 	
-	public void clearOrders() {
-		this.order = new MultiFieldOrder();
+	public void clearOrders() throws Exception {
+		getMultiFieldOrder().clearFieldOrders();
 	}
 	
 	/*
@@ -119,13 +159,7 @@ public class ListStructure extends BaseListStructure {
 	 */
 	
 	protected AndFilter getAndFilter() {
-		if (this.filter == null) {
-			clearFilters();
-		}
-		if (!AndFilter.class.isAssignableFrom(this.filter.getClass())) {
-			throw new RuntimeException("ListFilter must be an AndFilter instance");
-		}
-		return (AndFilter) this.filter; 
+		return (AndFilter) this.filter;
 	}
 	
 	public void addFilter(ListFilter filter) {
@@ -146,7 +180,7 @@ public class ListStructure extends BaseListStructure {
 		return null;
 	}
 	
-	public void clearFilters() {
-		this.filter = new AndFilter();
+	public void clearFilters() throws Exception {
+		getAndFilter().clearFilters();
 	}
 }

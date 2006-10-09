@@ -17,6 +17,7 @@ package org.araneaframework.uilib.list.structure.filter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.uilib.form.Control;
@@ -24,6 +25,7 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.TypeHelper;
 import org.araneaframework.uilib.list.structure.ListFilter;
 import org.araneaframework.uilib.list.structure.filter.advanced.RangeInRangeFilter;
 import org.araneaframework.uilib.list.structure.filter.advanced.SqlFunctionFilter;
@@ -109,6 +111,62 @@ public class FilterHelper extends BaseFilterHelper {
 	 */
 	public FilterHelper(ListWidget list) {
 		super(list);
+	}
+	
+	/**
+	 * Sets the current case sensitivity behaivor.
+	 * 
+	 * @param ignoreCase whether to ignore case.
+	 */
+	public FilterHelper setIgnoreCase(boolean ignoreCase) {
+		super._setIgnoreCase(ignoreCase);
+		return this;
+	}
+	
+//	/**
+//	 * Sets the current locale.
+//	 * 
+//	 * @param locale new locale.
+//	 */
+//	public FilterHelper setLocale(Locale locale) {
+//		super._setLocale(locale);
+//		return this;
+//	}
+	
+	/**
+	 * Sets the current strickness behaivor.
+	 * 
+	 * @param stirct whether new filters should be strict.
+	 */
+	public FilterHelper setStrict(boolean stirct) {
+		super._setStrict(stirct);
+		return this;
+	}
+	
+	/**
+	 * Adds custom label for specified field. This can override already defined
+	 * label of list field. Those labels are used by new filter form elements
+	 * that are automatically created for list filters. 
+	 * 
+	 * @param fieldId field id.
+	 * @param labelId label id (not yet resolved).
+	 */
+	public FilterHelper addCustomLabel(String fieldId, String labelId) {
+		super._addCustomLabel(fieldId, labelId);
+		return this;
+	}
+
+	/**
+	 * Defines type for specified field.
+	 * 
+	 * @param fieldId field id.
+	 * @param type field type.
+	 * 
+	 * @see TypeHelper#addFieldType(String, Class)
+	 */
+	public FilterHelper addFieldType(String fieldId, Class type) {
+		super._addFieldType(fieldId, type);
+		return this;
 	}
 	
 	// ========== EQUALS ========== 
@@ -358,7 +416,7 @@ public class FilterHelper extends BaseFilterHelper {
 	// filter with form element
 	
 	public FilterHelper notNull(String fieldId, Object conditionValue) throws Exception {
-		return isNull(fieldId, fieldId, conditionValue);
+		return notNull(fieldId, fieldId, conditionValue);
 	}
 	public FilterHelper notNull(String fieldId, String valueId, Object conditionValueId) throws Exception {
 		_notNull(fieldId, valueId);
@@ -366,7 +424,7 @@ public class FilterHelper extends BaseFilterHelper {
 		return this;
 	}
 	public FilterHelper notNull(String fieldId, Object conditionValue, Control control) throws Exception {
-		return isNull(fieldId, fieldId, conditionValue, control);
+		return notNull(fieldId, fieldId, conditionValue, control);
 	}
 	public FilterHelper notNull(String fieldId, String valueId, Object conditionValue, Control control) throws Exception {
 		_notNull(fieldId, valueId);
@@ -374,7 +432,7 @@ public class FilterHelper extends BaseFilterHelper {
 		return this;
 	}
 	public FilterHelper notNull(String fieldId, Object conditionValue, FormElement element) throws Exception {
-		return isNull(fieldId, fieldId, conditionValue, element);
+		return notNull(fieldId, fieldId, conditionValue, element);
 	}
 	public FilterHelper notNull(String fieldId, String valueId, Object conditionValue, FormElement element) throws Exception {
 		_notNull(fieldId, valueId);
@@ -385,7 +443,7 @@ public class FilterHelper extends BaseFilterHelper {
 	// filter
 	
 	public FilterHelper _notNull(String fieldId, Object conditionValue) {
-		return _isNull(fieldId, fieldId, conditionValue);
+		return _notNull(fieldId, fieldId, conditionValue);
 	}
 	public FilterHelper _notNull(String fieldId, String valueId, Object conditionValue) {
 		list.addFilter(NullFilter.getNotNullInstance(this, fieldId, valueId, conditionValue));
@@ -395,7 +453,7 @@ public class FilterHelper extends BaseFilterHelper {
 	// constant filter
 
 	public FilterHelper notNullConst(String fieldId) {
-		list.addFilter(NullFilter.getIsNullConstantInstance(this, fieldId));
+		list.addFilter(NullFilter.getNotNullConstantInstance(this, fieldId));
 		return this;
 	}	
 	

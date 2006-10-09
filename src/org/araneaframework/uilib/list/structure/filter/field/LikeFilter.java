@@ -18,6 +18,7 @@ package org.araneaframework.uilib.list.structure.filter.field;
 
 import java.util.Map;
 
+import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.Control;
@@ -43,7 +44,6 @@ public class LikeFilter extends BaseFieldFilter {
 		filter.setFieldId(fieldId);
 		filter.setValueId(valueId);
 		filter.setIgnoreCase(ctx.isIgnoreCase());
-		filter.setConfiguration(getConfiguration(ctx));
 		return filter;
 	}
 	
@@ -51,15 +51,6 @@ public class LikeFilter extends BaseFieldFilter {
 		LikeFilter filter = getInstance(ctx, fieldId, valueId);		
 		filter.setValue(value);
 		return filter;
-	}
-		
-	private static LikeConfiguration getConfiguration(FilterContext ctx) {
-		LikeConfiguration result = (LikeConfiguration)
-			ctx.getConfiguration().getEntry(ConfigurationContext.LIKE_CONFIGURATION);
-		if (result == null) {
-			result = new LikeConfiguration();
-		}
-		return result;
 	}
 	
 	public static void addToForm(FilterContext ctx, String id, FormElement element) throws Exception {
@@ -76,6 +67,13 @@ public class LikeFilter extends BaseFieldFilter {
 
 	private LikeFilter() {
 		// private
+	}
+	
+	public void init(Environment env) throws Exception {
+		ConfigurationContext cfg = (ConfigurationContext) env.getEntry(ConfigurationContext.class);
+		if (cfg != null) {
+			configuration = (LikeConfiguration) cfg.getEntry(ConfigurationContext.LIKE_CONFIGURATION);
+		}
 	}
 
 	public LikeConfiguration getConfiguration() {

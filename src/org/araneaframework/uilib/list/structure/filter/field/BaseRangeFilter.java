@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
+import org.araneaframework.uilib.list.structure.filter.BaseFilter;
 import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
@@ -30,7 +31,7 @@ import org.araneaframework.uilib.list.util.ExpressionUtil;
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public abstract class BaseRangeFilter implements FieldFilter {
+public abstract class BaseRangeFilter extends BaseFilter implements FieldFilter {
 	
 	private static final long serialVersionUID = 1L;
 	

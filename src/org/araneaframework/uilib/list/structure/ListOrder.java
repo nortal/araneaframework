@@ -17,6 +17,8 @@
 package org.araneaframework.uilib.list.structure;
 
 import java.io.Serializable;
+
+import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.uilib.list.OrderInfo;
 
@@ -30,6 +32,10 @@ import org.araneaframework.uilib.list.OrderInfo;
  * @see org.araneaframework.uilib.list.OrderInfo
  */
 public interface ListOrder extends Serializable {
+	
+	void init(Environment env) throws Exception;
+	void destroy() throws Exception;
+
 	/**
 	 * Builds <code>ComparatorExpression</code> from this
 	 * <code>ListOrder</code> according to the <code>OrderInfo</code>.

@@ -24,6 +24,7 @@ import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.support.UiLibMessages;
+import org.araneaframework.uilib.util.Event;
 
 /**
  * List filters form utils.
@@ -32,25 +33,32 @@ import org.araneaframework.uilib.support.UiLibMessages;
  */
 public class FilterFormUtil {
 	
+	public static final String TEMPORARY_LABEL = "";
 	public static final String DO_NOT_LOCALIZE_PREFIX = "#"; 
 	
 	public static FormElement createElement(FilterContext ctx, String id)
 		throws Exception {
 		Class type = ctx.getFieldType(id);
-		return FormUtil.createElement(ctx.getFieldLabel(id),
+		FormElement result = FormUtil.createElement(TEMPORARY_LABEL,
 				FormUtil.createControl(type),
-				FormUtil.createData(type), false);	
+				FormUtil.createData(type), false);
+		setLabel(ctx, result, id);
+		return result ;
 	}
 	
 	public static FormElement createElement(FilterContext ctx, String id,
-			Control control) throws Exception {		
-		return FormUtil.createElement(ctx.getFieldLabel(id), control,
+			Control control) throws Exception {
+		FormElement result = FormUtil.createElement(TEMPORARY_LABEL, control,
 				FormUtil.createData(ctx.getFieldType(id)), false);
+		setLabel(ctx, result, id);
+		return result;
 	}
 	
 	public static FormElement createElement(FilterContext ctx, String id,
 			Control control, Data data) throws Exception {
-		return FormUtil.createElement(ctx.getFieldLabel(id), control, data, false);
+		FormElement result = FormUtil.createElement(TEMPORARY_LABEL, control, data, false); 
+		setLabel(ctx, result, id);
+		return result;
 	}
 	
 	public static String getLabelForLowField(LocalizationContext loc, String fieldLabelId) {
@@ -74,5 +82,14 @@ public class FilterFormUtil {
 		catch (MissingResourceException e) {
 			return key;
 		}
+	}
+	
+	public static void setLabel(final FilterContext ctx,
+			final FormElement formElement, final String fieldId) {
+		ctx.addInitEvent(new Event() {
+			public void run() {
+				formElement.setLabel(ctx.getFieldLabel(fieldId));
+			}
+		});
 	}
 }

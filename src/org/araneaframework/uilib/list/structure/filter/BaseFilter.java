@@ -14,21 +14,23 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib.list.structure;
+package org.araneaframework.uilib.list.structure.filter;
 
 import org.araneaframework.Environment;
-import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
-
+import org.araneaframework.uilib.list.structure.ListFilter;
 
 /**
- * Static list filtering information that can be used along with
- * <code>FilterInfo</code> to build <code>FilterExpression</code> (an
- * <code>Expression</code> that evualuates into <code>Boolean.TRUE</code>
- * when the filter matches with the current record that a
- * <code>VariableResolver</code> provides and <code>Boolean.FALSE</code>
- * otherwise).
+ * Base implementation of the {@link ListFilter}.
+ * 
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public interface ListFilter extends ExpressionBuilder {
-	void init(Environment env) throws Exception;
-	void destroy() throws Exception;
+public abstract class BaseFilter implements ListFilter {
+
+	public void init(Environment env) throws Exception {
+		// empty		
+	}
+	
+	public void destroy() throws Exception {
+		// empty		
+	}
 }
