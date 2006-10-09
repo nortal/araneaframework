@@ -2,12 +2,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-        <!--
-	<bean id="araneaApplicationStart"
-		class="org.araneaframework.framework.filter.StandardDevelFilterWidget"
-		singleton="false">
-		<property name="childClass" value="org.araneaframework.example.main.web.RootWidget"/>
-	</bean> -->
 	<bean id="araneaApplicationStart"
 		class="org.araneaframework.example.main.web.LoginWidget"
 		singleton="false"/>
@@ -29,7 +23,7 @@
     <property name="maximumCachedSize" value="1048576"/>
   </bean>
   
-  <bean id="customSessionFilters" singleton="false"
+  <bean id="araneaSessionFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardFilterChainService">
     <property name="filterChain">     
       <list>
@@ -38,7 +32,7 @@
     </property>
   </bean>
 
-  <bean id="customWidgetFilters" singleton="false"
+  <bean id="araneaWidgetFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardFilterChainWidget">
     <property name="filterChain">     
       <list>

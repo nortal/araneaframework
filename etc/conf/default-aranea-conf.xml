@@ -19,7 +19,7 @@
         <ref bean="araneaRequestEncodingFilter"/>
         <ref bean="araneaFileUploadFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
-          <property name="beanId" value="araneaCustomApplicationFilters"/>
+          <property name="beanId" value="araneaApplicationFilters"/>
         </bean>
         <ref bean="araneaReadFile"/>   
         <ref bean="araneaMountingFilter"/>            
@@ -59,7 +59,7 @@
         <ref bean="araneaLocalizationFilter"/>
         <ref bean="araneaJspConfigFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
-          <property name="beanId" value="araneaCustomSessionFilters"/>
+          <property name="beanId" value="araneaSessionFilters"/>
         </bean>        
       </list>
     </property>
@@ -102,7 +102,7 @@
         <ref bean="araneaAjaxFilterService"/>
         <ref bean="responseHeaderFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
-          <property name="beanId" value="araneaCustomThreadFilters"/>
+          <property name="beanId" value="araneaThreadFilters"/>
         </bean>
       </list>
     </property>
@@ -139,7 +139,7 @@
         <ref bean="araneaContexts"/>
         <ref bean="araneaPopupFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterWidget" singleton="false">
-          <property name="beanId" value="araneaCustomWidgetFilters"/>
+          <property name="beanId" value="araneaWidgetFilters"/>
         </bean>        
       </list>
     </property>
