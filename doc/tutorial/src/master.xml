@@ -1577,8 +1577,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
   protected FormRowHandler buildFormRowHandler() throws Exception {
     /* Implementation of FormRowHandler that also calls dataprovider's
      * data refresh methods when list editing events occur. */
-    return new MemoryBasedListFormRowHandlerDecorator(dataProvider,
-            new PersonEditableRowHandler());
+    return new PersonEditableRowHandler());
   }
 
   /* Row handling functions. As this handler extends ValidOnlyIndividualFormRowHandler class,

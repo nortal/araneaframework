@@ -149,16 +149,16 @@ function AraneaPage() {
   /** 
    * Chooses appropriate submitting method and submittable form given the HTML element
    * that initiated the submit request. */
-  function submit(element);
+  function event(element);
 
   /** 
-   * Called by submit() to determine the appropriate form submitter.
+   * Called by event() to determine the appropriate form submitter.
    */
   function findSubmitter(element, systemForm);
 
   /** another submit function, takes all params that are possible to 
     * use with Aranea JSP currently. */
-  function submit_6(systemForm, eventId, eventTarget, 
+  function event_6(systemForm, eventId, eventTarget, 
                     eventParam, eventPrecondition, eventUpdateRegions);
   
   /** Logs message on DEBUG level, if logger is present. */

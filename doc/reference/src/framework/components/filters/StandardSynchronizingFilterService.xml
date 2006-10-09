@@ -1,7 +1,0 @@
-<sect3 id="StandardSynchronizingFilterService">
-    <title>StandardSynchronizingFilterService</title>
-
-    <para>
-      Synchronizes the calls to its child widget. Enriches environment with <literal>SynchronizingContext</literal> (which is just marker interface).
-    </para>
-</sect3>

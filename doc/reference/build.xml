@@ -131,7 +131,6 @@
     </target>
 
     <target name="copy-shared">
-
         <!-- Copy images and CSS for HTML documentation, age specific. -->
         <copy todir="${build.dir}/images">
             <fileset dir="${basedir}/images">

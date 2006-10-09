@@ -82,7 +82,10 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     String araneaCustomConfProperties = DEFAULT_ARANEA_CUSTOM_CONF_PROPERTIES;    
     if (getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER) != null)
       araneaCustomConfXml = getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER);    
-
+    
+    isSpringWebPresent = 
+    	isSpringWebPresent ? WebApplicationContextUtils.getWebApplicationContext(getServletContext()) != null : isSpringWebPresent;
+    
     if (isSpringWebPresent) {
       //Getting the Spring loaded main web application context
       webCtx  = WebApplicationContextUtils.getWebApplicationContext(getServletContext());        

@@ -32,7 +32,7 @@
     package.</para>
   </sect1>
 
-  <sect1>
+  <sect1 id="framework-assembly">
     <title>Framework Assembly</title>
 
     <para>Aranea framework is made up of the same Components, Services and
@@ -410,7 +410,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <title>Routers</title>
 
       <para> For explanation of router pattern, refer to <xref
-      linkend="services-as-framework-plugins" /> </para>
+      linkend="framework-assembly" /> </para>
 
       <sect3>
         <title>StandardTopServiceRouterService and
@@ -452,7 +452,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <title>Filters</title>
 
       <para> For explanation of filter pattern, refer to <xref
-      linkend="services-as-framework-plugins" /> </para>
+      linkend="framework-assembly" /> </para>
 
       <para>All filters have injectable properties for setting filter's child.
       For services, this property is <literal>childService</literal>, for

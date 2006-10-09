@@ -48,55 +48,21 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
     addEventListener("cancel", new ProxyEventListener(this));
     addEventListener("reset", new ProxyEventListener(this));
   }
-  
+
   public void handleEventRetry() throws Exception {
-    this.exception = null;
-  }
+    //noop
+  }  
   
   public void handleEventCancel() throws Exception {
-    this.exception = null;
-    
     cancel();
   }
   
   public void handleEventReset() throws Exception {
-    this.exception = null;
-    
     reset(null);    
   }
   
   protected void handleException(Exception e) throws Exception {
     this.exception = e;
-  }
-  
-  public void reset(EnvironmentAwareCallback callback) {
-    this.exception = null;
-    
-    super.reset(callback);
-  }
-  
-  public void cancel() {
-    this.exception = null;
-    
-    super.cancel();
-  }
-  
-  public void finish(Object returnValue) {
-    this.exception = null;
-    
-    super.finish(returnValue);
-  }
-  
-  public void start(Widget flow, Configurator configurator, Handler handler) {
-    this.exception = null;    
-    
-    super.start(flow, configurator, handler);
-  }
-  
-  public void replace(Widget flow, Configurator configurator) {
-    this.exception = null;
-    
-    super.replace(flow, configurator);
   }
   
   
@@ -134,6 +100,8 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
       log.error("Handling error:", e);
             
       renderExceptionHandler(output, e);
+      
+      exception = null;
     }
     
     arUtil.commit();
