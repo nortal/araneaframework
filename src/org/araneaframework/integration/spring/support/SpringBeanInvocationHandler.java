@@ -1,4 +1,4 @@
-package org.araneaframework.integration.spring;
+package org.araneaframework.integration.spring.support;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

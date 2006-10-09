@@ -4,6 +4,7 @@ import java.lang.reflect.Proxy;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.integration.spring.support.SpringBeanInvocationHandler;
 import org.springframework.beans.factory.BeanFactory;
 
 
