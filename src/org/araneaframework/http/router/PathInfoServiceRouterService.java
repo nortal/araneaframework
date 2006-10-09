@@ -28,12 +28,13 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.PathInfoServiceContext;
 
 /**
+ * TODO: document it
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
  */
 public class PathInfoServiceRouterService extends BaseServiceRouterService {
 	public static String PATH_ARGUMENT = "pathInfo";
 	
-	protected Object getServiceId(InputData input) throws Exception {
+	protected Object getServiceIdFromInput(InputData input) throws Exception {
 		return getPathInfo(input)[0];
 	}
   

@@ -122,15 +122,30 @@ public abstract class BaseServiceRouterService extends BaseService {
   
   /**
    * Returns the service id of the request. By default returns the parameter value of the request
-   * under the key <code>getServiceKey()</code>.
+   * under the key <code>getServiceKey()</code>. Returns <code>defaultServiceId</code> when input
+   * has no service information specified.
    */
   protected Object getServiceId(InputData input) throws Exception{
-    Object id = input.getGlobalData().get(getServiceKey());
+    Object id = getServiceIdFromInput(input);
     if (id == null)
-      id = defaultServiceId;
+      id = getDefaultServiceId();
     return id;
   }
-  
+
+  /**
+   * Returns the service id read from input. 
+   */
+  protected Object getServiceIdFromInput(InputData input) throws Exception {
+    return input.getGlobalData().get(getServiceKey());
+  }
+
+  /**
+   * Returns the default service id.
+   */
+  protected Object getDefaultServiceId() {
+    return defaultServiceId;
+  }
+
   /**
    * Every service has its own key under which the service service id can be found in the request.
    * This method returns that key. 
