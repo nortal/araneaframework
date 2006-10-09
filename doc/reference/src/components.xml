@@ -442,7 +442,7 @@ myEvent.send(null, rootComponent);
       calls and should take care of the synchronization themselves. However
       application components are typically synchronized by the framework. More
       information on the matter will follow in <xref
-      linkend="programming-with-widgets" />.</para>
+      linkend="core-application-widgets" />.</para>
     </sect2>
   </sect1>
 
@@ -912,7 +912,7 @@ if (fileUploadExt.uploadSucceeded()) {
     <literal>service()</literal> method in the Servlet API,
     <literal>InputData</literal> being an abstraction over a request and
     <literal>OutputData</literal> being an abstraction over a response (see
-    <xref linkend="components-io-data" />). Thus a service will both process
+    <xref linkend="core-io-data" />). Thus a service will both process
     the request parameters and render itself during this method call. However
     unlike servlets services can be <emphasis>Composite</emphasis> and may be
     defined both statically (on application startup) or dynamically
@@ -1077,7 +1077,7 @@ if (fileUploadExt.uploadSucceeded()) {
     and a base class for application development
     <literal>org.araneaframework.core.BaseApplicationWidget</literal>. More on
     the last one can be found in <xref
-    linkend="programming-with-widgets" />.</para>
+    linkend="core-application-widgets" />.</para>
 
     <sect2 id="components-render">
       <title>ViewModel and Rendering</title>
