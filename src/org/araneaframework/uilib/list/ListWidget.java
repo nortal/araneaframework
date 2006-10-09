@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.list;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,6 +52,7 @@ import org.araneaframework.uilib.list.structure.filter.FilterHelper;
 import org.araneaframework.uilib.list.structure.order.FieldOrder;
 import org.araneaframework.uilib.list.util.MapUtil;
 import org.araneaframework.uilib.support.UiLibMessages;
+import org.araneaframework.uilib.util.Event;
 
 /**
  * This class is the base widget for lists. It interacts with the user and uses the data from
@@ -84,11 +86,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/** The multi-ordering form name. */
 	public static final String ORDER_FORM_NAME = "orderForm";
 
-	protected ListStructure listStructure = createListStructure();	// should not be accessible by public methods
+	protected ListStructure listStructure;							// should not be accessible by public methods
 	protected ListDataProvider dataProvider;
 
 	protected TypeHelper typeHelper;
-	protected FilterHelper filterHelper;	
+	protected FilterHelper filterHelper; 
 	protected SequenceHelper sequenceHelper;						// should not be accessible by public methods	
 
 	protected FormWidget form = new FormWidget();					// is transfomed into filter info Map and vice-versa
@@ -96,6 +98,21 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 	protected List itemRange;
 	protected Map requestIdToRow = new HashMap();
+	
+	private List initEvents = new ArrayList();
+
+	//*********************************************************************
+	//* CONSTRUCTOR
+	//*********************************************************************
+	
+	/**
+	 * Creates a new {@link ListWidget} instance. 
+	 */
+	public ListWidget() {
+		typeHelper = createTypeHelper();
+		filterHelper = createFilterHelper();
+		listStructure = createListStructure();
+	}
 
 	//*********************************************************************
 	//* PUBLIC METHODS
@@ -622,7 +639,23 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	//*******************************************************************
 	// WIDGET METHODS
 	//*******************************************************************  
-
+	
+	public void addInitEvent(Event event) {
+		if (isInitialized()) {
+			event.run();
+		} else {
+			initEvents.add(event);
+		}		
+	}
+	
+	protected void runIinitEvents() {
+		for (Iterator it = initEvents.iterator(); it.hasNext();) {
+			Runnable event = (Runnable) it.next();
+			event.run();
+		}
+		initEvents = null;
+	}
+	
 	/**
 	 * Initilizes the list, initializing contained filter form and the {@link ListDataProvider}and
 	 * getting the initial item range.
@@ -631,8 +664,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		log.debug("Initilizing ListWidget.");
 
 		this.sequenceHelper = createSequenceHelper();
-		this.typeHelper = createTypeHelper();
-		this.filterHelper = createFilterHelper();	
 
 		addEventListener("nextPage", new NextPageEventHandler());
 		addEventListener("previousPage", new PreviousPageEventHandler());
@@ -645,17 +676,24 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		addEventListener("showSlice", new ShowSliceEventHandler());
 		addEventListener("order", new OrderEventHandler());
 
-		initDataProvider();
+		if (getDataProvider() != null) {			
+			initDataProvider();
+		}
 		initFilterForm();
 		initSequenceHelper();
-		initListStructure();
+		
+		this.typeHelper.init(getEnvironment());
+		this.filterHelper.init(getEnvironment());
+		this.listStructure.init(getEnvironment());
+		
+		runIinitEvents();
 	}
 
 	protected SequenceHelper createSequenceHelper() {
 		return new SequenceHelper(getConfiguration());
 	}	
 	protected TypeHelper createTypeHelper() {
-		return new TypeHelper(getL10nCtx().getLocale());
+		return new TypeHelper();
 	}	
 	protected ListStructure createListStructure() {
 		return new ListStructure(getTypeHelper());
@@ -693,10 +731,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		this.dataProvider.init();
 	}
 
-	protected void initListStructure() throws Exception {
-		this.listStructure.init(getEnvironment());
-	}	
-
 	/**
 	 * Destoys the list and contained data provider and filter form.
 	 * @throws Exception 
@@ -705,6 +739,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		log.debug("Destroying ListWidget.");
 		this.dataProvider.destroy();
 		this.listStructure.destroy();
+		this.filterHelper.destroy();
+		this.typeHelper.destroy();
 	}
 
 	/**

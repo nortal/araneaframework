@@ -44,7 +44,7 @@ public class BeanListWidget extends ListWidget {
 	}
 	
 	protected TypeHelper createTypeHelper() {
-		return new TypeHelper(getL10nCtx().getLocale()) {			
+		return new TypeHelper() {			
 			public Class getFieldType(String fieldId) {
 				Class result = super.getFieldType(fieldId);
 				if (result == null) {

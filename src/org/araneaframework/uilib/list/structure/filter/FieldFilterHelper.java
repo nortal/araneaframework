@@ -73,15 +73,15 @@ public class FieldFilterHelper extends BaseFilterHelper {
 		return this;
 	}
 	
-	/**
-	 * Sets the current locale.
-	 * 
-	 * @param locale new locale.
-	 */
-	public FieldFilterHelper setLocale(Locale locale) {
-		super._setLocale(locale);
-		return this;
-	}
+//	/**
+//	 * Sets the current locale.
+//	 * 
+//	 * @param locale new locale.
+//	 */
+//	public FieldFilterHelper setLocale(Locale locale) {
+//		super._setLocale(locale);
+//		return this;
+//	}
 	
 	/**
 	 * Sets the current strickness behaivor.

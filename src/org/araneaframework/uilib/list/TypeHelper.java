@@ -20,7 +20,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 
 /**
@@ -41,12 +44,27 @@ public class TypeHelper implements Serializable {
 	// Map<String,Class> - field types
 	private Map types = new HashMap();
 	
-	public TypeHelper(Locale locale) {
+	private boolean initialized = false;
+	
+	public void init(Environment env) throws Exception {
 		if (locale == null) {
-			locale = Locale.getDefault();
+			LocalizationContext l10nCtx =
+				(LocalizationContext) env.getEntry(LocalizationContext.class);
+			if (l10nCtx != null) {
+				locale = l10nCtx.getLocale();
+			}
+			if (locale == null) {
+				locale = Locale.getDefault();
+			}
 		}
-		this.locale = locale;
+		initialized = true;
 	}
+	
+	private boolean isInitialized() {
+		return this.initialized;
+	}
+	
+	public void destroy() throws Exception {}	
 	
 	public boolean isIgnoreCase() {
 		return ignoreCase;
@@ -57,6 +75,9 @@ public class TypeHelper implements Serializable {
 	}
 
 	public Locale getLocale() {
+		if (!isInitialized()) {
+			throw new IllegalStateException("Must be initialized first");
+		}
 		return locale;
 	}
 

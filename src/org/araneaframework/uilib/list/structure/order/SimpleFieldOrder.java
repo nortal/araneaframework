@@ -24,19 +24,21 @@ import org.araneaframework.backend.list.memorybased.compexpr.VariableComparatorE
 import org.araneaframework.uilib.list.OrderInfo;
 
 
-public class SimpleColumnOrder implements FieldOrder {
+public class SimpleFieldOrder implements FieldOrder {
 
 	private static final long serialVersionUID = 1L;
 
 	private String fieldId;
 	private Comparator comparator;
 	
-	private Environment env;
-	
-	public SimpleColumnOrder(String fieldId, Comparator comparator) {
+	public SimpleFieldOrder(String fieldId, Comparator comparator) {
 		setFieldId(fieldId);
 		setComparator(comparator);
 	}
+	
+	public SimpleFieldOrder(String fieldId) {
+		this(fieldId, null);
+	}	
 	
 	public String getFieldId() {
 		return this.fieldId;
@@ -54,13 +56,9 @@ public class SimpleColumnOrder implements FieldOrder {
 		this.comparator = comparator;
 	}
 
-	public void init(Environment env) throws Exception {
-		this.env = env;		
-	}	
+	public void init(Environment env) throws Exception {}	
 	
-	public void destroy() throws Exception {
-		this.env = null;
-	}
+	public void destroy() throws Exception {}
 
 	public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {
 		if (this.fieldId == null) {

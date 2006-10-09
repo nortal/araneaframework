@@ -261,6 +261,7 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 							This applies to filters that use String comparison.
 						</listitem>
 					</varlistentry>
+					<!-- 
 					<varlistentry>
 						<term>Locale</term>
 						<listitem>
@@ -270,6 +271,7 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 							is used to retrieve the Locale instnace.
 						</listitem>
 					</varlistentry>
+					 -->
 					<varlistentry>
 						<term>Strict/non-strict</term>
 						<listitem>
