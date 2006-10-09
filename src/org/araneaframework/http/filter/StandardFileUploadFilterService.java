@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
@@ -142,7 +142,7 @@ public class StandardFileUploadFilterService extends BaseFilterService {
       if (items != null) {
         Iterator iter = items.iterator();
         while (iter.hasNext()) {
-          FileItem item = (FileItem) iter.next();
+          DiskFileItem item = (DiskFileItem) iter.next();
 
           if (!item.isFormField()) {
             fileItems.put(item.getFieldName(), item);
@@ -154,8 +154,9 @@ public class StandardFileUploadFilterService extends BaseFilterService {
               parameterValues = new ArrayList();    
               parameterLists.put(item.getFieldName(), parameterValues);
             }
-          
-            parameterValues.add(item.getString());
+
+            String encoding = item.getCharSet() != null ? item.getCharSet() : request.getCharacterEncoding();
+            parameterValues.add(encoding != null ? item.getString(encoding): item.getString());
           }
         }
       }

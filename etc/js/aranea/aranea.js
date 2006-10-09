@@ -186,7 +186,7 @@ function AraneaPage() {
 	  submitCallbacks[systemFormId].execute();
   }
 
-  this.submit = function(element) {
+  this.event = function(element) {
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;
 	  
@@ -205,7 +205,7 @@ function AraneaPage() {
       this.executeCallbacks(systemForm['id']);
     }
 
-    return (this.findSubmitter(element, systemForm)).submit(element);
+    return (this.findSubmitter(element, systemForm)).event(element);
   }
 
   /** 
@@ -223,7 +223,7 @@ function AraneaPage() {
   
   // another submit function, takes all params that are currently possible to use.
   // TODO: get rid of duplicated logic from: submit() and findSubmitter()
-  this.submit_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
+  this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;
 
@@ -235,9 +235,9 @@ function AraneaPage() {
     }
 
     if (eventUpdateRegions != null && eventUpdateRegions.length > 0) 
-      new DefaultAraneaAJAXSubmitter().submit_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
+      new DefaultAraneaAJAXSubmitter().event_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
     else
-      new DefaultAraneaSubmitter().submit_4(systemForm, eventId, eventTarget, eventParam);
+      new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   }
   
   this.debug = function(message) {
@@ -293,8 +293,7 @@ AraneaPage.init = function() {
 function DefaultAraneaSubmitter(form) {
   var systemForm = form;
 
-  this.submit = function(element) {
-    var systemFormId = systemForm['id'];
+  this.event = function(element) {
     var traverser = getActiveAraneaPage().getTraverser();
 
     // event information
@@ -302,11 +301,11 @@ function DefaultAraneaSubmitter(form) {
     var eventId = traverser.getEventId(element);
     var eventParam = traverser.getEventParam(element);
     
-    return this.submit_4(systemForm, eventId, widgetId, eventParam);
+    return this.event_4(systemForm, eventId, widgetId, eventParam);
   }
 }
 
-DefaultAraneaSubmitter.prototype.submit_4 = function(systemForm, eventId, widgetId, eventParam) {
+DefaultAraneaSubmitter.prototype.event_4 = function(systemForm, eventId, widgetId, eventParam) {
   systemForm.widgetEventPath.value = widgetId ? widgetId : "";
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
@@ -321,8 +320,7 @@ DefaultAraneaSubmitter.prototype.submit_4 = function(systemForm, eventId, widget
 function DefaultAraneaAJAXSubmitter(form) {
   var systemForm = form;
 
-  this.submit = function(element) {
-    var systemFormId = systemForm['id'];
+  this.event = function(element) {
     var traverser = getActiveAraneaPage().getTraverser();
 	
 	// event information
@@ -331,11 +329,11 @@ function DefaultAraneaAJAXSubmitter(form) {
     var eventParam = traverser.getEventParam(element);
 	var updateRegions = traverser.getEventUpdateRegions(element);
 
-	return this.submit_5(systemForm, eventId, widgetId, eventParam, updateRegions);
+	return this.event_5(systemForm, eventId, widgetId, eventParam, updateRegions);
   }
 }
 
-DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
+DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
   systemForm.widgetEventPath.value = widgetId ? widgetId : "";
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";

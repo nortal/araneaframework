@@ -233,7 +233,7 @@
     
     <!-- Paper type, no headers on blank pages, no double sided printing -->
     <xsl:param name="paper.type" select="'A4'"/>
-    <xsl:param name="double.sided">0</xsl:param>
+    <xsl:param name="double.sided">1</xsl:param>
     <xsl:param name="headers.on.blank.pages">0</xsl:param>
     <xsl:param name="footers.on.blank.pages">0</xsl:param>
 

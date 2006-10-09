@@ -26,7 +26,6 @@ import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 import org.araneaframework.http.core.BaseAraneaDispatcherServlet;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -34,11 +33,10 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -72,8 +70,8 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   public static final String ARANEA_START_CLASS_INIT_PARAMETER = "araneaApplicationStart";
   public static final String ARANEA_ROOT_INIT_PARAMETER = "araneaApplicationRoot";
   
+  protected BeanFactory webCtx;
   protected BeanFactory beanFactory;
-  protected BeanFactory rootApplicationCtx;
   
   public void init() throws ServletException {    
     //Reading init-param's
@@ -87,12 +85,16 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
     if (isSpringWebPresent) {
       //Getting the Spring loaded main web application context
-      beanFactory = rootApplicationCtx = WebApplicationContextUtils.getWebApplicationContext(getServletContext());                     
+      webCtx  = WebApplicationContextUtils.getWebApplicationContext(getServletContext());        
+      beanFactory = ((ConfigurableApplicationContext) webCtx).getBeanFactory();           
+    }
+    else {    
+      beanFactory = new DefaultListableBeanFactory();
     }
     
-    //Loading default Aranea configuration
-    beanFactory = new XmlBeanFactory(new ClassPathResource(ARANEA_DEFAULT_CONF_XML), beanFactory);
-
+//  Loading default Aranea configuration
+    XmlBeanDefinitionReader confReader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) beanFactory);
+    confReader.loadBeanDefinitions(new ClassPathResource(ARANEA_DEFAULT_CONF_XML));
     
     //Loading default properties
     PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
@@ -116,12 +118,8 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     //Loading custom configuration 
     try {
       if (getServletContext().getResource(araneaCustomConfXml) != null) {    
-        XmlBeanDefinitionReader localConfReader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) beanFactory);
-        localConfReader.loadBeanDefinitions(new ServletContextResource(getServletContext(), araneaCustomConfXml));
+        confReader.loadBeanDefinitions(new ServletContextResource(getServletContext(), araneaCustomConfXml));
       }
-    }
-    catch (BeansException e) {
-      throw new AraneaRuntimeException(e);
     }
     catch (MalformedURLException e) {
       throw new AraneaRuntimeException(e);
@@ -144,13 +142,6 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
       ((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(ARANEA_START, startBeanDef);
     }
     
-    if (isSpringWebPresent) {
-      //Making a resulting web application context    
-      beanFactory = new GenericWebApplicationContext((DefaultListableBeanFactory) beanFactory);
-      ((GenericWebApplicationContext) beanFactory).setParent((ApplicationContext) rootApplicationCtx);
-      ((GenericWebApplicationContext) beanFactory).refresh();
-    }
-    
     super.init();        
   }  
   
@@ -170,8 +161,8 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     Map result = new HashMap();
     result.put(BeanFactory.class, beanFactory);   
     if (isSpringWebPresent) {
-      result.put(ApplicationContext.class, beanFactory);
-      result.put(WebApplicationContext.class, beanFactory);
+      result.put(ApplicationContext.class, webCtx);
+      result.put(WebApplicationContext.class, webCtx);
     }
     return result;
   }

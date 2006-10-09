@@ -411,8 +411,8 @@
       <sect2 id="uielementTag">
        <title><![CDATA[<ui:element>]]></title>
        <para>
-        Defines an HTML element, can be used with <literal>&lt;ui:attribute&gt;</literal> and <literal>&lt;ui:elementContent&gt;</literal>
-        to write HTML.
+        Defines HTML node, can be used together with <literal>&lt;ui:attribute&gt;</literal> and <literal>&lt;ui:elementContent&gt;</literal>
+        to define a full HTML node.
        </para>
       
          <para>
@@ -514,7 +514,10 @@
        <sect3 id="keyboardHandler_examples">
         <title>Examples</title>
 <programlisting role="xml"><![CDATA[<!-- Globally-scoped F2 listener -->
-<ui:keyboardHandler scope="" key="f2" handler="function() { alert('You pressed F2. Do it again if you dare!');}"/>]]></programlisting>
+<ui:keyboardHandler 
+  scope="" 
+  key="f2" 
+  handler="function() { alert('You pressed F2. Do it again if you dare!');}"/>]]></programlisting>
       </sect3>
       </sect2>
       
@@ -1622,7 +1625,7 @@
     </para>
     
     <para>
-       Layout tags are tags extending <literal>UiLayoutBaseTag</literal>. Layout tags allow
+       Layout tags are tags extending <literal>BaseLayoutTag</literal>. Layout tags allow
        placing of rows inside them (and rows allow using of cells inside). Standard layout
        tag (&lt;ui:layout&gt;) outputs HTML <emphasis>table</emphasis>, and standard
        row and cell tags output HTML <emphasis>tr</emphasis> and <emphasis>td</emphasis> tags,
@@ -1637,8 +1640,8 @@
     <title>Customizing Tag Styles</title>
 
       <para>
-         Presentation tags (tags extending <literal>UiPresentationTag</literal> or implementing 
-         <literal>UiStyledTagInterface</literal>)
+         Presentation tags (tags extending <literal>PresentationTag</literal> or implementing 
+         <literal>StyledTagInterface</literal>)
          have attribute <literal>styleClass</literal> that specifies the CSS style class used for
          rendering the tag. When <literal>styleClass</literal> attribute for tag is not specified, 
          some default style bundled with Aranea is used; or in some cases no HTML 
@@ -1653,11 +1656,10 @@
 
       <para>
         Some tags may have more than one attributes for defining tag style. For example 
-        <literal>&lt;ui:layout&gt;</literal> tag and other layout tags that extend <literal>UiStdLayoutBaseTag</literal>
-        or <literal>UiLayoutBaseTag</literal> have attributes <literal>rowClass</literal> and <literal>cellClass</literal>
+        <literal>&lt;ui:layout&gt;</literal> tag and other layout tags that extend <literal>LayoutHtmlTag</literal>
+        or <literal>BaseLayoutTag</literal> have attributes <literal>rowClasses</literal> and <literal>cellClasses</literal>
         that specify the default styles for <literal>&lt;ui:row&gt;</literal> and <literal>&lt;ui:cell&gt;</literal> tags
         used within the layout. These can be overriden with row and cell own <literal>styleClass</literal> attribute.
-        In general, goal has been to construct the tags in such way that applying only one CSS style to them would suffice.
       </para>
 
       <para>
@@ -1682,9 +1684,9 @@
         </para>
         
         <para>
-            There is also a <literal>renderMode</literal> attribute; in current tag libarary there are very few tags
+            There is also a <literal>renderMode</literal> attribute; in current tag library there are very few tags
             supporting this attribute. One of those is
-            <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>)&mdash;its renderMode
+            <literal>ButtonHtmlTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>)&mdash;its renderMode
             should have value <literal>"input"</literal> or <literal>"button"</literal> (default) and it specifies whether
             the button should be rendered in HTML with <literal>&lt;input type=button ... &gt;</literal> or 
             <literal>&lt;button ... &gt;</literal> tag. In the future, number of JSP tags having renderMode attribute will
@@ -1838,7 +1840,7 @@ JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
 JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
 
 // both will output something like this:
-// arn-evntId="hello" arn-trgtwdgt="contextWidgetId" arn-evntPar="name" onclick="return _ap.submit(this);"]]></programlisting>
+// arn-evntId="hello" arn-trgtwdgt="contextWidgetId" arn-evntPar="name" onclick="return _ap.event(this);"]]></programlisting>
     </para>
     
     </sect2>

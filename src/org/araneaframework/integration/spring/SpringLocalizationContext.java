@@ -8,7 +8,4 @@ import org.springframework.context.MessageSource;
  */
 public interface SpringLocalizationContext extends LocalizationContext {
 	public MessageSource getMessageSource();
-	
-	String getMessage(String code, Object[] args, String defaultMessage);
-	String getMessage(String code, Object[] args);
 }
