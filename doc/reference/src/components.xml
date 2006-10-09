@@ -355,10 +355,10 @@ msgContext.showInfoMessage("Hello world!");
       method should be to send the message to all component children, passing
       the <literal>send()</literal> method the identifier of the child and the
       child itself. It is up to the message what to do with the child further,
-      but typically some form of <emphasis>double-dispatch</emphasis> takes
-      place and message propagates itself further.</para>
-
-       TODO: explain double-dispatch 
+      but typically <literal>Message</literal> just calls the
+      <literal>propagate()</literal> method of the child passing itself as the
+      argument after possibly doing some custom processing (the
+      <emphasis>double-dispatch</emphasis> OO idiom).</para>
 
       <para>A standard <literal>Message</literal> implementation that uses
       double-dispatch to visit all the components in hierarchy is
@@ -1157,7 +1157,7 @@ if (fileUploadExt.uploadSucceeded()) {
     <title>Application Widgets</title>
 
     <para>This section explains how to program applications using widgets as
-    the main abstraction. </para>
+    the main abstraction.</para>
 
     <para>A typical application widget class will extend
     <literal>org.araneaframework.uilib.core.BaseUIWidget</literal>. This
@@ -1361,14 +1361,14 @@ String globalSubmittedParameter =
 ...</programlisting> <literal>getInputData()</literal> is a
       <literal>BaseApplicationWidget</literal> method that returns the input
       data for the current request (one can also use the
-      <literal>input</literal> parameter given to event listener directly).
-      </para>
+      <literal>input</literal> parameter given to event listener
+      directly).</para>
 
       <para><literal>org.araneaframework.OutputData</literal> is accessible
       through the <literal>getOutputData()</literal> method of
       <literal>BaseWidget</literal> or directly as the
       <literal>output</literal> parameter passed to
-      <literal>render()</literal> method. </para>
+      <literal>render()</literal> method.</para>
 
       <para>To find out more about <literal>InputData</literal> and
       <literal>OutputData</literal> see <xref linkend="core-io-data" /></para>
@@ -1543,7 +1543,7 @@ setViewSelector("myWidget/form");
 
                 <entry>Shows a permanent message <literal>message</literal> of
                 type <literal>type</literal> to the user. The message will be
-                shown until hidden explicitly. </entry>
+                shown until hidden explicitly.</entry>
               </row>
 
               <row>
