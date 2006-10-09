@@ -290,7 +290,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 	// * INNER CLASSES
 	// *********************************************************************
 
-	class BeanOrder implements Comparator, Serializable {
+	protected class BeanOrder implements Comparator, Serializable {
 		
 		private static final long serialVersionUID = 1L;
 
@@ -317,7 +317,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 		}
 	}
 
-	class BeanFilter implements Serializable {
+	protected class BeanFilter implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
