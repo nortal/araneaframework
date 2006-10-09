@@ -644,14 +644,18 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		if (isInitialized()) {
 			event.run();
 		} else {
+			if (initEvents == null)
+				initEvents = new ArrayList();
 			initEvents.add(event);
 		}		
 	}
 	
-	protected void runIinitEvents() {
-		for (Iterator it = initEvents.iterator(); it.hasNext();) {
-			Runnable event = (Runnable) it.next();
-			event.run();
+	protected void runInitEvents() {
+		if (initEvents != null) {
+			for (Iterator it = initEvents.iterator(); it.hasNext();) {
+				Runnable event = (Runnable) it.next();
+				event.run();
+			}
 		}
 		initEvents = null;
 	}
@@ -686,7 +690,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		this.filterHelper.init(getEnvironment());
 		this.listStructure.init(getEnvironment());
 		
-		runIinitEvents();
+		runInitEvents();
 	}
 
 	protected SequenceHelper createSequenceHelper() {

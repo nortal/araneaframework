@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.commons.lang.Validate;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
@@ -42,12 +41,14 @@ public class ListStructure extends BaseListStructure {
 	private boolean orderableByDefault = false;
 	
 	private boolean initialized = false;
-	private List initEvents = new ArrayList();
+	private List initEvents = null;
 	
 	public void init(Environment env) throws Exception {
-		for (Iterator it = initEvents.iterator(); it.hasNext();) {
-			Runnable event = (Runnable) it.next();
-			event.run();
+		if (initEvents != null) {
+			for (Iterator it = initEvents.iterator(); it.hasNext();) {
+				Runnable event = (Runnable) it.next();
+				event.run();
+			}
 		}
 		initialized = true;
 		initEvents = null;
@@ -64,6 +65,8 @@ public class ListStructure extends BaseListStructure {
 		if (isInitialized()) {
 			event.run();
 		} else {
+			if (initEvents == null)
+				initEvents = new ArrayList();
 			initEvents.add(event);
 		}		
 	}
