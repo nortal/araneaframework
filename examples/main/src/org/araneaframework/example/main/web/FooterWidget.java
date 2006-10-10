@@ -42,7 +42,7 @@ public class FooterWidget extends BaseUIWidget {
     /* widget source */
     String flowClassName = menuWidget.getFlowClassName();
     if (flowClassName != null) {
-      String path = StringUtils.replace(StringUtils.replace(flowClassName, "\\.class", ""), "\\.", "/");
+      String path = StringUtils.replace(StringUtils.replace(flowClassName, ".class", ""), ".", "/");
       while (path.lastIndexOf('$') != -1) {
         int index = path.lastIndexOf('$');
         path = path.substring(0, index);
