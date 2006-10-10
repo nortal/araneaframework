@@ -23,14 +23,14 @@
     <property name="maximumCachedSize" value="1048576"/>
   </bean>
   
-  <bean id="araneaCustomSessionFilters" singleton="false"
-    class="org.araneaframework.framework.filter.StandardFilterChainService">
-    <property name="filterChain">     
-      <list>
-        <ref bean="araneaSerializingAudit"/>
-      </list>
-    </property>
-  </bean>
+<bean id="araneaCustomSessionFilters" singleton="false"
+  class="org.araneaframework.framework.filter.StandardFilterChainService">
+  <property name="filterChain">     
+    <list>
+      <ref bean="araneaSerializingAudit"/>
+    </list>
+  </property>
+</bean>
 
   <bean id="araneaCustomWidgetFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardFilterChainWidget">

@@ -15,7 +15,7 @@
     <property name="filterChain">     
       <list>
         <ref bean="araneaCriticalErrorHandler"/>
-        <ref bean="araneaMainStatisticFilter"/>
+        <ref bean="araneaStatisticFilter"/>
         <ref bean="araneaRequestEncodingFilter"/>
         <ref bean="araneaFileUploadFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
@@ -76,18 +76,6 @@
     </property>
   </bean>
   
-	<bean class="org.araneaframework.http.filter.StandardAjaxFilterService" 
-    id="araneaAjaxFilterService" singleton="false">
-    <property name="existingRegions">
-      <list>
-        <value>messages</value>
-        <value>popupRegistrationRegion</value>
-        <value>focus</value>
-        <value>scrolling</value>
-      </list>
-    </property>
-  </bean>
-  
   <!-- Thread scope -->    
   
   <bean id="araneaThreadFilters" singleton="false"
@@ -95,22 +83,17 @@
     <property name="childService" ref="araneaWidgetAdapter"/>
     <property name="filterChain">
       <list>
-        <ref bean="araneaThreadCloningService"/>
+        <ref bean="araneaThreadCloningFilter"/>
         <ref bean="araneaSynchronizingFilter"/>
         <ref bean="araneaMountPointFilter"/>
         <ref bean="araneaContinuationFilter"/> 
-        <ref bean="araneaAjaxFilterService"/>
-        <ref bean="responseHeaderFilter"/>
+        <ref bean="araneaUpdateRegionFilter"/>
+        <ref bean="araneaResponseHeaderFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
           <property name="beanId" value="araneaCustomThreadFilters"/>
         </bean>
       </list>
     </property>
-  </bean>
-  
-  <bean class="org.araneaframework.http.filter.StandardThreadCloningFilterService" 
-    id="araneaThreadCloningService" 
-    singleton="false">
   </bean>
 
   <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService"
@@ -118,12 +101,7 @@
     singleton="false">
     <property name="childWidget" ref="araneaWidgetFilters"/>
   </bean>
-  
-  <bean class="org.araneaframework.http.filter.StandardClientStateFilterWidget"
-  	id="clientStatePreserver"
-  	singleton="false">
-  	<property name="compress" value="false"/>
-  </bean>
+
   
    <!-- Framework widgets -->
    
@@ -134,9 +112,8 @@
       <list>      
         <ref bean="araneaRedirectingFilter"/>        
         <ref bean="araneaTransactionFilter"/>
-        <!-- ref bean="clientStatePreserver" / -->
         <ref bean="araneaMessagingFilter"/>
-        <ref bean="araneaContexts"/>
+        <ref bean="araneaEnvContextFilter"/>
         <ref bean="araneaPopupFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterWidget" singleton="false">
           <property name="beanId" value="araneaCustomWidgetFilters"/>
@@ -181,16 +158,16 @@
   </bean>
   
   <bean class="org.araneaframework.http.filter.StandardHttpResponseFilterService" 
-    id="responseHeaderFilter" singleton="false">
+    id="araneaResponseHeaderFilter" singleton="false">
   </bean>
   
   <bean class="org.araneaframework.http.filter.StandardFileImportFilterService" 
-    id="araneaReadFile" singleton="false">
+    id="araneaReadFileFilter" singleton="false">
   </bean>
   
   <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"
-        id="araneaMainStatisticFilter" singleton="false">
-    <property name="namespace" value="MAIN"/>
+        id="araneaStatisticFilter" singleton="false">
+    <property name="message" value="Total request time: "/>
   </bean>
   
     <bean class="org.araneaframework.framework.filter.StandardSerializingAuditFilterService" 
@@ -242,7 +219,7 @@
   </bean>
 
   <bean class="org.araneaframework.framework.filter.StandardContextMapFilterWidget" 
-    id="araneaContexts" singleton="false">
+    id="araneaEnvContextFilter" singleton="false">
     <property name="contexts">    
       <map>
         <entry key="org.araneaframework.uilib.ConfigurationContext.class" value-ref="araneaConfiguration"/>
@@ -252,6 +229,28 @@
   
   <bean class="org.araneaframework.http.filter.StandardWindowScrollPositionFilterWidget" singleton="false"
     id="araneaScrollingFilter"/>
+    
+  <bean class="org.araneaframework.http.filter.StandardClientStateFilterWidget" 
+    id="araneaClientStateFilter" singleton="false">
+  	<property name="compress" value="false"/>
+  </bean>
+  
+  <bean class="org.araneaframework.http.filter.StandardThreadCloningFilterService" 
+    id="araneaThreadCloningFilter" 
+    singleton="false">
+  </bean>
+  
+  	<bean class="org.araneaframework.http.filter.StandardAjaxFilterService" 
+    id="araneaUpdateRegionFilter" singleton="false">
+    <property name="existingRegions">
+      <list>
+        <value>messages</value>
+        <value>popupRegistrationRegion</value>
+        <value>focus</value>
+        <value>scrolling</value>
+      </list>
+    </property>
+  </bean>  
   
   <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
 </beans>

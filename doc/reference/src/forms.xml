@@ -96,7 +96,7 @@ protected void init() {
             <term>Create and register the form</term>
 
             <listitem>
-              The line 
+               The line 
 
               <literal>new BeanFormWidget(Person.class)</literal>
 
@@ -112,20 +112,20 @@ protected void init() {
 
               <literal>addWidget("personForm", personForm)</literal>
 
-               initializes and registers the form allowing it to function.
+               initializes and registers the form allowing it to function. 
             </listitem>
           </varlistentry>
 
           <varlistentry>
-            <term>Add form fieds</term>
+            <term>Add form fields</term>
 
             <listitem>
-              The line 
+               The line 
 
               <literal>personForm.addBeanElement("name", "#Name", new
               TextControl(new Long(3), null), true)</literal>
 
-               adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (labels in Aranea are localizable by default and "#" escapes a non-localizable string), a text box control with a minimal length of 3 and that is mandatory.
+               adds an element associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name" (labels in Aranea are localizable by default and "#" escapes a non-localizable string), a text box control with a minimal length of 3 and that is mandatory. 
             </listitem>
           </varlistentry>
 
@@ -133,11 +133,11 @@ protected void init() {
             <term>Write JavaBean</term>
 
             <listitem>
-              The line 
+               The line 
 
               <literal>personForm.writeBean(person)</literal>
 
-               writes the data in the JavaBean properties to the corresponding form fields.
+               writes the data in the JavaBean properties to the corresponding form fields. 
             </listitem>
           </varlistentry>
         </variablelist></para>
@@ -159,11 +159,11 @@ private void handleEventSave() {
       <para>This code will execute if an event "save" comes and will do the
       following: <itemizedlist spacing="compact">
           <listitem>
-            Convert the request data to the JavaBean types and validate it according to the rules specified in controls (e.g. minimal length). Wrapping event body in 
+             Convert the request data to the JavaBean types and validate it according to the rules specified in controls (e.g. minimal length). Wrapping event body in 
 
             <literal>if (personForm.convertAndValidate()) {...}</literal>
 
-             is a generic idiom in Aranea as we believe that explicity leads to flexibility. By default the values will be just read from request without any parsing, conversion or validation and the latter will be done only after the 
+             is a generic idiom in Aranea as we believe that explicitly leads to flexibility. By default the values will be just read from request without any parsing, conversion or validation and the latter will be done only after the 
 
             <literal>convertAndValidate()</literal>
 
@@ -171,15 +171,15 @@ private void handleEventSave() {
 
             <literal>convertAndValidate()</literal>
 
-             method.
+             method. 
           </listitem>
 
           <listitem>
-            Read the 
+             Read the 
 
             <literal>person</literal>
 
-             object from the form, filling it in with the user data. Note that the same object that was originally read from the business layer is used here and forms take care of merging the new data and preserving the old.
+             object from the form, filling it in with the user data. Note that the same object that was originally read from the business layer is used here and forms take care of merging the new data and preserving the old. 
           </listitem>
         </itemizedlist></para>
 
@@ -457,7 +457,7 @@ myForm.getElement("registration").setConstraint(new AfterTodayConstraint(false))
       <para>The
       <literal>org.araneaframework.uilib.form.constraint.AfterTodayConstraint</literal>
       makes sure that the date is today or later, with the boolean parameter
-      indicating wheter today is allowed. The constraint will validate if the
+      indicating whether today is allowed. The constraint will validate if the
       form or the element in question is validated (e.g.
       <literal>convertAndValidate()</literal> is called) and will show an
       error message to the user, if the constraint was not satisfied. The
@@ -596,7 +596,7 @@ addWidget("searchForm", searchForm);
       nevertheless follow some pattern, whereas empty input should still be
       allowed).</para>
 
-      <para>The other constraint os called
+      <para>The other constraint is called
       <literal>GroupedConstraint</literal>. It is useful in cases when
       different constraints should be activated depending on the particular
       state of the component (a typical use case is that some groups of fields
@@ -897,7 +897,7 @@ private void handleEventSave() {
               <entry>Id of form element to be rendered. If not specified, it
               is usually taken from current form element context (<xref
                   linkend="uiFormElementTag">
-                  &lt;ui:formElement&gt;
+                   &lt;ui:formElement&gt; 
                 </xref>). For few tags, it is required.</entry>
             </row>
 
@@ -1496,8 +1496,7 @@ private void handleEventSave() {
       the surrounding form. The event is given as a name of the javascript
       function to be invoked on the element. For example, if you specify the
       element as "someButton", and event as "click", then when the required
-      keyboard event occures, the following javascript will be
-      executed:</para>
+      keyboard event occurs, the following javascript will be executed:</para>
 
       <programlisting role="javascript">var el = document.getElementById("&lt;form-id&gt;.someButton");
 el.click();</programlisting>
