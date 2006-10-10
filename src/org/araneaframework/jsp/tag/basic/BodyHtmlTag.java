@@ -48,6 +48,12 @@ public class BodyHtmlTag extends PresentationTag {
   protected String onload = ONLOAD;
   protected String onunload = ONUNLOAD;
   
+  /** Another bunch of HTML attributes. */
+  protected String id;
+  protected String title;
+  protected String lang;
+  protected String dir;
+
   /** Scripts registered by nested tags. */
   protected StringBuffer afterBodyEndScripts = null;
   
@@ -63,6 +69,12 @@ public class BodyHtmlTag extends PresentationTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "onload", onload);
     JspUtil.writeAttribute(out, "onunload", onunload);
+    
+    JspUtil.writeAttribute(out, "id", id);
+    JspUtil.writeAttribute(out, "title", title);
+    JspUtil.writeAttribute(out, "lang", lang);
+    JspUtil.writeAttribute(out, "dir", dir);
+
     JspUtil.writeCloseStartTag_SS(out);
     
     writeAfterBodyStartScripts(out);
@@ -208,5 +220,45 @@ public class BodyHtmlTag extends PresentationTag {
    */
   public void setOnunload(String onunload) throws JspException {
     this.onunload = (String) evaluate("onunload", onunload, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   * type = "java.lang.String"
+   * required = "false"
+   * description = "Text direction."
+   */
+  public void setDir(String dir) {
+    this.dir = dir;
+  }
+  
+  /**
+   * @jsp.attribute
+   * type = "java.lang.String"
+   * required = "false"
+   * description = "HTML body id"
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  /**
+   * @jsp.attribute
+   * type = "java.lang.String"
+   * required = "false"
+   * description = "Language information."
+   */
+  public void setLang(String lang) {
+    this.lang = lang;
+  }
+
+  /**
+   * @jsp.attribute
+   * type = "java.lang.String"
+   * required = "false"
+   * description = "Title."
+   */
+  public void setTitle(String title) {
+    this.title = title;
   }
 }

@@ -37,8 +37,7 @@ import javax.servlet.jsp.el.VariableResolver;
 import javax.servlet.jsp.tagext.BodyContent;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
 import org.apache.commons.el.VariableResolverImpl;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.araneaframework.http.core.Constants;
 
 /**
@@ -54,7 +53,7 @@ import org.araneaframework.http.core.Constants;
 public class PageContextImpl extends PageContext implements VariableResolver {
 
   // Logger
-  private static Log log = LogFactory.getLog(PageContextImpl.class);
+  private static final Logger log = Logger.getLogger(PageContextImpl.class);
 
   // The expression evaluator, for evaluating EL expressions.
   private static ExpressionEvaluatorImpl elExprEval = new ExpressionEvaluatorImpl(false);

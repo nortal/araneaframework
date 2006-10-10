@@ -76,17 +76,22 @@
 	<!-- Build the code -->
 	<target name="build" depends="xdoclet.hibernate,compile" description="Build the code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
-			<fileset dir="../lib">
+			<fileset dir="../lib/">
 				<include name="**/*.jar" />
 				<exclude name="jetty/*jar" />
 			</fileset>
-			<fileset dir="../../lib">
+			<fileset dir="../../lib/required">
+				<include name="**/*.jar" />
+				<exclude name="j2ee.jar" />
+			</fileset>
+			<fileset dir="../../lib/optional">
 				<include name="**/*.jar" />
 				<exclude name="j2ee.jar" />
 			</fileset>
 			<fileset file="../../dist/aranea.jar"/>
 			<fileset file="../../examples/common/dist/aranea-examples-common.jar"/>					
 		</copy>
+
 		<copy todir="war/WEB-INF/classes">
 			<fileset dir=".." includes="log4j.xml"/>
 		</copy>
