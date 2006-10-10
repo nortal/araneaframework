@@ -3,6 +3,7 @@ package org.araneaframework.http.filter;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.regexp.RE;
 import org.araneaframework.InputData;
@@ -67,7 +68,7 @@ public class StandardUpdateRegionFilterService extends BaseFilterService {
                   httpOutput.getOutputStream().write(responseIdElement.getBytes(characterEncoding));
                 }
 
-				String[] regions = commaSeparatedRegions.split(",");
+				String[] regions = StringUtils.split(commaSeparatedRegions, ',');
 				// adding the regions that may appear in the response but
 				// were not present in the request
 				if (existingRegions != null) {

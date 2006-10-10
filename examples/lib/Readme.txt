@@ -4,31 +4,25 @@ respective license; check the respective project distribution/website before usi
 of them in your own applications.
 
 *****************************************************************************
-* ./jakarta-commons/commons-*.jar
-- Jakarta Project Commons (http://jakarta.apache.org/commons/)
-- Logging is required for running sample applications.
-*****************************************************************************
-
-*****************************************************************************
 * ./xerces/*.jar
 - Apache XML project Xerces Java Parser (http://xerces.apache.org/xerces-j/)
 - Required for running the sample applications.
 *****************************************************************************
 
 *****************************************************************************
-* ./antlr/antlr-2.7.5H3.jar
+* ./antlr-2.7.5H3.jar
 - ANTRL (http://www.antlr.org/)
 - Required for running the sample applications.
 *****************************************************************************
 
 *****************************************************************************
-* ./hibernate/hibernate3.jar
+* ./hibernate3.jar
 - O/R mapping service for Java (http://www.hibernate.org/)
 - Required for running the sample application.
 *****************************************************************************
 
 *****************************************************************************
-* ./hsqldb/hsqldb.jar
+* ./hsqldb.jar
 - HSQL database engine (http://www.hsqldb.org/)
 - Required for running the sample applications.
 *****************************************************************************
@@ -40,7 +34,7 @@ of them in your own applications.
 *****************************************************************************
 
 *****************************************************************************
-* ./cglib/cglib-nodep-2.1_3
+* ./cglib-nodep-2.1_3
 - CGLIB - code generation library (http://cglib.sourceforge.net/)
 - Required by Spring
 *****************************************************************************
@@ -52,7 +46,7 @@ of them in your own applications.
 *****************************************************************************
 
 *****************************************************************************
-* ./jhighlight/jhighlight-1.0.jar
+* ./jhighlight-1.0.jar
 - source highlighting for various programming languages
 - Required for running main example.
 - https://jhighlight.dev.java.net/

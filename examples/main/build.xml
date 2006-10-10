@@ -146,7 +146,7 @@
 		
 		<java classname="org.hsqldb.Server" dir="data" fork="yes">
 			<classpath>
-				<pathelement location="../lib/hsqldb/hsqldb.jar" />
+				<pathelement location="../lib/hsqldb.jar" />
 			</classpath>
 			<arg line="-database.0 'templateapp' -dbname.0 'templateapp'" /> 
 		</java>
@@ -156,7 +156,7 @@
 	<target name="run-database-manager" description="Run database manager">
 		<java classname="org.hsqldb.util.DatabaseManagerSwing" dir="data" fork="yes">
 			<classpath>
-				<pathelement location="../lib/hsqldb/hsqldb.jar" />
+				<pathelement location="../lib/hsqldb.jar" />
 			</classpath>
       <arg line="--user sa --url jdbc:hsqldb:hsql://localhost/templateapp" />
 		</java>				

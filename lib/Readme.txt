@@ -1,7 +1,7 @@
 The following libraries are included in the Aranea Framework distribution because they 
-are required for building the framework or running the examples. Note that each of 
-these libraries is subject to the respective license; check the respective project 
-distribution/website before using any of them in your own applications.
+are required for building/testing/running the framework or running the examples. Note 
+that each of these libraries is subject to the respective license; check the respective 
+project distribution/website before using any of them in your own applications.
 
 buildtime/ - libraries that are only required at build-time
 optional/ - libraries that are needed at runtime only for certain functionality
@@ -10,7 +10,8 @@ required/ - libraries that are required at runtime
 *****************************************************************************
 * ./optional/asm/asm-2.2.1.jar;./optional/asm/asm-attrs.jar
 - ASM (http://asm.objectweb.org/)
-- Required for running the sample application and for generating unittest code coverage.
+- Required for running the sample application and for generating unittest code 
+  coverage.
 *****************************************************************************
 
 *****************************************************************************
@@ -28,7 +29,7 @@ required/ - libraries that are required at runtime
 *****************************************************************************
 * ./optional/xstream-1.1.2.jar
 - Xstream (http://xstream.codehaus.org/)
-- Required by the framework's serialization filter.
+- Required by the framework's serialization testing filter.
 *****************************************************************************
 
 *****************************************************************************
@@ -42,9 +43,12 @@ required/ - libraries that are required at runtime
 - Jakarta Project Commons (http://jakarta.apache.org/commons/)
 - ./required/commons-collections-3.1.jar is required by the framework core.
 - ./required/commons-lang-2.1.jar is required by the framework.
-- ./optional/commons-logging is required for running sample application in Jetty
-- ./optional/commons-fileupload-1.1.1 is required by the framework's file upload filter.
+- ./required/commons-validator-1.3.0.jar is required by the uilib.
+- ./optional/commons-fileupload-1.1.1.jar is required by the framework's file 
+   upload filter.
 - ./optional/commons-io-1.2 is required by commons-fileupload
+- ./optional/commons-logging.jar is required for building the framework with
+  java 1.3 and running the sample applications on Jetty.
 *****************************************************************************
 
 *****************************************************************************

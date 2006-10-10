@@ -37,6 +37,7 @@ import javax.servlet.jsp.el.VariableResolver;
 import javax.servlet.jsp.tagext.BodyContent;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
 import org.apache.commons.el.VariableResolverImpl;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.araneaframework.http.core.Constants;
 
@@ -433,8 +434,7 @@ public class PageContextImpl extends PageContext implements VariableResolver {
     }
     catch (IOException ex) {
       IllegalStateException ise = new IllegalStateException("jsp.error.attempt_to_clear_flushed_buffer");
-      ise.initCause(ex);
-      throw ise;
+      throw new NestableRuntimeException("jsp.error.attempt_to_clear_flushed_buffer", ise);
     }
 
     final String path = getAbsolutePathRelativeToContext(relativeUrlPath);

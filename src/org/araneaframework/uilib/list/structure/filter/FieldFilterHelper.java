@@ -15,8 +15,6 @@
 **/
 package org.araneaframework.uilib.list.structure.filter;
 
-import java.util.Locale;
-
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;

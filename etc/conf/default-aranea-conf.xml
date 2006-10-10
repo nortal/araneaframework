@@ -21,7 +21,7 @@
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
           <property name="beanId" value="araneaCustomApplicationFilters"/>
         </bean>
-        <ref bean="araneaReadFile"/>   
+        <ref bean="araneaReadFileFilter"/>   
         <ref bean="araneaMountingFilter"/>            
       </list>
     </property>

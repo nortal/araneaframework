@@ -20,8 +20,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import org.apache.commons.validator.GenericValidator;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -105,15 +104,6 @@ public class ValidationUtil {
 	 * @return whether the string is a valid email.
 	 */
 	public static boolean isEmail(String emailString) {
-		try {
-			new InternetAddress(emailString);
-			
-			if (emailString.indexOf('@') == -1) return false;
-		}
-		catch (AddressException e) {
-			return false;
-		}
-		
-		return true;
+		return GenericValidator.isEmail(emailString);
 	}  
 }

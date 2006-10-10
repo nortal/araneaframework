@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.collections.EnumerationUtils;
 import org.araneaframework.core.Assert;
 
 /**
@@ -111,7 +112,7 @@ public abstract class ClassLoaderUtil {
 		for (Iterator iter = loaders.iterator(); iter.hasNext();) {
 			ClassLoader loader = (ClassLoader) iter.next();
 			Enumeration resources = loader.getResources(name);
-			list.addAll(Collections.list(resources));
+			list.addAll(EnumerationUtils.toList(resources));
 		}
 		return Collections.enumeration(loaders);
 	}
