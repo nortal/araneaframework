@@ -74,7 +74,10 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
     simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
     simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
+    // require the number input field to be filled. It could have been achieved already
+    // on formelement creation by setting mandatory attribute to true
     simpleForm.getElement("number").setConstraint(new NotEmptyConstraint());
+    // sets initial value of form element
     simpleForm.setValueByFullName("dateTime", new Date());
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
@@ -98,7 +101,9 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     // (error messages are added automatically to the messagecontext 
     // though, user will not be without feedback)
     if (simpleForm.convertAndValidate()) {
+    	// long way to check form element value ...
     	getMessageCtx().showInfoMessage("Checkbox value is: " + ((FormElement) simpleForm.getElement("checkbox1")).getData().getValue());
+    	// and a shorter one
     	getMessageCtx().showInfoMessage("Textbox value is: " + simpleForm.getValueByFullName("textbox1"));
     	getMessageCtx().showInfoMessage("DateTime value is: " + simpleForm.getValueByFullName("dateTime"));
     	getMessageCtx().showInfoMessage("Time value is: " + simpleForm.getValueByFullName("time"));
