@@ -3,12 +3,12 @@ are required for building/testing/running the framework or running the examples.
 that each of these libraries is subject to the respective license; check the respective 
 project distribution/website before using any of them in your own applications.
 
-buildtime/ - libraries that are only required at build-time
+buildtime/ - libraries that are only required to build Aranea or run unit tests
 optional/ - libraries that are needed at runtime only for certain functionality
 required/ - libraries that are required at runtime
 
 *****************************************************************************
-* ./optional/asm/asm-2.2.1.jar;./optional/asm/asm-attrs.jar
+* ./buildtime/asm/asm-2.2.1.jar;./buildtime/asm/asm-attrs.jar
 - ASM (http://asm.objectweb.org/)
 - Required for running the sample application and for generating unittest code 
   coverage.
