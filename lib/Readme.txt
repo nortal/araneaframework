@@ -47,8 +47,8 @@ required/ - libraries that are required at runtime
 - ./optional/commons-fileupload-1.1.1.jar is required by the framework's file 
    upload filter.
 - ./optional/commons-io-1.2 is required by commons-fileupload
-- ./optional/commons-logging.jar is required for building the framework with
-  java 1.3 and running the sample applications on Jetty.
+- ./buildtime/commons-logging.jar is required for building the framework with
+  java 1.3 and actually running the sample applications on Jetty.
 *****************************************************************************
 
 *****************************************************************************
