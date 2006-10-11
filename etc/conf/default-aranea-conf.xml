@@ -240,7 +240,7 @@
     singleton="false">
   </bean>
   
-  	<bean class="org.araneaframework.http.filter.StandardAjaxFilterService" 
+  	<bean class="org.araneaframework.http.filter.StandardUpdateRegionFilterService" 
     id="araneaUpdateRegionFilter" singleton="false">
     <property name="existingRegions">
       <list>
