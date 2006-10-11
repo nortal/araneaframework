@@ -15,8 +15,6 @@
 **/
 package org.araneaframework.uilib.list.structure.filter;
 
-import java.util.Locale;
-
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
@@ -98,7 +96,6 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * label of list field. Those labels are used by new filter form elements
 	 * that are automatically created for list filters. 
 	 * 
-	 * @param fieldId field id.
 	 * @param labelId label id (not yet resolved).
 	 */
 	public FieldFilterHelper useCustomLabel(String labelId) {
@@ -109,7 +106,6 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	/**
 	 * Defines type for current field.
 	 * 
-	 * @param fieldId field id.
 	 * @param type field type.
 	 * 
 	 * @see TypeHelper#addFieldType(String, Class)

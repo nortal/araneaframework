@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.uilib.form.FormWidget;
@@ -46,7 +46,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	protected FormListModel model = null;
 
 	protected FormRowHandler formRowHandler;	
-	protected Map formRows = new LinkedHashMap();
+	protected Map formRows = new LinkedMap();
 
 	protected int rowFormCounter = 0;
 

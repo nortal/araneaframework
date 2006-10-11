@@ -15,23 +15,143 @@
   limitations under the License.
 -->
 <chapter id="integration">
-  <title>Integration</title>
+  <title>Third-party Integration</title>
 
   <sect1>
     <title>Spring Application Framework</title>
 
-    <para></para>
-
     <sect2>
-      <title>AraneaSpringDispatcherServlet</title>
+      <title>BeanFactory, ApplicationContext, WebApplicationContext</title>
 
-      <para></para>
+      <para><literal>AraneaSpringDispatcherServlet</literal> will always add a
+      BeanFactory to the environment. It can be retrieved as follows: </para>
+
+      <programlisting role="java">BeanFactory beanFactory = 
+  (BeanFactory) getEnvironment().getEntry(BeanFactory.class)</programlisting>
+
+      <para>Or using the method <literal>getBeanFactory()</literal> in
+      <literal>BaseUIWidget</literal>. By default it will contain only beans
+      configured by Aranea, however if one also uses usual Spring
+      configuration:</para>
+
+      <programlisting role="xml">...
+&lt;context-param&gt;
+  &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+  &lt;param-value&gt; 
+    /WEB-INF/services.xml
+  &lt;/param-value&gt;
+&lt;/context-param&gt;
+...
+&lt;listener&gt;
+  &lt;listener-class&gt;
+    org.springframework.web.context.ContextLoaderListener
+  &lt;/listener-class&gt;
+&lt;/listener&gt;
+...</programlisting>
+
+      <para>Then the <literal>AraneaSpringDispatcherServlet</literal> will
+      integrate with Spring and make <literal>BeanFactory</literal> provide
+      all of the configure beans, as well as add
+      <literal>ApplicationContext</literal> and
+      <literal>WebApplicationContext</literal> to the environment.</para>
+
+      <warning>
+        <para><literal>AraneaSpringDispatcherServlet</literal> must be
+        initialized after Spring context loader listener or servlet to
+        integrate with Spring successfully.</para>
+      </warning>
+    </sect2>
+
+    <sect2 id="araneaLocalizationFilter">
+      <title>Spring Localization Filter</title>
+
+      <informaltable frame="topbot">
+        <tgroup cols="2">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="3*" />
+
+          <tbody>
+            <row>
+              <entry align="right"><emphasis role="bold">Java
+              class:</emphasis></entry>
+
+              <entry><literal>SpringLocalizationFilterService</literal></entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis role="bold">Default configuration
+              name:</emphasis></entry>
+
+              <entry>-</entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis
+              role="bold">Provides:</emphasis></entry>
+
+              <entry><literal>LocalizationContext</literal>,
+              <literal>SpringLocalizationContext</literal></entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis role="bold">Depends
+              on:</emphasis></entry>
+
+              <entry><literal>WebApplicationContext</literal></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para>Provides localization services, see <xref
+      linkend="LocalizationContext" />. The difference from the <link
+      linkend="araneaLocalizationFilter">usual localization filter</link> is
+      that this one delegates the actual localization to a Spring
+      <literal>MessageSource</literal>.</para>
     </sect2>
 
     <sect2>
-      <title>SpringLocalizationFilterService</title>
+      <title>Widget Dependency Injection</title>
 
-      <para></para>
+      <para>Aranea does not by default support configuring widgets with
+      Spring, as they are assumed to be created by the programmer and their
+      life-cycle is managed by Aranea. The main problem however is that
+      widgets are assumed to be serializable and Spring beans are often not
+      (especially since they often are proxies with references to bean factory
+      and so on). As a solution we provide a utility class SpringInjectionUtil
+      that allows to inject Spring beans after a following convention:</para>
+
+      <para><programlisting role="java">...
+injectSomeSpringBean(ISomeBean someBean) {
+  this.someBean = someBean;
+}
+...</programlisting>This method is similar to a setter method, but starts with
+      "inject". The remainder of the method name is interpreted as the name of
+      Spring bean to be injected, with the first letter lowercase (in the case
+      of our example bean named "someSpringBean" would be injected). To
+      actually inject the beans to all similarly called methods in the current
+      widget call <literal>injectBeans()</literal> in widget
+      <literal>init()</literal> method as follows:</para>
+
+      <programlisting role="java">...
+protected init() {
+  ...
+  SpringInjectionUtil.injectBeans(getEnvironment(), this);
+}
+...</programlisting>
+
+      <para>You may even put this call into the base widget of your
+      application to ensure that all application widgets would get their
+      dependencies injected.</para>
+
+      <note>
+        <para>The injected bean must be an interface, as Aranea will construct
+        an indirection proxy. This will ensure that the referenced object will
+        be serialiazable (and small for that matter), but will also introduce
+        a small performance penalty (we believe to be negligible next to the
+        proxies of Spring itself).</para>
+      </note>
     </sect2>
   </sect1>
 </chapter>

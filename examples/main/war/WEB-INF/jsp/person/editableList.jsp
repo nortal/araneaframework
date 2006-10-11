@@ -154,6 +154,7 @@
             <!-- Finally the empty form for addition of new objects. -->
             <ui:formListAddForm>
               <ui:row>
+                <!-- columns, usage is the same as when rendering a form widget -->
                 <ui:cell/>
 
                 <ui:cell styleClass="center">

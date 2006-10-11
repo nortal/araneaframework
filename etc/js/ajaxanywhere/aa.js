@@ -101,7 +101,7 @@ AjaxAnywhere.prototype.submitAJAX = function(ajaxRequestId) {
     this.req.open("POST", url, true);
     this.req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     
-    getActiveAraneaPage().getLogger().info("Sending AJAX request '" + ajaxRequestId + "'");
+    araneaPage().getLogger().info("Sending AJAX request '" + ajaxRequestId + "'");
     
     var postData = "&" + this.preparePostData() + "&updateRegions=" + this.updateRegions + "&ajaxRequestId=" + ajaxRequestId;
     this.sendPreparedRequest(postData);
@@ -148,7 +148,7 @@ AjaxAnywhere.prototype.sendPreparedRequest = function (postData) {
 */
 AjaxAnywhere.prototype.dropPreviousRequest = function() {
     if (this.req != null && this.req.readyState != 0 && this.req.readyState != 4) {
-    	getActiveAraneaPage().getLogger().warn("Dropping AA request.");
+    	araneaPage().getLogger().warn("Dropping AA request.");
         // abort previous request if not completed
         this.req.onreadystatechange = null;
         this.req.abort();
@@ -200,7 +200,7 @@ AjaxAnywhere.prototype.callback = function() {
       text = this.req.responseText;
       
       if (this.req.status == 200) {
-        getActiveAraneaPage().getLogger().info("Processing ajax response '" + extractResponseId(text) + "'");
+        araneaPage().getLogger().info("Processing ajax response '" + extractResponseId(text) + "'");
         updateRegions(text);
         
         var trId = extractTransactionId(text);
@@ -329,7 +329,7 @@ AjaxAnywhere.prototype.onBeforeResponseProcessing = function () {
 */
 AjaxAnywhere.prototype.onAfterResponseProcessing = function () {
    AraneaPage.init();
-   getActiveAraneaPage().onload();
+   araneaPage().onload();
 };
 
 function extractScripts(str) {
@@ -370,7 +370,7 @@ function updateRegions(str) {
     i = endIndex;
   }
 
-  regions.forEach(function(regionName) { getActiveAraneaPage().debug("Updating region '" + regionName + "'"); updateRegion(regionName, str);});
+  regions.forEach(function(regionName) { araneaPage().debug("Updating region '" + regionName + "'"); updateRegion(regionName, str);});
 }
 
 function isUpdateRowRegion(regionId, str) {
@@ -385,7 +385,7 @@ function extractContentsById(elemId, str) {
 	var index = str.indexOf(blockStart);
 	
 	if (index == -1) {
-        getActiveAraneaPage().getLogger.error("Failed to find start of update region '" + elemId + "'.");
+        araneaPage().getLogger.error("Failed to find start of update region '" + elemId + "'.");
 		return "";
 	}
 
@@ -399,7 +399,7 @@ function extractContentsById(elemId, str) {
 	index = str.indexOf(blockEnd);
 	
 	if (index == -1) {
-		getActiveAraneaPage().getLogger.error("Failed to determine end of update region '" + elemId + "'.");
+		araneaPage().getLogger.error("Failed to determine end of update region '" + elemId + "'.");
 		return "";
 	}
 

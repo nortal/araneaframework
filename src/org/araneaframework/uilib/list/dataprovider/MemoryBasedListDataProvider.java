@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.BeanVariableResolver;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -312,7 +313,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 			try {
 				return this.orderExpr.compare(this.resolver1, this.resolver2);
 			} catch (ExpressionEvaluationException e) {
-				throw new RuntimeException(e);
+				throw new NestableRuntimeException(e);
 			}
 		}
 	}
@@ -337,7 +338,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 				return ((Boolean) this.filterExpr.evaluate(this.resolver))
 						.booleanValue();
 			} catch (ExpressionEvaluationException e) {
-				throw new RuntimeException(e);
+				throw new NestableRuntimeException(e);
 			}
 		}
 	}

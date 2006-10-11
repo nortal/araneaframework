@@ -102,8 +102,7 @@ public class DateControl extends TimestampControl {
 			cal.set(Calendar.HOUR_OF_DAY, defaultHour);
 			cal.set(Calendar.MINUTE, defaultMinute);
 			cal.set(Calendar.SECOND, defaultSecond);
-			
-			result = new Timestamp(cal.getTimeInMillis());
+			result = new Timestamp(cal.getTime().getTime());
 		}
 	
 		return result;

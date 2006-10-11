@@ -336,11 +336,7 @@ msgContext.showInfoMessage("Hello world!");
     </sect2>
 
     <sect2 id="components-messaging">
-       
-
       <title>Messaging Components</title>
-
-       
 
       <para>So far, we have looked at the component management and
       environment. However what makes the component hierarchy such a powerful
@@ -383,10 +379,7 @@ myEvent.send(null, rootComponent);
       gathers all <literal>FormWidget</literal>s from the widget
       hierarchy:</para>
 
-       
-
-      <para>
-        <programlisting role="java">public static class FormWidgetFinderMessage extends BroadcastMessage {
+      <para><programlisting role="java">public static class FormWidgetFinderMessage extends BroadcastMessage {
   List formList = new ArrayList();
 
   protected void execute(Component component) throws Exception {
@@ -396,10 +389,7 @@ myEvent.send(null, rootComponent);
   }
 
   public List getAllForms() { return formList; }
-}</programlisting>
-      </para>
-
-       
+}</programlisting></para>
 
       <para>Another standard <literal>Message</literal> implementation is
       <literal>org.araneaframework.core.RoutedMessage</literal>, which allows
@@ -413,8 +403,6 @@ Message myEvent = new RoutedMessage("a.b.c") {
 myEvent.send(null, rootComponent);
 ...</programlisting> This code will send the message to the specific component
       with path "a.b.c" and call <literal>myMethod()</literal> on it.</para>
-
-       
     </sect2>
 
     <sect2 id="components-persistence">
@@ -606,7 +594,7 @@ myEvent.send(null, rootComponent);
     <literal>getInputData()</literal> methods.</para>
 
     <warning>
-      <para>Since the the sibling <literal>*Data</literal> structure is not
+      <para>Since the sibling <literal>*Data</literal> structure is not
       propagated through the component hierarchy is not guaranteed to be
       scoped correctly!</para>
     </warning>
@@ -614,7 +602,7 @@ myEvent.send(null, rootComponent);
     <sect2>
       <title>Extensions</title>
 
-      <para>InputData an Outputdata both implement a way to extend their
+      <para>InputData an OutputData both implement a way to extend their
       functionality without wrapping or extending the objects themselves. This
       is achieved by providing the following two methods:</para>
 
@@ -797,7 +785,7 @@ if (fileUploadExt.uploadSucceeded()) {
       The problem is that unlike most common cases Aranea components form a
       hierarchy. Therefore if a parent is mapped to path prefix "myPath/*" and
       its child is mapped to a path prefix "myChildPath/*" if the path
-      handling were absolute the child would never get the mapped calles. This
+      handling were absolute the child would never get the mapped calls. This
       is due to the child being really mapped to the path
       "myPath/myChildPath". Therefore the parent must consume the prefix
       "myPath/" using method <literal>pushPathPrefix()</literal> and then the
@@ -912,8 +900,8 @@ if (fileUploadExt.uploadSucceeded()) {
     <literal>service()</literal> method in the Servlet API,
     <literal>InputData</literal> being an abstraction over a request and
     <literal>OutputData</literal> being an abstraction over a response (see
-    <xref linkend="core-io-data" />). Thus a service will both process
-    the request parameters and render itself during this method call. However
+    <xref linkend="core-io-data" />). Thus a service will both process the
+    request parameters and render itself during this method call. However
     unlike servlets services can be <emphasis>Composite</emphasis> and may be
     defined both statically (on application startup) or dynamically
     (adding/removing new services on the fly).</para>
@@ -994,7 +982,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
             <literal>HttpSession</literal>
 
-             attributes or similar low-level mechanics. Widget state (meaning the class fields) is guaranteed to be preserved as long as the widget is alive. One can just use these fields to save the necessary data without any external state management, thus adhering to the rules of object-oriented encapsulation, . 
+             attributes or similar low-level mechanics. Widget state (meaning the class fields) is guaranteed to be preserved as long as the widget is alive. One can just use these fields to save the necessary data without any external state management, thus adhering to the rules of object-oriented encapsulation. 
           </listitem>
         </varlistentry>
       </variablelist>The latter two properties make widgets ideal for
@@ -1098,7 +1086,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
                for rendering by casting it into e.g. 
 
-              <literal>ServletOutputData</literal>
+              <literal>HttpOutputData</literal>
 
                . In such a case the widget will just write out markup and return from the 
 
@@ -1374,7 +1362,7 @@ String globalSubmittedParameter =
       <literal>OutputData</literal> see <xref linkend="core-io-data" /></para>
     </sect2>
 
-    <sect2>
+    <sect2 id="widget-view-selector">
       <title>View Model and Rendering</title>
 
       <para><literal>BaseApplicationWidget</literal> also contains methods
@@ -1471,7 +1459,7 @@ setViewSelector("myWidget/form");
 
       <para><literal>org.araneaframework.framework.MessageContext</literal>
       allows to show messages to the user. The messages can be of several
-      types, inluding predefined error and informative types. Typically
+      types, including predefined error and informative types. Typically
       messages will be shown somewhere in the application (exact way is
       application-specific). <literal>MessageContext</literal> is available
       through a <literal>BaseUIWidget</literal> method
@@ -1579,7 +1567,7 @@ setViewSelector("myWidget/form");
 
       <para>For information on implementation of the
       <literal>MessageContext</literal> see <xref
-      linkend="StandardMessagingFilterWidget" />.</para>
+      linkend="araneaMessagingFilter" />.</para>
     </sect2>
 
     <sect2 id="LocalizationContext">
@@ -1677,7 +1665,7 @@ getMessageCtx().showInfoMessage(message);
 
       <para>For information on implementation of the
       <literal>LocalizationContext</literal> see <xref
-      linkend="StandardLocalizationFilterService" />.</para>
+      linkend="araneaLocalizationFilter" />.</para>
     </sect2>
 
     <sect2 id="FlowContext">
@@ -1780,7 +1768,7 @@ getFlowCtx().start(new TestFlow(new Long(5)),
       using the <literal>cancel()</literal> method.</para>
 
       <para>For standard implementation, please see <xref
-      linkend="StandardFlowContainerWidget" /></para>
+      linkend="araneaRootFlowContainer" /></para>
     </sect2>
   </sect1>
 </chapter>

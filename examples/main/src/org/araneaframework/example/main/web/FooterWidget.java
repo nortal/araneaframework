@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web;
 
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.AraneaVersion;
 import org.araneaframework.OutputData;
 import org.araneaframework.example.common.framework.TemplateMenuContext;
@@ -41,7 +42,7 @@ public class FooterWidget extends BaseUIWidget {
     /* widget source */
     String flowClassName = menuWidget.getFlowClassName();
     if (flowClassName != null) {
-      String path = flowClassName.replaceAll("\\.class", "").replaceAll("\\.", "/");
+      String path = StringUtils.replace(StringUtils.replace(flowClassName, ".class", ""), ".", "/");
       while (path.lastIndexOf('$') != -1) {
         int index = path.lastIndexOf('$');
         path = path.substring(0, index);

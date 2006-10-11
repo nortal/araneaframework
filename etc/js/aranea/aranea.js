@@ -244,37 +244,49 @@ function AraneaPage() {
     this.getLogger().debug(message);
   }
   
+  /** 
+   * Provides preferred way of overriding AraneaPage object functions. 
+   * @param functionName name of AraneaPage function that should be overridden. 
+   * @param f replacement function 
+   */
   this.override = function(functionName, f) {
   	this.getLogger().info("AraneaPage." +functionName + " was overriden.");
   	this[functionName] = f;
   }
   
+  /** 
+   * Adds keepalive function f that is executed periodically after time 
+   * milliseconds has passed 
+   */
   this.addKeepAlive = function(f, time) {
     keepAliveTimers.add(setInterval(f, time));
   }
 
+  /** Clears/removes all registered keepalive functions. */
   this.clearKeepAlives = function() {
     keepAliveTimers.forEach(function(timer) {clearInterval(timer);});
   }
 }
 
+/* Returns a default keepalive function -- to make periodical requests to expiring thread
+ * or top level services. */
 AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey) {
   return function() {
     if (window['prototype/prototype.js']) {
-      var url = getActiveAraneaPage().encodeURL(getActiveAraneaPage().getServletURL());
+      var url = araneaPage().encodeURL(araneaPage().getServletURL());
       url += "?transactionId=override";
       if (topServiceId) 
         url += "&topServiceId="+topServiceId;
       if (threadServiceId) 
         url += "&threadServiceId="+threadServiceId;
       url += "&" + keepAliveKey + "=true";
-      getActiveAraneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
+      araneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(
           url,
           { method: 'get' }
       );
     } else {
-      getActiveAraneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");
+      araneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");
     }
   };
 }
@@ -287,14 +299,14 @@ AraneaPage.getRandomRequestId = function() {
 
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
-  getActiveAraneaPage().addSystemLoadEvent(Behaviour.apply);
+  araneaPage().addSystemLoadEvent(Behaviour.apply);
 }
 
 function DefaultAraneaSubmitter(form) {
   var systemForm = form;
 
   this.event = function(element) {
-    var traverser = getActiveAraneaPage().getTraverser();
+    var traverser = araneaPage().getTraverser();
 
     // event information
     var widgetId = traverser.getEventTarget(element);
@@ -310,7 +322,7 @@ DefaultAraneaSubmitter.prototype.event_4 = function(systemForm, eventId, widgetI
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
 
-  getActiveAraneaPage().setSubmitted();
+  araneaPage().setSubmitted();
 
   systemForm.submit();
 
@@ -321,7 +333,7 @@ function DefaultAraneaAJAXSubmitter(form) {
   var systemForm = form;
 
   this.event = function(element) {
-    var traverser = getActiveAraneaPage().getTraverser();
+    var traverser = araneaPage().getTraverser();
 	
 	// event information
     var widgetId = traverser.getEventTarget(element);
@@ -349,8 +361,9 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
 }
 
 /* Initialize new Aranea page.  */
+/* Aranea page object is accessible in two ways -- _ap and araneaPage() */
 _ap = new AraneaPage();
-function getActiveAraneaPage() { return _ap; }
+function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 
 window['aranea.js'] = true;

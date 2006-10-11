@@ -41,10 +41,10 @@ function setCloningUrl(el) {
 	var eventParam = el.getAttribute('arn-evntPar');
 	var eventTarget = el.getAttribute('arn-trgtwdgt');
 
-	var systemForm = getActiveAraneaPage().getTraverser().findSurroundingSystemForm(el);
+	var systemForm = araneaPage().getTraverser().findSurroundingSystemForm(el);
 
     var url = new String();
-    url = getActiveAraneaPage().encodeURL(getActiveAraneaPage().getServletURL());
+    url = araneaPage().encodeURL(araneaPage().getServletURL());
 
     url += "?pleaseClone=true";
     url += "&topServiceId=" + systemForm['topServiceId'].value;

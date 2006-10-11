@@ -14,7 +14,7 @@
   limitations under the License.
 -->
 
-<preface id="intro">
+<chapter id="intro">
 	<title>Introduction</title>
 
   <sect1>
@@ -71,4 +71,4 @@
     TODO
   </sect1>
   
-</preface>
+</chapter>

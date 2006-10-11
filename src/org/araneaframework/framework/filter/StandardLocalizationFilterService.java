@@ -53,7 +53,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   public void setLanguageName(String languageName) {
     Assert.notNullParam(languageName, "languageName");
     
-    setLocale(new Locale(languageName));
+    setLocale(new Locale(languageName, ""));
   }
   
   /**

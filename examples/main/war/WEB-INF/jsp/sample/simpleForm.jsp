@@ -8,8 +8,9 @@
 	<!-- Component starts here -->
 	<ui:widgetContext>
 
-		<!-- Set the form context, the form we will be rendering here. 
-			We cannot as simply refer to form elements unless we define it here. -->
+        <!-- Set the form context, the form we will be rendering here. 
+            We cannot as simply (using non-qualified names) refer to form 
+            elements unless we define the form context here. -->
 		<ui:form id="simpleForm">
 
 			<!-- Now, these are the first custom tags in template application. They do
@@ -23,12 +24,14 @@
 			<ui:component>
 			
 				<!-- Custom tag, but more interesting that previous tags. It derives from
-                     UiLayoutBaseTag tag, it gives one ability to put row tags inside of it. 
+                     LayoutHtmlTag tag and allows putting row tags inside of it. 
                      Attribute rowClasses defines the styleClass attribute for rows inserted under 
-                     componentForm here, cellclasses does the same for cells. In HTML, this tag creates a TABLE. -->
+                     componentForm here, cellClasses does the same for cells. These classes are repeating
+                     e.g first cell in a row is with styleClass "name", second with "inpt", and third
+                     cell again has styleClass "name". In HTML, this tag creates a TABLE. -->
 				<ui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
-					<!-- As we can insert rows now, we just do that. -->
+					<!-- As we can insert rows now, we do just that. -->
 					<ui:row>
 						<!-- ... we can insert cells too! As we defined componentForm rowClass 
 							to be cols4  we should insert 4 cells here... -->
@@ -65,10 +68,12 @@
 					<ui:row>
 						<ui:formElement id="dateTime">
 							<ui:cell>
+							    <!-- "dateTime" label -->
 								<ui:label />
 							</ui:cell>
 
 							<ui:cell>
+          						<!-- "dateTime" input field -->
 								<ui:dateTimeInput/>
 							</ui:cell>
 						</ui:formElement>
@@ -108,7 +113,7 @@
 
 				</ui:componentForm>
 
-				<!-- template design tag -->
+				<!-- pure design tag -->
 				<ui:componentActions>
 					<ui:formElement id="button">
 						<ui:button/>

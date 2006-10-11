@@ -103,7 +103,7 @@
 
 		<para>
 <programlisting role="javascript">/* AraneaPage object is present on each page served by Aranea and contains common
- * functionality for setting page related variables, events and functions. */
+ * functionality for setting/getting page related variables, events and functions. */
 function AraneaPage() {
   /* Getters and setters for URL of aranea dispatcher servlet serving current page. */ 
   function getServletURL();
@@ -160,6 +160,22 @@ function AraneaPage() {
     * use with Aranea JSP currently. */
   function event_6(systemForm, eventId, eventTarget, 
                     eventParam, eventPrecondition, eventUpdateRegions);
+                    
+  /** 
+   * Provides preferred way of overriding AraneaPage object functions. 
+   * @param functionName name of AraneaPage function that should be overridden. 
+   * @param f replacement function 
+   */
+  function override(functionName, f);
+  
+  /** 
+   * Adds keepalive function f that is executed periodically after time 
+   * milliseconds has passed 
+   */
+  function addKeepAlive(f, time);
+
+  /** Clears/removes all registered keepalive functions. */
+  function clearKeepAlives();
   
   /** Logs message on DEBUG level, if logger is present. */
   function debug(message);
@@ -169,8 +185,16 @@ function AraneaPage() {
   * Currently only purpose of it is easier debugging (identifying requests). */
 function AraneaPage.getRandomRequestId();
 
+/* Returns a default keepalive function -- to make periodical requests to expiring thread
+ * or top level services. */
+AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey);
+
 /** Page initialization function, should be called upon page load. */
-AraneaPage.init();</programlisting>
+AraneaPage.init();
+
+/* Aranea page object is accessible in two ways -- _ap and araneaPage() */
+_ap = new AraneaPage();
+function araneaPage() { return _ap; }</programlisting>
       </para>
 
 	</sect1>

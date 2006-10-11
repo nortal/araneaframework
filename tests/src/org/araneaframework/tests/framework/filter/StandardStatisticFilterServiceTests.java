@@ -65,7 +65,7 @@ public class StandardStatisticFilterServiceTests extends TestCase {
   
   public void testGetSetNamespace() throws Exception {
     String nameSpace = "unittests";
-    service.setNamespace(nameSpace);
-    assertEquals(nameSpace, service.getNamespace());
+    service.setMessage(nameSpace);
+    assertEquals(nameSpace, service.getMessage());
   }
 }

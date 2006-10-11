@@ -25,27 +25,27 @@ import org.araneaframework.framework.core.BaseFilterService;
 /**
  * A filter that logs the time it takes for the child service to complete
  * its action method (serving the request). The logging
- * statement can have a prefix namespace set via <code>setNamespace()</code>.
+ * statement can have a message set via <code>setMessage()</code>.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardStatisticFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardStatisticFilterService.class);
-  private String namespace;
+  private String message;
 
-  public void setNamespace(String namespace) {
-    this.namespace = namespace;
+  public void setMessage(String message) {
+    this.message = message;
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     long start = System.currentTimeMillis();
     
     childService._getService().action(path, input, output);
-    log.info(namespace + ": action took " + (System.currentTimeMillis() - start) + " ms.");
+    log.info(message + (System.currentTimeMillis() - start) + " ms.");
   }
     
-  public String getNamespace() {
-    return namespace;
+  public String getMessage() {
+    return message;
   }
 }
