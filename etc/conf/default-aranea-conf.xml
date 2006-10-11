@@ -21,7 +21,7 @@
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
           <property name="beanId" value="araneaCustomApplicationFilters"/>
         </bean>
-        <ref bean="araneaReadFileFilter"/>   
+        <ref bean="araneaFileImportFilter"/>   
         <ref bean="araneaMountingFilter"/>            
       </list>
     </property>
@@ -137,7 +137,7 @@
     <property name="root" ref="araneaMainCallStack"/>
   </bean>
   
-   <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="araneaMainCallStack" singleton="false">
+   <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="araneaRootFlowContainer" singleton="false">
      <property name="top" ref="araneaApplicationStart"/>
    </bean>
    
@@ -162,7 +162,7 @@
   </bean>
   
   <bean class="org.araneaframework.http.filter.StandardFileImportFilterService" 
-    id="araneaReadFileFilter" singleton="false">
+    id="araneaFileImportFilter" singleton="false">
   </bean>
   
   <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"

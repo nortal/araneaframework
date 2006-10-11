@@ -15,8 +15,6 @@ public class ExamplePersonMountMessageFactory implements MessageFactory {
     return new SeriesMessage(new Message[] {
         new LoginMessage(),
         new BroadcastMessage() {
-          private static final long serialVersionUID = 1L;
-
           protected void execute(Component component) throws Exception {
             if (component instanceof MenuWidget) {
               ((MenuWidget) component).start(new PersonAddEditWidget(new Long(suffix)), null, null);

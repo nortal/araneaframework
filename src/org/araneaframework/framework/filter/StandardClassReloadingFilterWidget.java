@@ -39,8 +39,8 @@ import org.araneaframework.core.RelocatableDecorator;
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class StandardDevelFilterWidget extends BaseApplicationWidget {
-  private static final Logger log = Logger.getLogger(StandardDevelFilterWidget.class);
+public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
+  private static final Logger log = Logger.getLogger(StandardClassReloadingFilterWidget.class);
   
   private String childClassName;
   private RelocatableWidget child;
@@ -62,7 +62,7 @@ public class StandardDevelFilterWidget extends BaseApplicationWidget {
   
   private ClassLoader newClassLoader() throws MalformedURLException {
     ServletContext sctx = (ServletContext) getEnvironment().getEntry(ServletContext.class);
-    return new MyUrlClassloader(new URL[] {sctx.getResource("/WEB-INF/classes")}, getClass().getClassLoader());
+    return new ReloadingClassloader(new URL[] {sctx.getResource("/WEB-INF/classes")}, getClass().getClassLoader());
   }
   
   private Serializable reload(Serializable child) throws Exception {
@@ -109,16 +109,16 @@ public class StandardDevelFilterWidget extends BaseApplicationWidget {
     
     ByteArrayInputStream bais = new ByteArrayInputStream(serialized);
     
-    MyOIS in = new MyOIS(cl, bais);
+    ReloadingObjectInputStream in = new ReloadingObjectInputStream(cl, bais);
     Object obj = in.readObject();
     
     return (Serializable) obj;
   }
  
-  private static class MyOIS extends ObjectInputStream {
+  private static class ReloadingObjectInputStream extends ObjectInputStream {
     private ClassLoader cl;
     
-    public MyOIS(ClassLoader cl, InputStream in) throws IOException {
+    public ReloadingObjectInputStream(ClassLoader cl, InputStream in) throws IOException {
       super(in);
       this.cl = cl;
     }
@@ -129,9 +129,9 @@ public class StandardDevelFilterWidget extends BaseApplicationWidget {
     }
   }
   
-  private static class MyUrlClassloader extends URLClassLoader {
+  private static class ReloadingClassloader extends URLClassLoader {
 
-    public MyUrlClassloader(URL[] urls, ClassLoader parent) {
+    public ReloadingClassloader(URL[] urls, ClassLoader parent) {
       super(urls, parent);
     }
     

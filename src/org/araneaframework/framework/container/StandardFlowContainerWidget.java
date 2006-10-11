@@ -307,7 +307,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   private void refreshGlobalEnvironment() {
     nestedEnvironmentEntries.clear();
     
-    nestedEnvironmentEntries.put(FlowContext.class, this);
+    putLocalEnvironmentEntries(nestedEnvironmentEntries);
 
     for (Iterator i = nestedEnvEntryStacks.entrySet().iterator(); i.hasNext();) {
       Map.Entry entry = (Map.Entry) i.next();
@@ -318,6 +318,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
         nestedEnvironmentEntries.put(entryId, envEntry);
       }
     }    
+  }
+  
+  protected void putLocalEnvironmentEntries(Map nestedEnvironmentEntries) {
+    nestedEnvironmentEntries.put(FlowContext.class, this);
   }
   
   protected Environment getChildWidgetEnvironment() throws Exception {
