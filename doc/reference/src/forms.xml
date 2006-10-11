@@ -859,7 +859,7 @@ private void handleEventSave() {
   <sect1>
     <title>Forms JSP Tags</title>
 
-    <para>Form JSP tags can be divided into two categories— tags providing
+    <para>Form JSP tags can be divided into two categories&mdash;tags providing
     <emphasis>contexts</emphasis> (&lt;ui:form&gt;, &lt;ui:formElement&gt;)
     and tags for <emphasis>rendering</emphasis> form elements containing
     different controls. We will first describe the attributes that are common
@@ -960,6 +960,14 @@ private void handleEventSave() {
               <entry>CSS class applied HTML tag(s) that are used for rendering
               element.</entry>
             </row>
+            
+             <row>
+              <entry>style</entry>
+
+              <entry><emphasis>no</emphasis></entry>
+
+              <entry>Inline CSS style applied to HTML tag(s) that are used for rendering element.</entry>
+            </row>
           </tbody>
         </tgroup>
       </informaltable>
@@ -1037,12 +1045,24 @@ private void handleEventSave() {
 
                 <entry><literal>FormWidget.ViewModel</literal></entry>
               </row>
-
+              
               <row>
                 <entry>formId</entry>
 
                 <entry>Id of form.</entry>
 
+                <entry><literal>String</literal></entry>
+              </row>
+              
+               <row>
+                <entry>formFullId</entry>
+                <entry>Full id of form.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+              
+               <row>
+                <entry>formScopedFullId</entry>
+                <entry>Full scoped id of form.</entry>
                 <entry><literal>String</literal></entry>
               </row>
             </tbody>
@@ -1152,6 +1172,7 @@ private void handleEventSave() {
           </tgroup>
         </informaltable>
       </sect3>
+      
 
       <sect3>
         <title>Examples</title>
@@ -1227,6 +1248,7 @@ private void handleEventSave() {
             </tbody>
           </tgroup>
         </informaltable>
+        <emphasis>Also has standard <literal>style</literal> and <literal>styleClass</literal> attributes.</emphasis>
       </sect3>
 
       <sect3>
@@ -1313,6 +1335,7 @@ private void handleEventSave() {
             </tbody>
           </tgroup>
         </informaltable>
+        <emphasis>Also has standard <literal>style</literal> and <literal>styleClass</literal> attributes.</emphasis>
       </sect3>
 
       <sect3>
@@ -2211,14 +2234,14 @@ el.click();</programlisting>
       <para>A tag for configuring the rich textareas. The <ulink
       url="http://tinymce.moxiecode.com/">tinyMCE</ulink> WYSIWYG editor is
       attached to the textareas defined via
-      <literal>&lt;richtextarea&gt;</literal> . The configuration lets you
+      <literal>&lt;ui:richTextarea&gt;</literal> . The configuration lets you
       choose the looks, buttons, functionality of the editor. See <ulink
       url="http://tinymce.moxiecode.com/tinymce/docs/reference_configuration.html">tinyMCE
       configuration reference</ulink> for different configurable
       options.</para>
 
       <para>The configuration is done via nesting key value pairs inside the
-      <literal>&lt;richTextAreaInit&gt;</literal>. For the key value pairs the
+      <literal>&lt;ui:richTextAreaInit&gt;</literal>. For the key value pairs the
       <literal>&lt;ui:attribute&gt;</literal> tag is used. See the example for
       an overview.</para>
 
@@ -3859,7 +3882,6 @@ protected void handleEventSave() {
 
       <sect3>
         <title>Attributes</title>
-
         <informaltable frame="all">
           <tgroup cols="3">
             <colspec colwidth="2*" />
@@ -3892,10 +3914,10 @@ protected void handleEventSave() {
         </informaltable>
       </sect3>
 
-      <sect3>
+    <sect3>
         <title>Variables</title>
 
-        <informaltable frame="all">
+        <informaltable frame="topbot">
           <tgroup cols="3">
             <colspec colwidth="2*" />
 
@@ -3921,12 +3943,24 @@ protected void handleEventSave() {
 
                 <entry><literal>FormWidget.ViewModel</literal></entry>
               </row>
-
+              
               <row>
                 <entry>formId</entry>
 
                 <entry>Id of form.</entry>
 
+                <entry><literal>String</literal></entry>
+              </row>
+              
+               <row>
+                <entry>formFullId</entry>
+                <entry>Full id of form.</entry>
+                <entry><literal>String</literal></entry>
+              </row>
+              
+               <row>
+                <entry>formScopedFullId</entry>
+                <entry>Full scoped id of form.</entry>
                 <entry><literal>String</literal></entry>
               </row>
             </tbody>
