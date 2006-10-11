@@ -1,5 +1,15 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2006.10.13    | Aranea 1.0
+Features and Improvements
+	Reference manual updates
+	Updated to compile with Java 1.3
+	Tutorial splitted: introduction & main tutorial
+	Library dependencies reorganized
+
+Bugfixes
+	Some small fixes
+
 2006.10.09    | Aranea 1.0-RC4
 Features and Improvements
         Composite Constraints can optionally be lazy                          | See change #112
