@@ -124,7 +124,7 @@ public class BodyHtmlTag extends PresentationTag {
         String sTop = topServiceId == null ? "null" : "'" + topServiceId.toString() + "'";
         String sThread = threadServiceId == null ? "null" : "'" + threadServiceId.toString() + "'";
 
-        out.write("\ngetActiveAraneaPage().addKeepAlive(AraneaPage.getDefaultKeepAlive(" + 
+        out.write("\n_ap.addKeepAlive(AraneaPage.getDefaultKeepAlive(" + 
         		sTop + "," + 
         		sThread + "," + keepAliveKey + ")," + serviceTTL.toString() + ");\n");
       }
