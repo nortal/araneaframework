@@ -140,7 +140,7 @@
 
           <classname>Environment</classname>
 
-          . A component can be initialized only once and the environment it is given stays with it until it is destroyed. 
+           . A component can be initialized only once and the environment it is given stays with it until it is destroyed. 
         </listitem>
 
         <listitem>
@@ -1088,7 +1088,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
               <literal>HttpOutputData</literal>
 
-              . In such a case the widget will just write out markup and return from the 
+               . In such a case the widget will just write out markup and return from the 
 
               <literal>render()</literal>
 
@@ -1112,7 +1112,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
               <literal>org.araneaframework.Viewable</literal>
 
-              : 
+               : 
 
               <programlisting role="java">public interface Viewable extends Serializable {
   public Interface _getViewable();
@@ -1362,7 +1362,7 @@ String globalSubmittedParameter =
       <literal>OutputData</literal> see <xref linkend="core-io-data" /></para>
     </sect2>
 
-    <sect2>
+    <sect2 id="widget-view-selector">
       <title>View Model and Rendering</title>
 
       <para><literal>BaseApplicationWidget</literal> also contains methods
@@ -1567,7 +1567,7 @@ setViewSelector("myWidget/form");
 
       <para>For information on implementation of the
       <literal>MessageContext</literal> see <xref
-      linkend="StandardMessagingFilterWidget" />.</para>
+      linkend="araneaMessagingFilter" />.</para>
     </sect2>
 
     <sect2 id="LocalizationContext">
@@ -1665,7 +1665,7 @@ getMessageCtx().showInfoMessage(message);
 
       <para>For information on implementation of the
       <literal>LocalizationContext</literal> see <xref
-      linkend="StandardLocalizationFilterService" />.</para>
+      linkend="araneaLocalizationFilter" />.</para>
     </sect2>
 
     <sect2 id="FlowContext">
@@ -1768,7 +1768,7 @@ getFlowCtx().start(new TestFlow(new Long(5)),
       using the <literal>cancel()</literal> method.</para>
 
       <para>For standard implementation, please see <xref
-      linkend="StandardFlowContainerWidget" /></para>
+      linkend="araneaRootFlowContainer" /></para>
     </sect2>
   </sect1>
 </chapter>

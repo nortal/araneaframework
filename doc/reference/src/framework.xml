@@ -159,7 +159,7 @@
 
                 <entry>The path from the webapp root to the directory that
                 will act as JSP root. The JSPs put there can be selected using
-                widget view selectors (see <xref linkend="TODO" />).
+                widget view selectors (see <xref linkend="widget-view-selector" />).
                 <para><emphasis role="strong">Default value:</emphasis>
                 <literal>/WEB-INF/jsp</literal></para></entry>
               </row>
@@ -320,7 +320,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     component containing its chidren as fields as illustrated on <xref
     linkend="figure-framework-assembly" />.</para>
 
-    <figure id="xxx">
+    <figure id="figure-framework-assembly">
       <title>Framework assembly example</title>
 
       <mediaobject>
@@ -355,8 +355,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     <para>It is always safe to override filters, as they should never refer
     directly to their children. To override a filter just make a bean
     definition with the same name as in default configuration (filters and
-    their default configuration names are described in <xref
-    linkend="framework-filters" />). For instance to override the default
+    their default configuration names among other components are described in <xref
+    linkend="framework-components" />). For instance to override the default
     localization context with a custom-made one, one would need to add the
     following lines:</para>
 
@@ -453,9 +453,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               individual browser window (e.g. most rendering filters will fall
               into this category).</para><para><emphasis
               role="bold">Examples:</emphasis> <link
-              linkend="araneaThreadCloningFilter">araneaThreadCloningFilter</link>,
-              <link
-              linkend="araneaMountPointFilter">araneaMountPointFilter</link>.</para></entry>
+              linkend="araneaThreadCloningFilter">araneaThreadCloningFilter</link>
+              .</para></entry>
             </row>
 
             <row>
@@ -529,7 +528,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       StandardServletSessionRouterService
     </sect2 -->
 
-    <sect2 id="StandardLocalizationFilterService">
+    <sect2 id="araneaLocalizationFilter">
       <title>Localization Filter</title>
 
       <informaltable frame="topbot">
@@ -617,7 +616,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardAjaxFilterService">
+    <sect2 id="araneaUpdateRegionFilter">
       <title>AJAX Update Regions Filter</title>
 
       <para><informaltable frame="topbot">
@@ -704,7 +703,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardContextMapFilterWidget">
+    <sect2 id="araneaEnvContextFilter">
       <title>Environment Configuration Filter</title>
 
       <informaltable frame="topbot">
@@ -780,7 +779,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardCriticalExceptionHandlingFilterService">
+    <sect2 id="araneaCriticalErrorHandler">
       <title>Critical Exception Handler</title>
 
       <informaltable frame="topbot">
@@ -801,7 +800,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis role="bold">Default configuration
               name:</emphasis></entry>
 
-              <entry><literal>araneaEnvContextFilter</literal></entry>
+              <entry><literal>araneaCriticalErrorHandler</literal></entry>
             </row>
 
             <row>
@@ -854,7 +853,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardFileUploadFilterService">
+    <sect2 id="araneaFileUploadFilter">
       <title>File Uploading Filter</title>
 
       <informaltable frame="topbot">
@@ -964,7 +963,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardHttpResponseFilterService">
+    <sect2 id="araneaResponseHeaderFilter">
       <title>HTTP Response Headers Filter</title>
 
       <informaltable frame="topbot">
@@ -1068,7 +1067,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardJspFilterService">
+    <sect2 id="araneaJspConfigFilter">
       <title>JSP Configuration Filter</title>
 
       <informaltable frame="topbot">
@@ -1148,7 +1147,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardMessagingFilterWidget">
+    <sect2 id="araneaMessagingFilter">
       <title>User Messages Filter</title>
 
       <informaltable frame="topbot">
@@ -1192,7 +1191,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <para>See <xref linkend="MessageContext" />.</para>
     </sect2>
 
-    <sect2 id="StandardPopupFilterWidget">
+    <sect2 id="araneaPopupFilter">
       <title>Popup Windows Filter</title>
 
       <informaltable frame="topbot">
@@ -1266,7 +1265,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardSerializingAuditFilterService">
+    <sect2 id="araneaSerializingAudit">
       <title>Serialization Control Filter</title>
 
       <informaltable frame="topbot">
@@ -1342,7 +1341,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardStatisticFilterService">
+    <sect2 id="araneaStatisticFilter">
       <title>Statistics Logging Filter</title>
 
       <informaltable frame="topbot">
@@ -1412,7 +1411,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardSynchronizingFilterService">
+    <sect2 id="araneaSynchronizingFilter">
       <title>Synchronization Filter</title>
 
       <informaltable frame="topbot">
@@ -1458,7 +1457,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       interface).</para>
     </sect2>
 
-    <sect2 id="StandardThreadCloningFilterService">
+    <sect2 id="araneaThreadCloningFilter">
       <title>Browser Window Cloning Filter</title>
 
       <informaltable frame="topbot">
@@ -1538,7 +1537,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardTransactionFilterWidget">
+    <sect2 id="araneaTransactionFilter">
       <title>Multi-submit Protection Filter</title>
 
       <informaltable frame="topbot">
@@ -1614,7 +1613,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardThreadCloningFilterService">
+    <sect2 id="araneaClassReloadingFilter">
       <title>Class Reloading Filter</title>
 
       <informaltable frame="topbot">
@@ -1694,7 +1693,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardThreadCloningFilterService">
+    <sect2 id="araneaClientStateFilter">
       <title>Client State Serialization Filter</title>
 
       <informaltable frame="topbot">
@@ -1776,7 +1775,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardThreadCloningFilterService">
+    <sect2 id="araneaFileImportFilter">
       <title>Extension File Import Filter</title>
 
       <informaltable frame="topbot">
@@ -1822,7 +1821,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       See <xref linkend="framework-extensions" /></para>
     </sect2>
 
-    <sect2 id="StandardThreadCloningFilterService">
+    <sect2 id="araneaMountingFilter">
       <title>Bookmarking/URL Mounting Filter</title>
 
       <informaltable frame="topbot">
@@ -1843,7 +1842,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis role="bold">Default configuration
               name:</emphasis></entry>
 
-              <entry><literal>araneaThreadCloningFilter</literal></entry>
+              <entry><literal>araneaMountingFilter</literal></entry>
             </row>
 
             <row>
@@ -1902,7 +1901,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="StandardFlowContainerWidget">
+    <sect2 id="araneaRootFlowContainer">
       <title>Root Flow Container</title>
 
       <informaltable frame="topbot">
