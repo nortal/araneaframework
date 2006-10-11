@@ -80,11 +80,7 @@
 				<include name="**/*.jar" />
 				<exclude name="jetty/*jar" />
 			</fileset>
-			<fileset dir="../../lib/required">
-				<include name="**/*.jar" />
-				<exclude name="j2ee.jar" />
-			</fileset>
-			<fileset dir="../../lib/optional">
+			<fileset dir="../../lib/">
 				<include name="**/*.jar" />
 				<exclude name="j2ee.jar" />
 			</fileset>

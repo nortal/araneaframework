@@ -57,7 +57,7 @@ public class StandardFileUploadFilterService extends BaseFilterService {
   
   static {
     try {
-      Class.forName("org.springframework.web.context.WebApplicationContext");
+      Class.forName("org.apache.commons.fileupload.servlet.ServletFileUpload");
     }
     catch (ClassNotFoundException e) {
       commonsFileUploadPresent = false;
