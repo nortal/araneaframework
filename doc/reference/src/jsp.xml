@@ -89,16 +89,18 @@
         <title>Variables</title>
 
         <informaltable frame="all">
-          <tgroup cols="2">
+          <tgroup cols="3">
             <colspec colwidth="2*" />
 
             <colspec colwidth="5*" />
 
+            <colspec align="center" colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Variable</entry>
-
                 <entry>Description</entry>
+                <entry>Type</entry>
               </row>
             </thead>
 
@@ -108,6 +110,8 @@
 
                 <entry>The <literal>org.araneaframework.OutputData</literal>
                 that represents the current response.</entry>
+
+                <entry><literal>org.araneaframework.OutputData</literal></entry>
               </row>
             </tbody>
           </tgroup>
@@ -121,6 +125,41 @@
       <para>This tag should be immediately under the &lt;ui:root&gt; tag for
       any application that uses widgets. It allows widgets to be rendered and
       included.</para>
+      
+            <sect3>
+        <title>Variables</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>outputData</entry>
+
+                <entry>The <literal>org.araneaframework.OutputData</literal>
+                that represents the current response.</entry>
+
+                <entry><literal>org.araneaframework.OutputData</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      
     </sect2>
 
     <sect2>
@@ -245,13 +284,19 @@
 
               <row>
                 <entry>group</entry>
-
                 <entry><emphasis>no</emphasis></entry>
-
                 <entry>Writes out the HTML's CSS handling
                 <literal>link</literal> to load the group of files.</entry>
               </row>
+              
+              <row>
+                <entry>media</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Media type to which imported styles are applied.</entry>
+              </row>
+
             </tbody>
+
           </tgroup>
         </informaltable>
       </sect3>
@@ -304,6 +349,39 @@
                 <entry>Overwrite the standard Aranea JSP HTML body onload
                 event. Use with caution.</entry>
               </row>
+              
+              <row>
+                <entry>id</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>HTML BODY id.</entry>
+              </row>
+              
+              <row>
+                <entry>dir</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>HTML BODY dir attribute.</entry>
+              </row>
+              
+              <row>
+                <entry>lang</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>HTML BODY lang attribute.</entry>
+              </row>
+
+              <row>
+                <entry>title</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>HTML BODY title attribute.</entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>
@@ -377,6 +455,38 @@
           </tgroup>
         </informaltable>
       </sect3>
+      
+                  <sect3>
+        <title>Variables</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>systemFormId</entry>
+
+                <entry>SystemForm FORM id.</entry>
+
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
     </sect2>
 
     <sect2>
@@ -426,6 +536,12 @@
 
                 <entry>CSS class applied to rendered messages, default being
                 <literal>aranea-messages</literal>.</entry>
+              </row>
+              
+              <row>
+                <entry>style</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS inline style applied to rendered messages. Use <literal>styleClass</literal> instead.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1003,6 +1119,12 @@
 
                 <entry>The view model of the widget.</entry>
               </row>
+              
+              <row>
+                <entry>scopedWidgetId</entry>
+
+                <entry>The scoped id of the context widget.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
@@ -1062,6 +1184,15 @@
                 <entry>A dot-separated widget identifier path leading from the
                 current context widget to the target widget.</entry>
               </row>
+
+              <row>
+                <entry>path</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>Path to JSP, relative to <literal>jspPath</literal> of <literal>StandardJspFilterService</literal>.</entry>
+              </row>
+
             </tbody>
           </tgroup>
         </informaltable>
@@ -1091,6 +1222,39 @@
       <literal>&lt;ui:widgetInclude&gt;</literal>
 
       , but this tag allows to include not only descendants of current context widget but any widget that is accessible from global scope. 
+      
+            <sect3>
+        <title>Attributes</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>A dot-separated full widget identifier.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
     </sect2>
   </sect1>
 
@@ -1179,14 +1343,20 @@
                 <entry>If set to a not null value will show the button
                 disabled.</entry>
               </row>
+              
+              <row>
+                <entry>renderMode</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.
+                This attribute only applies to <literal>&lt;ui:eventButton&gt;</literal>, <literal>&lt;ui:eventLinkButton&gt;</literal>
+                is always rendered with HTML link.
+                </entry>
+              </row>
 
               <row>
                 <entry>styleClass</entry>
-
                 <entry><emphasis>no</emphasis></entry>
-
-                <entry>The CSS class that will override the default
-                one.</entry>
+                <entry>The CSS class that will override the default one.</entry>
               </row>
 
               <row>
@@ -1289,7 +1459,7 @@
               <row>
                 <entry>event</entry>
 
-                <entry><emphasis>no</emphasis></entry>
+                <entry><emphasis>yes</emphasis></entry>
 
                 <entry>Event to register.</entry>
               </row>
@@ -1525,15 +1695,7 @@
               </row>
 
               <row>
-                <entry>height</entry>
-
-                <entry><emphasis>no</emphasis></entry>
-
-                <entry>Layout height.</entry>
-              </row>
-
-              <row>
-                <entry>rowClass</entry>
+                <entry>rowClasses</entry>
 
                 <entry><emphasis>no</emphasis></entry>
 
@@ -1541,7 +1703,7 @@
               </row>
 
               <row>
-                <entry>cellClass</entry>
+                <entry>cellClasses</entry>
 
                 <entry><emphasis>no</emphasis></entry>
 
@@ -1558,6 +1720,42 @@
             </tbody>
           </tgroup>
         </informaltable></para>
+        
+         <sect3>
+        <title>Variables</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>rowClassProvider</entry>
+                <entry>Provides row class, usually should not be used from JSP.</entry>
+                <entry><literal>RowClassProvider</literal></entry>
+              </row>
+              
+              <row>
+                <entry>cellClassProvider</entry>
+                <entry>Provides cell class, usually should not be used from JSP.</entry>
+                <entry><literal>CellClassProvider</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+          </sect3>
     </sect2>
 
     <sect2>
@@ -1593,7 +1791,7 @@
               </row>
 
               <row>
-                <entry>cellClass</entry>
+                <entry>cellClasses</entry>
 
                 <entry><emphasis>no</emphasis></entry>
 
@@ -1622,6 +1820,36 @@
             </tbody>
           </tgroup>
         </informaltable></para>
+        
+                 <sect3>
+        <title>Variables</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>cellClassProvider</entry>
+                <entry>Provides cell class, usually should not be used from JSP.</entry>
+                <entry><literal>CellClassProvider</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+          </sect3>
     </sect2>
 
     <sect2>
@@ -1701,7 +1929,8 @@
               </row>
             </tbody>
           </tgroup>
-        </informaltable></para>
+        </informaltable>
+        </para>
 
       <sect3>
          
@@ -1788,6 +2017,10 @@
           </tgroup>
         </informaltable>
       </sect3>
+      
+      <para>
+        Either <literal>id</literal> or <literal>globalId</literal> attribute is required.
+      </para>
 
       <sect3 id="updateRegionTag_examples">
         <title>Examples</title>
@@ -1823,7 +2056,7 @@
     <sect2>
       <title>&lt;ui:bold&gt;</title>
 
-      <para>Acts as the HTML &lt;b&gt; tag.</para>
+      <para>Acts as the HTML  <emphasis>&lt;b&gt;</emphasis> tag.</para>
     </sect2>
 
      
@@ -1891,7 +2124,7 @@
     <sect2>
       <title>&lt;ui:style&gt;</title>
 
-      <para>Sets a CSS class for the content, acts as a
+      <para>Sets a CSS class for the tag content, acts as a
       <emphasis>&lt;span&gt;</emphasis> HTML tag with the
       <emphasis>class</emphasis> atribute set.</para>
 
@@ -1935,7 +2168,7 @@
     <sect2>
       <title>&lt;ui:newline&gt;</title>
 
-      <para>Puts a visual new line into resulting text.</para>
+      <para>Puts a visual new line (<literal>&lt;br/&gt;</literal>).</para>
     </sect2>
 
      
@@ -2015,7 +2248,17 @@
                   <emphasis>no</emphasis>
                 </entry>
 
-                <entry>CSS class for tag.</entry>
+                <entry>CSS class for button.</entry>
+              </row>
+              
+              <row>
+                <entry>style</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Inline CSS style for button.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -2070,6 +2313,37 @@
 
                 <entry>CSS class for tag.</entry>
               </row>
+              
+              <row>
+                <entry>style</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Inline CSS style for tag.</entry>
+              </row>
+              
+              <row>
+                <entry>onclick</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry><literal>onClick</literal> Javascript action.</entry>
+              </row>
+              
+              <row>
+                <entry>labelId</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Id of button label.</entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>
@@ -2164,6 +2438,16 @@
                 </entry>
 
                 <entry>CSS class for tag.</entry>
+              </row>
+              
+              <row>
+                <entry>style</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Inline CSS style for tag.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -2433,7 +2717,10 @@ JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
 JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
 
 // both will output something like this:
-// arn-evntId="hello" arn-trgtwdgt="contextWidgetId" arn-evntPar="name" onclick="return _ap.event(this);"</programlisting></para>
+    // arn-evntId="hello" 
+    // arn-trgtwdgt="contextWidgetId" 
+    // arn-evntPar="name" 
+    // onclick="return _ap.event(this);"</programlisting></para>
     </sect2>
 
      
@@ -2479,8 +2766,8 @@ JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
   }
 
   public String getCellClass() throws JspException {
-    FormElement.ViewModel formElementViewModel = 
-      (FormElement.ViewModel)pageContext.getAttribute(FormElementTag.VIEW_MODEL_KEY, PageContext.REQUEST_SCOPE);
+    FormElement.ViewModel formElementViewModel = (FormElement.ViewModel)
+      pageContext.getAttribute(FormElementTag.VIEW_MODEL_KEY, PageContext.REQUEST_SCOPE);
     // superProvider.getCellClass() may only be called once, otherwise moves on to next cell's style
     String superClass = superProvider.getCellClass();
 
