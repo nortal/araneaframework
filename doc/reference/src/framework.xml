@@ -159,8 +159,9 @@
 
                 <entry>The path from the webapp root to the directory that
                 will act as JSP root. The JSPs put there can be selected using
-                widget view selectors (see <xref linkend="widget-view-selector" />).
-                <para><emphasis role="strong">Default value:</emphasis>
+                widget view selectors (see <xref
+                linkend="widget-view-selector" />). <para><emphasis
+                role="strong">Default value:</emphasis>
                 <literal>/WEB-INF/jsp</literal></para></entry>
               </row>
             </tbody>
@@ -355,10 +356,10 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     <para>It is always safe to override filters, as they should never refer
     directly to their children. To override a filter just make a bean
     definition with the same name as in default configuration (filters and
-    their default configuration names among other components are described in <xref
-    linkend="framework-components" />). For instance to override the default
-    localization context with a custom-made one, one would need to add the
-    following lines:</para>
+    their default configuration names among other components are described in
+    <xref linkend="framework-components" />). For instance to override the
+    default localization context with a custom-made one, one would need to add
+    the following lines:</para>
 
     <para><programlisting role="xml">&lt;bean class="example.LocalizationFilterService"
   id="araneaLocalizationFilter" singleton="false"&gt;
@@ -528,7 +529,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       StandardServletSessionRouterService
     </sect2 -->
 
-    <sect2 id="araneaLocalizationFilter">
+    <sect2 id="araneaSpringLocalizationFilter">
       <title>Localization Filter</title>
 
       <informaltable frame="topbot">
