@@ -134,7 +134,7 @@
   
   <bean class="org.araneaframework.framework.container.StandardContainerWidget" id="araneaWidgetContainer"
     singleton="false">
-    <property name="root" ref="araneaMainCallStack"/>
+    <property name="root" ref="araneaRootFlowContainer"/>
   </bean>
   
    <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="araneaRootFlowContainer" singleton="false">

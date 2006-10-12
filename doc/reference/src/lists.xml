@@ -48,7 +48,7 @@
 
             <emphasis>filtering</emphasis>
 
-            , 
+             , 
 
             <emphasis>ordering</emphasis>
 
@@ -68,7 +68,7 @@
 
             <emphasis>filtering</emphasis>
 
-            , 
+             , 
 
             <emphasis>ordering</emphasis>
 
@@ -125,7 +125,7 @@ protected void init() {
 
               <literal>MyModel</literal>
 
-              . 
+               . 
             </listitem>
           </varlistentry>
 
@@ -814,7 +814,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
               <emphasis>filter form</emphasis>
 
-              . This is a basis of constructing a SQL 
+               . This is a basis of constructing a SQL 
 
               <literal>WHERE</literal>
 
@@ -847,7 +847,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
               <emphasis>query</emphasis>
 
-              . 
+               . 
             </listitem>
           </varlistentry>
 
@@ -984,7 +984,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
               <classname>BeanResultReader</classname>
 
-              . 
+               . 
             </listitem>
           </varlistentry>
         </variablelist></para>
@@ -1176,7 +1176,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
               <classname>BeanResultReader.</classname>
 
-              
+               
             </listitem>
           </varlistentry>
         </variablelist></para>
@@ -1220,7 +1220,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
                 <code>ListSqlHelper</code>
 
-                . E.g. booleans have to be converted into numeric (0 or 1) values. 
+                 . E.g. booleans have to be converted into numeric (0 or 1) values. 
               </listitem>
             </varlistentry>
 
@@ -1264,7 +1264,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
                 <code>Converter</code>
 
-                . E.g. to convert numeric value into a Boolean. Here is the Converter used reversely. 
+                 . E.g. to convert numeric value into a Boolean. Here is the Converter used reversely. 
               </listitem>
             </varlistentry>
 
@@ -1836,9 +1836,5 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 &lt;/ui:list&gt;</programlisting>
       </sect3>
     </sect2>
-  </sect1>
-
-  <sect1>
-    <title>Customizing and Extending Lists</title>
   </sect1>
 </chapter>

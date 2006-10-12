@@ -34,47 +34,38 @@
   <sect1 id="hello-world">
     <title>Hello World</title>
 
+    <para>This example demonstrates the way Aranea applications are assembled
+    from independent widgets, the way widgets receive and process events, the
+    way the widgets communicate and navigate among each other and how they can
+    render themselves. It does not however show numerous other features of
+    Aranea frameworks and is simplified as possible to show only relevant core
+    properties of Aranea. For a thorough introduction to building applications
+    with Aranea see the Business Tutorial.</para>
+
     <para>As an introduction to Aranea, we present the example that has become
     classical in computer literature for learning new languages and
     technologies—"Hello World!". Our variant of "Hello World!" will display a
-    form where one can insert his name (shown on <xref
-    linkend="example-name" />) and after clicking the button personalized
-    greeting is displayed (shown on <xref linkend="example-hello" />).</para>
+    form where one can insert his name and then display a personalized
+    greeting. We will asume that all Java classes in the example are in
+    <literal>example</literal> package.</para>
 
-    <figure id="example-name">
+    <figure id="example-hello-name">
       <title>Insert your name display</title>
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../images/example-name.png" format="PNG" />
+          <imagedata fileref="../images/hello-name-widgets.png" format="PNG" />
         </imageobject>
       </mediaobject>
     </figure>
 
-    <figure id="example-hello">
-      <title>Greeting display</title>
+    <para>As we can see on <xref linkend="example-hello-name" />, we will
+    split the example into two separate components (that we refer to hereon as
+    widgets). The starting widget is <literal>NameWidget</literal> that has an
+    associated <literal>name.jsp</literal> and displays the form for inserting
+    your name. The source code of the widget follows:</para>
 
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../images/example-hello.png" format="PNG" />
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>This example demonstrates the way Aranea applications are assembled
-    from independent widgets, the way widgets receive and process events, the
-    way the widgets communicate and navigate among each other and how they can
-    render themselves.</para>
-
-    <para>Most Aranea applications need a root widget class. In our very
-    simple case it will be the <literal>NameWidget</literal> defined on <xref
-    linkend="example-name-widget" />. The widget package is not important and
-    we assume it to be <literal>example</literal>.</para>
-
-    <figure id="example-name-widget">
-      <title>NameWidget.java</title>
-
-      <programlisting role="java">public class NameWidget extends BaseUIWidget {
+    <programlisting role="java">public class NameWidget extends BaseUIWidget {
   protected void init() throws Exception {        
     setViewSelector("name");
   }
@@ -84,15 +75,35 @@
     getFlowCtx().replace(new HelloWidget(name), null);
   }  
 }</programlisting>
-    </figure>
 
-    <para>The widget selects the JSP that will be used for rendering by
-    calling the <literal>setViewSelector("name")</literal>, which in this case
-    will be the JSP with path <literal>/WEB-INF/jsp/name.jsp</literal>
-    (certainly this location can be altered, but this is outside the example
-    scope). This JSP can be seen on the <xref linkend="example-name-jsp" />
-    (usually the root JSP tags are present only in topmost JSP
-    template).</para>
+    <para>The first thing of interest is the <literal>init()</literal> method.
+    As you could have guessed it is called when the widget is initialized by
+    the framework and can be used to perform initialization tasks. In this
+    case the widget selects the JSP that will be used for rendering by calling
+    the <literal>setViewSelector("name")</literal>, which by default will be
+    <literal>/WEB-INF/jsp/name.jsp</literal>:</para>
+
+    <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
+  &lt;ui:root&gt;
+    &lt;ui:viewPort&gt; 
+      &lt;head&gt;
+        &lt;ui:importScripts/&gt;           
+        &lt;title&gt;Hello World!&lt;/title&gt;
+      &lt;/head&gt;                  
+      &lt;ui:body&gt;
+        
+<emphasis role="bold">        &lt;ui:systemForm method="GET"&gt;
+            Insert your name: &lt;input type="text" name="name"/&gt;&lt;br/&gt;&lt;br/&gt;            
+            &lt;ui:eventButton labelId="#Say hello" eventId="hello"/&gt;      
+        &lt;/ui:systemForm&gt;</emphasis>
+
+      &lt;/ui:body&gt;
+    &lt;/ui:viewPort&gt;
+  &lt;/ui:root&gt;  
+&lt;/jsp:root&gt;</programlisting>
 
     <figure id="example-name-jsp">
       <title>/WEB-INF/jsp/name.jsp</title>
@@ -100,20 +111,20 @@
       <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
-  xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2"&gt;
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
   &lt;ui:root&gt;
     &lt;ui:viewPort&gt; 
       &lt;head&gt;
-        &lt;ui:importScripts/&gt;
-            
+        &lt;ui:importScripts/&gt;           
         &lt;title&gt;Hello World!&lt;/title&gt;
-      &lt;/head&gt;     
-             
+      &lt;/head&gt;                  
       &lt;ui:body&gt;
+        
         &lt;ui:systemForm method="GET"&gt;
             Insert your name: &lt;input type="text" name="name"/&gt;&lt;br/&gt;&lt;br/&gt;            
             &lt;ui:eventButton labelId="#Say hello" eventId="hello"/&gt;      
         &lt;/ui:systemForm&gt;
+
       &lt;/ui:body&gt;
     &lt;/ui:viewPort&gt;
   &lt;/ui:root&gt;  
@@ -168,7 +179,7 @@
 &lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
   xmlns:c="http://java.sun.com/jstl/core"
-  xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2"&gt;
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
   &lt;ui:root&gt;
     &lt;ui:viewPort&gt; 
       &lt;ui:widgetContext&gt;
@@ -210,10 +221,12 @@
   &lt;!-- Aranea dispatcher servlet --&gt;
    &lt;servlet&gt;
       &lt;servlet-name&gt;araneaServlet&lt;/servlet-name&gt;
-      &lt;servlet-class&gt;org.araneaframework.integration.spring.AraneaSpringDispatcherServlet&lt;/servlet-class&gt;
+      &lt;servlet-class&gt;
+        org.araneaframework.integration.spring.AraneaSpringDispatcherServlet
+      &lt;/servlet-class&gt;
       &lt;init-param&gt;
-      &lt;param-name&gt;araneaApplicationStart&lt;/param-name&gt;
-      &lt;param-value&gt;example.NameWidget&lt;/param-value&gt;
+        &lt;param-name&gt;araneaApplicationStart&lt;/param-name&gt;
+        &lt;param-value&gt;example.NameWidget&lt;/param-value&gt;
       &lt;/init-param&gt;      
       &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
    &lt;/servlet&gt;
@@ -225,5 +238,17 @@
    &lt;/servlet-mapping&gt;
 &lt;/web-app&gt;</programlisting>
     </figure>
+  </sect1>
+
+  <sect1>
+    <title>Flows</title>
+
+    <para></para>
+  </sect1>
+
+  <sect1>
+    <title>Reusing Widgets</title>
+
+    <para></para>
   </sect1>
 </article>
