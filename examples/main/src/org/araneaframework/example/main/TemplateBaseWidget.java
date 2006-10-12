@@ -57,7 +57,7 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
   
   protected class ComponentImpl extends BaseUIWidget.ComponentImpl {
     public void init(Environment env) {
-      SpringInjectionUtil.injectBeans(getEnvironment(), this);
+      SpringInjectionUtil.injectBeans(env, TemplateBaseWidget.this);
   
       super.init(env);
     }
