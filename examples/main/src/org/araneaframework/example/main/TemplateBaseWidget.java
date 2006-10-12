@@ -17,7 +17,6 @@
 package org.araneaframework.example.main;
 
 import org.araneaframework.example.common.framework.ViewSelectorAware;
-import org.araneaframework.example.main.business.data.ContractDAO;
 import org.araneaframework.example.main.business.data.GeneralDAO;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.integration.spring.SpringInjectionUtil;
@@ -44,10 +43,6 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
   
   public GeneralDAO getGeneralDAO() {
     return (GeneralDAO) getBeanFactory().getBean("generalDAO");
-  }
-  
-  public ContractDAO getContractDAO() {
-    return (ContractDAO) getBeanFactory().getBean("contractDAO");
   }
 
   public String getViewSelector() {

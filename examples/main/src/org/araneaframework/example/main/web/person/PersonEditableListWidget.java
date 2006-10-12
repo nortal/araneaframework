@@ -42,7 +42,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
-
+	private  IContractDAO contractDAO; 
 	/* Editable list. */ 
 	private EditableBeanListWidget list;
 	/* Actual holder of editable list rows (resides inside EditableBeanListWidget).
@@ -159,7 +159,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		public void deleteRow(Object key) throws Exception {
 			Long id = (Long) key;
-			getContractDAO().removeByPersonId(id);
+			contractDAO.removeByPersonId(id);
 			getGeneralDAO().remove(PersonMO.class, id);
 			list.getDataProvider().refreshData();
 		}
@@ -207,4 +207,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			form.addBeanElement("salary", "#Salary", new FloatControl(), false);
 		}
 	}
+	
+	  public void injectContractDAO(IContractDAO contractDAO) {
+		    this.contractDAO = contractDAO;
+		  }
 }
