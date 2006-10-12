@@ -132,7 +132,6 @@
     run). The main example's goal is to demonstrate a working Aranea web
     application that makes use of most often-used Aranea features.</para>
 
-    <ulink url="images/templateApp-screen.png">
       <mediaobject id="templateAppInAction" xreflabel="templateApp-in-action">
         <imageobject>
           <imagedata align="center"
@@ -140,10 +139,8 @@
                      format="PNG" />
         </imageobject>
 
-        <caption align="top">TemplateApp in action (click for complete
-        image).</caption>
-      </mediaobject>
-    </ulink>
+        <caption align="top">TemplateApp in action.</caption>
+    </mediaobject>
 
     <sect2>
       <title>Dependencies</title>

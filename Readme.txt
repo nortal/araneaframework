@@ -61,6 +61,7 @@ DOCUMENTATION
 
 Documentation can be found in the "doc" directory.
 	doc/white-paper is a whitepaper on the Aranea Web Framework
+	doc/introduction describes Aranea conceptual hello-world application
 	doc/tutorial is a tutorial/intro to Aranea Web Framework
 	doc/reference includes the reference manual.
 	doc/javadoc includes the javadoc
