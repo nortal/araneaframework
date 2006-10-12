@@ -559,12 +559,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/**
 	 * Sets the initial order of the list.
 	 * 
-	 * @param columnName the name of the column to order by.
+	 * @param fieldId the name of the column to order by.
 	 * @param ascending whether ordering should be ascending.
 	 */
-	public void setInitialOrder(String columnName, boolean ascending) {
+	public void setInitialOrder(String fieldId, boolean ascending) {
 		OrderInfo orderInfo = new OrderInfo();
-		OrderInfoField orderInfoField = new OrderInfoField(columnName, ascending);
+		OrderInfoField orderInfoField = new OrderInfoField(fieldId, ascending);
 		orderInfo.addField(orderInfoField);
 		setOrderInfo(orderInfo);
 	}
@@ -576,7 +576,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	public void setOrderInfo(OrderInfo orderInfo) {  	
 		this.orderInfo = orderInfo;
-		propagateListDataProviderWithOrderInfo(orderInfo);				
+		if (isInitialized()) {
+			propagateListDataProviderWithOrderInfo(orderInfo);			
+		}
 	}
 
 	protected void propagateListDataProviderWithOrderInfo(OrderInfo orderInfo) {
@@ -680,9 +682,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		addEventListener("showSlice", new ShowSliceEventHandler());
 		addEventListener("order", new OrderEventHandler());
 
-		if (getDataProvider() != null) {			
-			initDataProvider();
-		}
 		initFilterForm();
 		initSequenceHelper();
 		
@@ -691,6 +690,10 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		this.listStructure.init(getEnvironment());
 		
 		runInitEvents();
+
+		if (getDataProvider() != null) {			
+			initDataProvider();
+		}		
 	}
 
 	protected SequenceHelper createSequenceHelper() {
