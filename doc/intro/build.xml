@@ -45,16 +45,7 @@
     </target>
 
 
-    <target name="pdf-prepare">
-
-        <!-- Copy all the images to the output location, will be removed later. -->
-        <copy todir="${build.dir}/pdf/images">
-            <fileset dir="${basedir}/images">
-                <include name="**/*.png"/>
-                <include name="**/*.svg"/>
-                <include name="**/*.gif"/>
-            </fileset>
-        </copy>
+    <target name="pdf-prepare" depends="copy-shared">
 
         <!-- Create the XSL/FO temporary file. -->
         <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${basedir}" maxmemory="128m" >
@@ -102,10 +93,9 @@
         <delete>
             <fileset dir="${build.dir}/pdf" excludes="**/*.pdf"/>
         </delete>
-        <delete  dir="${build.dir}/pdf/images"/>
     </target>
 
-    <target name="html-single"
+    <target name="html-single" depends="copy-shared"
         description="Generates the single-page HTML documentation only for a age (set ">
     	<property name="single.html.build.dir" value="${build.dir}/html_single/"/>
 
@@ -119,10 +109,6 @@
             <arg value="${basedir}/src/master.xml"/>
             <arg value="${basedir}/styles/${db.style.htmlsingle}"/>
         </java>
-    	
-    	<copy todir="${single.html.build.dir}/images/">
-    		<fileset dir="images" includes="*.png"/>
-    	</copy>
     </target>
 
     <target name="copy-shared">

@@ -3329,7 +3329,7 @@ el.click();</programlisting>
     </sect2>
   </sect1>
 
-  <sect1>
+  <sect1 id="form_lists">
     <title>Form Lists</title>
 
     <para>A common need in handling data is allowing a user to list of data,

@@ -1,16 +1,19 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
 2006.10.13    | Aranea 1.0
+
 Features and Improvements
 	Reference manual updates
 	Updated to compile with Java 1.3
 	Tutorial splitted: introduction & main tutorial
-	Library dependencies reorganized
+	Library dependencies folders reorganized
 
 Bugfixes
 	Some small fixes
 
+---------------------------------------------------------------------------------------------
 2006.10.09    | Aranea 1.0-RC4
+
 Features and Improvements
         Composite Constraints can optionally be lazy                          | See change #112
         Managed services can be set TTL after which they may expire           | See #200
@@ -37,6 +40,7 @@ API Changes
         RelocatableServiceDecorator -> RelocatableDecorator
         RelocatableWidgetDecorator -> RelocatableDecorator
 
+---------------------------------------------------------------------------------------------
 2006.09.11    | Aranea 1.0-RC3
 
 Features and Improvements

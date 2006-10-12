@@ -48,7 +48,7 @@
 
             <emphasis>filtering</emphasis>
 
-            , 
+             , 
 
             <emphasis>ordering</emphasis>
 
@@ -68,7 +68,7 @@
 
             <emphasis>filtering</emphasis>
 
-            , 
+             , 
 
             <emphasis>ordering</emphasis>
 
@@ -125,7 +125,7 @@ protected void init() {
 
               <literal>MyModel</literal>
 
-              . 
+               . 
             </listitem>
           </varlistentry>
 
@@ -299,18 +299,15 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
       <para>Fortunately, in most cases it's unnecessary to add these search
       fields manually. Instead, if one is adding a list field, he or she can
       assign both the <code>ListFilter</code> and <code>FormElement</code> for
-      this field very simply: <programlisting role="java">
-	myList.addField("address", "#Address").like();
-</programlisting> Here we simply add an 'Address' field providing it with
+      this field very simply: <programlisting role="java">myList.addField("address", "#Address").like();</programlisting> Here we simply add an 'Address' field providing it with
       label and telling there's should be a <emphasis>Like filter</emphasis>
       for this field. By this, we automatically add a <code>TextControl</code>
       into the search form. By filling it with value 'Paris', we will see only
       rows which 'Address' field contain 'Paris', 'paris', 'PARIS' etc.</para>
 
       <para>To describe, how this works, we show a longer version of the
-      previous code: <programlisting role="java">	
-	myList.addField("address", "#Address");
-	myList.getFilterHelper().like("address");
+      previous code: <programlisting role="java">myList.addField("address", "#Address");
+myList.getFilterHelper().like("address");
 </programlisting> So there's a special class
       <code>org.araneaframework.uilib.list.structure.filter.FilterHelper</code>
       that is used to add list filters. All <code>ListWidget.addField()</code>
@@ -324,11 +321,9 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 
       <para>By default all filters that deal with the Strings are case
       insensitive. To configure some filters to be different, use the
-      following: <programlisting role="java">
-	myList.addField("country", "#Country").setIgnoreCase(false).like();
-	myList.addField("city", "#City").like();
-	myList.addField("address", "#Address").setIgnoreCase(true).like();
-</programlisting> This can be explained following: Before adding a Like filter
+      following: <programlisting role="java">myList.addField("country", "#Country").setIgnoreCase(false).like();
+myList.addField("city", "#City").like();
+myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisting> This can be explained following: Before adding a Like filter
       for the 'country' field, we switched to the case sensitive mode. And
       before adding a filter for the 'address' field, we switched to the case
       insensitive mode. Thus the city's filter is case sensitive as the
@@ -814,7 +809,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
               <emphasis>filter form</emphasis>
 
-              . This is a basis of constructing a SQL 
+               . This is a basis of constructing a SQL 
 
               <literal>WHERE</literal>
 
@@ -847,7 +842,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
               <emphasis>query</emphasis>
 
-              . 
+               . 
             </listitem>
           </varlistentry>
 
@@ -984,7 +979,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
               <classname>BeanResultReader</classname>
 
-              . 
+               . 
             </listitem>
           </varlistentry>
         </variablelist></para>
@@ -1176,7 +1171,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
               <classname>BeanResultReader.</classname>
 
-              
+               
             </listitem>
           </varlistentry>
         </variablelist></para>
@@ -1220,7 +1215,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
                 <code>ListSqlHelper</code>
 
-                . E.g. booleans have to be converted into numeric (0 or 1) values. 
+                 . E.g. booleans have to be converted into numeric (0 or 1) values. 
               </listitem>
             </varlistentry>
 
@@ -1264,7 +1259,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
                 <code>Converter</code>
 
-                . E.g. to convert numeric value into a Boolean. Here is the Converter used reversely. 
+                 . E.g. to convert numeric value into a Boolean. Here is the Converter used reversely. 
               </listitem>
             </varlistentry>
 
@@ -1837,8 +1832,28 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
       </sect3>
     </sect2>
   </sect1>
+  
+    <sect1>
+    <title>Editable Lists</title>
+    <para>
+     <literal>EditableListWidget</literal> and <literal>EditableBeanListWidget</literal> are <literal>ListWidgets</literal> 
+     wrapped around <literal>FormListWidget</literal> (See <xref linkend="form_lists"/> about it) which gathers data 
+     with the help from <literal>ListWidget</literal>.
+     </para>
+     
+     <para>
+     Both editable list widgets have just one constructor and one additional getter (compared to <literal>ListWidget</literal>):
+     <programlisting role="java"><![CDATA[public EditableListWidget(FormRowHandler rowHandler);
+public EditableBeanListWidget(FormRowHandler rowHandler, Class beanClass);
 
-  <sect1>
-    <title>Customizing and Extending Lists</title>
+// gets the wrapped form list
+public BeanFormListWidget getFormList();]]></programlisting>
+</para>
+
+    <para>
+        Most important component of editable lists is <literal>FormListWidget</literal>'s <literal>RowHandler</literal>, refer to <xref linkend="form_lists"/>
+        about implementing that interface. Other than required implementation of <literal>RowHandler</literal>, editable lists do not
+        differ from <literal>ListWidget</literal>s.
+    </para>
   </sect1>
 </chapter>

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class SpringInjectionUtil {
   public static void injectBeans(Environment env, Object object) {
-    Method[] methods = object.getClass().getDeclaredMethods();
+    Method[] methods = object.getClass().getMethods();
     for (int i = 0; i < methods.length; i++) {         
       if (methods[i].getName().startsWith("inject")) {
         String beanName = methods[i].getName().substring(6);

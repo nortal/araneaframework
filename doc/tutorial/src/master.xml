@@ -47,7 +47,7 @@
     of Aranea. For more thorough understanding, additional reading of Aranea
     Reference Manual is recommended. More theoretically inclined readers might
     also want to take a look at the technical paper, which briefly describes
-    the inner workings of Aranea. For more basic "Hello world" intro, see
+    the inner workings of Aranea. For a more conceptual "Hello world" intro, see
     <emphasis>Aranea Introduction</emphasis>.</para>
 
     <para>We try to present this tutorial in as clear and as beginner-friendly
@@ -132,7 +132,6 @@
     run). The main example's goal is to demonstrate a working Aranea web
     application that makes use of most often-used Aranea features.</para>
 
-    <ulink url="images/templateApp-screen.png">
       <mediaobject id="templateAppInAction" xreflabel="templateApp-in-action">
         <imageobject>
           <imagedata align="center"
@@ -140,10 +139,8 @@
                      format="PNG" />
         </imageobject>
 
-        <caption align="top">TemplateApp in action (click for complete
-        image).</caption>
-      </mediaobject>
-    </ulink>
+        <caption align="top">TemplateApp in action.</caption>
+    </mediaobject>
 
     <sect2>
       <title>Dependencies</title>

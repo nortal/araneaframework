@@ -180,7 +180,7 @@ public class MenuItem implements Serializable {
         resultFlow = menu.flowCreator.createFlow();
     } catch (Exception e) {
       clearSelection();
-      throw new AraneaRuntimeException("Selection of menu item '" + menuPath + "' failed at '" + pathElement +"'.");
+      throw new AraneaRuntimeException("Selection of menu item '" + menuPath + "' failed at '" + pathElement +"'.", e);
     }
 
     return resultFlow;

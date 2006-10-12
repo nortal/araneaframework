@@ -33,7 +33,9 @@
     <para>This chapter describes the core Aranea abstractions in detail
     generally not necessary to just develop application code so it can be
     skipped during the first reading. It is quite dry on the examples, but its
-    understanding is crucial to develop Aranea extensions.</para>
+    understanding is crucial to develop Aranea extensions. To get a quick
+    understanding of how to program applications with widgets read <xref
+    linkend="core-application-widgets" />. </para>
   </sect1>
 
   <sect1>

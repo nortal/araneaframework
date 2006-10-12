@@ -77,6 +77,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 		list.addField("birthdate", "#Birthdate").range();
 		list.addField("salary", "#Salary").range();
 		
+		list.setInitialOrder("name", true);
+		
 		// The dummy column without label (in list rows, some listRowLinkButton's will be written there).
 		// Needed to write out componentListHeader with correct number of columns. 
 		list.addField("dummy", null, false);
