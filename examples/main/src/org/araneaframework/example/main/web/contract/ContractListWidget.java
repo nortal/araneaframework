@@ -53,13 +53,13 @@ public class ContractListWidget extends TemplateBaseWidget {
 	
 	protected void initList() throws Exception {
 		list = new ListWidget();
-		addWidget("contractList", list);
 		list.setDataProvider(new TemplateContractListDataProvider());
 		list.addField("id", "#Id");
 		list.addField("company", "#Company");
 		list.addField("person", "#Person");
 		list.addField("notes", "#Notes");
 		list.addField("dummy", null, false);
+		addWidget("contractList", list);
 	}
 	
 	private void refreshList() throws Exception {  	
