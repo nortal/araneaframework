@@ -18,7 +18,7 @@
 -->
 <article>
   <articleinfo>
-    <title>And Object-Orieneted Introduction to Aranea</title>
+    <title>An Object-Oriented Introduction to Aranea</title>
 
     <titleabbrev>Aranea Intro</titleabbrev>
 
@@ -44,14 +44,14 @@
 
     <para>Although the examples we use here may seem to be way too simple and
     the abstractions we apply to them way too complex for their case, remember
-    that the same concepts can also be applied to very complex scenarious,
+    that the same concepts can also be applied to very complex scenarios,
     where such decomposition can lead to reusing a lot of GUI logics.</para>
 
     <para>As an introduction to Aranea, we present the example that has become
     classical in computer literature for learning new languages and
     technologies — "Hello World!". Our variant of "Hello World!" will display
     a form where one can insert his name and then display a personalized
-    greeting. We will asume that all Java classes in the example are in
+    greeting. We will assume that all Java classes in the example are in
     <literal>example</literal> package.</para>
 
     <figure id="example-hello-name">
@@ -111,11 +111,11 @@
   &lt;/ui:root&gt;  
 &lt;/jsp:root&gt;</programlisting>
 
-    <para>The interesting parts are highlited with bold.
+    <para>The interesting parts are highlighted with bold.
     <literal>&lt;ui:systemForm/&gt;</literal> renders the actual HTML form and
     <literal>&lt;ui:eventButton&gt;</literal> renders a button with a label
     "Say hello!" that will send the <literal>hello</literal> event to the
-    <literal>NameWidget</literal>, which calsl its
+    <literal>NameWidget</literal>, which calls its
     <literal>handleEventHello()</literal> method.</para>
 
     <para>When that will occur the first line of
@@ -214,7 +214,7 @@
 </programlisting>
 
     <para>This concludes the first part of the introduction. Further we will
-    examine advanced Object-Orieneted and navigational idioms using this very
+    examine advanced Object-Oriented and navigational idioms using this very
     same example as a case study.</para>
   </sect1>
 
@@ -292,15 +292,15 @@
       <para>As a matter of fact we are lying a bit, since
       <literal>hello.jsp</literal> also includes <literal>head</literal>,
       <literal>body</literal> and other general tags. However in the next
-      section we will show how to get rid of this repeating bolerplate and
+      section we will show how to get rid of this repeating boilerplate and
       make leave only relevant tags in widget JSPs. This way we would also put
       the current example to work.</para>
     </note>
 
     <para>The first thing to note from here is that since our widgets are
     objects through and through it is easy to make e.g. a widget that will use
-    three independent HelloWidgets to display greetings to three different
-    people:</para>
+    three independent <literal>HelloWidget</literal>s to display greetings to
+    three different people:</para>
 
     <programlisting role="java">public class ThreeGreetingsWidget extends BaseUIWidget {
   protected void init() throws Exception {
@@ -347,9 +347,9 @@
   ...
 }</programlisting>
 
-    <para>Then we could easily implement e.g. a widget that doesn just display
-    the greeting, but also tells how many hits does Google give for this
-    name:</para>
+    <para>Then we could easily implement e.g. a widget that doesn't just
+    display the greeting, but also tells how many hits does Google give for
+    this name:</para>
 
     <mediaobject>
       <imageobject>
@@ -378,7 +378,7 @@
     <para>Now that we have the example running let's get it more interesting.
     First of all we can notice that once you have inserted your name, there is
     no way to get back — the widget on the flow has been exchanged and unless
-    we create a new broser session we will always get the same "Hello
+    we create a new browser session we will always get the same "Hello
     Jevgeni!" message no matter how much we refresh. To remedy that lets
     modify the HelloWidget to have a back button. We start by adding the
     button to <literal>hello.jsp</literal>:</para>
@@ -467,9 +467,9 @@ public class HelloWidget extends BaseUIWidget {
     the <literal>NameWidget</literal> flow becomes active again.</para>
 
     <para>Now that we got the flow thing covered, let's try to get the JSPs
-    cleaner. Currently we dublicate all of the root tags like head, body, etc
+    cleaner. Currently we duplicate all of the root tags like head, body, etc
     in both widgets. In a real application we would definitely introduce a
-    RootWidget to take care of these things:</para>
+    <literal>RootWidget</literal> to take care of these things:</para>
 
     <programlisting role="java">public class RootWidget extends BaseUIWidget {
   protected void init() throws Exception {        
@@ -542,7 +542,7 @@ public class HelloWidget extends BaseUIWidget {
 
     <para>The last interesting thing we'd like to note, is that since
     StandardFlowContainer is a usual widget, it is simple to have several of
-    them (in fact as many as we need) running paralelly:</para>
+    them (in fact as many as we need) running in parallel:</para>
 
     <programlisting role="java">public class RootWidget extends BaseUIWidget {
   protected void init() throws Exception {        
@@ -594,9 +594,9 @@ public class HelloWidget extends BaseUIWidget {
   }  
 }</programlisting>
 
-    <para>Now we can just inlude NameWidget as a child and it will let us know
-    when the user clicks the button selecting the name. We can also wrap it as
-    a flow easily:</para>
+    <para>Now we can just include NameWidget as a child and it will let us
+    know when the user clicks the button selecting the name. We can also wrap
+    it as a flow easily:</para>
 
     <para><programlisting role="java">public class NameFlowWidget 
   extends BaseUIWidget implements NameWidget.Callback{
