@@ -52,7 +52,7 @@ public class ContractListWidget extends TemplateBaseWidget {
 	}
 	
 	protected void initList() throws Exception {
-		ListWidget list = new ListWidget();
+		list = new ListWidget();
 		addWidget("contractList", list);
 		list.setDataProvider(new TemplateContractListDataProvider());
 		list.addField("id", "#Id");

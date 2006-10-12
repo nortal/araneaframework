@@ -1832,4 +1832,28 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
       </sect3>
     </sect2>
   </sect1>
+  
+    <sect1>
+    <title>Editable Lists</title>
+    <para>
+     <literal>EditableListWidget</literal> and <literal>EditableBeanListWidget</literal> are <literal>ListWidgets</literal> 
+     wrapped around <literal>FormListWidget</literal> (See <xref linkend="form_lists"/> about it) which gathers data 
+     with the help from <literal>ListWidget</literal>.
+     </para>
+     
+     <para>
+     Both editable list widgets have just one constructor and one additional getter (compared to <literal>ListWidget</literal>):
+     <programlisting role="java"><![CDATA[public EditableListWidget(FormRowHandler rowHandler);
+public EditableBeanListWidget(FormRowHandler rowHandler, Class beanClass);
+
+// gets the wrapped form list
+public BeanFormListWidget getFormList();]]></programlisting>
+</para>
+
+    <para>
+        Most important component of editable lists is <literal>FormListWidget</literal>'s <literal>RowHandler</literal>, refer to <xref linkend="form_lists"/>
+        about implementing that interface. Other than required implementation of <literal>RowHandler</literal>, editable lists do not
+        differ from <literal>ListWidget</literal>s.
+    </para>
+  </sect1>
 </chapter>
