@@ -32,17 +32,23 @@
                 <ui:row styleClass="filter">
                   <ui:cell/>
 
+                  <ui:formElement id="name">
                   <ui:cell>
-                    <ui:textInput id="name"/>
+                    <ui:textInput/>
                   </ui:cell>
+                  </ui:formElement>
 
-                  <ui:cell>
-                    <ui:textInput id="surname"/>
-                  </ui:cell>
+                <ui:formElement id="surname">
+                <ui:cell>
+                  <ui:textInput/>
+                </ui:cell>
+                </ui:formElement>
 
-                  <ui:cell>
-                    <ui:textInput id="phone"/>
-                  </ui:cell>
+                <ui:formElement id="phone">
+                <ui:cell>
+                  <ui:textInput/>
+                </ui:cell>
+                </ui:formElement>
 
                   <ui:cell>
                     <ui:dateInput id="birthdate_start"/>
@@ -157,25 +163,35 @@
                 <!-- columns, usage is the same as when rendering a form widget -->
                 <ui:cell/>
 
+                <ui:formElement id="name">
                 <ui:cell styleClass="center">
-                  <ui:textInput id="name"/>
+                  <ui:textInput/>
                 </ui:cell>
+                </ui:formElement>
 
+                <ui:formElement id="surname">
                 <ui:cell>
-                  <ui:textInput id="surname"/>
+                  <ui:textInput/>
                 </ui:cell>
+                </ui:formElement>
 
+                <ui:formElement id="phone">
                 <ui:cell>
-                  <ui:textInput id="phone"/>
+                  <ui:textInput/>
                 </ui:cell>
+                </ui:formElement>
 
+                <ui:formElement id="birthdate">
                 <ui:cell>
-                  <ui:dateInput id="birthdate"/>
-                </ui:cell>							
+                  <ui:dateInput/>
+                </ui:cell>				
+                </ui:formElement>			
 
-                <ui:cell>
-                  <ui:floatInput id="salary" styleClass="w40"/>
-                </ui:cell>							
+                <ui:formElement id="salary">
+	                <ui:cell>
+	                     <ui:floatInput styleClass="w40"/>
+	                </ui:cell>							
+                </ui:formElement>
 
                 <ui:cell>
                   <ui:attribute name="width" value="0"/>
