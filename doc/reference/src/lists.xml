@@ -1866,7 +1866,7 @@ public BeanFormListWidget getFormList();]]></programlisting>
     list = new EditableBeanListWidget(buildFormRowHandler(), SomeBean.class);
     list.setDataProvider(buildListDataProvider());
     list.setOrderableByDefault(true);
-    // list has only to columns of which only one is editable
+    // list has only two columns of which only one is editable
     list.addField("immutable", "#Id", false);
     list.addField("mutable", "#First name").like();
 
