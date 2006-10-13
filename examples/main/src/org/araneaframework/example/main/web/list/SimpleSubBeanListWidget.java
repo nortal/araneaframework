@@ -36,8 +36,6 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	private ListWidget list;
 	
 	protected void init() throws Exception {
-		super.init();
-		
 		setViewSelector("list/subBeanList");
 		
 		initList();

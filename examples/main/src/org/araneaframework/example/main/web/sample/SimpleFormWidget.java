@@ -50,8 +50,6 @@ public class SimpleFormWidget extends TemplateBaseWidget {
    * Builds the form.
    */
   protected void init() throws Exception {
-	super.init();
-	
 	setViewSelector("sample/simpleForm");
 
     // creation of new form

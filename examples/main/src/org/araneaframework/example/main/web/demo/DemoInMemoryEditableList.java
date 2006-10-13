@@ -64,8 +64,6 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 	 * Builds the form with one checkbox, one textbox and a button.
 	 */
 	public void init() throws Exception {
-		super.init();
-		
 		setViewSelector("demo/demoInMemoryEditableList");		
 		
 		formList = new BeanFormListWidget(new DemoEditableRowHandler(), DataDTO.class);

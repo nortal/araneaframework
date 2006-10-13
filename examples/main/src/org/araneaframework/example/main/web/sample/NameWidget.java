@@ -29,8 +29,6 @@ public class NameWidget extends BaseUIWidget {
   private FormWidget form;
   
   protected void init() throws Exception {
-	super.init();
-	
 	setViewSelector("sample/nameForm");
 
 	form = new FormWidget();

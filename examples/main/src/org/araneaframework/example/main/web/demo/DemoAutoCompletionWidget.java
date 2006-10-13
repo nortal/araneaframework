@@ -19,8 +19,6 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
   private FormWidget form;
   
   public void init() throws Exception {
-    super.init();
-    
     setViewSelector("demo/demoAutoCompletion");
     form = new FormWidget();
     

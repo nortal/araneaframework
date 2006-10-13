@@ -34,8 +34,6 @@ public class RedirectingWidget extends TemplateBaseWidget {
 	  private static final long serialVersionUID = 1L;
 
   public void init() throws Exception {
-		super.init();
-    
     setViewSelector("misc/redirect");
     addEventListener("redirect", new ProxyEventListener(this));
 	}

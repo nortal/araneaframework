@@ -31,7 +31,6 @@ public class MultiListWidget extends TemplateBaseWidget {
 	  private static final long serialVersionUID = 1L;
 
   protected void init() throws Exception {
-		super.init();
 		addWidget("personListWdgt", new PersonListWidget(true));
 		addWidget("companyListWdgt", new CompanyListWidget());
 		

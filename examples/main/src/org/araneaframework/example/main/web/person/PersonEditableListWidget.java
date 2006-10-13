@@ -50,8 +50,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	private BeanFormListWidget formList;
 	
 	protected void init() throws Exception {
-		super.init();
-		
 		setViewSelector("person/editableList");
 		
 		/* PersonMO class is already familiar from form examples. 

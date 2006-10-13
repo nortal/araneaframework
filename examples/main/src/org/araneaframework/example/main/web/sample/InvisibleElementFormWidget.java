@@ -37,8 +37,6 @@ public class InvisibleElementFormWidget extends TemplateBaseWidget {
   }
   
   protected void init() throws Exception {
-    super.init();
-
     setViewSelector("sample/invisibleElementForm");
   
     form = new FormWidget();

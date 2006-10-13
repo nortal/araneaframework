@@ -32,8 +32,6 @@ public class DemoMultiSelect extends TemplateBaseWidget {
   private FormWidget form;
 	
 	protected void init() throws Exception {
-		super.init();
-		
 		setViewSelector("demo/demoMultiSelect");
 		
 		MultiSelectControl control = new MultiSelectControl();

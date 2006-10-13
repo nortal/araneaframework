@@ -43,8 +43,6 @@ public class PersonViewWidget extends TemplateBaseWidget {
 	}
 	
 	protected void init() throws Exception {
-		super.init();
-		
 		setViewSelector("person/personView");
 
 		BeanFormWidget personForm = new BeanFormWidget(PersonMO.class);

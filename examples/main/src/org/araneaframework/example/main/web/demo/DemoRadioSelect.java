@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.support.DisplayItem;
 
 /**
- * Demonstrates use of SelectControl rendered with radiobuttons and markBaseState() isStateChanged() methods.
+ * Demonstrates use of SelectControl rendered with radiobuttons.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -33,8 +33,6 @@ public class DemoRadioSelect extends TemplateBaseWidget {
 	private SelectControl control;
 
 	protected void init() throws Exception {
-		super.init();
-
 		setViewSelector("demo/demoRadioSelect");
 		
 		form = new FormWidget();

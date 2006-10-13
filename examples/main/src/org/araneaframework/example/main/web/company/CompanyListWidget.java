@@ -52,7 +52,6 @@ public class CompanyListWidget extends TemplateBaseWidget {
   }
 
   protected void init() throws Exception {
-    super.init();
     setViewSelector("company/companyList");
     log.debug("TemplateCompanyListWidget init called");    
 

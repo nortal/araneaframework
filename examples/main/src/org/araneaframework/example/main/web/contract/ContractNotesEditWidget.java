@@ -59,7 +59,6 @@ public class ContractNotesEditWidget extends TemplateBaseWidget {
 	}
 	
 	protected void init() throws Exception {
-		super.init();
 		setViewSelector("contract/contractNotesEdit");
 		log.debug("TemplateContractNotesEditWidget init called");
 		

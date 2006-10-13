@@ -37,8 +37,6 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
   private FormWidget searchForm;
   
   protected void init() throws Exception {
-    super.init();
-	  
 	setViewSelector("sample/searchForm");
 	
     searchForm = new FormWidget();

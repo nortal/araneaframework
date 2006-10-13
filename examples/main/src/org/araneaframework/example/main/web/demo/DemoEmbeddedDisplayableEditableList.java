@@ -69,9 +69,7 @@ public class DemoEmbeddedDisplayableEditableList extends TemplateBaseWidget {
 	 * Builds the form with one checkbox, one textbox and a button.
 	 */
 	public void init() throws Exception {
-		super.init();
-
-    setViewSelector("demo/demoEmbeddedDisplayableEditableList");
+		setViewSelector("demo/demoEmbeddedDisplayableEditableList");
 		
 		editableRows = new BeanFormListWidget(
         new DemoEditableRowHandler(),

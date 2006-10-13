@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding="iso-8859-1"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3CR3//EN"
-                      "../../support/docbook-dtd/docbookx.dtd"
+                      "../../../doc/support/docbook-dtd/docbookx.dtd"
 []>
 <!--
   Copyright 2006 Webmedia Group Ltd.

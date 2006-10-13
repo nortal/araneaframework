@@ -18,7 +18,7 @@
 -->
 <article>
   <articleinfo>
-    <title>An Object-Oriented Introduction to Aranea</title>
+    <title>Aranea Introductory Tutorial</title>
 
     <titleabbrev>Aranea Intro</titleabbrev>
 
@@ -34,20 +34,14 @@
   <sect1 id="hello-world">
     <title>Hello World</title>
 
-    <para>This introduction demonstrates the way Aranea applications are
-    assembled from independent widgets, the way widgets receive and process
-    events, the way the widgets communicate and navigate among each other and
-    how they can render themselves. It does not however show numerous other
+    <para>This tutorial demonstrates the way Aranea applications are
+    assembled from independent widgets and how we can use these widgets to apply Object-Oriented idioms.
+    It does not however show numerous other
     features of Aranea frameworks and is simplified as possible to show only
     relevant core properties of Aranea. For a thorough introduction to
     building applications with Aranea see the Business Tutorial.</para>
-
-    <para>Although the examples we use here may seem to be way too simple and
-    the abstractions we apply to them way too complex for their case, remember
-    that the same concepts can also be applied to very complex scenarios,
-    where such decomposition can lead to reusing a lot of GUI logics.</para>
-
-    <para>As an introduction to Aranea, we present the example that has become
+    
+    <para>For the first introduction to Aranea, we present the example that has become
     classical in computer literature for learning new languages and
     technologies — "Hello World!". Our variant of "Hello World!" will display
     a form where one can insert his name and then display a personalized
@@ -68,9 +62,10 @@
     <para>As we can see on <xref linkend="example-hello-name" />, we will
     split the example into two separate components (that we refer to hereon as
     widgets). Generally one component would be more than enough (for that
-    matter one JSP The starting widget is <literal>NameWidget</literal> that
-    has an associated <literal>name.jsp</literal> and displays the form for
-    inserting your name. The source code of the widget follows:</para>
+    matter a single JSP would be enough). The starting widget is
+    <literal>NameWidget</literal> that has an associated
+    <literal>name.jsp</literal> and displays the form for inserting your name.
+    The source code of the widget follows:</para>
 
     <programlisting role="java">public class NameWidget extends BaseUIWidget {
   protected void init() throws Exception {        
@@ -289,7 +284,7 @@
 ...</programlisting>
 
     <note>
-      <para>As a matter of fact we are lying a bit, since
+      <para>As a matter of fact we are simplifying a bit, since
       <literal>hello.jsp</literal> also includes <literal>head</literal>,
       <literal>body</literal> and other general tags. However in the next
       section we will show how to get rid of this repeating boilerplate and
@@ -297,35 +292,10 @@
       the current example to work.</para>
     </note>
 
-    <para>The first thing to note from here is that since our widgets are
-    objects through and through it is easy to make e.g. a widget that will use
-    three independent <literal>HelloWidget</literal>s to display greetings to
-    three different people:</para>
-
-    <programlisting role="java">public class ThreeGreetingsWidget extends BaseUIWidget {
-  protected void init() throws Exception {
-    addWidget("hello1", new HelloWidget("Jevgeni Kabanov"));
-    addWidget("hello2", new HelloWidget("Taimo Peelo"));
-    addWidget("hello3", new HelloWidget("Alar Kvell"));
-
-    setViewSelector("threeGreetings");
-  }
-}</programlisting>
-
-    <para>We would of course also need to include those widgets in the
-    JSP:</para>
-
-    <para><programlisting role="xml">...
-  &lt;ui:widgetContext&gt;
-    &lt;ui:widgetInclude id="hello"/&gt;&lt;br/&gt;
-    &lt;ui:widgetInclude id="hello"/&gt;&lt;br/&gt;
-    &lt;ui:widgetInclude id="hello"/&gt;&lt;br/&gt;        
-  &lt;/ui:widgetContext&gt;
-...</programlisting>The second thing to note is that
-    <literal>NameWidget</literal> doesn't really have to depend on
-    <literal>HelloWidget</literal>. In fact all that we need is a widget that
-    has a <literal>setName(String name)</literal> method as captured in the
-    following interface:</para>
+    <para>An interesting fact to notice is that <literal>NameWidget</literal>
+    doesn't really have to depend on <literal>HelloWidget</literal>. In fact
+    all we need is a widget that has a <literal>setName(String name)</literal>
+    method as captured in the following interface:</para>
 
     <programlisting role="java">public interface IHelloWidget extends Widget {
   public void setName(String name);
@@ -370,6 +340,32 @@
   }
   //... select JSP and render
 }</programlisting></para>
+
+    <para>Another interesting fact is that since our widgets are objects
+    through and through it is easy to make e.g. a widget that will use three
+    independent <literal>HelloWidget</literal>s to display greetings to three
+    different people:</para>
+
+    <programlisting role="java">public class ThreeGreetingsWidget extends BaseUIWidget {
+  protected void init() throws Exception {
+    addWidget("hello1", new HelloWidget("Jevgeni Kabanov"));
+    addWidget("hello2", new HelloWidget("Taimo Peelo"));
+    addWidget("hello3", new HelloWidget("Alar Kvell"));
+
+    setViewSelector("threeGreetings");
+  }
+}</programlisting>
+
+    <para>We would of course also need to include those widgets in the
+    JSP:</para>
+
+    <para><programlisting role="xml">...
+  &lt;ui:widgetContext&gt;
+    &lt;ui:widgetInclude id="hello1"/&gt;&lt;br/&gt;
+    &lt;ui:widgetInclude id="hello2"/&gt;&lt;br/&gt;
+    &lt;ui:widgetInclude id="hello3"/&gt;&lt;br/&gt;        
+  &lt;/ui:widgetContext&gt;
+...</programlisting></para>
   </sect1>
 
   <sect1>
@@ -380,12 +376,21 @@
     no way to get back — the widget on the flow has been exchanged and unless
     we create a new browser session we will always get the same "Hello
     Jevgeni!" message no matter how much we refresh. To remedy that lets
-    modify the HelloWidget to have a back button. We start by adding the
-    button to <literal>hello.jsp</literal>:</para>
+    modify the HelloWidget to have a back button.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata align="center" fileref="../images/hello-with-back.png"
+                   format="PNG" />
+      </imageobject>
+    </mediaobject>
+
+    <para>We start by adding the button to
+    <literal>hello.jsp</literal>:</para>
 
     <programlisting role="xml">...
 Hello &lt;c:out value="${widget.name}"/&gt;! &lt;br/&gt;
-&lt;ui:eventButton labelId="#Go back" eventId="back"/&gt;
+&lt;ui:eventButton labelId="#Back" eventId="back"/&gt;
 ...</programlisting>
 
     <para>This button should certainly map to the
@@ -474,13 +479,13 @@ public class HelloWidget extends BaseUIWidget {
     <programlisting role="java">public class RootWidget extends BaseUIWidget {
   protected void init() throws Exception {        
     setViewSelector("root");
-    addWidget("flowContainer", new StandardFlowContainer(new NameWidget));
+    addWidget("flowContainer", new StandardFlowContainerWidget(new NameWidget()));
   }
 }</programlisting>
 
-    <para><literal>StandardFlowContainer</literal> is a widget that provides
-    the <literal>FlowContext</literal> used for navigation in the previous
-    examples. It handles a stack of child widgets and implements
+    <para><literal>StandardFlowContainerWidget</literal> is a widget that
+    provides the <literal>FlowContext</literal> used for navigation in the
+    previous examples. It handles a stack of child widgets and implements
     <literal>start()</literal> and <literal>finish()</literal> by pushing on
     and popping from the stack. And since it is just a usual widget we can
     associate it with our <literal>RootWidget</literal> as usual and pass it a
@@ -511,8 +516,8 @@ public class HelloWidget extends BaseUIWidget {
   &lt;/ui:root&gt;  
 &lt;/jsp:root&gt;</programlisting>
 
-    <para>And remove the junk from other JSPs. After that the name.jsp will
-    look as follows:</para>
+    <para>And remove the junk from other JSPs. After that the
+    <literal>name.jsp</literal> will look as follows:</para>
 
     <programlisting role="xml">&lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
@@ -524,7 +529,7 @@ public class HelloWidget extends BaseUIWidget {
   &lt;/ui:widgetContext&gt;
 &lt;/jsp:root&gt;</programlisting>
 
-    <para>And the hello.jsp as follows:</para>
+    <para>And the <literal>hello.jsp</literal> as follows:</para>
 
     <programlisting role="xml">&lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
@@ -533,7 +538,7 @@ public class HelloWidget extends BaseUIWidget {
 
   &lt;ui:widgetContext&gt;
     Hello &lt;c:out value="${widget.name}"/&gt;! &lt;br/&gt;
-    &lt;ui:eventButton labelId="#Go back" eventId="back"/&gt;
+    &lt;ui:eventButton labelId="#Back" eventId="back"/&gt;
   &lt;/ui:widgetContext&gt;
 &lt;/jsp:root&gt;</programlisting>
 
@@ -541,22 +546,43 @@ public class HelloWidget extends BaseUIWidget {
     that declares that this JSP does in fact belong to a widget.</para>
 
     <para>The last interesting thing we'd like to note, is that since
-    StandardFlowContainer is a usual widget, it is simple to have several of
-    them (in fact as many as we need) running in parallel:</para>
+    <literal>StandardFlowContainerWidget</literal> is a usual widget, it is
+    simple to have several of them (in fact as many as we need) running in
+    parallel:</para>
 
     <programlisting role="java">public class RootWidget extends BaseUIWidget {
   protected void init() throws Exception {        
     setViewSelector("root");
-    addWidget("flowContainer1", new StandardFlowContainer(new NameWidget));
-    addWidget("flowContainer2", new StandardFlowContainer(new NameWidget));
-    addWidget("flowContainer3", new StandardFlowContainer(new NameWidget));
+    addWidget("flowContainer1", new StandardFlowContainerWidget(new NameWidget()));
+    addWidget("flowContainer2", new StandardFlowContainerWidget(new NameWidget()));
+    addWidget("flowContainer3", new StandardFlowContainerWidget(new NameWidget()));
   }
 }</programlisting>
 
     <para>Of course we would also need to include them from the corresponding
     JSP, but this would allow three independent instances of "Hello World"
     application to run unhindered on a single page, with each application
-    being completely independent of the rest.</para>
+    being completely independent of the rest:</para>
+
+    <para><mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="../images/three-flow-containers.png"
+                     format="PNG" />
+        </imageobject>
+      </mediaobject></para>
+
+    <para><note>
+        <para>To be honest, we are simplifying again, as all three widgets
+        have a textbox with one and the same name, which would conflict when
+        submitted. In reality we would have to scope the name, adding a
+        "${widgetId}." prefix to it and change
+        <literal>getGlobalData()</literal> to
+        <literal>getScopedData()</literal> in the parameter reading code.
+        However since in real-life use cases forms scope parameters
+        automatically, we choose to ignore this problem in our example as
+        well.</para>
+      </note></para>
   </sect1>
 
   <sect1>
@@ -632,7 +658,8 @@ public class HelloWidget extends BaseUIWidget {
   }
 }</programlisting></para>
 
-    <para>And we add the back button in the helloFlow.jsp:</para>
+    <para>And we add the back button in the
+    <literal>helloFlow.jsp</literal>:</para>
 
     <programlisting role="xml">&lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
@@ -640,7 +667,7 @@ public class HelloWidget extends BaseUIWidget {
   
   &lt;ui:widgetContext&gt;
     &lt;ui:widgetInclude id="hello"/&gt;&lt;br/&gt;        
-    &lt;ui:eventButton labelId="#Say hello" eventId="hello"/&gt;
+    &lt;ui:eventButton labelId="#Back" eventId="back"/&gt;
   &lt;/ui:widgetContext&gt;
 &lt;/jsp:root&gt;</programlisting>
   </sect1>
