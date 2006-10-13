@@ -35,8 +35,4 @@ public class HelloWidget extends BaseUIWidget {
   public String getName() {
     return this.name;
   }
-  
-  public void handleEventBack() throws Exception {
-    getFlowCtx().finish(null);
-  }  
 }

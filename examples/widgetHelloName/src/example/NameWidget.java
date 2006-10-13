@@ -27,7 +27,7 @@ public class NameWidget extends BaseUIWidget {
 	}
   
   public void handleEventHello() throws Exception {
-    String name = (String) getInputData().getScopedData().get("name");
-    getFlowCtx().start(new HelloWidget(name), null, null);
+    String name = (String) getInputData().getGlobalData().get("name");
+    getFlowCtx().replace(new HelloWidget(name), null);
   }  
 }

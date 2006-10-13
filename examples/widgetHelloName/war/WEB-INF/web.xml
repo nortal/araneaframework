@@ -15,7 +15,7 @@
      	<servlet-class>org.araneaframework.integration.spring.AraneaSpringDispatcherServlet</servlet-class>
      	<init-param>
      		<param-name>araneaApplicationStart</param-name>
-     		<param-value>example.RootWidget</param-value>
+     		<param-value>example.NameWidget</param-value>
      	</init-param>
       <load-on-startup>1</load-on-startup>
    </servlet>
