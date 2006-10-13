@@ -1855,5 +1855,59 @@ public BeanFormListWidget getFormList();]]></programlisting>
         about implementing that interface. Other than required implementation of <literal>RowHandler</literal>, editable lists do not
         differ from <literal>ListWidget</literal>s.
     </para>
+
+<para>
+<programlisting role="java"><![CDATA[public class SampleEditableListWidget {
+  private EditableBeanListWidget list;
+  
+  protected void init() throws Exception {
+    setViewSelector("sampleEditableListView");
+    
+    list = new EditableBeanListWidget(buildFormRowHandler(), SomeBean.class);
+    list.setDataProvider(buildListDataProvider());
+    list.setOrderableByDefault(true);
+    // list has only to columns of which only one is editable
+    list.addField("immutable", "#Id", false);
+    list.addField("mutable", "#First name").like();
+
+    addWidget("sampleEditableList", list);
+  }
+  
+  private FormRowHandler buildFormRowHandler() throws Exception {
+    // return formRowHandler, see the form list example
+  };
+  
+  private private ListDataProvider buildListDataProvider() throws Exception {
+    // return data provider
+  }
+}]]></programlisting>
+    </para>
+    
+    <para>
+        JSP view for this sample widget is presented below:
+<programlisting role="java"><![CDATA[...
+<ui:formList id="sampleEditableList">
+  <!-- List filter definition, usual -->
+  <!-- Editable lists body -->
+  <ui:formListRows>
+    <ui:row>
+      <ui:cell>
+        <!-- Row object is accessible as 'row' just as in lists -->
+        <c:out value="${row.immutable}"/>
+      </ui:cell>
+      <ui:cell>
+        <!-- But the implicit form tag for current row form is also present, so... -->
+        <ui:formElement id="mutable">
+          <ui:textInput/>
+        </ui:formElement>
+      </ui:cell>
+    </ui:row>
+  </ui:formListRows>
+</ui:formList>
+...]]></programlisting>
+    </para>
+    <para>
+      Full editable list example is bundled with Aranea examples.
+    </para>
   </sect1>
 </chapter>
