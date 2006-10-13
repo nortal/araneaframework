@@ -44,7 +44,7 @@ function submitThreadCloseRequest(win) {
     closeParam.setAttribute("value", "true");
     //TODO: find the systemform reliably
     win.document.forms['system_form_0'].appendChild(closeParam);
-    win.araneaPage().submit_6(win.document.system_form_0, null, null, null, null, null);
+    win.araneaPage().event_6(win.document.system_form_0, null, null, null, null, null);
   }
 }
 
