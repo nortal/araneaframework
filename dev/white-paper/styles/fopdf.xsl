@@ -7,7 +7,7 @@
 -->
 
 <!DOCTYPE xsl:stylesheet [
-    <!ENTITY db_xsl_path        "../../support/docbook-xsl/">
+    <!ENTITY db_xsl_path        "../../../doc/support/docbook-xsl/">
 ]>
 
 <xsl:stylesheet

@@ -249,7 +249,6 @@
 	<!-- Build internal documentation -->
 	<target name="doc" depends="init, javadoc" description="Build internal documentation">
 		<ant target="build" dir="doc/reference" />
-		<ant target="build" dir="doc/white-paper" /> 
 		<ant target="build" dir="doc/tutorial" />
 		<ant target="build" dir="doc/intro" />
 	</target>
