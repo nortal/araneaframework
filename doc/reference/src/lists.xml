@@ -1867,8 +1867,8 @@ public BeanFormListWidget getFormList();]]></programlisting>
     list.setDataProvider(buildListDataProvider());
     list.setOrderableByDefault(true);
     // list has only two columns of which only one is editable
-    list.addField("immutable", "#ImmutableLabel", false);
-    list.addField("mutable", "#MutableLabel").like();
+    list.addField("immutable", "#ImmutableColumnLabel", false);
+    list.addField("mutable", "#MutableColumnLabel").like();
 
     addWidget("sampleEditableList", list);
   }
