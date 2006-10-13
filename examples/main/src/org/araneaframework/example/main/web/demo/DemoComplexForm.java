@@ -44,8 +44,6 @@ public class DemoComplexForm extends TemplateBaseWidget {
 	private MultiSelectControl concreteBeastMultiSelectionControl;
 
 	protected void init() throws Exception {
-		super.init();
-
 		setViewSelector("demo/demoComplexForm");
 		putViewData("formLabel", "Complex_Form");
 		

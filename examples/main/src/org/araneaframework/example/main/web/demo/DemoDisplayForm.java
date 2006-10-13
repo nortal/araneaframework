@@ -30,16 +30,13 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DemoDisplayForm extends TemplateBaseWidget {
-
-	  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
   private FormWidget displayForm;
 
 	/**
 	 * Builds the form with one checkbox, one textbox and a button.
 	 */
 	public void init() throws Exception {
-		super.init();
-		
 		setViewSelector("demo/demoDisplayForm");
 		
 		displayForm = new FormWidget();

@@ -43,7 +43,6 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 	}
 
 	protected void init() throws Exception {
-		super.init();
 		putViewData("title", "#" + Integer.toString(count) + ". Popup Example");
 		setViewSelector("sample/samplePopup");
 	}

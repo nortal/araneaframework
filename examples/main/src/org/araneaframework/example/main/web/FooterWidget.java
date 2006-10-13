@@ -31,7 +31,6 @@ public class FooterWidget extends BaseUIWidget {
   private static final long serialVersionUID = 1L;
 
   protected void init() throws Exception {
-    super.init();
     putViewData("aranea-version", AraneaVersion.getVersion());
     setViewSelector("mainlayout/footer");
   }

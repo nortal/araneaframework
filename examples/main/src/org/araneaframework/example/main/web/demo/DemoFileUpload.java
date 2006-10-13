@@ -49,8 +49,6 @@ public class DemoFileUpload extends TemplateBaseWidget {
 	private List files = new ArrayList();
 
 	public void init() throws Exception {
-		super.init();
-
 		setViewSelector("demo/demoFileUpload");
 
 		buildList();

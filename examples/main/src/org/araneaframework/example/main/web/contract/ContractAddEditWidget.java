@@ -57,7 +57,6 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
 	}
 	
   protected void init() throws Exception {
-    log.debug("TemplateContractWizardWidget init called");
     setViewSelector("contract/contractAddEdit");
     company = new ContractCompanyEditWidget();
     person = new ContractPersonEditWidget();

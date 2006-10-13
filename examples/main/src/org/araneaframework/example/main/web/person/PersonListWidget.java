@@ -61,7 +61,6 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	protected void init() throws Exception {
-		super.init();
 		setViewSelector("person/personList");		
 		initList();
 	}

@@ -24,8 +24,6 @@ import org.araneaframework.example.main.TemplateBaseWidget;
  */
 public class AjaxRequestErrorWidget extends TemplateBaseWidget {
   public void init() throws Exception {
-    super.init();
-
     setViewSelector("misc/ajaxError");
     addEventListener("error", new ProxyEventListener(this));
   }

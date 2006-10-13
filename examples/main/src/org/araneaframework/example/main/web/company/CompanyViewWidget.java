@@ -41,7 +41,6 @@ public class CompanyViewWidget extends TemplateBaseWidget {
   }
 
   protected void init() throws Exception {
-    super.init();
     setViewSelector("company/companyView");
     log.debug("TemplateCompanyViewWidget init called");
 
