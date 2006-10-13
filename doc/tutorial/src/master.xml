@@ -566,8 +566,6 @@ private FormWidget simpleForm;
 * Builds the form.
 */
 protected void init() throws Exception {
-  super.init();
-
   setViewSelector("sample/simpleForm");
 
   // creation of new form
@@ -843,8 +841,6 @@ public void handleEventTestSimpleForm() throws Exception {
   }
   
   protected void init() throws Exception {
-    super.init();
-
     // Sets the view selector that will be used for rendering this widget. */ 
     setViewSelector("person/personAddEdit");
     // This viewdata is used in JSP to set component header (different for editing and adding). 
@@ -1028,8 +1024,6 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
   private MultiSelectControl concreteBeastMultiSelectionControl;
 
   protected void init() throws Exception {
-    super.init();
-
     setViewSelector("demo/demoComplexForm");
     putViewData("formLabel", "Complex_Form");
     
@@ -1377,8 +1371,6 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
   private MemoryBasedListDataProvider dataProvider = new DataProvider();
   
   protected void init() throws Exception {
-    super.init();
-	
     setViewSelector("person/editableList");
 	
     /* PersonMO class is already familiar from form examples. */
