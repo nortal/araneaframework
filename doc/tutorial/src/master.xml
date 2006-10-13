@@ -47,8 +47,8 @@
     of Aranea. For more thorough understanding, additional reading of Aranea
     Reference Manual is recommended. More theoretically inclined readers might
     also want to take a look at the technical paper, which briefly describes
-    the inner workings of Aranea. For a more conceptual "Hello world" intro, see
-    <emphasis>Aranea Introductory Tutorial</emphasis>.</para>
+    the inner workings of Aranea. For a more conceptual "Hello world" intro,
+    see <emphasis>Aranea Introductory Tutorial</emphasis>.</para>
 
     <para>We try to present this tutorial in as clear and as beginner-friendly
     way as possible. Our goal is to present material that would be
@@ -132,14 +132,13 @@
     run). The main example's goal is to demonstrate a working Aranea web
     application that makes use of most often-used Aranea features.</para>
 
-      <mediaobject id="templateAppInAction" xreflabel="templateApp-in-action">
-        <imageobject>
-          <imagedata align="center"
-                     fileref="images/templateApp-screen-small.png"
-                     format="PNG" />
-        </imageobject>
+    <mediaobject id="templateAppInAction" xreflabel="templateApp-in-action">
+      <imageobject>
+        <imagedata align="center"
+                   fileref="images/templateApp-screen-small.png" format="PNG" />
+      </imageobject>
 
-        <caption align="top">TemplateApp in action.</caption>
+      <caption align="top">TemplateApp in action.</caption>
     </mediaobject>
 
     <sect2>
@@ -165,7 +164,7 @@
       <literal>LoginWidget</literal>. It is simple, but gives a good
       demonstration of stateful controller capabilities. Simple login screen
       is built and upon receiving successful login event, it replaces itself
-      on the flowcontainer's call stack with real application widget (flow).
+      on the flow container call stack with real application widget (flow).
       After session timeout state is lost and the user is once again forced to
       log in.</para>
 
@@ -806,7 +805,7 @@ public void handleEventTestSimpleForm() throws Exception {
 
           <para>When you have model ready, using
           <literal>BeanFormWidget</literal> is almost the same as using
-          <literal>FormWidget</literal>. Main bonus is that specifing
+          <literal>FormWidget</literal>. Main bonus is that specifying
           <literal>Data</literal> when adding <literal>FormElements</literal>
           to form is no longer needed as it is determined from model class.
           Also <literal>BeanFormWidget's</literal>
@@ -1517,18 +1516,15 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
 
             <tbody>
               <row>
-                <entry>
-                  <literal>getRowKey(Object row)</literal>
-                </entry>
+                <entry><literal>getRowKey(Object row)</literal></entry>
 
                 <entry>Should return the key that uniquely identifies given
                 object among other same type objects.</entry>
               </row>
 
               <row>
-                <entry>
-                  <literal>initFormRow(FormRow formRow, Object row)</literal>
-                </entry>
+                <entry><literal>initFormRow(FormRow formRow, Object
+                row)</literal></entry>
 
                 <entry>Should initialize the editable row by building the form
                 inside the <literal>formRow</literal> and setting the correct
@@ -1538,9 +1534,8 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
               </row>
 
               <row>
-                <entry>
-                  <literal>initAddForm(FormWidget addForm)</literal>
-                </entry>
+                <entry><literal>initAddForm(FormWidget
+                addForm)</literal></entry>
 
                 <entry>Should initialize the form that will be used to add new
                 rows. Usually modifies the supplied form as calling
@@ -1551,37 +1546,30 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
               </row>
 
               <row>
-                <entry>
-                  <literal>addRow(FormWidget addForm)</literal>
-                </entry>
+                <entry><literal>addRow(FormWidget addForm)</literal></entry>
 
                 <entry>Called when a new row (object) should be added. Data of
                 the new object should be read from the supplied form.</entry>
               </row>
 
               <row>
-                <entry>
-                  <literal>saveRows(Map &lt;Object rowKey, EditableRow
-                  formRow&gt; formRows)</literal>
-                </entry>
+                <entry><literal>saveRows(Map &lt;Object rowKey, EditableRow
+                formRow&gt; formRows)</literal></entry>
 
                 <entry>Called when specified list rows should be
                 saved.</entry>
               </row>
 
               <row>
-                <entry>
-                  <literal>deleteRows(Set rowKeys)</literal>
-                </entry>
+                <entry><literal>deleteRows(Set rowKeys)</literal></entry>
 
                 <entry>Called when the rows (objects) identified by the
                 supplied set of keys should be deleted.</entry>
               </row>
 
               <row>
-                <entry>
-                  <literal>openOrCloseRow(FormRow formRow)</literal>
-                </entry>
+                <entry><literal>openOrCloseRow(FormRow
+                formRow)</literal></entry>
 
                 <entry>Called upon closing or opening of the formRow.</entry>
               </row>
@@ -1590,7 +1578,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
         </table>
 
         <para>JSP for editable list does not need as much work as writing
-        custom rowhandlers. instead of <literal>&lt;ui:list&gt;</literal> tag
+        custom row handlers. Instead of <literal>&lt;ui:list&gt;</literal> tag
         <literal>&lt;ui:formList&gt;</literal> should be used (in our example
         both are used). <literal>&lt;ui:listRows&gt;</literal> is replaced by
         <literal>&lt;ui:formListRows&gt;</literal> and object adding form is
