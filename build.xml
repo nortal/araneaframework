@@ -264,7 +264,6 @@
 		<antcall target="clean-all"/>
 		<ant dir="doc/reference" target="clean" inheritall="false"/>
 		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
-		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
 		<ant dir="doc/intro" target="clean" inheritall="false"/>
 		<mkdir dir="dist"/>
 
@@ -291,7 +290,6 @@
 		<antcall target="build-all"/>
 		<ant dir="doc/reference" target="clean" inheritall="false"/>
 		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
-		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
 			
 		<antcall target="doc"/>
     
