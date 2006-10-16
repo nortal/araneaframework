@@ -23,9 +23,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
@@ -38,6 +41,8 @@ import org.araneaframework.jsp.util.JspUtil;
 public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeContext {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final Logger log = Logger.getLogger(TreeNodeWidget.class);
 
 	public static final String DISPLAY_KEY = "display";
 
@@ -80,6 +85,18 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
 		if (collapsedDecide) {
 			collapsed = getTreeCtx().disposeChildren();
+		}
+
+		addActionListener("expand", new ExpandActionListener());
+	}
+
+	private class ExpandActionListener implements ActionListener {
+		public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
+			log.debug("Received 'expand' action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+			//update(input);
+			expand();
+			//process();
+			render(output);
 		}
 	}
 
@@ -208,9 +225,17 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	}
 */
 	protected void render(OutputData output) throws Exception {
+		Writer out = ((HttpOutputData) output).getWriter();
+
 		// Render display widget
 		Widget display = getDisplay();
-		if (display != null) {	// display is null if this is a TreeWidget
+		if (display != null) {	// display is null if this is root node (TreeWidget)
+			JspUtil.writeOpenStartTag(out, "a");
+		    JspUtil.writeAttribute(out, "href", "#");
+		    JspUtil.writeAttribute(out, "onclick", "_ap.action(this, 'expand', '" + output.getScope() + "', 'blah', null, function(request, response) { window.alert(request.responseText); Element.update('" + output.getScope() + "', request.responseText); });");
+		    JspUtil.writeCloseStartTag_SS(out);
+		    out.write(isCollapsed() ? "+" : "-");
+		    JspUtil.writeEndTag_SS(out, "a");
 			try {
 				output.pushScope(TreeNodeWidget.DISPLAY_KEY);
 				display._getWidget().render(output);
@@ -221,13 +246,14 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
 		// Render child nodes
 		if (!isCollapsed() && hasNodes()) {
-			Writer out = ((HttpOutputData) output).getWriter();
 			JspUtil.writeStartTag(out, "ul");
 			List nodes = getNodes();
 			for (ListIterator i = nodes.listIterator(); i.hasNext(); ) {
-				JspUtil.writeStartTag(out, "li");
 				try {
 					output.pushScope(Integer.toString(i.nextIndex()));
+					JspUtil.writeOpenStartTag(out, "li");
+					JspUtil.writeAttribute(out, "id", output.getScope());
+					JspUtil.writeCloseStartTag(out);
 					((TreeNodeWidget) i.next()).render(output);
 				} finally {
 					output.popScope();
@@ -235,6 +261,15 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 				JspUtil.writeEndTag(out, "li");
 			}
 			JspUtil.writeEndTag(out, "ul");
+		}
+	}
+
+	public void renderNode(OutputData output) throws Exception {	// Called only from display widget
+		output.popScope();
+		try {
+			render(output);
+		} finally {
+			output.pushScope(DISPLAY_KEY);
 		}
 	}
 

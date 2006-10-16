@@ -7,7 +7,8 @@
 
 	<ui:widgetContext>
 
-		<p><ui:eventLinkButton eventId="expandCollapse" labelId="#fooBar"/></p>
+		<ui:eventLinkButton eventId="expandCollapse" labelId="#fooBar"/>
+		fooBar
 
 	</ui:widgetContext>
 

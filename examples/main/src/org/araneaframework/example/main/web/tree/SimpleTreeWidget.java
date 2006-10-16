@@ -19,6 +19,10 @@ package org.araneaframework.example.main.web.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.core.ActionListener;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
 import org.araneaframework.uilib.tree.TreeNodeContext;
@@ -30,10 +34,11 @@ import org.araneaframework.uilib.tree.TreeWidget;
  */
 public class SimpleTreeWidget extends BaseUIWidget {
 
+	private static final Logger log = Logger.getLogger(SimpleTreeWidget.class);
+
 	private TreeWidget tree;
 
 	protected void init() throws Exception {
-		super.init();
 		setViewSelector("tree/simpleTree");
 		tree = new TreeWidget(new SimpleTreeDataProvider());
 		addWidget("tree", tree);
@@ -57,8 +62,12 @@ public class SimpleTreeWidget extends BaseUIWidget {
 		}
 
 		protected void init() throws Exception {
-			super.init();
 			setViewSelector("tree/test");
+			addActionListener("foo", new ActionListener() {
+				public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
+					log.debug("Action 'foo'");
+				}
+			});
 		}
 
 		protected TreeNodeContext getTreeNodeCtx() {

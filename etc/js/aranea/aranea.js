@@ -239,7 +239,36 @@ function AraneaPage() {
     else
       new DefaultAraneaSubmitter().submit_4(systemForm, eventId, eventTarget, eventParam);
   }
-  
+
+	/** MY CODE STARTS HERE :) **/
+	this.action = function(element, actionId, actionTarget, actionParam, actionPrecondition, actionCallback) {
+		var t = this.getTraverser();
+		var systemForm = t.findSurroundingSystemForm(element);
+		return this.action_6(systemForm, actionId, actionTarget, actionParam, actionPrecondition, actionCallback);
+	}
+
+	this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionPrecondition, actionCallback) {
+
+		// precondition ??
+
+		var url = getActiveAraneaPage().encodeURL(getActiveAraneaPage().getServletURL());
+		url += '?transactionId=override';
+		url += '&topServiceId=' + systemForm.topServiceId.value;
+		url += '&threadServiceId=' + systemForm.threadServiceId.value;
+		url += '&widgetActionPath=' + actionTarget;
+		url += '&serviceActionListenerId=' + actionId;
+		url += '&' + actionTarget + '.param=' + actionParam;
+		url += '&nosync=true';
+		return new Ajax.Request(
+			url,
+			{
+				method: 'get',
+				onComplete: actionCallback
+			}
+		);
+	}
+	/** MY CODE ENDS HERE :) **/
+
   this.debug = function(message) {
     this.getLogger().debug(message);
   }
@@ -294,7 +323,6 @@ function DefaultAraneaSubmitter(form) {
   var systemForm = form;
 
   this.submit = function(element) {
-    var systemFormId = systemForm['id'];
     var traverser = getActiveAraneaPage().getTraverser();
 
     // event information
@@ -322,7 +350,6 @@ function DefaultAraneaAJAXSubmitter(form) {
   var systemForm = form;
 
   this.submit = function(element) {
-    var systemFormId = systemForm['id'];
     var traverser = getActiveAraneaPage().getTraverser();
 	
 	// event information

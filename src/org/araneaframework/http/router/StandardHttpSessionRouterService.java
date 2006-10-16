@@ -67,28 +67,29 @@ public class StandardHttpSessionRouterService extends BaseService {
     
     boolean destroySession = input.getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY)!=null;   
     
+    RelocatableService service  = null;
+    
     //XXX Should we synchronize on session?
     synchronized (sess) {                  
       if (destroySession) {
         sess.invalidate();                    
         return;
       }
-      
-      RelocatableService service = getOrCreateSessionService(sess);   
-      
+      service = getOrCreateSessionService(sess);   
+    } 
+    
+    try {
+      service._getService().action(path, input, output);
+    }
+    finally {
+      service._getRelocatable().overrideEnvironment(null);
       try {
-        service._getService().action(path, input, output);
+        sess.setAttribute(SESSION_SERVICE_KEY, service);
       }
-      finally {
-        service._getRelocatable().overrideEnvironment(null);
-        try {
-          sess.setAttribute(SESSION_SERVICE_KEY, service);
-        }
-        catch (IllegalStateException  e) {
-          log.warn("Session invalidated before request was finished", e);
-        }
+      catch (IllegalStateException  e) {
+        log.warn("Session invalidated before request was finished", e);
       }
-    }    
+    }
   }
   
   public void propagate(Message message, InputData input, OutputData output) {

@@ -56,6 +56,7 @@
     <property name="childService" ref="araneaThreadServiceRouter"/>
     <property name="filterChain">     
       <list>
+        <ref bean="araneaSynchronizingFilter"/>
         <ref bean="araneaLocalizationFilter"/>
         <ref bean="araneaJspConfigFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
@@ -95,8 +96,7 @@
     <property name="childService" ref="araneaWidgetAdapter"/>
     <property name="filterChain">
       <list>
-        <ref bean="araneaThreadCloningService"/>
-        <ref bean="araneaSynchronizingFilter"/>
+        <ref bean="araneaThreadCloningService"/>        
         <ref bean="araneaMountPointFilter"/>
         <ref bean="araneaContinuationFilter"/> 
         <ref bean="araneaAjaxFilterService"/>

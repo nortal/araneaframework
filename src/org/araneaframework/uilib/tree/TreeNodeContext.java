@@ -18,6 +18,8 @@ package org.araneaframework.uilib.tree;
 
 import java.io.Serializable;
 
+import org.araneaframework.OutputData;
+
 /**
  * @author Alar Kvell (alar@araneaframework.org)
  */
@@ -30,5 +32,7 @@ public interface TreeNodeContext extends Serializable {
 	void invertCollapsed();
 
 	boolean isCollapsed();
+	
+	void renderNode(OutputData data) throws Exception;
 
 }

@@ -32,17 +32,12 @@ public class TreeTag extends BaseWidgetTag {
 
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-
-		WidgetContextTag widgetContextTag = new WidgetContextTag();
-		registerSubtag(widgetContextTag);
-		widgetContextTag.setId(id);
-		executeStartSubtag(widgetContextTag);
-
 		try {
+			getOutputData().pushScope(id);
 			out.flush(); // XXX needed, but WHY? 
 			widget._getWidget().render(getOutputData());
 		} finally {
-			executeEndTagAndUnregister(widgetContextTag);
+			getOutputData().popScope();
 		}
 
 		return SKIP_BODY;
