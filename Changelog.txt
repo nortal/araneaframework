@@ -1,10 +1,24 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
-2006.09.29    | Aranea 1.0-RC4
+2006.10.13    | Aranea 1.0
+
+Features and Improvements
+	Reference manual updates
+	Updated to compile with Java 1.3
+	Tutorial splitted: introduction & main tutorial
+	Library dependencies folders reorganized
+
+Bugfixes
+	Some small fixes
+
+---------------------------------------------------------------------------------------------
+2006.10.09    | Aranea 1.0-RC4
+
 Features and Improvements
         Composite Constraints can optionally be lazy                          | See change #112
         Managed services can be set TTL after which they may expire           | See #200
         Experimental development filter                                       | See change #109
+        Spring bean injection utility                                         | See change #123
         Major updates: reference manual
         Minor updates: tutorial
 
@@ -15,17 +29,18 @@ Bugfixes
         OutputData and InputData are not Serializable anymore                 | See change #114
         DateTimeControl value could not be set by programmer                  | See change #120
         Request encoding was set at the wrong time                            | See #236
+        UploadFilter messed up encodings                                      | See #250
 
 API Changes
-        Lists API did change substantially.
+        Lists API did change substantially (please re-read refman lists section).
         Form lists API changed a little.
         ErrorUtil -> MessageUtil
         CompositeConstraint -> BaseCompositeConstraint
         DisplayItemUtil.addItemsFromVoCollection -> addItemsFromBeanCollection
-        RelocatableWidgetDecorator -> RelocatableDecorator
         RelocatableServiceDecorator -> RelocatableDecorator
+        RelocatableWidgetDecorator -> RelocatableDecorator
 
-
+---------------------------------------------------------------------------------------------
 2006.09.11    | Aranea 1.0-RC3
 
 Features and Improvements

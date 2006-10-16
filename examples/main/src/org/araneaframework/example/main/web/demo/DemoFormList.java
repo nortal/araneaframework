@@ -65,8 +65,6 @@ public class DemoFormList extends TemplateBaseWidget {
 	 * Builds the form with one checkbox, one textbox and a button.
 	 */
 	public void init() throws Exception {
-		super.init();
-
 		setViewSelector("demo/demoEditableList");
 		
     formList = new BeanFormListWidget(

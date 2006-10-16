@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
@@ -53,13 +53,24 @@ import org.araneaframework.http.util.ServletUtil;
 public class StandardFileUploadFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardFileUploadFilterService.class);
   
+  private static boolean commonsFileUploadPresent = true;
+  
+  static {
+    try {
+      Class.forName("org.apache.commons.fileupload.servlet.ServletFileUpload");
+    }
+    catch (ClassNotFoundException e) {
+      commonsFileUploadPresent = false;
+    }
+  }
+  
   private String multipartEncoding;
   private boolean useRequestEncoding = false; 
   private Integer maximumCachedSize = null;
   private Long maximumSize = null;
   private String tempDirectory = null;
   
-
+  
   /**
    * Sets the character encoding that will be used to decode the <code>multipart/form-data</code>
    *  encoded strings. The default encoding is determined by Commons FileUpload.
@@ -97,14 +108,21 @@ public class StandardFileUploadFilterService extends BaseFilterService {
     this.tempDirectory = tempDirectory;
   }
   
+  protected void init() throws Exception {
+    if (!commonsFileUploadPresent)
+      log.warn("Jakarta Commons FileUpload not found! File uploading and multipart request handling will be disabled!");
+    
+    super.init();    
+  }
+  
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), FileUploadContext.class, new FileUploadContextImpl(this.maximumSize));
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletRequest request = ServletUtil.getRequest(input);
-    
-    if (ServletFileUpload.isMultipartContent(new ServletRequestContext(request))) {
+   
+    if (commonsFileUploadPresent && ServletFileUpload.isMultipartContent(new ServletRequestContext(request))) {
       Map fileItems = new HashMap();
       Map parameterLists = new HashMap();
       
@@ -142,7 +160,7 @@ public class StandardFileUploadFilterService extends BaseFilterService {
       if (items != null) {
         Iterator iter = items.iterator();
         while (iter.hasNext()) {
-          FileItem item = (FileItem) iter.next();
+          DiskFileItem item = (DiskFileItem) iter.next();
 
           if (!item.isFormField()) {
             fileItems.put(item.getFieldName(), item);
@@ -154,8 +172,9 @@ public class StandardFileUploadFilterService extends BaseFilterService {
               parameterValues = new ArrayList();    
               parameterLists.put(item.getFieldName(), parameterValues);
             }
-          
-            parameterValues.add(item.getString());
+
+            String encoding = item.getCharSet() != null ? item.getCharSet() : request.getCharacterEncoding();
+            parameterValues.add(encoding != null ? item.getString(encoding): item.getString());
           }
         }
       }

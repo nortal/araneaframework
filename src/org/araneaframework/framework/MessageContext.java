@@ -27,13 +27,12 @@ import java.io.Serializable;
  * the message via <code>showMessage(String,String)</code>.
  * </p>
  * <p>
- * A top level widget can use the MessageContext from the environment to output the accumulated
+ * A widget can use the MessageContext from the environment to output the accumulated
  * messages.
  * </p>
  * <p>
  * Permanent messages should stay in MessageContext until explicitly cleared, other messages should
- * be cleared by calling <code>clearMessages()</code> each time when implementing 
- * {@link org.araneaframework.Widget}'s <code>update()</code> is called.
+ * be cleared after the user has seen them once.
  * </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -50,35 +49,44 @@ public interface MessageContext extends Serializable {
   /**
    * A message type indicating its an info message.
    */
+  public static final String WARNING_TYPE = "warning";   
+  
+  /**
+   * A message type indicating its an info message.
+   */
   public static final String INFO_TYPE = "info";  
   
   /**
-   * Shows a message with type type and contents message to this MessageContext.
+   * Shows a message <code>message</code> of type <code>type</code> to the user. 
+   * Message is cleared after the user sees it once.
    */
   public void showMessage(String type, String message);
 
   /**
-   * Shows a permanent message that stays in this {@link org.araneaframework.framework.MessageContext} until cleared.
-   */
-  public void showPermanentMessage(String type, String message);
-
-  /**
-   * Shows an error message of type {@link #ERROR_TYPE}.
+   * Shows an error message to the user.
    */
   public void showErrorMessage(String message);
+  
+  /**
+   * Shows a warning message to the user.
+   */
+  public void showWarningMessage(String message);  
 
   /**
-   * Shows an informative message of type {@link #INFO_TYPE}.
+   * Shows an informative message to the user.
    */
   public void showInfoMessage(String message);
   
   /**
-   * Removes all messages currently present in this MessageContext.
-   * For non-permanent messages, this should always happen when implementing 
-   * {@link org.araneaframework.Widget}'s <code>update()</code> is called.
+   * Clears all non-permanent messages.
    */
   public void clearMessages();
 
+  /**
+   * Shows a permanent message <code>message</code> of type <code>type</code> to the user. 
+   * The message will be shown until hidden explicitly. 
+   */
+  public void showPermanentMessage(String type, String message);
   
   /**
    * Clears the specific permanent message, under all message types where it might be present.
@@ -87,12 +95,12 @@ public interface MessageContext extends Serializable {
   public void hidePermanentMessage(String message);
   
   /**
-   * Clears the permanent messages present in this {@link org.araneaframework.framework.MessageContext}.
+   * Clears all of the permanent messages.
    */
   public void clearPermanentMessages();
   
   /**
-   * Clears all messages present in this {@link org.araneaframework.framework.MessageContext}.
+   * Clears all messages (both permanent and usual).
    */  
   public void clearAllMessages();
 }

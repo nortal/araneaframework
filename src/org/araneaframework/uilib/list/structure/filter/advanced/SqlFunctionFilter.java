@@ -25,7 +25,7 @@ import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.backend.list.memorybased.expression.LaxyExpressionIterator;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
-import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.uilib.list.structure.filter.BaseFilter;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.structure.filter.atomic.Constant;
 import org.araneaframework.uilib.list.structure.filter.atomic.Field;
@@ -35,7 +35,7 @@ import org.araneaframework.uilib.list.util.FilterFormUtil;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
 
 
-public abstract class SqlFunctionFilter implements ListFilter {
+public abstract class SqlFunctionFilter extends BaseFilter {
 
 	private static final long serialVersionUID = 1L;
 	

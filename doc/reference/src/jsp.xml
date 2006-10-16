@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 2006 Webmedia Group Ltd.
  
@@ -13,616 +14,924 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <chapter id="jsp">
-   <title>JSP and Custom Tags</title>
-  
+  <title>JSP and Custom Tags</title>
+
   <sect1>
     <title>Aranea Standard Tag Library</title>
 
-    <para>
-      Aranea supports JSP rendering by providing a JSP 1.2 custom tag library that tries to abstract away from HTML and allow programming in terms of widgets, layouts and logical GUI elements. The tag library URI is "http://araneaframework.org/tag-library/standard" and it is contained in <literal>aranea-presentation.jar</literal>, so putting this JAR in the classpath (e.g. <literal>WEB-INF/lib</literal>) is enough to put it to work. Library tags support JSP Expression Language that is used in JSTL 1.0. 
-    </para>
+    <para>Aranea supports JSP rendering by providing a JSP 1.2 custom tag
+    library that tries to abstract away from HTML and allow programming in
+    terms of widgets, layouts and logical GUI elements. The tag library URI is
+    "http://araneaframework.org/tag-library/standard" and it is contained in
+    <literal>aranea-presentation.jar</literal>, so putting this JAR in the
+    classpath (e.g. <literal>WEB-INF/lib</literal>) is enough to put it to
+    work. Library tags support JSP Expression Language that is used in JSTL
+    1.0.</para>
 
-    <para>
-      Aranea examples use JSP XML form and in such form importing the library should look like this:
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
-  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2">
+    <para>Aranea examples use JSP XML form and in such form importing the
+    library should look like this: <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
   ...
-</jsp:root>]]></programlisting>      
-      In a usual JSP file it should look like this:
-<programlisting role="jsp"><![CDATA[<%@ taglib uri="http://araneaframework.org/tag-library/standard" prefix="ui" %>
-...]]></programlisting>
-      The suggested prefix for the tag library is "ui".
-    </para>
-
-    <para>
-      TODO: JSP 2.0 support, expression language support, types
-    </para>
+&lt;/jsp:root&gt;</programlisting> In a usual JSP file it should look like
+    this: <programlisting role="jsp">&lt;%@ taglib uri="http://araneaframework.org/tag-library/standard" prefix="ui" %&gt;
+...</programlisting> The suggested prefix for the tag library is "ui".</para>
   </sect1>
 
   <sect1 id="systemTags">
     <title>System Tags</title>
 
-    <para>
-      Aranea JSP rendering should start from some root JSP (called <emphasis>JSP template</emphasis>) that will include the root widgets. To support widgets and other custom tags one needs to make sure that the template looks something like this:
-<programlisting role="xml"><![CDATA[
-<?xml version="1.0" encoding="UTF-8"?>
-<jsp:root 
+    <para>Aranea JSP rendering should start from some root JSP (called
+    <emphasis>JSP template</emphasis>) that will include the root widgets. To
+    support widgets and other custom tags one needs to make sure that the
+    template looks something like this: <programlisting role="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
-  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2">
-  <ui:root>
-    <ui:viewPort>
-      <html>
-        <head>
-          <title>Aranea Template Application</title>
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
+  &lt;ui:root&gt;
+    &lt;ui:viewPort&gt;
+      &lt;html&gt;
+        &lt;head&gt;
+          &lt;title&gt;Aranea Template Application&lt;/title&gt;
           
-          <ui:importScripts/>      
-          <ui:importStyles/>      
+          &lt;ui:importScripts/&gt;      
+          &lt;ui:importStyles/&gt;      
    
-        </head>
+        &lt;/head&gt;
     
-          <ui:body>
-            <ui:systemForm method="POST">
-              <h1>Aranea Template Application</h1>
+          &lt;ui:body&gt;
+            &lt;ui:systemForm method="POST"&gt;
+              &lt;h1&gt;Aranea Template Application&lt;/h1&gt;
               
-              <ui:messages/>
+              &lt;ui:messages/&gt;
 
-              <ui:widgetInclude id="root"/>
-            </ui:systemForm>
+              &lt;ui:widgetInclude id="root"/&gt;
+            &lt;/ui:systemForm&gt;
           
-        </ui:body>   
-      </html>
-    </ui:viewPort>
-  </ui:root>
-</jsp:root>
-]]></programlisting>
-      Next are described all these tags except <![CDATA[<ui:widgetInclude>]]>, which is described in the following section.
-    </para>
-    
-    <sect2>
-      <title><![CDATA[<ui:root>]]></title>
-      <para>
-        This tag should always be the root of any Aranea template JSP. Its main function is to allow JSP access the controller.
-      </para>
+        &lt;/ui:body&gt;   
+      &lt;/html&gt;
+    &lt;/ui:viewPort&gt;
+  &lt;/ui:root&gt;
+&lt;/jsp:root&gt;
+</programlisting> Next are described all these tags except
+    &lt;ui:widgetInclude&gt;, which is described in the following
+    section.</para>
 
-      
+    <sect2>
+      <title>&lt;ui:root&gt;</title>
+
+      <para>This tag should always be the root of any Aranea template JSP. Its
+      main function is to allow JSP access the controller.</para>
+
       <sect3>
         <title>Variables</title>
+
         <informaltable frame="all">
-          <tgroup cols="2">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Variable</entry>
                 <entry>Description</entry>
+                <entry>Type</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>outputData</entry>
-                <entry>The <literal>org.araneaframework.OutputData</literal> that represents the current response.</entry>
+
+                <entry>The <literal>org.araneaframework.OutputData</literal>
+                that represents the current response.</entry>
+
+                <entry><literal>org.araneaframework.OutputData</literal></entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
       </sect3>
     </sect2>
-    
+
     <sect2>
-      <title><![CDATA[<ui:viewPort>]]></title>
-      <para>
-        This tag should be immediately under the &lt;ui:root&gt; tag for any application that uses widgets. It allows widgets to be rendered and included.
-      </para>
-    </sect2>    
-    
-    <sect2>
-      <title><![CDATA[<ui:importScripts>]]></title>
-      <para>
-         Aranea comes bundled with different external resources: javascript libraries, stylesheets and images. To automate the process
-			of loading the javascript files without the manual copying of them to specific webapp locations,  a special filter is used. The filter is able
-			to read files from aranea <literal>jar</literal> files.
-      </para>
-      <para>
-         <![CDATA[<ui:importScripts>]]> depends on the filter <emphasis>StandardServletFileImportFilterService</emphasis> being set. The filter provides
-         the functionality of reading files from the jars on the server.
-      </para>
-		<para>
-			If no attributes specified, the default group of javascript files are loaded.
-		</para>
+      <title>&lt;ui:viewPort&gt;</title>
+
+      <para>This tag should be immediately under the &lt;ui:root&gt; tag for
+      any application that uses widgets. It allows widgets to be rendered and
+      included.</para>
       
-      <sect3>
-        <title>Attributes</title>
+            <sect3>
+        <title>Variables</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
             <thead>
               <row>
-                <entry>Attribute</entry>
-                <entry>Required</entry>
+                <entry>Variable</entry>
                 <entry>Description</entry>
+                <entry>Type</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
-                <entry>file</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Writes HTML <literal>&lt;script&gt;</literal> tag to load the specific file.</entry>
-              </row>
-              <row>
-                <entry>group</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Writes HTML <literal>&lt;script&gt;</literal> tag to load a group of javascript files.</entry>
+                <entry>outputData</entry>
+
+                <entry>The <literal>org.araneaframework.OutputData</literal>
+                that represents the current response.</entry>
+
+                <entry><literal>org.araneaframework.OutputData</literal></entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
-      </sect3> 
-      
-             <sect3>
-        <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<ui:importScripts/> <!-- imports files from 'defaultScripts' group -->
-<ui:importScripts group="debugScripts"/> <!-- imports additional debug scripts (js logger) -->]]></programlisting> 
       </sect3>
-    </sect2>     
+      
+      
+    </sect2>
 
     <sect2>
-      <title><![CDATA[<ui:importStyles>]]></title>
-      <para>
-         Aranea comes bundled with css files to provide custom look for different predefined components (the template app, calendar, htmleditor, etc.).
-         Just as with javascript, to use them one would have to extract them from the jars and use them just like any other css file would be used.
-         To automate this process with aranea css files one can use the <![CDATA[<ui:importStyles>]]> tag to include the css files 
-         <emphasis>automatically</emphasis>.
-      </para>
-      <para>
-         <![CDATA[<ui:importStyles>]]> depends on the filter <emphasis>StandardServletFileImportFilterService</emphasis> being set. The filter provides
-         the functionality of reading files from the jars on the server.
-      </para>
+      <title>&lt;ui:importScripts&gt;</title>
 
-		<para>
-			If no attributes specified, the default group of css files are loaded.
-		</para>
-      
+      <para>Aranea comes bundled with different external resources: javascript
+      libraries, stylesheets and images. To automate the process of loading
+      the javascript files without the manual copying of them to specific
+      webapp locations, a special filter is used. The filter is able to read
+      files from aranea <literal>jar</literal> files.</para>
+
+      <para>&lt;ui:importScripts&gt; depends on the filter
+      <emphasis>StandardServletFileImportFilterService</emphasis> being set.
+      The filter provides the functionality of reading files from the jars on
+      the server.</para>
+
+      <para>If no attributes specified, the default group of javascript files
+      are loaded.</para>
+
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>file</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Writes out the HTML's CSS handling <literal>link</literal> to load the specific file.</entry>
+
+                <entry>Writes HTML <literal>&lt;script&gt;</literal> tag to
+                load the specific file.</entry>
               </row>
+
               <row>
                 <entry>group</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Writes out the HTML's CSS handling <literal>link</literal> to load the group of files.</entry>
+
+                <entry>Writes HTML <literal>&lt;script&gt;</literal> tag to
+                load a group of javascript files.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
-      </sect3> 
-    </sect2>   
-    
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui:importScripts/&gt; &lt;!-- imports files from 'defaultScripts' group --&gt;
+&lt;ui:importScripts group="debugScripts"/&gt; &lt;!-- imports additional debug scripts (js logger) --&gt;</programlisting>
+      </sect3>
+    </sect2>
+
     <sect2>
-      <title><![CDATA[<ui:body>]]></title>
-      <para>
-        This tag will render an HTML &lt;body&gt; tag with Aranea JSP specific <emphasis>onload</emphasis> and <emphasis>onunload</emphasis>
-        events attached. It usually writes out some other page initialization scripts too, depending on the circumstances.
-      </para>
-      
+      <title>&lt;ui:importStyles&gt;</title>
+
+      <para>Aranea comes bundled with CSS files to provide custom look for
+      different predefined components (the template app, calendar, htmleditor,
+      etc.). Just as with javascript, to use them one would have to extract
+      them from the jars and use them just like any other css file would be
+      used. To automate this process with aranea css files one can use the
+      &lt;ui:importStyles&gt; tag to include the css files
+      <emphasis>automatically</emphasis>.</para>
+
+      <para>&lt;ui:importStyles&gt; depends on the filter
+      <emphasis>StandardServletFileImportFilterService</emphasis> being set.
+      The filter provides the functionality of reading files from the jars on
+      the server.</para>
+
+      <para>If no attributes specified, the default group of css files are
+      loaded.</para>
+
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
+            <tbody>
+              <row>
+                <entry>file</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>Writes out the HTML's CSS handling
+                <literal>link</literal> to load the specific file.</entry>
+              </row>
+
+              <row>
+                <entry>group</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Writes out the HTML's CSS handling
+                <literal>link</literal> to load the group of files.</entry>
+              </row>
+              
+              <row>
+                <entry>media</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Media type to which imported styles are applied.</entry>
+              </row>
+
+            </tbody>
+
+          </tgroup>
+        </informaltable>
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>&lt;ui:body&gt;</title>
+
+      <para>This tag will render an HTML &lt;body&gt; tag with Aranea JSP
+      specific <emphasis>onload</emphasis> and <emphasis>onunload</emphasis>
+      events attached. It usually writes out some other page initialization
+      scripts too, depending on the circumstances.</para>
+
+      <sect3>
+        <title>Attributes</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
             <tbody>
               <row>
                 <entry>onload</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Overwrite the standard Aranea JSP HTML body onload event. Use with caution.</entry>
+
+                <entry>Overwrite the standard Aranea JSP HTML body onload
+                event. Use with caution.</entry>
               </row>
+
               <row>
                 <entry>onunload</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Overwrite the standard Aranea JSP HTML body onload event. Use with caution.</entry>
+
+                <entry>Overwrite the standard Aranea JSP HTML body onload
+                event. Use with caution.</entry>
               </row>
+              
+              <row>
+                <entry>id</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>HTML BODY id.</entry>
+              </row>
+              
+              <row>
+                <entry>dir</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>HTML BODY dir attribute.</entry>
+              </row>
+              
+              <row>
+                <entry>lang</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>HTML BODY lang attribute.</entry>
+              </row>
+
+              <row>
+                <entry>title</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>HTML BODY title attribute.</entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>
-      </sect3>      
-    </sect2>    
-
+      </sect3>
+    </sect2>
 
     <sect2 id="systemForm" xreflabel="systemForm">
-      <title><![CDATA[<ui:systemForm>]]></title>
-      <para>
-        This tag will render an HTML &lt;form&gt; tag along with some Aranea-specific hidden fields. When making custom web applications it is strongly suggested to have only one system form in the template and have it submit using <emphasis>POST</emphasis>. This will ensure that no matter what user does no data is ever lost. However Aranea does not impose this idiom and one may just as well submit using <emphasis>GET</emphasis>, define system forms in widgets and use usual HTML links instead of JavaScript.
-        See <xref linkend="systemTags"></xref> for usage example.
-      </para>
-      
+      <title>&lt;ui:systemForm&gt;</title>
+
+      <para>This tag will render an HTML &lt;form&gt; tag along with some
+      Aranea-specific hidden fields. When making custom web applications it is
+      strongly suggested to have only one system form in the template and have
+      it submit using <emphasis>POST</emphasis>. This will ensure that no
+      matter what user does no data is ever lost. However Aranea does not
+      impose this idiom and one may just as well submit using
+      <emphasis>GET</emphasis>, define system forms in widgets and use usual
+      HTML links instead of JavaScript. See <xref linkend="systemTags" /> for
+      usage example.</para>
+
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>id</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>The HTML "id" of the <literal><![CDATA[<form>]]></literal> tag that may be used in JavaScript. It will be autogenerated if omitted.</entry>
+
+                <entry>The HTML "id" of the <literal>&lt;form&gt;</literal>
+                tag that may be used in JavaScript. It will be autogenerated
+                if omitted.</entry>
               </row>
+
               <row>
                 <entry>method</entry>
+
                 <entry><emphasis>yes</emphasis></entry>
-                <entry>HTTP submit method, either <literal>GET</literal> or <literal>POST</literal>.</entry>
+
+                <entry>HTTP submit method, either <literal>GET</literal> or
+                <literal>POST</literal>.</entry>
               </row>
+
               <row>
                 <entry>enctype</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Same as HTML <literal><![CDATA[<form>]]></literal> attribute <literal>enctype</literal>, defines how form data is encoded.</entry>
+
+                <entry>Same as HTML <literal>&lt;form&gt;</literal> attribute
+                <literal>enctype</literal>, defines how form data is
+                encoded.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
-      </sect3>      
-    </sect2>    
-    
-    <sect2>
-      <title><![CDATA[<ui:messages>]]></title>
-      <para>
-        This tag will render messages of given type if they are present in current <literal>MessageContext</literal>. When type is not specified, all types of messages are rendered. As <literal>MessageContext</literal> is typically used for error messages, it is common to render these messages somewhere near top of the page, where they can easily be spotted.
-      </para>
+      </sect3>
       
-      <sect3>
-        <title>Attributes</title>
+                  <sect3>
+        <title>Variables</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>systemFormId</entry>
+
+                <entry>SystemForm FORM id.</entry>
+
+                <entry><literal>String</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>&lt;ui:messages&gt;</title>
+
+      <para>This tag will render messages of given type if they are present in
+      current <literal>MessageContext</literal>. When type is not specified,
+      all types of messages are rendered. As <literal>MessageContext</literal>
+      is typically used for error messages, it is common to render these
+      messages somewhere near top of the page, where they can easily be
+      spotted.</para>
+
+      <sect3>
+        <title>Attributes</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>type</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Message type.</entry>
               </row>
+
               <row>
                 <entry>styleClass</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>CSS class applied to rendered messages, default being <literal>aranea-messages</literal>.</entry>
+
+                <entry>CSS class applied to rendered messages, default being
+                <literal>aranea-messages</literal>.</entry>
+              </row>
+              
+              <row>
+                <entry>style</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS inline style applied to rendered messages. Use <literal>styleClass</literal> instead.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
       </sect3>
-      
+
       <sect3>
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-...
-<ui:messages type="info"/>
-<ui:messages type="error" styleClass="custom-error-message-class"/>
-<ui:messages/>
-...]]></programlisting> 
-      </sect3>
 
-    </sect2>       
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+...
+&lt;ui:messages type="info"/&gt;
+&lt;ui:messages type="error" styleClass="custom-error-message-class"/&gt;
+&lt;ui:messages/&gt;
+...</programlisting>
+      </sect3>
+    </sect2>
   </sect1>
 
   <sect1>
     <title>Basic Tags</title>
 
-      <sect2>
-       <title><![CDATA[<ui:attribute>]]></title>
-       <para>
-         Defines an attribute of the containing element, where possible. See also .
-         Most formelement tags accept attributes set by this tag too, see <xref linkend="attribute_examples"/>.
-       </para>
-      
-      <para>
-        <informaltable frame="all">
+    <sect2>
+      <title>&lt;ui:attribute&gt;</title>
+
+      <para>Defines an attribute of the containing element, where possible.
+      See also <xref linkend="uielementTag" />. Most form element tags accept
+      attributes set by this tag too, see <xref
+      linkend="attribute_examples" />.</para>
+
+      <para><informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>name</entry>
+
                 <entry><emphasis>yes</emphasis></entry>
+
                 <entry>Attribute name.</entry>
               </row>
+
               <row>
                 <entry>value</entry>
+
                 <entry><emphasis>yes</emphasis></entry>
+
                 <entry>Attribute value.</entry>
               </row>
             </tbody>
           </tgroup>
-        </informaltable>
-       </para>
-       
-                   <sect3 id="attribute_examples">
+        </informaltable></para>
+
+      <sect3 id="attribute_examples">
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 ...
-  <!-- set the onkeypress attribute for HTML input produced by ui:textInput-->
-  <ui:textInput>
-    <ui:attribute name="onkeypress" value="upperCase(this);"/>
-  </ui:textInput>
-...]]></programlisting>
+  &lt;!-- set the onkeypress attribute for HTML input produced by ui:textInput--&gt;
+  &lt;ui:textInput&gt;
+    &lt;ui:attribute name="onkeypress" value="upperCase(this);"/&gt;
+  &lt;/ui:textInput&gt;
+...</programlisting>
       </sect3>
-      </sect2>
-      
-      <sect2>
-       <title><![CDATA[<ui:elementContent>]]></title>
-       <para>
-         Defines an HTML element content, meaning the body of the HTML element where text and other tags go.
-       </para>
-      </sect2>
-      
-      <sect2 id="uielementTag">
-       <title><![CDATA[<ui:element>]]></title>
-       <para>
-        Defines an HTML element, can be used with <literal>&lt;ui:attribute&gt;</literal> and <literal>&lt;ui:elementContent&gt;</literal>
-        to write HTML.
-       </para>
-      
-         <para>
-           <informaltable frame="all">
-             <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
-               <thead>
-                 <row>
-                   <entry>Attribute</entry>
-                   <entry>Required</entry>
-                   <entry>Description</entry>
-                 </row>
-               </thead>
-               <tbody>
-                 <row>
-                   <entry>name</entry>
-                   <entry><emphasis>no</emphasis></entry>
-                   <entry>HTML element name.</entry>
-                 </row>
-               </tbody>
-             </tgroup>
-           </informaltable>
-        </para>
-        
-                    <sect3 id="element_attribute_examples">
-        <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<ui:element name="span">
-  <ui:attribute name="class" value="fancy"/>
-  <ui:elementContent>Contents of fancy span.</ui:elementContent>
-</ui:element>
-]]></programlisting>
-      </sect3>
-      </sect2>
-      
+    </sect2>
 
-      
-      <sect2 id="keyboardHandlerTag">
-       <title><![CDATA[<ui:keyboardHandler>]]></title>
-       <para>
-         Registers a simple javascript keyboard handler.
-       </para>
+    <sect2>
+      <title>&lt;ui:elementContent&gt;</title>
 
-       <para>
-        <informaltable frame="all">
+      <para>Defines an HTML element content, meaning the body of the HTML
+      element where text and other tags go.</para>
+    </sect2>
+
+    <sect2 id="uielementTag">
+      <title>&lt;ui:element&gt;</title>
+
+      <para>Defines HTML node, can be used together with
+      <literal>&lt;ui:attribute&gt;</literal> and
+      <literal>&lt;ui:elementContent&gt;</literal> to define a full HTML
+      node.</para>
+
+      <para><informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
+            <tbody>
+              <row>
+                <entry>name</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>HTML element name.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+
+      <sect3 id="element_attribute_examples">
+        <title>Examples</title>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui:element name="span"&gt;
+  &lt;ui:attribute name="class" value="fancy"/&gt;
+  &lt;ui:elementContent&gt;Contents of fancy span.&lt;/ui:elementContent&gt;
+&lt;/ui:element&gt;
+</programlisting>
+      </sect3>
+    </sect2>
+
+    <sect2 id="keyboardHandlerTag">
+      <title>&lt;ui:keyboardHandler&gt;</title>
+
+      <para>Registers a simple javascript keyboard handler.</para>
+
+      <para><informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
             <tbody>
               <row>
                 <entry>scope</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>
-                   When a keyboard event happens, it is usually associated with 
-                   a certain form element / form / widget / etc. The object with which an event is associated
-                   is identified by a hierarchical id (e.g. there may be widget 'somelist', containing
-                   form 'somelist.form', containing textbox 'somelist.form.textbox'.
-                   The scope is a prefix of that id that must match in order for the handler to be triggered.
-                   For example, the handler with scope='somelist.form.textbox' will be triggered only when
-                   the event in the textbox occurs, but the handler with scope="somelist" will be triggered when
-                   any event in any of the elements inside any of the forms of "somelist" occurs. I.e. for any
-                   element with ID beginning with 'somelist'.
-                   When scope is not specified, a global handler is registered, that reacts to an event in any form/widget.
-                </entry>
+
+                <entry>When a keyboard event happens, it is usually associated
+                with a certain form element / form / widget / etc. The object
+                with which an event is associated is identified by a
+                hierarchical id (e.g. there may be widget 'somelist',
+                containing form 'somelist.form', containing textbox
+                'somelist.form.textbox'. The scope is a prefix of that id that
+                must match in order for the handler to be triggered. For
+                example, the handler with scope='somelist.form.textbox' will
+                be triggered only when the event in the textbox occurs, but
+                the handler with scope="somelist" will be triggered when any
+                event in any of the elements inside any of the forms of
+                "somelist" occurs. I.e. for any element with ID beginning with
+                'somelist'. When scope is not specified, a global handler is
+                registered, that reacts to an event in any
+                form/widget.</entry>
               </row>
 
               <row>
                 <entry>handler</entry>
+
                 <entry><emphasis>yes</emphasis></entry>
-                <entry>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired.
-                        Example: <programlisting role="javascript">function(event, elementId) { alert(elementId); }</programlisting> 
-                </entry>
+
+                <entry>A javascript handler function that takes two parameters
+                - the event object and the element id for which the event was
+                fired. Example: <programlisting role="javascript">function(event, elementId) { alert(elementId); }</programlisting></entry>
               </row>
+
               <row>
                 <entry>keyCode</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</entry>
+
+                <entry>Keycode to which the event must be triggered. 13 means
+                enter. Either keyCode or key must be specified, but not
+                both.</entry>
               </row>
+
               <row>
                 <entry>key</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</entry>
+
+                <entry>Key, to which the event must be triggered. Key is
+                specified as a certain 'alias'. The alias may be an ASCII
+                character or a digit (this will denote the corresponding key
+                on a US keyboard), a space (' '), or one of the following:
+                'return', 'escape', 'backspace', 'tab', 'shift', 'control',
+                'space', 'f1', 'f2', ..., 'f12'.</entry>
               </row>
             </tbody>
           </tgroup>
-        </informaltable>
-        
-       </para>
-       <sect3 id="keyboardHandler_examples">
+        </informaltable></para>
+
+      <sect3 id="keyboardHandler_examples">
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<!-- Globally-scoped F2 listener -->
-<ui:keyboardHandler scope="" key="f2" handler="function() { alert('You pressed F2. Do it again if you dare!');}"/>]]></programlisting>
+
+        <programlisting role="xml">&lt;!-- Globally-scoped F2 listener --&gt;
+&lt;ui:keyboardHandler 
+  scope="" 
+  key="f2" 
+  handler="function() { alert('You pressed F2. Do it again if you dare!');}"/&gt;</programlisting>
       </sect3>
-      </sect2>
-      
-      <sect2>
-       <title><![CDATA[<ui:eventKeyboardHandler>]]></title>
-       <para>
-        Registers a 'server-side' keyboard handler that sends an event to the specified widget.
-       </para>
-       
-       <para>
-        <informaltable frame="all">
+    </sect2>
+
+    <sect2>
+      <title>&lt;ui:eventKeyboardHandler&gt;</title>
+
+      <para>Registers a 'server-side' keyboard handler that sends an event to
+      the specified widget.</para>
+
+      <para><informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>scope</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry><xref linkend="keyboardHandlerTag"/></entry>
+
+                <entry><xref linkend="keyboardHandlerTag" /></entry>
               </row>
+
               <row>
                 <entry>widgetId</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Id of Widget that is target of event produced by keyboard handler.</entry>
+
+                <entry>Id of Widget that is target of event produced by
+                keyboard handler.</entry>
               </row>
+
               <row>
                 <entry>eventId</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Id of event that should be sent to target widget.</entry>
+
+                <entry>Id of event that should be sent to target
+                widget.</entry>
               </row>
+
               <row>
                 <entry>eventParam</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Event parameters</entry>
               </row>
+
               <row>
                 <entry>updateRegions</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Enumerates the regions of markup to be updated in this widget scope. Please see <![CDATA[<ui:updateRegion>]]> for details.</entry>
+
+                <entry>Enumerates the regions of markup to be updated in this
+                widget scope. Please see &lt;ui:updateRegion&gt; for
+                details.</entry>
               </row>
+
               <row>
                 <entry>globalUpdateRegions</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Enumerates the regions of markup to be updated globally. Please see <![CDATA[<ui:updateRegion>]]> for details.</entry>
+
+                <entry>Enumerates the regions of markup to be updated
+                globally. Please see &lt;ui:updateRegion&gt; for
+                details.</entry>
               </row>
+
               <row>
                 <entry>keyCode</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</entry>
+
+                <entry>Keycode to which the event must be triggered. 13 means
+                enter. Either keyCode or key must be specified, but not
+                both.</entry>
               </row>
+
               <row>
                 <entry>key</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</entry>
+
+                <entry>Key, to which the event must be triggered. Key is
+                specified as a certain 'alias'. The alias may be an ASCII
+                character or a digit (this will denote the corresponding key
+                on a US keyboard), a space (' '), or one of the following:
+                'return', 'escape', 'backspace', 'tab', 'shift', 'control',
+                'space', 'f1', 'f2', ..., 'f12'.</entry>
               </row>
             </tbody>
           </tgroup>
-        </informaltable>
-        
-       </para>
-       
-              <sect3 id="eventKeyboardHandler_examples">
+        </informaltable></para>
+
+      <sect3 id="eventKeyboardHandler_examples">
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<!-- F2 listener that sends event 'add' to context widget upon activation -->
-<ui:eventKeyboardHandler eventId="add" key="f2" widgetId="${widgetId}"/>
-]]></programlisting>
+
+        <programlisting role="xml">&lt;!-- F2 listener that sends event 'add' to context widget upon activation --&gt;
+&lt;ui:eventKeyboardHandler eventId="add" key="f2" widgetId="${widgetId}"/&gt;
+</programlisting>
       </sect3>
-       
-      </sect2>
+    </sect2>
   </sect1>
-  
+
   <sect1>
     <title>Widget Tags</title>
 
     <sect2>
-      <title><![CDATA[<ui:widgetContext>]]></title>
+      <title>&lt;ui:widgetContext&gt;</title>
 
-      <para>
-        This tag should generally be the root of every widget JSP. It makes the widget view model accessible as an EL variable. It can also be used to render a descendant widget in the same JSP with the current widget. In the latter case you should set the <emphasis>id</emphasis> attribute to the identifier path of the descendent widget in question. Note that all widget-related tags inside of this tag will assume that the widget in question is their parent or ancestor (that is all the identifier pathes will start from it).
-      </para>
+      <para>This tag should generally be the root of every widget JSP. It
+      makes the widget view model accessible as an EL variable. It can also be
+      used to render a descendant widget in the same JSP with the current
+      widget. In the latter case you should set the <emphasis>id</emphasis>
+      attribute to the identifier path of the descendant widget in question.
+      Note that all widget-related tags inside of this tag will assume that
+      the widget in question is their parent or ancestor (that is all the
+      identifier paths will start from it).</para>
 
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>id</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>A dot-separated widget identifier path leading from the current context widget to the new one.</entry>
+
+                <entry>A dot-separated widget identifier path leading from the
+                current context widget to the new one.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -631,36 +940,189 @@
 
       <sect3>
         <title>Variables</title>
+
         <informaltable frame="all">
           <tgroup cols="2">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
             <thead>
               <row>
                 <entry>Variable</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>widget</entry>
-                <entry>The context widget instance. Can be used to access JavaBean property data from the widget 
-                (e.g. <literal>${widget.foo}</literal> will translate to a <literal>getFoo()</literal> widget call}.</entry>
-              </row>            
+
+                <entry>The context widget instance. Can be used to access
+                JavaBean property data from the widget (e.g.
+                <literal>${widget.foo}</literal> will translate to a
+                <literal>getFoo()</literal> widget call}.</entry>
+              </row>
+
               <row>
                 <entry>widgetId</entry>
-                <entry>The full dot-separated identifier of the context widget.</entry>
-              </row>         
+
+                <entry>The full dot-separated identifier of the context
+                widget.</entry>
+              </row>
+
               <row>
                 <entry>viewData</entry>
-                <entry>The view data of the context widget (see <literal>BaseApplicationWidget.putViewData()</literal>).</entry>
-              </row>                   
+
+                <entry>The view data of the context widget (see
+                <literal>BaseApplicationWidget.putViewData()</literal>).</entry>
+              </row>
+
               <row>
                 <entry>viewModel</entry>
+
                 <entry>The view model of the context widget.</entry>
               </row>
+
               <row>
                 <entry>scopedWidgetId</entry>
+
+                <entry>The scoped id of the context widget.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+         
+
+        <title>Examples</title>
+
+         The most common usage of &lt;ui:widgetContext&gt; is as root tag for widget JSPs: 
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+...
+  &lt;ui:widgetContext&gt;
+    ...
+    &lt;c:out value="${viewData.myMessage}"/&gt;
+    ...
+  &lt;/ui:widgetContext&gt;
+...</programlisting>
+
+         The other use case is to render a descendant widget: 
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+...
+  &lt;ui:widgetContext&gt;
+    ...
+    &lt;ui:widgetContext id="child.ofMyChild"&gt;
+      &lt;c:out value="${viewData.messageFromChildOfMyChild}"
+    &lt;/ui:widgetContext&gt;
+    ...
+  &lt;/ui:widgetContext&gt;
+...</programlisting>
+
+         
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>&lt;ui:widget&gt;</title>
+
+      <para>This tag is used when one needs to render a child or descendant
+      widget while still retaining in both current widget context and JSP. It
+      publishes the widget view model and full identifier as EL variables, but
+      does little else and does not setup a widget context (e.g.
+      <literal>&lt;ui:widgetInclude&gt;</literal> tag will not take it into
+      account).</para>
+
+      <sect3>
+        <title>Attributes</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>id</entry>
+
+                <entry><emphasis>yes</emphasis></entry>
+
+                <entry>A dot-separated widget identifier path leading from the
+                current context widget to the target widget.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+        <title>Variables</title>
+
+        <informaltable frame="all">
+          <tgroup cols="2">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <thead>
+              <row>
+                <entry>Variable</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>widget</entry>
+
+                <entry>The widget instance. Can be used to access JavaBean
+                property data from the widget (e.g.
+                <literal>${widget.foo}</literal> will translate to a
+                <literal>getFoo()</literal> widget call}.</entry>
+              </row>
+
+              <row>
+                <entry>widgetId</entry>
+
+                <entry>The full dot-separated identifier of the
+                widget.</entry>
+              </row>
+
+              <row>
+                <entry>viewData</entry>
+
+                <entry>The view data of the widget (see
+                <literal>BaseApplicationWidget.putViewData()</literal>).</entry>
+              </row>
+
+              <row>
+                <entry>viewModel</entry>
+
+                <entry>The view model of the widget.</entry>
+              </row>
+              
+              <row>
+                <entry>scopedWidgetId</entry>
+
                 <entry>The scoped id of the context widget.</entry>
               </row>
             </tbody>
@@ -670,92 +1132,67 @@
 
       <sect3>
         <title>Examples</title>
-        The most common usage of <![CDATA[<ui:widgetContext>]]> is as root tag for widget JSPs:        
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 ...
-  <ui:widgetContext>
+  &lt;ui:widgetContext&gt;
     ...
-    <c:out value="${viewData.myMessage}"/>
+    &lt;ui:widget id="child.ofMyChild"&gt;
+      &lt;c:out value="${viewData.messageFromChildOfMyChild}"
+	  &lt;ui:widgetInclude id="child"/&gt;
+    &lt;/ui:widget&gt;
     ...
-  </ui:widgetContext>
-...]]></programlisting> 
-      The other use case is to render a descendant widget:
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-...
-  <ui:widgetContext>
-    ...
-    <ui:widgetContext id="child.ofMyChild">
-      <c:out value="${viewData.messageFromChildOfMyChild}"
-    </ui:widgetContext>
-    ...
-  </ui:widgetContext>
-...]]></programlisting>      
+  &lt;/ui:widgetContext&gt;
+...</programlisting>
       </sect3>
     </sect2>
-    
+
     <sect2>
-      <title><![CDATA[<ui:widget>]]></title>
-      <para>
-        This tag is used when one needs to render a child or descendant widget while still retaining in both current widget context and JSP. 
-        It publishes the widget view model and full identifier as EL variables, but does little else and does not setup a widget context 
-        (e.g. <literal>&lt;ui:widgetInclude&gt;</literal> tag will not take it into account).
-      </para>
+      <title>&lt;ui:widgetInclude&gt;</title>
+
+      <para>This tag is used to render some child or descendant widget. It
+      will call the widget's <literal>render()</literal> method, which will
+      allow the target widget to choose how to render itself.</para>
 
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>id</entry>
-                <entry><emphasis>yes</emphasis></entry>
-                <entry>A dot-separated widget identifier path leading from the current context widget to the target widget.</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-      </sect3>
 
-      <sect3>
-        <title>Variables</title>
-        <informaltable frame="all">
-          <tgroup cols="2">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
-            <thead>
-              <row>
-                <entry>Variable</entry>
-                <entry>Description</entry>
+                <entry><emphasis>yes</emphasis></entry>
+
+                <entry>A dot-separated widget identifier path leading from the
+                current context widget to the target widget.</entry>
               </row>
-            </thead>
-            <tbody>
+
               <row>
-                <entry>widget</entry>
-                <entry>The widget instance. Can be used to access JavaBean property data from the widget 
-                (e.g. <literal>${widget.foo}</literal> will translate to a <literal>getFoo()</literal> widget call}.</entry>
-              </row>            
-              <row>
-                <entry>widgetId</entry>
-                <entry>The full dot-separated identifier of the widget.</entry>
-              </row>         
-              <row>
-                <entry>viewData</entry>
-                <entry>The view data of the widget (see <literal>BaseApplicationWidget.putViewData()</literal>).</entry>
-              </row>                   
-              <row>
-                <entry>viewModel</entry>
-                <entry>The view model of the widget.</entry>
+                <entry>path</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>Path to JSP, relative to <literal>jspPath</literal> of <literal>StandardJspFilterService</literal>.</entry>
               </row>
+
             </tbody>
           </tgroup>
         </informaltable>
@@ -763,145 +1200,195 @@
 
       <sect3>
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 ...
-  <ui:widgetContext>
+  &lt;ui:widgetContext&gt;
     ...
-    <ui:widget id="child.ofMyChild">
-      <c:out value="${viewData.messageFromChildOfMyChild}"
-	  <ui:widgetInclude id="child"/>
-    </ui:widget>
+    &lt;ui:widgetInclude id="child.ofMyChild"/&gt;
     ...
-  </ui:widgetContext>
-...]]></programlisting>      
+  &lt;/ui:widgetContext&gt;
+...</programlisting>
       </sect3>
     </sect2>
-    
-    <sect2>
-      <title><![CDATA[<ui:widgetInclude>]]></title>
-      <para>
-        This tag is used to render some child or descendant widget. It will call the widget's <literal>render()</literal> method, which will allow the target widget to choose how to render itself. 
-      </para>
 
-      <sect3>
+    <sect2>
+       
+
+      <title>&lt;ui:globalWidgetInclude&gt;</title>
+
+       Much like 
+
+      <literal>&lt;ui:widgetInclude&gt;</literal>
+
+      , but this tag allows to include not only descendants of current context widget but any widget that is accessible from global scope. 
+      
+            <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>id</entry>
                 <entry><emphasis>yes</emphasis></entry>
-                <entry>A dot-separated widget identifier path leading from the current context widget to the target widget.</entry>
+                <entry>A dot-separated full widget identifier.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
       </sect3>
-
-      <sect3>
-        <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-...
-  <ui:widgetContext>
-    ...
-    <ui:widgetInclude id="child.ofMyChild"/>
-    ...
-  </ui:widgetContext>
-...]]></programlisting>      
-      </sect3>
+      
     </sect2>
-
-    <sect2>
-      <title><![CDATA[<ui:globalWidgetInclude>]]></title>
-      Much like <literal><![CDATA[<ui:widgetInclude>]]></literal>, but this tag allows to 
-      include not only descendants of current context widget but any widget that is 
-      accessible from global scope.
-    </sect2>
-    
   </sect1>
-  
+
   <sect1>
     <title>Event-producing Tags</title>
+
     <sect2>
-      <title><![CDATA[<ui:eventButton> and <ui:eventLinkButton>]]></title>
-      <para>
-        These tags will render a button (or a link) that when clicked will send a specified event to the the target widget with an optional <literal>String</literal> parameter. 
-      </para>
+      <title>&lt;ui:eventButton&gt; and &lt;ui:eventLinkButton&gt;</title>
+
+      <para>These tags will render a button (or a link) that when clicked will
+      send a specified event to the target widget with an optional
+      <literal>String</literal> parameter.</para>
 
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>id</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>HTML "id" of the element that can be used to access it via DOM.</entry>
+
+                <entry>HTML "id" of the element that can be used to access it
+                via DOM.</entry>
               </row>
+
               <row>
                 <entry>labelId</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>The key of the localizable label that will be displayed on the button.</entry>
+
+                <entry>The key of the localizable label that will be displayed
+                on the button.</entry>
               </row>
+
               <row>
                 <entry>eventId</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>The identifier of the event that will be sent to the target widget.</entry>
+
+                <entry>The identifier of the event that will be sent to the
+                target widget.</entry>
               </row>
+
               <row>
                 <entry>eventParam</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry><literal>String</literal> event parameter that will accompany the event.</entry>
+
+                <entry><literal>String</literal> event parameter that will
+                accompany the event.</entry>
               </row>
+
               <row>
                 <entry>eventTarget</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>ID of receiving widget. Almost never set directly. Defaults to current contextwidget.</entry>
+
+                <entry>ID of receiving widget. Almost never set directly.
+                Defaults to current context widget.</entry>
               </row>
+
               <row>
                 <entry>disabled</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>If set to a not null value will show the button disabled.</entry>
+
+                <entry>If set to a not null value will show the button
+                disabled.</entry>
               </row>
+              
+              <row>
+                <entry>renderMode</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.
+                This attribute only applies to <literal>&lt;ui:eventButton&gt;</literal>, <literal>&lt;ui:eventLinkButton&gt;</literal>
+                is always rendered with HTML link.
+                </entry>
+              </row>
+
               <row>
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>The CSS class that will override the default one.</entry>
               </row>
+
               <row>
                 <entry>updateRegions</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Comma separated list of update regions that should be updated upon button receiving event. This attribute is only needed when using AJAX features&mdash;ordinary HTTP requests always update whole page.</entry>
+
+                <entry>Comma separated list of update regions that should be
+                updated upon button receiving event. This attribute is only
+                needed when using AJAX features—ordinary HTTP requests always
+                update whole page.</entry>
               </row>
+
               <row>
                 <entry>globalUpdateRegions</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Comma separated list of global update regions that should be updated upon button receiving event. This attribute is only needed when using AJAX features&mdash;ordinary HTTP requests always update whole page.</entry>
+
+                <entry>Comma separated list of global update regions that
+                should be updated upon button receiving event. This attribute
+                is only needed when using AJAX features—ordinary HTTP requests
+                always update whole page.</entry>
               </row>
+
               <row>
                 <entry>onClickPrecondition</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified, this is considered to be <literal>true</literal>.</entry>
+
+                <entry>Precondition for deciding whether onclick event should
+                go server side or not. If left unspecified, this is considered
+                to be <literal>true</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -911,57 +1398,69 @@
       <sect3>
         <title>HTML, Styles and JavaScript</title>
 
-        <para>
-          The <literal>eventButton</literal> tag writes out an HTML <literal>&lt;button&gt;</literal> closed tag with a default CSS class of "aranea-button".
-        </para>
-        <para>
-          The <literal>eventLinkButton</literal> tag writes out an HTML <literal>&lt;a&gt;</literal> open tag with a default CSS class of "aranea-link-button".
-        </para>
+        <para>The <literal>eventButton</literal> tag writes out an HTML
+        <literal>&lt;button&gt;</literal> closed tag with a default CSS class
+        of "aranea-button".</para>
+
+        <para>The <literal>eventLinkButton</literal> tag writes out an HTML
+        <literal>&lt;a&gt;</literal> open tag with a default CSS class of
+        "aranea-link-button".</para>
       </sect3>
-      
+
       <sect3>
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 ...
-  <ui:widgetContext>
+  &lt;ui:widgetContext&gt;
     ...
-    <ui:eventButton eventId="test" eventParam="${bean.id}"/>
-    <ui:eventLinkButton eventId="edit" eventParam="${bean.id}">
-      <ui:image code="edit"/>
-    </ui:eventLinkButton>
+    &lt;ui:eventButton eventId="test" eventParam="${bean.id}"/&gt;
+    &lt;ui:eventLinkButton eventId="edit" eventParam="${bean.id}"&gt;
+      &lt;ui:image code="edit"/&gt;
+    &lt;/ui:eventLinkButton&gt;
     ...
-  </ui:widgetContext>
-...]]></programlisting>      
+  &lt;/ui:widgetContext&gt;
+...</programlisting>
       </sect3>
     </sect2>
-    
-      <!--  ONLOADEVENT -->
+
+    <!--  ONLOADEVENT -->
 
     <sect2>
-      <title><![CDATA[<ui:onLoadEvent>]]></title>
-      <para>
-        This tag will register events that are executed when HTML page body has completely loaded. This tag can be used multiple times, 
-        all specified events will be added to event queue and executed in order of addition.
-      </para>
+      <title>&lt;ui:onLoadEvent&gt;</title>
+
+      <para>This tag will register events that are executed when HTML page
+      body has completely loaded. This tag can be used multiple times, all
+      specified events will be added to event queue and executed in order of
+      addition.</para>
 
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>event</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry><emphasis>yes</emphasis></entry>
+
                 <entry>Event to register.</entry>
               </row>
             </tbody>
@@ -971,485 +1470,691 @@
 
       <sect3>
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 ...
-    <ui:onLoadEvent event="activateFlashLights();"/>
-    <ui:onLoadEvent event="changeMenuBackGroundColor();"/>
-...]]></programlisting>
+    &lt;ui:onLoadEvent event="activateFlashLights();"/&gt;
+    &lt;ui:onLoadEvent event="changeMenuBackGroundColor();"/&gt;
+...</programlisting>
       </sect3>
     </sect2>
-    
-     <sect2>
-        <title><![CDATA[<ui:registerPopups>]]></title>
-        <para>
-            This tag checks presence of serverside session-threads that represent popups and adds system loadevent for opening them
-            in new browser window at client-side. For tag to have an effect, HTML page <literal>BODY</literal> tag must have attribute
-            onload event set to <emphasis>AraneaPage</emphasis> (See <xref linkend="aranea_clientside_js"/>) onload event. Also, this tag only works inside &lt;ui:systemForm&gt; tag.
-        </para>
-        
+
+    <sect2>
+      <title>&lt;ui:registerPopups&gt;</title>
+
+      <para>This tag checks presence of server-side session-threads that
+      represent popups and adds system loadevent for opening them in new
+      browser window at client-side. For tag to have an effect, HTML page
+      <literal>BODY</literal> tag must have attribute onload event set to
+      <emphasis>AraneaPage</emphasis> (See <xref
+      linkend="aranea_clientside_js" />) onload event. Also, this tag only
+      works inside &lt;ui:systemForm&gt; tag.</para>
+
       <sect3>
         <title>Attributes</title>
+
         <para>This tag has no attributes.</para>
       </sect3>
-        
-        <sect3>
+
+      <sect3>
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 ...
-<ui:body>
-  <ui:systemForm method="POST">
-    <ui:registerPopups/>
-  </ui:systemForm>
-</ui:body>
-...]]></programlisting>
+&lt;ui:body&gt;
+  &lt;ui:systemForm method="POST"&gt;
+    &lt;ui:registerPopups/&gt;
+  &lt;/ui:systemForm&gt;
+&lt;/ui:body&gt;
+...</programlisting>
       </sect3>
     </sect2>
-      
-     </sect1>
+  </sect1>
 
   <sect1>
     <title>HTML entity Tags</title>
-      <para>
-      Html entities can be inserted by using the predefined entity tags or using the
-      <![CDATA[<ui:entity>]]> for entities that have not been defined by Aranea JSP library.
-      </para>
 
-      <para>
-        The <literal>entity</literal> tag accepts a attribute <literal>code</literal> which is
-        used as &amp;<literal>code</literal>; to get the HTML entity.
-      </para>
-        
-        <informaltable frame="all">
-          <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
-            <thead>
-              <row>
-                <entry>Attribute</entry>
-                <entry>Required</entry>
-                <entry>Description</entry>
-              </row>
-            </thead>
-            <tbody>
-              <row>
-                <entry>code</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>HTML entity code, e.g. <emphasis>nbsp</emphasis> or <emphasis>#012</emphasis>.</entry>
-              </row>
-              
-              <row>
-                <entry>count</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Number of times to repeat the entity.</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-      
-      <sect2>
+    <para>HTML entities can be inserted by using the predefined entity tags or
+    using the &lt;ui:entity&gt; for entities that have not been defined by
+    Aranea JSP library.</para>
 
-        <title>Predefined entity tags</title>
-        <para>
-          The following predefined entities also accept the <literal>count</literal>
-          attribute. It defines the number of times to repeat the entity.
-        </para>
-        <informaltable frame="all">
-          <tgroup cols="2">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
-            <thead>
-              <row>
-                <entry>Tag</entry>
-                <entry>Description</entry>
-              </row>
-            </thead>
-            <tbody>
-              <row>
-                <entry><![CDATA[<ui:acute>]]></entry>
-                <entry>HTML <literal>&amp;acute;</literal> entity.</entry>
-              </row>
-              
-              <row>
-                <entry><![CDATA[<ui:copyright>]]></entry>
-                <entry>HTML <literal>&amp;copyright;</literal> entity.</entry>
-              </row>
-              
-              <row>
-                <entry><![CDATA[<ui:gt>]]></entry>
-                <entry>HTML <literal>&amp;gt;</literal> entity.</entry>
-              </row>
-              
-              <row>
-                <entry><![CDATA[<ui:laquo>]]></entry>
-                <entry>HTML <literal>&amp;laquo;</literal> entity.</entry>
-              </row>
-              
-              <row>
-                <entry><![CDATA[<ui:lt>]]></entry>
-                <entry>HTML <literal>&amp;lt;</literal> entity.</entry>
-              </row>
-              
-              <row>
-                <entry><![CDATA[<ui:nbsp>]]></entry>
-                <entry>HTML <literal>&amp;nbsp;</literal> entity.</entry>
-              </row>
-              
-              <row>
-                <entry><![CDATA[<ui:raquo>]]></entry>
-                <entry>HTML <literal>&amp;raquo;</literal> entity.</entry>
-              </row>
-              
-              <row>
-                <entry><![CDATA[<ui:acute>]]></entry>
-                <entry>HTML <literal>&amp;acute;</literal> entity.</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
+    <para>The <literal>entity</literal> tag accepts a attribute
+    <literal>code</literal> which is used as &amp;<literal>code</literal>; to
+    get the HTML entity.</para>
+
+    <informaltable frame="all">
+      <tgroup cols="3">
+        <colspec colwidth="2*" />
+
+        <colspec colwidth="1*" />
+
+        <colspec colwidth="4*" />
+
+        <thead>
+          <row>
+            <entry>Attribute</entry>
+
+            <entry>Required</entry>
+
+            <entry>Description</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>code</entry>
+
+            <entry><emphasis>no</emphasis></entry>
+
+            <entry>HTML entity code, e.g. <emphasis>nbsp</emphasis> or
+            <emphasis>#012</emphasis>.</entry>
+          </row>
+
+          <row>
+            <entry>count</entry>
+
+            <entry><emphasis>no</emphasis></entry>
+
+            <entry>Number of times to repeat the entity.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    <sect2>
+      <title>Predefined entity tags</title>
+
+      <para>The following predefined entities also accept the
+      <literal>count</literal> attribute. It defines the number of times to
+      repeat the entity.</para>
+
+      <informaltable frame="all">
+        <tgroup cols="2">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="4*" />
+
+          <thead>
+            <row>
+              <entry>Tag</entry>
+
+              <entry>Description</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>&lt;ui:acute&gt;</entry>
+
+              <entry>HTML <literal>&amp;acute;</literal> entity.</entry>
+            </row>
+
+            <row>
+              <entry>&lt;ui:copyright&gt;</entry>
+
+              <entry>HTML <literal>&amp;copyright;</literal> entity.</entry>
+            </row>
+
+            <row>
+              <entry>&lt;ui:gt&gt;</entry>
+
+              <entry>HTML <literal>&amp;gt;</literal> entity.</entry>
+            </row>
+
+            <row>
+              <entry>&lt;ui:laquo&gt;</entry>
+
+              <entry>HTML <literal>&amp;laquo;</literal> entity.</entry>
+            </row>
+
+            <row>
+              <entry>&lt;ui:lt&gt;</entry>
+
+              <entry>HTML <literal>&amp;lt;</literal> entity.</entry>
+            </row>
+
+            <row>
+              <entry>&lt;ui:nbsp&gt;</entry>
+
+              <entry>HTML <literal>&amp;nbsp;</literal> entity.</entry>
+            </row>
+
+            <row>
+              <entry>&lt;ui:raquo&gt;</entry>
+
+              <entry>HTML <literal>&amp;raquo;</literal> entity.</entry>
+            </row>
+
+            <row>
+              <entry>&lt;ui:acute&gt;</entry>
+
+              <entry>HTML <literal>&amp;acute;</literal> entity.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
     </sect2>
   </sect1>
-  
+
   <sect1>
     <title>Putting Widgets to Work with JSP</title>
-    <para>
-      Now we have defined enough JSP tags to render our example widget (see <xref linkend="widgets-example-widget"/>):
-      <programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<jsp:root 
+
+    <para>Now we have defined enough JSP tags to render our example widget
+    (see <xref linkend="widgets-example-widget" />): <programlisting
+    role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
   xmlns:c="http://java.sun.com/jstl/core"
-  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2">
-  <ui:widgetContext>
-    <h3>Test widget</h3>
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
+  &lt;ui:widgetContext&gt;
+    &lt;h3&gt;Test widget&lt;/h3&gt;
     
-    Data field: <c:out value="${viewData.myData.field}"/>
-    <ui:eventButton labelId="#Test" eventId="test"/>      
-  </ui:widgetContext>
-</jsp:root>]]></programlisting>
-    We can use just usual JSTL Core library tags to access the widget view data, as long as the <literal><![CDATA[<ui:widgetContext>]]></literal> is present via the <literal>viewData</literal> EL variable.
-    </para>
+    Data field: &lt;c:out value="${viewData.myData.field}"/&gt;
+    &lt;ui:eventButton labelId="#Test" eventId="test"/&gt;      
+  &lt;/ui:widgetContext&gt;
+&lt;/jsp:root&gt;</programlisting> We can use just usual JSTL Core library
+    tags to access the widget view data, as long as the
+    <literal>&lt;ui:widgetContext&gt;</literal> is present via the
+    <literal>viewData</literal> EL variable.</para>
   </sect1>
-  
+
   <sect1>
     <title>Layout Tags</title>
-    
+
     <sect2>
-      <title><![CDATA[<ui:layout>]]></title>
-      <para>
-         Represents a layout. Layouts allow to describe the way content will be placed on the page.
-      </para>
-      
-    <para>
-        <informaltable frame="all">
+      <title>&lt;ui:layout&gt;</title>
+
+      <para>Represents a layout. Layouts allow to describe the way content
+      will be placed on the page.</para>
+
+      <para><informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Applicable to:</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>width</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Layout width.</entry>
               </row>
+
               <row>
-                <entry>height</entry>
+                <entry>rowClasses</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Layout height.</entry>
-              </row>
-              <row>
-                <entry>rowClass</entry>
-                <entry><emphasis>no</emphasis></entry>
+
                 <entry>Default style of rows in this layout.</entry>
               </row>
+
               <row>
-                <entry>cellClass</entry>
+                <entry>cellClasses</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Default style of cells in this layout.</entry>
               </row>
+
               <row>
                 <entry>styleClass</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>CSS class for tag.</entry>
               </row>
             </tbody>
           </tgroup>
-        </informaltable>
-      </para>
-    </sect2>
-    
-    <sect2>
-      <title><![CDATA[<ui:row>]]></title>
-      <para>
-         Represents a row in layout.
-      </para>
-      
-    <para>
+        </informaltable></para>
+        
+         <sect3>
+        <title>Variables</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>rowClassProvider</entry>
+                <entry>Provides row class, usually should not be used from JSP.</entry>
+                <entry><literal>RowClassProvider</literal></entry>
+              </row>
+              
+              <row>
+                <entry>cellClassProvider</entry>
+                <entry>Provides cell class, usually should not be used from JSP.</entry>
+                <entry><literal>CellClassProvider</literal></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+          </sect3>
+    </sect2>
+
+    <sect2>
+      <title>&lt;ui:row&gt;</title>
+
+      <para>Represents a row in layout.</para>
+
+      <para><informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Applicable to:</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>height</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Row height.</entry>
               </row>
+
               <row>
-                <entry>cellClass</entry>
+                <entry>cellClasses</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Default style of cells in this row..</entry>
               </row>
+
               <row>
                 <entry>styleClass</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Cell css class, defines the way the cell will be rendered.</entry>
+
+                <entry>Cell css class, defines the way the cell will be
+                rendered.</entry>
               </row>
+
               <row>
                 <entry>overrideLayout</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Boolean that determines whether row's own styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass.</entry>
+
+                <entry>Boolean that determines whether row's own styleClass
+                completely overrides styleClass provided by surrounding layout
+                (default behaviour), or is appended to layout's
+                styleClass.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+        
+                 <sect3>
+        <title>Variables</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Variable</entry>
+                <entry>Description</entry>
+                <entry>Type</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>cellClassProvider</entry>
+                <entry>Provides cell class, usually should not be used from JSP.</entry>
+                <entry><literal>CellClassProvider</literal></entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
-      </para>
+          </sect3>
     </sect2>
-    
+
     <sect2>
-      <title><![CDATA[<ui:cell>]]></title>
-      <para>
-         Represents a cell in layout.
-      </para>
-      
-    <para>
-        <informaltable frame="all">
+      <title>&lt;ui:cell&gt;</title>
+
+      <para>Represents a cell in layout.</para>
+
+      <para><informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Applicable to:</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>height</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Row height.</entry>
-              </row> 
-              
+              </row>
+
               <row>
                 <entry>width</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Row width.</entry>
-              </row> 
-              
+              </row>
+
               <row>
                 <entry>colSpan</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Cell colspan, same as in HTML.</entry>
-              </row> 
+              </row>
+
               <row>
                 <entry>rowSpan</entry>
+
                 <entry><emphasis>no</emphasis></entry>
+
                 <entry>Cell rowspan, same as in HTML.</entry>
-              </row> 
+              </row>
+
               <row>
                 <entry>styleClass</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Cell css class, defines the way the cell will be rendered.</entry>
+
+                <entry>Cell css class, defines the way the cell will be
+                rendered.</entry>
               </row>
+
               <row>
                 <entry>overrideLayout</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Boolean that determines whether cells's own styleClass completely overrides styleClass provided by surrounding layout or row (default behaviour), or is appended to layout's or row's styleClass.</entry>
+
+                <entry>Boolean that determines whether cells's own styleClass
+                completely overrides styleClass provided by surrounding layout
+                or row (default behaviour), or is appended to layout's or
+                row's styleClass.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
-      </para>
-      
-            <sect3>
+        </para>
+
+      <sect3>
+         
+
         <title>Examples</title>
-        Layouts, rows and cells are used together like this:
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+         Layouts, rows and cells are used together like this: 
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 ...
-  <ui:layout rowClasses="even,odd" cellClasses="one,two,three,four">
-    <ui:row>
-      <ui:cell>
-         <!-- cell content -->
-      </ui:cell>
-    </ui:row>
-  </ui:layout>
-...]]></programlisting> 
+  &lt;ui:layout rowClasses="even,odd" cellClasses="one,two,three,four"&gt;
+    &lt;ui:row&gt;
+      &lt;ui:cell&gt;
+         &lt;!-- cell content --&gt;
+      &lt;/ui:cell&gt;
+    &lt;/ui:row&gt;
+  &lt;/ui:layout&gt;
+...</programlisting>
+
+         
       </sect3>
     </sect2>
-    
+
     <sect2>
-      <title><![CDATA[<ui:updateRegion> and <ui:updateRegionRows>]]></title>
-        <para>
-           These two tags define the update regions in the output that can be updated
-           via AJAX requests. The update regions chosen to be updated when some event
-           occurs is decided by tags that take the <literal>updateRegion</literal>
-           attribute (See <xref linkend="common-formelement-attributes"> </xref>).
-        </para>
-        
-        <para>
-          The <literal><![CDATA[<ui:updateRegion>]]></literal> should be used when defining updateregion
-          when the region is not contained in HTML table (layout). The
-          <literal><![CDATA[<ui:updateRegionRows>]]></literal> is for defining a region which is contained 
-          in HTML table and contains table rows itself. Updating just cells is not possible.
-        </para>
+      <title>&lt;ui:updateRegion&gt; and &lt;ui:updateRegionRows&gt;</title>
 
-        <sect3>
-           <informaltable frame="all">
-             <tgroup cols="3">
-               <colspec colwidth="2*"/>
-               <colspec colwidth="1*"/>
-               <colspec colwidth="4*"/>
-               <thead>
-                 <row>
-                   <entry>Attribute</entry>
-                   <entry>Required</entry>
-                   <entry>Description</entry>
-                 </row>
-               </thead>
-               <tbody>
-                 <row>
-                   <entry>id</entry>
-                   <entry><emphasis>no</emphasis></entry>
-                   <entry>The id of the region. Will be used to reference the region when POST'ing a form.</entry>
-                 </row>
-                 <row>
-                   <entry>globalId</entry>
-                   <entry><emphasis>no</emphasis></entry>
-                   <entry>When not using the <literal>globalId</literal>, the full id will be formed by concatenating the context widget id
-                   with the specified <literal>id</literal>. If for a reason you would want to avoid that, then you specify the id with
-                   the <literal>globalId</literal> attribute.</entry>
-                 </row>
-               </tbody>
-             </tgroup>
-           </informaltable>
-         </sect3>
-         
-                       <sect3 id="updateRegionTag_examples">
-        <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<!-- First update region, placed outside HTML table -->
-<ui:updateRegion id="outsideTable">
-</ui:updateRegion>
+      <para>These two tags define the update regions in the output that can be
+      updated via AJAX requests. The update regions chosen to be updated when
+      some event occurs is decided by tags that take the
+      <literal>updateRegion</literal> attribute (See <xref
+      linkend="common-formelement-attributes" />).</para>
 
-<ui:layout>
-  <!-- Second update region, placed inside HTML table -->
-  <ui:updateRegionRows id="insideTable"/>
-    <ui:row>
-      ...
-    </ui:row>
-  </ui:updateRegionRows>
-</ui:layout>
+      <para>The <literal>&lt;ui:updateRegion&gt;</literal> should be used when
+      defining updateregion when the region is not contained in HTML table
+      (layout). The <literal>&lt;ui:updateRegionRows&gt;</literal> is for
+      defining a region which is contained in HTML table and contains table
+      rows itself. Updating just cells is not possible.</para>
 
-<!-- Button that makes a background submit of specified event. 
-     When response arrives specified updateregions are updated -->
-<ui:eventButton id="test" updateRegions="outsideTable,insideTable"/>]]></programlisting>
-      </sect3>
-         
-    </sect2>
-  </sect1>
-  
-  <sect1>
-    <title>Presentation Tags</title>
-    Aranea JSP library contains synonyms for some (deprecated) HTML presentation tags.
-   <sect2>
-    <title><![CDATA[<ui:bold>]]></title>
-     <para>
-       Acts as the HTML &lt;b&gt; tag.
-     </para>
-   </sect2>
-    
-    <sect2>
-      <title><![CDATA[<ui:italic>]]></title>
-      <para>
-         Acts as <emphasis>&lt;i&gt;</emphasis> HTML tag.
-      </para>
-    </sect2>
-
-   <sect2>
-    <title><![CDATA[<ui:font>]]></title>
-      <para>
-        Acts as <emphasis>&lt;font&gt;</emphasis> HTML tag. 
-      </para>
-      
-      <para>
+      <sect3>
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>id</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>The id of the region. Will be used to reference the
+                region when POST'ing a form.</entry>
+              </row>
+
+              <row>
+                <entry>globalId</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>When not using the <literal>globalId</literal>, the
+                full id will be formed by concatenating the context widget id
+                with the specified <literal>id</literal>. If for a reason you
+                would want to avoid that, then you specify the id with the
+                <literal>globalId</literal> attribute.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+      
+      <para>
+        Either <literal>id</literal> or <literal>globalId</literal> attribute is required.
+      </para>
+
+      <sect3 id="updateRegionTag_examples">
+        <title>Examples</title>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- First update region, placed outside HTML table --&gt;
+&lt;ui:updateRegion id="outsideTable"&gt;
+&lt;/ui:updateRegion&gt;
+
+&lt;ui:layout&gt;
+  &lt;!-- Second update region, placed inside HTML table --&gt;
+  &lt;ui:updateRegionRows id="insideTable"/&gt;
+    &lt;ui:row&gt;
+      ...
+    &lt;/ui:row&gt;
+  &lt;/ui:updateRegionRows&gt;
+&lt;/ui:layout&gt;
+
+&lt;!-- Button that makes a background submit of specified event. 
+     When response arrives specified updateregions are updated --&gt;
+&lt;ui:eventButton id="test" updateRegions="outsideTable,insideTable"/&gt;</programlisting>
+      </sect3>
+    </sect2>
+  </sect1>
+
+  <sect1>
+     
+
+    <title>Presentation Tags</title>
+
+     Aranea JSP library contains synonyms for some (deprecated) HTML presentation tags. 
+
+    <sect2>
+      <title>&lt;ui:bold&gt;</title>
+
+      <para>Acts as the HTML  <emphasis>&lt;b&gt;</emphasis> tag.</para>
+    </sect2>
+
+     
+
+    <sect2>
+      <title>&lt;ui:italic&gt;</title>
+
+      <para>Acts as <emphasis>&lt;i&gt;</emphasis> HTML tag.</para>
+    </sect2>
+
+     
+
+    <sect2>
+      <title>&lt;ui:font&gt;</title>
+
+      <para>Acts as <emphasis>&lt;font&gt;</emphasis> HTML tag.</para>
+
+      <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
                 <entry>Applicable to:</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>face</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry>The font face of the font.</entry>
               </row>
+
               <row>
                 <entry>color</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry>The color of the font.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
-    </para>
-    </sect2>
-    
-    <sect2>
-      <title><![CDATA[<ui:style>]]></title>
-      <para>
-         Sets a CSS class for the content, acts as a <emphasis>&lt;span&gt;</emphasis> HTML tag with the <emphasis>class</emphasis> atribute set.
       </para>
-      
-    <para>
+    </sect2>
+
+     
+
+    <sect2>
+      <title>&lt;ui:style&gt;</title>
+
+      <para>Sets a CSS class for the tag content, acts as a
+      <emphasis>&lt;span&gt;</emphasis> HTML tag with the
+      <emphasis>class</emphasis> atribute set.</para>
+
+      <para>
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Applicable to:</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry>CSS class for tag.</entry>
               </row>
             </tbody>
@@ -1457,301 +2162,468 @@
         </informaltable>
       </para>
     </sect2>
-    
-    <sect2>
-      <title><![CDATA[<ui:newline>]]></title>
-      <para>
-      Puts a visual new line into resulting text.
-      </para>
-    </sect2>
+
+     
 
     <sect2>
-      <title><![CDATA[<ui:basicButton>]]></title>
+      <title>&lt;ui:newline&gt;</title>
+
+      <para>Puts a visual new line (<literal>&lt;br/&gt;</literal>).</para>
+    </sect2>
+
+     
+
+    <sect2>
+      <title>&lt;ui:basicButton&gt;</title>
+
+      <para>Represents an HTML form button.</para>
+
       <para>
-      Represents an HTML form button.
-      </para>
-    <para>
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Applicable to:</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>renderMode</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Allowed values are (button | input) - the corresponding
+                HTML tag will be used for rendering. Default is
+                button.</entry>
               </row>
+
               <row>
                 <entry>id</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Button id, allows to access button from JavaScript.</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Button id, allows to access button from
+                JavaScript.</entry>
               </row>
+
               <row>
                 <entry>labelId</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry>Id of button label.</entry>
               </row>
+
               <row>
                 <entry>onclick</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry><literal>onClick</literal> Javascript action.</entry>
               </row>
+
               <row>
                 <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>CSS class for tag.</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>CSS class for button.</entry>
+              </row>
+              
+              <row>
+                <entry>style</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Inline CSS style for button.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
       </para>
     </sect2>
-    
-    <sect2>
-      <title><![CDATA[<ui:basicLinkButton>]]></title>
-      <para>
-      Represents a link with an onClick JavaScript action.
-      </para>
 
-    <para>
+     
+
+    <sect2>
+      <title>&lt;ui:basicLinkButton&gt;</title>
+
+      <para>Represents a link with an onClick JavaScript action.</para>
+
+      <para>
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Applicable to:</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>id</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Button id, allows to access button from JavaScript.</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Button id, allows to access button from
+                JavaScript.</entry>
               </row>
+
               <row>
                 <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry>CSS class for tag.</entry>
               </row>
+              
+              <row>
+                <entry>style</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Inline CSS style for tag.</entry>
+              </row>
+              
+              <row>
+                <entry>onclick</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry><literal>onClick</literal> Javascript action.</entry>
+              </row>
+              
+              <row>
+                <entry>labelId</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Id of button label.</entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>
       </para>
     </sect2>
-    
+
+     
+
     <sect2>
-      <title><![CDATA[<ui:link>]]></title>
+      <title>&lt;ui:link&gt;</title>
+
+      <para>Usual HTML link, acts as a <emphasis>&lt;a&gt;</emphasis> HTML
+      tag.</para>
+
       <para>
-      Usual HTML link, acts as a <emphasis>&lt;a&gt;</emphasis> HTML tag.
-      </para>
-    
-    <para>
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Applicable to:</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>disabledStyleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry>CSS class for disabled link.</entry>
               </row>
+
               <row>
                 <entry>id</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry>Link id, allows to access link from JavaScript.</entry>
               </row>
+
               <row>
                 <entry>href</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry>Link target URL.</entry>
               </row>
+
               <row>
                 <entry>target</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Link target, same as <emphasis>&lt;a&gt;</emphasis> HTML tag <emphasis>target</emphasis> attribute.</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Link target, same as <emphasis>&lt;a&gt;</emphasis>
+                HTML tag <emphasis>target</emphasis> attribute.</entry>
               </row>
+
               <row>
                 <entry>disabled</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Controls whether the link is disabled, disabled link doesn't link anywhere.</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Controls whether the link is disabled, disabled link
+                doesn't link anywhere.</entry>
               </row>
+
               <row>
                 <entry>styleClass</entry>
-                <entry><emphasis>no</emphasis></entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
                 <entry>CSS class for tag.</entry>
+              </row>
+              
+              <row>
+                <entry>style</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Inline CSS style for tag.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
       </para>
     </sect2>
+
+     
   </sect1>
-  
+
   <sect1>
     <title>Programming JSPs without HTML</title>
-    <para>
-       Aranea standard tag library should mostly be enough to shelter end-users from the need to write
-       HTML inside JSPs. Snippets of HTML are alright but using it too often tends to lead to inflexible
-       UI; instead of embedding HTML in JSPs custom tags should be written if the need arises.
-    </para>
-    
-    <para>
-       When writing JSPs without embedded HTML, programmers best friends are <emphasis>styleClass</emphasis>
-       attributes of presentation tags, allowing tuning of tag appearances and <emphasis>layout</emphasis> tags.
-    </para>
-    
-    <para>
-       Layout tags are tags extending <literal>UiLayoutBaseTag</literal>. Layout tags allow
-       placing of rows inside them (and rows allow using of cells inside). Standard layout
-       tag (&lt;ui:layout&gt;) outputs HTML <emphasis>table</emphasis>, and standard
-       row and cell tags output HTML <emphasis>tr</emphasis> and <emphasis>td</emphasis> tags,
-       respectively. This is by no means a requirement for layout tags&mdash;there are 
-       probably ways to achieve the same behaviour with correctly styled HTML <emphasis>div</emphasis> tags;
-       but the tables should do just fine for majority of needs.
-    </para>
+
+    <para>Aranea standard tag library should mostly be enough to shelter
+    end-users from the need to write HTML inside JSPs. Snippets of HTML are
+    alright but using it too often tends to lead to inflexible UI; instead of
+    embedding HTML in JSPs custom tags should be written if the need
+    arises.</para>
+
+    <para>When writing JSPs without embedded HTML, programmers best friends
+    are <emphasis>styleClass</emphasis> attributes of presentation tags,
+    allowing tuning of tag appearances and <emphasis>layout</emphasis>
+    tags.</para>
+
+    <para>Layout tags are tags extending <literal>BaseLayoutTag</literal>.
+    Layout tags allow placing of rows inside them (and rows allow using of
+    cells inside). Standard layout tag (&lt;ui:layout&gt;) outputs HTML
+    <emphasis>table</emphasis>, and standard row and cell tags output HTML
+    <emphasis>tr</emphasis> and <emphasis>td</emphasis> tags, respectively.
+    This is by no means a requirement for layout tags—there are probably ways
+    to achieve the same behaviour with correctly styled HTML
+    <emphasis>div</emphasis> tags; but the tables should do just fine for
+    majority of needs.</para>
   </sect1>
- 
 
   <sect1>
     <title>Customizing Tag Styles</title>
 
-      <para>
-         Presentation tags (tags extending <literal>UiPresentationTag</literal> or implementing 
-         <literal>UiStyledTagInterface</literal>)
-         have attribute <literal>styleClass</literal> that specifies the CSS style class used for
-         rendering the tag. When <literal>styleClass</literal> attribute for tag is not specified, 
-         some default style bundled with Aranea is used; or in some cases no HTML 
-         <literal>class</literal> attribute is output at all&mdash;allowing 
-         cascading styles from some parent (HTML) tag to take over the presentation.
-      </para>
-      
-      <para>
-        Presentation tags also have <literal>style</literal> attribute for specifying inline style for tag.
-        Using it is discouraged&mdash;twinking style classes to fit ones specific needs is highly recommended.
-      </para>
+    <para>Presentation tags (tags extending <literal>PresentationTag</literal>
+    or implementing <literal>StyledTagInterface</literal>) have attribute
+    <literal>styleClass</literal> that specifies the CSS style class used for
+    rendering the tag. When <literal>styleClass</literal> attribute for tag is
+    not specified, some default style bundled with Aranea is used; or in some
+    cases no HTML <literal>class</literal> attribute is output at all—allowing
+    cascading styles from some parent (HTML) tag to take over the
+    presentation.</para>
 
-      <para>
-        Some tags may have more than one attributes for defining tag style. For example 
-        <literal>&lt;ui:layout&gt;</literal> tag and other layout tags that extend <literal>UiStdLayoutBaseTag</literal>
-        or <literal>UiLayoutBaseTag</literal> have attributes <literal>rowClass</literal> and <literal>cellClass</literal>
-        that specify the default styles for <literal>&lt;ui:row&gt;</literal> and <literal>&lt;ui:cell&gt;</literal> tags
-        used within the layout. These can be overriden with row and cell own <literal>styleClass</literal> attribute.
-        In general, goal has been to construct the tags in such way that applying only one CSS style to them would suffice.
-      </para>
+    <para>Presentation tags also have <literal>style</literal> attribute for
+    specifying inline style for tag. Using it is discouraged—tweaking style
+    classes to fit ones specific needs is highly recommended.</para>
 
-      <para>
-        To actually use new style(s) for some tag one often can just write a new CSS style 
-        (ie <literal>"somestyle { background: #ffc; color: #900; text-decoration: none; }"</literal>)&mdash;apply that
-        and be done with it.
-        For more complicated tags, one may need to take a quick peek at tag source code to see what HTML tags are
-        output and design their styles accordingly. Most of the time that should not be necessary.
-      </para>
-      
-      <para>
-        Changing default tag styles can be done in two ways&mdash;modifying CSS files or extending the tag one wants to
-        customize with dynamic initializer like this:
-      </para>
-      <programlisting role="java"><![CDATA[{
+    <para>Some tags may have more than one attributes for defining tag style.
+    For example <literal>&lt;ui:layout&gt;</literal> tag and other layout tags
+    that extend <literal>LayoutHtmlTag</literal> or
+    <literal>BaseLayoutTag</literal> have attributes
+    <literal>rowClasses</literal> and <literal>cellClasses</literal> that
+    specify the default styles for <literal>&lt;ui:row&gt;</literal> and
+    <literal>&lt;ui:cell&gt;</literal> tags used within the layout. These can
+    be overriden with row and cell own <literal>styleClass</literal>
+    attribute.</para>
+
+    <para>To actually use new style(s) for some tag one often can just write a
+    new CSS style (i.e. <literal>"somestyle { background: #ffc; color: #900;
+    text-decoration: none; }"</literal>)—apply that and be done with it. For
+    more complicated tags, one may need to take a quick peek at tag source
+    code to see what HTML tags are output and design their styles accordingly.
+    Most of the time that should not be necessary.</para>
+
+    <para>Changing default tag styles can be done in two ways—modifying CSS
+    files or extending the tag one wants to customize with dynamic initializer
+    like this:</para>
+
+    <programlisting role="java">{
     styleClass = "some-wanted-style";
-}]]></programlisting>
-    
-        <para>
-            needless to say, first method is very much preferred because creating custom tags just for changing
-            tag styles is quite pointless.
-        </para>
-        
-        <para>
-            There is also a <literal>renderMode</literal> attribute; in current tag libarary there are very few tags
-            supporting this attribute. One of those is
-            <literal>UiStdButtonTag</literal> (<literal>&lt;ui:basicButton&gt;</literal>)&mdash;its renderMode
-            should have value <literal>"input"</literal> or <literal>"button"</literal> (default) and it specifies whether
-            the button should be rendered in HTML with <literal>&lt;input type=button ... &gt;</literal> or 
-            <literal>&lt;button ... &gt;</literal> tag. In the future, number of JSP tags having renderMode attribute will
-            probably increase (this can be used to get rid of multiple JSP tags for rendering different types 
-            of (multi)selects, inputs and displays).
-        </para>
-      
-      <sect3>
-        <title>Attributes defining tag styles</title>
-        <informaltable frame="all">
-          <tgroup cols="3">
-            <colspec colwidth="1*"/>
-            <colspec colwidth="2*"/>
-            <colspec colwidth="2*"/>
-            <thead>
-              <row>
-                <entry>Attribute</entry>
-                <entry>Required</entry>
-                <entry>Applicable to:</entry>
-              </row>
-            </thead>
-            <tbody>
-              <row>
-                <entry>style</entry>
-                <entry>Inline CSS style applied to tag. Avoid.</entry>
-                <entry>Presentation tags.</entry>
-              </row>
-              <row>
-                <entry>styleClass</entry>
-                <entry>CSS class applied to tag.</entry>
-                <entry>Presentation tags.</entry>
-              </row>
-              <row>
-                <entry>rowClass</entry>
-                <entry>CSS class applied to rows inside the tag.</entry>
-                <entry>Layout tags.</entry>
-              </row>
-              <row>
-                <entry>cellClass</entry>
-                <entry>CSS class applied to cells inside the tag.</entry>
-                <entry>Layout tags, row tags.</entry>
-              </row>
-              <row>
-                <entry>renderMode</entry>
-                <entry>Defines the renderMode used for rendering the tag.</entry>
-                <entry><literal>&lt;ui:basicButton&gt;</literal>, <literal>&lt;ui:eventButton&gt;</literal>, <literal>&lt;ui:button&gt;</literal>.</entry>
-              </row>              
-            </tbody>
-          </tgroup>
-        </informaltable>
-      </sect3>
-      
+}</programlisting>
+
+    <para>needless to say, first method is very much preferred because
+    creating custom tags just for changing tag styles is quite
+    pointless.</para>
+
+    <para>There is also a <literal>renderMode</literal> attribute; in current
+    tag library there are very few tags supporting this attribute. One of
+    those is <literal>ButtonHtmlTag</literal>
+    (<literal>&lt;ui:basicButton&gt;</literal>)—its renderMode should have
+    value <literal>"input"</literal> or <literal>"button"</literal> (default)
+    and it specifies whether the button should be rendered in HTML with
+    <literal>&lt;input type=button ... &gt;</literal> or <literal>&lt;button
+    ... &gt;</literal> tag. In the future, number of JSP tags having
+    renderMode attribute will probably increase (this can be used to get rid
+    of multiple JSP tags for rendering different types of (multi)selects,
+    inputs and displays).</para>
+
+    <sect3>
+      <title>Attributes defining tag styles</title>
+
+      <informaltable frame="all">
+        <tgroup cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="2*" />
+
+          <thead>
+            <row>
+              <entry>Attribute</entry>
+
+              <entry>Required</entry>
+
+              <entry>Applicable to:</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>style</entry>
+
+              <entry>Inline CSS style applied to tag. Avoid.</entry>
+
+              <entry>Presentation tags.</entry>
+            </row>
+
+            <row>
+              <entry>styleClass</entry>
+
+              <entry>CSS class applied to tag.</entry>
+
+              <entry>Presentation tags.</entry>
+            </row>
+
+            <row>
+              <entry>rowClass</entry>
+
+              <entry>CSS class applied to rows inside the tag.</entry>
+
+              <entry>Layout tags.</entry>
+            </row>
+
+            <row>
+              <entry>cellClass</entry>
+
+              <entry>CSS class applied to cells inside the tag.</entry>
+
+              <entry>Layout tags, row tags.</entry>
+            </row>
+
+            <row>
+              <entry>renderMode</entry>
+
+              <entry>Defines the renderMode used for rendering the
+              tag.</entry>
+
+              <entry><literal>&lt;ui:basicButton&gt;</literal>,
+              <literal>&lt;ui:eventButton&gt;</literal>,
+              <literal>&lt;ui:button&gt;</literal>.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </sect3>
   </sect1>
-  
+
   <sect1>
+     
+
     <title>Making New JSP Tags</title>
-    JSP tags are very application specific, need for additional or modified JSP tags arises quite often.
-    Due to presentational nature of HTML and Javascript, extending the tags that really output HTML instead
-    of providing some information to subtags is messy. We look here at some more general tags and contracts
-    that should be followed when writing Aranea JSP tags.
+
+     JSP tags are very application specific, need for additional or modified JSP tags arises quite often. Due to presentational nature of HTML and Javascript, extending the tags that really output HTML instead of providing some information to subtags is messy. We look here at some more general tags and contracts that should be followed when writing Aranea JSP tags. 
 
     <sect2>
       <title>Utilities and base classes</title>
-      <para>
-      Custom tags should extend at least <emphasis>org.araneaframework.jsp.tag.BaseTag</emphasis> that provides
-      methods for registering subtags, manipulation of pagecontext and attribute evaluation.
-      <programlisting role="java"><![CDATA[import java.io.Writer;
+
+      <para>Custom tags should extend at least
+      <emphasis>org.araneaframework.jsp.tag.BaseTag</emphasis> that provides
+      methods for registering subtags, manipulation of pagecontext and
+      attribute evaluation. <programlisting role="java">import java.io.Writer;
 import org.araneaframework.jsp.tag.entity.NbspEntityHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -1792,44 +2664,51 @@ public class DummyTag extends BaseTag {
     // Now everything about this tag ceases to exist, 
     // context entries are removed, souls are purged.
   }
-}]]></programlisting>
-    </para>
+}</programlisting></para>
 
-    <para>
-      <literal>org.araneaframework.jsp.util.JspUtil</literal> that was used here is an utility class containing some functions for 
-      writing out (XML) tags with somewhat less room for errors than just <literal>out.write()</literal>. Other notable methods
-      provided by <literal>BaseTag</literal> are <literal>getOutputData()</literal> that returns response data, 
-      <literal>getConfiguration()</literal> and <literal>getLocalizationContext()</literal>.
-      
-      For tags with attributes, attribute evaluation functions that support <emphasis>Expression Language (EL)</emphasis> 
-      expressions are provided in <literal>BaseTag</literal>. Typical usage of these functions is following:
-      <programlisting role="java"><![CDATA[public void setWidth(String width) throws JspException {
+      <para><literal>org.araneaframework.jsp.util.JspUtil</literal> that was
+      used here is an utility class containing some functions for writing out
+      (XML) tags with somewhat less room for errors than just
+      <literal>out.write()</literal>. Other notable methods provided by
+      <literal>BaseTag</literal> are <literal>getOutputData()</literal> that
+      returns response data, <literal>getConfiguration()</literal> and
+      <literal>getLocalizationContext()</literal>. For tags with attributes,
+      attribute evaluation functions that support <emphasis>Expression
+      Language (EL)</emphasis> expressions are provided in
+      <literal>BaseTag</literal>. Typical usage of these functions is
+      following: <programlisting role="java">public void setWidth(String width) throws JspException {
   this.width = (String)evaluate("width", width, String.class);
-}]]></programlisting>
-    </para>
-    
-    <para>
-        Another common base tag for tags that output real HTML is <literal>org.araneaframework.jsp.PresentationTag</literal>.
-        The <literal>DummyTag</literal> should really extend it too, since it outputs some HTML. <literal>PresentationTag</literal>
-        defines <emphasis>style</emphasis> and <emphasis>styleClass</emphasis> attributes that can be applied to most HTML tags.
-    </para>
-    
-    <para>Important tag cleanup method is <literal>doFinally()</literal> that is called after rendering.
-    It should be used to clear references to objects that should no longer be referenced after rendering. 
-    As in containers tag instances can live very long time, they can leak quite a lot of memory unless resources are deallocated.</para>
+}</programlisting></para>
 
+      <para>Another common base tag for tags that output real HTML is
+      <literal>org.araneaframework.jsp.PresentationTag</literal>. The
+      <literal>DummyTag</literal> should really extend it too, since it
+      outputs some HTML. <literal>PresentationTag</literal> defines
+      <emphasis>style</emphasis> and <emphasis>styleClass</emphasis>
+      attributes that can be applied to most HTML tags.</para>
+
+      <para>Important tag cleanup method is <literal>doFinally()</literal>
+      that is called after rendering. It should be used to clear references to
+      objects that should no longer be referenced after rendering. As in
+      containers tag instances can live very long time, they can leak quite a
+      lot of memory unless resources are deallocated.</para>
     </sect2>
-    
+
+     
+
     <sect2>
       <title>Widgets and events</title>
-      <para>
-      Sending events to widgets is accomplished with javascript submit functions, helpful
-      utility being <literal>org.araneaframework.jsp.util.JspUtil</literal> and 
-      <literal>org.araneaframework.jsp.util.JspWidgetCallUtil</literal>. First one would construct
-      <literal>org.araneaframework.jsp.UiEvent</literal> and (in case of HTML element which
-      receives only one event) calls JspUtil.writeEventAttributes(Writer out, UiEvent event) and afterwards
-      writeSubmitScriptForEvent(Writer out, String attributeName).
-<programlisting role="java"><![CDATA[//public UiEvent(String eventId, String eventTargetWidget, String eventParameter)
+
+      <para>Sending events to widgets is accomplished with javascript submit
+      functions, helpful utility being
+      <literal>org.araneaframework.jsp.util.JspUtil</literal> and
+      <literal>org.araneaframework.jsp.util.JspWidgetCallUtil</literal>. First
+      one would construct <literal>org.araneaframework.jsp.UiEvent</literal>
+      and (in case of HTML element which receives only one event) calls
+      <literal>JspUtil.writeEventAttributes(Writer out, UiEvent
+      event)</literal> and afterwards
+      <literal>writeSubmitScriptForEvent(Writer out, String
+      attributeName)</literal>. <programlisting role="java">//public UiEvent(String eventId, String eventTargetWidget, String eventParameter)
 UiEvent event = new UiEvent("hello", "contextWidgetId", "name");
 // long way to ouput custom attributes version
 JspUtil.writeEventAttributes(out, event);
@@ -1838,37 +2717,45 @@ JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
 JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
 
 // both will output something like this:
-// arn-evntId="hello" arn-trgtwdgt="contextWidgetId" arn-evntPar="name" onclick="return _ap.submit(this);"]]></programlisting>
-    </para>
-    
+    // arn-evntId="hello" 
+    // arn-trgtwdgt="contextWidgetId" 
+    // arn-evntPar="name" 
+    // onclick="return _ap.event(this);"</programlisting></para>
     </sect2>
-    
+
+     
+
     <sect2>
       <title>Layouts</title>
-      <para>
-      New layouts are mostly concerned with styles or render layouts with some additional tags instead plain
-      <literal>table, tr, td</literal>.
-      As simple example, we define a layout that applies a class "error" to cells which contain invalid <literal>FormElement</literal>.
-      Note that approach we use only works when cell tag is aware of the surrounding <literal>FormElement</literal> at the
-      moment of rendering, meaning that <literal>FormElement</literal> is rendered in JSP something like this:
-      </para>
-      <para>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-...
-<ui:formElement id="someId">
-    <ui:cell>
-        <ui:label/>
-    </ui:cell>
 
-    <ui:cell>
-        <ui:textInput/>
-    </ui:cell>
-</ui:formElement>
-...]]>
-</programlisting></para>
-    <para>
-      What is needed foremost is a decorator for cells that are used inside invalid <literal>FormElement</literal>.
-<programlisting role="java"><![CDATA[public class ErrorMarkingCellClassProviderDecorator implements CellClassProvider {
+      <para>New layouts are mostly concerned with styles or render layouts
+      with some additional tags instead plain <literal>table, tr,
+      td</literal>. As simple example, we define a layout that applies a class
+      "error" to cells which contain invalid <literal>FormElement</literal>.
+      Note that approach we use only works when cell tag is aware of the
+      surrounding <literal>FormElement</literal> at the moment of rendering,
+      meaning that <literal>FormElement</literal> is rendered in JSP something
+      like this:</para>
+
+      <para>
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+...
+&lt;ui:formElement id="someId"&gt;
+    &lt;ui:cell&gt;
+        &lt;ui:label/&gt;
+    &lt;/ui:cell&gt;
+
+    &lt;ui:cell&gt;
+        &lt;ui:textInput/&gt;
+    &lt;/ui:cell&gt;
+&lt;/ui:formElement&gt;
+...
+</programlisting>
+      </para>
+
+      <para>What is needed foremost is a decorator for cells that are used
+      inside invalid <literal>FormElement</literal>. <programlisting
+      role="java">public class ErrorMarkingCellClassProviderDecorator implements CellClassProvider {
   protected CellClassProvider superProvider;
   protected PageContext pageContext;
 
@@ -1879,12 +2766,12 @@ JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
   }
 
   public String getCellClass() throws JspException {
-    FormElement.ViewModel formElementViewModel = 
-      (FormElement.ViewModel)pageContext.getAttribute(FormElementTag.VIEW_MODEL_KEY, PageContext.REQUEST_SCOPE);
+    FormElement.ViewModel formElementViewModel = (FormElement.ViewModel)
+      pageContext.getAttribute(FormElementTag.VIEW_MODEL_KEY, PageContext.REQUEST_SCOPE);
     // superProvider.getCellClass() may only be called once, otherwise moves on to next cell's style
     String superClass = superProvider.getCellClass();
 
-    if (formElementViewModel != null && !formElementViewModel.isValid()) {
+    if (formElementViewModel != null &amp;&amp; !formElementViewModel.isValid()) {
       if (superClass != null)
         return superClass + " error";
       else
@@ -1893,23 +2780,20 @@ JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
 
     return superClass;
   }
-}]]>
-</programlisting>
-    </para>
-    
-    <para>
-      Actual layout tag that decorates its cells according to described logic:
-<programlisting role="java"><![CDATA[public class CustomLayoutTag extends LayoutHtmlTag {
+}
+</programlisting></para>
+
+      <para>Actual layout tag that decorates its cells according to described
+      logic: <programlisting role="java">public class CustomLayoutTag extends LayoutHtmlTag {
   protected int doStartTag(Writer out) throws Exception {
     int result = super.doStartTag(out);
     addContextEntry(CellClassProvider.KEY, new ErrorMarkingCellClassProviderDecorator(this, pageContext));
 
     return result;
   }
-}]]></programlisting>
-    </para>
-      
+}</programlisting></para>
     </sect2>
-  </sect1>
 
+     
+  </sect1>
 </chapter>

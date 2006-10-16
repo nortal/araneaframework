@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.data.PersonListDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
@@ -41,7 +42,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
-	
+	private  IContractDAO contractDAO; 
 	/* Editable list. */ 
 	private EditableBeanListWidget list;
 	/* Actual holder of editable list rows (resides inside EditableBeanListWidget).
@@ -49,8 +50,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 	private BeanFormListWidget formList;
 	
 	protected void init() throws Exception {
-		super.init();
-		
 		setViewSelector("person/editableList");
 		
 		/* PersonMO class is already familiar from form examples. 
@@ -124,8 +123,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 				return ((PersonListDAO) getBeanFactory().getBean("personListDAO")).getItems(query);
 			}
 		}
-	}	
-
+	}
+	
 	/* Row handling functions. As this handler extends ValidOnlyIndividualFormRowHandler class,
 	 * its saveRow method does nothing: instead saveValidRow method should be implemented that
 	 * saves only these forms (rows) which data passes validation.  
@@ -158,13 +157,16 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		public void deleteRow(Object key) throws Exception {
 			Long id = (Long) key;
+			contractDAO.removeByPersonId(id);
 			getGeneralDAO().remove(PersonMO.class, id);
+			list.getDataProvider().refreshData();
 		}
 		
 		// Implementation of method that should save ADDED rows which data passes validation.
 		public void addValidRow(FormWidget addForm) throws Exception {
 			PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
 			getGeneralDAO().add(rowData);
+			list.getDataProvider().refreshData();
 			// this callback must be made here!
 			formList.resetAddForm();
 		}
@@ -203,4 +205,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			form.addBeanElement("salary", "#Salary", new FloatControl(), false);
 		}
 	}
+	
+	  public void injectContractDAO(IContractDAO contractDAO) {
+		    this.contractDAO = contractDAO;
+		  }
 }

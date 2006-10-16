@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Copyright 2006 Webmedia Group Ltd.
  
@@ -13,88 +14,190 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <chapter id="lists">
-	<title>Lists</title>
-	
-	<sect1>
-		<title>Introduction</title>
-		
-		<para>
-			A common task in web applications is displaying tables. This is a simple task if the tables are small and do not contain a lot of rows. The whole table can be visible at once and there is no need split the data into pages as well as provide an option to order the table by new column or display a search form that can be used to filter the data. In such cases where these features must be available, Aranea provides widget <classname>org.araneaframework.uilib.list.ListWidget</classname> and some support classes. In this chapter we will introduce these widgets and supporting API and show how to use and extend them.
-		</para>
-		<para>
-			<classname>ListWidget</classname> is used to define the list columns, the way the list can be filtered and ordered, how many items are shown per pages etc. <classname>ListWidget</classname> uses <classname>org.araneaframework.uilib.list.dataprovider.ListDataProvider</classname> to get the current list items range that also match with the current filter and order conditions. <classname>ListDataProvider</classname> can cache whole table and provide the <classname>ListWidget</classname> with the apropriate item range or fetch only the specific item range from database. Aranea provides two implementations:
-			<variablelist spacing="compact">
-			  <varlistentry>
-			    <term><classname>org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider</classname></term>
-			    <listitem>This is the memory-based solution that must be provided with the whole data at once. It does <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> and <emphasis>paging</emphasis> memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution for tables with few (typically less than 100) rows.</listitem>
-			  </varlistentry>
-			  <varlistentry>
-			    <term><classname>org.araneaframework.uilib.list.dataprovider.BackendListDataProvider</classname></term>
-			    <listitem>This is the database solution that will cache only the current item range and executes a new database query each time a <emphasis>filtering</emphasis>, <emphasis>ordering</emphasis> or <emphasis>paging</emphasis> conditions change. This is a powerful solution for tables with more than 500 rows.</listitem>
-			  </varlistentry>
-			</variablelist>
-		</para>
-	</sect1>
-		
-	<sect1>
-		<title>Lists API</title>
-		
-		<sect2>
-			<title>A Typical List</title>
-			
-			<para>
-				A typical list will be created used like this:
-<programlisting role="java">...
+  <title>Lists and Query Browsing</title>
+
+  <sect1>
+    <title>Introduction</title>
+
+    <para>A common task in web applications is displaying tables. This is a
+    simple task if the tables are small and do not contain a lot of rows. The
+    whole table can be visible at once and there is no need to split the data
+    into pages as well as provide an option to order the table by new column
+    or display a search form that can be used to filter the data. In such
+    cases where these features must be available, Aranea provides widget
+    <classname>org.araneaframework.uilib.list.ListWidget</classname> and some
+    support classes. In this chapter we will introduce these widgets and
+    supporting API and show how to use and extend them.</para>
+
+    <para><classname>ListWidget</classname> is used to define the list
+    columns, the way the list can be filtered and ordered, how many items are
+    shown per pages etc. <classname>ListWidget</classname> uses
+    <classname>org.araneaframework.uilib.list.dataprovider.ListDataProvider</classname>
+    to get the current list items range that also match with the current
+    filter and order conditions. <classname>ListDataProvider</classname> can
+    cache whole table and provide the <classname>ListWidget</classname> with
+    the appropriate item range or fetch only the specific item range from
+    database. Aranea provides two implementations: <variablelist
+        spacing="compact">
+        <varlistentry>
+          <term><classname>org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider</classname></term>
+
+          <listitem>
+             This is the memory-based solution that must be provided with the whole data at once. It does 
+
+            <emphasis>filtering</emphasis>
+
+             , 
+
+            <emphasis>ordering</emphasis>
+
+             and 
+
+            <emphasis>paging</emphasis>
+
+             memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution for tables with few (typically less than 100) rows. 
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><classname>org.araneaframework.uilib.list.dataprovider.BackendListDataProvider</classname></term>
+
+          <listitem>
+             This is the database solution that will cache only the current item range and executes a new database query each time a 
+
+            <emphasis>filtering</emphasis>
+
+             , 
+
+            <emphasis>ordering</emphasis>
+
+             or 
+
+            <emphasis>paging</emphasis>
+
+             conditions change. This is a powerful solution for tables with more than 500 rows. 
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </sect1>
+
+  <sect1>
+    <title>Lists API</title>
+
+    <sect2>
+      <title>A Typical List</title>
+
+      <para>A typical list will be created used like this: <programlisting
+      role="java">...
 private BeanListWidget myList;
 ...
 protected void init() {
   ...
   myList = new BeanListWidget(MyModel.class);
 
-  myList.addBeanColumn("name", "#Name", true,
-    new SimpleColumnFilter.Like(), new TextControl());
-  myList.addBeanColumn("surname", "#Last name", true,
-    new SimpleColumnFilter.Like(), new TextControl());
-  myList.addBeanColumn("phone", "#Phone no", true,
-    new SimpleColumnFilter.Like(), new TextControl());
+  myList.setOrderableByDefault(true);
+  myList.addField("name", "#Name").like();
+  myList.addField("surname", "#Surname").like();
+  myList.addField("phone", "#Phone no").like();
+  myList.addField("birthdate", "#Birthdate").range();
   ...
   myList.setInitialOrder("name", true);
   myList.setListDataProvider(new MyListDataProvider());  
   addWidget("myList", myList);
   ...
 }
-...</programlisting>
-				Note that here we basically do following things:
-				<variablelist spacing="compact">
-					<varlistentry>
-						<term>Create the list</term>
-						<listitem>The line <literal>new BeanListWidget(MyModel.class)</literal> creates a new list widget that is associated with the <emphasis>JavaBean</emphasis> model class <literal>MyModel</literal>.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Add list columns</term>
-						<listitem>The line <literal>myList.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl())</literal> adds a column associated with the JavaBean property "name" (this is also the identifier of the column), with a label "Name", makes the column orderable, makes the column filterable by <literal>Like</literal> filter, adds a text box control for this filter.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Set the initial list order</term>
-						<listitem>The line <literal>myList.setInitialOrder("name", true)</literal> sets the list to be ordered by column "name" by default.</listitem>
-					</varlistentry>										
-					<varlistentry>
-						<term>Set the list data provider</term>
-						<listitem>The line <literal>myList.setListDataProvider(new MyListDataProvider())</literal> sets the data provider for the list.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Register the list</term>
-						<listitem>The line <literal>addWidget("myList", myList)</literal> initializes and registers the list allowing it to function.</listitem>
-					</varlistentry>															
-				</variablelist>
-				Note that adding a list column that can be used to filter the list, takes two parameters. <classname>org.araneaframework.uilib.list.structure.filter.ColumnFilter</classname> that defines the filter logic as well as <classname>Control</classname> widget that binds data from the filter <classname>org.araneaframework.uilib.form.BeanFormWidget</classname> that is associated with <classname>ListWidget</classname>. <classname>FormElement</classname> widgets that are associated with the specified <classname>Control</classname> are constrcuted with the same identifier and label as the column itself.
-			</para>
+...</programlisting> Note that here we basically do following things:
+      <variablelist spacing="compact">
+          <varlistentry>
+            <term>Create the list</term>
 
-			<para>
-				Now that we have created the list we show how to build a simple data provider. The following example code should be in the same widget as the previous:
-<programlisting role="java">...
+            <listitem>
+               The line 
+
+              <literal>new BeanListWidget(MyModel.class)</literal>
+
+               creates a new list widget that is associated with the 
+
+              <emphasis>JavaBean</emphasis>
+
+               model class 
+
+              <literal>MyModel</literal>
+
+               . 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Make fields orderable</term>
+
+            <listitem>
+               The line 
+
+              <literal>myList.setOrderableByDefault(true)</literal>
+
+               configures the following fields as orderable. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Add list fields</term>
+
+            <listitem>
+               The line 
+
+              <literal>myList.addField("name", "#Name").like()</literal>
+
+               adds a field associated with the JavaBean property "name" (this is also the identifier of the field), with a label "Name", makes the field filterable by 
+
+              <literal>Like</literal>
+
+               filter. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Set the initial list order</term>
+
+            <listitem>
+               The line 
+
+              <literal>myList.setInitialOrder("name", true)</literal>
+
+               sets the list to be ordered by field "name" by default. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Set the list data provider</term>
+
+            <listitem>
+               The line 
+
+              <literal>myList.setListDataProvider(new
+              MyListDataProvider())</literal>
+
+               sets the data provider for the list. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Register the list</term>
+
+            <listitem>
+               The line 
+
+              <literal>addWidget("myList", myList)</literal>
+
+               initializes and registers the list allowing it to function. 
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+
+      <para>Now that we have created the list we show how to build a simple
+      data provider. The following example code should be in the same widget
+      as the previous: <programlisting role="java">...
 private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider {
   protected MyMemoryBasedListDataProvider() {
     super(MyModel.class);
@@ -103,91 +206,563 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
     return lookupMyService().findAllMyModel();
   }
 }
-...</programlisting>
-				The line <literal>super(MyModel.class)</literal> associated this <classname>MemoryBasedListDataProvider</classname> with the <emphasis>JavaBean</emphasis> model class <literal>MyModel</literal>.
-				The method <literal>List loadData()</literal> implements loading all table rows and returning it as a <classname>List</classname> object.
-			</para>
-			
-			<para>
-				Later, we will also discover using <classname>org.araneaframework.uilib.list.dataprovider.BackendListDataProvider</classname>.
-			</para>
-		</sect2>
+...</programlisting> The line <literal>super(MyModel.class)</literal>
+      associated this <classname>MemoryBasedListDataProvider</classname> with
+      the <emphasis>JavaBean</emphasis> model class
+      <literal>MyModel</literal>. The method <literal>List
+      loadData()</literal> implements loading all table rows and returning it
+      as a <classname>List</classname> object.</para>
 
-		<sect2>
-			<title>Filter with multiple values</title>
-						
-			<para>
-				Basically, each list column can be associated with one <classname>ListFilter</classname> and one <classname>FormElement</classname> (with its own identifier). However, so we can describe only very simple filtering conditions. Thus each Aranea List can contain more flexible filters, which can be associated with zero or more list columns and zero or more filter values that are binded by filter <classname>FormElement</classname> widgets that have a unique identifier for each (this is also called <emphasis>FilterInfoKey</emphasis>).
-			</para>			
+      <para>Later, we will also discover using
+      <classname>org.araneaframework.uilib.list.dataprovider.BackendListDataProvider</classname>.</para>
+    </sect2>
 
-			<para>
-				The following example discovers adding a column with filter that is associated with two <classname>FormElement</classname> widgets. That means one filter needs two values that may be entered.
-<programlisting role="java">...
-myList.addBeanColumn("birthday", "#Birthday", true);
-RangeColumnFilter birthdayFilter = new RangeColumnFilter.NonStrict("birthday");
-myList.addFilter(birthdayFilter);
-myList.addFilterFormElement(birthdayFilter.getStartFilterInfoKey(),
-  "#Birthday From", new DateControl(), new DateData());
-myList.addFilterFormElement(birthdayFilter.getEndFilterInfoKey(),
-  "#Birthday Till", new DateControl(), new DateData());
-...</programlisting>
-				Note that here we do following things:
-				<variablelist spacing="compact">
+    <sect2>
+      <title>Fields</title>
+
+      <para>As the list may be displayed as a table, it is basically an
+      ordered collection of items. In the previous example, we defined a list
+      of <code>MyModel.class</code> typed items that have fields 'name',
+      'surname', 'phone' and 'birthdate'. By listing of
+      <code>MyModel.class</code>, we also told <code>ListWidget</code> the
+      corresponding field types, e.g <code>String.class</code>,
+      <code>String.class</code>, <code>Long.class</code> and
+      <code>Date.class</code>. In fact this feature of reflection is the only
+      distinction between the <code>ListWidget</code> and
+      <code>BeanListWidget</code>.</para>
+
+      <para>Each list field have its own <emphasis>Id</emphasis>,
+      <emphasis>label</emphasis> and <emphasis>type</emphasis>. The labels are
+      used to automatically create a corresponding title row above the
+      displayed table. The types are used to describe how to order or filter
+      the whole data using this field. E.g <code>String.class</code> is
+      treated differently than other types, because usually one would prefer
+      to order by this field ignoring the case. Both the labels and types are
+      also used to build a corresponding search form - an automatically built
+      <code>FormWidget</code> - for the list.</para>
+
+      <para>If we would like to add some list fields that are not
+      <code>MyModel.class</code> fields, we can pass it's type to the
+      <code>ListWidget</code> like following: <programlisting role="java">myList.addField("income", "#Income", BigDecimal.class);</programlisting>
+      Here the <code>myList</code> could be just a <code>ListWidget</code>
+      rather than a <code>BeanListWidget</code>.</para>
+
+      <para>When adding a list field, we can also provide this field-related
+      ordering and filtering information.</para>
+    </sect2>
+
+    <sect2>
+      <title>Ordering</title>
+
+      <para>Each list field can be orderable or not. We already discovered
+      <code>ListWidget</code>'s method
+      <code>setOrderableByDefault(boolean)</code> that switch whether to
+      configure fields that are added afterwards orderable or not. This method
+      can be used several times in the list configuration.</para>
+
+      <para>Another way is to set each field individually orderable or not
+      when they are added to the list. In such case add additional boolean
+      argument to the <code>addField()</code> method such as: <programlisting
+      role="java">myList.addField("phone", "#Phone no", false);</programlisting>
+      Notice the <code>false</code> as third parameter. <code>true</code>
+      means that the list can be ordered by this field and <code>false</code>
+      means the opposite. By not providing this parameter, simply the last
+      value is used which has been set by
+      <code>setOrderableByDefault(boolean)</code> method.</para>
+
+      <para>In addition, we already used method <code>setInitialOrder(String,
+      boolean)</code>. It sets a specified field (the first argument) to be
+      ordered by default. <code>true</code> as the second argument tells the
+      ordering should be ascending, <code>false</code> would mean descending.
+      By not providing this information, the list is displayed in the original
+      order.</para>
+    </sect2>
+
+    <sect2>
+      <title>Filtering</title>
+
+      <para>Filtering means that we only display a certain list items. The
+      list can be filtered using its fields and data provided by the search
+      from of this list.</para>
+
+      <para>For this, we must provide the <code>ListWidget</code> with the
+      corresponding
+      <code>org.araneaframework.uilib.list.structure.ListFilter</code>s and
+      <code>FormElement</code>s. As the form elements are dummy "boxes" that
+      hold search data, each <code>ListFilter</code> is related to a certain
+      filter test, e.g. equality, greater than comparison etc. Each
+      <code>ListFilter</code> also knows what information it must consider. In
+      general, one list field is compared against a value provided by the
+      search form. It's also assumed that a blank search field means that this
+      particular <code>ListWidget</code> is currently disabled.</para>
+
+      <para>Fortunately, in most cases it's unnecessary to add these search
+      fields manually. Instead, if one is adding a list field, he or she can
+      assign both the <code>ListFilter</code> and <code>FormElement</code> for
+      this field very simply: <programlisting role="java">myList.addField("address", "#Address").like();</programlisting> Here we simply add an 'Address' field providing it with
+      label and telling there's should be a <emphasis>Like filter</emphasis>
+      for this field. By this, we automatically add a <code>TextControl</code>
+      into the search form. By filling it with value 'Paris', we will see only
+      rows which 'Address' field contain 'Paris', 'paris', 'PARIS' etc.</para>
+
+      <para>To describe, how this works, we show a longer version of the
+      previous code: <programlisting role="java">myList.addField("address", "#Address");
+myList.getFilterHelper().like("address");
+</programlisting> So there's a special class
+      <code>org.araneaframework.uilib.list.structure.filter.FilterHelper</code>
+      that is used to add list filters. All <code>ListWidget.addField()</code>
+      methods just return a little different version of this helper class,
+      called a <code>FieldFilterHelper</code>. It's methods do not need a
+      field Id and thus make one not to repeat the same field Id for each
+      filter. In general, the shorter usage is recommended of course. However
+      some filters are more complicated and may be related to more than one
+      list field. For those, one must use the <code>FilterHelper</code>
+      instead.</para>
+
+      <para>By default all filters that deal with the Strings are case
+      insensitive. To configure some filters to be different, use the
+      following: <programlisting role="java">myList.addField("country", "#Country").setIgnoreCase(false).like();
+myList.addField("city", "#City").like();
+myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisting> This can be explained following: Before adding a Like filter
+      for the 'country' field, we switched to the case sensitive mode. And
+      before adding a filter for the 'address' field, we switched to the case
+      insensitive mode. Thus the city's filter is case sensitive as the
+      country's but the address' filter does ignore the case.</para>
+
+      <para>This state is held by the <code>FilterHelper</code> and can be
+      modified either by calling a method of the <code>FilterHelper</code> or
+      the <code>FieldFilterHelper</code>. In such way, the following
+      parameters can be set: <variablelist>
+          <varlistentry>
+            <term>Case sensitivity</term>
+
+            <listitem>
+               By using 
+
+              <code>setIgnoreCase(boolean)</code>
+
+               one assigns new filters to ignore case (default) or not. This applies to filters that use String comparison. 
+            </listitem>
+          </varlistentry>
+
+          <!-- 
 					<varlistentry>
-						<term>Add list column</term>
-						<listitem>The line <literal>myList.addBeanColumn("birthday", "#Birthday", true)</literal> adds a column associated with the JavaBean property "birthday" (this is also the identifier of the column), with a label "#birthday" and makes the column orderable.</listitem>
+						<term>Locale</term>
+						<listitem>
+							By using <code>setLocale(Locale)</code> one assigns new filters to use as specific Locale.
+							This applies to filters that use String comparison and only the list with memory-based data provider.
+							By default <code>org.araneaframework.framework.LocalizationContext.getLocale()</code>
+							is used to retrieve the Locale instnace.
+						</listitem>
 					</varlistentry>
-					<varlistentry>
-						<term>Construct column filter</term>
-						<listitem>The line <literal>ListFilter birthdayFilter = new RangeColumnFilter.NonStrict("birthday")</literal> constructs <literal>Non-Strict Range</literal> filter for column "birthday". Notice that now we passed the column identifier to the filter because we did not add the filter among the column itself.</listitem>
-					</varlistentry>										
-					<varlistentry>
-						<term>Add column filter</term>
-						<listitem>The line <literal>myList.addFilter(birthdayFilter)</literal> adds the constructed filter to the list.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Add filter <classname>FormElemenet</classname> widgets</term>
-						<listitem>The line <literal>list.addFilterFormElement(birthdayFilter.getStartFilterInfoKey(), "#Birthday From", new DateControl(), new DateData())</literal> takes full arguments as adding <classname>FormElement</classname> to <classname>FormWidget</classname>. Because we need to create more than one <classname>FormElement</classname> widgets here with unique identifier, we can not use JavaBean propery "birthday" here (this could result two <classname>FormElement</classname> widgets with the same identifier). Furthermore, the identifiers of <classname>FormElement</classname> widgets must be known by the filter that they are associated. Otherwise their values are not binded to the filter. Here we use default <emphasis>FilterInfoKey</emphasis> values chosen by the filter according to the column identifier. Alternatively we could choose other keys and provide them to the filter instead.</listitem>
-					</varlistentry>					
-				</variablelist>
-				Notice that each time we have more than one <classname>FormElemenet</classname> widgets associated with one filter, we can not just pass a <classname>Control</classname> widget to the <literal>addColumn</literal> method as weel as use <classname>BeanFormWidget</classname>-like methods to avoid setting <classname>Data</classname> objects.
-			</para>
-			
-			<para>
-				In addition one could add additional <classname>Constraint</classname> to this filter <classname>FormWidget</classname> as following:
-<programlisting role="java">...
-FormWidget filterForm = myList.getFilterForm();
-filterForm.setConstraint(new RangeConstraint(
-  filterForm.getElementByFullName(birthdayFilter.getStartFilterInfoKey()),
-  filterForm.getElementByFullName(birthdayFilter.getEndFilterInfoKey()),
-  true)); 
-...</programlisting>
-				This makes sure that the provided range is valid - the first value is lower than the seoncd. Additional third parameter (here <literal>true</literal>) defines whether the equals condition is also allowed.
-			</para>
+					 -->
 
-			<para>
-				The following example discovers adding two columns with one filter that is associated with two <classname>FormElement</classname> widgets. That means one filter needs two values that may be entered.
-<programlisting role="java">...
-myList.addBeanColumn("start", "#Start", true);
-myList.addBeanColumn("finish", "#Finish", true);
-ListFilter dateFilter =
-  new RangeInRangeFilter.ColumnRangeInValueRangeNonStrict("startDate", "endDate");
-myList.addFilter(dateFilter);
-myList.addFilterFormElement(dateFilter.getStartFilterInfoKey(), "#Start Date",
-  new DateControl(), new DateData());
-myList.addFilterFormElement(dateFilter.getEndFilterInfoKey(), "#End Date",
-  new DateControl(), new DateData());
-...</programlisting>
-				This example differs from the previous one very little. <literal>RangeInRange</literal> filter is just constructed with two column idnetifiers.
-			</para>
-		</sect2>    	
-    	
-		<sect2>
-			<title>Backend Data Provider</title>
-						
-			<para>
-				Now that we have demonstrated defining lists and also creating <classname>MemoryBasedListDataProvider</classname>, we will discover using <classname>BackendListDataProvider</classname>. The following example code should be in the same widget as constucting of the related <classname>ListWidget</classname>.
-<programlisting role="java">...
+          <varlistentry>
+            <term>Strict/non-strict</term>
+
+            <listitem>
+               By using 
+
+              <code>setStrict(boolean)</code>
+
+               one assigns new filters to disallow equality or not. By default equality is allowed (strict). This applies to filters such as GreaterThan, LowerThan, Range etc. 
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+
+      <para>Now, let's show which filters we have got: <informaltable
+          frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="3*" />
+
+            <thead>
+              <row>
+                <entry><code>FilterHelper</code> method</entry>
+
+                <entry><code>ListFilter</code> class</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><code>eq()</code></entry>
+
+                <entry><code>EqualFilter</code></entry>
+
+                <entry>Tests if the value of a certain list field is equal to
+                the value of a certain search form field. The filter is
+                disabled if the search field is blank.</entry>
+              </row>
+
+              <row>
+                <entry><code>eqConst()</code></entry>
+
+                <entry><code>EqualFilter</code></entry>
+
+                <entry>Tests if the value of a certain list field is equal to
+                a certain constant. This filter is always enabled.</entry>
+              </row>
+
+              <row>
+                <entry><code>gt(), lt()</code></entry>
+
+                <entry><code>GreaterThanFilter, LowerThanFilter</code></entry>
+
+                <entry>Tests if the value of a certain list field is greater
+                than (lower than) the value of a certain search form field.
+                This filter is disabled if the search field is blank.</entry>
+              </row>
+
+              <row>
+                <entry><code>gtConst(), ltConst()</code></entry>
+
+                <entry><code>GreaterThanFilter, LowerThanFilter</code></entry>
+
+                <entry>Tests if the value of a certain list field is greater
+                than (lower than) a certain constant. This filter is always
+                enabled.</entry>
+              </row>
+
+              <row>
+                <entry><code>like()</code></entry>
+
+                <entry><code>LikeFilter</code></entry>
+
+                <entry>Tests if the pattern in a certain search form field
+                matches with the value of a certain list field. This
+                corresponds to the <literal>LIKE</literal> expression in SQL
+                with some modifications. By default, it takes
+                '<literal>%</literal>' and '<literal>*</literal>' symbols as
+                any-string wildcards and '<literal>_</literal>',
+                '<literal>.</literal>' and '<literal>?</literal>' as
+                any-symbol wildcards. In addition, the pattern does not have
+                to match with the whole string ('%' is automatically added
+                before and after the pattern string). The wildcards and their
+                automatic adding is configured by the
+                <code>org.araneaframework.uilib.list.util.like.LikeConfiguration</code>
+                which is found from the Aranea
+                <code>org.araneaframework.uilib.ConfigurationContext</code>.
+                This filter is identical in memory-based and database backend
+                usage. This filter is disabled if the search field is
+                blank.</entry>
+              </row>
+
+              <row>
+                <entry><code>likeConst()</code></entry>
+
+                <entry><code>LikeFilter</code></entry>
+
+                <entry>Tests if a certain constant pattern matches with the
+                value of a certain list field. This filter is always
+                enabled.</entry>
+              </row>
+
+              <row>
+                <entry><code>isNull(), notNull()</code></entry>
+
+                <entry><code>NullFilter</code></entry>
+
+                <entry>Tests if the value of a certain list field is null (is
+                not null) if the value of a certain search form field equals
+                to a specified value.</entry>
+              </row>
+
+              <row>
+                <entry><code>isNullConst(), notNullConst()</code></entry>
+
+                <entry><code>NullFilter</code></entry>
+
+                <entry>Tests if the value of a certain list field is null (is
+                not null). This filter is always enabled.</entry>
+              </row>
+
+              <row>
+                <entry><code>range()</code></entry>
+
+                <entry><code>RangeFilter</code></entry>
+
+                <entry>Tests if the value of a certain list field is between
+                two values of certain search form fields. The filter is
+                identical to the greater than or lower than filter in case of
+                one of the search fields is blank. This filter is disabled if
+                both search fields are blank.</entry>
+              </row>
+
+              <row>
+                <entry><code>fieldRangeInValueRange(),
+                valueRangeInFieldRange(), overlapRange()</code></entry>
+
+                <entry><code>RangeInRangeFilter</code></entry>
+
+                <entry>Tests if two values of certain list fields are between
+                two values of certain search form fields, vice-versa or do
+                they have a non-empty intersection. This filter is disabled if
+                both search fields are blank.</entry>
+              </row>
+
+              <row>
+                <entry><code>sqlFunction()</code></entry>
+
+                <entry><code>SqlFunctionFilter</code></entry>
+
+                <entry>Tests if the value returned from a certain SQL function
+                is equal (or is greater than or is lower than) to the value of
+                a certain list field, search form field or a constant. The
+                arguments of the SQL function can also be chosen among the
+                values of list fields, search form fields and constants. This
+                filter cannot be used memory-based. This filter is always
+                enabled.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable></para>
+
+      <para>By default the <code>FormElement</code>s added into the search
+      form have the same identifiers as the list fields. Therefore there can
+      be only one search field per list field. If one would like to override
+      the used Id for <code>FormElement</code>, any filter could be added like
+      following: <programlisting role="java">
+	myList.addField("country", "#Country").like();
+	myList.getFilterHelper().like("country", "anotherCountry");
+</programlisting> The first line adds a list field 'country' and a
+      <emphasis>Like filter</emphasis> associated with it as well as a new
+      <code>FormElement</code> with Id of 'country'. The second line adds
+      another <emphasis>Like filter</emphasis> associated to the list field
+      'country' and a new <code>FormElement</code> with Id of
+      'anotherCountry'.</para>
+
+      <para>By adding a filter, the corresponding <code>FormElement</code> is
+      automatically created and added to the search form of the list. Now we
+      cover the properties of the few <code>FormElement</code> describing
+      their default values and showing how to customize them: <informaltable
+          frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="3*" />
+
+            <colspec colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Property</entry>
+
+                <entry>Default value</entry>
+
+                <entry>Customizing</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>Id</entry>
+
+                <entry>Same as the list field Id.</entry>
+
+                <entry>Call
+                <code>addField(...).&lt;filter&gt;("myCustomId");</code></entry>
+              </row>
+
+              <row>
+                <entry>Label</entry>
+
+                <entry>Same as the label of the associated list field.</entry>
+
+                <entry>Call
+                <code>addField(...).useCustomLabel("myCustomLabel").xxx(...);</code></entry>
+              </row>
+
+              <row>
+                <entry>Control</entry>
+
+                <entry>Is selected considering the type of the associated list
+                field: <informaltable>
+                    <tgroup cols="2">
+                      <thead>
+                        <row>
+                          <entry>Type</entry>
+
+                          <entry>Control</entry>
+                        </row>
+                      </thead>
+
+                      <tbody>
+                        <row>
+                          <entry>
+                            <code>java.lang.String</code>
+                          </entry>
+
+                          <entry>
+                            <code>TextControl</code>
+                          </entry>
+                        </row>
+
+                        <row>
+                          <entry><code>java.math.BigInteger</code>,
+                          <code>java.lang.Long</code>,
+                          <code>java.lang.Integer</code>,
+                          <code>java.lang.Short</code>,
+                          <code>java.lang.Byte</code></entry>
+
+                          <entry>
+                            <code>NumberControl</code>
+                          </entry>
+                        </row>
+
+                        <row>
+                          <entry><code>java.math.BigDecimal</code>,
+                          <code>java.lang.Double</code>,
+                          <code>java.lang.Float</code></entry>
+
+                          <entry>
+                            <code>FloatControl</code>
+                          </entry>
+                        </row>
+
+                        <row>
+                          <entry>Other subclasses of
+                          <code>java.lang.Number</code></entry>
+
+                          <entry>
+                            <code>FloatControl</code>
+                          </entry>
+                        </row>
+
+                        <row>
+                          <entry><code>java.util.Date</code>,
+                          <code>java.sql.Date</code></entry>
+
+                          <entry>
+                            <code>DateControl</code>
+                          </entry>
+                        </row>
+
+                        <row>
+                          <entry>
+                            <code>java.sql.Time</code>
+                          </entry>
+
+                          <entry>
+                            <code>TimeControl</code>
+                          </entry>
+                        </row>
+
+                        <row>
+                          <entry>
+                            <code>java.sql.Timestamp</code>
+                          </entry>
+
+                          <entry>
+                            <code>DateTimeControl</code>
+                          </entry>
+                        </row>
+
+                        <row>
+                          <entry>
+                            <code>java.lang.Boolean</code>
+                          </entry>
+
+                          <entry>
+                            <code>CheckboxControl</code>
+                          </entry>
+                        </row>
+
+                        <row>
+                          <entry>All others</entry>
+
+                          <entry>
+                            <code>TextControl</code>
+                          </entry>
+                        </row>
+                      </tbody>
+                    </tgroup>
+                  </informaltable></entry>
+
+                <entry>Call <code>addField(...).xxx(new
+                MyCustomControl());</code></entry>
+              </row>
+
+              <row>
+                <entry>Data</entry>
+
+                <entry>Corresponds to the type of the associated list
+                field.</entry>
+
+                <entry>Call
+                <code>addField(...).useFieldType(MyType.class).xxx(...);</code></entry>
+              </row>
+
+              <row>
+                <entry>Initial value</entry>
+
+                <entry>Always <code>null</code> to disable the filter by
+                default.</entry>
+
+                <entry>After adding the field and the filter call
+                <code>myList.getForm().setValueByFullName("fieldId",
+                customInitialValue);</code> or add a custom
+                <code>Formelement</code>.</entry>
+              </row>
+
+              <row>
+                <entry>Mandatory</entry>
+
+                <entry>Always <code>false</code> as all search conditions are
+                optional.</entry>
+
+                <entry>After adding the field and the filter call
+                <code>myList.getForm().getElementByFullName("fieldId").setMandatory(true);</code>
+                or add a custom <code>Formelement</code>.</entry>
+              </row>
+
+              <row>
+                <entry>FormElement</entry>
+
+                <entry>See all properties above.</entry>
+
+                <entry>To use a custom <code>Formelement</code>, call
+                <code>addField(...).xxx(new MyCustomFormElement(...));</code>.
+                To disable adding it at all, call
+                <code>addField(...)._xxx();</code> (notice the
+                underscore).</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable> The <code>xxx</code> marks any filter adding method.
+      As one can count, there are 6 overridden methods for each list filter: 2
+      versions for providing a custom Id or not and 3 versions for providing a
+      custom <code>FormElement</code>, <code>Control</code> or neither of
+      them. In addition there are methods that start with an
+      <literal>_</literal> for disabling adding a form element. Using the
+      <code>FilterHelper</code> instead of <code>FieldFilterHelper</code> is
+      analogous except all filter adding methods take the list field Id as the
+      first argument in addition.</para>
+
+      <para>It's import to notice that <code>xxxxConst</code> methods do not
+      create a form element because they are independent of the search form at
+      all - they are constant. However they can actually take a value Id for
+      the defined constants as well. These Ids can be used later to convert
+      specific values when creating a database query. Of course non-constant
+      filters have the same Ids but just use them mainly to get values from
+      the search form. <code>xxxxConst</code> filters have 2 overridden add
+      methods depending on whether the custom value Id is provided or not. By
+      default it's the same as the field Id.</para>
+    </sect2>
+
+    <sect2>
+      <title>Backend Data Provider</title>
+
+      <para>Now that we have demonstrated defining lists and also creating
+      <classname>MemoryBasedListDataProvider</classname>, we will discover
+      using <classname>BackendListDataProvider</classname>. The following
+      example code should be in the same widget as constructing of the related
+      <classname>ListWidget</classname>. <programlisting role="java">...
 private class MyBackendListDataProvider extends BackendListDataProvider {
   public MyBackendListDataProvider() {
     super(true);
@@ -196,56 +771,230 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
     return lookupMyService().findMyModel(query);
   }
 }
-...</programlisting>
-				The line <literal>super(true)</literal> constructs <classname>BackendListDataProvider</classname> with cache enabled (only used when there are no change in <emphasis>query</emphasis>). Notice that there is no associaton with any <emphasis>JavaBean</emphasis> class here.
-				The method <literal>ListItemsData getItemRange(ListQuery query)</literal> implements loading current item range according to the range indexes and filtering and ordering conditions. <classname>org.araneaframework.backend.list.mode.ListQuery</classname> and <classname>org.araneaframework.backend.list.mode.ListItemsData</classname> may be thought as being input and output of each list data query.
-			</para>
-			
-			<para>
-				<classname>ListQuery</classname> is a simple JavaBean that holds the following properties:
-				<variablelist spacing="compact">
-					<varlistentry>
-						<term>List item range indexes</term>
-						<listitem>This is 0-based start index and items count (<classname>Long</classname> objects) that define the range. By default, lists are shown by pages. Altrough all items can be shown at once also. Then the start index is zero and items count is ommited.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Filter expression</term>
-						<listitem>This could be thought as an abstraction of previously defined bunch of <classname>ListFilter</classname> objects that are provided with the binded values from <emphasis>filter form</emphasis>. This is a basis of constructing a SQL <literal>WHERE</literal> clause later.</listitem>
-					</varlistentry>										
-					<varlistentry>
-						<term>Order expression</term>
-						<listitem>This could be thought as an abstraction of previously defined ordered columns that are provided with the current ordering condition. This is a basis of constructing a SQL <literal>ORDER BY</literal> clause later.</listitem>
-					</varlistentry>
-				</variablelist>
-				Generally, this whole object is just passed to <classname>org.araneaframework.backend.list.helper.ListSqlHelper</classname> class that is used to generate SQL statements and fetching the results from database. Latter is hold in <classname>ListItemsData</classname> object which is a simple JavaBean that holds the following properties:
-				<variablelist spacing="compact">
-					<varlistentry>
-						<term>List items range</term>
-						<listitem>Model objects that are the result of the <emphasis>query</emphasis>.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Total count</term>
-						<listitem>Total count (<classname>Long</classname> object) of the list. This is important information for navigating through the whole list. Notice that this depends only on filtering conditions.</listitem>
-					</varlistentry>
-				</variablelist>
-			</para>
-			
-			<para>
-				Notice that <classname>BackendListDataProvider</classname> actually do not depend on using databases. It just provides a simple <emphasis>query</emphasis> object and expects a simple result to be returned. Thus, you have the power to use it as you like. At the same, Aranea provides a very useful class <classname>org.araneaframework.backend.list.helper.ListSqlHelper</classname> that generate SQL statements and fetches the results from database. We strongly recommend it together with its subclasses that support different database systems. Currently <literal>Oracle</literal> and <literal>HSQL</literal> databases are supported.
-			</para>
-			
-			<para>
-				The following example discovers using an <literal>Oracle</literal>-based data providing with <classname>OracleListSqlHelper</classname> (a subclass of <classname>ListSqlHelper</classname>). The following code should be in a service class instead of previously discovered Widget:
-<programlisting role="java">public class MyService {
+...</programlisting> The line <literal>super(true)</literal> constructs
+      <classname>BackendListDataProvider</classname> with cache enabled (only
+      used when there are no change in <emphasis>query</emphasis>). Notice
+      that there is no association with any <emphasis>JavaBean</emphasis>
+      class here. The method <literal>ListItemsData getItemRange(ListQuery
+      query)</literal> implements loading current item range according to the
+      range indexes and filtering and ordering conditions.
+      <classname>org.araneaframework.backend.list.mode.ListQuery</classname>
+      and
+      <classname>org.araneaframework.backend.list.mode.ListItemsData</classname>
+      may be thought as being input and output of each list data query.</para>
+
+      <para><classname>ListQuery</classname> is a simple JavaBean that holds
+      the following properties: <variablelist spacing="compact">
+          <varlistentry>
+            <term>List item range indexes</term>
+
+            <listitem>
+               This is 0-based start index and items count ( 
+
+              <classname>Long</classname>
+
+               objects) that define the range. By default, lists are shown by pages. Although all items can be shown at once also. Then the start index is zero and items count is omitted. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Filter expression</term>
+
+            <listitem>
+               This could be thought as an abstraction of previously defined bunch of 
+
+              <classname>ListFilter</classname>
+
+               objects that are provided with the bound values from 
+
+              <emphasis>filter form</emphasis>
+
+               . This is a basis of constructing a SQL 
+
+              <literal>WHERE</literal>
+
+               clause later. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Order expression</term>
+
+            <listitem>
+               This could be thought as an abstraction of previously defined ordered columns that are provided with the current ordering condition. This is a basis of constructing a SQL 
+
+              <literal>ORDER BY</literal>
+
+               clause later. 
+            </listitem>
+          </varlistentry>
+        </variablelist> Generally, this whole object is just passed to
+      <classname>org.araneaframework.backend.list.helper.ListSqlHelper</classname>
+      class that is used to generate SQL statements and fetching the results
+      from database. Latter is hold in <classname>ListItemsData</classname>
+      object which is a simple JavaBean that holds the following properties:
+      <variablelist spacing="compact">
+          <varlistentry>
+            <term>List items range</term>
+
+            <listitem>
+               Model objects that are the result of the 
+
+              <emphasis>query</emphasis>
+
+               . 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Total count</term>
+
+            <listitem>
+               Total count ( 
+
+              <classname>Long</classname>
+
+               object) of the list. This is important information for navigating through the whole list. Notice that this depends only on filtering conditions. 
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+
+      <para>Notice that <classname>BackendListDataProvider</classname>
+      actually do not depend on using databases. It just provides a simple
+      <emphasis>query</emphasis> object and expects a simple result to be
+      returned. Thus, you have the power to use it as you like. At the same,
+      Aranea provides a very useful class
+      <classname>org.araneaframework.backend.list.helper.ListSqlHelper</classname>
+      that generate SQL statements and fetches the results from database. We
+      strongly recommend it together with its subclasses that support
+      different database systems. Currently <literal>Oracle</literal>
+      (<classname>OracleListSqlHelper</classname>) and <literal>HSQL</literal>
+      (<classname>HsqlListSqlHelper</classname>) databases are
+      supported.</para>
+
+      <para>The following example discovers the simplest usage of
+      <classname>ListSqlHelper</classname>. The following code should be in a
+      service class instead of previously discovered Widget: <programlisting
+      role="java">public class MyService {
   ...
   private DataSource dataSource;
   ...
-  public ListItemsData findMyModel(ListQuery query) throws Exception {
-    OracleListSqlHelper helper = new OracleListSqlHelper(query);
+  public ListItemsData findMyModel(ListQuery query) {
+    ListSqlHelper helper = new OracleListSqlHelper(this.dataSource, query);
 
-    helper.setColumnMapping("name", "NAME");
-    helper.setColumnMapping("surname", "SURNAME");
-    helper.setColumnMapping("phone", "PHONE_NO");
+    helper.addMapping("name", "NAME");
+    helper.addMapping("surname", "SURNAME");
+    helper.addMapping("phone", "PHONE_NO");
+
+    helper.setSimpleSqlQuery("PERSON");
+    return helper.execute(MyModel.class);
+  }
+  ...
+}</programlisting></para>
+
+      <para>Method <literal>ListItemsData findMyModel(ListQuery
+      query)</literal> does the following: <variablelist spacing="compact">
+          <varlistentry>
+            <term>Constructs and initializes the helper</term>
+
+            <listitem>
+               The line 
+
+              <literal>ListSqlHelper helper = new
+              OracleListSqlHelper(this.dataSource, query)</literal>
+
+               constructs 
+
+              <classname>OracleListSqlHelper</classname>
+
+               - an Oracle specific 
+
+              <classname>ListSqlHelper</classname>
+
+               - and passes it the 
+
+              <classname>DataSource</classname>
+
+               and 
+
+              <classname>ListQuery</classname>
+
+               data. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Adds column mappings</term>
+
+            <listitem>
+               The line 
+
+              <literal>helper.addMapping("name", "NAME")</literal>
+
+               defines that identifier of column "name" will be converted into 
+
+              <literal>"NAME"</literal>
+
+               when used in an SQL statement. There may be lot of differnece between JavaBean properties names and database fields names. The same database identifier ( 
+
+              <literal>"NAME"</literal>
+
+               ) is used when fetching data from 
+
+              <classname>ResultSet</classname>
+
+               by default. This could also have another identifier set by providing it as the third argument. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Provides the helper with a simple SQL query</term>
+
+            <listitem>
+               The line 
+
+              <literal>helper.setSimpleSqlQuery("PERSON")</literal>
+
+               sets the whole SQL query with parameters using only the given database table name. Filtering and ordering is added automatically according to the 
+
+              <classname>ListQuery</classname>
+
+               data. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Executes the query and retrieve the data</term>
+
+            <listitem>
+               The line 
+
+              <literal>return helper.execute(MyModel.class)</literal>
+
+               executes and retrieves data of both total count and items range queries. The 
+
+              <classname>ResultSet</classname>
+
+               is read using the default 
+
+              <classname>BeanResultReader</classname>
+
+               . 
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+
+      <para>The following example discovers the custom usage of
+      <classname>ListSqlHelper</classname>. <programlisting role="java">public class MyService {
+  ...
+  private DataSource dataSource;
+  ...
+  public ListItemsData findMyModel(ListQuery query) {
+    ListSqlHelper helper = new OracleListSqlHelper(this.dataSource, query);
+
+    helper.addMapping("name", "NAME");
+    helper.addMapping("surname", "SURNAME");
+    helper.addMapping("phone", "PHONE_NO");
 
     StringBuffer s = new StringBuffer();
     s.append("SELECT ");
@@ -258,631 +1007,907 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
     helper.addStatementParams(helper.getDatabaseFilterParams());
     helper.addStatementParams(helper.getDatabaseOrderParams());
 
-    ListItemsData data;
-    try {
-      helper.setDataSource(this.dataSource);
-      helper.execute();
-      data = helper.getListItemsData(MyModel.class);
-    } finally {
-      helper.close();
-    }
-    return data;
+    return helper.execute(MyModel.class);
   }
   ...
-}</programlisting>
-				Method <literal>ListItemsData findMyModel(ListQuery query)</literal> does the following:
-				<variablelist spacing="compact">
-					<varlistentry>
-						<term>Constructs the helper</term>
-						<listitem>The line <literal>OracleListSqlHelper helper = new OracleListSqlHelper(query)</literal> constructs <classname>OracleListSqlHelper</classname> and passes it <classname>ListQuery</classname> data.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Adds column mappings</term>
-						<listitem>The line <literal>helper.setColumnMapping("name", "NAME")</literal> defines that identifier of column "name" will be converted into <literal>"NAME"</literal> when used in an SQL statement. There may be lot of differnece between JavaBean properies names and database fields names. The same database identifier (<literal>"NAME"</literal>) is used when fetching data from <classname>ResultSet</classname> by default. This could also have another identifier set by providing it as the third argument.</listitem>
-					</varlistentry>										
-					<varlistentry>
-						<term>Gets SQL substrings from the helper</term>
-						<listitem>The line <literal>helper.getDatabaseFields()</literal> returns just the comma-separated list of database column identifiers that were just defined in the mapping. This does not depend on the original set of list columns at all. The line <literal>helper.getDatabaseFilterWith(" WHERE ", "")</literal> returns the <literal>WHERE</literal> clause body with the provided prefix and suffix. It returns an empty string if there is no filter condition currently set (it does not mean there are no filters defined). Notice that we only deal with SQL strings here. As <classname>ListSqlHelper</classname> uses <classname>PreparedStatement</classname> objects to execute queries, there must be provided statement parameters in addition to the SQL string. This generally provides better perfomance of executing similair queries.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Constructs SQL query string</term>
-						<listitem><literal>StringBuffer</literal> is used to construct the whole SQL query string. Notice that the helper does not construct it totally by itself. This lends user more power for complex queries. It is very important that the constructed query is for getting all rows that match with the current filter and order conditions, but not the range conditions. <classname>ListSqlHelper</classname> always executes two queries: one for getting the items count and another for getting the items range. Generally, both of these can be easily constructed from this one provided query. This implementation depends on the database system and therefore the concrete <classname>ListSqlHelper</classname> subclass.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Gets SQL parameters from the helper</term>
-						<listitem>The line <literal>helper.getDatabaseFilterParams()</literal> returns SQL parameters of <literal>WHERE</literal> clause or empty list if there are none.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Provides the helper with the SQL query</term>
-						<listitem>The line <literal>helper.setSqlQuery(...)</literal> sets the SQL string and the line <literal>helper.addStatementParams(...)</literal> adds the query parameters (<classname>ListSqlHelper</classname> uses <classname>PreparedStatement</classname>s). Of course, the order of parameters must match with the SQL string.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Provides the helper with <classname>DataSource</classname></term>
-						<listitem>This could also be done before but not later.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Executes the queries</term>
-						<listitem>The line <literal>helper.execute()</literal> executes both range count and getting range items queries. The <classname>ResultSet</classname> of the latter is let open.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Reads the results</term>
-						<listitem>The line <literal>helper.getListItemsData(MyModel.class)</literal> iterates through <classname>ResultSet</classname> and returns the JavaBean list that holds the data. It also returns the total items count. All this is encapsulated into <classname>ListItemsData</classname> object.</listitem>
-					</varlistentry>
-					<varlistentry>
-						<term>Close the database connection</term>
-						<listitem>This must be always done in <literal>finally</literal> clause.</listitem>
-					</varlistentry>
-				</variablelist>
-				<classname>ListSqlHelper</classname> is designed to be flexible remaining simple to be used. Note that the query that is constucted here start with the term <literal>"SELECT"</literal>. For example, <classname>HSqlListSqlHelper</classname> must be provided with the rest of <literal>SELECT</literal> clause without passing it the term <literal>"SELECT"</literal> itself. This ensures that the items count nad items range queries are always constructed correctly.
-			</para>
-		</sect2>
-	</sect1>
+}</programlisting></para>
 
-	<sect1>
-		<title>List JSP Tags</title>
-        <!-- LIST -->
-        <sect2>
-            <title><![CDATA[<ui:list>]]></title>
-            <para>
-                Starts a list context. List view model, list sequence view model and list id are made accessible to inner tags as EL variables.
-             </para>
+      <para>Method <literal>ListItemsData findMyModel(ListQuery
+      query)</literal> does the following: <variablelist spacing="compact">
+          <varlistentry>
+            <term>Constructs and initializes the helper</term>
 
-          <sect3>
-            <title>Attributes</title>
-            <informaltable frame="all">
-              <tgroup cols="3">
-                <colspec colwidth="2*"/>
-                <colspec colwidth="1*"/>
-                <colspec colwidth="4*"/>
-                <thead>
-                  <row>
-                    <entry>Attribute</entry>
-                    <entry>Required</entry>
-                    <entry>Description</entry>
-                  </row>
-                </thead>
-                <tbody>
-                  <row>
-                    <entry>id</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>List widget id.</entry>
-                  </row>
-                  <row>
-                    <entry>varSequence</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Name of variable that represents list sequence info (by default <emphasis>listSequence</emphasis>).</entry>
-                  </row>
-                </tbody>
-              </tgroup>
-            </informaltable>
-          </sect3>
-            
+            <listitem>
+               The line 
+
+              <literal>ListSqlHelper helper = new
+              OracleListSqlHelper(this.dataSource, query)</literal>
+
+               constructs 
+
+              <classname>OracleListSqlHelper</classname>
+
+               - an Oracle specific 
+
+              <classname>ListSqlHelper</classname>
+
+               - and passes it the 
+
+              <classname>DataSource</classname>
+
+               and 
+
+              <classname>ListQuery</classname>
+
+               data. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Adds column mappings</term>
+
+            <listitem>
+               The line 
+
+              <literal>helper.addMapping("name", "NAME")</literal>
+
+               defines that identifier of column "name" will be converted into 
+
+              <literal>"NAME"</literal>
+
+               when used in an SQL statement. There may be lot of differnece between JavaBean properties names and database fields names. The same database identifier ( 
+
+              <literal>"NAME"</literal>
+
+               ) is used when fetching data from 
+
+              <classname>ResultSet</classname>
+
+               by default. This could also have another identifier set by providing it as the third argument. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Gets SQL substrings from the helper</term>
+
+            <listitem>
+               The line 
+
+              <literal>helper.getDatabaseFields()</literal>
+
+               returns just the comma-separated list of database column identifiers that were just defined in the mapping. This does not depend on the original set of list columns at all. The line 
+
+              <literal>helper.getDatabaseFilterWith(" WHERE ", "")</literal>
+
+               returns the 
+
+              <literal>WHERE</literal>
+
+               clause body with the provided prefix and suffix. It returns an empty string if there is no filter condition currently set (it does not mean there are no filters defined). Notice that we only deal with SQL strings here. As 
+
+              <classname>ListSqlHelper</classname>
+
+               uses 
+
+              <classname>PreparedStatement</classname>
+
+               objects to execute queries, there must be provided statement parameters in addition to the SQL string. This generally provides better performance of executing similar queries. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Constructs SQL query string</term>
+
+            <listitem>
+               
+
+              <literal>StringBuffer</literal>
+
+               is used to construct the whole SQL query string. Notice that the helper does not construct it totally by itself. This lends user more power for complex queries. It is very important that the constructed query is for getting all rows that match with the current filter and order conditions, but not the range conditions. 
+
+              <classname>ListSqlHelper</classname>
+
+               always executes two queries: one for getting the items count and another for getting the items range. Generally, both of these can be easily constructed from this one provided query. This implementation depends on the database system and therefore the concrete 
+
+              <classname>ListSqlHelper</classname>
+
+               subclass. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Gets SQL parameters from the helper</term>
+
+            <listitem>
+               The line 
+
+              <literal>helper.getDatabaseFilterParams()</literal>
+
+               returns SQL parameters of 
+
+              <literal>WHERE</literal>
+
+               clause or empty list if there are none. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Provides the helper with the SQL query</term>
+
+            <listitem>
+               The line 
+
+              <literal>helper.setSqlQuery(...)</literal>
+
+               sets the SQL string and the line 
+
+              <literal>helper.addStatementParams(...)</literal>
+
+               adds the query parameters ( 
+
+              <classname>ListSqlHelper</classname>
+
+               uses 
+
+              <classname>PreparedStatement</classname>
+
+               s). Of course, the order of parameters must match with the SQL string. 
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Executes the query and retrieve the data</term>
+
+            <listitem>
+               The line 
+
+              <literal>return helper.execute(MyModel.class)</literal>
+
+               executes and retrieves data of both total count and items range queries. The 
+
+              <classname>ResultSet</classname>
+
+               is read using the default 
+
+              <classname>BeanResultReader.</classname>
+
+               
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+
       <sect3>
-        <title>Variables</title>
-        <informaltable frame="all">
-          <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
-            <colspec colwidth="2*" align="center"/>
-            <thead>
-              <row>
-                <entry>Variable</entry>
-                <entry>Description</entry>
-                <entry>Type</entry>
-              </row>
-            </thead>
-            <tbody>
-              <row>
-                <entry>list</entry>
-                <entry>View model of list.</entry>
-                <entry><literal>ListWidget.ViewModel</literal></entry>
-              </row>
-              <row>
-                <entry>listSequence (unless changed with <emphasis>varSequence</emphasis> attribute).</entry>
-                <entry>View model of list sequence info.</entry>
-                <entry><literal>SequenceHelper.ViewModel</literal></entry>
-              </row>
-              <row>
-                <entry>listId</entry>
-                <entry>Id of list.</entry>
-                <entry><literal>String</literal></entry>
-              </row>
-              <row>
-                <entry>listFullId</entry>
-                <entry>Full id of list.</entry>
-                <entry><literal>String</literal></entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
+        <title>ListSqlHelper mappings and converters</title>
+
+        <para>All Aranea List filters that are propagated with values from the
+        filter form construct an expression chain. This chain is built each
+        time any condition is changed. E.g if one is searching for persons
+        whose birthday is between July 6th, 1950 and Sept 2nd, 1990 then
+        there's one value 'Birthday' and two values 'July 6th, 1950' and 'Sept
+        2nd, 1990' which have 'Birthday_start' and 'Birthday_end' as names.
+        Ordering the list is done the same. When retrieving data from database
+        all these information must be considered to build an appropriate
+        query. Therefore all these variables must be mapped to database
+        fields. When reading the query results Bean fields must be mapped to
+        <code>ResultSet</code> columns. In general, these Bean fields match
+        exactly with the variables. But considering more specific cases, they
+        are not assumed to be the same.</para>
+
+        <para>The following list covers the terms that are used when
+        configuring <code>ListSqlHelper</code>: <variablelist>
+            <varlistentry>
+              <term>Expression variable</term>
+
+              <listitem>
+                 Variables can be thought as list columns that are used in filtering and ordering the list. Variable's name can be for example 'Birthday'. 
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Expression value</term>
+
+              <listitem>
+                 Values are the temporary information in the list filtering. '1980-08-21' is a value. 'Birthday_start' is a name of a value. In simple cases each variable matches with one value. In case of the range filter two different values (start and end of the range) are used. Also one value can be used together with two or more variables. A value identifier is used for optional converting before using it in a query. This is done by adding a 
+
+                <code>Converter</code>
+
+                 object to 
+
+                <code>ListSqlHelper</code>
+
+                 . E.g. booleans have to be converted into numeric (0 or 1) values. 
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Database field</term>
+
+              <listitem>
+                 Database field can be for example 'age' or 'company.name' as well as 'MAX(price)' or '(SELECT(COUNT(*) FROM document WHERE userId = user.id)' (an inner SELECT) - any expression that is part of a SQL string. 
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Database field alias</term>
+
+              <listitem>
+                 Database field alias is for example 'name', 'total_price' etc. It's just an identifier not a whole expression. In 
+
+                <code>ListSqlHelper</code>
+
+                 one can assign an alias for each database field or have it automatically generated. The result of a query is a table - a 
+
+                <code>ResultSet</code>
+
+                 - which columns have the same names as the aliases in the query. An alias can also be used in a custom filter condition (WHERE clause) to identify the same database field or expression that was added in the SELECT clause. 
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>ResultSet column</term>
+
+              <listitem>
+                 
+
+                <code>ResultSet</code>
+
+                 is a table that is retrieved from database as a result of executing the query. Generally all the columns that where added in a SELECT can be retrieved from the ResultSet by their aliases. But the ResultSet can also contain additional database-specific data such as 
+
+                <code>rownum</code>
+
+                 etc. ResultSet column can also be assigned a 
+
+                <code>Converter</code>
+
+                 . E.g. to convert numeric value into a Boolean. Here is the Converter used reversely. 
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Bean field</term>
+
+              <listitem>
+                 Bean field (or property) is for example 'phone' or 'address.city' that is an instance field of a Java object. During the ResultSet reading new instance of the given type is created and its fields are propagated with values. E.g. 'phone' is assigned by calling setPhone(String phone), 'address.city' is assigned by calling setAddress(new Address()) (if getAddress() == null) and getAddress().setCity(String city). 
+              </listitem>
+            </varlistentry>
+          </variablelist></para>
+
+        <para><literal>ListSqlHelper</literal> methods for configuring
+        mappings: <informaltable frame="all">
+            <tgroup cols="2">
+              <colspec colwidth="2*" />
+
+              <colspec colwidth="3*" />
+
+              <thead>
+                <row>
+                  <entry>Method</entry>
+
+                  <entry>Purpose</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry><literal>addMapping(String variable, String dbField,
+                  String dbAlias, String beanField)</literal></entry>
+
+                  <entry>Adds mapping between expression variable, database
+                  field and Bean field. Database field alias and Bean field
+                  are assigned manually.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addMapping(String variable, String dbField,
+                  String dbAlias)</literal></entry>
+
+                  <entry>Adds mapping between expression variable, database
+                  field and Bean field. Database field alias is assigned
+                  manually. Bean field is assigned the same as the
+                  variable.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addMapping(String variable, String
+                  dbField)</literal></entry>
+
+                  <entry>Adds mapping between expression variable, database
+                  field and Bean field. Database field alias is generated
+                  automatically. Bean field is assigned the same as the
+                  variable. (mostly used)</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addDatabaseFieldMapping(String variable,
+                  String dbField, String dbAlias)</literal></entry>
+
+                  <entry>Adds mapping between expression variable and database
+                  field. Database field alias is assigned manually.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addDatabaseFieldMapping(String variable,
+                  String dbField)</literal></entry>
+
+                  <entry>Adds mapping between expression variable and database
+                  field. Database field alias is generated
+                  automatically.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addResultSetMapping(String rsColumn, String
+                  beanField)</literal></entry>
+
+                  <entry>Adds mapping between <code>ResultSet</code> column
+                  (matches with database field alias) and Bean field. (rarely
+                  used)</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable></para>
+
+        <para><literal>ListSqlHelper</literal> methods for configuring
+        converters: <informaltable frame="all">
+            <tgroup cols="2">
+              <colspec colwidth="2*" />
+
+              <colspec colwidth="3*" />
+
+              <thead>
+                <row>
+                  <entry>Method</entry>
+
+                  <entry>Purpose</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry><literal>addDatabaseFieldConverter(String value,
+                  Converter converter)</literal></entry>
+
+                  <entry>Adds converter for expression value.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addResultSetDeconverterForBeanField(String
+                  beanField, Converter converter)</literal></entry>
+
+                  <entry>Adds deconverter for <code>ResultSet</code> column by
+                  Bean field that is mapped with that Column.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addResultSetDeconverterForColumn(String
+                  rsColumn, Converter converter)</literal></entry>
+
+                  <entry>Adds deconverter for <code>ResultSet</code>
+                  column.</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable></para>
       </sect3>
-      
-      <sect3>
-        <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<ui:list id="list">
-    ...
-</ui:list>]]></programlisting> 
-      </sect3>
-      
-        </sect2>
-        
-        <sect2>
-            <title><![CDATA[<ui:listFilter>]]></title>
-            <para>
-                Represents list filter. Introduces an implicit form (&lt;ui:form&gt;), so one can place form elements under it.
-            </para>
-            
-            <para>
-                <emphasis>This tag has no attributes.</emphasis>
-            </para>
-            
-        <sect3>
-        <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<ui:list id="list">
-  <ui:listFilter>
-    <ui:row>
-        <ui:cell>
-            <ui:textInput id="field1Filter"/>
-        </ui:cell>
-    
-        <ui:cell>
-            <ui:textInput id="field2Filter"/>
-        </ui:cell>
+    </sect2>
+  </sect1>
 
-        ...
+  <sect1>
+    <title>List JSP Tags</title>
 
-    </ui:row>
-  </ui:listFilter>
-</ui:list>]]></programlisting> 
-      </sect3>
-        </sect2>        
-        
-        <sect2>
-            <title><![CDATA[<ui:listRows>]]></title>
-          <para>
-               Iterating tag that gives access to each row on the current list page.
-               The row is by default accessible as EL variable <emphasis>row</emphasis>.
-          </para>
-          
-          <sect3>
-            <title>Attributes</title>
-            <informaltable frame="all">
-              <tgroup cols="3">
-                <colspec colwidth="2*"/>
-                <colspec colwidth="1*"/>
-                <colspec colwidth="4*"/>
-                <thead>
-                  <row>
-                    <entry>Attribute</entry>
-                    <entry>Required</entry>
-                    <entry>Description</entry>
-                  </row>
-                </thead>
-                <tbody>
-                  <row>
-                    <entry>var</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Name of variable that represents individual row (by default "row").</entry>
-                  </row>
-                </tbody>
-              </tgroup>
-            </informaltable>
-          </sect3>
-          
-              <sect3>
-                <title>Variables</title>
-                <informaltable frame="all">
-                  <tgroup cols="3">
-                    <colspec colwidth="2*"/>
-                    <colspec colwidth="5*"/>
-                    <colspec colwidth="2*" align="center"/>
-                    <thead>
-                      <row>
-                        <entry>Variable</entry>
-                        <entry>Description</entry>
-                        <entry>Type</entry>
-                      </row>
-                    </thead>
-                    <tbody>
-                      <row>
-                        <entry>row (unless changed with <emphasis>var</emphasis> attribute).</entry>
-                        <entry>Object held in current row.</entry>
-                        <entry><literal>Object</literal></entry>
-                      </row>
-                    </tbody>
-                  </tgroup>
-                </informaltable>
-              </sect3>
+    <!-- LIST -->
 
-        <sect3>
-        <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<ui:list id="list">
-  <ui:listFilter>
-    ...
-  </ui:listFilter>
-  
-  <ui:listRows>
-    <ui:row>
-        <!-- In each row, object in this list row is accessible -->
-        <ui:cell>
-            <c:out value="${row.field1}"/>
-        </ui:cell>
-
-        <ui:cell>
-            <c:out value="${row.field2}"/>
-        </ui:cell>
-
-        ...
-    </ui:row>
-  </ui:listRows>
-</ui:list>]]></programlisting> 
-      </sect3>
-
-          
-        </sect2>
-
-        <sect2>
-            <title><![CDATA[<ui:listRowButton>]]></title>
-            <para>
-                Represents an HTML form button (not tied to any <literal>Control</literal> or <literal>FormElement</literal>). 
-                Default <literal>styleClass="aranea-button"</literal>, rendered with HTML <literal>&lt;button ...&gt;</literal> tag.
-            </para>
-            
-         <sect3>
-            <title>Attributes</title>
-            <informaltable frame="all">
-              <tgroup cols="3">
-                <colspec colwidth="2*"/>
-                <colspec colwidth="1*"/>
-                <colspec colwidth="4*"/>
-                <thead>
-                  <row>
-                    <entry>Attribute</entry>
-                    <entry>Required</entry>
-                    <entry>Description</entry>
-                  </row>
-                </thead>
-                <tbody>
-                  <row>
-                    <entry>eventId</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Event triggered when button is clicked.</entry>
-                  </row>
-                  <row>
-                    <entry>id</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Button id, allows to access button from JavaScript.</entry>
-                  </row>
-                  <row>
-                    <entry>labelId</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Id of button label.</entry>
-                  </row>
-                  <row>
-                    <entry>onClickPrecondition</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal>.</entry>
-                  </row>
-                </tbody>
-              </tgroup>
-            </informaltable>
-           <emphasis>Also has standard <literal>styleClass</literal>, <literal>updateRegions</literal> and <literal>globalUpdateRegions</literal> attributes.</emphasis>
-          </sect3>
-        </sect2> 
-        
-        <sect2>
-            <title><![CDATA[<ui:listRowLinkButton>]]></title>
-            <para>
-                Represents a HTML link with an <literal>onClick</literal> JavaScript event.
-                Default <literal>styleClass="aranea-link-button"</literal>, rendered with HTML <literal>&lt;a href="javascript:" ...&gt;</literal> tag.
-            </para>
-            
-          <sect3>
-            <title>Attributes</title>
-            <informaltable frame="all">
-              <tgroup cols="3">
-                <colspec colwidth="2*"/>
-                <colspec colwidth="1*"/>
-                <colspec colwidth="4*"/>
-                <thead>
-                  <row>
-                    <entry>Attribute</entry>
-                    <entry>Required</entry>
-                    <entry>Description</entry>
-                  </row>
-                </thead>
-                <tbody>
-                  <row>
-                    <entry>eventId</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Event triggered when link is clicked.</entry>
-                  </row>
-                  <row>
-                    <entry>id</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Link id, allows to access link from JavaScript.</entry>
-                  </row>
-                  <row>
-                    <entry>labelId</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Id of link label.</entry>
-                  </row>
-                  <row>
-                    <entry>onClickPrecondition</entry>
-                    <entry><emphasis>no</emphasis></entry>
-                    <entry>Precondition for deciding whether onclick event should go server side or not. If left unspecified this is set to <literal>return true;</literal>.</entry>
-                  </row>
-                </tbody>
-              </tgroup>
-            </informaltable>
-            <emphasis>Also has standard <literal>styleClass</literal>, <literal>updateRegions</literal> and <literal>globalUpdateRegions</literal> attributes.</emphasis>
-          </sect3>
-          
-        <sect3>
-        <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<ui:list id="list">
-  ...  
-  <ui:listRows>
-    <ui:row>
-      ...
-      <ui:cell>
-        <ui:listRowLinkButton eventId="edit">
-          <img src="editButton.png"/>
-        </ui:listRowLinkButton>
-      </ui:cell>
-      ...
-    </ui:row>
-  </ui:listRows>
-</ui:list>]]></programlisting> 
-      </sect3>
-            
-        </sect2> 
-        
-        <!-- FORMLIST  -->
-    
     <sect2>
-      <title><![CDATA[<ui:formList>]]></title>
-      <para>
-            Formlist is a list of forms, an editable list. This tag specifies editable list context for its inner tags.
-      </para>
-      
+      <title>&lt;ui:list&gt;</title>
+
+      <para>Starts a list context. List view model, list sequence view model
+      and list id are made accessible to inner tags as EL variables.</para>
+
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>id</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Id of editable list. When not specified, attempt is made to construct it from existing list context&mdash;it this does not succeed, tag fails.</entry>
+
+                <entry>List widget id.</entry>
+              </row>
+
+              <row>
+                <entry>varSequence</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>Name of variable that represents list sequence info (by
+                default <emphasis>listSequence</emphasis>).</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
       </sect3>
-      
+
       <sect3>
         <title>Variables</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
-            <colspec colwidth="2*" align="center"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Variable</entry>
+
                 <entry>Description</entry>
+
                 <entry>Type</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
-                <entry>formList</entry>
-                <entry>Editable list view model.</entry>
-                <entry><literal>FormListWidget.ViewModel</literal></entry>
+                <entry>list</entry>
+
+                <entry>View model of list.</entry>
+
+                <entry><literal>ListWidget.ViewModel</literal></entry>
               </row>
+
               <row>
-                <entry>formListId</entry>
-                <entry>Editable list id.</entry>
+                <entry>listSequence (unless changed with
+                <emphasis>varSequence</emphasis> attribute).</entry>
+
+                <entry>View model of list sequence info.</entry>
+
+                <entry><literal>SequenceHelper.ViewModel</literal></entry>
+              </row>
+
+              <row>
+                <entry>listId</entry>
+
+                <entry>Id of list.</entry>
+
+                <entry><literal>String</literal></entry>
+              </row>
+
+              <row>
+                <entry>listFullId</entry>
+
+                <entry>Full id of list.</entry>
+
                 <entry><literal>String</literal></entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
       </sect3>
-      
+
       <sect3>
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<ui:list id="list">
-    <ui:formList>
-       ...
-    </ui:formList>
-</ui:list>]]></programlisting> 
-      </sect3>
-      </sect2>
 
-    <!-- FORMLISTROWS  -->
-    
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui:list id="list"&gt;
+    ...
+&lt;/ui:list&gt;</programlisting>
+      </sect3>
+    </sect2>
+
     <sect2>
-      <title><![CDATA[<ui:formListRows>]]></title>
-      <para>
-           Iterating tag that gives access to each row and row form on the editable list current page.
-           The editable row is accessible as "editableRow" variable.
-      </para>
-      
+      <title>&lt;ui:listFilter&gt;</title>
+
+      <para>Represents list filter. Introduces an implicit form
+      (&lt;ui:form&gt;), so one can place form elements under it.</para>
+
+      <para><emphasis>This tag has no attributes.</emphasis></para>
+
+      <sect3>
+        <title>Examples</title>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui:list id="list"&gt;
+  &lt;ui:listFilter&gt;
+    &lt;ui:row&gt;
+        &lt;ui:cell&gt;
+            &lt;ui:textInput id="field1Filter"/&gt;
+        &lt;/ui:cell&gt;
+    
+        &lt;ui:cell&gt;
+            &lt;ui:textInput id="field2Filter"/&gt;
+        &lt;/ui:cell&gt;
+
+        ...
+
+    &lt;/ui:row&gt;
+  &lt;/ui:listFilter&gt;
+&lt;/ui:list&gt;</programlisting>
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>&lt;ui:listRows&gt;</title>
+
+      <para>Iterating tag that gives access to each row on the current list
+      page. The row is by default accessible as EL variable
+      <emphasis>row</emphasis>.</para>
+
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
                 <entry>var</entry>
+
                 <entry><emphasis>no</emphasis></entry>
-                <entry>Name of variable that represents individual row (by default "row").</entry>
+
+                <entry>Name of variable that represents individual row (by
+                default "row").</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
       </sect3>
-      
+
       <sect3>
         <title>Variables</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
-            <colspec colwidth="2*" align="center"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <colspec align="center" colwidth="2*" />
+
             <thead>
               <row>
                 <entry>Variable</entry>
+
                 <entry>Description</entry>
+
                 <entry>Type</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
-                <entry>formRow</entry>
-                <entry>Current editable list row view model.</entry>
-                <entry><literal>FormRow.ViewModel</literal></entry>
-              </row>
-              <row>
-                <entry>row (unless changed with <emphasis>var</emphasis> attribute).</entry>
+                <entry>row (unless changed with <emphasis>var</emphasis>
+                attribute).</entry>
+
                 <entry>Object held in current row.</entry>
+
                 <entry><literal>Object</literal></entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
       </sect3>
-      
+
       <sect3>
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<ui:list id="list">
-    <ui:formList>
-        <ui:formListRows>
-           ...
-        </ui:formListRows>
-    </ui:formList>
-</ui:list>]]></programlisting> 
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui:list id="list"&gt;
+  &lt;ui:listFilter&gt;
+    ...
+  &lt;/ui:listFilter&gt;
+  
+  &lt;ui:listRows&gt;
+    &lt;ui:row&gt;
+        &lt;!-- In each row, object in this list row is accessible --&gt;
+        &lt;ui:cell&gt;
+            &lt;c:out value="${row.field1}"/&gt;
+        &lt;/ui:cell&gt;
+
+        &lt;ui:cell&gt;
+            &lt;c:out value="${row.field2}"/&gt;
+        &lt;/ui:cell&gt;
+
+        ...
+    &lt;/ui:row&gt;
+  &lt;/ui:listRows&gt;
+&lt;/ui:list&gt;</programlisting>
       </sect3>
-      </sect2>
-      
-   <sect2>
-      <title><![CDATA[<ui:formListAddForm>]]></title>
-      <para>
-            Allows for adding new forms (rows) to editable list.
-      </para>
-      
+    </sect2>
+
+    <sect2>
+      <title>&lt;ui:listRowButton&gt;</title>
+
+      <para>Represents an HTML form button (not tied to any
+      <literal>Control</literal> or <literal>FormElement</literal>). Default
+      <literal>styleClass="aranea-button"</literal>, rendered with HTML
+      <literal>&lt;button ...&gt;</literal> tag.</para>
+
       <sect3>
         <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="1*"/>
-            <colspec colwidth="4*"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
                 <entry>Attribute</entry>
+
                 <entry>Required</entry>
+
                 <entry>Description</entry>
               </row>
             </thead>
+
             <tbody>
+              <row>
+                <entry>eventId</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Event triggered when button is clicked.</entry>
+              </row>
+
               <row>
                 <entry>id</entry>
-                <entry><emphasis>no</emphasis></entry>
-                <entry>Editable list id. Searched from context, if not specified.</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Button id, allows to access button from
+                JavaScript.</entry>
+              </row>
+
+              <row>
+                <entry>labelId</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Id of button label.</entry>
+              </row>
+
+              <row>
+                <entry>onClickPrecondition</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Precondition for deciding whether onclick event should
+                go server side or not. If left unspecified this is set to
+                <literal>return true;</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
+
+        <emphasis>Also has standard <literal>styleClass</literal>,
+        <literal>updateRegions</literal> and
+        <literal>globalUpdateRegions</literal> attributes.</emphasis>
       </sect3>
-      
+    </sect2>
+
+    <sect2>
+      <title>&lt;ui:listRowLinkButton&gt;</title>
+
+      <para>Represents a HTML link with an <literal>onClick</literal>
+      JavaScript event. Default
+      <literal>styleClass="aranea-link-button"</literal>, rendered with HTML
+      <literal>&lt;a href="javascript:" ...&gt;</literal> tag.</para>
+
       <sect3>
-        <title>Variables</title>
+        <title>Attributes</title>
+
         <informaltable frame="all">
           <tgroup cols="3">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
-            <colspec colwidth="2*" align="center"/>
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
             <thead>
               <row>
-                <entry>Variable</entry>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
                 <entry>Description</entry>
-                <entry>Type</entry>
               </row>
             </thead>
+
             <tbody>
               <row>
-                <entry>form</entry>
-                <entry>View model of form.</entry>
-                <entry><literal>FormWidget.ViewModel</literal></entry>
+                <entry>eventId</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Event triggered when link is clicked.</entry>
               </row>
+
               <row>
-                <entry>formId</entry>
-                <entry>Id of form.</entry>
-                <entry><literal>String</literal></entry>
+                <entry>id</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Link id, allows to access link from JavaScript.</entry>
+              </row>
+
+              <row>
+                <entry>labelId</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Id of link label.</entry>
+              </row>
+
+              <row>
+                <entry>onClickPrecondition</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Precondition for deciding whether onclick event should
+                go server side or not. If left unspecified this is set to
+                <literal>return true;</literal>.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
+
+        <emphasis>Also has standard <literal>styleClass</literal>,
+        <literal>updateRegions</literal> and
+        <literal>globalUpdateRegions</literal> attributes.</emphasis>
       </sect3>
-      
+
       <sect3>
         <title>Examples</title>
-<programlisting role="xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<ui:formListAddForm>
-    <ui:row>
-        <ui:cell>
-            <ui:textInput id="name"/>
-        </ui:cell>
-        
-        <ui:cell>
-            <ui:textInput id="surname"/>
-        </ui:cell>
-        
-        <ui:cell>
-            <ui:textInput id="phone"/>
-        </ui:cell>
-        
-        <ui:cell>
-            <ui:dateInput id="birthdate"/>
-        </ui:cell>                          
-    </ui:row>       
-</ui:formListAddForm>]]></programlisting> 
-      </sect3>
-      </sect2>
-        
-        
-	</sect1>
 
-	<sect1>
-		<title>Customizing and Extending Lists</title>
-	</sect1>
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui:list id="list"&gt;
+  ...  
+  &lt;ui:listRows&gt;
+    &lt;ui:row&gt;
+      ...
+      &lt;ui:cell&gt;
+        &lt;ui:listRowLinkButton eventId="edit"&gt;
+          &lt;img src="editButton.png"/&gt;
+        &lt;/ui:listRowLinkButton&gt;
+      &lt;/ui:cell&gt;
+      ...
+    &lt;/ui:row&gt;
+  &lt;/ui:listRows&gt;
+&lt;/ui:list&gt;</programlisting>
+      </sect3>
+    </sect2>
+  </sect1>
+  
+    <sect1>
+    <title>Editable Lists</title>
+    <para>
+     <literal>EditableListWidget</literal> and <literal>EditableBeanListWidget</literal> are <literal>ListWidgets</literal> 
+     wrapped around <literal>FormListWidget</literal> (See <xref linkend="form_lists"/> about it) which gathers data 
+     with the help from <literal>ListWidget</literal>.
+     </para>
+     
+     <para>
+     Both editable list widgets have just one constructor and one additional getter (compared to <literal>ListWidget</literal>):
+     <programlisting role="java"><![CDATA[public EditableListWidget(FormRowHandler rowHandler);
+public EditableBeanListWidget(FormRowHandler rowHandler, Class beanClass);
+
+// gets the wrapped form list
+public BeanFormListWidget getFormList();]]></programlisting>
+</para>
+
+    <para>
+        Most important component of editable lists is <literal>FormListWidget</literal>'s <literal>RowHandler</literal>, refer to <xref linkend="form_lists"/>
+        about implementing that interface. Other than required implementation of <literal>RowHandler</literal>, editable lists do not
+        differ from <literal>ListWidget</literal>s.
+    </para>
+
+<para>
+<programlisting role="java"><![CDATA[public class SampleEditableListWidget {
+  private EditableBeanListWidget list;
+  
+  protected void init() throws Exception {
+    setViewSelector("sampleEditableListView");
+    
+    list = new EditableBeanListWidget(buildFormRowHandler(), SomeBean.class);
+    list.setDataProvider(buildListDataProvider());
+    list.setOrderableByDefault(true);
+    // list has only two columns of which only one is editable
+    list.addField("immutable", "#ImmutableColumnLabel", false);
+    list.addField("mutable", "#MutableColumnLabel").like();
+
+    addWidget("sampleEditableList", list);
+  }
+  
+  private FormRowHandler buildFormRowHandler() throws Exception {
+    // return formRowHandler, see the form list example
+  };
+  
+  private private ListDataProvider buildListDataProvider() throws Exception {
+    // return data provider
+  }
+}]]></programlisting>
+    </para>
+    
+    <para>
+        JSP view for this sample widget is presented below:
+<programlisting role="java"><![CDATA[...
+<ui:formList id="sampleEditableList">
+  <!-- List filter definition, usual -->
+  <!-- Editable lists body -->
+  <ui:formListRows>
+    <ui:row>
+      <ui:cell>
+        <!-- Row object is accessible as 'row' just as in lists -->
+        <c:out value="${row.immutable}"/>
+      </ui:cell>
+      <ui:cell>
+        <!-- But the implicit form tag for current row form is also present, so... -->
+        <ui:formElement id="mutable">
+          <ui:textInput/>
+        </ui:formElement>
+      </ui:cell>
+    </ui:row>
+  </ui:formListRows>
+</ui:formList>
+...]]></programlisting>
+    </para>
+    <para>
+      Full editable list example is bundled with Aranea examples.
+    </para>
+  </sect1>
 </chapter>

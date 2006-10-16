@@ -19,6 +19,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.list.ListWidget;
+import org.araneaframework.uilib.list.TypeHelper;
 
 /**
  * One list field specific proxy for {@link FilterHelper}.
@@ -28,7 +29,7 @@ import org.araneaframework.uilib.list.ListWidget;
  * @see FilterHelper
  * @see ListWidget
  */
-public class FieldFilterHelper {
+public class FieldFilterHelper extends BaseFilterHelper {
 	
 	private final FilterHelper helper;
 	private final String fieldId; 
@@ -41,6 +42,8 @@ public class FieldFilterHelper {
 	 * @param fieldId list field id.
 	 */
 	public FieldFilterHelper(FilterHelper helper, String fieldId) {
+		super(helper.list);
+		
 		Assert.notNullParam(helper, "helper");
 		Assert.notEmptyParam(fieldId, "fieldId");
 		
@@ -56,6 +59,60 @@ public class FieldFilterHelper {
 	 */
 	public FilterHelper getFilterHelper() {
 		return this.helper;
+	}
+	
+	/**
+	 * Sets the current case sensitivity behaivor.
+	 * 
+	 * @param ignoreCase whether to ignore case.
+	 */
+	public FieldFilterHelper setIgnoreCase(boolean ignoreCase) {
+		super._setIgnoreCase(ignoreCase);
+		return this;
+	}
+	
+//	/**
+//	 * Sets the current locale.
+//	 * 
+//	 * @param locale new locale.
+//	 */
+//	public FieldFilterHelper setLocale(Locale locale) {
+//		super._setLocale(locale);
+//		return this;
+//	}
+	
+	/**
+	 * Sets the current strickness behaivor.
+	 * 
+	 * @param stirct whether new filters should be strict.
+	 */
+	public FieldFilterHelper setStrict(boolean stirct) {
+		super._setStrict(stirct);
+		return this;
+	}
+	
+	/**
+	 * Adds custom label for current field. This can override already defined
+	 * label of list field. Those labels are used by new filter form elements
+	 * that are automatically created for list filters. 
+	 * 
+	 * @param labelId label id (not yet resolved).
+	 */
+	public FieldFilterHelper useCustomLabel(String labelId) {
+		super._addCustomLabel(fieldId, labelId);
+		return this;
+	}
+
+	/**
+	 * Defines type for current field.
+	 * 
+	 * @param type field type.
+	 * 
+	 * @see TypeHelper#addFieldType(String, Class)
+	 */
+	public FieldFilterHelper useFieldType(Class type) {
+		super._addFieldType(fieldId, type);
+		return this;
 	}
 	
 	// ========== EQUALS ========== 

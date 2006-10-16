@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.NotImplementedException;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -97,10 +98,13 @@ public class MockOutputData implements OutputData {
   }
 
   public void extend(Class interfaceClass, Object implementation) {
+    //XXX
+    throw new NotImplementedException();    
   }
 
   public Object narrow(Class interfaceClass) {
-    return null;
+    //XXX
+    throw new NotImplementedException();
   }
 
   public void pushAttribute(Object key, Object value) {

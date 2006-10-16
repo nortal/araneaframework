@@ -18,6 +18,7 @@ package org.araneaframework.tests.mock;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import org.apache.commons.lang.NotImplementedException;
 import org.araneaframework.framework.LocalizationContext;
 
 
@@ -43,6 +44,16 @@ public class MockLocalizationContext implements LocalizationContext {
 
   public String localize(String key) {
     return key;
+  }
+  
+  public String getMessage(String code, Object[] args) {
+    //XXX
+    throw new NotImplementedException();
+  }
+  
+  public String getMessage(String code, Object[] args, String defaultMessage) {
+    //XXX
+    throw new NotImplementedException();
   }
 
 }

@@ -32,17 +32,23 @@
                 <ui:row styleClass="filter">
                   <ui:cell/>
 
+                  <ui:formElement id="name">
                   <ui:cell>
-                    <ui:textInput id="name"/>
+                    <ui:textInput/>
                   </ui:cell>
+                  </ui:formElement>
 
-                  <ui:cell>
-                    <ui:textInput id="surname"/>
-                  </ui:cell>
+                <ui:formElement id="surname">
+                <ui:cell>
+                  <ui:textInput/>
+                </ui:cell>
+                </ui:formElement>
 
-                  <ui:cell>
-                    <ui:textInput id="phone"/>
-                  </ui:cell>
+                <ui:formElement id="phone">
+                <ui:cell>
+                  <ui:textInput/>
+                </ui:cell>
+                </ui:formElement>
 
                   <ui:cell>
                     <ui:dateInput id="birthdate_start"/>
@@ -78,6 +84,7 @@
                          It holds the properties of form used to present current row object. -->
                     <c:when test="${formRow.open}">
                       <!-- When formRow is "open", render the fields as inputs. -->
+
                       <ui:cell>
                         <ui:textInput id="name"/>
                       </ui:cell>
@@ -90,13 +97,17 @@
                         <ui:textInput id="phone"/>
                       </ui:cell>
 
+					<ui:formElement id="birthdate">
                       <ui:cell>
-                        <ui:dateInput id="birthdate"/>
-                      </ui:cell>																																			
+                        <ui:dateInput/>
+                      </ui:cell>			
+                      </ui:formElement>																																
 
+					<ui:formElement id="salary">
                       <ui:cell>
-                        <ui:floatInput id="salary" styleClass="min"/>
-                      </ui:cell>																																			
+                        <ui:floatInput styleClass="min"/>
+                      </ui:cell>
+                     </ui:formElement>
                     </c:when>
                     <c:otherwise>
                       <!-- When formRow is "closed", render the fields as displays. -->
@@ -154,27 +165,38 @@
             <!-- Finally the empty form for addition of new objects. -->
             <ui:formListAddForm>
               <ui:row>
+                <!-- columns, usage is the same as when rendering a form widget -->
                 <ui:cell/>
 
+                <ui:formElement id="name">
                 <ui:cell styleClass="center">
-                  <ui:textInput id="name"/>
+                  <ui:textInput/>
                 </ui:cell>
+                </ui:formElement>
 
+                <ui:formElement id="surname">
                 <ui:cell>
-                  <ui:textInput id="surname"/>
+                  <ui:textInput/>
                 </ui:cell>
+                </ui:formElement>
 
+                <ui:formElement id="phone">
                 <ui:cell>
-                  <ui:textInput id="phone"/>
+                  <ui:textInput/>
                 </ui:cell>
+                </ui:formElement>
 
+                <ui:formElement id="birthdate">
                 <ui:cell>
-                  <ui:dateInput id="birthdate"/>
-                </ui:cell>							
+                  <ui:dateInput/>
+                </ui:cell>				
+                </ui:formElement>			
 
-                <ui:cell>
-                  <ui:floatInput id="salary" styleClass="w40"/>
-                </ui:cell>							
+                <ui:formElement id="salary">
+	                <ui:cell>
+	                     <ui:floatInput styleClass="w40"/>
+	                </ui:cell>							
+                </ui:formElement>
 
                 <ui:cell>
                   <ui:attribute name="width" value="0"/>

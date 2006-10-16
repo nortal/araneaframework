@@ -249,8 +249,8 @@
 	<!-- Build internal documentation -->
 	<target name="doc" depends="init, javadoc" description="Build internal documentation">
 		<ant target="build" dir="doc/reference" />
-		<ant target="build" dir="doc/white-paper" /> 
-		<ant target="build" dir="doc/tutorial" />     
+		<ant target="build" dir="doc/tutorial" />
+		<ant target="build" dir="doc/intro" />
 	</target>
 	
 	<!-- test the system -->
@@ -264,7 +264,7 @@
 		<antcall target="clean-all"/>
 		<ant dir="doc/reference" target="clean" inheritall="false"/>
 		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
-		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
+		<ant dir="doc/intro" target="clean" inheritall="false"/>
 		<mkdir dir="dist"/>
 
 		<copy todir="build/tmp/dist">
@@ -290,7 +290,6 @@
 		<antcall target="build-all"/>
 		<ant dir="doc/reference" target="clean" inheritall="false"/>
 		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
-		<ant dir="doc/white-paper" target="clean" inheritall="false"/>
 			
 		<antcall target="doc"/>
     

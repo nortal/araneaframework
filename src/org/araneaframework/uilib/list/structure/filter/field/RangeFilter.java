@@ -30,6 +30,7 @@ import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
 import org.araneaframework.uilib.list.util.FormUtil;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
+import org.araneaframework.uilib.util.Event;
 
 
 public abstract class RangeFilter extends BaseRangeFilter {
@@ -38,9 +39,9 @@ public abstract class RangeFilter extends BaseRangeFilter {
 	
 	private Comparator comparator;
 
-	public static RangeFilter getInstance(FilterContext ctx, String fieldId,
-			String lowValueId, String highValueId) {
-		RangeFilter filter;
+	public static RangeFilter getInstance(final FilterContext ctx, final String fieldId,
+			final String lowValueId, final String highValueId) {
+		final RangeFilter filter;
 		
 		Class type = ctx.getFieldType(fieldId);
 		if (java.util.Date.class.equals(type)
@@ -61,6 +62,13 @@ public abstract class RangeFilter extends BaseRangeFilter {
 		filter.setFieldId(fieldId);
 		filter.setLowValueId(lowValueId);
 		filter.setHighValueId(highValueId);
+		
+		ctx.addInitEvent(new Event() {
+			public void run() {
+				filter.setComparator(ctx.getFieldComparator(fieldId));
+			}			
+		});
+		
 		return filter;
 	}
 	

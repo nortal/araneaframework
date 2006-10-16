@@ -57,8 +57,6 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 	}
 	
 	protected void init() throws Exception {
-		super.init();
-
 		// Sets the view selector that will be used for rendering this widget. */ 
 		setViewSelector("person/personAddEdit");
 		// This viewdata is used in JSP to set component header (different for editing and adding). 

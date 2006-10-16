@@ -28,8 +28,6 @@ public class InitErrorWidget extends TemplateBaseWidget {
 	  private static final long serialVersionUID = 1L;
 
   public void init() throws Exception {
-		super.init();
-    
     setViewSelector("misc/initError");
 
     throw new AraneaRuntimeException("Error on init()!");

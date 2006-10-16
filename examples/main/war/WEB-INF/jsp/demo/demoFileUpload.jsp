@@ -22,6 +22,14 @@
                                                <ui:cell styleClass="data">
                                                        <ui:select id="select"/>
                                                </ui:cell>
+                                               <ui:formElement id="encodingTest">
+	                                               <ui:cell styleClass="name">
+	                                                       <ui:label/>
+	                                               </ui:cell>
+	                                               <ui:cell styleClass="data">
+	                                                       <ui:textInput/>
+	                                               </ui:cell>
+                                               </ui:formElement>
                                        </ui:row>
                                        <ui:row>
                                                <ui:cell styleClass="name">

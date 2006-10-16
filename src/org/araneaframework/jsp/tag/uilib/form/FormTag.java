@@ -40,8 +40,9 @@ import org.araneaframework.uilib.form.FormWidget;
            </ul> "
  */
 public class FormTag extends BaseWidgetTag {
-	public final static String FORM_SCOPED_FULL_ID_KEY = "org.araneaframework.jsp.tag.uilib.form.FormTag..SCOPED_FULL_ID";
-	public final static String FORM_FULL_ID_KEY = "org.araneaframework.jsp.tag.uilib.form.FormTag.FULL_ID";
+	public final static String FORM_SCOPED_FULL_ID_KEY = "formScopedFullId";
+	public final static String FORM_FULL_ID_KEY = "formFullId";
+	public final static String FORM_ID_KEY = "formId";
 	public final static String FORM_VIEW_MODEL_KEY = "form";
 	public final static String FORM_KEY = "org.araneaframework.jsp.tag.uilib.form.FormTag.FORM";
 	
@@ -60,6 +61,7 @@ public class FormTag extends BaseWidgetTag {
 		// Set variables
 		addContextEntry(FORM_SCOPED_FULL_ID_KEY, scopedFullId);
 		addContextEntry(FORM_FULL_ID_KEY, fullId);
+		addContextEntry(FORM_ID_KEY, id);
 		addContextEntry(FORM_VIEW_MODEL_KEY, formViewModel);
 		addContextEntry(FORM_KEY, widget);
 	

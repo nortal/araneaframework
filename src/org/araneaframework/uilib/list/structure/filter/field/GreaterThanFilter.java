@@ -26,6 +26,7 @@ import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
+import org.araneaframework.uilib.util.Event;
 
 
 public abstract class GreaterThanFilter extends BaseFieldFilter {
@@ -34,8 +35,8 @@ public abstract class GreaterThanFilter extends BaseFieldFilter {
 	
 	private Comparator comparator;
 	
-	public static GreaterThanFilter getInstance(FilterContext ctx, String fieldId, String valueId) {
-		GreaterThanFilter filter;
+	public static GreaterThanFilter getInstance(final FilterContext ctx, final String fieldId, final String valueId) {
+		final GreaterThanFilter filter;
 		if (ctx.isStrict()) {
 			filter = new Strict();
 		} else {
@@ -43,7 +44,11 @@ public abstract class GreaterThanFilter extends BaseFieldFilter {
 		}
 		filter.setFieldId(fieldId);
 		filter.setValueId(valueId);
-		filter.setComparator(ctx.getFieldComparator(fieldId));
+		ctx.addInitEvent(new Event() {
+			public void run() {
+				filter.setComparator(ctx.getFieldComparator(fieldId));
+			}			
+		});
 		return filter;
 	}
 	

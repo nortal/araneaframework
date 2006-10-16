@@ -30,7 +30,7 @@ import org.araneaframework.jsp.container.UiWidgetContainer;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class JspWidgetCallUtil {
-  public static final String SIMPLE_SUBMIT_FUNCTION = "return _ap.submit(this);";
+  public static final String SIMPLE_SUBMIT_FUNCTION = "return _ap.event(this);";
 
   public static UiWidgetContainer getContainer(PageContext pageContext) throws JspException {
     return (UiWidgetContainer) JspUtil.requireContextEntry(pageContext, UiWidgetContainer.KEY);

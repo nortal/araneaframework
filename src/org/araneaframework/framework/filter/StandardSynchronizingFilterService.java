@@ -16,8 +16,7 @@
 
 package org.araneaframework.framework.filter;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -33,26 +32,26 @@ import org.araneaframework.framework.core.BaseFilterService;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardSynchronizingFilterService extends BaseFilterService {
-
-  protected void init() throws Exception {
-    Map entries = new HashMap();
-    entries.put(SynchronizingContext.class, new SynchronizingContext() {});
-    
-    childService._getComponent().init(new StandardEnvironment(getChildEnvironment(), entries));
+public class StandardSynchronizingFilterService 
+  extends BaseFilterService {
+  
+  protected Environment getChildEnvironment() {
+    return new StandardEnvironment(
+        getEnvironment(), 
+        SynchronizingContext.class, 
+        new SynchronizingContext() {});
   }
   
-  protected void destroy() throws Exception {
-    super.destroy();
-  }
-  
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-	 if (input.getGlobalData().get("nosync") != null) {
-		 childService._getService().action(path, input, output);
-	 } else {
-    	synchronized (this) {
-    		childService._getService().action(path, input, output);
-    	}
-	 }
+  protected synchronized void action(
+      Path path, 
+      InputData input, 
+      OutputData output) throws Exception {
+    if (input.getGlobalData().get("nosync") != null) {
+      super.action(path, input, output);
+    } else {
+      synchronized (this) {
+        super.action(path, input, output);
+      }
+    }
   }
 }

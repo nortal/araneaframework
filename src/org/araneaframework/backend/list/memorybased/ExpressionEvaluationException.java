@@ -16,7 +16,9 @@
 
 package org.araneaframework.backend.list.memorybased;
 
-public class ExpressionEvaluationException extends Exception {
+import org.apache.commons.lang.exception.NestableException;
+
+public class ExpressionEvaluationException extends NestableException {
 
 	private static final long serialVersionUID = 1L;
 

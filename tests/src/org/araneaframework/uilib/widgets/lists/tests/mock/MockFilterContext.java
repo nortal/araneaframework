@@ -20,9 +20,11 @@ import java.util.Locale;
 
 import org.araneaframework.tests.mock.MockConfiguration;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
+import org.araneaframework.uilib.util.Event;
 
 public class MockFilterContext implements FilterContext {
 	
@@ -59,6 +61,14 @@ public class MockFilterContext implements FilterContext {
 
 	public boolean isIgnoreCase() {
 		return true;
+	}
+
+	public void setLabelForElement(FormElement formElement, String fieldId) {
+		formElement.setLabel(fieldId);
+	}
+
+	public void addInitEvent(Event event) {
+		event.run();
 	}
 
 }

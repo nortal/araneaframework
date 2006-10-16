@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.list.BeanListWidget;
@@ -42,6 +43,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 	
 	private boolean editMode = false;
 	private boolean selectOnly = false;
+  
+  private IContractDAO contractDAO;
 	
 	private ListWidget list;
 	
@@ -58,26 +61,28 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	protected void init() throws Exception {
-		super.init();
 		setViewSelector("person/personList");		
 		initList();
 	}
 	
 	protected void initList() throws Exception {
 		this.list = new BeanListWidget(PersonMO.class);
-		addWidget("personList", this.list);
 		list.setDataProvider(new TemplatePersonListDataProvider());
 		list.addField("id", "#Id");
 		list.setOrderableByDefault(true);
 		list.addField("name", "#First name").like();
-		list.addField("surname", "#Last name").like();
+		list.addField("surname", "#Last name").setIgnoreCase(false).like();
 		list.addField("phone", "#Phone no").like();
 		list.addField("birthdate", "#Birthdate").range();
 		list.addField("salary", "#Salary").range();
 		
+		list.setInitialOrder("name", true);
+		
 		// The dummy column without label (in list rows, some listRowLinkButton's will be written there).
 		// Needed to write out componentListHeader with correct number of columns. 
 		list.addField("dummy", null, false);
+
+		addWidget("personList", this.list);		
 	}
 	
 	protected void refreshList() throws Exception {  	
@@ -103,7 +108,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 			throw new RuntimeException("Event 'remove' shoud be called only in edit mode");
 		}
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		getContractDAO().removeByPersonId(id);
+    contractDAO.removeByPersonId(id);
 		getGeneralDAO().remove(PersonMO.class, id);
 		refreshList();
 		log.debug("Person with Id of " + id + " removed sucessfully");
@@ -151,4 +156,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 			return getGeneralDAO().getAll(PersonMO.class);
 		}  	
 	}
+  
+  public void injectContractDAO(IContractDAO contractDAO) {
+    this.contractDAO = contractDAO;
+  }
 }

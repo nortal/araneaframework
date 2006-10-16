@@ -31,7 +31,7 @@
 	                            <div class="stripe1"><ui:nbsp/></div>
 	
 	                            <div id="wholder">
-	                             <!-- Renders the menu on left side of screen -->
+	                             <!-- Renders the side menu on left side of screen -->
 	                             <jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
 	 
 	                             <div id="content">

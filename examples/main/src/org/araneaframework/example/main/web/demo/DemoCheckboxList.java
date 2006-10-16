@@ -52,8 +52,6 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 	}
 
 	public void init() throws Exception {
-		super.init();
-
 		setViewSelector("demo/demoCheckboxList");
 
 		checkList = new EditableBeanListWidget(new DemoCheckboxListRowHandler(), DataDTO.class);

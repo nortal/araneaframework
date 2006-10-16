@@ -79,7 +79,8 @@ public class LoginWidget extends TemplateBaseWidget {
 	
 	/* Successful login event - does not check supplied credentials, 
 	 * promptly replaces login widget with root widget - allowing
-	 * user to start work with real examples. */ 
+	 * user to start work with real examples. Demonstrates
+	 * simple flow navigation. */ 
 	public void handleEventBypass() throws Exception {
 		getFlowCtx().replace(new RootWidget(), null);
 	}

@@ -28,7 +28,7 @@ import org.araneaframework.jsp.util.JspUtil;
  * @jsp.tag
  *   name = "basicLinkButton"
  *   body-content = "JSP"
- *   description = "Represents a link with an onClick JavaScript action."
+ *   description = "Represents a HTML link with an onClick JavaScript action."
  */
 public class LinkButtonHtmlTag extends BaseButtonTag {
   {

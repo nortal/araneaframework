@@ -37,8 +37,6 @@ public class SimpleListWidget extends TemplateBaseWidget {
   protected ListWidget simpleList;
     
   protected void init() throws Exception {
-	super.init();
-
 	setViewSelector("sample/simpleList");
 	
 	simpleList = new ListWidget();

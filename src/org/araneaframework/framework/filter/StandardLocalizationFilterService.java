@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework.filter;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -52,7 +53,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   public void setLanguageName(String languageName) {
     Assert.notNullParam(languageName, "languageName");
     
-    setLocale(new Locale(languageName));
+    setLocale(new Locale(languageName, ""));
   }
   
   /**
@@ -111,6 +112,23 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
 
   public String localize(String key) {
     return getResourceBundle().getString(key);
+  }
+  
+  public String getMessage(String code, Object[] args) {
+    String message = localize(code);        
+    return MessageFormat.format(message, args);
+  }
+  
+  public String getMessage(String code, Object[] args, String defaultMessage) {
+    String message = null;
+    try {
+      message = localize(code);
+    }
+    catch (MissingResourceException e) {
+      message = defaultMessage;
+    }
+    
+    return MessageFormat.format(message, args);
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {

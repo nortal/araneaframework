@@ -1,7 +1,7 @@
-**********************************************************
-* THE ARANEA FRAMEWORK, release 1.0 RC4 (October 2006)   *
-*        http://www.araneaframework.org/                 *
-**********************************************************
+*****************************************
+* THE ARANEA FRAMEWORK, release 1.0     *
+*    http://www.araneaframework.org/    *
+*****************************************
 
 INTRODUCTION
 
@@ -40,10 +40,13 @@ The "dist" directory contains the following jar files for use in applications:
  	Container independent services.
  
  * modules/aranea-http.jar
- 	Web-dependant services.
+ 	Web-dependent services.
  	
  * modules/aranea-jsp.jar
  	Custom tag library.
+ 
+ * modules/aranea-jsp-engine.jar
+    Experimental lightweight JSP engine (in prototype stage).
  
  * modules/aranea-backend.jar
  	Supporting classes for use in the application service layer.
@@ -57,7 +60,7 @@ The "dist" directory contains the following jar files for use in applications:
 DOCUMENTATION
 
 Documentation can be found in the "doc" directory.
-	doc/white-paper is a whitepaper on the Aranea Web Framework
+	doc/intro describes Aranea conceptual hello-world application
 	doc/tutorial is a tutorial/intro to Aranea Web Framework
 	doc/reference includes the reference manual.
 	doc/javadoc includes the javadoc

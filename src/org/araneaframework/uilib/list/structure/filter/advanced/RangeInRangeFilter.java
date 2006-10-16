@@ -28,6 +28,7 @@ import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
 import org.araneaframework.uilib.list.util.FormUtil;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
+import org.araneaframework.uilib.util.Event;
 
 
 public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
@@ -44,8 +45,8 @@ public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
 			filter = new FieldRangeInValueRangeStrict();
 		} else {
 			filter = new FieldRangeInValueRangeNonStrict();
-		}		
-		return init(filter, lowFieldId, highFieldId, lowValueId, highValueId);
+		}
+		return init(ctx, filter, lowFieldId, highFieldId, lowValueId, highValueId);
 	}
 
 	public static RangeInRangeFilter getValueRangeInFieldRangeInstance(FilterContext ctx,
@@ -57,7 +58,7 @@ public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
 		} else {
 			filter = new ValueRangeInFieldRangeNonStrict();
 		}		
-		return init(filter, lowFieldId, highFieldId, lowValueId, highValueId);
+		return init(ctx, filter, lowFieldId, highFieldId, lowValueId, highValueId);
 	}
 
 	public static RangeInRangeFilter getOverlapInstance(FilterContext ctx,
@@ -69,16 +70,30 @@ public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
 		} else {
 			filter = new OverlapNonStrict();
 		}		
-		return init(filter, lowFieldId, highFieldId, lowValueId, highValueId);
+		return init(ctx, filter, lowFieldId, highFieldId, lowValueId, highValueId);
 	}
 	
-	private static RangeInRangeFilter init(RangeInRangeFilter filter,
-			String lowFieldId, String highFieldId,
-			String lowValueId, String highValueId) {
+	private static RangeInRangeFilter init(final FilterContext ctx,
+			final RangeInRangeFilter filter,
+			final String lowFieldId, final String highFieldId,
+			final String lowValueId, final String highValueId) {
 		filter.setLowFieldId(lowFieldId);
 		filter.setHighFieldId(highFieldId);
 		filter.setLowValueId(lowValueId);
 		filter.setHighValueId(highValueId);
+		
+		ctx.addInitEvent(new Event() {
+			public void run() {
+				Comparator low = ctx.getFieldComparator(lowFieldId);
+				Comparator high = ctx.getFieldComparator(highFieldId);
+				if (low == null ? high == null : low.equals(high)) {
+					filter.setComparator(low);
+				} else {
+					throw new IllegalArgumentException("Low field and high field must have the same comparator");				
+				}
+			}
+		});
+		
 		return filter;
 	}
 	

@@ -19,7 +19,7 @@ function onWindowUnload() {
 }
 
 if (window['aranea.js'])
-  getActiveAraneaPage().addSystemUnLoadEvent(onWindowUnload);
+  araneaPage().addSystemUnLoadEvent(onWindowUnload);
 
 //popup maps
 var popups = new Object();
@@ -44,7 +44,7 @@ function submitThreadCloseRequest(win) {
     closeParam.setAttribute("value", "true");
     //TODO: find the systemform reliably
     win.document.forms['system_form_0'].appendChild(closeParam);
-    win.getActiveAraneaPage().submit_6(win.document.system_form_0, null, null, null, null, null);
+    win.araneaPage().event_6(win.document.system_form_0, null, null, null, null, null);
   }
 }
 

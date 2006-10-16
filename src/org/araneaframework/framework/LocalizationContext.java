@@ -36,11 +36,45 @@ public interface LocalizationContext extends Serializable {
    */
   public static final String LOCALIZATION_CONTEXT_KEY = "org.araneaframework.framework.LocalizationContext";
 
+  /**
+   * Returns the current session locale.
+   */
   public Locale getLocale();
+  
+  /**
+   * Sets the current session locale.
+   */
   public void setLocale(Locale locale);
   
+  
+  
+  /**
+   * Localizes a string returning one that corresponds to the current locale.
+   */
+  public String localize(String key);
+  
+  /**
+   * Returns a resource bundle corresponding to the current locale.
+   */
   public ResourceBundle getResourceBundle();
+  
+  /**
+   * Returns a resource bundle corresponding to arbitrary locale.
+   */
   public ResourceBundle getResourceBundle(Locale locale);
   
-  public String localize(String key);
+  
+  
+  /**
+   * Localizes the code and uses it to format the message with the passed arguments. 
+   * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
+   * If the localized message cannot be resolved uses <code>defaultMessage</code> instead.
+   */
+  public String getMessage(String code, Object[] args, String defaultMessage);
+  
+  /**
+   * Localizes the code and uses it to format the message with the passed arguments. 
+   * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
+   */
+  public String getMessage(String code, Object[] args);  
 }

@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.list;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -50,6 +52,7 @@ import org.araneaframework.uilib.list.structure.filter.FilterHelper;
 import org.araneaframework.uilib.list.structure.order.FieldOrder;
 import org.araneaframework.uilib.list.util.MapUtil;
 import org.araneaframework.uilib.support.UiLibMessages;
+import org.araneaframework.uilib.util.Event;
 
 /**
  * This class is the base widget for lists. It interacts with the user and uses the data from
@@ -85,16 +88,31 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 	protected ListStructure listStructure;							// should not be accessible by public methods
 	protected ListDataProvider dataProvider;
-	
+
 	protected TypeHelper typeHelper;
-	protected FilterHelper filterHelper;	
+	protected FilterHelper filterHelper; 
 	protected SequenceHelper sequenceHelper;						// should not be accessible by public methods	
 
-	protected FormWidget form;										// is transfomed into filter info Map and vice-versa
+	protected FormWidget form = new FormWidget();					// is transfomed into filter info Map and vice-versa
 	protected OrderInfo orderInfo = new OrderInfo();
 
 	protected List itemRange;
 	protected Map requestIdToRow = new HashMap();
+	
+	private List initEvents = new ArrayList();
+
+	//*********************************************************************
+	//* CONSTRUCTOR
+	//*********************************************************************
+	
+	/**
+	 * Creates a new {@link ListWidget} instance. 
+	 */
+	public ListWidget() {
+		typeHelper = createTypeHelper();
+		filterHelper = createFilterHelper();
+		listStructure = createListStructure();
+	}
 
 	//*********************************************************************
 	//* PUBLIC METHODS
@@ -108,7 +126,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return the {@link ListStructure}used to describe the list.
 	 */
 	public ListStructure getListStructure() {
-		assertInitialized();
 		return this.listStructure;
 	}
 
@@ -136,7 +153,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	public void setDataProvider(ListDataProvider dataProvider) throws Exception {
 		this.dataProvider = dataProvider;
-		initDataProvider();
+		if (isInitialized()) {			
+			initDataProvider();
+		}
 	}
 
 	/**
@@ -156,7 +175,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public void setTypeHelper(TypeHelper typeHelper) {
 		this.typeHelper = typeHelper;
 	}
-	
+
 	/**
 	 * Returns the {@link FilterHelper} used to help with adding filters.
 	 * 
@@ -165,7 +184,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public FilterHelper getFilterHelper() {
 		return filterHelper;
 	}
-	
+
 	/**
 	 * Sets the {@link FilterHelper} used to help with adding filters.
 	 * 
@@ -174,7 +193,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public void setFilterHelper(FilterHelper filterHelper) {
 		this.filterHelper = filterHelper;
 	}
-	
+
 	/**
 	 * Returns the {@link FieldFilterHelper} used to help with adding filters
 	 * for specified field.
@@ -185,7 +204,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public FieldFilterHelper getFilterHelper(String fieldId) {
 		return new FieldFilterHelper(filterHelper, fieldId);
 	}
-	
+
 	/**
 	 * Returns the {@link SequenceHelper}used to output pages.
 	 * 
@@ -205,7 +224,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 
 	/* ========== FormWidget proxy methods ========== */	
-	
+
 	/**
 	 * Returns the filter form.
 	 * 
@@ -239,7 +258,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public void setFilterResetButtonLabel(String label) {
 		getForm().getElementByFullName(FILTER_RESET_BUTTON_ID).setLabel(label);
 	}		
-	
+
 	/* ========== ListStructure Proxy methods ========== */	
 
 	/**
@@ -260,7 +279,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public void setOrderableByDefault(boolean orderableByDefault) {
 		getListStructure().setOrderableByDefault(orderableByDefault);
 	}	
-	
+
 	/**
 	 * Returns {@link ListField}s.
 	 * 
@@ -292,7 +311,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		ListField field = getField(columnId);
 		return field == null ? null : field.getLabel();
 	}
-	
+
 	/**
 	 * Adds a list field.
 	 * <p>
@@ -358,7 +377,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		getListStructure().addField(id, label, type, orderable);
 		return getFilterHelper(id);
 	}
-	
+
 	/**
 	 * Adds a list field order.
 	 * 
@@ -368,14 +387,15 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public void addFilter(FieldOrder order) {
 		getListStructure().addOrder(order);
 	}
-	
+
 	/**
 	 * Removes all list orders.
+	 * @throws Exception 
 	 */
-	public void clearOrders() {
+	public void clearOrders() throws Exception {
 		getListStructure().clearOrders();
 	}	
-	
+
 	/**
 	 * Adds a list filter.
 	 * 
@@ -385,16 +405,16 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public void addFilter(ListFilter filter) {
 		getListStructure().addFilter(filter);
 	}
-	
+
 	/**
 	 * Removes all list filters.
 	 */
-	public void clearFilters() {
+	public void clearFilters() throws Exception {
 		getListStructure().clearFilters();
 	}
 
 	/* ========== TypeHelper Proxy methods ========== */
-	
+
 	/**
 	 * Returns type of list field. Returns null if no such field or type for
 	 * this field is available.
@@ -427,7 +447,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public boolean isIgnoreCase() {
 		return this.typeHelper.isIgnoreCase();
 	}
-	
+
 	/* ========== SequenceHelper Proxy methods ========== */	
 
 	/**
@@ -487,7 +507,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public void showDefaultPages() {
 		getSequenceHelper().showDefaultPages();
 	}
-	
+
 	/* ========== List State reading and modifying ========== */	
 
 	/**
@@ -539,12 +559,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/**
 	 * Sets the initial order of the list.
 	 * 
-	 * @param columnName the name of the column to order by.
+	 * @param fieldId the name of the column to order by.
 	 * @param ascending whether ordering should be ascending.
 	 */
-	public void setInitialOrder(String columnName, boolean ascending) {
+	public void setInitialOrder(String fieldId, boolean ascending) {
 		OrderInfo orderInfo = new OrderInfo();
-		OrderInfoField orderInfoField = new OrderInfoField(columnName, ascending);
+		OrderInfoField orderInfoField = new OrderInfoField(fieldId, ascending);
 		orderInfo.addField(orderInfoField);
 		setOrderInfo(orderInfo);
 	}
@@ -556,7 +576,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	public void setOrderInfo(OrderInfo orderInfo) {  	
 		this.orderInfo = orderInfo;
-		propagateListDataProviderWithOrderInfo(orderInfo);				
+		if (isInitialized()) {
+			propagateListDataProviderWithOrderInfo(orderInfo);			
+		}
 	}
 
 	protected void propagateListDataProviderWithOrderInfo(OrderInfo orderInfo) {
@@ -564,17 +586,17 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		ComparatorExpression orderExpr = order != null ? order.buildComparatorExpression(orderInfo) : null;
 		this.dataProvider.setOrderExpression(orderExpr);			
 	}
-	
+
 	/**
 	 * Forces the list data provider to refresh the data.
 	 */
 	public void refresh() {
 		try {
-      this.dataProvider.refreshData();
-    }
-    catch (Exception e) {
-      throw new AraneaRuntimeException(e);
-    }		
+			this.dataProvider.refreshData();
+		}
+		catch (Exception e) {
+			throw new AraneaRuntimeException(e);
+		}		
 	}
 
 	/**
@@ -584,12 +606,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		ListItemsData itemRangeData;
 
 		try {
-      itemRangeData = this.dataProvider.getItemRange(new Long(this.sequenceHelper
-      		.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
-    }
-    catch (Exception e) {
-      throw new AraneaRuntimeException(e);
-    }
+			itemRangeData = this.dataProvider.getItemRange(new Long(this.sequenceHelper
+					.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
+		}
+		catch (Exception e) {
+			throw new AraneaRuntimeException(e);
+		}
 
 		this.itemRange = itemRangeData.getItemRange();
 		this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());
@@ -619,18 +641,35 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	//*******************************************************************
 	// WIDGET METHODS
 	//*******************************************************************  
-
+	
+	public void addInitEvent(Event event) {
+		if (isInitialized()) {
+			event.run();
+		} else {
+			if (initEvents == null)
+				initEvents = new ArrayList();
+			initEvents.add(event);
+		}		
+	}
+	
+	protected void runInitEvents() {
+		if (initEvents != null) {
+			for (Iterator it = initEvents.iterator(); it.hasNext();) {
+				Runnable event = (Runnable) it.next();
+				event.run();
+			}
+		}
+		initEvents = null;
+	}
+	
 	/**
 	 * Initilizes the list, initializing contained filter form and the {@link ListDataProvider}and
 	 * getting the initial item range.
 	 */
 	protected void init() throws Exception {
 		log.debug("Initilizing ListWidget.");
-		
+
 		this.sequenceHelper = createSequenceHelper();
-		this.typeHelper = createTypeHelper();
-		this.listStructure = createListStructure();
-		this.filterHelper = createFilterHelper();	
 
 		addEventListener("nextPage", new NextPageEventHandler());
 		addEventListener("previousPage", new PreviousPageEventHandler());
@@ -642,16 +681,26 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		addEventListener("showAll", new ShowAllEventHandler());
 		addEventListener("showSlice", new ShowSliceEventHandler());
 		addEventListener("order", new OrderEventHandler());
-             
+
 		initFilterForm();
-		initSequenceHelper();		
+		initSequenceHelper();
+		
+		this.typeHelper.init(getEnvironment());
+		this.filterHelper.init(getEnvironment());
+		this.listStructure.init(getEnvironment());
+		
+		runInitEvents();
+
+		if (getDataProvider() != null) {			
+			initDataProvider();
+		}		
 	}
-	
+
 	protected SequenceHelper createSequenceHelper() {
 		return new SequenceHelper(getConfiguration());
 	}	
 	protected TypeHelper createTypeHelper() {
-		return new TypeHelper(getL10nCtx().getLocale());
+		return new TypeHelper();
 	}	
 	protected ListStructure createListStructure() {
 		return new ListStructure(getTypeHelper());
@@ -659,12 +708,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected FilterHelper createFilterHelper() {
 		return new FilterHelper(this);
 	}
-	
+
 	protected void initFilterForm() throws Exception {
 		if (this.form == null) {
 			this.form = new FormWidget();
 		}
-			
+
 		FormElement filterButton = this.form.addElement(FILTER_BUTTON_ID, UiLibMessages.LIST_FILTER_BUTTON_LABEL, new ButtonControl(), null, false);
 		((ButtonControl) (filterButton.getControl())).addOnClickEventListener(new FilterEventHandler());
 
@@ -672,30 +721,33 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		((ButtonControl) (clearButton.getControl())).addOnClickEventListener(new FilterClearEventHandler());
 
 		this.form.markBaseState();
-		
+
 		addWidget(FILTER_FORM_NAME, this.form);		
 	}
-	
+
 	protected void initSequenceHelper() {
 		Long defaultListSize = (Long) getConfiguration().getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);
 		if (defaultListSize != null) {
 			this.sequenceHelper.setItemsOnPage(defaultListSize.longValue());
 		}		
 	}
-	
+
 	protected void initDataProvider() throws Exception {
 		propagateListDataProviderWithOrderInfo(getOrderInfo());
 		propagateListDataProviderWithFilter(getFilterInfo());		
 		this.dataProvider.init();
 	}
-	
+
 	/**
 	 * Destoys the list and contained data provider and filter form.
 	 * @throws Exception 
 	 */
 	protected void destroy() throws Exception {
 		log.debug("Destroying ListWidget.");
-		dataProvider.destroy();
+		this.dataProvider.destroy();
+		this.listStructure.destroy();
+		this.filterHelper.destroy();
+		this.typeHelper.destroy();
 	}
 
 	/**
@@ -905,11 +957,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		propagateListDataProviderWithFilter(new HashMap());
 		sequenceHelper.setCurrentPage(0);
 	}
-	
+
 	protected static void clearForm(FormWidget compositeFormElement) {
 		for (Iterator i = compositeFormElement.getElements().values().iterator(); i.hasNext();) {
 			GenericFormElement element = (GenericFormElement) i.next();
-			
+
 			if (element instanceof FormElement) {
 				((FormElement) element).setValue(null);
 				element.markBaseState();
@@ -1006,12 +1058,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		 */
 		public FormWidget.ViewModel getFilterForm() {
 			return filterForm;
-		}
-	}
-	
-	protected void assertInitialized() throws IllegalStateException {
-		if (!isInitialized()) {
-			throw new IllegalStateException("ListWidget is not initialized");
 		}
 	}
 }

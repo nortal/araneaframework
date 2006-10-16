@@ -186,7 +186,7 @@ function AraneaPage() {
 	  submitCallbacks[systemFormId].execute();
   }
 
-  this.submit = function(element) {
+  this.event = function(element) {
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;
 	  
@@ -205,7 +205,7 @@ function AraneaPage() {
       this.executeCallbacks(systemForm['id']);
     }
 
-    return (this.findSubmitter(element, systemForm)).submit(element);
+    return (this.findSubmitter(element, systemForm)).event(element);
   }
 
   /** 
@@ -223,7 +223,7 @@ function AraneaPage() {
   
   // another submit function, takes all params that are currently possible to use.
   // TODO: get rid of duplicated logic from: submit() and findSubmitter()
-  this.submit_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
+  this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;
 
@@ -235,9 +235,9 @@ function AraneaPage() {
     }
 
     if (eventUpdateRegions != null && eventUpdateRegions.length > 0) 
-      new DefaultAraneaAJAXSubmitter().submit_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
+      new DefaultAraneaAJAXSubmitter().event_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
     else
-      new DefaultAraneaSubmitter().submit_4(systemForm, eventId, eventTarget, eventParam);
+      new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   }
 
 	/** MY CODE STARTS HERE :) **/
@@ -273,37 +273,49 @@ function AraneaPage() {
     this.getLogger().debug(message);
   }
   
+  /** 
+   * Provides preferred way of overriding AraneaPage object functions. 
+   * @param functionName name of AraneaPage function that should be overridden. 
+   * @param f replacement function 
+   */
   this.override = function(functionName, f) {
   	this.getLogger().info("AraneaPage." +functionName + " was overriden.");
   	this[functionName] = f;
   }
   
+  /** 
+   * Adds keepalive function f that is executed periodically after time 
+   * milliseconds has passed 
+   */
   this.addKeepAlive = function(f, time) {
     keepAliveTimers.add(setInterval(f, time));
   }
 
+  /** Clears/removes all registered keepalive functions. */
   this.clearKeepAlives = function() {
     keepAliveTimers.forEach(function(timer) {clearInterval(timer);});
   }
 }
 
+/* Returns a default keepalive function -- to make periodical requests to expiring thread
+ * or top level services. */
 AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey) {
   return function() {
     if (window['prototype/prototype.js']) {
-      var url = getActiveAraneaPage().encodeURL(getActiveAraneaPage().getServletURL());
+      var url = araneaPage().encodeURL(araneaPage().getServletURL());
       url += "?transactionId=override";
       if (topServiceId) 
         url += "&topServiceId="+topServiceId;
       if (threadServiceId) 
         url += "&threadServiceId="+threadServiceId;
       url += "&" + keepAliveKey + "=true";
-      getActiveAraneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
+      araneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(
           url,
           { method: 'get' }
       );
     } else {
-      getActiveAraneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");
+      araneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");
     }
   };
 }
@@ -316,30 +328,30 @@ AraneaPage.getRandomRequestId = function() {
 
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
-  getActiveAraneaPage().addSystemLoadEvent(Behaviour.apply);
+  araneaPage().addSystemLoadEvent(Behaviour.apply);
 }
 
 function DefaultAraneaSubmitter(form) {
   var systemForm = form;
 
-  this.submit = function(element) {
-    var traverser = getActiveAraneaPage().getTraverser();
+  this.event = function(element) {
+    var traverser = araneaPage().getTraverser();
 
     // event information
     var widgetId = traverser.getEventTarget(element);
     var eventId = traverser.getEventId(element);
     var eventParam = traverser.getEventParam(element);
     
-    return this.submit_4(systemForm, eventId, widgetId, eventParam);
+    return this.event_4(systemForm, eventId, widgetId, eventParam);
   }
 }
 
-DefaultAraneaSubmitter.prototype.submit_4 = function(systemForm, eventId, widgetId, eventParam) {
+DefaultAraneaSubmitter.prototype.event_4 = function(systemForm, eventId, widgetId, eventParam) {
   systemForm.widgetEventPath.value = widgetId ? widgetId : "";
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
 
-  getActiveAraneaPage().setSubmitted();
+  araneaPage().setSubmitted();
 
   systemForm.submit();
 
@@ -349,8 +361,8 @@ DefaultAraneaSubmitter.prototype.submit_4 = function(systemForm, eventId, widget
 function DefaultAraneaAJAXSubmitter(form) {
   var systemForm = form;
 
-  this.submit = function(element) {
-    var traverser = getActiveAraneaPage().getTraverser();
+  this.event = function(element) {
+    var traverser = araneaPage().getTraverser();
 	
 	// event information
     var widgetId = traverser.getEventTarget(element);
@@ -358,11 +370,11 @@ function DefaultAraneaAJAXSubmitter(form) {
     var eventParam = traverser.getEventParam(element);
 	var updateRegions = traverser.getEventUpdateRegions(element);
 
-	return this.submit_5(systemForm, eventId, widgetId, eventParam, updateRegions);
+	return this.event_5(systemForm, eventId, widgetId, eventParam, updateRegions);
   }
 }
 
-DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
+DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
   systemForm.widgetEventPath.value = widgetId ? widgetId : "";
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
@@ -378,8 +390,9 @@ DefaultAraneaAJAXSubmitter.prototype.submit_5 = function(systemForm, eventId, wi
 }
 
 /* Initialize new Aranea page.  */
+/* Aranea page object is accessible in two ways -- _ap and araneaPage() */
 _ap = new AraneaPage();
-function getActiveAraneaPage() { return _ap; }
+function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 
 window['aranea.js'] = true;

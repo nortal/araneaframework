@@ -16,7 +16,7 @@
 		<!-- 
 		<ui:importScripts group="debugScripts"/>
 		<script type="text/javascript">
-			getActiveAraneaPage().setDefaultLogger();
+			araneaPage().setDefaultLogger();
 		</script>
         -->
 

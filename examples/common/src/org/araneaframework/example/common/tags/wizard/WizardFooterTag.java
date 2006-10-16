@@ -71,7 +71,7 @@ public class WizardFooterTag extends BaseTag {
     	buttonTag.setEventParam(eventParam);  		
   	}
   	if (disabled == true) {
-    	buttonTag.setDisabled(Boolean.toString(disabled));  		
+    	buttonTag.setDisabled("true");  		
   	}
   	if (labelId != null) {
     	buttonTag.setLabelId(labelId);  		

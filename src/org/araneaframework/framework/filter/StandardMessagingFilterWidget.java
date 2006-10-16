@@ -17,10 +17,11 @@
 package org.araneaframework.framework.filter;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -105,7 +106,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     Collection messages = (Collection)messageMap.get(type);
 
     if (messages == null) {
-      messages = new LinkedHashSet();
+      messages = ListOrderedSet.decorate(new HashSet());
       messageMap.put(type, messages);
     }
 
@@ -167,6 +168,10 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
 
   public void showInfoMessage(String message) {
     showMessage(INFO_TYPE, message);
+  }
+  
+  public void showWarningMessage(String message) {
+    showMessage(WARNING_TYPE, message);
   }
   
   public void clearMessages() {

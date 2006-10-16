@@ -23,12 +23,14 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.araneaframework.Environment;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.TypeHelper;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
+import org.araneaframework.uilib.util.Event;
 
 /**
  * Base implementation of list filter helper. Filter helper is used to add
@@ -63,7 +65,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 
 	// Map<String,String> - custom labels for fields
 	private Map labels = new HashMap();
-
+	
 	/**
 	 * Constructs a {@link BaseFilterHelper}.
 	 * 
@@ -72,6 +74,14 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	public BaseFilterHelper(ListWidget list) {
 		Validate.notNull(list);
 		this.list = list;
+	}
+	
+	public void init(Environment env) throws Exception {}
+	
+	public void destroy() throws Exception {}	
+	
+	public void addInitEvent(Event event) {
+		this.list.addInitEvent(event);
 	}
 
 	/**
@@ -88,7 +98,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @param ignoreCase whether to ignore case.
 	 */
-	public void setIgnoreCase(boolean ignoreCase) {
+	protected void _setIgnoreCase(boolean ignoreCase) {
 		getTypeHelper().setIgnoreCase(ignoreCase);
 	}
 
@@ -101,14 +111,14 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 		return getTypeHelper().getLocale();
 	}
 	
-	/**
-	 * Sets the current locale.
-	 * 
-	 * @param locale new locale.
-	 */
-	public void setLocale(Locale locale) {
-		getTypeHelper().setLocale(locale);
-	}
+//	/**
+//	 * Sets the current locale.
+//	 * 
+//	 * @param locale new locale.
+//	 */
+//	protected void _setLocale(Locale locale) {
+//		getTypeHelper().setLocale(locale);
+//	}
 
 	/**
 	 * Returns whether new filters should be strict.
@@ -127,7 +137,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @param stirct whether new filters should be strict.
 	 */
-	public void setStrict(boolean stirct) {
+	protected void _setStrict(boolean stirct) {
 		this.strict = stirct;
 	}
 
@@ -156,7 +166,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @return the localization context.
 	 */
-	protected LocalizationContext getL10nCtx() {
+	protected LocalizationContext getL10nCtx() {		
 		return (LocalizationContext) this.list.getEnvironment().requireEntry(LocalizationContext.class);
 	}
 
@@ -179,7 +189,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @param fieldId field id.
 	 * @param labelId label id (not yet resolved).
 	 */
-	public void addCustomLabel(String fieldId, String labelId) {
+	protected void _addCustomLabel(String fieldId, String labelId) {
 		this.labels.put(fieldId, labelId);
 	}
 	/**
@@ -214,7 +224,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @see TypeHelper#addFieldType(String, Class)
 	 */
-	public void addFieldType(String fieldId, Class type) {
+	protected void _addFieldType(String fieldId, Class type) {
 		getTypeHelper().addFieldType(fieldId, type);
 	}
 	/**
@@ -260,7 +270,15 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @see TypeHelper#getFieldComparator(String)
 	 */
 	public Comparator getFieldComparator(String fieldId) {
-		return getTypeHelper().getFieldComparator(fieldId);
+		Comparator result = getTypeHelper().getFieldComparator(fieldId);
+		if (result == null) {
+			if (fieldId.endsWith(LOW_SUFFIX)) {				
+				result = getFieldComparator(getFieldIdFromLowValueId(fieldId));
+			} else if (fieldId.endsWith(HIGH_SUFFIX)) {
+				result = getFieldComparator(getFieldIdFromHighValueId(fieldId));
+			}
+		}
+		return result;
 	}
 
 	// Value ids

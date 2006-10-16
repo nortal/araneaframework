@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3CR3//EN"
+"../../support/docbook-dtd/docbookx.dtd">
+<!--
+  Copyright 2006 Webmedia Group Ltd.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+   http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<article>
+  <articleinfo>
+    <title>Aranea Introductory Tutorial</title>
+
+    <titleabbrev>Aranea Intro</titleabbrev>
+
+    <authorgroup>
+      <author>
+        <firstname>Jevgeni</firstname>
+
+        <surname>Kabanov</surname>
+      </author>
+    </authorgroup>
+  </articleinfo>
+
+  <sect1 id="hello-world">
+    <title>Hello World</title>
+
+    <para>This tutorial demonstrates the way Aranea applications are
+    assembled from independent widgets and how we can use these widgets to apply Object-Oriented idioms.
+    It does not however show numerous other
+    features of Aranea frameworks and is simplified as possible to show only
+    relevant core properties of Aranea. For a thorough introduction to
+    building applications with Aranea see the Business Tutorial.</para>
+    
+    <para>For the first introduction to Aranea, we present the example that has become
+    classical in computer literature for learning new languages and
+    technologies — "Hello World!". Our variant of "Hello World!" will display
+    a form where one can insert his name and then display a personalized
+    greeting. We will assume that all Java classes in the example are in
+    <literal>example</literal> package.</para>
+
+    <figure id="example-hello-name">
+      <title>Insert your name display</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center" fileref="../images/hello-name-widgets.png"
+                     format="PNG" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>As we can see on <xref linkend="example-hello-name" />, we will
+    split the example into two separate components (that we refer to hereon as
+    widgets). Generally one component would be more than enough (for that
+    matter a single JSP would be enough). The starting widget is
+    <literal>NameWidget</literal> that has an associated
+    <literal>name.jsp</literal> and displays the form for inserting your name.
+    The source code of the widget follows:</para>
+
+    <programlisting role="java">public class NameWidget extends BaseUIWidget {
+  protected void init() throws Exception {        
+    setViewSelector("name");
+  }
+  
+  public void handleEventHello() throws Exception {
+    String name = 
+      (String) getCurrentInput().getGlobalData().get("name");
+    getFlowCtx().replace(new HelloWidget(name), null);
+  }  
+}</programlisting>
+
+    <para>The first thing of interest is the <literal>init()</literal> method.
+    As you could have guessed it is called when the widget is initialized by
+    the framework and can be used to perform initialization tasks. In this
+    case the widget selects the JSP that will be used for rendering by calling
+    the <literal>setViewSelector("name")</literal>, which by default will be
+    <literal>/WEB-INF/jsp/name.jsp</literal>:</para>
+
+    <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
+  &lt;ui:root&gt;
+    &lt;ui:viewPort&gt; 
+      &lt;head&gt;
+        &lt;ui:importScripts/&gt;           
+        &lt;title&gt;Hello World!&lt;/title&gt;
+      &lt;/head&gt;                  
+      &lt;ui:body&gt;        
+        &lt;ui:systemForm method="GET"&gt;
+            Insert your name: &lt;input type="text" name="name"/&gt;&lt;br/&gt;&lt;br/&gt;            
+            &lt;ui:eventButton labelId="#Say hello" eventId="hello"/&gt;      
+        &lt;/ui:systemForm&gt;
+      &lt;/ui:body&gt;
+    &lt;/ui:viewPort&gt;
+  &lt;/ui:root&gt;  
+&lt;/jsp:root&gt;</programlisting>
+
+    <para>The interesting parts are highlighted with bold.
+    <literal>&lt;ui:systemForm/&gt;</literal> renders the actual HTML form and
+    <literal>&lt;ui:eventButton&gt;</literal> renders a button with a label
+    "Say hello!" that will send the <literal>hello</literal> event to the
+    <literal>NameWidget</literal>, which calls its
+    <literal>handleEventHello()</literal> method.</para>
+
+    <para>When that will occur the first line of
+    <literal>handleEventHello()</literal> method <programlisting role="java">String name = (String) getCurrentInput().getGlobalData().get("name");</programlisting></para>
+
+    <para>will read the data submitted by the form input field "name" (this is
+    not the way it is done usually in Aranea, but using forms would complicate
+    this example). The second line of this method <programlisting role="java">getFlowCtx().replace(new HelloWidget(name), null);</programlisting></para>
+
+    <para>will create a new instance of <literal>HelloWidget</literal> passing
+    it the read <literal>name</literal> as a constructor argument. Then we
+    replace the current widget in the flow with a new one, which causes the
+    <literal>NameWidget</literal> instance to be destroyed and the
+    <literal>HelloWidget</literal> instance to become active. The
+    <literal>HelloWidget</literal> source follows:</para>
+
+    <programlisting role="java">public class HelloWidget extends BaseUIWidget {
+  private String name;
+  
+  public HelloWidget(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  protected void init() throws Exception {  
+    setViewSelector("hello");        
+  }
+}</programlisting>
+
+    <para><literal>HelloWidget</literal> saves the constructor argument and
+    makes it visible to the JSP via the getter <literal>getName()</literal>.
+    It will then delegate the rendering to the following JSP:</para>
+
+    <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
+  &lt;ui:root&gt;
+    &lt;ui:viewPort&gt; 
+      &lt;ui:widgetContext&gt;
+        &lt;head&gt;
+          &lt;ui:importScripts/&gt;
+              
+          &lt;title&gt;Hello World!&lt;/title&gt;
+        &lt;/head&gt;     
+        
+        &lt;ui:body&gt;
+          Hello &lt;c:out value="${widget.name}"/&gt;!
+        &lt;/ui:body&gt;
+      &lt;/ui:widgetContext&gt;
+    &lt;/ui:viewPort&gt;
+  &lt;/ui:root&gt;  
+&lt;/jsp:root&gt;</programlisting>
+
+    <para>Finally we will need to deploy the example as a web application. The
+    simplest way to configure Aranea is to pass the application starting
+    widget to its dispatcher servlet in the Servlet
+    <literal>web.xml</literal>:</para>
+
+    <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE web-app PUBLIC 
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+  "http://java.sun.com/dtd/web-app_2_3.dtd"&gt;
+
+&lt;web-app&gt;
+  &lt;!-- Aranea session cleanup listener --&gt;
+  &lt;listener&gt;
+    &lt;listener-class&gt;
+      org.araneaframework.http.core.StandardSessionListener
+    &lt;/listener-class&gt;
+  &lt;/listener&gt;
+
+  &lt;!-- Aranea dispatcher servlet --&gt;
+   &lt;servlet&gt;
+      &lt;servlet-name&gt;araneaServlet&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;
+        org.araneaframework.integration.spring.AraneaSpringDispatcherServlet
+      &lt;/servlet-class&gt;
+      &lt;init-param&gt;
+        &lt;param-name&gt;araneaApplicationStart&lt;/param-name&gt;
+        &lt;param-value&gt;example.NameWidget&lt;/param-value&gt;
+      &lt;/init-param&gt;      
+      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+   &lt;/servlet&gt;
+   
+   &lt;!-- Aranea dispatcher servlet mapping --&gt;
+   &lt;servlet-mapping&gt;
+      &lt;servlet-name&gt;araneaServlet&lt;/servlet-name&gt;
+      &lt;url-pattern&gt;/main/*&lt;/url-pattern&gt;
+   &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</programlisting>
+
+    <para>This concludes the first part of the introduction. Further we will
+    examine advanced Object-Oriented and navigational idioms using this very
+    same example as a case study.</para>
+  </sect1>
+
+  <sect1>
+    <title id="reusing-widgets">Reusing Widgets</title>
+
+    <para>Now that we have the example running let's get it more interesting.
+    It turns out that every widget made can also be freely reused as a
+    component inside any other widget. Let's try to reuse HelloWidget inside
+    of NameWidget as follows:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata align="center" fileref="../images/hello-in-name.png"
+                   format="PNG" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Turns out that doing it is very simple. First we have to modify the
+    <literal>HelloWidget</literal>, adding it a setter in addition to the
+    getter:</para>
+
+    <para><programlisting role="java">public class HelloWidget extends BaseUIWidget {
+  private String name;
+
+  public String getName() {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+  ...
+}</programlisting>Then we modify the <literal>NameWidget</literal> to use
+    <literal>HelloWidget</literal> directly instead of navigating to
+    it:</para>
+
+    <programlisting role="java">public class NameWidget extends BaseUIWidget {
+  private HelloWidget helloWidget; 
+  
+  protected void init() throws Exception {
+    helloWidget = new HelloWidget("Stranger");
+    addWidget("hello", helloWidget);
+
+    setViewSelector("name");
+  }
+  ...
+}</programlisting>
+
+    <para>This associates an instance of <literal>HelloWidget</literal> under
+    name "hello" with the <literal>NameWidget</literal> and passes it the
+    default greeting of "Stranger". We saved this instance in a field to be
+    able to use it directly, which we do in
+    <literal>handleEventHello()</literal>:</para>
+
+    <para><programlisting role="java">public class NameWidget extends BaseUIWidget {
+  ...
+ public void handleEventHello() throws Exception {
+    String name = (String) getInputData().getGlobalData().get("name");
+    helloWidget.setName(name);
+  } 
+}</programlisting>We use the setter to update the
+    <literal>HelloWidget</literal> state and display the submitted name. The
+    last thing we need to update is the <literal>name.jsp</literal>:</para>
+
+    <programlisting role="xml">...
+&lt;ui:systemForm method="GET"&gt;
+  &lt;ui:widgetInclude id="hello"/&gt;&lt;br/&gt;
+  Insert your name:   &lt;input type="text“ name="name"/&gt;&lt;br/&gt;&lt;br/&gt;        
+  &lt;ui:eventButton labelId="#Say hello" eventId="hello"/&gt;
+&lt;/ui:systemForm&gt;
+...</programlisting>
+
+    <note>
+      <para>As a matter of fact we are simplifying a bit, since
+      <literal>hello.jsp</literal> also includes <literal>head</literal>,
+      <literal>body</literal> and other general tags. However in the next
+      section we will show how to get rid of this repeating boilerplate and
+      make leave only relevant tags in widget JSPs. This way we would also put
+      the current example to work.</para>
+    </note>
+
+    <para>An interesting fact to notice is that <literal>NameWidget</literal>
+    doesn't really have to depend on <literal>HelloWidget</literal>. In fact
+    all we need is a widget that has a <literal>setName(String name)</literal>
+    method as captured in the following interface:</para>
+
+    <programlisting role="java">public interface IHelloWidget extends Widget {
+  public void setName(String name);
+}</programlisting>
+
+    <para>And make <literal>NameWidget</literal> accept it into its
+    constructor:</para>
+
+    <programlisting role="java">public class NameWidget extends BaseUIWidget {
+  private IHelloWidget helloWidget; 
+  public NameWidget(IHelloWidget helloWidget) {
+     this.helloWidget = helloWidget;
+  }
+
+  protected void init() throws Exception {
+    addWidget("hello", helloWidget);
+    setViewSelector("name");
+  }
+  ...
+}</programlisting>
+
+    <para>Then we could easily implement e.g. a widget that doesn't just
+    display the greeting, but also tells how many hits does Google give for
+    this name:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata align="center" fileref="../images/hello-jevgeni-google.png"
+                   format="PNG" />
+      </imageobject>
+    </mediaobject>
+
+    <para>For that we would just need a widget implementing
+    <literal>IHelloWidget</literal> that searches Google on
+    <literal>setName()</literal> calls:</para>
+
+    <para><programlisting role="java">public class GoogleHelloWidget implements IHelloWidget {
+  private int hits;
+  public void setName(String name) {
+    //Connect to Google...
+    this.hits = //Get number of hits...
+  }
+  //... select JSP and render
+}</programlisting></para>
+
+    <para>Another interesting fact is that since our widgets are objects
+    through and through it is easy to make e.g. a widget that will use three
+    independent <literal>HelloWidget</literal>s to display greetings to three
+    different people:</para>
+
+    <programlisting role="java">public class ThreeGreetingsWidget extends BaseUIWidget {
+  protected void init() throws Exception {
+    addWidget("hello1", new HelloWidget("Jevgeni Kabanov"));
+    addWidget("hello2", new HelloWidget("Taimo Peelo"));
+    addWidget("hello3", new HelloWidget("Alar Kvell"));
+
+    setViewSelector("threeGreetings");
+  }
+}</programlisting>
+
+    <para>We would of course also need to include those widgets in the
+    JSP:</para>
+
+    <para><programlisting role="xml">...
+  &lt;ui:widgetContext&gt;
+    &lt;ui:widgetInclude id="hello1"/&gt;&lt;br/&gt;
+    &lt;ui:widgetInclude id="hello2"/&gt;&lt;br/&gt;
+    &lt;ui:widgetInclude id="hello3"/&gt;&lt;br/&gt;        
+  &lt;/ui:widgetContext&gt;
+...</programlisting></para>
+  </sect1>
+
+  <sect1>
+    <title>Flows</title>
+
+    <para>Now that we have the example running let's get it more interesting.
+    First of all we can notice that once you have inserted your name, there is
+    no way to get back — the widget on the flow has been exchanged and unless
+    we create a new browser session we will always get the same "Hello
+    Jevgeni!" message no matter how much we refresh. To remedy that lets
+    modify the HelloWidget to have a back button.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata align="center" fileref="../images/hello-with-back.png"
+                   format="PNG" />
+      </imageobject>
+    </mediaobject>
+
+    <para>We start by adding the button to
+    <literal>hello.jsp</literal>:</para>
+
+    <programlisting role="xml">...
+Hello &lt;c:out value="${widget.name}"/&gt;! &lt;br/&gt;
+&lt;ui:eventButton labelId="#Back" eventId="back"/&gt;
+...</programlisting>
+
+    <para>This button should certainly map to the
+    <literal>handleEventBack()</literal> in the
+    <literal>HelloWidget</literal>:</para>
+
+    <programlisting role="java">public class HelloWidget extends BaseUIWidget {
+  ...
+  public void handleEventBack() throws Exception {
+    getFlowCtx().replace(new NameWidget(), null);
+  }  
+}</programlisting>
+
+    <para>This will do the work, however it is not very nice for a number of
+    reasons:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>We construct a new instance of <literal>NameWidget</literal>
+        every time we return. Perhaps we would actually want to return to it
+        as it was when we left it, preserving the inserted name?</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>HelloWidget</literal> doesn't really send us back, it
+        just replaces itself with the <literal>NameWidget</literal>. Thus
+        <literal>HelloWidget</literal> has to know where to send us, and if
+        more than one widget would be able to create it we would return
+        wrongly.</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Turns out it is easy to solve this problem. All we have to do is to
+    update <literal>NameWidget</literal> and <literal>HelloWidget</literal> as
+    follows:</para>
+
+    <programlisting role="java">public class NameWidget extends BaseUIWidget {
+  ...
+  public void handleEventHello() throws Exception {
+    ...
+    getFlowCtx().start(new HelloWidget(name), null);
+  }  
+}
+
+public class HelloWidget extends BaseUIWidget {
+  ...
+  public void handleEventBack() throws Exception {
+    getFlowCtx().finish(null);
+  }  
+}</programlisting>
+
+    <para>Before the widgets replaced each other inside one and the same
+    flow:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata align="center" fileref="../images/hello-flows.png"
+                   format="PNG" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Now however widgets are in different flows:</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata align="center" fileref="../images/hello-flows2.png"
+                   format="PNG" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Flows act as nested processes, preserving the nested ones intact,
+    while we interact with the current one, until we finish it. In our case by
+    calling <literal>getFlowCtx().start()</literal> we cause a new flow to be
+    created containing a <literal>HelloWidget</literal> instance. The previous
+    flow containing a <literal>NameWidget</literal> instance becomes inactive,
+    and we can interact with the <literal>HelloWidget</literal> flow freely.
+    After we call <literal>getFlowCtx().finish()</literal> the current flow
+    finishes execution freeing the <literal>HelloWidget</literal> instance and
+    the <literal>NameWidget</literal> flow becomes active again.</para>
+
+    <para>Now that we got the flow thing covered, let's try to get the JSPs
+    cleaner. Currently we duplicate all of the root tags like head, body, etc
+    in both widgets. In a real application we would definitely introduce a
+    <literal>RootWidget</literal> to take care of these things:</para>
+
+    <programlisting role="java">public class RootWidget extends BaseUIWidget {
+  protected void init() throws Exception {        
+    setViewSelector("root");
+    addWidget("flowContainer", new StandardFlowContainerWidget(new NameWidget()));
+  }
+}</programlisting>
+
+    <para><literal>StandardFlowContainerWidget</literal> is a widget that
+    provides the <literal>FlowContext</literal> used for navigation in the
+    previous examples. It handles a stack of child widgets and implements
+    <literal>start()</literal> and <literal>finish()</literal> by pushing on
+    and popping from the stack. And since it is just a usual widget we can
+    associate it with our <literal>RootWidget</literal> as usual and pass it a
+    <literal>NameWidget</literal> instance to be the starting flow.</para>
+
+    <para>Now we can put all of the boilerplate tags into
+    <literal>root.jsp</literal>:</para>
+
+    <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
+  &lt;ui:root&gt;
+    &lt;ui:viewPort&gt; 
+      &lt;ui:widgetContext&gt;
+        &lt;head&gt;
+          &lt;ui:importScripts/&gt;
+              
+          &lt;title&gt;Hello World!&lt;/title&gt;
+        &lt;/head&gt;     
+        
+        &lt;ui:body&gt;
+          &lt;ui:widgetInclude id="flowContainer"/&gt;
+        &lt;/ui:body&gt;
+      &lt;/ui:widgetContext&gt;
+    &lt;/ui:viewPort&gt;
+  &lt;/ui:root&gt;  
+&lt;/jsp:root&gt;</programlisting>
+
+    <para>And remove the junk from other JSPs. After that the
+    <literal>name.jsp</literal> will look as follows:</para>
+
+    <programlisting role="xml">&lt;jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
+  
+  &lt;ui:widgetContext&gt;
+    Insert your name:   &lt;input type="text“ name="name"/&gt;&lt;br/&gt;&lt;br/&gt;        
+    &lt;ui:eventButton labelId="#Say hello" eventId="hello"/&gt;
+  &lt;/ui:widgetContext&gt;
+&lt;/jsp:root&gt;</programlisting>
+
+    <para>And the <literal>hello.jsp</literal> as follows:</para>
+
+    <programlisting role="xml">&lt;jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
+
+  &lt;ui:widgetContext&gt;
+    Hello &lt;c:out value="${widget.name}"/&gt;! &lt;br/&gt;
+    &lt;ui:eventButton labelId="#Back" eventId="back"/&gt;
+  &lt;/ui:widgetContext&gt;
+&lt;/jsp:root&gt;</programlisting>
+
+    <para><literal>&lt;ui:widgetContext&gt;</literal> is the only required tag
+    that declares that this JSP does in fact belong to a widget.</para>
+
+    <para>The last interesting thing we'd like to note, is that since
+    <literal>StandardFlowContainerWidget</literal> is a usual widget, it is
+    simple to have several of them (in fact as many as we need) running in
+    parallel:</para>
+
+    <programlisting role="java">public class RootWidget extends BaseUIWidget {
+  protected void init() throws Exception {        
+    setViewSelector("root");
+    addWidget("flowContainer1", new StandardFlowContainerWidget(new NameWidget()));
+    addWidget("flowContainer2", new StandardFlowContainerWidget(new NameWidget()));
+    addWidget("flowContainer3", new StandardFlowContainerWidget(new NameWidget()));
+  }
+}</programlisting>
+
+    <para>Of course we would also need to include them from the corresponding
+    JSP, but this would allow three independent instances of "Hello World"
+    application to run unhindered on a single page, with each application
+    being completely independent of the rest:</para>
+
+    <para><mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="../images/three-flow-containers.png"
+                     format="PNG" />
+        </imageobject>
+      </mediaobject></para>
+
+    <para><note>
+        <para>To be honest, we are simplifying again, as all three widgets
+        have a textbox with one and the same name, which would conflict when
+        submitted. In reality we would have to scope the name, adding a
+        "${widgetId}." prefix to it and change
+        <literal>getGlobalData()</literal> to
+        <literal>getScopedData()</literal> in the parameter reading code.
+        However since in real-life use cases forms scope parameters
+        automatically, we choose to ignore this problem in our example as
+        well.</para>
+      </note></para>
+  </sect1>
+
+  <sect1>
+    <title>Putting It Together</title>
+
+    <para>Now that we have covered both widgets and flows let's try to
+    approach this example as we would in a usual application, where each
+    component can be a valuable reuse entity later. We'd like to reuse both
+    widgets both as widget children and independent flows.</para>
+
+    <para>However If we include <literal>NameWidget</literal> as a child
+    widget it will start a new flow with HelloWidget in it, which might not be
+    what we really want. We'd rather have <literal>NameWidget</literal> notify
+    us somehow. To do that we need it to declare a callback:</para>
+
+    <programlisting role="java">public class NameWidget extends BaseUIWidget {
+  interface Callback extends Serializable {
+    void nameSelected(String name);
+  }
+
+  private Callback callback;
+
+  public NameWidget(Callback callback) { 
+    this.callback = callback;
+  }
+  
+  protected void init() throws Exception {        
+    setViewSelector("name");
+  }
+  
+  public void handleEventHello() throws Exception {
+    String name = 
+      (String) getCurrentInput().getGlobalData().get("name");
+    callback.nameSelected("name");
+  }  
+}</programlisting>
+
+    <para>Now we can just include NameWidget as a child and it will let us
+    know when the user clicks the button selecting the name. We can also wrap
+    it as a flow easily:</para>
+
+    <para><programlisting role="java">public class NameFlowWidget 
+  extends BaseUIWidget implements NameWidget.Callback{
+
+  protected void init() throws Exception {     
+    addWidget("name", new NameWidget(this));
+    setViewSelector("nameFlow");
+  }
+  
+  public void nameSelected(String name) {
+    getFlowCtx().start(new HelloFlowWidget(name));
+  }
+}</programlisting></para>
+
+    <para>Where the <literal>nameFlow.jsp</literal> should just include the
+    "name" widget.</para>
+
+    <para>We need <literal>HelloWidget</literal> to have a setter and its JSP
+    should not have a back button (just like in <xref
+    linkend="reusing-widgets" />). Then the <literal>HelloFlowWidget</literal>
+    wrapper class will look as follows:</para>
+
+    <para><programlisting role="java">public class HelloFlowWidget extends BaseUIWidget{
+  private HelloWidget helloWidget;
+
+  public HelloFlowWidget(String name) {
+    this.helloWidget = new HelloWidget(name);
+  }
+
+  protected void init() throws Exception {     
+    addWidget("hello", helloWidget);
+    setViewSelector("helloFlow");
+  }
+}</programlisting></para>
+
+    <para>And we add the back button in the
+    <literal>helloFlow.jsp</literal>:</para>
+
+    <programlisting role="xml">&lt;jsp:root 
+  xmlns:jsp="http://java.sun.com/JSP/Page" 
+  xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
+  
+  &lt;ui:widgetContext&gt;
+    &lt;ui:widgetInclude id="hello"/&gt;&lt;br/&gt;        
+    &lt;ui:eventButton labelId="#Back" eventId="back"/&gt;
+  &lt;/ui:widgetContext&gt;
+&lt;/jsp:root&gt;</programlisting>
+  </sect1>
+</article>

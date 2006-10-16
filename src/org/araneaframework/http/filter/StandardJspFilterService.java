@@ -94,7 +94,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     }
   }
   
-  public class JspConfiguration {
+  public class JspConfiguration implements JspContext {
     public String getSubmitCharset() {
       return submitCharset;
     }
@@ -117,6 +117,10 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     
     public ConfigurationContext getConfiguration() {
       return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    }
+    
+    public String getJspPath() {
+      return jspPath;
     }
   }
   
