@@ -39,7 +39,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    systemFormId = (String) requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
+    systemFormId = (String) getContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 
     if (labelId != null)
       localizedLabel = JspUtil.getResourceString(pageContext, labelId);

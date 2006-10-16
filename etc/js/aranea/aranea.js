@@ -251,7 +251,7 @@ function AraneaPage() {
 
 		// precondition ??
 
-		var url = getActiveAraneaPage().encodeURL(getActiveAraneaPage().getServletURL());
+		var url = araneaPage().encodeURL(araneaPage().getServletURL());
 		url += '?transactionId=override';
 		url += '&topServiceId=' + systemForm.topServiceId.value;
 		url += '&threadServiceId=' + systemForm.threadServiceId.value;
