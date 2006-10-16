@@ -37,7 +37,6 @@ import org.araneaframework.core.NoCurrentOutputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.HttpInputData;
-import org.araneaframework.http.util.ServletUtil;
 
 /**
  * A ServletInputdata implementation which uses a StandardPath for determining
@@ -46,13 +45,14 @@ import org.araneaframework.http.util.ServletUtil;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardServletInputData implements HttpInputData {
-  private transient HttpServletRequest req;
+  private HttpServletRequest req;
   
   private StringBuffer scopeBuf = new StringBuffer();
   private Map extensions = new HashMap();
   
   private Map globalData = new HashMap();
   private Map scopedData = new HashMap();
+  private boolean dataInited;
   
   private StringBuffer path;
   private LinkedList pathPrefixes = new LinkedList();
@@ -70,8 +70,14 @@ public class StandardServletInputData implements HttpInputData {
   
   private void setRequest(HttpServletRequest request) {
     req = request;
+    dataInited = false;
     
-    globalData.clear();
+    path = new StringBuffer(req.getPathInfo() == null ? "" : req.getPathInfo());
+    pathPrefixes = new LinkedList();
+  }
+
+  private void initData() {
+	globalData.clear();
     scopedData.clear();
     
     Enumeration params = req.getParameterNames();
@@ -99,8 +105,7 @@ public class StandardServletInputData implements HttpInputData {
       }
     }
     
-    path = new StringBuffer(req.getPathInfo() == null ? "" : req.getPathInfo());
-    pathPrefixes = new LinkedList();
+    dataInited = true;
   }
 
   public Path getScope() {
@@ -131,11 +136,13 @@ public class StandardServletInputData implements HttpInputData {
     }
   }
   
-  public Map getGlobalData() {    
+  public Map getGlobalData() {
+    if (!dataInited) initData();
     return Collections.unmodifiableMap(globalData);
   }
 
   public Map getScopedData() {
+    if (!dataInited) initData();
     Map result = (Map)scopedData.get(scopeBuf.toString());
     if (result != null) {
       return Collections.unmodifiableMap(result);  

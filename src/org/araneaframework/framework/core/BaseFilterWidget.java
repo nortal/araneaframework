@@ -40,7 +40,7 @@ import org.araneaframework.framework.FilterWidget;
  * skeleton which lets all the requests through, sets the child, handles the initilization and
  * destroying of the child.
  * <p>
- * The child is initilized with <code>getChildWidgetEnvironment()</code> which by default returns
+ * The child is initialized with <code>getChildWidgetEnvironment()</code> which by default returns
  * this component's Environment. For alternate environments it should be overridden. 
  * </p>
  * 

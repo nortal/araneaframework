@@ -45,7 +45,7 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @param valueName the name of the Value Object field corresponding to the value of the select item.
    * @param displayStringName the name of the Value Object field corresponding to the display string of the select item.
    */
-  public static void addItemsFromVoCollection(DisplayItemContainer displayItems, Collection valueObjects, String valueName, String displayStringName) {
+  public static void addItemsFromBeanCollection(DisplayItemContainer displayItems, Collection valueObjects, String valueName, String displayStringName) {
     Assert.notNullParam(displayItems, "displayItems");
     Assert.noNullElementsParam(valueObjects, "valueObjects");
     Assert.notEmptyParam(valueName, "valueName");

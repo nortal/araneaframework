@@ -25,7 +25,7 @@ import org.araneaframework.http.FileUploadInputExtension;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.support.FileInfo;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class represents an HTML form file upload control.
@@ -74,22 +74,23 @@ public class FileUploadControl extends BaseControl {
    * Reads the {@link FileInfo}data from request {@link HttpInputData}.
    */
   protected void readFromRequest(HttpInputData request) {
-    FileUploadInputExtension fileUpload = null;
-    // Motivation for try: when one opens fileuploaddemo in new window (cloning!), exception occurs b/c 
-    // FileUploadInputExtension extension does not exist in InputData which is 
-    // extended only when request is multipart, while cloning filter always sends ordinary GET.
-	try {
-       fileUpload = (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);
-	} catch (NoSuchNarrowableException e) {
-      // If no fileupload extension is present and fileupload filter is enabled, control should 
-      // just sit there and be beautiful, otherwise....
-      if (getEnvironment().getEntry(FileUploadContext.class) == null)
-        throw new AraneaRuntimeException("It seems that attempt was made to use FileUploadControl, but upload filter is not present.");
+    FileUploadInputExtension fileUpload = getFileUploadInputExtension(request);
+    // this is acceptable, see comments in getFileUploadInputExtension()
+	if (fileUpload == null)
+      return;
+	
+	// FIXME: unfortunately this conditional code is unreachable because when request 
+	// parsing fails transaction id is usually not set (inconsistent) and update() is never called
+	if (!fileUpload.uploadSucceeded()) {
+      Long sizeLimit = ((FileUploadContext)getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
+      addError(MessageUtil.localizeAndFormat(
+    		  UiLibMessages.FILE_UPLOAD_FAILED,
+    		  sizeLimit.toString(),
+    		  getEnvironment()
+    		  ));
+      return;
 	}
 
-    if (fileUpload == null)
-      return;
-    
   	if (fileUpload.getUploadedFile(request.getScope().toString())!= null) {
       FileItem file = fileUpload.getUploadedFile(request.getScope().toString());
       String mimeType = file.getContentType();
@@ -100,22 +101,39 @@ public class FileUploadControl extends BaseControl {
       }
       else {
         addError(
-            ErrorUtil.localizeAndFormat(
+            MessageUtil.localizeAndFormat(
             UiLibMessages.FORBIDDEN_MIME_TYPE, 
-            ErrorUtil.localize(getLabel(), getEnvironment()),
+            MessageUtil.localize(getLabel(), getEnvironment()),
             getEnvironment()));        
       }
     }
   }
 
+  private FileUploadInputExtension getFileUploadInputExtension(HttpInputData request) {
+   if (getEnvironment().getEntry(FileUploadContext.class) == null)
+     throw new AraneaRuntimeException("It seems that attempt was made to use FileUploadControl, but upload filter is not present.");
+
+    FileUploadInputExtension fileUpload = null;
+    // Motivation for try: when one opens fileuploaddemo in new window (cloning!), exception occurs b/c 
+    // FileUploadInputExtension extension does not exist in InputData which is 
+    // extended only when request is multipart, while cloning filter always sends ordinary GET.
+	try {
+       fileUpload = (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);
+	} catch (NoSuchNarrowableException e) {
+      // If no fileupload extension is present and fileupload filter is enabled, control should 
+      // just sit there and be beautiful, otherwise just return null
+	}
+	return fileUpload;
+  }
+  
   public void convert() {
     value = innerData;
 
     if (isMandatory() && !isRead()) {
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.MANDATORY_FIELD, 
-          ErrorUtil.localize(getLabel(), getEnvironment()),
+          MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));        
     }
   }

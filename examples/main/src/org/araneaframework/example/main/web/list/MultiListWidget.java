@@ -32,7 +32,7 @@ public class MultiListWidget extends TemplateBaseWidget {
 
   protected void init() throws Exception {
 		super.init();
-		addWidget("personListWdgt", new PersonListWidget());
+		addWidget("personListWdgt", new PersonListWidget(true));
 		addWidget("companyListWdgt", new CompanyListWidget());
 		
 		setViewSelector("list/multiList");

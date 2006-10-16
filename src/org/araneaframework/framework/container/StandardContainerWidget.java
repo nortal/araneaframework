@@ -105,9 +105,16 @@ public class StandardContainerWidget extends BaseApplicationWidget {
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (hasAction(input)) {
-      Path actionPath = getActionPath(input);
-      log.debug("Routing action to widget '" + actionPath.toString() + "'");
-      super.action(actionPath, input, output);
+      output.pushAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY, this);
+      try {
+        Path actionPath = getActionPath(input);
+        log.debug("Routing action to widget '" + actionPath.toString() + "'");
+        super.action(actionPath, input, output);
+      }
+      finally {
+        output.popScope();
+        output.popAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
+      }
     }
   }
     

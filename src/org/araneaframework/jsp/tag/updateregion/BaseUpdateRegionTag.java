@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-package org.araneaframework.jsp.tag.updateRegion;
+package org.araneaframework.jsp.tag.updateregion;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
@@ -25,8 +25,8 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
 /**
  * Base tag for tags that allow defining updatable regions within HTML page.
  * 
- * @see org.araneaframework.jsp.tag.updateRegion.UpdateRegionHtmlTag
- * @see org.araneaframework.jsp.tag.updateRegion.UpdateRegionRowsHtmlTag
+ * @see org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag
+ * @see org.araneaframework.jsp.tag.updateregion.UpdateRegionRowsHtmlTag
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

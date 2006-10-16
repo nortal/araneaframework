@@ -68,7 +68,7 @@
 		</property>
 		<property name="beanNames">
 			<list>
-				<value>personDAO</value>
+				<value>*DAO</value>
 			</list>
 		</property>
 		<property name="proxyTargetClass" value="true"></property>

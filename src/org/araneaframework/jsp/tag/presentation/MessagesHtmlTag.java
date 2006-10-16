@@ -28,7 +28,7 @@ import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
- * Message tag - show the messages in <code>MessageContext</code> 
+ * Message tag - show the messages in {@link MessageContext} 
  * with given type. 
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)

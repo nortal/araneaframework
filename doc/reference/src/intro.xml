@@ -22,7 +22,7 @@
 
     <para>
       Aranea is a <emphasis>Java Hierarchical Model-View-Controller Web Framework</emphasis> that provides a common simple approach to building the web application components, reusing custom or general GUI logic and extending the framework. The framework is assembled from a number of independent modules with well-defined responsibilities and thus can be easily reconfigured to perform new and unexpected tasks. The controller is separated into a hierarchy of components that can react to user or system events. The framework is completely view agnostic, but provides a thorough library of JSP custom tags that target building GUIs without writing a line of HTML. All components and modules are simple <emphasis>Plain Old Java</emphasis> classes without any XML mappings and thus usual Object-Oriented design techniques can be applied. Aranea manages the component field persistence automatically and inherently supports nested state.
-    </para>      
+    </para>
 
     <para>
       Aranea is logically separated in the following modules:
@@ -36,11 +36,11 @@
           <listitem>Framework module sits on top of the <emphasis>Core</emphasis> module and contains the implementation of the Aranea Web Framework that does not directly depend on any container. <emphasis>Framework</emphasis> module includes package <literal>org.araneaframework.framework</literal> and its subpackages and is packaged into <literal>aranea-framework.jar</literal> .JAR file.</listitem>
         </varlistentry>
         <varlistentry>
-          <term>Aranea Servlet</term>
+          <term>Aranea HTTP</term>
           <listitem>Servlet module extends the <emphasis>Framework</emphasis> module with services that use a Servlet container. Servlet  module includes package <literal>org.araneaframework.http</literal> and its subpackages and is packaged into <literal>aranea-servlet.jar</literal> .JAR file.</listitem>
         </varlistentry>
         <varlistentry>
-          <term>Aranea Spring</term>
+          <term>Aranea Integration</term>
           <listitem>Spring module integrates Aranea with the <emphasis>Spring</emphasis> IoC container. Spring module includes package <literal>org.araneaframework.integration.spring</literal> and its subpackages and is packaged into <literal>aranea-spring.jar</literal> .JAR file.</listitem>
         </varlistentry>
         <varlistentry>

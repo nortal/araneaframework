@@ -29,7 +29,7 @@ import org.araneaframework.uilib.form.Constraint;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class OrConstraint extends CompositeConstraint {
+public class OrConstraint extends BaseCompositeConstraint {
   private boolean lazy = false;
 
   /**

@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.select;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
+import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.SelectControl;
@@ -40,6 +41,12 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
 
   {
     baseStyleClass = "aranea-radio";
+  }
+  
+  protected int doStartTag(Writer out) throws Exception {
+	int result = super.doStartTag(out);
+	addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
+	return result;
   }
 
   protected int doEndTag(Writer out) throws Exception {

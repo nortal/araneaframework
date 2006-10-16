@@ -31,11 +31,11 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.basic.ElementHtmlTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
@@ -55,7 +55,7 @@ import org.araneaframework.jsp.tag.uilib.list.formlist.FormListTag;
 public class JspUtil {
   private static final Map attributeErrorMap = new HashMap();  
   static {
-    attributeErrorMap.put(AraneaRootTag.OUTPUT_DATA_KEY, "<ui:root> tag expected, but not found!");
+    attributeErrorMap.put(ServletUtil.OUTPUT_DATA_KEY, "<ui:root> tag expected, but not found!");
     attributeErrorMap.put(AttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
     attributeErrorMap.put(PresentationTag.ATTRIBUTED_TAG_KEY, null);
 
@@ -210,17 +210,16 @@ public class JspUtil {
 
   
   /**
-   * Writes out attributes contained in the map.
+   * Writes out attributes contained in the Map &lt;attributeName, attributeValue&gt;.
    * If map is <code>null</code>, writes nothing.
    */
   public static void writeAttributes(Writer out, Map attributes) throws IOException {
     if (attributes == null) return;
     
-    for(Iterator i = attributes.keySet().iterator(); i.hasNext();) {
-      String name = (String)i.next();
-      String value = attributes.get(name).toString();
-      
-      JspUtil.writeAttribute(out, name, value);
+    for(Iterator i = attributes.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String attributeName = (String)entry.getKey();
+      JspUtil.writeAttribute(out, attributeName, entry.getValue());
     }    
   }
 

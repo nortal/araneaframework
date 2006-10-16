@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 
 /**
@@ -29,23 +30,48 @@ import org.araneaframework.jsp.container.UiWidgetContainer;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class JspWidgetCallUtil {
+  public static final String SIMPLE_SUBMIT_FUNCTION = "return _ap.submit(this);";
+
   public static UiWidgetContainer getContainer(PageContext pageContext) throws JspException {
     return (UiWidgetContainer) JspUtil.requireContextEntry(pageContext, UiWidgetContainer.KEY);
   }
 
   /**
-   * Write submit script for specified attribute.
+   * Write out form submit script for specified attribute of HTML element. Aranea custom HTML 
+   * tag attributes (See {@link org.araneaframework.jsp.AraneaAttributes}) are expected to be
+   * present for submit logic to work.
+   * 
    * @param out 
-   * @param attributeName
-   * @throws IOException 
+   * @param attributeName HTML attribute name, ('onclick', 'onchange', ...)
    */
   public static void writeSubmitScriptForEvent(Writer out, String attributeName) throws IOException {
     JspUtil.writeOpenAttribute(out, attributeName);
     out.write(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeCloseAttribute(out);
   }
-  
+
+  /**
+   * Write out form submit script for specified attribute of HTML element, along with Aranea 
+   * custom HTML tag attributes (See {@link org.araneaframework.jsp.AraneaAttributes}) that
+   * are determined by <code>event</code> parameter.
+   * 
+   * @param out 
+   * @param attributeName HTML attribute name, ('onclick', 'onchange', ...)
+   * @param event event that should be activated when HTML element 
+   */  
+  public static void writeSubmitScriptForEvent(Writer out, String attributeName, UiEvent event) throws IOException {
+    JspUtil.writeEventAttributes(out, event);
+	JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
+  }
+
+  /** 
+   * Returns simple submit script for HTML element. This should be used whenever HTML 
+   * element has just one event handling attribute that causes form submit, but can also 
+   * be used when submit event should always take the same attributes, regardless of 
+   * the DOM event that activates the submit function.
+   *  
+   * @return {@link #SIMPLE_SUBMIT_FUNCTION} */
   public static String getSubmitScriptForEvent() {
-    return "return _ap.submit(this);";
+    return SIMPLE_SUBMIT_FUNCTION;
   }
 }

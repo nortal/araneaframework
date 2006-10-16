@@ -20,7 +20,7 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -99,9 +99,9 @@ public abstract class StringArrayRequestControl extends BaseControl {
   public void validate() {
     if (isMandatory() && !isRead()) {
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.MANDATORY_FIELD, 
-          ErrorUtil.localize(getLabel(), getEnvironment()),
+          MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));        
     }
 

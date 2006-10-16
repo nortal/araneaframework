@@ -46,7 +46,13 @@ public class StandardSynchronizingFilterService extends BaseFilterService {
     super.destroy();
   }
   
-  protected synchronized void action(Path path, InputData input, OutputData output) throws Exception {
-    childService._getService().action(path, input, output);
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+	 if (input.getGlobalData().get("nosync") != null) {
+		 childService._getService().action(path, input, output);
+	 } else {
+    	synchronized (this) {
+    		childService._getService().action(path, input, output);
+    	}
+	 }
   }
 }

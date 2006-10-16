@@ -33,7 +33,7 @@ import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
 import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
-import org.araneaframework.uilib.form.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 
 
 /**

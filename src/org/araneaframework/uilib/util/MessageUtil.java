@@ -17,13 +17,10 @@
 package org.araneaframework.uilib.util;
 
 import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.Iterator;
 import org.araneaframework.Environment;
 import org.araneaframework.framework.LocalizationContext;
-import org.araneaframework.framework.MessageContext;
 
-public class ErrorUtil {
+public class MessageUtil {
   public static String localize(String messageCode, Environment env) {
     LocalizationContext locCtx = 
       (LocalizationContext) env.getEntry(LocalizationContext.class);
@@ -52,24 +49,5 @@ public class ErrorUtil {
   
   public static String localizeAndFormat(String message, Object[] parameters, Environment env) {
     return format(localize(message, env), parameters);
-  }
-  
-  public static String showError(String error, Environment env) {
-    MessageContext msgCtx = 
-      (MessageContext) env.getEntry(MessageContext.class);   
-    msgCtx.showMessage(MessageContext.ERROR_TYPE, error);
-    
-    return error;
-  }
-  
-  public static Collection showErrors(Collection errors, Environment env) {
-    MessageContext msgCtx = 
-      (MessageContext) env.getEntry(MessageContext.class);   
-    
-    for (Iterator i = errors.iterator(); i.hasNext();) {
-      msgCtx.showMessage(MessageContext.ERROR_TYPE, (String) i.next());
-    }
-    
-    return errors;
   }
 }

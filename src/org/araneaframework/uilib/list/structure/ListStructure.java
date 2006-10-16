@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.apache.commons.lang.Validate;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.TypeHelper;
 import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
@@ -37,7 +38,7 @@ public class ListStructure extends BaseListStructure {
 	private boolean orderableByDefault = false;
 
 	public ListStructure(TypeHelper typeHelper) {
-		Validate.notNull(typeHelper);
+		Assert.notNullParam(this, typeHelper, "typeHelper");
 		this.typeHelper = typeHelper;
 	}
 	

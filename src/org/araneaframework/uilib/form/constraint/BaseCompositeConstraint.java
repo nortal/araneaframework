@@ -29,7 +29,7 @@ import org.araneaframework.uilib.form.Constraint;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class CompositeConstraint extends BaseConstraint {
+public abstract class BaseCompositeConstraint extends BaseConstraint {
   protected List constraints = new ArrayList();
 
   /**
@@ -39,7 +39,7 @@ public abstract class CompositeConstraint extends BaseConstraint {
 	 *          contained constraint.
 	 * @return this composite constraint
 	 */
-  public CompositeConstraint addConstraint(Constraint constraint) {
+  public BaseCompositeConstraint addConstraint(Constraint constraint) {
     constraints.add(constraint);
     return this;
   }
