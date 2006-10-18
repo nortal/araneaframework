@@ -259,6 +259,7 @@ function AraneaPage() {
 		url += '&serviceActionListenerId=' + actionId;
 		url += '&' + actionTarget + '.param=' + actionParam;
 		url += '&nosync=true';
+		url += '&systemFormId=' + systemForm.id;
 		return new Ajax.Request(
 			url,
 			{

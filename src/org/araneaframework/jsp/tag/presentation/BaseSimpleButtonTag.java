@@ -17,7 +17,9 @@
 package org.araneaframework.jsp.tag.presentation;  
 
 import java.io.Writer;
+
 import javax.servlet.jsp.JspException;
+
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -39,7 +41,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    systemFormId = (String) getContextEntry(BaseSystemFormHtmlTag.ID_KEY);
+    systemFormId = (String) requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 
     if (labelId != null)
       localizedLabel = JspUtil.getResourceString(pageContext, labelId);

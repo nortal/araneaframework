@@ -35,6 +35,7 @@ import org.araneaframework.http.JspContext;
 import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.jsp.container.UiAraneaWidgetContainer;
 import org.araneaframework.jsp.container.UiWidgetContainer;
+import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 
 /**
  * Utility methods for Aranea framework running inside a servlet container. Includes
@@ -79,7 +80,12 @@ public abstract class ServletUtil {
           UiWidgetContainer.KEY, 
           new UiAraneaWidgetContainer(rootWidget, config));
 
-    //TODO AraneaSystemFormHtmlTag
+    /* AraneaSystemFormHtmlTag */
+    Object systemFormId = output.getInputData().getGlobalData().get("systemFormId");
+    if (systemFormId != null) {
+      req.setAttribute(BaseSystemFormHtmlTag.ID_KEY, systemFormId);
+      req.setAttribute(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);    
+    }
 
     ServletContext servletContext = 
       (ServletContext) env.getEntry(ServletContext.class);
