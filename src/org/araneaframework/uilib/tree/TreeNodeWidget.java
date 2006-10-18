@@ -45,6 +45,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	public static final Logger log = Logger.getLogger(TreeNodeWidget.class);
 
 	public static final String DISPLAY_KEY = "display";
+  public static final String EXPAND_EVENT = "expand";
+  public static final String COLLAPSE_EVENT = "collapse";
 
 	private boolean collapsed = true;
 	private boolean collapsedDecide = false;
@@ -87,7 +89,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 			collapsed = getTreeCtx().disposeChildren();
 		}
 
-		addActionListener("expand", new ExpandActionListener());
+		addActionListener(EXPAND_EVENT, new ExpandActionListener());
+    addActionListener(COLLAPSE_EVENT, new CollapseActionListener());
 	}
 
 	private class ExpandActionListener implements ActionListener {
@@ -99,6 +102,16 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 			render(output);
 		}
 	}
+
+  private class CollapseActionListener implements ActionListener {
+    public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
+      log.debug("Received 'collapse' action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+      //update(input);
+      collapse();
+      //process();
+      render(output);
+    }
+  }
 
 	protected Environment getDisplayWidgetEnvironment() {
 		return new StandardEnvironment(getEnvironment(), TreeNodeContext.class, this);
@@ -232,7 +245,19 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		if (display != null) {	// display is null if this is root node (TreeWidget)
 			JspUtil.writeOpenStartTag(out, "a");
 		    JspUtil.writeAttribute(out, "href", "#");
-		    JspUtil.writeAttribute(out, "onclick", "_ap.action(this, 'expand', '" + output.getScope() + "', 'blah', null, function(request, response) { window.alert(request.responseText); Element.update('" + output.getScope() + "', request.responseText); });");
+		    JspUtil.writeAttribute(out, "onclick",
+          "_ap.action(" +
+            "this, " +
+            "'" + (isCollapsed() ? EXPAND_EVENT : COLLAPSE_EVENT) + "', " +
+            "'" + output.getScope() + "', " +
+            "'blah', " +
+            "null, " +
+            "function(request, response) { " +
+//              "window.alert(request.responseText); " + 
+              "Element.update('" + output.getScope() + "', request.responseText); " +
+            "}" +
+          ");"
+        );
 		    JspUtil.writeCloseStartTag_SS(out);
 		    out.write(isCollapsed() ? "+" : "-");
 		    JspUtil.writeEndTag_SS(out, "a");
