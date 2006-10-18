@@ -46,7 +46,7 @@ public class StandardSynchronizingFilterService
       Path path, 
       InputData input, 
       OutputData output) throws Exception {
-    if (input.getGlobalData().get("nosync") != null) {
+    if (input.getGlobalData().containsKey("nosync")) {
       super.action(path, input, output);
     } else {
       synchronized (this) {
