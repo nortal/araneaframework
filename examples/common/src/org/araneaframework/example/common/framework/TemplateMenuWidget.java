@@ -16,19 +16,32 @@
 
 package org.araneaframework.example.common.framework;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 import org.araneaframework.uilib.core.MenuItem;
+import org.araneaframework.uilib.event.OnChangeEventListener;
+import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.form.data.StringData;
+import org.araneaframework.uilib.list.util.FormUtil;
+import org.araneaframework.uilib.support.DisplayItem;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerWidget implements TemplateMenuContext {
+  private FormWidget form;
+  private FormElement langSelect;
   protected MenuItem menu;
 
   // CONSTRUCTOR 
@@ -40,6 +53,18 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
     putViewData(TemplateMenuContext.MENU_VIEWDATA_KEY, menu);
   }
   
+  protected void init() throws Exception {
+	super.init();
+	
+	form = new FormWidget();
+	langSelect = FormUtil.createElement("#", new SelectControl(), new StringData(), false);
+	addWidget("form", form);
+	form.addWidget("langSelect", langSelect);
+
+	createLangSelect();
+	langSelect.setValue(getL10nCtx().getLocale().getLanguage());
+  }
+
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), TemplateMenuContext.class, this);
   }
@@ -61,7 +86,42 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
       }
     });
   }
-  
+
+  public void createLangSelect() throws Exception {
+    SelectControl select = new SelectControl();
+
+    select.addOnChangeEventListener(new OnChangeEventListener() {
+      public void onChange() throws Exception {
+        if (langSelect.convertAndValidate()) {
+          String lang = (String) langSelect.getValue();
+          getL10nCtx().setLocale(new Locale(lang));
+
+          ((SelectControl)langSelect.getControl()).clearItems();
+          ((SelectControl)langSelect.getControl()).addItem(new DisplayItem("en", getL10nCtx().localize("EnglishLang")));
+          ((SelectControl)langSelect.getControl()).addItem(new DisplayItem("et", getL10nCtx().localize("EstonianLang")));
+          ((SelectControl)langSelect.getControl()).setRawValue(lang);
+          langSelect.setValue(lang);
+        }
+      }
+    });
+
+    select.addItems(getLocales());
+    langSelect.setControl(select);
+    select.setRawValue(getL10nCtx().getLocale().getLanguage());
+    langSelect.setValue(getL10nCtx().getLocale().getLanguage());
+  }
+
+  public List getLocales() {
+    List result = new ArrayList();
+    result.add(new DisplayItem("en", getL10nCtx().localize("EnglishLang")));
+    result.add(new DisplayItem("et", getL10nCtx().localize("EstonianLang")));
+    return result;
+  }
+
+  protected LocalizationContext getL10nCtx() {
+    return (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+  }
+	
   // returns the name of currently running flow class, 
   // so that its source could be located and shown to user
   public String getFlowClassName() {
