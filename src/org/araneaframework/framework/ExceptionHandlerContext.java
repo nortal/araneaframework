@@ -19,6 +19,7 @@ package org.araneaframework.framework;
 import java.io.Serializable;
 
 /**
+ * XXX: unused as of Aranea 1.0
  * This context is passed to a continuation started using {@link org.araneaframework.framework.ContinuationManagerContext#start(Service)} 
  * and allows the continuation to explicitly restore control once it is finished. 
  * 
