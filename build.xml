@@ -71,6 +71,13 @@
 				description="Aranea User Interface Tag Library"
 			/>
 		</webdoclet>
+		
+		<!-- 
+		  Secondary TLD, attributes defined to be /rtexprvalue/s, so that JSP > 2 
+		  EL evaluator evaluates them -->
+		
+		<xslt style="etc/build/rt_tld-transform.xsl" in="build/tmp/presentation/META-INF/aranea-standard.tld" out="build/tmp/presentation/META-INF/aranea-standard_rt.tld"/>
+		<replace file="build/tmp/presentation/META-INF/aranea-standard_rt.tld" token="http://araneaframework.org/tag-library/standard" value="http://araneaframework.org/tag-library/standard_rt"/>
 	</target>	
 	
 	<target name="compile" depends="init">

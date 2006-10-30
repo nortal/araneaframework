@@ -6,19 +6,19 @@
 	<ul>
 		<li><ui:eventLinkButton
 			styleClass="errorLink"
-			labelId="#Retry" 
+			labelId="button.retry" 
 			eventId="retry"/></li>
 		<li><ui:eventLinkButton
 			styleClass="errorLink"
-			labelId="#Cancel" 
+			labelId="button.cancel" 
 			eventId="cancel"/></li>
 		<li><ui:eventLinkButton
 			styleClass="errorLink"
-			labelId="#Main page" 
+			labelId="label.mainpage" 
 			eventId="mainPage"/></li>		
 		<li><ui:eventLinkButton
 			styleClass="errorLink"
-			labelId="#Logout" 
+			labelId="label.logout" 
 			eventId="logout"/></li>			
 	</ul>
 	<div class="msg-error">
