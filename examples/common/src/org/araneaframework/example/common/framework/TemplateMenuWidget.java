@@ -62,7 +62,6 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
 	form.addWidget("langSelect", langSelect);
 
 	createLangSelect();
-	langSelect.setValue(getL10nCtx().getLocale().getLanguage());
   }
 
   protected Environment getChildWidgetEnvironment() throws Exception {
@@ -94,12 +93,10 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
       public void onChange() throws Exception {
         if (langSelect.convertAndValidate()) {
           String lang = (String) langSelect.getValue();
+          
           getL10nCtx().setLocale(new Locale(lang));
-
           ((SelectControl)langSelect.getControl()).clearItems();
-          ((SelectControl)langSelect.getControl()).addItem(new DisplayItem("en", getL10nCtx().localize("EnglishLang")));
-          ((SelectControl)langSelect.getControl()).addItem(new DisplayItem("et", getL10nCtx().localize("EstonianLang")));
-          ((SelectControl)langSelect.getControl()).setRawValue(lang);
+          ((SelectControl)langSelect.getControl()).addItems(getLocales());
           langSelect.setValue(lang);
         }
       }
@@ -107,7 +104,6 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
 
     select.addItems(getLocales());
     langSelect.setControl(select);
-    select.setRawValue(getL10nCtx().getLocale().getLanguage());
     langSelect.setValue(getL10nCtx().getLocale().getLanguage());
   }
 
