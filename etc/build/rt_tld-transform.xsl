@@ -7,13 +7,6 @@
     indent="yes" 
     doctype-public="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
     doctype-system="http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd"/>
-<!--
-	<xsl:output 
-            xml
-			doctype-public="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
-			doctype-system="http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd"
-			/>
--->
 
     <xsl:template match="*">
       <xsl:element name="{name()}" namespace="">
@@ -27,19 +20,6 @@
          </xsl:if>
 
       </xsl:element>
-
-    <!--  
-        <xsl:copy>
-		  <xsl:copy-of select="attribute::*"/>		
-          <xsl:apply-templates/>
-          
-           <xsl:if test="name()='attribute'">
-              <xsl:text disable-output-escaping="yes">
-                &lt;rtexprvalue&gt;true&lt;/rtexprvalue&gt;
-              </xsl:text>
-           </xsl:if>
-
-       </xsl:copy> -->
     </xsl:template>
 
 	<xsl:template match="text()">
@@ -49,11 +29,4 @@
 	<xsl:template match="comment()">
 		<xsl:copy/>
 	</xsl:template>
-
-
-<!-- 
-    <xsl:template match="/taglib/tag/attribute/">
-         <xsl:apply-templates/>
-    </xsl:template>
--->
 </xsl:stylesheet>
