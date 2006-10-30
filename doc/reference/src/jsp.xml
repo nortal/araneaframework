@@ -37,6 +37,13 @@
 &lt;/jsp:root&gt;</programlisting> In a usual JSP file it should look like
     this: <programlisting role="jsp">&lt;%@ taglib uri="http://araneaframework.org/tag-library/standard" prefix="ui" %&gt;
 ...</programlisting> The suggested prefix for the tag library is "ui".</para>
+
+    <para>
+        There is otherwise identical taglib that has <literal>&lt;rtexprvalue&gt;</literal> set to <literal>true</literal>
+        for each tag attribute. URI for that taglib is <literal>http://araneaframework.org/tag-library/standard_rt</literal>.
+        When using JSP version 2.0 or higher, this taglib should be used, otherwise EL in attributes is rejected by
+        containers.
+    </para>
   </sect1>
 
   <sect1 id="systemTags">
