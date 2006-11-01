@@ -55,8 +55,8 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   private Map taglibs = new HashMap();
   
   private String submitCharset;
-  
   private String jspPath = "/WEB-INF/jsp";
+  private String jspExtension = ".jsp";
   
   private LocalizationContext loc;
   
@@ -73,6 +73,14 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     return jspPath;
   }
   
+  public void setJspExtension(String jspExtension) {
+    this.jspExtension = jspExtension;
+  }
+  
+  public String getJspExtension() {
+    return jspExtension;
+  }
+
   protected void init() throws Exception {
     super.init();
 
@@ -121,6 +129,10 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     
     public String getJspPath() {
       return jspPath;
+    }
+
+    public String getJspExtension() {
+      return jspExtension;
     }
   }
   
