@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework.container;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
@@ -61,10 +62,14 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
     reset(null);    
   }
   
-  protected void handleException(Exception e) throws Exception {
+  protected void handleWidgetException(Exception e) throws Exception {
     this.exception = e;
+    
+    if (ExceptionUtils.getRootCause(e) != null)
+      log.error("Critical exception occured: ", ExceptionUtils.getRootCause(e));
+    else
+      log.error("Critical exception occured: ", e);
   }
-  
   
   protected void update(InputData input) throws Exception {
     if (exception == null)
