@@ -1,5 +1,13 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2006.11.xx    | Aranea 1.0.1
+Features and Improvements
+    Additional TLD with URI                                                   |
+       http://araneaframework.org/tag-library/standard_rt                     | See change #130
+    where tag attributes rtexprvalue is set to true.                          |
+    
+    Template application demonstrates localization support                    | See change #130
+
 2006.10.13    | Aranea 1.0
 
 Features and Improvements
