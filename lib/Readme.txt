@@ -27,7 +27,7 @@ required/ - libraries that are required at runtime
 *****************************************************************************
 
 *****************************************************************************
-* ./optional/xstream-1.1.2.jar
+* ./optional/xstream-1.2.jar
 - Xstream (http://xstream.codehaus.org/)
 - Required by the framework's serialization testing filter.
 *****************************************************************************
