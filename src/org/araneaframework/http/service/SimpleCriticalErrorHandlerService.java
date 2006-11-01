@@ -17,9 +17,7 @@
 package org.araneaframework.http.service;
 
 import java.io.Writer;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
