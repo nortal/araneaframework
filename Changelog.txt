@@ -12,6 +12,8 @@ Features and Improvements
     BaseService new method handleServiceException()                           | See change #131
     BaseWidget new method handleWidgetException()                             | See change #131
     StandardFileUploadFilterService now implements FileUploadContext          | See change #131
+
+Bugfixes
     BaseExpiringServiceRouter provided wrong context class                    | See change #131
     EqualFilter locale bugfix (lazyness)                                      | See #255
     ExpressionUtil le() method did not work                                   | See change #131
