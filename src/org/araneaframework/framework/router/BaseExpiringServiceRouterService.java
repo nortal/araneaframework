@@ -30,7 +30,7 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.ManagedServiceContext;
 
 /**
  * Router service that kills child services after specified period of inactivity is over.
@@ -81,7 +81,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   }
 
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), ThreadContext.class, new ServiceRouterContextImpl(serviceId));
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
   }
   
   protected void closeService(Object serviceId) {
