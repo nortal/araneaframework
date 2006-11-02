@@ -26,6 +26,7 @@ import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
+import org.araneaframework.uilib.util.Event;
 
 
 public class EqualFilter extends BaseFieldFilter {
@@ -34,11 +35,18 @@ public class EqualFilter extends BaseFieldFilter {
 	
 	private Comparator comparator;
 	
-	public static EqualFilter getInstance(FilterContext ctx, String fieldId, String valueId) {
-		EqualFilter filter = new EqualFilter();
+	public static EqualFilter getInstance(final FilterContext ctx, final String fieldId, String valueId) {
+		final EqualFilter filter = new EqualFilter();
 		filter.setFieldId(fieldId);
 		filter.setValueId(valueId);
 		filter.setComparator(ctx.getFieldComparator(fieldId));
+		
+		ctx.addInitEvent(new Event() {
+			public void run() {
+				filter.setComparator(ctx.getFieldComparator(fieldId));
+			}			
+		});
+
 		return filter;
 	}
 	
