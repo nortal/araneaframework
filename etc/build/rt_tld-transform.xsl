@@ -12,14 +12,13 @@
       <xsl:element name="{name()}" namespace="">
         <xsl:copy-of select="@*"/>
         <xsl:apply-templates/>
-        
-         <xsl:if test="name()='attribute'">
-            <xsl:text disable-output-escaping="yes">
-              &lt;rtexprvalue&gt;true&lt;/rtexprvalue&gt;
-            </xsl:text>
-         </xsl:if>
-
       </xsl:element>
+      <xsl:if test="name()='required'">
+         <xsl:text disable-output-escaping="yes">
+         &lt;rtexprvalue&gt;true&lt;/rtexprvalue&gt;
+         </xsl:text>
+      </xsl:if>
+
     </xsl:template>
 
 	<xsl:template match="text()">
