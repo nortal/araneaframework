@@ -31,6 +31,7 @@ import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.RelocatableDecorator;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterService;
@@ -104,14 +105,16 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
      * a) created service should not be decorated relocatable again, because clone is relocatable already 
      * b) new StandardThreadCloningFilterService's childService may not be reinited! */
     StandardThreadCloningFilterService wrappedClone = new StandardThreadCloningFilterService(clone, false);
-
     String cloneServiceId = RandomStringUtils.randomAlphabetic(12);
     if (log.isDebugEnabled())
       log.debug("Attaching the cloned thread as '" + cloneServiceId + "'.");
 
-    // XXX: cloned services getEnvironment.getEntry(ThreadContext.class)).getCurrentId() returns Id of the
-    // thread that requested cloning (task 246)
     startService(threadCtx, wrappedClone, cloneServiceId);
+    /* ThreadContext entry in clones Environment must be overridden here, otherwise
+       getEnvironment.getEntry(ThreadContext.class)).getCurrentId() returns id of the thread that
+       requested cloning */ 
+    Map cloneEnv = ((StandardEnvironment)(clone._getRelocatable().getCurrentEnvironment())).getEntryMap();
+    cloneEnv.put(ThreadContext.class, wrappedClone.getThreadServiceCtx());
 
     // send event to cloned service
     clone._getService().action(path, input, output);

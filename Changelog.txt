@@ -1,15 +1,24 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
-2006.11.xx    | Aranea 1.0.1
+2006.11.03    | Aranea 1.0.1
 Features and Improvements
-    Additional TLD with URI                                                   |
+    Additional Aranea JSP TLD with URI                                        |
        http://araneaframework.org/tag-library/standard_rt                     | See change #130
-    where tag attributes rtexprvalue is set to true.                          |
-    
-    Template application demonstrates localization support                    | See change #130
+    where tag attributes' rtexprvalue is set to true.                         |
 
+    Template application demonstrates basic localization                      | See change #130
+    StandardJspFilterService has new property jspExtension (default: ".jsp")  | See change #131
+    JspContext has additional method getJspExtension()                        | See change #131
+    BaseService new method handleServiceException()                           | See change #131
+    BaseWidget new method handleWidgetException()                             | See change #131
+    StandardFileUploadFilterService now implements FileUploadContext          | See change #131
+    BaseExpiringServiceRouter provided wrong context class                    | See change #131
+    EqualFilter locale bugfix (lazyness)                                      | See #255
+    ExpressionUtil le() method did not work                                   | See change #131
+    ThreadContext reported wrong id after cloning                             | See #246
+
+---------------------------------------------------------------------------------------------
 2006.10.13    | Aranea 1.0
-
 Features and Improvements
 	Reference manual updates
 	Updated to compile with Java 1.3
