@@ -1423,7 +1423,7 @@
     ...
     &lt;ui:eventButton eventId="test" eventParam="${bean.id}"/&gt;
     &lt;ui:eventLinkButton eventId="edit" eventParam="${bean.id}"&gt;
-      &lt;ui:image code="edit"/&gt;
+      &lt;img src="editButton.png"/&gt;
     &lt;/ui:eventLinkButton&gt;
     ...
   &lt;/ui:widgetContext&gt;

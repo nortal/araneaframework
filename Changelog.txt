@@ -1,6 +1,7 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
 2006.11.03    | Aranea 1.0.1
+
 Features and Improvements
     Additional Aranea JSP TLD with URI                                        |
        http://araneaframework.org/tag-library/standard_rt                     | See change #130
@@ -21,6 +22,7 @@ Bugfixes
 
 ---------------------------------------------------------------------------------------------
 2006.10.13    | Aranea 1.0
+
 Features and Improvements
 	Reference manual updates
 	Updated to compile with Java 1.3
