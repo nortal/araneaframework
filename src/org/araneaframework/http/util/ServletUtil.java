@@ -45,7 +45,8 @@ public abstract class ServletUtil {
    * is used.
    */
   public static void include(String filePath, Environment env, OutputData output) throws Exception {
-    log.debug("Including a resource from the absolute path '" + filePath + "'");
+    if (log.isDebugEnabled())
+      log.debug("Including a resource from the absolute path '" + filePath + "'");
     
     ServletContext servletContext = 
       (ServletContext) env.getEntry(ServletContext.class);

@@ -25,4 +25,5 @@ public interface JspContext extends Serializable {
   public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.http.JspContext";
 
   public String getJspPath();
+  public String getJspExtension();
 }

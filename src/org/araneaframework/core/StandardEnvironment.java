@@ -50,7 +50,7 @@ public class StandardEnvironment extends BaseEnvironment {
   public StandardEnvironment(Environment env, Object key, Object value) {
     Assert.notNullParam(key, "key");
     
-    entries = new HashMap();
+    entries = new HashMap(1);
     entries.put(key, value);
     parentEnv = env;
   }

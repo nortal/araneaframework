@@ -50,7 +50,7 @@ public abstract class BaseService extends BaseComponent implements Service {
       }
       catch (Exception e) {
         try {
-          handleException(e);
+          handleServiceException(e);
         }
         catch (Exception e2) {
           ExceptionUtil.uncheckException(e2);
@@ -71,6 +71,10 @@ public abstract class BaseService extends BaseComponent implements Service {
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception{}    
   
+  protected void handleServiceException(Exception e) throws Exception {
+    handleException(e);
+  }
+
   protected InputData getInputData() {
     return currentInputData;
   }

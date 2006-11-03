@@ -17,6 +17,7 @@
 package org.araneaframework.http.service;
 
 import java.io.Writer;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -26,6 +27,7 @@ import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.util.ServletUtil;
 
 public class SimpleCriticalErrorHandlerService extends BaseService {
   protected Throwable exception;
@@ -40,6 +42,8 @@ public class SimpleCriticalErrorHandlerService extends BaseService {
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     Writer out = ((HttpOutputData) output).getWriter();
+    
+    ServletUtil.getResponse(output).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     
     ((HttpOutputData) output).setContentType("text/html; charset=UTF-8");
     out.write("<html><head><title>Critical error occured!</title></head><body>");

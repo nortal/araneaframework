@@ -58,7 +58,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
       }
       catch (Exception e) {
         try {
-          handleException(e);
+          handleWidgetException(e);
         }
         catch (Exception e2) {
           ExceptionUtil.uncheckException(e2);
@@ -80,7 +80,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
       }
       catch (Exception e) {
         try {
-          handleException(e);
+          handleWidgetException(e);
         }
         catch (Exception e2) {
           ExceptionUtil.uncheckException(e2);
@@ -99,7 +99,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
       }
       catch (Exception e) {
         try {
-          handleException(e);
+          handleWidgetException(e);
         }
         catch (Exception e2) {
           ExceptionUtil.uncheckException(e2);
@@ -120,7 +120,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
       }
       catch (Exception e) {
         try {
-          handleException(e);
+          handleWidgetException(e);
         }
         catch (Exception e2) {
           ExceptionUtil.uncheckException(e2);
@@ -132,6 +132,10 @@ public abstract class BaseWidget extends BaseService implements Widget {
       }
     }
   }   
+    
+  protected void handleWidgetException(Exception e) throws Exception {
+    handleException(e);
+  }
     
   // Callbacks
   protected void update(InputData input) throws Exception {}

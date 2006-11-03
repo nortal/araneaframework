@@ -50,7 +50,7 @@ import org.araneaframework.http.util.ServletUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class StandardFileUploadFilterService extends BaseFilterService {
+public class StandardFileUploadFilterService extends BaseFilterService implements FileUploadContext {
   private static final Logger log = Logger.getLogger(StandardFileUploadFilterService.class);
   
   private static boolean commonsFileUploadPresent = true;
@@ -116,7 +116,7 @@ public class StandardFileUploadFilterService extends BaseFilterService {
   }
   
   protected Environment getChildEnvironment() {
-    return new StandardEnvironment(super.getChildEnvironment(), FileUploadContext.class, new FileUploadContextImpl(this.maximumSize));
+    return new StandardEnvironment(super.getChildEnvironment(), FileUploadContext.class, this);
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -244,15 +244,7 @@ public class StandardFileUploadFilterService extends BaseFilterService {
     }
   }
   
-  private static class FileUploadContextImpl implements FileUploadContext {
-    private Long maximumSize;
-
-    public FileUploadContextImpl(Long maximumSize) {
-      this.maximumSize = maximumSize != null ? maximumSize : new Long(new ServletFileUpload().getSizeMax());
-    }
-
-    public Long getFileSizeLimit() {
-      return maximumSize;
-    }
+  public Long getFileSizeLimit() {
+	return maximumSize != null ? maximumSize : new Long(new ServletFileUpload().getSizeMax());
   }
 }

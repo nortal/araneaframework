@@ -52,7 +52,7 @@ public class ExpressionUtil {
 	private static final LikeConfiguration DEFAULT_LIKE_CONFIGURATION = new LikeConfiguration();
 
 	/**
-	 * Creaters VARIABLE expression.
+	 * Creates VARIABLE expression.
 	 */
 	public static VariableExpression var(String name) {
 		Validate.notEmpty(name);		
@@ -60,7 +60,7 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters VALUE expression with name.
+	 * Creates VALUE expression with name.
 	 */
 	public static ValueExpression value(String name, Object value) {
 		if (value == null) {
@@ -70,28 +70,28 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters VALUE expression.
+	 * Creates VALUE expression.
 	 */
 	public static ValueExpression value(Object value) {
 		return value(null, value);
 	}
 	
 	/**
-	 * Creaters NULL value expression.
+	 * Creates NULL value expression.
 	 */
 	public static ValueExpression nullValue(String name) {
 		return new ValueExpression(name, null);
 	}
 	
 	/**
-	 * Creaters NULL value expression.
+	 * Creates NULL value expression.
 	 */
 	public static ValueExpression nullValue() {
 		return new ValueExpression(null);
 	}
 	
 	/**
-	 * Creaters EQUALS expression.
+	 * Creates EQUALS expression.
 	 */
 	public static Expression eq(Expression expr1,
 			Expression expr2, Comparator comp) {
@@ -105,7 +105,7 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters NOT EQUALS expression.
+	 * Creates NOT EQUALS expression.
 	 */
 	public static Expression ne(Expression expr1,
 			Expression expr2, Comparator comp) {
@@ -116,7 +116,7 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters GREATER THAN expression.
+	 * Creates GREATER THAN expression.
 	 */	
 	public static Expression gt(Expression expr1,
 			Expression expr2, Comparator comp) {
@@ -130,7 +130,7 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters LOWER THAN expression.
+	 * Creates LOWER THAN expression.
 	 */	
 	public static Expression lt(Expression expr1,
 			Expression expr2, Comparator comp) {
@@ -144,7 +144,7 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters GREATER THAN OR EQUALS expression.
+	 * Creates GREATER THAN OR EQUALS expression.
 	 */	
 	public static Expression ge(Expression expr1,
 			Expression expr2, Comparator comp) {		
@@ -155,18 +155,19 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters LOWER THAN OR EQUALS expression.
+	 * Creates LOWER THAN OR EQUALS expression.
 	 */	
 	public static Expression le(Expression expr1,
 			Expression expr2, Comparator comp) {
 		if (expr1 == null || expr2 == null) {
 			return null;
 		}
-		return new LowerThanExpression(expr1, expr2, comp);
+
+		return or(lt(expr1, expr2, comp), eq(expr1, expr2, comp));
 	}
 	
 	/**
-	 * Creaters IS NULL expression.
+	 * Creates IS NULL expression.
 	 */	
 	public static Expression isNull(Expression expr) {
 		if (expr == null) {
@@ -176,7 +177,7 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters IS NOT NULL expression.
+	 * Creates IS NOT NULL expression.
 	 */	
 	public static Expression notNull(Expression expr) {
 		if (expr == null) {
@@ -186,7 +187,7 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters LIKE expression.
+	 * Creates LIKE expression.
 	 */	
 	public static Expression like(Expression expr, ValueExpression pattern,
 			boolean ignoreCase, LikeConfiguration conf) {
@@ -200,28 +201,28 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters PROCEDURE expression.
+	 * Creates PROCEDURE expression.
 	 */	
 	public static ProcedureExpression sqlFunction(String name, Expression[] exprs) {
 		return (ProcedureExpression) addAll(new ProcedureExpression(name), exprs, false);
 	}
 	
 	/**
-	 * Creaters PROCEDURE expression.
+	 * Creates PROCEDURE expression.
 	 */	
 	public static ProcedureExpression sqlFunction(String name, Collection exprs) {
 		return (ProcedureExpression) addAll(new ProcedureExpression(name), exprs, false);
 	}
 	
 	/**
-	 * Creaters PROCEDURE expression.
+	 * Creates PROCEDURE expression.
 	 */	
 	public static ProcedureExpression sqlFunction(String name, Iterator exprs) {
 		return (ProcedureExpression) addAll(new ProcedureExpression(name), exprs, false);
 	}
 	
 	/**
-	 * Creaters NOT expression.
+	 * Creates NOT expression.
 	 */	
 	public static Expression not(Expression expr) {
 		if (expr == null) {
@@ -231,7 +232,7 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters AND expression.
+	 * Creates AND expression.
 	 */	
 	public static Expression and(Expression expr1, Expression expr2) {
 		if (expr1 != null && expr2 != null) {
@@ -245,28 +246,28 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters AND expression.
+	 * Creates AND expression.
 	 */	
 	public static Expression and(Expression[] exprs) {
 		return addAll(new AndExpression(), exprs, true);		
 	}
 	
 	/**
-	 * Creaters AND expression.
+	 * Creates AND expression.
 	 */	
 	public static Expression and(Collection exprs) {
 		return addAll(new AndExpression(), exprs, true);		
 	}
 	
 	/**
-	 * Creaters AND expression.
+	 * Creates AND expression.
 	 */	
 	public static Expression and(Iterator exprs) {
 		return addAll(new AndExpression(), exprs, true);		
 	}
 	
 	/**
-	 * Creaters OR expression.
+	 * Creates OR expression.
 	 */		
 	public static Expression or(Expression expr1, Expression expr2) {
 		if (expr1 != null && expr2 != null) {
@@ -280,21 +281,21 @@ public class ExpressionUtil {
 	}
 	
 	/**
-	 * Creaters OR expression.
+	 * Creates OR expression.
 	 */		
 	public static Expression or(Expression[] exprs) {
 		return addAll(new OrExpression(), exprs, true);		
 	}
 	
 	/**
-	 * Creaters OR expression.
+	 * Creates OR expression.
 	 */		
 	public static Expression or(Collection exprs) {
 		return addAll(new OrExpression(), exprs, true);		
 	}
 	
 	/**
-	 * Creaters OR expression.
+	 * Creates OR expression.
 	 */		
 	public static Expression or(Iterator exprs) {
 		return addAll(new OrExpression(), exprs, true);		
