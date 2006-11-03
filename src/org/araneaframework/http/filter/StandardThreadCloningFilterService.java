@@ -31,7 +31,6 @@ import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.RelocatableDecorator;
-import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterService;
@@ -58,6 +57,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   protected StandardThreadCloningFilterService(Service childService, boolean freshChildren) {
     /* if children are not fresh (they are clones) they may not be re-inited */
     this.initializeChildren = freshChildren;
+    /* fresh children need decoration */
     if (freshChildren)
       setChildService(childService);
     else
@@ -75,71 +75,82 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   public void setTimeToLive(Long timeToLive) {
     this.timeToLive = timeToLive;
   }
-
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (!cloningRequested(input)) {
-      super.action(path, input, output);
-      return;
-    }
-    
-    ThreadContext threadCtx = getThreadServiceCtx();
-    TopServiceContext topCtx = getTopServiceCtx();
-
-    if (log.isDebugEnabled())
-      log.debug("Attempting to clone current thread ('" + threadCtx.getCurrentId() + "').");
-
-    // clone the service and set its new environment
-    Relocatable.RelocatableService service = (RelocatableService) childService;
-    Environment env = service._getRelocatable().getCurrentEnvironment();
-    service._getRelocatable().overrideEnvironment(null);
-    
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(SerializationUtils.serialize(service)));
-
-    RelocatableService clone = (RelocatableService) ois.readObject();
-    clone._getRelocatable().overrideEnvironment(getEnvironment());
-    
-    // restore cloned service's environment
-    service._getRelocatable().overrideEnvironment(env);
-
-    /* wrap the cloned service in a new StandardThreadCloningFilterService.
-     * a) created service should not be decorated relocatable again, because clone is relocatable already 
-     * b) new StandardThreadCloningFilterService's childService may not be reinited! */
-    StandardThreadCloningFilterService wrappedClone = new StandardThreadCloningFilterService(clone, false);
-    String cloneServiceId = RandomStringUtils.randomAlphabetic(12);
-    if (log.isDebugEnabled())
-      log.debug("Attaching the cloned thread as '" + cloneServiceId + "'.");
-
-    startService(threadCtx, wrappedClone, cloneServiceId);
-    /* ThreadContext entry in clones Environment must be overridden here, otherwise
-       getEnvironment.getEntry(ThreadContext.class)).getCurrentId() returns id of the thread that
-       requested cloning */ 
-    Map cloneEnv = ((StandardEnvironment)(clone._getRelocatable().getCurrentEnvironment())).getEntryMap();
-    cloneEnv.put(ThreadContext.class, wrappedClone.getThreadServiceCtx());
-
-    // send event to cloned service
-    clone._getService().action(path, input, output);
-    
-    // redirect to URL where cloned service resides
-    HttpOutputData out = (HttpOutputData) getOutputData();
-    out.sendRedirect(out.encodeURL((getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), cloneServiceId))));
+  
+  protected void init() throws Exception {
+    if (initializeChildren)
+      super.init();
   }
 
-  private void startService(ThreadContext threadCtx, StandardThreadCloningFilterService cloneService, String cloneServiceId) {
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    if (cloningRequested(input))
+      redirect(cloningAction(path, input, output));
+    else
+      super.action(path, input, output);
+  }
+  
+  protected String cloningAction(Path path, InputData input, OutputData output) throws Exception {
+    if (log.isDebugEnabled())
+      log.debug("Attempting to clone current thread ('" + getThreadServiceCtx().getCurrentId() + "').");
+
+    RelocatableService clone = clone((RelocatableService)childService);
+    String cloneServiceId = startClone(clone);
+    clone._getService().action(path, input, output);
+    
+    // return URL where cloned service resides
+    return ((HttpOutputData) getOutputData()).encodeURL((getResponseURL(getRequestURL(), (String)getTopServiceCtx().getCurrentId(), cloneServiceId)));
+  }
+  
+  protected void redirect(String location) throws Exception {
+	((HttpOutputData) getOutputData()).sendRedirect(location);
+  }
+
+  /**
+   * Clones given {@link RelocatableService}. 
+   * Clone is created by first serializing and then deserializing given <code>service</code>.
+   * Created clone does not have {@link org.araneaframework.Environment}.
+   * @return clone (without {@link org.araneaframework.Environment}) of given {@link RelocatableService}.
+   */
+  protected RelocatableService clone(RelocatableService service) throws Exception {
+    Relocatable.Interface relocatable = service._getRelocatable();
+	Environment env = relocatable.getCurrentEnvironment();
+
+    relocatable.overrideEnvironment(null);
+    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(SerializationUtils.serialize(service)));
+    relocatable.overrideEnvironment(env);
+
+    return (RelocatableService) ois.readObject();
+  }
+
+  /** Wraps the cloned service in a new StandardThreadCloningFilterService, attaches it to {@link ThreadContext}.
+   * <ul>
+   * <li> created service should not be decorated relocatable again, because <code>clone</code> is relocatable already</li> 
+   * <li> new StandardThreadCloningFilterService's childService may not be reinited!</li>
+   * </ul>
+   * @return thread id assigned to wrapped service  */ 
+  protected String startClone(RelocatableService clone) throws Exception {
+    StandardThreadCloningFilterService wrappedClone = new StandardThreadCloningFilterService(clone, false);
+    String cloneServiceId = RandomStringUtils.randomAlphabetic(12);
+    
+    if (log.isDebugEnabled())
+      log.debug("Attaching the cloned thread as '" + cloneServiceId + "'.");
+    
+    startThreadService(getThreadServiceCtx(), wrappedClone, cloneServiceId);
+    clone._getRelocatable().overrideEnvironment(wrappedClone.getEnvironment());
+    
+    return cloneServiceId;
+  }
+
+  private void startThreadService(ThreadContext threadCtx, StandardThreadCloningFilterService cloneService, String cloneServiceId) {
     if (timeToLive == null)
       threadCtx.addService(cloneServiceId, cloneService);
     else
       threadCtx.addService(cloneServiceId, cloneService, timeToLive);
   }
 
-  protected void init() throws Exception {
-    if (initializeChildren)
-      super.init();
-  }
-  
   protected boolean cloningRequested(InputData input) throws Exception {
     return input.getGlobalData().get(ThreadCloningContext.CLONING_REQUEST_KEY) != null;
   }
-  
+
   protected String getRequestURL() {
     return ((HttpInputData) getInputData()).getContainerURL();
   }
