@@ -94,6 +94,8 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     script.append(acRequestUrl);
     script.append("\", {minChars: ");
     script.append(viewModel.getMinCompletionLength());
+    script.append(", afterUpdateElement:");
+    script.append("function(el, selectedEl) { if (el.onblur) { f = el.onblur; return f(el);} }");
     script.append("});");
 
 	return script.toString();
