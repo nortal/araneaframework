@@ -6,7 +6,10 @@ import java.text.ParseException;
 import java.util.Calendar;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
+import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.TimeControl;
 
 /**
@@ -67,9 +70,10 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   }
 
   protected void writeMinuteSelect(Writer out, String name, boolean disabled, Integer minute) throws IOException {
+    TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
     out.write("<select name='" + name + ".select2' onChange=\""
         + fillXJSCallConstructor("fillTimeText", systemFormId, name, name + ".select1", name + ".select2")
-        + ";\"");
+        + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
 
     if (disabled)
       out.write(" disabled=\"true\"");
@@ -83,11 +87,18 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   }
 
   protected void writeHourSelect(Writer out, String name, String systemFormId, boolean disabled, Integer hour) throws IOException {
+    TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
     out.write("<select name='" + name + ".select1' onChange=\""
         + fillXJSCallConstructor("fillTimeText", systemFormId, name, name + ".select1", name + ".select2")
-        + ";\"");
+        + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
     if (disabled)
       out.write(" disabled=\"true\"");
+
+    if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
+    	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
+    	out.write(" ");
+    	out.write(event.getEventAttributes().toString());
+    }
     out.write(">\n");
     
     StringBuffer sb = new StringBuffer().append("<script type=\"text/javascript\">");
@@ -108,6 +119,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       Long size, 
       boolean disabled,
       String accessKey) throws Exception {
+    TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
     // Write input tag
     JspUtil.writeOpenStartTag(out, "input");
     if (!StringUtils.isBlank(id))
@@ -119,11 +131,28 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "label", label);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
-    JspUtil.writeAttribute(out, "onBlur", fillXJSCallConstructor("fillTimeSelect", systemFormId, name, name +".select1", name + ".select2") + ";");
+
+    if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
+        JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
+        if (onChangePrecondition == null)
+      	  onChangePrecondition = "return isChanged('" + name + "');";
+
+    	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
+    	event.setEventPrecondition(onChangePrecondition);
+    	out.write(" ");
+    	out.write(event.getEventAttributes().toString());
+    }
+
+    StringBuffer onBlur = new StringBuffer(fillXJSCallConstructor("fillTimeSelect", systemFormId, name, name +".select1", name + ".select2") + ";");
+    if (!disabled && events && viewModel.isOnChangeEventRegistered())
+    	onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
+    JspUtil.writeAttribute(out, "onBlur", onBlur.toString());
+
     if (!StringUtils.isBlank(accessKey))
       JspUtil.writeAttribute(out, "accesskey", accessKey);
-    if (disabled)
+    if (disabled) 
       JspUtil.writeAttribute(out, "disabled", "true");
+
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartEndTag_SS(out);
   }
