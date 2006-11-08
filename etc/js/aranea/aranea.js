@@ -251,10 +251,10 @@ function AraneaPage() {
     return url;
   }
 
-  this.getSubmitActionURL = function(systemForm, actionId, actionTarget, actionParam, nosync) {
+  this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, nosync) {
     var t = this.getTraverser();
     var systemForm = t.findSurroundingSystemForm(element);
-    var url = this.getURL(systemForm.topServiceId.value, systemForm.threadServiceId.value);
+    var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value);
     url += '&widgetActionPath=' + actionTarget;
     url += '&serviceActionListenerId=' + actionId;
     url += '&' + actionTarget + '.param=' + actionParam;
@@ -273,7 +273,7 @@ function AraneaPage() {
   this.action_6 = function(systemForm, actionId, actionTarget, actionParam, nosync, actionCallback) {
     if (window['prototype/prototype.js']) {
       return new Ajax.Request(
-        this.getActionURL(systemForm, actionId, actionTarget, actionParam, nosync),
+        this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, nosync),
         {
           method: 'get',
           onComplete: actionCallback
@@ -317,7 +317,7 @@ function AraneaPage() {
 AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey) {
   return function() {
     if (window['prototype/prototype.js']) {
-      var url = araneaPage().getURL(topServiceId, threadServiceId);
+      var url = araneaPage().getSubmitURL(topServiceId, threadServiceId);
       url += "&" + keepAliveKey + "=true";
       araneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(

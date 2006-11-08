@@ -49,23 +49,29 @@ public class SimpleTreeWidget extends BaseUIWidget {
 		public List getChildren(TreeNodeWidget parent) {
 			List children = new ArrayList();
 			for (int i = 0; i < 5; i++) {
-				children.add(new TreeNodeWidget(new TestWidget()));
+				children.add(new TreeNodeWidget(new SimpleTreeNodeWidget()));
 			}
 			return children;
 		}
 
 	}
 
-	public static class TestWidget extends BaseUIWidget {
+	public static class SimpleTreeNodeWidget extends BaseUIWidget {
 
-		TestWidget() {
+    private int counter;
+
+		SimpleTreeNodeWidget() {
 		}
 
 		protected void init() throws Exception {
-			setViewSelector("tree/test");
-			addActionListener("foo", new ActionListener() {
+			setViewSelector("tree/simpleTreeNode");
+      putViewData("counter", new Integer(counter));
+			addActionListener("test", new ActionListener() {
 				public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-					log.debug("Action 'foo'");
+          log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+          putViewData("counter", new Integer(++counter));
+          //getTreeNodeCtx().renderNode(output);
+          render(output);
 				}
 			});
 		}
@@ -74,7 +80,7 @@ public class SimpleTreeWidget extends BaseUIWidget {
 			return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
 		}
 
-		public void handleEventExpandCollapse() {
+		public void handleEventInvertCollapsed() {
 			getTreeNodeCtx().invertCollapsed();
 		}
 

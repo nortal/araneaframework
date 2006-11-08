@@ -95,7 +95,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
 	private class ExpandActionListener implements ActionListener {
 		public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-			log.debug("Received 'expand' action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+			log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
 			//update(input);
 			expand();
 			//process();
@@ -105,7 +105,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   private class CollapseActionListener implements ActionListener {
     public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-      log.debug("Received 'collapse' action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+      log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
       //update(input);
       collapse();
       //process();
@@ -255,7 +255,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
             "function(request, response) { " +                              // actionCallback
               "Element.update('" + output.getScope() + "', request.responseText); " +
             "}" +
-          ");"
+          "); " +
+          "return false;"
         );
 		    JspUtil.writeCloseStartTag_SS(out);
 		    out.write(isCollapsed() ? "+" : "-");
