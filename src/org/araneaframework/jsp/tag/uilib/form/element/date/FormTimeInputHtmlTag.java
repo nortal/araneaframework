@@ -77,6 +77,15 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     if (disabled)
       out.write(" disabled=\"true\"");
+    
+    if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
+    	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
+    	String precondition = onChangePrecondition == null ? "return (document." + systemFormId + "['" + name +"'].value.length==5)" : onChangePrecondition;
+    	event.setEventPrecondition(precondition);
+    	out.write(" ");
+    	out.write(event.getEventAttributes().toString());
+    }
+
     out.write(">\n");
     
     StringBuffer sb = new StringBuffer().append("<script type=\"text/javascript\">");
@@ -96,6 +105,8 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
+    	String precondition = onChangePrecondition == null ? "return (document." + systemFormId + "['" + name +"'].value.length==5)" : onChangePrecondition;
+    	event.setEventPrecondition(precondition);
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
@@ -134,11 +145,9 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
         JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
-        if (onChangePrecondition == null)
-      	  onChangePrecondition = "return isChanged('" + name + "');";
-
+        String precondition  = onChangePrecondition == null ? "return isChanged('" + name + "');" : onChangePrecondition;
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
-    	event.setEventPrecondition(onChangePrecondition);
+    	event.setEventPrecondition(precondition);
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
@@ -146,7 +155,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     StringBuffer onBlur = new StringBuffer(fillXJSCallConstructor("fillTimeSelect", systemFormId, name, name +".select1", name + ".select2") + ";");
     if (!disabled && events && viewModel.isOnChangeEventRegistered())
     	onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
-    JspUtil.writeAttribute(out, "onBlur", onBlur.toString());
+    JspUtil.writeAttribute(out, "onblur", onBlur.toString());
 
     if (!StringUtils.isBlank(accessKey))
       JspUtil.writeAttribute(out, "accesskey", accessKey);
