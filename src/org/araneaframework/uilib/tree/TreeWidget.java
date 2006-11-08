@@ -32,12 +32,18 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 	private boolean disposeChildren = true; // remove all children when node is collapsed
 	                                        //(implies reloading children when node is reopened)
 	//private boolean updateWholeTree = false;
+  private boolean sync = false;           // synchronize action calls to widgets
 
 	public TreeWidget(TreeDataProvider dataProvider) {
 		super();
 		Assert.notNullParam(dataProvider, "dataProvider");
 		this.dataProvider = dataProvider;
 	}
+
+  public TreeWidget(TreeDataProvider dataProvider, boolean sync) {
+    this(dataProvider);
+    this.sync = sync;
+  }
 
 	protected void init() throws Exception {
 		addAllNodes(loadChildren());
@@ -50,6 +56,10 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 	public TreeDataProvider getDataProvider() {
 		return dataProvider;
 	}
+
+  public boolean getSync() {
+    return sync;
+  }
 
 	public boolean disposeChildren() {
 		return disposeChildren;

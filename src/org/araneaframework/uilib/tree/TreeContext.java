@@ -25,6 +25,8 @@ public interface TreeContext extends Serializable {
 
 	TreeDataProvider getDataProvider();
 
+  public boolean getSync();
+
 	boolean disposeChildren();
 
 }

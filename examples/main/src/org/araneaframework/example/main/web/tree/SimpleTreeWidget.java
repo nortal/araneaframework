@@ -70,8 +70,7 @@ public class SimpleTreeWidget extends BaseUIWidget {
 				public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
           log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
           putViewData("counter", new Integer(++counter));
-          //getTreeNodeCtx().renderNode(output);
-          render(output);
+          getTreeNodeCtx().renderNode(output);
 				}
 			});
 		}

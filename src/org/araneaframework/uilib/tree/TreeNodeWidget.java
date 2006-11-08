@@ -45,6 +45,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	public static final Logger log = Logger.getLogger(TreeNodeWidget.class);
 
 	public static final String DISPLAY_KEY = "display";
+  public static final String TOGGLE_EVENT = "toggle";
   public static final String EXPAND_EVENT = "expand";
   public static final String COLLAPSE_EVENT = "collapse";
 
@@ -89,9 +90,20 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 			collapsed = getTreeCtx().disposeChildren();
 		}
 
+    addActionListener(TOGGLE_EVENT, new InvertCollapsedListener());
 		addActionListener(EXPAND_EVENT, new ExpandActionListener());
     addActionListener(COLLAPSE_EVENT, new CollapseActionListener());
 	}
+
+  private class InvertCollapsedListener implements ActionListener {
+    public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
+      log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+      //update(input);
+      invertCollapsed();
+      //process();
+      render(output);
+    }
+  }
 
 	private class ExpandActionListener implements ActionListener {
 		public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
@@ -243,41 +255,37 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		// Render display widget
 		Widget display = getDisplay();
 		if (display != null) {	// display is null if this is root node (TreeWidget)
-			JspUtil.writeOpenStartTag(out, "a");
-		    JspUtil.writeAttribute(out, "href", "#");
-		    JspUtil.writeAttribute(out, "onclick",
-          "_ap.action(" +
-            "this, " +                                                      // element
-            "'" + (isCollapsed() ? EXPAND_EVENT : COLLAPSE_EVENT) + "', " + // actionId
-            "'" + output.getScope() + "', " +                               // actionTarget
-            "null, " +                                                      // actionParam
-            "true, " +                                                      // nosync
-            "function(request, response) { " +                              // actionCallback
-              "Element.update('" + output.getScope() + "', request.responseText); " +
-            "}" +
-          "); " +
-          "return false;"
-        );
-		    JspUtil.writeCloseStartTag_SS(out);
-		    out.write(isCollapsed() ? "+" : "-");
-		    JspUtil.writeEndTag_SS(out, "a");
-			try {
-				output.pushScope(TreeNodeWidget.DISPLAY_KEY);
-				display._getWidget().render(output);
-			} finally {
+		  JspUtil.writeOpenStartTag(out, "a");
+		  JspUtil.writeAttribute(out, "href", "#");
+		  JspUtil.writeAttribute(out, "onclick", "return AraneaTree.toggleNode(this);");
+		  JspUtil.writeCloseStartTag_SS(out);
+		  out.write(isCollapsed() ? "+" : "-");
+		  JspUtil.writeEndTag_SS(out, "a");
+		  try {
+		    output.pushScope(TreeNodeWidget.DISPLAY_KEY);
+		    display._getWidget().render(output);
+		  } finally {
 				output.popScope();
 			}
 		}
 
 		// Render child nodes
 		if (!isCollapsed() && hasNodes()) {
-			JspUtil.writeStartTag(out, "ul");
+      if (display != null) {
+        JspUtil.writeStartTag(out, "ul");
+      } else {
+        JspUtil.writeOpenStartTag(out, "ul");
+        JspUtil.writeAttribute(out, "arn-tree", "true");
+        JspUtil.writeAttribute(out, "arn-tree-noSync", Boolean.toString(!getTreeCtx().getSync()));
+        JspUtil.writeCloseStartTag_SS(out);
+      }
 			List nodes = getNodes();
 			for (ListIterator i = nodes.listIterator(); i.hasNext(); ) {
 				try {
 					output.pushScope(Integer.toString(i.nextIndex()));
 					JspUtil.writeOpenStartTag(out, "li");
 					JspUtil.writeAttribute(out, "id", output.getScope());
+          JspUtil.writeAttribute(out, "arn-treeNode", "true");
 					JspUtil.writeCloseStartTag(out);
 					((TreeNodeWidget) i.next()).render(output);
 				} finally {
