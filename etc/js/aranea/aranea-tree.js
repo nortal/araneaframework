@@ -39,7 +39,7 @@ var AraneaTree = {
 	// Returns LI that is Aranea tree node and surrounds given HTML element. 
 	getSurroundingTreeNode: function(element) {
 		do {
-			if (element.tagName && element.tagName.toLowerCase() == 'li' && element.getAttribute('arn-treeNode')) {
+			if (element.tagName && element.tagName.toLowerCase() == 'li' && Element.hasClassName(element, 'aranea-tree-node')) {
 				return element;
 			}
 			element = element.parentNode;
@@ -50,7 +50,7 @@ var AraneaTree = {
 	// Returns UL that is Aranea tree and surrounds given HTML element. 
 	getSurroundingTree: function(element) {
 		do {
-			if (element.tagName && element.tagName.toLowerCase() == 'ul' && element.getAttribute('arn-tree')) {
+			if (element.tagName && element.tagName.toLowerCase() == 'ul' && Element.hasClassName(element, 'aranea-tree')) {
 				return element;
 			}
 			element = element.parentNode;

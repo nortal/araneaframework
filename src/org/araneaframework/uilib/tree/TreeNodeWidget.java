@@ -275,7 +275,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
         JspUtil.writeStartTag(out, "ul");
       } else {
         JspUtil.writeOpenStartTag(out, "ul");
-        JspUtil.writeAttribute(out, "arn-tree", "true");
+        JspUtil.writeAttribute(out, "class", "aranea-tree");
         JspUtil.writeAttribute(out, "arn-tree-noSync", Boolean.toString(!getTreeCtx().getSync()));
         JspUtil.writeCloseStartTag_SS(out);
       }
@@ -285,7 +285,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 					output.pushScope(Integer.toString(i.nextIndex()));
 					JspUtil.writeOpenStartTag(out, "li");
 					JspUtil.writeAttribute(out, "id", output.getScope());
-          JspUtil.writeAttribute(out, "arn-treeNode", "true");
+          JspUtil.writeAttribute(out, "class", "aranea-tree-node");
 					JspUtil.writeCloseStartTag(out);
 					((TreeNodeWidget) i.next()).render(output);
 				} finally {
