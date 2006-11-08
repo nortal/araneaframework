@@ -16,8 +16,9 @@
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Alar Kvell (alar@araneaframework.org)
  */
- 
+
 /* AraneaTraverser is locator for some Aranea specific elements in DOM tree. */
 function AraneaTraverser() {
   /* Returns FORM that is Aranea system form and surrounds given HTML element. 
@@ -240,35 +241,48 @@ function AraneaPage() {
       new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   }
 
-	/** MY CODE STARTS HERE :) **/
-	this.action = function(element, actionId, actionTarget, actionParam, actionPrecondition, actionCallback) {
-		var t = this.getTraverser();
-		var systemForm = t.findSurroundingSystemForm(element);
-		return this.action_6(systemForm, actionId, actionTarget, actionParam, actionPrecondition, actionCallback);
-	}
+  this.getSubmitURL = function(topServiceId, threadServiceId) {
+    var url = this.encodeURL(this.getServletURL());
+    url += '?transactionId=override';
+    if (topServiceId) 
+      url += '&topServiceId=' + topServiceId;
+    if (threadServiceId) 
+      url += '&threadServiceId=' + threadServiceId;
+    return url;
+  }
 
-	this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionPrecondition, actionCallback) {
+  this.getSubmitActionURL = function(systemForm, actionId, actionTarget, actionParam, nosync) {
+    var t = this.getTraverser();
+    var systemForm = t.findSurroundingSystemForm(element);
+    var url = this.getURL(systemForm.topServiceId.value, systemForm.threadServiceId.value);
+    url += '&widgetActionPath=' + actionTarget;
+    url += '&serviceActionListenerId=' + actionId;
+    url += '&' + actionTarget + '.param=' + actionParam;
+    if (nosync)
+      url += '&nosync=true';
+    url += '&systemFormId=' + systemForm.id;
+    return url;
+  }
 
-		// precondition ??
+  this.action = function(element, actionId, actionTarget, actionParam, nosync, actionCallback) {
+    var t = this.getTraverser();
+    var systemForm = t.findSurroundingSystemForm(element);
+    return this.action_6(systemForm, actionId, actionTarget, actionParam, nosync, actionCallback);
+  }
 
-		var url = araneaPage().encodeURL(araneaPage().getServletURL());
-		url += '?transactionId=override';
-		url += '&topServiceId=' + systemForm.topServiceId.value;
-		url += '&threadServiceId=' + systemForm.threadServiceId.value;
-		url += '&widgetActionPath=' + actionTarget;
-		url += '&serviceActionListenerId=' + actionId;
-		url += '&' + actionTarget + '.param=' + actionParam;
-		url += '&nosync=true';
-		url += '&systemFormId=' + systemForm.id;
-		return new Ajax.Request(
-			url,
-			{
-				method: 'get',
-				onComplete: actionCallback
-			}
-		);
-	}
-	/** MY CODE ENDS HERE :) **/
+  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, nosync, actionCallback) {
+    if (window['prototype/prototype.js']) {
+      return new Ajax.Request(
+        this.getActionURL(systemForm, actionId, actionTarget, actionParam, nosync),
+        {
+          method: 'get',
+          onComplete: actionCallback
+        }
+      );
+    } else {
+      araneaPage().getLogger().warn("Prototype library not accessible, action call cannot be made.");
+    }
+  }
 
   this.debug = function(message) {
     this.getLogger().debug(message);
@@ -303,12 +317,7 @@ function AraneaPage() {
 AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey) {
   return function() {
     if (window['prototype/prototype.js']) {
-      var url = araneaPage().encodeURL(araneaPage().getServletURL());
-      url += "?transactionId=override";
-      if (topServiceId) 
-        url += "&topServiceId="+topServiceId;
-      if (threadServiceId) 
-        url += "&threadServiceId="+threadServiceId;
+      var url = araneaPage().getURL(topServiceId, threadServiceId);
       url += "&" + keepAliveKey + "=true";
       araneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(

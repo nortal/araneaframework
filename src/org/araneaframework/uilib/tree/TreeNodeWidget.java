@@ -247,13 +247,12 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		    JspUtil.writeAttribute(out, "href", "#");
 		    JspUtil.writeAttribute(out, "onclick",
           "_ap.action(" +
-            "this, " +
-            "'" + (isCollapsed() ? EXPAND_EVENT : COLLAPSE_EVENT) + "', " +
-            "'" + output.getScope() + "', " +
-            "'blah', " +
-            "null, " +
-            "function(request, response) { " +
-//              "window.alert(request.responseText); " + 
+            "this, " +                                                      // element
+            "'" + (isCollapsed() ? EXPAND_EVENT : COLLAPSE_EVENT) + "', " + // actionId
+            "'" + output.getScope() + "', " +                               // actionTarget
+            "null, " +                                                      // actionParam
+            "true, " +                                                      // nosync
+            "function(request, response) { " +                              // actionCallback
               "Element.update('" + output.getScope() + "', request.responseText); " +
             "}" +
           ");"
