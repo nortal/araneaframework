@@ -95,7 +95,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
       beanFactory = new DefaultListableBeanFactory();
     }
     
-//  Loading default Aranea configuration
+    // Loading default Aranea configuration
     XmlBeanDefinitionReader confReader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) beanFactory);
     confReader.loadBeanDefinitions(new ClassPathResource(ARANEA_DEFAULT_CONF_XML));
     
@@ -115,9 +115,6 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     cfg.setProperties(localConf);
     cfg.setLocalOverride(true);
     
-    //Applying properties to default configuration
-    cfg.postProcessBeanFactory((ConfigurableListableBeanFactory) beanFactory);
-    
     //Loading custom configuration 
     try {
       if (getServletContext().getResource(araneaCustomConfXml) != null) {    
@@ -128,6 +125,8 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
       throw new AraneaRuntimeException(e);
     }
     
+    //Applying properties to active configuration
+    cfg.postProcessBeanFactory((ConfigurableListableBeanFactory) beanFactory);
     
     //Reading the starting widget from an init parameter
     if (getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER) != null) {
