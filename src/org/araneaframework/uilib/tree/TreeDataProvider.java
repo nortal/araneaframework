@@ -20,10 +20,20 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Tree data provider is used by {@link TreeWidget} to retrieve tree data.
+ * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public interface TreeDataProvider extends Serializable {
 
+	/**
+   * Returns a list of child nodes for specified parent node.
+   * 
+   * @param parent
+   *          tree node whose children will be returned. Root node of the tree
+   *          ({@link TreeWidget}) has no display widget.
+   * @return list of {@link TreeNodeWidget}s.
+   */
 	List getChildren(TreeNodeWidget parent);
 
 }

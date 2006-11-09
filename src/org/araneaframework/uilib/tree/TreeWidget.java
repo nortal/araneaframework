@@ -29,17 +29,36 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 	private static final long serialVersionUID = 1L;
 
 	private TreeDataProvider dataProvider;
-	private boolean disposeChildren = true; // remove all children when node is collapsed
-	                                        //(implies reloading children when node is reopened)
-	//private boolean updateWholeTree = false;
-  private boolean sync = false;           // synchronize action calls to widgets
+	private boolean disposeChildren = true;
+  private boolean sync = false;
 
+  //TODO features:
+  // * disable use of action calls (AJAX)
+  // * not show collapse/expand by TreeNodeWidgets
+  // * not-dispose-children in client side
+  // * some nodes not collapsable
+
+	/**
+   * Creates a new {@link TreeWidget} instance.
+   * 
+   * @param dataProvider
+   *          tree data provider.
+   */
 	public TreeWidget(TreeDataProvider dataProvider) {
 		super();
 		Assert.notNullParam(dataProvider, "dataProvider");
 		this.dataProvider = dataProvider;
 	}
 
+  /**
+   * Creates a new {@link TreeWidget} instance.
+   * 
+   * @param dataProvider
+   *          tree data provider.
+   * @param sync
+   *          if AJAX requests to tree widget are synchronized. See
+   *          {@link TreeContext#getSync()}.
+   */
   public TreeWidget(TreeDataProvider dataProvider, boolean sync) {
     this(dataProvider);
     this.sync = sync;
@@ -66,20 +85,19 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 	}
 
 	public Widget getDisplay() {
-		// Only called from render()
 		return null;
 	}
 
+  // The following methods do nothing, because the root node of the tree has no
+  // display widget and therefore is always expanded.
+
 	public void expand() {
-		// Should never be called!
 	}
 
 	public void collapse() {
-		// Should never be called!
 	}
 
 	public void invertCollapsed() {
-		// Should never be called!
 	}
 
 }

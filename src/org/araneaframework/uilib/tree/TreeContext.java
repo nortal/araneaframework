@@ -19,14 +19,32 @@ package org.araneaframework.uilib.tree;
 import java.io.Serializable;
 
 /**
+ * Tree context. General interface that can be used to access current tree
+ * configuration.
+ * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public interface TreeContext extends Serializable {
 
+	/**
+   * Returns tree data provider.
+	 */
 	TreeDataProvider getDataProvider();
 
+  /**
+   * Returns if action calls (by AJAX requests) to tree widget are synchronized.
+   * Default is <code>true</code>. If set to <code>false</code> (in
+   * TreeWidget constructor), then
+   * {@link org.araneaframework.framework.filter.StandardSynchronizingFilterService}
+   * does not synchronize calls to this <code>TreeWidget</code> and its
+   * children.
+   */
   public boolean getSync();
 
+	/**
+   * Returns if child nodes are removed and discarded when a node is closed.
+   */
+  //TODO is there a need to specify this on TreeNode basis?
 	boolean disposeChildren();
 
 }

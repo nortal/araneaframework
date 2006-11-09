@@ -30,6 +30,9 @@ import org.araneaframework.uilib.tree.TreeNodeWidget;
 import org.araneaframework.uilib.tree.TreeWidget;
 
 /**
+ * Widget that shows a simple tree. Each node has five child nodes (tree is
+ * infinite). Child nodes are disposed when parent node is collapsed.
+ * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public class SimpleTreeWidget extends BaseUIWidget {
@@ -66,13 +69,17 @@ public class SimpleTreeWidget extends BaseUIWidget {
 		protected void init() throws Exception {
 			setViewSelector("tree/simpleTreeNode");
       putViewData("counter", new Integer(counter));
-			addActionListener("test", new ActionListener() {
-				public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-          log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+
+      addActionListener("test", new ActionListener() {
+
+        //TODO TreeNodeDisplayWidget which has in ActionListener processAction(String param) that also does renderNode 
+        public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
+          log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get(TreeNodeWidget.ACTION_PARAM_KEY) + "'");
           putViewData("counter", new Integer(++counter));
           getTreeNodeCtx().renderNode(output);
 				}
-			});
+
+      });
 		}
 
 		protected TreeNodeContext getTreeNodeCtx() {

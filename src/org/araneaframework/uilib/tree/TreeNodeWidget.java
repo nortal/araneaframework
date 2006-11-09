@@ -44,10 +44,16 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
 	public static final Logger log = Logger.getLogger(TreeNodeWidget.class);
 
-	public static final String DISPLAY_KEY = "display";
-  public static final String TOGGLE_EVENT = "toggle";
-  public static final String EXPAND_EVENT = "expand";
-  public static final String COLLAPSE_EVENT = "collapse";
+	/** Display widget id. */
+  public static final String DISPLAY_KEY = "display";
+  /** Toggle action id. */
+  public static final String TOGGLE_ACTION = "toggle";
+  /** Expand action id. */
+  public static final String EXPAND_ACTION = "expand";
+  /** Collapse action id. */
+  public static final String COLLAPSE_ACTION = "collapse";
+  /** Action request parameter name */
+  public static final String ACTION_PARAM_KEY = "param";
 
 	private boolean collapsed = true;
 	private boolean collapsedDecide = false;
@@ -55,22 +61,50 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	private Widget initDisplay;
 	private List initNodes;
 
-	TreeNodeWidget() {
+	/* Used by TreeWidget */
+  TreeNodeWidget() {
 		super();
 		this.collapsed = false;
 	}
 
+  /**
+   * Creates a new {@link TreeNodeWidget} instance. This node has no child nodes
+   * and will be collapsed (children hidden) by default.
+   * 
+   * @param display
+   *          widget that will be used to display this node.
+   */
 	public TreeNodeWidget(Widget display) {
 		super();
 		Assert.notNull(display);
 		this.initDisplay = display;
 	}
 
+  /**
+   * Creates a new {@link TreeNodeWidget} instance and adds the given list of
+   * nodes as its children. Node will be expanded (children shown) by default.
+   * 
+   * @param display
+   *          widget that will be used to display this node.
+   * @param nodes
+   *          list of {@link TreeNodeWidget}s added as children.
+   */
 	public TreeNodeWidget(Widget display, List nodes) {
 		this(display, nodes, true);
 		collapsedDecide = true;
 	}
 
+	/**
+   * Creates a new {@link TreeNodeWidget} instance and adds the given list of
+   * nodes as its children.
+   * 
+   * @param display
+   *          widget that will be used to display this node.
+   * @param nodes
+   *          list of {@link TreeNodeWidget}s added as children.
+   * @param collapsed
+   *          if tree node will be collapsed (children hidden) by default.
+   */
 	public TreeNodeWidget(Widget display, List nodes, boolean collapsed) {
 		this(display);
 		this.initNodes = nodes;
@@ -90,14 +124,14 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 			collapsed = getTreeCtx().disposeChildren();
 		}
 
-    addActionListener(TOGGLE_EVENT, new InvertCollapsedListener());
-		addActionListener(EXPAND_EVENT, new ExpandActionListener());
-    addActionListener(COLLAPSE_EVENT, new CollapseActionListener());
+    addActionListener(TOGGLE_ACTION, new InvertCollapsedListener());
+		addActionListener(EXPAND_ACTION, new ExpandActionListener());
+    addActionListener(COLLAPSE_ACTION, new CollapseActionListener());
 	}
 
   private class InvertCollapsedListener implements ActionListener {
     public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-      log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+      log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get(ACTION_PARAM_KEY) + "'");
       //update(input);
       invertCollapsed();
       //process();
@@ -107,7 +141,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
 	private class ExpandActionListener implements ActionListener {
 		public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-			log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+			log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get(ACTION_PARAM_KEY) + "'");
 			//update(input);
 			expand();
 			//process();
@@ -117,7 +151,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   private class CollapseActionListener implements ActionListener {
     public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-      log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get("param") + "'");
+      log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get(ACTION_PARAM_KEY) + "'");
       //update(input);
       collapse();
       //process();
@@ -166,30 +200,51 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		}
 	}
 
+	/**
+   * Returns the number of child nodes this tree node has. The display widget is
+   * not counted as a child node.
+   */
 	public int getNodeCount() {
 		return nodeCount;
 	}
 
+	/**
+   * Adds the given node as the last child node of this tree node.
+   * 
+   * @param node
+   *          child node to be added.
+   * @return index of the added child node.
+   */
 	public int addNode(TreeNodeWidget node) {
 		addWidget(Integer.toString(nodeCount), node);
 		return nodeCount++;
 	}
 
+	/**
+   * Appends all given nodes to this tree node.
+   * 
+   * @param nodes
+   *          list of {@link TreeNodeWidget}s to be added.
+   */
 	public void addAllNodes(List nodes) {
 		for (Iterator i = nodes.iterator(); i.hasNext(); ) {
 			addNode((TreeNodeWidget) i.next());
 		}
 	}
+
 /*
+  //TODO implementation 
 	public void addNode(TreeNodeWidget node, int index) {
-		
 	}
 
+  //TODO implementation 
 	public TreeNodeWidget removeNode(int index) {
-		
 	}
 */
-	// returns List<TreeNodeWidget>
+
+	/**
+	 * Removes all child nodes of this tree node.
+	 */
 	public void removeAllNodes() {
 		for (int i = 0; i < nodeCount; i++) {
 			removeWidget(Integer.toString(i));
@@ -197,16 +252,30 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		nodeCount = 0;
 	}
 
+	/**
+   * Returns the display widget of this tree node. Root node of the tree ({@link TreeWidget})
+   * has no display widget ({@link #getDisplay()} is <code>null</code>).
+   */
 	public Widget getDisplay() {
 		return (Widget) getChildren().get(DISPLAY_KEY);
 	}
 
+	/**
+   * Returns a child node of this tree node.
+   * 
+   * @param index
+   *          index of the returned child node.
+   */
 	public TreeNodeWidget getNode(int index) {
 		Assert.isTrue(index >= 0 && index < nodeCount, "Index out of bounds");
 		return (TreeNodeWidget) getChildren().get(Integer.toString(index));
 	}
 
-	// returns List<TreeNodeWidget>
+	/**
+   * Returns all child nodes of this tree node.
+   * 
+   * @return list of {@link TreeNodeWidget}s.
+   */
 	public List getNodes() {
 		Map children = getChildren();
 		List nodes = new ArrayList(getNodeCount());
@@ -216,9 +285,13 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		return nodes;
 	}
 
+	/**
+   * Returns if this tree node has any child nodes.
+	 */
 	public boolean hasNodes() {
 		return getNodeCount() > 0;
 	}
+
 /*
 	public Object getViewModel() throws Exception {
 		return new ViewModel();
@@ -249,6 +322,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
 	}
 */
+
 	protected void render(OutputData output) throws Exception {
 		Writer out = ((HttpOutputData) output).getWriter();
 
