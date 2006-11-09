@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import org.araneaframework.uilib.core.BaseUIWidget;
+import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
 import org.araneaframework.uilib.form.data.StringData;
@@ -24,7 +25,15 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
     
     AutoCompleteTextControl actc = new AutoCompleteTextControl();
     actc.setDataProvider(new DemoACDataProvider());
-    
+    actc.addOnChangeEventListener(
+    	new OnChangeEventListener() {
+    		public void onChange() throws Exception {
+    			form.convertAndValidate();
+    			getMessageCtx().showInfoMessage("Changed, value is " + form.getValueByFullName("acinput") );
+    		};
+    	}
+    );
+
     form.addElement("acinput", "#Country", actc, new StringData(), false);
 
     addWidget("testform", form);
