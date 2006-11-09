@@ -2,6 +2,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.BaseApplicationService;
@@ -92,13 +93,30 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     script.append(getScopedFullFieldId());
     script.append("\", ");
     script.append(acRequestUrl);
-    script.append("\", {minChars: ");
-    script.append(viewModel.getMinCompletionLength());
-    script.append(", afterUpdateElement:");
-    script.append("function(el, selectedEl) { if (el.onblur) { f = el.onblur; return f(el);} }");
+    script.append("\", {");
+    
+    // Autocompleter options
+    for (Iterator i = getOptionMap().entrySet().iterator(); i.hasNext(); ) {
+    	Map.Entry entry = (Map.Entry) i.next();
+    	script.append((String)entry.getKey());
+    	script.append(":");
+    	script.append((String)entry.getValue());
+    	if (i.hasNext()) script.append(",");
+    }
+
     script.append("});");
 
 	return script.toString();
+  }
+  
+  /** @since 1.0.2 */
+  protected Map getOptionMap() {
+    AutoCompleteTextControl.ViewModel viewModel = ((AutoCompleteTextControl.ViewModel) controlViewModel);
+
+    Map result = new HashMap(2);
+    result.put("minChars", String.valueOf(viewModel.getMinCompletionLength()));
+    result.put("afterUpdateElement", "function(el, selectedEl) { _ap.event(el); }");
+    return result;
   }
   
   /* ***********************************************************************************
