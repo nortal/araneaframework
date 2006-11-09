@@ -18,9 +18,12 @@ package org.araneaframework.jsp.util;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
+import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiEvent;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 
 /**
@@ -73,5 +76,27 @@ public abstract class JspWidgetCallUtil {
    * @return {@link #SIMPLE_SUBMIT_FUNCTION} */
   public static String getSubmitScriptForEvent() {
     return SIMPLE_SUBMIT_FUNCTION;
+  }
+  
+  /** @since 1.0.2 */
+  public static String getSubmitScriptForEvent(String systemFormId, UiUpdateEvent event) {
+    StringBuffer sb = new StringBuffer();
+    sb.append("_ap.event_6(");
+    sb.append("document.forms['");
+    sb.append(systemFormId);
+    sb.append("'],");
+    String eventId = event.getId() != null ? "'" + event.getId() + "'" : "null";
+    String eventTarget = event.getTarget() != null ? "'" + event.getTarget() + "'" : "null";
+    String eventParam = event.getParam() != null ? "'" + event.getParam() + "'" : "null";
+    String eventPrecondition = event.getEventPrecondition() != null ? "'" + event.getEventPrecondition() + "'" : "null";
+    List updateRegionNames = event.getUpdateRegionNames() != null ? event.getUpdateRegionNames() : Collections.EMPTY_LIST;
+    
+    sb.append(eventId).append(",");
+    sb.append(eventTarget).append(",");
+    sb.append(eventParam).append(",");
+    sb.append(eventPrecondition).append(",");
+    sb.append("new Array(").append(JspUpdateRegionUtil.formatUpdateRegionsJS(updateRegionNames)).append(")");
+    sb.append(");");
+    return sb.toString();
   }
 }

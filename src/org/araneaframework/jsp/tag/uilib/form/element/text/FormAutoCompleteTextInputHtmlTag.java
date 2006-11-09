@@ -10,8 +10,11 @@ import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetCallUtil;
+import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
 
 /**
@@ -36,7 +39,19 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     Map attributes = new HashMap();
     attributes.put("maxlength", viewModel.getMaxLength());
     attributes.put("autocomplete", "off");
+
+    // TODO: make it completely consistent with every other tag 
+    // Disallow event output from base tag -- directly outwritten onblur attribute breaks onchange functionality
+    // due to autocomplete component attaching its own eventlisteners in javascript. Not sure why!
+    // Attaching base onblur with Event.observe() does not work quite correctly either. It is probably caused 
+    // by browser workaround in scriptaculous library.
+    boolean b = events;
+    events = false;
     writeTextInput(out, "text", true, attributes);
+    events = b;
+    // restore 
+    //out.write("<script>Event.observe($('" + getScopedFullFieldId() + "'), 'change', function(){ " + JspWidgetCallUtil.getSubmitScriptForEvent() +"});</script>");
+    
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "id", "ACdiv." + getScopedFullFieldId());
     JspUtil.writeAttribute(out, "class", divClass);
@@ -45,10 +60,10 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 
     String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY);
     StringBuffer acRequestUrl = constructACUrl(systemFormId);
-    
-    JspUtil.writeStartTag_SS(out, "script");
-    out.write(constructACRegistrationScript(viewModel, acRequestUrl));
-    JspUtil.writeEndTag(out, "script");
+
+   	JspUtil.writeStartTag_SS(out, "script");
+   	out.write(constructACRegistrationScript(viewModel, acRequestUrl));
+   	JspUtil.writeEndTag(out, "script");
 
     super.doEndTag(out);
     return EVAL_PAGE;
@@ -115,10 +130,15 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 
     Map result = new HashMap(2);
     result.put("minChars", String.valueOf(viewModel.getMinCompletionLength()));
-    result.put("afterUpdateElement", "function(el, selectedEl) { _ap.event(el); }");
+    if (!viewModel.isDisabled() && events && viewModel.isOnChangeEventRegistered())
+      result.put("afterUpdateElement", "function(el, selectedEl) {" + JspWidgetCallUtil.getSubmitScriptForEvent(systemFormId, getOnChangeEvent()) + "}");
     return result;
   }
   
+  protected UiUpdateEvent getOnChangeEvent() {
+    return new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, formFullId + "." + derivedId, (String)null, updateRegionNames);
+  }
+
   /* ***********************************************************************************
    * Tag attributes
    * ***********************************************************************************/
