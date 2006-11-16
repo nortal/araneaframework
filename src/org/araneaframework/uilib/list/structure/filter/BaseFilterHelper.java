@@ -204,13 +204,20 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 		if (result == null) {
 			result = list.getFieldLabel(fieldId);
 		}
+
 		if (result == null) {
-			if (fieldId.endsWith(LOW_SUFFIX)) {				
-				result = FilterFormUtil.getLabelForLowField(getL10nCtx(),
-						getFieldIdFromLowValueId(fieldId));
+			if (fieldId.endsWith(LOW_SUFFIX)) {
+				String listFieldId = getFieldIdFromLowValueId(fieldId);
+				String fieldLabel = (String) this.labels.get(listFieldId);
+				if (fieldLabel == null) fieldLabel = list.getFieldLabel(listFieldId);
+
+				result = FilterFormUtil.getLabelForLowField(getL10nCtx(), fieldLabel);
 			} else if (fieldId.endsWith(HIGH_SUFFIX)) {
-				result = FilterFormUtil.getLabelForHighField(getL10nCtx(),
-						getFieldIdFromHighValueId(fieldId));
+				String listFieldId = getFieldIdFromHighValueId(fieldId);
+				String fieldLabel = (String) this.labels.get(listFieldId);
+				if (fieldLabel == null) fieldLabel = list.getFieldLabel(listFieldId);
+				
+				result = FilterFormUtil.getLabelForHighField(getL10nCtx(), fieldLabel);
 			}
 		}
 		return result;

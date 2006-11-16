@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
-2006.11.xx    | Aranea 1.0.2
+2006.11.16    | Aranea 1.0.2
 
 Features and Improvements
     <ui:autoCompleteTextInput> triggers onChange event when something         | See
@@ -10,6 +10,9 @@ Bugfixes
     'araneaCustomConfProperties' init parameter was ignored by dispatcher     | See #261
     Default properties could not be used in local Aranea configuration        | See #262
     <ui:timeInput> did not write out TimeControl's onChangeEventListener      | See #258
+    ComponentUtil.LISTENER_KEY contained dots (caused broken scoping)         | See #266
+    List docs mixed up strict and non-strict filter definition                | See change #134
+    Range filter produced invalid labels when erroneus filter input entered   | See #259
 
 ---------------------------------------------------------------------------------------------
 2006.11.03    | Aranea 1.0.1
