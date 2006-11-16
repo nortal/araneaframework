@@ -1534,8 +1534,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
               </row>
 
               <row>
-                <entry><literal>initAddForm(FormWidget
-                addForm)</literal></entry>
+                <entry><literal>initAddForm(FormWidget addForm)</literal></entry>
 
                 <entry>Should initialize the form that will be used to add new
                 rows. Usually modifies the supplied form as calling

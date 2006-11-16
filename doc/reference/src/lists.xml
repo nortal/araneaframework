@@ -365,7 +365,7 @@ myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisti
 
               <code>setStrict(boolean)</code>
 
-               one assigns new filters to disallow equality or not. By default equality is allowed (strict). This applies to filters such as GreaterThan, LowerThan, Range etc. 
+               one assigns new filters to disallow equality or not. By default equality is not allowed (strict). This applies to filters such as GreaterThan, LowerThan, Range etc. 
             </listitem>
           </varlistentry>
         </variablelist></para>
