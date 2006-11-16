@@ -26,6 +26,10 @@ import org.araneaframework.core.Assert;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ComponentUtil {
+  /** 
+   * Prior to 1.0.2 this constant contained illegal characters (dots), 
+   * thus using <code>addListenerComponent</code> broke component name 
+   * scoping. */
   public static final String LISTENER_KEY = "ComponentUtil_LISTENER";
   
   /**
