@@ -26,7 +26,7 @@ import org.araneaframework.core.Assert;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ComponentUtil {
-  public static final String LISTENER_KEY = "org.araneaframework.core.util.ComponentUtil.LISTENER";
+  public static final String LISTENER_KEY = "ComponentUtil_LISTENER";
   
   /**
    * This method will attach the listener component to the target custom component, allowing it to receive
