@@ -30,9 +30,9 @@ var AraneaTree = {
 	action: function(element, actionId, scopedActionTarget, actionParam) {
 		var treeNode = this.getSurroundingTreeNode(element);
 		var tree = this.getSurroundingTree(element);
-		var noSync = tree.getAttribute('arn-tree-noSync').toLowerCase() == 'true';
+		var nosync = tree.getAttribute('arn-tree-nosync').toLowerCase() == 'true';
 		var fullActionTarget = scopedActionTarget ? treeNode.id + '.' + scopedActionTarget : treeNode.id;
-		araneaPage().action(element, actionId, fullActionTarget, actionParam, noSync, this.getUpdateFunction(treeNode.id));
+		araneaPage().action(element, actionId, fullActionTarget, actionParam, nosync, this.getUpdateFunction(treeNode.id));
 		return false;
 	},
 

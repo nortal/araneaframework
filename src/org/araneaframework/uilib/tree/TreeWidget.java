@@ -18,7 +18,6 @@ package org.araneaframework.uilib.tree;
 
 import org.araneaframework.Environment;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 
 /**
@@ -30,7 +29,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
 	private TreeDataProvider dataProvider;
 	private boolean disposeChildren = true;
-  private boolean sync = false;
+  private boolean sync = true;
 
   //TODO features:
   // * disable use of action calls (AJAX)
@@ -42,11 +41,11 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
    * Creates a new {@link TreeWidget} instance.
    * 
    * @param dataProvider
-   *          tree data provider.
+   *          tree data provider. Can be <code>null</code>, then nodes are
+   *          not self-openable (plus sign is not shown in front of every node).
    */
 	public TreeWidget(TreeDataProvider dataProvider) {
 		super();
-		Assert.notNullParam(dataProvider, "dataProvider");
 		this.dataProvider = dataProvider;
 	}
 

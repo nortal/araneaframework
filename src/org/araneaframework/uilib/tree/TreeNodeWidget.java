@@ -169,7 +169,10 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
 	// returns List<TreeNodeWidget>
 	protected List loadChildren() {
-		return getTreeCtx().getDataProvider().getChildren(this);
+    if (getTreeCtx().getDataProvider() != null) {
+      return getTreeCtx().getDataProvider().getChildren(this);
+    }
+    return null;
 	}
 
 	public boolean isCollapsed() {
@@ -177,7 +180,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	}
 
 	public void expand() {
-		Assert.isTrue(isCollapsed(), "Node must be collapsed");
 		if (getTreeCtx().disposeChildren()) {
 			addAllNodes(loadChildren());
 		}
@@ -185,7 +187,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	}
 
 	public void collapse() {
-		Assert.isTrue(!isCollapsed(), "Node must be expanded");
 		if (getTreeCtx().disposeChildren()) {
 			removeAllNodes();
 		}
@@ -200,33 +201,19 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		}
 	}
 
-	/**
-   * Returns the number of child nodes this tree node has. The display widget is
-   * not counted as a child node.
-   */
 	public int getNodeCount() {
 		return nodeCount;
 	}
 
-	/**
-   * Adds the given node as the last child node of this tree node.
-   * 
-   * @param node
-   *          child node to be added.
-   * @return index of the added child node.
-   */
 	public int addNode(TreeNodeWidget node) {
 		addWidget(Integer.toString(nodeCount), node);
 		return nodeCount++;
 	}
 
-	/**
-   * Appends all given nodes to this tree node.
-   * 
-   * @param nodes
-   *          list of {@link TreeNodeWidget}s to be added.
-   */
 	public void addAllNodes(List nodes) {
+    if (nodes == null)
+      return;
+
 		for (Iterator i = nodes.iterator(); i.hasNext(); ) {
 			addNode((TreeNodeWidget) i.next());
 		}
@@ -242,9 +229,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	}
 */
 
-	/**
-	 * Removes all child nodes of this tree node.
-	 */
 	public void removeAllNodes() {
 		for (int i = 0; i < nodeCount; i++) {
 			removeWidget(Integer.toString(i));
@@ -252,30 +236,15 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		nodeCount = 0;
 	}
 
-	/**
-   * Returns the display widget of this tree node. Root node of the tree ({@link TreeWidget})
-   * has no display widget ({@link #getDisplay()} is <code>null</code>).
-   */
 	public Widget getDisplay() {
 		return (Widget) getChildren().get(DISPLAY_KEY);
 	}
 
-	/**
-   * Returns a child node of this tree node.
-   * 
-   * @param index
-   *          index of the returned child node.
-   */
 	public TreeNodeWidget getNode(int index) {
 		Assert.isTrue(index >= 0 && index < nodeCount, "Index out of bounds");
 		return (TreeNodeWidget) getChildren().get(Integer.toString(index));
 	}
 
-	/**
-   * Returns all child nodes of this tree node.
-   * 
-   * @return list of {@link TreeNodeWidget}s.
-   */
 	public List getNodes() {
 		Map children = getChildren();
 		List nodes = new ArrayList(getNodeCount());
@@ -285,9 +254,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		return nodes;
 	}
 
-	/**
-   * Returns if this tree node has any child nodes.
-	 */
 	public boolean hasNodes() {
 		return getNodeCount() > 0;
 	}
@@ -329,14 +295,17 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		// Render display widget
 		Widget display = getDisplay();
 		if (display != null) {	// display is null if this is root node (TreeWidget)
-		  JspUtil.writeOpenStartTag(out, "a");
-		  JspUtil.writeAttribute(out, "href", "#");
-		  JspUtil.writeAttribute(out, "onclick", "return AraneaTree.toggleNode(this);");
-		  JspUtil.writeCloseStartTag_SS(out);
-		  out.write(isCollapsed() ? "+" : "-");
-		  JspUtil.writeEndTag_SS(out, "a");
+      if (getTreeCtx().getDataProvider() != null) {
+  		  JspUtil.writeOpenStartTag(out, "a");
+  		  JspUtil.writeAttribute(out, "href", "#");
+  		  JspUtil.writeAttribute(out, "onclick", "return AraneaTree.toggleNode(this);");
+  		  JspUtil.writeCloseStartTag_SS(out);
+  		  out.write(isCollapsed() ? "+" : "-");
+  		  JspUtil.writeEndTag_SS(out, "a");
+      }
 		  try {
 		    output.pushScope(TreeNodeWidget.DISPLAY_KEY);
+        out.flush();
 		    display._getWidget().render(output);
 		  } finally {
 				output.popScope();
@@ -350,7 +319,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
       } else {
         JspUtil.writeOpenStartTag(out, "ul");
         JspUtil.writeAttribute(out, "class", "aranea-tree");
-        JspUtil.writeAttribute(out, "arn-tree-noSync", Boolean.toString(!getTreeCtx().getSync()));
+        JspUtil.writeAttribute(out, "arn-tree-nosync", Boolean.toString(!getTreeCtx().getSync()));
         JspUtil.writeCloseStartTag_SS(out);
       }
 			List nodes = getNodes();
@@ -361,6 +330,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 					JspUtil.writeAttribute(out, "id", output.getScope());
           JspUtil.writeAttribute(out, "class", "aranea-tree-node");
 					JspUtil.writeCloseStartTag(out);
+          out.flush();
 					((TreeNodeWidget) i.next()).render(output);
 				} finally {
 					output.popScope();

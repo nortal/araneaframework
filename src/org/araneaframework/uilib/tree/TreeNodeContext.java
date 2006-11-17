@@ -17,8 +17,9 @@
 package org.araneaframework.uilib.tree;
 
 import java.io.Serializable;
-
+import java.util.List;
 import org.araneaframework.OutputData;
+import org.araneaframework.Widget;
 
 /**
  * Tree node context. General interface that can be used to access current tree
@@ -59,5 +60,59 @@ public interface TreeNodeContext extends Serializable {
    * Could be called from action listener of tree node display widget.
    */
 	void renderNode(OutputData data) throws Exception;
+
+  /**
+   * Returns the number of child nodes this tree node has. The display widget is
+   * not counted as a child node.
+   */
+  int getNodeCount();
+
+  /**
+   * Adds the given node as the last child node of this tree node.
+   * 
+   * @param node
+   *          child node to be added.
+   * @return index of the added child node.
+   */
+  int addNode(TreeNodeWidget node);
+
+  /**
+   * Appends all given nodes to this tree node.
+   * 
+   * @param nodes
+   *          list of {@link TreeNodeWidget}s to be added.
+   */
+  void addAllNodes(List nodes);
+
+  /**
+   * Removes all child nodes of this tree node.
+   */
+  void removeAllNodes();
+
+  /**
+   * Returns the display widget of this tree node. Root node of the tree ({@link TreeWidget})
+   * has no display widget ({@link #getDisplay()} is <code>null</code>).
+   */
+  Widget getDisplay();
+
+  /**
+   * Returns a child node of this tree node.
+   * 
+   * @param index
+   *          index of the returned child node.
+   */
+  TreeNodeWidget getNode(int index);
+
+  /**
+   * Returns all child nodes of this tree node.
+   * 
+   * @return list of {@link TreeNodeWidget}s.
+   */
+  List getNodes();
+
+  /**
+   * Returns if this tree node has any child nodes.
+   */
+  boolean hasNodes();
 
 }
