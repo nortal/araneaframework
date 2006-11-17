@@ -52,7 +52,7 @@ public class StandardSerializingAuditFilterService extends BaseService implement
   
   /**
    * Sets the path where to write the serialized class in xml format. The path must
-   * be valid and writeable.
+   * be valid and writeable. Example: "/home/user/tmp".
    * @param testXmlSessionPath
    */
   public void setTestXmlSessionPath(String testXmlSessionPath) {

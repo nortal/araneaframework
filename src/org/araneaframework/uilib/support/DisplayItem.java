@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.support;
 
+import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 
 
@@ -23,7 +24,7 @@ import org.araneaframework.uilib.form.control.SelectControl;
 /**
  * Represents one item in the combo-box of the select element.
  * <p>
- * {@link SelectControl} manages a list of them.
+ * {@link SelectControl} and {@link MultiSelectControl} manage a list of them.
  * Each item is characterized by its value and label.
  *
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
