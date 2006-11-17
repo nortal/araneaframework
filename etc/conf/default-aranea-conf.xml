@@ -56,7 +56,6 @@
     <property name="childService" ref="araneaThreadServiceRouter"/>
     <property name="filterChain">     
       <list>
-        <ref bean="araneaSynchronizingFilter"/>
         <ref bean="araneaLocalizationFilter"/>
         <ref bean="araneaJspConfigFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
@@ -85,7 +84,6 @@
     <property name="filterChain">
       <list>
         <ref bean="araneaThreadCloningFilter"/>
-        <ref bean="araneaSynchronizingFilter"/>
         <ref bean="araneaMountPointFilter"/>
         <ref bean="araneaContinuationFilter"/> 
         <ref bean="araneaUpdateRegionFilter"/>
@@ -185,10 +183,6 @@
     id="araneaJspConfigFilter" singleton="false">
     <property name="submitCharset" value="${l10n.encoding}"/>
     <property name="jspPath" value="${jsp.path}"/>        
-  </bean>
-
-  <bean class="org.araneaframework.framework.filter.StandardSynchronizingFilterService" 
-    id="araneaSynchronizingFilter" singleton="false">
   </bean>
   
   <bean class="org.araneaframework.http.filter.StandardMountingFilterService" 

@@ -104,7 +104,7 @@ public abstract class BaseComponent implements Component {
   /**
    * Sets the environment of this BaseComponent to environment. 
    */
-  protected void _setEnvironment(Environment env) {
+  protected synchronized void _setEnvironment(Environment env) {
     this.environment = env;
   }
 
