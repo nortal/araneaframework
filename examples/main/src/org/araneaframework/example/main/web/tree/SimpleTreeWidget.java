@@ -43,7 +43,7 @@ public class SimpleTreeWidget extends BaseUIWidget {
 
 	protected void init() throws Exception {
 		setViewSelector("tree/simpleTree");
-		tree = new TreeWidget(new SimpleTreeDataProvider());
+		tree = new TreeWidget(new SimpleTreeDataProvider(), false);
 		addWidget("tree", tree);
 	}
 
@@ -72,22 +72,36 @@ public class SimpleTreeWidget extends BaseUIWidget {
 
       addActionListener("test", new ActionListener() {
 
-        //TODO TreeNodeDisplayWidget which has in ActionListener processAction(String param) that also does renderNode 
+        //TODO Create TreeNodeDisplayWidget which has ActionListener.processAction(String param)
+        //     that handles the following boilerplate code 
         public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-          log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get(TreeNodeWidget.ACTION_PARAM_KEY) + "'");
+          String param = (String) input.getScopedData().get(TreeNodeWidget.ACTION_PARAM_KEY);      // Boilerplate code
+          log.debug("Received action with actionId='" + actionId + "' and param='" + param + "'"); // Boilerplate code
           putViewData("counter", new Integer(++counter));
-          getTreeNodeCtx().renderNode(output);
+          getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
 				}
 
       });
-		}
+
+      addActionListener("sleep", new ActionListener() {
+
+        public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
+          String param = (String) input.getScopedData().get(TreeNodeWidget.ACTION_PARAM_KEY);      // Boilerplate code
+          log.debug("Received action with actionId='" + actionId + "' and param='" + param + "'"); // Boilerplate code
+          Thread.sleep(10000);
+          getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
+        }
+
+      });
+    }
 
 		protected TreeNodeContext getTreeNodeCtx() {
 			return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
 		}
 
-		public void handleEventInvertCollapsed() {
+		public void handleEventInvertCollapsed() throws Exception {
 			getTreeNodeCtx().invertCollapsed();
+      Thread.sleep(10000);
 		}
 
 	}
