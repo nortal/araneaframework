@@ -1,10 +1,14 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
-2006.11.16    | Aranea 1.0.2
+2006.11.17    | Aranea 1.0.2
 
 Features and Improvements
     <ui:autoCompleteTextInput> triggers onChange event when something         | See
     is selected from the suggestion list                                      |     #264
+    
+    Utility for setting FormElement properties that are used when rendering   |
+    FormElement with Aranea JSP <ui:automaticFormElementTag> is now included  | See #257
+    in aranea.jar (class AutomaticFormElementUtil)                            |
 
 Bugfixes
     'araneaCustomConfProperties' init parameter was ignored by dispatcher     | See #261
@@ -12,7 +16,8 @@ Bugfixes
     <ui:timeInput> did not write out TimeControl's onChangeEventListener      | See #258
     ComponentUtil.LISTENER_KEY contained dots (caused broken scoping)         | See #266
     List docs mixed up strict and non-strict filter definition                | See change #134
-    Range filter produced invalid labels when erroneus filter input entered   | See #259
+    Range filter produced error messages containing invalid labels when       | See
+    non-validating filter input was entered                                   |     #259
 
 ---------------------------------------------------------------------------------------------
 2006.11.03    | Aranea 1.0.1
