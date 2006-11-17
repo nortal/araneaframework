@@ -17,8 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.tree;
 
 import java.io.Writer;
-
-import org.araneaframework.jsp.tag.context.WidgetContextTag;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 
 /**
@@ -34,7 +32,7 @@ public class TreeTag extends BaseWidgetTag {
 		super.doStartTag(out);
 		try {
 			getOutputData().pushScope(id);
-			out.flush(); // XXX needed, but WHY? 
+			out.flush();
 			widget._getWidget().render(getOutputData());
 		} finally {
 			getOutputData().popScope();
