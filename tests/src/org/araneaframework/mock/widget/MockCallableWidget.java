@@ -16,8 +16,8 @@
 
 package org.araneaframework.mock.widget;
 
-import org.araneaframework.Component;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.Widget;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
@@ -26,7 +26,7 @@ import org.araneaframework.framework.FlowContext.Handler;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class MockCallableWidget extends StandardWidget {
+public class MockCallableWidget extends BaseApplicationWidget {
   private boolean activateCalled = false;
   private boolean deactivateCalled = false;
   
@@ -70,7 +70,7 @@ public class MockCallableWidget extends StandardWidget {
    */
   public Configurator getConfigurator() {
     return new FlowContext.Configurator() {
-      public void configure(Component comp) throws Exception {
+      public void configure(Widget comp) throws Exception {
         MockCallableWidget.this.configureCalled = true;
       }
     };

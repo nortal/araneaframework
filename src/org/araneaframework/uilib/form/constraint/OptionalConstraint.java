@@ -16,52 +16,38 @@
 
 package org.araneaframework.uilib.form.constraint;
 
-import java.util.List;
 import org.araneaframework.Environment;
-import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.Constraint;
 
 /**
- * Constraint that will be applied iff the field has been read from the request.
+ * Optional {@link Constraint} only applies when constrained field has some
+ * real value. This is a wrapper around {@link Constraint}, wrapped 
+ * {@link Constraint} will be  applied only if the constrained field has 
+ * been read from the request.
  * 
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
- * 
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class OptionalConstraint extends BaseConstraint {
-
+public class OptionalConstraint extends BaseFieldConstraint {
   private Constraint constraint;
 
   public OptionalConstraint(Constraint constraint) {
     this.constraint = constraint;
   }
-
+  
   protected void validateConstraint() throws Exception {
-    if (getField().isRead()) 
+    if (isRead()) {
       constraint.validate();
+      addErrors(constraint.getErrors());
+      constraint.clearErrors();
+    }
   }
 
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
   }
 
-  public void setEnviroment(Environment enviroment) {
-    constraint.setEnvironment(enviroment);
+  public void setEnvironment(Environment environment) {
+    super.setEnvironment(environment);
+    constraint.setEnvironment(environment);
   }
-
-  public void setField(FormElement field) {
-    constraint.setField(field);
-    super.setField(field);
-  }
-
-  public void clearErrors() {
-    constraint.clearErrors();
-  }
-
-  public List getErrors() {
-    return constraint.getErrors();
-  }
-
-  public boolean isValid() {
-    return constraint.isValid();
-  }
-
 }

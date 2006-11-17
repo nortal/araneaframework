@@ -16,18 +16,17 @@
 
 package org.araneaframework.jsp.container;
 
-import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.jsp.UiException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 
 /**
  *
  */
 public interface UiWidgetContainer {
   
-  public static final String REQUEST_CONTEXT_KEY = "org.araneaframework.jsp.container.UiWidgetContainer";
+  public static final String KEY = "org.araneaframework.jsp.container.UiWidgetContainer";
   
   /**
    * Returns a widget from the container.
@@ -36,19 +35,16 @@ public interface UiWidgetContainer {
   
   /**
    * Returns the mapping from tags to their classes.
+   * 
+   * @param uri - uri of the taglib sought
    */
-  public Map getTagMapping(PageContext pageContext) throws JspException;
+  public Map getTagMapping(PageContext pageContext, String uri) throws JspException;
   
   /**
    * Scopes the widget full id adding a container identifier (in 
    * case there can be more than one container in one request).
-   * @throws UiException 
+   * @throws AraneaJspException 
    * @throws JspException 
    */
-  public String scopeWidgetFullId(PageContext pageContext, String fullWidgetId) throws UiException, JspException;
-    
-  /**
-   * Returns the JavaScript string that makes the call into controller framework to a widget.
-   */
-  public String buildWidgetCall(String systemFormId, String fullWidgetId, String eventId, String eventParam, List updateRegions) throws JspException ;
+  public String scopeWidgetFullId(PageContext pageContext, String fullWidgetId) throws AraneaJspException, JspException;
 }

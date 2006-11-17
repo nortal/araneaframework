@@ -18,13 +18,15 @@ package org.araneaframework.backend.list.helper.builder.compexpr;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.CompExprToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class BaseCompExprToSqlExprBuilder implements CompExprToSqlExprBuilder {
 	private static final Logger log = Logger.getLogger(BaseCompExprToSqlExprBuilder.class);
 	
@@ -35,7 +37,9 @@ public class BaseCompExprToSqlExprBuilder implements CompExprToSqlExprBuilder {
 	}
 
 	public SqlExpression buildSqlExpression(ComparatorExpression expression) {
-		log.debug("ComparatorExpression class: " + expression.getClass());
+		if (log.isDebugEnabled()) {
+			log.debug("ComparatorExpression class: " + expression.getClass().getName());			
+		}
 		CompExprToSqlExprTranslator translator =
 			(CompExprToSqlExprTranslator) this.translators.get(expression.getClass());
 		if (translator == null) {

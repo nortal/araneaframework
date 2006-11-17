@@ -17,11 +17,12 @@
 package org.araneaframework.uilib.form.data;
 
 import java.io.Serializable;
+import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.support.FileInfo;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FileInfoData extends Data implements Serializable {

@@ -16,11 +16,13 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.uilib.form.Converter;
+
 /**
  * Convert the <code>Boolean</code> to <code>Long</code>, true - 1, false -
  * 0 and back
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class BooleanToLongConverter extends BaseConverter {
@@ -42,7 +44,7 @@ public class BooleanToLongConverter extends BaseConverter {
   /**
    * Returns a <code>new BooleanToLong10Converter()</code>.
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new BooleanToLongConverter();
   }
 }

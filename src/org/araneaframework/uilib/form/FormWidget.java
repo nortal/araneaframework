@@ -20,11 +20,9 @@ import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Widget;
-import org.araneaframework.uilib.InvalidFormElementNameException;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.uilib.form.control.BaseControl;
-import org.araneaframework.uilib.form.control.Control;
-import org.araneaframework.uilib.form.data.Data;
+import org.araneaframework.core.Assert;
+import org.araneaframework.uilib.InvalidFormElementNameException;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.NameUtil;
 
@@ -32,8 +30,7 @@ import org.araneaframework.uilib.util.NameUtil;
 /**
  * This class represents a form element that can contain other form elements.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
- * 
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormWidget extends GenericFormElement {
 
@@ -73,17 +70,23 @@ public class FormWidget extends GenericFormElement {
    * @return a contained element by its name.
    */
   public GenericFormElement getElement(String elementName) {
-    return (GenericFormElement) elements.get(elementName);
+    if (elementName.indexOf('.') == -1)
+      return (GenericFormElement) elements.get(elementName);
+    return getGenericElementByFullName(elementName);
   }
 
   /**
-   * Adds a contained element after specified id.
+   * Adds a contained element with given id after the element with specified id.
    * 
-   * @param element contained element.
-   * @param name element name
-   * @throws Exception 
+   * @param id added element id
+   * @param element added element
+   * @param afterId element id after which contained element should be added
    */
   public void addElementAfter(String id, GenericFormElement element, String afterId) throws Exception {
+    Assert.notEmptyParam(id, "id");
+    Assert.notEmptyParam(afterId, "afterId");
+    Assert.notNullParam(element, "element");
+    
     LinkedMap newElements = new LinkedMap();  
       
     if (!getElements().containsKey(afterId))
@@ -105,13 +108,18 @@ public class FormWidget extends GenericFormElement {
   }
   
   /**
-   * Adds a contained element before specified id.
+   * Adds a contained element with given id before the element with specified id.
+   * Should be only used in RARE cases where internal order of elements matters for some reason.
    * 
-   * @param element contained element.
-   * @param name element name
-   * @throws Exception 
+   * @param id added element id
+   * @param element added element
+   * @param beforeId element id before which contained element should be added
    */
   public void addElementBefore(String id, GenericFormElement element, String beforeId) throws Exception {
+    Assert.notEmptyParam(id, "id");
+    Assert.notEmptyParam(beforeId, "beforeId");
+    Assert.notNullParam(element, "element");
+    
     LinkedMap newElements = new LinkedMap();  
     
     if (!elements.containsKey(beforeId))
@@ -132,13 +140,15 @@ public class FormWidget extends GenericFormElement {
   }
   
   /**
-   * Adds a contained element. (better use {@link #addElement(GenericFormElement)}, since it's safer.
+   * Adds a contained element.
    * 
    * @param element contained element.
    * @param id element id
-   * @throws Exception 
    */
   public void addElement(String id, GenericFormElement element) throws Exception {
+    Assert.notEmptyParam(id, "id");
+    Assert.notNullParam(element, "element");
+    
     elements.put(id, element);
     
     if (isInitialized())
@@ -150,6 +160,8 @@ public class FormWidget extends GenericFormElement {
    * @throws Exception 
    */
   public void removeElement(String id) throws Exception {
+    Assert.notEmptyParam(id, "id");
+
     elements.remove(id);
     
     if (isInitialized())
@@ -186,7 +198,12 @@ public class FormWidget extends GenericFormElement {
   public void markBaseState() {
     for (Iterator i = elements.values().iterator(); i.hasNext();)
       ((GenericFormElement) i.next()).markBaseState();
-  }   
+  }
+  
+  public void restoreBaseState() {
+    for (Iterator i = elements.values().iterator(); i.hasNext();)
+       ((GenericFormElement) i.next()).restoreBaseState();
+  }
   
   public boolean isStateChanged() {
   	boolean result = false;
@@ -230,30 +247,28 @@ public class FormWidget extends GenericFormElement {
   //*********************************************************************
 
   /**
-   * Adds a new composite element.
+   * Adds a new subform to this {@link FormWidget}.
+   * @param id subform id.
    * 
-   * @param elementName the name of the form element.
-   * 
-   * @return a new composite element.
-   * @throws Exception 
+   * @return created subform
    */
   public FormWidget addSubForm(String id) throws Exception {
+    Assert.notEmptyParam(id, "id");
+    
   	FormWidget result = new FormWidget();
   	addElement(id, result);
     return result;
   }
 
   /**
-   * This method makes a {@link FormElement}adding a {@link org.araneaframework.uilib.form.converter.BaseConverter}to the
-   * given {@link BaseControl}and {@link Data}.
+   * This method makes a {@link FormElement} with given {@link Control} and {@link Data}.
    * 
-   * @param elementName the name of the form element.
-   * @param labelId id of the localized label.
-   * @param control the type of control data.
-   * @param data the type of data.
-   * @param mandatory whether the element must be present in request.
-   * @return {@link FormElement}by given parameters.
-   * @throws Exception 
+   * @param labelId localized label id
+   * @param control the type of control
+   * @param data the type of data
+   * @param initialValue initial value for data
+   * @param mandatory whether the element must be filled in
+   * @return {@link FormElement} with given configuration
    */
   public FormElement createElement(String labelId, Control control, Data data, Object initialValue, boolean mandatory) throws Exception {
   	if (data != null)
@@ -263,23 +278,22 @@ public class FormWidget extends GenericFormElement {
 
   
   /**
-   * This method makes a {@link FormElement}adding a {@link org.araneaframework.uilib.form.converter.BaseConverter}to the
-   * given {@link BaseControl}and {@link Data}.
+   * This method makes a {@link FormElement} with given {@link Control} and {@link Data}.
    * 
-   * @param elementName the name of the form element.
    * @param labelId id of the localized label.
    * @param control the type of control data.
    * @param data the type of data.
    * @param mandatory whether the element must be present in request.
-   * @return {@link FormElement}by given parameters.
-   * @throws Exception 
+   * @return {@link FormElement} with given configuration
    */
   public FormElement createElement(String labelId, Control control, Data data, boolean mandatory) throws Exception {
+    Assert.notNullParam(control, "control");
+    
     FormElement result = new FormElement();
     
     result.setLabel(labelId);
-    control.setMandatory(mandatory);    
-    control.setLabel(labelId);
+    result.setMandatory(mandatory);    
+    result.setLabel(labelId);
     result.setControl(control);
     if (data != null) {
       result.setData(data);
@@ -288,15 +302,13 @@ public class FormWidget extends GenericFormElement {
   }
 
   /**
-   * This method adds a {@link FormElement}adding a {@link org.araneaframework.uilib.form.converter.BaseConverter}to the given
-   * {@link BaseControl}and {@link Data}.
+   * This method adds a {@link FormElement} to this {@link FormWidget}.
    * 
    * @param elementName the name of the form element.
    * @param labelId id of the localized label.
    * @param control the type of control data.
    * @param data the type of data.
    * @param mandatory whether the element must be present in request.
-   * @throws Exception 
    */
   public FormElement addElement(String elementName, String labelId, Control control, Data data, boolean mandatory) throws Exception {
   	FormElement result = createElement(labelId, control, data, mandatory);
@@ -305,15 +317,13 @@ public class FormWidget extends GenericFormElement {
   }
   
   /**
-   * This method adds a {@link FormElement}adding a {@link org.araneaframework.uilib.form.converter.BaseConverter}to the given
-   * {@link BaseControl}and {@link Data}.
+   * This method adds a {@link FormElement} to this {@link FormWidget}.
    * 
    * @param elementName the name of the form element.
    * @param labelId id of the localized label.
    * @param control the type of control data.
    * @param data the type of data.
    * @param mandatory whether the element must be present in request.
-   * @throws Exception 
    */
   public FormElement addElement(String elementName, String labelId, Control control, Data data, Object initialValue, boolean mandatory) throws Exception {
   	FormElement result = createElement(labelId, control, data, initialValue, mandatory);
@@ -332,6 +342,8 @@ public class FormWidget extends GenericFormElement {
    * @return form element specified by full name.
    */
   public GenericFormElement getGenericElementByFullName(String fullName) {
+    Assert.notEmptyParam(fullName, "fullName");
+    
     GenericFormElement result = null;
 
     String currentElementName = NameUtil.getNamePrefix(fullName);
@@ -431,7 +443,7 @@ public class FormWidget extends GenericFormElement {
   /**
    * Represents a composite form element view model.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends GenericFormElement.ViewModel {
@@ -445,5 +457,4 @@ public class FormWidget extends GenericFormElement {
       return getChildren();
     } 
   }
-  
 }

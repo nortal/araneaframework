@@ -16,8 +16,6 @@
 
 package org.araneaframework;
 
-import java.io.Serializable;
-
 /**
  * Implementers can enrich their objects with external Objects 
  * implementing certain interfaces. If a class implements Extendable
@@ -43,9 +41,9 @@ import java.io.Serializable;
  * </pre>
  * @see org.araneaframework.Narrowable
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface Extendable extends Serializable {
+public interface Extendable {
   
   /**
    * Adds an extension to the class, an interface with its implementation.

@@ -17,10 +17,10 @@
 package org.araneaframework.tests;
 
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
 import org.araneaframework.Widget;
-import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
+import org.araneaframework.tests.util.RequestUtil;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
@@ -39,20 +39,16 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class WidgetTest extends TestCase {
-
-  private static Logger log = Logger.getLogger(WidgetTest.class);
-
   boolean eventsWork = false;
 
   private FormWidget makeUsualForm() throws Exception {
 
     //Creating form :-)
     FormWidget testForm = new FormWidget();
-    testForm._getComponent().init(new MockEnviroment());
     
     //Adding elements to form
     testForm.addElement("myCheckBox", "my checkbox", new CheckboxControl(), new BooleanData(), true);
@@ -71,6 +67,8 @@ public class WidgetTest extends TestCase {
     mySelect.addItem(new DisplayItem("2", "two"));
     mySelect.addItem(new DisplayItem("3", "three"));
     mySelect.addItem(new DisplayItem("4", "four"));
+    
+    testForm._getComponent().init(new MockEnvironment());
 
     return testForm;
   }
@@ -79,24 +77,27 @@ public class WidgetTest extends TestCase {
    * Testing reading from valid request.
    */
   public void testFormRequestHandling() throws Exception {
-
     FormWidget testForm = makeUsualForm();
-    
     Widget currentWidget = testForm;
-    
-    MockHttpServletRequest validRequest = new MockHttpServletRequest();
+    MockHttpServletRequest validRequest = RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-    validRequest.addParameter("testForm.__present", "true");
     validRequest.addParameter("testForm.myCheckBox", "true");
+    ((FormElement)testForm.getElement("myCheckBox")).rendered();
+
     validRequest.addParameter("testForm.myLongText", "108");
+    ((FormElement)testForm.getElement("myLongText")).rendered();
+    
+    ((FormElement)testForm.getElement("myDateTime")).rendered();
     validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
     validRequest.addParameter("testForm.myDateTime.time", "01:01");
-    validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
-    validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");    
     
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
+    validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
+    validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
     
     MockUiLibUtil.emulateHandleRequest(currentWidget, "testForm", validRequest);
-    currentWidget._getWidget().process();              
+    currentWidget._getWidget().process();
 
     assertTrue(((StringArrayRequestControl.ViewModel) testForm.getControlByFullName("myCheckBox")._getViewable().getViewModel()).getSimpleValue().equals("true"));
     assertTrue(((StringArrayRequestControl.ViewModel) testForm.getControlByFullName("myLongText")._getViewable().getViewModel()).getSimpleValue().equals("108"));

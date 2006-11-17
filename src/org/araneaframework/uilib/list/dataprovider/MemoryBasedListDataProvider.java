@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.BeanVariableResolver;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -39,7 +40,7 @@ import org.araneaframework.backend.list.model.ListItemsData;
  * Note, that all operations on items are made on the list of "processed", that
  * is ordered and filtered items.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public abstract class MemoryBasedListDataProvider implements ListDataProvider {
@@ -158,10 +159,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 	}
 
 	/**
-	 * Saves the list order. Transforms the order information into
-	 * {@link VoOrder}using
-	 * {@link OrderFactory#getVoOrder(Class, String, boolean)}and marks that
-	 * order has changed.
+	 * Sets the list order expression. 
 	 */
 	public void setOrderExpression(ComparatorExpression orderExpr) {
 		this.doOrder = true;
@@ -173,10 +171,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 	}
 
 	/**
-	 * Transforms the filter information into {@link VoFilter}using
-	 * {@link VoFilterBuilderVisitor}.
-	 * 
-	 * @throws Exception
+	 * Sets the list filter expression. 
 	 */
 	public void setFilterExpression(Expression filterExpr) {
 		this.doFilter = true;
@@ -204,11 +199,6 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 
 	/**
 	 * Processes the list items, filtering and ordering them, if there is need.
-	 * 
-	 * @param voFilter
-	 *            Value Object filter.
-	 * @param voOrder
-	 *            Value Object order.
 	 */
 	protected void process(BeanFilter beanFilter, Comparator beanOrder,
 			List all, List processed) {
@@ -247,9 +237,6 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 
 	/**
 	 * Orders the items.
-	 * 
-	 * @param voOrder
-	 *            Value Object order.
 	 */
 	protected void order(Comparator comparator, List ordered) {
 		log.debug("Ordering list itmes");
@@ -326,7 +313,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 			try {
 				return this.orderExpr.compare(this.resolver1, this.resolver2);
 			} catch (ExpressionEvaluationException e) {
-				throw new RuntimeException(e);
+				throw new NestableRuntimeException(e);
 			}
 		}
 	}
@@ -351,7 +338,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 				return ((Boolean) this.filterExpr.evaluate(this.resolver))
 						.booleanValue();
 			} catch (ExpressionEvaluationException e) {
-				throw new RuntimeException(e);
+				throw new NestableRuntimeException(e);
 			}
 		}
 	}

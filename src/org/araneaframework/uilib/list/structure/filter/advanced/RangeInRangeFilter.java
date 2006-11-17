@@ -12,230 +12,181 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.uilib.list.structure.filter.advanced;
 
+import java.util.Comparator;
 import java.util.Map;
 
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
-import org.araneaframework.backend.list.memorybased.expression.compare.GreaterThanExpression;
-import org.araneaframework.backend.list.memorybased.expression.compare.LowerThanExpression;
-import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
-import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
-import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
-import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
-import org.araneaframework.uilib.list.structure.ComparableType;
-import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.uilib.form.Control;
+import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.constraint.RangeConstraint;
+import org.araneaframework.uilib.list.structure.filter.FilterContext;
+import org.araneaframework.uilib.list.util.ExpressionUtil;
+import org.araneaframework.uilib.list.util.FilterFormUtil;
+import org.araneaframework.uilib.list.util.FormUtil;
+import org.araneaframework.uilib.list.util.NestedFormUtil;
+import org.araneaframework.uilib.util.Event;
 
 
-public abstract class RangeInRangeFilter extends ComparableType implements ListFilter {
-	
+public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
+
 	private static final long serialVersionUID = 1L;
 	
-	private String startColumnId;
-	private String endColumnId;
-	private String startFilterInfoKey;
-	private String endFilterInfoKey;
-	
-	protected RangeInRangeFilter(String startColumnId, String endColumnId) {
-		setStartColumnId(startColumnId);
-		setEndColumnId(endColumnId);
+	private Comparator comparator;
+
+	public static RangeInRangeFilter getFieldRangeInValueRangeInstance(FilterContext ctx,
+			String lowFieldId, String highFieldId,
+			String lowValueId, String highValueId) {
+		RangeInRangeFilter filter;
+		if (ctx.isStrict()) {
+			filter = new FieldRangeInValueRangeStrict();
+		} else {
+			filter = new FieldRangeInValueRangeNonStrict();
+		}
+		return init(ctx, filter, lowFieldId, highFieldId, lowValueId, highValueId);
+	}
+
+	public static RangeInRangeFilter getValueRangeInFieldRangeInstance(FilterContext ctx,
+			String lowFieldId, String highFieldId,
+			String lowValueId, String highValueId) {
+		RangeInRangeFilter filter;		
+		if (ctx.isStrict()) {
+			filter = new ValueRangeInFieldRangeStrict();
+		} else {
+			filter = new ValueRangeInFieldRangeNonStrict();
+		}		
+		return init(ctx, filter, lowFieldId, highFieldId, lowValueId, highValueId);
+	}
+
+	public static RangeInRangeFilter getOverlapInstance(FilterContext ctx,
+			String lowFieldId, String highFieldId,
+			String lowValueId, String highValueId) {
+		RangeInRangeFilter filter;		
+		if (ctx.isStrict()) {
+			filter = new OverlapStrict();
+		} else {
+			filter = new OverlapNonStrict();
+		}		
+		return init(ctx, filter, lowFieldId, highFieldId, lowValueId, highValueId);
 	}
 	
-	protected RangeInRangeFilter() {
-		// empty constructor
+	private static RangeInRangeFilter init(final FilterContext ctx,
+			final RangeInRangeFilter filter,
+			final String lowFieldId, final String highFieldId,
+			final String lowValueId, final String highValueId) {
+		filter.setLowFieldId(lowFieldId);
+		filter.setHighFieldId(highFieldId);
+		filter.setLowValueId(lowValueId);
+		filter.setHighValueId(highValueId);
+		
+		ctx.addInitEvent(new Event() {
+			public void run() {
+				Comparator low = ctx.getFieldComparator(lowFieldId);
+				Comparator high = ctx.getFieldComparator(highFieldId);
+				if (low == null ? high == null : low.equals(high)) {
+					filter.setComparator(low);
+				} else {
+					throw new IllegalArgumentException("Low field and high field must have the same comparator");				
+				}
+			}
+		});
+		
+		return filter;
+	}
+	
+	public static void addToForm(FilterContext ctx, String lowId, String highId, FormElement lowElement, FormElement highElement) throws Exception {
+		NestedFormUtil.addElement(ctx.getForm(), lowId, lowElement);
+		NestedFormUtil.addElement(ctx.getForm(), highId, highElement);
+		FormUtil.addConstraint(ctx.getForm(),
+				new RangeConstraint(lowElement, highElement, true));
+	}
+	
+	public static void addToForm(FilterContext ctx, String lowId, String highId, Control lowControl, Control highControl) throws Exception {
+		addToForm(ctx, lowId, highId,
+				FilterFormUtil.createElement(ctx, lowId, lowControl),
+				FilterFormUtil.createElement(ctx, highId, highControl));
+	}
+	
+	public static void addToForm(FilterContext ctx, String lowId, String highId) throws Exception {
+		addToForm(ctx, lowId, highId,
+				FilterFormUtil.createElement(ctx, lowId),
+				FilterFormUtil.createElement(ctx, highId));
 	}	
 	
-	public String getEndColumnId() {
-		return this.endColumnId;
+	public Comparator getComparator() {
+		return comparator;
+	}
+
+	public void setComparator(Comparator comparator) {
+		this.comparator = comparator;
 	}
 	
-	public RangeInRangeFilter setEndColumnId(String endColumnId) {
-		if (endColumnId == null) {
-			throw new RuntimeException("Column Id must be not null");
-		}
-		this.endColumnId = endColumnId;
-		if (this.endColumnId == null) {
-			this.endColumnId = endColumnId;
-		}
-		return this;
-	}
-	
-	public String getEndFilterInfoKey() {
-		return this.endFilterInfoKey;
-	}
-	
-	public RangeInRangeFilter setEndFilterInfoKey(String endFilterInfoKey) {
-		this.endFilterInfoKey = endFilterInfoKey;
-		return this;
-	}
-	
-	public String getStartColumnId() {
-		return this.startColumnId;
-	}
-	
-	public RangeInRangeFilter setStartColumnId(String startColumnId) {
-		if (startColumnId == null) {
-			throw new RuntimeException("Column Id must be not null");
-		}
-		this.startColumnId = startColumnId;
-		if (this.startFilterInfoKey == null) {
-			this.startFilterInfoKey = startColumnId;
-		}
-		return this;
-	}
-	
-	public String getStartFilterInfoKey() {
-		return this.startFilterInfoKey;
-	}
-	
-	public RangeInRangeFilter setStartFilterInfoKey(String startFilterInfoKey) {
-		this.startFilterInfoKey = startFilterInfoKey;
-		return this;
-	}
-	
-	private void validate() {
-		if (this.startColumnId == null) {
-			throw new RuntimeException("Start Column Id must be provided"); 
-		}
-		if (this.endColumnId == null) {
-			throw new RuntimeException("End Column Id must be provided"); 
-		}
-		if (this.startFilterInfoKey == null) {
-			throw new RuntimeException("Start FilterInfo key must be provided"); 
-		}
-		if (this.endFilterInfoKey == null) {
-			throw new RuntimeException("End FilterInfo key must be provided"); 
-		}
-		if (this.startColumnId.equals(this.endColumnId)) {
-			throw new RuntimeException("Start and End Column Ids must be different"); 
-		}
-		if (this.startFilterInfoKey.equals(this.endFilterInfoKey)) {
-			throw new RuntimeException("Start and End FilterInfo keys must be different"); 
-		}
-	}
-	
-	public Expression buildExpression(Map filterInfo) {
-		validate();
-		
-		Expression startVar = new VariableExpression(this.startColumnId);
-		Expression endVar = new VariableExpression(this.endColumnId);
-		Expression startVal = new ValueExpression(filterInfo.get(this.startFilterInfoKey));
-		Expression endVal = new ValueExpression(filterInfo.get(this.endFilterInfoKey));
-		return buildAction(startVar, endVar, startVal, endVal); 
-	}
-	
-	protected abstract Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal);
-	
-	/*
-	 * Subclasses
-	 */
-	
-	public static class ColumnRangeInValueRangeStrict extends RangeInRangeFilter {
-		private static final long serialVersionUID = 1L;
-		public ColumnRangeInValueRangeStrict(String startColumnId, String endColumnId) {
-			super(startColumnId, endColumnId);
+	static class FieldRangeInValueRangeStrict extends RangeInRangeFilter {
+		public Expression buildExpression(Map filterInfo) {
+			if (!isActive(filterInfo)) {
+				return null;
+			}
+			return ExpressionUtil.and(
+					ExpressionUtil.gt(buildLowVariableExpression(), buildLowValueExpression(filterInfo), getComparator()),
+					ExpressionUtil.lt(buildHighVariableExpression(), buildHighValueExpression(filterInfo), getComparator()));			
 		}		
-		public ColumnRangeInValueRangeStrict() {
-			super();
+	}
+	
+	static class FieldRangeInValueRangeNonStrict extends RangeInRangeFilter {
+		public Expression buildExpression(Map filterInfo) {
+			if (!isActive(filterInfo)) {
+				return null;
+			}
+			return ExpressionUtil.and(
+					ExpressionUtil.ge(buildLowVariableExpression(), buildLowValueExpression(filterInfo), getComparator()),
+					ExpressionUtil.le(buildHighVariableExpression(), buildHighValueExpression(filterInfo), getComparator()));			
 		}		
-		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			return new AndExpression().add(
-					new GreaterThanExpression(startVar, startVal)).add(
-							new LowerThanExpression(endVar, endVal));
+	}
+	
+	static class ValueRangeInFieldRangeStrict extends RangeInRangeFilter {
+		public Expression buildExpression(Map filterInfo) {
+			if (!isActive(filterInfo)) {
+				return null;
+			}
+			return ExpressionUtil.and(
+					ExpressionUtil.lt(buildLowVariableExpression(), buildLowValueExpression(filterInfo), getComparator()),
+					ExpressionUtil.gt(buildHighVariableExpression(), buildHighValueExpression(filterInfo), getComparator()));			
 		}
 	}
 	
-	public static class ColumnRangeInValueRangeNonStrict extends RangeInRangeFilter {
-		private static final long serialVersionUID = 1L;
-		public ColumnRangeInValueRangeNonStrict(String startColumnId, String endColumnId) {
-			super(startColumnId, endColumnId);
-		}		
-		public ColumnRangeInValueRangeNonStrict() {
-			super();
-		}
-		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			AndExpression expr = new AndExpression();
-			expr.add(new OrExpression().add(
-					new GreaterThanExpression(startVar, startVal)).add(
-							new EqualsExpression(startVar, startVal)));			
-			expr.add(new OrExpression().add(
-					new LowerThanExpression(endVar, endVal)).add(
-							new EqualsExpression(endVar, endVal)));
-			return expr;
-		}
-		
-	}
-	
-	public static class ValueRangeInColumnRangeStrict extends RangeInRangeFilter {
-		private static final long serialVersionUID = 1L;
-		public ValueRangeInColumnRangeStrict(String startColumnId, String endColumnId) {
-			super(startColumnId, endColumnId);
-		}		
-		public ValueRangeInColumnRangeStrict() {
-			super();
-		}
-		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			return new AndExpression().add(
-					new LowerThanExpression(startVar, startVal)).add(
-							new GreaterThanExpression(endVar, endVal));
+	static class ValueRangeInFieldRangeNonStrict extends RangeInRangeFilter {
+		public Expression buildExpression(Map filterInfo) {
+			if (!isActive(filterInfo)) {
+				return null;
+			}
+			return ExpressionUtil.and(
+					ExpressionUtil.le(buildLowVariableExpression(), buildLowValueExpression(filterInfo), getComparator()),
+					ExpressionUtil.ge(buildHighVariableExpression(), buildHighValueExpression(filterInfo), getComparator()));			
 		}
 	}
 	
-	public static class ValueRangeInColumnRangeNonStrict extends RangeInRangeFilter {
-		private static final long serialVersionUID = 1L;
-		public ValueRangeInColumnRangeNonStrict(String startColumnId, String endColumnId) {
-			super(startColumnId, endColumnId);
-		}		
-		public ValueRangeInColumnRangeNonStrict() {
-			super();
-		}
-		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			AndExpression expr = new AndExpression();
-			expr.add(new OrExpression().add(
-					new LowerThanExpression(startVar, startVal)).add(
-							new EqualsExpression(startVar, startVal)));			
-			expr.add(new OrExpression().add(
-					new GreaterThanExpression(endVar, endVal)).add(
-							new EqualsExpression(endVar, endVal)));
-			return expr;
+	static class OverlapStrict extends RangeInRangeFilter {
+		public Expression buildExpression(Map filterInfo) {
+			if (!isActive(filterInfo)) {
+				return null;
+			}
+			return ExpressionUtil.and(
+					ExpressionUtil.lt(buildLowVariableExpression(), buildHighValueExpression(filterInfo), getComparator()),
+					ExpressionUtil.gt(buildHighVariableExpression(), buildLowValueExpression(filterInfo), getComparator()));			
 		}
 	}
 	
-	public static class RangesOverlapStrict extends RangeInRangeFilter {
-		private static final long serialVersionUID = 1L;
-		public RangesOverlapStrict(String startColumnId, String endColumnId) {
-			super(startColumnId, endColumnId);
-		}		
-		public RangesOverlapStrict() {
-			super();
-		}
-		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			return new AndExpression().add(
-					new LowerThanExpression(startVar, endVal)).add(
-							new GreaterThanExpression(endVar, startVal));
-		}
-	}
-	
-	public static class RangesOverlapNonStrict extends RangeInRangeFilter {
-		private static final long serialVersionUID = 1L;
-		public RangesOverlapNonStrict(String startColumnId, String endColumnId) {
-			super(startColumnId, endColumnId);
-		}		
-		public RangesOverlapNonStrict() {
-			super();
-		}
-		protected Expression buildAction(Expression startVar, Expression endVar, Expression startVal, Expression endVal) {
-			AndExpression expr = new AndExpression();
-			expr.add(new OrExpression().add(
-					new LowerThanExpression(startVar, endVal)).add(
-							new EqualsExpression(startVar, endVal)));			
-			expr.add(new OrExpression().add(
-					new GreaterThanExpression(endVar, startVal)).add(
-							new EqualsExpression(endVar, startVal)));
-			return expr;			
+	static class OverlapNonStrict extends RangeInRangeFilter {
+		public Expression buildExpression(Map filterInfo) {
+			if (!isActive(filterInfo)) {
+				return null;
+			}
+			return ExpressionUtil.and(
+					ExpressionUtil.le(buildLowVariableExpression(), buildHighValueExpression(filterInfo), getComparator()),
+					ExpressionUtil.ge(buildHighVariableExpression(), buildLowValueExpression(filterInfo), getComparator()));			
 		}
 	}
 }

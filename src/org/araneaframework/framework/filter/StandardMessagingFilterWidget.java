@@ -16,21 +16,23 @@
 
 package org.araneaframework.framework.filter;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.set.ListOrderedSet;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 
 /**
  * Adds a {@link org.araneaframework.framework.MessageContext} implementation to the environment that can
- * be used to add messages for later output.
+ * be used to add messages for later output. 
  *<p>
  * An example how to add messages to the context follows:
  * <pre>
@@ -43,75 +45,121 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  *</p>
  *
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
-  public static final String MESSAGE_KEY = "org.araneaframework.framework.filter.StandardMessagingFilterWidget.MESSAGES"; 
-  
-  private static final Logger log = Logger.getLogger(StandardMessagingFilterWidget.class);
-  
-  private Map messages = new HashMap();
-
-  protected void init() throws Exception {
-    Map entries = new HashMap();
-    entries.put(MessageContext.class, this);
-    
-    childWidget._getComponent().init(new StandardEnvironment(getChildWidgetEnvironment(), entries));
-    
-    log.debug("Messaging filter service initialized.");
-  }
+  protected Map permanentMessages;
+  protected Map messages;
   
   protected void update(InputData input) throws Exception {
-    messages.clear();
-    
-    childWidget._getWidget().update(input);
+    clearMessages();
+
+    super.update(input);
+  }
+  
+  protected Environment getChildWidgetEnvironment() {
+    return new StandardEnvironment(getEnvironment(), MessageContext.class, this);
   }
   
   /**
-   * Adds all the messages to the output as Map under the key MESSAGE_KEY. The keys
+   * Adds all the messages to the output as Map under the key 
+   * {@link org.araneaframework.framework.MessageContext#MESSAGE_KEY}. The keys
    * of the Map are the different message types encountered so far and under the keys
-   * are the messages in a List.
+   * are the messages in a Collection.
    *<p>
    * A child service should do as follows to access the messages
    * <pre>
    * <code>
    * ...
    * Map map = output.getAttribute(MESSAGE_KEY);
-   * List list = (List)map.get(MessageContext.ERROR_TYPE); // list contains all the error messages
+   * Collection list = (Collection)map.get(MessageContext.ERROR_TYPE); // collection contains all the error messages
    * </code>
    * </pre>
-   * The map could be null if this service was not used. The list is null if no errors have
-   * been added to the messages. 
+   * The map could be null if this service was not used. The collection is null if no messages of
+   * that type been added to the messages. 
    *</p>
    */
   protected void render(OutputData output) throws Exception {
-    Map typedMessages = new HashMap();
-    
-    for (Iterator i = messages.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      
-      Collection typeCol = (Collection) typedMessages.get(entry.getValue());
-      
-      if (typeCol == null) {
-        typeCol = new ArrayList();
-        typedMessages.put(entry.getValue(), typeCol);
-      }
-      
-      typeCol.add(entry.getKey());
+    if (permanentMessages != null) {
+      // add permanent messages to-one time messages for rendering
+      messages = addPermanentMessages(messages);
     }
-    
-    output.pushAttribute(MESSAGE_KEY, typedMessages);
-    
+
+    output.pushAttribute(MessageContext.MESSAGE_KEY, messages);
+
     try {
-      childWidget._getWidget().render(output);
+      super.render(output);
     }
     finally {
-      output.popAttribute(MESSAGE_KEY);
+      output.popAttribute(MessageContext.MESSAGE_KEY);
     }
   }
+
+  /** Stores message of given type in given messageMap (created if <code>null</code> at invocation). */
+  protected Map storeMessage(final String type, final String message, Map messageMap) {
+    Assert.notEmptyParam(type, "type");
+    Assert.notEmptyParam(message, "message");
+    
+    if (messageMap == null)
+      messageMap = new LinkedMap();
+
+    Collection messages = (Collection)messageMap.get(type);
+
+    if (messages == null) {
+      messages = ListOrderedSet.decorate(new HashSet());
+      messageMap.put(type, messages);
+    }
+
+    messages.add(message);
+    
+    return messageMap;
+  }
   
+  /** Removes the given message from given messageMap. */
+  protected Map removeMessage(final String message, Map messageMap) {
+    Assert.notEmptyParam(message, "message");
+
+    if (messageMap == null)
+      return null;
+
+    for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+      Collection messages = (Collection)((Map.Entry)i.next()).getValue();
+      messages.remove(message);
+    }
+
+    return messageMap;
+  }
+  
+  /** 
+   * Adds current permanent messages to given message map.
+   * @return given message map with permanent messages added. 
+   */
+  protected Map addPermanentMessages(Map msgs) {
+    if (msgs == null && permanentMessages.size() > 0)
+      msgs = new LinkedMap();
+
+    for (Iterator i = permanentMessages.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry)i.next();
+      Collection typedMessages = (Collection)msgs.get(entry.getKey());
+
+      if (typedMessages == null)
+        msgs.put(entry.getKey(), entry.getValue());
+      else
+        typedMessages.addAll((Collection)entry.getValue());
+    }
+    return msgs;
+  }
+
   public void showMessage(String type, final String message) {
-    messages.put(message, type);
+    messages = storeMessage(type, message, messages);
+  }
+
+  public void showPermanentMessage(String type, final String message) {
+    permanentMessages = storeMessage(type, message, permanentMessages);
+  }
+  
+  public void hidePermanentMessage(String message) {
+    permanentMessages = removeMessage(message, permanentMessages);
   }
 
   public void showErrorMessage(String message) {
@@ -120,5 +168,24 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
 
   public void showInfoMessage(String message) {
     showMessage(INFO_TYPE, message);
+  }
+  
+  public void showWarningMessage(String message) {
+    showMessage(WARNING_TYPE, message);
+  }
+  
+  public void clearMessages() {
+    if (messages != null)
+      messages.clear();
+  }
+
+  public void clearPermanentMessages() {
+    if (permanentMessages != null)
+      permanentMessages.clear();
+  }
+  
+  public void clearAllMessages() {
+    clearMessages();
+    clearPermanentMessages();
   }
 }

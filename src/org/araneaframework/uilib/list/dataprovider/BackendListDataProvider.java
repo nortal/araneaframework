@@ -25,10 +25,11 @@ import org.araneaframework.backend.list.model.ListQuery;
  * This class provides a basic list data provider implementation that may be
  * used with SQL- or PL/SQL-based lists.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
- * 
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BackendListDataProvider implements ListDataProvider {
+	
+	public static final boolean USE_CACHE_BY_DEFAULT = false; 
 
 	protected ComparatorExpression orderExpr;
 	protected Expression filterExpr;
@@ -39,25 +40,33 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 	protected ListItemsData lastItemRange;
 
 	protected boolean forceReload = false;
-	protected boolean useCache = false;
+	protected boolean useCache = USE_CACHE_BY_DEFAULT;
 
+	/**
+	 * Instantiates the backend list data provider and sets whether to use caching.
+	 * 
+	 * @param useCache whether to use caching.
+	 */
 	public BackendListDataProvider(boolean useCache) {
 		this.useCache = useCache;
+	}
+	/**
+	 * Instantiates the backend list data provider with cache disabled.
+	 */
+	public BackendListDataProvider() {
+		// empty		
 	}
 
 	public void init() throws Exception {
 		// for subclasses to implement if needed
 	}
 
-	public void destroy() {
+	public void destroy() throws Exception {
 		// for subclasses to implement if needed
 	}
 
 	/**
-	 * This method should be used to receive the filter of the list.
-	 * 
-	 * @param filterExpr
-	 *            the filter of the list.
+	 * Sets the filter of the list.
 	 */
 	public void setFilterExpression(Expression filterExpr) {
 		this.filterExpr = filterExpr;
@@ -66,10 +75,7 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 	}
 
 	/**
-	 * This method should be used to receive the current ordering info.
-	 * 
-	 * @param orderInfo
-	 *            the current ordering info.
+	 * Sets the order of the list.
 	 */
 	public void setOrderExpression(ComparatorExpression orderExpr) {
 		this.orderExpr = orderExpr;
@@ -130,22 +136,8 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 	}
 
 	/**
-	 * This method should be overidden to return a range of items from the list
-	 * data.
+	 * This method should be overidden to return a range of items from the list data.
 	 * 
-	 * @param startIdx
-	 *            the inclusive 0-based starting index of the item range.
-	 * @param count
-	 *            the amount of items to return.
-	 * @param filter
-	 *            the basic filter to use for range retrieval.
-	 * @param order
-	 *            the basic order to use for range retrieval.
-	 * @return a range of items from the list data provider.
-	 * 
-	 * @throws Exception
-	 *             item range retrieval does not succeed.
 	 */
-	protected abstract ListItemsData getItemRange(ListQuery query)
-			throws Exception;
+	protected abstract ListItemsData getItemRange(ListQuery query) throws Exception;
 }

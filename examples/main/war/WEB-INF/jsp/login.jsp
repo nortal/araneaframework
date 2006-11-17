@@ -19,17 +19,17 @@
                 <html>
                     <head>
                         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                        <!-- Scripts -->
+                        <!-- Include script and style definitions from another file -->
                         <jsp:include page="scripts.jsp"/>
                         <title>Aranea Template Application Login Screen</title>
                     </head>
 
-                    <body>
+                    <ui:body>
                     	<!-- This tag will render an HTML form tag along with some Aranea-specific hidden fields. 
-                    	It is strongly suggested to have only one system form in the template and have it submit using 
+                    	It is strongly suggested to have only one system form in the template and have it submitted using 
                     	POST. This will ensure that no matter what user does no data is ever lost. -->
 	                    <ui:systemForm method="POST">
-
+							<ui:onLoadEvent event="Form.focusFirstElement(document.forms['${systemFormId}']);"/>
 		                    <div id="outer">
 		                        <div id="middle">
 		                            <div id="inner">
@@ -68,7 +68,8 @@
 		                                            		and tie them with events defined in TemplateLoginWidget.
 		                                            	 -->
 		                                                <ui:eventButton eventId="login" labelId="#Login"/>
-		                                                <ui:eventButton eventId="bypass" labelId="#Bypass login"/>
+		                                                <ui:eventButton id="bypassButton" eventId="bypass" labelId="#Bypass login"/>
+    		                                          	<ui:formEnterKeyboardHandler fullElementId="bypassButton"/>
 		                                            </div>
 		
 		                                            <div class="clear1"><ui:nbsp/></div>
@@ -81,7 +82,8 @@
 		                    
 	                    </ui:systemForm>
                     
-                    </body>        
+                    </ui:body>
+
                 </html>
             </ui:widgetContext>
         </ui:viewPort>

@@ -17,13 +17,27 @@
 package org.araneaframework.uilib.list.structure.filter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.list.structure.ListFilter;
 
 
 
 public abstract class MultiFilter implements ListFilter {
+	
 	protected List children = new ArrayList();
+	
+	public void init(Environment env) throws Exception {
+		for (Iterator i = children.iterator(); i.hasNext();) {
+			ListFilter filter = (ListFilter) i.next();
+			filter.init(env);
+		}
+	}
+	public void destroy() throws Exception {
+		clearFilters();
+	}
 	public MultiFilter addFilter(ListFilter filter) {
 		this.children.add(filter);
 		return this;
@@ -31,7 +45,11 @@ public abstract class MultiFilter implements ListFilter {
 	public List getFilters() {
 		return this.children;
 	}
-	public void clearFilters() {
-		this.children = new ArrayList();
+	public void clearFilters() throws Exception {
+		for (Iterator i = children.iterator(); i.hasNext();) {
+			ListFilter filter = (ListFilter) i.next();
+			filter.destroy();
+			i.remove();
+		}
 	}
 }

@@ -22,8 +22,11 @@ import java.io.Serializable;
  * A context providing multiple sessions.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface SessionServiceContext extends ManagedServiceContext, Serializable {
-  
+  /**
+   * The key of the service id in the request.
+   */
+  public static final String SESSION_SERVICE_KEY = "sessionServiceId";
 }

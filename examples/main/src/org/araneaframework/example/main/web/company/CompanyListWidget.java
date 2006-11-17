@@ -12,21 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.example.main.web.company;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
-import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
-import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
 /**
@@ -36,100 +34,127 @@ import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class CompanyListWidget extends BaseWidget {
-	
-	private static final long serialVersionUID = 1L;
-	
-	protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
-	
-	private boolean editMode = false;
-	
-	private ListWidget list;
-	
-	public CompanyListWidget() {
-		super();
-	}
-	
-	/**
-	 * @param editMode whether to allow add or remove persons.
-	 */
-	public CompanyListWidget(boolean editMode) {
-		super();
-		this.editMode = editMode;
-	}
-	
-	protected void init() throws Exception {
-		super.init();
-		setViewSelector("company/companyList");
-		log.debug("TemplateCompanyListWidget init called");    
-		addGlobalEventListener(new ProxyEventListener(this));
-		
-		this.list = initList();
-		addWidget("companyList", this.list);
-		
-		putViewData("allowAdd", new Boolean(editMode));    
-		putViewData("allowRemove", new Boolean(editMode));
-	}
-	
-	protected ListWidget initList() throws Exception {
-		BeanListWidget temp = new BeanListWidget(CompanyMO.class);
-		temp.setListDataProvider(new TemplateCompanyListDataProvider());
-		temp.addBeanColumn("id", "#Id", false);
-		temp.addBeanColumn("name", "#Name", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("address", "#Address", true, new SimpleColumnFilter.Like(), new TextControl());
-		return temp;
-	}
-	
-	private void refreshList() throws Exception {  	
-		this.list.getListDataProvider().refreshData();
-	}
-	
-	public void handleEventAdd(String eventParameter) throws Exception {
-		log.debug("Event 'add' received!");
-		if (!this.editMode) {
-			throw new RuntimeException("Event 'add' shoud be called only in edit mode");
-		}
-		getFlowCtx().start(new CompanyEditWidget(), null, new FlowContext.Handler() {
-			public void onFinish(Object returnValue) throws Exception {
-				log.debug("Company added with Id of " + returnValue + " sucessfully");    
-				refreshList();
-			}
-			public void onCancel() throws Exception {
-			}
-		});
-	}
-	
-	public void handleEventRemove(String eventParameter) throws Exception {
-		log.debug("Event 'remove' received!");
-		if (!editMode) {
-			throw new RuntimeException("Event 'remove' shoud be called only in edit mode");
-		}
-		Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		getGeneralDAO().remove(CompanyMO.class, id);
-		refreshList();
-		log.debug("Company with Id of " + id + " removed sucessfully");
-	}
-	
-	public void handleEventSelect(String eventParameter) throws Exception {
-		log.debug("Event 'select' received!");
-		Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		log.debug("Company selected with Id of " + id);
-		getFlowCtx().finish(id);
-	}
-	
-	public void handleEventCancel(String eventParameter) throws Exception {
-		log.debug("Event 'cancel' received!");
-		getFlowCtx().cancel();
-	}  
-	
-	private class TemplateCompanyListDataProvider extends MemoryBasedListDataProvider {
-		private static final long serialVersionUID = 1L;
-		
-		protected TemplateCompanyListDataProvider() {
-			super(CompanyMO.class);
-		}
-		public List loadData() throws Exception {		
-			return getGeneralDAO().getAll(CompanyMO.class);
-		}  	
-	}
+public class CompanyListWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
+  protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
+  private BeanListWidget list;
+  private boolean editMode = true;
+  
+  private IContractDAO contractDAO;
+
+  public CompanyListWidget() {
+    super();
+  }
+
+  public CompanyListWidget(boolean editMode) {
+    super();
+    this.editMode = editMode;
+  }
+
+  protected void init() throws Exception {
+    setViewSelector("company/companyList");
+    log.debug("TemplateCompanyListWidget init called");    
+
+    initList();
+  }
+
+  protected void initList() throws Exception {
+    // Create the new list widget whose records are JavaBeans, instances of CompanyMO.
+    // CompanyMO has fields named id, name and address.
+    list = new BeanListWidget(CompanyMO.class);
+    addWidget("companyList", this.list);
+    // set the data provider for the list
+    list.setDataProvider(new TemplateCompanyListDataProvider());
+    // add the displayed columns to list.
+    // addField(String id, String label, boolean orderable)
+    // note that # before the label means that label is treated as unlocalized and outputted as-is
+    list.addField("id", "#Id", false);
+    // addField(...) returns FieldFilterHelper, like() sets LIKE filter on the column
+    list.addField("name", "#Name", true).like();
+    list.addField("address", "#Address", true).like();
+    list.addField("dummy", null, false);
+  }
+
+  private void refreshList() throws Exception {    
+    this.list.getDataProvider().refreshData();
+  }
+
+  public void handleEventAdd(String eventParameter) throws Exception {
+    getFlowCtx().start(new CompanyEditWidget(), null, new FlowContext.Handler() {
+      private static final long serialVersionUID = 1L;
+      public void onFinish(Object returnValue) throws Exception {
+        log.debug("Company added with Id of " + returnValue + " sucessfully");
+        // trick to refresh the list data when we suspect it has changed
+        refreshList();
+      }
+      public void onCancel() throws Exception {
+      }
+    });
+  }
+
+  public void handleEventRemove(String eventParameter) throws Exception {
+    Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
+    contractDAO.removeByCompanyId(id);
+    getGeneralDAO().remove(CompanyMO.class, id);
+    refreshList();
+    log.debug("Company with Id of " + id + " removed sucessfully");
+  }
+
+  public void handleEventSelect(String eventParameter) throws Exception {
+    Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
+    log.debug("Company selected with Id of " + id);
+    if (editMode)
+      getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
+	        private static final long serialVersionUID = 1L;
+      public void onFinish(Object returnValue) throws Exception {
+	        log.debug("Company added with Id of " + returnValue + " sucessfully");
+	        refreshList();
+	      }
+	      public void onCancel() throws Exception {
+	      }
+	    });
+    else
+      getFlowCtx().finish(id);
+  }
+
+  public void handleEventEdit(String eventParameter) throws Exception {
+    Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
+    log.debug("Company selected with Id of " + id);
+    getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
+	      private static final long serialVersionUID = 1L;
+      public void onFinish(Object returnValue) throws Exception {
+	        log.debug("Company added with Id of " + returnValue + " sucessfully");
+	        refreshList();
+	      }
+	      public void onCancel() throws Exception {
+	      }
+	    }
+    );
+  }
+
+  public void handleEventCancel(String eventParameter) throws Exception {
+    getFlowCtx().cancel();
+  }  
+
+  private class TemplateCompanyListDataProvider extends MemoryBasedListDataProvider {
+    private static final long serialVersionUID = 1L;
+
+    // Overloading constructor with correct bean type.
+    protected TemplateCompanyListDataProvider() {
+      super(CompanyMO.class);
+    }
+
+    // Overloading the real data loading method. Should
+    // return java.util.List containing CompanuMO objects.
+    public List loadData() throws Exception {
+      // Here, database query is performed and all rows from COMPANY table retrieved.
+      // But you could also get the data from parsing some XML file, /dev/random etc.
+      // All that matters is that returned List really contains CompanyMO objects.
+      return getGeneralDAO().getAll(CompanyMO.class);
+    }      
+  }
+  
+  public void injectContractDAO(IContractDAO contractDAO) {
+    this.contractDAO = contractDAO;
+  }
 }

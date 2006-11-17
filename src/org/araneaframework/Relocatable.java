@@ -19,16 +19,16 @@ package org.araneaframework;
 import java.io.Serializable;
 
 /**
- * Relocatable is a component that can be relocated from one parent to another. As the Environment
+ * Relocatable is a component that can be relocated from one parent to another. As the {@link Environment}
  * of a component can be inhereted from the parent and the new parent's Environment can differ, this
- * class provides <code>overrideEnvironment(Environment)</code> for resetting the Environment.
+ * class provides {@link Interface#overrideEnvironment(Environment)} for resetting the {@link Environment}.
  * <p>
- * This interface should not be used directly, subinterfaces Interface, ComponentInterface,
- * ServiceInterface and WidgetInterface should be used.
+ * This interface should not be used directly, subinterfaces {@link RelocatableComponent}, 
+ * {@link RelocatableService}, and {@link RelocatableWidget} should be used.
  * </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Relocatable extends Serializable {
   public Relocatable.Interface _getRelocatable();
@@ -40,7 +40,12 @@ public interface Relocatable extends Serializable {
     /**
      * Overrides the current environment with env.
      */
-    public void overrideEnvironment(Environment newEnv) throws Exception; 
+    public void overrideEnvironment(Environment newEnv);
+    
+    /**
+     * Returns the current environment of the relocatable component. 
+     */
+    public Environment getCurrentEnvironment();
   }
   
   /**

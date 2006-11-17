@@ -24,8 +24,9 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
 
 /**
+ * Filter widget that enriches children's environment with specified context entries.
  * 
- * @author Jevgeni kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardContextMapFilterWidget extends BaseFilterWidget {
   private static final Logger log = Logger.getLogger(StandardContextMapFilterWidget.class);
@@ -35,25 +36,31 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
   protected void init() throws Exception {
     Map entries = new HashMap();
     
-    for (Iterator i = contexts.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      
-      String key = (String) entry.getKey();
-      
-      if (key.endsWith(".class")) {
-        String className =  key.substring(0, key.lastIndexOf('.'));
-        Class contextKey = Class.forName(className);
-        entries.put(contextKey, entry.getValue());
+    if (contexts != null)
+      for (Iterator i = contexts.entrySet().iterator(); i.hasNext();) {
+        Map.Entry entry = (Map.Entry) i.next();
+        
+        String key = (String) entry.getKey();
+        
+        if (key.endsWith(".class")) {
+          String className =  key.substring(0, key.lastIndexOf('.'));
+          Class contextKey = Class.forName(className);
+          entries.put(contextKey, entry.getValue());
+        }
+        else
+          entries.put(key, entry.getValue());
       }
-      else
-        entries.put(key, entry.getValue());
-    }
     
     childWidget._getComponent().init(new StandardEnvironment(getEnvironment(), entries));
            
-    log.debug("ContextMap service initialized, following contexts found: " + entries);
+    if (log.isDebugEnabled())
+      log.debug("Following contexts added to environment: " + entries);
   }
   
+  /**
+   * Set the contexts that are made accessible from children's environments.
+   * @param contexts Map &lt;contextKey, contextValue&gt;
+   */
   public void setContexts(Map contexts) {
     this.contexts = contexts;
   }

@@ -25,9 +25,20 @@ import java.io.Serializable;
  * <code>isConsistent()</code>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface TransactionContext extends Serializable {
+  /**
+   * The key in the request, under which is the transaction id.
+   */
+  public static final String TRANSACTION_ID_KEY = "transactionId";
+  
+  /**
+   * The key in the request that indicates situation where transaction id
+   * was overrriden on purpose. 
+   */
+  public static final String OVERRIDE_KEY = "override";
+
   /**
    * Returns true if current request is consistent (not a rerecurring one).
    */

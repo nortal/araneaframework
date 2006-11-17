@@ -19,10 +19,11 @@ package org.araneaframework.example.main.business.util;
 import java.io.Serializable;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DataDTO implements Serializable {
-	private Long id;
+	  private static final long serialVersionUID = 1L;
+  private Long id;
 	private Boolean booleanField;
 	private Long longField;
 	private String stringField;

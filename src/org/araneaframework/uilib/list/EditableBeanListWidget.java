@@ -12,57 +12,57 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.uilib.list.formlist.FormListWidget;
-import org.araneaframework.uilib.list.formlist.FormRowHandler;
+import org.araneaframework.core.Assert;
+import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
+import org.araneaframework.uilib.form.formlist.FormRowHandler;
+import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class EditableBeanListWidget extends BeanListWidget {
-	
-	protected FormListWidget formList;
-	
-  //*********************************************************************
-  //* CONSTRUCTORS  
-  //*********************************************************************	
-  
-  public EditableBeanListWidget(Class beanClass) {
-    super(beanClass);
-  }
 
-  //*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************		
+	protected BeanFormListWidget formList;
 
-  public void refreshCurrentItemRange() throws Exception {
-		super.refreshCurrentItemRange();		
-		
-		formList.setRows(getItemRange());
+	//*********************************************************************
+	//* CONSTRUCTORS  
+	//*********************************************************************	
+
+	public EditableBeanListWidget(FormRowHandler rowHandler, Class beanClass) {
+		super(beanClass);
+    
+    formList = new BeanFormListWidget(rowHandler, new ListWidgetFormListModel(this), beanClass);
 	}
-	
+
+	//*********************************************************************
+	//* PUBLIC METHODS
+	//*********************************************************************		
+  
 	/**
 	 * Returns the editable row manager.
 	 * @return the editable row manager.
 	 */
-	public FormListWidget getFormList() {
+	public BeanFormListWidget getFormList() {
 		return formList;
 	}
-	
+
 	public void setFormRowHandler(FormRowHandler rowHandler) {
-		formList = new FormListWidget(rowHandler);		
+		formList.setFormRowHandler(rowHandler);	
 	}
-	
-  //*********************************************************************
-  //* WIDGET METHODS
-  //*********************************************************************  	
-	
+
+	//*********************************************************************
+	//* WIDGET METHODS
+	//*********************************************************************  	
+
 	protected void init() throws Exception {
 		super.init();
-		
+
+    Assert.notNull(formList, "You must provide a form row handler to the editable list!");
+    
 		addWidget("formList", formList);
 	}
 }

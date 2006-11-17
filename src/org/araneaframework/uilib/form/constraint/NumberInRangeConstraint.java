@@ -17,60 +17,74 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.math.BigInteger;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This constraint checks that the value is between two others.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class NumberInRangeConstraint extends BaseConstraint {
-
+public class NumberInRangeConstraint extends BaseFieldConstraint {
   private BigInteger rangeStart;
   private BigInteger rangeEnd;
+  
+  public NumberInRangeConstraint() {}
+  public NumberInRangeConstraint(FormElement field) { super(field); }
   
   public NumberInRangeConstraint(BigInteger start, BigInteger end) {
     rangeStart = start;
     rangeEnd = end;
   }
   
-  public NumberInRangeConstraint() {}  
-  
   /**
    * Checks that the value is between two others.
    */
   protected void validateConstraint() {
-    BigInteger value = new BigInteger(getField().getData().getValue().toString());
+    if (getValue() == null) {
+      addError(
+            MessageUtil.localizeAndFormat(
+              UiLibMessages.NUMBER_NOT_BETWEEN, 
+              new Object[] {
+                  t(getLabel()),
+                  rangeStart.toString(),
+                  rangeEnd.toString()
+              },
+              getEnvironment()));     
+      return;
+    }
+    
+    BigInteger value = new BigInteger(getValue().toString());
     
     if (rangeStart != null && rangeEnd != null && ((value.compareTo(rangeStart) == -1) || value.compareTo(rangeEnd) == 1)) {      
-      addError(
-          ErrorUtil.localizeAndFormat(
-            UiLibMessages.NUMBER_NOT_BETWEEN, 
-            new Object[] {
-                ErrorUtil.localize(getField().getLabel(), getEnvironment()),
-                rangeStart.toString(),
-                rangeEnd.toString()
-            },
-            getEnvironment()));     
+        addError(
+                MessageUtil.localizeAndFormat(
+                  UiLibMessages.NUMBER_NOT_BETWEEN, 
+                  new Object[] {
+                      t(getLabel()),
+                      rangeStart.toString(),
+                      rangeEnd.toString()
+                  },
+                  getEnvironment()));
     }      
     else if (rangeStart != null && value.compareTo(rangeStart) == -1) {
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
             UiLibMessages.NUMBER_NOT_GREATER, 
             new Object[] {
-                ErrorUtil.localize(getField().getLabel(), getEnvironment()),
+                t(getLabel()),
                 rangeStart.toString(),
             },
             getEnvironment()));       
     }    
     else if (rangeEnd != null && value.compareTo(rangeEnd) == 1) {      
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
             UiLibMessages.NUMBER_NOT_LESS, 
             new Object[] {
-                ErrorUtil.localize(getField().getLabel(), getEnvironment()),
+                t(getLabel()),
                 rangeEnd.toString()
             },
             getEnvironment()));

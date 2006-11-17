@@ -29,18 +29,6 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  */
 public class StandardWidgetAdapterService extends BaseFilterWidget {
   private static final Logger log = Logger.getLogger(StandardWidgetAdapterService.class);
-
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Widget adapter service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Widget adapter service destroyed.");
-  }
   
   /**
    * If <code>propagateAsAction(InputData)</code> returns true then the action is
@@ -54,23 +42,23 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
    if (propagateAsAction(input)) {
-     log.debug("Routing action through widget adapter service.");
+     log.debug("Calling widget action().");
      childWidget._getService().action(path, input, output);
    }
    else {
-     log.debug("Routing action() to widget update()/event()/process()/render().");
+     log.debug("Translating action() call to widget update()/event()/process()/render() calls.");
      
      childWidget._getWidget().update(input);
      childWidget._getWidget().event(path, input);       
-     childWidget._getWidget().process();        
+     childWidget._getWidget().process();
      childWidget._getWidget().render(output);
    }
   }
 
   /**
-   * If returns true then propagates the action to the child widget. By default returns false.
+   * Returns whether inputData is such that action should be propagated to the child widget.
    */
   public boolean propagateAsAction(InputData input) {
-    return false;
+    return (input.getGlobalData().get(StandardContainerWidget.ACTION_PATH_KEY) != null); 
   }
 }

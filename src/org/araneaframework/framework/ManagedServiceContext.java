@@ -28,7 +28,7 @@ import org.araneaframework.Service;
  * <br><br>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ManagedServiceContext extends Serializable {
   /**
@@ -37,12 +37,25 @@ public interface ManagedServiceContext extends Serializable {
   public Object getCurrentId();
   
   /**
-   * Adds a child service service with the specified id.
+   * Adds a child service with the specified id.
    */
-  public Object addService(Object id, Service service) throws Exception;
+  public Service addService(Object id, Service service);
+  
+  /**
+   * Adds a child service with the specified id, and specifies that service may 
+   * be killed by service manager after it has been inactive for specified time.
+   * When the service is killed or whether it is killed at all is up to the 
+   * implementation.
+   */  
+  public Service addService(Object id, Service service, Long timeToLive);
+  
+  /**
+  * @return a child service with the specified id.
+  */
+  public Service getService(Object id);
   
   /**
    * Closes the service under the key id.
    */
-  public void close(Object id) throws Exception;
+  public void close(Object id);
 }

@@ -16,67 +16,145 @@
 
 package org.araneaframework.uilib.list.structure;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
-
-import org.araneaframework.uilib.list.structure.filter.ColumnFilter;
+import java.util.List;
+import org.apache.commons.lang.Validate;
+import org.araneaframework.Environment;
+import org.araneaframework.core.Assert;
+import org.araneaframework.uilib.list.TypeHelper;
+import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.structure.filter.composite.AndFilter;
-import org.araneaframework.uilib.list.structure.order.ColumnOrder;
-import org.araneaframework.uilib.list.structure.order.MultiColumnOrder;
+import org.araneaframework.uilib.list.structure.order.FieldOrder;
+import org.araneaframework.uilib.list.structure.order.MultiFieldOrder;
+import org.araneaframework.uilib.list.structure.order.SimpleFieldOrder;
+import org.araneaframework.uilib.util.Event;
 
 
 public class ListStructure extends BaseListStructure {
 
 	private static final long serialVersionUID = 1L;
 	
+	private final TypeHelper typeHelper;
+	
+	private boolean orderableByDefault = false;
+	
+	private boolean initialized = false;
+	private List initEvents = null;
+	
+	public void init(Environment env) throws Exception {
+		if (initEvents != null) {
+			for (Iterator it = initEvents.iterator(); it.hasNext();) {
+				Runnable event = (Runnable) it.next();
+				event.run();
+			}
+		}
+		initialized = true;
+		initEvents = null;
+		
+		this.filter.init(env);
+		this.order.init(env);
+	}
+	
+	private boolean isInitialized() {
+		return this.initialized;
+	}
+	
+	private void addInitEvent(Event event) {
+		if (isInitialized()) {
+			event.run();
+		} else {
+			if (initEvents == null)
+				initEvents = new ArrayList();
+			initEvents.add(event);
+		}		
+	}
+
+	public void destroy() throws Exception {
+		this.filter.destroy();
+		this.order.destroy();
+	}
+	
+	public ListStructure(TypeHelper typeHelper) {
+		Assert.notNullParam(this, typeHelper, "typeHelper");
+		this.typeHelper = typeHelper;
+		this.filter = new AndFilter();
+		this.order = new MultiFieldOrder();
+	}
+	
+	protected TypeHelper getTypeHelper() {
+		return this.typeHelper;
+	}
+
 	/*
-	 * Columns
+	 * Fields
 	 */
 
-	public void addColumn(String id, String label) {
-		addColumn(new ListColumn(id, label));
+	public void addField(String id, String label) {
+		addField(id, label, getTypeHelper().getFieldType(id), isOrderableByDefault());
 	}
-	
-	public void addColumn(ListColumn column, ColumnOrder columnOrder, ColumnFilter columnFilter) {
-		String id = column.getId();
-		addColumn(column);
-		if (columnOrder != null) {
-			columnOrder.setColumnId(id);
-			addColumnOrder(columnOrder);
-		}
-		if (columnFilter != null) {
-			columnFilter.setColumnId(id);
-			addFilter(columnFilter);
-		}
+
+	public void addField(String id, String label, boolean orderable) {
+		addField(id, label, getTypeHelper().getFieldType(id), orderable);
 	}
-	
-	public void addColumn(String id, String label, ColumnOrder columnOrder, ColumnFilter columnFilter) {
-		addColumn(new ListColumn(id, label), columnOrder, columnFilter);
+
+	public void addField(String id, String label, Class type) {
+		addField(id, label, type, isOrderableByDefault());
+	}
+
+	public void addField(String id, String label, Class type, boolean orderable) {
+		addField(new ListField(id, label));
+		if (type != null) {
+			getTypeHelper().addFieldType(id, type);
+		}
+		if (orderable) {
+			addFieldOrder(id);
+		}
 	}
 	
 	/*
 	 * Orders
-	 */
+	 */	
 	
-	protected MultiColumnOrder getMultiColumnOrder() {
-		if (this.order == null) {
-			clearColumnOrders();
-		}
-		if (!MultiColumnOrder.class.isAssignableFrom(this.order.getClass())) {
-			throw new RuntimeException("ListOrder must be a MultiColumnOrder instance");
-		}
-		return (MultiColumnOrder) this.order; 
+	public boolean isOrderableByDefault() {
+		return orderableByDefault;
+	}
+
+	public void setOrderableByDefault(boolean orderableByDefault) {
+		this.orderableByDefault = orderableByDefault;
 	}
 	
-	public void addColumnOrder(ColumnOrder columnOrder) {
-		getMultiColumnOrder().addColumnOrder(columnOrder);
+	protected void addFieldOrder(final String fieldId) {
+		final SimpleFieldOrder fieldOrder = new SimpleFieldOrder(fieldId); 
+		addInitEvent(new Event() {
+			public void run() {
+				Comparator comp = typeHelper.getFieldComparator(fieldId);
+				Validate.notNull(comp, "Could not get comparator for field '" + fieldId + "'");
+				fieldOrder.setComparator(comp);
+			}
+		});
+		addOrder(fieldOrder);		
 	}
 	
-	public ColumnOrder getColumnOrder(String column) {
-		return getMultiColumnOrder().getColumnOrder(column);
+	protected void addFieldOrder(String fieldId, Comparator comparator) {
+		addOrder(new SimpleFieldOrder(fieldId, comparator));
 	}
 	
-	public void clearColumnOrders() {
-		this.order = new MultiColumnOrder();
+	protected MultiFieldOrder getMultiFieldOrder() {
+		return (MultiFieldOrder) this.order; 
+	}
+	
+	public void addOrder(FieldOrder fieldOrder) {
+		getMultiFieldOrder().addFieldOrder(fieldOrder);
+	}
+	
+	public FieldOrder getFieldOrder(String field) {
+		return getMultiFieldOrder().getFieldOrder(field);
+	}
+	
+	public void clearOrders() throws Exception {
+		getMultiFieldOrder().clearFieldOrders();
 	}
 	
 	/*
@@ -84,26 +162,20 @@ public class ListStructure extends BaseListStructure {
 	 */
 	
 	protected AndFilter getAndFilter() {
-		if (this.filter == null) {
-			clearFilters();
-		}
-		if (!AndFilter.class.isAssignableFrom(this.filter.getClass())) {
-			throw new RuntimeException("ListFilter must be an AndFilter instance");
-		}
-		return (AndFilter) this.filter; 
+		return (AndFilter) this.filter;
 	}
 	
-	public void addFilter(ListFilter subFilter) {
-		getAndFilter().addFilter(subFilter);
+	public void addFilter(ListFilter filter) {
+		getAndFilter().addFilter(filter);
 	}
 	
-	public ColumnFilter getColumnFilter(String column) {
+	public FieldFilter getFieldFilter(String field) {
 		Iterator i = getAndFilter().getFilters().iterator();
 		while (i.hasNext()) {
 			ListFilter listFilter = (ListFilter) i.next();
-			if (ColumnFilter.class.isAssignableFrom(listFilter.getClass())) {
-				ColumnFilter columnFilter = (ColumnFilter) listFilter;
-				if (columnFilter.getColumnId().equals(column)) {
+			if (listFilter instanceof FieldFilter) {
+				FieldFilter columnFilter = (FieldFilter) listFilter;
+				if (columnFilter.getFieldId().equals(field)) {
 					return columnFilter;
 				}
 			}
@@ -111,7 +183,7 @@ public class ListStructure extends BaseListStructure {
 		return null;
 	}
 	
-	public void clearFilters() {
-		this.filter = new AndFilter();
+	public void clearFilters() throws Exception {
+		getAndFilter().clearFilters();
 	}
 }

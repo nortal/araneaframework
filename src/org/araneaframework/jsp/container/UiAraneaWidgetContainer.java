@@ -16,19 +16,17 @@
 
 package org.araneaframework.jsp.container;
 
-import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.core.Standard;
-import org.araneaframework.jsp.util.UiUpdateRegionUtil;
-import org.araneaframework.servlet.filter.StandardJspFilterService;
+import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.http.filter.StandardJspFilterService;
 
 public class UiAraneaWidgetContainer implements UiWidgetContainer {
-  protected Standard.StandardWidgetInterface rootWidget;
-  private StandardJspFilterService.Configuration conf;
+  protected ApplicationWidget rootWidget;
+  private StandardJspFilterService.JspConfiguration conf;
   
-  public UiAraneaWidgetContainer(Standard.StandardWidgetInterface rootWidget, StandardJspFilterService.Configuration conf) {
+  public UiAraneaWidgetContainer(ApplicationWidget rootWidget, StandardJspFilterService.JspConfiguration conf) {
     this.rootWidget = rootWidget;
     this.conf = conf;
   }
@@ -41,24 +39,8 @@ public class UiAraneaWidgetContainer implements UiWidgetContainer {
     return fullWidgetId;
   }
 
-  public String buildWidgetCall(String systemFormId, String fullWidgetId, String eventId, String eventParam, List updateRegions) throws JspException {
-    StringBuffer result = new StringBuffer();
-    result.append("araneaSubmitEvent(document.");
-    result.append(systemFormId);
-    result.append(", '");
-    result.append(fullWidgetId);
-    result.append("', '");
-    result.append(eventId);  
-    result.append("', '");
-    result.append(eventParam); 
-    result.append("', ");
-    result.append(UiUpdateRegionUtil.formatUpdateRegionsJS(updateRegions));       
-    result.append(");");
-    return result.toString();
-  }
-
-  public Map getTagMapping(PageContext pageContext) throws JspException {
-    return conf.getTagMapping();
+  public Map getTagMapping(PageContext pageContext, String uri) {
+    return conf.getTagMapping(uri);
   }
 
 }

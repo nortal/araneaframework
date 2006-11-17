@@ -19,7 +19,6 @@ package org.araneaframework.uilib.list;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-
 import org.apache.log4j.Logger;
 
 public class MultiOrderHelper {
@@ -28,9 +27,10 @@ public class MultiOrderHelper {
 	public static OrderInfo getOrderInfo(Map orderInfoMap) {
 		Map fieldOrders = new TreeMap();
 
-		for (Iterator i = orderInfoMap.keySet().iterator(); i.hasNext();) {
-			String column = (String) i.next();
-			long value = Long.parseLong(orderInfoMap.get(column).toString());
+		for (Iterator i = orderInfoMap.entrySet().iterator(); i.hasNext();) {
+			Map.Entry entry = (Map.Entry) i.next();
+			String column = (String) entry.getKey();
+			long value = Long.parseLong(entry.getValue().toString());
 			if (value != 0) {
 				boolean ascending = value > 0;
 				Long priority = new Long(Math.abs(value));

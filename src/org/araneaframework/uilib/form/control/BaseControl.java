@@ -16,30 +16,26 @@
 
 package org.araneaframework.uilib.form.control;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseWidget;
-import org.araneaframework.servlet.ServletInputData;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.uilib.form.Control;
+import org.araneaframework.uilib.form.FormElementContext;
 
 
 /**
  * This class is a control generalization that provides methods common to all HTML form controls.
  * The methods include XML output and error handling.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class BaseControl extends StandardPresentationWidget implements java.io.Serializable, Control {
-
-  private static Logger log = Logger.getLogger(BaseControl.class);
-
+public abstract class BaseControl extends BaseApplicationWidget implements java.io.Serializable, Control {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -47,74 +43,14 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
   protected Object value;
   protected Object innerData;
   
-  protected boolean mandatory = false;
-  protected boolean dirty = false;
-  protected boolean disabled;
-  
-  protected String label;
+  private boolean dirty = false;
 
-  private Set errors = new HashSet();
+  private FormElementContext feCtx;
   
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
 
-  /**
-   * Returns control label.
-   * 
-   * @return control label.
-   */
-  public String getLabel() {
-    return label;
-  }
-
-  /**
-   * Sets control label.
-   * 
-   * @param label control label.
-   */
-  public void setLabel(String label) {
-    this.label = label;
-  }
-
-  /**
-   * * Returns whether the control is mandatory, that is must be inserted by user.
-   * 
-   * @return whether the control is mandatory, that is must be inserted by user.
-   */
-  public boolean isMandatory() {
-    return this.mandatory;
-  }
-
-  /**
-   * Sets whether the control is mandatory, that is must be inserted by user.
-   * 
-   * @param mandatory whether the control is mandatory, that is must be inserted by user.
-   */
-  public void setMandatory(boolean mandatory) {
-    this.mandatory = mandatory;
-  }
-
-  /**
-   * Returns whether the control and it's read data is valid.
-   * 
-   * @return whether the control and it's read data is valid.
-   */
-  public boolean isValid() {
-    return errors.size() == 0;
-  }
-  
-  public void addError(String error) {
-    errors.add(ErrorUtil.showError(error, getEnvironment()));
-  }
-
-  /**
-   * Clears all control errors.
-   */
-  public void clearErrors() {
-    errors.clear();   
-  }
-  
   /**
    * Returns the value of the control (value read from the request). Type of value depends on the
    * type of control.
@@ -145,51 +81,57 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
     return new ViewModel();
   }
   
-  /**
-   * Sets whether the control is disabled
-   * @param disabled whether the control is disabled
-   */
-  public void setDisabled(boolean disabled) {
-    this.disabled = disabled;
-  } 
+  public void setFormElementCtx(FormElementContext formElementContext) {
+    this.feCtx = formElementContext;
+  }
+  
+  public FormElementContext getFormElementCtx() {
+    return feCtx;
+  }
   
   //*********************************************************************
-  //* ABSTRACT METHODS
-  //*********************************************************************
-
-  /**
-   * Returns whether the control data was present in the HTTP request.
-   * 
-   * @return whether the control data was present in the HTTP request.
-   */
-  public abstract boolean isRead();  
+  //* OVERRIDABLE METHODS
+  //*********************************************************************  
   
-  /**
-   * This method should be overriden by the control, returning the type of the value of this
-   * control. It is later used in {@link org.araneaframework.uilib.form.converter.ConverterFactory}to
-   * determine the {@link org.araneaframework.uilib.form.converter.BaseConverter}used to transfer the values
-   * from {@link org.araneaframework.uilib.form.data.Data}to control and back.
-   * 
-   * @return the type of the value of this control
-   */
-  public abstract String getRawValueType();  
+  public void convertAndValidate() {
+    convert();
+    validate();
+  }
   
-  /**
-   * Converts the control value from the one read from request to the one required by the control
-   * value type.
-   */
-  public abstract void convertAndValidate();   
+  public void convert() {
+  }
+  
+  public void validate() {
+  }
+  
+  protected void readFromRequest(HttpInputData request) {}
   
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  
   
-  protected void readFromRequest(String controlName, HttpServletRequest request) {}
+  protected void init() throws Exception {
+    super.init();
+    
+    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the control before it can be initialized! " +
+        "Make sure that the control is associated with a form element!");
+  }
   
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    if (!isDisabled())
+      super.action(path, input, output);
+  }
+
   protected void update(InputData input) throws Exception {
     super.update(input);
     
-    readFromRequest(input.getScope().toString(), ((ServletInputData) input).getRequest()); 
+    if (!isDisabled())
+      readFromRequest((HttpInputData) input);
+  }
+  
+  protected void handleEvent(InputData input) throws Exception {
+    if (!isDisabled())
+      super.handleEvent(input);
   }
   
   public Widget.Interface _getWidget() {
@@ -197,21 +139,49 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
   }
   
   protected class WidgetImpl extends BaseWidget.WidgetImpl {
-    public void update(InputData input) throws Exception {
-      clearErrors();
-      
-      super.update(input);
-      
-      dirty = false;
-    }
-    
-    public void process() throws Exception {
+    public void process()  {
       if (!dirty) return; 
       
       super.process();
+      
+      dirty = false;
     }
   }
+  
+  /**
+   * Returns control label.
+   * 
+   * @return control label.
+   */
+  protected String getLabel() {
+    return feCtx.getLabel();
+  }
 
+  /**
+   * * Returns whether the control is mandatory, that is must be inserted by user.
+   * 
+   * @return whether the control is mandatory, that is must be inserted by user.
+   */
+  protected boolean isMandatory() {
+    return feCtx.isMandatory();
+  }
+  
+  protected void addError(String error) {
+    feCtx.addError(error);
+  }
+  
+  /**
+   * Returns whether the control is disabled.
+   * @return whether the control is disabled
+   */
+  protected boolean isDisabled() {
+    return feCtx.isDisabled();
+  }
+  
+  protected boolean isValid() {
+    return feCtx.isValid();
+  }
+  
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
@@ -219,12 +189,9 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
   /**
    * Represents a general control view model.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
-   * 
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   public class ViewModel implements Control.ViewModel {
-    
-    protected Map attributes;
     protected String controlType;
     protected boolean mandatory;
     protected boolean disabled;
@@ -238,18 +205,10 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
       className = className.substring(className.lastIndexOf(".") + 1);      
       this.controlType = className;
       
-      this.mandatory = BaseControl.this.mandatory;
-      this.disabled = BaseControl.this.disabled;
+      this.mandatory = BaseControl.this.isMandatory();
+      this.disabled = BaseControl.this.isDisabled();
       
       this.label = BaseControl.this.getLabel();
-    }
-    
-    /**
-     * Returns attributes.
-     * @return attributes.
-     */
-    public Map getAttributes() {
-      return attributes;
     }
     
     /**
@@ -259,6 +218,7 @@ public abstract class BaseControl extends StandardPresentationWidget implements 
     public String getControlType() {
       return controlType;     
     }
+    
     
     /**
      * Returns whether the control is mandatory.

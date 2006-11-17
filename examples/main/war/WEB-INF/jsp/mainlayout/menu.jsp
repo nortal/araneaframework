@@ -12,14 +12,14 @@
         <div id="header">
             <div class="box1">
                 <a href="#" id="logo">
-                    <ui:image src="gfx/logo_aranea_screen.jpg"/>
+                    <ui:image src="gfx/logo_aranea_screen.jpg" alt="Aranea fancy logo"/>
                 </a>
 
                 <div id="menu1">
-                    <!-- ${contextWidget.data.VariableName} allows us to access data 
+                    <!-- ${viewData.VariableName} allows us to access data 
                         that was explicitly added to widget view model by the programmer
                         with putViewData() method. -->
-                    <c:forEach items="${contextWidget.data.menu.subMenu}" var="item">
+                    <c:forEach items="${viewData.menu.subMenu}" var="item">
                         <div class="item">
                             <c:if test="${item.value.selected}">
                                 <!-- create a button that 

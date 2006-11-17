@@ -16,6 +16,8 @@
 
 package org.araneaframework.example.main.business.model;
 
+import java.math.BigDecimal;
+
 
 /**
  * @author Rein Raudjärv <rein@webmedia.ee>
@@ -24,10 +26,12 @@ package org.araneaframework.example.main.business.model;
  */
 public class ContractMO implements GeneralMO {
 	
-	private Long id;
+	  private static final long serialVersionUID = 1L;
+  private Long id;
 	private CompanyMO company;
 	private PersonMO person;
 	private String notes;
+	private BigDecimal total;
 	
 	/**
 	 * @hibernate.id column="id" generator-class="increment"
@@ -41,7 +45,6 @@ public class ContractMO implements GeneralMO {
 
 	/**
 	 * @hibernate.many-to-one column="COMPANY_ID" not-null="true"
-	 *                        class="org.araneaframework.example.main.business.model.CompanyMO"
 	 */
 	public CompanyMO getCompany() {
 		return company;
@@ -52,7 +55,6 @@ public class ContractMO implements GeneralMO {
 	
 	/**
 	 * @hibernate.many-to-one column="PERSON_ID" not-null="true"
-	 *                        class="org.araneaframework.example.main.business.model.PersonMO"
 	 */
 	public PersonMO getPerson() {
 		return person;
@@ -62,12 +64,22 @@ public class ContractMO implements GeneralMO {
 	}	
 	
 	/**
-	 * @hibernate.property not-null="false"
+	 * @hibernate.property column="NOTES"
 	 */	
 	public String getNotes() {
 		return notes;
 	}
 	public void setNotes(String notes) {
 		this.notes = notes;
+	}
+	
+	/**
+	 * @hibernate.property column="TOTAL"
+	 */	
+	public BigDecimal getTotal() {
+		return total;
+	}
+	public void setTotal(BigDecimal total) {
+		this.total = total;
 	}
 }

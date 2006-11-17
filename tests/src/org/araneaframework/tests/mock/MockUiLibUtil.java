@@ -18,9 +18,9 @@ package org.araneaframework.tests.mock;
 
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.Widget;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.core.StandardWidget;
-import org.araneaframework.servlet.core.StandardServletInputData;
+import org.araneaframework.http.core.StandardServletInputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 public class MockUiLibUtil {
@@ -37,8 +37,8 @@ public class MockUiLibUtil {
       eventListenerId = eventId.substring(lastDot + 1);
     }
     
-    request.addParameter(StandardWidget.EVENT_PARAMETER_KEY, eventParameter);
-    request.addParameter(StandardWidget.EVENT_HANDLER_ID_KEY, eventListenerId);
+    request.addParameter(ApplicationWidget.EVENT_PARAMETER_KEY, eventParameter);
+    request.addParameter(ApplicationWidget.EVENT_HANDLER_ID_KEY, eventListenerId);
     StandardServletInputData input = new StandardServletInputData(request);
     
     widget._getWidget().event(new StandardPath(eventPath), input);
@@ -47,7 +47,7 @@ public class MockUiLibUtil {
   public static void emulateHandleEventForControl(Widget widget, String eventId, String eventParameter) throws Exception {
     MockHttpServletRequest request = new MockHttpServletRequest();
     
-    request.addParameter(StandardWidget.EVENT_PARAMETER_KEY, eventParameter);
+    request.addParameter(ApplicationWidget.EVENT_PARAMETER_KEY, eventParameter);
    StandardServletInputData input = new StandardServletInputData(request);
     
     widget._getWidget().event(new StandardPath(eventId), input);

@@ -17,6 +17,7 @@
 package org.araneaframework;
 
 import java.io.Serializable;
+import org.araneaframework.core.NoSuchEnvironmentEntryException;
 
 /**
  * A special data structure providing encapsulation of data needed by different components. 
@@ -28,11 +29,20 @@ import java.io.Serializable;
  * them. 
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Environment extends Serializable {
   /**
-   * Returns the entry with the specified key from this Environment.
+   * Returns the entry with the specified key from this Environment. 
+   * Returns null if the entry is not present in the environment.
    */
   public Object getEntry(Object key);
+  
+  /**
+   * Does the same as {@link #getEntry(Object)}, but throws a {@link NoSuchEnvironmentEntryException} if 
+   * entry cannot be found. 
+   * 
+   * @throws NoSuchEnvironmentEntryException If environment entry could not be found.
+   */
+  public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException;
 }

@@ -16,17 +16,15 @@
 
 package org.araneaframework.uilib.form.control;
 
-import javax.servlet.http.HttpServletRequest;
-import org.araneaframework.InputData;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
-import org.araneaframework.uilib.form.FormElement;
 
 
 /**
  * This class represents a button.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class ButtonControl extends BaseControl {
@@ -68,13 +66,13 @@ public class ButtonControl extends BaseControl {
   protected void init() throws Exception {
     super.init();
     
-    addGlobalEventListener(eventHelper);
+    setGlobalEventListener(eventHelper);
   }
   
   /**
    * Empty method
    */
-  protected void readFromRequest(String controlName, HttpServletRequest request) {
+  protected void readFromRequest(HttpInputData request) {
     // Button control is not interested in what is submitted
   }
 
@@ -108,7 +106,7 @@ public class ButtonControl extends BaseControl {
   /**
    * Represents a <code>ButtonControl</code> view model.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends BaseControl.ViewModel {

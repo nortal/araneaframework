@@ -18,15 +18,13 @@ package org.araneaframework.tests;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
-import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.http.core.StandardServletInputData;
+import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
+import org.araneaframework.tests.util.RequestUtil;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.constraint.AfterTodayConstraint;
 import org.araneaframework.uilib.form.constraint.ConstraintGroupHelper;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
 import org.araneaframework.uilib.form.constraint.NumberInRangeConstraint;
@@ -42,13 +40,10 @@ import org.araneaframework.uilib.form.data.LongData;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FormConstraintTest extends TestCase {
-
-  private static Logger log = Logger.getLogger(FormConstraintTest.class);
-
   boolean eventsWork = false;
   
   public FormConstraintTest(String name) {
@@ -59,38 +54,19 @@ public class FormConstraintTest extends TestCase {
 
     //Creating form :-)
     FormWidget testForm = new FormWidget();
-    testForm._getComponent().init(new MockEnviroment());
+    testForm._getComponent().init(new MockEnvironment());
     
     //Adding elements to form
     testForm.addElement("myCheckBox", "my checkbox", new CheckboxControl(), new BooleanData(), true);
+    ((FormElement)testForm.getElement("myCheckBox")).rendered();
     testForm.addElement("myLongText", "my long text", new TextControl(), new LongData(), false);
+    ((FormElement)testForm.getElement("myLongText")).rendered();
     testForm.addElement("myDateTime", "my date and time", new DateTimeControl(), new DateData(), false);
+    ((FormElement)testForm.getElement("myDateTime")).rendered();
     testForm.addElement("myButton", "my button", new ButtonControl(), null, false);
+    ((FormElement)testForm.getElement("myButton")).rendered();
 
     return testForm;
-  }
-
-  /**
-   * Testing reading from request with a primitive constraint set.
-   */
-  public void testFormPrimitiveConstraint() throws Exception {
-
-    FormWidget testForm = makeUsualForm();
-
-    MockHttpServletRequest request = new MockHttpServletRequest();
-
-    request.addParameter("testForm.__present", "true");
-    request.addParameter("testForm.myCheckBox", "true");
-    request.addParameter("testForm.myLongText", "108");
-	request.addParameter("testForm.myDateTime", (String) null);
-
-    //Testing primitive constraint
-    testForm.getElement("myDateTime").setConstraint(new NotEmptyConstraint());
-    
-    StandardServletInputData input = new StandardServletInputData(request);
-    input.pushScope("testForm");
-    testForm._getWidget().update(input);
-    assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
   }
 
   /**
@@ -102,7 +78,6 @@ public class FormConstraintTest extends TestCase {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
 
-    request.addParameter("testForm.__present", "true");
     request.addParameter("testForm.myCheckBox", "true");
     request.addParameter("testForm.myLongText", "108");
     request.addParameter("testForm.myDateTime", (String) null);
@@ -121,70 +96,14 @@ public class FormConstraintTest extends TestCase {
   }
   
   /**
-   * Testing reading from request with a grouped constraint set.
-   */
-  public void testFormActiveGroupedConstraintValidates() throws Exception {
-
-    FormWidget testForm = makeUsualForm();
-
-    MockHttpServletRequest request = new MockHttpServletRequest();
-
-    request.addParameter("testForm.__present", "true");
-    request.addParameter("testForm.myCheckBox", "true");
-    request.addParameter("testForm.myLongText", "108");    
-    request.addParameter("testForm.myDateTime.date", "11.10.2015");
-    request.addParameter("testForm.myDateTime.time", "01:01");  
-
-    // create helper
-    ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();    
-    testForm.getElement("myDateTime").setConstraint(groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
-    
-    StandardServletInputData input = new StandardServletInputData(request);
-    input.pushScope("testForm");
-    testForm._getWidget().update(input);
-    
-    groupHelper.setActiveGroup("active");
-    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());       
-  }
-  
-  /**
-   * Testing reading from request with a grouped constraint set.
-   */
-  public void testFormInactiveGroupedConstraintValidates() throws Exception {
-
-    FormWidget testForm = makeUsualForm();
-
-    MockHttpServletRequest request = new MockHttpServletRequest();
-
-    request.addParameter("testForm.__present", "true");
-    request.addParameter("testForm.myCheckBox", "true");
-    request.addParameter("testForm.myLongText", "108");    
-    request.addParameter("testForm.myDateTime.date", "11.10.2015");
-    request.addParameter("testForm.myDateTime.time", "01:01");  
-
-    // create helper
-    ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();    
-    testForm.getElement("myDateTime").setConstraint(groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
-    
-    StandardServletInputData input = new StandardServletInputData(request);
-    input.pushScope("testForm");
-    testForm._getWidget().update(input);
-    
-    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());       
-  }
-  
-  /**
    * Testing reading from request with a primitive constraint set.
    */
   public void testFormOptionalConstraint() throws Exception {
-
     FormWidget testForm = makeUsualForm();
 
-    MockHttpServletRequest request = new MockHttpServletRequest();
+    MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-    //invalid
-    
-    request.addParameter("testForm.__present", "true");
+    //invalid 1, integer should be greater than 20000
     request.addParameter("testForm.myCheckBox", "true");
     request.addParameter("testForm.myLongText", "12345");
     request.addParameter("testForm.myDateTime", (String) null);
@@ -200,12 +119,29 @@ public class FormConstraintTest extends TestCase {
     input.popScope();
     
     assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
-            
+    
+    //valid 1, long field is not read from request and should not be validated too
+    request = RequestUtil.markSubmitted(new MockHttpServletRequest());
+    
+    request.addParameter("testForm.myCheckBox", "true");
+    request.addParameter("testForm.myDateTime", (String) null);
+
+    //Testing primitive constraint
+    testForm.getElement("myLongText").setConstraint(
+        new OptionalConstraint(
+            new NumberInRangeConstraint(BigInteger.valueOf(20000), null)));
+
+    input = new StandardServletInputData(request);
+    input.pushScope("testForm");
+    testForm._getWidget().update(input);
+    input.popScope();
+    
+    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
+
     //valid
     
-    request = new MockHttpServletRequest();
+    request =  RequestUtil.markSubmitted(new MockHttpServletRequest());
     
-    request.addParameter("testForm.__present", "true");
     request.addParameter("testForm.myCheckBox", "true");
     request.addParameter("testForm.myLongText", "40000");
     request.addParameter("testForm.myDateTime", (String) null);
@@ -219,9 +155,8 @@ public class FormConstraintTest extends TestCase {
     
     //off
     
-    request = new MockHttpServletRequest();
+    request = RequestUtil.markSubmitted(new MockHttpServletRequest());
     
-    request.addParameter("testForm.__present", "true");
     request.addParameter("testForm.myCheckBox", "true");
     request.addParameter("testForm.myLongText", (String) null);
     request.addParameter("testForm.myDateTime", (String) null);
@@ -235,84 +170,10 @@ public class FormConstraintTest extends TestCase {
     
   }
 
-  public void testFormAfterTodayConstraint() throws Exception {
-
-    FormWidget testForm = makeUsualForm();
-
-    MockHttpServletRequest request = new MockHttpServletRequest();
-
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-    
-    //invalid
-    
-    request.addParameter("testForm.__present", "true");
-    request.addParameter("testForm.myDateTime.date", "11.10.1015");
-    request.addParameter("testForm.myDateTime.time", "01:01");  
-
-    testForm.getElement("myDateTime").setConstraint(new AfterTodayConstraint(false));
-
-    StandardServletInputData input = new StandardServletInputData(request);
-    input.pushScope("testForm");
-    testForm._getWidget().update(input);
-    input.popScope();
-    
-    assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
-            
-    request = new MockHttpServletRequest();
-    
-    //invalid
-    request.addParameter("testForm.__present", "true");
-    request.addParameter("testForm.myDateTime.date", sdf.format(new Date()));
-    request.addParameter("testForm.myDateTime.time", "00:00");  
-
-    testForm.getElement("myDateTime").setConstraint(new AfterTodayConstraint(false));
-    
-    input = new StandardServletInputData(request);
-    input.pushScope("testForm");
-    testForm._getWidget().update(input);
-    input.popScope();
-    
-    assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
-
-    request = new MockHttpServletRequest();
-    
-    //invalid    
-    request.addParameter("testForm.__present", "true");
-    request.addParameter("testForm.myDateTime.date", "11.10.2015");
-    request.addParameter("testForm.myDateTime.time", "01:01");  
-
-    //Testing primitive constraint
-    testForm.getElement("myDateTime").setConstraint(new AfterTodayConstraint(true));
-
-    input = new StandardServletInputData(request);
-    input.pushScope("testForm");
-    testForm._getWidget().update(input);
-    input.popScope();
-    
-    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
-    
-    request = new MockHttpServletRequest();
-    
-    //valid
-    request.addParameter("testForm.__present", "true");
-    request.addParameter("testForm.myDateTime.date", sdf.format(new Date()));
-    request.addParameter("testForm.myDateTime.time", "00:01");  
-
-    //Testing primitive constraint
-    testForm.getElement("myDateTime").setConstraint(new AfterTodayConstraint(true));
-
-    input = new StandardServletInputData(request);
-    input.pushScope("testForm");
-    testForm._getWidget().update(input);  
-    input.popScope();
-    
-    assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());            
-  }
-
   public void testFormRangeConstraint() throws Exception {
 
     FormWidget testForm = new FormWidget();
-    testForm._getComponent().init(new MockEnviroment());
+    testForm._getComponent().init(new MockEnvironment());
     
     //Adding elements to form
     FormElement lo = testForm.createElement("my date and time", new DateTimeControl(), new DateData(), false);

@@ -17,8 +17,7 @@
 package org.araneaframework.example.main.web.contract;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.example.main.web.company.CompanyViewWidget;
 import org.araneaframework.example.main.web.person.PersonViewWidget;
@@ -29,9 +28,11 @@ import org.araneaframework.example.main.web.person.PersonViewWidget;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class ContractViewWidget extends BaseWidget {
+public class ContractViewWidget extends TemplateBaseWidget {
 
-	private static final Logger log = Logger
+	  private static final long serialVersionUID = 1L;
+
+  private static final Logger log = Logger
 			.getLogger(ContractViewWidget.class);
 
 	private Long id = null;
@@ -48,29 +49,24 @@ public class ContractViewWidget extends BaseWidget {
 	}
 
 	protected void init() throws Exception {
-		super.init();
 		log.debug("TemplateContractViewWidget init called");
 		setViewSelector("contract/contractView");
-		addGlobalEventListener(new ProxyEventListener(this));
-
+    
 		contract = (ContractMO) getGeneralDAO().getById(ContractMO.class, id);
 		putViewData("contract", contract);
 	}
 
 	public void handleEventViewCompany(String eventParameter) throws Exception {
-		log.debug("Event 'viewCompany' received!");
 		getFlowCtx().start(
 				new CompanyViewWidget(contract.getCompany().getId()), null, null);
 	}
 
 	public void handleEventViewPerson(String eventParameter) throws Exception {
-		log.debug("Event 'viewPerson' received!");
 		getFlowCtx().start(
 				new PersonViewWidget(contract.getPerson().getId()), null, null);
 	}
 
 	public void handleEventReturn(String eventParameter) throws Exception {
-		log.debug("Event 'return' received!");
 		getFlowCtx().cancel();
 	}
 }

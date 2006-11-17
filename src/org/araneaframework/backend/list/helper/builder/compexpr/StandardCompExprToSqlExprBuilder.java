@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.helper.builder.compexpr;
 
 import java.util.Comparator;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.CompExprToSqlExprBuilder;
@@ -56,7 +55,7 @@ public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuild
 		return this.mapper != null ? (String) this.mapper.resolve(variable) : variable.getName();
 	}
 	
-	class MultiComparatorTranslator extends CompositeCompExprToSqlExprTranslator {
+	static class MultiComparatorTranslator extends CompositeCompExprToSqlExprTranslator {
 		protected SqlExpression translateParent(ComparatorExpression expr, SqlExpression[] sqlChildren) {
 			return new SqlCollectionExpression().setChildren(sqlChildren);
 		}

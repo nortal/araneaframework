@@ -32,29 +32,29 @@ public class BooleanToLongConverter implements Converter {
 
 	public BooleanToLongConverter(Long trueValue, Long falseValue) {
 		if (trueValue == null || falseValue == null) {
-			throw new ConvertionException("Target values can not be null");
+			throw new ConversionException("Target values can not be null");
 		}
 		if (trueValue == falseValue || trueValue.equals(falseValue)) {
-			throw new ConvertionException("Target values can not be the same");
+			throw new ConversionException("Target values can not be the same");
 		}
 		this.trueValue = trueValue;
 		this.falseValue = falseValue;
 	}
 
-	public Object convert(Object data) throws ConvertionException {
+	public Object convert(Object data) throws ConversionException {
 		return convert((Boolean) data);
 	}
 
-	public Long convert(Boolean data) throws ConvertionException {
+	public Long convert(Boolean data) throws ConversionException {
 		if (data == null) {
-			throw new ConvertionException("Data can not be null");
+			throw new ConversionException("Data can not be null");
 		}
 		return Boolean.TRUE.equals(data) ? this.trueValue : this.falseValue;
 	}
 
-	public Object reverseConvert(Object data) throws ConvertionException {
+	public Object reverseConvert(Object data) throws ConversionException {
 		if (data == null) {
-			throw new ConvertionException("Data can not be null");
+			throw new ConversionException("Data can not be null");
 		}
 		if (this.trueValue.equals(data)) {
 			return Boolean.TRUE;
@@ -62,7 +62,7 @@ public class BooleanToLongConverter implements Converter {
 		if (this.falseValue.equals(data)) {
 			return Boolean.FALSE;
 		}
-		throw new ConvertionException("Data " + data + " not supported");
+		throw new ConversionException("Data " + data + " not supported");
 	}
 
 	public Class getSourceType() {

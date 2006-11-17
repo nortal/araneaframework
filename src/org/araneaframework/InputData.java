@@ -16,7 +16,6 @@
 
 package org.araneaframework;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -34,10 +33,15 @@ import java.util.Map;
  * the path of data needed from the InputData.
  * </p>
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface InputData extends Serializable, Extendable, Narrowable {
+public interface InputData extends Extendable, Narrowable {
   
+  /**
+   * The key that can be used to retrieve InputData (as an example a request scope attribute).
+   */
+  public static final String INPUT_DATA_KEY = "org.araneaframework.InputData";
+
   /**
    * Returns the current Path of this InputData.
    * @return the Path of this InputData
@@ -54,6 +58,11 @@ public interface InputData extends Serializable, Extendable, Narrowable {
    * Removes the last entry from the Path of this InputData. 
    */
   public void popScope();
+  
+  /**
+   * Restores the scope to the passed one.
+   */
+  public void restoreScope(Path scope);  
 
   /**
    * Returns the data with the Path prefix.
@@ -71,5 +80,5 @@ public interface InputData extends Serializable, Extendable, Narrowable {
   /**
    * Returns the current OutputData.
    */
-  public OutputData getCurrentOutputData();
+  public OutputData getOutputData();
 }

@@ -17,37 +17,48 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.util.Iterator;
+import org.araneaframework.uilib.form.Constraint;
 
 
 /**
- * This constraint implements "OR" Boolean logic (checks that at l;east one
- * contained constraits is satisfied).
+ * This constraint implements "OR" Boolean logic (checks that at least one
+ * contained constraits is satisfied). It is eager by default, but can
+ * be set to act lazily, (note that subconstraints produce error messages
+ * as they are being validated, unless some custom error message has been set,
+ * it makes often sense to process all subconstraints). 
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
- * 
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class OrConstraint extends CompositeConstraint {
+public class OrConstraint extends BaseCompositeConstraint {
+  private boolean lazy = false;
 
   /**
-	 * Checks that at least one  contained constraits is satisfied.
-   * @throws Exception 
-	 */
+   * Checks that at least one  contained constraits is satisfied.
+   */
   public void validateConstraint() throws Exception {
-    
     boolean valid = false;
-    
+
     for (Iterator i = constraints.iterator(); i.hasNext();) {
       Constraint constraint = (Constraint) i.next();
-      constraint.validate();
-      valid = valid || constraint.isValid();      
+      valid = valid || constraint.validate();
+      addErrors(constraint.getErrors());
+      constraint.clearErrors();
+      if (valid && this.lazy)
+        break;
     }
-    
-    if (!valid) {
-      for (Iterator i = constraints.iterator(); i.hasNext();) {
-      	addErrors(((Constraint) i.next()).getErrors());   
-      }    
+
+    if (valid) {
+      clearErrors();
     }
-    
-    
+  }
+  
+  /**
+   * Sets whether this {@link OrConstraint} acts lazily, default is <code>false</code>.
+   * @param lazy
+   * @return this {@link OrConstraint}
+   */
+  public OrConstraint setLazy(boolean lazy) {
+    this.lazy = lazy;
+    return this;
   }
 }

@@ -21,24 +21,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
-import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
+import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
-import org.araneaframework.uilib.form.data.BooleanData;
-import org.araneaframework.uilib.list.EditableListWidget;
+import org.araneaframework.uilib.form.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.formlist.FormListUtil;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
 
 
 /**
  * This is an example of component with a single list.
  */
-public class DemoCheckboxList extends BaseWidget {
-	private EditableListWidget checkList;
+public class DemoCheckboxList extends TemplateBaseWidget {
+	  private static final long serialVersionUID = 1L;
+  private EditableBeanListWidget checkList;
 	private Map data = new HashMap();
 
 	{
@@ -54,25 +52,18 @@ public class DemoCheckboxList extends BaseWidget {
 	}
 
 	public void init() throws Exception {
-		super.init();
+		setViewSelector("demo/demoCheckboxList");
 
-		addGlobalEventListener(new ProxyEventListener(this));
-		setViewSelector("demo/DemoCheckboxList/main");
-		
-		MemoryBasedListDataProvider listDataProvider = new DemoCheckboxListDataProvider();
-
-	    checkList = new EditableListWidget(new DemoCheckboxListRowHandler());
-	    checkList.setListDataProvider(listDataProvider);
-	    
-	    checkList.addListColumn("booleanField", "#Boolean");
-	    checkList.addListColumn("stringField", "#String");
-	    checkList.addListColumn("longField", "#Long");
-		
-		FormListUtil.associateFormListWithMemoryBasedList(checkList.getFormList(), listDataProvider);
-		
-		checkList.setInitialOrder("longField", false);
-
+		checkList = new EditableBeanListWidget(new DemoCheckboxListRowHandler(), DataDTO.class);
 		addWidget("checkList", checkList);
+
+		checkList.setDataProvider(new DemoCheckboxListDataProvider());
+
+		checkList.addField("booleanField", "#Boolean");
+		checkList.addField("stringField", "#String");
+		checkList.addField("longField", "#Long");
+
+		checkList.setInitialOrder("longField", false);		
 	}
 
 	public void handleEventSave(String parameter) throws Exception {
@@ -84,25 +75,27 @@ public class DemoCheckboxList extends BaseWidget {
 	}
 
 	public class DemoCheckboxListRowHandler extends ValidOnlyIndividualFormRowHandler {
-		public Object getRowKey(Object row) {
+		    private static final long serialVersionUID = 1L;
+
+    public Object getRowKey(Object row) {
 			return ((DataDTO) row).getId();
 		}
 
 		public void saveValidRow(FormRow editableRow) {
-			DataDTO rowData = (DataDTO) data.get(editableRow.getRowKey());
-			rowData.setBooleanField((Boolean) editableRow.getRowForm().getValueByFullName("booleanField"));
+			DataDTO rowData = (DataDTO) data.get(editableRow.getKey());
+			rowData.setBooleanField((Boolean) editableRow.getForm().getValueByFullName("booleanField"));
 		}
 
-		public void initFormRow(FormRow editableRow, Object row)
-		                     throws Exception {
-			editableRow.getRowForm().addElement("booleanField", "#Boolean field", new CheckboxControl(),
-			                                    new BooleanData(), true);
-			TemplateUiLibUtil.writeDtoToForm(row, editableRow.getRowForm());
+		public void initFormRow(FormRow editableRow, Object row) throws Exception {
+			((BeanFormWidget)editableRow.getForm()).addBeanElement("booleanField", "#Boolean field", new CheckboxControl(), true);
+			((BeanFormWidget)editableRow.getForm()).writeBean(row);
 		}
 	}
 
 	public class DemoCheckboxListDataProvider extends MemoryBasedListDataProvider {
-		public DemoCheckboxListDataProvider() {
+		    private static final long serialVersionUID = 1L;
+
+    public DemoCheckboxListDataProvider() {
 			super(DataDTO.class);
 		}
 

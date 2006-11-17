@@ -20,11 +20,12 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.araneaframework.backend.list.SqlExpression;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class SqlStatement implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
@@ -101,22 +102,6 @@ public class SqlStatement implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Adds parameters from the given <code>SqlExpression</code> at the specified position.
-	 * 
-	 * @param index
-	 *            index at witch the specified parameters will be inserted.
-	 * @param expr
-	 *            <code>SqlExpression</code> instance.
-	 *            
-	 * @deprecated
-	 */
-	public void addAllExpressionParams(int index, SqlExpression expr) {
-		if (expr != null) {
-			this.parameters.addAll(index, Arrays.asList(expr.getValues()));			
-		}
-	}
-
-	/**
 	 * Counts all parameters.
 	 * 
 	 * @return paramaetrs count.
@@ -154,18 +139,6 @@ public class SqlStatement implements Serializable, Cloneable {
 	public void addAllParams(List params) {
 		addAllParams(countParams(), params);
 	}
-
-	/**
-	 * Adds parameters from the given <code>SqlExpression</code>.
-	 * 
-	 * @param expr
-	 *            <code>SqlExpression</code> instance.
-	 *            
-	 * @deprecated
-	 */
-	public void addAllExpressionParams(SqlExpression expr) {
-		addAllExpressionParams(countParams(), expr);
-	}
 	
 	/**
 	 * Clears all parameters.
@@ -192,10 +165,7 @@ public class SqlStatement implements Serializable, Cloneable {
 	 * Helper method that sets the parameters to the
 	 * <code>PreparedStatement</code>.
 	 * 
-	 * @param statement
-	 *            <code>PreparedStatement</code> which parameters will be set.
-	 * @param parameters
-	 *            parameters for the <code>PreparedStatement</code>.
+	 * @param pstmt <code>PreparedStatement</code> which parameters will be set.
 	 * @throws SQLException
 	 */
 	protected void propagateStatementWithParams(PreparedStatement pstmt)
@@ -205,8 +175,8 @@ public class SqlStatement implements Serializable, Cloneable {
 			if (parameter instanceof NullValue) {
 				pstmt.setNull(i, ((NullValue) parameter).getType());
 			} else {
-				// converting java.util.Date into java.sql.Date
-			    if (parameter != null && java.util.Date.class.isAssignableFrom(parameter.getClass())) {
+				// converting java.util.Date into java.sql.Date (java.sql.Timestamp is not changed)
+			    if (parameter != null && parameter.getClass().equals(java.util.Date.class)) {
 			    	parameter = new java.sql.Date(((java.util.Date) parameter).getTime());
 			    }
 				pstmt.setObject(i, parameter);

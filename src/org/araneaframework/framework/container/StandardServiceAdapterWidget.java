@@ -46,11 +46,11 @@ public class StandardServiceAdapterWidget extends BaseWidget {
   
   protected void init() throws Exception {
     childService._getComponent().init(getEnvironment());
-  } 
+  }
   
   /**
    * Returns the path of action from the InputData. Uses the
-   * ACTION_PATH_INPUT_DATA_PARAMETER to get the path.
+   * {@link StandardServiceAdapterWidget#ACTION_PATH_INPUT_DATA_PARAMETER} to get the path.
    */
   protected Path getActionPath(InputData input) {
     return new StandardPath((String) input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER));
@@ -65,7 +65,6 @@ public class StandardServiceAdapterWidget extends BaseWidget {
     message.send(null, childService);
   }
   
-  //Puts eventReceived flag if
   public void event(Path path, InputData input) {
     if (!path.hasNext()) {
       eventReceived = true;
@@ -73,6 +72,7 @@ public class StandardServiceAdapterWidget extends BaseWidget {
   }  
   
   /**
+   * TODO: why is it in render and not in event() ??
    * Calls child service's action only if an event was received. The action path
    * is constructed via <code>getActionPath(InputData)</code>. The InputData is
    * saved in the <code>update(InputData)</code> method.

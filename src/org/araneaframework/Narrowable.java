@@ -16,17 +16,15 @@
 
 package org.araneaframework;
 
-import java.io.Serializable;
-
 /**
  * Provides objects with the capability of narrowing down to a specific implementation
  * of an interface added with extend from {@link org.araneaframework.Extendable}.
  * 
  * @see org.araneaframework.Extendable
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface Narrowable extends Serializable {
+public interface Narrowable {
   
   /**
    * Narrows down to the implementation of the interfaceClass, returns

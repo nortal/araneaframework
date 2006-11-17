@@ -16,19 +16,23 @@
 
 package org.araneaframework;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
- *  A map of attributes with a scope. As OutputData is passed to different methods
- *  of StandardComponent and derivates, the scope helps the components understand
- *  where they are located in the greater hirearchy. 
+ * A map of attributes with a scope. As OutputData is passed to different methods
+ * of BaseApplicationComponent and derivates, the scope helps the components understand
+ * where they are located in the greater hirearchy. 
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface OutputData extends Serializable, Extendable, Narrowable {
+public interface OutputData extends Extendable, Narrowable {
   
+  /**
+   * The key that can be used to retrieve OutputData (as an example a request scope attribute).
+   */
+  public static final String OUTPUT_DATA_KEY = "org.araneaframework.OutputData";
+
   /**
    * Adds the step to the scope Path of this OutputData.
    * @param step is the next step on the Path
@@ -81,7 +85,7 @@ public interface OutputData extends Serializable, Extendable, Narrowable {
   public Map getAttributes();
   
   /**
-   * Returns the currenct InputData.
+   * Returns the current InputData.
    */
-  public InputData getCurrentInputData();
+  public InputData getInputData();
 }

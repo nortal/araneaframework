@@ -20,16 +20,16 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.backend.util.BeanMapper;
+import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
-import org.araneaframework.uilib.form.data.Data;
 
 
 /**
  * This class allows one to write Value Objects to forms.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class BeanFormWriter implements Serializable {
@@ -51,7 +51,7 @@ public class BeanFormWriter implements Serializable {
 	 * @param vo Value Object to read from.
 	 */
   public void writeFormBean(FormWidget form, Object vo) {
-    List voFields = beanMapper.getBeanFields();
+    List voFields = beanMapper.getFields();
 
     for (Iterator i = voFields.iterator(); i.hasNext();) {
       String field = (String) i.next();
@@ -60,13 +60,13 @@ public class BeanFormWriter implements Serializable {
         if (element instanceof FormElement) {          
           Data data = ((FormElement) element).getData();
           if (data != null) {
-            data.setValue(beanMapper.getBeanFieldValue(vo, field));
+            data.setValue(beanMapper.getFieldValue(vo, field));
           }
         }
         else if (element instanceof FormWidget) {
-          BeanFormWriter subVoWriter = new BeanFormWriter(beanMapper.getBeanFieldType(field));
+          BeanFormWriter subVoWriter = new BeanFormWriter(beanMapper.getFieldType(field));
 
-          Object subVO = beanMapper.getBeanFieldValue(vo, field);
+          Object subVO = beanMapper.getFieldValue(vo, field);
           
           if (subVO != null) {
             subVoWriter.writeFormBean((FormWidget) element, subVO);

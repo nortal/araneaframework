@@ -16,138 +16,106 @@
 
 package org.araneaframework.uilib.form.constraint;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import org.araneaframework.Environment;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.ConfigurationContext;
-import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.Constraint;
 
 /**
- * This class is the base class for form constraints. A constraint operates on the form elements
- * providing means to constrain form element validity. That is using a constraint you can put
- * additional (and/or custom) conditions for the form elements to be valid.
+ * Base class for constraints. A {@link org.araneaframework.uilib.form.Constraint} 
+ * operates on the form elements or forms providing means to constrain their content.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
- *  
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseConstraint implements java.io.Serializable, Constraint {
-
-  //*******************************************************************
-  // FIELDS
-  //*******************************************************************
-
-  private List errors = new ArrayList();
-  
-  private FormElement field;
-  
-  protected Environment enviroment;
-
+  private Environment environment;
   protected String customErrorMessage;
+  private Set errors;
 
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
-
-  /**
-   * Sets the <code>SimpleFormElement</code> that the constraint will operate on (the constraints
-   * that operate on more than one field should ignore this function, composite constraints should
-   * propagate it down the tree).
-   * 
-   * @param field <code>SimpleFormElement</code> the field that constraint will operate on.
-   */
-  public void setField(FormElement field) {
-    this.field = field;
-  }
-
-  /**
-   * This method validates the constraint conditions, providing some preconditions and
-   * postconditions for the {@link #validate()}method.
-   * @throws Exception 
-   */
-  public void validate() throws Exception {
+  
+  public boolean validate() throws Exception {
     clearErrors();
-
+    
     validateConstraint();
 
     //Putting custom message only
-    if (getErrors().size() > 0 && customErrorMessage != null) {
+    if (errors != null && !errors.isEmpty() && customErrorMessage != null) {
     	clearErrors();
     	addError(customErrorMessage);
     }
+    
+    return isValid();
   }
 
   /**
-   * Returns whether the constraint is satisfied/valid (same that no errors were produced).
-   * 
-   * @return whether the constraint is satisfied/valid (same that no errors were produced).
+   * Returns whether the constraint is satisfied/valid. Constraint is valid
+   * when no validation errors were produced.
    */
   public boolean isValid() {
-    return getErrors().size() == 0;
+    //XXX: should it throw NotValidatedYetException if called before validation
+    return errors == null || errors.size() == 0;
   }
 
-  /**
-   * Returns the {@link UiMessage}s produced while validationg the constraint.
-   * 
-   * @return the {@link UiMessage}s produced while validationg the constraint.
-   */
-  public List getErrors() {
+  public Set getErrors() {
+    if (errors == null)
+      errors = new HashSet();
     return errors;
   }
 
-  /**
-   * Clears the the errors produced while validationg the constraint.
-   */
   public void clearErrors() {
-    errors.clear();
+    errors = null;
   }
- 
-  /**
-   * Sets the custom {@link UiMessage}, that will be returned instead of the usual ones.
-   * 
-   * @param customErrorMessage custom {@link UiMessage} that will be returned instead of the
-   * usual ones.
-   */
+
   public void setCustomErrorMessage(String customErrorMessage) {
     this.customErrorMessage = customErrorMessage;
   }
   
-  public void setEnvironment(Environment enviroment) {
-  	this.enviroment = enviroment;
+  public void setEnvironment(Environment environment) {
+    // allow setting of constraint environment only once
+    if (this.environment == null)
+      this.environment = environment;
   }
   
-  //*********************************************************************
+  public Environment getEnvironment() {
+    return environment;
+  }
+  
+  
+//*********************************************************************
   //* PROTECTED METHODS
   //*********************************************************************
   
   protected void addError(String error) {
-  	errors.add(error);
+    getErrors().add(error);
   }
   
   protected void addErrors(Collection errorList) {
-  	errors.addAll(errorList);
-  }  
-  
-  protected FormElement getField() {
-  	return field;
+    getErrors().addAll(errorList);
   }
-  
+
   protected ConfigurationContext getConfiguration() {
-  	return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
   }
-  
-  protected Environment getEnvironment() {
-  	return this.enviroment;
+
+  protected String t(String key) {
+    LocalizationContext locCtx = 
+     (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+    return locCtx.localize(key);
   }
-  
+
   //*********************************************************************
   //* ABSTRACT IMPLEMENTATION METHODS
   //*********************************************************************
 
   /**
-   * This method should validate the constraint conditions adding {@link UiMessage}s if some
-   * condition is not satisfied.
-   * @throws Exception 
+   * This method should validate the constraint conditions adding error messages
+   * and add messages about unsatisfied conditions.
    */
   protected abstract void validateConstraint() throws Exception;
 }

@@ -16,13 +16,12 @@
 
 package org.araneaframework.uilib.form.control;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * This class represents a read only control, that is technically it is not a 
  * true control, but just a label displaying the text to the user.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class DisplayControl extends BaseControl {
@@ -50,22 +49,6 @@ public class DisplayControl extends BaseControl {
     return new ViewModel();
   }
   
-  /**
-   * Empty.
-   * 
-   */
-  protected void readFromRequest(String controlName, HttpServletRequest request) {
-    //Empty method
-  }
-
-  /**
-   * Empty.
-   * 
-   */
-  public void convertAndValidate() {
-    //Empty method
-  }
-  
   protected void process() throws Exception {
     innerData = value;
     
@@ -77,7 +60,7 @@ public class DisplayControl extends BaseControl {
   //*********************************************************************    
   
   /**
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends BaseControl.ViewModel {

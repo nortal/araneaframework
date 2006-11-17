@@ -75,7 +75,7 @@
 
 		<p>	
 			<jsp:text>Return value: </jsp:text>
-			<c:out value="${contextWidget.data.returnValue}"/>
+			<c:out value="${viewData.returnValue}"/>
 		</p>
 	
 	</ui:widgetContext>	

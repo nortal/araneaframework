@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
-import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.TestVO;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
@@ -35,7 +35,7 @@ import org.araneaframework.uilib.form.reader.MapFormWriter;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FormRWTest extends TestCase {
@@ -46,7 +46,7 @@ public class FormRWTest extends TestCase {
 
     //Creating form :-)
     FormWidget voForm = new FormWidget();
-    voForm._getComponent().init(new MockEnviroment());
+    voForm._getComponent().init(new MockEnvironment());
     
     //Adding elements to form
     voForm.addElement("booleanValue", "vo checkbox", new CheckboxControl(), new BooleanData(), true);

@@ -27,7 +27,7 @@ import org.araneaframework.backend.util.BeanMapper;
  * This VO is used by tests only ({@link org.araneaframework.uilib.tests.ListTest},
  * {@link org.araneaframework.uilib.tests.FormTest},{@link org.araneaframework.uilib.tests.VoProcessingTest}.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class TestVO implements Serializable, Cloneable {
@@ -116,12 +116,12 @@ public class TestVO implements Serializable, Cloneable {
    */
   public String toString() {
     StringBuffer result = new StringBuffer();
-    List voFields = beanMapper.getBeanFields();
+    List voFields = beanMapper.getFields();
     for (Iterator i = voFields.iterator(); i.hasNext();) {
       String field = (String) i.next();
       result.append(field);
       result.append("=");
-      result.append("" + beanMapper.getBeanFieldValue(this, field));
+      result.append("" + beanMapper.getFieldValue(this, field));
       result.append("; ");
     }
     return result.toString();
@@ -139,10 +139,10 @@ public class TestVO implements Serializable, Cloneable {
 
     //Otherwise compare all fields
     boolean result = true;
-    List voFields = beanMapper.getBeanFields();
+    List voFields = beanMapper.getFields();
     for (Iterator i = voFields.iterator(); i.hasNext() && result;) {
       String field = (String) i.next();
-      result = valuesEqual(beanMapper.getBeanFieldValue(this, field), beanMapper.getBeanFieldValue(otherVo,
+      result = valuesEqual(beanMapper.getFieldValue(this, field), beanMapper.getFieldValue(otherVo,
           field));
     }
     return result;
@@ -153,10 +153,10 @@ public class TestVO implements Serializable, Cloneable {
    */
   public int hashCode() {
     int result = 17;
-    List voFields = beanMapper.getBeanFields();
+    List voFields = beanMapper.getFields();
     for (Iterator i = voFields.iterator(); i.hasNext();) {
       String field = (String) i.next();
-      result = 37 * result + beanMapper.getBeanFieldValue(this, field).hashCode();
+      result = 37 * result + beanMapper.getFieldValue(this, field).hashCode();
     }
     return result;
   }

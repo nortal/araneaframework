@@ -48,6 +48,10 @@
 	<bean id="generalDAO" class="org.araneaframework.example.main.business.data.GeneralDAO">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
+	
+	<bean id="contractDAO" class="org.araneaframework.example.main.business.data.ContractDAO">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
 
 	<bean id="personListDAO" class="org.araneaframework.example.main.business.data.PersonListDAO">
 		<property name="dataSource" ref="dataSource"/>
@@ -64,7 +68,7 @@
 		</property>
 		<property name="beanNames">
 			<list>
-				<value>personDAO</value>
+				<value>*DAO</value>
 			</list>
 		</property>
 		<property name="proxyTargetClass" value="true"></property>

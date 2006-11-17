@@ -17,19 +17,30 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
+
+import javax.sql.DataSource;
+
 import org.araneaframework.backend.list.model.ListQuery;
 
 
+/**
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ */
 public class OracleListSqlHelper extends ListSqlHelper {
 
 	protected SqlStatement statement = new SqlStatement();
 
-	protected String countSqlQuery = null;
+	protected String countSqlQuery = null;	
 	
+	public OracleListSqlHelper(DataSource dataSource, ListQuery query) {
+		super(dataSource, query);
+	}
+	public OracleListSqlHelper(DataSource dataSource) {
+		super(dataSource);
+	}
 	public OracleListSqlHelper(ListQuery query) {
 		super(query);
 	}
-
 	public OracleListSqlHelper() {
 		super();
 	}
@@ -45,20 +56,17 @@ public class OracleListSqlHelper extends ListSqlHelper {
 	}
 
 	protected SqlStatement getRangeSqlStatement() {
-		StringBuffer query = new StringBuffer();
-		query.append("SELECT * FROM (");
-		query.append("SELECT rownum listRowNum, listItemData.* FROM (");
-		query.append(this.statement.getQuery());
-		query.append(") listItemData");
-		query.append(") WHERE");
-		query.append(" listRowNum >= ");
-		query.append("?");
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT * FROM ("
+				+ "SELECT rownum listRowNum, listItemData.* FROM (");
+		sb.append(this.statement.getQuery());
+		sb.append(") listItemData"
+				+ ") WHERE listRowNum >= ?");
 		if (this.itemRangeCount != null) {
-			query.append(" AND listRowNum <= ");
-			query.append("?");
+			sb.append(" AND listRowNum <= ?");
 		}
 
-		SqlStatement temp = new SqlStatement(query.toString());
+		SqlStatement temp = new SqlStatement(sb.toString());
 		temp.addAllParams(this.statement.getParams());
 		temp.addParam(new Long(this.itemRangeStart.longValue() + 1));
 		if (this.itemRangeCount != null) {

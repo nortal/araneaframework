@@ -16,10 +16,12 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConverterNotFoundException;
+import org.araneaframework.uilib.form.Converter;
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ConverterProvider {
   /**
@@ -31,5 +33,5 @@ public interface ConverterProvider {
    * 
    * @throws ConverterNotFoundException if {@link BaseConverter}is not found  
    */
-  public Converter findConverter(String fromType, String toType) throws ConverterNotFoundException;
+  public Converter findConverter(String fromType, String toType, Environment env) throws ConverterNotFoundException;
 }

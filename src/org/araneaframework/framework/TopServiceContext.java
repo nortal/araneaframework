@@ -22,8 +22,12 @@ import java.io.Serializable;
  * A top level service that is not syncrhonized and is dependent only on the request.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface TopServiceContext extends ManagedServiceContext, Serializable {
-  
+  /**
+   * The key of the top-service's id in the request.
+   */
+  public static final String TOP_SERVICE_KEY = "topServiceId";
+  public static final String KEEPALIVE_KEY = "topServiceKeepAlive";
 }

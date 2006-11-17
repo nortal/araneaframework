@@ -16,22 +16,25 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.uilib.form.Converter;
+import org.araneaframework.uilib.form.FormElementContext;
+
 /**
  * Reverses the conversion of a contained converter.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class ReverseConverter extends BaseConverter {
 
-  protected BaseConverter toReverse;
+  protected Converter toReverse;
 
   /**
 	 * Creates class initializing the contained converter.
 	 * 
 	 * @param toReverse converter that will be reversed.
 	 */
-  public ReverseConverter(BaseConverter toReverse) {
+  public ReverseConverter(Converter toReverse) {
     this.toReverse = toReverse;
   }
 
@@ -40,8 +43,7 @@ public class ReverseConverter extends BaseConverter {
 	 * contained converter.
 	 */
   public Object convertNotNull(Object data) {
-    Object result = toReverse.reverseConvertNotNull(data);
-    addErrors(toReverse.getReverseErrors());    
+    Object result = toReverse.reverseConvert(data);
   	return result;    
   }
 
@@ -50,22 +52,20 @@ public class ReverseConverter extends BaseConverter {
 	 * contained converter.
 	 */
   public Object reverseConvertNotNull(Object data) {    
-    Object result = toReverse.convertNotNull(data);
-    addReverseErrors(toReverse.getErrors());    
+    Object result = toReverse.convert(data);  
   	return result;       
   }
 
-  /**
-   * Sets the contained converter control label.
-   */
-  public void setLabel(String controlLabel) {
-    toReverse.setLabel(controlLabel);
+  public void setFormElementCtx(FormElementContext feCtx) {
+    super.setFormElementCtx(feCtx);
+    
+    toReverse.setFormElementCtx(feCtx);
   }
 
   /**
    * Returns a <code>new ReverseConverter(toReverse)</code>.
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new ReverseConverter(toReverse.newConverter());
   }
 }

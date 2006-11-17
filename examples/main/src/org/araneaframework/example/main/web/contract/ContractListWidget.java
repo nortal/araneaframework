@@ -19,13 +19,9 @@ package org.araneaframework.example.main.web.contract;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.OutputData;
-import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
@@ -37,96 +33,72 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class ContractListWidget extends BaseWidget {
-	
-	private static final long serialVersionUID = 1L;
-	
-	protected static final Logger log = Logger.getLogger(ContractListWidget.class);
-	
-	private boolean editMode = false;
+public class ContractListWidget extends TemplateBaseWidget {
+	  private static final long serialVersionUID = 1L;
+
+  protected static final Logger log = Logger.getLogger(ContractListWidget.class);
 	
 	private ListWidget list;
 	
 	public ContractListWidget() {
-		super();
-	}
-	
-	/**
-	 * @param editMode whether to allow add or remove persons.
-	 */
-	public ContractListWidget(boolean editMode) {
-		this.editMode = editMode;
 	}
 	
 	protected void init() throws Exception {
-		super.init();
 		setViewSelector("contract/contractList");
 		log.debug("TemplateContractListWidget init called");    
-		addGlobalEventListener(new ProxyEventListener(this));
-		
-		this.list = initList();
-		addWidget("contractList", this.list);
-		
-		putViewData("allowAdd", new Boolean(editMode));    
-		putViewData("allowRemove", new Boolean(editMode));
+
+		initList();
 	}
 	
-	protected ListWidget initList() throws Exception {
-		ListWidget temp = new ListWidget();
-		temp.setListDataProvider(new TemplateContractListDataProvider());
-		temp.addListColumn("id", "#Id");
-		temp.addListColumn("company", "#Company");
-		temp.addListColumn("person", "#Person");
-		temp.addListColumn("notes", "#Notes");
-		return temp;
+	protected void initList() throws Exception {
+		list = new ListWidget();
+		list.setDataProvider(new TemplateContractListDataProvider());
+		list.addField("id", "#Id");
+		list.addField("company", "#Company");
+		list.addField("person", "#Person");
+		list.addField("notes", "#Notes");
+		list.addField("dummy", null, false);
+		addWidget("contractList", list);
 	}
 	
 	private void refreshList() throws Exception {  	
-		this.list.getListDataProvider().refreshData();
+		this.list.getDataProvider().refreshData();
 	}
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
-		log.debug("Event 'add' received!");
-		if (!editMode) {
-			throw new RuntimeException("Event 'add' shoud be called only in edit mode");
-		}
-		getFlowCtx().start(new ContractEditWidget(), null, new FlowContext.Handler() {
-			public void onFinish(Object returnValue) throws Exception {
-				log.debug("Contract added with Id of " + returnValue + " sucessfully");    
-				refreshList();
-			}
-			public void onCancel() throws Exception {
-			}
-		});
+		getFlowCtx().start(new ContractAddEditWidget(), 
+				null, 
+				new FlowContext.Handler() {
+					          private static final long serialVersionUID = 1L;
+          public void onFinish(Object returnValue) throws Exception {
+						log.debug("Contract added with Id of " + returnValue + " sucessfully");    
+						refreshList();
+					}
+					public void onCancel() throws Exception {
+					}
+				}
+		);
 	}
 	
 	public void handleEventRemove(String eventParameter) throws Exception {
-		log.debug("Event 'remove' received!");
-		if (!editMode) {
-			throw new RuntimeException("Event 'remove' shoud be called only in edit mode");
-		}
 		Long id = ((ContractMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		getGeneralDAO().remove(ContractMO.class, id);
 		refreshList();
 		log.debug("Contract with Id of " + id + " removed sucessfully");
 	}
 	
-	public void handleEventSelect(String eventParameter) throws Exception {
-		log.debug("Event 'select' received!");
+	public void handleEventEdit(String eventParameter) throws Exception {
 		Long id = ((ContractMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		log.debug("Contract selected with Id of " + id);
-		getFlowCtx().finish(id);
+		getFlowCtx().start(new ContractAddEditWidget(id), null, null);
 	}
 	
 	public void handleEventCancel(String eventParameter) throws Exception {
-		log.debug("Event 'cancel' received!");
 		getFlowCtx().cancel();
-	}  
+	}
 	
 	private class TemplateContractListDataProvider extends MemoryBasedListDataProvider {
-		private static final long serialVersionUID = 1L;
-		
-		protected TemplateContractListDataProvider() {
+		    private static final long serialVersionUID = 1L;
+    protected TemplateContractListDataProvider() {
 			super(ContractMO.class);
 		}
 		public List loadData() throws Exception {		

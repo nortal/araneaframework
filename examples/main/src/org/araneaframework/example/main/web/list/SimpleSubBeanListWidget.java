@@ -21,54 +21,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.GeneralMO;
-import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.structure.filter.column.SimpleColumnFilter;
 
 
-public class SimpleSubBeanListWidget extends BaseWidget {
-	
-	private static final long serialVersionUID = 1L;
-	
-	protected static final Logger log = Logger.getLogger(SimpleSubBeanListWidget.class);
+public class SimpleSubBeanListWidget extends TemplateBaseWidget {
+	  private static final long serialVersionUID = 1L;
+
+  protected static final Logger log = Logger.getLogger(SimpleSubBeanListWidget.class);
 	
 	private ListWidget list;
 	
 	protected void init() throws Exception {
-		super.init();
-		
 		setViewSelector("list/subBeanList");
 		
-		this.list = initList();
-		addWidget("list", this.list);
+		initList();
 	}
 	
-	protected ListWidget initList() throws Exception {
-		BeanListWidget temp = new BeanListWidget(ContactMO.class);
-		temp.setListDataProvider(new DataProvider());
-		temp.addBeanColumn("id", "#Id", false);
-		temp.addBeanColumn("name.firstname", "#First name", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("name.lastname", "#Last name", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("address.country", "#Country", true, new SimpleColumnFilter.Like(), new TextControl());
-		temp.addBeanColumn("address.city", "#City", true, new SimpleColumnFilter.Like(), new TextControl());
-		return temp;
+	protected void initList() throws Exception {
+		list = new BeanListWidget(ContactMO.class);
+		addWidget("list", list);
+		list.setDataProvider(new DataProvider());
+		list.setOrderableByDefault(true);
+		list.addField("id", "#Id", false);
+		list.addField("name.firstname", "#First name").like();
+		list.addField("name.lastname", "#Last name").like();
+		list.addField("address.country", "#Country").like();
+		list.addField("address.city", "#City").like();
+		list.addField("dummy", null, false);
 	}
 	
-	private class DataProvider extends MemoryBasedListDataProvider {
-		private static final long serialVersionUID = 1L;
-		
-		protected DataProvider() {
+	private static class DataProvider extends MemoryBasedListDataProvider {
+		    private static final long serialVersionUID = 1L;
+    protected DataProvider() {
 			super(ContactMO.class);
 		}
 		public List loadData() throws Exception {
 			List contacts = new ArrayList(3);
-			contacts.add(contact("Jüri", "Tamm", "Estonia", "Tallinn"));
-			contacts.add(contact("Mari", "Tamm", "Estonia", "Tartu"));
-			contacts.add(contact("Jack", "Norris", "USA", "Texas"));
+			contacts.add(contact("Alice", "", "Wonderland", ""));
+			contacts.add(contact("Chuck", "Norris", "USA", "Texas"));
+			contacts.add(contact("Gudmund", "Edmundsdottir", "Iceland", ""));
 			return contacts;
 		}
 		
@@ -95,8 +90,8 @@ public class SimpleSubBeanListWidget extends BaseWidget {
 	}
 	
 	public static class ContactMO implements GeneralMO {
-		private static final long serialVersionUID = 1L;
-		private Long id;
+		    private static final long serialVersionUID = 1L;
+    private Long id;
 		private NameMO name;
 		private AddressMO address;
 		public AddressMO getAddress() {
@@ -121,8 +116,8 @@ public class SimpleSubBeanListWidget extends BaseWidget {
 	}
 	
 	public static class NameMO implements Serializable {
-		private static final long serialVersionUID = 1L;
-		private String firstname;
+		    private static final long serialVersionUID = 1L;
+    private String firstname;
 		private String lastname;
 		public String getFirstname() {
 			return firstname;
@@ -139,8 +134,8 @@ public class SimpleSubBeanListWidget extends BaseWidget {
 	}
 	
 	public static class AddressMO implements Serializable {
-		private static final long serialVersionUID = 1L;
-		private String country;
+		    private static final long serialVersionUID = 1L;
+    private String country;
 		private String city;
 		public String getCity() {
 			return city;

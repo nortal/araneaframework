@@ -16,22 +16,17 @@
 
 package org.araneaframework.uilib.form.constraint;
 
-import java.util.List;
 import org.araneaframework.Environment;
-import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.Constraint;
 
 /**
  * Constraint that will be applied iff the constraint's group is active.
  * 
  * @author Ilja Livenson (ilja@webmedia.ee)
- * 
  */
 public class GroupedConstraint extends BaseConstraint {
-
   private ConstraintGroupHelper conditionalConstraintHelper;
-
   private Constraint constraint;
-
   private String group;
 
   public GroupedConstraint(ConstraintGroupHelper helper, Constraint constraint, String group) {
@@ -39,15 +34,17 @@ public class GroupedConstraint extends BaseConstraint {
     this.constraint = constraint;
     this.group = group;
   }
-
+  
   protected void validateConstraint() throws Exception {
     // in case the constraint's group is inactive, just ignore it
     if (!this.conditionalConstraintHelper.isGroupActive(this.group))
       return;
     else
       this.constraint.validate();
+    addErrors(constraint.getErrors());
+    constraint.clearErrors();
   }
-
+  
   public ConstraintGroupHelper getConditionalConstraintHelper() {
     return conditionalConstraintHelper;
   }
@@ -55,29 +52,16 @@ public class GroupedConstraint extends BaseConstraint {
   public void setConditionalConstraintHelper(ConstraintGroupHelper conditionalConstraintHelper) {
     this.conditionalConstraintHelper = conditionalConstraintHelper;
   }
+  
+  public void setEnvironment(Environment environment) {
+    constraint.setEnvironment(environment);
+  }
 
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
   }
 
-  public void setEnviroment(Environment enviroment) {
-    constraint.setEnvironment(enviroment);
-  }
-
-  public void setField(FormElement field) {
-    constraint.setField(field);
-  }
-
   public void clearErrors() {
     constraint.clearErrors();
   }
-
-  public List getErrors() {
-    return constraint.getErrors();
-  }
-
-  public boolean isValid() {
-    return constraint.isValid();
-  }
-
 }

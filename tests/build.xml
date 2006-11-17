@@ -4,13 +4,19 @@
 	<property name="src.build.dir" value="../build/classes"/>
 	<property name="tests.build.dir" value="build/classes"/>
 	<property name="tests.reports.dir" value="build/reports"/>
-
+	<property name="src.instrumented.build.dir" value="build/instrumented"/>
+	<property name="src.dir" value="../src"/>
+	<property name="tests.src.dir" value="src"/>
+	<property name="build.coverage.dir" value="build/coverage"/>
+	
 	<!--Set the classpath-->
 	<path id="classpath">
 		<fileset dir="../lib" includes="**/*.jar"/>
-		<fileset dir="../build" includes="**/*.jar"/>
-		<fileset dir="../build" includes="**/*.jar"/>
+		<fileset dir="../dist" includes="**/*.jar"/>
 	</path>
+	
+	<!-- Define the task -->
+	<taskdef classpathref="classpath" resource="tasks.properties" />
 	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
@@ -51,6 +57,8 @@
 				<fileset dir="${tests.build.dir}">
 					<include name="**/*Test.class"/>
 					<include name="**/*Tests.class"/>
+					<!-- exclude abstract tests -->
+					<exclude name="**/BaseMessageContextTests.class"/>
 				</fileset>
 			</batchtest>
 		</junit>
@@ -63,7 +71,6 @@
       <formatter type="plain" usefile="false"/>
 		<classpath location="${src.build.dir}"/>
 		<classpath location="${tests.build.dir}"/>
-		<classpath refid="tests.classpath"/>
     </junit>
   </target>
 
@@ -99,12 +106,15 @@
 		>
 			<classpath location="${src.instrumented.build.dir}"/>
 			<classpath location="${tests.build.dir}"/>
-			<classpath refid="tests.classpath"/>
+			<classpath refid="classpath"/>
+			
 			<formatter type="xml" />
 			<batchtest todir="${tests.reports.dir}">
 				<fileset dir="${tests.build.dir}">
 					<include name="**/*Test.class"/>
 					<include name="**/*Tests.class"/>
+					<!-- exclude abstract tests -->
+					<exclude name="**/BaseMessageContextTests.class"/>
 				</fileset>
 			</batchtest>
 		</junit>
@@ -126,6 +136,8 @@
 				<fileset dir="${tests.build.dir}">
 					<include name="**/*Test.class"/>
 					<include name="**/*Tests.class"/>
+					<!-- exclude abstract tests -->
+					<exclude name="**/BaseMessageContextTests.class"/>
 				</fileset>
 			</batchtest>
 		</junit>

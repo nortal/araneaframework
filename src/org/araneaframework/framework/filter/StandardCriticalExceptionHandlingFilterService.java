@@ -24,8 +24,7 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.servlet.ServletOverridableOutputData;
-import org.araneaframework.servlet.util.AtomicResponseHelper;
+import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
  * A custom exception handling filter. If the child service's action method throws an exception,
@@ -33,23 +32,11 @@ import org.araneaframework.servlet.util.AtomicResponseHelper;
  * request routed to the handler.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardCriticalExceptionHandlingFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardCriticalExceptionHandlingFilterService.class);
   private ExceptionHandlerFactory factory;
-  
-  protected void init() throws Exception {
-    super.init();
-    
-    log.debug("Exception handling filter service initialized.");
-  }
-  
-  protected void destroy() throws Exception {
-    super.destroy();
-    
-    log.debug("Exception handling filter service destroyed.");
-  }
   
   /**
    * Set the factory for creating the exception handling service.
@@ -59,8 +46,8 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    AtomicResponseHelper arUtil = new AtomicResponseHelper();
-    arUtil.wrapOutput((ServletOverridableOutputData)output);
+    AtomicResponseHelper arUtil = 
+      new AtomicResponseHelper(output);
     
     try {
       childService._getService().action(path, input, output);
@@ -73,7 +60,7 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
       
       if (e instanceof Error && 
           !(e instanceof StackOverflowError))
-        throw (Error) e;      
+        throw (Error) e;
       
       arUtil.rollback();
       

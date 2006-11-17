@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import org.araneaframework.backend.util.BeanMapper;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.support.DisplayItem;
 
 
@@ -28,7 +29,7 @@ import org.araneaframework.uilib.support.DisplayItem;
  * Represents the items put into {@link org.araneaframework.uilib.form.control.SelectControl}or
  * {@link org.araneaframework.uilib.form.control.MultiSelectControl}.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class DisplayItemUtil implements java.io.Serializable {
@@ -44,13 +45,18 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @param valueName the name of the Value Object field corresponding to the value of the select item.
    * @param displayStringName the name of the Value Object field corresponding to the display string of the select item.
    */
-  public static void addItemsFromVoCollection(DisplayItemContainer displayItems, Collection valueObjects, String valueName, String displayStringName) {
+  public static void addItemsFromBeanCollection(DisplayItemContainer displayItems, Collection valueObjects, String valueName, String displayStringName) {
+    Assert.notNullParam(displayItems, "displayItems");
+    Assert.noNullElementsParam(valueObjects, "valueObjects");
+    Assert.notEmptyParam(valueName, "valueName");
+    Assert.notEmptyParam(displayStringName, "displayStringName");
+    
     if (valueObjects.size() == 0) return;
-  	BeanMapper beanMapper = new BeanMapper(valueObjects.iterator().next().getClass());
+    BeanMapper beanMapper = new BeanMapper(valueObjects.iterator().next().getClass());
 
     for (Iterator i = valueObjects.iterator(); i.hasNext();) {
       Object vo = i.next();
-      displayItems.addItem(new DisplayItem(beanMapper.getBeanFieldValue(vo, valueName).toString(), beanMapper.getBeanFieldValue(vo,
+      displayItems.addItem(new DisplayItem(beanMapper.getFieldValue(vo, valueName).toString(), beanMapper.getFieldValue(vo,
           displayStringName).toString()));
     }
   }
@@ -70,6 +76,8 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @return whether <code>value</code> is found in the select items.
    */
   public static boolean isValueInItems(Collection displayItems, String value) {
+    Assert.noNullElementsParam(displayItems, "displayItems");
+    
     for (Iterator i = displayItems.iterator(); i.hasNext(); ) {
     	DisplayItem currentItem = (DisplayItem) i.next();
       String currentValue = currentItem.getValue();
@@ -89,6 +97,8 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @return display item label by the specified value.
    */
   public static String getLabelForValue(Collection displayItems, String value) {
+    Assert.noNullElementsParam(displayItems, "displayItems");
+    
     for (Iterator i = displayItems.iterator(); i.hasNext(); ) {
       DisplayItem item = (DisplayItem)i.next();
       String currentValue = item.getValue();
@@ -108,6 +118,8 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @return display item index by the specified value.
    */
 	public static int getValueIndex(List displayItems, String value) {
+    Assert.noNullElementsParam(displayItems, "displayItems");
+    
 		for (ListIterator i = displayItems.listIterator(); i.hasNext(); ) {
 			DisplayItem item = (DisplayItem) i.next();
 			if ((value == null && item.getValue() == null) ||

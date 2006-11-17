@@ -32,7 +32,7 @@ import java.io.Serializable;
  * can be called within this request.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Widget extends Service, Serializable {
   public Interface _getWidget();
@@ -44,7 +44,7 @@ public interface Widget extends Service, Serializable {
      * widget the chance to update itself with the current InputData and do the necessary
      * updates. 
      */
-    public void update(InputData data) throws Exception;
+    public void update(InputData data);
     
     /**
      * Widget received an event. 
@@ -52,7 +52,7 @@ public interface Widget extends Service, Serializable {
      * @param input
      * @throws Exception
      */
-    public void event(Path path, InputData input) throws Exception;
+    public void event(Path path, InputData input);
     
     /**
      * Signals the component that the widget is in post-processing state meaning
@@ -61,7 +61,7 @@ public interface Widget extends Service, Serializable {
      * been called already (although this is the usual case) but it means, they won't
      * be called for sure anymore.
      */
-    public void process() throws Exception;
+    public void process();
     
     /**
      * Widget outputs its graphical representation to OutputData. This method is

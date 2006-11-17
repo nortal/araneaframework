@@ -27,14 +27,20 @@ import java.io.Serializable;
  * the message via <code>showMessage(String,String)</code>.
  * </p>
  * <p>
- * A top level widget can use the MessageContext from the environment to output the accumulated
+ * A widget can use the MessageContext from the environment to output the accumulated
  * messages.
+ * </p>
+ * <p>
+ * Permanent messages should stay in MessageContext until explicitly cleared, other messages should
+ * be cleared after the user has seen them once.
  * </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface MessageContext extends Serializable {
+  public static final String MESSAGE_KEY = "org.araneaframework.framework.MessageContext.MESSAGES";
+  
   /**
    * A message type indicating its an error message. 
    */
@@ -43,21 +49,58 @@ public interface MessageContext extends Serializable {
   /**
    * A message type indicating its an info message.
    */
-  public static final String INFO_TYPE = "info";
+  public static final String WARNING_TYPE = "warning";   
   
   /**
-   * Shows a message with type type and contents message to this MessageContext.
+   * A message type indicating its an info message.
+   */
+  public static final String INFO_TYPE = "info";  
+  
+  /**
+   * Shows a message <code>message</code> of type <code>type</code> to the user. 
+   * Message is cleared after the user sees it once.
    */
   public void showMessage(String type, String message);
-  
+
   /**
-   * Shows an error message of type {@link #ERROR_TYPE}.
+   * Shows an error message to the user.
    */
   public void showErrorMessage(String message);
   
-  
   /**
-   * Shows an informative message of type {@link #INFO_TYPE}.
+   * Shows a warning message to the user.
+   */
+  public void showWarningMessage(String message);  
+
+  /**
+   * Shows an informative message to the user.
    */
   public void showInfoMessage(String message);
+  
+  /**
+   * Clears all non-permanent messages.
+   */
+  public void clearMessages();
+
+  /**
+   * Shows a permanent message <code>message</code> of type <code>type</code> to the user. 
+   * The message will be shown until hidden explicitly. 
+   */
+  public void showPermanentMessage(String type, String message);
+  
+  /**
+   * Clears the specific permanent message, under all message types where it might be present.
+   * @param message to be removed from permanent messages
+   */
+  public void hidePermanentMessage(String message);
+  
+  /**
+   * Clears all of the permanent messages.
+   */
+  public void clearPermanentMessages();
+  
+  /**
+   * Clears all messages (both permanent and usual).
+   */  
+  public void clearAllMessages();
 }

@@ -23,6 +23,7 @@ import org.araneaframework.backend.list.memorybased.ExpressionEvaluationExceptio
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.backend.list.memorybased.expression.compare.LikeExpression;
+import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockValueExpression;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
@@ -38,6 +39,8 @@ public class LikeExpressionTests extends TestCase {
 	
 	private Value om;
 	private Value tm;
+	
+	private LikeConfiguration config;
 
 	public void setUp() {
 		this.resolver = new MockVariableResolver();
@@ -46,6 +49,8 @@ public class LikeExpressionTests extends TestCase {
 		this.jerry = new MockValueExpression("Jerry");
 		this.om = new MockValueExpression("om");
 		this.tm = new MockValueExpression("t.m");
+		
+		this.config = new LikeConfiguration();
 	}
 
 	public void tearDown() {
@@ -54,26 +59,27 @@ public class LikeExpressionTests extends TestCase {
 		this.jerry = null;
 		this.om = null;
 		this.tm = null;
+		this.config = null;
 	}
 
 	public void testLikeExpression() throws ExpressionEvaluationException {
 		log.debug("Testing LikeExpression");
 		boolean ignoreCase = false;
 		try {
-			new LikeExpression(null, null, ignoreCase).evaluate(this.resolver);
+			new LikeExpression(null, null, ignoreCase, config).evaluate(this.resolver);
 			fail("LikeExpression operands can not be nulls");
 		} catch (Exception e) {
 			// normal
 		}
 		try {
-			new LikeExpression(this.tom, null, ignoreCase)
+			new LikeExpression(this.tom, null, ignoreCase, config)
 					.evaluate(this.resolver);
 			fail("LikeExpression operands can not be nulls");
 		} catch (Exception e) {
 			// normal
 		}
 		try {
-			new LikeExpression(null, this.om, ignoreCase)
+			new LikeExpression(null, this.om, ignoreCase, config)
 					.evaluate(this.resolver);
 			fail("LikeExpression operands can not be nulls");
 		} catch (Exception e) {
@@ -82,16 +88,16 @@ public class LikeExpressionTests extends TestCase {
 
 		// evaluating
 		assertEquals("LikeExpression must return true", Boolean.TRUE,
-				new LikeExpression(this.tom, this.om, false)
+				new LikeExpression(this.tom, this.om, false, config)
 						.evaluate(this.resolver));
 		assertEquals("LikeExpression must return true", Boolean.TRUE,
-				new LikeExpression(this.tom, this.tm, true)
+				new LikeExpression(this.tom, this.tm, true, config)
 						.evaluate(this.resolver));
 		assertEquals("LikeExpression must return false", Boolean.FALSE,
-				new LikeExpression(this.tom, this.tm, false)
+				new LikeExpression(this.tom, this.tm, false, config)
 						.evaluate(this.resolver));
 		assertEquals("LikeExpression must return false", Boolean.FALSE,
-				new LikeExpression(this.jerry, this.om, false)
+				new LikeExpression(this.jerry, this.om, false, config)
 						.evaluate(this.resolver));
 	}
 }

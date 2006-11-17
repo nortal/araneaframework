@@ -19,16 +19,16 @@ package org.araneaframework.uilib.form.reader;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
+import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
-import org.araneaframework.uilib.form.data.Data;
 
 
 /**
  * This class allows one to write <code>Map</code>s to forms.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class MapFormWriter implements Serializable {  
@@ -40,22 +40,22 @@ public class MapFormWriter implements Serializable {
    */
   public void writeForm(FormWidget form, Map map) {
 
-    for (Iterator i = map.keySet().iterator(); i.hasNext();) {
-
-      String key = (String) i.next();
+    for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String key = (String) entry.getKey();
       GenericFormElement element = form.getElement(key);
 
       if (element != null) {
         if (element instanceof FormElement) {
           Data data = ((FormElement) element).getData();
           if (data != null) {
-            data.setValue(map.get(key));
+            data.setValue(entry.getValue());
           }
         }
         else if (element instanceof FormWidget) {
           MapFormWriter subMapWriter = new MapFormWriter();
 
-          Map subMap = (Map) map.get(key);
+          Map subMap = (Map) entry.getValue();
 
           if (subMap != null) {
             subMapWriter.writeForm((FormWidget) element, subMap);

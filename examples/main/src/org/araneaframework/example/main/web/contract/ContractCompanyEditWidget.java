@@ -18,7 +18,7 @@ package org.araneaframework.example.main.web.contract;
 
 import org.apache.log4j.Logger;
 import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.framework.FlowContext;
@@ -27,10 +27,9 @@ import org.araneaframework.framework.FlowContext;
 /**
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class ContractCompanyEditWidget extends BaseWidget {
-	
-	private static final Logger log = Logger.getLogger(ContractCompanyEditWidget.class);
-	
+public class ContractCompanyEditWidget extends TemplateBaseWidget {
+	  private static final long serialVersionUID = 1L;
+  private static final Logger log = Logger.getLogger(ContractCompanyEditWidget.class);
 	private CompanyMO company = null;
 
   public CompanyMO getCompany() {
@@ -51,16 +50,16 @@ public class ContractCompanyEditWidget extends BaseWidget {
     putViewData("company", company);
   }
   
-	public void handleEventChooseCompany(String eventParameter) throws Exception {
-    log.debug("Event 'chooseCompany' received!");
-    getFlowCtx().start(new CompanyListWidget(false), null, new FlowContext.Handler() {
-			public void onFinish(Object returnValue) throws Exception {
-				Long id = (Long) returnValue;
-				company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);
-				log.debug("Company with id of " + id + " set to this contract");
-      }
-      public void onCancel() throws Exception {
-      }
-    });
-	}
+  public void handleEventChooseCompany(String eventParameter) throws Exception {
+	  getFlowCtx().start(new CompanyListWidget(false), null, new FlowContext.Handler() {
+		      private static final long serialVersionUID = 1L;
+      public void onFinish(Object returnValue) throws Exception {
+			  Long id = (Long) returnValue;
+			  company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);
+			  log.debug("Company with id of " + id + " set to this contract");
+		  }
+		  public void onCancel() throws Exception {
+		  }
+	  });
+  }
 }

@@ -19,17 +19,18 @@ package org.araneaframework.uilib.form.constraint;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import org.araneaframework.uilib.form.Constraint;
 
 /**
- * Helper for the <code>GroupedConstraint</code> that holds a set of currently
+ * Helper for the {@link GroupedConstraint} that holds a set of currently
  * active groups and provides a factory method for wrapping <code>Constraint</code> 
- * instances in <code>GroupedConstraint</code>.
+ * instances in {@link GroupedConstraint}.
  * @author Ilja Livenson (ilja@webmedia.ee)
  *
  */
 public class ConstraintGroupHelper implements Serializable {
 	private Set activeGroups = new HashSet();
-		
+
 	/**
 	 * Wrap the <code>Constraint</code> in the <code>GroupedConstraint</code> instance
 	 * assigned to the specified group.
@@ -41,10 +42,7 @@ public class ConstraintGroupHelper implements Serializable {
 	}
 	
 	public void setActiveGroups(Set activeGroups) {
-		if (activeGroups == null) 
-			this.activeGroups = new HashSet();
-		else 
-			this.activeGroups = activeGroups;
+        this.activeGroups = activeGroups == null ? new HashSet() : activeGroups;
 	}
 	
 	public void setActiveGroup(String activeGroup) {
@@ -58,7 +56,7 @@ public class ConstraintGroupHelper implements Serializable {
 	
 	public Set getActiveGroups() {
 		return activeGroups;
-	}	
+	}
 
 	public boolean isGroupActive(String group) {
 		return this.activeGroups.contains(group);

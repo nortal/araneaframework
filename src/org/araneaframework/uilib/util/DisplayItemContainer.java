@@ -21,32 +21,29 @@ import java.util.List;
 import org.araneaframework.uilib.support.DisplayItem;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface DisplayItemContainer {
  
-	/**
-   * Adds a display-item to the element.
-   * 
-   * @param item the item to be added.
-   */
+  /**
+  * Adds a display-item to the element.
+  * @param item the item to be added.
+  */
   public void addItem(DisplayItem item);
   
-	/**
-   * Adds display-items to the element.
-   * 
-   * @param items the items to be added.
+  /**
+   * Adds {@link DisplayItem}'s from <code>Collection to this {@link DisplayItemContainer}.
+   * @param items <code>Collection &lt;{@link DisplayItem}&gt;</code>.
    */
   public void addItems(Collection items);  
-  
-  
+
   /**
-   * Clears the list of display-items.
+   * Clears the currently held {@link DisplayItem}s.
    */
   public void clearItems();
   
   /**
-   * Returns a list of display-items.
+   * Returns a <code>List &lt;{@link DisplayItem}&gt;</code> that this {@link DisplayItemContainer} currently helds.
    * @return a list of display-items.
    */
   public List getDisplayItems();

@@ -16,21 +16,24 @@
 
 package org.araneaframework.example.main.business.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 
 /**
- * @author Rein Raudjärv <rein@webmedia.ee>
- *
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+
  * @hibernate.class table="person" lazy="false"
  */
 public class PersonMO implements GeneralMO {
 	
-	private Long id;
+	  private static final long serialVersionUID = 1L;
+  private Long id;
 	private String name;
 	private String surname;
 	private String phone;
 	private Date birthdate;
+	private BigDecimal salary;
 	
 	/**
 	 * @hibernate.id column="id" generator-class="increment"
@@ -63,7 +66,7 @@ public class PersonMO implements GeneralMO {
 	}
 	
 	/**
-	 * @hibernate.property not-null="false"
+	 * @hibernate.property
 	 */
 	public String getPhone() {
 		return phone;
@@ -73,12 +76,22 @@ public class PersonMO implements GeneralMO {
 	}
 
 	/**
-	 * @hibernate.property not-null="false"
+	 * @hibernate.property type="date"
 	 */
 	public Date getBirthdate() {
 		return birthdate;
 	}
 	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
+	}
+
+	/**
+	 * @hibernate.property
+	 */	
+	public BigDecimal getSalary() {
+		return salary;
+	}
+	public void setSalary(BigDecimal salary) {
+		this.salary = salary;
 	}
 }

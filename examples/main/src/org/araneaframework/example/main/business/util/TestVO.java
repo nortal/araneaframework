@@ -17,7 +17,7 @@
 package org.araneaframework.example.main.business.util;
 
 import java.io.Serializable;
-import org.apache.log4j.Logger;
+
 import org.araneaframework.backend.BaseBean;
 import org.araneaframework.backend.util.BeanMapper;
 
@@ -26,13 +26,11 @@ import org.araneaframework.backend.util.BeanMapper;
  * This VO is used by tests only ({@link org.araneaframework.uilib.tests.ListTest},
  * {@link org.araneaframework.uilib.tests.FormTest},{@link org.araneaframework.uilib.tests.VoProcessingTest}.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class TestVO extends BaseBean implements Serializable, Cloneable {
-
-  private static Logger log = Logger.getLogger(TestVO.class);
-
+  private static final long serialVersionUID = 1L;
   /**
    * Private VoMapper, used for <code>toString</code> and <code>equals</code> methods.
    */

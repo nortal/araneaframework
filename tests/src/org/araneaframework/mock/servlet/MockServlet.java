@@ -16,8 +16,8 @@
 
 package org.araneaframework.mock.servlet;
 
-import org.araneaframework.servlet.ServletServiceAdapterComponent;
-import org.araneaframework.servlet.core.StandardMainServlet;
+import org.araneaframework.http.ServletServiceAdapterComponent;
+import org.araneaframework.http.core.BaseAraneaDispatcherServlet;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -26,7 +26,7 @@ import org.springframework.core.io.ClassPathResource;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class MockServlet extends StandardMainServlet {
+public class MockServlet extends BaseAraneaDispatcherServlet {
   private String beansFile = "smokeTest.xml";
   private ServletServiceAdapterComponent builtComponent;
   private BeanFactory factory;

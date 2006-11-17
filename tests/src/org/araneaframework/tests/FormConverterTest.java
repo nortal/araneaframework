@@ -19,12 +19,13 @@ package org.araneaframework.tests;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.araneaframework.tests.mock.MockConfiguration;
+import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FormConverterTest extends TestCase {
@@ -36,7 +37,10 @@ public class FormConverterTest extends TestCase {
     boolean exceptionThrown = false;
     
     try {
-      ConverterFactory.getInstance(new MockConfiguration()).findConverter("unexistingUniqueRandomType1", "unexistingUniqueRandomType2");
+      ConverterFactory.getInstance(new MockConfiguration()).findConverter(
+          "unexistingUniqueRandomType1", 
+          "unexistingUniqueRandomType2",
+          new MockEnvironment());
     }
     catch (ConverterNotFoundException e) {
       log.debug(e.getMessage());

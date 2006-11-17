@@ -3,7 +3,7 @@
     <dirname property="imported.basedir" file="${ant.file.ReferenceDocumentation}"/>
 
     <!-- Set build directories for all formats. -->
-    <property name="build.dir"             value="../../build/doc/reference"/>
+    <property name="build.dir"             value="../../dist/doc/reference"/>
 
     <!-- Support files for build process. -->
     <property name="support.dir"           value="${imported.basedir}/../support"/>
@@ -46,17 +46,7 @@
     </target>
 
 
-    <target name="pdf-prepare">
-
-        <!-- Copy all the images to the output location, will be removed later. -->
-        <copy todir="${build.dir}/pdf/images">
-            <fileset dir="${basedir}/images">
-                <include name="**/*.png"/>
-                <include name="**/*.svg"/>
-                <include name="**/*.gif"/>
-            </fileset>
-        </copy>
-
+    <target name="pdf-prepare" depends="copy-shared">
         <!-- Create the XSL/FO temporary file. -->
         <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${basedir}" maxmemory="128m" >
         	  <sysproperty key="java.awt.headless" value="true"/>    	       
@@ -100,7 +90,7 @@
     <target name="pdf" depends="pdf-normal,pdf-customized"
             description="Generates the PDF documentation only for a age (set ">
         <!-- House keeping,delete temporary files. -->
-        <delete>
+        <delete failonerror="false">
             <fileset dir="${build.dir}/pdf" excludes="**/*.pdf"/>
         </delete>
         <delete  dir="${build.dir}/pdf/images"/>
@@ -141,15 +131,14 @@
     </target>
 
     <target name="copy-shared">
-
         <!-- Copy images and CSS for HTML documentation, age specific. -->
-        <copy todir="${build.dir}/shared/images">
+        <copy todir="${build.dir}/images">
             <fileset dir="${basedir}/images">
                 <include name="**/*.png"/>
                 <include name="**/*.gif"/>
             </fileset>
         </copy>
-        <copy todir="${build.dir}/shared/css">
+        <copy todir="${build.dir}/css">
             <fileset dir="${basedir}/styles">
                 <include name="**/*.css"/>
             </fileset>

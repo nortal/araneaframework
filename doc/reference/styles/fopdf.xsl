@@ -233,12 +233,12 @@
     
     <!-- Paper type, no headers on blank pages, no double sided printing -->
     <xsl:param name="paper.type" select="'A4'"/>
-    <xsl:param name="double.sided">0</xsl:param>
+    <xsl:param name="double.sided">1</xsl:param>
     <xsl:param name="headers.on.blank.pages">0</xsl:param>
     <xsl:param name="footers.on.blank.pages">0</xsl:param>
 
     <!-- Space between paper border and content (chaotic stuff, don't touch) -->
-    <!-- xsl:param name="page.margin.top">5mm</xsl:param>
+    <xsl:param name="page.margin.top">5mm</xsl:param>
     <xsl:param name="region.before.extent">10mm</xsl:param>
     <xsl:param name="body.margin.top">10mm</xsl:param>
 
@@ -247,7 +247,7 @@
     <xsl:param name="page.margin.bottom">0mm</xsl:param>
 
     <xsl:param name="page.margin.outer">18mm</xsl:param>
-    <xsl:param name="page.margin.inner">18mm</xsl:param -->
+    <xsl:param name="page.margin.inner">18mm</xsl:param>
 
     <!-- No intendation of Titles -->
     <xsl:param name="title.margin.left">0pc</xsl:param>

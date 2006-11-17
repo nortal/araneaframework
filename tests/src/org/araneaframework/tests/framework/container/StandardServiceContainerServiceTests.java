@@ -18,12 +18,12 @@ package org.araneaframework.tests.framework.container;
 
 import junit.framework.TestCase;
 import org.araneaframework.Path;
-import org.araneaframework.framework.container.StandardServiceContainerService;
+import org.araneaframework.framework.container.StandardContainerService;
+import org.araneaframework.http.core.StandardServletInputData;
+import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulStandardService;
-import org.araneaframework.servlet.core.StandardServletInputData;
-import org.araneaframework.servlet.core.StandardServletOutputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -32,7 +32,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  *
  */
 public class StandardServiceContainerServiceTests extends TestCase {
-  private StandardServiceContainerService parent;
+  private StandardContainerService parent;
   private MockEventfulStandardService child;
   
   private StandardServletInputData input;
@@ -45,7 +45,7 @@ public class StandardServiceContainerServiceTests extends TestCase {
   
   public void setUp() throws Exception {
     child = new MockEventfulStandardService();
-    parent = new StandardServiceContainerService();
+    parent = new StandardContainerService();
     parent.setChildService(child);
     MockLifeCycle.begin(parent);
     
@@ -60,7 +60,7 @@ public class StandardServiceContainerServiceTests extends TestCase {
   
   public void testActionGetsCalled() throws Exception {
     String pathStr = "i.am.a.path.who.are.you";
-    req.addParameter(StandardServiceContainerService.ACTION_PATH_INPUT_DATA_PARAMETER, pathStr);
+    req.addParameter(StandardContainerService.ACTION_PATH_INPUT_DATA_PARAMETER, pathStr);
     input = new StandardServletInputData(req);
     
     parent._getService().action(path, input, output);

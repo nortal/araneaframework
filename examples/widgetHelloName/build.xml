@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="build" name="Aranea QuickStart1 Example"> 
+	<property environment="env" />
+
+	<!--Set the classpath-->
+	<path id="classpath">
+    <fileset dir="../../lib" includes="**/*.jar" excludes="cobertura//**/*"/>
+	<fileset dir="../lib" includes="**/*.jar"/>
+    <fileset dir="../.." includes="dist/aranea.jar"/>
+    <fileset dir="../.." includes="examples/common/dist/aranea-examples-common.jar"/>
+	</path>
+	
+	<!--Set the Jetty classpath-->
+	<path id="classpath.jetty">
+		<fileset dir="../lib/jetty" includes="*.jar" />
+		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
+		<pathelement location="${env.ANT_HOME}/lib/ant.jar" />
+	</path>
+	
+	<taskdef
+		name="webdoclet"
+		classname="xdoclet.modules.web.WebDocletTask"
+		classpathref="classpath"
+	/>
+	
+	<!-- Clean up build system results -->
+	<target name="clean" description="Clean up build system results">
+		<delete dir="war/WEB-INF/classes" failonerror="false"/>
+		<delete dir="war/WEB-INF/lib" failonerror="false"/>		
+	</target>
+	
+	<!-- Initialize the build system -->
+	<target name="init">
+		<mkdir dir="war/WEB-INF/classes" />
+		<mkdir dir="war/WEB-INF/lib" />		
+	</target>
+	
+	
+
+	<!-- Build the code -->
+	<target name="build" depends="compile" description="Build the code">
+		<copy todir="war/WEB-INF/lib" flatten="true">
+			<fileset dir="../../lib">
+				<include name="**/*.jar" />
+				<exclude name="j2ee.jar" />
+				<exclude name="jetty/*jar" />				
+			</fileset>
+			<fileset dir="../../dist" includes="aranea.jar"/>	
+			<fileset dir="../../examples/common/dist" includes="aranea-examples-common.jar"/>						
+		</copy>
+		<copy todir="war/WEB-INF/classes">
+			<fileset dir=".." includes="log4j.xml"/>
+		</copy>
+	</target>
+	
+	<target name="compile" depends="init">
+		<!--Compile Java source files-->
+		<javac destdir="war/WEB-INF/classes"
+			debug="on"
+			debuglevel="lines,vars,source"
+			encoding="utf-8"
+			target="1.3"
+			source="1.3"			
+			srcdir="src"
+			includes="**/*.java"
+			classpathref="classpath"
+		/>
+	</target>	
+		
+
+	<!-- Starts standalone server -->
+	<target name="run-app-only" description="Run in standalone container">
+		<java classname="org.mortbay.jetty.Server" dir="war" fork="yes">
+			<arg value="../jetty.xml"/>
+			<classpath>
+				<pathelement location="war/WEB-INF/classes" />
+				<path refid="classpath" />
+				<path refid="classpath.jetty" />
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="run-app" depends="build, run-app-only" description="Build and run in standalone container"/>
+</project>

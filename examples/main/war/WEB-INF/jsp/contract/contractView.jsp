@@ -12,20 +12,20 @@
 		<p>
 			<jsp:text>Company: </jsp:text>
 			<ui:eventLinkButton eventId="viewCompany">
-				<c:out value="${contextWidget.data.contract.company.name}"/>
+				<c:out value="${viewData.contract.company.name}"/>
 			</ui:eventLinkButton>
 		</p>
 		
 		<p>
 			<jsp:text>Person: </jsp:text>
 			<ui:eventLinkButton eventId="viewPerson">
-				<c:out value="${contextWidget.data.contract.person.name}"/>
+				<c:out value="${viewData.contract.person.name}"/>
 			</ui:eventLinkButton>
 		</p>
 			
 		<p>
 			<jsp:text>Notes: </jsp:text>
-			<c:out value="${contextWidget.data.contract.notes}"/>
+			<c:out value="${viewData.contract.notes}"/>
 		</p>
 
 		<ui:eventButton eventId="return" labelId="#Back"/>

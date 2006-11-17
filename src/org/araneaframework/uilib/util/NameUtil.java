@@ -18,19 +18,18 @@ package org.araneaframework.uilib.util;
 
 import java.io.Serializable;
 
-
 /**
  * This class is a general helper, which is used throughout UiLib to parse <code>String</code>s like
  * events and hierarchical names. 
  * 
-* @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
-* 
-*/
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * 
+ */
 public class NameUtil implements Serializable {
 
   /**
    * Returns the fullname concatenated from the <code>prefix</code>
-   * and the <code>name</code>. If prefix isn't empty, a <code>"."</code>
+   * and the <code>name</code>. If prefix isn't empty, a dot
    * is added after it.
    * 
    * @param prefix the full name prefix.
@@ -43,7 +42,7 @@ public class NameUtil implements Serializable {
   
   /**
    * Returns the prefix of the full name (prefix is part before the first 
-   * <code>"."</code>, or the whole full name if it contains no dots).
+   * dot, or the whole full name if it contains no dots).
    * 
    * @param fullName the full name.
    * @return prefix of the full name.
@@ -55,7 +54,7 @@ public class NameUtil implements Serializable {
   
   /**
    * Returns suffix of the fullname(suffix is part after the first 
-   * <code>"."</code>, or an empty <code>String</code> if full name 
+   * dot, or an empty <code>String</code> if full name 
    * contains no dots).
    * 
    * @param fullName full name.

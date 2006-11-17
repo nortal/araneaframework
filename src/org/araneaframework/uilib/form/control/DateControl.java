@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.control;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import org.araneaframework.uilib.ConfigurationContext;
 
@@ -25,7 +24,7 @@ import org.araneaframework.uilib.ConfigurationContext;
  * This class represents a {@link org.araneaframework.uilib.form.control.TimestampControl},
  * that holds only date - that is it's default pattern is "dd.MM.yyyy".
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class DateControl extends TimestampControl {
@@ -76,14 +75,21 @@ public class DateControl extends TimestampControl {
   //* INTERNAL METHODS
   //*********************************************************************  	
 
-  protected void init() {    
-  		if (!confOverridden) {
-  			String confFormat = (String) getConfiguration().getEntry(ConfigurationContext.CUSTOM_DATE_FORMAT);    
-  			if (confFormat != null) dateTimeFormat = confFormat;
-	    
-	    	String confOutputFormat = (String) getConfiguration().getEntry(ConfigurationContext.DEFAULT_DATE_OUTPUT_FORMAT);    
-	    	if (confOutputFormat != null) currentSimpleDateTimeFormat = new SimpleDateFormat(confOutputFormat);
-  		}
+  protected void init() throws Exception {
+    super.init();
+
+
+    if (!confOverridden) {
+      ConfigurationContext confCtx = 
+        (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
+      
+      String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_DATE_FORMAT);    
+      if (confFormat != null) dateTimeInputPattern = confFormat;
+
+      String confOutputFormat = (String) confCtx.getEntry(ConfigurationContext.DEFAULT_DATE_OUTPUT_FORMAT);    
+      if (confOutputFormat != null) 
+        dateTimeOutputPattern = confOutputFormat;
+    }
   }	 
   
 	protected Object fromRequest(String parameterValue) {
@@ -96,8 +102,7 @@ public class DateControl extends TimestampControl {
 			cal.set(Calendar.HOUR_OF_DAY, defaultHour);
 			cal.set(Calendar.MINUTE, defaultMinute);
 			cal.set(Calendar.SECOND, defaultSecond);
-			
-			result = new Timestamp(cal.getTimeInMillis());
+			result = new Timestamp(cal.getTime().getTime());
 		}
 	
 		return result;

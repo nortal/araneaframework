@@ -13,3 +13,7 @@ tmp
 *.essModel
 .refactorings
 dist
+aranea-main-example.launch
+.ant-targets-build.xml
+.fbwarnings
+.fbprefs

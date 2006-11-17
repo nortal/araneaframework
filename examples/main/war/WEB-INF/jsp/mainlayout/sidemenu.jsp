@@ -9,7 +9,7 @@
 	<ui:widgetContext id="menu">
 		<div id="leftcol">
 			<ul id="menu2">
-				<c:forEach items="${contextWidget.data.menu.subMenu}" var="topMenuItem">
+				<c:forEach items="${viewData.menu.subMenu}" var="topMenuItem">
 					<c:if test="${topMenuItem.value.selected}">
 						<c:forEach items="${topMenuItem.value.subMenu}" var="item">
 							<li>

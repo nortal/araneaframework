@@ -25,7 +25,7 @@ import java.util.List;
  * This class represents the ordering information supplied by user in a series
  * of UI interactions.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class OrderInfo implements Serializable {
 
@@ -69,9 +69,9 @@ public class OrderInfo implements Serializable {
 	/**
 	 * View model.
 	 * 
-	 * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 	 */
-	public class ViewModel {
+	public class ViewModel implements Serializable {
 		private List fields = new ArrayList();
 
 		/**

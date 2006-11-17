@@ -29,12 +29,11 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ContinuationContext;
 import org.araneaframework.framework.ContinuationManagerContext;
 import org.araneaframework.framework.core.BaseFilterService;
-import org.araneaframework.servlet.ServletOverridableOutputData;
-import org.araneaframework.servlet.util.AtomicResponseHelper;
+import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardContinuationFilterService extends BaseFilterService implements ContinuationManagerContext, ContinuationContext{
   private static final Logger log = Logger.getLogger(StandardContinuationFilterService.class);  
@@ -42,29 +41,27 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
   private Service continuation;
   
   protected Environment getChildEnvironment() {
-    Map entries = new HashMap();
-    entries.put(ContinuationManagerContext.class, this);        
-    return new StandardEnvironment(super.getChildEnvironment(), entries);
+    return new StandardEnvironment(super.getChildEnvironment(), ContinuationManagerContext.class, this);
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    AtomicResponseHelper arUtil = new AtomicResponseHelper();
-    arUtil.wrapOutput((ServletOverridableOutputData)output);
+    AtomicResponseHelper arUtil = 
+      new AtomicResponseHelper(output);
     
     try {
-      if (isContinuationRunning()) {
-        log.debug("Routing request through standard continuation.");
+      if (isRunning()) {
+        log.debug("Routing action to continuation");
         continuation._getService().action(path, input, output);
       }
       
-      if (!isContinuationRunning()) {
+      if (!isRunning()) {
         arUtil.rollback();
         
         Path scope = output.getScope();             
         
         try {                          
           try {
-            log.debug("Routing request through the continuation.");
+            log.debug("Routing action to child service");
             childService._getService().action(path, input, output);
           }
           finally {
@@ -77,6 +74,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
 
           arUtil.rollback();
           
+          log.debug("Routing action to continuation");          
           continuation._getService().action(null, input, output);
         }
       }
@@ -86,7 +84,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     }
   }
 
-  public void runContinuation(Service continuation) throws Exception {
+  public void start(Service continuation) {
     this.continuation = continuation;
     
     Map entries = new HashMap();
@@ -96,26 +94,26 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     throw new AraneaRuntimeException("Continuation set!");
   }
   
-  public void restore() throws Exception {
+  public void finish() {
     continuation._getComponent().destroy();
     continuation = null;
   }
 
-  public boolean isContinuationRunning() {
+  public boolean isRunning() {
     return continuation != null;
   }
 
-	public void runContinuationOnce(Service continuation) throws Exception {
+	public void runOnce(Service continuation) {
 		BaseFilterService service = new BaseFilterService(continuation) {
 			protected void action(Path path, InputData input, OutputData output) throws Exception {
         childService._getService().action(path, input, output);
 				
 				ContinuationContext conCtx = 
 					(ContinuationContext) getEnvironment().getEntry(ContinuationContext.class);
-				conCtx.restore();
+				conCtx.finish();
 			}
 		};
     
-		runContinuation(service);
+		start(service);
 	}
 }

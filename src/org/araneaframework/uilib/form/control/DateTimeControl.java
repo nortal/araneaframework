@@ -18,14 +18,15 @@ package org.araneaframework.uilib.form.control;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
  * This class represents a control that has both date and time.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class DateTimeControl extends BaseControl {
@@ -81,17 +82,6 @@ public class DateTimeControl extends BaseControl {
     return timeControl.isRead() || dateControl.isRead();
   }
 
-  /**
-   * Sets the label of both included controls.
-   * 
-   * @param label the label of both included controls.
-   */
-  public void setLabel(String label) {
-    super.setLabel(label);
-    timeControl.setLabel(label);
-    dateControl.setLabel(label);
-  }
-
   //*******************************************************************
   // HELPER METHODS
   //*******************************************************************
@@ -130,15 +120,12 @@ public class DateTimeControl extends BaseControl {
   /**
    * 
    */
-  public void convertAndValidate() {
-    dateControl.setMandatory(false);
-    timeControl.setMandatory(false);
-
-    dateControl.convertAndValidate();
-    timeControl.convertAndValidate();
+  public void convert() {
+    dateControl.convert();
+    timeControl.convert();
 
     //Reading control data
-    if (isValid() && isRead()) {
+    if (getFormElementCtx().isValid() && isRead()) {
       value = addTimeToDate(
           (Timestamp) dateControl.getRawValue(), 
           (Timestamp) timeControl.getRawValue());
@@ -146,12 +133,14 @@ public class DateTimeControl extends BaseControl {
     else {
       value = null;
     }
-
+  }
+  
+  public void validate() {
     if (isMandatory() && !isRead()) {
       addError(
-          ErrorUtil.localizeAndFormat(
+          MessageUtil.localizeAndFormat(
           UiLibMessages.MANDATORY_FIELD, 
-          ErrorUtil.localize(getLabel(), getEnvironment()),
+          MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));          
     }
   }
@@ -165,16 +154,19 @@ public class DateTimeControl extends BaseControl {
   }
   
   public void setRawValue(Object value) {
+    // mark composite control dirty
+    super.setRawValue(null);
     dateControl.setRawValue(value);    
     timeControl.setRawValue(value);
   }
   
-  public void setDisabled(boolean disabled) {
-    super.setDisabled(disabled);
+  public void setFormElementCtx(FormElementContext formElementContext) {
+    super.setFormElementCtx(formElementContext);
     
-    dateControl.setDisabled(disabled);
-    timeControl.setDisabled(disabled);
+    dateControl.setFormElementCtx(formElementContext);
+    timeControl.setFormElementCtx(formElementContext);
   }
+  
   
   //*********************************************************************
   //* VIEW MODEL
@@ -182,7 +174,7 @@ public class DateTimeControl extends BaseControl {
   
   /**
    * Represents a date-time control view model.
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends BaseControl.ViewModel {

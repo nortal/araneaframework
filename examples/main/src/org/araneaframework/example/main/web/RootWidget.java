@@ -12,28 +12,54 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.example.main.web;
 
-import org.apache.log4j.Logger;
+import org.araneaframework.Environment;
+import org.araneaframework.Widget;
+import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.menu.MenuWidget;
-import org.araneaframework.example.main.web.util.EmptyWidget;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
+import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
- * This is root widget. It initializes MenuWidget with
- * TemplateEmptyWidget as first element.
+ * This is root widget, always rendered after user has 'logged on'.
+ * It consists only of menu widget. 
  * 
- * @author Rein Raudjärv <reinra@ut.ee>
+ * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class RootWidget extends StandardPresentationWidget {
+public class RootWidget extends BaseUIWidget implements SecurityContext {
+	  private static final long serialVersionUID = 1L;
+  private MenuWidget menuWidget;
+	private Widget topWidget;
 
-	private static final Logger log = Logger.getLogger(RootWidget.class);
+	public RootWidget() {}
+
+	public RootWidget(Widget topWidget) {
+		this.topWidget = topWidget;
+	}
 
 	protected void init() throws Exception {
-		addWidget("menu", new MenuWidget(new EmptyWidget()));
+		menuWidget = new MenuWidget(topWidget);
+		topWidget = null;
+		addWidget("menu", menuWidget);
 		setViewSelector("root");
-		log.debug("Root widget initialized");
+	}
+
+	protected Environment getChildWidgetEnvironment() throws Exception {
+		return new StandardEnvironment(getEnvironment(), SecurityContext.class, this);
+	}
+
+	public boolean hasPrivilege(String privilege) {
+		return false;
+	}
+
+	public MenuWidget getMenuWidget() {
+		return menuWidget;
+	}
+
+	public void logout() throws Exception {
+		getFlowCtx().replace(new LoginWidget(), null);
 	}
 }

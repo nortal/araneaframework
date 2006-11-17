@@ -359,7 +359,7 @@ public class SequenceHelper implements Serializable {
    * 
    * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
    */
-  public class ViewModel {
+  public class ViewModel implements Serializable {
     private Long firstPage;
     private Long lastPage;
     private Long blockFirstPage;
@@ -369,6 +369,7 @@ public class SequenceHelper implements Serializable {
     private Boolean allItemsShown;
     private Long pageFirstItem;
     private Long pageLastItem;
+    private Long itemsOnPage;
 
     /**
      * Takes a snapshot of outer class state.
@@ -383,10 +384,12 @@ public class SequenceHelper implements Serializable {
       this.currentPage = new Long(SequenceHelper.this.currentPage);
       this.totalItemCount = new Long(SequenceHelper.this.totalItemCount);
       
-      this.allItemsShown = new Boolean(SequenceHelper.this.allItemsShown);
+      this.allItemsShown = SequenceHelper.this.allItemsShown ? Boolean.TRUE : Boolean.FALSE;
       
       this.pageFirstItem = new Long(SequenceHelper.this.getCurrentPageFirstItemIndex() + 1);
       this.pageLastItem = new Long(SequenceHelper.this.getCurrentPageLastItemIndex() + 1);
+      
+      this.itemsOnPage = new Long(SequenceHelper.this.itemsOnPage);
     }
 
     /**
@@ -451,5 +454,12 @@ public class SequenceHelper implements Serializable {
     public Long getTotalItemCount() {
       return totalItemCount;
     }
+
+	/**
+	 * @return Returns the itemsOnPage.
+	 */
+	public Long getItemsOnPage() {
+		return itemsOnPage;
+	}
   }
 }

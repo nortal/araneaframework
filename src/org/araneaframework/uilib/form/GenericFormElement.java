@@ -21,44 +21,52 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import org.araneaframework.core.StandardWidget;
+import org.araneaframework.Environment;
+import org.araneaframework.core.Assert;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.MessageContext;
-import org.araneaframework.uilib.core.StandardPresentationWidget;
-import org.araneaframework.uilib.form.constraint.Constraint;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
  * Represents a general form element, a node in form element hierarchy.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class GenericFormElement extends StandardPresentationWidget {
+public abstract class GenericFormElement extends BaseApplicationWidget {
 
   //*******************************************************************
   // FIELDS
   //*******************************************************************
   protected Constraint constraint;
 
-  protected Map properties = new HashMap();
+  protected Map properties;
   
   protected boolean converted = false;
   protected boolean validated = false;  
   
-  protected Set errors = new HashSet();
-
+  private Set errors;
+  
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
     
-  /**
+  protected void init() throws Exception {
+    super.init();
+    if (constraint != null)
+      constraint.setEnvironment(getConstraintEnvironment());
+  }
+
+/**
    * Returns all properties of the element as a map (string -&gt; string).
    * 
    * @return all properties as a map.
    */
   public Map getProperties() {
+    if (properties == null)
+      properties = new HashMap();
     return properties;
   }
 
@@ -69,7 +77,9 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    * @param value value for the property.
    */
   public void setProperty(Object key, Object value) {
-    properties.put(key, value);
+    Assert.notNullParam(key, "key");
+    
+    getProperties().put(key, value);
   }
 
   /**
@@ -79,7 +89,9 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    * @return the value of the property, <code>null</code> if property is not defined.
    */
   public Object getProperty(Object key) {
-    return properties.get(key);
+    Assert.notNullParam(key, "key");
+    
+    return getProperties().get(key);
   }
 
   /**
@@ -98,10 +110,12 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    */
   public void setConstraint(Constraint constraint) {
     this.constraint = constraint;
-    
-    if (constraint != null && isInitialized()) {
-      constraint.setEnvironment(getEnvironment());
-    }
+    if (constraint != null && isInitialized())
+      constraint.setEnvironment(getConstraintEnvironment());
+  }
+  
+  public Environment getConstraintEnvironment() {
+    return getEnvironment();
   }
 
   /**
@@ -110,7 +124,7 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    * @return whether the element is valid.
    */
   public boolean isValid() {
-    return (errors.size() == 0);
+    return (errors == null || errors.size() == 0);
   }
 
   /**
@@ -148,7 +162,7 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
   public boolean validate() throws Exception {
   	validated = false;  	  	
   	
-  	boolean valid = validateInternal();   
+  	boolean valid = validateInternal();
     
   	validated = valid;  	
   	return valid;
@@ -162,22 +176,20 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
   	return converted && validated;
   }    
 
-  /**
-   * Clears element errors.
-   */
-  public void clearErrors() {  
-    errors.clear();   
-  }
-
   //*********************************************************************
   //* OVERRIDABLE METHODS
   //*********************************************************************
-  
-  protected void init() throws Exception {
-    super.init();
+
+  protected void process() throws Exception {
+    MessageContext msgCtx = 
+      (MessageContext) getEnvironment().getEntry(MessageContext.class);
     
-    if (getConstraint() != null)
-      getConstraint().setEnvironment(getEnvironment());   
+    for (Iterator i = getErrors().iterator(); i.hasNext();) {
+      String message = (String) i.next();
+      msgCtx.showErrorMessage(message);      
+    }
+
+    super.process();
   }
 
   //*********************************************************************
@@ -192,6 +204,11 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
   public abstract void markBaseState();
   
   /**
+   * Restores the value of the data item from the marked base state.
+   */
+  public abstract void restoreBaseState();
+  
+  /**
    * Returns whether data item state has changed after it was marked.
    * @return whether data item state has changed after it was marked.
    */
@@ -204,8 +221,8 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
 	public abstract void setDisabled(boolean disabled);
   
   /**
-   * Returns wether the element is disabled.
-   * @return wether the element is disabled.
+   * Returns whether the element is disabled.
+   * @return whether the element is disabled.
    */
 	public abstract boolean isDisabled();
     
@@ -222,7 +239,7 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
    * Converts the element value from control to data item
    * @throws Exception 
    */
-  protected abstract void convertInternal() throws Exception;    
+  protected abstract void convertInternal() throws Exception;
   
   /**
    * Validates the element.
@@ -233,11 +250,40 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
   protected boolean validateInternal() throws Exception {
     if (getConstraint() != null && isValid()) {
     	getConstraint().validate();    
-      errors.addAll( ErrorUtil.showErrors(getConstraint().getErrors(), getEnvironment()));
+      addErrors(getConstraint().getErrors());
       getConstraint().clearErrors();
     }
 
     return isValid();
+  }
+  
+  public Set getErrors() {
+    if (errors == null)
+      errors = new HashSet();
+    return errors;
+  }
+  
+  public void addError(String error) {
+    Assert.notNullParam(error, "error");
+    
+    getErrors().add(error);
+  }
+  
+  public void addErrors(Set errors) {
+    Assert.noNullElementsParam(errors, "errors");
+    
+    getErrors().addAll(errors);
+  }
+  
+  /**
+   * Clears element errors.
+   */
+  public void clearErrors() {  
+    errors = null;
+  }
+  
+  public Object getValue() {
+    return null;
   }
   
   //*********************************************************************
@@ -247,10 +293,10 @@ public abstract class GenericFormElement extends StandardPresentationWidget {
   /**
    * This class represents a form element view model.
    * 
-   * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
-  public class ViewModel extends StandardWidget.ViewModel{
+  public class ViewModel extends BaseApplicationWidget.ViewModel{
     
     private Map properties;
 

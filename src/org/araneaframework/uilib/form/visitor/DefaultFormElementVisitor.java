@@ -18,11 +18,14 @@ package org.araneaframework.uilib.form.visitor;
 
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DefaultFormElementVisitor extends FormElementVisitor {
 	public void visit(String id, FormElement element) {}
 	public void visit(String id, FormWidget element) {}
+  public void visit(String id, BaseFormListWidget element) {
+  }
 }

@@ -17,10 +17,12 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.text.Collator;
+import org.araneaframework.Environment;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ErrorUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * Given two form elements checks that their values are one after another.
@@ -29,18 +31,18 @@ import org.araneaframework.uilib.util.ErrorUtil;
  * TODO: Add locale support for string ranges.
  * 
  * @author <a href="mailto:kt@webmedia.ee">Konstantin Tretyakov</a>
+ * XXX: this is one messy constraint.
  */
 public final class RangeConstraint extends BaseConstraint {
 
 	protected boolean allowEquals;
 	protected FormElement fieldLo, fieldHi;
-	
+
 	/**
 	 * @param fieldLo The value of this field is checked to be less than the value of fieldHi (or null)
 	 * @param fieldHi The value of this field is checked to be greater than the value of fieldLo (or null)
 	 * @param allowEquals If this is true, the constraint will be considered satisfied when values of fieldLo and fieldHi are 
 	 *                    equal. Otherwise the constraint won't be satisfied in this case.
-	 * @param locale  In case the data to be compared is of type String, this locale will be used in comparison.
 	 */
 	public RangeConstraint(FormElement fieldLo, FormElement fieldHi, boolean allowEquals) {
 		this.allowEquals = allowEquals;
@@ -83,12 +85,18 @@ public final class RangeConstraint extends BaseConstraint {
     
     if (comparison > 0 || (!allowEquals && comparison == 0)){
       addError(
-          ErrorUtil.localizeAndFormat(
-          UiLibMessages.RANGE_CHECK_FAILED, 
-          ErrorUtil.localize(fieldLo.getLabel(), getEnvironment()),
-          ErrorUtil.localize(fieldHi.getLabel(), getEnvironment()),
-          getEnvironment()));
+          MessageUtil.localizeAndFormat(
+            UiLibMessages.RANGE_CHECK_FAILED, 
+            t(fieldLo.getLabel(), fieldLo.getEnvironment()),
+            t(fieldHi.getLabel(), fieldHi.getEnvironment()),
+            getEnvironment()));
     }
   }
+  
+  private String t(String key, Environment env) {
+	    LocalizationContext locCtx = 
+	     (LocalizationContext) env.getEntry(LocalizationContext.class);
+	    return locCtx.localize(key);
+	  }
 
 }

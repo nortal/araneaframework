@@ -17,10 +17,11 @@
 package org.araneaframework.uilib.form.converter;
 
 import java.math.BigInteger;
+import org.araneaframework.uilib.form.Converter;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class BigIntegerToIntegerConverter extends BaseConverter {
@@ -28,7 +29,7 @@ public class BigIntegerToIntegerConverter extends BaseConverter {
   /**
    * Returns a <code>new BigIntegerToIntegerConverter()</code>.
    */
-  public BaseConverter newConverter() {
+  public Converter newConverter() {
     return new BigIntegerToIntegerConverter();
   }
 

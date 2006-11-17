@@ -26,13 +26,13 @@ import java.io.Serializable;
  * </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Viewable extends Serializable {
   public Interface _getViewable();
 
   interface Interface extends Serializable {
-    public Object getViewModel() throws Exception;
+    public Object getViewModel();
   }
   
   /**

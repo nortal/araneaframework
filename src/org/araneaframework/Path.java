@@ -30,7 +30,7 @@ import java.io.Serializable;
  * which component. 
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Path extends Cloneable, Serializable {
   

@@ -17,9 +17,11 @@
 package org.araneaframework.uilib.list.structure.filter.composite;
 
 import java.util.Map;
+
+import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.Expression;
-import org.araneaframework.backend.list.memorybased.expression.logical.NotExpression;
 import org.araneaframework.uilib.list.structure.ListFilter;
+import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 
 public class NotFilter implements ListFilter {
@@ -27,7 +29,13 @@ public class NotFilter implements ListFilter {
 	public NotFilter(ListFilter filter) {
 		this.filter = filter;
 	}
+	public void init(Environment env) throws Exception {
+		this.filter.init(env);
+	}
+	public void destroy() throws Exception {
+		this.filter.destroy();
+	}
 	public Expression buildExpression(Map data) {
-		return new NotExpression(this.filter.buildExpression(data));
+		return ExpressionUtil.not(this.filter.buildExpression(data));
 	}
 }

@@ -19,7 +19,6 @@ package org.araneaframework.framework.router;
 import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.SessionServiceContext;
 
@@ -31,28 +30,19 @@ import org.araneaframework.framework.SessionServiceContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardSessionServiceRouterService extends BaseServiceRouterService {
-  /**
-   * The key of the service id in the request.
-   */
-  public static final String SESSION_SERVICE_KEY = "sessionServiceId";
-  
-  protected Object getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get(SESSION_SERVICE_KEY);
-  }
-
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
     Map entries = new HashMap();    
     entries.put(SessionServiceContext.class, new ServiceRouterContextImpl(serviceId));
-    return new StandardEnvironment(getEnvironment(), entries);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
   
   private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements SessionServiceContext {
     protected ServiceRouterContextImpl(Object serviceId) {
       super(serviceId);
-    }    
+    }
   }
 
   protected Object getServiceKey() throws Exception {
-    return SESSION_SERVICE_KEY;
+    return SessionServiceContext.SESSION_SERVICE_KEY;
   }
 }

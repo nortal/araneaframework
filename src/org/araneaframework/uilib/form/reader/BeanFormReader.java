@@ -20,17 +20,18 @@ import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
-import org.araneaframework.uilib.form.data.Data;
+import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
 
 
 /**
  * This class allows one to read <code>Value Object</code> s from
  * {@link org.araneaframework.uilib.form.FormWidget}s.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class BeanFormReader {
@@ -78,7 +79,7 @@ public class BeanFormReader {
 	 *          Value Object to write to.
 	 */
   public void readFormBean(Object vo) {
-    BeanMapper beanMapper = new BeanMapper(vo.getClass());
+	  BeanMapper beanMapper = new BeanMapper(vo.getClass());
     for (Iterator i = compositeFormElement.getElements().entrySet().iterator(); i.hasNext();) {
     	Map.Entry entry = (Map.Entry) i.next();
     	
@@ -86,17 +87,23 @@ public class BeanFormReader {
       String elementId = (String) entry.getKey();
       
       if (element instanceof FormElement) {
-        if (beanMapper.fieldIsWritable(elementId)) {
+        if (beanMapper.isWritable(elementId)) {
           Data data = ((FormElement) element).getData();
           if (data != null) {
-            beanMapper.setBeanFieldValue(vo, elementId, data.getValue());
+            beanMapper.setFieldValue(vo, elementId, data.getValue());
           }
         }
       }
       else if (element instanceof FormWidget) {
-        if (beanMapper.fieldIsWritable(elementId)) {
+        if (beanMapper.isWritable(elementId)) {
           BeanFormReader subVoReader = new BeanFormReader((FormWidget) element);
-          beanMapper.setBeanFieldValue(vo, elementId, subVoReader.getBean(beanMapper.getBeanFieldType(elementId)));
+          beanMapper.setFieldValue(vo, elementId, subVoReader.getBean(beanMapper.getFieldType(elementId)));
+        }
+      }
+      else if (element instanceof BaseFormListWidget) {
+        if (beanMapper.isWritable(elementId)) {
+          ListFormReader subVoReader = new ListFormReader((BaseFormListWidget) element);
+          beanMapper.setFieldValue(vo, elementId, subVoReader.getList());
         }
       }
     }

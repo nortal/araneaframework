@@ -17,13 +17,13 @@
 package org.araneaframework.uilib.support;
 
 import java.io.Serializable;
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 
 
 /**
  * Specifies the text type for {@link org.araneaframework.uilib.form.control.TextControl}.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class TextType extends Enum implements Serializable {
@@ -35,11 +35,6 @@ public class TextType extends Enum implements Serializable {
    * Any text. 
    */
   public final static TextType TEXT = new TextType("TEXT");  
-  
-  /**
-   * Estonian personal id. 
-   */
-  public final static TextType EST_PERSONAL_ID = new TextType("PERSONAL_ID");
   
   /**
    * String containing numbers only. 

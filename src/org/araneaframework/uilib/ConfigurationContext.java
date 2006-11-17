@@ -19,7 +19,10 @@ package org.araneaframework.uilib;
 import java.io.Serializable;
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * Configuration context for Uilib widgets. Defined constants
+ * are the keys under which some existing widgets search their configuration.
+ * 
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ConfigurationContext extends Serializable {
   /**
@@ -49,18 +52,12 @@ public interface ConfigurationContext extends Serializable {
   public static final String CUSTOM_CONVERTER_PROVIDER = "uilib.widgets.forms.converters.CustomConverterProvider";
   
   /**
-   * <code>Boolean</code> that controls whether form elements will check if they have been submitted to request 
-   * before reading (this will increase request size, since every element will mark it's presence in request).
-   */
-  public static final String FORM_ELEMENT_READ_SUBMITTED_ONLY = "uilib.widgets.forms.FormElementReadSubmittedOnly"; 
-  
-  /**
-   * <code>Long</code> that controls the default size of the list (i.e. how many rows are show on one page).
+   * <code>Long</code> that controls the default size of the list (eg how many rows are shown on one page).
    */
   public static final String DEFAULT_LIST_ITEMS_ON_PAGE = "uilib.widgets.lists.DefaultListItemsOnPage";
   
   /**
-   * <code>Long</code> that controls the full size of the list (i.e. how many rows maximum may be shown at once).
+   * <code>Long</code> that controls the full size of the list (eg how many rows maximum may be shown at once).
    */
   public static final String FULL_LIST_ITEMS_ON_PAGE = "uilib.widgets.lists.FullListItemsOnPage";
   
@@ -80,7 +77,18 @@ public interface ConfigurationContext extends Serializable {
   public static final String LIST_FILTER_CONFIGURATOR = "uilib.widgets.lists.ListFilterConfigurator";  
   
   /**
-   * Returns a configuration entry.
+   * {@link org.araneaframework.uilib.form.control.AutoCompleteTextControl.ResponseBuilder} that configures how
+   * {@link org.araneaframework.uilib.form.control.AutoCompleteTextControl} sends back the suggested completions.
+   */
+  public static final String AUTO_COMPLETE_RESPONSE_BUILDER = "uilib.widgets.AutoCompleteTextControl.DefaultResponseBuilder";
+  
+  /**
+   * <code>LikeConfiguration</code> that configures Like filter in lists.
+   */
+  public static final String LIKE_CONFIGURATION = "uilib.widgets.lists.LikeConfiguration";
+  
+  /**
+   * Returns a configuration entry with given name.
    */
   public Object getEntry(String entryName);
 }

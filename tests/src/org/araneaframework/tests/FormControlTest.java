@@ -20,19 +20,19 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import junit.framework.TestCase;
-import org.araneaframework.tests.mock.MockEnviroment;
+import org.araneaframework.tests.mock.MockEnvironment;
+import org.araneaframework.tests.mock.MockFormElementContext;
 import org.araneaframework.tests.mock.MockUiLibUtil;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.support.TextType;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov</a>
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FormControlTest extends TestCase {
@@ -45,7 +45,8 @@ public class FormControlTest extends TestCase {
 
     MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
     MultiSelectControl ms = new MultiSelectControl();
-    ms._getComponent().init(new MockEnviroment());
+    ms.setFormElementCtx(new MockFormElementContext());
+    ms._getComponent().init(new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(ms, "myMultiSelect", emptyRequest);    
     ms.convertAndValidate();
 
@@ -55,6 +56,7 @@ public class FormControlTest extends TestCase {
     
     ms._getComponent().destroy();
   }
+  
 
   /**
    * Tests that {@link TextControl} return <code>null</code> on empty request.
@@ -64,14 +66,15 @@ public class FormControlTest extends TestCase {
     MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
     emptyRequest.addParameter("myTextBox", "");
 
-    TextControl tb = new TextControl();   
-    tb._getComponent().init(new MockEnviroment());
-    MockUiLibUtil.emulateHandleRequest(tb, "myTextBox", emptyRequest);
-    tb.convertAndValidate();
+    TextControl textControl = new TextControl();
+    textControl.setFormElementCtx(new MockFormElementContext());
+    textControl._getComponent().init(new MockEnvironment());
+    MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", emptyRequest);
+    textControl.convertAndValidate();
 
-    assertNull("TextBox must return null on empty request.", tb.getRawValue());
+    assertNull("TextBox must return null on empty request.", textControl.getRawValue());
 
-    tb._getComponent().destroy();
+    textControl._getComponent().destroy();
   }
   
   /**
@@ -85,45 +88,50 @@ public class FormControlTest extends TestCase {
     
     valueRequest.addParameter("myTextBox", DEV_NULL);
 
-    TextControl tb = new TextControl();
-    tb._getComponent().init(new MockEnviroment());
-    MockUiLibUtil.emulateHandleRequest(tb, "myTextBox", valueRequest);
-    StringArrayRequestControl.ViewModel vm = (StringArrayRequestControl.ViewModel) tb._getViewable().getViewModel();
+    TextControl textControl = new TextControl();
+    textControl.setFormElementCtx(new MockFormElementContext());
+    textControl._getComponent().init(new MockEnvironment());
+    MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", valueRequest);
+    StringArrayRequestControl.ViewModel vm = (StringArrayRequestControl.ViewModel) textControl._getViewable().getViewModel();
     
     assertEquals("TextBox must contain the value from request!", DEV_NULL, vm.getSimpleValue());
     
-    tb._getComponent().destroy();
+    textControl._getComponent().destroy();
   }  
   
   //***********************************************************************
   // Client-side validation tests
   //***********************************************************************
-  
   /**
    * Tests that {@link NumberControl} lets only valid integers through.
    */
-  public void testNumberControlSimpleValidation() throws Exception {
+  public void testNumberControlSimpleValidationNew() throws Exception {
     MockHttpServletRequest correctValueRequest = new MockHttpServletRequest();
     correctValueRequest.addParameter("myNumberInput", "108");
     
-    NumberControl nc = new NumberControl();
-    nc._getComponent().init(new MockEnviroment());
-    MockUiLibUtil.emulateHandleRequest(nc, "myNumberInput", correctValueRequest);
-    nc.convertAndValidate();
+    NumberControl numberControl = new NumberControl();
     
-    assertTrue("Number control must be valid.", nc.isValid());
-    assertTrue("Number control value must be a 'BigInteger'.", nc.getRawValue() instanceof BigInteger);
-    assertTrue("Number control value must be '108'.", ((BigInteger) nc.getRawValue()).longValue() == 108L);
+    MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
+    
+    numberControl.setFormElementCtx(mockFormElementContext);
+    numberControl._getComponent().init(new MockEnvironment());
+
+    MockUiLibUtil.emulateHandleRequest(numberControl, "myNumberInput", correctValueRequest);
+    numberControl.convertAndValidate();
+    
+    assertTrue("Number control must be valid.", mockFormElementContext.isValid());
+    assertTrue("Number control value must be a 'BigInteger'.", numberControl.getRawValue() instanceof BigInteger);
+    assertTrue("Number control value must be '108'.", ((BigInteger) numberControl.getRawValue()).longValue() == 108L);
 
     MockHttpServletRequest incorrectValueRequest = new MockHttpServletRequest();
     incorrectValueRequest.addParameter("myNumberInput", "abcd");
     
-    MockUiLibUtil.emulateHandleRequest(nc, "myNumberInput", incorrectValueRequest);
-    nc.convertAndValidate();    
+    MockUiLibUtil.emulateHandleRequest(numberControl, "myNumberInput", incorrectValueRequest);
+    numberControl.convertAndValidate();    
     
-    assertTrue("Number control mustn't be valid.", !nc.isValid());
+    assertTrue("Number control mustn't be valid.", !mockFormElementContext.isValid());
     
-    nc._getComponent().destroy();
+    numberControl._getComponent().destroy();
   }
   
   /**
@@ -134,35 +142,37 @@ public class FormControlTest extends TestCase {
     MockHttpServletRequest correctValueRequest = new MockHttpServletRequest();
     correctValueRequest.addParameter("myNumberInput", "50");
     
-    NumberControl nc = new NumberControl();
-    nc._getComponent().init(new MockEnviroment());
+    MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
+    NumberControl numberControl = new NumberControl();
+    numberControl.setFormElementCtx(mockFormElementContext);
+    numberControl._getComponent().init(new MockEnvironment());
     
-    nc.setMinValue(new BigInteger("25"));
-    nc.setMaxValue(new BigInteger("75"));
+    numberControl.setMinValue(new BigInteger("25"));
+    numberControl.setMaxValue(new BigInteger("75"));
     
-    MockUiLibUtil.emulateHandleRequest(nc, "myNumberInput", correctValueRequest);
-    nc.convertAndValidate();
+    MockUiLibUtil.emulateHandleRequest(numberControl, "myNumberInput", correctValueRequest);
+    numberControl.convertAndValidate();
     
-    assertTrue("Number control must be valid.", nc.isValid());    
-    assertTrue("Number control value must be '50'.", ((BigInteger) nc.getRawValue()).longValue() == 50L);
+    assertTrue("Number control must be valid.", mockFormElementContext.isValid());    
+    assertTrue("Number control value must be '50'.", ((BigInteger) numberControl.getRawValue()).longValue() == 50L);
     
     MockHttpServletRequest tooLittleValueRequest = new MockHttpServletRequest();
     tooLittleValueRequest.addParameter("myNumberInput", "20");
     
-    MockUiLibUtil.emulateHandleRequest(nc, "myNumberInput", tooLittleValueRequest);
-    nc.convertAndValidate();    
+    MockUiLibUtil.emulateHandleRequest(numberControl, "myNumberInput", tooLittleValueRequest);
+    numberControl.convertAndValidate();    
     
-    assertTrue("Number control mustn't be valid.", !nc.isValid());
+    assertTrue("Number control mustn't be valid.", !mockFormElementContext.isValid());
        
     MockHttpServletRequest tooBigValueRequest = new MockHttpServletRequest();
     tooBigValueRequest.addParameter("myNumberInput", "80");
     
-    MockUiLibUtil.emulateHandleRequest(nc, "myNumberInput", tooBigValueRequest);
-    nc.convertAndValidate();    
+    MockUiLibUtil.emulateHandleRequest(numberControl, "myNumberInput", tooBigValueRequest);
+    numberControl.convertAndValidate();    
     
-    assertTrue("Number control mustn't be valid.", !nc.isValid());
+    assertTrue("Number control mustn't be valid.", !mockFormElementContext.isValid());
     
-    nc._getComponent().destroy();
+    numberControl._getComponent().destroy();
   }
   
   /**
@@ -173,11 +183,13 @@ public class FormControlTest extends TestCase {
     correctValueRequest.addParameter("myFloatInput", "28.012");
     
     FloatControl nc = new FloatControl();
-    nc._getComponent().init(new MockEnviroment());
+    MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
+    nc.setFormElementCtx(mockFormElementContext);
+    nc._getComponent().init(new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(nc, "myFloatInput", correctValueRequest);
     nc.convertAndValidate();
     
-    assertTrue("Float control must be valid.", nc.isValid());
+    assertTrue("Float control must be valid.", mockFormElementContext.isValid());
     assertTrue("Float control value must be a 'BigDecimal'.", nc.getRawValue() instanceof BigDecimal);
     assertTrue("Float control value must be '28.012'.", ((BigDecimal) nc.getRawValue()).doubleValue() == 28.012);
     
@@ -187,7 +199,7 @@ public class FormControlTest extends TestCase {
     MockUiLibUtil.emulateHandleRequest(nc, "myFloatInput", incorrectValueRequest);
     nc.convertAndValidate();    
     
-    assertTrue("Float control mustn't be valid.", !nc.isValid());
+    assertTrue("Float control mustn't be valid.", !mockFormElementContext.isValid());
     
     nc._getComponent().destroy();
   }
@@ -200,61 +212,35 @@ public class FormControlTest extends TestCase {
     MockHttpServletRequest correctValueRequest = new MockHttpServletRequest();
     correctValueRequest.addParameter("myFloatInput", "50.0018");
     
-    FloatControl nc = new FloatControl();
-    nc._getComponent().init(new MockEnviroment());
+    FloatControl numberControl = new FloatControl();
+    MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
+    numberControl.setFormElementCtx(mockFormElementContext);
+    numberControl._getComponent().init(new MockEnvironment());
     
-    nc.setMinValue(new BigDecimal("25.001"));
-    nc.setMaxValue(new BigDecimal("75.002"));
+    numberControl.setMinValue(new BigDecimal("25.001"));
+    numberControl.setMaxValue(new BigDecimal("75.002"));
     
-    MockUiLibUtil.emulateHandleRequest(nc, "myFloatInput", correctValueRequest);
-    nc.convertAndValidate();
+    MockUiLibUtil.emulateHandleRequest(numberControl, "myFloatInput", correctValueRequest);
+    numberControl.convertAndValidate();
     
-    assertTrue("Float control must be valid.", nc.isValid());    
-    assertTrue("Float control value must be '50.0018'.", ((BigDecimal) nc.getRawValue()).doubleValue() == 50.0018);
+    assertTrue("Float control must be valid.", mockFormElementContext.isValid());    
+    assertTrue("Float control value must be '50.0018'.", ((BigDecimal) numberControl.getRawValue()).doubleValue() == 50.0018);
     
     MockHttpServletRequest tooLittleValueRequest = new MockHttpServletRequest();
     tooLittleValueRequest.addParameter("myFloatInput", "20.1");
     
-    MockUiLibUtil.emulateHandleRequest(nc, "myFloatInput", tooLittleValueRequest);
-    nc.convertAndValidate();    
+    MockUiLibUtil.emulateHandleRequest(numberControl, "myFloatInput", tooLittleValueRequest);
+    numberControl.convertAndValidate();    
     
-    assertTrue("Float control mustn't be valid.", !nc.isValid());
+    assertTrue("Float control mustn't be valid.", !mockFormElementContext.isValid());
     
     MockHttpServletRequest tooBigValueRequest = new MockHttpServletRequest();
     tooBigValueRequest.addParameter("myFloatInput", "80.2");
     
-    MockUiLibUtil.emulateHandleRequest(nc, "myFloatInput", tooBigValueRequest);    
-    nc.convertAndValidate();    
+    MockUiLibUtil.emulateHandleRequest(numberControl, "myFloatInput", tooBigValueRequest);    
+    numberControl.convertAndValidate();    
     
-    assertTrue("Float control mustn't be valid.", !nc.isValid());    
-  }
-  
-  /**
-   * Tests that {@link TextControl} with content type set to personal id
-   * lets only valid Estonian personal ids through. 
-   */
-  public void testPersonalIdControlSimpleValidation() throws Exception {
-    MockHttpServletRequest correctValueRequest = new MockHttpServletRequest();
-    correctValueRequest.addParameter("myPersonalIdInput", "38304280235");
-    
-    TextControl pic = new TextControl(TextType.EST_PERSONAL_ID);
-    pic._getComponent().init(new MockEnviroment());
-    MockUiLibUtil.emulateHandleRequest(pic, "myPersonalIdInput", correctValueRequest);
-    pic.convertAndValidate();
-    
-    assertTrue("Personal id control must be valid.", pic.isValid());
-    assertTrue("Personal id control value must be a 'String'.", pic.getRawValue() instanceof String);
-    assertTrue("Personal id control value must be '38304280235'.", ((String) pic.getRawValue()).equals("38304280235"));
-     
-    MockHttpServletRequest incorrectValueRequest = new MockHttpServletRequest();
-    incorrectValueRequest.addParameter("myPersonalIdInput", "abcd");
-    
-    MockUiLibUtil.emulateHandleRequest(pic, "myPersonalIdInput", incorrectValueRequest);
-    pic.convertAndValidate();    
-    
-    assertTrue("Personal id control mustn't be valid.", !pic.isValid());
-    
-    pic._getComponent().destroy();
+    assertTrue("Float control mustn't be valid.", !mockFormElementContext.isValid());    
   }
   
   /**
@@ -266,70 +252,73 @@ public class FormControlTest extends TestCase {
     MockHttpServletRequest correctValueRequest = new MockHttpServletRequest();
     correctValueRequest.addParameter("myTextBox", "i love me");
     
-    TextControl tc = new TextControl();
-    tc._getComponent().init(new MockEnviroment());
+    TextControl textControl = new TextControl();
+    MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
+    textControl.setFormElementCtx(mockFormElementContext);
+    textControl._getComponent().init(new MockEnvironment());
     
-    tc.setMinLength(new Long(5));
-    tc.setMaxLength(new Long(20));
+    textControl.setMinLength(new Long(5));
+    textControl.setMaxLength(new Long(20));
     
-    MockUiLibUtil.emulateHandleRequest(tc, "myTextBox", correctValueRequest);
-    tc.convertAndValidate();
+    MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", correctValueRequest);
+    textControl.convertAndValidate();
     
-    assertTrue("Textbox control must be valid.", tc.isValid());    
-    assertTrue("Textbox control value must be 'i love me'.", ((String) tc.getRawValue()).equals("i love me"));
+    assertTrue("Textbox control must be valid.", mockFormElementContext.isValid());    
+    assertTrue("Textbox control value must be 'i love me'.", ((String) textControl.getRawValue()).equals("i love me"));
      
     //Too short
 
     MockHttpServletRequest tooShortValueRequest = new MockHttpServletRequest();
     tooShortValueRequest.addParameter("myTextBox", "boo");
     
-    MockUiLibUtil.emulateHandleRequest(tc, "myTextBox", tooShortValueRequest);
-    tc.convertAndValidate();    
+    MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", tooShortValueRequest);
+    textControl.convertAndValidate();    
     
-    assertTrue("Textbox control mustn't be valid.", !tc.isValid());
+    assertTrue("Textbox control mustn't be valid.", !mockFormElementContext.isValid());
     
     //Too long
     
     MockHttpServletRequest tooLongValueRequest = new MockHttpServletRequest();
     tooLongValueRequest.addParameter("myTextBox", "i love myself and others very very much");
     
-    MockUiLibUtil.emulateHandleRequest(tc, "myTextBox", tooLongValueRequest);   
-    tc.convertAndValidate();    
+    MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", tooLongValueRequest);   
+    textControl.convertAndValidate();    
     
-    assertTrue("Textbox control mustn't be valid.", !tc.isValid());  
+    assertTrue("Textbox control mustn't be valid.", !mockFormElementContext.isValid());
+    mockFormElementContext.clearErrors();
           
     //min=max correct
     
-    tc.setMinLength(new Long(10));
-    tc.setMaxLength(new Long(10));
+    textControl.setMinLength(new Long(10));
+    textControl.setMaxLength(new Long(10));
 
     correctValueRequest = new MockHttpServletRequest();
     correctValueRequest.addParameter("myTextBox", "1234567890");
     
-    MockUiLibUtil.emulateHandleRequest(tc, "myTextBox", correctValueRequest);
-    tc.convertAndValidate();
+    MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", correctValueRequest);
+    textControl.convertAndValidate();
         
-    assertTrue("Textbox control must be valid.", tc.isValid());    
-    assertTrue("Textbox control value must be '1234567890'.", ((String) tc.getRawValue()).equals("1234567890"));
+    assertTrue("Textbox control must be valid.", mockFormElementContext.isValid());
+    assertTrue("Textbox control value must be '1234567890'.", ((String) textControl.getRawValue()).equals("1234567890"));
     
     //min=max too short
 
     tooShortValueRequest.addParameter("myTextBox", "123456789");
     
-    MockUiLibUtil.emulateHandleRequest(tc, "myTextBox", tooShortValueRequest);
-    tc.convertAndValidate();
+    MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", tooShortValueRequest);
+    textControl.convertAndValidate();
         
-    assertTrue("Textbox control mustn't be valid.", !tc.isValid());    
+    assertTrue("Textbox control mustn't be valid.", !mockFormElementContext.isValid());    
     
     //min=max too long
 
     tooShortValueRequest.addParameter("myTextBox", "12345678901");
     
-    MockUiLibUtil.emulateHandleRequest(tc, "myTextBox", tooShortValueRequest);   
-    tc.convertAndValidate();
-        
-    assertTrue("Textbox control mustn't be valid.", !tc.isValid());  
-    
-    tc._getComponent().destroy();
+    MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", tooShortValueRequest);   
+    textControl.convertAndValidate();
+
+    assertTrue("Textbox control mustn't be valid.", !mockFormElementContext.isValid());  
+
+    textControl._getComponent().destroy();
   }  
 }

@@ -20,14 +20,22 @@ import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.backend.list.memorybased.Expression;
 
-
-
+/**
+ * Composite Expression containing other expressions.
+ */
 public abstract class MultiExpression implements CompositeExpression {
 	protected List children = new ArrayList();
+
+	/**
+	 * Adds expression to this composite MultiExpression.
+	 * @param expression expression to add
+	 * @return this MultiExpression with added expression
+	 */
 	public MultiExpression add(Expression expression) {
 		this.children.add(expression);
 		return this;
 	}
+
 	public Expression[] getChildren() {
 		return (Expression[]) this.children.toArray(new Expression[this.children.size()]);
 	}

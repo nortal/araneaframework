@@ -18,11 +18,10 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
-import org.araneaframework.example.main.business.util.TemplateUiLibUtil;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.NumberControl;
@@ -30,11 +29,11 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.LongData;
 import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.list.formlist.FormListUtil;
-import org.araneaframework.uilib.list.formlist.FormListWidget;
-import org.araneaframework.uilib.list.formlist.FormRow;
-import org.araneaframework.uilib.list.formlist.InMemoryFormListHelper;
-import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
+import org.araneaframework.uilib.form.formlist.FormListUtil;
+import org.araneaframework.uilib.form.formlist.FormRow;
+import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 
 
 /**
@@ -43,11 +42,12 @@ import org.araneaframework.uilib.list.formlist.adapters.ValidOnlyIndividualFormR
  * Seperate forms are used for individual rows, so that client-side validation
  * would work on the same separate rows.
  *
- * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class DemoInMemoryEditableList extends BaseWidget {
+public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
-	private FormListWidget formList;
+	  private static final long serialVersionUID = 1L;
+  private BeanFormListWidget formList;
 	private List data = new ArrayList();
 	
 	private InMemoryFormListHelper inMemoryHelper;
@@ -64,18 +64,11 @@ public class DemoInMemoryEditableList extends BaseWidget {
 	 * Builds the form with one checkbox, one textbox and a button.
 	 */
 	public void init() throws Exception {
-		super.init();
-
-		addGlobalEventListener(new ProxyEventListener(this));
-    setViewSelector("demo/DemoInMemoryEditableList/main");		
+		setViewSelector("demo/demoInMemoryEditableList");		
 		
-		formList = new FormListWidget(new DemoEditableRowHandler());
-		inMemoryHelper = new InMemoryFormListHelper(data, formList.getFormRowHandler());
+		formList = new BeanFormListWidget(new DemoEditableRowHandler(), DataDTO.class);
+		inMemoryHelper = new InMemoryFormListHelper(formList, data);
 		
-		FormListUtil.keepFormListChangesInMemory(formList, inMemoryHelper);
-		FormListUtil.associateFormListWithMap(formList, inMemoryHelper.getCurrent());
-		formList.setRows(new ArrayList(inMemoryHelper.getCurrent().values()));
-
 		addWidget("editableList", formList);
 	}
 	
@@ -96,23 +89,25 @@ public class DemoInMemoryEditableList extends BaseWidget {
 	}
 	
   protected void handleProcess() throws Exception {
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded());
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated());
+	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded().values());
+	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated().values());
 	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Deleted: " + inMemoryHelper.getDeleted());
   }
   
 	public class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-		public Object getRowKey(Object row) {
+		    private static final long serialVersionUID = 1L;
+
+    public Object getRowKey(Object row) {
 			return ((DataDTO) row).getId();
 		}
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
-			DataDTO rowData = (DataDTO) TemplateUiLibUtil.readDtoFromForm(editableRow.getRow(), editableRow.getRowForm());
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).readBean(editableRow.getRow()); 
 
 			//Saving data
-			inMemoryHelper.update(editableRow.getRowKey(), rowData);
-			editableRow.getRowForm().markBaseState();
+			inMemoryHelper.update(editableRow.getKey(), rowData);
+			editableRow.getForm().markBaseState();
 		}
 
 		public void deleteRow(Object key) throws Exception {
@@ -121,22 +116,22 @@ public class DemoInMemoryEditableList extends BaseWidget {
 		}
 
 		public void addValidRow(FormWidget addForm) throws Exception {
-			DataDTO rowData = (DataDTO) TemplateUiLibUtil.readDtoFromForm(new DataDTO(), addForm);
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).readBean(new DataDTO()); 
 
 			inMemoryHelper.add(rowData);
 		}
 
 		public void initFormRow(FormRow editableRow, Object row)
 		                     throws Exception {
-			FormWidget rowForm = editableRow.getRowForm();
+			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
 
 			addCommonFormFields(rowForm);
 
-			FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getRowKey());
-			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getRowKey());
+			FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getKey());
 
-			TemplateUiLibUtil.writeDtoToForm(row, rowForm);			
-			editableRow.getRowForm().markBaseState();
+			rowForm.writeBean(row);
+			editableRow.getForm().markBaseState();
 		}
 
 		public void initAddForm(FormWidget addForm) throws Exception {

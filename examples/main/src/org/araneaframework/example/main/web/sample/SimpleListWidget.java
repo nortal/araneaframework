@@ -19,40 +19,37 @@ package org.araneaframework.example.main.web.sample;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import org.apache.log4j.Logger;
-import org.araneaframework.OutputData;
-import org.araneaframework.core.ProxyEventListener;
-import org.araneaframework.example.main.BaseWidget;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.TestVO;
-import org.araneaframework.servlet.ServletOutputData;
-import org.araneaframework.servlet.util.ServletUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 /**
  * This is an example of component with a single list.
  */
-public class SimpleListWidget extends BaseWidget {
+public class SimpleListWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
+
   private static final Logger log = Logger.getLogger(SimpleFormWidget.class);
 
   protected ListWidget simpleList;
     
   protected void init() throws Exception {
-	super.init();
-	
-	addGlobalEventListener(new ProxyEventListener(this));
+	setViewSelector("sample/simpleList");
 	
 	simpleList = new ListWidget();
-	simpleList.setListDataProvider(new SimpleListDataProvider());
-	simpleList.addListColumn("booleanValue", "#Boolean");
-	simpleList.addListColumn("stringValue", "#String");
-	simpleList.addListColumn("longValue", "#Long");
+	addWidget("simpleList", simpleList);
+	simpleList.setDataProvider(new SimpleListDataProvider());
+	simpleList.addField("booleanValue", "#Boolean");
+	simpleList.addField("stringValue", "#String");
+	simpleList.addField("longValue", "#Long");
 	simpleList.setInitialOrder("longValue", true);
-	
-    addWidget("simpleList", simpleList);
   }  
   
-  private class SimpleListDataProvider extends MemoryBasedListDataProvider {
+  private static class SimpleListDataProvider extends MemoryBasedListDataProvider {
+    private static final long serialVersionUID = 1L;
     protected List data = new ArrayList();
     
     public SimpleListDataProvider() {
@@ -89,12 +86,6 @@ public class SimpleListWidget extends BaseWidget {
   }
   
   public void handleEventReturn(String eventParameter) throws Exception {
-	  log.debug("Event 'return' received!");
 	  getFlowCtx().cancel();
   }	
-  
-  protected void render(OutputData output) throws Exception {
-	log.debug(getClass().getName() + " render called");
-	ServletUtil.include("/WEB-INF/jsp/sample/simpleList/component.jsp", getEnvironment(), (ServletOutputData) output);
-  }
 }

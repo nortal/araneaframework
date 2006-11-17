@@ -18,16 +18,17 @@ package org.araneaframework.uilib.form.converter;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
+import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.ConverterKey;
 
 /**
  * This class is a Factory pattern implementation, that provides methods to make
  * {@link org.araneaframework.uilib.form.FormElement}s and {@link org.araneaframework.uilib.form.converter.BaseConverter}s.
  * 
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
- *  
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org) 
  */
 public class ConverterFactory implements ConverterProvider {
   protected static final Map converters = new HashMap();
@@ -63,7 +64,7 @@ public class ConverterFactory implements ConverterProvider {
     converters.put(new ConverterKey("Timestamp", "Date"), new TimestampToDateConverter());
 
     //Long -> Type
-    converters.put(new ConverterKey("Long", "Boolean"), new ReverseConverter(new BooleanToLongConverter()));
+    converters.put(new ConverterKey("Long", "Boolean"), new ReverseConverter(new BooleanToLongConverter()));    
   }
 
   /**
@@ -78,7 +79,7 @@ public class ConverterFactory implements ConverterProvider {
    * @throws ConverterNotFoundException
    *           if {@link BaseConverter}is not found
    */
-  public Converter findConverter(String fromType, String toType) throws ConverterNotFoundException {
+  public Converter findConverter(String fromType, String toType, Environment env) throws ConverterNotFoundException {
     if (fromType == null || toType == null) throw new ConverterNotFoundException(fromType, toType);
     if (fromType.equals(toType)) {
       return new IdenticalConverter();
