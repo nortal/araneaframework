@@ -1175,7 +1175,7 @@ public abstract class ListSqlHelper {
 				
 				if (!this.beanMapper.isWritable(beanField))
 					throw new RuntimeException(
-							"The field '" + beanField + "' specified in the mapping doesn't have a corresponding Value Object field!");
+							"Bean '" +  bean.toString() + "' specified in mapping does not have accessible setter corresponding to field '" + beanField + "'");
 
 				readBeanField(rs, rsColumn, bean, beanField);
 			}

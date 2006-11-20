@@ -1141,6 +1141,14 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               templates should search for them. Default is
               "/WEB-INF/jsp".</entry>
             </row>
+
+            <row>
+              <entry>jspExtension
+              <para><literal>java.lang.String</literal></para></entry>
+
+              <entry>File name extension jsp templates are assumed to have. 
+              Default is ".jsp".</entry>
+            </row>
           </tbody>
         </tgroup>
       </informaltable>

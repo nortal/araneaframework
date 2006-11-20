@@ -66,11 +66,10 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
     this.exception = e;
     
     if (ExceptionUtils.getRootCause(e) != null)
-        log.error("Critical exception occured: ", ExceptionUtils.getRootCause(e));
+      log.error("Critical exception occured: ", ExceptionUtils.getRootCause(e));
     else
-        log.error("Critical exception occured: ", e);
+      log.error("Critical exception occured: ", e);
   }
-  
   
   protected void update(InputData input) throws Exception {
     if (exception == null)

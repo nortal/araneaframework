@@ -72,7 +72,7 @@ public abstract class BaseService extends BaseComponent implements Service {
   protected void action(Path path, InputData input, OutputData output) throws Exception{}    
   
   protected void handleServiceException(Exception e) throws Exception {
-	handleException(e);
+    handleException(e);
   }
 
   protected InputData getInputData() {

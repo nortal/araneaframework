@@ -14,29 +14,29 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.business.util;
+package org.araneaframework.jsp.support;
 
 import java.io.Serializable;
-
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class TagAttr implements Serializable {
-	  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
+    
   protected String name;
-	protected Object value;
+  protected Object value;
 
-	public TagAttr(String name, Object value) {
-		this.name = name;
-		this.value = value;
-	}
+  public TagAttr(String name, Object value) {
+    this.name = name;
+    this.value = value;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public Object getValue() {
-		return value;
-	}
+  public Object getValue() {
+    return value;
+  }
 }
