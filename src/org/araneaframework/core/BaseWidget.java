@@ -132,10 +132,6 @@ public abstract class BaseWidget extends BaseService implements Widget {
       }
     }
   }   
-  
-  protected void handleWidgetException(Exception e) throws Exception {
-	  handleException(e);
-  }
     
   protected void handleWidgetException(Exception e) throws Exception {
     handleException(e);
