@@ -1229,7 +1229,8 @@ public abstract class ListSqlHelper {
 	private String getAliasForField(String dbField) {
 		// Remove prefix
 		String tmp = dbField.substring(dbField.lastIndexOf('.') + 1);
-		if (!StringUtils.isAlphanumeric(tmp)) {
+		// TODO: replace with 1.3 compatible regexp check
+		if (!StringUtils.containsOnly(tmp, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789_")) {
 			tmp = "alias";
 		}
 		
