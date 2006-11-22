@@ -36,7 +36,7 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * @author Oleg Mürk
  * 
  * @jsp.tag
- *   name = "filterButton"
+ *   name = "listFilterButton"
  *   body-content = "JSP"
  *   description = "Renders ListWidget's filter form filtering button. Should be used inside &lt;ui:listFilter&gt; tag. Button label identifier is UiLibMessages.LIST_FILTER_BUTTON_LABEL&mdash;'uilib.list.filter.button'"
  */
@@ -96,7 +96,7 @@ public class ListFilterButtonHtmlTag extends FormLinkButtonHtmlTag {
    */
   public void setRenderMode(String renderMode) throws JspException {
 	  if (!(renderMode.equals(ListFilterButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(ListFilterButtonHtmlTag.RENDER_INPUT) || renderMode.equals(ListFilterButtonHtmlTag.RENDER_EMPTY)))
-	      throw new AraneaJspException("<ui:filterButton> 'renderMode' attribute must be '" + ListFilterButtonHtmlTag.RENDER_BUTTON + "' or '"+ ListFilterButtonHtmlTag.RENDER_INPUT+"'" + "' or '"+ ListFilterButtonHtmlTag.RENDER_EMPTY+"'");
+	      throw new AraneaJspException("<ui:listFilterButton> 'renderMode' attribute must be '" + ListFilterButtonHtmlTag.RENDER_BUTTON + "' or '"+ ListFilterButtonHtmlTag.RENDER_INPUT+"'" + "' or '"+ ListFilterButtonHtmlTag.RENDER_EMPTY+"'");
       this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
   }
 }
