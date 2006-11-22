@@ -34,7 +34,7 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * 
  * @jsp.tag
  *   name = "clearFilterButton"
- *   body-content = "empty"
+ *   body-content = "JSP"
  *   description = "Renders ListWidget's filter form clearance button. Should be used inside &lt;ui:listFilter&gt; tag. Button label identifier is UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL&mdash;'uilib.list.filter.clear.button'"
  */
 public class ListFilterClearButtonHtmlTag extends FormLinkButtonHtmlTag {
