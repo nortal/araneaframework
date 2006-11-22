@@ -1605,14 +1605,14 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
                 <entry>Indicates whether button label is shown.Value should be
                 <literal>true</literal> or <literal>false</literal>, default
-                is <literal>false</literal>&mdash;using <literal>true</literal> is pointless with this particular tag, it only has some effect
+                is <literal>false</literal>&mdash;using <literal>true</literal> is pointless with these particular tags, it only has some effect
                 when specified <literal>renderMode</literal> is <literal>empty</literal> and tags body is left empty too.</entry>
               </row>
             </tbody>
           </tgroup>
         </informaltable>
         
-       <emphasis>Also has all common form element rendering attributes plus standard <literal>style</literal> and <literal>styleClass</literal> attributes.</emphasis>
+       <emphasis>Also have all common form element rendering attributes plus standard <literal>style</literal> and <literal>styleClass</literal> attributes.</emphasis>
       </sect3>
 
       <sect3>
