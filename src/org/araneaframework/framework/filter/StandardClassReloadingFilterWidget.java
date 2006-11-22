@@ -24,10 +24,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import javax.servlet.ServletContext;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -48,7 +50,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
   public void setChildClass(String childClass) {
     this.childClassName = childClass;
   }
-  
+
   protected void init() throws Exception {    
     super.init();  
     
@@ -123,29 +125,49 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
       this.cl = cl;
     }
 
-    protected Class resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+    protected Class resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
       String name = desc.getName();
       return cl.loadClass(name);
     }
   }
   
-  private static class ReloadingClassloader extends URLClassLoader {
+  private class ReloadingClassloader extends URLClassLoader {
 
     public ReloadingClassloader(URL[] urls, ClassLoader parent) {
       super(urls, parent);
     }
     
     public Class loadClass(String name) throws ClassNotFoundException {
-      Class c = findLoadedClass(name);
-      if (c != null)
-        return c;
+      if (hasLoadedClass(this, name))
+        return super.loadClass(name);
       
       try {
         return findClass(name);
       }
       catch (ClassNotFoundException e) {
-        return super.loadClass(name);
+        return getParent().loadClass(name);
       }
     }
+  }
+  
+  private boolean hasLoadedClass(ClassLoader cl, String name) {
+    try {
+      Method mFindLoadedClass = ClassLoader.class.getDeclaredMethod(
+          "findLoadedClass", new Class[] { String.class });
+      mFindLoadedClass.setAccessible(true);
+      if (mFindLoadedClass.invoke(cl, new Object[] { name }) != null)
+        return true;
+      
+      Method mGetParent = ClassLoader.class.getDeclaredMethod("getParent",
+          new Class[] {});
+      ClassLoader parent = (ClassLoader) mGetParent.invoke(cl, new Object[] {});
+      if (parent != null)
+        return hasLoadedClass(parent, name);
+      
+      return false;
+    } 
+    catch (Exception e) {
+      throw new NestableRuntimeException(e);
+    }    
   }
 }
