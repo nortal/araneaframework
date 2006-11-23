@@ -371,9 +371,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     configuration:</para>
 
     <para><programlisting role="xml">&lt;bean class="org.araneaframework.framework.core.NopFilterWidget"
-  id="araneaTransactionFilter" singleton="false"&gt;
-  &lt;property name="languageName" value="ee"/&gt;
-&lt;/bean&gt;</programlisting><warning>
+  id="araneaTransactionFilter" singleton="false"/&gt;</programlisting><warning>
         <para>Since filters can be both services and widgets, you have to be
         careful to use the appropriate one for the current context. In current
         case you have override service filters with
