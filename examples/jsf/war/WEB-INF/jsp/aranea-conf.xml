@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="araneaApplicationStart"
+          class="test.HelloWidget"
+          singleton="false"/>
+          
+      <!-- custom application filters -->
+      <bean id="araneaCustomApplicationFilters" singleton="false"
+            class="org.araneaframework.framework.filter.StandardFilterChainService">
+          <property name="filterChain">     
+              <list>
+                  <ref bean="jsfFilter"/>
+              </list>
+          </property>
+      </bean>
+      
+      <bean 
+        class="test.base.JsfFilterService" 
+        id="jsfFilter" 
+        singleton="false">
+    </bean>
+    
+    <!-- overridden beans -->    
+    <bean 
+        class="org.araneaframework.http.filter.StandardJspFilterService" 
+        id="araneaJspConfigFilter" 
+        singleton="false">
+        <property name="submitCharset" value="${l10n.encoding}"/>
+        <property name="jspPath" value="${jsp.path}"/>
+        <property name="jspExtension" value=".jspx"/>
+    </bean>
+</beans>
