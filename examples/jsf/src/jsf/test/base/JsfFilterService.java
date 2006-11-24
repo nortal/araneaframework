@@ -1,12 +1,3 @@
-/*
- * JsfFilterService.java
- *
- * Created on 15 November 2006, 13:44
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package jsf.test.base;
 
 import javax.faces.FactoryFinder;
@@ -31,7 +22,7 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * @author Taimo
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class JsfFilterService extends BaseFilterService implements JSFContext {
     private static final ThreadLocal facesContext = new ThreadLocal();

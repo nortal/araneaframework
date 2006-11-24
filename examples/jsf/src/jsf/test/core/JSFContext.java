@@ -1,12 +1,3 @@
-/*
- * JSFContext.java
- *
- * Created on 15 November 2006, 13:49
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package jsf.test.core;
 
 import java.io.Serializable;
@@ -20,7 +11,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 
 /**
- * @author Taimo
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface JSFContext extends Serializable {
     public void initFacesContext(InputData input, OutputData ouput);

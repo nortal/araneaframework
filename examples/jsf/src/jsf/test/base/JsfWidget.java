@@ -9,18 +9,11 @@
 
 package jsf.test.base;
 
-import java.io.IOException;
-import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import jsf.test.core.JSFContext;
+import jsf.test.core.JsfRequestWrapper;
+import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -29,10 +22,11 @@ import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
- *
- * @author taimo
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class JsfWidget extends BaseUIWidget {
+	private static final Logger log = org.apache.log4j.Logger.getLogger(JsfWidget.class);
+	
     String resolvedViewSelector;
     
     /** Creates a new instance of JsfWidget */
@@ -41,7 +35,6 @@ public class JsfWidget extends BaseUIWidget {
     }
     
     protected void init() throws Exception {
-        Logger log = java.util.logging.Logger.getLogger("JsfWidget");
         resolvedViewSelector = resolveJspName(getJspContext(), resolvedViewSelector);
         log.info("resolved view " + resolvedViewSelector);
     }
@@ -76,7 +69,7 @@ public class JsfWidget extends BaseUIWidget {
         //decorate the request
         ServletUtil.setRequest(input, new JsfRequestWrapper(request, resolvedViewSelector));
         
-        // XXX: should give dummy outputdata?
+        // XXX: should give dummy outputdata
         getJSFContext().initFacesContext(input, getOutputData());
         
         return getJSFContext().getFacesContext();
@@ -88,53 +81,5 @@ public class JsfWidget extends BaseUIWidget {
     
     public JSFContext getJSFContext() {
         return (JSFContext) getEnvironment().getEntry(JSFContext.class);
-    }
-    
-    public class JsfRequestWrapper extends HttpServletRequestWrapper {
-        private String viewSelector;
-        private HttpServletRequest wrapped;
-        
-        public JsfRequestWrapper(HttpServletRequest request, String viewSelector) {
-            super(request);
-            this.wrapped = request;
-            
-            this.viewSelector = viewSelector;
-        }
-
-        public String getPathInfo() {
-            return null;
-        }
-
-        public String getServletPath() {
-            return viewSelector;
-        }
-
-        public RequestDispatcher getRequestDispatcher(String path) {
-            return new AlwaysIncludingRequestDispatcherWrapper(wrapped.getRequestDispatcher(path));
-            //return wrapped.getRequestDispatcher(path);
-        }
-        
-    }
-    
-    public class AlwaysIncludingRequestDispatcherWrapper implements RequestDispatcher {
-        private RequestDispatcher wrapped;
-        
-        public AlwaysIncludingRequestDispatcherWrapper(RequestDispatcher wrapped) {
-            this.wrapped = wrapped;
-        }
-        
-        public void include(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-            wrapped.include(request, response);
-        }
-
-        public void forward(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-            wrapped.include(request, response);
-        }
-    }
-    
-    public class JsfResponseWrapper extends HttpServletResponseWrapper {
-        public JsfResponseWrapper(HttpServletResponse response) {
-            super(response);
-        }
     }
 }
