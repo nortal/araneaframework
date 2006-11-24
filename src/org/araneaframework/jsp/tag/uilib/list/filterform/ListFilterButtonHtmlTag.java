@@ -39,6 +39,8 @@ import org.araneaframework.uilib.support.UiLibMessages;
  *   name = "listFilterButton"
  *   body-content = "JSP"
  *   description = "Renders ListWidget's filter form filtering button. Should be used inside &lt;ui:listFilter&gt; tag. Button label identifier is UiLibMessages.LIST_FILTER_BUTTON_LABEL&mdash;'uilib.list.filter.button'"
+ *
+ * @since 1.0.3  
  */
 public class ListFilterButtonHtmlTag extends FormLinkButtonHtmlTag {
   public static final String RENDER_BUTTON = "button";
