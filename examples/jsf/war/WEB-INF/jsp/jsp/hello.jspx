@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root
+    xmlns:jsp="http://java.sun.com/JSP/Page" 
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:ui="http://araneaframework.org/tag-library/standard_rt"
+    version="2.0">
+    
+    <!-- to change the content type or response encoding change the following line -->
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    
+    <ui:root>
+        <ui:viewPort>	
+            <ui:widgetContext>
+                <html>
+                    <head>
+                        <ui:importScripts/>
+
+                        <title>Aranea Widget Hello Name Example</title>
+                    </head>
+
+                    <ui:body id="${widget.name}">
+                        <ui:systemForm method="get">
+                            Hello ${widget.name} at ${widget.date}. See for
+                            <ui:eventLinkButton labelId="#yourself" eventId="goJSF"/>
+                        </ui:systemForm>
+                    </ui:body>
+                </html>				
+            </ui:widgetContext>
+        </ui:viewPort>
+    </ui:root>
+</jsp:root>
