@@ -21,9 +21,9 @@ import java.util.ResourceBundle;
 import org.araneaframework.http.support.FallbackResourceBundle;
 import org.araneaframework.http.support.StringResourceBundle;
 
-public class TemplateResourceBundle extends FallbackResourceBundle {
+public class TemplateResourceBundle_en extends FallbackResourceBundle {
 
-	public TemplateResourceBundle() throws Exception {
+	public TemplateResourceBundle_en() throws Exception {
 		setLocale(Locale.ENGLISH);
 
 		addResourceBundle(new StringResourceBundle());

@@ -63,7 +63,7 @@
                   </ui:cell>		
                   
                   <ui:cell>
-                    <ui:filterButton/>
+                    <ui:listFilterButton/>
                   </ui:cell>
                 </ui:row>
               </ui:listFilter>					

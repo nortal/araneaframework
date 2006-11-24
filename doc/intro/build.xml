@@ -42,6 +42,7 @@
     	<antcall target="copy-shared"/>
         <antcall target="pdf"/>
         <antcall target="html-single"/>
+    	  <antcall target="html"/>
     </target>
 
 
@@ -110,6 +111,25 @@
             <arg value="${basedir}/styles/${db.style.htmlsingle}"/>
         </java>
     </target>
+	
+  <target name="html"
+          description="Generates the HTML documentation only for a age (set ">
+
+      <mkdir dir="${build.dir}/html/"/>
+			
+  		<copy todir="${build.dir}/html/">
+  			<fileset dir="." includes="conf/**/*"/>
+  		</copy>
+  		
+      <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${build.dir}/html">
+          <classpath refid="lib.classpath"/>
+      		<sysproperty key="java.awt.headless" value="true"/>      	
+          <arg value="${basedir}/src/master.xml"/>
+          <arg value="${basedir}/styles/${db.style.html}"/>
+      </java>
+  	
+  		<delete dir="${build.dir}/html/conf"/>
+  </target>
 
     <target name="copy-shared">
 
