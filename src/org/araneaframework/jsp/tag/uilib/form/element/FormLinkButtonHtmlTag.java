@@ -48,7 +48,6 @@ public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "id", this.getScopedFullFieldId());
     JspUtil.writeAttribute(out, "href", "#");    
-    JspUtil.writeAttribute(out, "label", localizedLabel);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
 
     if (events) {

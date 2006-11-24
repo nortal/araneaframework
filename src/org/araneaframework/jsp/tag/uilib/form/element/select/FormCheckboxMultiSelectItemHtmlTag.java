@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
 
 
 /**
- * Form radio button, represents one item from {@link org.araneaframework.uilib.form.control.MultiSelectControl}. 
+ * Form multiselect rendering tag, represents one item from {@link org.araneaframework.uilib.form.control.MultiSelectControl}. 
  * Default <code>styleClass</code> is &quot;aranea-multi-checkbox&quot;. 
  * It will be rendered with HTML &lt;input type=&quot;checkbox&quot;&gt; tag.
  * 
@@ -36,7 +36,7 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
  * @jsp.tag
  *   name = "checkboxMultiSelectItem"
  *   body-content = "JSP"
- *   description = "Form radio button, represents one item from UiLib 'MultiSelectControl'." 
+ *   description = "Form checkbox, represents one item from UiLib 'MultiSelectControl' rendered with checkboxes." 
  */
 public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 	protected String value;

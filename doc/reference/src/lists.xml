@@ -1544,7 +1544,93 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 &lt;/ui:list&gt;</programlisting>
       </sect3>
     </sect2>
+    
+        <sect2>
+      <title>&lt;ui:listFilterButton&gt; and &lt;ui:listFilterClearButton&gt;</title>
+      <para>
+       <literal>&lt;ui:listFilterButton&gt;</literal> 
+       renders list's filter form filtering activation button and registers a keyboard handler, so that 
+       pressing <literal>ENTER</literal> key in any filter form field activates list filtering. 
+       <literal>&lt;ui:listFilterClearButton&gt;</literal> 
+       renders list's filter form clearing button, pressing it sends server-side event that clears all active list filters.
+       </para>
 
+       <para>
+       Both of these tags must be used inside <literal>&lt;ui:listFilter&gt;</literal>
+       tag. 
+       </para>
+       
+            <sect3>
+        <title>Attributes</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>renderMode</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>Possible values are <literal>button</literal>, <literal>input</literal>&mdash;filter button is rendered with corresponding HTML tags, or <literal>empty</literal> in which case JSP author must provide suitable content for this tag by themself (with an image, for example). Default rendermode is <literal>button</literal>.</entry>
+              </row>
+                            <row>
+                <entry>onClickPrecondition</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>Precondition for deciding whether registered onclick
+                event should go server side or not. If left unspecified, this
+                is considered to be <literal>true</literal>.</entry>
+              </row>
+              <row>
+                <entry>showLabel</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>Indicates whether button label is shown.Value should be
+                <literal>true</literal> or <literal>false</literal>, default
+                is <literal>false</literal>&mdash;using <literal>true</literal> is pointless with these particular tags, it only has some effect
+                when specified <literal>renderMode</literal> is <literal>empty</literal> and tags body is left empty too.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        
+       <emphasis>Also have all common form element rendering attributes plus standard <literal>style</literal> and <literal>styleClass</literal> attributes.</emphasis>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+                <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+...
+  &lt;ui:listFilter&gt;
+    &lt;ui:row&gt;
+      &lt;!-- Bunch of filter fields in cells --&gt;
+      &lt;ui:cell&gt;
+        &lt;ui:listFilterButton/&gt;
+        &lt;ui:listFilterClearButton/&gt;
+      &lt;/ui:cell&gt;
+    &lt;ui:row&gt;
+  &lt;/ui:listFilter&gt;</programlisting>
+      </sect3>
+    </sect2>
+    
     <sect2>
       <title>&lt;ui:listRows&gt;</title>
 

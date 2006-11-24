@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.sql.DataSource;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.SqlExpression;
@@ -1175,7 +1176,7 @@ public abstract class ListSqlHelper {
 				
 				if (!this.beanMapper.isWritable(beanField))
 					throw new RuntimeException(
-							"Bean '" +  bean.toString() + "' specified in mapping does not have accessible setter corresponding to field '" + beanField + "'");
+							"Bean '" +  ObjectUtils.identityToString(bean.toString()) + "' specified in mapping does not have accessible setter corresponding to field '" + beanField + "'");
 
 				readBeanField(rs, rsColumn, bean, beanField);
 			}
@@ -1228,7 +1229,8 @@ public abstract class ListSqlHelper {
 	private String getAliasForField(String dbField) {
 		// Remove prefix
 		String tmp = dbField.substring(dbField.lastIndexOf('.') + 1);
-		if (!StringUtils.isAlphanumeric(tmp)) {
+		// TODO: replace with 1.3 compatible regexp check
+		if (!StringUtils.containsOnly(tmp, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789_")) {
 			tmp = "alias";
 		}
 		

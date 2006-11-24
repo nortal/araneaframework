@@ -24,12 +24,13 @@
                 exclude-result-prefixes="#default">
                 
 <xsl:import href="&db_xsl_path;/html/chunk.xsl"/>
+<xsl:import href="htmlcode.xsl"/>
 
 <!--###################################################
                      HTML Settings
     ################################################### -->   
 
-    <xsl:param name="chunk.section.depth">'5'</xsl:param>
+    <xsl:param name="chunk.section.depth">1</xsl:param>
     <xsl:param name="use.id.as.filename">'1'</xsl:param>
     <xsl:param name="html.stylesheet">../css/html.css</xsl:param>
 
