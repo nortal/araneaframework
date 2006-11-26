@@ -1,10 +1,12 @@
 package org.araneaframework.example.main.web.demo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
@@ -24,7 +26,11 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
     form = new FormWidget();
     
     AutoCompleteTextControl actc = new AutoCompleteTextControl();
-    actc.setDataProvider(new DemoACDataProvider());
+    actc.setDataProvider(new DemoACDataProvider(new LocalizationContextProvider() {
+		public LocalizationContext getL10nCtx() {
+			return DemoAutoCompletionWidget.this.getL10nCtx();
+		}
+    }));
     actc.addOnChangeEventListener(
     	new OnChangeEventListener() {
     		public void onChange() throws Exception {
@@ -45,19 +51,41 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
     }
   }
   
-  private static final class DemoACDataProvider implements AutoCompleteTextControl.DataProvider {
+  public static interface LocalizationContextProvider extends Serializable {
+	  public LocalizationContext getL10nCtx();
+  }
+  
+  public static final class DemoACDataProvider implements AutoCompleteTextControl.DataProvider {
     private static final long serialVersionUID = 1L;
-    private static final List allSuggestions = new ArrayList();
+    private List allSuggestions = new ArrayList();
+    
+    private String language;
+    private LocalizationContextProvider locCtxProvider;
 
-    static {
-      for (Iterator i = Arrays.asList(Locale.getISOCountries()).iterator(); i.hasNext(); )
-        allSuggestions.add(new Locale("en", (String)i.next()).getDisplayCountry());
+    public DemoACDataProvider(LocalizationContextProvider locCtxProvider) {
+    	this.locCtxProvider = locCtxProvider;
+    	fetchData();
+    }
+    
+    private void fetchData() {
+      allSuggestions.clear();
+      language = locCtxProvider.getL10nCtx().getLocale().getLanguage();
+      for (Iterator i = Arrays.asList(Locale.getISOCountries()).iterator(); i.hasNext(); ) {
+        allSuggestions.add(new Locale(language, (String)i.next()).getDisplayCountry(locCtxProvider.getL10nCtx().getLocale()));
+      }
+    }
+    
+    private boolean isLanguageChanged() {
+      return !language.equals(locCtxProvider.getL10nCtx().getLocale().getLanguage());
     }
 
     public List getSuggestions(String input) {
       List results = new ArrayList();
       if (input == null)
         return results;
+      
+      if (isLanguageChanged())
+    	  fetchData();
 
       for (Iterator i = allSuggestions.iterator(); i.hasNext();) {
         String suggestion = (String)i.next();
@@ -70,5 +98,4 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
       return results;
     }
   }
-  
 }

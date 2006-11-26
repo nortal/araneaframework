@@ -25,7 +25,6 @@ import org.araneaframework.uilib.ConfigurationContext;
  * that holds only date - that is it's default pattern is "dd.MM.yyyy".
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class DateControl extends TimestampControl {
 	protected int defaultHour;
@@ -96,7 +95,7 @@ public class DateControl extends TimestampControl {
 		Timestamp result = (Timestamp) super.fromRequest(parameterValue);
 		
 		if (result != null) {
-			Calendar cal = Calendar.getInstance();
+			Calendar cal = getCalendarInstance();
 			cal.setTime(result);
 			
 			cal.set(Calendar.HOUR_OF_DAY, defaultHour);
@@ -107,5 +106,15 @@ public class DateControl extends TimestampControl {
 	
 		return result;
 	}
-
+	
+	/**
+	 * Used by {@link DateControl#fromRequest(String)} to acquire <code>Calendar</code>
+	 * instance for converting value read from request to <code>TimeStamp</code> 
+	 * 
+	 * @return <code>Calendar</code> using the default time zone and default locale.
+	 * @since 1.0.3
+	 */
+	protected Calendar getCalendarInstance() {
+		return Calendar.getInstance();
+	}
 }
