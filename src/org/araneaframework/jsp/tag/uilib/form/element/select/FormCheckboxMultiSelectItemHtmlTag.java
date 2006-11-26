@@ -67,7 +67,6 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeAttribute(out, "class", getStyleClass());
 		JspUtil.writeAttribute(out, "style", getStyle());
 		JspUtil.writeAttribute(out, "type", "checkbox");
-		JspUtil.writeAttribute(out, "label", localizedLabel);
 		JspUtil.writeAttribute(out, "value", value);
 		JspUtil.writeAttribute(out, "tabindex", tabindex);
 
