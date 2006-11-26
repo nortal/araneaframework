@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -83,7 +84,7 @@ public class MessagesHtmlTag extends PresentationTag {
       Collection messages = (Collection) ((Map.Entry) i.next()).getValue();
 
       for (Iterator j = messages.iterator(); j.hasNext();) {
-        out.write((String) j.next());
+        out.write(StringEscapeUtils.escapeHtml((String) j.next()));
         if (j.hasNext())
           JspUtil.writeStartEndTag(out, "br");
       }
