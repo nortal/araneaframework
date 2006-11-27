@@ -313,30 +313,33 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		}
 
 		// Render child nodes
-		if (!isCollapsed() && hasNodes()) {
+		if (display == null || (!isCollapsed() && hasNodes())) {
       if (display != null) {
         JspUtil.writeStartTag(out, "ul");
       } else {
         JspUtil.writeOpenStartTag(out, "ul");
+        JspUtil.writeAttribute(out, "id", output.getScope());
         JspUtil.writeAttribute(out, "class", "aranea-tree");
         JspUtil.writeAttribute(out, "arn-tree-nosync", Boolean.toString(!getTreeCtx().getSync()));
         JspUtil.writeCloseStartTag_SS(out);
       }
-			List nodes = getNodes();
-			for (ListIterator i = nodes.listIterator(); i.hasNext(); ) {
-				try {
-					output.pushScope(Integer.toString(i.nextIndex()));
-					JspUtil.writeOpenStartTag(out, "li");
-					JspUtil.writeAttribute(out, "id", output.getScope());
-          JspUtil.writeAttribute(out, "class", "aranea-tree-node");
-					JspUtil.writeCloseStartTag(out);
-          out.flush();
-					((TreeNodeWidget) i.next()).render(output);
-				} finally {
-					output.popScope();
-				}
-				JspUtil.writeEndTag(out, "li");
-			}
+      if (!isCollapsed() && hasNodes()) {
+  			List nodes = getNodes();
+  			for (ListIterator i = nodes.listIterator(); i.hasNext(); ) {
+  				try {
+  					output.pushScope(Integer.toString(i.nextIndex()));
+  					JspUtil.writeOpenStartTag(out, "li");
+  					JspUtil.writeAttribute(out, "id", output.getScope());
+            JspUtil.writeAttribute(out, "class", "aranea-tree-node");
+  					JspUtil.writeCloseStartTag(out);
+            out.flush();
+  					((TreeNodeWidget) i.next()).render(output);
+  				} finally {
+  					output.popScope();
+  				}
+  				JspUtil.writeEndTag(out, "li");
+  			}
+      }
 			JspUtil.writeEndTag(out, "ul");
 		}
 	}
