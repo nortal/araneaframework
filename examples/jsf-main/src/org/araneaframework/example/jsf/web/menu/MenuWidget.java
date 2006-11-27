@@ -100,7 +100,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       errorMenu.addMenuItem(new MenuItem("Redirecting", RedirectingWidget.class));
     }   
     
-    	result.addMenuItem((String)null, new MenuItem("#JSF")).addMenuItem(JSFMenu());
+    	result.addMenuItem((String)null, JSFMenu());
 		
 		return result;
 	}
