@@ -252,8 +252,6 @@ function AraneaPage() {
   }
 
   this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, nosync) {
-    var t = this.getTraverser();
-    var systemForm = t.findSurroundingSystemForm(element);
     var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value);
     url += '&widgetActionPath=' + actionTarget;
     url += '&serviceActionListenerId=' + actionId;
