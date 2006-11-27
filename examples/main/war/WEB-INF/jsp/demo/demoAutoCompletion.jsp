@@ -24,7 +24,7 @@
               </ui:cell>
 
               <ui:cell styleClass="inpt">
-                <ui:autoCompleteTextInput />
+                <ui:ehlFancyAutoCompleteTextInput />
               </ui:cell>
             </ui:formElement>
 

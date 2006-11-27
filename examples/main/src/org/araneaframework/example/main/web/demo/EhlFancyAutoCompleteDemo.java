@@ -8,16 +8,17 @@ import java.util.List;
 import java.util.Locale;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
-import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
-import org.araneaframework.uilib.form.data.StringData;
+import org.araneaframework.uilib.form.control.EhlFancyAutoCompleteControl;
+import org.araneaframework.uilib.form.data.DisplayItemData;
+import org.araneaframework.uilib.support.DisplayItem;
 
 /**
  * @author Steven Jentson (steven@webmedia.ee)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class DemoAutoCompletionWidget extends BaseUIWidget {
+public class EhlFancyAutoCompleteDemo extends BaseUIWidget {
   private static final long serialVersionUID = 1L;
   private FormWidget form;
   
@@ -25,30 +26,28 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
     setViewSelector("demo/demoAutoCompletion");
     form = new FormWidget();
     
-    AutoCompleteTextControl actc = new AutoCompleteTextControl();
-    actc.setDataProvider(new DemoACDataProvider(new LocalizationContextProvider() {
-		public LocalizationContext getL10nCtx() {
-			return DemoAutoCompletionWidget.this.getL10nCtx();
-		}
-    }));
-    actc.addOnChangeEventListener(
-    	new OnChangeEventListener() {
-    		public void onChange() throws Exception {
-    			form.convertAndValidate();
-    			getMessageCtx().showInfoMessage("Changed, value is " + form.getValueByFullName("acinput") );
-    		};
-    	}
-    );
-
-    form.addElement("acinput", "#Country", actc, new StringData(), false);
+    EhlFancyAutoCompleteControl actc = new EhlFancyAutoCompleteControl();
+    actc.addItems(getCompletions());
+    form.addElement("acinput", "#whatever", actc, new DisplayItemData(), false);
 
     addWidget("testform", form);
   }
   
   public void handleEventTest() throws Exception {
     if (form.convertAndValidate()) {
-      getMessageCtx().showInfoMessage("Country submitted: " + form.getValueByFullName("acinput"));
+      DisplayItem item = (DisplayItem) form.getValueByFullName("acinput");
+      if (item != null)
+    	 getMessageCtx().showInfoMessage(item + " : [" + item.getValue() + ", " + item.getDisplayString() + "]");
     }
+  }
+
+  private List getCompletions() {
+	 List result = new ArrayList();
+	 result.add(new DisplayItem("value1", "string1"));
+	 result.add(new DisplayItem("value2", "string2"));
+	 result.add(new DisplayItem("value3", "string3"));
+	 result.add(new DisplayItem("value4", "string4"));
+	 return result;
   }
   
   public static interface LocalizationContextProvider extends Serializable {

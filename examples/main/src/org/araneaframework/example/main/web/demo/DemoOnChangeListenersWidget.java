@@ -57,7 +57,7 @@ public class DemoOnChangeListenersWidget extends TemplateBaseWidget {
 		simpleForm.addElement("suggestBox", "demo.suggestive.textinput", buildControl(AutoCompleteTextControl.class), new StringData(), false);
 		((AutoCompleteTextControl)
 				simpleForm.getControlByFullName("suggestBox"))
-					.setDataProvider(new DemoAutoCompletionWidget.DemoACDataProvider(new DemoAutoCompletionWidget.LocalizationContextProvider() {
+					.setDataProvider(new EhlFancyAutoCompleteDemo.DemoACDataProvider(new EhlFancyAutoCompleteDemo.LocalizationContextProvider() {
 						public LocalizationContext getL10nCtx() {
 							return DemoOnChangeListenersWidget.this.getL10nCtx();
 						}

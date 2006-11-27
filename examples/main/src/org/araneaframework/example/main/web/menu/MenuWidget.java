@@ -27,7 +27,7 @@ import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
 import org.araneaframework.example.main.web.demo.DemoOnChangeListenersWidget;
-import org.araneaframework.example.main.web.demo.DemoAutoCompletionWidget;
+import org.araneaframework.example.main.web.demo.EhlFancyAutoCompleteDemo;
 import org.araneaframework.example.main.web.demo.DemoCheckboxList;
 import org.araneaframework.example.main.web.demo.DemoComplexForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayForm;
@@ -121,7 +121,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
-      advDemos.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
+      advDemos.addMenuItem(new MenuItem("AutoComplete", EhlFancyAutoCompleteDemo.class));
       advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));
       
       MenuItem formListMenu = sampleMenu.addMenuItem(new MenuItem("Form_Lists"));
