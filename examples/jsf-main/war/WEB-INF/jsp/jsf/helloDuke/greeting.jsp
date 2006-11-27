@@ -31,8 +31,7 @@
     version="2.0">
     
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
-    <html>
-	<body bgcolor="white">
+
     <h2>My name is Duke.  What is yours?</h2>
     <jsp:useBean id="UserNameBean" class="org.araneaframework.example.jsf.web.jsf.helloDuke.UserNameBean" scope="session" />
     <f:view>
@@ -44,6 +43,4 @@
 		          type="submit" />
     </h:form>
     </f:view>
-    </body>
-    </html>
 </jsp:root>
