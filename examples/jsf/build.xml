@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="lib-copy" name="jsf-fun"> 
-	<target name="lib-copy" description="Copy libraries to WEB-INF/lib">
-		<copy todir="war/WEB-INF/lib">
-			<fileset includes="../../lib/required/*.jar"/>
-			<fileset includes="../../lib/optional/*.jar"/>
-		</copy>
-	</target>
-</project>
