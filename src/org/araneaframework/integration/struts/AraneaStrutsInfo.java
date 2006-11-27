@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.core.Assert;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.framework.container.StandardContainerWidget;
 
 public class AraneaStrutsInfo implements Serializable {
   private static final String ARANEA_INFO_PARAMETER = "araInfo";
@@ -14,27 +16,32 @@ public class AraneaStrutsInfo implements Serializable {
   private String containerPath;
   private String topServiceId;
   private String threadServiceId;
-  //private String transactionId;
+  private String widgetEventPath;
+  private String transactionId;
   
-  public AraneaStrutsInfo(String containerPath, String topServiceId, String threadServiceId, String transactionId) {
+  public AraneaStrutsInfo(String containerPath, String topServiceId, String threadServiceId, String widgetEventPath, String transactionId) {
     this.containerPath = containerPath;
     this.topServiceId = topServiceId;
     this.threadServiceId = threadServiceId;
-    //this.transactionId = transactionId;
+    this.widgetEventPath = widgetEventPath;
+    this.transactionId = transactionId;    
   }
   
   public String encode() {
     return new StringBuffer(ARANEA_INFO_PARAMETER).append('=').append(containerPath.replace('/', '.'))
     .append(DELIMITER).append(topServiceId)
     .append(DELIMITER).append(threadServiceId)
-    /*.append(DELIMITER).append(transactionId)*/.toString();
+    .append(DELIMITER).append(widgetEventPath)
+    .append(DELIMITER).append(transactionId).toString();
   }
   
   public String toQuery() {
     return new StringBuffer(containerPath.replace('.', '/')).append('?')
       .append(TopServiceContext.TOP_SERVICE_KEY).append('=').append(topServiceId).append('&')
-      .append(ThreadContext.THREAD_SERVICE_KEY).append('=').append(threadServiceId)
-      /*.append(TransactionContext.TRANSACTION_ID_KEY).append('=').append(transactionId)*/.toString();
+      .append(ThreadContext.THREAD_SERVICE_KEY).append('=').append(threadServiceId).append('&')
+      .append(StandardContainerWidget.EVENT_PATH_KEY).append('=').append(widgetEventPath).append('&')
+      .append(StandardContainerWidget.EVENT_HANDLER_ID_KEY).append('=').append("include").append('&')
+      .append(TransactionContext.TRANSACTION_ID_KEY).append('=').append(transactionId).toString();
   }
   
   public static boolean containsInfo(HttpServletRequest req) {
@@ -49,8 +56,9 @@ public class AraneaStrutsInfo implements Serializable {
     String containerPath = tokens.nextToken();
     String topServiceId = tokens.nextToken();
     String threadServiceId = tokens.nextToken();
-    String transactionId = null; /*tokens.nextToken();*/
+    String widgetEventPath = tokens.nextToken();
+    String transactionId = tokens.nextToken();
     
-    return new AraneaStrutsInfo(containerPath, topServiceId, threadServiceId, transactionId);
+    return new AraneaStrutsInfo(containerPath, topServiceId, threadServiceId, widgetEventPath, transactionId);
   }
 }

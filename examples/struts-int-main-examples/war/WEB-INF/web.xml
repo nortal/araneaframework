@@ -9,26 +9,21 @@
 		</param-value>
 	</context-param>
 	
-     <!-- filter>
-     <filter-name>jhighlight</filter-name>
-     <filter-class>com.uwyn.jhighlight.servlet.HighlightFilter</filter-class>
+   <filter>
+     <filter-name>araneaStrutsfilter</filter-name>
+     <filter-class>org.araneaframework.integration.struts.AraneaStrutsFilter</filter-class>
    </filter>
 
     <filter-mapping>
-      <filter-name>jhighlight</filter-name>
-      <url-pattern>/*</url-pattern>
-    </filter-mapping -->
-    
-    <filter>
-     <filter-name>araneaStrutsJSP</filter-name>
-     <filter-class>org.araneaframework.integration.struts.AraneaJSPFilter</filter-class>
-   </filter>
-
-    <filter-mapping>
-      <filter-name>araneaStrutsJSP</filter-name>
+      <filter-name>araneaStrutsfilter</filter-name>
       <url-pattern>*.jsp</url-pattern>
-    </filter-mapping>    
-
+    </filter-mapping>   
+    
+    <filter-mapping>
+      <filter-name>araneaStrutsfilter</filter-name>
+      <servlet-name>action</servlet-name>
+    </filter-mapping>  
+    
 	<listener>
     <listener-class>
       org.araneaframework.http.core.StandardSessionListener
@@ -49,7 +44,7 @@
    
     <servlet>
         <servlet-name>action</servlet-name>
-        <servlet-class>org.araneaframework.integration.struts.AraneaStrutsServlet</servlet-class>
+        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
 
         <!-- Default -->
         <init-param>
