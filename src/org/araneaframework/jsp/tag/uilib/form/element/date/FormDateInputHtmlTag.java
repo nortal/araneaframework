@@ -19,8 +19,6 @@ package org.araneaframework.jsp.tag.uilib.form.element.date;
 import java.io.Writer;
 import org.araneaframework.uilib.form.control.DateControl;
 
-
-
 /**
  * Standard date input form element tag.
  * 

@@ -235,9 +235,9 @@ function AraneaPage() {
     }
 
     if (eventUpdateRegions != null && eventUpdateRegions.length > 0) 
-      new DefaultAraneaAJAXSubmitter().event_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
+      return new DefaultAraneaAJAXSubmitter().event_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
     else
-      new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
+      return new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   }
   
   this.debug = function(message) {

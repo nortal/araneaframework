@@ -68,9 +68,9 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     
     // and here we add form elements to form without the extra step taken previously. 
     simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
-    simpleForm.addElement("dateTime", "#DateTime", new DateTimeControl(), new DateData(), false);
-    simpleForm.addElement("time", "#Time", new TimeControl(), new DateData(), false);
-    simpleForm.addElement("date", "#Date", new DateControl(), new DateData(), false);
+    simpleForm.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
+    simpleForm.addElement("time", "common.time", new TimeControl(), new DateData(), false);
+    simpleForm.addElement("date", "common.date", new DateControl(), new DateData(), false);
     simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
     // require the number input field to be filled. It could have been achieved already
     // on formelement creation by setting mandatory attribute to true

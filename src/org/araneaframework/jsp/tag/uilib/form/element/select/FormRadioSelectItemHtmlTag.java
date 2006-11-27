@@ -69,8 +69,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttribute(out, "type", "radio");    
-    JspUtil.writeAttribute(out, "label", localizedLabel);
+    JspUtil.writeAttribute(out, "type", "radio");
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     if (viewModel.isDisabled() || viewModel.getSelectItemByValue(value).isDisabled())

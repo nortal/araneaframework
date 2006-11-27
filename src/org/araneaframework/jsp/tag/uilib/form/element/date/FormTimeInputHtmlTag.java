@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
 import java.util.Calendar;
+import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiUpdateEvent;
@@ -22,6 +23,7 @@ import org.araneaframework.uilib.form.control.TimeControl;
  *   description = "Form time input field (custom control), represents UiLib "TimeControl"."
  */
 public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
+  protected boolean showTimeSelect = true;
 
   {
     baseStyleClass = "aranea-time";
@@ -52,16 +54,21 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
    	    minute = new Integer(calendar.get(Calendar.MINUTE));
       }
     } catch (ParseException e) {
-        // try to preserve the contents of selects anyway
-    	String strHour =  ServletUtil.getRequest(getOutputData().getInputData()).getParameter(name+".select1");
-    	if (strHour != null && !(strHour.trim().length() == 0))
-     	  hour = Integer.valueOf(strHour.trim());
-    	String strMinute = ServletUtil.getRequest(getOutputData().getInputData()).getParameter(name+".select2");
-    	if (strMinute != null && !(strMinute.trim().length() == 0))
-    	  minute = Integer.valueOf(strMinute);
+    	if (showTimeSelect) {
+          // try to preserve the contents of selects anyway
+    	  String strHour =  ServletUtil.getRequest(getOutputData().getInputData()).getParameter(name+".select1");
+    	  if (strHour != null && !(strHour.trim().length() == 0))
+     	    hour = Integer.valueOf(strHour.trim());
+    	  String strMinute = ServletUtil.getRequest(getOutputData().getInputData()).getParameter(name+".select2");
+    	  if (strMinute != null && !(strMinute.trim().length() == 0))
+    	    minute = Integer.valueOf(strMinute);
+    	}
     }
-    writeHourSelect(out, name, systemFormId, viewModel.isDisabled(), hour);
-    writeMinuteSelect(out, name, viewModel.isDisabled(), minute);
+
+    if (showTimeSelect) {
+      writeHourSelect(out, name, systemFormId, viewModel.isDisabled(), hour);
+      writeMinuteSelect(out, name, viewModel.isDisabled(), minute);
+    }
 
     out.write("</td></tr></table>\n");
 
@@ -80,19 +87,18 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     
     if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
-    	String precondition = onChangePrecondition == null ? "return (document." + systemFormId + "['" + name +"'].value.length==5)" : onChangePrecondition;
-    	event.setEventPrecondition(precondition);
+    	event.setEventPrecondition(getMinuteSelectOnChangePrecondition(name, systemFormId));
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
 
     out.write(">\n");
-    
-    StringBuffer sb = new StringBuffer().append("<script type=\"text/javascript\">");
-    sb.append("addOptions('"+name+".select2',60,").append(minute != null ? minute.toString():"null").append(");");
-    sb.append("</script>\n</select>\n");
-    
-    out.write(sb.toString());
+
+    JspUtil.writeStartTag_SS(out, "script");
+    out.write(getTimeSelectScript(name+".select2", minute, 60));
+    JspUtil.writeEndTag_SS(out, "script");
+
+    JspUtil.writeEndTag_SS(out, "select");
   }
 
   protected void writeHourSelect(Writer out, String name, String systemFormId, boolean disabled, Integer hour) throws IOException {
@@ -105,18 +111,17 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
-    	String precondition = onChangePrecondition == null ? "return (document." + systemFormId + "['" + name +"'].value.length==5)" : onChangePrecondition;
-    	event.setEventPrecondition(precondition);
+    	event.setEventPrecondition(getHourSelectOnChangePrecondition(name, systemFormId));
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
     out.write(">\n");
+
+    JspUtil.writeStartTag_SS(out, "script");
+    out.write(getTimeSelectScript(name+".select1", hour, 24));
+    JspUtil.writeEndTag_SS(out, "script");
     
-    StringBuffer sb = new StringBuffer().append("<script type=\"text/javascript\">");
-    sb.append("addOptions('"+name+".select1',24,").append(hour != null ? hour.toString():"null").append(");");
-    sb.append("</script>\n</select>\n");
-    
-    out.write(sb.toString());
+    JspUtil.writeEndTag_SS(out, "select");
   }
 
   /**
@@ -140,19 +145,19 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "type", "text");
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeAttribute(out, "size", size);
-    JspUtil.writeAttribute(out, "label", label);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
 
     if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
         JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
-        String precondition  = onChangePrecondition == null ? "return isChanged('" + name + "');" : onChangePrecondition;
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
-    	event.setEventPrecondition(precondition);
+    	event.setEventPrecondition(getTimeInputOnChangePrecondition(name, systemFormId));
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
 
-    StringBuffer onBlur = new StringBuffer(fillXJSCallConstructor("fillTimeSelect", systemFormId, name, name +".select1", name + ".select2") + ";");
+    StringBuffer onBlur = new StringBuffer();
+    if (showTimeSelect)
+    	onBlur.append(fillXJSCallConstructor("fillTimeSelect", systemFormId, name, name +".select1", name + ".select2") + ";");
     if (!disabled && events && viewModel.isOnChangeEventRegistered())
     	onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeAttribute(out, "onblur", onBlur.toString());
@@ -172,5 +177,17 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   
   public static final String staticFillXJSCall(String function, String formId, String timeInputEl, String hourSelectEl, String minuteSelectEl) {
     return function + "(document." + formId + ", '" + timeInputEl + "', '"  +  hourSelectEl + "', '" + minuteSelectEl + "')";
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Boolean, specifying whether HTML &lt;select&;gt;'s should be shown for hour/minute selection."
+   * 
+   * @since 1.0.3
+   */
+  public void setShowTimeSelect(String showTimeSelect) throws JspException {
+    this.showTimeSelect = ((Boolean) evaluate("showTimeSelect", showTimeSelect, Boolean.class)).booleanValue();
   }
 }

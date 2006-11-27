@@ -87,7 +87,6 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeAttribute(out, "type", "text");
 		JspUtil.writeAttribute(out, "value", value);	
 		JspUtil.writeAttribute(out, "size", size);
-		JspUtil.writeAttribute(out, "label", label);
 		JspUtil.writeAttribute(out, "tabindex", tabindex);
 		if (!StringUtils.isBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 		
@@ -121,7 +120,57 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			writeCalendarScript(out, id, "%d.%m.%Y");
 		}
 	}
+
+	/**
+	 * @since 1.0.3
+	 */
+	protected String getTimeSelectScript(String selectId, Integer value, int valueCount) {
+	    StringBuffer sb = new StringBuffer();
+	    sb.append("addOptions('"+selectId+"'," + String.valueOf(valueCount)+ ",");
+	    sb.append(value != null ? value.toString():"null").append(");");
+
+	    return sb.toString();
+	}
 	
+	  /**
+	   * @since 1.0.3
+	   */
+	  protected String getTimeInputOnChangePrecondition(String timeInputId, String systemFormId) {
+        if (onChangePrecondition != null)
+          return onChangePrecondition;
+        String timeInputRef = "document." + systemFormId + "['" + timeInputId + "']";
+	    String precondition =  
+	    		"return isChanged('" + timeInputId + "')"+
+	    		" && ((" + timeInputRef + ".value.length==5) || (" + timeInputRef + ".value.length==0))"
+	    		;
+	    return precondition;
+	  }
+
+	  /**
+	   * @since 1.0.3
+	   */
+	  protected String getHourSelectOnChangePrecondition(String timeInputId, String systemFormId) {
+	    return getSelectOnChangePrecondition(timeInputId, systemFormId);
+	  }
+
+	  /**
+	   * @since 1.0.3
+	   */
+	  protected String getMinuteSelectOnChangePrecondition(String timeInputId, String systemFormId) {
+	    return getSelectOnChangePrecondition(timeInputId, systemFormId);
+	  }
+
+	  /**
+	   * @since 1.0.3
+	   */
+	  protected String getSelectOnChangePrecondition(String timeInputId, String systemFormId) {
+	    String precondition = onChangePrecondition == null ? 
+	    		"return (document." + systemFormId + "['" + timeInputId +"'].value.length==5)" 
+	    		: 
+	    		onChangePrecondition;
+	    return precondition;
+	  }
+
 	
 	/**
 	 * Writes out time input
@@ -155,7 +204,6 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeAttribute(out, "type", "text");
 		JspUtil.writeAttribute(out, "value", value);	
 		JspUtil.writeAttribute(out, "size", size);
-		JspUtil.writeAttribute(out, "label", label);
 		JspUtil.writeAttribute(out, "tabindex", tabindex);
 		if (!StringUtils.isBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 		if (disabled) {

@@ -91,7 +91,6 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     if (writeValue)
       JspUtil.writeAttribute(out, "value", viewModel.getSimpleValue());
     JspUtil.writeAttribute(out, "size", size);
-    JspUtil.writeAttribute(out, "label", localizedLabel);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
 
     for (Iterator i = customAttributes.entrySet().iterator(); i.hasNext(); ) {

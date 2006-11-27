@@ -30,7 +30,8 @@ function calendarSetup(inputFieldId, dateFormat, alignment) {
     singleClick  : true,
     step         : 1,
     firstDay     : 1,
-    align        : align
+    align        : align,
+    electric     : false
   });
 }
 

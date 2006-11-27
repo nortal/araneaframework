@@ -18,6 +18,8 @@ package org.araneaframework.uilib.form.control;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import org.araneaframework.uilib.event.OnChangeEventListener;
+import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -27,13 +29,13 @@ import org.araneaframework.uilib.util.MessageUtil;
  * This class represents a control that has both date and time.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class DateTimeControl extends BaseControl {
-
   //*******************************************************************
   // FIELDS
   //*******************************************************************
+  /** @since 1.0.3 */
+  protected StandardControlEventListenerAdapter eventHelper = new StandardControlEventListenerAdapter();
 
   protected DateControl dateControl;
   protected TimeControl timeControl;
@@ -48,6 +50,17 @@ public class DateTimeControl extends BaseControl {
   public DateTimeControl() {
     dateControl = new DateControl();
     timeControl = new TimeControl();
+  }
+  
+  /**
+   * Creates {@link DateTimeControl} consisting of specified {@link DateControl} 
+   * and {@link TimeControl}.
+   * 
+   * @since 1.0.3
+   */
+  public DateTimeControl(DateControl dateControl, TimeControl timeControl) {
+    this.dateControl = dateControl;
+    this.timeControl = timeControl;
   }
 
   /**
@@ -81,6 +94,20 @@ public class DateTimeControl extends BaseControl {
   public boolean isRead() {
     return timeControl.isRead() || dateControl.isRead();
   }
+  
+  /**
+   * @since 1.0.3
+   */
+  public void addOnChangeEventListener(OnChangeEventListener onChangeEventListener) {
+    eventHelper.addOnChangeEventListener(onChangeEventListener);
+  }
+  
+  /**
+   * @since 1.0.3
+   */
+  public void clearOnChangeEventListeners() {
+    eventHelper.clearOnChangeEventListeners();
+  }
 
   //*******************************************************************
   // HELPER METHODS
@@ -112,7 +139,9 @@ public class DateTimeControl extends BaseControl {
   
   protected void init() throws Exception {
     super.init();
-    
+
+    setGlobalEventListener(eventHelper);
+
     addWidget("date", dateControl);
     addWidget("time", timeControl);
   }
@@ -184,19 +213,21 @@ public class DateTimeControl extends BaseControl {
     private DateControl.ViewModel dateViewModel;
     private TimeControl.ViewModel timeViewModel;
     
-    
+    private boolean hasOnChangeEventListeners;
+
     /**
      * Takes an outer class snapshot.     
      */    
     public ViewModel() throws Exception {
       dateViewModel = (DateControl.ViewModel) dateControl._getViewable().getViewModel();
-      String[] timeInnerData = (String[]) timeControl.innerData;         
+      String[] timeInnerData = (String[]) timeControl.innerData;
       this.time = timeInnerData == null ? null : timeInnerData[0];
-      
       
       timeViewModel = (TimeControl.ViewModel) timeControl._getViewable().getViewModel();
       String[] dateInnerData = (String[]) dateControl.innerData;
-      this.date = dateInnerData == null ? null : dateInnerData[0];      
+      this.date = dateInnerData == null ? null : dateInnerData[0];
+      
+      this.hasOnChangeEventListeners = eventHelper.hasOnChangeEventListeners();    
     }       
     
     /**
@@ -214,6 +245,13 @@ public class DateTimeControl extends BaseControl {
     public String getDate() {
       return date;
     }
+    
+    /**
+     * @since 1.0.3
+     */
+    public boolean isOnChangeEventRegistered() {
+      return hasOnChangeEventListeners;
+    } 
 
     public DateControl.ViewModel getDateViewModel() {
       return dateViewModel;
