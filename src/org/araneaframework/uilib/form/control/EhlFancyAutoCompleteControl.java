@@ -10,9 +10,6 @@ import org.araneaframework.uilib.util.DisplayItemContainer;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
 /**
- * Autocomplete with {@link DisplayItem}'s for make benefit the glorious team 
- * of eHL.
- * 
  * What is bad about this is that basically this is nothing more than 
  * {@link org.araneaframework.uilib.form.control.SelectControl}, but as input is
  * text field, there is no good way to restrict user input&mdash;user makes logical
