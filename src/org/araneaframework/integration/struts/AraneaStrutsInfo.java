@@ -17,22 +17,19 @@ public class AraneaStrutsInfo implements Serializable {
   private String topServiceId;
   private String threadServiceId;
   private String widgetEventPath;
-  private String transactionId;
   
-  public AraneaStrutsInfo(String containerPath, String topServiceId, String threadServiceId, String widgetEventPath, String transactionId) {
+  public AraneaStrutsInfo(String containerPath, String topServiceId, String threadServiceId, String widgetEventPath) {
     this.containerPath = containerPath;
     this.topServiceId = topServiceId;
     this.threadServiceId = threadServiceId;
     this.widgetEventPath = widgetEventPath;
-    this.transactionId = transactionId;    
   }
   
   public String encode() {
     return new StringBuffer(ARANEA_INFO_PARAMETER).append('=').append(containerPath.replace('/', '.'))
     .append(DELIMITER).append(topServiceId)
     .append(DELIMITER).append(threadServiceId)
-    .append(DELIMITER).append(widgetEventPath)
-    .append(DELIMITER).append(transactionId).toString();
+    .append(DELIMITER).append(widgetEventPath).toString();
   }
   
   public String toQuery() {
@@ -41,7 +38,7 @@ public class AraneaStrutsInfo implements Serializable {
       .append(ThreadContext.THREAD_SERVICE_KEY).append('=').append(threadServiceId).append('&')
       .append(StandardContainerWidget.EVENT_PATH_KEY).append('=').append(widgetEventPath).append('&')
       .append(StandardContainerWidget.EVENT_HANDLER_ID_KEY).append('=').append("include").append('&')
-      .append(TransactionContext.TRANSACTION_ID_KEY).append('=').append(transactionId).toString();
+      .append(TransactionContext.TRANSACTION_ID_KEY).append('=').append(TransactionContext.OVERRIDE_KEY).toString();
   }
   
   public static boolean containsInfo(HttpServletRequest req) {
@@ -49,7 +46,7 @@ public class AraneaStrutsInfo implements Serializable {
   }
   
   public static AraneaStrutsInfo decode(HttpServletRequest req) {
-    Assert.isTrue(containsInfo(req), "Encoded info must correspond to the format!");
+    Assert.isTrue(containsInfo(req), "Encoded info invalid!");
     
     StringTokenizer tokens = new StringTokenizer(req.getParameter(ARANEA_INFO_PARAMETER), DELIMITER);
 
@@ -57,8 +54,7 @@ public class AraneaStrutsInfo implements Serializable {
     String topServiceId = tokens.nextToken();
     String threadServiceId = tokens.nextToken();
     String widgetEventPath = tokens.nextToken();
-    String transactionId = tokens.nextToken();
     
-    return new AraneaStrutsInfo(containerPath, topServiceId, threadServiceId, widgetEventPath, transactionId);
+    return new AraneaStrutsInfo(containerPath, topServiceId, threadServiceId, widgetEventPath);
   }
 }

@@ -6,14 +6,17 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -27,7 +30,8 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.ServletUtil;
 
 public class StrutsWidget extends BaseApplicationWidget {  
-  private boolean firstTime = true;
+  private boolean rerender = true;
+  
   private String strutsURI;
   private byte[] renderResult;
   
@@ -66,105 +70,19 @@ public class StrutsWidget extends BaseApplicationWidget {
       ServletUtil.setRequest(input, req);
     }
     
-    return postProcess(strutsResponse.getData(), input, output);
-  }
-  
-  
-  private String writeAttributes(Map attributes) throws RESyntaxException {
-    StringBuffer result = new StringBuffer();
-    for (Iterator i = attributes.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      result.append(entry.getKey().toString());
-      result.append("=\"");
-      result.append(entry.getValue().toString());
-      result.append("\"");
-      if (i.hasNext())
-        result.append(" ");
-    }
-    
-    return result.toString();
-  }
-  
-  private Map extractAttributes(String tagStart) throws RESyntaxException {
-    Map result = new HashMap();
-    
-    RE attributeRE = new RE("<.*(([a..zA..Z]) *= *\"(.*)\")*.*>");
-    attributeRE.setMatchFlags(RE.MATCH_CASEINDEPENDENT | RE.MATCH_MULTILINE);    
-
-    attributeRE.match(tagStart);
-    for (int i = 1; i < attributeRE.getParenCount(); i += 3) {
-      result.put(attributeRE.getParen(i + 1).toLowerCase(), attributeRE.getParen(i + 2));
-    }    
-    
-    return result;
-  }
-  
-  private byte[] postProcess(byte[] vanilla, InputData input, OutputData output) throws Exception {
-    String charEnc = ServletUtil.getRequest(input).getCharacterEncoding();
-                
-    String html = charEnc == null ? new String(vanilla) : new String(vanilla, charEnc);
-    
-    RE bodyRE = new RE("<body.*>(.*)</body>");
-    bodyRE.setMatchFlags(RE.MATCH_CASEINDEPENDENT | RE.MATCH_MULTILINE);
-    
-    bodyRE.match(html);
-    html = bodyRE.getParen(1);
-    
-    StringBuffer result = new StringBuffer();
-    
-    RE formRE = new RE("(<form.*>)(.*)(</form>)");
-    formRE.setMatchFlags(RE.MATCH_CASEINDEPENDENT | RE.MATCH_MULTILINE);
-
-        
-    int formSearchStart = 0;
-    
-    while (formRE.match(html, formSearchStart)) {
-      result.append(html.substring(formSearchStart, formRE.getParenStart(0)));
-      
-      String formTagStart = formRE.getParen(1);
-      String formBody = formRE.getParen(2);
-      String formTagEnd = formRE.getParen(3);
-      
-      formTagStart = formTagStart.replaceAll("<form", "<x-form");
-      formTagEnd = formTagEnd.replaceAll("</form>", "</x-form>");
-   
-      Map formTagAttrs = extractAttributes(formTagStart);
-                  
-      int submitSearchStart = 0;
-      
-      RE submitRE = new RE("<input.*type * = *\"submit\">");
-      while (submitRE.match(formBody, submitSearchStart)) {
-        StringBuffer submitBuf = new StringBuffer();
-        
-        Map attrs = extractAttributes(submitRE.getParen(0));
-        
-        submitBuf.append("<input type=\"button\" name=\"");
-        submitBuf.append("submit".equalsIgnoreCase((String) attrs.get("name")) ? "DO_SUBMIT" : attrs.get("name"));
-        submitBuf.append("\" onclick=\\\"");
-        
-        submitSearchStart = submitRE.getParenEnd(0);
-      }
-      
-      result.append(formBody);
-      result.append(formTagEnd);
-      formSearchStart = formRE.getParenEnd(0);
-    }
-    
-    result.append(html.substring(formSearchStart));
-        
-    return charEnc == null ? result.toString().getBytes() : result.toString().getBytes(charEnc); 
+    return StrutsPostProcesserUtil.postProcess(strutsResponse.getData(), input, output);
   }
   
   private class IncludeEventListener implements org.araneaframework.core.EventListener {
     public void processEvent(Object eventId, InputData input) throws Exception {
-      renderResult = renderInclude(input, getOutputData());
+      rerender = true;
     }
   }
 
   protected void render(OutputData output) throws Exception {
-    if (firstTime) {
+    if (rerender) {
       renderResult = renderInclude(getInputData(), output);
-      firstTime = false;
+      rerender = false;
     }
     
     if (renderResult != null)
@@ -180,12 +98,7 @@ public class StrutsWidget extends BaseApplicationWidget {
       super(arg0);
   
       out = new AraneaServletOutputStream();
-      if (getResponse().getCharacterEncoding() != null) { 
-        writerOut = new PrintWriter(new OutputStreamWriter(out, getResponse().getCharacterEncoding()));
-      }
-      else {
-        writerOut = new PrintWriter(new OutputStreamWriter(out));
-      }       
+      writerOut = new PrintWriter(new OutputStreamWriter(out, "UTF-8"));   
     } 
     
     public ServletOutputStream getOutputStream() throws IOException {
@@ -232,8 +145,6 @@ public class StrutsWidget extends BaseApplicationWidget {
       (TopServiceContext) getEnvironment().requireEntry(TopServiceContext.class);
     ThreadContext threadCtx = 
       (ThreadContext) getEnvironment().requireEntry(ThreadContext.class);
-//    TransactionContext transCtx = 
-//      (TransactionContext) getEnvironment().requireEntry(TransactionContext.class);    
     
     Assert.isTrue(getOutputData() != null || getInputData() != null, "Either input- or output data should be not null");
     
@@ -241,8 +152,7 @@ public class StrutsWidget extends BaseApplicationWidget {
         (String) ((HttpInputData) getInputData()).getContainerPath(), 
         (String) topCtx.getCurrentId(), 
         (String) threadCtx.getCurrentId(), 
-        "".equals(getOutputData().getScope().toString()) ? getInputData().getScope().toString() : getOutputData().getScope().toString(),
-        TransactionContext.OVERRIDE_KEY);
+        "".equals(getOutputData().getScope().toString()) ? getInputData().getScope().toString() : getOutputData().getScope().toString());
     
     url.append(baseURL.contains("?") ? "&" : "?");
     

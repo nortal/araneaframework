@@ -21,7 +21,8 @@
 <html:errors/>
 
 <html:form action="/SaveRegistration"
-           onsubmit="return validateRegistrationForm(this);">
+           onsubmit="return validateRegistrationForm(this);"
+           focus="username">
     <html:hidden property="task"/>
     <table border="0" width="100%">
 
