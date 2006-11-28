@@ -117,13 +117,13 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("Simple", new MenuItem("Popup_Example", SamplePopupWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("MultiSelect", DemoMultiSelect.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("RadioSelect", DemoRadioSelect.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
       
       MenuItem advDemos = sampleMenu.addMenuItem(new MenuItem("Advanced"));
       sampleMenu.addMenuItem("Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
       advDemos.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
+      advDemos.addMenuItem(new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
       
       MenuItem formListMenu = sampleMenu.addMenuItem(new MenuItem("Form_Lists"));
       formListMenu.addMenuItem(new MenuItem("Display_Form", DemoDisplayForm.class));
