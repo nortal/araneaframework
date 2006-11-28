@@ -117,7 +117,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("Simple", new MenuItem("Popup_Example", SamplePopupWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("MultiSelect", DemoMultiSelect.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("RadioSelect", DemoRadioSelect.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("#Form with actions", SampleActionFormWidget.class));
+      sampleMenu.addMenuItem("Simple", new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
       
       MenuItem advDemos = sampleMenu.addMenuItem(new MenuItem("Advanced"));
       sampleMenu.addMenuItem("Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
@@ -138,8 +138,8 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
       sampleMenu.addMenuItem("Lists", new MenuItem("Multi_List", MultiListWidget.class));
 
-      MenuItem treeMenu = sampleMenu.addMenuItem(new MenuItem("#Trees"));
-      treeMenu.addMenuItem(new MenuItem("#Simple", SimpleTreeWidget.class));
+      MenuItem treeMenu = sampleMenu.addMenuItem(new MenuItem("Trees"));
+      treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
     } 
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
