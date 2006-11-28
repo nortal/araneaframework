@@ -36,6 +36,8 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // * not show collapse/expand by TreeNodeWidgets
   // * not-dispose-children in client side
   // * some nodes not collapsable
+  // * disable concrete tree node toggling client-side when request has been
+  //   submitted - response not yet arrived and processed
 
 	/**
    * Creates a new {@link TreeWidget} instance.
@@ -45,7 +47,6 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
    *          not self-openable (plus sign is not shown in front of every node).
    */
 	public TreeWidget(TreeDataProvider dataProvider) {
-		super();
 		this.dataProvider = dataProvider;
 	}
 

@@ -129,9 +129,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class InvertCollapsedListener extends StandardActionListener {
     public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
       log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
-      //update(input);
       invertCollapsed();
-      //process();
       render(output);
     }
   }
@@ -139,9 +137,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	private class ExpandActionListener extends StandardActionListener {
     public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
       log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
-			//update(input);
 			expand();
-			//process();
 			render(output);
 		}
 	}
@@ -149,9 +145,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class CollapseActionListener extends StandardActionListener {
     public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
       log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
-      //update(input);
       collapse();
-      //process();
       render(output);
     }
   }
