@@ -18,11 +18,9 @@ package org.araneaframework.example.main.web.tree;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
@@ -64,10 +62,6 @@ public class SimpleTreeWidget extends BaseUIWidget {
 
     private int counter;
 
-    public int getCounter() {
-      return counter++;
-    }
-
 		protected void init() throws Exception {
 			setViewSelector("tree/simpleTreeNode");
       putViewData("counter", new Integer(counter));
@@ -76,6 +70,7 @@ public class SimpleTreeWidget extends BaseUIWidget {
 
         public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
           log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
+          putViewData("counter", new Integer(++counter));
           getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
 				}
 
