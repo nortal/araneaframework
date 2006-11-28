@@ -22,15 +22,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.jsp.util.JspUtil;
@@ -52,8 +51,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   public static final String EXPAND_ACTION = "expand";
   /** Collapse action id. */
   public static final String COLLAPSE_ACTION = "collapse";
-  /** Action request parameter name */
-  public static final String ACTION_PARAM_KEY = "param";
 
 	private boolean collapsed = true;
 	private boolean collapsedDecide = false;
@@ -129,9 +126,9 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     addActionListener(COLLAPSE_ACTION, new CollapseActionListener());
 	}
 
-  private class InvertCollapsedListener implements ActionListener {
-    public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-      log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get(ACTION_PARAM_KEY) + "'");
+  private class InvertCollapsedListener extends StandardActionListener {
+    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+      log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
       //update(input);
       invertCollapsed();
       //process();
@@ -139,9 +136,9 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
   }
 
-	private class ExpandActionListener implements ActionListener {
-		public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-			log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get(ACTION_PARAM_KEY) + "'");
+	private class ExpandActionListener extends StandardActionListener {
+    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+      log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
 			//update(input);
 			expand();
 			//process();
@@ -149,9 +146,9 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		}
 	}
 
-  private class CollapseActionListener implements ActionListener {
-    public synchronized void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-      log.debug("Received action with actionId='" + actionId + "' and param='" + input.getScopedData().get(ACTION_PARAM_KEY) + "'");
+  private class CollapseActionListener extends StandardActionListener {
+    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+      log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
       //update(input);
       collapse();
       //process();
@@ -257,37 +254,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	public boolean hasNodes() {
 		return getNodeCount() > 0;
 	}
-
-/*
-	public Object getViewModel() throws Exception {
-		return new ViewModel();
-	}
-
-	public class ViewModel extends BaseUIWidget.ViewModel {
-
-		public Widget getDisplay() {
-			return TreeNodeWidget.this.getDisplay();
-		}
-
-		public String getDisplayId() {
-			return TreeNodeWidget.DISPLAY_KEY;
-		}
-
-		public boolean isCollapsed() {
-			return TreeNodeWidget.this.isCollapsed();
-		}
-
-		public List getNodes() throws Exception {
-			List nodes = TreeNodeWidget.this.getNodes();
-			List viewModels = new ArrayList(getNodeCount());
-			for (Iterator i = nodes.iterator(); i.hasNext(); ) {
-				viewModels.add(((TreeNodeWidget) i.next()).getViewModel());
-			}
-			return viewModels;
-		}
-
-	}
-*/
 
 	protected void render(OutputData output) throws Exception {
 		Writer out = ((HttpOutputData) output).getWriter();

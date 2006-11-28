@@ -18,4 +18,5 @@ public interface ApplicationWidget extends ApplicationService, Widget, Composite
    * The key of the event handler.
    */
   public static final String EVENT_HANDLER_ID_KEY = "widgetEventHandler";
-  public static final String EVENT_PARAMETER_KEY = "widgetEventParameter";}
+  public static final String EVENT_PARAMETER_KEY = "widgetEventParameter";
+}

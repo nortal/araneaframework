@@ -7,7 +7,7 @@
 
 	<ui:widgetContext>
 		Here is a link to <ui:eventLinkButton eventId="invertCollapsed" labelId="#toggle"/> the collapsed state of this node.
-		A link for <a href="#" onclick="return AraneaTree.displayAction(this, 'test', 'someData');">test action</a> in node display widget (clicked <c:out value="${viewData.counter}"/> times).
+		A link for <a href="#" onclick="return AraneaTree.displayAction(this, 'test', 'someData');">test action</a> in node display widget (clicked <c:out value="${widget.counter}"/> times).
 		<a href="#" onclick="return AraneaTree.displayAction(this, 'sleep', 'someData');">Sleep</a>
 	</ui:widgetContext>
 

@@ -43,7 +43,7 @@ function setCloningUrl(el) {
 
 	var systemForm = araneaPage().getTraverser().findSurroundingSystemForm(el);
 
-    var url = araneaPage().getSubmitURL(systemForm['topServiceId'].value, systemForm['threadServiceId'].value);
+    var url = araneaPage().getSubmitURL(systemForm['topServiceId'].value, systemForm['threadServiceId'].value, 'override');
     url += "&pleaseClone=true";
 
     if (eventId)

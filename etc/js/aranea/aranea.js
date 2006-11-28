@@ -241,9 +241,9 @@ function AraneaPage() {
       new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   }
 
-  this.getSubmitURL = function(topServiceId, threadServiceId) {
+  this.getSubmitURL = function(topServiceId, threadServiceId, transactionId) {
     var url = this.encodeURL(this.getServletURL());
-    url += '?transactionId=override';
+    url += '?transactionId=' + transactionId;
     if (topServiceId) 
       url += '&topServiceId=' + topServiceId;
     if (threadServiceId) 
@@ -252,10 +252,10 @@ function AraneaPage() {
   }
 
   this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, nosync) {
-    var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value);
+    var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value, 'override');
     url += '&widgetActionPath=' + actionTarget;
-    url += '&serviceActionListenerId=' + actionId;
-    url += '&' + actionTarget + '.param=' + actionParam;
+    url += '&serviceActionHandler=' + actionId;
+    url += '&serviceActionParameter=' + actionParam;
     if (nosync)
       url += '&nosync=true';
     url += '&systemFormId=' + systemForm.id;
@@ -315,7 +315,7 @@ function AraneaPage() {
 AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey) {
   return function() {
     if (window['prototype/prototype.js']) {
-      var url = araneaPage().getSubmitURL(topServiceId, threadServiceId);
+      var url = araneaPage().getSubmitURL(topServiceId, threadServiceId, 'override');
       url += "&" + keepAliveKey + "=true";
       araneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(

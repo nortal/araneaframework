@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ActionListener;
+import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
 import org.araneaframework.uilib.tree.TreeNodeContext;
@@ -63,31 +64,27 @@ public class SimpleTreeWidget extends BaseUIWidget {
 
     private int counter;
 
-		SimpleTreeNodeWidget() {
-		}
+    public int getCounter() {
+      return counter++;
+    }
 
 		protected void init() throws Exception {
 			setViewSelector("tree/simpleTreeNode");
       putViewData("counter", new Integer(counter));
 
-      addActionListener("test", new ActionListener() {
+      addActionListener("test", new StandardActionListener() {
 
-        //TODO Create TreeNodeDisplayWidget which has ActionListener.processAction(String param)
-        //     that handles the following boilerplate code 
-        public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-          String param = (String) input.getScopedData().get(TreeNodeWidget.ACTION_PARAM_KEY);      // Boilerplate code
-          log.debug("Received action with actionId='" + actionId + "' and param='" + param + "'"); // Boilerplate code
-          putViewData("counter", new Integer(++counter));
+        public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+          log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
           getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
 				}
 
       });
 
-      addActionListener("sleep", new ActionListener() {
+      addActionListener("sleep", new StandardActionListener() {
 
-        public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-          String param = (String) input.getScopedData().get(TreeNodeWidget.ACTION_PARAM_KEY);      // Boilerplate code
-          log.debug("Received action with actionId='" + actionId + "' and param='" + param + "'"); // Boilerplate code
+        public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+          log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
           Thread.sleep(10000);
           getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
         }
@@ -101,7 +98,6 @@ public class SimpleTreeWidget extends BaseUIWidget {
 
 		public void handleEventInvertCollapsed() throws Exception {
 			getTreeNodeCtx().invertCollapsed();
-      Thread.sleep(10000);
 		}
 
 	}

@@ -368,7 +368,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * to extract it from InputData's global data.
    */
   protected Object getActionId(InputData input) {
-    return input.getGlobalData().get(BaseApplicationService.ACTION_ID_ATTRIBUTE);
+    return input.getGlobalData().get(ApplicationService.ACTION_HANDLER_ID_KEY);
   }
   
   //*******************************************************************
