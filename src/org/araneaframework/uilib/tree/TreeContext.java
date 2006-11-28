@@ -44,7 +44,6 @@ public interface TreeContext extends Serializable {
 	/**
    * Returns if child nodes are removed and discarded when a node is closed.
    */
-  //TODO is there a need to specify this on TreeNode basis?
 	boolean disposeChildren();
 
 }
