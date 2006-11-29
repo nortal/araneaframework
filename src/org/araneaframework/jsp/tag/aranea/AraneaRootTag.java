@@ -25,6 +25,7 @@ import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.araneaframework.OutputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.filter.StandardJspFilterService;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
@@ -35,8 +36,6 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   body-content = "JSP"
  */
 public class AraneaRootTag extends BaseTag {
-  public static final String OUTPUT_DATA_KEY = "outputData";
-
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -46,7 +45,7 @@ public class AraneaRootTag extends BaseTag {
           JspContext.JSP_CONFIGURATION_KEY);
     
     addContextEntry(
-        AraneaRootTag.OUTPUT_DATA_KEY, 
+        ServletUtil.OUTPUT_DATA_KEY, 
         output);
 
     Config.set(

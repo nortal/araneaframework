@@ -20,12 +20,22 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.jstl.core.Config;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.framework.ViewPortContext;
+import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.filter.StandardJspFilterService;
+import org.araneaframework.jsp.container.UiAraneaWidgetContainer;
+import org.araneaframework.jsp.container.UiWidgetContainer;
+import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 
 /**
  * Utility methods for Aranea framework running inside a servlet container. Includes
@@ -36,6 +46,8 @@ import org.araneaframework.http.HttpOutputData;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ServletUtil {
+	public static final String OUTPUT_DATA_KEY = "outputData";
+	
   private static final Logger log = Logger.getLogger(ServletUtil.class);
   
   /**
@@ -48,6 +60,34 @@ public abstract class ServletUtil {
     if (log.isDebugEnabled())
       log.debug("Including a resource from the absolute path '" + filePath + "'");
     
+    LocalizationContext l10nCtx = 
+    	(LocalizationContext) env.getEntry(LocalizationContext.class);
+    
+    HttpServletRequest req = getRequest(output.getInputData());
+    req.setAttribute(OUTPUT_DATA_KEY, output);
+    req.setAttribute(
+    		Config.FMT_LOCALIZATION_CONTEXT + ".request", 
+    		new javax.servlet.jsp.jstl.fmt.LocalizationContext(
+    				l10nCtx.getResourceBundle(), 
+    				l10nCtx.getLocale()));
+    
+    /* AraneaViewPortTag */
+    StandardJspFilterService.JspConfiguration config = 
+        (StandardJspFilterService.JspConfiguration) output.getAttribute(
+            JspContext.JSP_CONFIGURATION_KEY);
+    StandardContainerWidget rootWidget = 
+        (StandardContainerWidget) output.getAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
+    req.setAttribute(
+          UiWidgetContainer.KEY, 
+          new UiAraneaWidgetContainer(rootWidget, config));
+
+    /* AraneaSystemFormHtmlTag */
+    Object systemFormId = output.getInputData().getGlobalData().get("systemFormId");
+    if (systemFormId != null) {
+      req.setAttribute(BaseSystemFormHtmlTag.ID_KEY, systemFormId);
+      req.setAttribute(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);    
+    }
+
     ServletContext servletContext = 
       (ServletContext) env.getEntry(ServletContext.class);
     servletContext.getRequestDispatcher(filePath).include(

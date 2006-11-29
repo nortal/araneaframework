@@ -97,7 +97,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
     }
   }
   
-  private  Serializable deepCopy(ClassLoader cl, Serializable original) throws Exception {
+  private Serializable deepCopy(ClassLoader cl, Serializable original) throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
     ObjectOutputStream out = new ObjectOutputStream(baos);
     try {
