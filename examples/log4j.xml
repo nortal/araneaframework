@@ -8,7 +8,7 @@
    </appender>
 
    <appender name="FILE" class="org.apache.log4j.FileAppender">
-   	<param name="file" value="c:/temp/theloog.log" />
+   	<param name="file" value="/home/taimo/tmp/sun.log"/>
    	<layout class="org.apache.log4j.PatternLayout">
    		<param name="ConversionPattern" value="%d{hh:mm:ss} %-5p - %c{1}.%M - %m%n" />
    	</layout>

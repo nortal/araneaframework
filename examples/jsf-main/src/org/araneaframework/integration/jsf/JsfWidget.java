@@ -1,12 +1,3 @@
-/*
- * JsfWidget.java
- *
- * Created on 20 November 2006, 11:26
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package org.araneaframework.integration.jsf;
 
 import javax.faces.context.FacesContext;
@@ -52,14 +43,12 @@ public class JsfWidget extends BaseUIWidget {
     }
 
     protected void render(OutputData output) throws Exception {
-        FacesContext facesContext = getJSFContext().getFacesContext();
-        if (facesContext == null)
-            facesContext = initFacesContext();
+        FacesContext facesContext = initFacesContext();
 
         getJSFContext().getLifecycle().execute(facesContext);
         getJSFContext().getLifecycle().render(facesContext);
 
-        getJSFContext().releaseFacesContext();
+        getJSFContext().releaseFacesContext(facesContext);
     }
     
     protected FacesContext initFacesContext() {
@@ -70,9 +59,7 @@ public class JsfWidget extends BaseUIWidget {
         ServletUtil.setRequest(input, new JsfRequestWrapper(request, resolvedViewSelector));
         
         // XXX: should give dummy outputdata
-        getJSFContext().initFacesContext(input, getOutputData());
-        
-        return getJSFContext().getFacesContext();
+        return getJSFContext().initFacesContext(input, getOutputData());
     }
 
     public JspContext getJspContext() {

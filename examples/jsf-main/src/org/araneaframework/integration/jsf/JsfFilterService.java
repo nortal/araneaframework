@@ -18,6 +18,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.integration.jsf.core.AraneaJsfNavigationHandlerWrapper;
 import org.araneaframework.integration.jsf.core.JSFContext;
 import org.araneaframework.integration.jsf.useless.ViewHandlerDecorator;
 
@@ -25,8 +26,8 @@ import org.araneaframework.integration.jsf.useless.ViewHandlerDecorator;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class JsfFilterService extends BaseFilterService implements JSFContext {
-    private static final ThreadLocal facesContext = new ThreadLocal();
     private Lifecycle lifecycle = null;
+    private Application application = null;
     
     protected Environment getChildEnvironment() {
         return new StandardEnvironment(super.getChildEnvironment(), JSFContext.class, this);
@@ -41,8 +42,9 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
         Assert.notNull(getRenderKitFactory());
         Assert.notNull(getFacesContextFactory());
         
-        Application app = appFactory.getApplication();
-        app.setViewHandler(new ViewHandlerDecorator(app.getViewHandler()));
+        application = appFactory.getApplication();
+        application.setViewHandler(new ViewHandlerDecorator(application.getViewHandler()));
+        application.setNavigationHandler(new AraneaJsfNavigationHandlerWrapper(application.getNavigationHandler()));
         
         lifecycle =  getLifecycleFactory().getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
         Assert.notNull(lifecycle);
@@ -52,40 +54,30 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
         super.action(path, input, output);
     }
     
-    public Lifecycle getLifecycle() {
-        return lifecycle;
-    } 
+
     
-    public void initFacesContext(InputData input, OutputData output) {
+    public FacesContext initFacesContext(InputData input, OutputData output) {
         ServletContext servletCtx = ((ServletConfig)getEnvironment().getEntry(ServletConfig.class)).getServletContext();
         Assert.notNull(servletCtx, "ServletContext");
         Assert.notNull(ServletUtil.getRequest(input), "request");
         Assert.notNull(ServletUtil.getResponse(output), "response");
         Assert.notNull(lifecycle);
 
-        facesContext.set(
+        FacesContext result = 
                 getFacesContextFactory().getFacesContext(                    
                     ((ServletConfig)getEnvironment().getEntry(ServletConfig.class)).getServletContext(),
                     ServletUtil.getRequest(input),
                     ServletUtil.getResponse(output),
                     lifecycle
-                )
-        );
+                );
         
-        Assert.isTrue(
-                getFacesContext() == getFacesContext().getCurrentInstance(), 
-                "expected: getFacesContext() == facesContext.getCurrentInstance()");
+        return result;
     }
 
-    public void releaseFacesContext() {
-        getFacesContext().release();
-        facesContext.set(null);
+    public void releaseFacesContext(FacesContext facesContext) {
+    	facesContext.release();
     }
-    
-    public FacesContext getFacesContext() {
-        return (FacesContext)facesContext.get();
-    }
-    
+
     /* Factory getters. */
     public ApplicationFactory getApplicationFactory() {
         return (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
@@ -102,4 +94,12 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
     public RenderKitFactory getRenderKitFactory() {
         return (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
     }
+    
+    public Application getApplication() {
+    	return application;
+    }
+    
+    public Lifecycle getLifecycle() {
+        return lifecycle;
+    } 
 }

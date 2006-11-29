@@ -1,26 +1,15 @@
-/*
- * ViewHandlerDecorator.java
- *
- * Created on 22 November 2006, 10:13
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
 
 package org.araneaframework.integration.jsf.useless;
 
 import java.io.IOException;
 import java.util.Locale;
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 /**
- *
- * @author taimo
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class ViewHandlerDecorator extends ViewHandler {
     ViewHandler viewHandler;

@@ -106,9 +106,9 @@ public class MenuWidget extends TemplateMenuWidget  {
 	}
 
 	protected MenuItem JSFMenu() {
-		MenuItem root = new MenuItem("#JSF");
-		root.addMenuItem(new MenuItem("#Welcome JSF", WelcomeJSF.class));
-		root.addMenuItem(new MenuItem("#HelloDuke", HelloDukeWidget.class));
+		MenuItem root = new MenuItem("JSF");
+		root.addMenuItem(new MenuItem("WelcomeJSF", WelcomeJSF.class));
+		root.addMenuItem(new MenuItem("Helloduke", HelloDukeWidget.class));
 		
 		return root;
 	}

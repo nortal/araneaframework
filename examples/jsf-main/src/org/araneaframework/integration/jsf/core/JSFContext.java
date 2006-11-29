@@ -1,6 +1,7 @@
 package org.araneaframework.integration.jsf.core;
 
 import java.io.Serializable;
+import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
@@ -14,14 +15,14 @@ import org.araneaframework.OutputData;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface JSFContext extends Serializable {
-    public void initFacesContext(InputData input, OutputData ouput);
-    public void releaseFacesContext();
-    
-    public FacesContext getFacesContext();
-    public Lifecycle getLifecycle();
+    public FacesContext initFacesContext(InputData input, OutputData ouput);
+    public void releaseFacesContext(FacesContext facesContext);
     
     public ApplicationFactory getApplicationFactory();
     public LifecycleFactory getLifecycleFactory();
     public RenderKitFactory getRenderKitFactory();
     public FacesContextFactory getFacesContextFactory();
+    
+    public Application getApplication();
+    public Lifecycle getLifecycle();
 }
