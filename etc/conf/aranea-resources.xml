@@ -34,6 +34,10 @@
     <files content-type="text/javascript" group="debugScripts">
         <file path="js/log4javascript/log4javascript.js"/>
     </files>
+    
+    <files content-type="text/javascript" group="araneaJSF">
+        <file path="js/aranea/aranea-jsf-behaviour.js"/>
+    </files>
 
 	<files content-type="image/gif">
 		<file path="gfx/i01.gif"/>
