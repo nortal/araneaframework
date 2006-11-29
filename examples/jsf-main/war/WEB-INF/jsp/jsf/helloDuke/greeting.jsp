@@ -35,12 +35,12 @@
     <h2>My name is Duke.  What is yours?</h2>
     <jsp:useBean id="UserNameBean" class="org.araneaframework.example.jsf.web.jsf.helloDuke.UserNameBean" scope="session" />
     <f:view>
-    <h:form id="helloForm" >
+<!--    <h:form id="helloForm" >-->
         <h:graphicImage id="waveImg" url="gfx/helloDuke/wave.med.gif" />
   	<h:inputText id="username"
 			value="#{UserNameBean.userName}"/>
   	<h:commandButton id="submit" action="success" value="Submit" 
 		          type="submit" />
-    </h:form>
+<!--    </h:form>-->
     </f:view>
 </jsp:root>

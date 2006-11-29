@@ -22,11 +22,15 @@
  
  Copyright 2005 Sun Microsystems Inc. All Rights Reserved
 -->
-<HTML>
-    <HEAD> <title>Hello</title> </HEAD>
-    <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
-    <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-    <body bgcolor="white">
+
+<jsp:root
+    xmlns:jsp="http://java.sun.com/JSP/Page" 
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:ui="http://araneaframework.org/tag-library/standard_rt"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    version="2.0">
+
     <f:view>
     <h:form id="responseform">
     <h:graphicImage id="waveImg" url="/wave.med.gif" />
@@ -37,4 +41,5 @@
          <p>
     </h:form>
     </f:view>
-</HTML>  
+</jsp:root>
+
