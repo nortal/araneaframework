@@ -1,15 +1,6 @@
 package org.araneaframework.integration.jsf;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseStream;
-import javax.faces.context.ResponseWriter;
-import javax.faces.context.ResponseWriterWrapper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
@@ -58,13 +49,6 @@ public class JsfWidget extends BaseUIWidget {
         getJSFContext().getLifecycle().execute(facesContext);
         getJSFContext().getLifecycle().render(facesContext);
         
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ResponseStream stream = createResponseStream(baos);
-        //ResponseWriter writer = 
-        
-        facesContext.setResponseStream(stream);
-        //facesContext.setResponseWriter(responseWriter);
-
         getJSFContext().destroyFacesContext(facesContext);
     }
     
@@ -74,7 +58,7 @@ public class JsfWidget extends BaseUIWidget {
         HttpServletRequest request = ServletUtil.getRequest(input);
         HttpServletResponse response = ServletUtil.getResponse(output);
         
-        // wrap the request and response
+        // wrap the request
         ServletUtil.setRequest(input, new JsfRequestWrapper(request, resolvedViewSelector));
         //ServletUtil.setResponse(output,new JsfResponseWrapper(response));
         
@@ -94,57 +78,7 @@ public class JsfWidget extends BaseUIWidget {
     	return resolvedViewSelector;
     }
     
-//    public ResponseWriter createResponseWriter(final OutputStream out, String charEncoding) throws UnsupportedEncodingException {
-//    	final PrintWriter writer = null;
-//    	if (charEncoding != null) {
-//    		writer = new PrintWriter(new OutputStreamWriter(out, charEncoding));
-//    	} else {
-//    		writer = new PrintWriter(new OutputStreamWriter(out));
-//    	}
-//
-//    	return new ResponseWriterWrapper() {
-//			protected ResponseWriter getWrapped() {
-//				return writer;
-//			}
-//    	};
-    		
-////    	//		if (getResponse().getCharacterEncoding() != null) 
-//			result = new PrintWriter(new OutputStreamWriter(out, getResponse().getCharacterEncoding()));
-//		else 
-//			result = new PrintWriter(new OutputStreamWriter(out));}
-//    }
-    
-    public ResponseStream createResponseStream(OutputStream out) {
-        final OutputStream output = out;
-        return new ResponseStream() {
-            public void write(int b) throws IOException {
-            	log.debug("writing b");
-                output.write(b);
-            }
-
-
-            public void write(byte b[]) throws IOException {
-            	log.debug("writing b[]");
-                output.write(b);
-            }
-
-
-            public void write(byte b[], int off, int len) throws IOException {
-            	log.debug("writing b[], int off, int len");
-                output.write(b, off, len);
-            }
-
-
-            public void flush() throws IOException {
-            	log.debug("flushing");
-                output.flush();
-            }
-
-
-            public void close() throws IOException {
-            	log.debug("closing");
-                output.close();
-            }
-        };
+    public void handleEventSubmit() {
+    	log.debug("Handling submit ");
     }
 }

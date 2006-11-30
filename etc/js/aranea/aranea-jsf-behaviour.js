@@ -34,6 +34,6 @@ var aranea_jsf_rules = {
   },
 };
 
-Behaviour.register(aranea_jsf_rules);
+//Behaviour.register(aranea_jsf_rules);
 
 window['aranea-jsf-behaviour.js'] = true;

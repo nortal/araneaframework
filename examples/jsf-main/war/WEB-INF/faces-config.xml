@@ -15,20 +15,41 @@
 	
   <!-- Tell Duke your name -->
   <navigation-rule>
-    <from-view-id>/greeting.jspx</from-view-id>
+    <from-view-id>/greeting.jsp</from-view-id>
     <navigation-case>
       <from-outcome>success</from-outcome>
-      <to-view-id>/response.jspx</to-view-id>
+      <to-view-id>/response.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>
 
   <!-- Return to greeting page -->
   <navigation-rule>
-    <from-view-id>/response.jspx</from-view-id>
+    <from-view-id>/response.jsp</from-view-id>
     <navigation-case>
       <from-outcome>success</from-outcome>
-      <to-view-id>/greeting.jspx</to-view-id>
+            <to-view-id>/greeting.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>
+      
+  <!-- components -->
+  <component>
+      <component-type>javax.faces.HtmlForm</component-type>
+      <component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlForm</component-class>
+  </component>
+  
+    <component>
+      <component-type>javax.faces.HtmlCommandButton</component-type>
+      <component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlCommandButton</component-class>
+  </component>
 
+  
+    <!-- 
+  <render-kit>
+      <renderer>
+          <component-family>javax.faces.Form</component-family>
+          <renderer-type>AraneaFormRenderer</renderer-type>
+          <renderer-class>org.araneaframework.integration.jsf.renderer.EmptyRenderer</renderer-class>
+      </renderer>
+  </render-kit>
+      -->
 </faces-config>
