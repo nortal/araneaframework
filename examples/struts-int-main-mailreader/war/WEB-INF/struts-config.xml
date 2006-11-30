@@ -122,9 +122,9 @@
                     path="/Welcome.jsp"/>
         </action>
         <!-- Display welcome page -->
-        <action
+        <!-- action
                 path="/Welcome"
-                forward="/Welcome.jsp"/>
+                forward="/Welcome.jsp"/ -->
 
         <!-- Change locale action -->
         <action

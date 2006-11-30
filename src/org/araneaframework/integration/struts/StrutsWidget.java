@@ -4,36 +4,35 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import org.apache.regexp.RESyntaxException;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
-import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.ServletUtil;
 
 public class StrutsWidget extends BaseApplicationWidget {  
+  public static final String STRUTS_WIDGET_KEY = "org.araneaframework.integration.struts.StrutsWidget"; 
+  
   private boolean rerender = true;
   
   private String strutsURI;
-  private byte[] renderResult;
+  private List renderers = new ArrayList();
+  
+  private transient StrutsResponse strutsResponse; 
   
   public StrutsWidget(String strutsURI) {
     this.strutsURI = strutsURI;
@@ -45,50 +44,179 @@ public class StrutsWidget extends BaseApplicationWidget {
     addEventListener("include", new IncludeEventListener());
   }
   
-  private byte[] renderInclude(InputData input, OutputData output)  throws Exception {
-    HttpServletResponse res = ServletUtil.getResponse(getOutputData());
-    HttpServletRequest req = ServletUtil.getRequest(input);
-    
-    StrutsResponse strutsResponse = new StrutsResponse(res);
-    ServletUtil.setResponse(getOutputData(), strutsResponse);      
-    
-    StrutsRequest strutsRequest = new StrutsRequest(req);
-    ServletUtil.setRequest(input, strutsRequest); 
-    
-    strutsRequest.setAttribute(AraneaStrutsFilter.ARANEA_INCLUDE, Boolean.TRUE);
-   
-    String strutsServletPath = 
-      (String) strutsRequest.getAttribute(AraneaStrutsFilter.ORIGINAL_SERVLET_PATH);
-    if (strutsServletPath != null)
-      strutsURI = strutsServletPath;
-    
-    try {
-      strutsRequest.getRequestDispatcher(strutsURI).include(strutsRequest, strutsResponse);
-    }
-    finally {
-      ServletUtil.setResponse(getOutputData(), res);   
-      ServletUtil.setRequest(input, req);
-    }
-    
-    return StrutsPostProcesserUtil.postProcess(strutsResponse.getData(), input, output);
-  }
-  
   private class IncludeEventListener implements org.araneaframework.core.EventListener {
     public void processEvent(Object eventId, InputData input) throws Exception {
       rerender = true;
     }
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  private void renderPhaseOne(InputData input, OutputData output)  throws Exception {
+    renderers.clear();
+    
+    HttpServletResponse res = ServletUtil.getResponse(output);
+    HttpServletRequest req = ServletUtil.getRequest(input);
+    
+    strutsResponse = new StrutsResponse(res);
+    ServletUtil.setResponse(output, strutsResponse);      
+    
+    StrutsRequest strutsRequest = new StrutsRequest(req);
+    ServletUtil.setRequest(input, strutsRequest); 
+    
+    try {
+      strutsRequest.setAttribute(AraneaStrutsFilter.ARANEA_INCLUDE, Boolean.TRUE);
+         
+      String strutsServletPath = 
+        (String) strutsRequest.getAttribute(AraneaStrutsFilter.ORIGINAL_SERVLET_PATH);
+      if (strutsServletPath != null)
+        strutsURI = strutsServletPath;
+      
+      output.pushAttribute(STRUTS_WIDGET_KEY, this);
+        
+      strutsRequest.getRequestDispatcher(strutsURI).include(strutsRequest, strutsResponse);     
+      
+      byte[] bytes = strutsResponse.getData();      
+      renderers.add(new ByteRenderer(bytes));     
+    }
+    finally {
+      output.popAttribute(STRUTS_WIDGET_KEY);
+      
+      ServletUtil.setResponse(getOutputData(), res);   
+      ServletUtil.setRequest(input, req);
+      
+      strutsResponse = null;
+    }
+  }
+  
+  private byte[] renderPhaseTwo(InputData input, OutputData output)  throws Exception {
+    HttpServletResponse res = ServletUtil.getResponse(output);
+    HttpServletRequest req = ServletUtil.getRequest(input);
+    
+    StrutsResponse strutsResponse = new StrutsResponse(res);
+    ServletUtil.setResponse(output, strutsResponse);      
+    
+    StrutsRequest strutsRequest = new StrutsRequest(req);
+    ServletUtil.setRequest(input, strutsRequest); 
+    
+    try {
+      strutsRequest.setAttribute(AraneaStrutsFilter.ARANEA_INCLUDE, Boolean.TRUE);
+         
+      String strutsServletPath = 
+        (String) strutsRequest.getAttribute(AraneaStrutsFilter.ORIGINAL_SERVLET_PATH);
+      if (strutsServletPath != null)
+        strutsURI = strutsServletPath;
+      
+      output.pushAttribute(STRUTS_WIDGET_KEY, this);
+
+      for (Iterator i = renderers.iterator(); i.hasNext();) {
+        Renderer renderer = (Renderer) i.next();
+        renderer.render(output); 
+      }
+      
+      return StrutsPostProcesserUtil.postProcess(strutsResponse.getData(), input, output);      
+    }
+    finally {
+      output.popAttribute(STRUTS_WIDGET_KEY);
+      
+      ServletUtil.setResponse(getOutputData(), res);   
+      ServletUtil.setRequest(input, req);
+    }
+  }
+  
+  public void renderWidget(String widgetId, OutputData output) throws Exception {
+    byte[] bytes = strutsResponse.getData();
+    
+    renderers.add(new ByteRenderer(bytes));
+    renderers.add(new WidgetRenderer(widgetId));    
+  }
 
   protected void render(OutputData output) throws Exception {
     if (rerender) {
-      renderResult = renderInclude(getInputData(), output);
+      renderPhaseOne(getInputData(), output);
       rerender = false;
     }
     
-    if (renderResult != null)
-      ((HttpOutputData) output).getOutputStream().write(renderResult);
+    byte[] renderResult = renderPhaseTwo(getInputData(), output);
+    ((HttpOutputData) output).getOutputStream().write(renderResult);
     ((HttpOutputData) output).getOutputStream().flush();
+        
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  private interface Renderer extends Serializable {
+    void render(OutputData output) throws Exception;
+  }
+  
+  private class ByteRenderer implements Renderer {
+    private byte[] bytes;
+    
+    public ByteRenderer(byte[] bytes) {
+      this.bytes = bytes;
+    }
+
+    public void render(OutputData output) throws Exception {
+      ((HttpOutputData) output).getOutputStream().write(bytes);
+      ((HttpOutputData) output).getOutputStream().flush();
+    }
+  }
+  
+  private class WidgetRenderer implements Renderer {
+    private String widgetId;
+            
+    public WidgetRenderer(String widgetId) {
+      this.widgetId = widgetId;
+    }
+
+    public void render(OutputData output) throws Exception {
+      output.pushScope(widgetId);
+      
+      try {                
+        StrutsWidget.this.getWidget(widgetId)._getWidget().render(output);                
+        ((HttpOutputData) output).getWriter().flush();
+      }
+      finally {
+        output.popScope();
+      }
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   private class StrutsResponse extends  HttpServletResponseWrapper {
     private ServletOutputStream out;
@@ -96,9 +224,9 @@ public class StrutsWidget extends BaseApplicationWidget {
     
     public StrutsResponse(HttpServletResponse arg0) throws UnsupportedEncodingException {
       super(arg0);
-  
+      
       out = new AraneaServletOutputStream();
-      writerOut = new PrintWriter(new OutputStreamWriter(out, "UTF-8"));   
+      writerOut = new PrintWriter(new OutputStreamWriter(out, "UTF-8"));  
     } 
     
     public ServletOutputStream getOutputStream() throws IOException {
@@ -122,7 +250,11 @@ public class StrutsWidget extends BaseApplicationWidget {
         writerOut.flush();
       out.flush();
       
-      return ((AraneaServletOutputStream) out).getData();
+      byte[] result = ((AraneaServletOutputStream) out).getData();
+      
+      ((AraneaServletOutputStream) out).reset();
+      
+      return result;
     }
   }
   
@@ -164,7 +296,7 @@ public class StrutsWidget extends BaseApplicationWidget {
     private ByteArrayOutputStream out;
     
     private AraneaServletOutputStream() {
-      out = new ByteArrayOutputStream(20480);
+      reset();
     }
     
     public void write(int b) throws IOException {
@@ -178,6 +310,10 @@ public class StrutsWidget extends BaseApplicationWidget {
     }
     public void flush() throws IOException{
       out.flush();
+    }
+    
+    public void reset() {
+      out = new ByteArrayOutputStream(20480);
     }
         
     public byte[] getData() {

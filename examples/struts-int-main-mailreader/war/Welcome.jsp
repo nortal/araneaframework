@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="http://araneaframework.org/tag-library/standard" prefix="ui" %>
 
 <html>
 <head>
@@ -32,6 +33,8 @@
              altKey="struts.logo.alt"/></p>
 
 <p><html:link action="/Tour"><bean:message key="index.tour"/></html:link></p>
+
+<ui:strutsWidgetInclude id="test"/>
 
 </body>
 </html>

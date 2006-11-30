@@ -23,6 +23,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.apps.mailreader.Constants;
 import org.apache.struts.apps.mailreader.dao.UserDatabase;
 import org.apache.struts.util.MessageResources;
+import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
+import org.araneaframework.example.main.web.demo.DemoFormList;
+import org.araneaframework.integration.struts.AraneaUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,6 +79,8 @@ public final class WelcomeAction extends BaseAction {
             return doFindFailure(mapping);
         }
 
+        AraneaUtil.get(request).addWidget("test", new DemoDisplayableEditableList());
+        
         // Forward to our success page
         return doFindSuccess(mapping);
 

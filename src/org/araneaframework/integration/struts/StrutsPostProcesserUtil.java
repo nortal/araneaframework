@@ -64,11 +64,53 @@ public abstract class StrutsPostProcesserUtil {
 
       Map formTagAttrs = extractAttributes(formTagStart);
       
-      result.append("<script>");
-      result.append("document.forms[\"");
+      
+      result.append("<script>\n");
+      result.append("  document.forms['");
       result.append(formTagAttrs.get("name"));
-      result.append("\"]=_ap.getSystemForm(this);");      
-      result.append("</script>");
+      result.append("'] = _ap.getSystemForm(this);\n\n");
+      
+      result.append("function simulate");
+      result.append(formTagAttrs.get("name"));
+      result.append("() {\n");    
+      
+      result.append("  document.forms[\"");
+      result.append(formTagAttrs.get("name"));
+      result.append("\"]=form;\n");      
+      
+      result.append("  form.name='");
+      result.append(formTagAttrs.get("name"));  
+      result.append("';\n");     
+      
+      result.append("  form.id='");
+      result.append(formTagAttrs.get("name")); 
+      result.append("';\n");
+      
+      result.append("  form.action='");
+      result.append(formTagAttrs.get("action"));
+      result.append("';\n");
+      
+      if (formTagAttrs.containsKey("method")) {
+        result.append("  form.method='");
+        result.append(formTagAttrs.get("method"));
+        result.append("';\n");
+      }
+      if (formTagAttrs.containsKey("enctype")) {
+        result.append("  form.enctype='");
+        result.append(formTagAttrs.get("enctype"));
+        result.append("';\n");
+      }      
+      
+      if (formTagAttrs.containsKey("onsubmit")) {
+        result.append("  form.onsubmit = function () {");
+        result.append(((String)formTagAttrs.get("onsubmit")));
+        result.append("};\n");
+      } 
+      else {
+        result.append("  form.onsubmit = function () {return true;};\n");
+      }      
+      result.append("};\n");
+      result.append("</script>\n");
       
       int submitSearchStart = 0;
             
@@ -86,39 +128,16 @@ public abstract class StrutsPostProcesserUtil {
         submitBuf.append("<input type=\"submit\" name=\"");
         submitBuf.append("submit".equalsIgnoreCase((String) attrs.get("name")) ? "DO_SUBMIT" : attrs.get("name"));
         submitBuf.append("\" onclick=\"");
-        submitBuf.append("sf = _ap.getSystemForm(this); ");
-        submitBuf.append("sf.name='");
-        submitBuf.append(formTagAttrs.get("name"));  
-        submitBuf.append("'; ");
-        submitBuf.append("sf.id='");
-        submitBuf.append(formTagAttrs.get("name"));  
-        submitBuf.append("'; ");        
-        if (formTagAttrs.containsKey("onsubmit")) {
-          submitBuf.append("sf.onsubmit = function () {");
-          submitBuf.append(((String)formTagAttrs.get("onsubmit")));
-          submitBuf.append("};");
-        } 
-        else {
-          submitBuf.append("sf.onsubmit = function () {return true;};");
-        }
-        submitBuf.append("sf.action='");
-        submitBuf.append(formTagAttrs.get("action"));
-        if (formTagAttrs.containsKey("method")) {
-          submitBuf.append("'; sf.method='");
-          submitBuf.append(formTagAttrs.get("method"));
-        }
-        if (formTagAttrs.containsKey("enctype")) {
-          submitBuf.append("'; sf.enctype='");
-          submitBuf.append(formTagAttrs.get("enctype"));
-        }
-        submitBuf.append("';");
+        submitBuf.append("simulate");
+        submitBuf.append(formTagAttrs.get("name"));
+        submitBuf.append("();");
         if (attrs.containsKey("onclick")) {
           submitBuf.append(attrs.get("onclick"));
           if (!((String) attrs.get("onclick")).trim().endsWith(";"))
             submitBuf.append(";");
         }        
-        submitBuf.append("return true;\" ");
-        
+        submitBuf.append("\" ");
+       
         attrs.remove("name");
         attrs.remove("type");
         attrs.remove("onclick");
