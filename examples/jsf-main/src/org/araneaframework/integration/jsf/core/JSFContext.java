@@ -16,7 +16,7 @@ import org.araneaframework.OutputData;
  */
 public interface JSFContext extends Serializable {
     public FacesContext initFacesContext(InputData input, OutputData ouput);
-    public void releaseFacesContext(FacesContext facesContext);
+    public void destroyFacesContext(FacesContext facesContext);
     
     public ApplicationFactory getApplicationFactory();
     public LifecycleFactory getLifecycleFactory();

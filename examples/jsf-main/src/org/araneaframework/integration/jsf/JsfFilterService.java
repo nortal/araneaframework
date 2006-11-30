@@ -74,7 +74,7 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
         return result;
     }
 
-    public void releaseFacesContext(FacesContext facesContext) {
+    public void destroyFacesContext(FacesContext facesContext) {
     	facesContext.release();
     }
 

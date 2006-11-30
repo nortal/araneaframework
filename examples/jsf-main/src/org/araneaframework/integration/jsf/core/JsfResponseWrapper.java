@@ -80,4 +80,10 @@ public class JsfResponseWrapper extends HttpServletResponseWrapper {
 
 		return result;
 	}
+
+	public void sendRedirect(String location) throws IOException {
+		if (log.isDebugEnabled())
+			log.debug("Redirection to '" + location + "'");
+		super.sendRedirect(location);
+	}
 }
