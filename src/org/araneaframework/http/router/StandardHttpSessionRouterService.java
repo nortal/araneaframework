@@ -123,7 +123,7 @@ public class StandardHttpSessionRouterService extends BaseService {
             sess.setAttribute(SESSION_SERVICE_KEY, service);
           }
           catch (IllegalStateException  e) {
-            log.warn("Session invalidated before request was finished", e);
+            log.warn("Session invalidated before request was finished.");
           }
         }
         finally {
