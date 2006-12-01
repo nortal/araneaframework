@@ -11,6 +11,7 @@ import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.integration.jsf.core.JSFContext;
 import org.araneaframework.integration.jsf.core.JsfRequestWrapper;
+import org.araneaframework.integration.jsf.core.JsfResponseWrapper;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
@@ -56,7 +57,7 @@ public class JsfWidget extends BaseUIWidget {
         InputData input = getInputData();
         OutputData output = getOutputData();
         HttpServletRequest request = ServletUtil.getRequest(input);
-        HttpServletResponse response = ServletUtil.getResponse(output);
+        //HttpServletResponse response = ServletUtil.getResponse(output);
         
         // wrap the request
         ServletUtil.setRequest(input, new JsfRequestWrapper(request, resolvedViewSelector));

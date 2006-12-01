@@ -11,11 +11,10 @@
             test.base.viewhandler.ViewHandlerDecorator
         </view-handler>
     </application> -->
-
 	
   <!-- Tell Duke your name -->
   <navigation-rule>
-    <from-view-id>/greeting.jsp</from-view-id>
+    <from-view-id>/WEB-INF/jsp/jsf/helloDuke/greeting.jsp</from-view-id>
     <navigation-case>
       <from-outcome>success</from-outcome>
       <to-view-id>/response.jsp</to-view-id>
@@ -42,8 +41,6 @@
       <component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlCommandButton</component-class>
   </component>
 
-  
-    <!-- 
   <render-kit>
       <renderer>
           <component-family>javax.faces.Form</component-family>
@@ -51,5 +48,5 @@
           <renderer-class>org.araneaframework.integration.jsf.renderer.EmptyRenderer</renderer-class>
       </renderer>
   </render-kit>
-      -->
+  
 </faces-config>
