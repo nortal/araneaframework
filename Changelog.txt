@@ -19,6 +19,7 @@ Bugfixes
     _ap.event_6 submit method did not return false (broke at least IE6)       | See #278
     FormElement tags did complain about correct Control types that were       | See
     implemented as (anonymous) inner classes                                  |     #286
+    FileImporter searched overrides from classpath not from app context       | See #287
 
 ---------------------------------------------------------------------------------------------
 2006.11.17    | Aranea 1.0.2
