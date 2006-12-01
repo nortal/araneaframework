@@ -6,17 +6,19 @@ Features and Improvements
     InputData and OutputData are accessible from BaseWidget init() now        | See #269
     Aranea JSP now bundles ListFilterButton and ListFilterClearButton tags    | See #268
     Rendering of HTML <select>'s was made optional for <ui:*TimeInput>        | See #279
+    EmptyStringNullableControl now treats blank strings as empty too          | See #282
 
 Bugfixes
     <ui:eventKeyboardHandler> generated incomplete submit script              | See #274
-    ListSqlHelper made did not handle generating aliases for tables which     | See
-    name contained underscore                                                 |     #273
+    ListSqlHelper did not handle generating aliases for tables which name     | See
+    contained underscore                                                      |     #273
     StandardClassReloadingFilterWidget worked wrong for some classes already  | See
     loaded in the webapp classloader                                          |     #276
     MessagesHtmlTag did not escape outputted HTML                             | See #283
-    EmptyStringNullableControl now treats blank strings as empty too          | See #282
-    DateTimeControl now has methods for adding/removing onChange listeners    | See #281
+    DateTimeControl did not have onChange listeners                           | See #281
     _ap.event_6 submit method did not return false (broke at least IE6)       | See #278
+    FormElement tags did complain about correct Control types that were       | See
+    implemented as (anonymous) inner classes                                  |     #286
 
 ---------------------------------------------------------------------------------------------
 2006.11.17    | Aranea 1.0.2
