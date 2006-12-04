@@ -28,8 +28,6 @@ import org.araneaframework.http.util.ServletUtil;
 public class StrutsWidget extends BaseApplicationWidget {  
   public static final String STRUTS_WIDGET_KEY = "org.araneaframework.integration.struts.StrutsWidget"; 
   
-  private boolean rerender = true;
-  
   private String strutsURI;
   private List renderers = new ArrayList();
   
@@ -43,7 +41,7 @@ public class StrutsWidget extends BaseApplicationWidget {
     super.init();
     
     addEventListener("include", new IncludeEventListener());
-    
+        
     renderPhaseOne(getInputData(), getOutputData());
   }
   
@@ -65,10 +63,13 @@ public class StrutsWidget extends BaseApplicationWidget {
   
   private void renderPhaseOne(InputData input, OutputData output)  throws Exception {    
     renderers.clear();
-
-    Path originalScope = output.getScope();
-    output.restoreScope(input.getScope());
-
+    
+    Path is = getInputData().getScope();
+    Path os = getOutputData().getScope();
+    
+    input.restoreScope(getScope().toPath());
+    output.restoreScope(getScope().toPath());
+    
     try {    
       HttpServletResponse res = ServletUtil.getResponse(output);
       HttpServletRequest req = ServletUtil.getRequest(input);
@@ -104,7 +105,8 @@ public class StrutsWidget extends BaseApplicationWidget {
       }
     }
     finally {
-      output.restoreScope(originalScope);
+      output.restoreScope(os);
+      input.restoreScope(is);
     }
   }
   
