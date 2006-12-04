@@ -38,7 +38,7 @@
 			   value="#{UserNameBean.userName}" /> </h2>
 	 <h:commandButton id="back" value="Back" action="success" 
                            />
-         <p>
+         <p/>
     </h:form>
     </f:view>
 </jsp:root>

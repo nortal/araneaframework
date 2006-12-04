@@ -26,20 +26,31 @@
     <from-view-id>/response.jsp</from-view-id>
     <navigation-case>
       <from-outcome>success</from-outcome>
-            <to-view-id>/greeting.jsp</to-view-id>
+            <to-view-id>/WEB-INF/jsp/jsf/helloDuke/greeting.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>
-      
+  
+    <navigation-rule>
+    <from-view-id>/greeting.jsp</from-view-id>
+    <navigation-case>
+      <from-outcome>success</from-outcome>
+            <to-view-id>/WEB-INF/jsp/jsf/helloDuke/greeting.jsp</to-view-id>
+    </navigation-case>
+  </navigation-rule>      
   <!-- components -->
+
   <component>
       <component-type>javax.faces.HtmlForm</component-type>
       <component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlForm</component-class>
   </component>
-  
+
+    <!--
     <component>
       <component-type>javax.faces.HtmlCommandButton</component-type>
       <component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlCommandButton</component-class>
-  </component>
+  </component>-->
+  
+  <!--  javascript:alert(document.getElementById('system_form_0').onsubmit=function() {return true;}); -->
 
   <render-kit>
       <renderer>

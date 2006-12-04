@@ -5,11 +5,15 @@ import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
+import javax.faces.event.PhaseEvent;
+import javax.faces.event.PhaseId;
+import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -26,6 +30,8 @@ import org.araneaframework.integration.jsf.useless.ViewHandlerDecorator;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class JsfFilterService extends BaseFilterService implements JSFContext {
+	private static final Logger log = Logger.getLogger(JsfFilterService.class);
+	
     private Lifecycle lifecycle = null;
     private Application application = null;
     
@@ -47,8 +53,32 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
         application.setNavigationHandler(new AraneaJsfNavigationHandlerWrapper(application.getNavigationHandler()));
         
         lifecycle =  getLifecycleFactory().getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+
+		lifecycle.addPhaseListener(getLoggingListener(PhaseId.RESTORE_VIEW));
+		lifecycle.addPhaseListener(getLoggingListener(PhaseId.APPLY_REQUEST_VALUES));
+		lifecycle.addPhaseListener(getLoggingListener(PhaseId.PROCESS_VALIDATIONS));
+		lifecycle.addPhaseListener(getLoggingListener(PhaseId.UPDATE_MODEL_VALUES));
+		lifecycle.addPhaseListener(getLoggingListener(PhaseId.INVOKE_APPLICATION));
+		lifecycle.addPhaseListener(getLoggingListener(PhaseId.RENDER_RESPONSE));
+    	
         Assert.notNull(lifecycle);
     }
+
+	private PhaseListener getLoggingListener(final PhaseId phaseId) {
+		return new PhaseListener() {
+			public void afterPhase(PhaseEvent event) {
+				log.debug("After phase:" + getPhaseId());
+			}
+
+			public void beforePhase(PhaseEvent event) {
+				log.debug("Before phase:" + getPhaseId());
+			}
+
+			public PhaseId getPhaseId() {
+				return phaseId;
+			}
+    	};
+	}
     
     protected void action(Path path, InputData input, OutputData output) throws Exception {
         super.action(path, input, output);
