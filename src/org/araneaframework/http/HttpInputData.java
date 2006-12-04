@@ -65,10 +65,14 @@ public interface HttpInputData extends InputData {
    */
   String getContainerURL();
   
+  String getContainerPath();
+  
   /**
    * Returns an URL pointing to the Aranea container context (in most cases the web application root).
    */
   String getContextURL();
+  
+  String getContextPath();
   
   /**
    * Returns the path on the server starting from the dispatcher servlet that has been submitted as the part of the request target URL. 

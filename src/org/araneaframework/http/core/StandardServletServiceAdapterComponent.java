@@ -38,7 +38,7 @@ public class StandardServletServiceAdapterComponent extends BaseComponent
 	private Service childService;
 
 	protected void init() throws Exception {
-		childService._getComponent().init(getEnvironment());
+		childService._getComponent().init(getScope(), getEnvironment());
 	}
 
 	public void setChildService(Service service) {

@@ -89,7 +89,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
     
     Map entries = new HashMap();
     entries.put(ContinuationContext.class, this);        
-    continuation._getComponent().init(new StandardEnvironment(getEnvironment(), entries));
+    continuation._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), entries));
     
     throw new AraneaRuntimeException("Continuation set!");
   }
