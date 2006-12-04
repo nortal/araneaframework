@@ -6,7 +6,13 @@ import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.EventListener;
+import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.MountContext;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.uilib.ConfigurationContext;
+import org.springframework.beans.factory.BeanFactory;
 
 public class AraneaUtil {
   private StrutsWidget parent;
@@ -15,6 +21,16 @@ public class AraneaUtil {
     this.parent = parent;
   }
 
+  public static boolean present(HttpServletRequest req) {
+    OutputData output = ServletUtil.getOutputData(req);
+    if (output == null) return false;
+    
+    StrutsWidget parent = (StrutsWidget) output.getAttribute(StrutsWidget.STRUTS_WIDGET_KEY);
+    if (parent == null) return false;
+    
+    return true;
+  }
+  
   public static AraneaUtil get(HttpServletRequest req) {
     OutputData output = ServletUtil.getOutputData(req);
     StrutsWidget parent = (StrutsWidget) output.getAttribute(StrutsWidget.STRUTS_WIDGET_KEY);
@@ -52,5 +68,29 @@ public class AraneaUtil {
 
   public Widget getWidget(Object key) {
     return parent.getWidget(key);
+  }
+
+  public ConfigurationContext getConfiguration() {
+    return (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
+  }
+  
+  public FlowContext getFlowCtx() {
+    return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
+  }
+  
+  public MessageContext getMessageCtx() {
+    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+  }
+  
+  public LocalizationContext getL10nCtx() {
+    return (LocalizationContext) getEnvironment().requireEntry(LocalizationContext.class);
+  }
+  
+  public MountContext getMountCtx() {
+    return (MountContext) getEnvironment().requireEntry(MountContext.class);
+  }
+  
+  public BeanFactory getBeanFactory() {
+    return (BeanFactory) getEnvironment().requireEntry(BeanFactory.class);
   }
 }

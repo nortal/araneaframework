@@ -64,7 +64,7 @@ public class StandardSerializingAuditFilterService extends BaseService implement
   }
 
   protected void init() throws Exception {
-    child._getComponent().init(getEnvironment());
+    child._getComponent().init(getScope(), getEnvironment());
   }
   
   protected void destroy() throws Exception {

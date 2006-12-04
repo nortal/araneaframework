@@ -27,6 +27,7 @@ import org.araneaframework.Composite;
 import org.araneaframework.Environment;
 import org.araneaframework.Message;
 import org.araneaframework.Relocatable;
+import org.araneaframework.Scope;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
@@ -43,6 +44,7 @@ public abstract class BaseComponent implements Component {
   private static final Logger log = Logger.getLogger(BaseComponent.class);
   
   private Environment environment;
+  private Scope scope;
   private Map children;
   private Map disabledChildren;
   
@@ -90,8 +92,12 @@ public abstract class BaseComponent implements Component {
   /**
    * Returns the Environment of this BaseComponent.
    */
-  protected Environment getEnvironment() {
+  public Environment getEnvironment() {
     return environment;
+  }
+  
+  public Scope getScope() {
+    return scope;
   }
   
   /**
@@ -106,6 +112,13 @@ public abstract class BaseComponent implements Component {
    */
   protected void _setEnvironment(Environment env) {
     this.environment = env;
+  }
+  
+  /**
+   * Sets the environment of this BaseComponent to environment. 
+   */
+  protected void _setScope(Scope scope) {
+    this.scope = scope;
   }
 
   /**
@@ -219,7 +232,7 @@ public abstract class BaseComponent implements Component {
     // component should be in place since during init the 
     // component might be overridden.
     _getChildren().put(key, component);
-    component._getComponent().init(env);
+    component._getComponent().init(new StandardScope(key, getScope()), env);
   }
   
   /**
@@ -362,7 +375,7 @@ public abstract class BaseComponent implements Component {
   //component implementation
   protected class ComponentImpl implements Component.Interface {
     
-    public synchronized void init(Environment env) {
+    public synchronized void init(Scope scope, Environment env) {
       Assert.notNull(this, env, "Environment cannot be null!");
       Assert.isTrue(this, !isInitialized(), "Cannot initialize the component more than once!");
             

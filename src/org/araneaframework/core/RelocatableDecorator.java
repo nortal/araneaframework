@@ -96,7 +96,8 @@ public class RelocatableDecorator extends BaseService implements Serializable, R
   // PROTECTED METHODS
   //*******************************************************************
   protected void init() throws Exception {
-    child._getComponent().init(new BaseEnvironment() {
+    //TODO: Override scope
+    child._getComponent().init(getScope(), new BaseEnvironment() {
       public Object getEntry(Object key) {
         return getEnvironment().getEntry(key);
       }

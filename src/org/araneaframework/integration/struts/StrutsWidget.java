@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.ThreadContext;
@@ -42,11 +43,13 @@ public class StrutsWidget extends BaseApplicationWidget {
     super.init();
     
     addEventListener("include", new IncludeEventListener());
+    
+    renderPhaseOne(getInputData(), getOutputData());
   }
   
   private class IncludeEventListener implements org.araneaframework.core.EventListener {
     public void processEvent(Object eventId, InputData input) throws Exception {
-      rerender = true;
+      renderPhaseOne(input, getOutputData());
     }
   }
   
@@ -60,43 +63,48 @@ public class StrutsWidget extends BaseApplicationWidget {
   
   
   
-  
-  
-  
-  private void renderPhaseOne(InputData input, OutputData output)  throws Exception {
+  private void renderPhaseOne(InputData input, OutputData output)  throws Exception {    
     renderers.clear();
-    
-    HttpServletResponse res = ServletUtil.getResponse(output);
-    HttpServletRequest req = ServletUtil.getRequest(input);
-    
-    strutsResponse = new StrutsResponse(res);
-    ServletUtil.setResponse(output, strutsResponse);      
-    
-    StrutsRequest strutsRequest = new StrutsRequest(req);
-    ServletUtil.setRequest(input, strutsRequest); 
-    
-    try {
-      strutsRequest.setAttribute(AraneaStrutsFilter.ARANEA_INCLUDE, Boolean.TRUE);
-         
-      String strutsServletPath = 
-        (String) strutsRequest.getAttribute(AraneaStrutsFilter.ORIGINAL_SERVLET_PATH);
-      if (strutsServletPath != null)
-        strutsURI = strutsServletPath;
-      
-      output.pushAttribute(STRUTS_WIDGET_KEY, this);
-        
-      strutsRequest.getRequestDispatcher(strutsURI).include(strutsRequest, strutsResponse);     
-      
-      byte[] bytes = strutsResponse.getData();      
-      renderers.add(new ByteRenderer(bytes));     
+
+    Path originalScope = output.getScope();
+    output.restoreScope(input.getScope());
+
+    try {    
+      HttpServletResponse res = ServletUtil.getResponse(output);
+      HttpServletRequest req = ServletUtil.getRequest(input);
+
+      strutsResponse = new StrutsResponse(res);
+      ServletUtil.setResponse(output, strutsResponse);      
+
+      StrutsRequest strutsRequest = new StrutsRequest(req);
+      ServletUtil.setRequest(input, strutsRequest); 
+
+      try {
+        strutsRequest.setAttribute(AraneaStrutsFilter.ARANEA_INCLUDE, Boolean.TRUE);
+
+        String strutsServletPath = 
+          (String) strutsRequest.getAttribute(AraneaStrutsFilter.ORIGINAL_SERVLET_PATH);
+        if (strutsServletPath != null)
+          strutsURI = strutsServletPath;
+
+        output.pushAttribute(STRUTS_WIDGET_KEY, this);
+
+        strutsRequest.getRequestDispatcher(strutsURI).include(strutsRequest, strutsResponse);     
+
+        byte[] bytes = strutsResponse.getData();      
+        renderers.add(new ByteRenderer(bytes));     
+      }
+      finally {
+        output.popAttribute(STRUTS_WIDGET_KEY);
+
+        ServletUtil.setResponse(getOutputData(), res);   
+        ServletUtil.setRequest(input, req);
+
+        strutsResponse = null;
+      }
     }
     finally {
-      output.popAttribute(STRUTS_WIDGET_KEY);
-      
-      ServletUtil.setResponse(getOutputData(), res);   
-      ServletUtil.setRequest(input, req);
-      
-      strutsResponse = null;
+      output.restoreScope(originalScope);
     }
   }
   
@@ -142,12 +150,7 @@ public class StrutsWidget extends BaseApplicationWidget {
     renderers.add(new WidgetRenderer(widgetId));    
   }
 
-  protected void render(OutputData output) throws Exception {
-    if (rerender) {
-      renderPhaseOne(getInputData(), output);
-      rerender = false;
-    }
-    
+  protected void render(OutputData output) throws Exception {    
     byte[] renderResult = renderPhaseTwo(getInputData(), output);
     ((HttpOutputData) output).getOutputStream().write(renderResult);
     ((HttpOutputData) output).getOutputStream().flush();
