@@ -98,7 +98,7 @@
 		</javac>
 	</target>
 	
-	<target name="jar" depends="compile">
+	<target name="jar" depends="compile,tld">
 		<mkdir dir="dist" />
 		<mkdir dir="dist/modules" />
 		<mkdir dir="dist/integration" />

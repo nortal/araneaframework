@@ -141,10 +141,27 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 		StringBuffer result = new StringBuffer("function (event, elementId) { ");
 		result.append("_ap.event_6(");
 		result.append("document.forms['").append(systemFormId).append("'],");
-		result.append("'").append(event.getId()).append("',");
-		result.append("'").append(event.getTarget()).append("',");
-		result.append("'").append(event.getParam()).append("',");
-		result.append("'").append(JspUpdateRegionUtil.formatUpdateRegionsJS(event.getUpdateRegionNames())).append("',");
+		if (event.getId() != null)
+			result.append("'").append(event.getId()).append("',");
+		else
+			result.append(" null, ");
+		
+		if (event.getTarget() != null)
+			result.append("'").append(event.getTarget()).append("',");
+		else
+			result.append(" null, ");
+		
+		if (event.getParam() != null)
+			result.append("'").append(event.getParam()).append("',");
+		else
+			result.append(" null, ");
+		
+		if (event.getEventPrecondition() != null)
+			result.append("'").append(event.getEventPrecondition()).append("',");
+		else
+			result.append(" null, ");
+
+		result.append("'").append(JspUpdateRegionUtil.formatUpdateRegionsJS(event.getUpdateRegionNames())).append("'");
 
 		result.append(')');
 		result.append('}');

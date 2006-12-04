@@ -77,7 +77,6 @@ public class FormFileUploadHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "type", "file");
     JspUtil.writeAttribute(out, "accept", accept);
     JspUtil.writeAttribute(out, "size", size);
-    JspUtil.writeAttribute(out, "label", localizedLabel);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartEndTag_SS(out);

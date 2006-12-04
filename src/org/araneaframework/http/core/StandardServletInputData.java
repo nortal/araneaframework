@@ -17,8 +17,6 @@
 package org.araneaframework.http.core;
 
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -30,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.EmptyPathStackException;
 import org.araneaframework.core.NoCurrentOutputDataSetException;

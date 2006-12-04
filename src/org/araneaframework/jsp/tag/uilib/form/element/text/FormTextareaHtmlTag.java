@@ -63,7 +63,6 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     
     JspUtil.writeAttribute(out, "cols", cols);
     JspUtil.writeAttribute(out, "rows", rows);
-    JspUtil.writeAttribute(out, "label", localizedLabel);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     if (viewModel.isDisabled())
       JspUtil.writeAttribute(out, "disabled", "true");

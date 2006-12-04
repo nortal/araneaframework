@@ -2473,7 +2473,8 @@ el.click();</programlisting>
       <title>&lt;ui:timeInput&gt;</title>
 
       <para>Form time input field, represents <literal>TimeControl</literal>.
-      Default <literal>styleClass="aranea-time"</literal>.</para>
+      Default <literal>styleClass="aranea-time"</literal>. HTML &lt;select&gt;s for easy hour/minute selection
+      are rendered too, unless <literal>showTimeSelect</literal> attribute forbids it.</para>
 
       <sect3>
         <title>Attributes</title>
@@ -2507,6 +2508,19 @@ el.click();</programlisting>
                 <entry>Precondition for deciding whether registered onchange
                 event should go server side or not. If left unspecified, this
                 is considered to be <literal>true</literal>.</entry>
+              </row>
+              
+              <row>
+                <entry>showTimeSelect</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>
+                	Boolean, specifying whether HTML &lt;select&;gt;'s should be rendered for easy hour/minute selection.
+                	Default is to render them (<literal>true</literal>).
+                </entry>
               </row>
             </tbody>
           </tgroup>
@@ -2536,8 +2550,8 @@ el.click();</programlisting>
       <title>&lt;ui:dateTimeInput&gt;</title>
 
       <para>Form input field for both date and time, represents
-      <literal>DateTimeControl</literal>.</para>
-
+      <literal>DateTimeControl</literal>. It is rendered as input fields for date and time + date picker and
+      time picker (time picker can be switched off by setting <literal>showTimeSelect="false"</literal> if so desired).</para>
       <sect3>
         <title>Attributes</title>
 
@@ -2570,6 +2584,19 @@ el.click();</programlisting>
                 <entry>Precondition for deciding whether registered onchange
                 event should go server side or not. If left unspecified, this
                 is considered to be <literal>true</literal>.</entry>
+              </row>
+              
+              <row>
+                <entry>showTimeSelect</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>
+                	Boolean, specifying whether HTML &lt;select&;gt;'s should be rendered for easy hour/minute selection.
+                	Default is to render them (<literal>true</literal>).
+                </entry>
               </row>
 
               <row>

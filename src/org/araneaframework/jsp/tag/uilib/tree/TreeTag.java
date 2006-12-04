@@ -14,15 +14,31 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.framework;
+package org.araneaframework.jsp.tag.uilib.tree;
 
-import java.io.Serializable;
+import java.io.Writer;
+import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 
 /**
- * A context providing syncrhonized calls to the child service.
- * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Alar Kvell (alar@araneaframework.org)
+ * @jsp.tag
+ *   name = "tree"
+ *   body-content = "empty"
+ *   description = "Tree"
  */
-public interface SynchronizingContext extends Serializable {
+public class TreeTag extends BaseWidgetTag {
+
+	public int doStartTag(Writer out) throws Exception {
+		super.doStartTag(out);
+		try {
+			getOutputData().pushScope(id);
+			out.flush();
+			widget._getWidget().render(getOutputData());
+		} finally {
+			getOutputData().popScope();
+		}
+
+		return SKIP_BODY;
+	}
+
 }

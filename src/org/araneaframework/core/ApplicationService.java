@@ -19,4 +19,14 @@ public interface ApplicationService extends ApplicationComponent, Service, Compo
      * Can be used to custom data from the view.
      */
     public Map getData();
-  }}
+  }
+
+  //*******************************************************************
+  // CONSTANTS
+  //*******************************************************************
+  /**
+   * The attribute of the action id.
+   */
+  public static final String ACTION_HANDLER_ID_KEY = "serviceActionHandler";
+  public static final String ACTION_PARAMETER_KEY = "serviceActionParameter"; 
+}

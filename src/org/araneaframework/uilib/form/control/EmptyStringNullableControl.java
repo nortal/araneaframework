@@ -16,14 +16,15 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This is a simple class that should be inherited by those controls,
- * which find that empty <code>String</code> in request is same as 
+ * which find that blank <code>String</code> in request is same as 
  * <code>null</code>.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * TODO: rename to BlankStringNullableControl in Aranea 2.0
  */
 public abstract class EmptyStringNullableControl extends StringRequestControl {
   
@@ -32,11 +33,11 @@ public abstract class EmptyStringNullableControl extends StringRequestControl {
   //*********************************************************************  	
 
   /**
-   * Preprocesses the request parameter, substituting empty String 
+   * Preprocesses the request parameter, substituting empty or blank String 
    * with null.
    */
   protected String preprocessRequestParameter(String parameterValue) {
-    if (parameterValue == null || "".equals(parameterValue)) {
+    if (StringUtils.isBlank(parameterValue)) {
       return null;
     }
     return parameterValue;

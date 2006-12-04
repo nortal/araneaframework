@@ -24,14 +24,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
-import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
-import org.araneaframework.core.BaseService;
 import org.araneaframework.core.RelocatableDecorator;
-import org.araneaframework.framework.FilterService;
+import org.araneaframework.core.util.ReadWriteLock;
+import org.araneaframework.core.util.ReaderPreferenceReadWriteLock;
+import org.araneaframework.framework.core.BaseFilterService;
 
 /**
  * Serializes the the session during the request routing. This
@@ -44,11 +44,16 @@ import org.araneaframework.framework.FilterService;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class StandardSerializingAuditFilterService extends BaseService implements FilterService {
+public class StandardSerializingAuditFilterService extends BaseFilterService {
   private static final Logger log = Logger.getLogger(StandardSerializingAuditFilterService.class);
   
-  private Relocatable.RelocatableService child;
   private String testXmlSessionPath;
+
+  private ReadWriteLock callRWLock = new ReaderPreferenceReadWriteLock();
+
+  public void setChildService(Service child) {
+    this.childService = new RelocatableDecorator(child);
+  }
   
   /**
    * Sets the path where to write the serialized class in xml format. The path must
@@ -59,40 +64,39 @@ public class StandardSerializingAuditFilterService extends BaseService implement
     this.testXmlSessionPath = testXmlSessionPath;
   }
   
-  public void setChildService(Service child) {
-    this.child = new RelocatableDecorator(child);
-  }
-
-  protected void init() throws Exception {
-    child._getComponent().init(getScope(), getEnvironment());
-  }
-  
-  protected void destroy() throws Exception {
-    child._getComponent().destroy();
-  }
-  
-  protected void propagate(Message message) throws Exception {
-    message.send(null, child);
-  }
-  
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    child._getRelocatable().overrideEnvironment(getEnvironment());
-    child._getService().action(path, input, output);    
-    child._getRelocatable().overrideEnvironment(null);
-    
-    HttpSession sess = (HttpSession) getEnvironment().getEntry(HttpSession.class);
-    
-    byte[] serialized = SerializationUtils.serialize(child);
-    log.debug("Serialized session size: " + serialized.length);
-    
-    if (testXmlSessionPath != null) {
-      String dumpPath = testXmlSessionPath + "/" + sess.getId() + ".xml";
-      log.debug("Dumping session XML to '" + dumpPath + "'");
-      
-      XStream xstream = new XStream(new DomDriver());
-      PrintWriter writer = new PrintWriter(new FileWriter(dumpPath));
-      xstream.toXML(child, writer);
-      writer.close();
+    callRWLock.readLock().acquire();
+    try {      
+      ((Relocatable) childService)._getRelocatable().overrideEnvironment(getEnvironment());
+      super.action(path, input, output);
+    }
+    finally {
+      callRWLock.readLock().release();
+    }
+
+    if (callRWLock.writeLock().attempt(0)) {
+      try {
+        ((Relocatable) childService)._getRelocatable().overrideEnvironment(null);
+
+        HttpSession sess = (HttpSession) getEnvironment().getEntry(HttpSession.class);
+
+        byte[] serialized = SerializationUtils.serialize(childService);
+        log.debug("Serialized session size: " + serialized.length);
+
+        if (testXmlSessionPath != null) {
+          String dumpPath = testXmlSessionPath + "/" + sess.getId() + ".xml";
+          log.debug("Dumping session XML to '" + dumpPath + "'");
+
+          XStream xstream = new XStream(new DomDriver());
+          PrintWriter writer = new PrintWriter(new FileWriter(dumpPath));
+          xstream.toXML(childService, writer);
+          writer.close();
+        }
+
+      }
+      finally {
+        callRWLock.writeLock().release();
+      }
     }
   }
 }

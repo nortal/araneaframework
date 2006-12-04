@@ -67,7 +67,6 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttribute(out, "label", localizedLabel);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeAttribute(out, "size", size);
 

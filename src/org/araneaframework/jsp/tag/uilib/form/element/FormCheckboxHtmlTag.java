@@ -68,7 +68,6 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 
 		if (viewModel.isDisabled())
 			JspUtil.writeAttribute(out, "disabled", "true");
-		JspUtil.writeAttribute(out, "label", localizedLabel);
 		JspUtil.writeAttribute(out, "tabindex", tabindex);
 		if (accessKey != null)
 			JspUtil.writeAttribute(out, "accesskey", accessKey);

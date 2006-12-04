@@ -48,9 +48,9 @@
 			                </ui:cell>							
 
 							<ui:cell>
-								<ui:filterButton/>
+								<ui:listFilterButton/>
 								<br/>
-								<ui:filterClearButton/>
+								<ui:listFilterClearButton/>
 							</ui:cell>
 						</ui:row>
 

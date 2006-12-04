@@ -63,8 +63,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "multiple", "true");
-    JspUtil.writeAttribute(out, "size", size);    
-    JspUtil.writeAttribute(out, "label", localizedLabel);
+    JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     if (viewModel.isOnChangeEventRegistered())
       this.writeSubmitScriptForUiEvent(out, "onchange", derivedId, "onChanged", "", updateRegionNames);

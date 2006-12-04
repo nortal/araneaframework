@@ -16,6 +16,7 @@
 		<file path="js/aranea/aranea.js"/>
         <file path="js/aranea/aranea-keyboard.js"/>
 		<file path="js/aranea/aranea-util.js"/>
+		<file path="js/aranea/aranea-tree.js"/>
 		<file path="js/aranea/aranea-behaviour.js"/>
 		<file path="js/aranea/aranea-popups.js"/>
         
