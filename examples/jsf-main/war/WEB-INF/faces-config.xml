@@ -44,11 +44,11 @@
       <component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlForm</component-class>
   </component>
 
-    <!--
+
     <component>
       <component-type>javax.faces.HtmlCommandButton</component-type>
       <component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlCommandButton</component-class>
-  </component>-->
+  </component>
   
   <!--  javascript:alert(document.getElementById('system_form_0').onsubmit=function() {return true;}); -->
 
