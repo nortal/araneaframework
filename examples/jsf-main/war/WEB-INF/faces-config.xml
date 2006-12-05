@@ -18,7 +18,6 @@
     <navigation-case>
       <from-outcome>success</from-outcome>
       <to-view-id>/jsf/helloduke/response.jsp</to-view-id>
-      <redirect/>
     </navigation-case>
   </navigation-rule>
 
