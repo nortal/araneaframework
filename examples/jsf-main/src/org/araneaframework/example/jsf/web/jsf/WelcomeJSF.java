@@ -4,6 +4,6 @@ import org.araneaframework.integration.jsf.JsfWidget;
 
 public class WelcomeJSF extends JsfWidget {
 	public WelcomeJSF() {
-		super("jsf/welcomeJSF");
+		super("/jsf/welcomeJSF.jsp");
 	}
 }

@@ -14,29 +14,21 @@
 	
   <!-- Tell Duke your name -->
   <navigation-rule>
-    <from-view-id>/WEB-INF/jsp/jsf/helloDuke/greeting.jsp</from-view-id>
+    <from-view-id>/jsf/helloduke/greeting.jsp</from-view-id>
     <navigation-case>
       <from-outcome>success</from-outcome>
-      <to-view-id>/response.jsp</to-view-id>
+      <to-view-id>/jsf/helloduke/response.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>
 
   <!-- Return to greeting page -->
   <navigation-rule>
-    <from-view-id>/response.jsp</from-view-id>
+    <from-view-id>/jsf/helloduke/response.jsp</from-view-id>
     <navigation-case>
       <from-outcome>success</from-outcome>
-            <to-view-id>/WEB-INF/jsp/jsf/helloDuke/greeting.jsp</to-view-id>
+            <to-view-id>/jsf/helloduke/greeting.jsp</to-view-id>
     </navigation-case>
   </navigation-rule>
-  
-    <navigation-rule>
-    <from-view-id>/greeting.jsp</from-view-id>
-    <navigation-case>
-      <from-outcome>success</from-outcome>
-            <to-view-id>/WEB-INF/jsp/jsf/helloDuke/greeting.jsp</to-view-id>
-    </navigation-case>
-  </navigation-rule>      
   <!-- components -->
 
   <component>
@@ -44,12 +36,11 @@
       <component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlForm</component-class>
   </component>
 
+<!--  <component>-->
+<!--  	<component-type>javax.faces.HtmlCommandButton</component-type>-->
+<!--  	<component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlCommandButton</component-class>-->
+<!--  </component>-->
 
-    <component>
-      <component-type>javax.faces.HtmlCommandButton</component-type>
-      <component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlCommandButton</component-class>
-  </component>
-  
   <!--  javascript:alert(document.getElementById('system_form_0').onsubmit=function() {return true;}); -->
 
   <render-kit>

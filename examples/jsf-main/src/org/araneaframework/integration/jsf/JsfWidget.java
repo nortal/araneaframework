@@ -2,34 +2,31 @@ package org.araneaframework.integration.jsf;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.integration.jsf.core.JSFContext;
 import org.araneaframework.integration.jsf.core.JsfRequestWrapper;
-import org.araneaframework.integration.jsf.core.JsfResponseWrapper;
-import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class JsfWidget extends BaseUIWidget {
+public class JsfWidget extends BaseApplicationWidget {
 	private static final Logger log = org.apache.log4j.Logger.getLogger(JsfWidget.class);
-	
-    String resolvedViewSelector;
+    protected String viewSelector;
     
     /** Creates a new instance of JsfWidget */
     public JsfWidget(String viewSelector) {
-        resolvedViewSelector = viewSelector;
+        this.viewSelector = viewSelector;
     }
     
     protected void init() throws Exception {
-        resolvedViewSelector = resolveJspName(getJspContext(), resolvedViewSelector);
-        log.info("resolved view " + resolvedViewSelector);
+    	if (log.isDebugEnabled())
+    		log.debug("JSF view from '" + viewSelector + "'");
     }
 
     protected void handleUpdate(InputData input) throws Exception {        
@@ -50,6 +47,9 @@ public class JsfWidget extends BaseUIWidget {
         getJSFContext().getLifecycle().execute(facesContext);
         getJSFContext().getLifecycle().render(facesContext);
         
+        if (!facesContext.getViewRoot().getViewId().equals(viewSelector))
+        	log.debug("ViewSelector changed from '" + viewSelector + "' to '" + facesContext.getViewRoot().getViewId()+ "'");
+        
         getJSFContext().destroyFacesContext(facesContext);
     }
     
@@ -60,7 +60,7 @@ public class JsfWidget extends BaseUIWidget {
         //HttpServletResponse response = ServletUtil.getResponse(output);
         
         // wrap the request
-        ServletUtil.setRequest(input, new JsfRequestWrapper(request, resolvedViewSelector));
+        ServletUtil.setRequest(input, new JsfRequestWrapper(request, viewSelector));
         //ServletUtil.setResponse(output,new JsfResponseWrapper(response));
         
         // XXX: should give dummy outputdata
@@ -76,7 +76,7 @@ public class JsfWidget extends BaseUIWidget {
     }
     
     public String getViewSelector() {
-    	return resolvedViewSelector;
+    	return viewSelector;
     }
     
     public void handleEventSubmit() {

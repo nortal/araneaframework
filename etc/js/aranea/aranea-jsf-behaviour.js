@@ -22,7 +22,7 @@
 
 function aranea_jsf_input_button_submit(element) {
   var systemForm = araneaPage().getTraverser().findSurroundingSystemForm(element);
-  systemForm['onsubmit'] = function() { return true; };
+  systemForm['onsubmit'] = function() { return true };
 }
 
 
@@ -34,6 +34,6 @@ var aranea_jsf_rules = {
   },
 };
 
-//Behaviour.register(aranea_jsf_rules);
+Behaviour.register(aranea_jsf_rules);
 
 window['aranea-jsf-behaviour.js'] = true;
