@@ -13,14 +13,14 @@ import org.apache.log4j.Logger;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class JsfRequestWrapper extends HttpServletRequestWrapper {
-	private static final Logger log = org.apache.log4j.Logger.getLogger(JsfRequestWrapper.class);
+public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
+	private static final Logger log = org.apache.log4j.Logger.getLogger(AraneaJsfRequestWrapper.class);
 
 	private Map attributes;
 
     private String viewSelector;
 
-    public JsfRequestWrapper(HttpServletRequest request, String viewSelector) {
+    public AraneaJsfRequestWrapper(HttpServletRequest request, String viewSelector) {
         super(request);
         this.viewSelector = viewSelector;
     }
@@ -86,8 +86,8 @@ public class JsfRequestWrapper extends HttpServletRequestWrapper {
 	}
 	
 	public HttpServletRequest getOriginalRequest() {
-		if (getRequest() instanceof JsfRequestWrapper)
-			return ((JsfRequestWrapper)getRequest()).getOriginalRequest();
+		if (getRequest() instanceof AraneaJsfRequestWrapper)
+			return ((AraneaJsfRequestWrapper)getRequest()).getOriginalRequest();
 		return (HttpServletRequest)getRequest();
 	}
 }

@@ -31,6 +31,7 @@ import org.araneaframework.example.jsf.web.demo.DemoMultiSelect;
 import org.araneaframework.example.jsf.web.demo.DemoRadioSelect;
 import org.araneaframework.example.jsf.web.demo.DemoRichTextForm;
 import org.araneaframework.example.jsf.web.jsf.WelcomeJSF;
+import org.araneaframework.example.jsf.web.jsf.helloDuke.DoubleDukeWidget;
 import org.araneaframework.example.jsf.web.jsf.helloDuke.HelloDukeWidget;
 import org.araneaframework.example.jsf.web.misc.AjaxRequestErrorWidget;
 import org.araneaframework.example.jsf.web.misc.EventErrorWidget;
@@ -109,6 +110,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		MenuItem root = new MenuItem("JSF");
 		root.addMenuItem(new MenuItem("WelcomeJSF", WelcomeJSF.class));
 		root.addMenuItem(new MenuItem("Helloduke", HelloDukeWidget.class));
+		root.addMenuItem(new MenuItem("DoubleDuke", DoubleDukeWidget.class));
 		
 		return root;
 	}

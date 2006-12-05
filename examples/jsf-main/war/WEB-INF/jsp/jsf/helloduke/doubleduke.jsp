@@ -8,6 +8,8 @@
     version="2.0">
 
    <ui:widgetContext>
-      <ui:widgetInclude id="helloDuke"/>
+      <ui:widgetInclude id="helloDuke1.helloDuke"/>
+      <hr/>
+      <ui:widgetInclude id="helloDuke2.helloDuke"/>
    </ui:widgetContext>
 </jsp:root>
