@@ -92,7 +92,7 @@ public class JsfWidget extends BaseApplicationWidget {
     }
     
     protected void restoreResponse(OutputData input) {
-    	
+    	//XXX: should do?
     }
 
     public JspContext getJspContext() {

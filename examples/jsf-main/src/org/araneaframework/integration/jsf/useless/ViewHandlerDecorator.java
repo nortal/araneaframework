@@ -3,19 +3,22 @@ package org.araneaframework.integration.jsf.useless;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 import javax.faces.FacesException;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import org.araneaframework.OutputData;
+import javax.servlet.ServletRequest;
+import org.apache.log4j.Logger;
 import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.util.ServletUtil;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class ViewHandlerDecorator extends ViewHandler {
-    ViewHandler viewHandler;
+	private static final Logger log =  Logger.getLogger(ViewHandlerDecorator.class);
+    private ViewHandler viewHandler;
     
     /** Creates a new instance of ViewHandlerDecorator */
     public ViewHandlerDecorator(ViewHandler viewHandler) {
@@ -25,7 +28,7 @@ public class ViewHandlerDecorator extends ViewHandler {
     public void writeState(FacesContext context) throws IOException {
         viewHandler.writeState(context);
     }
-    // this should use our own
+    // this should use our own too
     public String calculateCharacterEncoding(FacesContext context) {
         return viewHandler.calculateCharacterEncoding(context);
     }
@@ -43,7 +46,15 @@ public class ViewHandlerDecorator extends ViewHandler {
     }
 
     public UIViewRoot createView(FacesContext context, String viewId) {
+    	if (log.isDebugEnabled())
+    		log.debug("View is being created from '" + viewId + "'");
         return viewHandler.createView(context, viewId);
+    }
+    
+    public UIViewRoot restoreView(FacesContext context, String viewId) {
+    	if (log.isDebugEnabled())
+    		log.debug("View is being restored from '" + viewId + "'");
+        return viewHandler.restoreView(context, viewId);
     }
 
     public String getActionURL(FacesContext context, String viewId) {
@@ -54,17 +65,12 @@ public class ViewHandlerDecorator extends ViewHandler {
         return viewHandler.getResourceURL(context, path);
     }
 
-    public UIViewRoot restoreView(FacesContext context, String viewId) {
-        return viewHandler.restoreView(context, viewId);
-    }
-
     public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {
         viewHandler.renderView(context, viewToRender);
     }
     
     public LocalizationContext getLocalizationContext(FacesContext context) {
-    	Map requestAttributes = context.getExternalContext().getRequestMap();
-    	OutputData output = (OutputData) requestAttributes.get(OutputData.OUTPUT_DATA_KEY);
+    	HttpOutputData output = ServletUtil.getOutputData((ServletRequest)context.getExternalContext().getRequest());
     	LocalizationContext locCtx = (LocalizationContext) output.getAttribute(LocalizationContext.LOCALIZATION_CONTEXT_KEY);
     	return locCtx;
     }
