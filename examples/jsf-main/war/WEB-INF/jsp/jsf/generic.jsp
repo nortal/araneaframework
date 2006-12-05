@@ -8,6 +8,6 @@
     version="2.0">
 
    <ui:widgetContext>
-      <ui:widgetInclude id="helloDuke"/>
+      <ui:widgetInclude id="${widget.jsfWidget}"/>
    </ui:widgetContext>
 </jsp:root>
