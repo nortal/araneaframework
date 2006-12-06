@@ -48,7 +48,7 @@ public class JsfWidget extends BaseApplicationWidget {
 
         getJSFContext().getLifecycle().execute(facesContext);
         getJSFContext().getLifecycle().render(facesContext);
-        
+
         if (!facesContext.getViewRoot().getViewId().equals(viewSelector))
         	log.debug("ViewSelector changed from '" + viewSelector + "' to '" + facesContext.getViewRoot().getViewId()+ "'");
         

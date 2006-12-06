@@ -24,7 +24,7 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.integration.jsf.core.AraneaJsfNavigationHandlerWrapper;
 import org.araneaframework.integration.jsf.core.JSFContext;
-import org.araneaframework.integration.jsf.useless.ViewHandlerDecorator;
+import org.araneaframework.integration.jsf.useless.AraneaViewHandlerDecorator;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -49,7 +49,7 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
         Assert.notNull(getFacesContextFactory());
         
         application = appFactory.getApplication();
-        application.setViewHandler(new ViewHandlerDecorator(application.getViewHandler()));
+        //application.setViewHandler(new AraneaViewHandlerDecorator(application.getViewHandler()));
         application.setNavigationHandler(new AraneaJsfNavigationHandlerWrapper(application.getNavigationHandler()));
         
         lifecycle =  getLifecycleFactory().getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);

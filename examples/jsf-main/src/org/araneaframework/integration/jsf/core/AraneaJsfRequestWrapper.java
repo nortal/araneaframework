@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
  */
 public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
 	private static final Logger log = org.apache.log4j.Logger.getLogger(AraneaJsfRequestWrapper.class);
+	
+	private static final String ARANEA_JSF_REQUEST_WRAPPER = "org.araneaframework.integration.jsf.core.AraneaJsfRequestWrapper";
 
 	private Map attributes;
 
@@ -23,6 +25,7 @@ public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
     public AraneaJsfRequestWrapper(HttpServletRequest request, String viewSelector) {
         super(request);
         this.viewSelector = viewSelector;
+        setAttribute(ARANEA_JSF_REQUEST_WRAPPER, this);
     }
 
     public String getPathInfo() {
@@ -34,7 +37,7 @@ public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {
-        return new JsfRequestDispatcherWrapper(getRequest().getRequestDispatcher(path));
+        return new AraneaJsfRequestDispatcherWrapper(getRequest().getRequestDispatcher(path));
         //return wrapped.getRequestDispatcher(path);
     }
 
@@ -42,7 +45,8 @@ public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
 		if (attributes == null)
 			attributes = new HashMap();
 
-		log.debug("setAttribute(name='" + name + "', value=" + 
+		if (log.isDebugEnabled())
+			log.debug("setAttribute(name='" + name + "', value=" + 
 				value instanceof String ? "'" + value + "'" : ObjectUtils.identityToString(value) +");");
 
 		if (value == null)
@@ -52,9 +56,9 @@ public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
 	}
 
 	public Object getAttribute(String name) {
-		Object result = super.getAttribute(name);
+		Object result = attributes != null ? attributes.get(name) : null;
 		if (result == null)
-			result = attributes != null ? attributes.get(name) : null;
+			result = super.getAttribute(name);
 		return result;
 	}
 

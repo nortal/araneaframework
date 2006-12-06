@@ -7,7 +7,5 @@
     xmlns:h="http://java.sun.com/jsf/html"
     version="2.0">
 
-   <ui:widgetContext>
       <ui:widgetInclude id="${widget.jsfWidget}"/>
-   </ui:widgetContext>
 </jsp:root>

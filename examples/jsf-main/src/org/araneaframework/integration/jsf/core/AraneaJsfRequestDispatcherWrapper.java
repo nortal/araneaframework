@@ -10,11 +10,11 @@ import org.apache.log4j.Logger;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class JsfRequestDispatcherWrapper implements RequestDispatcher {
-	private static final Logger log = Logger.getLogger(JsfRequestDispatcherWrapper.class);
+public class AraneaJsfRequestDispatcherWrapper implements RequestDispatcher {
+	private static final Logger log = Logger.getLogger(AraneaJsfRequestDispatcherWrapper.class);
     private RequestDispatcher wrapped;
     
-    public JsfRequestDispatcherWrapper(RequestDispatcher wrapped) {
+    public AraneaJsfRequestDispatcherWrapper(RequestDispatcher wrapped) {
         this.wrapped = wrapped;
     }
     
