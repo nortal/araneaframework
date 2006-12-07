@@ -69,8 +69,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   //*******************************************************************
   
   /**
-   * Constructs a StandardCallStackWidget with topWidget being the first
-   * callable on the stack.
+   * Constructs a {@link StandardFlowContainerWidget} with <code>topWidget</code> 
+   * being the first flow on the top of flow stack.
    */
   public StandardFlowContainerWidget(Widget topWidget) {
     this.top = topWidget;
