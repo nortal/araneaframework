@@ -12,13 +12,14 @@ public class AraneaJsfHtmlForm extends HtmlForm {
 	}
 	
 	public void setId(String id) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		
-		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-		String widgetId = (String)request.getAttribute("widgetId");
-		widgetId = widgetId.replaceAll("\\.", "_");
-
-		super.setId(widgetId+"_" + id);
+		super.setId(id);
+//		FacesContext context = FacesContext.getCurrentInstance();
+//		
+//		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+//		String widgetId = (String)request.getAttribute("widgetId");
+//		widgetId = widgetId.replaceAll("\\.", "_");
+//
+//		super.setId(widgetId+"_" + id);
 	}
 
 	public String getClientId(FacesContext context) {

@@ -8,6 +8,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.framework.FlowContext;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.integration.jsf.core.AraneaJsfRequestWrapper;
@@ -29,6 +31,7 @@ public class JsfWidget extends BaseApplicationWidget {
     protected void init() throws Exception {
     	if (log.isDebugEnabled())
     		log.debug("JSF view from '" + viewSelector + "'");
+    	addEventListener("endFlow", new ProxyEventListener(this));
     }
 
     protected void handleUpdate(InputData input) throws Exception {        
@@ -107,7 +110,7 @@ public class JsfWidget extends BaseApplicationWidget {
     	return viewSelector;
     }
     
-    public void handleEventSubmit() {
-    	log.debug("Handling submit ");
+    public void handleEventEndFlow(String param) {
+    	((FlowContext)getEnvironment().getEntry(FlowContext.class)).finish(param);
     }
 }
