@@ -573,13 +573,13 @@ function __gwt_bootstrap() {
   }
 
   // Hook the current window onload handler.
-  var oldHandler = window.onload;
-  window.onload = function() {
+  //var oldHandler = window.onload;
+  //window.onload = function() {
     __gwt_isHostPageLoaded = true;
-    if (oldHandler) {
-      oldHandler();
-    }
-  };
+  //  if (oldHandler) {
+  //    oldHandler();
+  //  }
+  //};
 
   // Parse meta tags from host html.
   __gwt_processMetas();

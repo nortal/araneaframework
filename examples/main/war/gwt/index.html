@@ -21,7 +21,7 @@
 		    	_document: null,
 
 				addModule: function(widgetId, moduleId) {
-					window.alert('[addModule] "' + widgetId + '", "' + moduleId + '"');
+					//window.alert('[addModule] "' + widgetId + '", "' + moduleId + '"');
 					
 					//TODO check if modules contains widgetId, then destroy previous module and replace with new
 					//if (this._modules[widgetId]) {
@@ -41,6 +41,7 @@
 				},
 
 				renderModule: function(widgetId) {
+					//TODO
 				},
 
 				loadPage: function() {
@@ -50,7 +51,7 @@
 						var module = this._modules[i];
 
 						if (module.meta) {
-							alert('remove ' + module.meta);
+							//window.alert('[loadPage] remove ' + module.meta);
 							module.meta.parentNode.removeChild(module.meta);
 							module.meta = null;
 						}
@@ -70,12 +71,17 @@
 						}
 
 						if (module.dom) {
-							//TODO reattach module.dom to $('module.widgetId')
+							//window.alert('[loadPage] restoring ' + module.dom + ' -> ' + container);
+							var container = this.getDocument().getElementById(module.widgetId);
+							if (container) {
+								container.parentNode.replaceChild(module.dom, container);
+								module.dom = null;
+							}
 						}
 
 					}
 
-					alert('[go] modules.length=' + this._modules.length + ' metaCount=' + metaCount);
+					//window.alert('[loadPage] modules.length=' + this._modules.length + ' metaCount=' + metaCount);
 					if (metaCount > 0) {
 						__gwt_moduleControlBlocks.blocks_ = [];
 						__gwt_bootstrap();
@@ -83,7 +89,13 @@
 				},
 
 				unloadPage: function() {
-					alert('unload');
+					for (var i = 0; i < this._modules.length; i++) {
+						var module = this._modules[i];
+						var container = this.getDocument().getElementById(module.widgetId);
+						if (container) {
+							module.dom = container.parentNode.removeChild(container);
+						}
+					}
 				},
 
 				getDocument: function() {
