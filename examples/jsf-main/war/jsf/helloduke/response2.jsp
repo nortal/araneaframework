@@ -32,14 +32,14 @@
     version="2.0">
 
     <f:view>
-    <h:form id="responseform">
-    <h:graphicImage id="waveImg" url="gfx/helloDuke/wave.med.gif" />
-    <h2>Hi, <h:outputText id="userLabel"
-			   value="#{UserNameBean.userName}" /> </h2>
-	 <h:commandButton id="back" value="Back" action="success" 
+    <h:form id="responseform2">
+    <h:graphicImage id="waveImg2" url="gfx/helloDuke/wave.med.gif" />
+    <h2>Hi, <h:outputText id="userLabel2"
+			   value="#{UserNameBean2.userName}" /> </h2>
+	 <h:commandButton id="back2" value="Back" action="success" 
                            />
          <p/>
-   </h:form>
+    </h:form>
     </f:view>
 </jsp:root>
 

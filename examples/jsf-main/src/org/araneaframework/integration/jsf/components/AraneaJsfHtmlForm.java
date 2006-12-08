@@ -4,7 +4,6 @@ import java.io.IOException;
 import javax.faces.component.html.HtmlForm;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
-import javax.servlet.http.HttpServletRequest;
 
 public class AraneaJsfHtmlForm extends HtmlForm {
 	public String getRendererType() {
@@ -13,6 +12,7 @@ public class AraneaJsfHtmlForm extends HtmlForm {
 	
 	public void setId(String id) {
 		super.setId(id);
+		//XXX: scoping cannot be done this way
 //		FacesContext context = FacesContext.getCurrentInstance();
 //		
 //		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();

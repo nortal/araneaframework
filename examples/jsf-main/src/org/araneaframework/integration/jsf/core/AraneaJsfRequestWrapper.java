@@ -4,11 +4,13 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import javax.faces.render.ResponseStateManager;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
+import org.araneaframework.integration.jsf.JsfWidget;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -21,19 +23,22 @@ public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
 	private Map attributes;
 
     private String viewSelector;
+    private JsfWidget jsfWidget;
 
-    public AraneaJsfRequestWrapper(HttpServletRequest request, String viewSelector) {
+    public AraneaJsfRequestWrapper(HttpServletRequest request, JsfWidget jsfWidget) {
         super(request);
-        this.viewSelector = viewSelector;
+        this.viewSelector = jsfWidget.getViewSelector();
+        this.jsfWidget = jsfWidget;
         setAttribute(ARANEA_JSF_REQUEST_WRAPPER, this);
     }
-
+    
     //XXX: both these path methods are ugly and unreliable
 //    public String getPathInfo() {
 //    	//return viewSele;
 //    }
 
-    //  XXX: both these path methods are ugly and unreliable
+
+	//  XXX: both these path methods are ugly and unreliable
     public String getServletPath() {
         return viewSelector;
     }
@@ -41,6 +46,15 @@ public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
     public String getViewSelector() {
     	return viewSelector;
     }
+    
+    
+    public String getParameter(String name) {
+    	if (name != null && name.equals(ResponseStateManager.VIEW_STATE_PARAM))
+    		return super.getParameter(jsfWidget.getWidgetStateParam());
+
+		return super.getParameter(name);
+	}
+    
 
     public RequestDispatcher getRequestDispatcher(String path) {
         return new AraneaJsfRequestDispatcherWrapper(getRequest().getRequestDispatcher(path));

@@ -33,6 +33,22 @@
 			<to-view-id>/jsf/helloduke/greeting.jsp</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsf/helloduke/greeting2.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsf/helloduke/response2.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsf/helloduke/response2.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsf/helloduke/greeting2.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 	<!-- END HELLODUKE -->
 
 	<!-- GUESSNUMBER -->
@@ -65,13 +81,11 @@
 	<!--  	<component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlCommandButton</component-class>-->
 	<!--  </component>-->
 
-	<!--  javascript:alert(document.getElementById('system_form_0').onsubmit=function() {return true;}); -->
-
 	<render-kit>
 		<renderer>
 			<component-family>javax.faces.Form</component-family>
 			<renderer-type>AraneaFormRenderer</renderer-type>
-			<renderer-class>org.araneaframework.integration.jsf.renderer.EmptyRenderer</renderer-class>
+			<renderer-class>org.araneaframework.integration.jsf.renderer.AraneaJsfFormRenderer</renderer-class>
 		</renderer>
 	</render-kit>
 

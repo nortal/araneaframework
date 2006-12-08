@@ -88,7 +88,7 @@ public class AraneaJsfResponseWrapper extends HttpServletResponseWrapper {
 	public void sendRedirect(String location) throws IOException {
 		if (log.isDebugEnabled())
 			log.debug("Redirection to '" + location + "' requested.");
-		// local JSF response should be reset here, requestdispatcher.include() invoked
+		// should local JSF response should be reset here, requestdispatcher.include() invoked
 		super.sendRedirect(location);
 	}
 }

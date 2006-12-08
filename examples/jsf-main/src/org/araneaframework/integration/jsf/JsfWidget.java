@@ -3,6 +3,7 @@ package org.araneaframework.integration.jsf;
 import javax.faces.application.StateManager;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
@@ -19,6 +20,7 @@ import org.araneaframework.integration.jsf.core.AraneaJsfRequestWrapper;
 import org.araneaframework.integration.jsf.core.AraneaJsfResponseWrapper;
 import org.araneaframework.integration.jsf.core.AraneaJsfStateManagerWrapper;
 import org.araneaframework.integration.jsf.core.JSFContext;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -35,6 +37,8 @@ public class JsfWidget extends BaseApplicationWidget {
     public JsfWidget(String viewSelector) {
         this.viewSelector = viewSelector;
     }
+    
+    
     
     protected void init() throws Exception {
     	if (log.isDebugEnabled())
@@ -65,7 +69,8 @@ public class JsfWidget extends BaseApplicationWidget {
         	UIViewRoot root = 
         		manager.restoreView(facesContext, getViewSelector(), getJSFContext().getApplication().getViewHandler().calculateRenderKitId(facesContext));
         	
-        	if (root.equals(savedViewRoot)) {
+        	
+        	if (root !=null && root.equals(savedViewRoot)) {
         		log.debug(":--------О");
         	}
 
@@ -75,8 +80,10 @@ public class JsfWidget extends BaseApplicationWidget {
         getJSFContext().getLifecycle().execute(facesContext);
         getJSFContext().getLifecycle().render(facesContext);
 
+        // navigationhandler has kicked in
         if (!facesContext.getViewRoot().getViewId().equals(viewSelector)) {
-        	log.debug("ViewSelector changed from '" + viewSelector + "' to '" + facesContext.getViewRoot().getViewId()+ "'");
+        	if (log.isDebugEnabled())
+        		log.debug("ViewSelector changed from '" + viewSelector + "' to '" + facesContext.getViewRoot().getViewId()+ "'");
         	viewSelector = facesContext.getViewRoot().getViewId();
         }
         
@@ -86,9 +93,17 @@ public class JsfWidget extends BaseApplicationWidget {
 
         getJSFContext().destroyFacesContext(facesContext);
         
+        // peek the response
+        MockHttpServletResponse r = (MockHttpServletResponse) ((AraneaJsfResponseWrapper) ServletUtil.getResponse(getOutputData())).getResponse();
+        String s = r.getContentAsString();
+        
+        s= s.replaceAll("\"javax.faces.ViewState\"", "\""+ getWidgetStateParam() + "\"");
+
         // restore request and response
         restoreRequest(getInputData());
         restoreResponse(getOutputData());
+        
+        ServletUtil.getResponse(getOutputData()).getWriter().write(s);
     }
     
     protected FacesContext initFacesContext() {
@@ -118,12 +133,17 @@ public class JsfWidget extends BaseApplicationWidget {
     		request = ServletUtil.getRequest(input);
     	}
 
-    	ServletUtil.setRequest(input, new AraneaJsfRequestWrapper(request, viewSelector));
+    	ServletUtil.setRequest(input, new AraneaJsfRequestWrapper(request, this));
     }
     
+    
+    
+    
+    HttpServletResponse resp;
     protected HttpServletResponse wrapJsfResponse(OutputData output) {
     	HttpServletResponse response = ServletUtil.getResponse(output);
-    	ServletUtil.setResponse(output,new AraneaJsfResponseWrapper(response));
+    	resp = response;
+    	ServletUtil.setResponse(output,new AraneaJsfResponseWrapper(new MockHttpServletResponse()));
     	return ServletUtil.getResponse(output);
     }
     
@@ -135,8 +155,10 @@ public class JsfWidget extends BaseApplicationWidget {
     	}
     }
     
-    protected void restoreResponse(OutputData input) {
+    protected void restoreResponse(OutputData output) {
     	//XXX: should do?
+    	ServletUtil.setResponse(output,resp);
+    	resp = null;
     }
 
     public JspContext getJspContext() {
@@ -149,6 +171,10 @@ public class JsfWidget extends BaseApplicationWidget {
     
     public String getViewSelector() {
     	return viewSelector;
+    }
+    
+    public String getWidgetStateParam() {
+    	return getOutputData().getScope() + "-JSFSTATE";
     }
     
     public void handleEventEndFlow(String param) {

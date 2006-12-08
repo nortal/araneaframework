@@ -22,7 +22,6 @@
  
  Copyright 2005 Sun Microsystems Inc. All Rights Reserved
 -->
-
 <jsp:root
     xmlns:jsp="http://java.sun.com/JSP/Page" 
     xmlns:c="http://java.sun.com/jstl/core"
@@ -30,16 +29,18 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     version="2.0">
+    
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
 
+    <h2>My name is Duke.  What is yours?</h2>
+    <jsp:useBean id="UserNameBean2" class="org.araneaframework.example.jsf.web.jsf.helloDuke.UserNameBean" scope="session" />
     <f:view>
-    <h:form id="responseform">
-    <h:graphicImage id="waveImg" url="gfx/helloDuke/wave.med.gif" />
-    <h2>Hi, <h:outputText id="userLabel"
-			   value="#{UserNameBean.userName}" /> </h2>
-	 <h:commandButton id="back" value="Back" action="success" 
-                           />
-         <p/>
-   </h:form>
+  <h:form id="helloForm2" >
+        <h:graphicImage id="waveImg2" url="gfx/helloDuke/wave.med.gif" />
+  	<h:inputText id="username2"
+			value="#{UserNameBean2.userName}" />
+  	<h:commandButton id="submit2" action="success" value="Submit" 
+		          type="submit" />
+    </h:form>
     </f:view>
 </jsp:root>
-

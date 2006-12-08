@@ -7,11 +7,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.ActionEvent;
 import javax.faces.render.Renderer;
-import org.araneaframework.core.Assert;
 
-public class EmptyRenderer extends Renderer {
+public class AraneaJsfFormRenderer extends Renderer {
 	public void decode(FacesContext facesContext, UIComponent component) {
 	    UIForm htmlForm = (UIForm)component;
 
@@ -21,8 +19,8 @@ public class EmptyRenderer extends Renderer {
         htmlForm.setSubmitted(submittedValue != null);
 
         // XXX: events 
-    ActionEvent actionEvent = new ActionEvent(component);
-        component.queueEvent(actionEvent);
+//    ActionEvent actionEvent = new ActionEvent(component);
+//        component.queueEvent(actionEvent);
 	}
 
 	public void encodeBegin(FacesContext facesContext, UIComponent component) throws IOException {
