@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<style>
+			body, iframe {
+				width: 100%;
+				height: 100%;
+				border: 0;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+    </head>
+    <body>
+		<script type="text/javascript" src="gwt.js"></script>
+		<script type="text/javascript">
+		    var Aranea = {};
+		    Aranea.Gwt = {
+		    	_modules: [],
+		    	_document: null,
+
+				addModule: function(widgetId, moduleId) {
+					window.alert('[addModule] "' + widgetId + '", "' + moduleId + '"');
+					
+					//TODO check if modules contains widgetId, then destroy previous module and replace with new
+					//if (this._modules[widgetId]) {
+					//	window.alert('Error: GWT widget "' + widgetId + '" ("' + moduleId + '") already exists!');
+					//	return;
+					//}
+
+					var module = {
+						widgetId: widgetId,
+						moduleId: moduleId,
+						meta: null,
+						state: 0,
+						dom: null
+					};
+
+					this._modules.push(module);
+				},
+
+				renderModule: function(widgetId) {
+				},
+
+				loadPage: function() {
+					var metaCount = 0;
+
+					for (var i = 0; i < this._modules.length; i++) {
+						var module = this._modules[i];
+
+						if (module.meta) {
+							alert('remove ' + module.meta);
+							module.meta.parentNode.removeChild(module.meta);
+							module.meta = null;
+						}
+
+						if (module.state == 0) {
+							var meta = this.getDocument().defaultView.Builder.node(
+								'meta',
+								{
+									name: 'gwt:module',
+									content: module.widgetId + '=' + module.moduleId + '=' + module.moduleId
+								}
+							);
+							document.body.previousSibling.appendChild(meta);
+							module.meta = meta;
+							module.state++;
+							metaCount++;
+						}
+
+						if (module.dom) {
+							//TODO reattach module.dom to $('module.widgetId')
+						}
+
+					}
+
+					alert('[go] modules.length=' + this._modules.length + ' metaCount=' + metaCount);
+					if (metaCount > 0) {
+						__gwt_moduleControlBlocks.blocks_ = [];
+						__gwt_bootstrap();
+					}
+				},
+
+				unloadPage: function() {
+					alert('unload');
+				},
+
+				getDocument: function() {
+					return this._document;
+				}
+			};
+		</script>
+		<iframe src="../main"></iframe>
+    </body>
+</html>
