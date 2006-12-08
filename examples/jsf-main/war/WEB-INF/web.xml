@@ -22,6 +22,11 @@
         <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
         <param-value>.jsp</param-value>
     </context-param>
+
+    <context-param> <!-- RI specific -->
+    	<param-name>com.sun.faces.disableVersionTracking</param-name>
+    	<param-value>true</param-value>
+    </context-param>
     <!-- END JSF integration -->
 	
      <filter>

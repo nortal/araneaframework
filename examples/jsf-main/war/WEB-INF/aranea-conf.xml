@@ -3,9 +3,9 @@
 
 <beans>
 	<bean id="araneaApplicationStart"
-		class="org.araneaframework.example.jsf.web.LoginWidget"
+		class="org.araneaframework.example.jsf.web.RootWidget"
 		singleton="false"/>
-  
+		
   <bean class="org.araneaframework.http.filter.StandardMountingFilterService" 
     id="araneaMountFilter" singleton="false">
     <property name="mounts">

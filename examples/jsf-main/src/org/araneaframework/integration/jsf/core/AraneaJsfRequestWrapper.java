@@ -28,17 +28,22 @@ public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
         setAttribute(ARANEA_JSF_REQUEST_WRAPPER, this);
     }
 
-    public String getPathInfo() {
-        return null;
-    }
+    //XXX: both these path methods are ugly and unreliable
+//    public String getPathInfo() {
+//    	//return viewSele;
+//    }
 
+    //  XXX: both these path methods are ugly and unreliable
     public String getServletPath() {
         return viewSelector;
+    }
+    
+    public String getViewSelector() {
+    	return viewSelector;
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {
         return new AraneaJsfRequestDispatcherWrapper(getRequest().getRequestDispatcher(path));
-        //return wrapped.getRequestDispatcher(path);
     }
 
 	public void setAttribute(String name, Object value) {

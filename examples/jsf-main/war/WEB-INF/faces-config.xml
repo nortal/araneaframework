@@ -5,10 +5,16 @@
 <faces-config version="1.2" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+
 	<application>
-		<view-handler>
-			org.araneaframework.integration.jsf.useless.AraneaViewHandlerDecorator
-		</view-handler>
+		<!--  This is better off set in JSF filter  -->
+		<!--view-handler>
+			org.araneaframework.integration.jsf.core.AraneaViewHandlerDecorator
+		</view-handler-->
+		
+		<state-manager>
+			org.araneaframework.integration.jsf.core.AraneaJsfStateManagerWrapper
+		</state-manager>
 	</application>
 
 	<!-- HELLODUKE -->

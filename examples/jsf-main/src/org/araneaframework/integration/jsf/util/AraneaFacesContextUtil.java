@@ -4,6 +4,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletRequest;
 import org.araneaframework.OutputData;
 import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 
 public class AraneaFacesContextUtil {
@@ -15,5 +16,7 @@ public class AraneaFacesContextUtil {
 		return (LocalizationContext) getOutputData(facesContext).getAttribute(LocalizationContext.LOCALIZATION_CONTEXT_KEY);
 	}
 	
-	
+	public static JspContext getJspContext(FacesContext facesContext) {
+		return (JspContext) getOutputData(facesContext).getAttribute(JspContext.JSP_CONFIGURATION_KEY);
+	}
 }
