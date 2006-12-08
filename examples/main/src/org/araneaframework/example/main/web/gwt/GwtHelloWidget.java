@@ -14,4 +14,8 @@ public class GwtHelloWidget extends BaseUIWidget {
     addWidget("hello3", new GwtWidget("org.araneaframework.example.gwt.hello.Hello"));
   }
 
+  public void handleEventStart() throws Exception {
+    getFlowCtx().start(new OtherWidget(), null, null);
+  }
+
 }

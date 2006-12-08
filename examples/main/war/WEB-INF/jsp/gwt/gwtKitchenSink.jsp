@@ -13,7 +13,12 @@
 
 		<ui:component>
 
-			<ui:eventButton eventId="test" labelId="#Empty submit"/>
+			<p>
+				<ui:eventButton eventId="test" labelId="#Empty submit"/>
+			</p>
+			<p>
+				<ui:eventButton eventId="start" labelId="#Start new flow"/>
+			</p>
 
 			<!-- <iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe> -->
 

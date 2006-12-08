@@ -13,7 +13,12 @@
 
 		<ui:component>
 
-			<ui:eventButton eventId="test" labelId="#Empty submit"/>
+			<p>
+				<ui:eventButton eventId="test" labelId="#Empty submit"/>
+			</p>
+			<p>
+				<ui:eventButton eventId="start" labelId="#Start new flow"/>
+			</p>
 
 			<ui:gwtWidgetInclude id="hello1"/>
 			<ui:gwtWidgetInclude id="hello2"/>

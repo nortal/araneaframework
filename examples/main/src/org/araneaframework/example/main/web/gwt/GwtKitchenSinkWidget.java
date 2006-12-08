@@ -14,4 +14,8 @@ public class GwtKitchenSinkWidget extends BaseUIWidget {
     addWidget("kitchen3", new GwtWidget("org.araneaframework.example.gwt.kitchensink.KitchenSink"));
   }
 
+  public void handleEventStart() throws Exception {
+    getFlowCtx().start(new OtherWidget(), null, null);
+  }
+
 }

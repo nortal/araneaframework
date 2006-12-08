@@ -37,6 +37,13 @@
 								}
 							}
 */
+
+							// Copy-paste hack
+							if (module.meta) {
+								module.meta.parentNode.removeChild(module.meta);
+								module.meta = null;
+							}
+
 							delete this._modules[i];
 						}
 					}

@@ -1,3 +1,3 @@
 #!/bin/sh
 APPDIR=`dirname "$0"`;
-java  -cp "$APPDIR/src:$APPDIR/war/WEB-INF/classes:/home/programs/lib/gwt-linux-1.2.22/gwt-user.jar:/home/programs/lib/gwt-linux-1.2.22/gwt-dev-linux.jar" com.google.gwt.dev.GWTCompiler -out "$APPDIR/war/gwt" -style DETAILED "$@" org.araneaframework.example.gwt.hello.Hello;
+java  -cp "$APPDIR/src:$APPDIR/war/WEB-INF/classes:$APPDIR/../lib/gwt/gwt-user.jar:$APPDIR/../lib/gwt/gwt-dev-linux.jar" com.google.gwt.dev.GWTCompiler -out "$APPDIR/war/gwt" -style DETAILED "$@" org.araneaframework.example.gwt.hello.Hello;
