@@ -3,9 +3,12 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
+<html>
+<head>
+<title>Hello World!</title>
+</head>
+<body>
 <html:errors/><p>
-
-xxx
 
 <logic:present name="examples.hello" scope="request">
    <h2>
@@ -21,3 +24,5 @@ xxx
   <html:submit value="Submit"/>
   <html:reset/>
 </html:form>
+</body>
+</html>

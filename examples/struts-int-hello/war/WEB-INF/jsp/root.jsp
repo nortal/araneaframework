@@ -19,13 +19,13 @@
 						<div style="width: 80%; border-color: green; border-style: solid; border-width: 2px; padding: 10px">						
 								<ui:widgetInclude id="araneaHelloWorld" />															
 						</div>
-					</ui:systemForm>	
+					
 						<br/><br/><br/>
 						<h3>Struts Hello World</h3>
 						<div style="width: 80%; border-color: red; border-style: solid; border-width: 2px; padding: 10px">
 							<ui:widgetInclude id="strutsHelloWorld" />					
 						</div>
-					
+					</ui:systemForm>	
 				</ui:body>
 				</html>
 			</ui:widgetContext>

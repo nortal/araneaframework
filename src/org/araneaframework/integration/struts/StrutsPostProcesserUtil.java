@@ -39,14 +39,14 @@ public abstract class StrutsPostProcesserUtil {
     return result;
   }
   
-  public static byte[] postProcess(byte[] vanilla, InputData input, OutputData output) throws Exception {        
+  public static byte[] postProcess(byte[] vanilla, InputData input, OutputData output) throws Exception {       
     String html = new String(vanilla, "UTF-8");
         
     Pattern bodyPattern = Pattern.compile("<body.*?>(.*)</body>", 
         Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     Matcher bodyMatcher = bodyPattern.matcher(html);
-    bodyMatcher.find();
-    html = bodyMatcher.group(1);
+    if (bodyMatcher.find())
+      html = bodyMatcher.group(1);
     
     StringBuffer result = new StringBuffer();
     
@@ -55,6 +55,7 @@ public abstract class StrutsPostProcesserUtil {
     Matcher formMatcher = formPattern.matcher(html);
         
     int formSearchStart = 0;
+    int formIndex = 0;
     
     while (formSearchStart < html.length() && formMatcher.find(formSearchStart)) {
       result.append(html.substring(formSearchStart, formMatcher.start(0)));
@@ -64,19 +65,25 @@ public abstract class StrutsPostProcesserUtil {
 
       Map formTagAttrs = extractAttributes(formTagStart);
       
+      if (formTagAttrs.get("name") == null)
+        formTagAttrs.put("name", "struts_form_" + formIndex++);
       
       result.append("<script>\n");
-      result.append("  document.forms['");
-      result.append(formTagAttrs.get("name"));
-      result.append("'] = _ap.getSystemForm(this);\n\n");
-      
+//      result.append("  document.forms['");
+//      result.append(formTagAttrs.get("name"));
+//      result.append("'] = _ap.getSystemForm(this);\n\n");
+//      
       result.append("function simulate");
       result.append(formTagAttrs.get("name"));
-      result.append("() {\n");    
+      result.append("(form) {\n");    
       
-      result.append("  document.forms[\"");
+      result.append("  document.forms['");
       result.append(formTagAttrs.get("name"));
-      result.append("\"]=form;\n");      
+      result.append("'] = form;\n\n");
+            
+//      result.append("  var form = document.forms['");
+//      result.append(formTagAttrs.get("name"));
+//      result.append("'];\n");      
       
       result.append("  form.name='");
       result.append(formTagAttrs.get("name"));  
@@ -130,7 +137,7 @@ public abstract class StrutsPostProcesserUtil {
         submitBuf.append("\" onclick=\"");
         submitBuf.append("simulate");
         submitBuf.append(formTagAttrs.get("name"));
-        submitBuf.append("();");
+        submitBuf.append("(_ap.getSystemForm(this));");
         if (attrs.containsKey("onclick")) {
           submitBuf.append(attrs.get("onclick"));
           if (!((String) attrs.get("onclick")).trim().endsWith(";"))

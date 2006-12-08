@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -26,6 +27,8 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.ServletUtil;
 
 public class StrutsWidget extends BaseApplicationWidget {  
+  private static final Logger log = Logger.getLogger(StrutsWidget.class);
+  
   public static final String STRUTS_WIDGET_KEY = "org.araneaframework.integration.struts.StrutsWidget"; 
   
   private String strutsURI;
@@ -195,6 +198,11 @@ public class StrutsWidget extends BaseApplicationWidget {
     }
 
     public void render(OutputData output) throws Exception {
+      if (StrutsWidget.this.getWidget(widgetId) == null) {
+        log.warn("Widget '" + widgetId + "' was not found under Struts widget '" + output.getScope() + "'.");
+        return;
+      }
+      
       output.pushScope(widgetId);
       
       try {                

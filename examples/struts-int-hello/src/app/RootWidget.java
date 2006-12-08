@@ -26,8 +26,8 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  */
 public class RootWidget extends BaseUIWidget {
 	protected void init() throws Exception {
-    addWidget("strutsHelloWorld", new StrutsHelloWorldWidget());
     addWidget("araneaHelloWorld", new StandardFlowContainerWidget(new NameWidget()));
+    addWidget("strutsHelloWorld", new StrutsHelloWorldWidget());
     setViewSelector("root");
 	} 
 }

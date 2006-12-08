@@ -27,14 +27,14 @@
         Russian</html:link></li>
 </ul>
 
+<ui:strutsWidgetInclude id="list"/>
+
 <hr/>
 
 <p><html:img bundle="alternate" pageKey="struts.logo.path"
              altKey="struts.logo.alt"/></p>
 
 <p><html:link action="/Tour"><bean:message key="index.tour"/></html:link></p>
-
-<ui:strutsWidgetInclude id="test"/>
 
 </body>
 </html>

@@ -88,6 +88,18 @@
                     name="type"
                     type="java.lang.String"/>
         </form-bean>
+        
+        <!-- SubscriptionAction form bean -->
+        <form-bean
+                name="CompanyForm"
+                type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property
+                    name="name"
+                    type="java.lang.String"/>
+            <form-property
+                    name="address"
+                    type="java.lang.String"/>
+        </form-bean>        
 
     </form-beans>
 
@@ -121,10 +133,6 @@
                     name="Success"
                     path="/Welcome.jsp"/>
         </action>
-        <!-- Display welcome page -->
-        <!-- action
-                path="/Welcome"
-                forward="/Welcome.jsp"/ -->
 
         <!-- Change locale action -->
         <action
@@ -207,6 +215,7 @@
             <forward
                     name="Success"
                     path="/MainMenu.do"/>
+                                                           
         </action>
 
         <!-- Matches SaveSubscription action -->
@@ -228,6 +237,19 @@
         <action
                 path="/Tour"
                 forward="/tour.html"/>
+                
+        <!-- Process a user logon -->
+        <action
+                path="/SubmitCompany"
+                type="org.araneaframework.example.main.web.company.CompanyAction"
+                name="CompanyForm"
+                scope="request"
+                input="Company"
+                validate="true">
+            <forward
+                    name="Company"
+                    path="/Company.jsp"/>                
+        </action>                
 
     </action-mappings>
 
