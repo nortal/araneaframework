@@ -107,7 +107,6 @@ function ModuleControlBlock(metaElem, rawName) {
     parts[1] = rawName.substring(i+1);
   }
 
-  //alert(container + "\n" + parts[0] + "\n" + parts[1]);
   this.metaElem_ = metaElem;
   this.container_ = container;
   this.baseUrl_ = parts[0];
