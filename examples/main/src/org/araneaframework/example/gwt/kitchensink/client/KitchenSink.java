@@ -50,6 +50,10 @@ public class KitchenSink implements EntryPoint, HistoryListener {
     show(info, false);
   }
 
+  public static native String getContainer() /*-{
+    return $mcb.getContainer ? $mcb.getContainer() : null;
+  }-*/;
+
   public void onModuleLoad() {
     // Load all the sinks.
     loadSinks();
@@ -73,7 +77,7 @@ public class KitchenSink implements EntryPoint, HistoryListener {
     panel.setCellWidth(vp, "100%");
 
     History.addHistoryListener(this);
-    RootPanel.get("gwtKitchenSink").add(panel);
+    RootPanel.get(getContainer()).add(panel);
 
     // Show the initial screen.
     String initToken = History.getToken();

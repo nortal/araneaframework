@@ -13,7 +13,7 @@
 
 		<ui:component>
 
-			<ui:eventButton eventId="test" labelId="#Aranea submit"/>
+			<ui:eventButton eventId="test" labelId="#Empty submit"/>
 
 			<ui:gwtWidgetInclude id="hello1"/>
 			<ui:gwtWidgetInclude id="hello2"/>

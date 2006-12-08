@@ -24,6 +24,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Hello implements EntryPoint {
 
+  public static native String getContainer() /*-{
+    return $mcb.getContainer ? $mcb.getContainer() : null;
+  }-*/;
+
   public void onModuleLoad() {
     Button b = new Button("Click me " + Math.round(Math.random() * 100), new ClickListener() {
       public void onClick(Widget sender) {
@@ -33,9 +37,5 @@ public class Hello implements EntryPoint {
 
     RootPanel.get(getContainer()).add(b);
   }
-
-  public static native String getContainer() /*-{
-    return $mcb.getContainer ? $mcb.getContainer() : null;
-  }-*/;
 
 }

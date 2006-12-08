@@ -9,7 +9,9 @@ public class GwtKitchenSinkWidget extends BaseUIWidget {
 
   protected void init() throws Exception {
     setViewSelector("gwt/gwtKitchenSink");
-    addWidget("hello", new GwtWidget("org.araneaframework.example.gwt.kitchensink.KitchenSink"));
+    addWidget("kitchen1", new GwtWidget("org.araneaframework.example.gwt.kitchensink.KitchenSink"));
+    addWidget("kitchen2", new GwtWidget("org.araneaframework.example.gwt.kitchensink.KitchenSink"));
+    addWidget("kitchen3", new GwtWidget("org.araneaframework.example.gwt.kitchensink.KitchenSink"));
   }
 
 }
