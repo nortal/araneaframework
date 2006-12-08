@@ -29,7 +29,7 @@ public class JsfWidget extends BaseApplicationWidget {
     
     protected boolean justInited;
     
-    protected Object state;
+    protected Object savedViewRoot;
     
     /** Creates a new instance of JsfWidget */
     public JsfWidget(String viewSelector) {
@@ -59,13 +59,18 @@ public class JsfWidget extends BaseApplicationWidget {
         FacesContext facesContext = initFacesContext();
         StateManager mng = facesContext.getApplication().getStateManager();
         
-//        if (state != null) {
-//        	AraneaJsfStateManagerWrapper manager = (AraneaJsfStateManagerWrapper) mng;
-//        	UIViewRoot root = 
-//        		manager.restoreView(facesContext, getViewSelector(), getJSFContext().getApplication().getViewHandler().calculateRenderKitId(facesContext));
-//
-//        	manager.restoreComponentState(facesContext, root, getJSFContext().getApplication().getViewHandler().calculateRenderKitId(facesContext));
-//        }
+        // XXX: just experimenting
+        if (savedViewRoot  != null) {
+        	AraneaJsfStateManagerWrapper manager = (AraneaJsfStateManagerWrapper) mng;
+        	UIViewRoot root = 
+        		manager.restoreView(facesContext, getViewSelector(), getJSFContext().getApplication().getViewHandler().calculateRenderKitId(facesContext));
+        	
+        	if (root.equals(savedViewRoot)) {
+        		log.debug(":--------О");
+        	}
+
+        	//manager.restoreComponentState(facesContext, root, getJSFContext().getApplication().getViewHandler().calculateRenderKitId(facesContext));
+        }
 
         getJSFContext().getLifecycle().execute(facesContext);
         getJSFContext().getLifecycle().render(facesContext);
@@ -75,7 +80,7 @@ public class JsfWidget extends BaseApplicationWidget {
         	viewSelector = facesContext.getViewRoot().getViewId();
         }
         
-        Object what = facesContext.getViewRoot().saveState(facesContext);
+        savedViewRoot = facesContext.getViewRoot().saveState(facesContext);
 
         //state = mng.saveView(facesContext);
 
