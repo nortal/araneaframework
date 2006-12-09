@@ -42,7 +42,7 @@ public class Tables extends Sink {
   private FlexTable outer = new FlexTable();
 
   public Tables() {
-    outer.setWidget(0, 0, new Image("rembrandt/LaMarcheNocturne.jpg"));
+    outer.setWidget(0, 0, new Image(KitchenSink.URL_PREFIX + "rembrandt/LaMarcheNocturne.jpg"));
     outer.getFlexCellFormatter().setColSpan(0, 0, 2);
     outer.getFlexCellFormatter().setHorizontalAlignment(0, 0,
       HasHorizontalAlignment.ALIGN_CENTER);

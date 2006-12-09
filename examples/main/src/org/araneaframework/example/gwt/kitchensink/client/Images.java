@@ -47,9 +47,9 @@ public class Images extends Sink implements ClickListener, LoadListener {
 
   private int curImage;
   private Image image = new Image();
-  private Image loadingImage = new Image("images/blanksearching.gif");
-  private Image nextButton = new Image("rembrandt/forward.gif");
-  private Image prevButton = new Image("rembrandt/back.gif");
+  private Image loadingImage = new Image(KitchenSink.URL_PREFIX + "images/blanksearching.gif");
+  private Image nextButton = new Image(KitchenSink.URL_PREFIX + "rembrandt/forward.gif");
+  private Image prevButton = new Image(KitchenSink.URL_PREFIX + "rembrandt/back.gif");
 
   public Images() {
     image.addLoadListener(this);
@@ -89,7 +89,7 @@ public class Images extends Sink implements ClickListener, LoadListener {
   }
 
   public void onLoad(Widget sender) {
-    loadingImage.setUrl("images/blanksearching.gif");
+    loadingImage.setUrl(KitchenSink.URL_PREFIX + "images/blanksearching.gif");
   }
 
   public void onShow() {
@@ -102,7 +102,7 @@ public class Images extends Sink implements ClickListener, LoadListener {
       index = 0;
 
     curImage = index;
-    loadingImage.setUrl("images/searching.gif");
-    image.setUrl(sImages[curImage]);
+    loadingImage.setUrl(KitchenSink.URL_PREFIX + "images/searching.gif");
+    image.setUrl(KitchenSink.URL_PREFIX + sImages[curImage]);
   }
 }

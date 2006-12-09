@@ -32,7 +32,7 @@ public class Frames extends Sink {
     };
   }
 
-  private Frame frame = new Frame("rembrandt/LaMarcheNocturne.html");
+  private Frame frame = new Frame(KitchenSink.URL_PREFIX + "rembrandt/LaMarcheNocturne.html");
 
   public Frames() {
     frame.setWidth("100%");

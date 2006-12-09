@@ -31,6 +31,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class KitchenSink implements EntryPoint, HistoryListener {
 
+  public static final String URL_PREFIX = "gwt/org.araneaframework.example.gwt.kitchensink.KitchenSink/";
+
   private SinkInfo curInfo;
   private Sink curSink;
   private HTML description = new HTML();

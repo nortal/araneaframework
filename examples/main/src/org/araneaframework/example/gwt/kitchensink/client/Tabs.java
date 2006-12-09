@@ -39,10 +39,10 @@ public class Tabs extends Sink {
   private TabPanel fTabs = new TabPanel();
 
   public Tabs() {
-    fTabs.add(createImage("rembrandt/JohannesElison.jpg"), "1634");
-    fTabs.add(createImage("rembrandt/SelfPortrait1640.jpg"), "1640");
-    fTabs.add(createImage("rembrandt/LaMarcheNocturne.jpg"), "1642");
-    fTabs.add(createImage("rembrandt/TheReturnOfTheProdigalSon.jpg"), "1662");
+    fTabs.add(createImage(KitchenSink.URL_PREFIX + "rembrandt/JohannesElison.jpg"), "1634");
+    fTabs.add(createImage(KitchenSink.URL_PREFIX + "rembrandt/SelfPortrait1640.jpg"), "1640");
+    fTabs.add(createImage(KitchenSink.URL_PREFIX + "rembrandt/LaMarcheNocturne.jpg"), "1642");
+    fTabs.add(createImage(KitchenSink.URL_PREFIX + "rembrandt/TheReturnOfTheProdigalSon.jpg"), "1662");
     fTabs.selectTab(0);
 
     fTabs.setWidth("100%");
