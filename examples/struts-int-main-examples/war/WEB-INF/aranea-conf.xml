@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <!-- bean id="araneaApplicationStart" singleton="false"
+  	class="org.araneaframework.framework.filter.StandardClassReloadingFilterWidget">
+  	<property name="childClassName" value="org.araneaframework.example.main.web.LoginWidget"/>
+  </bean -->
+	
+	<bean id="araneaApplicationStart"
+		class="org.araneaframework.example.main.web.RootWidget"
+		singleton="false"/>
+  
+  <bean class="org.araneaframework.http.filter.StandardMountingFilterService" 
+    id="araneaMountFilter" singleton="false">
+    <property name="mounts">
+      <map>
+        <entry key="person">
+          <bean class="org.araneaframework.example.main.message.ExamplePersonMountMessageFactory" singleton="false"/>
+        </entry>
+      </map>
+    </property>
+  </bean>
+  
+  <!-- Set the limits for file uploads. -->
+  <bean id="araneaFileUploadFilter" class="org.araneaframework.http.filter.StandardFileUploadFilterService" singleton="false">
+    <property name="maximumSize" value="1048576"/>
+    <property name="maximumCachedSize" value="1048576"/>
+  </bean>
+  
+<bean id="araneaCustomSessionFilters" singleton="false"
+  class="org.araneaframework.framework.filter.StandardFilterChainService">
+  <property name="filterChain">     
+    <list>
+      <ref bean="araneaSerializingAudit"/>
+    </list>
+  </property>
+</bean>
+
+  <bean id="araneaCustomWidgetFilters" singleton="false"
+    class="org.araneaframework.framework.filter.StandardFilterChainWidget">
+    <property name="filterChain">     
+      <list>
+        <ref bean="araneaScrollingFilter"/>
+      </list>
+    </property>
+  </bean>
+</beans>

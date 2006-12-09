@@ -32,8 +32,14 @@ public class TransactionHelper implements Serializable {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private Long currentTransactionId;
   private Random random = new Random(System.currentTimeMillis());
+  
+  private Long currentTransactionId;
+  private Long nextTransactionId;  
+  
+  {
+    resetTransactionId();
+  }
   
   //*******************************************************************
   // PUBLIC METHODS
@@ -42,14 +48,19 @@ public class TransactionHelper implements Serializable {
    * Generates a new current transaction id.
    */
   public void resetTransactionId() {
-    currentTransactionId = new Long(random.nextLong());
+    currentTransactionId = nextTransactionId;
+    nextTransactionId = new Long(random.nextLong());
   }
   
   /**
    * Returns the current transaction id.
    */
-  public Object getCurrentTransactionId() {
+  public Long getCurrentTransactionId() {
     return currentTransactionId;  
+  }
+  
+  public Long getNextTransactionId() {
+    return nextTransactionId;  
   }
   
   /**

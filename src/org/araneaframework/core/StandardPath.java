@@ -16,6 +16,7 @@
 
 package org.araneaframework.core;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
@@ -30,6 +31,10 @@ import org.araneaframework.Path;
  */
 public class StandardPath implements Path {
   private LinkedList path = new LinkedList();
+  
+  public StandardPath(Collection fullPath) {
+    path.addAll(fullPath);
+  }
   
   /**
    * Constructs a path from the fullPath. Expects fullPath to be a dot-separated String.
