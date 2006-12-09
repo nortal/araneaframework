@@ -149,6 +149,7 @@ function AraneaPage() {
   /** Aranea JSP specific DOM tree traverser. */
   var traverser = new AraneaTraverser();
   this.getTraverser = function() { return traverser; }
+  this.getSystemForm = function(element) { return traverser.findSurroundingSystemForm(element); }
   
   /** Timer that executes keepalive calls, if any. */
   var keepAliveTimers = new AraneaStore();

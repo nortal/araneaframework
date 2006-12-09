@@ -51,7 +51,7 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
           entries.put(key, entry.getValue());
       }
     
-    childWidget._getComponent().init(new StandardEnvironment(getEnvironment(), entries));
+    childWidget._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), entries));
            
     if (log.isDebugEnabled())
       log.debug("Following contexts added to environment: " + entries);

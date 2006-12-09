@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.StandardScope;
 import org.araneaframework.example.common.framework.context.WizardContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
@@ -156,7 +157,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
 	
 	private void initPage(Widget page) throws Exception {
 		log.debug("Initializing page...");
-		page._getComponent().init(getChildEnvironment());
+		page._getComponent().init(new StandardScope(CURRENT_PAGE_KEY, getScope()), getChildEnvironment());
 		if (getIndexOfPage(page) == getCurrentPageIndex()) {
 			_getChildren().put(CURRENT_PAGE_KEY, page);
 		}

@@ -190,8 +190,13 @@ public class StandardServletInputData implements HttpInputData {
     url.append(":");
     url.append(req.getServerPort());
     url.append(req.getContextPath());
-    url.append(req.getServletPath());
+    url.append(getContainerPath());
     return url.toString();
+  }
+  
+  public String getContainerPath() {
+    String includeServletPath = (String) req.getAttribute("javax.servlet.include.servlet_path");
+    return includeServletPath == null ? req.getServletPath() : includeServletPath;
   }
   
   public String getContextURL() {
@@ -203,6 +208,10 @@ public class StandardServletInputData implements HttpInputData {
     url.append(req.getServerPort());
     url.append(req.getContextPath());
     return url.toString();
+  }
+  
+  public String getContextPath() {
+    return req.getContextPath();
   }
   
   public String getRequestURL() {

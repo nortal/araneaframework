@@ -69,7 +69,7 @@ public class BaseFilterWidget extends BaseWidget  implements FilterWidget {
   protected void init() throws Exception {
     Assert.notNull(this, childWidget, "Filter cannot have a null child!");
     
-    this.childWidget._getComponent().init(getChildWidgetEnvironment());
+    this.childWidget._getComponent().init(getScope(), getChildWidgetEnvironment());
   }
   
   protected void propagate(Message message) throws Exception {   

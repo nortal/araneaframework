@@ -19,6 +19,7 @@ package org.araneaframework.http.extension;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -94,7 +95,10 @@ public class ExternalResourceInitializer {
 		while (resources.hasMoreElements()) {
 			URL fileURL = (URL)resources.nextElement();
 			log.debug("Adding resources from file'"+fileURL+"'");
-			xr.parse(new InputSource(fileURL.openStream()));
+			//XXX: fix to broken caching, remove, not good for production
+			URLConnection connection =  fileURL.openConnection();
+			connection.setDefaultUseCaches(false);
+			xr.parse(new InputSource(connection.getInputStream()));
 		}
 	}
 	

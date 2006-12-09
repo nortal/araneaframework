@@ -41,6 +41,9 @@ import java.io.Serializable;
  */
 public interface Component extends Serializable {
   
+  public Scope getScope();
+  public Environment getEnvironment();
+  
   /**
    * The factory method returning the implementation of the Component.
    * @return the implementation of the Component.
@@ -56,7 +59,7 @@ public interface Component extends Serializable {
      * Initializes this Component with the specified Environment.
      * @param env the Environment of this Component
      */
-    public void init(Environment env);
+    public void init(Scope scope, Environment env);
     
     /**
      * Destroys this Component.
