@@ -49,8 +49,15 @@ public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
     
     
     public String getParameter(String name) {
-    	if (name != null && name.equals(ResponseStateManager.VIEW_STATE_PARAM))
-    		return super.getParameter(jsfWidget.getWidgetStateParam());
+    	if (name != null && name.equals(ResponseStateManager.VIEW_STATE_PARAM)) {
+    		if (jsfWidget.isInitializingRequest())
+    			return null;
+    		
+    		String result = super.getParameter(jsfWidget.getWidgetStateParam());
+    		
+    		return result;
+    	}
+    		
 
 		return super.getParameter(name);
 	}

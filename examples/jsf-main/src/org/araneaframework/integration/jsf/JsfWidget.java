@@ -3,6 +3,7 @@ package org.araneaframework.integration.jsf;
 import javax.faces.application.StateManager;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.render.ResponseStateManager;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,16 +64,13 @@ public class JsfWidget extends BaseApplicationWidget {
         FacesContext facesContext = initFacesContext();
         StateManager mng = facesContext.getApplication().getStateManager();
         
+        boolean doesit = facesContext.getExternalContext().getRequestParameterMap().containsKey(ResponseStateManager.VIEW_STATE_PARAM);
+        
         // XXX: just experimenting
         if (savedViewRoot  != null) {
         	AraneaJsfStateManagerWrapper manager = (AraneaJsfStateManagerWrapper) mng;
-        	UIViewRoot root = 
-        		manager.restoreView(facesContext, getViewSelector(), getJSFContext().getApplication().getViewHandler().calculateRenderKitId(facesContext));
-        	
-        	
-        	if (root !=null && root.equals(savedViewRoot)) {
-        		log.debug(":--------О");
-        	}
+//        	UIViewRoot root = 
+//        		manager.restoreView(facesContext, getViewSelector(), getJSFContext().getApplication().getViewHandler().calculateRenderKitId(facesContext));
 
         	//manager.restoreComponentState(facesContext, root, getJSFContext().getApplication().getViewHandler().calculateRenderKitId(facesContext));
         }
@@ -120,8 +118,9 @@ public class JsfWidget extends BaseApplicationWidget {
         return getJSFContext().initFacesContext(input, output);
     }
     
+    
+    HttpServletRequest rqst;
     protected void wrapJsfRequest(InputData input) {
-    	HttpServletRequest request;
 //    	if (!justInited) {
 //    		try {
 //    			request = (HttpServletRequest) input.narrow(JSFRequest.class);
@@ -135,9 +134,9 @@ public class JsfWidget extends BaseApplicationWidget {
 //    		request = ServletUtil.getRequest(input);
 //    	}
 
-    	request = ServletUtil.getRequest(input);
+    	rqst = ServletUtil.getRequest(input);
     	
-    	ServletUtil.setRequest(input, new AraneaJsfRequestWrapper(request, this));
+    	ServletUtil.setRequest(input, new AraneaJsfRequestWrapper(rqst, this));
     }
     
     
@@ -155,8 +154,9 @@ public class JsfWidget extends BaseApplicationWidget {
     	HttpServletRequest request = ServletUtil.getRequest(input);
     	if (request instanceof AraneaJsfRequestWrapper) {
     		AraneaJsfRequestWrapper req = (AraneaJsfRequestWrapper) request;
-    		ServletUtil.setRequest(input, (HttpServletRequest) req.getRequest());
+    		ServletUtil.setRequest(input, rqst);
     	}
+    	rqst = null;
     }
     
     protected void restoreResponse(OutputData output) {
@@ -177,9 +177,11 @@ public class JsfWidget extends BaseApplicationWidget {
     	return viewSelector;
     }
     
+    public boolean isInitializingRequest() {
+    	return justInited;
+    }
+    
     public String getWidgetStateParam() {
-    	if (justInited)
-    		return null;
     	return getOutputData().getScope() + "-JSFSTATE";
     }
     
