@@ -39,8 +39,13 @@ import org.araneaframework.example.main.web.demo.DemoInMemoryEditableList;
 import org.araneaframework.example.main.web.demo.DemoMultiSelect;
 import org.araneaframework.example.main.web.demo.DemoRadioSelect;
 import org.araneaframework.example.main.web.demo.DemoRichTextForm;
+import org.araneaframework.example.main.web.gwt.GwtDynaTableWidget;
 import org.araneaframework.example.main.web.gwt.GwtHelloWidget;
+import org.araneaframework.example.main.web.gwt.GwtI18nWidget;
+import org.araneaframework.example.main.web.gwt.GwtJsonWidget;
 import org.araneaframework.example.main.web.gwt.GwtKitchenSinkWidget;
+import org.araneaframework.example.main.web.gwt.GwtMailWidget;
+import org.araneaframework.example.main.web.gwt.GwtSimpleXmlWidget;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.misc.AjaxRequestErrorWidget;
@@ -165,8 +170,13 @@ public class MenuWidget extends TemplateMenuWidget  {
     }    
     
     MenuItem gwtMenu = intMenu.addMenuItem(new MenuItem("#GWT")); {
+      gwtMenu.addMenuItem(new MenuItem("#DynaTable", GwtDynaTableWidget.class));
       gwtMenu.addMenuItem(new MenuItem("#Hello", GwtHelloWidget.class));
-      gwtMenu.addMenuItem(new MenuItem("#Kitchen Sink", GwtKitchenSinkWidget.class));
+      gwtMenu.addMenuItem(new MenuItem("#I18N", GwtI18nWidget.class));
+      gwtMenu.addMenuItem(new MenuItem("#JSON", GwtJsonWidget.class));
+      gwtMenu.addMenuItem(new MenuItem("#KitchenSink", GwtKitchenSinkWidget.class));
+      gwtMenu.addMenuItem(new MenuItem("#Mail", GwtMailWidget.class));
+      gwtMenu.addMenuItem(new MenuItem("#SimpleXML", GwtSimpleXmlWidget.class));
     }
     
     

@@ -8,7 +8,7 @@
 	<ui:widgetContext>
 
 		<ui:componentHeader>
-			<ui:componentName>GWT Kitchen Sink</ui:componentName>
+			<ui:componentName>GWT Mail App</ui:componentName>
         </ui:componentHeader>
 
 		<ui:component>
@@ -20,9 +20,7 @@
 				<ui:eventButton eventId="start" labelId="#Start new flow"/>
 			</p>
 
-			<iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"><jsp:text> </jsp:text></iframe>
-
-			<ui:gwtWidgetInclude id="kitchenSink" styleClass="gwtKitchenSink"/>
+			<ui:gwtWidgetInclude id="mail" styleClass="gwtMail"/>
 
 		</ui:component>
 

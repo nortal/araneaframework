@@ -8,7 +8,7 @@
 	<ui:widgetContext>
 
 		<ui:componentHeader>
-			<ui:componentName>GWT Kitchen Sink</ui:componentName>
+			<ui:componentName>GWT Dynamic Table</ui:componentName>
         </ui:componentHeader>
 
 		<ui:component>
@@ -22,7 +22,17 @@
 
 			<iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"><jsp:text> </jsp:text></iframe>
 
-			<ui:gwtWidgetInclude id="kitchenSink" styleClass="gwtKitchenSink"/>
+			<ui:gwtWidgetInclude id="dynaTable" styleClass="DynaTable">
+				<h1>School Schedule for Professors and Students</h1>
+				<table width="100%" border="0" summary="School Schedule for Professors and Students">
+					<tr valign="top">
+						<td id="calendar" align="center" width="90%">
+						</td>
+						<td id="days" align="center" width="10%">
+						</td>
+					</tr>
+				</table>
+			</ui:gwtWidgetInclude>
 
 		</ui:component>
 

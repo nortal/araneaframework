@@ -115,6 +115,15 @@
 	
 	<target name="gwt" depends="compile, gwt_uptodate" unless="gwt.uptodate"> 
 		<java classname="com.google.gwt.dev.GWTCompiler" fork="yes" dir=".">
+			<arg line="-out war/gwt -style DETAILED org.araneaframework.example.gwt.dynatable.DynaTable"/>
+			<classpath>
+				<pathelement location="war/WEB-INF/classes" />
+				<pathelement location="src" />
+				<path refid="classpath" />
+			</classpath>
+		</java>
+		
+		<java classname="com.google.gwt.dev.GWTCompiler" fork="yes" dir=".">
 			<arg line="-out war/gwt -style DETAILED org.araneaframework.example.gwt.hello.Hello"/>
 			<classpath>
 				<pathelement location="war/WEB-INF/classes" />
@@ -124,7 +133,43 @@
 		</java>
 		
 		<java classname="com.google.gwt.dev.GWTCompiler" fork="yes" dir=".">
+			<arg line="-out war/gwt -style DETAILED org.araneaframework.example.gwt.i18n.I18N"/>
+			<classpath>
+				<pathelement location="war/WEB-INF/classes" />
+				<pathelement location="src" />
+				<path refid="classpath" />
+			</classpath>
+		</java>	
+		
+		<java classname="com.google.gwt.dev.GWTCompiler" fork="yes" dir=".">
+			<arg line="-out war/gwt -style DETAILED org.araneaframework.example.gwt.json.JSON"/>
+			<classpath>
+				<pathelement location="war/WEB-INF/classes" />
+				<pathelement location="src" />
+				<path refid="classpath" />
+			</classpath>
+		</java>	
+		
+		<java classname="com.google.gwt.dev.GWTCompiler" fork="yes" dir=".">
 			<arg line="-out war/gwt -style DETAILED org.araneaframework.example.gwt.kitchensink.KitchenSink"/>
+			<classpath>
+				<pathelement location="war/WEB-INF/classes" />
+				<pathelement location="src" />
+				<path refid="classpath" />
+			</classpath>
+		</java>	
+		
+		<java classname="com.google.gwt.dev.GWTCompiler" fork="yes" dir=".">
+			<arg line="-out war/gwt -style DETAILED org.araneaframework.example.gwt.mail.Mail"/>
+			<classpath>
+				<pathelement location="war/WEB-INF/classes" />
+				<pathelement location="src" />
+				<path refid="classpath" />
+			</classpath>
+		</java>	
+		
+		<java classname="com.google.gwt.dev.GWTCompiler" fork="yes" dir=".">
+			<arg line="-out war/gwt -style DETAILED org.araneaframework.example.gwt.simplexml.SimpleXML"/>
 			<classpath>
 				<pathelement location="war/WEB-INF/classes" />
 				<pathelement location="src" />

@@ -1,2 +1,7 @@
 org.araneaframework.example.gwt.hello.Hello
 org.araneaframework.example.gwt.kitchensink.KitchenSink
+org.araneaframework.example.gwt.dynatable.DynaTable
+org.araneaframework.example.gwt.i18n.I18N
+org.araneaframework.example.gwt.json.JSON
+org.araneaframework.example.gwt.mail.Mail
+org.araneaframework.example.gwt.simplexml.SimpleXML

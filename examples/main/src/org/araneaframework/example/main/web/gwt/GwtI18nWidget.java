@@ -3,13 +3,13 @@ package org.araneaframework.example.main.web.gwt;
 import org.araneaframework.integration.gwt.GwtWidget;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
-public class GwtKitchenSinkWidget extends BaseUIWidget {
+public class GwtI18nWidget extends BaseUIWidget {
 
   private static final long serialVersionUID = 1L;
 
   protected void init() throws Exception {
-    setViewSelector("gwt/gwtKitchenSink");
-    addWidget("kitchenSink", new GwtWidget("org.araneaframework.example.gwt.kitchensink.KitchenSink"));
+    setViewSelector("gwt/gwtI18n");
+    addWidget("i18n", new GwtWidget("org.araneaframework.example.gwt.i18n.I18N"));
   }
 
   public void handleEventStart() throws Exception {

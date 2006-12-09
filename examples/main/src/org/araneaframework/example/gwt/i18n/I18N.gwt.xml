@@ -1,0 +1,7 @@
+<module>
+	<inherits name="com.google.gwt.user.User" />
+    <inherits name="com.google.gwt.i18n.I18N"/>
+	<entry-point class="org.araneaframework.example.gwt.i18n.client.I18N" />
+	<extend-property name="locale" values="fr" />
+	<stylesheet src='I18N.css'/>
+</module>
