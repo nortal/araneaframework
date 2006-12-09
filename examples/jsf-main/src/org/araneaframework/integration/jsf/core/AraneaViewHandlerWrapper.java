@@ -19,8 +19,8 @@ import org.araneaframework.integration.jsf.util.AraneaFacesContextUtil;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class AraneaViewHandlerDecorator extends ViewHandlerWrapper {
-	private static final Logger log =  Logger.getLogger(AraneaViewHandlerDecorator.class);
+public class AraneaViewHandlerWrapper extends ViewHandlerWrapper {
+	private static final Logger log =  Logger.getLogger(AraneaViewHandlerWrapper.class);
     private ViewHandler viewHandler;
     
     protected ViewHandler getWrapped() {
@@ -28,7 +28,7 @@ public class AraneaViewHandlerDecorator extends ViewHandlerWrapper {
 	}
 
 	/** Creates a new instance of ViewHandlerDecorator */
-    public AraneaViewHandlerDecorator(ViewHandler viewHandler) {
+    public AraneaViewHandlerWrapper(ViewHandler viewHandler) {
     	Assert.notNullParam(this, viewHandler, "viewHandler");
         this.viewHandler = viewHandler;
     }

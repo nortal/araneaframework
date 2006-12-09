@@ -40,18 +40,18 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     <jsp:useBean id="UserNumberBean" class="org.araneaframework.example.jsf.web.jsf.guessNumber.UserNumberBean" scope="session" />
     
     <f:view>
-    <h:form id="helloForm" >
+    <h:form id="helloFormZ" >
       <h2>Hi. My name is Duke.  I'm thinking of a number from
       <h:outputText lang="en_US" value="#{UserNumberBean.minimum}"/> to
       <h:outputText value="#{UserNumberBean.maximum	}"/>.  Can you guess
       it?</h2>
 
-        <h:graphicImage id="waveImg" url="/jsf/guessNumber/wave.med.gif" />
-  	<h:inputText id="userNo" label="User Number" value="#{UserNumberBean.userNumber}"
+        <h:graphicImage id="waveImgZ" url="/jsf/guessNumber/wave.med.gif" />
+  	<h:inputText id="userNoZ" label="User Number" value="#{UserNumberBean.userNumber}"
                       validator="#{UserNumberBean.validate}"/>          
-	 <h:commandButton id="submit" action="success" value="Submit" />
+	 <h:commandButton id="submitZ" action="success" value="Submit" />
          <p />
-	 <h:message showSummary="true" showDetail="false" style="color: red; font-family: 'New Century Schoolbook', serif; font-style: oblique; text-decoration: overline" id="errors1" for="userNo"/>
+	 <h:message showSummary="true" showDetail="false" style="color: red; font-family: 'New Century Schoolbook', serif; font-style: oblique; text-decoration: overline" id="errors1Z" for="userNoZ"/>
 
     </h:form>
     </f:view>

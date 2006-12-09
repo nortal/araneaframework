@@ -32,7 +32,7 @@
     
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
 
-    <h2>My name is Duke.  What is yours?</h2>
+    <h2>My name is Yet Another Duke.  Who would you be?</h2>
     <jsp:useBean id="UserNameBean2" class="org.araneaframework.example.jsf.web.jsf.helloDuke.UserNameBean" scope="session" />
     <f:view>
   <h:form id="helloForm2" >

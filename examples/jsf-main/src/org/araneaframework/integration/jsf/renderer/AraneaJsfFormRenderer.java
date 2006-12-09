@@ -7,6 +7,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.event.ActionEvent;
 import javax.faces.render.Renderer;
 
 public class AraneaJsfFormRenderer extends Renderer {
@@ -14,13 +15,15 @@ public class AraneaJsfFormRenderer extends Renderer {
 	    UIForm htmlForm = (UIForm)component;
 
         Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
-        String submittedValue = (String)paramMap.get(component.getClientId(facesContext));
         
-        htmlForm.setSubmitted(submittedValue != null);
+        //XXX: should we just always set submitted to true??
+        //String submittedValue = (String)paramMap.get(component.getClientId(facesContext));
+        
+        htmlForm.setSubmitted(true);
 
-        // XXX: events 
-//    ActionEvent actionEvent = new ActionEvent(component);
-//        component.queueEvent(actionEvent);
+        // XXX: events, lost, arent they>
+   ActionEvent actionEvent = new ActionEvent(component);
+        component.queueEvent(actionEvent);
 	}
 
 	public void encodeBegin(FacesContext facesContext, UIComponent component) throws IOException {

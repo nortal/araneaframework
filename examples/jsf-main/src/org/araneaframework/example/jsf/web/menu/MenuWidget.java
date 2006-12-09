@@ -33,7 +33,7 @@ import org.araneaframework.example.jsf.web.demo.DemoRichTextForm;
 import org.araneaframework.example.jsf.web.jsf.WelcomeJSFWidget;
 import org.araneaframework.example.jsf.web.jsf.flowtest.JsfFlowTestWidget;
 import org.araneaframework.example.jsf.web.jsf.guessNumber.GuessNumberWidget;
-import org.araneaframework.example.jsf.web.jsf.helloDuke.DoubleDukeWidget;
+import org.araneaframework.example.jsf.web.jsf.helloDuke.TripleDukeWidget;
 import org.araneaframework.example.jsf.web.jsf.helloDuke.HelloDukeWidget;
 import org.araneaframework.example.jsf.web.misc.AjaxRequestErrorWidget;
 import org.araneaframework.example.jsf.web.misc.EventErrorWidget;
@@ -116,7 +116,7 @@ public void handleEventLogout() throws Exception {
 		MenuItem root = new MenuItem("JSF");
 		root.addMenuItem(new MenuItem("WelcomeJSF", WelcomeJSFWidget.class));
 		root.addMenuItem(new MenuItem("Helloduke", HelloDukeWidget.class));
-		root.addMenuItem(new MenuItem("DoubleDuke", DoubleDukeWidget.class));
+		root.addMenuItem(new MenuItem("DoubleDuke", TripleDukeWidget.class));
 		root.addMenuItem(new MenuItem("GuessNumber", GuessNumberWidget.class));
 		root.addMenuItem(new MenuItem("#FlowTest", JsfFlowTestWidget.class));
 		

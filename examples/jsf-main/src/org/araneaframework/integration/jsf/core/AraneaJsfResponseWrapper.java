@@ -1,14 +1,9 @@
 package org.araneaframework.integration.jsf.core;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.log4j.Logger;
-import org.araneaframework.http.support.ByteArrayServletOutputStream;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -19,7 +14,7 @@ public class AraneaJsfResponseWrapper extends HttpServletResponseWrapper {
 	public AraneaJsfResponseWrapper(HttpServletResponse response) {
 		super(response);
 	}
-	
+
 //    private ServletOutputStream out;
 //    private PrintWriter writerOut;
 //	

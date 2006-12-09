@@ -1,11 +1,5 @@
 package org.araneaframework.integration.jsf;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
@@ -17,11 +11,8 @@ import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
-import javax.faces.render.ResponseStateManager;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -32,7 +23,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.integration.jsf.core.AraneaJsfNavigationHandlerWrapper;
-import org.araneaframework.integration.jsf.core.AraneaViewHandlerDecorator;
+import org.araneaframework.integration.jsf.core.AraneaViewHandlerWrapper;
 import org.araneaframework.integration.jsf.core.JSFContext;
 
 /**
@@ -58,7 +49,7 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
         Assert.notNull(getFacesContextFactory());
         
         application = appFactory.getApplication();
-        application.setViewHandler(new AraneaViewHandlerDecorator(application.getViewHandler()));
+        application.setViewHandler(new AraneaViewHandlerWrapper(application.getViewHandler()));
         application.setNavigationHandler(new AraneaJsfNavigationHandlerWrapper(application.getNavigationHandler()));
         
         lifecycle =  getLifecycleFactory().getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
@@ -98,21 +89,12 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
 	}
     
     protected void action(Path path, InputData input, OutputData output) throws Exception {
-    	if (!isJSFRequest(input)) {
-    		super.action(path, input, output);
-    		return;
-    	}
-    	
-    	HttpServletRequest request = ServletUtil.getRequest(input);
-    	ServletUtil.setRequest(input, (HttpServletRequest) getNonFacesRequest(input));
-
-    	input.extend(JSFRequest.class, request);
     	super.action(path, input, output);
     }
 
-    protected boolean isJSFRequest(InputData input) {
-    	return ServletUtil.getRequest(input).getParameter(ResponseStateManager.VIEW_STATE_PARAM) != null;
-    }
+//    protected boolean isJSFRequest(InputData input) {
+//    	return ServletUtil.getRequest(input).getParameter(ResponseStateManager.VIEW_STATE_PARAM) != null;
+//    }
 
     public FacesContext initFacesContext(InputData input, OutputData output) {
         ServletContext servletCtx = ((ServletConfig)getEnvironment().getEntry(ServletConfig.class)).getServletContext();
@@ -161,43 +143,7 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
         return lifecycle;
     };
     
-    protected Object getNonFacesRequest(InputData input) {
-    	return new PlainRequest(ServletUtil.getRequest(input));
-    }
-    
-    protected static class PlainRequest extends HttpServletRequestWrapper {
-		protected PlainRequest(HttpServletRequest request) {
-			super(request);
-		}
-
-		public String getParameter(String name) {
-			if (name.equals(ResponseStateManager.VIEW_STATE_PARAM))
-				return null;
-			return super.getParameter(name);
-		}
-
-		public Map getParameterMap() {
-			Map mutable = new HashMap(super.getParameterMap());
-			mutable.remove(ResponseStateManager.VIEW_STATE_PARAM);
-			return Collections.unmodifiableMap(mutable);
-		}
-
-		public Enumeration getParameterNames() {
-			Enumeration temp = super.getParameterNames();
-			List list = new ArrayList();
-			while (temp.hasMoreElements()) {
-				Object current = temp.nextElement();
-				if (!current.equals(ResponseStateManager.VIEW_STATE_PARAM))
-					list.add(current);
-			}
-			return Collections.enumeration(list);
-		}
-
-		public String[] getParameterValues(String name) {
-			if (name.equals(ResponseStateManager.VIEW_STATE_PARAM))
-				return null;
-			return super.getParameterValues(name);
-		}
-	}
-    
+//    PROTECTED OBJECT GETNONFACESREQUEST(INPUTDATA INPUT) {
+//    	RETURN NEW PLAINREQUEST(SERVLETUTIL.GETREQUEST(INPUT));
+//    }
 }

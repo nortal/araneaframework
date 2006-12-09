@@ -97,6 +97,8 @@ public class JsfWidget extends BaseApplicationWidget {
         MockHttpServletResponse r = (MockHttpServletResponse) ((AraneaJsfResponseWrapper) ServletUtil.getResponse(getOutputData())).getResponse();
         String s = r.getContentAsString();
         
+        justInited = false;
+        //XXX: not strict enpohyhg
         s= s.replaceAll("\"javax.faces.ViewState\"", "\""+ getWidgetStateParam() + "\"");
 
         // restore request and response
@@ -120,19 +122,21 @@ public class JsfWidget extends BaseApplicationWidget {
     
     protected void wrapJsfRequest(InputData input) {
     	HttpServletRequest request;
-    	if (!justInited) {
-    		try {
-    			request = (HttpServletRequest) input.narrow(JSFRequest.class);
-    		} catch (NoSuchNarrowableException e) {
-    			// then it does not really matter;
-    			request = ServletUtil.getRequest(input);
-    		}
-    	}
-    	else {
-    		justInited = false;
-    		request = ServletUtil.getRequest(input);
-    	}
+//    	if (!justInited) {
+//    		try {
+//    			request = (HttpServletRequest) input.narrow(JSFRequest.class);
+//    		} catch (NoSuchNarrowableException e) {
+//    			// then it does not really matter;
+//    			request = ServletUtil.getRequest(input);
+//    		}
+//    	}
+//    	else {
+//    		justInited = false;
+//    		request = ServletUtil.getRequest(input);
+//    	}
 
+    	request = ServletUtil.getRequest(input);
+    	
     	ServletUtil.setRequest(input, new AraneaJsfRequestWrapper(request, this));
     }
     
@@ -174,6 +178,8 @@ public class JsfWidget extends BaseApplicationWidget {
     }
     
     public String getWidgetStateParam() {
+    	if (justInited)
+    		return null;
     	return getOutputData().getScope() + "-JSFSTATE";
     }
     
