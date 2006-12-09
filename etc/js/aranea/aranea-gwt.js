@@ -18,12 +18,14 @@
  * @author Alar Kvell (alar@araneaframework.org)
  */
 
-window.parent.Aranea.Gwt._document = document;
-araneaPage().addSystemLoadEvent(function() {
-	window.parent.document.body.appendChild(Builder.node('script', {type: 'text/javascript'}, 'Aranea.Gwt.loadPage();'));
-});
-araneaPage().addSystemUnLoadEvent(function() {
-	window.parent.document.body.appendChild(Builder.node('script', {type: 'text/javascript'}, 'Aranea.Gwt.unloadPage();'));
-});
+if (window.parent.Aranea) {
+	window.parent.Aranea.Gwt._document = document;
+	araneaPage().addSystemLoadEvent(function() {
+		window.parent.document.body.appendChild(Builder.node('script', {type: 'text/javascript'}, 'Aranea.Gwt.loadPage();'));
+	});
+	araneaPage().addSystemUnLoadEvent(function() {
+		window.parent.document.body.appendChild(Builder.node('script', {type: 'text/javascript'}, 'Aranea.Gwt.unloadPage();'));
+	});
+}
 
 window['aranea-gwt.js'] = true;

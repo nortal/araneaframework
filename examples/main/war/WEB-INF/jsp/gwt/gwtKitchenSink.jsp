@@ -20,11 +20,9 @@
 				<ui:eventButton eventId="start" labelId="#Start new flow"/>
 			</p>
 
-			<!-- <iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe> -->
+			<iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"><jsp:text> </jsp:text></iframe>
 
-			<ui:gwtWidgetInclude id="kitchen1"/>
-			<ui:gwtWidgetInclude id="kitchen2"/>
-			<ui:gwtWidgetInclude id="kitchen3"/>
+			<ui:gwtWidgetInclude id="kitchen"/>
 
 		</ui:component>
 
