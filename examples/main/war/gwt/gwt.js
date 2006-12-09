@@ -35,7 +35,7 @@ DynamicResources.prototype.addScripts = function(scriptArray, insertBeforeElem) 
     eval("readyFn = " + scriptArray[i+1]);
     e.__readyFn = readyFn;
     e.type = "text/javascript";
-    e.src = src;
+    e.src = 'gwt/' + src;
     e.__insertBeforeElem = insertBeforeElem;
     this.pendingScriptElems_ = this.pendingScriptElems_.concat(e);
   }
@@ -61,7 +61,7 @@ DynamicResources.prototype.addStyles = function(styleSrcArray, insertBeforeElem)
     this.pendingElemsBySrc_[src] = e;
     e.type = "text/css";
     e.rel = "stylesheet";
-    e.href = src;
+    e.href = 'gwt/' + src;
     parent.insertBefore(e, insertBeforeElem);
   }
 }
@@ -163,16 +163,16 @@ ModuleControlBlock.prototype.getModuleFrameWindow = function() {
  * The array is set up such that, pairwise, the entries are (src, readyFnStr).
  */
 ModuleControlBlock.prototype.addScripts = function(scriptSrcArray) {
-  return ModuleControlBlocks.dynamicResources_.addScripts(scriptSrcArray, this.metaElem_);
+  return ModuleControlBlocks.dynamicResources_.addScripts(scriptSrcArray, Aranea.Gwt.getDocument().body.previousSibling.lastChild);
 }
 
 /**
  * Injects a set of dynamic styles.
  */
 ModuleControlBlock.prototype.addStyles = function(styleSrcArray) {
-  return ModuleControlBlocks.dynamicResources_.addStyles(styleSrcArray, this.metaElem_);
+  return ModuleControlBlocks.dynamicResources_.addStyles(styleSrcArray, Aranea.Gwt.getDocument().body.previousSibling.lastChild);
 }
- 
+
 //////////////////////////////////////////////////////////////////////////////
 // ModuleControlBlocks
 //

@@ -89,11 +89,15 @@
 						}
 
 					}
+					for (src in ModuleControlBlocks.dynamicResources_.pendingElemsBySrc_) {
+						var e = ModuleControlBlocks.dynamicResources_.pendingElemsBySrc_[src];
+						this.getDocument().body.previousSibling.appendChild(e);
+					}
 
-					if (metaCount > 0) {
+					//if (metaCount > 0) {
 						__gwt_moduleControlBlocks.blocks_ = [];
 						__gwt_bootstrap();
-					}
+					//}
 				},
 
 				unloadPage: function() {
@@ -104,6 +108,10 @@
 						if (container) {
 							module.dom = container.parentNode.removeChild(container);
 						}
+					}
+					for (src in ModuleControlBlocks.dynamicResources_.pendingElemsBySrc_) {
+						var e = ModuleControlBlocks.dynamicResources_.pendingElemsBySrc_[src];
+						e.parentNode.removeChild(e);
 					}
 				},
 
