@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="1.2" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+
+	<application>
+		<!--  This is better off set in JSF filter  -->
+		<!--view-handler>
+			org.araneaframework.integration.jsf.core.AraneaViewHandlerDecorator
+		</view-handler-->
+		
+		<state-manager>
+			org.araneaframework.integration.jsf.core.AraneaJsfStateManagerWrapper
+		</state-manager>
+	</application>
+
+	<!-- HELLODUKE -->
+	<navigation-rule>
+		<from-view-id>/jsf/helloduke/greeting.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsf/helloduke/response.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsf/helloduke/response.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsf/helloduke/greeting.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsf/helloduke/greeting2.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsf/helloduke/response2.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsf/helloduke/response2.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsf/helloduke/greeting2.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<!-- END HELLODUKE -->
+
+	<!-- GUESSNUMBER -->
+	<navigation-rule>
+		<from-view-id>/jsf/guessNumber/greeting.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsf/guessNumber/response.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/jsf/guessNumber/response.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/jsf/guessNumber/greeting.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<!-- END GUESSNUMBER -->
+
+	<!-- components -->
+
+	<component>
+		<component-type>javax.faces.HtmlForm</component-type>
+		<component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlForm</component-class>
+	</component>
+
+	<!--  <component>-->
+	<!--  	<component-type>javax.faces.HtmlCommandButton</component-type>-->
+	<!--  	<component-class>org.araneaframework.integration.jsf.components.AraneaJsfHtmlCommandButton</component-class>-->
+	<!--  </component>-->
+
+	<render-kit>
+		<renderer>
+			<component-family>javax.faces.Form</component-family>
+			<renderer-type>AraneaFormRenderer</renderer-type>
+			<renderer-class>org.araneaframework.integration.jsf.renderer.AraneaJsfFormRenderer</renderer-class>
+		</renderer>
+	</render-kit>
+
+</faces-config>

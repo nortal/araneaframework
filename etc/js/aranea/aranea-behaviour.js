@@ -52,8 +52,8 @@ function setCloningUrl(el) {
       url += "&widgetEventParameter=" + eventParam;
     if (eventTarget)
       url += "&widgetEventPath="+ eventTarget;
-      
-    el['href'] = url;
+
+    el['href'] = "javascript:window.location='"+ url + "';";
 }
 
 var aranea_rules = {
