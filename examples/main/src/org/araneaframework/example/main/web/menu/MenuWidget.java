@@ -39,6 +39,8 @@ import org.araneaframework.example.main.web.demo.DemoInMemoryEditableList;
 import org.araneaframework.example.main.web.demo.DemoMultiSelect;
 import org.araneaframework.example.main.web.demo.DemoRadioSelect;
 import org.araneaframework.example.main.web.demo.DemoRichTextForm;
+import org.araneaframework.example.main.web.gwt.GwtHelloWidget;
+import org.araneaframework.example.main.web.gwt.GwtKitchenSinkWidget;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.misc.AjaxRequestErrorWidget;
@@ -143,6 +145,11 @@ public class MenuWidget extends TemplateMenuWidget  {
       MenuItem treeMenu = sampleMenu.addMenuItem(new MenuItem("Trees"));
       treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
     } 
+    
+    MenuItem gwtMenu = result.addMenuItem(new MenuItem("#GWT")); {
+      gwtMenu.addMenuItem(new MenuItem("#Hello", GwtHelloWidget.class));
+      gwtMenu.addMenuItem(new MenuItem("#Kitchen Sink", GwtKitchenSinkWidget.class));
+    }
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
       errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));

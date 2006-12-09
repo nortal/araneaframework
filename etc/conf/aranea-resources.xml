@@ -19,13 +19,15 @@
 		<file path="js/aranea/aranea-tree.js"/>
 		<file path="js/aranea/aranea-behaviour.js"/>
 		<file path="js/aranea/aranea-popups.js"/>
+		<file path="js/aranea/aranea-gwt.js"/>
         
         <file path="js/ajaxanywhere/aa.js"/>
 
     	<file path="js/prototype/prototype.js"/>
 
-		<file path="js/scriptaculous/controls.js"/>
+		<file path="js/scriptaculous/builder.js"/>
 		<file path="js/scriptaculous/effects.js"/>
+		<file path="js/scriptaculous/controls.js"/>
 		
 		<file path="js/calendar/calendar.js"/>
 		<file path="js/calendar/calendar-en.js"/>
