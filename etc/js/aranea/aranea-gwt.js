@@ -21,11 +21,54 @@
 if (window.parent.Aranea) {
 	window.parent.Aranea.Gwt._document = document;
 	araneaPage().addSystemLoadEvent(function() {
-		window.parent.document.body.appendChild(Builder.node('script', {type: 'text/javascript'}, 'Aranea.Gwt.loadPage();'));
+		window.parent.document.body.appendChild(
+			Builder.node('script', {type: 'text/javascript'}, 'Aranea.Gwt.loadPage();')
+		);
 	});
 	araneaPage().addSystemUnLoadEvent(function() {
-		window.parent.document.body.appendChild(Builder.node('script', {type: 'text/javascript'}, 'Aranea.Gwt.unloadPage();'));
+		window.parent.document.body.appendChild(
+			Builder.node('script', {type: 'text/javascript'}, 'Aranea.Gwt.unloadPage();')
+		);
 	});
+} else {
+	araneaPage().addSystemLoadEvent(function() {
+		window.parent.document.body.appendChild(
+			Builder.node('script', {type: 'text/javascript', src: 'gwt/gwt.js'})
+		);
+	});
+}
+
+function araneaGwtAddModule(widgetId, moduleId) {
+	if (window.parent.Aranea) {
+		window.parent.document.body.appendChild(
+			Builder.node(
+				'script',
+				{type: 'text/javascript'},
+				'Aranea.Gwt.addModule("' + widgetId + '", "' + moduleId + '");'
+			)
+		);
+	}
+}
+
+function araneaGwtRenderModule(widgetId, moduleId) {
+	if (window.parent.Aranea) {
+		window.parent.document.body.appendChild(
+			Builder.node(
+				'script',
+				{type: 'text/javascript'},
+				'Aranea.Gwt.renderModule("' + widgetId + '");'
+			)
+		);
+	} else {
+		var meta = Builder.node(
+			'meta',
+			{
+				name: 'gwt:module',
+				content: widgetId + '=gwt/' + moduleId + '=' + moduleId
+			}
+		);
+		document.body.previousSibling.appendChild(meta);
+	}
 }
 
 window['aranea-gwt.js'] = true;

@@ -42,9 +42,9 @@ public class GwtWidgetIncludeTag extends BaseWidgetTag {
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeCloseStartTag(out);
     if (firstRender) {
-      out.write(constructParentJavascript("Aranea.Gwt.addModule(\"" + fullId + "\", \"" + gwtWidgetViewModel.getModule() + "\");"));
+      out.write("araneaGwtAddModule('" + fullId + "', '" + gwtWidgetViewModel.getModule() + "');\n");
     }
-    out.write(constructParentJavascript("Aranea.Gwt.renderModule(\"" + fullId + "\");"));
+    out.write("araneaGwtRenderModule('" + fullId + "', '" + gwtWidgetViewModel.getModule() + "');\n");
     JspUtil.writeEndTag(out, "script");
 
     return EVAL_BODY_INCLUDE;   
@@ -53,15 +53,6 @@ public class GwtWidgetIncludeTag extends BaseWidgetTag {
   public void doFinally() {
     super.doFinally();
     gwtWidgetViewModel = null;
-  }
-
-  // dont use ' inside script
-  private String constructParentJavascript(String script) {
-    StringBuffer s = new StringBuffer();
-    s.append("window.parent.document.body.appendChild(Builder.node('script', {type: 'text/javascript'}, '");
-    s.append(script);
-    s.append("'));\n");
-    return s.toString();
   }
 
 }

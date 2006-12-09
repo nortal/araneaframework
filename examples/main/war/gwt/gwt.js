@@ -35,7 +35,7 @@ DynamicResources.prototype.addScripts = function(scriptArray, insertBeforeElem) 
     eval("readyFn = " + scriptArray[i+1]);
     e.__readyFn = readyFn;
     e.type = "text/javascript";
-    e.src = 'gwt/' + src;
+    e.src = (window.Aranea ? 'gwt/' : '') + src;
     e.__insertBeforeElem = insertBeforeElem;
     this.pendingScriptElems_ = this.pendingScriptElems_.concat(e);
   }
@@ -61,7 +61,7 @@ DynamicResources.prototype.addStyles = function(styleSrcArray, insertBeforeElem)
     this.pendingElemsBySrc_[src] = e;
     e.type = "text/css";
     e.rel = "stylesheet";
-    e.href = 'gwt/' + src;
+    e.href = (window.Aranea ? 'gwt/' : '') + src;
     parent.insertBefore(e, insertBeforeElem);
   }
 }
@@ -129,7 +129,9 @@ ModuleControlBlock.prototype.isReady = function() {
 ModuleControlBlock.prototype.compilationLoaded = function(frameWnd) {
   this.frameWnd_ = frameWnd;
   this.compilationLoaded_ = true;
-  frameWnd.$doc = frameWnd.parent.Aranea.Gwt.getDocument();
+  if (frameWnd.parent.Aranea) {
+  	frameWnd.$doc = frameWnd.parent.Aranea.Gwt.getDocument();
+  }
 }
 
 /**
@@ -163,14 +165,14 @@ ModuleControlBlock.prototype.getModuleFrameWindow = function() {
  * The array is set up such that, pairwise, the entries are (src, readyFnStr).
  */
 ModuleControlBlock.prototype.addScripts = function(scriptSrcArray) {
-  return ModuleControlBlocks.dynamicResources_.addScripts(scriptSrcArray, Aranea.Gwt.getDocument().body.previousSibling.lastChild);
+  return ModuleControlBlocks.dynamicResources_.addScripts(scriptSrcArray, window.Aranea ? Aranea.Gwt.getDocument().body.previousSibling.lastChild : this.metaElem_);
 }
 
 /**
  * Injects a set of dynamic styles.
  */
 ModuleControlBlock.prototype.addStyles = function(styleSrcArray) {
-  return ModuleControlBlocks.dynamicResources_.addStyles(styleSrcArray, Aranea.Gwt.getDocument().body.previousSibling.lastChild);
+  return ModuleControlBlocks.dynamicResources_.addStyles(styleSrcArray, window.Aranea ? Aranea.Gwt.getDocument().body.previousSibling.lastChild : this.metaElem_);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -588,4 +590,6 @@ function __gwt_bootstrap() {
 }
 
 // Go.
-//__gwt_bootstrap();
+if (!window.Aranea) {
+	__gwt_bootstrap();
+}
