@@ -34,6 +34,8 @@ public class StrutsWidget extends BaseApplicationWidget {
   private String strutsURI;
   private List renderers = new ArrayList();
   
+  private AraneaStrutsInfo asInfo;
+  
   private transient StrutsResponse strutsResponse; 
   
   public StrutsWidget(String strutsURI) {
@@ -72,6 +74,21 @@ public class StrutsWidget extends BaseApplicationWidget {
     
     input.restoreScope(getScope().toPath());
     output.restoreScope(getScope().toPath());
+    
+    
+    
+    TopServiceContext topCtx = 
+      (TopServiceContext) getEnvironment().requireEntry(TopServiceContext.class);
+    ThreadContext threadCtx = 
+      (ThreadContext) getEnvironment().requireEntry(ThreadContext.class);
+
+     asInfo = new AraneaStrutsInfo(
+        (String) ((HttpInputData) getInputData()).getContainerPath(), 
+        (String) topCtx.getCurrentId(), 
+        (String) threadCtx.getCurrentId(), 
+        getScope().toPath().toString());
+    
+    
     
     try {    
       HttpServletResponse res = ServletUtil.getResponse(output);
@@ -285,20 +302,7 @@ public class StrutsWidget extends BaseApplicationWidget {
     Assert.notNull(baseURL);
     
     StringBuffer url = new StringBuffer(baseURL);
-    
-    TopServiceContext topCtx = 
-      (TopServiceContext) getEnvironment().requireEntry(TopServiceContext.class);
-    ThreadContext threadCtx = 
-      (ThreadContext) getEnvironment().requireEntry(ThreadContext.class);
-    
-    Assert.isTrue(getOutputData() != null || getInputData() != null, "Either input- or output data should be not null");
-    
-    AraneaStrutsInfo asInfo = new AraneaStrutsInfo(
-        (String) ((HttpInputData) getInputData()).getContainerPath(), 
-        (String) topCtx.getCurrentId(), 
-        (String) threadCtx.getCurrentId(), 
-        "".equals(getOutputData().getScope().toString()) ? getInputData().getScope().toString() : getOutputData().getScope().toString());
-    
+        
     url.append(baseURL.indexOf('?') != -1 ? '&' : '?');
     
     url.append(asInfo.encode());

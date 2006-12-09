@@ -26,6 +26,9 @@ public class AraneaStrutsFilter implements Filter {
       ServletException {
     HttpServletRequest req = (HttpServletRequest) request;
     
+    //TMP UGLY HACK!!!
+    response.setContentType("text/html; charset=UTF-8");
+    
     if (AraneaStrutsInfo.containsInfo(req) 
         && request.getAttribute(ARANEA_INCLUDE) == null) {
       

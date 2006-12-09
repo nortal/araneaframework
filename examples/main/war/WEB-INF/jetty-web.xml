@@ -4,13 +4,9 @@
   <Call name="getServletHandler">
     <Call name="getServletHolder"><Arg>jsp</Arg>   
       <Call name="setInitParameter">
-        <Arg>keepgenerated</Arg>
-				<Arg>true</Arg>
-      </Call>
-      <Call name="setInitParameter">
         <Arg>scratchdir</Arg>
-				<Arg>../tmp/jsp</Arg>
-      </Call>      
+				<Arg>../tmp</Arg>
+      </Call>
     </Call>
   </Call>
 </Configure>

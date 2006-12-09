@@ -23,6 +23,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.integration.struts.StrutsWidget;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
@@ -79,19 +80,35 @@ public class CompanyListWidget extends TemplateBaseWidget {
     this.list.getDataProvider().refreshData();
   }
 
-  public void handleEventAdd(String eventParameter) throws Exception {
-    getFlowCtx().start(new CompanyEditWidget(), null, new FlowContext.Handler() {
-      private static final long serialVersionUID = 1L;
-      public void onFinish(Object returnValue) throws Exception {
-        log.debug("Company added with Id of " + returnValue + " sucessfully");
-        // trick to refresh the list data when we suspect it has changed
-        refreshList();
-      }
-      public void onCancel() throws Exception {
-      }
-    });
+  
+  
+  
+  
+  
+  public void handleEventAdd(String eventParameter) throws Exception {        
+    getFlowCtx().start(
+        new StrutsWidget("/Company.do"), 
+        null, 
+        new CompanyHandler());  
   }
+  
+  private class CompanyHandler implements FlowContext.Handler {
+    public void onFinish(Object returnValue) throws Exception {
+      CompanyMO company = (CompanyMO) returnValue;
+      getMessageCtx().showInfoMessage("Company '" + company.toString() + "' added!");
+      
+      getGeneralDAO().add(company);
+      refreshList();
+    }
+    public void onCancel() throws Exception {
+    }
+  }       
 
+  
+  
+  
+  
+  
   public void handleEventRemove(String eventParameter) throws Exception {
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     contractDAO.removeByCompanyId(id);

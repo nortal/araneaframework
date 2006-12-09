@@ -57,6 +57,7 @@ import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
 import org.araneaframework.example.main.web.tree.SimpleTreeWidget;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.integration.struts.StrutsWidget;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.support.FlowCreator;
 
@@ -146,10 +147,35 @@ public class MenuWidget extends TemplateMenuWidget  {
       treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
     } 
     
-    MenuItem gwtMenu = result.addMenuItem(new MenuItem("#GWT")); {
+    
+    
+    
+    
+    
+    
+    
+    MenuItem intMenu = result.addMenuItem(new MenuItem("#Integration")); 
+    
+    MenuItem strutsMenu = intMenu.addMenuItem(new MenuItem("#Struts")); {
+      strutsMenu.addMenuItem(new MenuItem("#Mailreader", new FlowCreator() {
+        public Widget createFlow() {
+          return new StrutsWidget("/Welcome.do");
+        }
+      }));
+    }    
+    
+    MenuItem gwtMenu = intMenu.addMenuItem(new MenuItem("#GWT")); {
       gwtMenu.addMenuItem(new MenuItem("#Hello", GwtHelloWidget.class));
       gwtMenu.addMenuItem(new MenuItem("#Kitchen Sink", GwtKitchenSinkWidget.class));
     }
+    
+    
+    
+    
+    
+    
+    
+    
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
       errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
