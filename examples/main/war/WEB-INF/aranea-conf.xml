@@ -40,4 +40,16 @@
       </list>
     </property>
   </bean>
+  
+    <!-- custom application filters -->
+    
+    <bean class="org.araneaframework.integration.jsf.JsfFilterService" id="araneaJSFContext" singleton="false"/>
+  <bean id="araneaCustomApplicationFilters" singleton="false"
+    class="org.araneaframework.framework.filter.StandardFilterChainService">
+    <property name="filterChain">
+        <list>
+            <ref bean="araneaJSFContext" />
+        </list>
+    </property>
+  </bean>
 </beans>

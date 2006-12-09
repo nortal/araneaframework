@@ -80,6 +80,7 @@
 			<fileset dir="../lib/">
 				<include name="**/*.jar" />
 				<exclude name="jetty/*jar" />
+				<exclude name="compiletime/jsf/javaee.jar" />
 			</fileset>
 			<fileset dir="../../lib/">
 				<include name="**/*.jar" />

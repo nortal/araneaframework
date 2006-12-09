@@ -21,6 +21,11 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
+import org.araneaframework.example.main.web.jsf.WelcomeJSFWidget;
+import org.araneaframework.example.main.web.jsf.flowtest.JsfFlowTestWidget;
+import org.araneaframework.example.main.web.jsf.guessNumber.GuessNumberWidget;
+import org.araneaframework.example.main.web.jsf.helloDuke.HelloDukeWidget;
+import org.araneaframework.example.main.web.jsf.helloDuke.TripleDukeWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
@@ -180,12 +185,7 @@ public class MenuWidget extends TemplateMenuWidget  {
     }
     
     
-    
-    
-    
-    
-    
-    
+    MenuItem jsfMenu = intMenu.addMenuItem(JSFMenu()); 
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
       errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
@@ -197,6 +197,19 @@ public class MenuWidget extends TemplateMenuWidget  {
 		
 		return result;
 	}
+	
+    
+	protected MenuItem JSFMenu() {
+		MenuItem root = new MenuItem("JSF");
+		root.addMenuItem(new MenuItem("WelcomeJSF", WelcomeJSFWidget.class));
+		root.addMenuItem(new MenuItem("Helloduke", HelloDukeWidget.class));
+		root.addMenuItem(new MenuItem("DoubleDuke", TripleDukeWidget.class));
+		root.addMenuItem(new MenuItem("GuessNumber", GuessNumberWidget.class));
+		root.addMenuItem(new MenuItem("#FlowTest", JsfFlowTestWidget.class));
+		
+		return root;
+	}
+
   
   protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
     if (ExceptionUtils.getRootCause(e) != null) {

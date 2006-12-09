@@ -228,7 +228,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
   
   public boolean isNested() {
-    return callStack.size() != 0;
+    return callStack.size() > 1;
   }
   
   public void reset(final EnvironmentAwareCallback callback) {   
