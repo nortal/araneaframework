@@ -19,6 +19,7 @@ package org.araneaframework.uilib.core;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
+import org.araneaframework.Scope;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.framework.FlowContext;
@@ -106,10 +107,10 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
   
   protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
-    public synchronized void init(Environment env) {
+    public synchronized void init(Scope scope, Environment env) {
       setGlobalEventListener(new ProxyEventListener(BaseUIWidget.this));
 	
-      super.init(env);
+      super.init(scope, env);
     }
   }
 }

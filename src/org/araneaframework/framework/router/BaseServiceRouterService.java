@@ -71,7 +71,7 @@ public abstract class BaseServiceRouterService extends BaseService {
     Iterator ite = serviceMap.entrySet().iterator();
     while(ite.hasNext()) {
       Map.Entry entry = (Map.Entry) ite.next();
-      _addComponent(entry.getKey(), (Service) entry.getValue(), getChildEnvironment(entry.getKey()));
+      _addComponent(entry.getKey(), (Service) entry.getValue(), getScope(), getChildEnvironment(entry.getKey()));
     }
     // free extra references
     serviceMap = null;

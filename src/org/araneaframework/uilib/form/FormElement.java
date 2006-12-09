@@ -133,7 +133,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
     control.setFormElementCtx(this);
     
     if (isInitialized())
-      control._getComponent().init(getEnvironment());
+      control._getComponent().init(getScope(), getEnvironment());
   }
 
   /**
@@ -291,7 +291,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
       setConverter(findConverter());
     
     if (getControl() != null) 
-      getControl()._getComponent().init(getEnvironment());
+      getControl()._getComponent().init(getScope(), getEnvironment());
   }
   
   protected void destroy() throws Exception {
