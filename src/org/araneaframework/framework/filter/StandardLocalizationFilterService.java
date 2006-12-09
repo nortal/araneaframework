@@ -84,7 +84,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   }
 
   protected void init() throws Exception {
-    childService._getComponent().init(getChildEnvironment());
+    childService._getComponent().init(getScope(), getChildEnvironment());
   }
   
   /** 

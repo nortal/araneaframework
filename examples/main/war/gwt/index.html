@@ -1,0 +1,120 @@
+<html>
+    <head>
+    	<title>Aranea&mdash;Java Web Framework Construction and Integration Kit</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<script type="text/javascript" src="gwt.js"></script>
+		<script type="text/javascript">
+
+		    var Aranea = {};
+		    Aranea.Gwt = {
+		    	_modules: [],
+		    	_document: null,
+
+				addModule: function(widgetId, moduleId) {
+
+					//check if modules contains widgetId, then destroy previous module and replace with new
+					for (var i = 0; i < this._modules.length; i++) {
+						var module = this._modules[i];
+						if (!module) continue;
+						if (module.widgetId == widgetId) {
+							//Destroy GWT module
+/*							TODO remove GWT event listeners
+							for (var j = 0; j < __gwt_moduleControlBlocks.blocks_.length; j++) {
+								var mcb = __gwt_moduleControlBlocks.blocks_[j];
+								if (mcb.getContainer() == widgetId) {
+									var iframe = mcb.getModuleFrameWindow().frameElement;
+									iframe.parentNode.removeChild(iframe);
+								}
+							}
+*/
+
+							// Copy-paste hack
+							if (module.meta) {
+								module.meta.parentNode.removeChild(module.meta);
+								module.meta = null;
+							}
+
+							delete this._modules[i];
+						}
+					}
+
+					var module = {
+						widgetId: widgetId,
+						moduleId: moduleId,
+						meta: null,
+						state: 0,
+						dom: null
+					};
+
+					this._modules.push(module);
+				},
+
+				renderModule: function(widgetId) {
+					//TODO
+				},
+
+				loadPage: function() {
+					var metaCount = 0;
+
+					for (var i = 0; i < this._modules.length; i++) {
+						var module = this._modules[i];
+						if (!module) continue;
+
+						if (module.meta) {
+							module.meta.parentNode.removeChild(module.meta);
+							module.meta = null;
+						}
+
+						if (module.state == 0) {
+							var meta = this.getDocument().defaultView.Builder.node(
+								'meta',
+								{
+									name: 'gwt:module',
+									content: module.widgetId + '=' + module.moduleId + '=' + module.moduleId
+								}
+							);
+							document.body.previousSibling.appendChild(meta);
+							module.meta = meta;
+							module.state++;
+							metaCount++;
+						}
+
+						if (module.dom) {
+							var container = this.getDocument().getElementById(module.widgetId);
+							if (container) {
+								container.parentNode.replaceChild(module.dom, container);
+								module.dom = null;
+							}
+						}
+
+					}
+
+					if (metaCount > 0) {
+						__gwt_moduleControlBlocks.blocks_ = [];
+						__gwt_bootstrap();
+					}
+				},
+
+				unloadPage: function() {
+					for (var i = 0; i < this._modules.length; i++) {
+						var module = this._modules[i];
+						if (!module) continue;
+						var container = this.getDocument().getElementById(module.widgetId);
+						if (container) {
+							module.dom = container.parentNode.removeChild(container);
+						}
+					}
+				},
+
+				getDocument: function() {
+					return this._document;
+				}
+			};
+
+		</script>
+    </head>
+	<frameset rows="100%">
+		<frame src="../main"/>
+	</frameset>
+    </body>
+</html>

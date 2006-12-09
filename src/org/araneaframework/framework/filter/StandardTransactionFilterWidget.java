@@ -45,8 +45,12 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     return this.consistent;
   }
 
-  public Object getTransactionId() {
+  public Long getTransactionId() {
     return transHelper.getCurrentTransactionId();
+  }
+  
+  public Long getNextTransactionId() {
+    return transHelper.getNextTransactionId();
   }
 
   protected void init() throws Exception {

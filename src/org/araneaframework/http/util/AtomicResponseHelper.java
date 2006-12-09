@@ -16,7 +16,6 @@
 
 package org.araneaframework.http.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -28,6 +27,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.support.ByteArrayServletOutputStream;
 
 /**
  * A helper class for providing rollback and commit functionality on an OutputData.
@@ -77,7 +77,7 @@ public class AtomicResponseHelper {
     
 
     private void resetStream() {
-      out = new AraneaServletOutputStream();
+      out = new ByteArrayServletOutputStream();
     }    
     
     public ServletOutputStream getOutputStream() throws IOException {
@@ -115,9 +115,7 @@ public class AtomicResponseHelper {
         writerOut.flush();
       out.flush();
       
-      byte[] data = ((AraneaServletOutputStream) out).getData();
-      
-      log.debug("Committed data size: " + data.length);
+      byte[] data = ((ByteArrayServletOutputStream) out).getData();
       
       getResponse().getOutputStream().write(data);
       getResponse().getOutputStream().flush();
@@ -138,37 +136,9 @@ public class AtomicResponseHelper {
     }    
     
     public byte[] getData() throws Exception {
-  	  return ((AraneaServletOutputStream) out).getData();
+  	  return ((ByteArrayServletOutputStream) out).getData();
     }
   }
-  
-  private static class AraneaServletOutputStream extends ServletOutputStream {
-    private ByteArrayOutputStream out;
-    
-    private AraneaServletOutputStream() {
-      out = new ByteArrayOutputStream(20480);
-    }
-    
-    public void write(int b) throws IOException {
-      out.write(b);
-    }
-    public void write(byte[] b) throws IOException {
-      out.write(b);
-    }
-    public void write(byte[] b, int offset, int len) throws IOException{
-       out.write(b, offset, len);
-    }
-    public void flush() throws IOException{
-      out.flush();
-    }
-        
-    public byte[] getData() {
-      return out.toByteArray();
-    }
-  }
-  //*******************************************************************
-  // PUBLIC METHODS
-  //*******************************************************************  
   
   public void commit() throws Exception {
     atomicWrapper.commit();

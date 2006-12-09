@@ -152,7 +152,7 @@ public class StandardHttpSessionRouterService extends BaseService {
       log.debug("Created HTTP session '"+sess.getId()+"'");
       result = new RelocatableDecorator(serviceFactory.buildService(getEnvironment()));        
       
-      result._getComponent().init(newEnv);
+      result._getComponent().init(getScope(), newEnv);
     }
     else {
       result = (RelocatableService) sess.getAttribute(SESSION_SERVICE_KEY);
