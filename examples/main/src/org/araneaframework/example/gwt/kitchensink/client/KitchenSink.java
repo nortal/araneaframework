@@ -18,6 +18,7 @@ package org.araneaframework.example.gwt.kitchensink.client;
 import org.araneaframework.example.gwt.kitchensink.client.Sink.SinkInfo;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -31,7 +32,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class KitchenSink implements EntryPoint, HistoryListener {
 
-  public static final String URL_PREFIX = "gwt/org.araneaframework.example.gwt.kitchensink.KitchenSink/";
+  public static final String URL_PREFIX = GWT.getModuleBaseURL();
 
   private SinkInfo curInfo;
   private Sink curSink;

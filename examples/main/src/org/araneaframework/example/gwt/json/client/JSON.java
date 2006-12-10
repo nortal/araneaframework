@@ -15,6 +15,7 @@
  */
 package org.araneaframework.example.gwt.json.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONObject;
@@ -79,7 +80,7 @@ public class JSON {
    * http://api.search.yahoo.com/ImageSearchService/V1/imageSearch?appid=YahooDemo&query=potato&results=2&output=json
    * 
    */
-  private static final String DEFAULT_SEARCH_URL = "search-results.js";
+  private static final String DEFAULT_SEARCH_URL = GWT.getModuleBaseURL() + "search-results.js";
 
   /*
    * Text displayed on the fetch button when we are in a default state.

@@ -16,6 +16,7 @@
 package org.araneaframework.example.gwt.simplexml.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.HTTPRequest;
 import com.google.gwt.user.client.ResponseTextHandler;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -46,7 +47,7 @@ public class SimpleXML implements EntryPoint {
   }-*/;
 
   public void onModuleLoad() {
-    HTTPRequest.asyncGet("org.araneaframework.example.gwt.simplexml.SimpleXML/customerRecord.xml", new ResponseTextHandler() {
+    HTTPRequest.asyncGet(GWT.getModuleBaseURL() + "customerRecord.xml", new ResponseTextHandler() {
       public void onCompletion(String responseText) {
         // In the real world, this text would come as a RPC response. This
         // technique is great for testing and samples though!

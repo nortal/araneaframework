@@ -16,6 +16,7 @@
 package org.araneaframework.example.gwt.mail.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Window;
@@ -31,7 +32,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class Mail implements EntryPoint, WindowResizeListener {
 
-  public static final String URL_PREFIX = "gwt/org.araneaframework.example.gwt.mail.Mail/";
+  public static final String URL_PREFIX = GWT.getModuleBaseURL();
 
   private static Mail singleton;
 
