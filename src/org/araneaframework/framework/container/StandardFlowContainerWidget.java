@@ -92,7 +92,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     
     CallFrame frame = makeCallFrame(flow, configurator, handler);
     
-    log.debug("Starting flow '" + flow.getClass().getName() +"'");
+    if (log.isDebugEnabled())
+      log.debug("Starting flow '" + flow.getClass().getName() +"'");
     
     if (_getChildren().get(FlowContext.FLOW_KEY) != null) {
       ((Widget) getChildren().get(FlowContext.FLOW_KEY))._getComponent().disable();
@@ -119,7 +120,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
     CallFrame frame = makeCallFrame(flow, configurator, previousFrame.getHandler());
     
-    log.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + 
+    if (log.isDebugEnabled())
+      log.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + 
         "' with flow '" + flow.getClass().getName() + "'");
     
     removeWidget(FlowContext.FLOW_KEY);
@@ -145,7 +147,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
     CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
     
-    log.debug("Finishing flow '" + previousFrame.getWidget().getClass().getName() + "'");
+    if (log.isDebugEnabled())
+      log.debug("Finishing flow '" + previousFrame.getWidget().getClass().getName() + "'");
     
     removeWidget(FlowContext.FLOW_KEY);
     if (frame != null) {
@@ -170,7 +173,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
     CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
     
-    log.debug("Cancelling flow '" + previousFrame.getWidget().getClass().getName() + "'");
+    if (log.isDebugEnabled())
+      log.debug("Cancelling flow '" + previousFrame.getWidget().getClass().getName() + "'");
     
     removeWidget(FlowContext.FLOW_KEY);
     if (frame != null) {
@@ -231,8 +235,9 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     return callStack.size() != 0;
   }
   
-  public void reset(final EnvironmentAwareCallback callback) {   
-    log.debug("Resetting flows '" + callStack + "'");
+  public void reset(final EnvironmentAwareCallback callback) {
+    if (log.isDebugEnabled())
+      log.debug("Resetting flows '" + callStack + "'");
     
     for (Iterator i = callStack.iterator(); i.hasNext();) {
       CallFrame frame = (CallFrame) i.next();
