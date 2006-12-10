@@ -1,1 +1,0 @@
-@java -cp "%~dp0\src;%~dp0\war\WEB-INF\classes;%~dp0\..\lib\gwt\gwt-user.jar;%~dp0\..\lib\gwt\gwt-dev-linux.jar" com.google.gwt.dev.GWTCompiler -out "%~dp0\war\gwt" -style DETAILED %* org.araneaframework.example.gwt.kitchensink.KitchenSink
