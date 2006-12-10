@@ -22,6 +22,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.web.jsf.WelcomeJSFWidget;
+import org.araneaframework.example.main.web.jsf.company.CompanyAddJsfWidget;
 import org.araneaframework.example.main.web.jsf.flowtest.JsfFlowTestWidget;
 import org.araneaframework.example.main.web.jsf.guessNumber.GuessNumberWidget;
 import org.araneaframework.example.main.web.jsf.helloDuke.HelloDukeWidget;
@@ -206,6 +207,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		root.addMenuItem(new MenuItem("DoubleDuke", TripleDukeWidget.class));
 		root.addMenuItem(new MenuItem("GuessNumber", GuessNumberWidget.class));
 		root.addMenuItem(new MenuItem("#FlowTest", JsfFlowTestWidget.class));
+		root.addMenuItem(new MenuItem("#Add company", CompanyAddJsfWidget.class));
 		
 		return root;
 	}

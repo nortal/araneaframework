@@ -1,10 +1,8 @@
 package org.araneaframework.integration.jsf;
 
 import javax.faces.application.StateManager;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.render.ResponseStateManager;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
@@ -12,7 +10,6 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.http.JspContext;
@@ -34,6 +31,8 @@ public class JsfWidget extends BaseApplicationWidget {
     
     protected Object savedViewRoot;
     
+    private transient FacesContext fcontext;
+    
     /** Creates a new instance of JsfWidget */
     public JsfWidget(String viewSelector) {
         this.viewSelector = viewSelector;
@@ -53,6 +52,9 @@ public class JsfWidget extends BaseApplicationWidget {
     }
 
     protected void event(Path path, InputData input) throws Exception {
+    	fcontext = initFacesContext();
+    	 getJSFContext().getLifecycle().execute(fcontext);
+    	
         super.event(path, input);
     }
 
@@ -66,7 +68,11 @@ public class JsfWidget extends BaseApplicationWidget {
     	try {
     		response = ServletUtil.getResponse(output);
     		
-		    FacesContext facesContext = initFacesContext();
+		    FacesContext facesContext = fcontext;
+		    if (facesContext == null) {
+		    	facesContext = initFacesContext();
+		    	 getJSFContext().getLifecycle().execute(facesContext);
+		    }
 		    StateManager mng = facesContext.getApplication().getStateManager();
 		    
 		    boolean doesit = facesContext.getExternalContext().getRequestParameterMap().containsKey(ResponseStateManager.VIEW_STATE_PARAM);
@@ -80,7 +86,7 @@ public class JsfWidget extends BaseApplicationWidget {
 		    	//manager.restoreComponentState(facesContext, root, getJSFContext().getApplication().getViewHandler().calculateRenderKitId(facesContext));
 		    }
 		
-		    getJSFContext().getLifecycle().execute(facesContext);
+		  
 		    getJSFContext().getLifecycle().render(facesContext);
 		
 		    // navigationhandler has kicked in
