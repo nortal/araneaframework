@@ -24,6 +24,10 @@ import com.google.gwt.user.client.ui.Composite;
 
 public class SchoolCalendarWidget extends Composite {
 
+  public static native String getContainer() /*-{
+    return $mcb.getContainer ? $mcb.getContainer() : null;
+  }-*/;
+
   public class CalendarProvider implements DynaTableDataProvider {
 
     public CalendarProvider() {
@@ -40,7 +44,7 @@ public class SchoolCalendarWidget extends Composite {
       // Use a module-relative URLs to ensure that this client code can find 
       // its way home, even when the URL changes (as might happen when you 
       // deploy this as a webapp under an external servlet container). 
-      String moduleRelativeURL = GWT.getModuleBaseURL() + "calendar";
+      String moduleRelativeURL = GWT.getModuleBaseURL() + "../../gwt-dynatable";
       target.setServiceEntryPoint(moduleRelativeURL);
     }
 
@@ -110,7 +114,7 @@ public class SchoolCalendarWidget extends Composite {
     private int lastStartRow = -1;
   }
 
-  private final static boolean USE_STATIC_RPC_ANSWERS = true;
+  private final static boolean USE_STATIC_RPC_ANSWERS = false;
 
   public SchoolCalendarWidget(int visibleRows) {
     String[] columns = new String[]{"Name", "Description", "Schedule"};
