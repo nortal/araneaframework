@@ -23,6 +23,7 @@ public class JsfWidget extends BaseApplicationWidget {
 	private static final Logger log = org.apache.log4j.Logger.getLogger(JsfWidget.class);
     protected String viewSelector;
     protected boolean justInited;
+    protected boolean doNotRender;
     
     protected transient FacesContext facesContext;
     protected transient HttpServletResponse response = null;
@@ -64,6 +65,9 @@ public class JsfWidget extends BaseApplicationWidget {
 	
 
     protected void render(OutputData output) throws Exception {
+    	if (doNotRender)
+    		return;
+    	
     	String s = null;
     	try {
     		response = ServletUtil.getResponse(output);
@@ -175,7 +179,17 @@ public class JsfWidget extends BaseApplicationWidget {
     }
     
     public void handleEventEndFlow(String param) {
-    	((FlowContext)getEnvironment().getEntry(FlowContext.class)).finish(param);
+		doNotRender = true;
+		
+		ServletUtil.getRequest(getInputData()).setAttribute("widget", this);
+
+		facesContext = initFacesContext();
+		getJSFContext().getLifecycle().execute(facesContext);
+		
+		restoreRequest(getInputData());
+		restoreResponse(getOutputData(), response);
+		
+		destroyFacesContext();
     }
     
     protected FacesContext getCurrentFacesContext() {

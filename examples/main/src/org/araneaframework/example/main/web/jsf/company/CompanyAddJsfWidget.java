@@ -1,9 +1,7 @@
 package org.araneaframework.example.main.web.jsf.company;
 
-import org.araneaframework.OutputData;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
-import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.integration.jsf.JsfWidget;
 
 
@@ -20,7 +18,6 @@ public class CompanyAddJsfWidget extends TemplateBaseWidget {
 	}
 	
 	public class CompanyJsfWidget extends JsfWidget {
-		private boolean doRender = true;
 		private CompanyMO company = new CompanyMO();
 		
 		public CompanyJsfWidget(String s) {
@@ -33,24 +30,8 @@ public class CompanyAddJsfWidget extends TemplateBaseWidget {
 		}
 
 		public void handleEventEndFlow(String param) {
-			doRender = false;
-			
-			ServletUtil.getRequest(getInputData()).setAttribute("widget", this);
-
-			facesContext = initFacesContext();
-			getJSFContext().getLifecycle().execute(facesContext);
-			
-			restoreRequest(getInputData());
-			restoreResponse(getOutputData(), response);
-			
-			destroyFacesContext();
-			
+			super.handleEventEndFlow(param);
 			getFlowCtx().finish(company);
-		}
-
-		protected void render(OutputData output) throws Exception {
-			if (doRender)
-				super.render(output);
 		}
 	}
 }
