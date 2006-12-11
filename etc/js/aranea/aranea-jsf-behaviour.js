@@ -31,7 +31,7 @@ var aranea_jsf_rules = {
     if (el['type'] == 'submit') {
     	el.onclick = aranea_jsf_input_button_submit(el);
     }
-  },
+  }
 };
 
 Behaviour.register(aranea_jsf_rules);
