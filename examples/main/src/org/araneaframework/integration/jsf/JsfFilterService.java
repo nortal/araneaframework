@@ -79,6 +79,7 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
 			}
 			
 			private String getViewId() {
+				//XXX: that method may not be used
 				FacesContext ctx = FacesContext.getCurrentInstance();
 				if (ctx != null && ctx.getViewRoot() != null) {
 					return ctx.getViewRoot().getViewId();
@@ -91,10 +92,6 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
     protected void action(Path path, InputData input, OutputData output) throws Exception {
     	super.action(path, input, output);
     }
-
-//    protected boolean isJSFRequest(InputData input) {
-//    	return ServletUtil.getRequest(input).getParameter(ResponseStateManager.VIEW_STATE_PARAM) != null;
-//    }
 
     public FacesContext initFacesContext(InputData input, OutputData output) {
         ServletContext servletCtx = ((ServletConfig)getEnvironment().getEntry(ServletConfig.class)).getServletContext();
@@ -115,7 +112,8 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
     }
 
     public void destroyFacesContext(FacesContext facesContext) {
-    	facesContext.release();
+    	if (facesContext != null)
+    		facesContext.release();
     }
 
     /* Factory getters. */
@@ -142,8 +140,4 @@ public class JsfFilterService extends BaseFilterService implements JSFContext {
     public Lifecycle getLifecycle() {
         return lifecycle;
     };
-    
-//    PROTECTED OBJECT GETNONFACESREQUEST(INPUTDATA INPUT) {
-//    	RETURN NEW PLAINREQUEST(SERVLETUTIL.GETREQUEST(INPUT));
-//    }
 }
