@@ -71,6 +71,7 @@ public class JsfWidget extends BaseApplicationWidget {
     	String s = null;
     	try {
     		response = ServletUtil.getResponse(output);
+        ServletUtil.getRequest(getInputData()).setAttribute("widget", this);
     		
 		    facesContext = getCurrentFacesContext();
 		    if (facesContext == null) {
@@ -178,21 +179,25 @@ public class JsfWidget extends BaseApplicationWidget {
     	return getScope() + "-JSFSTATE";
     }
     
-    public void handleEventEndFlow(String param) {
-		doNotRender = true;
-		
-		ServletUtil.getRequest(getInputData()).setAttribute("widget", this);
+    public void closeFacesContext() {
+      doNotRender = true;
 
-		facesContext = initFacesContext();
-		getJSFContext().getLifecycle().execute(facesContext);
-		
-		restoreRequest(getInputData());
-		restoreResponse(getOutputData(), response);
-		
-		destroyFacesContext();
+      ServletUtil.getRequest(getInputData()).setAttribute("widget", this);
+
+      facesContext = initFacesContext();
+      getJSFContext().getLifecycle().execute(facesContext);
+
+      restoreRequest(getInputData());
+      restoreResponse(getOutputData(), response);
+
+      destroyFacesContext();
     }
     
     protected FacesContext getCurrentFacesContext() {
     	return this.facesContext;
+    }
+    
+    protected FlowContext getFlowCtx() {
+      return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
     }
 }

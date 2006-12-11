@@ -31,27 +31,29 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     version="2.0">
-    
-    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
-    
-    <ui:widgetContext>
-    
-    <f:view>
-	   <h:form id="companyForm">
-	   	<h2>Add company here</h2>
-		
-		<h:outputLabel value="Name:" id="Name" for="companyName"/>
-		<h:inputText id="companyName" label="Name" value="#{widget.company.name}"/>
-		<br/>
-		<h:outputLabel value="Address:" id="Address"/>
-		<h:inputText id="companyAddress" label="Address" value="#{widget.company.address}"/>
-	   </h:form>
-	   <br/>
-	   
- 	<t:componentActions>
-	   <ui:eventButton eventId="endFlow" labelId="#Commit"/>
-		</t:componentActions>
-    </f:view>
-    
-    </ui:widgetContext>
+
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+
+	<ui:widgetContext>
+
+		<f:view>
+			<h:form id="companyForm">
+				<h2>Add company here</h2>
+
+				<h:outputLabel value="Name:" id="Name" for="companyName" />
+				<h:inputText id="companyName" label="Name"
+					value="#{widget.company.name}" />
+				<br />
+				<h:outputLabel value="Address:" id="Address" />
+				<h:inputText id="companyAddress" label="Address"
+					value="#{widget.company.address}" />
+			</h:form>
+			<br />
+
+			<t:componentActions>
+				<ui:eventButton eventId="endFlow" labelId="#Add" />
+			</t:componentActions>
+		</f:view>
+
+	</ui:widgetContext>
 </jsp:root>
