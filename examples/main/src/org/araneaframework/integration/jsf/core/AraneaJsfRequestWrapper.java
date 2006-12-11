@@ -64,6 +64,7 @@ public class AraneaJsfRequestWrapper extends HttpServletRequestWrapper {
     
 
     public RequestDispatcher getRequestDispatcher(String path) {
+    	//jsfWidget.getEnvironment();
         return new AraneaJsfRequestDispatcherWrapper(getRequest().getRequestDispatcher(path));
     }
 

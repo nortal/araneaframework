@@ -41,10 +41,10 @@
 	   	<h2>Add company here</h2>
 		
 		<h:outputLabel value="Name:" id="Name" for="companyName"/>
-		<h:inputText id="companyName" label="Name" value="#{widget.name}"/>
+		<h:inputText id="companyName" label="Name" value="#{widget.company.name}"/>
 		<br/>
 		<h:outputLabel value="Address:" id="Address"/>
-		<h:inputText id="companyAddress" label="Address" value="#{widget.address}"/>
+		<h:inputText id="companyAddress" label="Address" value="#{widget.company.address}"/>
 	   </h:form>
 	   <br/>
 	   
