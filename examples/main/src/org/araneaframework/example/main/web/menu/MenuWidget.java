@@ -17,13 +17,19 @@
 package org.araneaframework.example.main.web.menu;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.core.WidgetFactory;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.FooterWidget;
+import org.araneaframework.example.main.web.company.CompanyEditWidget;
+import org.araneaframework.example.main.web.company.CompanyMixedWidget;
+import org.araneaframework.example.main.web.company.JsfCompanyAddWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
+import org.araneaframework.example.main.web.company.StrutsCompanyAddWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
 import org.araneaframework.example.main.web.demo.DemoAutoCompletionWidget;
@@ -43,7 +49,6 @@ import org.araneaframework.example.main.web.gwt.GwtDynaTableWidget;
 import org.araneaframework.example.main.web.gwt.GwtHelloWidget;
 import org.araneaframework.example.main.web.gwt.GwtKitchenSinkWidget;
 import org.araneaframework.example.main.web.gwt.GwtMailWidget;
-import org.araneaframework.example.main.web.jsf.company.CompanyJsfWidget;
 import org.araneaframework.example.main.web.jsf.guessNumber.GuessNumberWidget;
 import org.araneaframework.example.main.web.jsf.helloDuke.HelloDukeWidget;
 import org.araneaframework.example.main.web.jsf.helloDuke.TripleDukeWidget;
@@ -187,7 +192,30 @@ public class MenuWidget extends TemplateMenuWidget  {
     jsfMenu.addMenuItem(new MenuItem("DoubleDuke", TripleDukeWidget.class));
     jsfMenu.addMenuItem(new MenuItem("GuessNumber", GuessNumberWidget.class));
     //root.addMenuItem(new MenuItem("#FlowTest", JsfFlowTestWidget.class));
-    jsfMenu.addMenuItem(new MenuItem("#Add company", CompanyJsfWidget.class));
+    jsfMenu.addMenuItem(new MenuItem("#Add company", JsfCompanyAddWidget.class));
+    
+    MenuItem mixedMenu = intMenu.addMenuItem(new MenuItem("#Mixed"));
+    mixedMenu.addMenuItem(new MenuItem("#Aranea", CompanyListWidget.class));
+    mixedMenu.addMenuItem(new MenuItem("#Struts", new FlowCreator() {
+      public Widget createFlow() {
+        return new CompanyListWidget(false, new WidgetFactory() {
+          public Widget buildWidget(Environment env) {
+            return new StrutsCompanyAddWidget();
+          }
+        });
+      }
+    }));
+    mixedMenu.addMenuItem(new MenuItem("#JSF", new FlowCreator() {
+      public Widget createFlow() {
+        return new CompanyListWidget(false, new WidgetFactory() {
+          public Widget buildWidget(Environment env) {
+            return new JsfCompanyAddWidget();
+          }
+        });
+      }
+    }));
+    mixedMenu.addMenuItem(new MenuItem("#Mixed", CompanyMixedWidget.class));
+
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
       errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));

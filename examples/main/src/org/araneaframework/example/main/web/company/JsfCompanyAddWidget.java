@@ -1,17 +1,16 @@
 /**
  * 
  */
-package org.araneaframework.example.main.web.jsf.company;
+package org.araneaframework.example.main.web.company;
 
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.integration.jsf.JsfWidget;
 
-public class CompanyJsfWidget extends JsfWidget {
+public class JsfCompanyAddWidget extends JsfWidget {
 	private CompanyMO company = new CompanyMO();
 	
-	public CompanyJsfWidget() {
+	public JsfCompanyAddWidget() {
 		super("/jsf/company/companyAdd.jsp");
-		company.setName("Default");
 	}
 	
 	public CompanyMO getCompany() {

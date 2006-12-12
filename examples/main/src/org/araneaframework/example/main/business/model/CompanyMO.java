@@ -61,4 +61,8 @@ public class CompanyMO implements GeneralMO {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+  
+  public String toString() {
+    return "Company {Name = '" + getName() +  "', Address = '" + getAddress() + "'}";
+  }
 }

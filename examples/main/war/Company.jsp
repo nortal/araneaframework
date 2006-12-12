@@ -34,10 +34,9 @@
 
         <tr>
             <td align="right">
-                <html:submit property="Submit" value="Submit"/>
+                <html:submit property="Submit" value="Add"/>
             </td>
             <td align="left">
-                <html:reset/>
             </td>
         </tr>
 

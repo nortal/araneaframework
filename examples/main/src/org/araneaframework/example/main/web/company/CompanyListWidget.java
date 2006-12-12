@@ -17,13 +17,14 @@
 package org.araneaframework.example.main.web.company;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
+import org.araneaframework.Environment;
+import org.araneaframework.Widget;
+import org.araneaframework.core.WidgetFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.integration.struts.StrutsWidget;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
@@ -39,16 +40,23 @@ public class CompanyListWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
   protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
   private BeanListWidget list;
-  private boolean editMode = true;
+  private boolean editMode = false;
+  
+  private WidgetFactory addWidgetFactory; 
   
   private IContractDAO contractDAO;
 
   public CompanyListWidget() {
-    super();
+    this(true, new WidgetFactory() {
+      public Widget buildWidget(Environment env) {
+        return new CompanyEditWidget();
+      }
+    });
   }
 
-  public CompanyListWidget(boolean editMode) {
+  public CompanyListWidget(boolean editMode, WidgetFactory addWidgetFactory) {
     super();
+    this.addWidgetFactory = addWidgetFactory;
     this.editMode = editMode;
   }
 
@@ -76,8 +84,12 @@ public class CompanyListWidget extends TemplateBaseWidget {
     list.addField("dummy", null, false);
   }
 
-  private void refreshList() throws Exception {    
+  public void refreshList() throws Exception {    
     this.list.getDataProvider().refreshData();
+  }
+  
+  protected void enable() throws Exception {
+    refreshList();
   }
 
   
@@ -87,7 +99,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
   
   public void handleEventAdd(String eventParameter) throws Exception {        
     getFlowCtx().start(
-        new StrutsWidget("/Company.do"), 
+        addWidgetFactory.buildWidget(getEnvironment()), 
         null, 
         new CompanyHandler());  
   }

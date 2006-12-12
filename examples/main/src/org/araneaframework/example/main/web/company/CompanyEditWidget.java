@@ -50,7 +50,6 @@ public class CompanyEditWidget extends TemplateBaseWidget {
   protected void init() throws Exception {
     setViewSelector("company/companyAddEdit");
     putViewData("formLabel", id != null ? "company.edit.form.label" : "company.add.form.label");
-    log.debug("CompanyEditWidget init called");
 
     form = new BeanFormWidget(CompanyMO.class);
     form.addBeanElement("name", "#Name", new TextControl(), true);
@@ -72,11 +71,10 @@ public class CompanyEditWidget extends TemplateBaseWidget {
 
       if (id != null) {
         getGeneralDAO().edit(company);
+        getFlowCtx().finish(id);
       } else {
-        id = getGeneralDAO().add(company);                
-      }
-      log.debug("Company saved, id = " + id);
-      getFlowCtx().finish(id);
+        getFlowCtx().finish(company);
+      }     
     }
   }
 

@@ -51,7 +51,7 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
   }
   
   public void handleEventChooseCompany(String eventParameter) throws Exception {
-	  getFlowCtx().start(new CompanyListWidget(false), null, new FlowContext.Handler() {
+	  getFlowCtx().start(new CompanyListWidget(), null, new FlowContext.Handler() {
 		      private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {
 			  Long id = (Long) returnValue;

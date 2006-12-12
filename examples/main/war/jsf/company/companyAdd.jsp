@@ -49,10 +49,7 @@
 					value="#{widget.company.address}" />
 			</h:form>
 			<br />
-
-			<t:componentActions>
-				<ui:eventButton eventId="endFlow" labelId="#Add" />
-			</t:componentActions>
+			<ui:eventButton eventId="endFlow" labelId="#Add" />
 		</f:view>
 
 	</ui:widgetContext>
