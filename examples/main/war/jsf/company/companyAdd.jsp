@@ -38,7 +38,7 @@
 
 		<f:view>
 			<h:form id="companyForm">
-				<h2>Add company here</h2>
+				<h2>Adding company (JSF)</h2>
 
 				<h:outputLabel value="Name:" id="Name" for="companyName" />
 				<h:inputText id="companyName" label="Name"

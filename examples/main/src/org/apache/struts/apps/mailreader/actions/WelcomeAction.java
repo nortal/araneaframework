@@ -26,12 +26,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.apps.mailreader.Constants;
 import org.apache.struts.apps.mailreader.dao.UserDatabase;
 import org.apache.struts.util.MessageResources;
-import org.araneaframework.Environment;
-import org.araneaframework.example.main.web.company.CompanyEditWidget;
-import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
-import org.araneaframework.framework.FlowContext;
-import org.araneaframework.framework.MessageContext;
-import org.araneaframework.integration.struts.AraneaUtil;
 
 
 /**
@@ -80,29 +74,8 @@ public final class WelcomeAction extends BaseAction {
             request.setAttribute(Constants.ERROR_KEY, messages);
             return doFindFailure(mapping);
         }
-
-        if (AraneaUtil.present(request)) {
-          AraneaUtil au = AraneaUtil.get(request);
-          au.addWidget("test", new DemoDisplayableEditableList());
-          au.getFlowCtx().start(new CompanyEditWidget(), null, new CompanyHandler(au.getEnvironment()));
-        }
         
         // Forward to our success page
         return doFindSuccess(mapping);
     }
-    
-    private static class CompanyHandler implements FlowContext.Handler {
-      private Environment env;
-      
-      public CompanyHandler(Environment env) {
-        this.env = env;
-      }
-      public void onFinish(Object returnValue) throws Exception {
-        MessageContext msgCtx = (MessageContext) env.getEntry(MessageContext.class);
-        msgCtx.showInfoMessage("Added company " + returnValue);
-      }
-      public void onCancel() throws Exception {
-      }
-    }
-
 }

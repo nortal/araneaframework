@@ -49,7 +49,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
   public CompanyListWidget() {
     this(true, new WidgetFactory() {
       public Widget buildWidget(Environment env) {
-        return new CompanyEditWidget();
+        return new CompanyAddWidget();
       }
     });
   }

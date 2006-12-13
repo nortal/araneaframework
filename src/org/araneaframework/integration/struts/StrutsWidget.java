@@ -134,6 +134,8 @@ public class StrutsWidget extends BaseApplicationWidget {
     HttpServletResponse res = ServletUtil.getResponse(output);
     HttpServletRequest req = ServletUtil.getRequest(input);
     
+    res.getWriter().flush();
+    
     StrutsResponse strutsResponse = new StrutsResponse(res);
     ServletUtil.setResponse(output, strutsResponse);      
     

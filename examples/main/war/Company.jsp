@@ -11,6 +11,8 @@
 <body>
 <html:errors/>
 
+<h2>Adding Company (Struts)</h2>
+
 <html:form action="/SubmitCompany">
     <table border="0">
 

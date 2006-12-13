@@ -9,11 +9,6 @@ public class TripleDukeWidget extends TemplateBaseWidget {
 		setViewSelector("jsf/helloduke/tripleduke");
 		addWidget("helloDuke1", new HelloDukeWidget());
 		addWidget("helloDuke2", new GuessNumberWidget());
-		addWidget("helloDuke3", new HelloDukeWidget() {
-			protected void init() throws Exception {
-				setViewSelector("jsf/generic");
-				addWidget("helloDuke", new JsfWidget("/jsf/helloduke/greeting2.jsp"));
-			}
-		});
+		addWidget("helloDuke3", new JsfWidget("/jsf/helloduke/greeting2.jsp"));
 	}
 }

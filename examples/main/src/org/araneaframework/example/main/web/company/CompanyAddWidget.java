@@ -28,44 +28,28 @@ import org.araneaframework.uilib.form.control.TextControl;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class CompanyEditWidget extends TemplateBaseWidget {
+public class CompanyAddWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
-  private static final Logger log = Logger.getLogger(CompanyEditWidget.class);
-  private Long id = null;
+  private static final Logger log = Logger.getLogger(CompanyAddWidget.class);
   private BeanFormWidget form;
-  
-  /**
-   * Constructor for editing existing company with specified Id.
-   * @param id Company's Id.
-   */
-  public CompanyEditWidget(Long id) {
-    this.id = id;
-  }
 
   protected void init() throws Exception {
-    setViewSelector("company/companyEdit");
-    putViewData("formLabel", id != null ? "company.edit.form.label" : "company.add.form.label");
+    setViewSelector("company/companyAdd");
+    putViewData("formLabel", "company.add.form.label");
 
     form = new BeanFormWidget(CompanyMO.class);
     form.addBeanElement("name", "#Name", new TextControl(), true);
     form.addBeanElement("address", "#Address", new TextControl(), true);
-
-    CompanyMO company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);   
-    form.writeBean(company);
-
 
     addWidget("form", form);
   }
 
   public void handleEventSave(String eventParameter) throws Exception {
     if (form.convertAndValidate()) {
-      CompanyMO company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);
-
+      CompanyMO company = new CompanyMO();
       company = (CompanyMO) form.readBean(company);
 
-      getGeneralDAO().edit(company);
-        
-      getFlowCtx().finish(id);
+      getFlowCtx().finish(company);           
     }
   }
 
