@@ -39,12 +39,19 @@ function addPopup(popupId, windowProperties, url) {
 
 function submitThreadCloseRequest(win) {
   if (win && win.document) {
-    var closeParam = createNamedElement("input", "popupClose");
-    closeParam.setAttribute("type", "hidden");
-    closeParam.setAttribute("value", "true");
-    //TODO: find the systemform reliably
-    win.document.forms['system_form_0'].appendChild(closeParam);
-    win.araneaPage().event_6(win.document.system_form_0, null, null, null, null, null);
+    var systemForm = null;
+    for (var i = 0; i < win.document.forms.length; i++) {
+      if (win.document.forms[i].getAttribute('arn-systemForm')) {
+	    systemForm = win.document.forms[i];
+      }
+  	}
+    if (systemForm) {
+      var closeParam = createNamedElement("input", "popupClose");
+      closeParam.setAttribute("type", "hidden");
+      closeParam.setAttribute("value", "true");
+      systemForm.appendChild(closeParam);
+      win.araneaPage().event_6(systemForm, null, null, null, null, null);
+    }
   }
 }
 
