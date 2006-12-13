@@ -42,11 +42,13 @@
 
 				<h:outputLabel value="Name:" id="Name" for="companyName" />
 				<h:inputText id="companyName" label="Name"
-					value="#{widget.company.name}" />
+					value="#{widget.company.name}">
+			</h:inputText>
+			
 				<br />
 				<h:outputLabel value="Address:" id="Address" />
 				<h:inputText id="companyAddress" label="Address"
-					value="#{widget.company.address}" />
+					value="#{widget.company.address}"/>
 			</h:form>
 			<br />
 			<ui:eventButton eventId="endFlow" labelId="#Add" />

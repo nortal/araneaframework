@@ -25,10 +25,9 @@ import org.araneaframework.core.WidgetFactory;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.FooterWidget;
-import org.araneaframework.example.main.web.company.CompanyEditWidget;
+import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.company.CompanyMixedWidget;
 import org.araneaframework.example.main.web.company.JsfCompanyAddWidget;
-import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.company.StrutsCompanyAddWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
@@ -173,26 +172,29 @@ public class MenuWidget extends TemplateMenuWidget  {
           return new StrutsWidget("/Welcome.do");
         }
       }));
-    }    
+    }
+    
+    
+    
     
     MenuItem gwtMenu = intMenu.addMenuItem(new MenuItem("#GWT")); {
       gwtMenu.addMenuItem(new MenuItem("#Hello", GwtHelloWidget.class));
       gwtMenu.addMenuItem(new MenuItem("#KitchenSink", GwtKitchenSinkWidget.class));
       gwtMenu.addMenuItem(new MenuItem("#Mail", GwtMailWidget.class));      
       gwtMenu.addMenuItem(new MenuItem("#DynaTable", GwtDynaTableWidget.class));      
-      //gwtMenu.addMenuItem(new MenuItem("#I18N", GwtI18nWidget.class));
-      //gwtMenu.addMenuItem(new MenuItem("#JSON", GwtJsonWidget.class));
-      //gwtMenu.addMenuItem(new MenuItem("#SimpleXML", GwtSimpleXmlWidget.class));
     }
     
     
-    MenuItem jsfMenu = intMenu.addMenuItem(new MenuItem("JSF"));
-    //root.addMenuItem(new MenuItem("WelcomeJSF", WelcomeJSFWidget.class));
-    jsfMenu.addMenuItem(new MenuItem("Helloduke", HelloDukeWidget.class));
-    jsfMenu.addMenuItem(new MenuItem("DoubleDuke", TripleDukeWidget.class));
+    
+        
+    MenuItem jsfMenu = intMenu.addMenuItem(new MenuItem("JSF"));    
+    jsfMenu.addMenuItem(new MenuItem("Helloduke", HelloDukeWidget.class));    
     jsfMenu.addMenuItem(new MenuItem("GuessNumber", GuessNumberWidget.class));
-    //root.addMenuItem(new MenuItem("#FlowTest", JsfFlowTestWidget.class));
-    jsfMenu.addMenuItem(new MenuItem("#Add company", JsfCompanyAddWidget.class));
+    jsfMenu.addMenuItem(new MenuItem("DoubleDuke", TripleDukeWidget.class));
+
+    
+    
+    
     
     MenuItem mixedMenu = intMenu.addMenuItem(new MenuItem("#Mixed"));
     mixedMenu.addMenuItem(new MenuItem("#Aranea", CompanyListWidget.class));
@@ -216,6 +218,9 @@ public class MenuWidget extends TemplateMenuWidget  {
     }));
     mixedMenu.addMenuItem(new MenuItem("#Mixed", CompanyMixedWidget.class));
 
+    
+    
+    
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
       errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
