@@ -62,6 +62,7 @@ var AraneaTree = {
 		return function(request, response) {
 			// TODO handle non-200 responses
 			Element.update(treeNodeId, request.responseText);
+			Behaviour.apply();
 		};
 	}
 }
