@@ -80,8 +80,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     //add new, not yet opened popup to popup map
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
-    
-    log.debug("Popup service with identifier '" + threadId + "' was created.");
+
+    if (log.isDebugEnabled())
+      log.debug("Popup service with identifier '" + threadId + "' was created.");
     return threadId;
   }
 
@@ -102,7 +103,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
     
-    log.debug("Popup service with identifier '" + threadId + "' was created.");
+    if (log.isDebugEnabled())
+      log.debug("Popup service with identifier '" + threadId + "' was created.");
     return threadId;
   }
 
@@ -116,7 +118,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
     
-    log.debug("Popup service with identifier '" + threadId + "' was created.");
+    if (log.isDebugEnabled())
+      log.debug("Popup service with identifier '" + threadId + "' was created.");
     return threadId;
   }
   
@@ -140,7 +143,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     });
     allPopups.put(threadId, popups.get(threadId));
     
-    log.debug("Popup service with identifier '" + threadId + "' was created for mounted URL '" + url + "'.");
+    if (log.isDebugEnabled())
+      log.debug("Popup service with identifier '" + threadId + "' was created for mounted URL '" + url + "'.");
     return threadId;
   }
   
@@ -198,7 +202,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       ThreadContext threadCtx = (ThreadContext)getEnvironment().getEntry(ThreadContext.class);
       Object id = threadCtx.getCurrentId();
       threadCtx.close(id);
-      log.debug("Closed thread with id : " + id);
+      if (log.isDebugEnabled())
+        log.debug("Closed thread with id : " + id);
     } else {
       super.event(path, input);
     }
