@@ -16,9 +16,14 @@
 
 package org.araneaframework.uilib.tree;
 
+import java.io.Writer;
+
 import org.araneaframework.Environment;
+import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -87,6 +92,28 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 	public Widget getDisplay() {
 		return null;
 	}
+
+  public int getParentCount() {
+    return 0;
+  }
+
+  protected void renderChildrenStart(Writer out, OutputData output) throws Exception {
+    JspUtil.writeOpenStartTag(out, "ul");
+    JspUtil.writeAttribute(out, "id", output.getScope());
+    JspUtil.writeAttribute(out, "class", "aranea-tree");
+    JspUtil.writeAttribute(out, "arn-tree-nosync", Boolean.toString(!getTreeCtx().getSync()));
+    JspUtil.writeCloseStartTag_SS(out);
+  }
+
+  public void renderGfx(Writer out, OutputData output, boolean current) throws Exception {
+    renderMyGfx(out, output, 0, current);
+  }
+
+  protected void render(OutputData output) throws Exception {
+    super.render(output);
+    Writer out = ((HttpOutputData) output).getWriter();
+    out.flush();
+  }
 
   // The following methods do nothing, because the root node of the tree has no
   // display widget and therefore is always expanded.

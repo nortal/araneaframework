@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.tree;
 
 import java.io.Serializable;
+import java.io.Writer;
 import java.util.List;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -114,5 +115,9 @@ public interface TreeNodeContext extends Serializable {
    * Returns if this tree node has any child nodes.
    */
   boolean hasNodes();
+
+  void renderGfx(Writer out, OutputData output, boolean current) throws Exception;
+  int getParentCount();
+  int getNodeIndex(TreeNodeWidget node);
 
 }

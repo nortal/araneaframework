@@ -22,11 +22,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardActionListener;
@@ -109,7 +112,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 	}
 
 	protected void init() throws Exception {
-		addWidget(DISPLAY_KEY, initDisplay, getDisplayWidgetEnvironment());
+		addWidget(DISPLAY_KEY, initDisplay);
 		initDisplay = null;
 
 		if (this.initNodes != null) {
@@ -150,13 +153,17 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
   }
 
-	protected Environment getDisplayWidgetEnvironment() {
+	protected Environment getChildWidgetEnvironment() {
 		return new StandardEnvironment(getEnvironment(), TreeNodeContext.class, this);
 	}
 
 	protected TreeContext getTreeCtx() {
 		return (TreeContext) getEnvironment().getEntry(TreeContext.class);
 	}
+
+  protected TreeNodeContext getTreeNodeCtx() {
+    return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
+  }
 
 	// returns List<TreeNodeWidget>
 	protected List loadChildren() {
@@ -249,19 +256,66 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 		return getNodeCount() > 0;
 	}
 
+  public int getParentCount() {
+    return getTreeNodeCtx().getParentCount() + 1;
+  }
+
+  public int getNodeIndex(TreeNodeWidget node) {
+    Map children = getChildren();
+    for (int i = 0; i < getNodeCount(); i++) {
+      if (children.get(Integer.toString(i)) == node) {
+        return i;
+      }
+    }
+    throw new AraneaRuntimeException("Node " + ObjectUtils.identityToString(node) + " not found among children.");
+  }
+
+  protected void renderToggleLink(Writer out, OutputData output) throws Exception {
+    JspUtil.writeOpenStartTag(out, "a");
+    JspUtil.writeAttribute(out, "href", "#");
+    JspUtil.writeAttribute(out, "onclick", "return AraneaTree.toggleNode(this);");
+    JspUtil.writeCloseStartTag_SS(out);
+    out.write(isCollapsed() ? "+" : "-");
+    JspUtil.writeEndTag_SS(out, "a");
+  }
+
+  protected void renderChildrenStart(Writer out, OutputData output) throws Exception {
+    JspUtil.writeStartTag(out, "ul");
+  }
+
+  protected void renderChildrenEnd(Writer out, OutputData output) throws Exception {
+    JspUtil.writeEndTag(out, "ul");
+  }
+
+  protected void renderChildStart(Writer out, OutputData output, TreeNodeWidget node) throws Exception {
+    JspUtil.writeOpenStartTag(out, "li");
+    JspUtil.writeAttribute(out, "id", output.getScope());
+    JspUtil.writeAttribute(out, "class", "aranea-tree-node");
+    JspUtil.writeCloseStartTag(out);
+  }
+
+  protected void renderChildEnd(Writer out, OutputData output, TreeNodeWidget node) throws Exception {
+    JspUtil.writeEndTag(out, "li");
+  }
+
+  public void renderGfx(Writer out, OutputData output, boolean current) throws Exception {
+    TreeNodeContext parent = getTreeNodeCtx();
+    parent.renderGfx(out, output, false);
+    renderMyGfx(out, output, parent.getNodeIndex(this), current);
+  }
+
+  protected void renderMyGfx(Writer out, OutputData output, int index, boolean current) throws Exception {
+  }
+
 	protected void render(OutputData output) throws Exception {
 		Writer out = ((HttpOutputData) output).getWriter();
 
 		// Render display widget
 		Widget display = getDisplay();
 		if (display != null) {	// display is null if this is root node (TreeWidget)
+      renderGfx(out, output, true);
       if (getTreeCtx().getDataProvider() != null) {
-  		  JspUtil.writeOpenStartTag(out, "a");
-  		  JspUtil.writeAttribute(out, "href", "#");
-  		  JspUtil.writeAttribute(out, "onclick", "return AraneaTree.toggleNode(this);");
-  		  JspUtil.writeCloseStartTag_SS(out);
-  		  out.write(isCollapsed() ? "+" : "-");
-  		  JspUtil.writeEndTag_SS(out, "a");
+        renderToggleLink(out, output);
       }
 		  try {
 		    output.pushScope(TreeNodeWidget.DISPLAY_KEY);
@@ -274,33 +328,23 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
 		// Render child nodes
 		if (display == null || (!isCollapsed() && hasNodes())) {
-      if (display != null) {
-        JspUtil.writeStartTag(out, "ul");
-      } else {
-        JspUtil.writeOpenStartTag(out, "ul");
-        JspUtil.writeAttribute(out, "id", output.getScope());
-        JspUtil.writeAttribute(out, "class", "aranea-tree");
-        JspUtil.writeAttribute(out, "arn-tree-nosync", Boolean.toString(!getTreeCtx().getSync()));
-        JspUtil.writeCloseStartTag_SS(out);
-      }
+      renderChildrenStart(out, output);
       if (!isCollapsed() && hasNodes()) {
   			List nodes = getNodes();
   			for (ListIterator i = nodes.listIterator(); i.hasNext(); ) {
   				try {
   					output.pushScope(Integer.toString(i.nextIndex()));
-  					JspUtil.writeOpenStartTag(out, "li");
-  					JspUtil.writeAttribute(out, "id", output.getScope());
-            JspUtil.writeAttribute(out, "class", "aranea-tree-node");
-  					JspUtil.writeCloseStartTag(out);
+            TreeNodeWidget node = (TreeNodeWidget) i.next();
+            renderChildStart(out, output, node);
             out.flush();
-  					((TreeNodeWidget) i.next()).render(output);
+  					node.render(output);
+            renderChildEnd(out, output, node);
   				} finally {
   					output.popScope();
   				}
-  				JspUtil.writeEndTag(out, "li");
   			}
       }
-			JspUtil.writeEndTag(out, "ul");
+      renderChildrenEnd(out, output);
 		}
 	}
 
