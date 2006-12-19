@@ -150,7 +150,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   
   public void open(final String url, final PopupWindowProperties properties) {
     Assert.notEmptyParam(this, url, "url");
-    popups.put(url, new PopupServiceInfo() {
+    popups.put(getRandomServiceId(), new PopupServiceInfo() {
       public PopupWindowProperties getPopupProperties() {
         return properties;
       }
@@ -253,7 +253,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     HttpInputData input = (HttpInputData) getInputData();
     return ((HttpOutputData) input.getOutputData()).encodeURL(input.getContainerURL());
   }
-
+  
   /* ************************************************************************************
    * PUBLIC INNER CLASSES
    * ************************************************************************************/
