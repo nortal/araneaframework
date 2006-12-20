@@ -105,7 +105,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     JspUtil.writeCloseStartTag_SS(out);
   }
 
-  public void renderDisplayPrefixRecursive(Writer out, OutputData output, boolean current) throws Exception {
+  public void renderDisplayPrefixRecursive(Writer out, OutputData output, String path, boolean current) throws Exception {
     renderDisplayPrefix(out, output, 0, current);
   }
 

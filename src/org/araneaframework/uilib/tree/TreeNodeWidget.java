@@ -270,15 +270,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return getTreeNodeCtx().getParentCount() + 1;
   }
 
-  /**
-   * Returns index that this node has as parent's child.
-   */
-  protected int getNodeIndex(OutputData output) {
-    String path = output.getScope().toString();
-    int index = Integer.parseInt(path.substring(path.lastIndexOf('.') + 1));
-    return index;
-  }
-
   public void renderNode(OutputData output) throws Exception {  // Called only from display widget
     output.popScope();
     try {
@@ -298,7 +289,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     // Render display widget
     Widget display = getDisplay();
     if (display != null) {  // display is null if this is root node (TreeWidget)
-      renderDisplayPrefixRecursive(out, output, true);
+      renderDisplayPrefixRecursive(out, output, output.getScope().toString(), true);
       if (getTreeCtx().getDataProvider() != null) {
         renderToggleLink(out, output);
       }
@@ -383,10 +374,14 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     JspUtil.writeEndTag(out, "li");
   }
 
-  public void renderDisplayPrefixRecursive(Writer out, OutputData output, boolean current) throws Exception {
+  public void renderDisplayPrefixRecursive(Writer out, OutputData output, String path, boolean current) throws Exception {
+    int index = Integer.parseInt(path.substring(path.lastIndexOf('.') + 1));
+    String parentPath = path.substring(0, path.lastIndexOf('.'));
+
     TreeNodeContext parent = getTreeNodeCtx();
-    parent.renderDisplayPrefixRecursive(out, output, false);
-    renderDisplayPrefix(out, output, getNodeIndex(output), current);
+    parent.renderDisplayPrefixRecursive(out, output, parentPath, false);
+
+    renderDisplayPrefix(out, output, index, current);
   }
 
   /**
