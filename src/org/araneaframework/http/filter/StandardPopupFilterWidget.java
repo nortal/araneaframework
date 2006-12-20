@@ -276,6 +276,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   public static class StandardPopupServiceInfo implements PopupServiceInfo {
+    private boolean overrideTransaction = true;
     private String topServiceId;
     private String threadServiceId;
     private String requestUrl;
@@ -295,6 +296,11 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     public String getThreadServiceId() {
       return threadServiceId;
     }
+    
+    /** @since 1.0.4 */
+    public void setTransactionOverride(boolean b) {
+      this.overrideTransaction = b;
+    }
 
     public String toURL() {
       StringBuffer url = new StringBuffer(requestUrl != null ? requestUrl : "");
@@ -303,7 +309,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
         url.append("&" + ThreadContext.THREAD_SERVICE_KEY + "=");
         url.append(threadServiceId);
       }
-      url.append('&').append((TransactionContext.TRANSACTION_ID_KEY + "=")).append(TransactionContext.OVERRIDE_KEY);
+
+      if (overrideTransaction)
+        url.append('&').append((TransactionContext.TRANSACTION_ID_KEY + "=")).append(TransactionContext.OVERRIDE_KEY);
       return url.toString();
     }
 
