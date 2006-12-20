@@ -62,9 +62,11 @@ public class WindowClosingService extends BaseService {
 			String topserviceId = (String) ((TopServiceContext) opener.getEnvironment().getEntry(TopServiceContext.class)).getCurrentId();
 			String url = ((HttpOutputData)getInputData().getOutputData()).encodeURL(((HttpInputData)getInputData()).getContainerURL());
 			serviceInfo = new StandardPopupServiceInfo(topserviceId, threadId, null, url);
+			serviceInfo.setTransactionOverride(false);
 		}
 		
 		String script;
+		
 		if (serviceInfo != null) {
 			script = 
 				"reloadParentWindow('" + serviceInfo.toURL() + "');" +
