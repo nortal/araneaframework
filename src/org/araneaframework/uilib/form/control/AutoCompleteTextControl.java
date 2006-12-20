@@ -58,9 +58,11 @@ public class AutoCompleteTextControl extends TextControl {
     this.responseBuilder = responseBuilder;
   }
   
-  /** @since 1.0.4 */
+  /**
+   * @return {@link ResponseBuilder} that will be used to build response with suggestions.
+   * @since 1.0.4 */
   public ResponseBuilder getResponseBuilder() {
-    return this.responseBuilder;
+    return resolveResponseBuilder();
   }
 
   public interface DataProvider extends Serializable {
@@ -71,22 +73,30 @@ public class AutoCompleteTextControl extends TextControl {
     public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
       String str = innerData == null ? null : ((String[]) innerData)[0];
       List suggestions = dataProvider.getSuggestions(str);
-      
-      ConfigurationContext confCtx = 
-        (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
-      
-      ResponseBuilder responseBuilder = AutoCompleteTextControl.this.responseBuilder; 
-      if (responseBuilder == null)
-    	  responseBuilder = (ResponseBuilder)confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
-      if (responseBuilder == null)
-        responseBuilder = new DefaultResponseBuilder();
-      
+
+      ResponseBuilder responseBuilder = resolveResponseBuilder();
+
       HttpOutputData httpOutput = (HttpOutputData) output;
       String xml = responseBuilder.getResponseContent(suggestions);
 
       httpOutput.setContentType(responseBuilder.getResponseContentType());
       httpOutput.getWriter().write(xml);
     }
+  }
+  
+  /** @since 1.0.4 */
+  protected ResponseBuilder resolveResponseBuilder() {
+    ResponseBuilder result = this.responseBuilder;
+    if (result == null) {
+      ConfigurationContext confCtx = 
+        (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+      result = (ResponseBuilder)confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
+    }
+    
+    if (result == null)
+      result = new DefaultResponseBuilder();
+    
+    return result;
   }
 
   /**
@@ -108,7 +118,7 @@ public class AutoCompleteTextControl extends TextControl {
   }
   
   /**
-   * Default {@link ResponseBuilder} used when {@link Control} does not have
+   * Default {@link ResponseBuilder} used when {@link AutoCompleteTextControl} does not have
    * its {@link ResponseBuilder} set and {@link ConfigurationContext#AUTO_COMPLETE_RESPONSE_BUILDER}
    * does not specify application-wide {@link ResponseBuilder}.
    * 
