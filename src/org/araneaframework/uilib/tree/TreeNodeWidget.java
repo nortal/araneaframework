@@ -23,13 +23,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardActionListener;
@@ -130,27 +128,39 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   private class InvertCollapsedListener extends StandardActionListener {
+
+    private static final long serialVersionUID = 1L;
+
     public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
       log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
       invertCollapsed();
       render(output);
     }
+
   }
 
   private class ExpandActionListener extends StandardActionListener {
+
+    private static final long serialVersionUID = 1L;
+
     public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
       log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
       expand();
       render(output);
     }
+
   }
 
   private class CollapseActionListener extends StandardActionListener {
+
+    private static final long serialVersionUID = 1L;
+
     public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
       log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
       collapse();
       render(output);
     }
+
   }
 
   protected Environment getChildWidgetEnvironment() {
@@ -260,14 +270,13 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return getTreeNodeCtx().getParentCount() + 1;
   }
 
-  public int getNodeIndex(TreeNodeWidget node) {
-    Map children = getChildren();
-    for (int i = 0; i < getNodeCount(); i++) {
-      if (children.get(Integer.toString(i)) == node) {  //FIXME
-        return i;
-      }
-    }
-    throw new AraneaRuntimeException("Node " + ObjectUtils.identityToString(node) + " not found among children.");
+  /**
+   * Returns index that this node has as parent's child.
+   */
+  protected int getNodeIndex(OutputData output) {
+    String path = output.getScope().toString();
+    int index = Integer.parseInt(path.substring(path.lastIndexOf('.') + 1));
+    return index;
   }
 
   public void renderNode(OutputData output) throws Exception {  // Called only from display widget
@@ -377,7 +386,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   public void renderDisplayPrefixRecursive(Writer out, OutputData output, boolean current) throws Exception {
     TreeNodeContext parent = getTreeNodeCtx();
     parent.renderDisplayPrefixRecursive(out, output, false);
-    renderDisplayPrefix(out, output, parent.getNodeIndex(this), current);
+    renderDisplayPrefix(out, output, getNodeIndex(output), current);
   }
 
   /**

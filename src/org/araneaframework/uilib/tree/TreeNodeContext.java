@@ -134,15 +134,4 @@ public interface TreeNodeContext extends Serializable {
    */
   int getParentCount();
 
-  /**
-   * Returns index of child node.
-   * 
-   * @param node
-   *          child node whose index is being sought.
-   * @return index of child node.
-   * @throws AraneaRuntimeException
-   *           if node is not found among immediate children.
-   */
-  int getNodeIndex(TreeNodeWidget node);
-
 }
