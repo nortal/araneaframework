@@ -95,7 +95,7 @@ public abstract class JspWidgetCallUtil {
     sb.append(eventTarget).append(",");
     sb.append(eventParam).append(",");
     sb.append(eventPrecondition).append(",");
-    sb.append("new Array(").append(JspUpdateRegionUtil.formatUpdateRegionsJS(updateRegionNames)).append(")");
+    sb.append("\"").append(JspUpdateRegionUtil.formatUpdateRegionsJS(updateRegionNames)).append("\"");
     sb.append(");");
     return sb.toString();
   }
