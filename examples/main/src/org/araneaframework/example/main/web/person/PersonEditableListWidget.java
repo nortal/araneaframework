@@ -32,7 +32,6 @@ import org.araneaframework.uilib.core.PopupFlowWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -81,6 +80,10 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 	}
 	
+	protected void process() throws Exception {
+		super.process();
+	}
+
 	protected abstract ListDataProvider buildListDataProvider() throws Exception;
 	
 	protected abstract FormRowHandler buildFormRowHandler() throws Exception;
@@ -237,32 +240,25 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		}
 	}
 	
-	  private class MyHandler extends EmptyHandler { 
+	  private class MyHandler implements FlowContext.Handler { 
 		    private BeanFormWidget form; 
 		    private PersonMO rowObject; 
 		    
 		    public MyHandler(BeanFormWidget form, PersonMO rowObject) { 
 		      this.form = form; 
 		      this.rowObject = rowObject; 
-		    } 
-		    
-		    public void onFinish(Object returnValue) { 
+		    }
+
+		    public void onCancel() throws Exception {
+			}
+
+			public void onFinish(Object returnValue) { 
 		      rowObject.setName(returnValue.toString());
-		      form.writeBean(rowObject); 
+		      form.writeBean(rowObject);
+		      form._getWidget().process();
 		    } 
 		  }
-	  
-	  private class EmptyHandler implements FlowContext.Handler {
 
-		public void onCancel() throws Exception {
-
-		}
-
-		public void onFinish(Object returnValue) throws Exception {
-
-		}
-		  
-	  }
 	
 	  public void injectContractDAO(IContractDAO contractDAO) {
 		    this.contractDAO = contractDAO;
