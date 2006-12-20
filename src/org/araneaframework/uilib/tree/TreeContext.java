@@ -26,10 +26,10 @@ import java.io.Serializable;
  */
 public interface TreeContext extends Serializable {
 
-	/**
+  /**
    * Returns tree data provider.
-	 */
-	TreeDataProvider getDataProvider();
+   */
+  TreeDataProvider getDataProvider();
 
   /**
    * Returns if action calls (by AJAX requests) to tree widget are synchronized.
@@ -41,9 +41,9 @@ public interface TreeContext extends Serializable {
    */
   public boolean getSync();
 
-	/**
+  /**
    * Returns if child nodes are removed and discarded when a node is closed.
    */
-	boolean disposeChildren();
+  boolean disposeChildren();
 
 }

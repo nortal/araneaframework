@@ -30,10 +30,10 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private TreeDataProvider dataProvider;
-	private boolean disposeChildren = true;
+  private TreeDataProvider dataProvider;
+  private boolean disposeChildren = true;
   private boolean sync = true;
 
   //TODO features:
@@ -44,16 +44,16 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // * disable concrete tree node toggling client-side when request has been
   //   submitted - response not yet arrived and processed
 
-	/**
+  /**
    * Creates a new {@link TreeWidget} instance.
    * 
    * @param dataProvider
    *          tree data provider. Can be <code>null</code>, then nodes are
    *          not self-openable (plus sign is not shown in front of every node).
    */
-	public TreeWidget(TreeDataProvider dataProvider) {
-		this.dataProvider = dataProvider;
-	}
+  public TreeWidget(TreeDataProvider dataProvider) {
+    this.dataProvider = dataProvider;
+  }
 
   /**
    * Creates a new {@link TreeWidget} instance.
@@ -69,29 +69,29 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     this.sync = sync;
   }
 
-	protected void init() throws Exception {
-		addAllNodes(loadChildren());
-	}
+  protected void init() throws Exception {
+    addAllNodes(loadChildren());
+  }
 
-	public Environment getEnvironment() {
-		return new StandardEnvironment(super.getEnvironment(), TreeContext.class, this);
-	}
+  public Environment getEnvironment() {
+    return new StandardEnvironment(super.getEnvironment(), TreeContext.class, this);
+  }
 
-	public TreeDataProvider getDataProvider() {
-		return dataProvider;
-	}
+  public TreeDataProvider getDataProvider() {
+    return dataProvider;
+  }
 
   public boolean getSync() {
     return sync;
   }
 
-	public boolean disposeChildren() {
-		return disposeChildren;
-	}
+  public boolean disposeChildren() {
+    return disposeChildren;
+  }
 
-	public Widget getDisplay() {
-		return null;
-	}
+  public Widget getDisplay() {
+    return null;
+  }
 
   public int getParentCount() {
     return 0;
@@ -105,8 +105,8 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     JspUtil.writeCloseStartTag_SS(out);
   }
 
-  public void renderGfx(Writer out, OutputData output, boolean current) throws Exception {
-    renderMyGfx(out, output, 0, current);
+  public void renderDisplayPrefixRecursive(Writer out, OutputData output, boolean current) throws Exception {
+    renderDisplayPrefix(out, output, 0, current);
   }
 
   protected void render(OutputData output) throws Exception {
@@ -118,13 +118,13 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // The following methods do nothing, because the root node of the tree has no
   // display widget and therefore is always expanded.
 
-	public void expand() {
-	}
+  public void expand() {
+  }
 
-	public void collapse() {
-	}
+  public void collapse() {
+  }
 
-	public void invertCollapsed() {
-	}
+  public void invertCollapsed() {
+  }
 
 }

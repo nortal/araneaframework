@@ -41,26 +41,26 @@ public interface TreeNodeContext extends Serializable {
    * {@link TreeDataProvider} if {@link TreeContext#disposeChildren()} is
    * <code>true</code>.
    */
-	void expand();
-	
-	/**
+  void expand();
+
+  /**
    * Sets collapsed state of tree node to <code>true</code>, thus hiding
    * child nodes. This may trigger removal of child nodes if
    * {@link TreeContext#disposeChildren()} is <code>true</code>.
    */
-	void collapse();
-	
-	/**
+  void collapse();
+
+  /**
    * Inverts collapsed state of tree node, collapsing expanded node and vice
    * versa.
    */
-	void invertCollapsed();
-	
-	/**
+  void invertCollapsed();
+
+  /**
    * Renders tree node and all of its children to specified {@link OutputData}.
    * Could be called from action listener of tree node display widget.
    */
-	void renderNode(OutputData data) throws Exception;
+  void renderNode(OutputData data) throws Exception;
 
   /**
    * Returns the number of child nodes this tree node has. The display widget is
@@ -116,8 +116,33 @@ public interface TreeNodeContext extends Serializable {
    */
   boolean hasNodes();
 
-  void renderGfx(Writer out, OutputData output, boolean current) throws Exception;
+  /**
+   * Renders HTML before DisplayWidget's toggle link. Calls
+   * {@link TreeNodeWidget#renderDisplayPrefixRecursive} on each TreeNodeWidget,
+   * staring from TreeWidget.
+   * 
+   * @param current
+   *          if this TreeNodeWidget's DisplayWidget is about to be rendered
+   */
+  void renderDisplayPrefixRecursive(Writer out, OutputData output, boolean current) throws Exception;
+
+  /**
+   * Returns how many parent nodes this TreeNodeWidget has. TreeWidget (root
+   * node) has zero parents, it's immediate children have one parent, etc.
+   * 
+   * @return number of parents in hierarchy.
+   */
   int getParentCount();
+
+  /**
+   * Returns index of child node.
+   * 
+   * @param node
+   *          child node whose index is being sought.
+   * @return index of child node.
+   * @throws AraneaRuntimeException
+   *           if node is not found among immediate children.
+   */
   int getNodeIndex(TreeNodeWidget node);
 
 }
