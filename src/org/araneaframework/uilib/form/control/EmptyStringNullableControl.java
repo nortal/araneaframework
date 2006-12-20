@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
  * <code>null</code>.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * TODO: rename to BlankStringNullableControl in Aranea 2.0
  */
 public abstract class EmptyStringNullableControl extends StringRequestControl {
   

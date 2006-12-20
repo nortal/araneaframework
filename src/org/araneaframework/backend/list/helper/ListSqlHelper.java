@@ -1230,7 +1230,7 @@ public abstract class ListSqlHelper {
 		// Remove prefix
 		String tmp = dbField.substring(dbField.lastIndexOf('.') + 1);
 		// TODO: replace with 1.3 compatible regexp check
-		if (!StringUtils.containsOnly(tmp, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789_")) {
+		if (!StringUtils.containsOnly(tmp, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")) {
 			tmp = "alias";
 		}
 		
