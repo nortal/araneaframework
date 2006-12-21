@@ -33,12 +33,11 @@ import org.araneaframework.http.util.ServletUtil;
  *
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class ApplyReturnValueService extends BaseService {
+public class ApplyReturnValueService extends BaseService implements ClientSideReturnService {
 	private String value;
 	private String widgetId;
 	
-	public ApplyReturnValueService(String value, String widgetId) {
-		this.value = value;
+	public ApplyReturnValueService(String widgetId) {
 		this.widgetId = widgetId;
 	}
 	
@@ -73,5 +72,13 @@ public class ApplyReturnValueService extends BaseService {
 
 		ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
 		mngCtx.close(mngCtx.getCurrentId());
+	}
+
+	public Object getReturnValue() {
+		return value;
+	}
+
+	public void setReturnValue(Object returnValue) {
+		this.value = returnValue.toString();
 	}
 }

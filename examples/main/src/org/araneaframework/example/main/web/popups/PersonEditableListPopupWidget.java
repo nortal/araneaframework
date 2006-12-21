@@ -16,28 +16,16 @@
 
 package org.araneaframework.example.main.web.popups;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
-import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.message.PopupMessageFactory;
 import org.araneaframework.example.main.web.sample.NameWidget;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.TopServiceContext;
-import org.araneaframework.framework.TransactionContext;
-import org.araneaframework.http.HttpInputData;
-import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.support.PopupWindowProperties;
-import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
@@ -234,69 +222,10 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(rowObject)); 
 		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
 		      rowForm.convert();
+		      
+		      Widget toStart = new PopupFlowContextWidget(new NameWidget(), new ApplyReturnValueService(formElementId));
 
-		      NameWidget nameWidget = new NameWidget() {
-				protected FlowContext getFlowCtx() {
-					final FlowContext flowContext = super.getFlowCtx(); 
-					return new FlowContext() {
-						
-						  protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
-							    Map m = new HashMap();
-							    m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
-							    m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
-							    m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-							    return ((HttpOutputData)getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
-							  }
-						
-						
-						public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {
-							flowContext.addNestedEnvironmentEntry(scope, entryId, envEntry);
-						}
-
-						public void cancel() {
-							//
-						}
-
-						public void finish(Object result) {
-							ThreadContext threadCtx = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
-							TopServiceContext topCtx = (TopServiceContext) getEnvironment().getEntry(TopServiceContext.class);
-						    try {
-						      // close the session-thread serving popupflow
-						    	threadCtx.close(threadCtx.getCurrentId());
-
-						      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
-						      // popup window is closed with redirect to a page that closes current window and reloads parent.
-						      threadCtx.addService(rndThreadId, new ApplyReturnValueService(result.toString(), formElementId));
-						      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), (String)topCtx.getCurrentId(), rndThreadId));
-						    } catch (Exception e) {
-						      ExceptionUtil.uncheckException(e);
-						    }
-						}
-
-						public FlowReference getCurrentReference() {
-							return flowContext.getCurrentReference();
-						}
-
-						public boolean isNested() {
-							return flowContext.isNested();
-						}
-
-						public void replace(Widget flow, Configurator configurator) {
-							flowContext.replace(flow, configurator);
-						}
-
-						public void reset(EnvironmentAwareCallback callback) {
-							flowContext.reset(callback);
-						}
-
-						public void start(Widget flow, Configurator configurator, Handler handler) {
-							flowContext.start(flow, configurator, handler);
-						}
-					};
-				}
-		      };
-
-		      getPopupCtx().open(new PopupMessageFactory().buildMessage(nameWidget), new PopupWindowProperties(), null);
+		      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), new PopupWindowProperties(), null);
 		}
 	}
 	
