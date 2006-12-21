@@ -69,7 +69,7 @@ public class WindowClosingService extends BaseService {
 		
 		if (serviceInfo != null) {
 			script = 
-				"reloadParentWindow('" + serviceInfo.toURL() + "');" +
+				"reloadParentWindow('" + serviceInfo.toURL() + "&processOnly=true');" +
 				"closeWindow(50);";
 		} else {
 			script = "closeWindow(50);";

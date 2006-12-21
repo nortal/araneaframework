@@ -84,7 +84,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   }
 
   protected void process() throws Exception {
-    if (isConsistent()) {
+    if (isConsistent() || getInputData().getGlobalData().get("processOnly")!=null) {
       childWidget._getWidget().process();
     }
     else {

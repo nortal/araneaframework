@@ -18,12 +18,18 @@ package org.araneaframework.example.main.web.popups;
 
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.Widget;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.message.PopupMessageFactory;
 import org.araneaframework.example.main.web.sample.NameWidget;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.FlowContext.Configurator;
+import org.araneaframework.framework.FlowContext.FlowReference;
+import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
@@ -199,9 +205,17 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(rowObject)); 
 		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
 		      rowForm.convert(); 
-		      PopupWindowProperties p = new PopupWindowProperties(); 
-		      PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new PopupMessageFactory());
-		      getFlowCtx().start(pfw, null, new MyHandler(rowForm, rowObject)); 
+		      //PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new PopupMessageFactory());
+		      NameWidget nameWidget = new NameWidget() {
+				protected void destroy() throws Exception {
+					super.destroy();
+				}
+		      };
+
+		      getPopupCtx().open(new PopupMessageFactory().buildMessage(nameWidget), new PopupWindowProperties(), null);
+
+		      
+		      //getFlowCtx().start(pfw, null, new MyHandler(rowForm, rowObject)); 
 		}
 	}
 	

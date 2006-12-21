@@ -47,7 +47,7 @@ import org.araneaframework.http.util.URLUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContext {
-  Widget child;
+  protected Widget child;
 
   public PopupFlowWrapperWidget(Widget child) {
     this.child = child;
