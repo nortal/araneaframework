@@ -84,7 +84,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   }
 
   protected void process() throws Exception {
-    if (isConsistent() || getInputData().getGlobalData().get("processOnly")!=null) {
+    if (isConsistent() || alwaysProcess(getInputData())) {
       childWidget._getWidget().process();
     }
     else {
@@ -125,5 +125,9 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    */
   protected Object getTransactionId(InputData input) throws Exception {
     return input.getGlobalData().get(TransactionContext.TRANSACTION_ID_KEY);
+  }
+  
+  protected boolean alwaysProcess(InputData input) {
+    return input.getGlobalData().get(TransactionContext.ALWAYS_PROCESS_KEY) != null;
   }
 }

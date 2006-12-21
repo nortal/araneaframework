@@ -16,21 +16,28 @@
 
 package org.araneaframework.example.main.web.popups;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.message.PopupMessageFactory;
 import org.araneaframework.example.main.web.sample.NameWidget;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.framework.FlowContext.Configurator;
-import org.araneaframework.framework.FlowContext.FlowReference;
-import org.araneaframework.framework.FlowContext.Handler;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.support.PopupWindowProperties;
+import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
@@ -47,10 +54,12 @@ import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
-
 public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 	protected static final Logger log = Logger.getLogger(PersonEditableListPopupWidget.class);
 	private  IContractDAO contractDAO; 
+	
+	private boolean usePopupFlow = true;
+	
 	/* Editable list. */ 
 	private EditableBeanListWidget list;
 	/* Actual holder of editable list rows (resides inside EditableBeanListWidget).
@@ -133,20 +142,8 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 			return ((PersonMO) rowData).getId();
 		}
 		
-		// Implementation of method that should save EDITED rows which data passes validation.
 		public void saveValidRow(FormRow editableRow) throws Exception {
-			/* Reads data from form. FormRow.getForm() method returns the widget that is 
-			 * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
-			 * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
-			 * we can cast the return type accordingly. */
-			//PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).readBean(new PersonMO());
-			//rowData.setId((Long) editableRow.getKey());
-			
-			// Save modified object.
-			//getGeneralDAO().edit(rowData);
-			
-			// Set the row closed (for further editing, it must be opened again). 
-			editableRow.close();
+
 		}
 		
 		public void deleteRow(Object key) throws Exception {
@@ -172,7 +169,7 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 			// See below.
 			addCommonFormFields(rowForm);
 			
-			FormListUtil.addButtonToRowForm("#", rowForm, new PopupListener((PersonMO)rowData), "popupButton");
+			FormListUtil.addButtonToRowForm("#", rowForm, new PopupListenerFactory().createListener(rowData) , "popupButton");
 			rowForm.writeBean(rowData);
 		}
 		
@@ -193,9 +190,17 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		}
 	}
 	
-	private class PopupListener implements OnClickEventListener {
+	private class PopupListenerFactory {
+		public OnClickEventListener createListener(Object data) {
+			if (usePopupFlow)
+				return new PopupFlowListener((PersonMO)data);
+			return new PopupClientListener((PersonMO)data);
+		}
+	}
+	
+	private class PopupFlowListener implements OnClickEventListener {
 		private PersonMO person;
-		public PopupListener(PersonMO eventParam) {
+		public PopupFlowListener(PersonMO eventParam) {
 			this.person = eventParam;
 		}
 		
@@ -204,18 +209,94 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		      
 		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(rowObject)); 
 		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
-		      rowForm.convert(); 
-		      //PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new PopupMessageFactory());
+		      PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), new PopupWindowProperties(), new PopupMessageFactory());
+		      getFlowCtx().start(pfw, null, new MyHandler(rowForm, rowObject)); 
+		}
+	}
+	
+	private class PopupClientListener implements OnClickEventListener {
+		private PersonMO person;
+		
+		
+		public PopupClientListener(PersonMO eventParam) {
+			this.person = eventParam;
+		}
+		
+		public void onClick() throws Exception {
+		      final PersonMO rowObject = person;
+		      
+		      String widgetId = getInputData().getScope().toString();
+		      widgetId = widgetId.substring(0, widgetId.lastIndexOf('.'));
+		      widgetId = widgetId + ".name";
+		      
+		      final String formElementId = widgetId;
+
+		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(rowObject)); 
+		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
+		      rowForm.convert();
+
 		      NameWidget nameWidget = new NameWidget() {
-				protected void destroy() throws Exception {
-					super.destroy();
+				protected FlowContext getFlowCtx() {
+					final FlowContext flowContext = super.getFlowCtx(); 
+					return new FlowContext() {
+						
+						  protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
+							    Map m = new HashMap();
+							    m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
+							    m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
+							    m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
+							    return ((HttpOutputData)getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
+							  }
+						
+						
+						public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {
+							flowContext.addNestedEnvironmentEntry(scope, entryId, envEntry);
+						}
+
+						public void cancel() {
+							//
+						}
+
+						public void finish(Object result) {
+							ThreadContext threadCtx = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
+							TopServiceContext topCtx = (TopServiceContext) getEnvironment().getEntry(TopServiceContext.class);
+						    try {
+						      // close the session-thread serving popupflow
+						    	threadCtx.close(threadCtx.getCurrentId());
+
+						      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
+						      // popup window is closed with redirect to a page that closes current window and reloads parent.
+						      threadCtx.addService(rndThreadId, new ApplyReturnValueService(result.toString(), formElementId));
+						      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), (String)topCtx.getCurrentId(), rndThreadId));
+						    } catch (Exception e) {
+						      ExceptionUtil.uncheckException(e);
+						    }
+						}
+
+						public FlowReference getCurrentReference() {
+							return flowContext.getCurrentReference();
+						}
+
+						public boolean isNested() {
+							return flowContext.isNested();
+						}
+
+						public void replace(Widget flow, Configurator configurator) {
+							flowContext.replace(flow, configurator);
+						}
+
+						public void reset(EnvironmentAwareCallback callback) {
+							flowContext.reset(callback);
+						}
+
+						public void start(Widget flow, Configurator configurator, Handler handler) {
+							flowContext.start(flow, configurator, handler);
+						}
+					};
 				}
 		      };
 
 		      getPopupCtx().open(new PopupMessageFactory().buildMessage(nameWidget), new PopupWindowProperties(), null);
-
-		      
-		      //getFlowCtx().start(pfw, null, new MyHandler(rowForm, rowObject)); 
 		}
 	}
 	
@@ -241,4 +322,14 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 	  public void injectContractDAO(IContractDAO contractDAO) {
 		    this.contractDAO = contractDAO;
 		  }
+	  
+	  public void setUsePopupFlow(boolean b) {
+		  this.usePopupFlow = b;
+	  }
+	  
+	  public String getTitle() {
+		  if (usePopupFlow)
+			  return "Server-side return";
+		  return "Client-side return";
+	  }
 }

@@ -7,5 +7,6 @@
 
   <ui:widgetContext>
  	<ui:widgetInclude id="editableList"/>
+ 	<ui:widgetInclude id="anotherEditableList"/>
   </ui:widgetContext>
 </jsp:root>

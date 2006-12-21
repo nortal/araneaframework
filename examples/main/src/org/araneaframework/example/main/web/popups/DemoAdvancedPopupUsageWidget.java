@@ -23,10 +23,16 @@ import org.araneaframework.example.main.TemplateBaseWidget;
  */
 public class DemoAdvancedPopupUsageWidget extends TemplateBaseWidget {
 	private PersonEditableListPopupWidget editableList;
+	private PersonEditableListPopupWidget anotherEditableList;
 
 	protected void init() throws Exception {
 		setViewSelector("demo/advancedPopups");
 		editableList = new PersonEditableListPopupWidget.Memory();
+		
+		anotherEditableList = new PersonEditableListPopupWidget.Memory();
+		anotherEditableList.setUsePopupFlow(false);
+		
 		addWidget("editableList", editableList);
+		addWidget("anotherEditableList", anotherEditableList);
 	}
 }

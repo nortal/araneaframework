@@ -17,7 +17,7 @@
       <ui:formList>
 		
         <ui:componentHeader>
-          <ui:componentName>Editable person list</ui:componentName>
+          <ui:componentName><c:out value="Editable person list (${widget.title})"/> </ui:componentName>
         </ui:componentHeader>
 		
         <ui:component>
