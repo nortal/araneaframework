@@ -18,7 +18,6 @@ package org.araneaframework.example.main.web.popups;
 
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
@@ -238,6 +237,7 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 			public void onFinish(Object returnValue) { 
 		      rowObject.setName(returnValue.toString());
 		      form.writeBean(rowObject);
+		      
 		    } 
 		  }
 
