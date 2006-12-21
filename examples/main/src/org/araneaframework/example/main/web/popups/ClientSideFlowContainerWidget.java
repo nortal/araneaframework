@@ -18,13 +18,20 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
-public class PopupFlowContextWidget extends BaseApplicationWidget implements FlowContext {
+public class ClientSideFlowContainerWidget extends BaseApplicationWidget implements FlowContext {
 	private Widget widget;
 	private ClientSideReturnService finishingService;
 	
-	public PopupFlowContextWidget(BaseUIWidget widget, ClientSideReturnService finishingService) {
+	public ClientSideFlowContainerWidget(BaseUIWidget widget) {
 		this.widget = widget;
-		this.finishingService = finishingService;
+	}
+	
+	public void setFinishService(ClientSideReturnService service) {
+		this.finishingService = service;
+	}
+	
+	public ClientSideReturnService getFinishService() {
+		return finishingService;
 	}
 	
 	protected void init() throws Exception {
@@ -62,7 +69,7 @@ public class PopupFlowContextWidget extends BaseApplicationWidget implements Flo
 
 	      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
 	      // popup window is closed with redirect to a page that closes current window and reloads parent.
-	      finishingService.setReturnValue(result);
+	      finishingService.setResult(result);
 	      threadCtx.addService(rndThreadId, finishingService);
 	      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), (String)topCtx.getCurrentId(), rndThreadId));
 	    } catch (Exception e) {

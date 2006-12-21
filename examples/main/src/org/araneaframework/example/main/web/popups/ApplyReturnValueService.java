@@ -74,11 +74,11 @@ public class ApplyReturnValueService extends BaseService implements ClientSideRe
 		mngCtx.close(mngCtx.getCurrentId());
 	}
 
-	public Object getReturnValue() {
+	public Object getResult() {
 		return value;
 	}
 
-	public void setReturnValue(Object returnValue) {
+	public void setResult(Object returnValue) {
 		this.value = returnValue.toString();
 	}
 }

@@ -223,7 +223,8 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
 		      rowForm.convert();
 		      
-		      Widget toStart = new PopupFlowContextWidget(new NameWidget(), new ApplyReturnValueService(formElementId));
+		      ClientSideFlowContainerWidget toStart =  new ClientSideFlowContainerWidget(new NameWidget());
+		      toStart.setFinishService(new ApplyReturnValueService(formElementId));
 
 		      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), new PopupWindowProperties(), null);
 		}
