@@ -251,27 +251,27 @@ function AraneaPage() {
     return url;
   }
 
-  this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, nosync) {
+  this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync) {
     var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value, 'override');
     url += '&widgetActionPath=' + actionTarget;
     url += '&serviceActionHandler=' + actionId;
     url += '&serviceActionParameter=' + actionParam;
-    if (nosync)
-      url += '&nosync=true';
+    if (!sync)
+      url += '&sync=false';
     url += '&systemFormId=' + systemForm.id;
     return url;
   }
 
-  this.action = function(element, actionId, actionTarget, actionParam, nosync, actionCallback) {
+  this.action = function(element, actionId, actionTarget, actionParam, sync, actionCallback) {
     var t = this.getTraverser();
     var systemForm = t.findSurroundingSystemForm(element);
-    return this.action_6(systemForm, actionId, actionTarget, actionParam, nosync, actionCallback);
+    return this.action_6(systemForm, actionId, actionTarget, actionParam, sync, actionCallback);
   }
 
-  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, nosync, actionCallback) {
+  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, sync, actionCallback) {
     if (window['prototype/prototype.js']) {
       return new Ajax.Request(
-        this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, nosync),
+        this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync),
         {
           method: 'get',
           onComplete: actionCallback

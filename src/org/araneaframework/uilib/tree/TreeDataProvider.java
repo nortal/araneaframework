@@ -26,7 +26,7 @@ import java.util.List;
  */
 public interface TreeDataProvider extends Serializable {
 
-	/**
+  /**
    * Returns a list of child nodes for specified parent node.
    * 
    * @param parent
@@ -34,6 +34,6 @@ public interface TreeDataProvider extends Serializable {
    *          ({@link TreeWidget}) has no display widget.
    * @return list of {@link TreeNodeWidget}s.
    */
-	List getChildren(TreeNodeWidget parent);
+  List getChildren(TreeNodeWidget parent);
 
 }
