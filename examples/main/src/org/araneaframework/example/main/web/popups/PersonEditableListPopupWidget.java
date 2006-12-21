@@ -211,20 +211,13 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		}
 		
 		public void onClick() throws Exception {
-		      final PersonMO rowObject = person;
-		      
+		      // get the id of updatable formelement, tricky
 		      String widgetId = getInputData().getScope().toString();
 		      widgetId = widgetId.substring(0, widgetId.lastIndexOf('.'));
 		      widgetId = widgetId + ".name";
 		      
-		      final String formElementId = widgetId;
-
-		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(rowObject)); 
-		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
-		      rowForm.convert();
-		      
-		      ClientSideFlowContainerWidget toStart =  new ClientSideFlowContainerWidget(new NameWidget());
-		      toStart.setFinishService(new ApplyReturnValueService(formElementId));
+		      ClientSideFlowContainerWidget toStart = new ClientSideFlowContainerWidget(new NameWidget());
+		      toStart.setFinishService(new ApplyReturnValueService(widgetId));
 
 		      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), new PopupWindowProperties(), null);
 		}

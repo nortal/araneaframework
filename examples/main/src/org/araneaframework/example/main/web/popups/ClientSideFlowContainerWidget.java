@@ -5,8 +5,10 @@ import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
+import org.araneaframework.Service;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
@@ -21,6 +23,7 @@ import org.araneaframework.uilib.core.BaseUIWidget;
 public class ClientSideFlowContainerWidget extends BaseApplicationWidget implements FlowContext {
 	private Widget widget;
 	private ClientSideReturnService finishingService;
+	private Service cancellingService;
 	
 	public ClientSideFlowContainerWidget(BaseUIWidget widget) {
 		this.widget = widget;
@@ -32,6 +35,14 @@ public class ClientSideFlowContainerWidget extends BaseApplicationWidget impleme
 	
 	public ClientSideReturnService getFinishService() {
 		return finishingService;
+	}
+	
+	public void setCancelService(Service service) {
+		cancellingService = service;
+	}
+	
+	public Service getCancelService() {
+		return cancellingService;
 	}
 	
 	protected void init() throws Exception {
@@ -57,12 +68,24 @@ public class ClientSideFlowContainerWidget extends BaseApplicationWidget impleme
 	}
 
 	public void cancel() {
-		
+		ThreadContext threadCtx = getThreadContext();
+		TopServiceContext topCtx = getTopServiceContext();
+	    try {
+	      // close the session-thread serving popupflow
+	    	threadCtx.close(threadCtx.getCurrentId());
+
+	      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
+	      Assert.notNull(cancellingService);
+	      threadCtx.addService(rndThreadId, cancellingService);
+	      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), (String)topCtx.getCurrentId(), rndThreadId));
+	    } catch (Exception e) {
+	      ExceptionUtil.uncheckException(e);
+	    }
 	}
 
 	public void finish(Object result) {
-		ThreadContext threadCtx = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
-		TopServiceContext topCtx = (TopServiceContext) getEnvironment().getEntry(TopServiceContext.class);
+		ThreadContext threadCtx = getThreadContext();
+		TopServiceContext topCtx = getTopServiceContext();
 	    try {
 	      // close the session-thread serving popupflow
 	    	threadCtx.close(threadCtx.getCurrentId());
@@ -75,6 +98,14 @@ public class ClientSideFlowContainerWidget extends BaseApplicationWidget impleme
 	    } catch (Exception e) {
 	      ExceptionUtil.uncheckException(e);
 	    }
+	}
+	
+	protected TopServiceContext getTopServiceContext() {
+		return (TopServiceContext) getEnvironment().getEntry(TopServiceContext.class);
+	}
+	
+	protected ThreadContext getThreadContext() {
+		return (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
 	}
 
 	public FlowReference getCurrentReference() {
@@ -89,13 +120,13 @@ public class ClientSideFlowContainerWidget extends BaseApplicationWidget impleme
 	}
 
 	public void reset(EnvironmentAwareCallback callback) {
+		throw new IllegalStateException();
 	}
 
 	public void start(Widget flow, Configurator configurator, Handler handler) {
 		getFlowCtx().start(flow, configurator, handler);
 	}
 	
-	///////
 	protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
 		Map m = new HashMap();
 		m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
