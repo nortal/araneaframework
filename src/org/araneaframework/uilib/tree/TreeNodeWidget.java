@@ -214,8 +214,34 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public int addNode(TreeNodeWidget node) {
+    Assert.notNullParam(node, "node");
     addWidget(Integer.toString(nodeCount), node);
     return nodeCount++;
+  }
+
+  public void addNode(int index, TreeNodeWidget node) {
+    Assert.notNullParam(node, "node");
+    Assert.isTrue(index < getNodeCount(), "index must be less that nodeCount");
+    for (int i = getNodeCount() - 1; i >= index; i--) {
+      Widget tmpNode = getWidget(Integer.toString(i));
+      removeWidget(Integer.toString(i));
+      addWidget(Integer.toString(i + 1), tmpNode);
+    }
+    addWidget(Integer.toString(index), node);
+    nodeCount++;
+  }
+
+  public TreeNodeWidget removeNode(int index) {
+    Assert.isTrue(index < getNodeCount(), "index must be less that nodeCount");
+    TreeNodeWidget node = getNode(index);
+    removeWidget(Integer.toString(index));
+    nodeCount--;
+    for (int i = index; i < getNodeCount(); i++) {
+      Widget tmpNode = getWidget(Integer.toString(i + 1));
+      removeWidget(Integer.toString(i + 1));
+      addWidget(Integer.toString(i), tmpNode);
+    }
+    return node;
   }
 
   public void addAllNodes(List nodes) {
@@ -227,16 +253,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
   }
 
-/*
-  //TODO implementation 
-  public void addNode(TreeNodeWidget node, int index) {
-  }
-
-  //TODO implementation 
-  public TreeNodeWidget removeNode(int index) {
-  }
-*/
-
   public void removeAllNodes() {
     for (int i = 0; i < nodeCount; i++) {
       removeWidget(Integer.toString(i));
@@ -245,12 +261,12 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public Widget getDisplay() {
-    return (Widget) getChildren().get(DISPLAY_KEY);
+    return getWidget(DISPLAY_KEY);
   }
 
   public TreeNodeWidget getNode(int index) {
     Assert.isTrue(index >= 0 && index < nodeCount, "Index out of bounds");
-    return (TreeNodeWidget) getChildren().get(Integer.toString(index));
+    return (TreeNodeWidget) getWidget(Integer.toString(index));
   }
 
   public List getNodes() {

@@ -40,8 +40,12 @@ import org.araneaframework.http.util.ServletUtil;
  * Also handles the invalidation of the session.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Alar Kvell (alar@araneaframework.org)
  */
 public class StandardHttpSessionRouterService extends BaseService {
+  
+  private static final long serialVersionUID = 1L;
+  
   private static final Logger log = Logger.getLogger(StandardHttpSessionRouterService.class);
   
   /**
@@ -49,7 +53,10 @@ public class StandardHttpSessionRouterService extends BaseService {
    */
   public static final String DESTROY_SESSION_PARAMETER_KEY = "destroySession";
   
-  public static final String NOSYNC_PARAMETER_KEY = "nosync";
+  /**
+   * The synchronization parameter key in the request.
+   */
+  public static final String SYNC_PARAMETER_KEY = "sync";
   
   /**
    * The key of the service in the session.
@@ -58,7 +65,6 @@ public class StandardHttpSessionRouterService extends BaseService {
   
   private ServiceFactory serviceFactory;
   
-  //private ReadWriteLock callRWLock = new ReaderPreferenceReadWriteLock();
   private Map locks = Collections.synchronizedMap(new HashMap());
   
   /**
@@ -83,7 +89,8 @@ public class StandardHttpSessionRouterService extends BaseService {
     
     RelocatableService service = getOrCreateSessionService(sess);   
     
-    if (!"true".equals(input.getGlobalData().get(NOSYNC_PARAMETER_KEY))) {
+    // Requests are synchronized by default (if "sync" parameter is missing)
+    if (!"false".equals(input.getGlobalData().get(SYNC_PARAMETER_KEY))) {
       synchronized (sess.getId()) {
         doAction(path, input, output, sess, service); 
       }     
@@ -162,4 +169,5 @@ public class StandardHttpSessionRouterService extends BaseService {
     
     return result;
   }
+
 }

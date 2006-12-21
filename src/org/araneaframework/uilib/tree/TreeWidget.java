@@ -101,7 +101,9 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     JspUtil.writeOpenStartTag(out, "ul");
     JspUtil.writeAttribute(out, "id", output.getScope());
     JspUtil.writeAttribute(out, "class", "aranea-tree");
-    JspUtil.writeAttribute(out, "arn-tree-nosync", Boolean.toString(!getTreeCtx().getSync()));
+    if (!getTreeCtx().getSync()) {
+      JspUtil.writeAttribute(out, "arn-tree-sync", "false");
+    }
     JspUtil.writeCloseStartTag_SS(out);
   }
 

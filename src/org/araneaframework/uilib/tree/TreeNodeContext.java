@@ -78,6 +78,26 @@ public interface TreeNodeContext extends Serializable {
   int addNode(TreeNodeWidget node);
 
   /**
+   * Adds the given node to the specified position. Moves all subsequent nodes
+   * one position further.
+   * 
+   * @param index
+   *          Position of the added node
+   * @param node
+   *          Node to add
+   */
+  void addNode(int index, TreeNodeWidget node);
+
+  /**
+   * Removes child node at the specified position.
+   * 
+   * @param index
+   *          Position of the removed node
+   * @return Node that was removed
+   */
+  TreeNodeWidget removeNode(int index);
+
+  /**
    * Appends all given nodes to this tree node.
    * 
    * @param nodes
