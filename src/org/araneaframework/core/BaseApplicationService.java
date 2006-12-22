@@ -41,6 +41,14 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public abstract class BaseApplicationService extends BaseService implements ApplicationService {
   private static final Logger log = Logger.getLogger(ApplicationWidget.class);
+  //*******************************************************************    
+  // CONSTANTS   
+  //*******************************************************************    
+  /**    
+   * The attribute of the action id.
+   * @deprecated
+   */    
+  public static final String ACTION_ID_ATTRIBUTE = ApplicationService.ACTION_HANDLER_ID_KEY;    
 
   //*******************************************************************
   // FIELDS
