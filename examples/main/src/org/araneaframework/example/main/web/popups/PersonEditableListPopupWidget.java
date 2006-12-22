@@ -41,9 +41,12 @@ import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
-public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
+public class PersonEditableListPopupWidget extends TemplateBaseWidget {
+	private static final long serialVersionUID = 1L;
 	protected static final Logger log = Logger.getLogger(PersonEditableListPopupWidget.class);
 	private  IContractDAO contractDAO; 
+	
+	private MemoryBasedListDataProvider dataProvider = new DataProvider();
 	
 	private boolean usePopupFlow = true;
 	
@@ -82,49 +85,34 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		super.process();
 	}
 
-	protected abstract ListDataProvider buildListDataProvider() throws Exception;
+	protected ListDataProvider buildListDataProvider() throws Exception {
+		return dataProvider;
+	}
 	
-	protected abstract FormRowHandler buildFormRowHandler() throws Exception;
+	protected FormRowHandler buildFormRowHandler() throws Exception {
+        /* Implementation of FormRowHandler that also calls dataprovider's
+         * data refresh methods when list editing events occur. */
+		return new PersonEditableRowHandler();
+	}
 	
-	public static class Memory extends PersonEditableListPopupWidget {
-		    private static final long serialVersionUID = 1L;
-    private MemoryBasedListDataProvider dataProvider = new DataProvider();
-
-		protected ListDataProvider buildListDataProvider() throws Exception {
-			return dataProvider;
+	private class DataProvider extends MemoryBasedListDataProvider {
+	      private static final long serialVersionUID = 1L;
+	      private List data;
+		      
+		protected DataProvider() {
+			super(PersonMO.class);
 		}
-		
-		protected FormRowHandler buildFormRowHandler() throws Exception {
-	        /* Implementation of FormRowHandler that also calls dataprovider's
-	         * data refresh methods when list editing events occur. */
-			return new PersonEditableRowHandler();
-		}
-		
-		private class DataProvider extends MemoryBasedListDataProvider {
-		      private static final long serialVersionUID = 1L;
-		      private List data;
-			      
-			protected DataProvider() {
-				super(PersonMO.class);
-			}
-			public List loadData() throws Exception {
-				if (data == null)
-					data = getGeneralDAO().getAll(PersonMO.class);
-				return data;
-			}
+		public List loadData() throws Exception {
+			if (data == null)
+				data = getGeneralDAO().getAll(PersonMO.class);
+			return data;
 		}
 	}
 	
-	/* Row handling functions. As this handler extends ValidOnlyIndividualFormRowHandler class,
-	 * its saveRow method does nothing: instead saveValidRow method should be implemented that
-	 * saves only these forms (rows) which data passes validation.  
-	 */ 
+	
 	public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
 		    private static final long serialVersionUID = 1L;
 
-    /* Implementation of the method that must return unique key for each row
-		 * in editable list. As we hold database objects (PersonMO-s) in this list, 
-		 * it is natural to use synthetic ID field for a key.*/ 
 		public Object getRowKey(Object rowData) {
 			return ((PersonMO) rowData).getId();
 		}
@@ -140,34 +128,27 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 			list.getDataProvider().refreshData();
 		}
 		
-		// Implementation of method that should save ADDED rows which data passes validation.
 		public void addValidRow(FormWidget addForm) throws Exception {
 			PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
 			getGeneralDAO().add(rowData);
 			list.getDataProvider().refreshData();
-			// this callback must be made here!
 			formList.resetAddForm();
 		}
 		
-		// Called to initialize each row in editable list.
 		public void initFormRow(FormRow editableRow, Object rowData) throws Exception {
-			// Get the rowForm (this is the formwidget holding row object data). 
 			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
-			// See below.
 			addCommonFormFields(rowForm);
 			
 			FormListUtil.addButtonToRowForm("#", rowForm, new PopupListenerFactory().createListener(rowData) , "popupButton");
 			rowForm.writeBean(rowData);
 		}
-		
-		// Called to initialize a blank row meant for adding new records.
+
 		public void initAddForm(FormWidget addForm) throws Exception {
 			addCommonFormFields((BeanFormWidget)addForm);
-			// Button that saves the content of the new record (calls addValidRow()). 
 			FormListUtil.addAddButtonToAddForm("#", formList, addForm);
 		}
 		
-		// Adds PersonMO bean fields to given BeanFormWidget.
+
 		private void addCommonFormFields(BeanFormWidget form) throws Exception {
 			form.addBeanElement("name", "#First name", new TextControl(), true);
 			form.addBeanElement("surname", "#Last name", new TextControl(),  true);
@@ -181,7 +162,7 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		public OnClickEventListener createListener(Object data) {
 			if (usePopupFlow)
 				return new PopupFlowListener((PersonMO)data);
-			return new PopupClientListener((PersonMO)data);
+			return new PopupClientListener();
 		}
 	}
 	
@@ -190,25 +171,16 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		public PopupFlowListener(PersonMO eventParam) {
 			this.person = eventParam;
 		}
-		
+
 		public void onClick() throws Exception {
-		      final PersonMO rowObject = person; 
-		      
-		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(rowObject)); 
+		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(person)); 
 		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
 		      PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), new PopupWindowProperties(), new PopupMessageFactory());
-		      getFlowCtx().start(pfw, null, new MyHandler(rowForm, rowObject)); 
+		      getFlowCtx().start(pfw, null, new MyHandler(rowForm, person)); 
 		}
 	}
 	
 	private class PopupClientListener implements OnClickEventListener {
-		private PersonMO person;
-		
-		
-		public PopupClientListener(PersonMO eventParam) {
-			this.person = eventParam;
-		}
-		
 		public void onClick() throws Exception {
 		      // get the id of updatable formelement, tricky
 		      String widgetId = getInputData().getScope().toString();
@@ -222,37 +194,36 @@ public abstract class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		}
 	}
 	
-	  private class MyHandler implements FlowContext.Handler { 
-		    private BeanFormWidget form; 
-		    private PersonMO rowObject; 
-		    
-		    public MyHandler(BeanFormWidget form, PersonMO rowObject) { 
-		      this.form = form; 
-		      this.rowObject = rowObject; 
-		    }
+	private class MyHandler implements FlowContext.Handler { 
+		private BeanFormWidget form; 
+		private PersonMO rowObject; 
 
-		    public void onCancel() throws Exception {
-			}
+		public MyHandler(BeanFormWidget form, PersonMO rowObject) { 
+			this.form = form; 
+			this.rowObject = rowObject; 
+		}
 
-			public void onFinish(Object returnValue) { 
-		      rowObject.setName(returnValue.toString());
-		      form.writeBean(rowObject);
-		      
-		    } 
-		  }
+		public void onCancel() throws Exception {
+		}
+
+		public void onFinish(Object returnValue) { 
+			rowObject.setName(returnValue.toString());
+			form.writeBean(rowObject);
+		} 
+	}
 
 	
-	  public void injectContractDAO(IContractDAO contractDAO) {
-		    this.contractDAO = contractDAO;
-		  }
-	  
-	  public void setUsePopupFlow(boolean b) {
-		  this.usePopupFlow = b;
-	  }
-	  
-	  public String getTitle() {
-		  if (usePopupFlow)
-			  return "Server-side return";
-		  return "Client-side return";
-	  }
+	public void injectContractDAO(IContractDAO contractDAO) {
+		this.contractDAO = contractDAO;
+	}
+
+	public void setUsePopupFlow(boolean b) {
+		this.usePopupFlow = b;
+	}
+
+	public String getTitle() {
+		if (usePopupFlow)
+			return "Server-side return";
+		return "Client-side return";
+	}
 }

@@ -27,9 +27,9 @@ public class DemoAdvancedPopupUsageWidget extends TemplateBaseWidget {
 
 	protected void init() throws Exception {
 		setViewSelector("demo/advancedPopups");
-		editableList = new PersonEditableListPopupWidget.Memory();
+		editableList = new PersonEditableListPopupWidget();
 		
-		anotherEditableList = new PersonEditableListPopupWidget.Memory();
+		anotherEditableList = new PersonEditableListPopupWidget();
 		anotherEditableList.setUsePopupFlow(false);
 		
 		addWidget("editableList", editableList);
