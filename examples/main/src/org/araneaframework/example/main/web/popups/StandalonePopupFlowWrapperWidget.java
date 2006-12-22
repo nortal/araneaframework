@@ -37,13 +37,21 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
+import org.araneaframework.uilib.core.PopupFlowWrapperWidget;
 
-public class ClientSideFlowContainerWidget extends BaseApplicationWidget implements FlowContext {
+/**
+ * Similar to {@link PopupFlowWrapperWidget} but this never proxies {@link FlowContext} calls
+ * to opening thread's {@link FlowContext} and allows setting the {@link Service} that will
+ * be executed upon return from wrapped {@link Widget}.
+ * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ */
+public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContext {
 	private Widget widget;
 	private ClientSideReturnService finishingService;
 	private Service cancellingService;
 	
-	public ClientSideFlowContainerWidget(BaseUIWidget widget) {
+	public StandalonePopupFlowWrapperWidget(BaseUIWidget widget) {
 		this.widget = widget;
 	}
 	

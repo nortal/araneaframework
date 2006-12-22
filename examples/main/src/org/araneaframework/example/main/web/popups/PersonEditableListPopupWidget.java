@@ -171,7 +171,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		      widgetId = widgetId.substring(0, widgetId.lastIndexOf('.'));
 		      widgetId = widgetId + ".name";
 		      
-		      ClientSideFlowContainerWidget toStart = new ClientSideFlowContainerWidget(new NameWidget());
+		      StandalonePopupFlowWrapperWidget toStart = new StandalonePopupFlowWrapperWidget(new NameWidget());
 		      toStart.setFinishService(new ApplyReturnValueService(widgetId));
 	      
 			PopupWindowProperties p = new PopupWindowProperties();
