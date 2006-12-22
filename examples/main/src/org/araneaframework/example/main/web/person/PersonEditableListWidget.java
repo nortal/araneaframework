@@ -24,15 +24,8 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.data.PersonListDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
-import org.araneaframework.example.main.message.PopupMessageFactory;
-import org.araneaframework.example.main.web.sample.NameWidget;
-import org.araneaframework.framework.FlowContext;
-import org.araneaframework.http.support.PopupWindowProperties;
-import org.araneaframework.uilib.core.PopupFlowWidget;
-import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -101,15 +94,11 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		private class DataProvider extends MemoryBasedListDataProvider {
 			      private static final long serialVersionUID = 1L;
-			      private List data;
-			      
-			protected DataProvider() {
+      protected DataProvider() {
 				super(PersonMO.class);
 			}
-			public List loadData() throws Exception {
-				if (data == null)
-					data = getGeneralDAO().getAll(PersonMO.class);
-				return data;
+			public List loadData() throws Exception {		
+				return getGeneralDAO().getAll(PersonMO.class);
 			}
 		}
 	}
@@ -156,11 +145,11 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			 * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
 			 * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
 			 * we can cast the return type accordingly. */
-			//PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).readBean(new PersonMO());
-			//rowData.setId((Long) editableRow.getKey());
+			PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).readBean(new PersonMO());
+			rowData.setId((Long) editableRow.getKey());
 			
 			// Save modified object.
-			//getGeneralDAO().edit(rowData);
+			getGeneralDAO().edit(rowData);
 			
 			// Set the row closed (for further editing, it must be opened again). 
 			editableRow.close();
@@ -196,8 +185,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
 			/* A button that deletes this row and its data (calls deleteRow()). */
 			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
-			
-			FormListUtil.addButtonToRowForm("#", rowForm, new PopupListener((PersonMO)rowData), "popupButton");
 
 			rowForm.writeBean(rowData);
 		}
@@ -218,51 +205,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			form.addBeanElement("salary", "#Salary", new FloatControl(), false);
 		}
 	}
-	
-	private class PopupListener implements OnClickEventListener {
-		private PersonMO person;
-		public PopupListener(PersonMO eventParam) {
-			this.person = eventParam;
-		}
-		
-		public void onClick() throws Exception {
-		      final PersonMO rowObject = person; 
-		      
-		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(rowObject)); 
-		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
-		      rowForm.convert(); 
-		      PopupWindowProperties p = new PopupWindowProperties(); 
-		      PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new PopupMessageFactory());
-		      getFlowCtx().start(pfw, null, new MyHandler(rowForm, rowObject)); 
-		}
-	}
-	
-	  private class MyHandler extends EmptyHandler { 
-		    private BeanFormWidget form; 
-		    private PersonMO rowObject; 
-		    
-		    public MyHandler(BeanFormWidget form, PersonMO rowObject) { 
-		      this.form = form; 
-		      this.rowObject = rowObject; 
-		    } 
-		    
-		    public void onFinish(Object returnValue) { 
-		      rowObject.setName(returnValue.toString());
-		      form.writeBean(rowObject); 
-		    } 
-		  }
-	  
-	  private class EmptyHandler implements FlowContext.Handler {
-
-		public void onCancel() throws Exception {
-
-		}
-
-		public void onFinish(Object returnValue) throws Exception {
-
-		}
-		  
-	  }
 	
 	  public void injectContractDAO(IContractDAO contractDAO) {
 		    this.contractDAO = contractDAO;

@@ -21,6 +21,7 @@ import org.araneaframework.OutputData;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.0.4
  */
 public abstract class StandardActionListener implements ActionListener {
 

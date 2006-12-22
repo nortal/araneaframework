@@ -48,6 +48,7 @@ import org.araneaframework.example.main.web.misc.RedirectingWidget;
 import org.araneaframework.example.main.web.misc.RenderErrorWidget;
 import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.person.PersonListWidget;
+import org.araneaframework.example.main.web.popups.DemoAdvancedPopupUsageWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
 import org.araneaframework.example.main.web.sample.SampleActionFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
@@ -123,6 +124,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
+      sampleMenu.addMenuItem("Advanced", new MenuItem("Advanced_Popup", DemoAdvancedPopupUsageWidget.class));
       advDemos.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
       advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));
       advDemos.addMenuItem(new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
