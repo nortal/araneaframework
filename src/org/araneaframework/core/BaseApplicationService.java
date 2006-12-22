@@ -40,14 +40,6 @@ import org.araneaframework.core.util.ExceptionUtil;
  *
  */
 public abstract class BaseApplicationService extends BaseService implements ApplicationService {
-  //*******************************************************************
-  // CONSTANTS
-  //*******************************************************************
-  /**
-   * The attribute of the action id.
-   */
-  public static final String ACTION_ID_ATTRIBUTE = "serviceActionListenerId";
-  
   private static final Logger log = Logger.getLogger(ApplicationWidget.class);
 
   //*******************************************************************
@@ -296,12 +288,12 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
   
   /**
-   * Returns the id of the action based on the input. Uses the ACTION_ID_ATTRIBUTE key
+   * Returns the id of the action based on the input. Uses the ACTION_HANDLER_ID_KEY key
    * to extract it from InputData's global data.
    */
   protected Object getActionId(InputData input) {
     Assert.notNull(this, input, "Cannot extract action id from a null input!");
-    return input.getGlobalData().get(ACTION_ID_ATTRIBUTE);
+    return input.getGlobalData().get(ApplicationService.ACTION_HANDLER_ID_KEY);
   }
 
   
