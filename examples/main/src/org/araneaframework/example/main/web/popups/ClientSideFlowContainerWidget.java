@@ -19,6 +19,7 @@ package org.araneaframework.example.main.web.popups;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
+import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
 import org.araneaframework.Service;
@@ -26,6 +27,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
@@ -61,9 +63,12 @@ public class ClientSideFlowContainerWidget extends BaseApplicationWidget impleme
 		return cancellingService;
 	}
 	
+	protected Environment getChildWidgetEnvironment() throws Exception {
+		return new StandardEnvironment(super.getChildWidgetEnvironment(), FlowContext.class, this);
+	}
+
 	protected void init() throws Exception {
 		addWidget("widget", widget);
-		addNestedEnvironmentEntry(this, FlowContext.class, this);
 	}
 
 	protected void render(OutputData output) throws Exception {

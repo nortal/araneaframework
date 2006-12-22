@@ -28,7 +28,6 @@ import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
-import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupWindowContext;
@@ -70,7 +69,7 @@ public class WindowClosingService extends BaseService {
 		
 		if (serviceInfo != null) {
 			script = 
-				"reloadParentWindow('" + serviceInfo.toURL() + "&" + TransactionContext.ALWAYS_PROCESS_KEY + "=true" + "');" +
+				"reloadParentWindow('" + serviceInfo.toURL() + "');" +
 				"closeWindow(50);";
 		} else {
 			script = "closeWindow(50);";

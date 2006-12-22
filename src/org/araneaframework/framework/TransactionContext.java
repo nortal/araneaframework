@@ -17,7 +17,6 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
-import org.araneaframework.Widget;
 
 /**
  * TransactionContext filters routing of duplicate requests. The detection of
@@ -39,14 +38,6 @@ public interface TransactionContext extends Serializable {
    * was overrriden on purpose. 
    */
   public static final String OVERRIDE_KEY = "override";
-
-  /**
-   * The key in the request that indicates that {@link Widget.Interface#process()}
-   * should be called even when transaction id is not consistent.
-   * 
-   * @since 1.0.4
-   */
-  public static final String ALWAYS_PROCESS_KEY = "allowInconsistentProcessing";
 
   /**
    * Returns true if current request is consistent (not a rerecurring one).

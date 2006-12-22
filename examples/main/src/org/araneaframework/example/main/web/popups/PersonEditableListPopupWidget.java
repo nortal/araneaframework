@@ -18,6 +18,7 @@ package org.araneaframework.example.main.web.popups;
 
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
@@ -139,7 +140,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		public OnClickEventListener createListener(Object data) {
 			if (usePopupFlow)
 				return new PopupFlowListener((PersonMO)data);
-			return new PopupClientListener();
+			return new PopupClientListener(PersonEditableListPopupWidget.this);
 		}
 	}
 	
@@ -158,6 +159,12 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 	}
 	
 	private class PopupClientListener implements OnClickEventListener {
+		private Widget starter;
+		
+		public PopupClientListener(Widget opener) {
+			starter = opener;
+		}
+		
 		public void onClick() throws Exception {
 		      // get the id of updatable formelement, tricky
 		      String widgetId = getInputData().getScope().toString();
@@ -166,8 +173,13 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		      
 		      ClientSideFlowContainerWidget toStart = new ClientSideFlowContainerWidget(new NameWidget());
 		      toStart.setFinishService(new ApplyReturnValueService(widgetId));
+	      
+			PopupWindowProperties p = new PopupWindowProperties();
+			p.setHeight("600");
+			p.setWidth("1000");
+			p.setScrollbars("yes");
 
-		      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), new PopupWindowProperties(), null);
+		      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, starter);
 		}
 	}
 	
@@ -186,6 +198,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		public void onFinish(Object returnValue) { 
 			rowObject.setName(returnValue.toString());
 			form.writeBean(rowObject);
+			form._getWidget().process();
 		} 
 	}
 

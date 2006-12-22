@@ -28,8 +28,8 @@ import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * Service that returns response that closes browser window that made the 
- * request; and if possible, reloads the opener of that window.
+ * Sample service that applies the flow return value to opener
+ * window widget purely on client-side.
  *
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
