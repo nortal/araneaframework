@@ -505,7 +505,11 @@ public class TldLocationsCache {
     
     private void scanPathForJars(String path) throws Exception {      
       Set paths = ctxt.getResourcePaths(path);
-      
+
+      // nothing on this path
+      if (paths == null)
+        return;
+
       for (Iterator i = paths.iterator(); i.hasNext();) {
         String entry = (String) i.next();
         

@@ -39,7 +39,7 @@ public class OnLoadEventHtmlTag extends BaseTag{
     JspUtil.writeStartTag(out, "script");
     out.write("_ap.addClientLoadEvent(");
     out.write("function() {");
-    JspUtil.writeEscaped(out, event);
+    JspUtil.writeEscapedAttribute(out, event);
     out.write("} );\n");
     JspUtil.writeEndTag(out, "script");
 

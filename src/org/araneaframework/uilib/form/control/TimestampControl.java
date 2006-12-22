@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
+import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
 
 
 /**
@@ -28,7 +29,6 @@ import org.araneaframework.uilib.util.ValidationUtil;
  * of type <code>Timestamp</code>. 
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public abstract class TimestampControl extends EmptyStringNullableControl {
   
@@ -70,7 +70,7 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
    * it fails.
    */
   protected Object fromRequest(String parameterValue) {
-  	ValidationUtil.ParsedDate result = ValidationUtil.parseDate(parameterValue, dateTimeInputPattern);
+  	ValidationUtil.ParsedDate result = parseDate(parameterValue);
     
     if (result != null) {
       dateTimeOutputPattern = result.getOutputPattern();
@@ -86,6 +86,18 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
     
     return null;
   }
+  
+  /**
+   * Used by {@link TimestampControl#fromRequest(String)} to convert value
+   * read from request to a <code>Date</code> in default <code>TimeZone</code>
+   * and <code>Locale</code>.
+   * 
+   * @return
+   * @since 1.0.3
+   */
+  protected ParsedDate parseDate(String parameterValue) {
+    return ValidationUtil.parseDate(parameterValue, dateTimeInputPattern);
+  }
 
   /**
    * Formats the value using <code>dateTimeFormat</code>.
@@ -94,6 +106,10 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
     return new SimpleDateFormat(dateTimeOutputPattern).format((Timestamp) controlValue);
   }
   
+  //*********************************************************************
+  //* PUBLIC METHODS
+  //*********************************************************************  	
+  
   /**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
@@ -101,6 +117,10 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
   public Object getViewModel() {
     return new ViewModel();
   }
+
+  //*********************************************************************
+  //* VIEWMODEL
+  //*********************************************************************  	
   
   public class ViewModel extends EmptyStringNullableControl.ViewModel {
     private String dateTimeOutputPattern;

@@ -158,6 +158,9 @@
                     <ui:linkButton id="delete" showLabel="false">
                       <ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
                     </ui:linkButton>
+                    <ui:linkButton id="popupButton" showLabel="false">
+	                   <ui:image src="gfx/butt_minimize.gif" alt="#Popup" title="Popup"/>
+                    </ui:linkButton>
                   </ui:cell>
                 </ui:row>
               </ui:formListRows>

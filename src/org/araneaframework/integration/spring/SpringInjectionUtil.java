@@ -3,6 +3,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.integration.spring.support.SpringBeanInvocationHandler;
 import org.springframework.beans.factory.BeanFactory;
@@ -33,7 +34,7 @@ public class SpringInjectionUtil {
         try {
           methods[i].invoke(object, new Object[] {
               Proxy.newProxyInstance(
-                  SpringInjectionUtil.class.getClassLoader(), 
+                  ClassLoaderUtil.getDefaultClassLoader(), 
                   new Class[] {methods[i].getParameterTypes()[0]}, 
                   new SpringBeanInvocationHandler(env, beanName))              
           });

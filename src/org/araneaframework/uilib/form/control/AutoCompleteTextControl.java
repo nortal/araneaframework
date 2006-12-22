@@ -21,6 +21,7 @@ public class AutoCompleteTextControl extends TextControl {
 
   protected long minCompletionLength = 1;
   protected DataProvider dataProvider;
+  protected ResponseBuilder responseBuilder;
 
   public AutoCompleteTextControl() {}
 
@@ -51,6 +52,16 @@ public class AutoCompleteTextControl extends TextControl {
   public void setDataProvider(DataProvider dataProvider) {
     this.dataProvider = dataProvider;
   }
+  
+  /** @since 1.0.4 */
+  public void setResponseBuilder(ResponseBuilder responseBuilder) {
+    this.responseBuilder = responseBuilder;
+  }
+  
+  /** @since 1.0.4 */
+  public ResponseBuilder getResponseBuilder() {
+    return this.responseBuilder;
+  }
 
   public interface DataProvider extends Serializable {
     public List getSuggestions(String input);
@@ -64,8 +75,9 @@ public class AutoCompleteTextControl extends TextControl {
       ConfigurationContext confCtx = 
         (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
       
-      ResponseBuilder responseBuilder = 
-        (ResponseBuilder) confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
+      ResponseBuilder responseBuilder = AutoCompleteTextControl.this.responseBuilder; 
+      if (responseBuilder == null)
+    	  responseBuilder = (ResponseBuilder)confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
       if (responseBuilder == null)
         responseBuilder = new DefaultResponseBuilder();
       
@@ -81,7 +93,7 @@ public class AutoCompleteTextControl extends TextControl {
    * Autocompletion response builder interface.
    * @author Taimo Peelo (taimo@araneaframework.org)
    */
-  public interface ResponseBuilder extends Serializable {
+  public static interface ResponseBuilder extends Serializable {
     /**
      * Returns response content with <code>suggestions</code> appropriately set. 
      * @param suggestions suggested completions that should be included in response
@@ -96,6 +108,10 @@ public class AutoCompleteTextControl extends TextControl {
   }
   
   /**
+   * Default {@link ResponseBuilder} used when {@link Control} does not have
+   * its {@link ResponseBuilder} set and {@link ConfigurationContext#AUTO_COMPLETE_RESPONSE_BUILDER}
+   * does not specify application-wide {@link ResponseBuilder}.
+   * 
    * @author Steven Jentson (steven@webmedia.ee)
    */
   public static class DefaultResponseBuilder implements ResponseBuilder {

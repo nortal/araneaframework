@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.core.BaseApplicationService;
+import org.araneaframework.core.ApplicationService;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
@@ -79,7 +79,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     result.append(constructServiceParameter(systemFormId, TransactionContext.TRANSACTION_ID_KEY)).append(" + \"").append('&');
     result.append(constructServiceParameter(systemFormId, ThreadContext.THREAD_SERVICE_KEY)).append(" + \"").append('&');
     result.append(StandardContainerWidget.ACTION_PATH_KEY).append('=').append(getScopedFullFieldId()).append('&');
-    result.append(BaseApplicationService.ACTION_ID_ATTRIBUTE).append('=').append(AutoCompleteTextControl.LISTENER_NAME);
+    result.append(ApplicationService.ACTION_HANDLER_ID_KEY).append('=').append(AutoCompleteTextControl.LISTENER_NAME);
 
 	return result;
   }
