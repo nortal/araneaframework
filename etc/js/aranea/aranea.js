@@ -251,27 +251,25 @@ function AraneaPage() {
     return url;
   }
 
-  this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync) {
+  this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam) {
     var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value, 'override');
     url += '&widgetActionPath=' + actionTarget;
     url += '&serviceActionHandler=' + actionId;
     url += '&serviceActionParameter=' + actionParam;
-    if (!sync)
-      url += '&sync=false';
     url += '&systemFormId=' + systemForm.id;
     return url;
   }
 
-  this.action = function(element, actionId, actionTarget, actionParam, sync, actionCallback) {
+  this.action = function(element, actionId, actionTarget, actionParam, actionCallback) {
     var t = this.getTraverser();
     var systemForm = t.findSurroundingSystemForm(element);
-    return this.action_6(systemForm, actionId, actionTarget, actionParam, sync, actionCallback);
+    return this.action_6(systemForm, actionId, actionTarget, actionParam, actionCallback);
   }
 
-  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, sync, actionCallback) {
+  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionCallback) {
     if (window['prototype/prototype.js']) {
       return new Ajax.Request(
-        this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync),
+        this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam),
         {
           method: 'get',
           onComplete: actionCallback
