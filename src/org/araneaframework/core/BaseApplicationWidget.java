@@ -364,7 +364,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   }
   
   /**
-   * Returns the id of the action based on the input. Uses the ACTION_ID_ATTRIBUTE key
+   * Returns the id of the action based on the input. Uses the ACTION_HANDLER_ID_KEY key
    * to extract it from InputData's global data.
    */
   protected Object getActionId(InputData input) {

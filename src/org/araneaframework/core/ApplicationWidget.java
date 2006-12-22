@@ -14,9 +14,11 @@ public interface ApplicationWidget extends ApplicationService, Widget, Composite
    * A view model for a Widget.
    */
   public interface WidgetViewModel extends ApplicationService.ServiceViewModel, Serializable {}
+
   /**
    * The key of the event handler.
    */
   public static final String EVENT_HANDLER_ID_KEY = "widgetEventHandler";
   public static final String EVENT_PARAMETER_KEY = "widgetEventParameter";
+
 }

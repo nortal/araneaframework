@@ -41,6 +41,14 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public abstract class BaseApplicationService extends BaseService implements ApplicationService {
   private static final Logger log = Logger.getLogger(ApplicationWidget.class);
+  //*******************************************************************    
+  // CONSTANTS   
+  //*******************************************************************    
+  /**    
+   * The attribute of the action id.
+   * @deprecated
+   */    
+  public static final String ACTION_ID_ATTRIBUTE = ApplicationService.ACTION_HANDLER_ID_KEY;    
 
   //*******************************************************************
   // FIELDS
@@ -288,7 +296,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
   
   /**
-   * Returns the id of the action based on the input. Uses the ACTION_ID_ATTRIBUTE key
+   * Returns the id of the action based on the input. Uses the ACTION_HANDLER_ID_KEY key
    * to extract it from InputData's global data.
    */
   protected Object getActionId(InputData input) {
