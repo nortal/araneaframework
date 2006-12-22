@@ -124,15 +124,15 @@ public class DateTimeControl extends BaseControl {
     if (date == null) return time;
     if (time == null) return date;
 
-    Calendar dateCalendar = Calendar.getInstance();
-    Calendar timeCalendar = Calendar.getInstance();
+    Calendar dateCalendar = getCalendarInstance();
+    Calendar timeCalendar = getCalendarInstance();
     dateCalendar.setTime(date);
     timeCalendar.setTime(time);
     dateCalendar.set(Calendar.HOUR_OF_DAY, timeCalendar.get(Calendar.HOUR_OF_DAY));
     dateCalendar.set(Calendar.MINUTE, timeCalendar.get(Calendar.MINUTE));
     return new Timestamp(dateCalendar.getTime().getTime());
   }
-  
+
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
@@ -144,6 +144,18 @@ public class DateTimeControl extends BaseControl {
 
     addWidget("date", dateControl);
     addWidget("time", timeControl);
+  }
+  
+  /**
+   * Used by {@link DateTimeControl#convert()} to acquire <code>Calendar</code>
+   * instance for converting <code>Date</code> and <code>Time</code> values read 
+   * from request to single <code>TimeStamp</code>. 
+   * 
+   * @return <code>Calendar</code> using the default time zone and default locale.
+   * @since 1.0.3
+   */
+  protected Calendar getCalendarInstance() {
+    return Calendar.getInstance();
   }
 
   /**

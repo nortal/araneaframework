@@ -130,16 +130,20 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 	}
 
 	private void loadFiles(List files, OutputStream out) throws Exception {
+		ServletContext context = (ServletContext)getEnvironment().getEntry(ServletContext.class);
 		for (Iterator iter = files.iterator(); iter.hasNext();) {
 			String fileName = (String) iter.next();
 			
 			ClassLoader loader = getClass().getClassLoader();
 			// first we try load an override
-			URL fileURL = loader.getResource(OVERRIDE_PREFIX+"/"+fileName);
+			URL fileURL = context.getResource("/" + OVERRIDE_PREFIX+"/"+fileName);
 			
 			if (fileURL == null) {
 				// fallback to the original
 				fileURL = loader.getResource(fileName);
+			} else if (log.isDebugEnabled()) {
+				log.debug("Serving override of file '" + fileName + "'" +
+						" from context path resource '" + fileURL.getFile() + "'.");
 			}
 			
 			FileInputStream fileInputStream = null;
