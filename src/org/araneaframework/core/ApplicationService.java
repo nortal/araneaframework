@@ -23,8 +23,10 @@ public interface ApplicationService extends ApplicationComponent, Service, Compo
 
   /**
    * The attribute of the action id.
+   * @since 1.0.4
    */
   public static final String ACTION_HANDLER_ID_KEY = "serviceActionHandler";
+  /** @since 1.0.4 */
   public static final String ACTION_PARAMETER_KEY = "serviceActionParameter";
 
 }

@@ -81,6 +81,12 @@ function processPopups() {
   popupProperties = new Object();
 }
 
+function applyReturnValue(value, elementId) {
+  if (window.opener) {
+  	window.opener.document.getElementById(elementId).value = value;
+  }
+}
+
 function reloadParentWindow(url) {
   if (window.opener) {
     window.opener.document.location.href=url;
