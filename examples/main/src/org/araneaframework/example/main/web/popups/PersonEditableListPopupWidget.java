@@ -35,10 +35,8 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
-import org.araneaframework.uilib.form.formlist.FormRowHandler;
 import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
-import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 public class PersonEditableListPopupWidget extends TemplateBaseWidget {
@@ -49,24 +47,18 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 	private MemoryBasedListDataProvider dataProvider = new DataProvider();
 	
 	private boolean usePopupFlow = true;
-	
-	/* Editable list. */ 
+
 	private EditableBeanListWidget list;
-	/* Actual holder of editable list rows (resides inside EditableBeanListWidget).
-       Look inside init() method to see where it comes from. */ 
 	private BeanFormListWidget formList;
 	
 	protected void init() throws Exception {
 		setViewSelector("person/popupeditableList");
 		
-		/* PersonMO class is already familiar from form examples. 
-       FormRowHandler class that will handle the different row operations. */
-		list = new EditableBeanListWidget(buildFormRowHandler(), PersonMO.class);
+		list = new EditableBeanListWidget(new PersonEditableRowHandler(), PersonMO.class);
 		this.formList = list.getFormList();
 		addWidget("list", list);
 		list.setOrderableByDefault(true);
 		list.addField("id", "#Id", false);
-		/* Filtering by fields other than ID is enabled. */
 		list.addField("name", "#First name").like();
 		list.addField("surname", "#Last name").like();
 		list.addField("phone", "#Phone no").like();		
@@ -74,27 +66,13 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		list.addField("salary", "#Salary").range();
 		list.addField("dummy", null, false);
 		
-		/* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
-		list.setDataProvider(buildListDataProvider());
-
-		/* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
-		
+		list.setDataProvider(dataProvider);
 	}
 	
 	protected void process() throws Exception {
 		super.process();
 	}
 
-	protected ListDataProvider buildListDataProvider() throws Exception {
-		return dataProvider;
-	}
-	
-	protected FormRowHandler buildFormRowHandler() throws Exception {
-        /* Implementation of FormRowHandler that also calls dataprovider's
-         * data refresh methods when list editing events occur. */
-		return new PersonEditableRowHandler();
-	}
-	
 	private class DataProvider extends MemoryBasedListDataProvider {
 	      private static final long serialVersionUID = 1L;
 	      private List data;
@@ -108,7 +86,6 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 			return data;
 		}
 	}
-	
 	
 	public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
 		    private static final long serialVersionUID = 1L;
