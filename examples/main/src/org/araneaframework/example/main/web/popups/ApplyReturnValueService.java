@@ -14,66 +14,38 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.http.service;
+package org.araneaframework.example.main.web.popups;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
-import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.TopServiceContext;
-import org.araneaframework.http.HttpInputData;
-import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.PopupWindowContext;
-import org.araneaframework.http.filter.StandardPopupFilterWidget.StandardPopupServiceInfo;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * Service that returns response that closes browser window that made the 
- * request; and if possible, reloads the opener of that window.
+ * Sample service that applies the flow return value to opener
+ * window widget purely on client-side.
  *
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class WindowClosingService extends BaseService {
-	private Environment closableComponentEnv;
+public class ApplyReturnValueService extends BaseService implements ClientSideReturnService {
+	private String value;
+	private String widgetId;
 	
-	public WindowClosingService(Environment closableComponentEnv) {
-		this.closableComponentEnv = closableComponentEnv;
+	public ApplyReturnValueService(String widgetId) {
+		this.widgetId = widgetId;
 	}
 	
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ServletUtil.getResponse(output);
-		
-		PopupWindowContext popupCtx = ((PopupWindowContext)closableComponentEnv.getEntry(PopupWindowContext.class));
-		BaseApplicationWidget opener = null;
-		if (popupCtx != null)
-			opener = (BaseApplicationWidget) popupCtx.getOpener();
-		
-		StandardPopupServiceInfo serviceInfo = null;
-		if (opener != null) {
-			String threadId = (String) ((ThreadContext) opener.getEnvironment().getEntry(ThreadContext.class)).getCurrentId();
-			String topserviceId = (String) ((TopServiceContext) opener.getEnvironment().getEntry(TopServiceContext.class)).getCurrentId();
-			String url = ((HttpOutputData)getInputData().getOutputData()).encodeURL(((HttpInputData)getInputData()).getContainerURL());
-			serviceInfo = new StandardPopupServiceInfo(topserviceId, threadId, null, url);
-			serviceInfo.setTransactionOverride(false);
-		}
-		
-		String script;
-		
-		if (serviceInfo != null) {
-			script = 
-				"reloadParentWindow('" + serviceInfo.toURL() + "');" +
-				"closeWindow(50);";
-		} else {
-			script = "closeWindow(50);";
-		}
+		String script = 
+			    "applyReturnValue('" + value + "', '" + widgetId +"');" + 
+			    "closeWindow(50);";
 
 		String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);
 		String responseStr = 
@@ -100,5 +72,13 @@ public class WindowClosingService extends BaseService {
 
 		ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
 		mngCtx.close(mngCtx.getCurrentId());
+	}
+
+	public Object getResult() {
+		return value;
+	}
+
+	public void setResult(Object returnValue) {
+		this.value = returnValue.toString();
 	}
 }

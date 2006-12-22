@@ -17,7 +17,7 @@
       <ui:formList>
 		
         <ui:componentHeader>
-          <ui:componentName>Editable person list</ui:componentName>
+          <ui:componentName><c:out value="Editable person list (${widget.title})"/> </ui:componentName>
         </ui:componentHeader>
 		
         <ui:component>
@@ -148,15 +148,8 @@
                       </c:otherwise>
                     </c:choose>
 
-                    <!-- EditSave event is produced by buttons created with 
-                         FormListUtil.addEditSaveButtonToRowForm() -->
-                    <ui:linkButton id="editSave" showLabel="false">
-                      <ui:image code="buttonChange" alt="${altEditText}" title="${altEditText}"/>
-                    </ui:linkButton>
-                    <!-- Delete event is produced by buttons created with 
-                         FormListUtil.addDeleteButtonToRowForm() -->
-                    <ui:linkButton id="delete" showLabel="false">
-                      <ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
+                    <ui:linkButton id="popupButton" showLabel="false">
+	                   <ui:image src="gfx/dot17.gif" alt="#Popup" title="Popup"/>
                     </ui:linkButton>
                   </ui:cell>
                 </ui:row>

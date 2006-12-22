@@ -80,8 +80,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     //add new, not yet opened popup to popup map
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
-    
-    log.debug("Popup service with identifier '" + threadId + "' was created.");
+
+    if (log.isDebugEnabled())
+      log.debug("Popup service with identifier '" + threadId + "' was created.");
     return threadId;
   }
 
@@ -102,7 +103,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
     
-    log.debug("Popup service with identifier '" + threadId + "' was created.");
+    if (log.isDebugEnabled())
+      log.debug("Popup service with identifier '" + threadId + "' was created.");
     return threadId;
   }
 
@@ -116,7 +118,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
     
-    log.debug("Popup service with identifier '" + threadId + "' was created.");
+    if (log.isDebugEnabled())
+      log.debug("Popup service with identifier '" + threadId + "' was created.");
     return threadId;
   }
   
@@ -140,13 +143,14 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     });
     allPopups.put(threadId, popups.get(threadId));
     
-    log.debug("Popup service with identifier '" + threadId + "' was created for mounted URL '" + url + "'.");
+    if (log.isDebugEnabled())
+      log.debug("Popup service with identifier '" + threadId + "' was created for mounted URL '" + url + "'.");
     return threadId;
   }
   
   public void open(final String url, final PopupWindowProperties properties) {
     Assert.notEmptyParam(this, url, "url");
-    popups.put(url, new PopupServiceInfo() {
+    popups.put(getRandomServiceId(), new PopupServiceInfo() {
       public PopupWindowProperties getPopupProperties() {
         return properties;
       }
@@ -198,7 +202,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       ThreadContext threadCtx = (ThreadContext)getEnvironment().getEntry(ThreadContext.class);
       Object id = threadCtx.getCurrentId();
       threadCtx.close(id);
-      log.debug("Closed thread with id : " + id);
+      if (log.isDebugEnabled())
+        log.debug("Closed thread with id : " + id);
     } else {
       super.event(path, input);
     }
@@ -248,7 +253,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     HttpInputData input = (HttpInputData) getInputData();
     return ((HttpOutputData) input.getOutputData()).encodeURL(input.getContainerURL());
   }
-
+  
   /* ************************************************************************************
    * PUBLIC INNER CLASSES
    * ************************************************************************************/
@@ -271,6 +276,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   public static class StandardPopupServiceInfo implements PopupServiceInfo {
+    private boolean overrideTransaction = true;
     private String topServiceId;
     private String threadServiceId;
     private String requestUrl;
@@ -290,6 +296,11 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     public String getThreadServiceId() {
       return threadServiceId;
     }
+    
+    /** @since 1.0.4 */
+    public void setTransactionOverride(boolean b) {
+      this.overrideTransaction = b;
+    }
 
     public String toURL() {
       StringBuffer url = new StringBuffer(requestUrl != null ? requestUrl : "");
@@ -298,7 +309,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
         url.append("&" + ThreadContext.THREAD_SERVICE_KEY + "=");
         url.append(threadServiceId);
       }
-      url.append('&').append((TransactionContext.TRANSACTION_ID_KEY + "=")).append(TransactionContext.OVERRIDE_KEY);
+
+      if (overrideTransaction)
+        url.append('&').append((TransactionContext.TRANSACTION_ID_KEY + "=")).append(TransactionContext.OVERRIDE_KEY);
       return url.toString();
     }
 

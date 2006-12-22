@@ -2518,7 +2518,7 @@ el.click();</programlisting>
                 </entry>
 
                 <entry>
-                	Boolean, specifying whether HTML &lt;select&;gt;'s should be rendered for easy hour/minute selection.
+                	Boolean, specifying whether HTML &lt;select&gt;'s should be rendered for easy hour/minute selection.
                 	Default is to render them (<literal>true</literal>).
                 </entry>
               </row>
@@ -2594,7 +2594,7 @@ el.click();</programlisting>
                 </entry>
 
                 <entry>
-                	Boolean, specifying whether HTML &lt;select&;gt;'s should be rendered for easy hour/minute selection.
+                	Boolean, specifying whether HTML &lt;select&gt;'s should be rendered for easy hour/minute selection.
                 	Default is to render them (<literal>true</literal>).
                 </entry>
               </row>

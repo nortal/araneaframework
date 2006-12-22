@@ -35,7 +35,7 @@ public class MockEventfulStandardService extends BaseApplicationService {
   private transient OutputData output;
 
   protected Object getActionId(InputData input) {
-    return input.getScopedData().get(ACTION_ID_ATTRIBUTE);
+    return input.getScopedData().get(ACTION_HANDLER_ID_KEY);
   }
 
   public void action(Path path, InputData input, OutputData output) throws Exception {

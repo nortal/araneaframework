@@ -1,5 +1,49 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2006.12.22    | Aranea 1.0.4
+
+Features and Improvements
+    AutoCompleteTextControl now has setter for ResponseBuilder (as opposed to |
+    finding ResponseBuilder from ConfigurationContext)                        | See #298
+    Actions javascript API was backported from Aranea 1.1 branch              | See #302
+    Additional action and popup examples
+    (Demos->Advanced->(Form With Actions | Advanced popups))
+
+Bugfixes
+    aranea-resources.xml contained references to example specific files       | See #288
+    aranea-popups.js contained hardcoded system form identifier               | See #290
+    TldLocationsCache threw NPE on some containers when WEB-INF/lib contained |
+    empty folders                                                             | See #292
+    <ui:onLoadEvent> 'event' attribute was escaped too strictly               | See #293
+    IE had trouble handling popup maps where id contained slashes             | See #297
+    WindowClosingService (used by PopupFlowWrapperWidget) caused opener       |
+    window to lose form data                                                  | See #292
+    JspWidgetCallUtil.getSubmitScriptForEvent constructed updateRegions       |
+    parameter that was unaccepted by event functions                          | See #303
+
+---------------------------------------------------------------------------------------------
+2006.12.01    | Aranea 1.0.3
+
+Features and Improvements
+    InputData and OutputData are accessible from BaseWidget init() now        | See #269
+    Aranea JSP now bundles ListFilterButton and ListFilterClearButton tags    | See #268
+    Rendering of HTML <select>'s was made optional for <ui:*TimeInput>        | See #279
+    EmptyStringNullableControl now treats blank strings as empty too          | See #282
+
+Bugfixes
+    <ui:eventKeyboardHandler> generated incomplete submit script              | See #274
+    ListSqlHelper did not handle generating aliases for tables which name     | See
+    contained underscore                                                      |     #273
+    StandardClassReloadingFilterWidget worked wrong for some classes already  | See
+    loaded in the webapp classloader                                          |     #276
+    MessagesHtmlTag did not escape outputted HTML                             | See #283
+    DateTimeControl did not have onChange listeners                           | See #281
+    _ap.event_6 submit method did not return false (broke at least IE6)       | See #278
+    FormElement tags did complain about correct Control types that were       | See
+    implemented as (anonymous) inner classes                                  |     #286
+    FileImporter searched overrides from classpath not from app context       | See #287
+
+---------------------------------------------------------------------------------------------
 2006.11.17    | Aranea 1.0.2
 
 Features and Improvements
