@@ -87,7 +87,7 @@
 	<target name="tld-check">
 		<uptodate property="tld-check.uptodate" targetfile="build/tld/META-INF/aranea-template.tld">						
 			<srcfiles dir="src/org/araneaframework/example/common/tags"/>
-      <srcfiles dir="../../src/org/araneaframework/jsp/tag"/>  
+	        <!--srcfiles dir="../../src/org/araneaframework/jsp/tag"/-->  
 		</uptodate>
 	</target>
 	
@@ -98,7 +98,7 @@
 			force="false"
 		>
 			<fileset dir="${src.dir}" includes="**/*Tag.java"/>
-			<fileset dir="../../src" includes="**/*Tag.java"/>
+			<!--fileset dir="../../src" includes="**/*Tag.java"/-->
 			
 			<jsptaglib validatexml="true"
 				shortName="aranea-tag-library-template"
