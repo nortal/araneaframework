@@ -60,6 +60,7 @@ public class IntelligentTldMerger {
 		 
 		 NodeList fTags = fDoc.getElementsByTagName("tag"); 
 		 NodeList sTags = sDoc.getElementsByTagName("tag");
+		 NodeList oTags = oDoc.getElementsByTagName("tag");
 		 
 		 for (int i = 0; i < sTags.getLength(); i++) {
 			 Node current = sTags.item(i);
@@ -77,8 +78,8 @@ public class IntelligentTldMerger {
 						 List additionalAttributes = getAttributesFromTLD(fDoc,  tagClazz.getSuperclass().getName());
 						 System.out.println("    Searched for additional attributes from '" + tagClazz.getSuperclass().getName() + "', found " + additionalAttributes.size());
 						 for (Iterator it = additionalAttributes.iterator(); it.hasNext(); ) {
-							 Node adopted = sDoc.adoptNode((Node)it.next());
-							 current.appendChild(adopted);
+							 Node newAttr = (Node) it.next();
+							 current.appendChild(sDoc.adoptNode(newAttr.cloneNode(true)));
 						 }
 						 tagClazz = tagClazz.getSuperclass();
 					 }
