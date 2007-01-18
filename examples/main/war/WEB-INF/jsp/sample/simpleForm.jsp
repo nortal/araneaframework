@@ -2,7 +2,7 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 
 	<!-- Component starts here -->
@@ -16,12 +16,12 @@
 			<!-- Now, these are the first custom tags in template application. They do
 			     nothing particularly interesting, just set up the HTML DIV element
 			     containing the component header -->
-			<ui:componentHeader>
-				<ui:componentName>Tutorial first form</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>Tutorial first form</tui:componentName>
+			</tui:componentHeader>
 
 			<!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
-			<ui:component>
+			<tui:component>
 			
 				<!-- Custom tag, but more interesting that previous tags. It derives from
                      LayoutHtmlTag tag and allows putting row tags inside of it. 
@@ -29,7 +29,7 @@
                      componentForm here, cellClasses does the same for cells. These classes are repeating
                      e.g first cell in a row is with styleClass "name", second with "inpt", and third
                      cell again has styleClass "name". In HTML, this tag creates a TABLE. -->
-				<ui:componentForm rowClasses="cols4" cellClasses="name, inpt">
+				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
 					<!-- As we can insert rows now, we do just that. -->
 					<ui:row>
@@ -111,15 +111,15 @@
 						</ui:formElement>
 					</ui:row>
 
-				</ui:componentForm>
+				</tui:componentForm>
 
 				<!-- pure design tag -->
-				<ui:componentActions>
+				<tui:componentActions>
 					<ui:formElement id="button">
 						<ui:button/>
 					</ui:formElement>
-				</ui:componentActions>
-			</ui:component>
+				</tui:componentActions>
+			</tui:component>
 
 		</ui:form>
 

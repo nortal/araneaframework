@@ -2,7 +2,7 @@
 <jsp:root 
     xmlns:jsp="http://java.sun.com/JSP/Page" 
     xmlns:c="http://java.sun.com/jstl/core" 
-    xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2">
+    xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template" version="1.2">
     <!--  variables -->
     <c:set var="activeStyle" value="active"/>
 
@@ -12,7 +12,7 @@
         <div id="header">
             <div class="box1">
                 <a href="#" id="logo">
-                    <ui:image src="gfx/logo_aranea_screen.jpg" alt="Aranea fancy logo"/>
+                    <tui:image src="gfx/logo_aranea_screen.jpg" alt="Aranea fancy logo"/>
                 </a>
 
                 <div id="menu1">

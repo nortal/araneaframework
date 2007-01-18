@@ -2,21 +2,21 @@
 <jsp:root
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2"
 >
 	<ui:widgetContext>
 	
 		<ui:list id="list">
-			<ui:componentHeader>
-				<ui:componentName>Contacts (SubBeanList)</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>Contacts (SubBeanList)</tui:componentName>
+			</tui:componentHeader>
 					
-			<ui:component>
+			<tui:component>
 						
 				<!-- Body -->
-				<ui:componentList>
-					<ui:componentListHeader/>
+				<tui:componentList>
+					<tui:componentListHeader/>
 					
 					<!-- Filter -->
 					<ui:listFilter>
@@ -71,12 +71,12 @@
 							
 						</ui:row>
 					</ui:listRows>				
-				</ui:componentList>
+				</tui:componentList>
 			
 				<!-- Sequence -->
-				<ui:componentListFooter/>
+				<tui:componentListFooter/>
 
-			</ui:component>
+			</tui:component>
 		
 		</ui:list>
 

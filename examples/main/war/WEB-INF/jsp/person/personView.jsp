@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 	<ui:widgetContext>
 		<ui:form id="personForm">
 
-			<ui:componentHeader>
-				<ui:componentName>Viewing person</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>Viewing person</tui:componentName>
+			</tui:componentHeader>
 
-			<ui:component>
-				<ui:componentForm>
+			<tui:component>
+				<tui:componentForm>
 					<ui:row>
 						<ui:formElement id="name">
 							<ui:cell styleClass="name">
@@ -62,12 +62,12 @@
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>					
-				</ui:componentForm>
+				</tui:componentForm>
 
-				<ui:componentActions>
+				<tui:componentActions>
 					<ui:eventButton eventId="return" labelId="#Back" />
-				</ui:componentActions>
-			</ui:component>
+				</tui:componentActions>
+			</tui:component>
 
 		</ui:form>
 	</ui:widgetContext>
