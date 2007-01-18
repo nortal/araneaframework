@@ -47,8 +47,6 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
 			    "if (window.opener) { window.opener.araneaPage().action(document.getElementById('" + widgetId  + "'), 'testAction', '" + widgetId.substring(0, widgetId.lastIndexOf('.')) + "' , '" + value + "', window.opener['tehcallback']);  }" +
 			    "closeWindow(50);";
 		
-		//function(element, actionId, actionTarget, actionParam, actionCallback)
-		
 		String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);
 		String responseStr = 
 			"<html>" +

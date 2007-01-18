@@ -10,8 +10,7 @@
        examples/main/war/WEB-INF/jsp/editableList.jsp
   -->
   <ui:widgetContext>
-
-    <!-- Start the list context ... -->
+	<!-- Start the list context ... -->
     <ui:list id="list">
       <!-- and continue with announcement that this list is editable -->
       <ui:formList>

@@ -6,7 +6,18 @@
   version="1.2">
 
   <ui:widgetContext>
+  	<script type="text/javascript">
+		window['tehcallback'] = function(request, response) {
+			if (request.status != 200) {
+				alert(request.responseText);	// Very ugly
+				return;
+			}
+			eval(request.responseText);
+		};
+	</script>
+  
  	<ui:widgetInclude id="editableList"/>
  	<ui:widgetInclude id="anotherEditableList"/>
+ 	<ui:widgetInclude id="yanotherEditableList"/>
   </ui:widgetContext>
 </jsp:root>
