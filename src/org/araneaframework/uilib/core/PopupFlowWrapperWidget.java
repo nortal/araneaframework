@@ -47,7 +47,7 @@ import org.araneaframework.http.util.URLUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContext {
-  Widget child;
+  protected Widget child;
 
   public PopupFlowWrapperWidget(Widget child) {
     this.child = child;
@@ -67,15 +67,13 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
 
   public void replace(Widget flow, Configurator configurator) {
-    // XXX: does not work when this is only widget on call stack?
+    // XXX: does not work when this is only widget on call stack
     getLocalFlowContext().replace(flow, configurator);
-    // throw AraneaRuntimeException();
   }
 
   public void finish(Object result) {
     ThreadContext threadCtx = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
     TopServiceContext topCtx = (TopServiceContext) getEnvironment().getEntry(TopServiceContext.class);
-    //XXX: may not just call openerflowcontext if more than one flow has been started from here 
     getOpenerFlowContext().finish(result);
 
     try {

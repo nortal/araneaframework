@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
-       xmlns:ui="http://araneaframework.org/tag-library/template" 
+       xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template" 
        xmlns:c="http://java.sun.com/jstl/core"
        xmlns:fmt="http://java.sun.com/jstl/fmt"
       version="1.2">
 
        <ui:widgetContext>
                        <!-- Label -->
-                       <ui:componentHeader>
-                               <ui:componentName>File upload demo</ui:componentName>
-                       </ui:componentHeader>
-                       <ui:component>
+                       <tui:componentHeader>
+                               <tui:componentName>File upload demo</tui:componentName>
+                       </tui:componentHeader>
+                       <tui:component>
                        		<ui:form id="uploadForm">
 
                                <!-- Body -->
-                               <ui:componentForm>
+                               <tui:componentForm>
                                        <ui:row>
                                                <ui:cell styleClass="name">
                                                        <ui:label id="select"/>
@@ -41,13 +41,13 @@
 	                                               </ui:cell>
 	                                           </ui:formElement>
                                        </ui:row>
-                               </ui:componentForm>
+                               </tui:componentForm>
                            </ui:form>
                              
                        <c:if test="${not empty widget.children['uploadList']}">
 	                       	<ui:list id="uploadList">
-	                       		<ui:componentList>
-	                       			<ui:componentListHeader/>
+	                       		<tui:componentList>
+	                       			<tui:componentListHeader/>
 	                       			
 	                       			<ui:listRows>
 	                       				<ui:row>
@@ -68,11 +68,11 @@
 	                       				</ui:row>
 	                       			</ui:listRows>
 	
-	                       		</ui:componentList>
+	                       		</tui:componentList>
 	                       	 </ui:list>	
                        </c:if>
 
-                       </ui:component>
+                       </tui:component>
                
        </ui:widgetContext>
 </jsp:root>

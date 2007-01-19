@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
-		<ui:componentHeader>
-			<ui:componentName>
+		<tui:componentHeader>
+			<tui:componentName>
 				Editable list
-				</ui:componentName>
-		</ui:componentHeader>
+				</tui:componentName>
+		</tui:componentHeader>
 
-		<ui:component>
-			<ui:componentList>
+		<tui:component>
+			<tui:componentList>
 				<ui:formList id="editableList">
 					<ui:formListRows>
 						<ui:row>
@@ -30,10 +30,10 @@
 							</ui:formElement>
 							<ui:cell width="0">
 								<ui:linkButton id="save" showLabel="false">
-									<ui:image code="buttonChange" />
+									<tui:image code="buttonChange" />
 								</ui:linkButton>
 								<ui:linkButton id="delete" showLabel="false">
-									<ui:image code="buttonDelete" />
+									<tui:image code="buttonDelete" />
 								</ui:linkButton>
 							</ui:cell>
 						</ui:row>
@@ -55,14 +55,14 @@
 							</ui:formElement>
 							<ui:cell width="0">
 								<ui:linkButton id="add" showLabel="false">
-									<ui:image code="add" />
+									<tui:image code="add" />
 								</ui:linkButton>
 							</ui:cell>
 						</ui:row>
 					</ui:formListAddForm>
 				</ui:formList>
-			</ui:componentList>
+			</tui:componentList>
 
-		</ui:component>
+		</tui:component>
 	</ui:widgetContext>
 </jsp:root>

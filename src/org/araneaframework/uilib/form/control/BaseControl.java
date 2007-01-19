@@ -202,7 +202,11 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
      */    
     public ViewModel() {
       String className = BaseControl.this.getClass().getName();
-      className = className.substring(className.lastIndexOf(".") + 1);      
+      // Recognizes Controls that are defined as (anonymous) nested classes.
+      // Prior to 1.5 getDeclaringClass() does not exist, so just look for '$'.
+      if (className.indexOf('$') != -1)
+        className = BaseControl.this.getClass().getSuperclass().getName();
+      className = className.substring(className.lastIndexOf(".") + 1);
       this.controlType = className;
       
       this.mandatory = BaseControl.this.isMandatory();

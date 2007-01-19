@@ -3,7 +3,7 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2"
 >
   <!-- Main example's person editable list JSP -
@@ -16,15 +16,15 @@
       <!-- and continue with announcement that this list is editable -->
       <ui:formList>
 		
-        <ui:componentHeader>
-          <ui:componentName>Editable person list</ui:componentName>
-        </ui:componentHeader>
+        <tui:componentHeader>
+          <tui:componentName>Editable person list</tui:componentName>
+        </tui:componentHeader>
 		
-        <ui:component>
+        <tui:component>
 
-          <ui:componentList>
+          <tui:componentList>
 
-            <ui:componentListHeader/>
+            <tui:componentListHeader/>
 
               <!-- List filter for editable list is exactly 
                    the same as filter for ordinary lists -->
@@ -105,7 +105,7 @@
 
 					<ui:formElement id="salary">
                       <ui:cell>
-                        <ui:floatInput styleClass="min"/>
+                        <ui:floatInput styleClass="w40"/>
                       </ui:cell>
                      </ui:formElement>
                     </c:when>
@@ -151,12 +151,12 @@
                     <!-- EditSave event is produced by buttons created with 
                          FormListUtil.addEditSaveButtonToRowForm() -->
                     <ui:linkButton id="editSave" showLabel="false">
-                      <ui:image code="buttonChange" alt="${altEditText}" title="${altEditText}"/>
+                      <tui:image code="buttonChange" alt="${altEditText}" title="${altEditText}"/>
                     </ui:linkButton>
                     <!-- Delete event is produced by buttons created with 
                          FormListUtil.addDeleteButtonToRowForm() -->
                     <ui:linkButton id="delete" showLabel="false">
-                      <ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
+                      <tui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
                     </ui:linkButton>
                   </ui:cell>
                 </ui:row>
@@ -200,17 +200,17 @@
 
                 <ui:cell>
                   <ui:attribute name="width" value="0"/>
-                  <ui:linkButton id="add" showLabel="false"><ui:image code="buttonAdd"/></ui:linkButton>
+                  <ui:linkButton id="add" showLabel="false"><tui:image code="buttonAdd"/></ui:linkButton>
                 </ui:cell>
               </ui:row>
             </ui:formListAddForm>
             
-          </ui:componentList>
+          </tui:componentList>
 
           <!-- Sequence -->
-          <ui:componentListFooter/>
+          <tui:componentListFooter/>
 
-        </ui:component>
+        </tui:component>
 		
       </ui:formList>
     </ui:list>

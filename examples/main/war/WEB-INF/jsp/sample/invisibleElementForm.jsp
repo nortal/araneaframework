@@ -2,20 +2,20 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 
 	<!-- Component starts here -->
 	<ui:widgetContext>
 		<ui:form id="form">
 
-			<ui:componentHeader>
-				<ui:componentName>Tutorial invisible element form</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>Tutorial invisible element form</tui:componentName>
+			</tui:componentHeader>
 
-			<ui:component>
+			<tui:component>
 				<!-- Body -->
-				<ui:componentForm>					
+				<tui:componentForm>					
 					<ui:formElement id="showTitle">
 						<ui:row>
 							<ui:cell styleClass="name">
@@ -60,13 +60,13 @@
 							<ui:cell colspan="2"/>			
 						</ui:row>
 					</ui:formElement>
-				</ui:componentForm>
+				</tui:componentForm>
 
 				<!-- Footer -->
-				<ui:componentActions>
+				<tui:componentActions>
 					<ui:eventButton eventId="test" labelId="#Refresh"/>
-				</ui:componentActions>
-			</ui:component>
+				</tui:componentActions>
+			</tui:component>
 
 		</ui:form>
 	</ui:widgetContext>

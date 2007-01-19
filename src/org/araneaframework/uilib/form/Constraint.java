@@ -58,6 +58,10 @@ public interface Constraint extends Serializable {
    * Environment should come from whatever {@link org.araneaframework.Component} that this
    * {@link Constraint} is operating on.
    * 
+   * {@link Constraint} {@link org.araneaframework.Environment} may be set to non-null 
+   * value only once, further calls are ignored. Application programmer typically never
+   * calls this method as {@link org.araneaframework.Environment} is propagated seamlessly.
+   * 
    * @param environment 
    */
   public void setEnvironment(Environment environment);

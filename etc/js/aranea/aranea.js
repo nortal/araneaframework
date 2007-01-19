@@ -16,8 +16,9 @@
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Alar Kvell (alar@araneaframework.org)
  */
- 
+
 /* AraneaTraverser is locator for some Aranea specific elements in DOM tree. */
 function AraneaTraverser() {
   /* Returns FORM that is Aranea system form and surrounds given HTML element. 
@@ -233,13 +234,56 @@ function AraneaPage() {
         return false;
       }
     }
+    
+    if (systemForm) {
+      this.executeCallbacks(systemForm['id']);
+    }
 
     if (eventUpdateRegions != null && eventUpdateRegions.length > 0) 
       return new DefaultAraneaAJAXSubmitter().event_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
     else
       return new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   }
-  
+
+  this.getSubmitURL = function(topServiceId, threadServiceId, transactionId) {
+    var url = this.encodeURL(this.getServletURL());
+    url += '?transactionId=' + transactionId;
+    if (topServiceId) 
+      url += '&topServiceId=' + topServiceId;
+    if (threadServiceId) 
+      url += '&threadServiceId=' + threadServiceId;
+    return url;
+  }
+
+  this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam) {
+    var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value, 'override');
+    url += '&widgetActionPath=' + actionTarget;
+    url += '&serviceActionHandler=' + actionId;
+    url += '&serviceActionParameter=' + actionParam;
+    url += '&systemFormId=' + systemForm.id;
+    return url;
+  }
+
+  this.action = function(element, actionId, actionTarget, actionParam, actionCallback) {
+    var t = this.getTraverser();
+    var systemForm = t.findSurroundingSystemForm(element);
+    return this.action_6(systemForm, actionId, actionTarget, actionParam, actionCallback);
+  }
+
+  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionCallback) {
+    if (window['prototype/prototype.js']) {
+      return new Ajax.Request(
+        this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam),
+        {
+          method: 'get',
+          onComplete: actionCallback
+        }
+      );
+    } else {
+      araneaPage().getLogger().warn("Prototype library not accessible, action call cannot be made.");
+    }
+  }
+
   this.debug = function(message) {
     this.getLogger().debug(message);
   }
@@ -273,12 +317,7 @@ function AraneaPage() {
 AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey) {
   return function() {
     if (window['prototype/prototype.js']) {
-      var url = araneaPage().encodeURL(araneaPage().getServletURL());
-      url += "?transactionId=override";
-      if (topServiceId) 
-        url += "&topServiceId="+topServiceId;
-      if (threadServiceId) 
-        url += "&threadServiceId="+threadServiceId;
+      var url = araneaPage().getSubmitURL(topServiceId, threadServiceId, 'override');
       url += "&" + keepAliveKey + "=true";
       araneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(

@@ -14,19 +14,11 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.common.tags.external;
+package org.araneaframework.example.main.web.popups;
 
-import java.util.Collection;
+import org.araneaframework.Service;
 
-
-/**
- * SAMPLE Process navigation view model data interface.
- * 
- * @author Oleg Mürk
- */
-public interface SampleProcessNavigationComponentData {
-    Integer getCurrentStepIdx();
-    Integer getLastInitializedStepIdx();
-    Integer getStepCount();
-    Collection getSteps();
+public interface ClientSideReturnService extends Service {
+  public void setResult(Object returnValue);
+  public Object getResult();
 }

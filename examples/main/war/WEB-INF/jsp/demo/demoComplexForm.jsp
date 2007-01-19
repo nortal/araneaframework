@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
 	version="1.2">
 	<ui:widgetContext>
 		<ui:form id="complexForm">
 
-			<ui:componentHeader>
-				<ui:componentName>
+			<tui:componentHeader>
+				<tui:componentName>
 					<!-- The label, defined in DemoComplexForm class. -->
 					<fmt:message key="${viewData.formLabel}"/>
-				</ui:componentName>
-			</ui:componentHeader>
+				</tui:componentName>
+			</tui:componentHeader>
 
-			<ui:component>
+			<tui:component>
 
-				<ui:componentForm>
+				<tui:componentForm>
 					<ui:row>
 						<ui:formElement id="beastSelection">
 							<ui:cell width="25%"/>
@@ -62,9 +62,9 @@
 						</c:if>
 					</ui:updateRegionRows>
 
-				</ui:componentForm>
+				</tui:componentForm>
 
-			</ui:component>
+			</tui:component>
 
 		</ui:form>
 

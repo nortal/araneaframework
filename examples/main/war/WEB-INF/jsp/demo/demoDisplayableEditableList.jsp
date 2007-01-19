@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
-		<ui:componentHeader>
-			<ui:componentName>List</ui:componentName>
-		</ui:componentHeader>
+		<tui:componentHeader>
+			<tui:componentName>List</tui:componentName>
+		</tui:componentHeader>
 
-		<ui:component>
-			<ui:componentList>
+		<tui:component>
+			<tui:componentList>
 				<ui:formList id="editableList">
 					<ui:formListRows>
 						<ui:row>
@@ -32,7 +32,7 @@
 								<c:otherwise>
 									<ui:cell styleClass="center">
 										<c:if test="${row.booleanField}">
-											<ui:image code="flag" />
+											<tui:image code="flag" />
 										</c:if>
 									</ui:cell>
 									<ui:cell>
@@ -45,12 +45,12 @@
 							</c:choose>
 							<ui:cell width="0">
 								<ui:linkButton id="editSave" showLabel="false">
-									<ui:image code="buttonChange" />
+									<tui:image code="buttonChange" />
 								</ui:linkButton>
 
 								<c:if test="${formRow.open}">
 									<ui:linkButton id="delete" showLabel="false">
-										<ui:image code="buttonDelete" />
+										<tui:image code="buttonDelete" />
 									</ui:linkButton>
 								</c:if>
 							</ui:cell>
@@ -73,13 +73,13 @@
 							</ui:formElement>
 							<ui:cell width="0">
 								<ui:linkButton id="add" showLabel="false">
-									<ui:image code="buttonAdd" />
+									<tui:image code="buttonAdd" />
 								</ui:linkButton>
 							</ui:cell>
 						</ui:row>
 					</ui:formListAddForm>
 				</ui:formList>
-			</ui:componentList>
-		</ui:component>
+			</tui:componentList>
+		</tui:component>
 	</ui:widgetContext>
 </jsp:root>

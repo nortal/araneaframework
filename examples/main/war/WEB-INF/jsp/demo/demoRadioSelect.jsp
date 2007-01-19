@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
-		<ui:componentHeader>
-			<ui:componentName>RadioSelectDemo</ui:componentName>
-		</ui:componentHeader>
+		<tui:componentHeader>
+			<tui:componentName>RadioSelectDemo</tui:componentName>
+		</tui:componentHeader>
 		
 		<ui:form id="form">
-			<ui:component>
+			<tui:component>
 
-				<ui:componentForm>
+				<tui:componentForm>
 					<ui:row>
 						<ui:formElement id="select">
 							<ui:cell>
@@ -22,13 +22,13 @@
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
-				</ui:componentForm>
+				</tui:componentForm>
 				
-				<ui:componentActions>
+				<tui:componentActions>
 					<ui:eventButton eventId="test" labelId="#Test"/>
-				</ui:componentActions>
+				</tui:componentActions>
 
-			</ui:component>
+			</tui:component>
 		</ui:form>
 	</ui:widgetContext>
 </jsp:root>

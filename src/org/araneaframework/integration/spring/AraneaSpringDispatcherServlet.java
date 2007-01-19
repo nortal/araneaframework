@@ -102,6 +102,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     //Loading default properties
     PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
     cfg.setLocation(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
+    cfg.setIgnoreUnresolvablePlaceholders(true);
         
     //Loading custom properties
     Properties localConf = new Properties();
