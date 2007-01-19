@@ -33,6 +33,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.apache.xerces.dom.DocumentImpl;
+import org.apache.xerces.dom.NodeImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -73,7 +75,7 @@ public class TcdAndTldMerger {
 		 
 		 Document fDoc = docBuilder.parse(first);
 		 Document sDoc = docBuilder.parse(second);
-
+		 
 		 NodeList sTags = sDoc.getElementsByTagName("tag");
 		 
 		 for (int i = 0; i < sTags.getLength(); i++) {
@@ -90,7 +92,7 @@ public class TcdAndTldMerger {
 						 List additionalAttributes = getAttributesFromTCD(fDoc,  tagClazz.getSuperclass().getName());
 						 for (Iterator it = additionalAttributes.iterator(); it.hasNext(); ) {
 							 Node additional = (Node) it.next();
-							 String attrName = ((Element) additional).getElementsByTagName("name").item(0).getTextContent();
+							 String attrName = ((NodeImpl)((Element) additional).getElementsByTagName("name").item(0)).getTextContent();
 							 
 							 // attribute from parentclass should only be added if it does not exist already 
 							 NodeList currentAttrs = ((Element)current).getElementsByTagName("attribute");
@@ -105,7 +107,7 @@ public class TcdAndTldMerger {
 							 
 							 if (found) continue;
 
-							 current.appendChild(sDoc.adoptNode((additional.cloneNode(true))));
+							 current.appendChild(((DocumentImpl)sDoc).adoptNode((additional.cloneNode(true))));
 						 }
 						 
 						 // if any supertag has extra attributes, it should have them all
