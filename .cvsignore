@@ -4,6 +4,7 @@ build
 .classpath
 .jetproperties
 personal.build.properties
+changelogic-personal.properties
 devweb-personal.properties
 .settings
 Model Folder
@@ -17,3 +18,4 @@ aranea-main-example.launch
 .ant-targets-build.xml
 .fbwarnings
 .fbprefs
+.changelogic-rt
