@@ -38,6 +38,7 @@
 		</fileset>
 		<fileset dir="../lib">
 			<include name="**/xerces*.jar" />
+			<include name="**/xml-apis*.jar" />
 		</fileset>
 		<fileset dir="../..">
 			<include name="dist/**/*.jar" />
