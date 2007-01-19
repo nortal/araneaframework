@@ -47,6 +47,8 @@ public class TcdAndTldMerger {
 			System.err.println("USAGE: TCD TLD outputTLD");
 			System.exit(1);
 		}
+		
+		System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
 
 		String firstTLD = args[0], secondTLD = args[1], outputTLD = args[2];
 		
@@ -55,15 +57,10 @@ public class TcdAndTldMerger {
 
 		File second = new File(secondTLD);
 		
-		boolean existent = true;
-
 		if (!second.exists() || !second.canRead()) {
 			System.err.println(secondTLD + " unreadable.");
-			existent = false;
-		}
-		
-		if (!existent)
 			System.exit(1);
+		}
 		
 		File output = new File(outputTLD);
 		
