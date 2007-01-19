@@ -36,6 +36,9 @@
 		<fileset dir="../../lib">
 			<include name="**/*.jar" />
 		</fileset>
+		<fileset dir="../lib">
+			<include name="**/xerces*.jar" />
+		</fileset>
 		<fileset dir="../..">
 			<include name="dist/**/*.jar" />
 		</fileset>
