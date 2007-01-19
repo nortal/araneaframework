@@ -36,6 +36,10 @@
 		<fileset dir="../../lib">
 			<include name="**/*.jar" />
 		</fileset>
+		<fileset dir="../lib">
+			<include name="**/xerces*.jar" />
+			<include name="**/xml-apis*.jar" />
+		</fileset>
 		<fileset dir="../..">
 			<include name="dist/**/*.jar" />
 		</fileset>
@@ -87,7 +91,7 @@
 	<target name="tld-check">
 		<uptodate property="tld-check.uptodate" targetfile="build/tld/META-INF/aranea-template.tld">						
 			<srcfiles dir="src/org/araneaframework/example/common/tags"/>
-      <srcfiles dir="../../src/org/araneaframework/jsp/tag"/>  
+	        <srcfiles dir="../../src/org/araneaframework/jsp/tag"/>  
 		</uptodate>
 	</target>
 	
@@ -98,7 +102,6 @@
 			force="false"
 		>
 			<fileset dir="${src.dir}" includes="**/*Tag.java"/>
-			<fileset dir="../../src" includes="**/*Tag.java"/>
 			
 			<jsptaglib validatexml="true"
 				shortName="aranea-tag-library-template"
@@ -107,5 +110,18 @@
 				description="Template-App Tag Library"
 			/>
 		</webdoclet>
+		
+		<java classname="org.araneaframework.buildutil.TcdAndTldMerger" fork="true">
+			<arg value="META-INF/aranea-standard.tcd"/>
+			<arg value="build/tld/META-INF/aranea-template.tld"/>
+			<arg value="build/tld/META-INF/temporary-template.tld"/>
+			<classpath>
+				<path refid="classpath"/> 
+				<pathelement location="../../build/tmp/classes"/>
+				<pathelement location="build/classes"/>
+			</classpath>
+		</java>
+		
+		<move file="build/tld/META-INF/temporary-template.tld" tofile="build/tld/META-INF/aranea-template.tld"/>
  	</target>
 </project>

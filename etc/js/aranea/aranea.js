@@ -234,6 +234,10 @@ function AraneaPage() {
         return false;
       }
     }
+    
+    if (systemForm) {
+      this.executeCallbacks(systemForm['id']);
+    }
 
     if (eventUpdateRegions != null && eventUpdateRegions.length > 0) 
       return new DefaultAraneaAJAXSubmitter().event_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);

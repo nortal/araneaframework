@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
 		<ui:form id="displayForm">
 
 			<!-- Label -->
-			<ui:componentHeader>
-				<ui:componentName>Demo display form</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>Demo display form</tui:componentName>
+			</tui:componentHeader>
 
-			<ui:component>
+			<tui:component>
 
 				<!-- Body -->
-				<ui:componentForm>
+				<tui:componentForm>
 
 					<ui:row>
 						<ui:cell styleClass="name">
@@ -24,7 +24,7 @@
 						<ui:cell styleClass="data">
 							<ui:conditionalDisplay id="condDisplay">
 								<ui:conditionTrue>
-									<ui:image code="triangle" />
+									<tui:image code="triangle" />
 								</ui:conditionTrue>
 							</ui:conditionalDisplay>
 						</ui:cell>
@@ -52,9 +52,9 @@
 						</ui:cell>
 					</ui:row>
 
-				</ui:componentForm>
+				</tui:componentForm>
 
-			</ui:component>
+			</tui:component>
 
 		</ui:form>
 	</ui:widgetContext>

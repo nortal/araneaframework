@@ -16,15 +16,21 @@
 
 package org.araneaframework.example.main.web.popups;
 
+import java.io.Writer;
+import java.util.Date;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.message.PopupMessageFactory;
 import org.araneaframework.example.main.web.sample.NameWidget;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
@@ -48,6 +54,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 	private MemoryBasedListDataProvider dataProvider = new DataProvider();
 	
 	private boolean usePopupFlow = true;
+	private boolean useAction = false;
 
 	private EditableBeanListWidget list;
 	private BeanFormListWidget formList;
@@ -118,6 +125,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 			addCommonFormFields(rowForm);
 			
 			FormListUtil.addButtonToRowForm("#", rowForm, new PopupListenerFactory().createListener(rowData) , "popupButton");
+			rowForm.addActionListener("testAction", new TestActionListener());
 			rowForm.writeBean(rowData);
 		}
 
@@ -140,6 +148,10 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		public OnClickEventListener createListener(Object data) {
 			if (usePopupFlow)
 				return new PopupFlowListener((PersonMO)data);
+			
+			if (useAction)
+				return new PopupClientListenerActionInvoker(PersonEditableListPopupWidget.this);
+
 			return new PopupClientListener(PersonEditableListPopupWidget.this);
 		}
 	}
@@ -183,6 +195,42 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		}
 	}
 	
+	private class PopupClientListenerActionInvoker implements OnClickEventListener {
+		private Widget starter;
+		
+		public PopupClientListenerActionInvoker(Widget opener) {
+			starter = opener;
+		}
+		
+		public void onClick() throws Exception {
+		      // get the id of updatable formelement, tricky
+		      String widgetId = getInputData().getScope().toString();
+		      widgetId = widgetId.substring(0, widgetId.lastIndexOf('.'));
+		      widgetId = widgetId + ".name";
+		      
+		      StandalonePopupFlowWrapperWidget toStart = new StandalonePopupFlowWrapperWidget(new NameWidget());
+		      toStart.setFinishService(new ParentActionInvokingService(widgetId));
+	      
+			PopupWindowProperties p = new PopupWindowProperties();
+			p.setHeight("600");
+			p.setWidth("1000");
+			p.setScrollbars("yes");
+
+		      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, starter);
+		}
+	}
+	
+	private class TestActionListener extends StandardActionListener {
+		public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+			StringBuffer s = new StringBuffer("alert('this is a message from action that came back to haunt you, return value being: ");
+			s.append(actionParam);
+			s.append("')");
+			
+			Writer out = ((HttpOutputData) output).getWriter();
+		    out.write(s.toString());
+		}
+	}
+	
 	private class MyHandler implements FlowContext.Handler { 
 		private BeanFormWidget form; 
 		private PersonMO rowObject; 
@@ -202,7 +250,6 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		} 
 	}
 
-	
 	public void injectContractDAO(IContractDAO contractDAO) {
 		this.contractDAO = contractDAO;
 	}
@@ -210,10 +257,16 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 	public void setUsePopupFlow(boolean b) {
 		this.usePopupFlow = b;
 	}
+	
+	public void setUseAction(boolean b) {
+		this.useAction = b;
+	}
 
 	public String getTitle() {
 		if (usePopupFlow)
 			return "Server-side return";
+		if (useAction)
+			return "Client-side return calling serverside action";
 		return "Client-side return";
 	}
 }
