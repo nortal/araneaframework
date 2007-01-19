@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
 	version="1.2">
 	<ui:widgetContext>
-		<ui:componentHeader>
-			<ui:componentName>
+		<tui:componentHeader>
+			<tui:componentName>
 				<fmt:message key="${viewData.formLabel}"/>
-			</ui:componentName>
-		</ui:componentHeader>
+			</tui:componentName>
+		</tui:componentHeader>
 
-		<ui:component>
+		<tui:component>
 
 			<ui:form id="form">
-				<ui:componentForm rowClasses="cols4" cellClasses="name,inpt">
+				<tui:componentForm rowClasses="cols4" cellClasses="name,inpt">
 					<ui:formElement id="name">
 						<ui:row>
 							<ui:cell>
@@ -36,15 +36,15 @@
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
-				</ui:componentForm>
+				</tui:componentForm>
 
 			</ui:form>
 
-			<ui:componentActions>
+			<tui:componentActions>
 				<ui:eventButton eventId="save" labelId="#Save" />
 				<ui:eventButton eventId="cancel" labelId="#Cancel" />
-			</ui:componentActions>
-		</ui:component>
+			</tui:componentActions>
+		</tui:component>
 
 	</ui:widgetContext>
 </jsp:root>

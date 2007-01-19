@@ -3,28 +3,27 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2"
 >
   <!-- Main example's person editable list JSP -
        examples/main/war/WEB-INF/jsp/editableList.jsp
   -->
   <ui:widgetContext>
-
-    <!-- Start the list context ... -->
+	<!-- Start the list context ... -->
     <ui:list id="list">
       <!-- and continue with announcement that this list is editable -->
       <ui:formList>
 		
-        <ui:componentHeader>
-          <ui:componentName><c:out value="Editable person list (${widget.title})"/> </ui:componentName>
-        </ui:componentHeader>
+        <tui:componentHeader>
+          <tui:componentName><c:out value="Editable person list (${widget.title})"/> </tui:componentName>
+        </tui:componentHeader>
 		
-        <ui:component>
+        <tui:component>
 
-          <ui:componentList>
+          <tui:componentList>
 
-            <ui:componentListHeader/>
+            <tui:componentListHeader/>
 
               <!-- List filter for editable list is exactly 
                    the same as filter for ordinary lists -->
@@ -149,7 +148,7 @@
                     </c:choose>
 
                     <ui:linkButton id="popupButton" showLabel="false">
-	                   <ui:image src="gfx/dot17.gif" alt="#Popup" title="Popup"/>
+	                   <tui:image src="gfx/dot17.gif" alt="#Popup" title="Popup"/>
                     </ui:linkButton>
                   </ui:cell>
                 </ui:row>
@@ -193,17 +192,17 @@
 
                 <ui:cell>
                   <ui:attribute name="width" value="0"/>
-                  <ui:linkButton id="add" showLabel="false"><ui:image code="buttonAdd"/></ui:linkButton>
+                  <ui:linkButton id="add" showLabel="false"><tui:image code="buttonAdd"/></ui:linkButton>
                 </ui:cell>
               </ui:row>
             </ui:formListAddForm>
             
-          </ui:componentList>
+          </tui:componentList>
 
           <!-- Sequence -->
-          <ui:componentListFooter/>
+          <tui:componentListFooter/>
 
-        </ui:component>
+        </tui:component>
 		
       </ui:formList>
     </ui:list>

@@ -2,7 +2,7 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 
 	<ui:widgetContext>
@@ -26,13 +26,13 @@
 				var widgetId = '<c:out value="${widgetId}" />';
 			</script>
 				
-			<ui:componentHeader>
-				<ui:componentName>Form with actions</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>Form with actions</tui:componentName>
+			</tui:componentHeader>
 
-			<ui:component>
+			<tui:component>
 
-				<ui:componentForm>
+				<tui:componentForm>
 
 					<ui:row>
 						<ui:cell>
@@ -107,9 +107,9 @@
 						</ui:cell>
 					</ui:row>
 
-				</ui:componentForm>
+				</tui:componentForm>
 
-			</ui:component>
+			</tui:component>
 
 		</ui:form>
 

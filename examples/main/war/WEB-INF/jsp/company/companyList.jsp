@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
 	xmlns:c="http://java.sun.com/jstl/core" 
-	xmlns:ui="http://araneaframework.org/tag-library/template" 
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template" 
 	version="1.2">		
 	<ui:widgetContext>
 		<ui:list id="companyList">
 		
-			<ui:componentHeader>
-				<ui:componentName>Companies</ui:componentName>
-			</ui:componentHeader>
-			<ui:component>
+			<tui:componentHeader>
+				<tui:componentName>Companies</tui:componentName>
+			</tui:componentHeader>
+			<tui:component>
 			
 				<!-- Body -->
-				<ui:componentList>
+				<tui:componentList>
 					<!-- Title -->
-					<ui:componentListHeader/>
+					<tui:componentListHeader/>
 					
 					<!-- Filter -->
 					<ui:listFilter>
@@ -60,24 +60,24 @@
 							
 							<ui:cell>
 								<ui:listRowLinkButton eventId="edit">
-									<ui:image code="buttonChange" alt="Edit company" title="Edit company"/>
+									<tui:image code="buttonChange" alt="Edit company" title="Edit company"/>
 								</ui:listRowLinkButton>
 								<ui:listRowLinkButton eventId="remove" onClickPrecondition="return window.confirm('Are you sure?');">
-									<ui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
+									<tui:image code="buttonDelete" alt="Remove company" title="Remove company"/>
 								</ui:listRowLinkButton>
 							</ui:cell>
 							
 						</ui:row>
 					</ui:listRows>				
-				</ui:componentList>
+				</tui:componentList>
 			
 				<!-- Sequence -->
-				<ui:componentListFooter/>
+				<tui:componentListFooter/>
 
-				<ui:componentActions>
+				<tui:componentActions>
 					<ui:eventButton eventId="add" labelId="#Add new company"/>
-				</ui:componentActions>
-			</ui:component>
+				</tui:componentActions>
+			</tui:component>
 		
 		</ui:list>
 

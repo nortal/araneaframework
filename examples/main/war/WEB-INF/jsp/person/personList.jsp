@@ -3,20 +3,20 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2"
 >
 	<ui:widgetContext>
 		<ui:list id="personList">
-			<ui:componentHeader>
-				<ui:componentName>Persons List</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>Persons List</tui:componentName>
+			</tui:componentHeader>
 				
-			<ui:component>
+			<tui:component>
 
-				<ui:componentList width="1000px">
+				<tui:componentList width="1000px">
 					<!-- Title -->
-					<ui:componentListHeader/>
+					<tui:componentListHeader/>
 
 					<!-- Filter -->
 					<ui:listFilter>
@@ -86,24 +86,24 @@
 							
 							<ui:cell>
 								<ui:listRowLinkButton eventId="edit">
-									<ui:image code="buttonChange" alt="Edit person" title="Edit person"/>
+									<tui:image code="buttonChange" alt="Edit person" title="Edit person"/>
 								</ui:listRowLinkButton>
 								<ui:listRowLinkButton eventId="remove">
-									<ui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
+									<tui:image code="buttonDelete" alt="Remove person" title="Remove person"/>
 								</ui:listRowLinkButton>
 							</ui:cell>
 							
 						</ui:row>
 					</ui:listRows>
-				</ui:componentList>
+				</tui:componentList>
 
-				<ui:componentListFooter/>
+				<tui:componentListFooter/>
 				
-				<ui:componentActions>
+				<tui:componentActions>
 					<ui:eventButton eventId="add" labelId="#Add new person"/>
-				</ui:componentActions>
+				</tui:componentActions>
 
-			</ui:component>
+			</tui:component>
 		
 		</ui:list>
 	</ui:widgetContext>

@@ -24,15 +24,21 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 public class DemoAdvancedPopupUsageWidget extends TemplateBaseWidget {
 	private PersonEditableListPopupWidget editableList;
 	private PersonEditableListPopupWidget anotherEditableList;
+	private PersonEditableListPopupWidget yetAnotherEditableList;
 
 	protected void init() throws Exception {
 		setViewSelector("demo/advancedPopups");
 		editableList = new PersonEditableListPopupWidget();
-		
+
 		anotherEditableList = new PersonEditableListPopupWidget();
 		anotherEditableList.setUsePopupFlow(false);
-		
+
+		yetAnotherEditableList = new PersonEditableListPopupWidget();
+		yetAnotherEditableList.setUsePopupFlow(false);
+		yetAnotherEditableList.setUseAction(true);
+
 		addWidget("editableList", editableList);
 		addWidget("anotherEditableList", anotherEditableList);
+		addWidget("yanotherEditableList", yetAnotherEditableList);
 	}
 }

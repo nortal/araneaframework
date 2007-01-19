@@ -2,7 +2,7 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 
 	<!-- Component starts here -->
@@ -10,12 +10,12 @@
 
 		<ui:form id="form">
 
-			<ui:componentHeader>
-				<ui:componentName>What are you, stranger?</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>What are you, stranger?</tui:componentName>
+			</tui:componentHeader>
 
-			<ui:component>
-				<ui:componentForm rowClasses="cols4">
+			<tui:component>
+				<tui:componentForm rowClasses="cols4">
 					<ui:formElement id="name">
 						<ui:row>
 							<ui:cell styleClass="name">
@@ -27,13 +27,13 @@
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
-				</ui:componentForm>
+				</tui:componentForm>
 
 				<!-- template design tag -->
-				<ui:componentActions>
+				<tui:componentActions>
 					<ui:eventButton eventId="return" labelId="#confirm"/>
-				</ui:componentActions>
-			</ui:component>
+				</tui:componentActions>
+			</tui:component>
 
 		</ui:form>
 

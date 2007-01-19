@@ -2,19 +2,19 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
   xmlns:c="http://java.sun.com/jstl/core"
   xmlns:fmt="http://java.sun.com/jstl/fmt"
-  xmlns:ui="http://araneaframework.org/tag-library/template"
+  xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
   version="1.2">
 
   <ui:widgetContext>
     <ui:form id="testform">
 
-      <ui:componentHeader>
-        <ui:componentName>Autocomplete (suggestion) demo</ui:componentName>
-      </ui:componentHeader>
+      <tui:componentHeader>
+        <tui:componentName>Autocomplete (suggestion) demo</tui:componentName>
+      </tui:componentHeader>
 
-      <ui:component>
+      <tui:component>
       
-        <ui:componentForm>
+        <tui:componentForm>
 
           <ui:row>
 
@@ -30,12 +30,12 @@
 
           </ui:row>
 
-        </ui:componentForm>
+        </tui:componentForm>
 
-        <ui:componentActions>
+        <tui:componentActions>
           <ui:eventButton eventId="test" labelId="#Test"/>
-        </ui:componentActions>
-      </ui:component>
+        </tui:componentActions>
+      </tui:component>
     </ui:form>
 
   </ui:widgetContext>

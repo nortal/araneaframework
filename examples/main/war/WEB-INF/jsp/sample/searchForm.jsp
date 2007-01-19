@@ -2,20 +2,20 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 
 	<!-- Component starts here -->
 	<ui:widgetContext>
 		<ui:form id="searchForm">
 
-			<ui:componentHeader>
-				<ui:componentName>Tutorial search form</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>Tutorial search form</tui:componentName>
+			</tui:componentHeader>
 
-			<ui:component>
+			<tui:component>
 				<!-- Body -->
-				<ui:componentForm>
+				<tui:componentForm>
 					<ui:row>
 						<ui:cell colspan="2">Client</ui:cell>
 					</ui:row>
@@ -93,13 +93,13 @@
 							</ui:cell>
 						</ui:row>
 					</ui:formElement>
-				</ui:componentForm>
+				</tui:componentForm>
 
 				<!-- Footer -->
-				<ui:componentActions>
+				<tui:componentActions>
 					<ui:eventButton id="search" eventId="search" labelId="#Search"/>
-				</ui:componentActions>
-			</ui:component>
+				</tui:componentActions>
+			</tui:component>
 
 		</ui:form>
 	</ui:widgetContext>

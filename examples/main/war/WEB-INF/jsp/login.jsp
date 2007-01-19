@@ -1,7 +1,9 @@
 <jsp:root 
     xmlns:jsp="http://java.sun.com/JSP/Page" 
     xmlns:c="http://java.sun.com/jstl/core" 
-    xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2">
+    xmlns:ui="http://araneaframework.org/tag-library/standard" 
+    xmlns:tui="http://araneaframework.org/tag-library/template"
+    version="1.2">
     <jsp:directive.page contentType="text/html; charset=UTF-8"/>
     
     <!-- This tag should always be the root of any Aranea template JSP. 
@@ -35,7 +37,7 @@
 		                            <div id="inner">
 		                                <div class="login">
 		                                    <div id="login-logo">
-		                                    	<ui:image src="gfx/logo_aranea_login.jpg"/>
+		                                    	<tui:image src="gfx/logo_aranea_login.jpg"/>
 		                                    </div>
 		
 		                                    <div class="a">

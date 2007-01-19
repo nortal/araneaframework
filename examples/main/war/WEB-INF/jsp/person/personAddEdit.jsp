@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:ui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
 	version="1.2">
 	
@@ -13,15 +13,15 @@
 
 		<ui:form id="personForm">
 
-			<ui:componentHeader>
-				<ui:componentName>
+			<tui:componentHeader>
+				<tui:componentName>
 					<fmt:message key="${viewData.label}"/>
-				</ui:componentName>
-			</ui:componentHeader>
+				</tui:componentName>
+			</tui:componentHeader>
 
-			<ui:component>
+			<tui:component>
 
-				<ui:componentForm rowClasses="cols4" cellClasses="name,inpt">
+				<tui:componentForm rowClasses="cols4" cellClasses="name,inpt">
 					<ui:row>
 						<ui:formElement id="name">
 							<ui:cell>
@@ -72,16 +72,16 @@
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
-				</ui:componentForm>
+				</tui:componentForm>
 
 				<!-- template design tag -->
-				<ui:componentActions>
+				<tui:componentActions>
 					<!-- Sends all form data and calls "save" event (handleEventSave) -->
 					<ui:eventButton eventId="save" labelId="#Add" />
 					<!-- Sends all form data and calls "cancel" event (handleEventCancel) -->
 					<ui:eventButton eventId="cancel" labelId="#Cancel" />
-				</ui:componentActions>
-			</ui:component>
+				</tui:componentActions>
+			</tui:component>
 
 		</ui:form>
 

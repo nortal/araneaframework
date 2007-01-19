@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jstl/core" xmlns:ui="http://araneaframework.org/tag-library/template"  version="1.2">		
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jstl/core" xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"  version="1.2">		
 	<ui:widgetContext>
 		<ui:list id="contractList">
 		
-			<ui:componentHeader>
-				<ui:componentName>Contract list</ui:componentName>
-			</ui:componentHeader>
+			<tui:componentHeader>
+				<tui:componentName>Contract list</tui:componentName>
+			</tui:componentHeader>
 			
-			<ui:component>
+			<tui:component>
 				<!-- Body -->
-				<ui:componentList>
+				<tui:componentList>
 					<!-- Title -->				
-					<ui:componentListHeader/>
+					<tui:componentListHeader/>
 
 					<ui:listRows>
 						<ui:row>
@@ -35,21 +35,21 @@
 
 							<ui:cell>
 								<ui:listRowLinkButton eventId="remove">
-									<ui:image code="buttonDelete" alt="Remove contract" title="Remove contract"/>
+									<tui:image code="buttonDelete" alt="Remove contract" title="Remove contract"/>
 								</ui:listRowLinkButton>
 							</ui:cell>
 						</ui:row>
 					</ui:listRows>				
-				</ui:componentList>
+				</tui:componentList>
 			
 				<!-- Sequence -->
-				<ui:componentListFooter/>
+				<tui:componentListFooter/>
 
-				<ui:componentActions>
+				<tui:componentActions>
 					<ui:eventButton eventId="add" labelId="#Add new contract" />
-				</ui:componentActions>
+				</tui:componentActions>
 
-			</ui:component>
+			</tui:component>
 		
 		</ui:list>
 
