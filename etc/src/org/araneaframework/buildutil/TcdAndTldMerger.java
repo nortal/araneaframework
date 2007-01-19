@@ -84,7 +84,7 @@ public class TcdAndTldMerger {
 			 for (int j = 0; j < children.getLength(); j++) {
 				 Node node = children.item(j);
 				 if (node.getNodeName().equals("tag-class")) {
-					 String tagClassName = node.getTextContent();
+					 String tagClassName = ((NodeImpl)node).getTextContent();
 					 if (tagClassName == null)
 						 continue;
 					 Class tagClazz = Class.forName(tagClassName);
@@ -99,7 +99,9 @@ public class TcdAndTldMerger {
 							 
 							 boolean found = false;
 							 for (int zz = 0; zz < currentAttrs.getLength(); zz++) {
-								 if (((Element)currentAttrs.item(zz)).getElementsByTagName("name").item(0).getTextContent().equals(attrName)) {
+								 if (
+										 ( (NodeImpl)  ((Element)currentAttrs.item(zz)).getElementsByTagName("name").item(0)).
+										 getTextContent().equals(attrName)) {
 									 found = true;
 									 break;
 								 }
@@ -145,7 +147,7 @@ public class TcdAndTldMerger {
 		Node tagClassNode = null;
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node current = nodes.item(i);
-			if (current.getTextContent() != null && current.getTextContent().equals(tagClass)) {
+			if (((NodeImpl)current).getTextContent() != null && ((NodeImpl)current).getTextContent().equals(tagClass)) {
 				tagClassNode = current;
 				break;
 			}
