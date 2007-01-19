@@ -1,0 +1,476 @@
+<?xml version="1.0" ?>
+<project name="Changelogic" default="edit_change" basedir="./">
+
+<!--
+
+
+
+
+
+********************************************************************************
+
+
+
+PLEASE DO NOT MODIFY THIS FILE.
+
+ALL YOUR CHANGES WILL BE LOST ON NEXT AUTOMATIC UPDATE.
+
+
+
+********************************************************************************
+
+
+
+
+
+
+-->	
+	
+	<condition
+		property="changelogic.fail.oldJar"
+		value="Please remove ${ant.home}/lib/changelogic-ant.jar - It is in the way"
+	>
+		<and>
+			<available file="${ant.home}/lib/changelogic-ant.jar"/>
+		</and>
+	</condition>
+	<fail
+		if="changelogic.fail.oldJar"
+		message="${changelogic.fail.oldJar}"
+	/>
+
+	<property file="${basedir}/changelogic-personal.properties"/>
+	<property file="${basedir}/changelogic-project.properties"/>
+	
+	<property file="${basedir}/devweb-personal.properties"/>
+	<property file="${basedir}/devweb-project.properties"/>
+
+	<!-- Remap properties from "devweb" to "cl" -->
+	<property name="cl.rooturl" value="${devweb.rooturl}"/>
+
+	<condition
+		property="changelogic.fail.rootUrl"
+		value="Please check the correctness of the root url property. The server returned HTTP response code 300 or above for the URL ${cl.rooturl}/lib/changelogic-build.xml"
+	>
+		<!-- Set the property if the http:// url is not functional -->
+		<and>
+			<contains
+				string="${cl.rooturl}"
+				substring="http://"
+			/>
+			<not>
+				<http
+					url="${cl.rooturl}/lib/changelogic-build.xml"
+					errorsBeginAt="300"
+				/>
+			</not>
+		</and>
+	</condition>
+	<fail
+		if="changelogic.fail.rootUrl"
+		message="${changelogic.fail.rootUrl}"
+	/>
+	
+	<property 
+		name="changelogic.rt"
+		value="${basedir}/.changelogic-rt"
+	/>
+
+	<mkdir dir="${changelogic.rt}"/>
+
+	<target
+		name="init"
+		depends="upgrade"
+	>
+		<path id="changelogic.classpath">
+			<fileset dir="${changelogic.rt}">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+		
+		<taskdef 
+			name="localClassLoaderRef"
+			classname="com.changelogic.client.ant.taskdefs.DefineLocalClassLoaderRefTask"
+			classpathref="changelogic.classpath"
+		/>
+
+		<localClassLoaderRef
+			ref="com.changelogic.client.ant.LocalClassLoader"
+		>
+			<classpath
+				refid="changelogic.classpath"
+			/>
+		</localClassLoaderRef>
+
+		<taskdef
+			resource="changelogic-tasks.properties"
+			loaderref="com.changelogic.client.ant.LocalClassLoader"
+		/>
+	</target>
+	
+	<target 
+		name="test_setup"
+		depends="init"
+	>
+		<antcall target="TODO"/>
+	</target>
+
+	<target 
+		name="edit_change" 
+		description="Start development of a change. You will be prompted for the change ID."
+		depends="init"
+	>
+		<promptandstartdev/>
+	</target>	
+
+	<target
+		name="edit_module"
+		description="Start development of a module. You will be prompted for the module code."
+		depends="init"
+	>
+		<promptandeditmodule/>
+	</target>
+
+	<target
+		name="update"
+		description="Update the base version of a change."
+		depends="init"
+	>
+		<updatebase/>
+	</target>
+	
+	<target
+		name="update_continue"
+		description="Continue the base version update of a change."
+	>
+		<antcall target="update"/>
+	</target>
+
+	<target
+		name="update_cancel"
+		description="Cancel the base version update of a change."
+		depends="init"
+	>
+		<cancelbaseupdate/>
+	</target>
+	
+	<target
+		name="add_checkpoint"
+		description="Add a checkpoint to the committed state of a change."
+		depends="init"
+	>
+		<createcheckpoint/>
+	</target>
+
+	<target
+		name="refresh"
+		description="Refresh current working directory retaining local edits."
+		depends="init"
+	>
+		<refresh/>
+	</target>
+
+	<target
+		name="refresh_all"
+		description="Refresh current working directory (including not editable modules) retaining local edits."
+		depends="init"
+	>
+		<checkoutchange/>
+	</target>
+
+	<target
+		name="commit"
+		description="Commit local edits."
+		depends="init"
+	>
+		<commit/>
+	</target>
+
+	<target 
+		name="commit_change" 
+		description="End development of a change and hand it over for review."
+		depends="init"
+	>
+		<enddev/>
+	</target>
+
+	<target
+		name="upload_diff"
+		description="Upload diff (without ending development) for intermediary review."
+		depends="init"
+	>
+		<uploaddiff/>
+	</target>
+
+	<target
+		name="checkout_submilestone_last_version"
+		description="Check out the la(te)st version of a submilestone. You will be prompted for the submilesone number."
+		depends="init"
+	>
+		<property name="checkout.submilestone" value=""/>
+		<property name="checkout.dir" value=".."/>
+		<checkoutlastversion
+			revision="${checkout.submilestone}"
+			checkoutDir="${checkout.dir}"
+		/>
+	</target>
+
+	<target
+		name="query_submilestone_last_version"
+		description="Query for the la(te)st version of a submilestone."
+		depends="init"
+	>
+		<antcall target="TODO"/>
+	</target>
+
+	<target
+		name="checkout_change_last_checkpoint"
+		description="Check out the la(te)st checkpoint of a change. You will be prompted for the change number."
+		depends="init"
+	>
+		<property name="checkout.change.id" value=""/>
+		<property name="checkout.dir" value=".."/>
+		<checkoutlastcheckpoint
+			revision="${checkout.change.id}"
+			checkoutDir="${checkout.dir}"
+		/>
+	</target>
+	
+	<target
+		name="query_change_last_checkpoint"
+		description="Query for the la(te)st checkpoint of a change."
+		depends="init"
+	>
+		<antcall target="TODO"/>
+	</target>
+
+	<target
+		name="checkout_version"
+		description="Check out a version. You will be prompted for the version number."
+		depends="init"
+	>
+		<property name="checkout_version.version" value=""/>
+		<property name="checkout.dir" value=".."/>
+		<checkoutversion
+			revision="${checkout_version.version}"
+			checkoutDir="${checkout.dir}"
+		/>
+	</target>
+
+	<target
+		name="checkout_change"
+		description="Check out a change. You will be prompted for the change number."
+		depends="init"
+	>
+		<property name="checkout_change.change_id" value=""/>
+		<property name="checkout.dir" value=".."/>
+		<checkoutchange
+			revision="${checkout_change.change_id}"
+			checkoutDir="${checkout.dir}"
+		/>
+	</target>
+
+	<target 
+		name="integrate" 
+		description="Start integration of a change. You will be prompted for the change number."
+		depends="init"
+	>
+		<promptandstartintegration/>
+	</target>
+
+	<target 
+		name="integrate_continue" 
+		description="Continue integration of a change."
+		depends="init"
+	>
+		<continueintegration/>
+	</target>
+	
+	<target
+		name="integrate_step"
+		description="Continue integration of a change from a sepecified step."
+		depends="init"
+	>
+		<continueintegration
+			steppingEnabled="true"
+		/>
+	</target>
+	
+	<target
+		name="integrate_clean"
+		description="Clean integration directories."
+		depends="init"
+	>
+		<cleanintegration/>
+	</target>
+
+	<target
+		name="integrate_cancel"
+		description="Cancel the integration of a change. All edits made by the integrator will be lost."
+		depends="init"
+	>
+		<cancelintegration/>
+	</target>
+	
+	<target
+		name="process_environment_adjustments"
+		description="Retrieve a list of environment adjustments for manual application. You will be prompted on each adjustment."
+		depends="init"
+	>
+		<adjustenv/>
+	</target>
+	
+	<target
+		name="reset"
+		description="Resets the state of client application by deleting serialized commands file. Resetting might be needed when executing commands directly on the server (e.g. abandoning a change)."
+		depends="init"
+	>
+		<reset/>
+	</target>
+
+	<target
+		name="sync_main"
+	>
+		<antcall target="TODO"/>
+	</target>
+	
+	<target
+		name="sync_main_continue"
+	>
+		<antcall target="TODO"/>
+	</target>
+
+	<target
+		name="setup_project"
+		depends="init"
+		description="Activates the project and extension modules by creating Changelogic-specific VCS layout"
+	>
+		<setupproject/>
+	</target>
+
+	<target
+		name="add_module"
+		depends="init"
+		description="Adds a module to current change and marks it editable"
+	>
+		<property name="path" value="."/>
+
+		<property name="module.code" value=""/>
+		<property name="module.projectId" value="-1"/>
+		<property name="module.startChangeId" value="-1"/>
+		<property name="module.endChangeId" value="-1"/>
+
+		<property name="module.name" value=""/>
+		<property name="module.serverPath" value=""/>
+		<property name="module.workPath" value=""/>
+
+		<addmodule
+			moduleCode="${module.code}"
+			path="${path}"
+			projectId="${module.projectId}"
+			startChangeId="${module.startChangeId}"
+			endChangeId="${module.endChangeId}"
+		>
+			<module
+				name="${module.name}"
+				serverPath="${module.serverPath}"
+				workPath="${module.workPath}"
+			/>
+		</addmodule>
+	</target>
+
+	<target
+		name="test_checkout"
+	>
+		<antcall target="TODO"/>
+	</target>
+
+	<target
+		name="test_self"
+	>
+	</target>
+
+	<!-- Must not depend on "init" -->
+	<target
+		name="upgrade"
+		description="Upgrade the local installation of Changelogic."
+	>
+		<antcall target="upgrade_ant"/>
+		<antcall target="upgrade_changelogic"/>
+	</target>
+
+	<target
+		name="upgrade_ant"
+	>
+		<mkdir dir="${changelogic.rt}"/>
+		
+		<condition property="changelogic-ant.available">
+			<and>
+				<available file="${changelogic.rt}/changelogic-ant.jar"/>
+
+				<!--
+				The length of changelogic-ant.jar was some 500k before mavenization
+				-->
+				<length
+					file="${changelogic.rt}/changelogic-ant.jar"
+					when="less"
+					length="100000"
+				/>
+			</and>
+		</condition>
+
+		<antcall target="upgrade_ant_impl"/>
+	</target>
+
+	<target
+		name="upgrade_ant_impl"
+		unless="changelogic-ant.available"
+	>
+		<antcall target="upgrade_file">
+			<param name="srcpath" value="${cl.rooturl}/lib/changelogic-build.xml"/>
+			<param name="destpath" value="${basedir}/changelogic-build.xml"/>
+		</antcall>
+		<antcall target="upgrade_file">
+			<param name="srcpath" value="${cl.rooturl}/lib/changelogic-ant.jar"/>
+			<param name="destpath" value="${changelogic.rt}/changelogic-ant.jar"/>
+		</antcall>
+	</target>
+
+	<target
+		name="upgrade_file"
+	>
+		<property name="srcpath" value=""/>
+		<property name="destpath" value=""/>
+		<get
+			src="${srcpath}"
+			dest="${destpath}"
+			usetimestamp="true"
+		/>
+	</target>
+		
+	<target
+		name="upgrade_changelogic"
+	>
+		<path id="changelogic-upgrade.classpath">
+			<fileset dir="${changelogic.rt}">
+				<include name="changelogic-ant.jar"/>
+			</fileset>
+		</path>
+
+		<taskdef
+			name="upgrade"
+			classname="com.changelogic.client.ant.taskdefs.UpgradeTask"
+			classpathref="changelogic-upgrade.classpath"
+		/>
+		<upgrade
+			downloadUrl="${cl.rooturl}/lib/"
+			workDir="${basedir}"
+			purgeUnlistedJars="true"
+		/>
+	</target>
+
+	<target name="TODO">
+		<fail message="The requested operation is not (yet) implemented!"/>
+	</target>
+
+</project>
