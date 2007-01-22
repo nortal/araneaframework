@@ -1,6 +1,7 @@
 package org.araneaframework.integration.spring.support;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.araneaframework.Environment;
 import org.springframework.beans.factory.BeanFactory;
@@ -19,7 +20,11 @@ public class SpringBeanInvocationHandler implements InvocationHandler, Serializa
       (BeanFactory) env.getEntry(BeanFactory.class);
     
     Object bean = bf.getBean(id);
-        
-    return method.invoke(bean, args);
+    
+    try {
+      return method.invoke(bean, args);
+    } catch (InvocationTargetException ex){
+      throw ex.getCause();
+    }
   }
 }

@@ -18,8 +18,12 @@ function onWindowUnload() {
   closeOpenedPopupWindows();
 }
 
+/* Behaviour when click made in parent window closes popups is just 
+ * too confusing and unexpected, so turn it off. */
+/* 
 if (window['aranea.js'])
   araneaPage().addSystemUnLoadEvent(onWindowUnload);
+*/
 
 //popup maps
 var popups = new Object();
