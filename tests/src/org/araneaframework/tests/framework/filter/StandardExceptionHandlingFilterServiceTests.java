@@ -53,7 +53,7 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
   
   public void setUp() throws Exception {
     factoryCreatedService = new MockRenderableStandardService();
-    factoryCreatedService._getComponent().init(MockUtil.getEnv());
+    factoryCreatedService._getComponent().init(null, MockUtil.getEnv());
     
     factory = new ExceptionHandlerFactory() {
       public Service buildExceptionHandler(Throwable e, Environment environment) {

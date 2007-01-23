@@ -48,4 +48,10 @@ public interface TransactionContext extends Serializable {
    * Returns the transaction id of the current request.
    */
   public Object getTransactionId();
+  
+  /**
+   * Returns the transaction id expected in the next request.
+   * @since 1.1
+   */
+  public Long getNextTransactionId();
 }

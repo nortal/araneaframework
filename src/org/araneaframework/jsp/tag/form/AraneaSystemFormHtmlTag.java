@@ -20,10 +20,10 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.http.util.ClientStateUtil;
@@ -80,6 +80,6 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
   }
 
   protected String getFormAction() {
-	  return ((HttpServletRequest) pageContext.getRequest()).getContextPath() + ((HttpServletRequest) pageContext.getRequest()).getServletPath();
+      return ((HttpInputData) output.getInputData()).getContextPath() + ((HttpInputData) output.getInputData()).getContainerPath();
   }
 }

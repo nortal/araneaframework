@@ -19,6 +19,7 @@ package org.araneaframework.tests;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import junit.framework.TestCase;
+import org.araneaframework.core.StandardScope;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
@@ -54,7 +55,7 @@ public class FormConstraintTest extends TestCase {
 
     //Creating form :-)
     FormWidget testForm = new FormWidget();
-    testForm._getComponent().init(new MockEnvironment());
+    testForm._getComponent().init(new StandardScope("testForm", null), new MockEnvironment());
     
     //Adding elements to form
     testForm.addElement("myCheckBox", "my checkbox", new CheckboxControl(), new BooleanData(), true);
@@ -173,7 +174,7 @@ public class FormConstraintTest extends TestCase {
   public void testFormRangeConstraint() throws Exception {
 
     FormWidget testForm = new FormWidget();
-    testForm._getComponent().init(new MockEnvironment());
+    testForm._getComponent().init(new StandardScope("testForm", null), new MockEnvironment());
     
     //Adding elements to form
     FormElement lo = testForm.createElement("my date and time", new DateTimeControl(), new DateData(), false);
@@ -187,8 +188,7 @@ public class FormConstraintTest extends TestCase {
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
     
     //valid
-    
-    request.addParameter("testForm.__present", "true");
+
     request.addParameter("testForm.date.myDateLo.date", sdf.format(new java.sql.Date(System.currentTimeMillis()-1000*60*60*24)));
     request.addParameter("testForm.date.myDateHi.date", sdf.format(new java.util.Date()));
     
@@ -213,7 +213,6 @@ public class FormConstraintTest extends TestCase {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
 
-    request.addParameter("testForm.__present", "true");
     request.addParameter("testForm.myCheckBox", "true");
     request.addParameter("testForm.myLongText", "108");
     request.addParameter("testForm.myDateTime.date", "11.10.20151");
@@ -236,7 +235,6 @@ public class FormConstraintTest extends TestCase {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
 
-    request.addParameter("testForm.__present", "true");
     request.addParameter("testForm.myCheckBox", "true");
     request.addParameter("testForm.myLongText", "108");
     request.addParameter("testForm.myDateTime.date", "11.10.20151278901");

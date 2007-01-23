@@ -126,4 +126,9 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   protected Object getTransactionId(InputData input) throws Exception {
     return input.getGlobalData().get(TransactionContext.TRANSACTION_ID_KEY);
   }
+  
+  /** @since 1.1 */
+  public Long getNextTransactionId() {
+    return transHelper.getNextTransactionId();
+  }
 }
