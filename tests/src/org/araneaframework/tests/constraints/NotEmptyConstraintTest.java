@@ -74,7 +74,16 @@ public class NotEmptyConstraintTest extends TestCase {
     processRequestWithText((String)null);
     assertFalse("Textinput value should have not been read from request.", form.convertAndValidate());
   }
-
+  
+  /** Test that constraint correctly detects that formelement was submitted as empty, even after
+   * FormElement.setValue is called. */
+  public void testFormElementMissingInRequestExplicitSetValue() throws Exception {
+    textInput.setConstraint(new NotEmptyConstraint());
+    processRequestWithText((String)null);
+    textInput.setValue("some text");
+    assertFalse("Textinput value should have not been read from request (it was set only explicitly).", form.convertAndValidate());
+  }
+  
   public void testInvalidForm() throws Exception {
     form.setConstraint(new NotEmptyConstraint(textInput));
     processRequestWithText((String)null);

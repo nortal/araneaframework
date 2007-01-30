@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form;
 
 import org.araneaframework.uilib.DataItemTypeViolatedException;
+import org.araneaframework.uilib.util.Event;
 
 /**
  * This class represents typed form element data. Type is used by the
@@ -31,14 +32,17 @@ import org.araneaframework.uilib.DataItemTypeViolatedException;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class Data implements java.io.Serializable {
+public class Data implements java.io.Serializable, FormElementAware {
   protected String type;
   protected Class typeClass;
   
+  /** @deprecated do not use */
   protected boolean dirty = false;
   
   protected Object value;  
   protected Object markedBaseValue;
+  
+  protected FormElement feCtx;
   
   /**
    * Creates {@link Data} of type <code>type</code>.
@@ -73,11 +77,23 @@ public class Data implements java.io.Serializable {
    * @param value {@link Data} value.
    */
   public void setValue(Object value) {
+    final Object val = value;
+
     if (value != null && !(typeClass.isAssignableFrom(value.getClass())))
       throw new DataItemTypeViolatedException(getValueType(), value.getClass());
     
-    this.dirty = true;
     this.value = value;
+    
+    if (feCtx != null) {
+      feCtx.addInitEvent(new Event() {
+		public void run() {
+          // TODO:this is dangerous in case Data value is set before FE is associated with Control
+          if (feCtx.getControl() != null) {
+            feCtx.getControl().setRawValue(feCtx.getConverter().reverseConvert(val));
+          }
+		}
+      });
+    }
   }
 
   /**
@@ -94,6 +110,7 @@ public class Data implements java.io.Serializable {
   
   /**
    * Marks the {@link Data} non-dirty.
+   * @deprecated not used anymore, do not call
    */
   public void clean() {
     dirty = false;
@@ -102,6 +119,7 @@ public class Data implements java.io.Serializable {
   /**
    * Returns whether {@link Data} value has been set by calling {@link #setValue(Object)}.
    * @return whether {@link Data} value has been set by calling {@link #setValue(Object)}.
+   * @deprecated not used anymore, do not call
    */
   public boolean isDirty() {
     return dirty;
@@ -141,5 +159,9 @@ public class Data implements java.io.Serializable {
   	else
   		if (markedBaseValue == null || value == null) return true;
   		else return !markedBaseValue.equals(value);
+  }
+
+  public void setFormElementCtx(FormElementContext feCtx) {
+    this.feCtx = (FormElement)feCtx; 
   }
 }

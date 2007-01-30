@@ -39,15 +39,6 @@ public abstract class StringArrayRequestControl extends BaseControl {
   //*********************************************************************
 
   /**
-   * 
-   * 
-   * By default the control is considered read if it has a not null data read from request.
-   */
-  public boolean isRead() {
-    return innerData != null;
-  }
-
-  /**
    * @param onChangeEventListener {@link OnChangeEventListener} which is called when the control value is changing.
    * @see StandardControlEventListenerAdapter#addOnChangeEventListener(OnChangeEventListener)
    */
@@ -59,10 +50,13 @@ public abstract class StringArrayRequestControl extends BaseControl {
     eventHelper.clearOnChangeEventListeners();
   }
   
+  public void setRawValue(Object value) {
+  	super.setRawValue(value);
+    innerData = getRawValue() != null ? toResponseParameters(getRawValue()) : null;
+  }
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
-
   protected void init() throws Exception {
     super.init();
     
@@ -77,6 +71,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
   protected void readFromRequest(HttpInputData request) {
     String parameterValues[] = request.getParameterValues(request.getScope().toString());
     innerData = preprocessRequestParameters(parameterValues);
+    isReadFromRequest = innerData != null;
   }
 
   /**
@@ -124,8 +119,6 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * Copies the value to inner data (output value) if control is valid.
    */
   protected void process() throws Exception {
-    innerData = value != null ? toResponseParameters(value) : null;
-    
     value = null;
   }
   

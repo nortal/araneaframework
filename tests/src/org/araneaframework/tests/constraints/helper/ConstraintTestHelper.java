@@ -45,7 +45,6 @@ public class ConstraintTestHelper {
   public void testConstraintValidness(Constraint constraint, Object value, boolean valid) throws Exception {
     element.setConstraint(constraint);
     element.setValue(value);
-    element.getControl().setRawValue(value);
 
     junit.framework.Assert.assertEquals(valid, element.validate());
     form.clearErrors();

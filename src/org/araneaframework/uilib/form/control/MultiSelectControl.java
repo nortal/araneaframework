@@ -96,10 +96,6 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
   public void addDisplayItems(Collection valueObjects, String valueName, String labelName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, valueObjects, valueName, labelName);
   }  
-
-  public boolean isRead() {
-    return ((String[]) innerData).length > 0;
-  }
   
   /**
    * Returns "List&lt;String&gt;".

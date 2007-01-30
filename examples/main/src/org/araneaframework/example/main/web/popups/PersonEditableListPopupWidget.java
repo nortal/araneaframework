@@ -246,7 +246,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		public void onFinish(Object returnValue) { 
 			rowObject.setName(returnValue.toString());
 			form.writeBean(rowObject);
-			form._getWidget().process();
+			//form._getWidget().process();
 		} 
 	}
 
