@@ -19,6 +19,7 @@ package org.araneaframework.core;
 import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
+import org.araneaframework.Widget;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -26,9 +27,9 @@ import org.araneaframework.InputData;
 public class ProxyEventListener implements EventListener {
 	public static final Logger log = Logger.getLogger(ProxyEventListener.class);
 	
-  protected Object eventTarget;
+  protected Widget eventTarget;
 
-  public ProxyEventListener(Object eventTarget) {
+  public ProxyEventListener(Widget eventTarget) {
     this.eventTarget = eventTarget;
   }
 
@@ -57,7 +58,7 @@ public class ProxyEventListener implements EventListener {
       return;
     } catch (NoSuchMethodException e) {/*OK*/}
     
-    log.warn("Widget '" + input.getScope() +
+    log.warn("Widget '" + eventTarget.getScope() +
         "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget)); 
   }
 }

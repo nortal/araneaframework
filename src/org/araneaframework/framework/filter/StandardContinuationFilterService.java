@@ -57,16 +57,9 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
       if (!isRunning()) {
         arUtil.rollback();
         
-        Path scope = output.getScope();             
-        
         try {                          
-          try {
-            log.debug("Routing action to child service");
-            childService._getService().action(path, input, output);
-          }
-          finally {
-            output.restoreScope(scope);
-          }
+          log.debug("Routing action to child service");
+          childService._getService().action(path, input, output);
         }
         catch (Exception e) {         
           if (continuation == null)

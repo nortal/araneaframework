@@ -30,14 +30,10 @@ public class TreeTag extends BaseWidgetTag {
 
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		try {
-			getOutputData().pushScope(id);
-			out.flush();
-			widget._getWidget().render(getOutputData());
-		} finally {
-			getOutputData().popScope();
-		}
-
+    
+		out.flush();
+		widget._getWidget().render(getOutputData());
+      
 		return SKIP_BODY;
 	}
 
