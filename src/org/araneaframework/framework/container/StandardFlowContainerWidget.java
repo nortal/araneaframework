@@ -295,7 +295,14 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     output.pushAttribute(FlowContext.CALL_STACK_KEY, callStack);
       
     try {          
-      getWidget(FlowContext.FLOW_KEY)._getWidget().render(output);
+      output.pushScope(FlowContext.FLOW_KEY);
+      
+      try {   
+        getWidget(FlowContext.FLOW_KEY)._getWidget().render(output);
+      } 
+      finally {
+        output.popScope();
+      }
     }
     finally {       
       output.popAttribute(FlowContext.CALL_STACK_KEY);

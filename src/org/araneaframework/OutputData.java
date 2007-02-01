@@ -37,23 +37,23 @@ public interface OutputData extends Extendable, Narrowable {
    * Adds the step to the scope Path of this OutputData.
    * @param step is the next step on the Path
    */
-  //public void pushScope(Object step);
+  public void pushScope(Object step);
   
   /**
    * Removes the last entry from the Path of this OutputData .
    */
-  //public void popScope();
+  public void popScope();
   
   /**
   * Returns the current Path of this InputData.
   * @return the Path of this InputData
   */
- // public Path getScope();
+  public Path getScope();
   
   /**
    * Restores the scope to the passed one.
    */
-  //public void restoreScope(Path scope);
+  public void restoreScope(Path scope);
 
   /**
    * Pushes the specified value to the stack with the specified key.

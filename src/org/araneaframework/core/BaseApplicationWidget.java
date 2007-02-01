@@ -186,7 +186,12 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       Object key = ite.next();
       Widget widget = (Widget) getChildren().get(key);
       if (widget != null) {
-        widget._getWidget().update(input);
+        try {
+          input.pushScope(key);
+          widget._getWidget().update(input);
+        } finally {
+          input.popScope();
+        }
       }
     }
   }
@@ -204,12 +209,18 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       Widget pWidget = (Widget)getChildren().get(next);           
       
       if (pWidget == null ) {
-        log.warn("Widget '" + getScope() + 
+        log.warn("Widget '" + input.getScope() + 
             "' could not deliver event as child '" + next + "' was not found!" + Assert.thisToString(this));  
         return;
       }
       
-      pWidget._getWidget().event(path, input);
+      try {
+        input.pushScope(next);
+        pWidget._getWidget().event(path, input);
+      }
+      finally {
+        input.popScope();
+      }
 
     }
     else {
@@ -246,7 +257,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     String eventId = getEventId(input);
     
     if (eventId == null) {
-      log.warn("Widget '" + getScope() +
+      log.warn("Widget '" + input.getScope() +
           "' cannot deliver event for a null action id!" + Assert.thisToString(this));  
       return;
     }
@@ -271,9 +282,9 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       }
     }
     catch (Exception e) {
-      throw new EventException(this, getScope().toString(), eventId, e);
+      throw new EventException(this, input.getScope().toString(), eventId, e);
     }
-    log.warn("Widget '" + getScope() +
+    log.warn("Widget '" + input.getScope() +
         "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"  + Assert.thisToString(this)); 
   }
   
@@ -289,12 +300,21 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       
       Service service = (Service)getChildren().get(next);
       if (service == null) {
-        log.warn("Service '" + getScope()+ 
+        log.warn("Service '" + input.getScope()+ 
             "' could not deliver action as child '" + next + "' was not found!" + Assert.thisToString(this));  
         return;
       }
       
-      service._getService().action(path, input, output);
+      try {
+        input.pushScope(next);
+        output.pushScope(next);
+        
+        service._getService().action(path, input, output);
+      }
+      finally {
+        input.popScope();
+        output.popScope();
+      }
     }
     else {
       handleAction(input, output);
@@ -308,7 +328,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     Object actionId = getActionId(input);    
     
     if (actionId == null) {
-      log.warn("Service '" + getScope() +
+      log.warn("Service '" + input.getScope() +
           "' cannot deliver action for a null action id!" + Assert.thisToString(this));  
       return;
     }
@@ -326,7 +346,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       return;
     }
     
-    log.warn("Service '" + getScope() +
+    log.warn("Service '" + input.getScope() +
       "' cannot deliver action as no action listeners were registered for action id '" + actionId + "'!"  + Assert.thisToString(this));  
   }
   

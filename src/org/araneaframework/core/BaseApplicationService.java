@@ -321,12 +321,21 @@ public abstract class BaseApplicationService extends BaseService implements Appl
       
       Service service = (Service)getChildren().get(next);
       if (service == null) {
-        log.warn("Service '" + getScope() + 
+        log.warn("Service '" + input.getScope()+ 
             "' could not deliver action as child '" + next + "' was not found!" + Assert.thisToString(this));  
         return;
       }
       
-      service._getService().action(path, input, output);
+      try {
+        input.pushScope(next);
+        output.pushScope(next);
+        
+        service._getService().action(path, input, output);
+      }
+      finally {
+        input.popScope();
+        output.popScope();
+      }
     }
     else {
       handleAction(input, output);
@@ -340,7 +349,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     Object actionId = getActionId(input);    
     
     if (actionId == null) {
-      log.warn("Service '" + getScope() +
+      log.warn("Service '" + input.getScope() +
           "' cannot deliver action for a null action id!" + Assert.thisToString(this));  
       return;
     }
@@ -358,7 +367,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
       return;
     }
     
-    log.warn("Service '" + getScope() +
+    log.warn("Service '" + input.getScope() +
       "' cannot deliver action as no action listeners were registered for action id '" + actionId + "'!"  + Assert.thisToString(this));  
   }
 }

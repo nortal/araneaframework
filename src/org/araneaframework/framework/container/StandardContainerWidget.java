@@ -78,9 +78,11 @@ public class StandardContainerWidget extends BaseApplicationWidget {
     output.pushAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY, this);
     
     try {
+      output.pushScope(CHILD_KEY);
       ((Widget) getChildren().get(CHILD_KEY))._getWidget().render(output);
     }
     finally {
+      output.popScope();
       output.popAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
     }
   }
@@ -110,6 +112,7 @@ public class StandardContainerWidget extends BaseApplicationWidget {
         super.action(actionPath, input, output);
       }
       finally {
+        output.popScope();
         output.popAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
       }
     }

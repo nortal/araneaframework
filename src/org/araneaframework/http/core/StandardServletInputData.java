@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.Scope;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.EmptyPathStackException;
 import org.araneaframework.core.NoCurrentOutputDataSetException;
@@ -155,18 +154,6 @@ public class StandardServletInputData implements HttpInputData {
     else {
       return Collections.unmodifiableMap(new HashMap());
     }
-  }
-  
-  public Map getScopedData(Scope scope) {
-    if (!dataInited) initData();
-    Map result = (Map)scopedData.get(scope.toString());
-    if (result != null) {
-      return Collections.unmodifiableMap(result);  
-    }
-    else {
-      return Collections.unmodifiableMap(new HashMap());
-    }
-
   }
 
   public void extend(Class interfaceClass, Object implementation) {
