@@ -27,12 +27,12 @@ import org.araneaframework.core.StandardEnvironment;
  */
 public class MockLifeCycle {
   public static Component begin(Component comp, Environment env) throws Exception {
-    comp._getComponent().init(env);
+    comp._getComponent().init(comp.getScope(), env);
     return comp;
   }
   
   public static Component begin(Component comp) throws Exception {
-    comp._getComponent().init(new StandardEnvironment(null, new HashMap()));
+    comp._getComponent().init(comp.getScope(), new StandardEnvironment(null, new HashMap()));
     return comp;
   }
 }

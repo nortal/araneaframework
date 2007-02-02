@@ -56,7 +56,7 @@ public abstract class BaseMessageContextTests extends TestCase {
     ((FilterWidget)msgCtx).setChildWidget(new MockBaseWidget());
     
     Environment env = new StandardEnvironment(null, new HashMap());
-    ((Widget)msgCtx)._getComponent().init(env);
+    ((Widget)msgCtx)._getComponent().init(null, env);
   }
   
   // add nothing, test emptiness

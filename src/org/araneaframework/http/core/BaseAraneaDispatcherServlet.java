@@ -17,6 +17,7 @@
 package org.araneaframework.http.core;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletConfig;
@@ -56,7 +57,7 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
     Environment env = new StandardEnvironment(null, entries);
     
     try {
-      serviceAdapter._getComponent().init(env);
+      serviceAdapter._getComponent().init(null, env);
     } 
     catch (Exception e) {
       log.info("Unable to start " + AraneaVersion.getTitle() + " " + AraneaVersion.getVersion(), e);
@@ -91,6 +92,6 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
   protected abstract ServletServiceAdapterComponent buildRootComponent();  
   
   protected Map getEnvironmentEntries() {
-	  return new HashMap();
+    return Collections.EMPTY_MAP;
   }
 }

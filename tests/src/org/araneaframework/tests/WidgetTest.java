@@ -18,6 +18,7 @@ package org.araneaframework.tests;
 
 import junit.framework.TestCase;
 import org.araneaframework.Widget;
+import org.araneaframework.core.StandardScope;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
 import org.araneaframework.tests.util.RequestUtil;
@@ -68,7 +69,7 @@ public class WidgetTest extends TestCase {
     mySelect.addItem(new DisplayItem("3", "three"));
     mySelect.addItem(new DisplayItem("4", "four"));
     
-    testForm._getComponent().init(new MockEnvironment());
+    testForm._getComponent().init(new StandardScope("testForm", null), new MockEnvironment());
 
     return testForm;
   }

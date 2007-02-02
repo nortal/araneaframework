@@ -18,6 +18,7 @@ package org.araneaframework.example.main;
 
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
+import org.araneaframework.Scope;
 import org.araneaframework.example.common.framework.ViewSelectorAware;
 import org.araneaframework.example.main.business.data.GeneralDAO;
 import org.araneaframework.http.PopupWindowContext;
@@ -56,10 +57,10 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
   }
   
   protected class ComponentImpl extends BaseUIWidget.ComponentImpl {
-    public void init(Environment env) {
+    public void init(Scope scope, Environment env) {
       SpringInjectionUtil.injectBeans(env, TemplateBaseWidget.this);
   
-      super.init(env);
+      super.init(scope, env);
     }
   }
 }

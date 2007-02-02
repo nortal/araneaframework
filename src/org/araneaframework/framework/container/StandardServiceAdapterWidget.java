@@ -45,7 +45,7 @@ public class StandardServiceAdapterWidget extends BaseWidget {
   }
   
   protected void init() throws Exception {
-    childService._getComponent().init(getEnvironment());
+    childService._getComponent().init(getScope(), getEnvironment());
   }
   
   /**
