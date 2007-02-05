@@ -26,6 +26,7 @@
 		<ant dir="examples/serviceHelloWorld" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="clean" inheritall="false"/>
 		<ant dir="examples/widgetHelloName" target="clean" inheritall="false"/>		
+		<ant dir="examples/blank" target="clean" inheritall="false"/>		
 	</target>
 	
 	<!-- Clean up build system results -->
@@ -45,6 +46,7 @@
 	
 	<target name="build-all" depends="build" description="Build the code and examples">
 		<ant dir="examples/common" target="build" inheritall="false"/>
+		<ant dir="examples/blank" target="build" inheritall="false"/>	
 		<ant dir="examples/main" target="build" inheritall="false"/>	
 		<ant dir="examples/serviceHelloWorld" target="build" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="build" inheritall="false"/>

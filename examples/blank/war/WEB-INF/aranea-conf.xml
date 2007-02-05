@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="araneaApplicationStart"
+		class="org.araneaframework.example.blank.RootWidget"
+		singleton="false"/>
+
+  <!-- Maybe disable file uploading filter? -->
+  <bean id="araneaFileUploadFilter" class="org.araneaframework.http.filter.StandardFileUploadFilterService" singleton="false">
+    <property name="maximumSize" value="1048576"/>
+    <property name="maximumCachedSize" value="1048576"/>
+  </bean>
+</beans>
