@@ -22,16 +22,14 @@
 	
 	                <ui:body>
 
-	                    <div id="cont1">
 	                        <ui:systemForm method="POST">
 	                        
 	                        <ui:registerPopups/>
 	                        
                              <!-- Renders the menu on top of the screen -->
 	                         <jsp:include page="/WEB-INF/jsp/menu.jsp"/>
-	                            <div class="stripe1"><ui:nbsp/></div>
+	                            <ui:nbsp/>
 	
-	                             <div id="content">
 	                             	<ui:updateRegion globalId="messages">
 		                               <ui:messages type="info"/>
 	                                   <ui:messages type="error" styleClass="msg-error"/>
@@ -41,11 +39,11 @@
 	                                 	widget rendered here is whatever widget is on top of call
 	                                 	stack at the moment of rendering. -->
 	                                 <ui:widgetInclude id="menu"/>
-	                             </div>
+	   
 	 
 					
 	                        </ui:systemForm>
-	                    </div>
+	  
 
 	                </ui:body>
 	            </html>

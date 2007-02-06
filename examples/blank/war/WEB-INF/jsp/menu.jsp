@@ -3,8 +3,6 @@
     xmlns:jsp="http://java.sun.com/JSP/Page" 
     xmlns:c="http://java.sun.com/jstl/core" 
     xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template" version="1.2">
-    <!--  variables -->
-    <c:set var="activeStyle" value="active"/>
 
     <!-- WidgetContext id must be set here, because we want to render MenuWidget 
     	not TemplateRootWidget (which includes this JSP, thereby providing its own widget context) here. -->
@@ -13,7 +11,7 @@
         <c:forEach items="${widget.menu.subMenu}" var="item">
             <c:if test="${item.value.selected}">
                 <ui:bold>
-                   <ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}" styleClass="${activeStyle}"/>
+                   <ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}"/>
                 </ui:bold>
             </c:if>
 
