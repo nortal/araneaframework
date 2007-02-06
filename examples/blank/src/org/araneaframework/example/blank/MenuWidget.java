@@ -16,13 +16,13 @@
 
 package org.araneaframework.example.blank;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.OutputData;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.BaseMenuWidget;
 import org.araneaframework.uilib.core.MenuItem;
 
 public class MenuWidget extends BaseMenuWidget {
-	private String activeMenuItem;
-	
 	public MenuWidget() throws Exception {
 		super(null);
 	}
@@ -31,23 +31,18 @@ public class MenuWidget extends BaseMenuWidget {
 		MenuItem result = new MenuItem();
 		result.addMenuItem(new MenuItem("#Blank1", BlankWidget.class));
 		result.addMenuItem(new MenuItem("#Blank2", BlankWidget.class));
-		result.addMenuItem(new MenuItem("#Blank3", BlankWidget.class));
-		result.addMenuItem(new MenuItem("#Blank4", BlankWidget.class));
+		result.addMenuItem(new MenuItem("#Exceptions happen", ExceptionWidget.class));
 
 		return result;
 	}
-	
-	public void selectMenuItem(String menuItemPath) throws Exception {
-		super.selectMenuItem(menuItemPath);
-		activeMenuItem = menuItemPath;
-	}
-	
-	// TODO: this method is here only for demo purposes (BlankWidget),
-	// it is recommended to remove this in real application
-	public String getSelectedPath() {
-		return activeMenuItem;
-	}
 
 	protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
+	    if (ExceptionUtils.getRootCause(e) != null) {
+	        putViewDataOnce("rootStackTrace", 
+	            ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
+	      }        
+	      putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
+	      
+	      ServletUtil.include("/WEB-INF/jsp/menuError.jsp", getEnvironment(), output);		
 	}
 }

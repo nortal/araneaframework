@@ -16,15 +16,11 @@
 
 package org.araneaframework.example.blank;
 
-import java.util.Date;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
-public class BlankWidget extends BaseUIWidget {
+public class ExceptionWidget extends BaseUIWidget {
 	protected void init() throws Exception {
-		setViewSelector("blankwidget");
-	}
-
-	public String getDate() {
-		return new String("Time was '" + new Date() + "' when you activated this menu item.");
+		throw new AraneaRuntimeException("Be not afraid! This exception was generated to let exception handler/renderer demonstrate its abilities.");
 	}
 }

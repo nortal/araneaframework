@@ -29,8 +29,4 @@ public class RootWidget extends BaseUIWidget {
 		addWidget("menu", menuWidget);
 		setViewSelector("root");
 	}
-
-	public MenuWidget getMenuWidget() {
-		return menuWidget;
-	}
 }
