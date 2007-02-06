@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.Environment;
 import org.springframework.beans.factory.BeanFactory;
 
@@ -42,7 +41,7 @@ public class SpringBeanInvocationHandler implements InvocationHandler, Serializa
     try {
       return method.invoke(bean, args);
     } catch (InvocationTargetException ex){
-      throw ExceptionUtils.getCause(ex);
+      throw ex.getTargetException();
     }
   }
 }
