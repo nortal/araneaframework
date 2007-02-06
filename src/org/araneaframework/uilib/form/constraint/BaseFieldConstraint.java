@@ -110,5 +110,5 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
     public FieldConstraintException(Throwable cause) {
       super(cause);
     }
-  };
+  }
 }

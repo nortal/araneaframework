@@ -18,7 +18,6 @@ package org.araneaframework.framework.container;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
-import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;

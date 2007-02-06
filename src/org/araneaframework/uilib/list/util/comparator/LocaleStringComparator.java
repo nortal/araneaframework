@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.list.util.comparator;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.Locale;
