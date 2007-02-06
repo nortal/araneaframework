@@ -12,8 +12,9 @@
 		Menu level 1:
         <c:forEach items="${widget.menu.subMenu}" var="item">
             <c:if test="${item.value.selected}">
-                <ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}" styleClass="${activeStyle}"/>
-                    <ui:nbsp/>
+                <ui:bold>
+                   <ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}" styleClass="${activeStyle}"/>
+                </ui:bold>
             </c:if>
 
             <c:if test="${not item.value.selected}">

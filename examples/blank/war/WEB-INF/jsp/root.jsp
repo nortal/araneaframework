@@ -27,7 +27,7 @@
 	                        
 	                        <ui:registerPopups/>
 	                        
-							<!-- Renders the menu on top of the screen -->
+                             <!-- Renders the menu on top of the screen -->
 	                         <jsp:include page="/WEB-INF/jsp/menu.jsp"/>
 	                            <div class="stripe1"><ui:nbsp/></div>
 	
