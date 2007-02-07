@@ -30,7 +30,7 @@
 	</target>
 
 	<!-- Create WAR -->
-	<target name="blank-war" depends="build" description="Build the ready-to-deploy war archive">
+	<target name="war" depends="build" description="Build the war archive of blank application.">
 		<mkdir dir="dist"/>
 		<war destfile="dist/aranea-blank.war" webxml="war/WEB-INF/web.xml">
 			<lib dir="war/WEB-INF/lib" excludes="jasper*"/>
@@ -43,13 +43,18 @@
 	<!-- Build the code -->
 	<target name="build" depends="compile" description="Build the code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
-			<fileset dir="../lib/">
-				<include name="**/*.jar" />
-				<exclude name="jetty/*jar" />
-			</fileset>
 			<fileset dir="../../lib/">
 				<include name="**/*.jar" />
 				<exclude name="j2ee.jar" />
+				<exclude name="**/xdoclet*jar" />
+				<exclude name="**/xjavadoc*jar" />
+				<exclude name="**/spring-mock*jar" />
+				<exclude name="**/junit*jar" />
+				<exclude name="**/jhbasic*jar" />
+				<exclude name="**/javancss*jar" />
+				<exclude name="**/cobertura.jar" />
+				<exclude name="**/ccl.jar" />
+				<exclude name="**/asm*.jar" />
 			</fileset>
 			<fileset file="../../dist/aranea.jar"/>
 		</copy>

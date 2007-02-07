@@ -5,6 +5,14 @@
 	<bean id="araneaApplicationStart"
 		class="org.araneaframework.example.blank.RootWidget"
 		singleton="false"/>
+		
+    <!-- Use this this bean instead of the default one if your application
+         needs to have a login screen. -->
+    <!--
+    <bean id="araneaApplicationStart"
+        class="org.araneaframework.example.blank.LoginWidget"
+        singleton="false"/>
+    -->
 
   <!-- Maybe disable file uploading filter? -->
   <bean id="araneaFileUploadFilter" class="org.araneaframework.http.filter.StandardFileUploadFilterService" singleton="false">
