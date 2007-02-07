@@ -37,6 +37,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.RelocatableDecorator;
+import org.araneaframework.core.util.ClassLoaderUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -64,7 +65,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
   
   private ClassLoader newClassLoader() throws MalformedURLException {
     ServletContext sctx = (ServletContext) getEnvironment().getEntry(ServletContext.class);
-    return new ReloadingClassloader(new URL[] {sctx.getResource("/WEB-INF/classes")}, getClass().getClassLoader());
+    return new ReloadingClassloader(new URL[] {sctx.getResource("/WEB-INF/classes")}, ClassLoaderUtil.getDefaultClassLoader());
   }
   
   private Serializable reload(Serializable child) throws Exception {

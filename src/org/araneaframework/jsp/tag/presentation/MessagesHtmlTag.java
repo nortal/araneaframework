@@ -89,7 +89,7 @@ public class MessagesHtmlTag extends PresentationTag {
           JspUtil.writeStartEndTag(out, "br");
       }
       if (i.hasNext())
-        JspUtil.writeStartEndTag(out, "br");;
+        JspUtil.writeStartEndTag(out, "br");
     }
 
     JspUtil.writeEndTag(out, "div");

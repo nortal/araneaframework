@@ -19,14 +19,13 @@ package org.araneaframework.example.common.framework;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.framework.LocalizationContext;
-import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
+import org.araneaframework.uilib.core.BaseMenuWidget;
+import org.araneaframework.uilib.core.MenuContext;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -39,7 +38,7 @@ import org.araneaframework.uilib.support.DisplayItem;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerWidget implements TemplateMenuContext {
+public abstract class TemplateMenuWidget extends BaseMenuWidget {
   private FormWidget form;
   private FormElement langSelect;
   protected MenuItem menu;
@@ -49,8 +48,8 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
     super(topWidget);
     
     menu = buildMenu();
-    addEventListener(TemplateMenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
-    putViewData(TemplateMenuContext.MENU_VIEWDATA_KEY, menu);
+    addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
+    putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
   
   protected void init() throws Exception {
@@ -62,10 +61,6 @@ public abstract class TemplateMenuWidget extends ExceptionHandlingFlowContainerW
 	form.addWidget("langSelect", langSelect);
 
 	createLangSelect();
-  }
-
-  protected Environment getChildWidgetEnvironment() throws Exception {
-    return new StandardEnvironment(super.getChildWidgetEnvironment(), TemplateMenuContext.class, this);
   }
   
   // MENU SELECTION LISTENER

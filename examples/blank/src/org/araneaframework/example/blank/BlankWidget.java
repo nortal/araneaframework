@@ -1,5 +1,5 @@
 /**
- * Copyright 2006 Webmedia Group Ltd.
+ * Copyright 2006-2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,17 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.integration.spring;
+package org.araneaframework.example.blank;
 
-import org.araneaframework.framework.LocalizationContext;
-import org.springframework.context.MessageSource;
+import java.util.Date;
+import org.araneaframework.uilib.core.BaseUIWidget;
 
-/**
- * @author <a href="mailto:rein@webmedia.ee">Rein Raudjärv</a>
- */
-public interface SpringLocalizationContext extends LocalizationContext {
-	public MessageSource getMessageSource();
+public class BlankWidget extends BaseUIWidget {
+	protected void init() throws Exception {
+		setViewSelector("blankwidget");
+	}
+
+	public String getDate() {
+		return new String("Time was '" + new Date() + "' when you activated this menu item.");
+	}
 }
