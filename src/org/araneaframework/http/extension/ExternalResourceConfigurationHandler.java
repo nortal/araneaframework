@@ -44,7 +44,7 @@ public class ExternalResourceConfigurationHandler extends DefaultHandler {
 	
 	public ExternalResourceConfigurationHandler(ExternalResource resource) {
 		super();
-		result = resource;;
+		result = resource;
 	}
 
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {

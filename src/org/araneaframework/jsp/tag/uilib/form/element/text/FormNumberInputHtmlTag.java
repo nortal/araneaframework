@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
-import org.araneaframework.uilib.form.control.NumberControl;
 
 /**
  * Standard number input form element tag.

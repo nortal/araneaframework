@@ -207,16 +207,15 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 * event on the element.
 	 * The generated handler might look like this:
 	 * <pre>
-	 *  function() { document.getElementById('fullElementId').click(); };
+	 *  function() { return document.getElementById('fullElementId').click(); };
 	 * </pre>
 	 * This string might be given as a parameter to a javascript function "uiRegisterKeypressHandler".
 	 *
 	 * Any of the parameters may be null. In this case the componentId is searched for in the pageContext,
 	 * and in other cases taken as empty string.
-	 *
 	 */
 	public static final String createHandlerToInvokeJavascriptEvent(String fullElementId, String event) {
-		return "function() { " + "document.getElementById('" + fullElementId + "')." + event + "(); }";
+		return "function() { " + "return document.getElementById('" + fullElementId + "')." + event + "(); }";
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * Copyright 2006 Webmedia Group Ltd.
+ * Copyright 2006-2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,13 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.integration.spring;
+package org.araneaframework.example.blank;
 
-import org.araneaframework.framework.LocalizationContext;
-import org.springframework.context.MessageSource;
+import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.uilib.core.BaseUIWidget;
 
-/**
- * @author <a href="mailto:rein@webmedia.ee">Rein Raudjärv</a>
- */
-public interface SpringLocalizationContext extends LocalizationContext {
-	public MessageSource getMessageSource();
+public class ExceptionWidget extends BaseUIWidget {
+	protected void init() throws Exception {
+		throw new AraneaRuntimeException("Be not afraid! This exception was generated to let exception handler/renderer demonstrate its abilities.");
+	}
 }

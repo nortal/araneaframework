@@ -19,10 +19,10 @@ package org.araneaframework.example.main.web;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.AraneaVersion;
 import org.araneaframework.OutputData;
-import org.araneaframework.example.common.framework.TemplateMenuContext;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.core.BaseUIWidget;
+import org.araneaframework.uilib.core.MenuContext;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -36,7 +36,7 @@ public class FooterWidget extends BaseUIWidget {
   }
 
    protected void render(OutputData output) throws Exception {
-    TemplateMenuWidget menuWidget = (TemplateMenuWidget) getEnvironment().getEntry(TemplateMenuContext.class);
+    TemplateMenuWidget menuWidget = (TemplateMenuWidget) getEnvironment().getEntry(MenuContext.class);
 
     /* widget source */
     String flowClassName = menuWidget.getFlowClassName();

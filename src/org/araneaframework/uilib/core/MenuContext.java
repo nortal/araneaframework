@@ -14,14 +14,12 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.common.framework;
-
-import java.io.Serializable;
+package org.araneaframework.uilib.core;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public interface TemplateMenuContext extends Serializable {
+public interface MenuContext {
   public static final String MENU_VIEWDATA_KEY = "menu";
   public static final String MENU_SELECT_EVENT_KEY = "menuSelect";
 
@@ -30,4 +28,7 @@ public interface TemplateMenuContext extends Serializable {
    * @param menuItemPath
    */
   public void selectMenuItem(String menuItemPath) throws Exception;
+
+  public MenuItem getMenu() throws Exception;
+  public void setMenu(MenuItem menu) throws Exception;
 }
