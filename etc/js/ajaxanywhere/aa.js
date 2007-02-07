@@ -49,16 +49,7 @@ function AjaxAnywhere() {
 * Returns a Form object that corresponds to formName property of this AjaxAnywhere class instance.
 */
 AjaxAnywhere.prototype.findForm = function () {
-    var form;
-    if (this.formName != null)
-        form = document.forms[this.formName];
-    else if (document.forms.length > 0)
-        form = document.forms[0];
-
-    if (typeof form != "object") {
-        //alert("AjaxAnywhere error: Form with name [" + this.formName + "] not found");
-    }
-    return form;
+    return this.systemForm;
 }
 
 /**
