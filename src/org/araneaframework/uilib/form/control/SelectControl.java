@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.araneaframework.core.Assert;
+import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemContainer;
 import org.araneaframework.uilib.util.DisplayItemUtil;
@@ -89,7 +90,24 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
 
   public int getValueIndex(String value) {
     return DisplayItemUtil.getValueIndex(items, value);
-  }	
+  }
+  
+  /**
+   * Returns {@link DisplayItem} corresponding to selected element. Current
+   * value by which seleced element is determined is reported by the {@link FormElement} 
+   * to which this {@link SelectControl})belongs. If no {@link FormElement} is
+   * associated with {@link SelectControl}, this method returns <code>null</code>.
+   * @return {@link DisplayItem} corresponding to selected element.
+   * @since 1.0.5
+   */
+  public DisplayItem getSelectedDisplayItem() {
+    FormElementContext ctx = getFormElementCtx();
+    if (ctx == null)
+      return null;
+
+    int index = getValueIndex((String)ctx.getValue());  
+    return (DisplayItem)getDisplayItems().get(index); 
+  }
   
   //*********************************************************************
   //* INTERNAL METHODS
