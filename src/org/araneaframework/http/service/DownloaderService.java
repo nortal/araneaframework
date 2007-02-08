@@ -14,29 +14,27 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.uilib;
+package org.araneaframework.http.service;
 
 import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.BaseService;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * Widget that returns binary data via action.
- *
+ * Service that serves content.
+ * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
-public class DataWidget extends BaseApplicationWidget {
+public class DownloaderService extends BaseService {
 
-  private static final long serialVersionUID = 1L;
+  protected byte[] data;
+  protected String contentType;
 
-  private byte[] data;
-  private String contentType;
-
-  public DataWidget(byte[] data, String contentType) {
+  public DownloaderService(byte[] data, String contentType) {
     Assert.notNullParam(data, "data");
     Assert.notEmptyParam(contentType, "contentType");
     this.data = data;
