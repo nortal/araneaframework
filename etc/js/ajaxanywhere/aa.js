@@ -335,19 +335,19 @@ function extractScripts(str) {
 function extractTransactionId(newContents) {
 	var re = /<input name="transactionId" type="hidden" value="(-?[0-9]+)"\/>/
 	var result = re.exec(newContents);
-	return result[1];
+	return result ? result[1] : null;
 }
 
 function extractResponseId(response) {
   var re = /<input name="ajaxResponseId" type="hidden" value="(-?[0-9]+)"\/>/
   var result = re.exec(response);
-  return result[1];
+  return result ? result[1] : null;
 }
 
 function extractBody(str) {
 	var re = /^<body.*>(.*)<\/body>$/
 	var result = re.exec(str);
-	return result[1];
+	return result ? result[1] : null;
 }
 
 function updateRegions(str) {
