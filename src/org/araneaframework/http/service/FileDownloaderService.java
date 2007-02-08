@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.Assert;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.support.FileInfo;
@@ -39,11 +40,13 @@ public class FileDownloaderService extends DownloaderService {
 	
 	public FileDownloaderService(FileInfo file) {
     super(file.readFileContent(), file.getContentType());
+    Assert.notNullParam(file, "file");
 		this.fileName = normalizeFileName(file.getOriginalFilename());
 	}
 	
 	public FileDownloaderService(byte[] fileContent, String contentType, String fileName) {
     super(fileContent, contentType);
+    Assert.notEmptyParam(fileName, "fileName");
 		this.fileName = normalizeFileName(fileName);
 	}
 	
@@ -94,8 +97,13 @@ public class FileDownloaderService extends DownloaderService {
     HttpServletResponse response = ServletUtil.getResponse(output);
     response.setHeader("Content-Disposition", (contentDispositionInline ? "inline;" : "attachment;") + "filename=" + fileName);
 
-    //Ensure that allow to download only once...
+    close();
+  }
+
+  //Ensure that allow to download only once...
+  protected void close() {
     ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
     mngCtx.close(mngCtx.getCurrentId());
   }
+
 }
