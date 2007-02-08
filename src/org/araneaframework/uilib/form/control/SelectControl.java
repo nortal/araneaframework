@@ -100,7 +100,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * @return {@link DisplayItem} corresponding to selected element.
    * @since 1.0.5
    */
-  public DisplayItem getSelectedDisplayItem() {
+  public DisplayItem getSelectedItem() {
     FormElementContext ctx = getFormElementCtx();
     if (ctx == null)
       return null;
