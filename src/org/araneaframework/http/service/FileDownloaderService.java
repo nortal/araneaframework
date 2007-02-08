@@ -16,13 +16,11 @@
 
 package org.araneaframework.http.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.BaseService;
+import org.araneaframework.core.Assert;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.support.FileInfo;
@@ -33,24 +31,22 @@ import org.araneaframework.uilib.support.FileInfo;
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class FileDownloaderService extends BaseService {
+public class FileDownloaderService extends DownloaderService {
 	protected FileInfo file;
 	
-	protected byte[] fileContent;
-	protected String contentType;
 	protected String fileName;
 	
 	protected boolean contentDispositionInline = true;
 	
 	public FileDownloaderService(FileInfo file) {
-		this.fileContent = file.readFileContent();
-		this.contentType = file.getContentType();
+    super(file.readFileContent(), file.getContentType());
+    Assert.notNullParam(file, "file");
 		this.fileName = normalizeFileName(file.getOriginalFilename());
 	}
 	
 	public FileDownloaderService(byte[] fileContent, String contentType, String fileName) {
-		this.fileContent = fileContent;
-		this.contentType = contentType;
+    super(fileContent, contentType);
+    Assert.notEmptyParam(fileName, "fileName");
 		this.fileName = normalizeFileName(fileName);
 	}
 	
@@ -96,21 +92,18 @@ public class FileDownloaderService extends BaseService {
 	}
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
+    super.action(path, input, output);
+
     HttpServletResponse response = ServletUtil.getResponse(output);
-    
-    ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(fileContent.length);
-    byteOutputStream.write(fileContent);
-
-    response.setContentType(contentType);
     response.setHeader("Content-Disposition", (contentDispositionInline ? "inline;" : "attachment;") + "filename=" + fileName);
-    response.setContentLength(byteOutputStream.size());
 
-    OutputStream out = response.getOutputStream();
-    byteOutputStream.writeTo(out);
-    out.flush();
+    close();
+  }
 
-    //Ensure that allow to download only once...
+  //Ensure that allow to download only once...
+  protected void close() {
     ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
     mngCtx.close(mngCtx.getCurrentId());
   }
+
 }

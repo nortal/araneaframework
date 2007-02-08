@@ -258,9 +258,11 @@ function AraneaPage() {
   this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync) {
     var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value, 'override');
     url += '&widgetActionPath=' + actionTarget;
-    url += '&serviceActionHandler=' + actionId;
-    url += '&serviceActionParameter=' + actionParam;
-    if (!sync)
+    if (actionId)
+      url += '&serviceActionHandler=' + actionId;
+    if (actionParam)
+      url += '&serviceActionParameter=' + actionParam;
+    if (sync != undefined && !sync)
       url += '&sync=false';
     url += '&systemFormId=' + systemForm.id;
     return url;

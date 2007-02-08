@@ -1,0 +1,92 @@
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
+package org.araneaframework.jsp.tag.support;
+
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.jsp.JspException;
+import org.araneaframework.core.ApplicationService;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.util.ClientStateUtil;
+import org.araneaframework.http.util.URLUtil;
+import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
+import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
+
+/**
+ * Widget action url tag. Makes available <code>widgetActionUrl</code> EL
+ * variable that can be used to fetch data from widget's action.
+ *
+ * @author Alar Kvell (alar@araneaframework.org)
+ *
+ * @jsp.tag
+ *   name = "widgetActionUrl"
+ *   body-content = "JSP" 
+ *   description = "Widget action url tag.<br/> 
+           Makes available following page scope variables: 
+           <ul>
+             <li><i>widgetActionUrl</i> - URL which points to widget's action.
+           </ul> "
+ */
+public class WidgetActionUrlTag extends BaseWidgetTag {
+
+  public static final String WIDGET_ACTION_URL_KEY = "widgetActionUrl";
+
+  protected String actionId;
+
+  public int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+    addContextEntry(WIDGET_ACTION_URL_KEY, getWidgetActionUrl());
+    return EVAL_BODY_INCLUDE;    
+  }
+
+  protected String getWidgetActionUrl() throws JspException {
+    Map state = (Map) getOutputData().getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
+    String systemFormId = (String) requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
+    Map m = new HashMap();
+    m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
+    m.put(TopServiceContext.TOP_SERVICE_KEY, state.get(TopServiceContext.TOP_SERVICE_KEY));
+    m.put(ThreadContext.THREAD_SERVICE_KEY, state.get(ThreadContext.THREAD_SERVICE_KEY));
+    m.put(StandardContainerWidget.ACTION_PATH_KEY, fullId);
+    if (actionId != null) {
+      m.put(ApplicationService.ACTION_HANDLER_ID_KEY, actionId);
+    }
+    m.put(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);
+    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(((HttpInputData) getOutputData().getInputData()).getContainerURL(), m));
+  }
+
+  public void doFinally() {
+    super.doFinally();
+    actionId = null;
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Action id" 
+   */
+  public void setActionId(String actionId) throws JspException {
+    this.actionId = (String)evaluateNotNull("actionId", actionId, String.class);
+  }
+
+}
