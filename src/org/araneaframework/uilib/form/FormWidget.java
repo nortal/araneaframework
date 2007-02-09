@@ -398,7 +398,7 @@ public class FormWidget extends GenericFormElement {
    */
   public Object getValueByFullName(String fullName) {
   	FormElement el = getElementByFullName(fullName);
-    return (el == null) ? null : el.getData().getValue();  	    
+    return (el == null) ? null : el.getValue();  	    
   }
 
   /**

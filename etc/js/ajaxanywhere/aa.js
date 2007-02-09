@@ -49,16 +49,7 @@ function AjaxAnywhere() {
 * Returns a Form object that corresponds to formName property of this AjaxAnywhere class instance.
 */
 AjaxAnywhere.prototype.findForm = function () {
-    var form;
-    if (this.formName != null)
-        form = document.forms[this.formName];
-    else if (document.forms.length > 0)
-        form = document.forms[0];
-
-    if (typeof form != "object") {
-        //alert("AjaxAnywhere error: Form with name [" + this.formName + "] not found");
-    }
-    return form;
+    return this.systemForm;
 }
 
 /**
@@ -344,19 +335,19 @@ function extractScripts(str) {
 function extractTransactionId(newContents) {
 	var re = /<input name="transactionId" type="hidden" value="(-?[0-9]+)"\/>/
 	var result = re.exec(newContents);
-	return result[1];
+	return result ? result[1] : null;
 }
 
 function extractResponseId(response) {
   var re = /<input name="ajaxResponseId" type="hidden" value="(-?[0-9]+)"\/>/
   var result = re.exec(response);
-  return result[1];
+  return result ? result[1] : null;
 }
 
 function extractBody(str) {
 	var re = /^<body.*>(.*)<\/body>$/
 	var result = re.exec(str);
-	return result[1];
+	return result ? result[1] : null;
 }
 
 function updateRegions(str) {

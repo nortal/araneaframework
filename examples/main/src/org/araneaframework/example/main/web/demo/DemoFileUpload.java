@@ -24,6 +24,7 @@ import org.araneaframework.http.service.FileDownloaderService;
 import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.OnClickEventListener;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.FileUploadControl;
@@ -72,19 +73,23 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		
 		result.addElement("encodingTest", "#encodingTest", new TextControl(), new StringData(), false);
 
-		SelectControl select = new SelectControl();
-		select.addOnChangeEventListener(new OnChangeEventListener() {
+		SelectControl selectControl = new SelectControl();
+		selectControl.addOnChangeEventListener(new OnChangeEventListener() {
 			      private static final long serialVersionUID = 1L;
 
       public void onChange() throws Exception {
 			}
 		});
 
-		select.addItem(new DisplayItem(null, "- choose -"));
-		select.addItem(new DisplayItem("1", "one"));
-		select.addItem(new DisplayItem("2", "two"));
+		selectControl.addItem(new DisplayItem(null, "- choose -"));
+		selectControl.addItem(new DisplayItem("1", "one"));
+		selectControl.addItem(new DisplayItem("2", "two"));
 
-		result.addElement("select", "#Select", select, new StringData(), true);
+		result.addElement("select", "#Select", selectControl, new StringData(), true);
+		FormElement selectElement = (FormElement) result.getElement("select");
+		selectElement.setValue("1");
+		selectElement.setDisabled(true);
+
 		result.addElement("file", "#File", new FileUploadControl(),
 				new FileInfoData(), false);
 
@@ -104,6 +109,10 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
 		PopupWindowProperties p = new PopupWindowProperties();
 		popupContext.open(service, p, null);
+	}
+	
+	public void handleEventValidate() throws Exception {
+        form.convertAndValidate();
 	}
 
 	// INNER CLASSES

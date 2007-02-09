@@ -126,12 +126,14 @@ function AraneaPage() {
   
   /* Logger that outputs javascript logging messages. */
   var dummyLogger = new function() { var dummy = function() {}; this.trace = dummy; this.debug = dummy; this.info = dummy; this.warn = dummy; this.error = dummy; this.fatal = dummy;};
+  var firebugLogger = window.console ? new function() { this.trace = window.console.debug; this.debug = window.console.debug; this.info = window.console.info; this.warn = window.console.warn; this.error = window.console.error; this.fatal = window.console.error;} : dummyLogger;
   var logger = dummyLogger;
   this.setDummyLogger = function() { logger = dummyLogger; }
-  this.setDefaultLogger = function() { 
-  	if (window['log4javascript/log4javascript.js'])
+  this.setDefaultLogger = function() {
+    if (window['log4javascript/log4javascript.js'])
       logger = log4javascript.getDefaultLogger();
   }
+  this.setFirebugLogger = function() { this.setLogger(firebugLogger); }
   this.setLogger = function(theLogger) { logger = theLogger; }
   this.getLogger = function() { return logger; }
   
