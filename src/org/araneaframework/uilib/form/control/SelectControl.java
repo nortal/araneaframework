@@ -105,8 +105,8 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
     if (ctx == null)
       return null;
 
-    int index = getValueIndex((String)ctx.getValue());  
-    return (DisplayItem)getDisplayItems().get(index); 
+    int index = getValueIndex((String)ctx.getValue());
+    return index >= 0 ? (DisplayItem)getDisplayItems().get(index) : null; 
   }
   
   //*********************************************************************
