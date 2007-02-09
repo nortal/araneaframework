@@ -421,6 +421,46 @@ public class FormTest extends TestCase {
   }
   
   /**
+   * Testcase: http://changelogic.araneaframework.org/index.php?event=Show_task&task_id=316&project_id=0
+   * Disabled &lt;select&gt; is created, initial value set. Request does not contain this select (disabled
+   * HTML elements are not submitted). FormElement must be considered valid.
+   */
+  public void testDisabledNonNullMandatorySelectValidates() throws Exception {
+    FormWidget testForm = new FormWidget();
+    
+    SelectControl selectControl = new SelectControl();
+	selectControl.addItem(new DisplayItem(null, "- choose -"));
+	selectControl.addItem(new DisplayItem("1", "one"));
+	selectControl.addItem(new DisplayItem("2", "two"));
+
+	testForm.addElement("select", "#Select", selectControl, new StringData(), true);
+	FormElement selectElement = (FormElement) testForm.getElement("select");
+	selectElement.setValue("1");
+	selectElement.setDisabled(true);
+	selectElement.rendered();
+	
+	testForm._getComponent().init(new MockEnvironment());
+	// if this is not called, Control value is never set and test fails
+	testForm._getWidget().process();
+	
+    MockHttpServletRequest almostEmptyRequest = 
+    	RequestUtil.markSubmitted(new MockHttpServletRequest());
+
+    almostEmptyRequest.addParameter("dummyParam", "true");
+    
+    StandardServletInputData input = new StandardServletInputData(almostEmptyRequest);
+    
+    input.pushScope("testForm");
+    testForm._getWidget().update(input);
+    input.popScope();
+
+    testForm.getValueByFullName("select");
+    assertTrue(
+    		"Test form disabled select element with assigned value must be valid after reading from request.", 
+    		testForm.convertAndValidate());
+  }
+  
+  /**
    * Tests helper functions that access form parts by their full name.
    */
   public void testFormTraversal() throws Exception {

@@ -188,7 +188,6 @@ public class FormConstraintTest extends TestCase {
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
     
     //valid
-
     request.addParameter("testForm.date.myDateLo.date", sdf.format(new java.sql.Date(System.currentTimeMillis()-1000*60*60*24)));
     request.addParameter("testForm.date.myDateHi.date", sdf.format(new java.util.Date()));
     

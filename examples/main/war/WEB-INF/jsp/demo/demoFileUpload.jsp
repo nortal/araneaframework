@@ -71,6 +71,11 @@
 	                       		</tui:componentList>
 	                       	 </ui:list>	
                        </c:if>
+                       
+                         <!-- pure design tag -->
+                         <tui:componentActions>
+                             <ui:eventButton eventId="validate" labelId="#Validate"/>
+                         </tui:componentActions>
 
                        </tui:component>
                

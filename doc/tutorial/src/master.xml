@@ -653,12 +653,12 @@ public void handleEventTestSimpleForm() throws Exception {
   &lt;!-- Now, these are the first custom tags in template application. They do
        nothing particularly interesting, just set up the HTML DIV element
        containing the component header --&gt;
-  &lt;ui:componentHeader&gt;
-    &lt;ui:componentName&gt;Tutorial first form&lt;/ui:componentName&gt;
-  &lt;/ui:componentHeader&gt;
+  &lt;tui:componentHeader&gt;
+    &lt;tui:componentName&gt;Tutorial first form&lt;/tui:componentName&gt;
+  &lt;/tui:componentHeader&gt;
 
   &lt;!-- Another custom template tag, purely design-focused (look ComponentTag for source)--&gt;
-  &lt;ui:component&gt;
+  &lt;tui:component&gt;
 
     &lt;!-- Custom tag, but more interesting that previous tags. It derives from
          LayoutHtmlTag tag and allows putting row tags inside of it. 
@@ -666,7 +666,7 @@ public void handleEventTestSimpleForm() throws Exception {
          componentForm here, cellClasses does the same for cells. These classes are repeating
          e.g first cell in a row is with styleClass "name", second with "inpt", and third
          cell again has styleClass "name". In HTML, this tag creates a TABLE. --&gt;
-    &lt;ui:componentForm rowClasses="cols4" cellClasses="name, inpt"&gt;
+    &lt;tui:componentForm rowClasses="cols4" cellClasses="name, inpt"&gt;
 
       &lt;!-- As we can insert rows now, we do just that. --&gt;
       &lt;ui:row&gt;
@@ -738,15 +738,15 @@ public void handleEventTestSimpleForm() throws Exception {
         &lt;/ui:formElement&gt;
       &lt;/ui:row&gt;
 
-    &lt;/ui:componentForm&gt;
+    &lt;/tui:componentForm&gt;
 
     &lt;!-- pure design tag --&gt;
-    &lt;ui:componentActions&gt;
+    &lt;tui:componentActions&gt;
       &lt;ui:formElement id="button"&gt;
         &lt;ui:button/&gt;
       &lt;/ui:formElement&gt;
-    &lt;/ui:componentActions&gt;
-  &lt;/ui:component&gt;
+    &lt;/tui:componentActions&gt;
+  &lt;/tui:component&gt;
 
 &lt;/ui:form&gt;
 </programlisting>
@@ -1085,16 +1085,16 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
           <programlisting role="xml">&lt;ui:widgetContext&gt;
   &lt;ui:form id="complexForm"&gt;
 
-    &lt;ui:componentHeader&gt;
-      &lt;ui:componentName&gt;
+    &lt;tui:componentHeader&gt;
+      &lt;tui:componentName&gt;
         &lt;!-- The label, defined in DemoComplexForm class. --&gt;
         &lt;fmt:message key="${viewData.formLabel}"/&gt;
-      &lt;/ui:componentName&gt;
-    &lt;/ui:componentHeader&gt;
+      &lt;/tui:componentName&gt;
+    &lt;/tui:componentHeader&gt;
 
-    &lt;ui:component&gt;
+    &lt;tui:component&gt;
 
-      &lt;ui:componentForm&gt;
+      &lt;tui:componentForm&gt;
 
         &lt;ui:row&gt;
           &lt;ui:formElement id="beastSelection"&gt;
@@ -1145,9 +1145,9 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
           &lt;/c:if&gt;
         &lt;/ui:updateRegionRows&gt;
 
-      &lt;/ui:componentForm&gt;
+      &lt;/tui:componentForm&gt;
 
-    &lt;/ui:component&gt;
+    &lt;/tui:component&gt;
 
   &lt;/ui:form&gt;
 
