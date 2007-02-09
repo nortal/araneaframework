@@ -20,7 +20,7 @@ Features and Improvements
 Bugfixes
     executeCallbacks() invocation was missing from AraneaPage.event_6.        | See #305
     onunload() javascript that closed popup windows was removed.              | See #308
-    SpringBeanInvocationHandler.invoke had broken exception handling.         | See #307
+    SpringBeanInvocationHandler.invoke() had broken exception handling.       | See #307
     FormKeyboardHandlerHtmlTag.createHandlerToInvokeJavascriptEvent.          | See #311
 
 ---------------------------------------------------------------------------------------------
