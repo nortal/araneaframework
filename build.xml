@@ -251,7 +251,10 @@
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/**/*"/>	
 			</fileset>
-			<fileset dir="etc"/>
+			<fileset dir="etc">
+              <exclude name="build/*"/>
+              <exclude name="build"/>
+			</fileset>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 
 			<manifest>
