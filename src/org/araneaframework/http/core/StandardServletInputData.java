@@ -190,7 +190,7 @@ public class StandardServletInputData implements HttpInputData {
     url.append(":");
     url.append(req.getServerPort());
     url.append(req.getContextPath());
-    url.append(getContainerPath());
+    url.append(req.getServletPath());
     return url.toString();
   }
   
