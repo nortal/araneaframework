@@ -75,7 +75,10 @@ public class NotEmptyConstraintTest extends TestCase {
     assertFalse("Textinput value should have not been read from request.", form.convertAndValidate());
   }
   
-  /** Test that constraint correctly detects that formelement was submitted as empty, even after
+  /** 
+   * TODO: this test fails now, because we are emulating previous broken behaviour of forms,
+   * unfortunately some cases of validation (isRead() of controls) fails otherwise.
+   * Test that constraint correctly detects that formelement was submitted as empty, even after
    * FormElement.setValue is called. */
   public void testFormElementMissingInRequestExplicitSetValue() throws Exception {
     textInput.setConstraint(new NotEmptyConstraint());
