@@ -77,13 +77,19 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     getOpenerFlowContext().finish(result);
 
     try {
-      // close the session-thread serving popupflow
-      getOpenerPopupContext().close(threadCtx.getCurrentId().toString());
+      // close the session-thread of popupflow
+      Object currentThreadId = threadCtx.getCurrentId();
+	  getOpenerPopupContext().close(currentThreadId.toString());
+	  
+	  Object servingThreadId = getInputData().getGlobalData().get(ThreadContext.THREAD_SERVICE_KEY);
 
-      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
-      // popup window is closed with redirect to a page that closes current window and reloads parent.
-      threadCtx.addService(rndThreadId, new WindowClosingService(getEnvironment()));
-      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), rndThreadId));
+      // if request for closing popup came from the popup window itself
+	  if (currentThreadId.equals(servingThreadId)) {
+	    String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
+        //popup window is closed with redirect to a page that closes current window and reloads parent.
+        threadCtx.addService(rndThreadId, new WindowClosingService(getEnvironment()));
+        ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String)topCtx.getCurrentId(), rndThreadId));
+      }
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
