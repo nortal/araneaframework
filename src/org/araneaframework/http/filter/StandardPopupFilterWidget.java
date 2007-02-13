@@ -86,24 +86,19 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     if (log.isDebugEnabled())
         log.debug("Popup service with identifier '" + threadId + "' was created.");
     
-    if (opener != null)
-        new OpenerRegistrationMessage(opener).send(null, service);
+    OpenerRegistrationMessage msg = new OpenerRegistrationMessage(opener);
+    try {
+      if (opener != null)
+        msg.send(null, service);
+    } finally {
+      if (opener != null && !msg.isDelivered())
+        log.error("Opener registration message delivery failed.");
+    }
 
-//    try {
-      if (startMessage != null)
-        startMessage.send(null, service);
-//    } catch (Exception e) {
-//      boolean servicePresent = (((ThreadContext)getEnvironment().getEntry(ThreadContext.class)).getService(threadId) != null);
-//      // XXX: DANGER: if thread is dead by now (startMessage killed it!); IllegalStateException can be expected.
-//      if ((e instanceof IllegalStateException) && !servicePresent) {
-//        // do nothing
-//      }
-//      else {
-//        //TODO confirm: if exception happened, should popup be not opened at all?
-//        close(threadId);
-//        ExceptionUtil.uncheckException(e);
-//      }
-//    }
+    //TODO when exception happens here, should we kill serving session thread
+    // and not open popup window at all
+    if (startMessage != null)
+      startMessage.send(null, service);
 
     return threadId;
   }
@@ -262,7 +257,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
    * Message that registers opener as creator of the popup thread.
    */
   public static class OpenerRegistrationMessage implements Message {
-    Widget opener;
+	private boolean delivered= false;
+    private Widget opener;
 
     public OpenerRegistrationMessage(Widget opener) {
       this.opener = opener;
@@ -281,10 +277,13 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     }
 
     protected void execute(Component component) throws Exception {
-      if (component instanceof StandardPopupFilterWidget) {
-        StandardPopupFilterWidget w = (StandardPopupFilterWidget) component;
-        w.opener = opener;
-      }
+      StandardPopupFilterWidget w = (StandardPopupFilterWidget) component;
+      w.opener = opener;
+      delivered = true;
+    }
+    
+    public boolean isDelivered() {
+      return delivered;
     }
   }
 
