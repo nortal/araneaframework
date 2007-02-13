@@ -63,6 +63,11 @@ public class StandardHttpSessionRouterService extends BaseService {
    */
   public static final String SESSION_SERVICE_KEY = "sessionService";
   
+  /**
+   * The key of the synchronization object in the session.
+   */
+  public static final String SESSION_SYNC_OBJECT_KEY = "sessionSyncObject";
+  
   private ServiceFactory serviceFactory;
   
   private Map locks = Collections.synchronizedMap(new HashMap());
@@ -87,20 +92,27 @@ public class StandardHttpSessionRouterService extends BaseService {
       return;
     }
     
-    RelocatableService service = getOrCreateSessionService(sess);   
-    
     // Requests are synchronized by default (if "sync" parameter is missing)
     if (!"false".equals(input.getGlobalData().get(SYNC_PARAMETER_KEY))) {
-      synchronized (sess.getId()) {
-        doAction(path, input, output, sess, service); 
+      /*
+       * "Synchronized" requests use an additional dummy object for
+       * synchronization, so that only one "synchronized" request is processed
+       * at a time.
+       */
+      synchronized (getOrCreateSessionSyncObject(sess)) {
+        doAction(path, input, output, sess); 
       }     
     }
     else {
-      doAction(path, input, output, sess, service); 
+      doAction(path, input, output, sess);
     }
   }
   
-  protected void doAction(Path path, InputData input, OutputData output, HttpSession sess, RelocatableService service) throws Exception {
+  protected void doAction(Path path, InputData input, OutputData output, HttpSession sess) throws Exception {
+    /*
+     * Both "synchronized" and "unsynchronized" requests use the session object
+     * to synchronize critical sections dealing with locking in doActionmethod.
+     */
     synchronized (sess) {
       ReadWriteLock lock = (ReadWriteLock) locks.get(sess);
       if (lock == null) {
@@ -109,7 +121,9 @@ public class StandardHttpSessionRouterService extends BaseService {
       }
       lock.readLock().acquire();
     }
-
+    
+    RelocatableService service = getOrCreateSessionService(sess);
+    
     try {
       service._getService().action(path, input, output);
     }
@@ -148,6 +162,15 @@ public class StandardHttpSessionRouterService extends BaseService {
     message.send(null, service);
     
     sess.setAttribute(SESSION_SERVICE_KEY, service);
+  }
+  
+  private synchronized Object getOrCreateSessionSyncObject(HttpSession sess) {
+    Object syncObject = sess.getAttribute(SESSION_SYNC_OBJECT_KEY);
+    if (syncObject == null) {
+      syncObject = new Object();
+      sess.setAttribute(SESSION_SYNC_OBJECT_KEY, syncObject);
+    }
+    return syncObject;
   }
   
   private synchronized RelocatableService getOrCreateSessionService(HttpSession sess) {
