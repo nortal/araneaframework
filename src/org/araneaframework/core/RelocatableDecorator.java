@@ -48,20 +48,10 @@ public class RelocatableDecorator extends BaseService implements Serializable, R
   // PROTECTED CLASSES
   //*******************************************************************
   protected class RelocatableComponentImpl implements Relocatable.Interface {
-    public void overrideEnvironment(Environment newEnv) {
-      _startWaitingCall();
-      
-      try {
-        _waitNoCall();
-      }
-      catch (InterruptedException e) {
-        throw new NestableRuntimeException(e);
-      }      
+    public void overrideEnvironment(Environment newEnv) {   
       synchronized (this) {
         _setEnvironment(newEnv);
       }
-      
-      _endWaitingCall();
     }
     
     public Environment getCurrentEnvironment() {

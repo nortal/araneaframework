@@ -175,7 +175,9 @@ ALL YOUR CHANGES WILL BE LOST ON NEXT AUTOMATIC UPDATE.
 		description="Refresh current working directory (including not editable modules) retaining local edits."
 		depends="init"
 	>
-		<checkoutchange/>
+		<refresh
+			complete="true"
+		/>
 	</target>
 
 	<target
@@ -381,8 +383,10 @@ ALL YOUR CHANGES WILL BE LOST ON NEXT AUTOMATIC UPDATE.
 
 	<target
 		name="test_checkout"
+		depends="init"
+		description="Verifies the correctness of VCS metafiles"
 	>
-		<antcall target="TODO"/>
+		<testcheckout/>
 	</target>
 
 	<target

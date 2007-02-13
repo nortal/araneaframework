@@ -19,6 +19,7 @@ package org.araneaframework.http.filter;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
@@ -88,9 +89,21 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     if (opener != null)
         new OpenerRegistrationMessage(opener).send(null, service);
 
-    if (startMessage != null)
-      startMessage.send(null, service);
-    ((ThreadContext)getEnvironment().getEntry(ThreadContext.class)).getService(threadId);
+//    try {
+      if (startMessage != null)
+        startMessage.send(null, service);
+//    } catch (Exception e) {
+//      boolean servicePresent = (((ThreadContext)getEnvironment().getEntry(ThreadContext.class)).getService(threadId) != null);
+//      // XXX: DANGER: if thread is dead by now (startMessage killed it!); IllegalStateException can be expected.
+//      if ((e instanceof IllegalStateException) && !servicePresent) {
+//        // do nothing
+//      }
+//      else {
+//        //TODO confirm: if exception happened, should popup be not opened at all?
+//        close(threadId);
+//        ExceptionUtil.uncheckException(e);
+//      }
+//    }
 
     return threadId;
   }
