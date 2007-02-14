@@ -312,7 +312,10 @@ public class FormElement extends GenericFormElement implements FormElementContex
   /**
    * Uses {@link BaseConverter}to convert the {@link BaseControl}value to the {@link Data}value.
    */
-  protected void convertInternal() {  	
+  protected void convertInternal() {
+    if (!isInitialized())
+      return;
+
     //There is only point to convert and set the data if it is present
     if (getData() != null && getControl() != null) {
 
