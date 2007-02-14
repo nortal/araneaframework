@@ -101,7 +101,7 @@ public class FormWidget extends GenericFormElement {
         }
     }
     
-    if (isInitialized())
+    if (isAlive())
       addWidget(id, element);
       
     elements = newElements;
@@ -133,7 +133,7 @@ public class FormWidget extends GenericFormElement {
         newElements.put(entry.getKey(), entry.getValue());
     }
       
-    if (isInitialized())
+    if (isAlive())
       addWidget(id, element);
     
     elements = newElements;
@@ -151,7 +151,7 @@ public class FormWidget extends GenericFormElement {
     
     elements.put(id, element);
     
-    if (isInitialized())
+    if (isAlive())
       addWidget(id, element);
   }
 
@@ -164,7 +164,7 @@ public class FormWidget extends GenericFormElement {
 
     elements.remove(id);
     
-    if (isInitialized())
+    if (isAlive())
       removeWidget(id);
   }
 

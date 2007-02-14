@@ -46,7 +46,11 @@ public abstract class BaseComponent implements Component {
   private Map children;
   private Map disabledChildren;
 
-  private Boolean nullIfInited = Boolean.FALSE;
+  private static final int UNBORN = 0;
+  private static final int ALIVE = 1;
+  private static final int DEAD = 2; 
+
+  private int lifeState = UNBORN;
 
   //*******************************************************************
   // PUBLIC METHODS
@@ -91,11 +95,42 @@ public abstract class BaseComponent implements Component {
   }
   
   /**
-   * Returns true, if the BaseComponent has been initialized. 
+   * Returns whether this component is alive &mdash; initialized and not 
+   * yet destroyed.
+   * @return whether component is alive
+   * 
+   * @since 1.0.6
+   */
+  protected boolean isAlive() {
+    return lifeState == BaseComponent.ALIVE;
+  }
+  
+  /**
+   * Returns whether this component is dead &mdash; {@link Component.Interface#destroy()}.
+   * @return whether component is destroyed 
+   * @since 1.0.6 */
+  protected boolean isDead() {
+    return lifeState == BaseComponent.DEAD;
+  }
+
+  /**
+   * @return whether component is uninitialized
+   * @since 1.0.6 */
+  protected boolean isUnborn() {
+    return lifeState == BaseComponent.UNBORN;
+  }
+
+  /**
+   * Use {@link BaseComponent#isAlive()} instead, this method's
+   * name carries the wrong semantics (component might be initialized
+   * but already dead).
+   * 
+   * @return same as {@link BaseComponent#isAlive()}
+   * @deprecated method is deprecated since 1.0.6
    */
   protected boolean isInitialized() {
-    return nullIfInited == null;
-  } 
+    return isAlive();
+  }
   
   /**
    * Sets the environment of this BaseComponent to environment. 
@@ -152,14 +187,14 @@ public abstract class BaseComponent implements Component {
   }
 
   /**
-   * Checks if this component is initialized. If not, throws IllegalStateException.
+   * Checks if this component is alive. If not, throws IllegalStateException.
    */
   protected void _checkCall() throws IllegalStateException {
-//    if (!isInitialized()) {
-//      throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
-//    }
+    if (!isAlive()) {
+      throw new IllegalStateException("Component '" + getClass().getName() + "' is not alive (has not been born or has died already)!");
+    }
   }
-  
+
   /**
    * Returns the children of this component.
    */
@@ -328,10 +363,10 @@ public abstract class BaseComponent implements Component {
     
     public synchronized void init(Environment env) {
       Assert.notNull(this, env, "Environment cannot be null!");
-      Assert.isTrue(this, !isInitialized(), "Cannot initialize the component more than once!");
+      Assert.isTrue(this, isUnborn(), "Cannot initialize the component more than once!");
             
       BaseComponent.this._setEnvironment(env);
-      nullIfInited = null;
+      lifeState = BaseComponent.ALIVE;
       try {
         BaseComponent.this.init();
       }
@@ -361,7 +396,7 @@ public abstract class BaseComponent implements Component {
           
           BaseComponent.this.destroy();
         }
-        nullIfInited = Boolean.FALSE;
+        lifeState = BaseComponent.DEAD;
       }
       catch (Exception e) {
         ExceptionUtil.uncheckException(e);

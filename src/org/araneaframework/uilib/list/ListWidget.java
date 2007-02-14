@@ -153,7 +153,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	public void setDataProvider(ListDataProvider dataProvider) throws Exception {
 		this.dataProvider = dataProvider;
-		if (isInitialized()) {			
+		if (isAlive()) {			
 			initDataProvider();
 		}
 	}
@@ -527,7 +527,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	public void setFilterInfo(Map filterInfo) throws Exception {  	
 		if (filterInfo != null) {
-			if (isInitialized()) {
+			if (isAlive()) {
 				propagateListDataProviderWithFilter(filterInfo);				
 			}
 			MapFormWriter mapFormWriter = new MapFormWriter();
@@ -576,7 +576,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	public void setOrderInfo(OrderInfo orderInfo) {  	
 		this.orderInfo = orderInfo;
-		if (isInitialized()) {
+		if (isAlive()) {
 			propagateListDataProviderWithOrderInfo(orderInfo);			
 		}
 	}
@@ -643,9 +643,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	//*******************************************************************  
 	
 	public void addInitEvent(Event event) {
-		if (isInitialized()) {
+		if (isAlive()) {
 			event.run();
-		} else {
+		} else if (isUnborn()) {
 			if (initEvents == null)
 				initEvents = new ArrayList();
 			initEvents.add(event);

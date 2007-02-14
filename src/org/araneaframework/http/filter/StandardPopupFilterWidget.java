@@ -96,7 +96,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     }
 
     //TODO when exception happens here, should we kill serving session thread
-    // and not open popup window at all
+    // and not open popup window at all?
     if (startMessage != null)
       startMessage.send(null, service);
 
