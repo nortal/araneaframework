@@ -187,11 +187,13 @@ public abstract class BaseComponent implements Component {
   }
 
   /**
-   * Checks if this component is alive. If not, throws IllegalStateException.
+   * Checks if this component was born once. If not, throws IllegalStateException.
    */
   protected void _checkCall() throws IllegalStateException {
-    if (!isAlive()) {
-      throw new IllegalStateException("Component '" + getClass().getName() + "' is not alive (has not been born or has died already)!");
+    // for purposes of not generating exceptions when destroyed widgets receive some leftover calls,
+    // isUnborn() is called here instead of isAlive()
+    if (isUnborn()) {
+      throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
     }
   }
 
@@ -228,7 +230,7 @@ public abstract class BaseComponent implements Component {
     Assert.isInstanceOfParam(String.class, key, "key");
 
     _checkCall();
-    
+
     // cannot add a child with key that clashes with a disabled child's key
     if (_getChildren().containsKey(key)) {
       if (_getDisabledChildren().containsKey(key))
