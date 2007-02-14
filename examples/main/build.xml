@@ -15,6 +15,7 @@
 	<path id="classpath.jetty">
 		<fileset dir="../lib/jetty" includes="*.jar" />
 		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
+		<fileset dir="${env.ANT_HOME}/lib/" includes="ant-launcher.jar" />
 		<pathelement location="${env.ANT_HOME}/lib/ant.jar" />
 	</path>
 	
