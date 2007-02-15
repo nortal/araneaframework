@@ -114,10 +114,11 @@ public abstract class BaseComponent implements Component {
   }
 
   /**
-   * @return whether component is uninitialized
+   * Returns whether {@link Component#init} has been run.
+   * @return whether component's initialization method has been run
    * @since 1.0.6 */
-  protected boolean isUnborn() {
-    return lifeState == BaseComponent.UNBORN;
+  protected boolean isBorn() {
+    return lifeState != BaseComponent.UNBORN;
   }
 
   /**
@@ -192,7 +193,7 @@ public abstract class BaseComponent implements Component {
   protected void _checkCall() throws IllegalStateException {
     // for purposes of not generating exceptions when destroyed widgets receive some leftover calls,
     // isUnborn() is called here instead of isAlive()
-    if (isUnborn()) {
+    if (!isBorn()) {
       throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
     }
   }
@@ -365,7 +366,7 @@ public abstract class BaseComponent implements Component {
     
     public synchronized void init(Environment env) {
       Assert.notNull(this, env, "Environment cannot be null!");
-      Assert.isTrue(this, isUnborn(), "Cannot initialize the component more than once!");
+      Assert.isTrue(this, !isBorn(), "Cannot initialize the component more than once!");
             
       BaseComponent.this._setEnvironment(env);
       lifeState = BaseComponent.ALIVE;

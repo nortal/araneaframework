@@ -645,11 +645,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public void addInitEvent(Event event) {
 		if (isAlive()) {
 			event.run();
-		} else if (isUnborn()) {
+		} else if (!isBorn()) {
 			if (initEvents == null)
 				initEvents = new ArrayList();
 			initEvents.add(event);
-		}		
+		}
 	}
 	
 	protected void runInitEvents() {
