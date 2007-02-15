@@ -45,12 +45,12 @@ public abstract class BaseComponent implements Component {
   private Environment environment;
   private Map children;
   private Map disabledChildren;
-
-  private static final int UNBORN = 0;
-  private static final int ALIVE = 1;
-  private static final int DEAD = 2; 
-
-  private int lifeState = UNBORN;
+  
+  private Boolean nullIfInited = Boolean.FALSE;
+  
+  private transient int callCount = 0;
+  private transient int reentrantCallCount = 0;
+  private transient ThreadLocal reentrantTLS;
 
   //*******************************************************************
   // PUBLIC METHODS
@@ -95,43 +95,11 @@ public abstract class BaseComponent implements Component {
   }
   
   /**
-   * Returns whether this component is alive &mdash; initialized and not 
-   * yet destroyed.
-   * @return whether component is alive
-   * 
-   * @since 1.0.6
-   */
-  protected boolean isAlive() {
-    return lifeState == BaseComponent.ALIVE;
-  }
-  
-  /**
-   * Returns whether this component is dead &mdash; {@link Component.Interface#destroy()}.
-   * @return whether component is destroyed 
-   * @since 1.0.6 */
-  protected boolean isDead() {
-    return lifeState == BaseComponent.DEAD;
-  }
-
-  /**
-   * Returns whether {@link Component#init} has been run.
-   * @return whether component's initialization method has been run
-   * @since 1.0.6 */
-  protected boolean isBorn() {
-    return lifeState != BaseComponent.UNBORN;
-  }
-
-  /**
-   * Use {@link BaseComponent#isAlive()} instead, this method's
-   * name carries the wrong semantics (component might be initialized
-   * but already dead).
-   * 
-   * @return same as {@link BaseComponent#isAlive()}
-   * @deprecated method is deprecated since 1.0.6
+   * Returns true, if the BaseComponent has been initialized. 
    */
   protected boolean isInitialized() {
-    return isAlive();
-  }
+    return nullIfInited == null;
+  } 
   
   /**
    * Sets the environment of this BaseComponent to environment. 
@@ -141,20 +109,34 @@ public abstract class BaseComponent implements Component {
   }
 
   /**
-   * @deprecated
-   * 
    * Waits until no call is made to the component. Used to synchronize calls
    * to the component.
    */
   protected synchronized void _waitNoCall() throws InterruptedException {    
+    long waitStart = System.currentTimeMillis();
+    
+    while (callCount != reentrantCallCount) { 
+      this.wait(1000);
+      
+      if (callCount != reentrantCallCount) {
+        log.warn("Deadlock or starvation suspected, call count '" + callCount + "', reentrant call count '" + reentrantCallCount + "'");
+        
+        if (waitStart < System.currentTimeMillis() - 10000) {
+          log.error("Deadlock or starvation not solved in 10s, call count '" + 
+              callCount + "', reentrant call count '" + reentrantCallCount + "'", 
+              new AraneaRuntimeException("Deadlock or starvation suspected!"));
+          return;
+        }
+      }
+    }    
   }
 
   /**
    * Checks if a call is valid (component is in the required state), increments the call count.
    */
   protected synchronized void _startCall() throws IllegalStateException {
-//    _checkCall();
-//    incCallCount();
+    _checkCall();
+    incCallCount();
   }
 
   /**
@@ -162,42 +144,36 @@ public abstract class BaseComponent implements Component {
    * this object's monitor
    */
   protected synchronized void _endCall() {
-//    decCallCount();
-//    this.notifyAll();
+    decCallCount();
+    this.notifyAll();
   }
   
   /**
-   * @deprecated
-   * 
    * Used for starting a call that is a re-entrant call. Meaning a call of this component
    * is doing the calling
    */
   protected synchronized void _startWaitingCall() {
-//    if (getReentrantCount() >= 1)
-//      reentrantCallCount++;
+    if (getReentrantCount() >= 1)
+      reentrantCallCount++;
   }
   
   /**
-   * @deprecated
-   * 
    * Decrements internal callcount counter.
    */
   protected synchronized void _endWaitingCall() {    
-//    if (getReentrantCount() >= 1)
-//      reentrantCallCount--;
+    if (getReentrantCount() >= 1)
+      reentrantCallCount--;
   }
 
   /**
-   * Checks if this component was born once. If not, throws IllegalStateException.
+   * Checks if this component is initialized. If not, throws IllegalStateException.
    */
   protected void _checkCall() throws IllegalStateException {
-    // for purposes of not generating exceptions when destroyed widgets receive some leftover calls,
-    // isUnborn() is called here instead of isAlive()
-    if (!isBorn()) {
+    if (!isInitialized()) {
       throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
     }
   }
-
+  
   /**
    * Returns the children of this component.
    */
@@ -231,7 +207,7 @@ public abstract class BaseComponent implements Component {
     Assert.isInstanceOfParam(String.class, key, "key");
 
     _checkCall();
-
+    
     // cannot add a child with key that clashes with a disabled child's key
     if (_getChildren().containsKey(key)) {
       if (_getDisabledChildren().containsKey(key))
@@ -339,16 +315,13 @@ public abstract class BaseComponent implements Component {
     Iterator ite = (new HashMap(_getChildren())).keySet().iterator();
     while(ite.hasNext()) {
       Object key = ite.next();
+      Component component = (Component)_getChildren().get(key);
       
-      if (_getChildren().containsKey(key)) {
-    	Component component = (Component)_getChildren().get(key);
-
-    	if (component == null ) {
-    	  throw new NoSuchComponentException(key);
-    	}
-
-        message.send(key, component);
-      }
+      if (component == null ) {
+        throw new NoSuchComponentException(key);
+      }      
+      
+      message.send(key, component);
     }
   }
   
@@ -357,6 +330,31 @@ public abstract class BaseComponent implements Component {
   // PRIVATE METHODS
   //*******************************************************************
   
+  private void incCallCount() {
+    if (reentrantTLS == null)
+      reentrantTLS = new ThreadLocal();
+    
+    if (reentrantTLS.get() == null)
+      reentrantTLS.set(new Counter(0));
+    
+    callCount++;
+    ((Counter) reentrantTLS.get()).counter++;
+    
+    if (getReentrantCount() > 1)
+      reentrantCallCount++;
+  }
+   
+  private void decCallCount() {
+    if (getReentrantCount() > 1)
+      reentrantCallCount--;
+    
+    callCount--;
+    ((Counter) reentrantTLS.get()).counter--;
+  }
+  
+  private int getReentrantCount() {     
+    return (reentrantTLS == null || reentrantTLS.get() == null) ? 0 : ((Counter) reentrantTLS.get()).counter;
+  }
   
   //*******************************************************************
   // PROTECTED CLASSES
@@ -366,10 +364,10 @@ public abstract class BaseComponent implements Component {
     
     public synchronized void init(Environment env) {
       Assert.notNull(this, env, "Environment cannot be null!");
-      Assert.isTrue(this, !isBorn(), "Cannot initialize the component more than once!");
+      Assert.isTrue(this, !isInitialized(), "Cannot initialize the component more than once!");
             
       BaseComponent.this._setEnvironment(env);
-      lifeState = BaseComponent.ALIVE;
+      nullIfInited = null;
       try {
         BaseComponent.this.init();
       }
@@ -379,10 +377,12 @@ public abstract class BaseComponent implements Component {
     }
     
     public void destroy(){     
+      _startWaitingCall();
+      
       try {
         /* XXX synch logic a bit weird. 
          * Second call to destroy should fail, not wait. */
-        //_waitNoCall();
+        _waitNoCall();
         synchronized (this) {
           if (children != null)
             for (Iterator i = new HashMap(_getChildren()).keySet().iterator(); i.hasNext(); ) {
@@ -399,10 +399,13 @@ public abstract class BaseComponent implements Component {
           
           BaseComponent.this.destroy();
         }
-        lifeState = BaseComponent.DEAD;
+        nullIfInited = Boolean.FALSE;   
       }
       catch (Exception e) {
         ExceptionUtil.uncheckException(e);
+      }
+      finally {
+        _endWaitingCall();
       }
     }
     

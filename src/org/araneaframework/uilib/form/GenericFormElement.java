@@ -109,7 +109,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    */
   public void setConstraint(Constraint constraint) {
     this.constraint = constraint;
-    if (constraint != null && isAlive())
+    if (constraint != null && isInitialized())
       constraint.setEnvironment(getConstraintEnvironment());
   }
   
