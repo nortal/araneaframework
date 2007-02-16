@@ -19,9 +19,28 @@ package org.araneaframework.mock.core;
 import org.araneaframework.core.BaseComponent;
 
 /**
- * @author toomas
- *
+ * @author Toomas Römer (toomas@webmedia.ee)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class MockBaseComponent extends BaseComponent {
-  
+	private Boolean enabled = null;
+	private boolean alive = false;
+
+	protected void init() throws Exception {
+		enabled = Boolean.TRUE;
+		alive = true;
+	}
+	
+	protected void disable() throws Exception {
+		enabled = Boolean.FALSE;
+	}
+
+	protected void enable() throws Exception {
+		enabled = Boolean.TRUE;
+	}
+
+	protected void destroy() throws Exception {
+		enabled = null;
+		alive = false;
+	}
 }

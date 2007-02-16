@@ -113,7 +113,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			out.write("\" ");
 			JspUtil.writeAttribute(out, "id", calendarImgId);
 			JspUtil.writeAttribute(out, "class", calendarIconClass);
-			JspUtil.writeCloseStartTag_SS(out);
+			JspUtil.writeCloseStartEndTag_SS(out);
 	
 			JspUtil.writeEndTag_SS(out, "a");
 		
