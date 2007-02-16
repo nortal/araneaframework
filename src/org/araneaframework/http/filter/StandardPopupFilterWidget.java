@@ -29,9 +29,9 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
@@ -67,23 +67,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   /* ************************************************************************************
    * PopupWindowContext interface methods
    * ************************************************************************************/
-  public String open(Message startMessage, PopupWindowProperties properties) throws Exception {    
-    String threadId = getRandomServiceId();
-    String topServiceId = (String) getTopServiceCtx().getCurrentId();
-
-    Service service = threadServiceFactory.buildService(getEnvironment());
-    startThreadPopupService(threadId, service);
-
-    if (startMessage != null)
-      startMessage.send(null, service);
-    
-    //add new, not yet opened popup to popup map
-    popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
-    allPopups.put(threadId, popups.get(threadId));
-
-    if (log.isDebugEnabled())
-      log.debug("Popup service with identifier '" + threadId + "' was created.");
-    return threadId;
+  public String open(Message startMessage, PopupWindowProperties properties) throws Exception {
+    return open(startMessage, properties, null);
   }
 
   public String open(Message startMessage, PopupWindowProperties properties, Widget opener) {
@@ -93,18 +78,27 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     Service service = threadServiceFactory.buildService(getEnvironment());
     startThreadPopupService(threadId, service);
 
-    if (startMessage != null)
-      startMessage.send(null, service);
-    
-    if (opener != null)
-      new OpenerRegistrationMessage(opener).send(null, service);
-
     //add new, not yet opened popup to popup map
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
     allPopups.put(threadId, popups.get(threadId));
     
     if (log.isDebugEnabled())
-      log.debug("Popup service with identifier '" + threadId + "' was created.");
+        log.debug("Popup service with identifier '" + threadId + "' was created.");
+    
+    OpenerRegistrationMessage msg = new OpenerRegistrationMessage(opener);
+    try {
+      if (opener != null)
+        msg.send(null, service);
+    } finally {
+      if (opener != null && !msg.isDelivered())
+        log.error("Opener registration message delivery failed.");
+    }
+
+    //TODO when exception happens here, should we kill serving session thread
+    // and not open popup window at all?
+    if (startMessage != null)
+      startMessage.send(null, service);
+
     return threadId;
   }
 
@@ -175,6 +169,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       return false;
     } finally {
       allPopups.remove(id);
+      popups.remove(id);
     }
 
     if (log.isDebugEnabled())
@@ -260,18 +255,34 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   /**
    * Message that registers opener as creator of the popup thread.
    */
-  public static class OpenerRegistrationMessage extends BroadcastMessage {
-    Widget opener;
+  public static class OpenerRegistrationMessage implements Message {
+	private boolean delivered= false;
+    private Widget opener;
 
     public OpenerRegistrationMessage(Widget opener) {
       this.opener = opener;
     }
-    
-    protected void execute(Component component) throws Exception {
-      if (component instanceof StandardPopupFilterWidget) {
-        StandardPopupFilterWidget w = (StandardPopupFilterWidget) component;
-        w.opener = opener;
+
+    public void send(Object id, Component component) {
+      try {
+        if (component instanceof StandardPopupFilterWidget) {
+          execute(component);
+        } else {
+          component._getComponent().propagate(this);
+        }
+      } catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
       }
+    }
+
+    protected void execute(Component component) throws Exception {
+      StandardPopupFilterWidget w = (StandardPopupFilterWidget) component;
+      w.opener = opener;
+      delivered = true;
+    }
+    
+    public boolean isDelivered() {
+      return delivered;
     }
   }
 

@@ -336,13 +336,13 @@ public abstract class BaseComponent implements Component {
     Iterator ite = (new HashMap(_getChildren())).keySet().iterator();
     while(ite.hasNext()) {
       Object key = ite.next();
+
       Component component = (Component)_getChildren().get(key);
-      
-      if (component == null ) {
-        throw new NoSuchComponentException(key);
-      }      
-      
-      message.send(key, component);
+
+      // message has not destroyed previously existing child
+      if (component != null ) {
+    	message.send(key, component);  
+      }
     }
   }
   
