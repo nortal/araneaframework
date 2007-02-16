@@ -44,6 +44,8 @@ public class FormSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
 		JspUtil.writeCloseStartTag(out);
 
 		JspUtil.writeEscaped(out, viewModel.getLabelForValue(viewModel.getSimpleValue()));
+		
+		JspUtil.writeEndTag_SS(out, "span");
 
 		return super.doEndTag(out);  
 	}
