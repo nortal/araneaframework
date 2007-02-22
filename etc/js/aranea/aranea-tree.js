@@ -19,27 +19,66 @@
  * @author Alar Kvell (alar@araneaframework.org)
  */
 var AraneaTree = {
+
+	/**
+	 * Toggles the state of tree node between expanded and collapsed.
+	 *
+	 * @param element Id or reference of the TreeNodeWidget or its descendant.
+	 * @return false. This is useful in onclick handler of an anchor.
+	 */
 	toggleNode: function(element) {
-		return this.action(element, 'toggle', null, null);
+		return this.action(element, 'toggle');
 	},
 
-	displayAction: function(element, actionId, actionParam) {
-		return this.action(element, actionId, 'display', actionParam);
+	/**
+	 * Calls an action on the display Widget of a TreeNodeWidget. The HTML
+	 * contents of this TreeNodeWidget are replaced by the contents of the
+	 * response (therefore, calling getTreeNodeCtx().render() in the end of the
+	 * action listener is advised).
+	 *
+	 * @param element Id or reference of the TreeNodeWidget or its descendant.
+	 * @param actionId Action listener id.
+	 * @param actionParam A parameter passed to action listener (optional).
+	 * @param onComplete Function that is called on the completion of action
+	 *                   (optional).
+	 * @return false. This is useful in onclick handler of an anchor.
+	 */
+	displayAction: function(element, actionId, actionParam, onComplete) {
+		return this.action(element, actionId, 'display', actionParam, onComplete);
 	},
 
-	action: function(element, actionId, scopedActionTarget, actionParam) {
-		var treeNode = this.getSurroundingTreeNode(element);
-		var tree = this.getSurroundingTree(element);
+	/**
+	 * Calls an action on the TreeNodeWidget. The HTML contents of this
+	 * TreeNodeWidget are replaced by the contents of the response (therefore,
+	 * calling render() in the end of the action listener is advised).
+	 *
+	 * @param element Id or reference of the TreeNodeWidget or its descendant.
+	 * @param actionId Action listener id.
+	 * @param scopedActionTarget Id of the child widget that the action is sent
+	 *                           to (or dot-separated relative path of a deeper
+	 *                           descendant of the TreeNodeWidget). If empty,
+	 *                           null, or undefined, then action is sent to
+	 *                           TreeNodeWidget.
+	 * @param actionParam A parameter passed to action listener (optional).
+	 * @param onComplete Function that is called on the completion of action
+	 *                   (optional).
+	 * @return false. This is useful in onclick handler of an anchor.
+	 */
+	action: function(element, actionId, scopedActionTarget, actionParam, onComplete) {
+		var treeNode = this.getSurroundingTreeOrNode(element);
+		var tree = this.getSurroundingTree(treeNode);
 		var sync = !tree.hasAttribute('arn-tree-sync') || tree.getAttribute('arn-tree-sync').toLowerCase() != 'false';
 		var fullActionTarget = scopedActionTarget ? treeNode.id + '.' + scopedActionTarget : treeNode.id;
-		araneaPage().action(element, actionId, fullActionTarget, actionParam, sync, this.getUpdateFunction(treeNode.id));
+		var actionCallback = this.getUpdateFunction(treeNode.id, onComplete);
+		araneaPage().action(tree, actionId, fullActionTarget, actionParam, sync, actionCallback);
 		return false;
 	},
 
-	// Returns LI that is Aranea tree node and surrounds given HTML element. 
-	getSurroundingTreeNode: function(element) {
+	// Returns LI that is Aranea tree node or UL that is Aranea tree and surrounds given HTML element. 
+	getSurroundingTreeOrNode: function(element) {
+		element = $(element);
 		do {
-			if (element.tagName && element.tagName.toLowerCase() == 'li' && Element.hasClassName(element, 'aranea-tree-node')) {
+			if (Element.hasClassName(element, 'aranea-tree-node') || Element.hasClassName(element, 'aranea-tree')) {
 				return element;
 			}
 			element = element.parentNode;
@@ -49,8 +88,9 @@ var AraneaTree = {
 
 	// Returns UL that is Aranea tree and surrounds given HTML element. 
 	getSurroundingTree: function(element) {
+		element = $(element);
 		do {
-			if (element.tagName && element.tagName.toLowerCase() == 'ul' && Element.hasClassName(element, 'aranea-tree')) {
+			if (Element.hasClassName(element, 'aranea-tree')) {
 				return element;
 			}
 			element = element.parentNode;
@@ -58,13 +98,22 @@ var AraneaTree = {
 		return null;
 	},
 
-	getUpdateFunction: function(treeNodeId) {
+	getUpdateFunction: function(treeNodeId, onComplete) {
 		return function(request, response) {
 			// TODO handle non-200 responses
-			Element.update(treeNodeId, request.responseText);
+			var element = $(treeNodeId);
+			if (Element.hasClassName(element, 'aranea-tree')) {
+				Element.replace(element, request.responseText);
+			} else {
+				Element.update(element, request.responseText);
+			}
 			Behaviour.apply();
+			if (onComplete) {
+				onComplete(request, response);
+			}
 		};
 	}
+
 }
 
 window['aranea-tree.js'] = true;
