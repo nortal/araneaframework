@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -744,10 +743,17 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	protected void destroy() throws Exception {
 		log.debug("Destroying ListWidget.");
-		this.dataProvider.destroy();
-		this.listStructure.destroy();
-		this.filterHelper.destroy();
-		this.typeHelper.destroy();
+        if (this.dataProvider != null)
+        	this.dataProvider.destroy();
+        
+        if (this.listStructure != null)
+        	this.listStructure.destroy();
+        
+        if (this.filterHelper != null)
+        	this.filterHelper.destroy();
+        
+        if (this.typeHelper != null)
+        	this.typeHelper.destroy();
 	}
 
 	/**
