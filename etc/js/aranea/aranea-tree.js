@@ -41,10 +41,11 @@ var AraneaTree = {
 	 * @param actionParam A parameter passed to action listener (optional).
 	 * @param onComplete Function that is called on the completion of action
 	 *                   (optional).
+	 * @param options Options passed to Ajax.Request (optional).
 	 * @return false. This is useful in onclick handler of an anchor.
 	 */
-	displayAction: function(element, actionId, actionParam, onComplete) {
-		return this.action(element, actionId, 'display', actionParam, onComplete);
+	displayAction: function(element, actionId, actionParam, onComplete, options) {
+		return this.action(element, actionId, 'display', actionParam, onComplete, options);
 	},
 
 	/**
@@ -62,15 +63,16 @@ var AraneaTree = {
 	 * @param actionParam A parameter passed to action listener (optional).
 	 * @param onComplete Function that is called on the completion of action
 	 *                   (optional).
+	 * @param options Options passed to Ajax.Request (optional).
 	 * @return false. This is useful in onclick handler of an anchor.
 	 */
-	action: function(element, actionId, scopedActionTarget, actionParam, onComplete) {
+	action: function(element, actionId, scopedActionTarget, actionParam, onComplete, options) {
 		var treeNode = this.getSurroundingTreeOrNode(element);
 		var tree = this.getSurroundingTree(treeNode);
 		var sync = !tree.hasAttribute('arn-tree-sync') || tree.getAttribute('arn-tree-sync').toLowerCase() != 'false';
 		var fullActionTarget = scopedActionTarget ? treeNode.id + '.' + scopedActionTarget : treeNode.id;
 		var actionCallback = this.getUpdateFunction(treeNode.id, onComplete);
-		araneaPage().action(tree, actionId, fullActionTarget, actionParam, sync, actionCallback);
+		araneaPage().action(tree, actionId, fullActionTarget, actionParam, sync, actionCallback, options);
 		return false;
 	},
 

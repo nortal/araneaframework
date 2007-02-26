@@ -270,21 +270,17 @@ function AraneaPage() {
     return url;
   }
 
-  this.action = function(element, actionId, actionTarget, actionParam, sync, actionCallback) {
+  this.action = function(element, actionId, actionTarget, actionParam, sync, actionCallback, options) {
     var t = this.getTraverser();
     var systemForm = t.findSurroundingSystemForm(element);
-    return this.action_6(systemForm, actionId, actionTarget, actionParam, sync, actionCallback);
+    return this.action_6(systemForm, actionId, actionTarget, actionParam, sync, actionCallback, options);
   }
 
-  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, sync, actionCallback) {
+  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, sync, actionCallback, options) {
     if (window['prototype/prototype.js']) {
-      return new Ajax.Request(
-        this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync),
-        {
-          method: 'get',
-          onComplete: actionCallback
-        }
-      );
+      options = Object.extend({method: 'get', onComplete: actionCallback}, options);
+      var url = this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync);
+      return new Ajax.Request(url, options);
     } else {
       araneaPage().getLogger().warn("Prototype library not accessible, action call cannot be made.");
     }
