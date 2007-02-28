@@ -188,7 +188,11 @@ function AraneaPage() {
 	if (submitCallbacks[systemFormId])
 	  submitCallbacks[systemFormId].execute();
   }
-
+	
+	this.getSystemForm = function(element) {
+	  return this.getTraverser().findSurroundingSystemForm(element);
+	}	
+	
   this.event = function(element) {
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;

@@ -195,8 +195,7 @@ public class StandardServletInputData implements HttpInputData {
   }
   
   public String getContainerPath() {
-    String includeServletPath = (String) req.getAttribute("javax.servlet.include.servlet_path");
-    return includeServletPath == null ? req.getServletPath() : includeServletPath;
+    return req.getServletPath();
   }
   
   public String getContextURL() {
