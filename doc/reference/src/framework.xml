@@ -955,7 +955,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry>maximumRequestSize
               <para><literal>java.lang.Long</literal></para></entry>
 
-              <entry>Maximum size of the request sent to the server.</entry>
+              <entry>Maximum size of the request that server will
+              parse to the end.</entry>
             </row>
 
             <row>
