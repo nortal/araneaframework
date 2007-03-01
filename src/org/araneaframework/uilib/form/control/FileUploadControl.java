@@ -37,7 +37,7 @@ public class FileUploadControl extends BaseControl {
   protected List permittedMimeFileTypes;
   
   protected boolean uploadSucceeded = true;
-  protected boolean mimeTypePermited = true;
+  protected boolean mimeTypePermitted = true;
 
   public boolean isRead() {
     return innerData != null;
@@ -94,9 +94,9 @@ public class FileUploadControl extends BaseControl {
       FileItem file = fileUpload.getUploadedFile(request.getScope().toString());
       String mimeType = file.getContentType();
       
-      mimeTypePermited = permittedMimeFileTypes == null || permittedMimeFileTypes.contains(mimeType);
+      mimeTypePermitted = permittedMimeFileTypes == null || permittedMimeFileTypes.contains(mimeType);
 
-      if (mimeTypePermited) {
+      if (mimeTypePermitted) {
         innerData = new FileInfo(file);
       }
     }
@@ -142,7 +142,7 @@ public class FileUploadControl extends BaseControl {
           MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));        
     }
-    if (!mimeTypePermited) {
+    if (!mimeTypePermitted) {
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.FORBIDDEN_MIME_TYPE, 
