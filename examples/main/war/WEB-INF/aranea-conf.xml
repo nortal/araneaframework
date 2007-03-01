@@ -20,6 +20,7 @@
   <!-- Set the limits for file uploads. -->
   <bean id="araneaFileUploadFilter" class="org.araneaframework.http.filter.StandardFileUploadFilterService" singleton="false">
     <property name="maximumSize" value="1048576"/>
+    <property name="maximumRequestSize" value="5242880"/>
     <property name="maximumCachedSize" value="1048576"/>
   </bean>
   

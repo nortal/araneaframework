@@ -17,8 +17,8 @@
 package org.araneaframework.example.main.web.popups;
 
 import java.io.Writer;
-import java.util.Date;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
