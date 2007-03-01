@@ -945,10 +945,17 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
             <row>
               <entry>maximumSize
-              <para><literal>java.lang.Integer</literal></para></entry>
+              <para><literal>java.lang.Long</literal></para></entry>
 
               <entry>Maximum size of file that may be uploaded to
               server.</entry>
+            </row>
+
+            <row>
+              <entry>maximumRequestSize
+              <para><literal>java.lang.Long</literal></para></entry>
+
+              <entry>Maximum size of the request sent to the server.</entry>
             </row>
 
             <row>
