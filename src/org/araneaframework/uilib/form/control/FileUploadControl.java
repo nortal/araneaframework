@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.uilib.form.control;
 
@@ -31,11 +31,13 @@ import org.araneaframework.uilib.util.MessageUtil;
  * This class represents an HTML form file upload control.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- *  
+ * 
  */
 public class FileUploadControl extends BaseControl {
-
   protected List permittedMimeFileTypes;
+  
+  protected boolean uploadSucceeded = true;
+  protected boolean mimeTypePermited = true;
 
   public boolean isRead() {
     return innerData != null;
@@ -44,12 +46,13 @@ public class FileUploadControl extends BaseControl {
   /**
    * Sets the MIME file types that will be permitted,
    * 
-   * @param permittedMimeFileTypes the MIME file types that will be permitted.
+   * @param permittedMimeFileTypes
+   *          the MIME file types that will be permitted.
    */
   public void setPermittedMimeFileTypes(List permittedMimeFileTypes) {
     this.permittedMimeFileTypes = permittedMimeFileTypes;
   }
-  
+
   /**
    * Returns "FileInfo".
    * 
@@ -58,16 +61,16 @@ public class FileUploadControl extends BaseControl {
   public String getRawValueType() {
     return "FileInfo";
   }
-  
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
-	
+
+  // *********************************************************************
+  // * INTERNAL METHODS
+  // *********************************************************************
+
   /**
    * Empty.
    */
   protected void prepareResponse() {
-  //There is no response for file upload control.
+    // There is no response for file upload control.
   }
 
   /**
@@ -76,59 +79,62 @@ public class FileUploadControl extends BaseControl {
   protected void readFromRequest(HttpInputData request) {
     FileUploadInputExtension fileUpload = getFileUploadInputExtension(request);
     // this is acceptable, see comments in getFileUploadInputExtension()
-	if (fileUpload == null)
+    if (fileUpload == null) {
       return;
-	
-	// FIXME: unfortunately this conditional code is unreachable because when request 
-	// parsing fails transaction id is usually not set (inconsistent) and update() is never called
-	if (!fileUpload.uploadSucceeded()) {
-      Long sizeLimit = ((FileUploadContext)getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
-      addError(MessageUtil.localizeAndFormat(
-    		  UiLibMessages.FILE_UPLOAD_FAILED,
-    		  sizeLimit.toString(),
-    		  getEnvironment()
-    		  ));
-      return;
-	}
+    }
 
-  	if (fileUpload.getUploadedFile(request.getScope().toString())!= null) {
+    // FIXME: unfortunately this conditional code is unreachable because when request
+    // parsing fails transaction id is usually not set (inconsistent) and update() is never called
+    uploadSucceeded = fileUpload.uploadSucceeded();
+    if (!uploadSucceeded) {
+      return;
+    }
+
+    if (fileUpload.getUploadedFile(request.getScope().toString()) != null) {
       FileItem file = fileUpload.getUploadedFile(request.getScope().toString());
       String mimeType = file.getContentType();
+      
+      mimeTypePermited = permittedMimeFileTypes == null || permittedMimeFileTypes.contains(mimeType);
 
-      if (permittedMimeFileTypes == null || permittedMimeFileTypes.contains(mimeType)) {
-
+      if (mimeTypePermited) {
         innerData = new FileInfo(file);
-      }
-      else {
-        addError(
-            MessageUtil.localizeAndFormat(
-            UiLibMessages.FORBIDDEN_MIME_TYPE, 
-            MessageUtil.localize(getLabel(), getEnvironment()),
-            getEnvironment()));        
       }
     }
   }
 
   private FileUploadInputExtension getFileUploadInputExtension(HttpInputData request) {
-   if (getEnvironment().getEntry(FileUploadContext.class) == null)
-     throw new AraneaRuntimeException("It seems that attempt was made to use FileUploadControl, but upload filter is not present.");
+    if (getEnvironment().getEntry(FileUploadContext.class) == null)
+      throw new AraneaRuntimeException("It seems that attempt was made to use FileUploadControl, but upload filter is not present.");
 
     FileUploadInputExtension fileUpload = null;
-    // Motivation for try: when one opens fileuploaddemo in new window (cloning!), exception occurs b/c 
-    // FileUploadInputExtension extension does not exist in InputData which is 
+    // Motivation for try: when one opens fileuploaddemo in new window (cloning!), exception occurs b/c
+    // FileUploadInputExtension extension does not exist in InputData which is
     // extended only when request is multipart, while cloning filter always sends ordinary GET.
-	try {
-       fileUpload = (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);
-	} catch (NoSuchNarrowableException e) {
-      // If no fileupload extension is present and fileupload filter is enabled, control should 
+    try {
+      fileUpload = (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);
+    }
+    catch (NoSuchNarrowableException e) {
+      // If no fileupload extension is present and fileupload filter is enabled, control should
       // just sit there and be beautiful, otherwise just return null
-	}
-	return fileUpload;
+    }
+    return fileUpload;
   }
-  
+
   public void convert() {
     value = innerData;
+    
+    if (!uploadSucceeded) {
+      Long sizeLimit = ((FileUploadContext) getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
+      addError(MessageUtil.localizeAndFormat(
+          UiLibMessages.FILE_UPLOAD_FAILED,
+          sizeLimit.toString(),
+          getEnvironment()
+          ));
+      return;
+    }
+  }
 
+  public void validate() {
     if (isMandatory() && !isRead()) {
       addError(
           MessageUtil.localizeAndFormat(
@@ -136,8 +142,15 @@ public class FileUploadControl extends BaseControl {
           MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));        
     }
+    if (!mimeTypePermited) {
+      addError(
+          MessageUtil.localizeAndFormat(
+          UiLibMessages.FORBIDDEN_MIME_TYPE, 
+          MessageUtil.localize(getLabel(), getEnvironment()),
+          getEnvironment()));        
+    }
   }
-  
+
   /**
    * Returns {@link ViewModel}.
    * 
@@ -145,11 +158,11 @@ public class FileUploadControl extends BaseControl {
    */
   public Object getViewModel() {
     return new ViewModel();
-  } 
+  }
 
-  //*********************************************************************
-  //* VIEW MODEL
-  //*********************************************************************
+  // *********************************************************************
+  // * VIEW MODEL
+  // *********************************************************************
 
   /**
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -174,5 +187,4 @@ public class FileUploadControl extends BaseControl {
       return permittedMimeFileTypes;
     }
   }
-
 }
