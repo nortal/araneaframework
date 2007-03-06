@@ -83,7 +83,7 @@ public class Data implements java.io.Serializable, FormElementAware {
       throw new DataItemTypeViolatedException(getValueType(), value.getClass());
     
     this.value = value;
-    
+
     if (feCtx != null) {
       feCtx.addInitEvent(new Event() {
 		public void run() {
@@ -119,7 +119,7 @@ public class Data implements java.io.Serializable, FormElementAware {
   /**
    * Returns whether {@link Data} value has been set by calling {@link #setValue(Object)}.
    * @return whether {@link Data} value has been set by calling {@link #setValue(Object)}.
-   * @deprecated not used anymore, do not call
+   * @deprecated not used anymore, do not call, always returns <code>false</code>
    */
   public boolean isDirty() {
     return dirty;
@@ -162,6 +162,9 @@ public class Data implements java.io.Serializable, FormElementAware {
   }
 
   public void setFormElementCtx(FormElementContext feCtx) {
-    this.feCtx = (FormElement)feCtx; 
+    if (this.feCtx != feCtx) {
+      this.feCtx = (FormElement)feCtx;
+      setValue(getValue());
+    }
   }
 }

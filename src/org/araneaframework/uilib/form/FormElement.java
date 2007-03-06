@@ -315,6 +315,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
   protected void convertInternal() {
     if (!isInitialized())
       return;
+    
+    Object newDataValue = null;
 
     //There is only point to convert and set the data if it is present
     if (getData() != null && getControl() != null) {
@@ -325,15 +327,15 @@ public class FormElement extends GenericFormElement implements FormElementContex
       if (isValid()) {
         //We assume that the convertor is present, if control and data are
         // here
-        Object newDataValue = getConverter().convert(getControl().getRawValue());
-        getData().setValue(newDataValue);
+        newDataValue = getConverter().convert(getControl().getRawValue());
+        //TODO: remove in 1.1 final
         getData().clean();
       }
     }
 
-    //Reseting data, if element is not valid.
-    if (getData() != null && !isValid()) {
-      getData().setValue(null);
+    if (getData() != null && isValid()) {
+      getData().setValue(newDataValue);
+      //TODO: remove in 1.1 final
       getData().clean();
     }
   }
