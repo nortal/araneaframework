@@ -27,7 +27,9 @@ import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
 import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TimeControl;
+import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.form.data.StringData;
 
@@ -62,6 +64,9 @@ public class DemoOnChangeListenersWidget extends TemplateBaseWidget {
 							return DemoOnChangeListenersWidget.this.getL10nCtx();
 						}
 					}));
+		
+		simpleForm.addElement("float1", "common.float", buildControl(FloatControl.class), new BigDecimalData(), false);
+		simpleForm.addElement("float2", "common.float", buildControl(FloatControl.class), new BigDecimalData(), false);
 
 		addWidget("listenerForm", simpleForm);
 	}

@@ -49,7 +49,15 @@
 							</ui:cell>
 						</ui:formElement>
 
-						<ui:cell colspan="2"/>
+						<ui:formElement id="float1">
+							<ui:cell>
+								<ui:label />
+							</ui:cell>
+		
+							<ui:cell>
+								<ui:floatInput/>
+							</ui:cell>
+						</ui:formElement>
 					</ui:row>
 				</tui:componentForm>
 			</tui:component>
@@ -91,11 +99,19 @@
 							</ui:cell>
 
 							<ui:cell>
-								<ui:dateInput />
+								<ui:dateInput updateRegions="woot"/>
 							</ui:cell>
 						</ui:formElement>
 
-						<ui:cell colspan="2"/>
+						<ui:formElement id="float2">
+							<ui:cell>
+								<ui:label />
+							</ui:cell>
+		
+							<ui:cell>
+								<ui:floatInput updateRegions="woot"/>
+							</ui:cell>
+						</ui:formElement>
 					</ui:row>
 					</ui:updateRegionRows>
 				</tui:componentForm>
@@ -123,7 +139,7 @@
 				</tui:componentForm>
 
 			</tui:component>
-
+			
 		</ui:form>
 
 	</ui:widgetContext>
