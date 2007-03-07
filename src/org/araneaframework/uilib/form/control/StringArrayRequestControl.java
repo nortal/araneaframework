@@ -119,8 +119,8 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * Copies the value to inner data (output value) if control is valid.
    */
   protected void process() throws Exception {
-    //XXX: this was here before change_153 (async form mods) 
-	//value = null;
+    //XXX: i am keeping this only b/c it was here before change_153 (async form mods) 
+    value = null;
   }
   
   //*********************************************************************
