@@ -6,7 +6,7 @@ Features and Improvements
     "ant run-app-*" targets now work when using Ant 1.7                       | See #320
     AraneaPage.(action & action_6) take Ajax.Request options as parameters    | See change #170
     FormSelectDisplayHtmlTag output can be optionally wrapped                 | See #324
-    All distribution files now include source code                            | See #327
+    All distribution .jar files now include claseses' source code             | See #327
 
 Bugfixes
     FileUpload Control now produces error messages when file size limit is    |
