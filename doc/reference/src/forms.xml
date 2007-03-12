@@ -2276,8 +2276,42 @@ el.click();</programlisting>
 
       <sect3>
         <title>Attributes</title>
+        
+                <informaltable frame="topbot">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
 
-        <emphasis>Has standard <literal>id</literal> and
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>escapeSingleSpaces</entry>
+
+                <entry>
+                  <emphasis>false</emphasis>
+                </entry>
+
+                <entry>Boolean, specifying whether even single spaces (blanks) should be replace with &amp;nbsp; entities in output. It affects
+                browser performed text-wrapping. Default value is <literal>false</literal>. 
+                Attribute is available since tag-library version 1.0.6.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <emphasis>Also has standard <literal>id</literal> and
         <literal>styleClass</literal> attributes.</emphasis>
       </sect3>
     </sect2>

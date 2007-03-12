@@ -140,6 +140,9 @@
 		<jar destfile="dist/modules/aranea-core.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/*"/>
+			</fileset>
+			
+			<fileset dir="src">
 				<include name="org/araneaframework/core/**/*"/>
 			</fileset>
 			
@@ -155,6 +158,10 @@
 				<include name="org/araneaframework/framework/**/*"/>												
 			</fileset>
 			
+			<fileset dir="src">
+				<include name="org/araneaframework/framework/**/*"/>
+			</fileset>
+			
 			<manifest>
 				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
 				<attribute name="Implementation-Title" value="${project.title}"/>
@@ -167,6 +174,10 @@
 			  <include name="org/araneaframework/http/**/*"/>						
 			</fileset>
 			
+			<fileset dir="src">
+				<include name="org/araneaframework/http/**/*"/>
+			</fileset>
+						
 			<manifest>
 				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
 				<attribute name="Implementation-Title" value="${project.title}"/>
@@ -179,6 +190,10 @@
 				<include name="org/araneaframework/backend/**/*"/>			
 			</fileset>
 			
+			<fileset dir="src">
+				<include name="org/araneaframework/backend/**/*"/>
+			</fileset>
+			
 			<manifest>
 				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
 				<attribute name="Implementation-Title" value="${project.title}"/>
@@ -188,6 +203,10 @@
 		
 		<jar destfile="dist/modules/aranea-uilib.jar" compress="true">
 			<fileset dir="build/classes">
+				<include name="org/araneaframework/uilib/**/*"/>			
+			</fileset>
+			
+			<fileset dir="src">
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
       	<fileset dir="etc" includes="resource/**/*"/>  
@@ -204,6 +223,12 @@
 				<include name="org/araneaframework/jsp/**/*"/>			
 				<exclude name="org/araneaframework/jsp/engine/**/*"/>			
 			</fileset>
+			
+			<fileset dir="src">
+				<include name="org/araneaframework/jsp/**/*"/>			
+				<exclude name="org/araneaframework/jsp/engine/**/*"/>			
+			</fileset>
+
 			<fileset dir="etc" includes="js/**/*"/>
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
@@ -220,7 +245,11 @@
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/engine/**/*"/>		        
 			</fileset>
-      	
+
+			<fileset dir="src">
+				<include name="org/araneaframework/jsp/engine/**/*"/>		        
+			</fileset>
+
 			<fileset dir="etc" includes="cache/**/*"/>      
 			
 			<manifest>
@@ -236,6 +265,11 @@
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/integration/spring/**/*"/>			
 			</fileset>
+			
+			<fileset dir="src">
+				<include name="org/araneaframework/integration/spring/**/*"/>	
+			</fileset>
+			
 			<fileset dir="etc" includes="conf/**/*"/>
 			
 			<manifest>
@@ -251,10 +285,12 @@
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/**/*"/>	
 			</fileset>
-			<fileset dir="etc">
-              <exclude name="build/*"/>
-              <exclude name="build"/>
+			<fileset dir="src">
+			  <include name="org/araneaframework/**/*"/>	
 			</fileset>
+			
+			<fileset dir="etc" excludes="build/,src/"/>
+
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 
 			<manifest>
