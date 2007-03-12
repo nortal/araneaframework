@@ -117,8 +117,6 @@ public class AtomicResponseHelper {
       
       byte[] data = ((AraneaServletOutputStream) out).getData();
       
-      log.debug("Committed data size: " + data.length);
-      
       getResponse().getOutputStream().write(data);
       getResponse().getOutputStream().flush();
       
