@@ -47,6 +47,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 
 	protected FormRowHandler formRowHandler;	
 	protected Map formRows = new LinkedMap();
+  protected List rows = new ArrayList();
 
 	protected int rowFormCounter = 0;
 
@@ -72,18 +73,19 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	}
   
   protected List getRows() {
-    if (model == null)
-      return new ArrayList();
-    
-    try {
-      return model.getRows();
-    }
-    catch (Exception e) {
-      throw new AraneaRuntimeException(e);
-    }
+    return rows;
   }
 
 	public void processRows() {
+    if (model != null) {
+      try {
+        rows = model.getRows();
+      }
+      catch (Exception e) {
+        throw new AraneaRuntimeException(e);
+      }
+    }
+    
 		for (Iterator i = getRows().iterator(); i.hasNext();) {
 			Object row = i.next();
 

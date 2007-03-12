@@ -86,7 +86,6 @@ public class StandardUpdateRegionFilterService extends BaseFilterService {
 			}
 		}
 		finally {
-			log.info("Committing response.");
 			arUtil.commit();
 		}
 	}

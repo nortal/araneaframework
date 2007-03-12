@@ -164,12 +164,8 @@ public class BaseListStructure implements Serializable {
 		 * Takes a snapshot of outer class state.
 		 */
 		protected ViewModel() {
-			log.debug("Constructing ListStructure.ViewModel");
 			MultiFieldOrder multiOrder = getListOrder() instanceof MultiFieldOrder ? (MultiFieldOrder) getListOrder()
 					: null;
-			if (multiOrder == null) {
-				log.debug("MultiColumnOrder not found");
-			}
 
 			for (Iterator i = BaseListStructure.this.fieldList.iterator(); i
 					.hasNext();) {

@@ -46,7 +46,6 @@ public class MultiComparatorExpression implements CompositeComparatorExpression 
 	public int compare(VariableResolver resolver1, VariableResolver resolver2)
 	throws ExpressionEvaluationException {
 		if (this.children.size() == 0) {
-			log.debug("No children specified - returning zero as the comparing result");
 			return 0;
 		}
 		
