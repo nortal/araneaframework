@@ -26,8 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.DisplayItemContainer;
 import org.araneaframework.uilib.util.DisplayItemUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 
 /**
@@ -187,8 +189,18 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
     
     return result;
   }
-
-
+  
+  
+  
+   protected void validateNotNull() {
+     if (isMandatory() && ((Collection)value).isEmpty()) {
+	      addError(
+	              MessageUtil.localizeAndFormat(
+	              UiLibMessages.MANDATORY_FIELD, 
+	              MessageUtil.localize(getLabel(), getEnvironment()),
+	              getEnvironment()));
+    }
+  }
 
   /**
    * Converts <code>String[]</code> to <code>List&lt;String&gt;</code>.

@@ -93,6 +93,8 @@ public abstract class StringArrayRequestControl extends BaseControl {
    */
   public void validate() {
     if (isMandatory() && !isRead()) {
+      boolean hasValue = (innerData != null && ((String[]) innerData).length > 0 && ((String[]) innerData)[0].trim().length() != 0);
+      if (!isDisabled() || (isDisabled() && !hasValue))
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.MANDATORY_FIELD, 
