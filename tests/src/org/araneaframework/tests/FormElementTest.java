@@ -47,9 +47,9 @@ public class FormElementTest extends TestCase {
 		sfe.setMandatory(true);
 
 		sfe.setControl(tb);
-		sfe.setData(new LongData());
 		sfe.setConverter(new StringToLongConverter());
-
+		sfe.setData(new LongData());
+		
 		sfe._getWidget().update(new StandardServletInputData(emptyRequest));
 		sfe.convertAndValidate();
 

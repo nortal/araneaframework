@@ -16,6 +16,9 @@
 
 package org.araneaframework.uilib.form;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -28,6 +31,7 @@ import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
+import org.araneaframework.uilib.util.Event;
 
 /**
  * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
@@ -38,6 +42,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*******************************************************************
   // FIELDS
   //*******************************************************************
+  private List initEvents = new ArrayList();
+	
   protected Control control;
   protected Converter converter;
   protected Data data;
@@ -108,6 +114,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
    */
   public void setData(Data data) {
     this.data = data;
+    data.setFormElementCtx(this);
   }
 
   /**
@@ -243,16 +250,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
    */
   protected void process() throws Exception {
     if (getControl() != null) {
-      if (getData() != null) {
-        if (getData().isDirty()) {
-          getControl().setRawValue(getConverter().reverseConvert(getData().getValue()));      
-        }
-        
-        // XXX: why would anyone want to set Data to null here
-        // getData().setValue(null);
-        getData().clean();
-      }      
-
       getControl()._getWidget().process();
     }
     
@@ -282,7 +279,18 @@ public class FormElement extends GenericFormElement implements FormElementContex
    */
   public Object getViewModel() throws Exception {
     return new ViewModel();
-  }	  
+  }
+  
+  /** @since 1.0.5 */
+  public void addInitEvent(Event event) {
+    if (isInitialized()) {
+      event.run();
+    } else {
+      if (initEvents == null)
+        initEvents = new ArrayList();
+      initEvents.add(event);
+    }
+  }
   
   protected void init() throws Exception {
     super.init();
@@ -292,6 +300,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
     
     if (getControl() != null) 
       getControl()._getComponent().init(getScope(), getEnvironment());
+    
+    runInitEvents();
   }
   
   protected void destroy() throws Exception {
@@ -302,10 +312,12 @@ public class FormElement extends GenericFormElement implements FormElementContex
   /**
    * Uses {@link BaseConverter}to convert the {@link BaseControl}value to the {@link Data}value.
    */
-  protected void convertInternal() {  	
-  	//It is dangerous to overwrite dirty data
-  	if (getData() != null && getData().isDirty()) return;
-  	
+  protected void convertInternal() {
+    if (!isInitialized())
+      return;
+    
+    Object newDataValue = null;
+
     //There is only point to convert and set the data if it is present
     if (getData() != null && getControl() != null) {
 
@@ -315,15 +327,15 @@ public class FormElement extends GenericFormElement implements FormElementContex
       if (isValid()) {
         //We assume that the convertor is present, if control and data are
         // here
-        Object newDataValue = getConverter().convert(getControl().getRawValue());
-        getData().setValue(newDataValue);
+        newDataValue = getConverter().convert(getControl().getRawValue());
+        //TODO: remove in 1.1 final
         getData().clean();
       }
     }
 
-    //Reseting data, if element is not valid.
-    if (getData() != null && !isValid()) {
-      getData().setValue(null);
+    if (getData() != null && isValid()) {
+      getData().setValue(newDataValue);
+      //TODO: remove in 1.1 final
       getData().clean();
     }
   }
@@ -338,6 +350,18 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	public void accept(String id, FormElementVisitor visitor) {
 		visitor.visit(id, this);
 	}
+	
+  /** Called from {@link FormElement#init()} to run queued events.
+   * @since 1.0.5 */
+  protected void runInitEvents() {
+    if (initEvents != null) {
+      for (Iterator it = initEvents.iterator(); it.hasNext();) {
+        Runnable event = (Runnable) it.next();
+        event.run();
+      }
+    }
+    initEvents = null;
+  }
 	
 	  /**
 	   * Returns whether this {@link GenericFormElement} was rendered

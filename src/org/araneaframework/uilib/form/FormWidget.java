@@ -271,9 +271,9 @@ public class FormWidget extends GenericFormElement {
    * @return {@link FormElement} with given configuration
    */
   public FormElement createElement(String labelId, Control control, Data data, Object initialValue, boolean mandatory) throws Exception {
-  	if (data != null)
-  		data.setValue(initialValue);
-  	return createElement(labelId, control, data, mandatory);
+    if (data != null)
+      data.setValue(initialValue);
+    return createElement(labelId, control, data, mandatory); 
   }
 
   

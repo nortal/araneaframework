@@ -16,6 +16,8 @@
 
 package org.araneaframework.example.main.web.demo;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
@@ -58,7 +60,7 @@ public class DemoMultiSelect extends TemplateBaseWidget {
 	   * at the end of the request.
 	   */
 	  public void handleEventTest() throws Exception {
-        form.convert();
+        form.convertAndValidate();
         if (form.isStateChanged())
         	getMessageCtx().showInfoMessage("State of multiselect control has changed.");
 

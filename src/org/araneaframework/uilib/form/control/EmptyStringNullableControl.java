@@ -45,7 +45,9 @@ public abstract class EmptyStringNullableControl extends StringRequestControl {
   
 
 	public boolean isRead() {
-		return innerData != null && ((String[]) innerData)[0].trim().length() != 0;
+		// semantically this is not right, as innerData may be not null when value was not
+		// actually read from current request: ie in cases when update() is not called. 
+		return (innerData != null && ((String[]) innerData)[0].trim().length() != 0);
 	}
 
 }
