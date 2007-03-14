@@ -42,8 +42,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   
   protected Object value;
   protected Object innerData;
-  
-  private boolean dirty = false;
+  protected boolean isReadFromRequest = false;
 
   private FormElementContext feCtx;
   
@@ -68,7 +67,6 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
    * @see #getRawValue()
    */
   public void setRawValue(Object value) {   
-    dirty = true;
     BaseControl.this.value = value;
   }
 
@@ -87,6 +85,13 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   
   public FormElementContext getFormElementCtx() {
     return feCtx;
+  }
+  
+  /**
+   * By default the control is considered read if it has a not null data read from request.
+   */
+  public boolean isRead() {
+    return isReadFromRequest;
   }
   
   //*********************************************************************
@@ -134,20 +139,6 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
       super.handleEvent(input);
   }
   
-  public Widget.Interface _getWidget() {
-    return new WidgetImpl();
-  }
-  
-  protected class WidgetImpl extends BaseWidget.WidgetImpl {
-    public void process()  {
-      if (!dirty) return; 
-      
-      super.process();
-      
-      dirty = false;
-    }
-  }
-  
   /**
    * Returns control label.
    * 
@@ -181,7 +172,18 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   protected boolean isValid() {
     return feCtx.isValid();
   }
-  
+
+  public Widget.Interface _getWidget() {
+	  return new WidgetImpl();
+  }
+
+  protected class WidgetImpl extends BaseWidget.WidgetImpl {
+    public void process() {
+      super.process();
+      isReadFromRequest = false;
+    }
+  }
+
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    

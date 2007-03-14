@@ -39,6 +39,7 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
 	 * Checks that the <code>String</code> is not empty.
 	 */
   public void validateConstraint() {
+    // XXX: something instead isRead() is greatly desired here
     if (!isRead()) {
     	addError(
     	    MessageUtil.localizeAndFormat(

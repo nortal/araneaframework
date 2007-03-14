@@ -79,7 +79,6 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
         // TODO numberFormatException handling
         quantity.setValue(new Integer(actionParam));
         calculate();
-        form._getWidget().process();
         writeFields(output);
       }
     });
@@ -90,7 +89,6 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
         // TODO numberFormatException handling
         vat.setValue(round2(new BigDecimal(actionParam)));
         calculate();
-        form._getWidget().process();
         writeFields(output);
       }
     });
