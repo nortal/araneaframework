@@ -359,6 +359,7 @@
 				<include name="Notice.txt"/>
 				<include name="Readme.txt"/>
 				<include name="Changelog.txt"/>
+				<include name="version.properties"/>
 
 				<exclude name="CVS/**/*"/>
 				<exclude name="**/*lck"/>

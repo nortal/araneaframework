@@ -105,7 +105,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
 
   /**
-   * Clones given {@link RelocatableService}. 
+   * Clones given {@link org.araneaframework.Relocatable.RelocatableService}. 
    * Clone is created by first serializing and then deserializing given <code>service</code>.
    * Created clone does not have {@link org.araneaframework.Environment}.
    * @return clone (without {@link org.araneaframework.Environment}) of given {@link RelocatableService}.

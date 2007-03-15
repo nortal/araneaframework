@@ -72,10 +72,11 @@ public class StandardServiceAdapterWidget extends BaseWidget {
   }  
   
   /**
-   * TODO: why is it in render and not in event() ??
    * Calls child service's action only if an event was received. The action path
    * is constructed via <code>getActionPath(InputData)</code>. The InputData is
    * saved in the <code>update(InputData)</code> method.
+   * 
+   * TODO: why is it in render and not in event() ?
    */
   public void render(OutputData output) throws Exception {
     if (eventReceived) {
