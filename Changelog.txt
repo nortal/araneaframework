@@ -10,9 +10,11 @@ Features and Improvements
 
 Bugfixes
     FileUpload Control now produces error messages when file size limit is    |
-    exceeded (NB! only when request size limit is not exceeded too)           | See #248
+    exceeded (NB! only when request size limit is within boundaries)          | See #248
     <span> in FormSelectDisplayHtmlTag is now closed correctly                | See #322
     ListWidget.destroy() caused NullPointerException in some cases            | See #325
+    Form modifications from actions and session threads were a hassle         | See change #153
+    Memory based lists were reloading data too often                          | See #294
 
 ---------------------------------------------------------------------------------------------
 2007.02.09    | Aranea 1.0.5
