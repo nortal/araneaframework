@@ -119,9 +119,9 @@ public class AutoCompleteTextControl extends TextControl {
   }
   
   /**
-   * Default {@link ResponseBuilder} used when {@link AutoCompleteTextControl} does not have
-   * its {@link ResponseBuilder} set and {@link ConfigurationContext#AUTO_COMPLETE_RESPONSE_BUILDER}
-   * does not specify application-wide {@link ResponseBuilder}.
+   * Default {@link AutoCompleteTextControl.ResponseBuilder} used when {@link AutoCompleteTextControl} does not have
+   * its {@link AutoCompleteTextControl.ResponseBuilder} set and {@link ConfigurationContext#AUTO_COMPLETE_RESPONSE_BUILDER}
+   * does not specify application-wide {@link AutoCompleteTextControl.ResponseBuilder}.
    * 
    * @author Steven Jentson (steven@webmedia.ee)
    */

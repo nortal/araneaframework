@@ -92,7 +92,6 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
    * read from request to a <code>Date</code> in default <code>TimeZone</code>
    * and <code>Locale</code>.
    * 
-   * @return
    * @since 1.0.3
    */
   protected ParsedDate parseDate(String parameterValue) {
