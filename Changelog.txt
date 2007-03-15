@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
-2007.03.09    | Aranea 1.0.6
+2007.03.16    | Aranea 1.0.6
 
 Features and Improvements
     "ant run-app-*" targets now work when using Ant 1.7                       | See #320
