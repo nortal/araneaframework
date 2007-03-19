@@ -85,14 +85,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
       messages = addPermanentMessages(messages);
     }
 
-    output.pushAttribute(MessageContext.MESSAGE_KEY, messages);
-
-    try {
-      super.render(output);
-    }
-    finally {
-      output.popAttribute(MessageContext.MESSAGE_KEY);
-    }
+    super.render(output);
   }
 
   /** Stores message of given type in given messageMap (created if <code>null</code> at invocation). */
@@ -187,5 +180,10 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   public void clearAllMessages() {
     clearMessages();
     clearPermanentMessages();
+  }
+
+  public Map getMessages() {
+    //TODO unmodifiable???
+    return messages;
   }
 }

@@ -17,8 +17,8 @@
 package org.araneaframework.http;
 
 import java.io.Serializable;
+import java.util.Map;
 import org.araneaframework.Message;
-import org.araneaframework.OutputData;
 import org.araneaframework.Service;
 import org.araneaframework.Widget;
 import org.araneaframework.http.support.PopupWindowProperties;
@@ -30,8 +30,6 @@ import org.araneaframework.http.support.PopupWindowProperties;
  * @author Taimo Peelo
  */
 public interface PopupWindowContext extends Serializable {
-  /** Key under which popup info is made available in response {@link OutputData}. */
-  public static final String POPUPS_KEY = "popupWindows";
 
   /** Popup closing key, when session-thread in a window receives response containing 
    * that key, it should close and take serverside service with it. */
@@ -77,4 +75,6 @@ public interface PopupWindowContext extends Serializable {
    * @return opener of thread-level service, <code>null</code> when calling service does not have registered opener.
    */
   public Widget getOpener();
+  
+  public Map getPopups();
 }

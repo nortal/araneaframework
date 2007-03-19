@@ -17,6 +17,7 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * A context for adding messages to a central pool of messages for later 
@@ -39,7 +40,6 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface MessageContext extends Serializable {
-  public static final String MESSAGE_KEY = "org.araneaframework.framework.MessageContext.MESSAGES";
   
   /**
    * A message type indicating its an error message. 
@@ -103,4 +103,6 @@ public interface MessageContext extends Serializable {
    * Clears all messages (both permanent and usual).
    */  
   public void clearAllMessages();
+  
+  public Map getMessages();
 }

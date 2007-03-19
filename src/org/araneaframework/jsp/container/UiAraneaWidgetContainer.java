@@ -17,26 +17,21 @@
 package org.araneaframework.jsp.container;
 
 import java.util.Map;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.http.filter.StandardJspFilterService;
+import org.araneaframework.http.JspContext;
 
 public class UiAraneaWidgetContainer implements UiWidgetContainer {
   protected ApplicationWidget rootWidget;
-  private StandardJspFilterService.JspConfiguration conf;
+  private JspContext conf;
   
-  public UiAraneaWidgetContainer(ApplicationWidget rootWidget, StandardJspFilterService.JspConfiguration conf) {
+  public UiAraneaWidgetContainer(ApplicationWidget rootWidget, JspContext conf) {
     this.rootWidget = rootWidget;
     this.conf = conf;
   }
 
   public Map getWidgets() {
     return rootWidget._getComposite().getChildren();
-  }
-
-  public String scopeWidgetFullId(PageContext pageContext, String fullWidgetId) throws JspException {
-    return fullWidgetId;
   }
 
   public Map getTagMapping(PageContext pageContext, String uri) {

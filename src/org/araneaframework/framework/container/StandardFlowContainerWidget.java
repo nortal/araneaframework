@@ -292,7 +292,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     //Don't render empty callstack
     if (getCallStack().size() == 0) return; 
     
-    output.pushAttribute(FlowContext.CALL_STACK_KEY, callStack);
+//    output.pushAttribute(FlowContext.CALL_STACK_KEY, callStack);
       
     try {          
       output.pushScope(FlowContext.FLOW_KEY);
@@ -305,7 +305,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       }
     }
     finally {       
-      output.popAttribute(FlowContext.CALL_STACK_KEY);
+//      output.popAttribute(FlowContext.CALL_STACK_KEY);
     }
   }
   

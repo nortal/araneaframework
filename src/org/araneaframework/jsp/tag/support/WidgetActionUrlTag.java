@@ -60,12 +60,11 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
   }
 
   protected String getWidgetActionUrl() throws JspException {
-    Map state = (Map) getOutputData().getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
     String systemFormId = (String) requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
     Map m = new HashMap();
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-    m.put(TopServiceContext.TOP_SERVICE_KEY, state.get(TopServiceContext.TOP_SERVICE_KEY));
-    m.put(ThreadContext.THREAD_SERVICE_KEY, state.get(ThreadContext.THREAD_SERVICE_KEY));
+    m.put(TopServiceContext.TOP_SERVICE_KEY, ClientStateUtil.requireTopServiceId(getEnvironment()));
+    m.put(ThreadContext.THREAD_SERVICE_KEY, ClientStateUtil.requireThreadServiceId(getEnvironment()));
     m.put(StandardContainerWidget.ACTION_PATH_KEY, fullId);
     if (actionId != null) {
       m.put(ApplicationService.ACTION_HANDLER_ID_KEY, actionId);

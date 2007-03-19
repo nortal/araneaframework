@@ -54,7 +54,8 @@ public class MessagesHtmlTag extends PresentationTag {
   protected int doEndTag(Writer out) throws Exception {
     super.doEndTag(out);
 
-    Map messageMap = (Map) getOutputData().getAttribute(MessageContext.MESSAGE_KEY);
+    MessageContext messageContext = (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+    Map messageMap = messageContext.getMessages();
     if (messageMap == null)
       return EVAL_PAGE;
 

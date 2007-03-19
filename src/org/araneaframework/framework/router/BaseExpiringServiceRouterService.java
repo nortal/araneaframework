@@ -30,6 +30,7 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.ExpiringServiceContext;
 import org.araneaframework.framework.ManagedServiceContext;
 
 /**
@@ -39,14 +40,16 @@ import org.araneaframework.framework.ManagedServiceContext;
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public abstract class BaseExpiringServiceRouterService extends BaseServiceRouterService {
-  /** {@link OutputData} key under which expiring service lifetime expectancies are stored. 
-   * This should be a <code>Map &lt;Object router_service_key, Long timeToLive&gt;</code> */
-  public static final String SERVICE_TTL_MAP = "serviceTTLMap";
+public abstract class BaseExpiringServiceRouterService extends BaseServiceRouterService implements ExpiringServiceContext {
 
   private static final Logger log = Logger.getLogger(BaseExpiringServiceRouterService.class);
   private Map timeCapsules;
-
+  private Map serviceTTLMap;
+  
+  public Map getServiceTTLMap() {
+    return serviceTTLMap;
+  }
+  
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     TimeCapsule capsule = null;
     if (timeCapsules != null) {
@@ -54,9 +57,11 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
       capsule = (TimeCapsule)getTimeCapsules().get(getServiceId(input));
     }
  
-    Map serviceTTLMap = null;
+    serviceTTLMap = null;
     if (capsule != null) {
-      serviceTTLMap = (Map) output.getAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP);
+      if (getEnvironment().getEntry(ExpiringServiceContext.class) != null) {
+        serviceTTLMap = ((ExpiringServiceContext) getEnvironment().getEntry(ExpiringServiceContext.class)).getServiceTTLMap();
+      }
       if (serviceTTLMap == null) {
         serviceTTLMap = new HashMap();
       }
@@ -65,12 +70,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     }
 
     if (!isKeepAlive(input)) {
-      try {
-    	output.pushAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP, serviceTTLMap);
     	super.action(path, input, output);
-      } finally {
-        output.popAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP);
-      }
     } else {
       if (log.isDebugEnabled())
         log.debug(Assert.thisToString(this) + " received keepalive for service '" + getServiceId(input).toString() + "'");
@@ -81,7 +81,10 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   }
 
   protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
+    Map entries = new HashMap();
+    entries.put(ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
+    entries.put(ExpiringServiceContext.class, this);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
   
   protected void closeService(Object serviceId) {

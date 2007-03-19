@@ -26,12 +26,11 @@ import org.araneaframework.Path;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.filter.StandardPopupFilterWidget.StandardPopupServiceInfo;
+import org.araneaframework.http.util.ClientStateUtil;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
 
@@ -58,8 +57,8 @@ public class WindowClosingService extends BaseService {
 		
 		StandardPopupServiceInfo serviceInfo = null;
 		if (opener != null) {
-			String threadId = (String) ((ThreadContext) opener.getEnvironment().getEntry(ThreadContext.class)).getCurrentId();
-			String topserviceId = (String) ((TopServiceContext) opener.getEnvironment().getEntry(TopServiceContext.class)).getCurrentId();
+			String threadId = (String) ClientStateUtil.requireThreadServiceId(opener.getEnvironment());
+			String topserviceId = (String) ClientStateUtil.requireTopServiceId(opener.getEnvironment());
 			String url = ((HttpOutputData)getInputData().getOutputData()).encodeURL(((HttpInputData)getInputData()).getContainerURL());
 			serviceInfo = new StandardPopupServiceInfo(topserviceId, threadId, null, url);
 			serviceInfo.setTransactionOverride(false);

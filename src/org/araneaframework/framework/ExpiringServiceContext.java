@@ -17,11 +17,8 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
-import org.araneaframework.core.ApplicationWidget;
+import java.util.Map;
 
-/**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- */
-public interface ViewPortContext extends Serializable {
-  public ApplicationWidget getViewPort();
+public interface ExpiringServiceContext extends Serializable {
+  public Map getServiceTTLMap();
 }

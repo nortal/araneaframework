@@ -17,15 +17,13 @@
 package org.araneaframework.jsp.tag.form;
 
 import java.io.Writer;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
-import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.http.util.ClientStateUtil;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -41,26 +39,17 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Puts an HTML <i>form</i> tag with parameters needed by Aranea."
  */
 public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {  
-  private OutputData output;
-  private StandardJspFilterService.JspConfiguration config;
+  private JspContext config;
   
   protected int doStartTag(Writer out) throws Exception {
-    output = getOutputData(); 
-
-    config = 
-      (StandardJspFilterService.JspConfiguration) output.getAttribute(
-          JspContext.JSP_CONFIGURATION_KEY);
+    config = (JspContext) getEnvironment().requireEntry(JspContext.class);
 
     super.doStartTag(out);
     
     // Hidden fields: preset
-    Map state = (Map)output.getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
-    if (state != null) {
-	    for (Iterator iter = state.entrySet().iterator(); iter.hasNext();) {
-			Entry element = (Entry) iter.next();
-	        JspUtil.writeHiddenInputElement(out, (String)element.getKey(), (String)element.getValue());
-		}
-    }
+    JspUtil.writeHiddenInputElement(out, TopServiceContext.TOP_SERVICE_KEY, ClientStateUtil.requireTopServiceId(getEnvironment()).toString());
+    JspUtil.writeHiddenInputElement(out, ThreadContext.THREAD_SERVICE_KEY, ClientStateUtil.requireThreadServiceId(getEnvironment()).toString());
+    JspUtil.writeHiddenInputElement(out, TransactionContext.TRANSACTION_ID_KEY, ClientStateUtil.requireTransactionId(getEnvironment()).toString());
     
     // Hidden fields: to be set
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");

@@ -17,11 +17,8 @@
 package org.araneaframework.jsp.tag.aranea;
 
 import java.io.Writer;
-import org.araneaframework.OutputData;
 import org.araneaframework.framework.ViewPortContext;
-import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.jsp.container.UiAraneaWidgetContainer;
 import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.tag.BaseTag;
@@ -40,16 +37,10 @@ public class AraneaViewPortTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    OutputData output = getOutputData(); 
-    StandardContainerWidget rootWidget = 
-      (StandardContainerWidget) output.getAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
-    StandardJspFilterService.JspConfiguration config = 
-      (StandardJspFilterService.JspConfiguration) output.getAttribute(
-          JspContext.JSP_CONFIGURATION_KEY);
-
-    addContextEntry(
-        UiWidgetContainer.KEY, 
-        new UiAraneaWidgetContainer(rootWidget, config));  
+    ViewPortContext viewPortContext = (ViewPortContext) getEnvironment().requireEntry(ViewPortContext.class);
+    JspContext config = (JspContext) getEnvironment().requireEntry(JspContext.class);
+    
+    addContextEntry(UiWidgetContainer.KEY, new UiAraneaWidgetContainer(viewPortContext.getViewPort(), config));  
     
     return EVAL_BODY_INCLUDE;
   }

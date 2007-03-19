@@ -19,7 +19,6 @@ package org.araneaframework.jsp.container;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.jsp.exception.AraneaJspException;
 
 /**
  *
@@ -39,12 +38,4 @@ public interface UiWidgetContainer {
    * @param uri - uri of the taglib sought
    */
   public Map getTagMapping(PageContext pageContext, String uri) throws JspException;
-  
-  /**
-   * Scopes the widget full id adding a container identifier (in 
-   * case there can be more than one container in one request).
-   * @throws AraneaJspException 
-   * @throws JspException 
-   */
-  public String scopeWidgetFullId(PageContext pageContext, String fullWidgetId) throws AraneaJspException, JspException;
 }

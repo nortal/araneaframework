@@ -14,14 +14,27 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.framework;
+package org.araneaframework.jsp.util;
 
-import java.io.Serializable;
-import org.araneaframework.core.ApplicationWidget;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * Adapter resource bundle that converts all objects to string.
  */
-public interface ViewPortContext extends Serializable {
-  public ApplicationWidget getViewPort();
+public class StringAdapterResourceBundle extends ResourceBundle {
+  protected ResourceBundle bundle;
+  
+  public StringAdapterResourceBundle(ResourceBundle bundle) {
+    this.bundle = bundle;
+  }
+  
+  protected Object handleGetObject(String key) {
+    Object object = bundle.getObject(key);
+    return (object != null) ? object.toString() : null;
+  } 
+  
+  public Enumeration getKeys() {
+    return bundle.getKeys();
+  }
 }
