@@ -44,6 +44,7 @@ import org.araneaframework.jsp.util.StringAdapterResourceBundle;
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Alar Kvell (alar@araneaframework.org)
  */
 public abstract class ServletUtil {
 	
@@ -62,37 +63,33 @@ public abstract class ServletUtil {
     Map attributeBackupMap = new HashMap();
     
     HttpServletRequest req = getRequest(output.getInputData());
-    JspContext config = (JspContext) env.requireEntry(JspContext.class);
-//    req.setAttribute(Environment.ENVIRONMENT_KEY, env);
     setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
     
     /* AraneaRootTag */
-//    LocalizationContext l10nCtx = (LocalizationContext) env.getEntry(LocalizationContext.class);
-//    req.setAttribute(
-//    		Config.FMT_LOCALIZATION_CONTEXT + ".request", 
-//    		new javax.servlet.jsp.jstl.fmt.LocalizationContext(
-//    				l10nCtx.getResourceBundle(), 
-//    				l10nCtx.getLocale()));
-    setAttribute(req, attributeBackupMap,
-      Config.FMT_LOCALIZATION_CONTEXT + ".request",
-      new javax.servlet.jsp.jstl.fmt.LocalizationContext(
-        new StringAdapterResourceBundle(config.getCurrentBundle()), 
-        config.getCurrentLocale()
-      )
-    );
+    JspContext config = (JspContext) env.requireEntry(JspContext.class);
+    if (req.getAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".request") == null) {
+      setAttribute(req, attributeBackupMap,
+        Config.FMT_LOCALIZATION_CONTEXT + ".request",
+        new javax.servlet.jsp.jstl.fmt.LocalizationContext(
+          new StringAdapterResourceBundle(config.getCurrentBundle()), 
+          config.getCurrentLocale()
+        )
+      );
+    }
     
     /* AraneaViewPortTag */
-    ViewPortContext viewPortContext = (ViewPortContext) env.requireEntry(ViewPortContext.class);
-    //req.setAttribute(UiWidgetContainer.KEY, new UiAraneaWidgetContainer(viewPortContext.getViewPort(), config));
-    setAttribute(req, attributeBackupMap, UiWidgetContainer.KEY, new UiAraneaWidgetContainer(viewPortContext.getViewPort(), config));
+    if (req.getAttribute(UiWidgetContainer.KEY) == null) {
+      ViewPortContext viewPortContext = (ViewPortContext) env.requireEntry(ViewPortContext.class);
+      setAttribute(req, attributeBackupMap, UiWidgetContainer.KEY, new UiAraneaWidgetContainer(viewPortContext.getViewPort(), config));
+    }
     
     /* AraneaSystemFormHtmlTag */
-    Object systemFormId = output.getInputData().getGlobalData().get("systemFormId");
-    if (systemFormId != null) {
-//      req.setAttribute(BaseSystemFormHtmlTag.ID_KEY, systemFormId);
-        setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.ID_KEY, systemFormId);
-//      req.setAttribute(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);    
-        setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);
+    if (req.getAttribute(BaseSystemFormHtmlTag.ID_KEY) == null || req.getAttribute(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY) == null) {
+      Object systemFormId = output.getInputData().getGlobalData().get("systemFormId");
+      if (systemFormId != null) {
+          setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.ID_KEY, systemFormId);
+          setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);
+      }
     }
     
     ServletContext servletContext = (ServletContext) env.getEntry(ServletContext.class);
@@ -120,19 +117,19 @@ public abstract class ServletUtil {
     }
   }
   
-// /**
-//  * Includes the jsp specified by file using the the request and response streams
-//  * of the output. The pathname specified may be relative, although it cannot extend
-//  * outside the current servlet context. If the path begins with a "/" it is interpreted
-//  * as relative to the current context root. 
-//  */
-//  public static void includeRelative(String filePath, Environment env, OutputData output) throws Exception {
-//    log.debug("Including a resource from the relative path '" + filePath + "'");
-//    
-//    getRequest(output.getInputData()).getRequestDispatcher(filePath).include(
-//        getRequest(output.getInputData()), 
-//        getResponse(output));
-//  }
+  /**
+   * Includes the jsp specified by file using the the request and response streams
+   * of the output. The pathname specified may be relative, although it cannot extend
+   * outside the current servlet context. If the path begins with a "/" it is interpreted
+   * as relative to the current context root. 
+   */
+  public static void includeRelative(String filePath, Environment env, OutputData output) throws Exception {
+    log.debug("Including a resource from the relative path '" + filePath + "'");
+    
+    getRequest(output.getInputData()).getRequestDispatcher(filePath).include(
+        getRequest(output.getInputData()), 
+        getResponse(output));
+  }
   
   public static void publishModel(InputData input, String name, Object model) {
     getRequest(input).setAttribute(name, model);

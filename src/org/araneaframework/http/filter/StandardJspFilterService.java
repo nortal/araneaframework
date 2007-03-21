@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -80,9 +81,9 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     return submitCharset;
   }
   
-//  public String getFormAction() {
-//    return ((ServletConfig) getEnvironment().getEntry(ServletConfig.class)).getServletContext().getServletContextName();
-//  }
+  public String getFormAction() {
+    return ((ServletConfig) getEnvironment().getEntry(ServletConfig.class)).getServletContext().getServletContextName();
+  }
   
   public ResourceBundle getCurrentBundle() {
     return loc.getResourceBundle();

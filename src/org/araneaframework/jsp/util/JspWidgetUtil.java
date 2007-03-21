@@ -47,9 +47,9 @@ public abstract class JspWidgetUtil {
 			return output.getScope().toString();
 	}
 	
-//    public static ApplicationWidget getContextWidgetFromContext(PageContext pageContext) throws JspException  {
-//      return getWidgetFromContext(null, pageContext);
-//    }    
+    public static ApplicationWidget getContextWidgetFromContext(PageContext pageContext) throws JspException  {
+      return getWidgetFromContext(null, pageContext);
+    }    
     
 	public static ApplicationWidget getWidgetFromContext(String widgetId, PageContext pageContext) throws JspException {
       UiWidgetContainer container = 

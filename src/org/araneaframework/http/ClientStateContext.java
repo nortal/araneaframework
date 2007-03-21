@@ -16,16 +16,20 @@
 
 package org.araneaframework.http;
 
-import java.io.Serializable;
-import org.araneaframework.framework.ManagedServiceContext;
+public interface ClientStateContext {
 
-/**
- * A top level service that is not synchronized and is dependent only on the request. This context
- * corresponds to a service router that uses <code>HttpServletRequest.getPathInfo()</code> for 
- * routing the request to corresponding service.
- * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- */
-public interface PathInfoServiceContext extends ManagedServiceContext, Serializable {
-  String getPathInfo();
+  /**
+   * Global parameter key for the client state form input.
+   */
+  public static final String CLIENT_STATE = "clientState";
+
+  /**
+   * Global parameter key for the version of the client state form input.
+   */
+  public static final String CLIENT_STATE_VERSION = "clientStateVersion";
+
+  String getClientState();
+
+  String getClientStateVersion();
+
 }

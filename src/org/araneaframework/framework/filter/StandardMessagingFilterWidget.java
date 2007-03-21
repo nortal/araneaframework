@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.set.ListOrderedSet;
 import org.araneaframework.Environment;
@@ -183,7 +184,9 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   }
 
   public Map getMessages() {
-    //TODO unmodifiable???
-    return messages;
+    if (messages == null)
+      return null;
+    else
+      return MapUtils.unmodifiableMap(messages);
   }
 }

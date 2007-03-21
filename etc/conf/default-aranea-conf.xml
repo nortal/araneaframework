@@ -225,10 +225,10 @@
   <bean class="org.araneaframework.http.filter.StandardWindowScrollPositionFilterWidget" singleton="false"
     id="araneaScrollingFilter"/>
     
-<!--  <bean class="org.araneaframework.http.filter.StandardClientStateFilterWidget" -->
-<!--    id="araneaClientStateFilter" singleton="false">-->
-<!--  	<property name="compress" value="false"/>-->
-<!--  </bean>-->
+  <bean class="org.araneaframework.http.filter.StandardClientStateFilterWidget" 
+    id="araneaClientStateFilter" singleton="false">
+  	<property name="compress" value="false"/>
+  </bean>
   
   <bean class="org.araneaframework.http.filter.StandardThreadCloningFilterService" 
     id="araneaThreadCloningFilter" 

@@ -20,6 +20,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.http.ClientStateContext;
 
 /**
  * Utility class for setting system form's fields.
@@ -36,17 +37,31 @@ public abstract class ClientStateUtil {
   }
   
   public static Object getThreadServiceId(Environment env) {
-    ThreadContext threadContext = (ThreadContext) env.requireEntry(ThreadContext.class);
+    ThreadContext threadContext = (ThreadContext) env.getEntry(ThreadContext.class);
     if (threadContext == null)
       return null;
     return threadContext.getCurrentId();
   }
   
   public static Object getTransactionId(Environment env) {
-    TransactionContext transactionContext = (TransactionContext) env.requireEntry(TransactionContext.class);
+    TransactionContext transactionContext = (TransactionContext) env.getEntry(TransactionContext.class);
     if (transactionContext == null)
       return null;
     return transactionContext.getTransactionId();
+  }
+  
+  public static String getClientState(Environment env) {
+    ClientStateContext clientStateContext = (ClientStateContext) env.getEntry(ClientStateContext.class);
+    if (clientStateContext == null)
+      return null;
+    return clientStateContext.getClientState();
+  }
+  
+  public static String getClientStateVersion(Environment env) {
+    ClientStateContext clientStateContext = (ClientStateContext) env.getEntry(ClientStateContext.class);
+    if (clientStateContext == null)
+      return null;
+    return clientStateContext.getClientStateVersion();
   }
   
   public static Object requireTopServiceId(Environment env) {
@@ -62,5 +77,15 @@ public abstract class ClientStateUtil {
   public static Object requireTransactionId(Environment env) {
     TransactionContext transactionContext = (TransactionContext) env.requireEntry(TransactionContext.class);
     return transactionContext.getTransactionId();
+  }
+  
+  public static String requireClientState(Environment env) {
+    ClientStateContext clientStateContext = (ClientStateContext) env.requireEntry(ClientStateContext.class);
+    return clientStateContext.getClientState();
+  }
+  
+  public static String requireClientStateVersion(Environment env) {
+    ClientStateContext clientStateContext = (ClientStateContext) env.requireEntry(ClientStateContext.class);
+    return clientStateContext.getClientStateVersion();
   }
 }

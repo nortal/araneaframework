@@ -34,7 +34,7 @@ public interface JspContext extends Serializable {
 
   public String getSubmitCharset();
   
-//  public String getFormAction();
+  public String getFormAction();
   
   public ResourceBundle getCurrentBundle();
   

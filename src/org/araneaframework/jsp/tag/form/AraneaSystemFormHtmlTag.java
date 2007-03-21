@@ -23,6 +23,7 @@ import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.http.ClientStateContext;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ClientStateUtil;
 import org.araneaframework.jsp.util.JspUtil;
@@ -50,6 +51,15 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     JspUtil.writeHiddenInputElement(out, TopServiceContext.TOP_SERVICE_KEY, ClientStateUtil.requireTopServiceId(getEnvironment()).toString());
     JspUtil.writeHiddenInputElement(out, ThreadContext.THREAD_SERVICE_KEY, ClientStateUtil.requireThreadServiceId(getEnvironment()).toString());
     JspUtil.writeHiddenInputElement(out, TransactionContext.TRANSACTION_ID_KEY, ClientStateUtil.requireTransactionId(getEnvironment()).toString());
+    
+    String clientState = ClientStateUtil.getClientState(getEnvironment());
+    if (clientState != null) {
+      JspUtil.writeHiddenInputElement(out, ClientStateContext.CLIENT_STATE, clientState);
+    }
+    String clientStateVersion = ClientStateUtil.getClientStateVersion(getEnvironment());
+    if (clientStateVersion != null) {
+      JspUtil.writeHiddenInputElement(out, ClientStateContext.CLIENT_STATE_VERSION, clientStateVersion);
+    }
     
     // Hidden fields: to be set
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");
