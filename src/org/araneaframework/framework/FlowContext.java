@@ -39,11 +39,6 @@ public interface FlowContext extends Serializable {
   public static final String FLOW_KEY = "f";
 
   /**
-   * The key used for the CallStack in the OutputData attribute set.
-   */
-//  public static final String CALL_STACK_KEY = "org.araneaframework.framework.FlowContext.CALL_STACK";
-
-  /**
    * Starts a new nested subflow, that can be configured using the configurator. Current flow becomes inactive
    * untils subflow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification,
    * when the subflow ends execution.
