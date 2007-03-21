@@ -17,6 +17,7 @@
 package org.araneaframework.jsp.container;
 
 import java.util.Map;
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.JspContext;
@@ -32,6 +33,10 @@ public class UiAraneaWidgetContainer implements UiWidgetContainer {
 
   public Map getWidgets() {
     return rootWidget._getComposite().getChildren();
+  }
+
+  public String scopeWidgetFullId(PageContext pageContext, String fullWidgetId) throws JspException {
+    return fullWidgetId;
   }
 
   public Map getTagMapping(PageContext pageContext, String uri) {

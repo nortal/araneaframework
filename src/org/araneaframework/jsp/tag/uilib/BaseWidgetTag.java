@@ -39,7 +39,7 @@ public class BaseWidgetTag extends BaseTag {
     if (fullId == null) 
       throw new AraneaJspException("Widget must have an id!");        
   
-    scopedFullId = fullId;
+    scopedFullId = container.scopeWidgetFullId(pageContext, fullId);
   
     // Continue
     return EVAL_BODY_INCLUDE;    
