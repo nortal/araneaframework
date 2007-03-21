@@ -260,9 +260,4 @@ public class ComponentListFooterTag extends PresentationTag {
     result.setTarget(listId);
     return result;
   }
-  
-//  public StringBuffer getRequestURL() throws JspException {
-//    OutputData output = (OutputData) requireContextEntry(ServletUtil.OUTPUT_DATA_KEY);
-//    return new StringBuffer(((HttpInputData)output.getInputData()).getContainerURL());
-//  }
 }

@@ -29,6 +29,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.StandardEnvironment;
@@ -45,7 +46,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
-//  private static final Logger log = Logger.getLogger(StandardJspFilterService.class);
+  private static final Logger log = Logger.getLogger(StandardJspFilterService.class);
 
   // URI -> Map<TagInfo>
   private Map taglibs = new HashMap();
