@@ -15,13 +15,13 @@ required/ - libraries that are required at runtime
 *****************************************************************************
 
 *****************************************************************************
-* ./required/jakarta-regexp-1.2.jar
+* ./required/jakarta-regexp-1.5.jar
 - Pure Java Regular Expression package (http://jakarta.apache.org/regexp/)
 - Required by the framework.
 *****************************************************************************
 
 *****************************************************************************
-* /required/log4j-1.2.8.jar
+* /required/log4j-1.2.14.jar
 - LOG4J (http://logging.apache.org/log4j/docs/)
 - Required by the framework.
 *****************************************************************************
@@ -41,13 +41,13 @@ required/ - libraries that are required at runtime
 *****************************************************************************
 * jakarta-commons
 - Jakarta Project Commons (http://jakarta.apache.org/commons/)
-- ./required/commons-collections-3.1.jar is required by the framework core.
-- ./required/commons-lang-2.1.jar is required by the framework.
-- ./required/commons-validator-1.3.0.jar is required by the uilib.
-- ./optional/commons-fileupload-1.1.1.jar is required by the framework's file 
+- ./required/commons-collections-3.2.jar is required by the framework core.
+- ./required/commons-lang-2.3.jar is required by the framework.
+- ./required/commons-validator-1.3.1.jar is required by the uilib.
+- ./optional/commons-fileupload-1.2.jar is required by the framework's file 
    upload filter.
-- ./optional/commons-io-1.2 is required by commons-fileupload
-- ./buildtime/commons-logging.jar is required for building the framework with
+- ./optional/commons-io-1.3.1 is required by commons-fileupload
+- ./buildtime/commons-logging-1.1.jar is required for building the framework with
   java 1.3 and actually running the sample applications on Jetty.
 *****************************************************************************
 
