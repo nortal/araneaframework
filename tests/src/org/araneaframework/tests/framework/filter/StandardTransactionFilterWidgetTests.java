@@ -42,7 +42,7 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
     child = new MockEventfulBaseWidget();
     trans = new StandardTransactionFilterWidget();
     trans.setChildWidget(child);
-    trans._getComponent().init(new StandardEnvironment(null, new HashMap()));
+    trans._getComponent().init(null, new StandardEnvironment(null, new HashMap()));
     
     resp = new MockHttpServletResponse();
     req = new MockHttpServletRequest();

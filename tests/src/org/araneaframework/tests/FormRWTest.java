@@ -46,7 +46,7 @@ public class FormRWTest extends TestCase {
 
     //Creating form :-)
     FormWidget voForm = new FormWidget();
-    voForm._getComponent().init(new MockEnvironment());
+    voForm._getComponent().init(null, new MockEnvironment());
     
     //Adding elements to form
     voForm.addElement("booleanValue", "vo checkbox", new CheckboxControl(), new BooleanData(), true);
