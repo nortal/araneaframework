@@ -62,7 +62,7 @@ public class StandardSessionServiceRouterServiceTests extends TestCase {
     map.put("child2", child2);
     
     service.setServiceMap(map);
-    service._getComponent().init(MockUtil.getEnv());
+    service._getComponent().init(null, MockUtil.getEnv());
     
     service.setDefaultServiceId("child1");
   }

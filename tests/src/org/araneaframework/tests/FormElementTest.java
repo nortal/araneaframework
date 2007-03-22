@@ -41,7 +41,7 @@ public class FormElementTest extends TestCase {
 		FormElement sfe = new FormElement();
 		sfe.setLabel("textbox");
 
-		sfe._getComponent().init(new MockEnvironment());
+		sfe._getComponent().init(null, new MockEnvironment());
 
 		TextControl tb = new TextControl();
 		sfe.setMandatory(true);
@@ -74,7 +74,7 @@ public class FormElementTest extends TestCase {
 		FormElement textArea = subForm.createElement("my text area", new TextareaControl(), new StringData(), true);
 		subForm.addElement("myTextarea", textArea);
 
-		form._getComponent().init(new MockEnvironment());
+		form._getComponent().init(null, new MockEnvironment());
 
 		// first level formElement
 		assertEquals(button, form.getElement("myButton"));

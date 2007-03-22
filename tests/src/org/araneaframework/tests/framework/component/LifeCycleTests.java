@@ -30,11 +30,11 @@ public class LifeCycleTests extends TestCase {
 	public void testPermantentDeath() throws Exception {
 		MockBaseComponent c = new MockBaseComponent();
 		
-		c._getComponent().init(new MockEnvironment());
+		c._getComponent().init(null, new MockEnvironment());
 		c._getComponent().destroy();
 		
 		try {
-			c._getComponent().init(new MockEnvironment());
+			c._getComponent().init(null, new MockEnvironment());
 
 			fail("Attempted to reanimate destroyed Component -- exception should have occured.");
 		} catch (Exception e) {

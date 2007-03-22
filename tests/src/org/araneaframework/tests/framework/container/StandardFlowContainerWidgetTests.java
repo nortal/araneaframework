@@ -42,7 +42,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     env = new StandardEnvironment(null, new HashMap());
     
     stackWidget = new StandardFlowContainerWidget(topWidget);
-    stackWidget._getComponent().init(env);
+    stackWidget._getComponent().init(null, env);
   }
   
   public void testCallingContract() throws Exception {

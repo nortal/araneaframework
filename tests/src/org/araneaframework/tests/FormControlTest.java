@@ -46,7 +46,7 @@ public class FormControlTest extends TestCase {
     MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
     MultiSelectControl ms = new MultiSelectControl();
     ms.setFormElementCtx(new MockFormElementContext());
-    ms._getComponent().init(new MockEnvironment());
+    ms._getComponent().init(null, new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(ms, "myMultiSelect", emptyRequest);    
     ms.convertAndValidate();
 
@@ -68,7 +68,7 @@ public class FormControlTest extends TestCase {
 
     TextControl textControl = new TextControl();
     textControl.setFormElementCtx(new MockFormElementContext());
-    textControl._getComponent().init(new MockEnvironment());
+    textControl._getComponent().init(null, new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", emptyRequest);
     textControl.convertAndValidate();
 
@@ -90,7 +90,7 @@ public class FormControlTest extends TestCase {
 
     TextControl textControl = new TextControl();
     textControl.setFormElementCtx(new MockFormElementContext());
-    textControl._getComponent().init(new MockEnvironment());
+    textControl._getComponent().init(null, new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", valueRequest);
     StringArrayRequestControl.ViewModel vm = (StringArrayRequestControl.ViewModel) textControl._getViewable().getViewModel();
     
@@ -114,7 +114,7 @@ public class FormControlTest extends TestCase {
     MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
     
     numberControl.setFormElementCtx(mockFormElementContext);
-    numberControl._getComponent().init(new MockEnvironment());
+    numberControl._getComponent().init(null, new MockEnvironment());
 
     MockUiLibUtil.emulateHandleRequest(numberControl, "myNumberInput", correctValueRequest);
     numberControl.convertAndValidate();
@@ -145,7 +145,7 @@ public class FormControlTest extends TestCase {
     MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
     NumberControl numberControl = new NumberControl();
     numberControl.setFormElementCtx(mockFormElementContext);
-    numberControl._getComponent().init(new MockEnvironment());
+    numberControl._getComponent().init(null, new MockEnvironment());
     
     numberControl.setMinValue(new BigInteger("25"));
     numberControl.setMaxValue(new BigInteger("75"));
@@ -185,7 +185,7 @@ public class FormControlTest extends TestCase {
     FloatControl nc = new FloatControl();
     MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
     nc.setFormElementCtx(mockFormElementContext);
-    nc._getComponent().init(new MockEnvironment());
+    nc._getComponent().init(null, new MockEnvironment());
     MockUiLibUtil.emulateHandleRequest(nc, "myFloatInput", correctValueRequest);
     nc.convertAndValidate();
     
@@ -215,7 +215,7 @@ public class FormControlTest extends TestCase {
     FloatControl numberControl = new FloatControl();
     MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
     numberControl.setFormElementCtx(mockFormElementContext);
-    numberControl._getComponent().init(new MockEnvironment());
+    numberControl._getComponent().init(null, new MockEnvironment());
     
     numberControl.setMinValue(new BigDecimal("25.001"));
     numberControl.setMaxValue(new BigDecimal("75.002"));
@@ -255,7 +255,7 @@ public class FormControlTest extends TestCase {
     TextControl textControl = new TextControl();
     MockFormElementContext mockFormElementContext = new MockFormElementContext("TheLabel", false, false);
     textControl.setFormElementCtx(mockFormElementContext);
-    textControl._getComponent().init(new MockEnvironment());
+    textControl._getComponent().init(null, new MockEnvironment());
     
     textControl.setMinLength(new Long(5));
     textControl.setMaxLength(new Long(20));

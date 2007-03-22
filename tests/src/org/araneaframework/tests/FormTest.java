@@ -91,7 +91,7 @@ public class FormTest extends TestCase {
     mySelect.addItem(new DisplayItem("3", "three"));
     mySelect.addItem(new DisplayItem("4", "four"));
     
-    testForm._getComponent().init(new MockEnvironment());
+    testForm._getComponent().init(null, new MockEnvironment());
 
     return testForm;
   }
@@ -439,7 +439,7 @@ public class FormTest extends TestCase {
 	selectElement.setDisabled(true);
 	selectElement.rendered();
 	
-	testForm._getComponent().init(new MockEnvironment());
+	testForm._getComponent().init(null, new MockEnvironment());
 	// if this is not called, Control value is never set and test fails
 	testForm._getWidget().process();
 	
