@@ -22,7 +22,7 @@ public class AsyncFormModificationTest extends TestCase {
 	protected FormWidget makeForm() throws Exception {
 		FormWidget testForm = new FormWidget();
 		testForm.addElement("myLongText", "my long text", new TextControl(), new StringData(), true);
-		testForm._getComponent().init(new MockEnvironment());
+		testForm._getComponent().init(null, new MockEnvironment());
 		return testForm;
 	}
 	
@@ -97,7 +97,7 @@ public class AsyncFormModificationTest extends TestCase {
 		FormWidget testForm = new FormWidget();
 		testForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), true);
 		testForm.addElement("text", "#Text", new TextControl(), new StringData(), false);
-		testForm._getComponent().init(new MockEnvironment());
+		testForm._getComponent().init(null, new MockEnvironment());
 		
 		// construct the request
 		MockHttpServletRequest validRequest = 
