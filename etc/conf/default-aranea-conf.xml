@@ -165,7 +165,7 @@
     id="araneaFileImportFilter" singleton="false">
   </bean>
   
-  <bean class="org.araneaframework.framework.filter.SystemFormFilterService" 
+  <bean class="org.araneaframework.framework.filter.StandardSystemFormFilterService" 
     id="araneaSystemFormFilter" singleton="false">
   </bean>
   
