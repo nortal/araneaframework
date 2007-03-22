@@ -18,8 +18,8 @@ package org.araneaframework.framework.router;
 
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
@@ -174,7 +174,7 @@ public abstract class BaseServiceRouterService extends BaseService {
     
     public Service addService(Object id, Service service, Long timeToLive) {
       Service result = addService(id, service);
-      if (log.isEnabledFor(Priority.WARN)) {
+      if (log.isEnabledFor(Level.WARN)) {
         log.warn(getClass().getName() + 
         		".addService(Object id, Service service, Long timeToLive) ignores timeToLive attribute." +
         		"Just addService(Object id, Service service) should be used.");
