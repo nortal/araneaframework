@@ -47,7 +47,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   private Map serviceTTLMap;
   
   public Map getServiceTTLMap() {
-    return serviceTTLMap;
+    return Collections.unmodifiableMap(serviceTTLMap);
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {

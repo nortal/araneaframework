@@ -19,6 +19,19 @@ package org.araneaframework.framework;
 import java.io.Serializable;
 import java.util.Map;
 
+/**
+ * Router service that kills child services after specified period of inactivity
+ * is over. BaseExpiringServiceRouterService implementation checks for child
+ * services whose lifetime has expired only when servicing request.
+ * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ */
 public interface ExpiringServiceContext extends Serializable {
+
+  /**
+   * Returns all expiring services. Keys of the Map are services' keepalive id's
+   * (String). Values are services' time to live in milliseconds (Long).
+   */
   public Map getServiceTTLMap();
+
 }

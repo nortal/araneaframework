@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.framework.ExpiringServiceContext;
-import org.araneaframework.http.util.ClientStateUtil;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -121,8 +121,8 @@ public class BodyHtmlTag extends PresentationTag {
         // than specified in configuration, there could be a better way.
         Long serviceTTL = new Long((((Long) entry.getValue()).longValue() - 4000));
 
-        Object topServiceId = ClientStateUtil.getTopServiceId(getEnvironment());
-        Object threadServiceId = ClientStateUtil.getThreadServiceId(getEnvironment());
+        Object topServiceId = EnvironmentUtil.getTopServiceId(getEnvironment());
+        Object threadServiceId = EnvironmentUtil.getThreadServiceId(getEnvironment());
 
         String sTop = topServiceId == null ? "null" : "'" + topServiceId.toString() + "'";
         String sThread = threadServiceId == null ? "null" : "'" + threadServiceId.toString() + "'";

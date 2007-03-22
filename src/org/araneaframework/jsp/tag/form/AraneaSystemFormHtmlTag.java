@@ -17,15 +17,13 @@
 package org.araneaframework.jsp.tag.form;
 
 import java.io.Writer;
+import java.util.Iterator;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.TopServiceContext;
-import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.container.StandardContainerWidget;
-import org.araneaframework.http.ClientStateContext;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.http.util.ClientStateUtil;
 import org.araneaframework.jsp.util.JspUtil;
 
 
@@ -46,21 +44,14 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     config = (JspContext) getEnvironment().requireEntry(JspContext.class);
 
     super.doStartTag(out);
-    
+
     // Hidden fields: preset
-    JspUtil.writeHiddenInputElement(out, TopServiceContext.TOP_SERVICE_KEY, ClientStateUtil.requireTopServiceId(getEnvironment()).toString());
-    JspUtil.writeHiddenInputElement(out, ThreadContext.THREAD_SERVICE_KEY, ClientStateUtil.requireThreadServiceId(getEnvironment()).toString());
-    JspUtil.writeHiddenInputElement(out, TransactionContext.TRANSACTION_ID_KEY, ClientStateUtil.requireTransactionId(getEnvironment()).toString());
-    
-    String clientState = ClientStateUtil.getClientState(getEnvironment());
-    if (clientState != null) {
-      JspUtil.writeHiddenInputElement(out, ClientStateContext.CLIENT_STATE, clientState);
+    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
+    for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      JspUtil.writeHiddenInputElement(out, (String) entry.getKey(), (String) entry.getValue());
     }
-    String clientStateVersion = ClientStateUtil.getClientStateVersion(getEnvironment());
-    if (clientStateVersion != null) {
-      JspUtil.writeHiddenInputElement(out, ClientStateContext.CLIENT_STATE_VERSION, clientStateVersion);
-    }
-    
+
     // Hidden fields: to be set
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");
     JspUtil.writeHiddenInputElement(out, StandardContainerWidget.EVENT_PATH_KEY, "");

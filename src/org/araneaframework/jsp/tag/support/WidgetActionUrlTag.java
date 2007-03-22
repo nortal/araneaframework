@@ -27,7 +27,7 @@ import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.util.ClientStateUtil;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
@@ -63,8 +63,8 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
     String systemFormId = (String) requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
     Map m = new HashMap();
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-    m.put(TopServiceContext.TOP_SERVICE_KEY, ClientStateUtil.requireTopServiceId(getEnvironment()));
-    m.put(ThreadContext.THREAD_SERVICE_KEY, ClientStateUtil.requireThreadServiceId(getEnvironment()));
+    m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
+    m.put(ThreadContext.THREAD_SERVICE_KEY, EnvironmentUtil.requireThreadServiceId(getEnvironment()));
     m.put(StandardContainerWidget.ACTION_PATH_KEY, fullId);
     if (actionId != null) {
       m.put(ApplicationService.ACTION_HANDLER_ID_KEY, actionId);

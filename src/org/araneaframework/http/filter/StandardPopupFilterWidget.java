@@ -16,9 +16,9 @@
 
 package org.araneaframework.http.filter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.collections.map.UnmodifiableMap;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
@@ -183,7 +183,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   public Map getPopups() {
-    return UnmodifiableMap.decorate(popups);
+    return Collections.unmodifiableMap(popups);
   }
   
   /* ************************************************************************************

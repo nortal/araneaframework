@@ -17,15 +17,14 @@
 package org.araneaframework.framework.filter;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
-import org.apache.commons.collections.map.UnmodifiableMap;
 import org.apache.commons.collections.set.ListOrderedSet;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
@@ -62,33 +61,6 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     return new StandardEnvironment(getEnvironment(), MessageContext.class, this);
   }
   
-  /**
-   * Adds all the messages to the output as Map under the key 
-   * {@link org.araneaframework.framework.MessageContext#MESSAGE_KEY}. The keys
-   * of the Map are the different message types encountered so far and under the keys
-   * are the messages in a Collection.
-   *<p>
-   * A child service should do as follows to access the messages
-   * <pre>
-   * <code>
-   * ...
-   * Map map = output.getAttribute(MESSAGE_KEY);
-   * Collection list = (Collection)map.get(MessageContext.ERROR_TYPE); // collection contains all the error messages
-   * </code>
-   * </pre>
-   * The map could be null if this service was not used. The collection is null if no messages of
-   * that type been added to the messages. 
-   *</p>
-   */
-  protected void render(OutputData output) throws Exception {
-    if (permanentMessages != null) {
-      // add permanent messages to-one time messages for rendering
-      messages = addPermanentMessages(messages);
-    }
-
-    super.render(output);
-  }
-
   /** Stores message of given type in given messageMap (created if <code>null</code> at invocation). */
   protected Map storeMessage(final String type, final String message, Map messageMap) {
     Assert.notEmptyParam(type, "type");
@@ -184,9 +156,13 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   }
 
   public Map getMessages() {
-    if (messages == null)
+    if (permanentMessages != null) {
+      // add permanent messages to-one time messages for rendering
+      messages = addPermanentMessages(messages);
+    }
+    if (messages == null) {
       return null;
-    else
-      return UnmodifiableMap.decorate(messages);
+    }
+    return Collections.unmodifiableMap(messages);
   }
 }

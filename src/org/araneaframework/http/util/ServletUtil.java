@@ -34,8 +34,8 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.jsp.container.UiAraneaWidgetContainer;
 import org.araneaframework.jsp.container.UiWidgetContainer;
+import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
-import org.araneaframework.jsp.util.StringAdapterResourceBundle;
 
 /**
  * Utility methods for Aranea framework running inside a servlet container. Includes
@@ -67,13 +67,10 @@ public abstract class ServletUtil {
     
     /* AraneaRootTag */
     JspContext config = (JspContext) env.requireEntry(JspContext.class);
-    if (req.getAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".request") == null) {
+    if (req.getAttribute(AraneaRootTag.LOCALIZATION_CONTEXT_KEY) == null) {
       setAttribute(req, attributeBackupMap,
-        Config.FMT_LOCALIZATION_CONTEXT + ".request",
-        new javax.servlet.jsp.jstl.fmt.LocalizationContext(
-          new StringAdapterResourceBundle(config.getCurrentBundle()), 
-          config.getCurrentLocale()
-        )
+        AraneaRootTag.LOCALIZATION_CONTEXT_KEY,
+        AraneaRootTag.getLocalizationContext(config)
       );
     }
     
