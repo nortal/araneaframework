@@ -2513,3 +2513,5 @@ if (/Konqueror|Safari|KHTML/.test(navigator.userAgent)) {
 }
 
 Element.addMethods();
+
+window['prototype/prototype.js'] = true;
