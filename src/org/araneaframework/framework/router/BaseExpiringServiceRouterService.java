@@ -47,6 +47,8 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   private Map serviceTTLMap;
   
   public Map getServiceTTLMap() {
+    if (serviceTTLMap == null)
+      return null;
     return Collections.unmodifiableMap(serviceTTLMap);
   }
   

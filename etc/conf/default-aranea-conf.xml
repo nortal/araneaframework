@@ -88,6 +88,7 @@
         <ref bean="araneaContinuationFilter"/> 
         <ref bean="araneaUpdateRegionFilter"/>
         <ref bean="araneaResponseHeaderFilter"/>
+        <ref bean="araneaSystemFormFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
           <property name="beanId" value="araneaCustomThreadFilters"/>
         </bean>
@@ -162,6 +163,10 @@
   
   <bean class="org.araneaframework.http.filter.StandardFileImportFilterService" 
     id="araneaFileImportFilter" singleton="false">
+  </bean>
+  
+  <bean class="org.araneaframework.framework.filter.SystemFormFilterService" 
+    id="araneaSystemFormFilter" singleton="false">
   </bean>
   
   <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"

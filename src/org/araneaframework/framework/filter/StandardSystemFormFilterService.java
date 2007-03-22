@@ -22,7 +22,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
-public class SystemFormFilterService extends BaseFilterService implements SystemFormContext {
+public class StandardSystemFormFilterService extends BaseFilterService implements SystemFormContext {
 
   private Map fields = new HashMap();
 
