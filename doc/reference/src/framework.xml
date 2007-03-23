@@ -1541,7 +1541,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis role="bold">Depends
               on:</emphasis></entry>
 
-              <entry>-</entry>
+              <entry><literal>SystemFormContext</literal></entry>
             </row>
           </tbody>
         </tgroup>
@@ -1698,7 +1698,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis role="bold">Depends
               on:</emphasis></entry>
 
-              <entry>-</entry>
+              <entry><literal>SystemFormContext</literal></entry>
             </row>
           </tbody>
         </tgroup>
