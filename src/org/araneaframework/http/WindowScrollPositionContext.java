@@ -24,7 +24,6 @@ import java.io.Serializable;
  */
 
 public interface WindowScrollPositionContext extends Serializable {
-  public static final String SCROLL_HANDLER_KEY="scrollHandler";
 
   public static final String WINDOW_SCROLL_X_KEY = "windowScrollX";
   public static final String WINDOW_SCROLL_Y_KEY = "windowScrollY";

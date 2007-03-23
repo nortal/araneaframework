@@ -534,7 +534,7 @@ myEvent.send(null, rootComponent);
     will contain the submitted parameters with no dots in them and
     <emphasis>scoped data</emphasis> will contain the parameters prefixed with
     the current component scope string.</para>
-
+<!--
     <para>The main function of <literal>OutputData</literal> is to propagate
     attributes that are used when delegating rendering to a templating engine
     or by children to access some general information during rendering. The
@@ -588,7 +588,7 @@ myEvent.send(null, rootComponent);
         </tbody>
       </tgroup>
     </informaltable>
-
+-->
     <para>Finally, as <literal>InputData</literal> and
     <literal>OutputData</literal> are typically connected, they can be
     retrieved from the other <literal>*Data</literal> structure using

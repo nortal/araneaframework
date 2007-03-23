@@ -39,7 +39,8 @@ public class PopupRegistrationHtmlTag extends BaseTag {
   public static final String POPUP_REGISTRATION_REGION  = "popupRegistrationRegion";
 	
   protected int doEndTag(Writer out) throws Exception {
-    Object popups = getOutputData().getAttribute(PopupWindowContext.POPUPS_KEY);
+    PopupWindowContext popupWindowContext = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
+    Object popups = popupWindowContext.getPopups();
     
     UpdateRegionHtmlTag updateRegionTag = new UpdateRegionHtmlTag();
     updateRegionTag.setGlobalId(POPUP_REGISTRATION_REGION);

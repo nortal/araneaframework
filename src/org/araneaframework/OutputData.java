@@ -16,7 +16,6 @@
 
 package org.araneaframework;
 
-import java.util.Map;
 
 /**
  * A map of attributes with a scope. As OutputData is passed to different methods
@@ -54,35 +53,6 @@ public interface OutputData extends Extendable, Narrowable {
    * Restores the scope to the passed one.
    */
   public void restoreScope(Path scope);
-
-  /**
-   * Pushes the specified value to the stack with the specified key.
-   * 
-   * @param key the key of the value being added
-   * @param value the value to be added
-   */
-  public void pushAttribute(Object key, Object value);
-  
-  /**
-   * Pops the attribute with the specified key that is top on the stack.
-   * @param key the key of the attribute
-   * @return the attribute under the key
-   */
-  public Object popAttribute(Object key);
-  
-  /**
-   * Returns the attribute with specified key that is top on the stack.
-   * @param key of the attribute
-   * @return the attribute under the key
-   */
-  public Object getAttribute(Object key);
-  
-  /**
-   * Returns a map of all the attributes in this OutputData that are
-   * currently on the top of the stack.
-   * @return a map of attributes.
-   */
-  public Map getAttributes();
   
   /**
    * Returns the current InputData.

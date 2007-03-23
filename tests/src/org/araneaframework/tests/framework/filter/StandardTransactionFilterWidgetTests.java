@@ -16,10 +16,11 @@
 
 package org.araneaframework.tests.framework.filter;
 
-import java.util.HashMap;
+import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.filter.StandardTransactionFilterWidget;
 import org.araneaframework.http.core.StandardServletInputData;
@@ -42,7 +43,7 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
     child = new MockEventfulBaseWidget();
     trans = new StandardTransactionFilterWidget();
     trans.setChildWidget(child);
-    trans._getComponent().init(null, new StandardEnvironment(null, new HashMap()));
+    trans._getComponent().init(null, new StandardEnvironment(null, SystemFormContext.class, new MockSystemFormFilterService()));
     
     resp = new MockHttpServletResponse();
     req = new MockHttpServletRequest();
@@ -119,5 +120,13 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
   public void testDestroyChild() throws Exception {
     trans._getComponent().destroy();
     assertTrue(child.getDestroyCalled());
+  }
+  
+  protected static class MockSystemFormFilterService implements SystemFormContext {
+    public void addField(String key, String value) {
+    }
+    public Map getFields() {
+      return null;
+    }
   }
 }

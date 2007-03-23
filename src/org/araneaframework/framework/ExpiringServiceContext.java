@@ -14,18 +14,24 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.http;
+package org.araneaframework.framework;
 
 import java.io.Serializable;
-import org.araneaframework.framework.ManagedServiceContext;
+import java.util.Map;
 
 /**
- * A top level service that is not synchronized and is dependent only on the request. This context
- * corresponds to a service router that uses <code>HttpServletRequest.getPathInfo()</code> for 
- * routing the request to corresponding service.
+ * Router service that kills child services after specified period of inactivity
+ * is over. BaseExpiringServiceRouterService implementation checks for child
+ * services whose lifetime has expired only when servicing request.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public interface PathInfoServiceContext extends ManagedServiceContext, Serializable {
-  String getPathInfo();
+public interface ExpiringServiceContext extends Serializable {
+
+  /**
+   * Returns all expiring services. Keys of the Map are services' keepalive id's
+   * (String). Values are services' time to live in milliseconds (Long).
+   */
+  public Map getServiceTTLMap();
+
 }

@@ -17,15 +17,31 @@
 package org.araneaframework.http;
 
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import org.araneaframework.uilib.ConfigurationContext;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface JspContext extends Serializable {
-  public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.http.JspContext";
 
   public String getJspPath();
 
   /** @since 1.0.1 */
   public String getJspExtension();
+
+  public String getSubmitCharset();
+  
+  public String getFormAction();
+  
+  public ResourceBundle getCurrentBundle();
+  
+  public Locale getCurrentLocale();
+  
+  public Map getTagMapping(String uri);
+  
+  public ConfigurationContext getConfiguration();
+
 }

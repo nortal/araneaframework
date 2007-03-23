@@ -32,7 +32,6 @@ import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
-import org.araneaframework.http.util.ClientStateUtil;
 
 /**
  * A router service consists of multiple child services, they form a service map.
@@ -97,18 +96,9 @@ public abstract class BaseServiceRouterService extends BaseService {
     		"Router found current service id to be null, which means that it could not be " +
     		"read from request and default value is not defined too.");
 
-    ClientStateUtil.put((String)getServiceKey(), currentServiceId.toString(), output);
-    
     if (_getChildren().containsKey(currentServiceId)) {
-      output.pushAttribute(getServiceKey(), currentServiceId);
-      
-      try {
-        log.debug("Routing action to service '"+currentServiceId+"' under router '" + getClass().getName() + "'");
-        ((Service) _getChildren().get(currentServiceId))._getService().action(path, input, output);
-      }
-      finally {
-        output.popAttribute(getServiceKey());
-      }
+      log.debug("Routing action to service '"+currentServiceId+"' under router '" + getClass().getName() + "'");
+      ((Service) _getChildren().get(currentServiceId))._getService().action(path, input, output);
     }
     else {
       throw new NoSuchServiceException("Service '" + currentServiceId +"' was not found under router '" + getClass().getName() + "'!");

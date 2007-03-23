@@ -32,8 +32,9 @@ import org.araneaframework.http.PathInfoServiceContext;
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
  */
 public class PathInfoServiceRouterService extends BaseServiceRouterService {
-	public static String PATH_ARGUMENT = "pathInfo";
 	
+  private String pathInfo;
+  
 	protected Object getServiceIdFromInput(InputData input) throws Exception {
 		return getPathInfo(input)[0];
 	}
@@ -43,14 +44,8 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 	}
 
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
-	    output.pushAttribute(PATH_ARGUMENT, getPathInfo(input)[1]);
-	    
-	    try {
-	      super.action(path, input, output);
-	    }
-	    finally {
-	      output.popAttribute(PATH_ARGUMENT);
-	    }
+    pathInfo = getPathInfo(input)[1];
+    super.action(path, input, output);
 	}
 	
 	private static String[] getPathInfo(InputData input) {
@@ -89,5 +84,8 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 		protected ServiceRouterContextImpl(Object serviceId) {
 			super(serviceId);
 		}
+    public String getPathInfo() {
+      return pathInfo;
+    }
 	}
 }

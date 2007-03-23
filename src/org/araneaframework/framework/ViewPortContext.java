@@ -17,13 +17,11 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
+import org.araneaframework.core.ApplicationWidget;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ViewPortContext extends Serializable {
-  /**
-   * The view port widget key in the output attributes.
-   */
-  public static final String VIEW_PORT_WIDGET_KEY = "org.araneaframework.framework.ViewPortContext.WIDGET_KEY";
+  public ApplicationWidget getViewPort();
 }

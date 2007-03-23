@@ -19,9 +19,6 @@ package org.araneaframework.example.common.tags.example.component;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.OutputData;
-import org.araneaframework.http.HttpInputData;
-import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -262,10 +259,5 @@ public class ComponentListFooterTag extends PresentationTag {
     result.setId(SHOW_ALL_EVENT_ID);
     result.setTarget(listId);
     return result;
-  }
-  
-  public StringBuffer getRequestURL() throws JspException {
-    OutputData output = (OutputData) requireContextEntry(ServletUtil.OUTPUT_DATA_KEY);
-    return new StringBuffer(((HttpInputData)output.getInputData()).getContainerURL());
   }
 }

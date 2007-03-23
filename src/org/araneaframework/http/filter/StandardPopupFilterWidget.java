@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.filter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
@@ -181,6 +182,10 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return this.opener;
   }
   
+  public Map getPopups() {
+    return Collections.unmodifiableMap(popups);
+  }
+  
   /* ************************************************************************************
    * Widget methods
    * ************************************************************************************/
@@ -209,15 +214,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
    * into output under the key {@link org.araneaframework.http.PopupWindowContext}.POPUPS_KEY
    */
   protected void render(OutputData output) throws Exception {
-    output.pushAttribute(POPUPS_KEY, popups);
-
-    try {
-      super.render(output);
-    }
-    finally {
-      output.popAttribute(POPUPS_KEY);
-    }
-
+    super.render(output);
     popups = new HashMap();
   }
   

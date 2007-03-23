@@ -19,13 +19,9 @@ package org.araneaframework.jsp.tag.aranea;
 import java.io.Writer;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
-import org.araneaframework.OutputData;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.http.filter.StandardJspFilterService;
-import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
@@ -36,48 +32,43 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   body-content = "JSP"
  */
 public class AraneaRootTag extends BaseTag {
+  
+  public static final String LOCALIZATION_CONTEXT_KEY = Config.FMT_LOCALIZATION_CONTEXT + ".request";
+  
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    OutputData output = (OutputData) pageContext.getRequest().getAttribute(OutputData.OUTPUT_DATA_KEY);
-    StandardJspFilterService.JspConfiguration config = 
-      (StandardJspFilterService.JspConfiguration) output.getAttribute(
-          JspContext.JSP_CONFIGURATION_KEY);
+    JspContext config = (JspContext) getEnvironment().requireEntry(JspContext.class);
     
-    addContextEntry(
-        ServletUtil.OUTPUT_DATA_KEY, 
-        output);
-
-    Config.set(
-        pageContext, 
-        Config.FMT_LOCALIZATION_CONTEXT, 
-        new LocalizationContext(
-            new StringAdapterResourceBundle(config.getCurrentBundle()),
-            config.getCurrentLocale()
-          ),
-          PageContext.REQUEST_SCOPE           
-        );
-    
+    addContextEntry(LOCALIZATION_CONTEXT_KEY, getLocalizationContext(config));
     return EVAL_BODY_INCLUDE;
   }
-}
+  
+  public static LocalizationContext getLocalizationContext(JspContext config) {
+    return new LocalizationContext(
+      new StringAdapterResourceBundle(config.getCurrentBundle()),
+      config.getCurrentLocale()
+    );
+  }
+  
+  /**
+   * Adapter resource bundle that converts all objects to string.
+   */
+  public static class StringAdapterResourceBundle extends ResourceBundle {
+    protected ResourceBundle bundle;
+    
+    public StringAdapterResourceBundle(ResourceBundle bundle) {
+      this.bundle = bundle;
+    }
+    
+    protected Object handleGetObject(String key) {
+      Object object = bundle.getObject(key);
+      return (object != null) ? object.toString() : null;
+    } 
+    
+    public Enumeration getKeys() {
+      return bundle.getKeys();
+    }
+  }
 
-/**
- * Adapter resource bundle that converts all objects to string.
- */
-class StringAdapterResourceBundle extends ResourceBundle {
-  ResourceBundle bundle;
-  
-  StringAdapterResourceBundle(ResourceBundle bundle) {
-    this.bundle = bundle;
-  }
-  
-  protected Object handleGetObject(String key) {
-    Object object = bundle.getObject(key);
-    return (object != null) ? object.toString() : null;
-  } 
-  
-  public Enumeration getKeys() {
-    return bundle.getKeys();
-  }
 }

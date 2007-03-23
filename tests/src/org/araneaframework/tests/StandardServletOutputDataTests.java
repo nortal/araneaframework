@@ -53,11 +53,6 @@ public class StandardServletOutputDataTests extends TestCase {
     assertEquals(resp, ServletUtil.getResponse(out));
   }
   
-  public void testSetGetAttribute() {
-    out.pushAttribute("foo","bar");
-    assertEquals("bar", out.getAttribute("foo"));
-  }
-  
   public void testExtendNarrow() {
     Map map = new HashMap();
     out.extend(Map.class, map);
@@ -72,10 +67,5 @@ public class StandardServletOutputDataTests extends TestCase {
   
   public void testGetOutputStream() throws Exception {
     assertEquals(resp.getOutputStream(), out.getOutputStream());
-  }
-  
-  public void testGetAttributeKeys() {
-    out.pushAttribute("foo","bar");
-    assertEquals("foo", out.getAttributes().keySet().iterator().next());
   }
 }

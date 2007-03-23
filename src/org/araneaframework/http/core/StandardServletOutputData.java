@@ -19,10 +19,7 @@ package org.araneaframework.http.core;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.EmptyStackException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -48,8 +45,6 @@ public class StandardServletOutputData implements HttpOutputData {
   private StringBuffer scopeBuf = new StringBuffer();
   
   private Map extensions = new HashMap();
-  private Map attributes = new HashMap();
-  private Map currentTopAttributes = new HashMap();
   
   /**
    * Constructs a StandardServletOutputData with the request and response. 
@@ -93,46 +88,6 @@ public class StandardServletOutputData implements HttpOutputData {
     Assert.notNullParam(scope, "scope");
     
     scopeBuf = new StringBuffer(scope.toString());
-  }
-
-  public void pushAttribute(Object key, Object value) {
-    LinkedList stack = (LinkedList) attributes.get(key);
-    
-    if (stack == null) {
-      stack = new LinkedList();
-      attributes.put(key, stack); 
-    }
-    
-    stack.addFirst(value);
-    currentTopAttributes.put(key, value);
-  }
-  
-  public Object popAttribute(Object key) {
-    LinkedList stack = (LinkedList) attributes.get(key);
-    currentTopAttributes.remove(key);
-    
-    
-    if (stack == null || stack.size() == 0) {
-      throw new EmptyStackException();
-    }
-    
-    Object result = stack.removeFirst();
-    if (stack.size() > 0)
-      currentTopAttributes.put(key, stack.getFirst());
-    return result;
-  }
-
-  public Object getAttribute(Object key) {
-    LinkedList stack = (LinkedList) attributes.get(key);
-    
-    if (stack == null || stack.size() == 0)
-      return null;
-    
-    return stack.getFirst();
-  }
-
-  public Map getAttributes() {    
-    return Collections.unmodifiableMap(currentTopAttributes);
   }
 
   public void extend(Class interfaceClass, Object implementation) {

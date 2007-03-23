@@ -22,10 +22,10 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.framework.util.TransactionHelper;
-import org.araneaframework.http.util.ClientStateUtil;
 
 /**
  * Filters <code>update(InputData)</code>, <code>event(Path, InputData)</code>, <code>process()</code> and
@@ -100,16 +100,12 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     // CONFIRM: when transactionid was overriden in request, new transaction id should not be generated
     if (transHelper.getCurrentTransactionId() == null || !transHelper.isOverride(getTransactionId(getInputData())))
       transHelper.resetTransactionId();
-    output.pushAttribute(TransactionContext.TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId());
-    ClientStateUtil.put(TransactionContext.TRANSACTION_ID_KEY, transHelper.getCurrentTransactionId() + "", output);
 
-    try {
-      log.debug("New transaction id '" + getTransactionId() + "'.");
-      childWidget._getWidget().render(output);
-    }
-    finally {
-      output.popAttribute(TransactionContext.TRANSACTION_ID_KEY);
-    }
+    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
+    systemFormContext.addField(TRANSACTION_ID_KEY, getTransactionId().toString());
+
+    log.debug("New transaction id '" + getTransactionId() + "'.");
+    childWidget._getWidget().render(output);
   }
 
   /**

@@ -17,6 +17,7 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * A context for adding messages to a central pool of messages for later 
@@ -39,7 +40,6 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface MessageContext extends Serializable {
-  public static final String MESSAGE_KEY = "org.araneaframework.framework.MessageContext.MESSAGES";
   
   /**
    * A message type indicating its an error message. 
@@ -103,4 +103,24 @@ public interface MessageContext extends Serializable {
    * Clears all messages (both permanent and usual).
    */  
   public void clearAllMessages();
+  
+  /**
+   * Returns all messages as a Map. The keys
+   * of the Map are the different message types encountered so far and under the keys
+   * are the messages in a Collection.
+   *<p>
+   * A child service should do as follows to access the messages
+   * <pre>
+   * <code>
+   * ...
+   * MessageContext msgCtx = (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+   * Map map = msgCtx.getMessages();
+   * Collection list = (Collection) map.get(MessageContext.ERROR_TYPE); // collection contains all the error messages
+   * </code>
+   * </pre>
+   * The map could be null if this service was not used. The collection is null if no messages of
+   * that type been added to the messages. 
+   *</p>
+   */
+  public Map getMessages();
 }

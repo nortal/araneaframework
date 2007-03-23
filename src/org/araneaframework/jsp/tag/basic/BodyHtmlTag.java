@@ -22,9 +22,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.TopServiceContext;
-import org.araneaframework.framework.router.BaseExpiringServiceRouterService;
+import org.araneaframework.framework.ExpiringServiceContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -110,7 +109,10 @@ public class BodyHtmlTag extends PresentationTag {
 
   /** Writes scripts that register client-side keepalive events for server-side expiring services. */
   protected void writeKeepAliveRegistrationScripts(Writer out) throws JspException, IOException {
-	Map expiringServiceMap = (Map) getOutputData().getAttribute(BaseExpiringServiceRouterService.SERVICE_TTL_MAP);
+    ExpiringServiceContext expiringServiceContext = (ExpiringServiceContext) getEnvironment().getEntry(ExpiringServiceContext.class);
+    if (expiringServiceContext == null)
+      return;
+	  Map expiringServiceMap = expiringServiceContext.getServiceTTLMap();
     if (expiringServiceMap != null && !expiringServiceMap.isEmpty()) { // there are some expiring services
       for (Iterator i = expiringServiceMap.entrySet().iterator(); i.hasNext();) {
         Map.Entry entry = (Map.Entry) i.next();
@@ -118,8 +120,9 @@ public class BodyHtmlTag extends PresentationTag {
         // TODO: keepalives are just invoked a little (4 seconds) more often from client side,
         // than specified in configuration, there could be a better way.
         Long serviceTTL = new Long((((Long) entry.getValue()).longValue() - 4000));
-        Object topServiceId =  getOutputData().getAttribute(TopServiceContext.TOP_SERVICE_KEY);
-        Object threadServiceId = getOutputData().getAttribute(ThreadContext.THREAD_SERVICE_KEY);
+
+        Object topServiceId = EnvironmentUtil.getTopServiceId(getEnvironment());
+        Object threadServiceId = EnvironmentUtil.getThreadServiceId(getEnvironment());
 
         String sTop = topServiceId == null ? "null" : "'" + topServiceId.toString() + "'";
         String sThread = threadServiceId == null ? "null" : "'" + threadServiceId.toString() + "'";

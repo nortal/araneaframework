@@ -17,12 +17,15 @@
 package org.araneaframework.framework.container;
 
 import org.apache.log4j.Logger;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.ViewPortContext;
 
@@ -33,7 +36,7 @@ import org.araneaframework.framework.ViewPortContext;
  *
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardContainerWidget extends BaseApplicationWidget {  
+public class StandardContainerWidget extends BaseApplicationWidget implements ViewPortContext {  
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
@@ -59,15 +62,23 @@ public class StandardContainerWidget extends BaseApplicationWidget {
   //*******************************************************************
   // PUBLIC METHODS
   //*******************************************************************  
-    
+  
   public void setRoot(Widget root) {
     this.root = root;
   }  
   
+  public ApplicationWidget getViewPort() {
+    return this;
+  }
+  
   //*******************************************************************
   // PROTECTED METHODS
   //*******************************************************************
-
+  
+  protected Environment getChildWidgetEnvironment() {
+    return new StandardEnvironment(getEnvironment(), ViewPortContext.class, this);
+  }
+  
   protected void init() throws Exception {
     Assert.notNull(this, root, "Root widget cannot be null!");
     
@@ -75,15 +86,12 @@ public class StandardContainerWidget extends BaseApplicationWidget {
   }
   
   protected void render(OutputData output) throws Exception {
-    output.pushAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY, this);
-    
     try {
       output.pushScope(CHILD_KEY);
       ((Widget) getChildren().get(CHILD_KEY))._getWidget().render(output);
     }
     finally {
       output.popScope();
-      output.popAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
     }
   }
     
@@ -105,7 +113,6 @@ public class StandardContainerWidget extends BaseApplicationWidget {
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (hasAction(input)) {
-      output.pushAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY, this);
       try {
         Path actionPath = getActionPath(input);
         log.debug("Routing action to widget '" + actionPath.toString() + "'");
@@ -113,7 +120,6 @@ public class StandardContainerWidget extends BaseApplicationWidget {
       }
       finally {
         output.popScope();
-        output.popAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
       }
     }
   }
