@@ -139,7 +139,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
     
     control.setFormElementCtx(this);
     
-    if (isAlive())
+    if (isInitialized())
       control._getComponent().init(getScope(), getEnvironment());
   }
 

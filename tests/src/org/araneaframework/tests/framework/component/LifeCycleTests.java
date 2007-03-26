@@ -48,58 +48,26 @@ public class LifeCycleTests extends TestCase {
 	// invalid leftover calls are those that activate the methods that directly 
 	// depend on request or response
 	public void testInvalidLeftOverCalls() throws Exception {
-		MockBaseWidget w = new MockBaseWidget();
-		w._getComponent().init(null, new MockEnvironment());
-		w._getComponent().destroy();
-		
-		// ACTION
-		try {
-			w._getService().action(null, new MockInputData(), new MockOutputData());
-			fail("Should not be reached");
-		} catch (IllegalStateException e) {
-			
-		}
-
-		// UPDATE
-		try {
-			w._getWidget().update(new MockInputData());
-			fail("Should not be reached");
-		} catch (IllegalStateException e) {
-			
-		}
-		
-		// EVENT
-		try {
-			w._getWidget().event(null, new MockInputData());
-			fail("Should not be reached");
-		} catch (IllegalStateException e) {
-			
-		}
-		
-		// TODO: PROCESS:: to be removed after process() is gone from 1.1 devel branch
-		try {
-			w._getWidget().process();
-			fail("Should not be reached");
-		} catch (IllegalStateException e) {
-		
-		}
-		
-		// RENDER
-		try {
-			w._getWidget().render(new MockOutputData());
-			fail("Should not be reached");
-		} catch (IllegalStateException e) {
-		
-		}
+		// no leftover calls to component methods are considered invalid 
 	}
 	
+	// all leftover calls are considered valid 
 	public void testValidLeftOverCalls() throws Exception {
 		MockBaseWidget w = new MockBaseWidget();
 		w._getComponent().init(null, new MockEnvironment());
 		w._getComponent().destroy();
 		
 		w.addComponent("new", new MockBaseWidget());
+		w.removeComponent("new");
+
 		w._getComponent().disable();
 		w._getComponent().enable();
+		
+		w._getService().action(null, new MockInputData(), new MockOutputData());
+
+		w._getWidget().update(new MockInputData());
+		w._getWidget().event(null, new MockInputData());
+		w._getWidget().process();
+		w._getWidget().render(new MockOutputData());
 	}
 }

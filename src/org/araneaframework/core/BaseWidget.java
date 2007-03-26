@@ -51,7 +51,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
     public void update(InputData input) {
       Assert.notNullParam(this, input, "input");
 
-      _strictStartCall();
+      _startCall();
       currentInputData = input;
       try {
         BaseWidget.this.update(input);
@@ -73,7 +73,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
     public void event(Path path, InputData input) {
       Assert.notNullParam(this, input, "input");
       
-      _strictStartCall();
+      _startCall();
       currentInputData = input;
       try {
         BaseWidget.this.event(path, input);
@@ -93,7 +93,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
     }
     
     public void process() {
-      _strictStartCall();
+      _startCall();
       try {
         BaseWidget.this.process();
       }
@@ -113,7 +113,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
     public void render(OutputData output) {
       Assert.notNullParam(this, output, "output");
       
-      _strictStartCall();
+      _startCall();
       currentOutputData = output;
       try {
         BaseWidget.this.render(output);

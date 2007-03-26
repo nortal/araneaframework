@@ -152,7 +152,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	public void setDataProvider(ListDataProvider dataProvider) throws Exception {
 		this.dataProvider = dataProvider;
-		if (isAlive()) {			
+		if (isInitialized()) {			
 			initDataProvider();
 		}
 	}

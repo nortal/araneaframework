@@ -429,7 +429,8 @@ public abstract class BaseComponent implements Component {
     
     public void destroy(){     
       _startWaitingCall();
-      
+      _strictCheckCall();
+
       try {
         /* XXX synch logic a bit weird. 
          * Second call to destroy should fail, not wait. */
@@ -461,7 +462,7 @@ public abstract class BaseComponent implements Component {
     }
     
     public void propagate(Message message) {
-      _startCall();
+      _strictStartCall();
       try {      
         BaseComponent.this.propagate(message);
       }
