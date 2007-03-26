@@ -48,7 +48,11 @@ public abstract class BaseComponent implements Component {
   private Map children;
   private Map disabledChildren;
   
-  private Boolean nullIfInited = Boolean.FALSE;
+  public static final int UNBORN = 1;
+  public static final int ALIVE = 2;
+  public static final int DEAD = 3;
+  
+  private int state = UNBORN;
   
   private transient int callCount = 0;
   private transient int reentrantCallCount = 0;
@@ -104,8 +108,16 @@ public abstract class BaseComponent implements Component {
    * Returns true, if the BaseComponent has been initialized. 
    */
   protected boolean isInitialized() {
-    return nullIfInited == null;
+    return state != UNBORN;
   } 
+  
+  protected boolean isAlive() {
+    return state == ALIVE;
+  }
+  
+  protected boolean isDead() {
+    return state == DEAD;
+  }
   
   /**
    * Sets the environment of this BaseComponent to environment. 
@@ -151,6 +163,11 @@ public abstract class BaseComponent implements Component {
     _checkCall();
     incCallCount();
   }
+  
+  protected synchronized void _strictStartCall() throws IllegalStateException {
+	_strictCheckCall();
+	incCallCount();
+  }
 
   /**
    * Decrements the call count. Wakes up all threads that are waiting on
@@ -180,11 +197,23 @@ public abstract class BaseComponent implements Component {
 
   /**
    * Checks if this component is initialized. If not, throws IllegalStateException.
+   * This is relatively loose check, it should be performed when ENTERING the methods
+   * of components that do not directly serve the request.
    */
   protected void _checkCall() throws IllegalStateException {
     if (!isInitialized()) {
       throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
     }
+  }
+  
+  /**
+   * Checks if this component is initialized. This is strict check that should be used 
+   * when entering methods that directly process the request.
+   */
+  protected void _strictCheckCall() throws IllegalStateException {
+	if (!isAlive()) {
+	  throw new IllegalStateException("Component '" + getClass().getName() + "' is not alive!");
+	}
   }
   
   /**
@@ -389,7 +418,7 @@ public abstract class BaseComponent implements Component {
 
       BaseComponent.this._setScope(scope);
       BaseComponent.this._setEnvironment(env);
-      nullIfInited = null;
+      state = ALIVE;
       try {
         BaseComponent.this.init();
       }
@@ -421,7 +450,7 @@ public abstract class BaseComponent implements Component {
           
           BaseComponent.this.destroy();
         }
-        nullIfInited = Boolean.FALSE;   
+        state = DEAD;
       }
       catch (Exception e) {
         ExceptionUtil.uncheckException(e);

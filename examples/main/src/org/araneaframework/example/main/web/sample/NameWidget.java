@@ -27,8 +27,19 @@ import org.araneaframework.uilib.form.data.StringData;
 public class NameWidget extends BaseUIWidget {
   private static final long serialVersionUID = 1L;
   private FormWidget form;
+  private boolean returnGoo = false;
+  
+  public NameWidget() {
+  }
+
+  public NameWidget(boolean doGoo) {
+	  returnGoo = doGoo;
+  }
   
   protected void init() throws Exception {
+    if (returnGoo)
+    	getFlowCtx().finish("Goo");
+    
 	setViewSelector("sample/nameForm");
 
 	form = new FormWidget();

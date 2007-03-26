@@ -152,7 +152,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	public void setDataProvider(ListDataProvider dataProvider) throws Exception {
 		this.dataProvider = dataProvider;
-		if (isInitialized()) {			
+		if (isAlive()) {			
 			initDataProvider();
 		}
 	}
@@ -642,9 +642,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	//*******************************************************************  
 	
 	public void addInitEvent(Event event) {
-		if (isInitialized()) {
+		if (isAlive()) {
 			event.run();
-		} else {
+		} else if (!isInitialized()){
 			if (initEvents == null)
 				initEvents = new ArrayList();
 			initEvents.add(event);
