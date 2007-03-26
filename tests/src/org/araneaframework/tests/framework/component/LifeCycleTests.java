@@ -18,6 +18,8 @@ package org.araneaframework.tests.framework.component;
 
 import junit.framework.TestCase;
 import org.araneaframework.Component;
+import org.araneaframework.Message;
+import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.mock.MockInputData;
 import org.araneaframework.mock.MockOutputData;
 import org.araneaframework.mock.core.MockBaseComponent;
@@ -48,7 +50,27 @@ public class LifeCycleTests extends TestCase {
 	// invalid leftover calls are those that activate the methods that directly 
 	// depend on request or response
 	public void testInvalidLeftOverCalls() throws Exception {
-		// no leftover calls to component methods are considered invalid 
+		MockBaseWidget w = new MockBaseWidget();
+		w._getComponent().init(null, new MockEnvironment());
+		w._getComponent().destroy();
+		
+		try {
+			w._getComponent().propagate(new BroadcastMessage() {
+				protected void execute(Component component) throws Exception {
+					return;
+				}
+			});
+			fail("Propagating messages from dead components is prohibited.");
+		} catch (IllegalStateException e) {
+			// fine
+		}
+		
+		try {
+			w._getComponent().destroy();
+			fail("Double destroy() is prohibited.");
+		} catch (IllegalStateException e) {
+			// fine
+		}
 	}
 	
 	// all leftover calls are considered valid 

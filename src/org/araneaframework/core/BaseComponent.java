@@ -196,19 +196,20 @@ public abstract class BaseComponent implements Component {
   }
 
   /**
-   * Checks if this component is initialized. If not, throws IllegalStateException.
-   * This is relatively loose check, it should be performed when ENTERING the methods
-   * of components that do not directly serve the request.
+   * Checks if this component was initialized. If not, throws IllegalStateException.
+   * This is relatively loose check, allowing leftover calls to dead components.
+   * @throws IllegalStateException when component has never been initialized
    */
   protected void _checkCall() throws IllegalStateException {
     if (!isInitialized()) {
-      throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
+      throw new IllegalStateException("Component '" + getClass().getName() + "' was never initialized!");
     }
   }
   
   /**
-   * Checks if this component is initialized. This is strict check that should be used 
-   * when entering methods that directly process the request.
+   * Checks if this component is currently alive. 
+   * This is strict check that disallows leftover calls to dead components.
+   * @throws IllegalStateException when component is unborn or dead
    */
   protected void _strictCheckCall() throws IllegalStateException {
 	if (!isAlive()) {
