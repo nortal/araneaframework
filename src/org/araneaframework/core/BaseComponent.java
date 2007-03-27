@@ -360,7 +360,7 @@ public abstract class BaseComponent implements Component {
   protected void _propagate(Message message) {
     Assert.notNullParam(this, message, "message");
     
-    if (children == null)
+    if (children == null || isDead())
       return;
     
     Iterator ite = (new HashMap(_getChildren())).keySet().iterator();
@@ -463,7 +463,7 @@ public abstract class BaseComponent implements Component {
     }
     
     public void propagate(Message message) {
-      _strictStartCall();
+      _startCall();
       try {      
         BaseComponent.this.propagate(message);
       }
