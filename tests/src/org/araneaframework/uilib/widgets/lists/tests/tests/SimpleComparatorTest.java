@@ -16,9 +16,15 @@
 
 package org.araneaframework.uilib.widgets.lists.tests.tests;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Locale;
 import junit.framework.TestCase;
+import org.apache.commons.lang.SerializationUtils;
 import org.araneaframework.uilib.list.util.comparator.BooleanComparator;
+import org.araneaframework.uilib.list.util.comparator.ComparableComparator;
+import org.araneaframework.uilib.list.util.comparator.IgnoreCaseComparator;
 import org.araneaframework.uilib.list.util.comparator.LocaleStringComparator;
 import org.araneaframework.uilib.list.util.comparator.NullComparator;
 import org.araneaframework.uilib.list.util.comparator.ReverseComparator;
@@ -140,5 +146,45 @@ public class SimpleComparatorTest extends TestCase {
 
 		assertFalse(first.equals(second));
 		assertFalse(first.hashCode() == second.hashCode());	// not necessary, but nice
+	}
+	
+	public void testIgnoreCaseComparatorEqualsTrue_1() {
+		IgnoreCaseComparator first = IgnoreCaseComparator.INSTANCE;
+		IgnoreCaseComparator second = IgnoreCaseComparator.INSTANCE;
+
+		assertTrue(first.equals(second));
+		assertTrue(first.hashCode() == second.hashCode());
+	}
+	
+	public void testIgnoreCaseComparatorEqualsTrue_2() throws IOException, ClassNotFoundException {
+		IgnoreCaseComparator first = IgnoreCaseComparator.INSTANCE;
+		IgnoreCaseComparator second =
+			(IgnoreCaseComparator) new ObjectInputStream(
+					new ByteArrayInputStream(SerializationUtils.serialize(first))).readObject();
+	    
+		assertTrue(first != second);
+		
+		assertTrue(first.equals(second));
+		assertTrue(first.hashCode() == second.hashCode());
+	}
+	
+	public void testComparableComparatorEqualsTrue_1() {
+		ComparableComparator first = ComparableComparator.INSTANCE;
+		ComparableComparator second = ComparableComparator.INSTANCE;
+
+		assertTrue(first.equals(second));
+		assertTrue(first.hashCode() == second.hashCode());
+	}
+	
+	public void testComparableComparatorEqualsTrue_2() throws IOException, ClassNotFoundException {
+		ComparableComparator first = ComparableComparator.INSTANCE;
+		ComparableComparator second =
+			(ComparableComparator) new ObjectInputStream(
+					new ByteArrayInputStream(SerializationUtils.serialize(first))).readObject();
+		
+		assertTrue(first != second);
+
+		assertTrue(first.equals(second));
+		assertTrue(first.hashCode() == second.hashCode());
 	}
 }

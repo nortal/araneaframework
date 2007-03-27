@@ -18,6 +18,7 @@ package org.araneaframework.uilib.list.util.comparator;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Not-null comparator that compares <code>Boolean</code> values.
@@ -41,5 +42,13 @@ public class BooleanComparator implements Comparator, Serializable {
 			return Boolean.TRUE.equals(o1) ? -1 : 1;
 		}
 		return Boolean.TRUE.equals(o1) ? 1 : -1;
+	}
+	
+	public boolean equals(Object obj) {
+		return BooleanComparator.class.equals(obj.getClass()) && ((BooleanComparator)obj).trueFirst == trueFirst;
+	}
+
+	public int hashCode() {
+		return new HashCodeBuilder(20070327, 1455).append(trueFirst).toHashCode();
 	}
 }
