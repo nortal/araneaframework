@@ -25,6 +25,8 @@ import java.util.Locale;
  */
 public class IgnoreCaseComparator implements StringComparator, Serializable {
 	public static final IgnoreCaseComparator INSTANCE = new IgnoreCaseComparator();
+	
+	private IgnoreCaseComparator() {}
 
 	public boolean getIgnoreCase() {
 		return true;

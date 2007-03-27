@@ -86,10 +86,10 @@ public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
 			public void run() {
 				Comparator low = ctx.getFieldComparator(lowFieldId);
 				Comparator high = ctx.getFieldComparator(highFieldId);
-				if (low == null ? high == null : low.equals(high)) {
+				if (low == null ? high == null : low.getClass().equals(high.getClass())) {
 					filter.setComparator(low);
 				} else {
-					throw new IllegalArgumentException("Low field and high field must have the same comparator");				
+					throw new IllegalArgumentException("Low field and high field comparator types must be the same.");				
 				}
 			}
 		});

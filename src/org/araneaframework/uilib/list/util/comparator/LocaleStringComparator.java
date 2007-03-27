@@ -19,6 +19,7 @@ package org.araneaframework.uilib.list.util.comparator;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.Locale;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.araneaframework.core.Assert;
 
 /**
@@ -58,5 +59,21 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 		}
 		return this.collator;
 	}
-	
+
+	public boolean equals(Object obj) {
+		if (obj instanceof LocaleStringComparator == false) {
+			return false;
+		}
+
+		if (this == obj) {
+			return true;
+		}
+
+		LocaleStringComparator rhs = (LocaleStringComparator) obj;
+		return ignoreCase == rhs.ignoreCase && locale.equals(rhs.locale);
+	}
+
+	public int hashCode() {
+		return new HashCodeBuilder(20070327, 1221).append(ignoreCase).append(locale).toHashCode();
+	}
 }

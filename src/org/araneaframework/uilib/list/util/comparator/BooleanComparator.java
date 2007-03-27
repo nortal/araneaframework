@@ -28,7 +28,7 @@ public class BooleanComparator implements Comparator, Serializable {
 
 	private boolean trueFirst;
 
-	public BooleanComparator(boolean trueFirst) {
+	private BooleanComparator(boolean trueFirst) {
 		this.trueFirst = trueFirst;
 	}
 
