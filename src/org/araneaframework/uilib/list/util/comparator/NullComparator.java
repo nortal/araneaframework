@@ -18,6 +18,7 @@ package org.araneaframework.uilib.list.util.comparator;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Comparator that compares <code>null</code> values and uses another not-null
@@ -53,5 +54,22 @@ public class NullComparator implements Comparator, Serializable {
 			return this.nullFirst ? 1 : -1;
 		}
 		return this.notNullComparator.compare(o1, o2);
+	}
+	
+	public boolean equals(Object obj) {
+		if (obj instanceof NullComparator == false) {
+			return false;
+		}
+
+		if (this == obj) {
+			return true;
+		}
+
+		NullComparator rhs = (NullComparator) obj;
+		return nullFirst == rhs.nullFirst && notNullComparator.equals(rhs.notNullComparator);
+	}
+
+	public int hashCode() {
+		return new HashCodeBuilder(20070327, 1229).append(nullFirst).append(notNullComparator).toHashCode();
 	}
 }

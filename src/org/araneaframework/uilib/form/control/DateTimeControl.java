@@ -121,7 +121,16 @@ public class DateTimeControl extends BaseControl {
    * @return the sum of the date and the time.
    */
   private Timestamp addTimeToDate(Timestamp date, Timestamp time) {
-    if (date == null) return time;
+    // if date is null, it means that date part is completely cleared
+	// and when we just return time, it means that Control now holds a
+    // bogus Date since 'Jan 01 00:00:00 EET 1970'.
+    // problem was described in task 336 and forum topic
+	// http://forum.araneaframework.org/viewtopic.php?t=128
+	  
+    // date is null, discard the time
+    if (date == null)
+    	return null;
+
     if (time == null) return date;
 
     Calendar dateCalendar = getCalendarInstance();

@@ -71,7 +71,7 @@ public class ComparatorFactory {
 	 *         including <code>null</code> references.
 	 */
 	public static Comparator getDefault(boolean nullFirst) {
-		return new NullComparator(new ComparableComparator(), nullFirst);
+		return new NullComparator(ComparableComparator.INSTANCE, nullFirst);
 	}
 
 	/**
