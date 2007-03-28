@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.example.common.tags.wizard;
 
@@ -20,7 +20,6 @@ import java.io.Writer;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.util.JspWidgetUtil;
 
 
 /**
@@ -36,13 +35,18 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
  */
 public class WizardBodyTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
-    ApplicationWidget widget = JspWidgetUtil.getWidgetFromContext(null, pageContext);
+    ApplicationWidget widget = getContextWidget();
 
     OutputData output = getOutputData();
 
-    out.flush();
-	widget._getWidget().render(output);	  
-		
+    try {
+      getUIWidget().hideContextEntries(pageContext);
+      out.flush();
+      widget._getWidget().render(output);
+    } finally {
+      getUIWidget().restoreContextEntries(pageContext);
+    }
+
     return SKIP_BODY;
   }
 }

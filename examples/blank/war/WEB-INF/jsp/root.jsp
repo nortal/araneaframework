@@ -5,7 +5,6 @@
     version="1.2">
 
 	<ui:root>
-	    <ui:viewPort>
 	
 	        <ui:widgetContext>	        
 	        		<![CDATA[
@@ -49,6 +48,5 @@
 	            </html>
 	        </ui:widgetContext>
 	
-	    </ui:viewPort>
 	</ui:root>
 </jsp:root>

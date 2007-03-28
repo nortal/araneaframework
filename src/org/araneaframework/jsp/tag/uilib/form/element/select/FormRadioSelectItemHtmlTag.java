@@ -53,7 +53,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     assertControlType("SelectControl");
     
     // Prepare
-    String name = this.getScopedFullFieldId();     
+    String name = this.getFullFieldId();     
     SelectControl.ViewModel viewModel = ((SelectControl.ViewModel)controlViewModel);
     
     // Write input tag

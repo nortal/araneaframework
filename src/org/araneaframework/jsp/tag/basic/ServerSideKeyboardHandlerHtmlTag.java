@@ -20,9 +20,7 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiUpdateEvent;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -135,12 +133,10 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
           event.setTarget(JspWidgetUtil.getContextWidgetFullId(pageContext));
 		}
 
-		String systemFormId = (String)JspUtil.requireContextEntry(pageContext, BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY);
-		
-        // submit_6 : function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
+    // submit_6 : function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
 		StringBuffer result = new StringBuffer("function (event, elementId) { ");
 		result.append("_ap.event_6(");
-		result.append("document.forms['").append(systemFormId).append("'],");
+		result.append("araneaPage().getSystemForm(),");
 		if (event.getId() != null)
 			result.append("'").append(event.getId()).append("',");
 		else

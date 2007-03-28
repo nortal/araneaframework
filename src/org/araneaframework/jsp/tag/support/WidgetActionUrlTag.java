@@ -29,7 +29,6 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.URLUtil;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 
 /**
@@ -60,7 +59,6 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
   }
 
   protected String getWidgetActionUrl() throws JspException {
-    String systemFormId = (String) requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
     Map m = new HashMap();
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
     m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
@@ -69,7 +67,6 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
     if (actionId != null) {
       m.put(ApplicationService.ACTION_HANDLER_ID_KEY, actionId);
     }
-    m.put(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);
     return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(((HttpInputData) getOutputData().getInputData()).getContainerURL(), m));
   }
 

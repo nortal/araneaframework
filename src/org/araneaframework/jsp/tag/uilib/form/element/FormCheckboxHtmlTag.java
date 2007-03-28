@@ -52,7 +52,7 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 		assertControlType("CheckboxControl");	
 
 		// Prepare
-		String name = this.getScopedFullFieldId();
+		String name = this.getFullFieldId();
 		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
 
 		// Write input tag							

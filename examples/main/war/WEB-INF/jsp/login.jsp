@@ -11,7 +11,6 @@
     <ui:root>
     	<!-- This tag should be immediately under the ui:root tag for any application that uses widgets. 
     		It allows widgets to be rendered and included. -->
-        <ui:viewPort>
         	<!-- This tag should generally be the root of every widget JSP. It makes the widget view model accessible as an EL variable.
         	It can also be used to render a descendant widget in the same JSP with the current widget. 
         	In the latter case you should set the id attribute to the identifier path of the descendent 
@@ -31,7 +30,7 @@
                     	It is strongly suggested to have only one system form in the template and have it submitted using 
                     	POST. This will ensure that no matter what user does no data is ever lost. -->
 	                    <ui:systemForm method="POST">
-							<ui:onLoadEvent event="Form.focusFirstElement(document.forms['${systemFormId}']);"/>
+							<ui:onLoadEvent event="Form.focusFirstElement(araneaPage().getSystemForm());"/>
 		                    <div id="outer">
 		                        <div id="middle">
 		                            <div id="inner">
@@ -88,6 +87,5 @@
 
                 </html>
             </ui:widgetContext>
-        </ui:viewPort>
     </ui:root>
 </jsp:root>

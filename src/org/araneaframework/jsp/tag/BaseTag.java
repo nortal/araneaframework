@@ -30,10 +30,13 @@ import javax.servlet.jsp.tagext.TryCatchFinally;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.UIWidget;
 
 /**
  * UI contained base tag.
@@ -185,6 +188,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 			attributeBackupMap.put(key, currentAttribute);
 		
 		// Set new value
+    getUIWidget().addContextEntry(key, value);
 		if (value != null)
 			pageContext.setAttribute(key, value, PageContext.REQUEST_SCOPE);
 		else
@@ -299,9 +303,21 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 	protected OutputData getOutputData() throws JspException {
 		return (OutputData) pageContext.getRequest().getAttribute(OutputData.OUTPUT_DATA_KEY);
 	}
-	
+  
   protected Environment getEnvironment() throws JspException {
     return (Environment) pageContext.getRequest().getAttribute(Environment.ENVIRONMENT_KEY);
+  }
+  
+  protected UIWidget getUIWidget() {
+    return JspWidgetUtil.getUIWidget(pageContext);
+  }
+  
+  protected ApplicationWidget getContextWidget() {
+    return JspWidgetUtil.getContextWidget(pageContext);
+  }
+  
+  protected String getContextWidgetFullId() {
+    return JspWidgetUtil.getContextWidgetFullId(pageContext);
   }
   
 	/* ***********************************************************************************
@@ -350,9 +366,10 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 			for(Iterator j = attributeBackupMap.entrySet().iterator(); j.hasNext();) {
 				Map.Entry entry2 = (Map.Entry)j.next();
 				Object oldAttribute = entry2.getValue();
+        getUIWidget().addContextEntry((String)entry2.getKey(), oldAttribute);
 				if (oldAttribute != null)
 					pageContext.setAttribute((String)entry2.getKey(), oldAttribute, scope);
-				else
+        else
 					pageContext.removeAttribute((String)entry2.getKey(), scope);
 			}
 		}

@@ -35,7 +35,6 @@ import java.io.Writer;
            </ul> "
  */
 public class WidgetTag extends BaseWidgetTag {
-  public static final String WIDGET_SCOPED_ID_KEY = "scopedWidgetId";
   public static final String WIDGET_ID_KEY = "widgetId";
   public static final String WIDGET_KEY = "widget";
   public static final String WIDGET_VIEW_MODEL_KEY = "viewModel";
@@ -46,7 +45,6 @@ public class WidgetTag extends BaseWidgetTag {
      
      // Set variables
      addContextEntry(WIDGET_ID_KEY, fullId);
-     addContextEntry(WIDGET_SCOPED_ID_KEY, scopedFullId);    
      addContextEntry(WIDGET_VIEW_MODEL_KEY, viewModel);
      addContextEntry(WIDGET_KEY, widget);
      addContextEntry(WIDGET_VIEW_DATA_KEY, viewModel.getData());

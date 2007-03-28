@@ -11,7 +11,6 @@ import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.jsp.UiUpdateEvent;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.event.OnChangeEventListener;
@@ -53,13 +52,12 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     //out.write("<script>Event.observe($('" + getScopedFullFieldId() + "'), 'change', function(){ " + JspWidgetCallUtil.getSubmitScriptForEvent() +"});</script>");
     
     JspUtil.writeOpenStartTag(out, "div");
-    JspUtil.writeAttribute(out, "id", "ACdiv." + getScopedFullFieldId());
+    JspUtil.writeAttribute(out, "id", "ACdiv." + getFullFieldId());
     JspUtil.writeAttribute(out, "class", divClass);
     JspUtil.writeCloseStartTag(out);
     JspUtil.writeEndTag(out, "div");
 
-    String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY);
-    StringBuffer acRequestUrl = constructACUrl(systemFormId);
+    StringBuffer acRequestUrl = constructACUrl();
 
    	JspUtil.writeStartTag_SS(out, "script");
    	out.write(constructACRegistrationScript(viewModel, acRequestUrl));
@@ -72,26 +70,24 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   /* ***********************************************************************************
    * Helper functions for construction of URL.
    * ***********************************************************************************/
-  protected StringBuffer constructACUrl(String systemFormId) {
+  protected StringBuffer constructACUrl() {
     StringBuffer result = new StringBuffer();
-    result.append("document.").append(systemFormId).append(".action + \"?");
-    result.append(constructServiceParameter(systemFormId, TopServiceContext.TOP_SERVICE_KEY)).append(" + \"").append('&');
-    result.append(constructServiceParameter(systemFormId, TransactionContext.TRANSACTION_ID_KEY)).append(" + \"").append('&');
-    result.append(constructServiceParameter(systemFormId, ThreadContext.THREAD_SERVICE_KEY)).append(" + \"").append('&');
-    result.append(StandardContainerWidget.ACTION_PATH_KEY).append('=').append(getScopedFullFieldId()).append('&');
+    result.append("araneaPage().getSystemForm().action + \"?");
+    result.append(constructServiceParameter(TopServiceContext.TOP_SERVICE_KEY)).append(" + \"").append('&');
+    result.append(constructServiceParameter(TransactionContext.TRANSACTION_ID_KEY)).append(" + \"").append('&');
+    result.append(constructServiceParameter(ThreadContext.THREAD_SERVICE_KEY)).append(" + \"").append('&');
+    result.append(StandardContainerWidget.ACTION_PATH_KEY).append('=').append(getFullFieldId()).append('&');
     result.append(ApplicationService.ACTION_HANDLER_ID_KEY).append('=').append(AutoCompleteTextControl.LISTENER_NAME);
 
 	return result;
   }
   
-  protected String constructServiceParameter(String systemFormId, String serviceId) {
+  protected String constructServiceParameter(String serviceId) {
 	StringBuffer result = new StringBuffer();
 	result.
 	  append(serviceId).
 	  append("=\"").
-	  append("+document.").
-	  append(systemFormId).
-	  append('.').
+	  append("+araneaPage().getSystemForm().").
 	  append(serviceId).
 	  append(".value");
     return result.toString();
@@ -103,9 +99,9 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected String constructACRegistrationScript(AutoCompleteTextControl.ViewModel viewModel, StringBuffer acRequestUrl) {
 	StringBuffer script = new StringBuffer();
     script.append("new Ajax.Autocompleter(\"");
-    script.append(getScopedFullFieldId());
+    script.append(getFullFieldId());
     script.append("\", \"ACdiv.");
-    script.append(getScopedFullFieldId());
+    script.append(getFullFieldId());
     script.append("\", ");
     script.append(acRequestUrl);
     script.append("\", {");
@@ -131,7 +127,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     Map result = new HashMap(2);
     result.put("minChars", String.valueOf(viewModel.getMinCompletionLength()));
     if (!viewModel.isDisabled() && events && viewModel.isOnChangeEventRegistered())
-      result.put("afterUpdateElement", "function(el, selectedEl) {" + JspWidgetCallUtil.getSubmitScriptForEvent(systemFormId, getOnChangeEvent()) + "}");
+      result.put("afterUpdateElement", "function(el, selectedEl) {" + JspWidgetCallUtil.getSubmitScriptForEvent(getOnChangeEvent()) + "}");
     return result;
   }
   

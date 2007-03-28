@@ -22,7 +22,6 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.PresentationTag;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspScriptUtil;
 import org.araneaframework.jsp.util.JspUtil;
@@ -61,7 +60,6 @@ public class ComponentListFooterTag extends PresentationTag {
 
   public final static String DEFAULT_NO_DATA_STRING_ID = "list.info.noData";
 
-  protected String systemFormId;
   protected String listId;
 
   protected String numberStyleClass = "nr";
@@ -81,9 +79,6 @@ public class ComponentListFooterTag extends PresentationTag {
 
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
-    // Get system form id 
-    systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 
     // Get list data
     listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    

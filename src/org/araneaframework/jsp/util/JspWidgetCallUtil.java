@@ -20,11 +20,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
 import java.util.List;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
-import org.araneaframework.jsp.container.UiWidgetContainer;
 
 /**
  * Standard util for producing calls to UiLib widgets in various
@@ -34,10 +31,6 @@ import org.araneaframework.jsp.container.UiWidgetContainer;
  */
 public abstract class JspWidgetCallUtil {
   public static final String SIMPLE_SUBMIT_FUNCTION = "return _ap.event(this);";
-
-  public static UiWidgetContainer getContainer(PageContext pageContext) throws JspException {
-    return (UiWidgetContainer) JspUtil.requireContextEntry(pageContext, UiWidgetContainer.KEY);
-  }
 
   /**
    * Write out form submit script for specified attribute of HTML element. Aranea custom HTML 
@@ -79,12 +72,9 @@ public abstract class JspWidgetCallUtil {
   }
   
   /** @since 1.0.2 */
-  public static String getSubmitScriptForEvent(String systemFormId, UiUpdateEvent event) {
+  public static String getSubmitScriptForEvent(UiUpdateEvent event) {
     StringBuffer sb = new StringBuffer();
-    sb.append("_ap.event_6(");
-    sb.append("document.forms['");
-    sb.append(systemFormId);
-    sb.append("'],");
+    sb.append("araneaPage().getSystemForm(),");
     String eventId = event.getId() != null ? "'" + event.getId() + "'" : "null";
     String eventTarget = event.getTarget() != null ? "'" + event.getTarget() + "'" : "null";
     String eventParam = event.getParam() != null ? "'" + event.getParam() + "'" : "null";

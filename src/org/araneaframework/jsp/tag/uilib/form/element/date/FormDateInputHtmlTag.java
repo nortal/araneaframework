@@ -38,7 +38,7 @@ public class FormDateInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     assertControlType("DateControl");    
 
     // Prepare
-    String name = this.getScopedFullFieldId();       
+    String name = this.getFullFieldId();       
     DateControl.ViewModel viewModel = ((DateControl.ViewModel)controlViewModel);
 
     Long dateInputSize = DEFAULT_DATE_INPUT_SIZE;

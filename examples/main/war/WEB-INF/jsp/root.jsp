@@ -4,7 +4,6 @@
     xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template" version="1.2">
 	<!-- This is a master page of Aranea framework template application (examples/main/war/WEB-INF/jsp/root.jsp) -->
 	<ui:root>
-	    <ui:viewPort>
 	
 	        <ui:widgetContext>	        
 	        		<![CDATA[
@@ -57,6 +56,5 @@
 	            </html>
 	        </ui:widgetContext>
 	
-	    </ui:viewPort>
 	</ui:root>
 </jsp:root>

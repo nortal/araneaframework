@@ -26,7 +26,6 @@ import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -44,10 +43,7 @@ import org.araneaframework.uilib.form.FormWidget;
 public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface {
 	public final static String COUNTER_KEY = "org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag.KEY";
 
-	protected String contextWidgetId;
-	protected String systemFormId;
 	protected String formFullId;
-	protected String formScopedFullId;
 	
 	protected FormWidget.ViewModel formViewModel;
 	protected FormElement.ViewModel formElementViewModel;
@@ -81,14 +77,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);    
 
-		//Get context widget id
-		contextWidgetId = JspWidgetUtil.getContextWidgetFullId(pageContext);	
-
-		// Get system form id 
-		systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
-
 		// Get form data		
-		formScopedFullId = (String)requireContextEntry(FormTag.FORM_SCOPED_FULL_ID_KEY);
 		formFullId = (String)requireContextEntry(FormTag.FORM_FULL_ID_KEY);
 		formViewModel = (FormWidget.ViewModel)requireContextEntry(FormTag.FORM_VIEW_MODEL_KEY);
 		FormWidget form = (FormWidget)requireContextEntry(FormTag.FORM_KEY);
@@ -118,11 +107,11 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		if (accessKey != null && accessKey.length() != 1) accessKey = null;
 
 		if (hasElementContextSpan)
-            writeFormElementContextOpen(out, formScopedFullId, derivedId, true, pageContext);
+            writeFormElementContextOpen(out, formFullId, derivedId, true, pageContext);
 
 		updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 		
-		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.getScopedFullFieldId());
+		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.getFullFieldId());
 
 		// Continue
 		return EVAL_BODY_INCLUDE;		
@@ -217,13 +206,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 	public void setAccessKeyId(String accessKeyId) throws JspException {
 		this.accessKeyId = (String)evaluate("accessKeyId", accessKeyId, String.class);
-	}
-
-	/**
-	 * Computes field name.
-	 */
-	protected String getScopedFullFieldId() {
-		return formScopedFullId + "." + derivedId;
 	}
 
 	/**

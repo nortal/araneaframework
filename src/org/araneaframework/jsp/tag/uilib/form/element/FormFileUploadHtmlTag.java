@@ -52,7 +52,7 @@ public class FormFileUploadHtmlTag extends BaseFormElementHtmlTag {
     assertControlType("FileUploadControl");
 
     // Prepare
-    String name = this.getScopedFullFieldId();    
+    String name = this.getFullFieldId();    
     FileUploadControl.ViewModel viewModel = ((FileUploadControl.ViewModel)controlViewModel);
 
     // Build accepted mime-types list
@@ -82,7 +82,7 @@ public class FormFileUploadHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeCloseStartEndTag_SS(out);
     
     JspUtil.writeStartTag_SS(out, "script");
-    out.write("setFormEncoding('" + systemFormId +"',"+"'multipart/form-data');");
+    out.write("araneaPage().setSystemFormEncoding('multipart/form-data');");
     JspUtil.writeEndTag_SS(out, "script");
 
     super.doEndTag(out);

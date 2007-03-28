@@ -20,7 +20,6 @@ package org.araneaframework.jsp.tag.basic;
 import java.io.Writer;
 import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 /**
  * Tag that registers functions dealing with window scroll position storing and restoring.
@@ -43,8 +42,6 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
    }
    
    protected void registerScrollHandler(Writer out, WindowScrollPositionContext scrollHandler) throws Exception {
-     // ensure that tag is used inside systemform 
-     String systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
      String x = scrollHandler.getX();
      String y = scrollHandler.getY();
 
@@ -53,15 +50,14 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
 
      out.write("<script>");
      // ensure restoration of scroll position
-     out.write("_ap.addSystemLoadEvent(function() { var form = document.forms['" + systemFormId + "'];" +
+     out.write("_ap.addSystemLoadEvent(function() { var form = araneaPage().getSystemForm();" +
     		" if (form." +  WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + " && form."+WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ") "+
      		"scrollToCoordinates("+x + ","+y+");});");
     		//"form."+ WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + ".value, " +
      		//"form."+ WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ".value);});");
      
      // ensure that the scroll coordinates are submitted with request
-     out.write("var form = document.forms['" + systemFormId + "'];");
-     out.write("_ap.addSubmitCallback(function() {saveScrollCoordinates(document.forms['" + systemFormId +"'])});");
+     out.write("_ap.addSubmitCallback(function() {saveScrollCoordinates()});");
      out.write("</script>");
    }
 }

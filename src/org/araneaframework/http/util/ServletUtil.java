@@ -23,19 +23,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.jstl.core.Config;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.framework.ViewPortContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.jsp.container.UiAraneaWidgetContainer;
-import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
+import org.araneaframework.uilib.UIWidget;
 
 /**
  * Utility methods for Aranea framework running inside a servlet container. Includes
@@ -57,12 +53,18 @@ public abstract class ServletUtil {
    * is used.
    */
   public static void include(String filePath, Environment env, OutputData output) throws Exception {
+    //FIXME
+  }
+  
+  public static void include(String filePath, UIWidget widget, OutputData output) throws Exception {
     if (log.isDebugEnabled())
       log.debug("Including a resource from the absolute path '" + filePath + "'");
     
     Map attributeBackupMap = new HashMap();
     
+    Environment env = widget.getEnvironment();
     HttpServletRequest req = getRequest(output.getInputData());
+    setAttribute(req, attributeBackupMap, UIWidget.UIWIDGET_KEY, widget);
     setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
     
     /* AraneaRootTag */
@@ -72,21 +74,6 @@ public abstract class ServletUtil {
         AraneaRootTag.LOCALIZATION_CONTEXT_KEY,
         AraneaRootTag.getLocalizationContext(config)
       );
-    }
-    
-    /* AraneaViewPortTag */
-    if (req.getAttribute(UiWidgetContainer.KEY) == null) {
-      ViewPortContext viewPortContext = (ViewPortContext) env.requireEntry(ViewPortContext.class);
-      setAttribute(req, attributeBackupMap, UiWidgetContainer.KEY, new UiAraneaWidgetContainer(viewPortContext.getViewPort(), config));
-    }
-    
-    /* AraneaSystemFormHtmlTag */
-    if (req.getAttribute(BaseSystemFormHtmlTag.ID_KEY) == null || req.getAttribute(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY) == null) {
-      Object systemFormId = output.getInputData().getGlobalData().get("systemFormId");
-      if (systemFormId != null) {
-          setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.ID_KEY, systemFormId);
-          setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);
-      }
     }
     
     ServletContext servletContext = (ServletContext) env.getEntry(ServletContext.class);
@@ -154,5 +141,9 @@ public abstract class ServletUtil {
   
   public static HttpOutputData getOutputData(ServletRequest req) {
     return (HttpOutputData) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
+  }
+  
+  public static Environment getEnvironment(ServletRequest req) {
+    return (Environment) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
   }
 }

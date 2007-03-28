@@ -45,10 +45,9 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 	}
 
 	protected int doEndTag(Writer out) throws Exception {   
-		ApplicationWidget widget = JspWidgetUtil.getWidgetFromContext(widgetId, pageContext);
+    ApplicationWidget widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), widgetId);
 		
 		WidgetContextTag widgetContextTag = new WidgetContextTag();
-		
 		registerSubtag(widgetContextTag);
 		widgetContextTag.setId(widgetId);
 		executeStartSubtag(widgetContextTag);
@@ -56,6 +55,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 		OutputData output = getOutputData();
 		
 		try {
+      getUIWidget().hideContextEntries(pageContext);
 			if (page == null) {
 				out.flush();
 				widget._getWidget().render(output);
@@ -65,7 +65,8 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 				JspUtil.include(pageContext, config.getJspPath() + "/" + page);
 			}
 		}
-		finally {		
+		finally {
+      getUIWidget().restoreContextEntries(pageContext);
 			executeEndTagAndUnregister(widgetContextTag);
 		}
 		

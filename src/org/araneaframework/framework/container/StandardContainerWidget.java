@@ -17,17 +17,13 @@
 package org.araneaframework.framework.container;
 
 import org.apache.log4j.Logger;
-import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.framework.ViewPortContext;
 
 /**
  * A widget that contains a child widget. It routes an action to the child
@@ -36,7 +32,7 @@ import org.araneaframework.framework.ViewPortContext;
  *
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardContainerWidget extends BaseApplicationWidget implements ViewPortContext {  
+public class StandardContainerWidget extends BaseApplicationWidget {  
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
@@ -67,17 +63,9 @@ public class StandardContainerWidget extends BaseApplicationWidget implements Vi
     this.root = root;
   }  
   
-  public ApplicationWidget getViewPort() {
-    return this;
-  }
-  
   //*******************************************************************
   // PROTECTED METHODS
   //*******************************************************************
-  
-  protected Environment getChildWidgetEnvironment() {
-    return new StandardEnvironment(getEnvironment(), ViewPortContext.class, this);
-  }
   
   protected void init() throws Exception {
     Assert.notNull(this, root, "Root widget cannot be null!");
