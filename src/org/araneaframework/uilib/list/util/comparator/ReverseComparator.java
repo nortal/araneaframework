@@ -18,13 +18,13 @@ package org.araneaframework.uilib.list.util.comparator;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Comparator that reverses another <code>Comparator</code> by switching the
  * order of two comparable objects.
  */
 public class ReverseComparator implements Comparator, Serializable {
-
 	protected Comparator comparator;
 
 	public ReverseComparator(Comparator comparator) {
@@ -37,5 +37,21 @@ public class ReverseComparator implements Comparator, Serializable {
 	public int compare(Object o1, Object o2) {
 		return this.comparator.compare(o2, o1);
 	}
+	
+	public boolean equals(Object obj) {
+		if (obj instanceof ReverseComparator == false) {
+			return false;
+		}
 
+		if (this == obj) {
+			return true;
+		}
+
+		ReverseComparator rhs = (ReverseComparator) obj;
+		return comparator.equals(rhs.comparator);
+	}
+
+	public int hashCode() {
+		return new HashCodeBuilder(20070327, 1239).append(comparator).toHashCode();
+	}
 }

@@ -26,7 +26,17 @@ import java.util.Comparator;
 public class ComparableComparator implements Comparator, Serializable {
 	public static final ComparableComparator INSTANCE = new ComparableComparator();
 
+	private ComparableComparator() {};
+	
 	public int compare(Object o1, Object o2) {
 		return ((Comparable) o1).compareTo(o2);
+	}
+	
+	public boolean equals(Object obj) {
+		return ComparableComparator.class.equals(obj.getClass());
+	}
+
+	public int hashCode() {
+		return 703271500;
 	}
 }

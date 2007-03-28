@@ -89,7 +89,7 @@ public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
 				if (low == null ? high == null : low.equals(high)) {
 					filter.setComparator(low);
 				} else {
-					throw new IllegalArgumentException("Low field and high field must have the same comparator");				
+					throw new IllegalArgumentException("Low field and high field comparator types must be the same.");				
 				}
 			}
 		});
