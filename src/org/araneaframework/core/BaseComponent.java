@@ -48,11 +48,11 @@ public abstract class BaseComponent implements Component {
   private Map children;
   private Map disabledChildren;
   
-  public static final int UNBORN = 1;
-  public static final int ALIVE = 2;
-  public static final int DEAD = 3;
+  private static final byte UNBORN = 1;
+  private static final byte ALIVE = 2;
+  private static final byte DEAD = 3;
   
-  private int state = UNBORN;
+  private byte state = UNBORN;
   
   private transient int callCount = 0;
   private transient int reentrantCallCount = 0;
