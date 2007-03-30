@@ -49,8 +49,7 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
     super.doStartTag(out);
 
     formViewModel = (FormWidget.ViewModel)requireContextEntry(FormTag.FORM_VIEW_MODEL_KEY);
-    FormWidget form = 
-      (FormWidget)JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
+    FormWidget form = (FormWidget) requireContextEntry(FormTag.FORM_KEY);
 
     // In case the tag is in formElement tag
     derivedId = id;

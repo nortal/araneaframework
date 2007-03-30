@@ -32,6 +32,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.JspContext;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
@@ -164,7 +165,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 	 * Gets the value of <code>key</code> from <code>PageContext.REQUEST_SCOPE</code>.
 	 */	
 	protected Object getContextEntry(String key) throws JspException {
-		return pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
+		return JspUtil.getContextEntry(pageContext, key);
 	}
 	
 	/**
@@ -188,7 +189,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 			attributeBackupMap.put(key, currentAttribute);
 		
 		// Set new value
-    getUIWidget().addContextEntry(key, value);
+		getUIWidget().addContextEntry(key, value);
 		if (value != null)
 			pageContext.setAttribute(key, value, PageContext.REQUEST_SCOPE);
 		else
@@ -284,7 +285,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 	//
 
 	protected ConfigurationContext getConfiguration() throws JspException {
-    JspContext config = (JspContext) getEnvironment().getEntry(JspContext.class);
+		JspContext config = (JspContext) getEnvironment().getEntry(JspContext.class);
 		return config.getConfiguration();
 	}
 	
@@ -301,25 +302,25 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 	 * @return the current response object.
 	 */
 	protected OutputData getOutputData() throws JspException {
-		return (OutputData) pageContext.getRequest().getAttribute(OutputData.OUTPUT_DATA_KEY);
+		return ServletUtil.getOutputData(pageContext.getRequest());
 	}
-  
-  protected Environment getEnvironment() throws JspException {
-    return (Environment) pageContext.getRequest().getAttribute(Environment.ENVIRONMENT_KEY);
-  }
-  
-  protected UIWidget getUIWidget() {
-    return JspWidgetUtil.getUIWidget(pageContext);
-  }
-  
-  protected ApplicationWidget getContextWidget() {
-    return JspWidgetUtil.getContextWidget(pageContext);
-  }
-  
-  protected String getContextWidgetFullId() {
-    return JspWidgetUtil.getContextWidgetFullId(pageContext);
-  }
-  
+
+	protected Environment getEnvironment() throws JspException {
+		return ServletUtil.getEnvironment(pageContext.getRequest());
+	}
+
+	protected UIWidget getUIWidget() {
+		return JspWidgetUtil.getUIWidget(pageContext);
+	}
+
+	protected ApplicationWidget getContextWidget() {
+		return JspWidgetUtil.getContextWidget(pageContext);
+	}
+
+	protected String getContextWidgetFullId() {
+		return JspWidgetUtil.getContextWidgetFullId(pageContext);
+	}
+
 	/* ***********************************************************************************
 	 * PRIVATE internal method for releasing the subtags
 	 * ***********************************************************************************/	
@@ -366,10 +367,10 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 			for(Iterator j = attributeBackupMap.entrySet().iterator(); j.hasNext();) {
 				Map.Entry entry2 = (Map.Entry)j.next();
 				Object oldAttribute = entry2.getValue();
-        getUIWidget().addContextEntry((String)entry2.getKey(), oldAttribute);
+				getUIWidget().addContextEntry((String)entry2.getKey(), oldAttribute);
 				if (oldAttribute != null)
 					pageContext.setAttribute((String)entry2.getKey(), oldAttribute, scope);
-        else
+        		else
 					pageContext.removeAttribute((String)entry2.getKey(), scope);
 			}
 		}

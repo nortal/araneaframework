@@ -3,7 +3,6 @@ package org.araneaframework.jsp.tag.uilib;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 

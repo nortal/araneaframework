@@ -39,9 +39,9 @@ public class WidgetContextTag extends WidgetTag {
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    addContextEntry(CONTEXTWIDGET_KEY, widget);
-
     if (id != null) {
+      addContextEntry(CONTEXTWIDGET_KEY, widget);
+
       output = getOutputData();
       StringTokenizer tokenizer = new StringTokenizer(id, ".");
 

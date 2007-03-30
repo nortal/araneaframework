@@ -6,7 +6,6 @@
     version="1.2">
     <jsp:directive.page contentType="text/html; charset=UTF-8"/>
 
-    <ui:root>
             <ui:widgetContext>
                 <html>
                     <head>
@@ -67,5 +66,4 @@
 
                 </html>
             </ui:widgetContext>
-    </ui:root>
 </jsp:root>

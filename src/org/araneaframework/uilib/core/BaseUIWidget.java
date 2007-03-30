@@ -16,17 +16,11 @@
 
 package org.araneaframework.uilib.core;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Scope;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.framework.FlowContext;
@@ -37,6 +31,7 @@ import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.UIWidget;
+import org.araneaframework.uilib.util.UIWidgetHelper;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
@@ -46,7 +41,10 @@ import org.springframework.beans.factory.BeanFactory;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BaseUIWidget extends BaseApplicationWidget implements UIWidget {
+
   protected String viewSelector;  
+
+  protected UIWidgetHelper uiWidgetHelper = new UIWidgetHelper();
 
   /**
    * Sets the view selector for this widget, should be path to <code>jsp</code> file
@@ -104,6 +102,7 @@ public class BaseUIWidget extends BaseApplicationWidget implements UIWidget {
     
     String jsp = resolveJspName(jspCtx, viewSelector);
     ServletUtil.include(jsp, this, output);
+    uiWidgetHelper.reset();
   }
   
   protected String resolveJspName(JspContext jspCtx, String viewSelector) {
@@ -122,50 +121,16 @@ public class BaseUIWidget extends BaseApplicationWidget implements UIWidget {
     }
   }
 
-
-  private Set contextEntries;
-  private Map hiddenContextEntries;
-
   public void addContextEntry(String key, Object value) {
-    Assert.isTrue(hiddenContextEntries == null, "");
-    if (value == null) {
-      if (contextEntries != null)
-        contextEntries.remove(key);
-    } else {
-      if (contextEntries == null)
-        contextEntries = new HashSet();
-      contextEntries.add(key);
-    }
-  }
-
-  public void removeContextEntry(String key) {
-    Assert.isTrue(hiddenContextEntries == null, "");
-    contextEntries.remove(key);
+    uiWidgetHelper.addContextEntry(key, value);
   }
 
   public void hideContextEntries(PageContext pageContext) {
-    if (contextEntries == null || contextEntries.size() == 0)
-      return;
-    Assert.isTrue(hiddenContextEntries == null, "");
-    hiddenContextEntries = new HashMap();
-    for (Iterator i = contextEntries.iterator(); i.hasNext(); ) {
-      String key = (String) i.next();
-      Object value = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
-      Assert.notNull(value);
-      hiddenContextEntries.put(key, value);
-      pageContext.removeAttribute(key, PageContext.REQUEST_SCOPE);
-    }
+    uiWidgetHelper.hideContextEntries(pageContext);
   }
 
   public void restoreContextEntries(PageContext pageContext) {
-    if (hiddenContextEntries == null)
-      return;
-    for (Iterator i = hiddenContextEntries.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      Assert.isTrue(pageContext.getAttribute((String) entry.getKey(), PageContext.REQUEST_SCOPE) == null, "");
-      pageContext.setAttribute((String) entry.getKey(), entry.getValue(), PageContext.REQUEST_SCOPE);
-    }
-    hiddenContextEntries = null;
+    uiWidgetHelper.restoreContextEntries(pageContext);
   }
 
 }

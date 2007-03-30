@@ -105,7 +105,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   protected void init() throws Exception {
     super.init();
 
-    loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+    loc = (LocalizationContext) getEnvironment().requireEntry(LocalizationContext.class);
   }
   
   protected Environment getChildEnvironment() {

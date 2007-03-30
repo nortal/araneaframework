@@ -5,12 +5,7 @@
     xmlns:tui="http://araneaframework.org/tag-library/template"
     version="1.2">
     <jsp:directive.page contentType="text/html; charset=UTF-8"/>
-    
-    <!-- This tag should always be the root of any Aranea template JSP. 
-    Its main function is to allow JSP access the controller. -->
-    <ui:root>
-    	<!-- This tag should be immediately under the ui:root tag for any application that uses widgets. 
-    		It allows widgets to be rendered and included. -->
+
         	<!-- This tag should generally be the root of every widget JSP. It makes the widget view model accessible as an EL variable.
         	It can also be used to render a descendant widget in the same JSP with the current widget. 
         	In the latter case you should set the id attribute to the identifier path of the descendent 
@@ -87,5 +82,4 @@
 
                 </html>
             </ui:widgetContext>
-    </ui:root>
 </jsp:root>

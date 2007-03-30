@@ -46,7 +46,7 @@ public class FormListTag extends BaseWidgetTag {
 	 */
 	public int doStartTag(Writer out) throws Exception {
 		if (id == null) {
-			String listId = (String) JspUtil.requireContextEntry(pageContext, ListTag.LIST_ID_KEY);
+			String listId = (String) requireContextEntry(ListTag.LIST_ID_KEY);
 			id = listId + ".formList";
 		}
 		

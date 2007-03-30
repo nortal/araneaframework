@@ -16,13 +16,17 @@
 
 package org.araneaframework.http.util;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.jstl.core.Config;
+import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -30,7 +34,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
+import org.araneaframework.jsp.tag.context.WidgetContextTag;
 import org.araneaframework.uilib.UIWidget;
 
 /**
@@ -53,34 +57,36 @@ public abstract class ServletUtil {
    * is used.
    */
   public static void include(String filePath, Environment env, OutputData output) throws Exception {
-    //FIXME
+    include(filePath, env, output, null);
   }
   
   public static void include(String filePath, UIWidget widget, OutputData output) throws Exception {
+    include(filePath, widget.getEnvironment(), output, widget);
+  }
+
+  private static void include(String filePath, Environment env, OutputData output, UIWidget widget) throws Exception {
     if (log.isDebugEnabled())
       log.debug("Including a resource from the absolute path '" + filePath + "'");
-    
+
     Map attributeBackupMap = new HashMap();
-    
-    Environment env = widget.getEnvironment();
     HttpServletRequest req = getRequest(output.getInputData());
-    setAttribute(req, attributeBackupMap, UIWidget.UIWIDGET_KEY, widget);
-    setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
-    
-    /* AraneaRootTag */
     JspContext config = (JspContext) env.requireEntry(JspContext.class);
-    if (req.getAttribute(AraneaRootTag.LOCALIZATION_CONTEXT_KEY) == null) {
-      setAttribute(req, attributeBackupMap,
-        AraneaRootTag.LOCALIZATION_CONTEXT_KEY,
-        AraneaRootTag.getLocalizationContext(config)
-      );
+    if (widget != null) {
+      setAttribute(req, attributeBackupMap, UIWidget.UIWIDGET_KEY, widget);
+      setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXTWIDGET_KEY, widget);
+    } else {
+      setAttribute(req, attributeBackupMap, UIWidget.UIWIDGET_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXTWIDGET_KEY, null);
     }
-    
-    ServletContext servletContext = (ServletContext) env.getEntry(ServletContext.class);
+    setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
+    setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(config));
+
+    ServletContext servletContext = (ServletContext) env.requireEntry(ServletContext.class);
     servletContext.getRequestDispatcher(filePath).include(getRequest(output.getInputData()), getResponse(output));
+
     restoreAttributes(req, attributeBackupMap);
   }
-  
+
   private static void setAttribute(HttpServletRequest req, Map attributeBackupMap, String name, Object value) {
     attributeBackupMap.put(name, req.getAttribute(name));
     if (value != null) {
@@ -144,6 +150,36 @@ public abstract class ServletUtil {
   }
   
   public static Environment getEnvironment(ServletRequest req) {
-    return (Environment) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
+    return (Environment) req.getAttribute(Environment.ENVIRONMENT_KEY);
   }
+
+  public static final String LOCALIZATION_CONTEXT_KEY = Config.FMT_LOCALIZATION_CONTEXT + ".request";
+
+  public static LocalizationContext buildLocalizationContext(JspContext config) {
+    return new LocalizationContext(
+      new StringAdapterResourceBundle(config.getCurrentBundle()),
+      config.getCurrentLocale()
+    );
+  }
+
+  /**
+   * Adapter resource bundle that converts all objects to string.
+   */
+  public static class StringAdapterResourceBundle extends ResourceBundle {
+    protected ResourceBundle bundle;
+    
+    public StringAdapterResourceBundle(ResourceBundle bundle) {
+      this.bundle = bundle;
+    }
+    
+    protected Object handleGetObject(String key) {
+      Object object = bundle.getObject(key);
+      return (object != null) ? object.toString() : null;
+    } 
+    
+    public Enumeration getKeys() {
+      return bundle.getKeys();
+    }
+  }
+
 }
