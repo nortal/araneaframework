@@ -31,7 +31,7 @@ import org.araneaframework.jsp.tag.uilib.WidgetTag;
  */
 public class WidgetContextTag extends WidgetTag {
 
-  public static final String CONTEXTWIDGET_KEY = "org.araneaframework.jsp.tag.context.WidgetContextTag.CONTEXTWIDGET";
+  public static final String CONTEXT_WIDGET_KEY = "org.araneaframework.jsp.tag.context.WidgetContextTag.CONTEXTWIDGET";
   private OutputData output = null;
   
   private int pathLength = 0;
@@ -40,7 +40,7 @@ public class WidgetContextTag extends WidgetTag {
     super.doStartTag(out);
 
     if (id != null) {
-      addContextEntry(CONTEXTWIDGET_KEY, widget);
+      addContextEntry(CONTEXT_WIDGET_KEY, widget);
 
       output = getOutputData();
       StringTokenizer tokenizer = new StringTokenizer(id, ".");

@@ -33,7 +33,7 @@ public abstract class JspWidgetUtil {
   }
 
   public static ApplicationWidget getContextWidget(PageContext pageContext) {
-    return (ApplicationWidget) pageContext.getRequest().getAttribute(WidgetContextTag.CONTEXTWIDGET_KEY);
+    return (ApplicationWidget) pageContext.getRequest().getAttribute(WidgetContextTag.CONTEXT_WIDGET_KEY);
   }
 
   public static String getContextWidgetFullId(PageContext pageContext) {

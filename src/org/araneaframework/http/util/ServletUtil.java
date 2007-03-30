@@ -73,10 +73,10 @@ public abstract class ServletUtil {
     JspContext config = (JspContext) env.requireEntry(JspContext.class);
     if (widget != null) {
       setAttribute(req, attributeBackupMap, UIWidget.UIWIDGET_KEY, widget);
-      setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXTWIDGET_KEY, widget);
+      setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
     } else {
       setAttribute(req, attributeBackupMap, UIWidget.UIWIDGET_KEY, null);
-      setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXTWIDGET_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, null);
     }
     setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
     setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(config));
