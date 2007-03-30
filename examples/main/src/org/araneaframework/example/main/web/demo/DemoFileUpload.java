@@ -60,7 +60,6 @@ public class DemoFileUpload extends TemplateBaseWidget {
 
 	private void buildList() throws Exception {
 		uploadList = new ListWidget();
-		addWidget("uploadForm", uploadList);
 		uploadList.setDataProvider(new FileListDataProvider());
 		uploadList.addField("originalFilename", "#Original filename");
 		uploadList.addField("size", "#File size");

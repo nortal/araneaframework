@@ -283,9 +283,9 @@ public class FormElement extends GenericFormElement implements FormElementContex
   
   /** @since 1.0.5 */
   public void addInitEvent(Event event) {
-    if (isInitialized()) {
+    if (isAlive()) {
       event.run();
-    } else {
+    } else if (!isInitialized()) {
       if (initEvents == null)
         initEvents = new ArrayList();
       initEvents.add(event);
@@ -313,7 +313,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * Uses {@link BaseConverter}to convert the {@link BaseControl}value to the {@link Data}value.
    */
   protected void convertInternal() {
-    if (!isInitialized())
+    if (!isAlive())
       return;
     
     Object newDataValue = null;

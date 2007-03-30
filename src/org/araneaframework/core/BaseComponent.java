@@ -48,7 +48,11 @@ public abstract class BaseComponent implements Component {
   private Map children;
   private Map disabledChildren;
   
-  private Boolean nullIfInited = Boolean.FALSE;
+  private static final byte UNBORN = 1;
+  private static final byte ALIVE = 2;
+  private static final byte DEAD = 3;
+  
+  private byte state = UNBORN;
   
   private transient int callCount = 0;
   private transient int reentrantCallCount = 0;
@@ -104,8 +108,16 @@ public abstract class BaseComponent implements Component {
    * Returns true, if the BaseComponent has been initialized. 
    */
   protected boolean isInitialized() {
-    return nullIfInited == null;
+    return state != UNBORN;
   } 
+  
+  protected boolean isAlive() {
+    return state == ALIVE;
+  }
+  
+  protected boolean isDead() {
+    return state == DEAD;
+  }
   
   /**
    * Sets the environment of this BaseComponent to environment. 
@@ -151,6 +163,11 @@ public abstract class BaseComponent implements Component {
     _checkCall();
     incCallCount();
   }
+  
+  protected synchronized void _strictStartCall() throws IllegalStateException {
+	_strictCheckCall();
+	incCallCount();
+  }
 
   /**
    * Decrements the call count. Wakes up all threads that are waiting on
@@ -179,12 +196,25 @@ public abstract class BaseComponent implements Component {
   }
 
   /**
-   * Checks if this component is initialized. If not, throws IllegalStateException.
+   * Checks if this component was initialized. If not, throws IllegalStateException.
+   * This is relatively loose check, allowing leftover calls to dead components.
+   * @throws IllegalStateException when component has never been initialized
    */
   protected void _checkCall() throws IllegalStateException {
     if (!isInitialized()) {
-      throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
+      throw new IllegalStateException("Component '" + getClass().getName() + "' was never initialized!");
     }
+  }
+  
+  /**
+   * Checks if this component is currently alive. 
+   * This is strict check that disallows leftover calls to dead components.
+   * @throws IllegalStateException when component is unborn or dead
+   */
+  protected void _strictCheckCall() throws IllegalStateException {
+	if (!isAlive()) {
+	  throw new IllegalStateException("Component '" + getClass().getName() + "' is not alive!");
+	}
   }
   
   /**
@@ -330,7 +360,7 @@ public abstract class BaseComponent implements Component {
   protected void _propagate(Message message) {
     Assert.notNullParam(this, message, "message");
     
-    if (children == null)
+    if (children == null || isDead())
       return;
     
     Iterator ite = (new HashMap(_getChildren())).keySet().iterator();
@@ -389,7 +419,7 @@ public abstract class BaseComponent implements Component {
 
       BaseComponent.this._setScope(scope);
       BaseComponent.this._setEnvironment(env);
-      nullIfInited = null;
+      state = ALIVE;
       try {
         BaseComponent.this.init();
       }
@@ -400,7 +430,8 @@ public abstract class BaseComponent implements Component {
     
     public void destroy(){     
       _startWaitingCall();
-      
+      _strictCheckCall();
+
       try {
         /* XXX synch logic a bit weird. 
          * Second call to destroy should fail, not wait. */
@@ -421,7 +452,7 @@ public abstract class BaseComponent implements Component {
           
           BaseComponent.this.destroy();
         }
-        nullIfInited = Boolean.FALSE;   
+        state = DEAD;
       }
       catch (Exception e) {
         ExceptionUtil.uncheckException(e);

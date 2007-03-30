@@ -23,6 +23,7 @@
 				<ui:eventButton eventId="openUrl" labelId="#Open some URL (/.)" updateRegions="testPopupOpeningWithAJAX"/>
 				<ui:eventButton eventId="openNewCustomFlow" labelId="#Open interactive popup."/>
 				<ui:eventButton eventId="openMountedPopup" labelId="#Open mounted URL."/>
+				<ui:eventButton eventId="openImmediatelyReturningCustomFlow" labelId="#Open immediately returning interactive popup."/>
  				<ui:eventButton 
  					eventId="endFlow" 
  					labelId="#End this flow."/>
