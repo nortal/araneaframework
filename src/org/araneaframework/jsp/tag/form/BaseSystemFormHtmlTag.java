@@ -42,11 +42,6 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    // Error check
-// FIXME
-//    if (getContextEntry(ID_KEY) != null)
-//      throw new AraneaJspException("System forms cannot be nested");                    
-
     // Compute new id for systemForm.
     derivedId = id == null ? "system_form_0" : id;
 
