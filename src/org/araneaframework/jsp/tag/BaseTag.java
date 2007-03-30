@@ -31,6 +31,7 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -378,4 +379,64 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
 		// Release data
 		attributeBackup = null;
 	}
+  
+  /*
+   * Hiding and restoring contextentries when widgetInclude is done
+   */
+
+  private Set contextEntries;
+  private Map hiddenContextEntries;
+  public static final String GLOBAL_CONTEXT_ENTRIES_KEY = "org.araneaframework.jsp.tag.BaseTag";
+
+  public void addGlobalContextEntry(String key, Object value) {
+    if (hiddenContextEntries != null) {
+      hiddenContextEntries = null;
+      throw new AraneaRuntimeException("ContextEntries were not restored properly");
+    }
+    if (value == null) {
+      if (contextEntries != null)
+        contextEntries.remove(key);
+    } else {
+      if (contextEntries == null)
+        contextEntries = new HashSet();
+      contextEntries.add(key);
+    }
+  }
+
+  public void hideContextEntries(PageContext pageContext) {
+    if (contextEntries == null || contextEntries.size() == 0)
+      return;
+    if (hiddenContextEntries != null) {
+      hiddenContextEntries = null;
+      throw new AraneaRuntimeException("ContextEntries were not restored properly");
+    }
+    hiddenContextEntries = new HashMap();
+    for (Iterator i = contextEntries.iterator(); i.hasNext(); ) {
+      String key = (String) i.next();
+      Object value = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
+      if (value != null) {
+        hiddenContextEntries.put(key, value);
+        pageContext.removeAttribute(key, PageContext.REQUEST_SCOPE);
+      }
+    }
+  }
+
+  public void restoreContextEntries(PageContext pageContext) {
+    if (hiddenContextEntries == null)
+      return;
+    for (Iterator i = hiddenContextEntries.entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      pageContext.setAttribute((String) entry.getKey(), entry.getValue(), PageContext.REQUEST_SCOPE);
+    }
+    hiddenContextEntries = null;
+  }
+
+  public void reset() {
+    if (contextEntries != null)
+      contextEntries.clear();
+    if (hiddenContextEntries != null) {
+      hiddenContextEntries = null;
+      throw new AraneaRuntimeException("ContextEntries were not restored properly");
+    }
+  }
 }

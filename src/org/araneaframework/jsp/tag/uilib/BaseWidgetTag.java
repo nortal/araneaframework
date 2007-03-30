@@ -28,9 +28,6 @@ public class BaseWidgetTag extends BaseTag {
 
     if (id == null) {
       widget = getContextWidget();
-      if (widget == null) {
-        widget = getUIWidget();
-      }
     } else {
       widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), id);
     }
