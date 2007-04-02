@@ -40,11 +40,11 @@ public class WizardBodyTag extends BaseTag {
     OutputData output = getOutputData();
 
     try {
-      getUIWidget().hideContextEntries(pageContext);
+      hideGlobalContextEntries(pageContext);
       out.flush();
       widget._getWidget().render(output);
     } finally {
-      getUIWidget().restoreContextEntries(pageContext);
+      restoreGlobalContextEntries(pageContext);
     }
 
     return SKIP_BODY;

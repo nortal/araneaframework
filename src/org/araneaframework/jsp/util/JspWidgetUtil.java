@@ -21,16 +21,11 @@ import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
-import org.araneaframework.uilib.UIWidget;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class JspWidgetUtil {
-
-  public static UIWidget getUIWidget(PageContext pageContext) {
-    return (UIWidget) pageContext.getRequest().getAttribute(UIWidget.UIWIDGET_KEY);
-  }
 
   public static ApplicationWidget getContextWidget(PageContext pageContext) {
     return (ApplicationWidget) pageContext.getRequest().getAttribute(WidgetContextTag.CONTEXT_WIDGET_KEY);

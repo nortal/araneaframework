@@ -30,8 +30,6 @@ import org.araneaframework.framework.MountContext;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.ConfigurationContext;
-import org.araneaframework.uilib.UIWidget;
-import org.araneaframework.uilib.util.UIWidgetHelper;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
@@ -40,11 +38,9 @@ import org.springframework.beans.factory.BeanFactory;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class BaseUIWidget extends BaseApplicationWidget implements UIWidget {
+public class BaseUIWidget extends BaseApplicationWidget {
 
   protected String viewSelector;  
-
-  protected UIWidgetHelper uiWidgetHelper = new UIWidgetHelper();
 
   /**
    * Sets the view selector for this widget, should be path to <code>jsp</code> file
@@ -102,7 +98,6 @@ public class BaseUIWidget extends BaseApplicationWidget implements UIWidget {
     
     String jsp = resolveJspName(jspCtx, viewSelector);
     ServletUtil.include(jsp, this, output);
-    uiWidgetHelper.reset();
   }
   
   protected String resolveJspName(JspContext jspCtx, String viewSelector) {
@@ -119,18 +114,6 @@ public class BaseUIWidget extends BaseApplicationWidget implements UIWidget {
 	
       super.init(scope, env);
     }
-  }
-
-  public void addContextEntry(String key, Object value) {
-    uiWidgetHelper.addContextEntry(key, value);
-  }
-
-  public void hideContextEntries(PageContext pageContext) {
-    uiWidgetHelper.hideContextEntries(pageContext);
-  }
-
-  public void restoreContextEntries(PageContext pageContext) {
-    uiWidgetHelper.restoreContextEntries(pageContext);
   }
 
 }

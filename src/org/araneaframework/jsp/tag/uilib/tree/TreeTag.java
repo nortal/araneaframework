@@ -31,13 +31,13 @@ public class TreeTag extends BaseWidgetTag {
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		try {
-      getUIWidget().hideContextEntries(pageContext);
+      hideGlobalContextEntries(pageContext);
 			getOutputData().pushScope(id);
 			out.flush();
 			widget._getWidget().render(getOutputData());
 		} finally {
 			getOutputData().popScope();
-      getUIWidget().restoreContextEntries(pageContext);
+      restoreGlobalContextEntries(pageContext);
 		}
 
 		return SKIP_BODY;

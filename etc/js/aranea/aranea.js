@@ -113,8 +113,10 @@ function AraneaPage() {
   this.setSystemForm = function(_systemForm) { systemForm = _systemForm; }
 
 	this.setSystemFormEncoding = function(encoding) {
-		systemForm.enctype = encoding;
-		systemForm.encoding = encoding; // IE
+		this.addSystemLoadEvent(function() {
+			systemForm.enctype = encoding;
+			systemForm.encoding = encoding; // IE
+		});
 	}
 
 	this.getEventTarget = function(element) {

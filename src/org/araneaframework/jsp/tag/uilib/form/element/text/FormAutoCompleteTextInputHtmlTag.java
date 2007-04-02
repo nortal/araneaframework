@@ -98,7 +98,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
    * ***********************************************************************************/
   protected String constructACRegistrationScript(AutoCompleteTextControl.ViewModel viewModel, StringBuffer acRequestUrl) {
 	StringBuffer script = new StringBuffer();
-    script.append("new Ajax.Autocompleter(\"");
+    script.append("araneaPage().addClientLoadEvent(function() {new Ajax.Autocompleter(\"");
     script.append(getFullFieldId());
     script.append("\", \"ACdiv.");
     script.append(getFullFieldId());
@@ -115,7 +115,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     	if (i.hasNext()) script.append(",");
     }
 
-    script.append("});");
+    script.append("});});");
 
 	return script.toString();
   }

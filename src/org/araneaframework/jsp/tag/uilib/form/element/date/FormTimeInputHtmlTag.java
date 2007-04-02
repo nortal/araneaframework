@@ -78,7 +78,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
   protected void writeMinuteSelect(Writer out, String name, boolean disabled, Integer minute) throws IOException {
     TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
-    out.write("<select name='" + name + ".select2' onChange=\""
+    out.write("<select id=\"" + name + ".select2\" name=\"" + name + ".select2\" onChange=\""
         + fillXJSCallConstructor("fillTimeText", name, name + ".select1", name + ".select2")
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
 
@@ -103,7 +103,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
   protected void writeHourSelect(Writer out, String name, boolean disabled, Integer hour) throws IOException {
     TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
-    out.write("<select name='" + name + ".select1' onChange=\""
+    out.write("<select id=\"" + name + ".select1\" name=\"" + name + ".select1\" onChange=\""
         + fillXJSCallConstructor("fillTimeText", name, name + ".select1", name + ".select2")
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
     if (disabled)

@@ -395,7 +395,7 @@ public class JspUtil {
   /**
    * Read attribute value from request scope.  
    */
-  public static Object getContextEntry(PageContext pageContext, String key) throws JspException {
+  public static Object getContextEntry(PageContext pageContext, String key) {
     return pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
   }
   

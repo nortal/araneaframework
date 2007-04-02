@@ -31,11 +31,11 @@ import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
-import org.araneaframework.uilib.UIWidget;
 
 /**
  * Utility methods for Aranea framework running inside a servlet container. Includes
@@ -60,11 +60,11 @@ public abstract class ServletUtil {
     include(filePath, env, output, null);
   }
   
-  public static void include(String filePath, UIWidget widget, OutputData output) throws Exception {
+  public static void include(String filePath, ApplicationWidget widget, OutputData output) throws Exception {
     include(filePath, widget.getEnvironment(), output, widget);
   }
 
-  private static void include(String filePath, Environment env, OutputData output, UIWidget widget) throws Exception {
+  private static void include(String filePath, Environment env, OutputData output, ApplicationWidget widget) throws Exception {
     if (log.isDebugEnabled())
       log.debug("Including a resource from the absolute path '" + filePath + "'");
 
@@ -72,10 +72,8 @@ public abstract class ServletUtil {
     HttpServletRequest req = getRequest(output.getInputData());
     JspContext config = (JspContext) env.requireEntry(JspContext.class);
     if (widget != null) {
-      setAttribute(req, attributeBackupMap, UIWidget.UIWIDGET_KEY, widget);
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
     } else {
-      setAttribute(req, attributeBackupMap, UIWidget.UIWIDGET_KEY, null);
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, null);
     }
     setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);

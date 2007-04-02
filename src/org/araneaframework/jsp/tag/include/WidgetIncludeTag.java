@@ -55,7 +55,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 		OutputData output = getOutputData();
 		
 		try {
-      getUIWidget().hideContextEntries(pageContext);
+      hideGlobalContextEntries(pageContext);
 			if (page == null) {
 				out.flush();
 				widget._getWidget().render(output);
@@ -66,7 +66,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 			}
 		}
 		finally {
-      getUIWidget().restoreContextEntries(pageContext);
+      restoreGlobalContextEntries(pageContext);
 			executeEndTagAndUnregister(widgetContextTag);
 		}
 		

@@ -16,7 +16,6 @@
 
 package org.araneaframework.framework.container;
 
-import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
@@ -25,18 +24,14 @@ import org.araneaframework.Path;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.http.util.AtomicResponseHelper;
-import org.araneaframework.uilib.UIWidget;
-import org.araneaframework.uilib.util.UIWidgetHelper;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget implements UIWidget {
+public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget {
   private static final Logger log = Logger.getLogger(ExceptionHandlingFlowContainerWidget.class);
   
   protected Exception exception;  
-  
-  protected UIWidgetHelper uiWidgetHelper = new UIWidgetHelper();
   
   public ExceptionHandlingFlowContainerWidget() {
     super();
@@ -109,7 +104,6 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
       log.error("Handling error:", e);
             
       renderExceptionHandler(output, e);
-      uiWidgetHelper.reset();
       
       exception = null;
     }
@@ -118,18 +112,5 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   }
   
   protected abstract void renderExceptionHandler(OutputData output, Exception e) throws Exception;
-
-
-  public void addContextEntry(String key, Object value) {
-    uiWidgetHelper.addContextEntry(key, value);
-  }
-
-  public void hideContextEntries(PageContext pageContext) {
-    uiWidgetHelper.hideContextEntries(pageContext);
-  }
-
-  public void restoreContextEntries(PageContext pageContext) {
-    uiWidgetHelper.restoreContextEntries(pageContext);
-  }
 
 }
