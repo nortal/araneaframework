@@ -112,5 +112,4 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   }
   
   protected abstract void renderExceptionHandler(OutputData output, Exception e) throws Exception;
-
 }

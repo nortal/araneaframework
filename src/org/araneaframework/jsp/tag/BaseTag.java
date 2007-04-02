@@ -44,6 +44,7 @@ import org.araneaframework.uilib.ConfigurationContext;
  * UI contained base tag.
  * 
  * @author Oleg Mürk
+ * @author Alar Kvell (alar@araneaframework.org)
  */
 public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /* ***********************************************************************************
@@ -61,6 +62,10 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
    * Map: scope -> (Map: key -> backup attribute value)
    */ 
   private Map attributeBackup;
+
+  private Set globalContextEntries;
+  private Map hiddenContextEntries;
+  public static final String GLOBAL_CONTEXT_ENTRIES_KEY = "org.araneaframework.jsp.tag.BaseTag.GLOBAL_CONTEXT_ENTRIES";
 
   /* ***********************************************************************************
    * Tag interface methods && ContainedTagInterface methods
@@ -377,13 +382,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
     attributeBackup = null;
   }
 
-  /*
+  /* ***********************************************************************************
    * Hiding and restoring contextentries when widgetInclude is done
-   */
-
-  private Set globalContextEntries;
-  private Map hiddenContextEntries;
-  public static final String GLOBAL_CONTEXT_ENTRIES_KEY = "org.araneaframework.jsp.tag.BaseTag.GLOBAL_CONTEXT_ENTRIES";
+   * ***********************************************************************************/
 
   protected void addGlobalContextEntry(String key, Object value) {
     if (hiddenContextEntries != null) {

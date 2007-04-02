@@ -72,7 +72,6 @@ public class JspUtil {
     attributeErrorMap.put(ListTag.LIST_VIEW_MODEL_KEY, "&lt;ui:list&gt; tag expected, but not found! Make sure list tags is used inside &lt;ui:list&gt; tag.");
     attributeErrorMap.put(ListTag.LIST_ID_KEY, "&lt;ui:list&gt; tag expected, but not found!  Make sure list tags is used inside &lt;ui:list&gt; tag.");
     attributeErrorMap.put(ListRowsTag.ROW_REQUEST_ID_KEY, "&lt;ui:listRows&gt; or another list rows tag expected, but not found!");	
-//    attributeErrorMap.put(BaseSystemFormHtmlTag.ID_KEY, "&lt;ui:systemForm&gt; tag expected, but not found! Make sure your tags are surrounded by &lt;ui:systemForm&gt;.");
   }
 
   /**

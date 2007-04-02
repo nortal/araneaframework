@@ -236,8 +236,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 
 	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
-		//  Enclose the element in a <span id=somerandomid>
-		String spanId = "fe-span-" + generateId(pageContext);
+		//  Enclose the element in a <span id=someuniqueid>
+		String spanId = "fe-span-" + fullFormId + "." + elementId;
 
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "id", spanId);
@@ -263,21 +263,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 	public static void writeFormElementContextClose(Writer out) throws IOException{
 		JspUtil.writeEndTag_SS(out, "span");
-	}
-
-	/**
-	 * Generates an id, that is unique in PageContext.REQUEST_SCOPE.
-	 * @param pageContext
-	 * @return generated id
-	 */
-	public static Long generateId(PageContext pageContext){
-		Long counter = (Long)pageContext.getAttribute(COUNTER_KEY, PageContext.REQUEST_SCOPE);
-		if (counter == null)
-			counter = new Long(0);
-		else
-			counter = new Long(counter.longValue() + 1);
-		pageContext.setAttribute(COUNTER_KEY, counter, PageContext.REQUEST_SCOPE);
-		return counter;
 	}
 
 	/**

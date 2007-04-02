@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.core;
 
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
@@ -39,7 +38,6 @@ import org.springframework.beans.factory.BeanFactory;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BaseUIWidget extends BaseApplicationWidget {
-
   protected String viewSelector;  
 
   /**
@@ -115,5 +113,4 @@ public class BaseUIWidget extends BaseApplicationWidget {
       super.init(scope, env);
     }
   }
-
 }

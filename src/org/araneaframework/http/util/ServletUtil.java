@@ -60,6 +60,14 @@ public abstract class ServletUtil {
     include(filePath, env, output, null);
   }
   
+  /**
+   * Includes the jsp specified by filePath using the the request and response streams
+   * of the output. The pathname must begin with a "/" and is interpreted as relative to
+   * the current context root. The context root in the env under the key ServletContext.class
+   * is used.
+   * 
+   * Widget is made available to JSP, so contextWidget tag can be used.
+   */
   public static void include(String filePath, ApplicationWidget widget, OutputData output) throws Exception {
     include(filePath, widget.getEnvironment(), output, widget);
   }
