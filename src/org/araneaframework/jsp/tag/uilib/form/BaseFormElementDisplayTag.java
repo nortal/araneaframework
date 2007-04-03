@@ -21,7 +21,6 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
@@ -49,8 +48,7 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
     super.doStartTag(out);
 
     formViewModel = (FormWidget.ViewModel)requireContextEntry(FormTag.FORM_VIEW_MODEL_KEY);
-    FormWidget form = 
-      (FormWidget)JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
+    FormWidget form = (FormWidget) requireContextEntry(FormTag.FORM_KEY);
 
     // In case the tag is in formElement tag
     derivedId = id;

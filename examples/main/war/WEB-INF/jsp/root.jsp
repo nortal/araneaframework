@@ -3,9 +3,7 @@
     xmlns:c="http://java.sun.com/jstl/core" 
     xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template" version="1.2">
 	<!-- This is a master page of Aranea framework template application (examples/main/war/WEB-INF/jsp/root.jsp) -->
-	<ui:root>
-	    <ui:viewPort>
-	
+
 	        <ui:widgetContext>	        
 	        		<![CDATA[
 		        		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	        		
@@ -56,7 +54,5 @@
 	                </ui:body>
 	            </html>
 	        </ui:widgetContext>
-	
-	    </ui:viewPort>
-	</ui:root>
+
 </jsp:root>

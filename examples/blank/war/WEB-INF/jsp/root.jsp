@@ -4,9 +4,6 @@
     xmlns:ui="http://araneaframework.org/tag-library/standard" 
     version="1.2">
 
-	<ui:root>
-	    <ui:viewPort>
-	
 	        <ui:widgetContext>	        
 	        		<![CDATA[
 		        		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	        		
@@ -48,7 +45,5 @@
 	                </ui:body>
 	            </html>
 	        </ui:widgetContext>
-	
-	    </ui:viewPort>
-	</ui:root>
+
 </jsp:root>

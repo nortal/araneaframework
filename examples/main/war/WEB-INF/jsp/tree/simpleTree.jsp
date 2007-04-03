@@ -15,7 +15,7 @@
 
 		<tui:component>
 
-			<ui:tree id="tree"/>
+			<ui:widgetInclude id="tree"/>
 
 		</tui:component>
 

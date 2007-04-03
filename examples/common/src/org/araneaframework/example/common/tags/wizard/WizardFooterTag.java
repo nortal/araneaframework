@@ -22,7 +22,6 @@ import org.araneaframework.example.common.framework.context.WizardContext;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.presentation.BaseEventButtonTag;
 import org.araneaframework.jsp.tag.presentation.EventButtonHtmlTag;
-import org.araneaframework.jsp.util.JspWidgetUtil;
 
 
 /**
@@ -47,7 +46,7 @@ public class WizardFooterTag extends BaseTag {
 
   protected int doStartTag(Writer out) throws Exception {
 		  	
-  	WizardContext wizard = (WizardContext) JspWidgetUtil.getWidgetFromContext(null, pageContext);
+  	WizardContext wizard = (WizardContext) getContextWidget();
 		
 		int index = wizard.getCurrentPageIndex();
 		int count = wizard.countPages();

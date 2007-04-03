@@ -44,7 +44,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     assertControlType("DateTimeControl");
 
     // Prepare
-    String name = this.getScopedFullFieldId();
+    String name = this.getFullFieldId();
     DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel) controlViewModel);
 
     Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
@@ -138,10 +138,10 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
   protected void writeMinuteSelect(Writer out, String name, boolean disabled, Integer minute) throws IOException {
 	DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel) controlViewModel);
-    out.write("<select name='"
+    out.write("<select id=\"" + name + ".select2\" name=\""
         + name
-        + ".select2' onChange=\"" +
-        fillXJSCallConstructor("fillTimeText", systemFormId, name)
+        + ".select2\" onChange=\"" +
+        fillXJSCallConstructor("fillTimeText", name)
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
 
     if (disabled)
@@ -149,7 +149,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     
     if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
-    	event.setEventPrecondition(getMinuteSelectOnChangePrecondition(name + ".time", systemFormId));
+    	event.setEventPrecondition(getMinuteSelectOnChangePrecondition(name + ".time"));
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
@@ -164,17 +164,17 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
   protected void writeHourSelect(Writer out, String name, boolean disabled, Integer hour) throws IOException {
     DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel) controlViewModel);
-    out.write("<select name='"
+    out.write("<select id=\"" + name + ".select1\" name=\""
         + name
-        + ".select1' onChange=\"" + 
-        fillXJSCallConstructor("fillTimeText", systemFormId, name)
+        + ".select1\" onChange=\"" + 
+        fillXJSCallConstructor("fillTimeText", name)
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
     if (disabled)
       out.write(" disabled=\"true\"");
 
     if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
-    	event.setEventPrecondition(getHourSelectOnChangePrecondition(name + ".time", systemFormId));
+    	event.setEventPrecondition(getHourSelectOnChangePrecondition(name + ".time"));
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
@@ -206,14 +206,14 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
         JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
-    	event.setEventPrecondition(getTimeInputOnChangePrecondition(name+".time", systemFormId));
+    	event.setEventPrecondition(getTimeInputOnChangePrecondition(name+".time"));
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
 
     StringBuffer onBlur = new StringBuffer();
     if (showTimeSelect) 
-      onBlur.append(fillXJSCallConstructor("fillTimeSelect", systemFormId, name) + ";");
+      onBlur.append(fillXJSCallConstructor("fillTimeSelect", name) + ";");
     if (!disabled && events && viewModel.isOnChangeEventRegistered())
       onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeAttribute(out, "onBlur", onBlur.toString());
@@ -288,8 +288,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		}
 	}
 
-  protected String fillXJSCallConstructor(String function, String formId, String element) {
-    return FormTimeInputHtmlTag.staticFillXJSCall(function, formId, element +".time", element + ".select1", element + ".select2");
+  protected String fillXJSCallConstructor(String function, String element) {
+    return FormTimeInputHtmlTag.staticFillXJSCall(function, element +".time", element + ".select1", element + ".select2");
   }
   
   /**

@@ -37,23 +37,23 @@ function calendarSetup(inputFieldId, dateFormat, alignment) {
 
 /* fillTime*() and addOptions() functions are used in *timeInputs 
  * for hour and minute inputs/selects. */
-function fillTimeText(systemForm, el, hourSelect, minuteSelect) {
-  if (systemForm[hourSelect].value=='' && systemForm[minuteSelect].value=='') {
-    systemForm[el].value='';
+function fillTimeText(el, hourSelect, minuteSelect) {
+  if (document.getElementById(hourSelect).value=='' && document.getElementById(minuteSelect).value=='') {
+    document.getElementById(el).value='';
   }
   else {
-    systemForm[el].value=systemForm[hourSelect].value+':'+systemForm[minuteSelect].value;
+    document.getElementById(el).value=document.getElementById(hourSelect).value+':'+document.getElementById(minuteSelect).value;
   }
 }
 
-function fillTimeSelect(systemForm, timeInput, hourSelect, minuteSelect) {
-  timestr = systemForm[timeInput].value;
+function fillTimeSelect(timeInput, hourSelect, minuteSelect) {
+  timestr = document.getElementById(timeInput).value;
   separatorPos = timestr.indexOf(':');
   hours = timestr.substr(0, separatorPos);
   hourValue = hours.length==1 ? '0'+hours : hours;
-  minuteValue = timestr.substr(separatorPos+1, systemForm[timeInput].value.length);
-  systemForm[hourSelect].value=hourValue;
-  systemForm[minuteSelect].value=minuteValue;
+  minuteValue = timestr.substr(separatorPos+1, document.getElementById(timeInput).value.length);
+  document.getElementById(hourSelect).value=hourValue;
+  document.getElementById(minuteSelect).value=minuteValue;
 }
 
 // Adds options empty,0-(z-1) to select with option x preselected. Used for
@@ -87,13 +87,8 @@ function isChanged(elementId) {
   return (el.oldValue != el.value);
 }
 
-function setFormEncoding(formName, encoding) {
-  document.forms[formName].enctype = encoding;
-  document.forms[formName].encoding = encoding; // IE
-}
-
 //--------------- Scroll position saving/restoring --------------//
-function saveScrollCoordinates(form) {
+function saveScrollCoordinates() {
 	var x, y;
 
 	if (document.documentElement && document.documentElement.scrollTop) {
@@ -110,6 +105,7 @@ function saveScrollCoordinates(form) {
 		y = window.pageYOffset;
 	}
 	
+	var form = araneaPage().getSystemForm();
 	if (form.windowScrollX) {
 		form['windowScrollX'].value = x;
 	}

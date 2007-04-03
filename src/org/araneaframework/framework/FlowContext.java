@@ -34,11 +34,6 @@ import org.araneaframework.core.ApplicationWidget;
  */
 public interface FlowContext extends Serializable {
   /**
-   * The key of the callable child.
-   */
-  public static final String FLOW_KEY = "f";
-
-  /**
    * Starts a new nested subflow, that can be configured using the configurator. Current flow becomes inactive
    * untils subflow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification,
    * when the subflow ends execution.

@@ -53,7 +53,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     assertControlType("MultiSelectControl");    
     
     // Prepare
-    String name = this.getScopedFullFieldId();     
+    String name = this.getFullFieldId();     
     MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
     
     // Write input tag

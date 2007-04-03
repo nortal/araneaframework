@@ -19,46 +19,6 @@
  * @author Alar Kvell (alar@araneaframework.org)
  */
 
-/* AraneaTraverser is locator for some Aranea specific elements in DOM tree. */
-function AraneaTraverser() {
-  /* Returns FORM that is Aranea system form and surrounds given HTML element. 
-   * Should be overriden with fast constant function when using just one system form. */
-  this.findSurroundingSystemForm = function(element) {
-    if (document.forms.length == 1 && document.forms[0].getAttribute('arn-systemForm'))
-      return document.forms[0];
-
-    do {
-      if (element.tagName && element.tagName.toLowerCase() == 'form' && element.getAttribute('arn-systemForm')) {
-	    return element;
-	  }
-      element = element.parentNode;
-  	} while (element);
-
-	return null;
-  }
-}
-
-AraneaTraverser.prototype.getElementAttribute = function (element, attributeName) {
-  return element.getAttribute(attributeName);
-}
-AraneaTraverser.prototype.getEventTarget = function(element) {
-  return this.getElementAttribute(element, 'arn-trgtwdgt');
-}
-AraneaTraverser.prototype.getEventId = function(element) {
-  return this.getElementAttribute(element, 'arn-evntId');
-}
-AraneaTraverser.prototype.getEventParam = function(element) {
-  return this.getElementAttribute(element, 'arn-evntPar');
-}
-AraneaTraverser.prototype.getEventUpdateRegions = function(element) {
-  return this.getElementAttribute(element, 'arn-updrgns');
-}
-AraneaTraverser.prototype.getEventPreCondition = function(element) {
-  return this.getElementAttribute(element, 'arn-evntCond');
-}
-
-// END AraneaTraverser
-
 function AraneaStore() {
   var objects = new Array();
 
@@ -148,10 +108,33 @@ function AraneaPage() {
   this.isSubmitted = function() { return submitted; }
   this.setSubmitted = function() { submitted = true; }
   
-  /** Aranea JSP specific DOM tree traverser. */
-  var traverser = new AraneaTraverser();
-  this.getTraverser = function() { return traverser; }
-  
+  var systemForm = null;
+  this.getSystemForm = function() { return systemForm; }
+  this.setSystemForm = function(_systemForm) { systemForm = _systemForm; }
+
+	this.setSystemFormEncoding = function(encoding) {
+		this.addSystemLoadEvent(function() {
+			systemForm.enctype = encoding;
+			systemForm.encoding = encoding; // IE
+		});
+	}
+
+	this.getEventTarget = function(element) {
+		return element.getAttribute('arn-trgtwdgt');
+	}
+	this.getEventId = function(element) {
+		return element.getAttribute('arn-evntId');
+	}
+	this.getEventParam = function(element) {
+		return element.getAttribute('arn-evntPar');
+	}
+	this.getEventUpdateRegions = function(element) {
+		return element.getAttribute('arn-updrgns');
+	}
+	this.getEventPreCondition = function(element) {
+		return element.getAttribute('arn-evntCond');
+	}
+
   /** Timer that executes keepalive calls, if any. */
   var keepAliveTimers = new AraneaStore();
 
@@ -189,17 +172,12 @@ function AraneaPage() {
 	  submitCallbacks[systemFormId].execute();
   }
 	
-	this.getSystemForm = function(element) {
-	  return this.getTraverser().findSurroundingSystemForm(element);
-	}	
-	
   this.event = function(element) {
     if (this.isSubmitted() || !this.isLoaded())
 	  return false;
 	  
-    var t = this.getTraverser();
-	var systemForm = t.findSurroundingSystemForm(element);
-    var preCondition = t.getEventPreCondition(element);
+	var systemForm = this.getSystemForm();
+    var preCondition = this.getEventPreCondition(element);
 
     if (preCondition) {
       var f = new Function("element", preCondition);
@@ -220,7 +198,7 @@ function AraneaPage() {
    * submit methods.
    */
   this.findSubmitter = function(element, systemForm) {
-    var updateRegions = element.getAttribute('arn-updrgns');
+    var updateRegions = this.getEventUpdateRegions(element);
 
 	if (window['ajaxanywhere/aa.js'] && updateRegions && updateRegions.length > 0)
 	  return new DefaultAraneaAJAXSubmitter(systemForm);
@@ -275,8 +253,7 @@ function AraneaPage() {
   }
 
   this.action = function(element, actionId, actionTarget, actionParam, sync, actionCallback, options) {
-    var t = this.getTraverser();
-    var systemForm = t.findSurroundingSystemForm(element);
+    var systemForm = this.getSystemForm();
     return this.action_6(systemForm, actionId, actionTarget, actionParam, sync, actionCallback, options);
   }
 
@@ -346,17 +323,22 @@ AraneaPage.getRandomRequestId = function() {
 AraneaPage.init = function() {
   araneaPage().addSystemLoadEvent(Behaviour.apply);
 }
+AraneaPage.findSystemForm = function() {
+	araneaPage().setSystemForm($A(document.getElementsByTagName('form')).find(
+		function(element) {
+			return element.hasAttribute('arn-systemForm');
+		}
+	));
+}
 
 function DefaultAraneaSubmitter(form) {
   var systemForm = form;
 
   this.event = function(element) {
-    var traverser = araneaPage().getTraverser();
-
     // event information
-    var widgetId = traverser.getEventTarget(element);
-    var eventId = traverser.getEventId(element);
-    var eventParam = traverser.getEventParam(element);
+    var widgetId = araneaPage().getEventTarget(element);
+    var eventId = araneaPage().getEventId(element);
+    var eventParam = araneaPage().getEventParam(element);
     
     return this.event_4(systemForm, eventId, widgetId, eventParam);
   }
@@ -378,13 +360,11 @@ function DefaultAraneaAJAXSubmitter(form) {
   var systemForm = form;
 
   this.event = function(element) {
-    var traverser = araneaPage().getTraverser();
-	
 	// event information
-    var widgetId = traverser.getEventTarget(element);
-    var eventId = traverser.getEventId(element);
-    var eventParam = traverser.getEventParam(element);
-	var updateRegions = traverser.getEventUpdateRegions(element);
+    var widgetId = araneaPage().getEventTarget(element);
+    var eventId = araneaPage().getEventId(element);
+    var eventParam = araneaPage().getEventParam(element);
+	var updateRegions = araneaPage().getEventUpdateRegions(element);
 
 	return this.event_5(systemForm, eventId, widgetId, eventParam, updateRegions);
   }
@@ -410,5 +390,6 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
 _ap = new AraneaPage();
 function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
+_ap.addSystemLoadEvent(AraneaPage.findSystemForm);
 
 window['aranea.js'] = true;

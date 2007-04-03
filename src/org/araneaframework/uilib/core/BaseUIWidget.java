@@ -95,7 +95,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
     JspContext jspCtx = (JspContext) getEnvironment().requireEntry(JspContext.class);
     
     String jsp = resolveJspName(jspCtx, viewSelector);
-    ServletUtil.include(jsp, getEnvironment(), output);
+    ServletUtil.include(jsp, this, output);
   }
   
   protected String resolveJspName(JspContext jspCtx, String viewSelector) {

@@ -3,8 +3,6 @@
 	xmlns:jsp="http://java.sun.com/JSP/Page" 
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template" version="1.2">
-  <ui:root>
-  	<ui:viewPort>	
 		<ui:widgetContext>
 			<html>
 		     	<head>
@@ -18,6 +16,4 @@
 				</ui:body>
 			</html>				
 			</ui:widgetContext>
-		</ui:viewPort>
-	</ui:root>	
 </jsp:root>

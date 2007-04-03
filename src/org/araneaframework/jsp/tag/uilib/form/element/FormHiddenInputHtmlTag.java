@@ -51,7 +51,7 @@ public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
     // Type check
     assertControlType("HiddenControl");
 
-    String name = this.getScopedFullFieldId();
+    String name = this.getFullFieldId();
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
 
     JspUtil.writeOpenStartTag(out, "input");

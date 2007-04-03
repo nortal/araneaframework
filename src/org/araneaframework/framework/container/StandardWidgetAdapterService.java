@@ -20,6 +20,9 @@ import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.ApplicationService;
+import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.core.BaseFilterWidget;
 
 /**
@@ -41,24 +44,58 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
    * are called on the child, if not then just <code>render(output).</code>
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-   if (propagateAsAction(input)) {
-     log.debug("Calling widget action().");
-     childWidget._getService().action(path, input, output);
+   if (hasAction(input)) {
+     Path actionPath = getActionPath(input);
+     if (log.isDebugEnabled())
+       log.debug("Routing action to widget '" + actionPath.toString() + "'");
+     childWidget._getService().action(actionPath, input, output);
    }
    else {
-     log.debug("Translating action() call to widget update()/event()/process()/render() calls.");
+     if (log.isDebugEnabled())
+       log.debug("Translating action() call to widget update()/event()/process()/render() calls.");
      
      childWidget._getWidget().update(input);
-     childWidget._getWidget().event(path, input);       
+     if (hasEvent(input)) {
+       Path eventPath = getEventPath(input);
+       if (log.isDebugEnabled())
+         log.debug("Routing event to widget '" + eventPath.toString() + "'");
+       childWidget._getWidget().event(eventPath, input);
+     }
      childWidget._getWidget().process();
      childWidget._getWidget().render(output);
    }
   }
-
+  
   /**
-   * Returns whether inputData is such that action should be propagated to the child widget.
+   * Extracts the path from the input and returns it. This implementation uses
+   * the {@link StandardContainerWidget#EVENT_PATH_KEY} parameter in the request and expects the event path to be
+   * a dot-separated string. 
    */
-  public boolean propagateAsAction(InputData input) {
-    return (input.getGlobalData().get(StandardContainerWidget.ACTION_PATH_KEY) != null); 
+  protected Path getEventPath(InputData input) {
+    return new StandardPath((String) input.getGlobalData().get(ApplicationWidget.EVENT_PATH_KEY));
   }
+  
+  /**
+   * Returns true if the request contains an event.
+   */
+  protected boolean hasEvent(InputData input) {
+    return input.getGlobalData().get(ApplicationWidget.EVENT_PATH_KEY) != null;
+  }
+  
+  /**
+   * Extracts the path from the input and returns it. This implementation uses
+   * the {@link StandardContainerWidget#ACTION_PATH_KEY} parameter in the request and expects the action path to be
+   * a dot-separated string. 
+   */
+  protected Path getActionPath(InputData input) {
+    return new StandardPath((String) input.getGlobalData().get(ApplicationService.ACTION_PATH_KEY));
+  }
+  
+  /**
+   * Returns true if the request contains an action.
+   */
+  protected boolean hasAction(InputData input) {
+    return input.getGlobalData().get(ApplicationService.ACTION_PATH_KEY) != null;
+  }
+
 }

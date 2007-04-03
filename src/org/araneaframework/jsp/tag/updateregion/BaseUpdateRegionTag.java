@@ -20,7 +20,6 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.util.JspWidgetUtil;
 
 /**
  * Base tag for tags that allow defining updatable regions within HTML page.
@@ -42,7 +41,7 @@ public class BaseUpdateRegionTag extends BaseTag {
     if (id == null && globalId == null)
       throw new AraneaJspException("'id' or 'globalId' is required!");
 
-    String contextWidgetId = JspWidgetUtil.getContextWidgetFullId(pageContext);
+    String contextWidgetId = getContextWidgetFullId();
 
     fullId = globalId;
     

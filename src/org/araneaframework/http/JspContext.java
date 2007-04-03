@@ -17,9 +17,7 @@
 package org.araneaframework.http;
 
 import java.io.Serializable;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
@@ -33,15 +31,11 @@ public interface JspContext extends Serializable {
   public String getJspExtension();
 
   public String getSubmitCharset();
-  
+
   public String getFormAction();
-  
-  public ResourceBundle getCurrentBundle();
-  
-  public Locale getCurrentLocale();
-  
+
   public Map getTagMapping(String uri);
-  
+
   public ConfigurationContext getConfiguration();
 
 }

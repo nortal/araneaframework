@@ -22,7 +22,6 @@ import java.util.Map;
 import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -61,13 +60,12 @@ public class PopupRegistrationHtmlTag extends BaseTag {
   }
 
   protected void addPopups(Writer out, Map popups) throws Exception {
-    String systemFormId = (String) requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 	for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
-	  addPopup(out, systemFormId, (Map.Entry)i.next());
+	  addPopup(out, (Map.Entry)i.next());
 	}
   }
 
-  protected void addPopup(Writer out, String systemFormId, Map.Entry popup) throws Exception {
+  protected void addPopup(Writer out, Map.Entry popup) throws Exception {
 	String serviceId = (String)popup.getKey();
     PopupServiceInfo serviceInfo = (PopupServiceInfo)popup.getValue();
 

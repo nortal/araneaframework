@@ -164,6 +164,6 @@ public class MenuWidget extends TemplateMenuWidget  {
     }        
     putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
     
-    ServletUtil.include("/WEB-INF/jsp/menuError.jsp", getEnvironment(), output);
+    ServletUtil.include("/WEB-INF/jsp/menuError.jsp", this, output);
   }
 }

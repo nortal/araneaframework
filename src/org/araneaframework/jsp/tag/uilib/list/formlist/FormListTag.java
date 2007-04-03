@@ -20,7 +20,6 @@ import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
 
 /**
@@ -46,7 +45,7 @@ public class FormListTag extends BaseWidgetTag {
 	 */
 	public int doStartTag(Writer out) throws Exception {
 		if (id == null) {
-			String listId = (String) JspUtil.requireContextEntry(pageContext, ListTag.LIST_ID_KEY);
+			String listId = (String) requireContextEntry(ListTag.LIST_ID_KEY);
 			id = listId + ".formList";
 		}
 		

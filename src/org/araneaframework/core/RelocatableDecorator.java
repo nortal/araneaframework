@@ -17,7 +17,6 @@
 package org.araneaframework.core;
 
 import java.io.Serializable;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;

@@ -135,10 +135,10 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	  /**
 	   * @since 1.0.3
 	   */
-	  protected String getTimeInputOnChangePrecondition(String timeInputId, String systemFormId) {
+	  protected String getTimeInputOnChangePrecondition(String timeInputId) {
         if (onChangePrecondition != null)
           return onChangePrecondition;
-        String timeInputRef = "document." + systemFormId + "['" + timeInputId + "']";
+        String timeInputRef = "document.getElementById('" + timeInputId + "')";
 	    String precondition =  
 	    		"return isChanged('" + timeInputId + "')"+
 	    		" && ((" + timeInputRef + ".value.length==5) || (" + timeInputRef + ".value.length==0))"
@@ -149,23 +149,23 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	  /**
 	   * @since 1.0.3
 	   */
-	  protected String getHourSelectOnChangePrecondition(String timeInputId, String systemFormId) {
-	    return getSelectOnChangePrecondition(timeInputId, systemFormId);
+	  protected String getHourSelectOnChangePrecondition(String timeInputId) {
+	    return getSelectOnChangePrecondition(timeInputId);
 	  }
 
 	  /**
 	   * @since 1.0.3
 	   */
-	  protected String getMinuteSelectOnChangePrecondition(String timeInputId, String systemFormId) {
-	    return getSelectOnChangePrecondition(timeInputId, systemFormId);
+	  protected String getMinuteSelectOnChangePrecondition(String timeInputId) {
+	    return getSelectOnChangePrecondition(timeInputId);
 	  }
 
 	  /**
 	   * @since 1.0.3
 	   */
-	  protected String getSelectOnChangePrecondition(String timeInputId, String systemFormId) {
+	  protected String getSelectOnChangePrecondition(String timeInputId) {
 	    String precondition = onChangePrecondition == null ? 
-	    		"return (document." + systemFormId + "['" + timeInputId +"'].value.length==5)" 
+	    		"return (document.getElementById('" + timeInputId +"').value.length==5)" 
 	    		: 
 	    		onChangePrecondition;
 	    return precondition;

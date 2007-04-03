@@ -188,7 +188,7 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 
 		// Scope here means the analogue of "scope" attribute in KeyboardHandlerHtmlTag
 		// It must be prefixed by componentId when the surrounding systemForm's "scope" is "screen".
-		String scope = (String) pageContext.getAttribute(FormTag.FORM_SCOPED_FULL_ID_KEY,
+		String scope = (String) pageContext.getAttribute(FormTag.FORM_FULL_ID_KEY,
 		                                                 PageContext.REQUEST_SCOPE);
 		if (!StringUtils.isBlank(subscope)) {
 			if (StringUtils.isBlank(scope))
@@ -226,7 +226,7 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	public static final String elementIdToFullElementId(PageContext pageContext, String elementId) {
 		// Determine the full id.
 		String fullElementId = elementId;
-		String scope = (String) pageContext.getAttribute(FormTag.FORM_SCOPED_FULL_ID_KEY,
+		String scope = (String) pageContext.getAttribute(FormTag.FORM_FULL_ID_KEY,
 		                                                 PageContext.REQUEST_SCOPE);
 		if (!StringUtils.isBlank(scope))
 			fullElementId = scope + "." + elementId;

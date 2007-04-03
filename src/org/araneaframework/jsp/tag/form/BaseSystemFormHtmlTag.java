@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.form;
 import java.io.Writer;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -31,13 +30,9 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Oleg Mürk
  */
 public abstract class BaseSystemFormHtmlTag extends BaseTag {
-  public final static String COUNTER_KEY = "org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag.FORM_COUNTER";  
-  public final static String ID_KEY = "org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag.ID";
 
   public final static String GET_METHOD = "get";
   public final static String POST_METHOD = "post";
-
-  public final static String SYSTEM_FORM_ID_KEY = "systemFormId";
 
   private String id = null;
   protected String derivedId = null;
@@ -47,15 +42,8 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    // Error check
-    if (getContextEntry(ID_KEY) != null)
-      throw new AraneaJspException("System forms cannot be nested");                    
-
     // Compute new id for systemForm.
-    derivedId = id == null ? BaseSystemFormHtmlTag.generateId(pageContext) : id;
-
-    addContextEntry(ID_KEY, derivedId);
-    addContextEntry(SYSTEM_FORM_ID_KEY, derivedId);    
+    derivedId = id == null ? "systemForm" : id;
 
     // Write form 
     JspUtil.writeOpenStartTag(out, "form");
@@ -79,16 +67,6 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     // Continue
     super.doEndTag(out);
     return EVAL_PAGE;      
-  }
-
-  public static String generateId(PageContext pageContext){
-    Long counter = (Long)pageContext.getAttribute(COUNTER_KEY, PageContext.REQUEST_SCOPE);
-    if (counter == null)
-      counter = new Long(0);
-    else
-      counter = new Long(counter.longValue() + 1);
-    pageContext.setAttribute(COUNTER_KEY, counter, PageContext.REQUEST_SCOPE);
-    return "system_form_" + counter;
   }
 
   /* ***********************************************************************************

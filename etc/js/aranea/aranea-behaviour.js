@@ -41,7 +41,7 @@ function setCloningUrl(el) {
 	var eventParam = el.getAttribute('arn-evntPar');
 	var eventTarget = el.getAttribute('arn-trgtwdgt');
 
-	var systemForm = araneaPage().getTraverser().findSurroundingSystemForm(el);
+	var systemForm = araneaPage().getSystemForm();
 
     var url = araneaPage().getSubmitURL(systemForm['topServiceId'].value, systemForm['threadServiceId'].value, 'override');
     url += "&pleaseClone=true";

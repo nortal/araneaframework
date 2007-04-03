@@ -21,4 +21,9 @@ public interface ApplicationWidget extends ApplicationService, Widget, Composite
   public static final String EVENT_HANDLER_ID_KEY = "widgetEventHandler";
   public static final String EVENT_PARAMETER_KEY = "widgetEventParameter";
 
+  /**
+   * The key of the path of the event in the request.
+   */
+  public static final String EVENT_PATH_KEY = "widgetEventPath";
+
 }
