@@ -43,7 +43,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     super.doStartTag(out);
 
     // Compute new id for systemForm.
-    derivedId = id == null ? "system_form_0" : id;
+    derivedId = id == null ? "systemForm" : id;
 
     // Write form 
     JspUtil.writeOpenStartTag(out, "form");

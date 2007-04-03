@@ -24,7 +24,6 @@ import org.araneaframework.core.ApplicationService;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
-import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.EnvironmentUtil;
@@ -63,7 +62,7 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
     m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
     m.put(ThreadContext.THREAD_SERVICE_KEY, EnvironmentUtil.requireThreadServiceId(getEnvironment()));
-    m.put(StandardContainerWidget.ACTION_PATH_KEY, fullId);
+    m.put(ApplicationService.ACTION_PATH_KEY, fullId);
     if (actionId != null) {
       m.put(ApplicationService.ACTION_HANDLER_ID_KEY, actionId);
     }

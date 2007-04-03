@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -33,7 +31,6 @@ import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.support.CachingEntityResolver;
@@ -54,8 +51,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   private String submitCharset;
   private String jspPath = "/WEB-INF/jsp";
   private String jspExtension = ".jsp";
-  
-  private LocalizationContext loc;
   
   // Spring injection parameters  
   public void setSubmitCharset(String submitCharset) {
@@ -83,15 +78,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
   public String getFormAction() {
-    return ((ServletConfig) getEnvironment().getEntry(ServletConfig.class)).getServletContext().getServletContextName();
-  }
-  
-  public ResourceBundle getCurrentBundle() {
-    return loc.getResourceBundle();
-  }
-  
-  public Locale getCurrentLocale() {
-    return loc.getLocale();
+    return ((ServletConfig) getEnvironment().requireEntry(ServletConfig.class)).getServletContext().getServletContextName();
   }
   
   public Map getTagMapping(String uri){
@@ -100,12 +87,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   
   public ConfigurationContext getConfiguration() {
     return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
-  }
-
-  protected void init() throws Exception {
-    super.init();
-
-    loc = (LocalizationContext) getEnvironment().requireEntry(LocalizationContext.class);
   }
   
   protected Environment getChildEnvironment() {

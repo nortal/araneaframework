@@ -22,7 +22,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.framework.SystemFormContext;
-import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -54,7 +53,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
 
     // Hidden fields: to be set
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");
-    JspUtil.writeHiddenInputElement(out, StandardContainerWidget.EVENT_PATH_KEY, "");
+    JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PATH_KEY, "");
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PARAMETER_KEY, "");
 
     // Continue

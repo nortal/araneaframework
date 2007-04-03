@@ -80,7 +80,7 @@
 								<ui:floatInput style="text-align: right" />
 								<script type="text/javascript">
 									Event.observe(formId + '.vat', 'change', function(event) {
-										araneaPage().action_6(document.system_form_0, 'vatChange', widgetId, $F(formId + '.vat'), true, callback);
+										araneaPage().action_6(araneaPage().getSystemForm(), 'vatChange', widgetId, $F(formId + '.vat'), true, callback);
 									});
 								</script>
 							</ui:formElement>

@@ -36,6 +36,7 @@ import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
+import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -399,10 +400,14 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
         globalContextEntries = (Set) getContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY);
         if (globalContextEntries == null) {
           globalContextEntries = new HashSet();
+          addContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY, globalContextEntries);
+          // Hide contextentries that are set in ServletUtil.include
           globalContextEntries.add(WidgetContextTag.CONTEXT_WIDGET_KEY);
           globalContextEntries.add(Environment.ENVIRONMENT_KEY);
-          globalContextEntries.add(WidgetContextTag.CONTEXT_WIDGET_KEY);
-          addContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY, globalContextEntries);
+          globalContextEntries.add(WidgetTag.WIDGET_KEY);
+          globalContextEntries.add(WidgetTag.WIDGET_ID_KEY);
+          globalContextEntries.add(WidgetTag.WIDGET_VIEW_MODEL_KEY);
+          globalContextEntries.add(WidgetTag.WIDGET_VIEW_DATA_KEY);
         }
       }
       globalContextEntries.add(key);

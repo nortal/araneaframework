@@ -20,7 +20,6 @@ import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
-import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
 
 /**

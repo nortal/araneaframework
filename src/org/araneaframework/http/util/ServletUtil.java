@@ -26,16 +26,16 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.jstl.core.Config;
-import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.JspContext;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
+import org.araneaframework.jsp.tag.uilib.WidgetTag;
 
 /**
  * Utility methods for Aranea framework running inside a servlet container. Includes
@@ -78,14 +78,23 @@ public abstract class ServletUtil {
 
     Map attributeBackupMap = new HashMap();
     HttpServletRequest req = getRequest(output.getInputData());
-    JspContext config = (JspContext) env.requireEntry(JspContext.class);
     if (widget != null) {
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
+      String fullId = widget.getScope().toString();
+      ApplicationWidget.WidgetViewModel viewModel = (ApplicationWidget.WidgetViewModel) widget._getViewable().getViewModel();
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_KEY, widget);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_ID_KEY, fullId);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_MODEL_KEY, viewModel);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_DATA_KEY, viewModel.getData());
     } else {
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_ID_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_MODEL_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_DATA_KEY, null);
     }
     setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
-    setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(config));
+    setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(env));
 
     ServletContext servletContext = (ServletContext) env.requireEntry(ServletContext.class);
     servletContext.getRequestDispatcher(filePath).include(getRequest(output.getInputData()), getResponse(output));
@@ -161,10 +170,11 @@ public abstract class ServletUtil {
 
   public static final String LOCALIZATION_CONTEXT_KEY = Config.FMT_LOCALIZATION_CONTEXT + ".request";
 
-  public static LocalizationContext buildLocalizationContext(JspContext config) {
-    return new LocalizationContext(
-      new StringAdapterResourceBundle(config.getCurrentBundle()),
-      config.getCurrentLocale()
+  public static javax.servlet.jsp.jstl.fmt.LocalizationContext buildLocalizationContext(Environment env) {
+    LocalizationContext localizationContext = (LocalizationContext) env.requireEntry(LocalizationContext.class);
+    return new javax.servlet.jsp.jstl.fmt.LocalizationContext(
+      new StringAdapterResourceBundle(localizationContext.getResourceBundle()),
+      localizationContext.getLocale()
     );
   }
 

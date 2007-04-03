@@ -30,5 +30,11 @@ public interface ApplicationService extends ApplicationComponent, Service, Compo
    */
   public static final String ACTION_HANDLER_ID_KEY = "serviceActionHandler";
   /** @since 1.0.4 */
-  public static final String ACTION_PARAMETER_KEY = "serviceActionParameter"; 
+  public static final String ACTION_PARAMETER_KEY = "serviceActionParameter";
+
+  /**
+   * The key of the path of the action in the request.
+   */
+  public static final String ACTION_PATH_KEY = "widgetActionPath";
+
 }
