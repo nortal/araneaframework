@@ -40,7 +40,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  *
  */
 public abstract class BaseApplicationService extends BaseService implements ApplicationService {
-  private static final Logger log = Logger.getLogger(ApplicationWidget.class);
+  private static final Logger log = Logger.getLogger(BaseApplicationService.class);
   //*******************************************************************    
   // CONSTANTS   
   //*******************************************************************    
