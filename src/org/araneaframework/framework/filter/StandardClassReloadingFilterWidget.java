@@ -87,13 +87,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
   }
   
   protected void render(OutputData output) throws Exception {
-    try {
-      output.pushScope("c");
-      child._getWidget().render(output);
-    }
-    finally {
-      output.popScope();
-    }
+    child._getWidget().render(output);
   }
   
   private Serializable deepCopy(ClassLoader cl, Serializable original) throws Exception {

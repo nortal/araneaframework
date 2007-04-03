@@ -298,13 +298,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     
     CallFrame frame = (CallFrame) callStack.getFirst();
     
-    output.pushScope(frame.getName());
-    try {   
-      getWidget(frame.getName())._getWidget().render(output);
-    } 
-    finally {
-      output.popScope();
-    }
+    getWidget(frame.getName())._getWidget().render(output);
   }
   
   private void refreshGlobalEnvironment() {

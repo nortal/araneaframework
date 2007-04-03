@@ -29,10 +29,8 @@ import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.EmptyPathStackException;
 import org.araneaframework.core.NoCurrentOutputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
-import org.araneaframework.core.StandardPath;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpInputData;
 
@@ -45,7 +43,6 @@ import org.araneaframework.http.HttpInputData;
 public class StandardServletInputData implements HttpInputData {
   private HttpServletRequest req;
   
-  private StringBuffer scopeBuf = new StringBuffer();
   private Map extensions = new HashMap();
   
   private Map globalData = new HashMap();
@@ -105,49 +102,15 @@ public class StandardServletInputData implements HttpInputData {
     
     dataInited = true;
   }
-
-  public Path getScope() {
-    return new StandardPath(scopeBuf.toString());
-  }
-
-  public void pushScope(Object step) {
-    Assert.isInstanceOfParam(String.class, step, "step");
-    Assert.notEmptyParam((String) step, "step");
-    
-    if (scopeBuf.length()>0) {
-      scopeBuf.append("."+step);
-    }
-    else {
-      scopeBuf.append(step);
-    }
-  }
-
-  public void popScope() {
-    if (scopeBuf.toString().lastIndexOf(".") != -1) {
-      scopeBuf.setLength(scopeBuf.toString().lastIndexOf("."));
-    }
-    else {
-      if (scopeBuf.length()==0) {
-        throw new EmptyPathStackException();
-      }
-      scopeBuf.setLength(0);
-    }
-  }
-  
-  public void restoreScope(Path scope) {
-    Assert.notNullParam(scope, "scope");
-    
-    scopeBuf = new StringBuffer(scope.toString());
-  }
   
   public Map getGlobalData() {
     if (!dataInited) initData();
     return Collections.unmodifiableMap(globalData);
   }
 
-  public Map getScopedData() {
+  public Map getScopedData(Path scope) {
     if (!dataInited) initData();
-    Map result = (Map)scopedData.get(scopeBuf.toString());
+    Map result = (Map)scopedData.get(scope.toString());
     if (result != null) {
       return Collections.unmodifiableMap(result);  
     }

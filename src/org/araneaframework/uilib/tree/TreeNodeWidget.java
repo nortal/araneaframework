@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -34,6 +33,7 @@ import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.util.NameUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -287,12 +287,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public void renderNode(OutputData output) throws Exception {  // Called only from display widget
-    output.popScope();
-    try {
-      render(output);
-    } finally {
-      output.pushScope(DISPLAY_KEY);
-    }
+    render(output);
   }
 
   //*******************************************************************
@@ -305,38 +300,29 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     // Render display widget
     Widget display = getDisplay();
     if (display != null) {  // display is null if this is root node (TreeWidget)
-      renderDisplayPrefixRecursive(out, output, output.getScope().toString(), true);
+      renderDisplayPrefixRecursive(out, true);
       if (getTreeCtx().getDataProvider() != null) {
         renderToggleLink(out, output);
       }
-      try {
-        output.pushScope(TreeNodeWidget.DISPLAY_KEY);
-        out.flush();
-        display._getWidget().render(output);
-      } finally {
-        output.popScope();
-      }
+      out.flush();
+      display._getWidget().render(output);
     }
 
     // Render child nodes
     if (display == null || (!isCollapsed() && hasNodes())) {
-      renderChildrenStart(out, output);
+      renderChildrenStart(out);
       if (!isCollapsed() && hasNodes()) {
         List nodes = getNodes();
         for (ListIterator i = nodes.listIterator(); i.hasNext(); ) {
-          try {
-            output.pushScope(Integer.toString(i.nextIndex()));
-            TreeNodeWidget node = (TreeNodeWidget) i.next();
-            renderChildStart(out, output, node);
-            out.flush();
-            node.render(output);
-            renderChildEnd(out, output, node);
-          } finally {
-            output.popScope();
-          }
+          String childFullId = NameUtil.getFullName(getScope().toString(), Integer.toString(i.nextIndex()));
+          TreeNodeWidget node = (TreeNodeWidget) i.next();
+          renderChildStart(out, childFullId, node);
+          out.flush();
+          node.render(output);
+          renderChildEnd(out, childFullId, node);
         }
       }
-      renderChildrenEnd(out, output);
+      renderChildrenEnd(out);
     }
   }
 
@@ -357,7 +343,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    * Renders HTML after DisplayWidget and before child nodes. Called only if
    * there are child nodes and they are not collapsed.
    */
-  protected void renderChildrenStart(Writer out, OutputData output) throws Exception {
+  protected void renderChildrenStart(Writer out) throws Exception {
     JspUtil.writeStartTag(out, "ul");
   }
 
@@ -365,7 +351,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    * Renders HTML after all child nodes have been rendered. Called only if
    * there are child nodes and they are not collapsed.
    */
-  protected void renderChildrenEnd(Writer out, OutputData output) throws Exception {
+  protected void renderChildrenEnd(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "ul");
   }
 
@@ -373,9 +359,9 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    * Renders HTML immediately before each child node.
    * @param node Child node that is about to be rendered
    */
-  protected void renderChildStart(Writer out, OutputData output, TreeNodeWidget node) throws Exception {
+  protected void renderChildStart(Writer out, String childFullId, TreeNodeWidget node) throws Exception {
     JspUtil.writeOpenStartTag(out, "li");
-    JspUtil.writeAttribute(out, "id", output.getScope());
+    JspUtil.writeAttribute(out, "id", childFullId);
     JspUtil.writeAttribute(out, "class", "aranea-tree-node");
     JspUtil.writeCloseStartTag(out);
   }
@@ -386,18 +372,15 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    * @param node
    *          child node that was just rendered
    */
-  protected void renderChildEnd(Writer out, OutputData output, TreeNodeWidget node) throws Exception {
+  protected void renderChildEnd(Writer out, String childFullId, TreeNodeWidget node) throws Exception {
     JspUtil.writeEndTag(out, "li");
   }
 
-  public void renderDisplayPrefixRecursive(Writer out, OutputData output, String path, boolean current) throws Exception {
-    int index = Integer.parseInt(path.substring(path.lastIndexOf('.') + 1));
-    String parentPath = path.substring(0, path.lastIndexOf('.'));
-
+  public void renderDisplayPrefixRecursive(Writer out, boolean current) throws Exception {
     TreeNodeContext parent = getTreeNodeCtx();
-    parent.renderDisplayPrefixRecursive(out, output, parentPath, false);
+    parent.renderDisplayPrefixRecursive(out, false);
 
-    renderDisplayPrefix(out, output, index, current);
+    renderDisplayPrefix(out, Integer.parseInt(getScope().getId().toString()), current);
   }
 
   /**
@@ -409,7 +392,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    * @param current
    *          if this TreeNodeWidget's DisplayWidget is about to be rendered
    */
-  protected void renderDisplayPrefix(Writer out, OutputData output, int index, boolean current) throws Exception {
+  protected void renderDisplayPrefix(Writer out, int index, boolean current) throws Exception {
   }
 
 }

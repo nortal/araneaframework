@@ -57,7 +57,7 @@ public class ProxyEventListener implements EventListener {
       return;
     } catch (NoSuchMethodException e) {/*OK*/}
     
-    log.warn("Widget '" + input.getScope() +
+    log.warn("Widget '" + eventTarget.getClass().getName() +
         "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget)); 
   }
 }
