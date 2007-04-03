@@ -50,7 +50,7 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
 
      out.write("<script>");
      // ensure restoration of scroll position
-     out.write("_ap.addSystemLoadEvent(function() { var form = araneaPage().getSystemForm();" +
+     out.write("_ap.addSystemLoadEvent(function() { var form = _ap.getSystemForm();" +
     		" if (form." +  WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + " && form."+WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ") "+
      		"scrollToCoordinates("+x + ","+y+");});");
     		//"form."+ WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + ".value, " +

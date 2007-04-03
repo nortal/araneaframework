@@ -82,7 +82,7 @@ public class FormFileUploadHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeCloseStartEndTag_SS(out);
     
     JspUtil.writeStartTag_SS(out, "script");
-    out.write("araneaPage().setSystemFormEncoding('multipart/form-data');");
+    out.write("_ap.setSystemFormEncoding('multipart/form-data');");
     JspUtil.writeEndTag_SS(out, "script");
 
     super.doEndTag(out);

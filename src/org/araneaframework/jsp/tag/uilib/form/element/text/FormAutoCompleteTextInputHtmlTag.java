@@ -72,7 +72,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
    * ***********************************************************************************/
   protected StringBuffer constructACUrl() {
     StringBuffer result = new StringBuffer();
-    result.append("araneaPage().getSystemForm().action + \"?");
+    result.append("_ap.getSystemForm().action + \"?");
     result.append(constructServiceParameter(TopServiceContext.TOP_SERVICE_KEY)).append(" + \"").append('&');
     result.append(constructServiceParameter(TransactionContext.TRANSACTION_ID_KEY)).append(" + \"").append('&');
     result.append(constructServiceParameter(ThreadContext.THREAD_SERVICE_KEY)).append(" + \"").append('&');
@@ -87,7 +87,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 	result.
 	  append(serviceId).
 	  append("=\"").
-	  append("+araneaPage().getSystemForm().").
+	  append("+_ap.getSystemForm().").
 	  append(serviceId).
 	  append(".value");
     return result.toString();
@@ -98,7 +98,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
    * ***********************************************************************************/
   protected String constructACRegistrationScript(AutoCompleteTextControl.ViewModel viewModel, StringBuffer acRequestUrl) {
 	StringBuffer script = new StringBuffer();
-    script.append("araneaPage().addClientLoadEvent(function() {new Ajax.Autocompleter(\"");
+    script.append("_ap.addClientLoadEvent(function() {new Ajax.Autocompleter(\"");
     script.append(getFullFieldId());
     script.append("\", \"ACdiv.");
     script.append(getFullFieldId());

@@ -75,7 +75,7 @@ public abstract class JspWidgetCallUtil {
   public static String getSubmitScriptForEvent(UiUpdateEvent event) {
     StringBuffer sb = new StringBuffer();
     sb.append("_ap.event_6(");
-    sb.append("araneaPage().getSystemForm(),");
+    sb.append("_ap.getSystemForm(),");
     String eventId = event.getId() != null ? "'" + event.getId() + "'" : "null";
     String eventTarget = event.getTarget() != null ? "'" + event.getTarget() + "'" : "null";
     String eventParam = event.getParam() != null ? "'" + event.getParam() + "'" : "null";
