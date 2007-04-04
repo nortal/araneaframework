@@ -89,7 +89,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
         if (langSelect.convertAndValidate()) {
           String lang = (String) langSelect.getValue();
           
-          getL10nCtx().setLocale(new Locale(lang));
+          getL10nCtx().setLocale(new Locale(lang, ""));
           ((SelectControl)langSelect.getControl()).clearItems();
           ((SelectControl)langSelect.getControl()).addItems(getLocales());
           langSelect.setValue(lang);

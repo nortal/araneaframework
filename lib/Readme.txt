@@ -44,9 +44,9 @@ required/ - libraries that are required at runtime
 - ./required/commons-collections-3.1.jar is required by the framework core.
 - ./required/commons-lang-2.1.jar is required by the framework.
 - ./required/commons-validator-1.3.0.jar is required by the uilib.
-- ./optional/commons-fileupload-1.1.1.jar is required by the framework's file 
+- ./optional/commons-fileupload-1.2.jar is required by the framework's file 
    upload filter.
-- ./optional/commons-io-1.2 is required by commons-fileupload
+- ./optional/commons-io-1.3.1 is required by commons-fileupload
 - ./buildtime/commons-logging.jar is required for building the framework with
   java 1.3 and actually running the sample applications on Jetty.
 *****************************************************************************
