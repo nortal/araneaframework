@@ -97,7 +97,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return 0;
   }
 
-  protected void renderChildrenStart(Writer out, OutputData output) throws Exception {
+  protected void renderChildrenStart(Writer out) throws Exception {
     JspUtil.writeOpenStartTag(out, "ul");
     JspUtil.writeAttribute(out, "id", getScope());
     JspUtil.writeAttribute(out, "class", "aranea-tree");
