@@ -46,15 +46,13 @@ public class NotEmptyConstraintTest extends TestCase {
   
   protected InputData createRequestWithText(String text) {
     MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-    request.addParameter("form.text", text);
+    request.addParameter("text", text);
     return new StandardServletInputData(request);
   }
   
   protected void processRequestWithText(String text) {
     InputData input = createRequestWithText(text);
-    input.pushScope("form");
     form._getWidget().update(input);
-    input.popScope();
   }
   
   public void testValidFormElement() throws Exception {

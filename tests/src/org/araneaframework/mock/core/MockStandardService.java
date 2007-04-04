@@ -29,7 +29,7 @@ public class MockStandardService extends BaseApplicationService {
   private boolean actionCalled = false;
 
   protected Object getActionId(InputData input) {
-    return input.getScopedData().get(ACTION_HANDLER_ID_KEY);
+    return input.getScopedData(getScope().toPath()).get(ACTION_HANDLER_ID_KEY);
   }
   
   public boolean isActionCalled() {

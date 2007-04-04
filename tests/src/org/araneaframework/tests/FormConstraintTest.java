@@ -89,7 +89,6 @@ public class FormConstraintTest extends TestCase {
         groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
 
     StandardServletInputData input = new StandardServletInputData(request);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
     
     groupHelper.setActiveGroup("active");
@@ -115,9 +114,7 @@ public class FormConstraintTest extends TestCase {
             new NumberInRangeConstraint(BigInteger.valueOf(20000), null)));
 
     StandardServletInputData input = new StandardServletInputData(request);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
-    input.popScope();
     
     assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
     
@@ -133,9 +130,7 @@ public class FormConstraintTest extends TestCase {
             new NumberInRangeConstraint(BigInteger.valueOf(20000), null)));
 
     input = new StandardServletInputData(request);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
-    input.popScope();
     
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
 
@@ -148,9 +143,7 @@ public class FormConstraintTest extends TestCase {
     request.addParameter("testForm.myDateTime", (String) null);
     
     input = new StandardServletInputData(request);
-    input.pushScope("testForm");
     testForm._getWidget().update(input); 
-    input.popScope();
     
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
     
@@ -163,9 +156,7 @@ public class FormConstraintTest extends TestCase {
     request.addParameter("testForm.myDateTime", (String) null);
     
     input = new StandardServletInputData(request);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
-    input.popScope();
     
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
     
@@ -197,9 +188,7 @@ public class FormConstraintTest extends TestCase {
                                               );
 
     StandardServletInputData input = new StandardServletInputData(request);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
-    input.popScope();
     
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());            
   }
