@@ -36,7 +36,7 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
     		public void onChange() throws Exception {
     			form.convertAndValidate();
     			getMessageCtx().showInfoMessage("Changed, value is " + form.getValueByFullName("acinput") );
-    		};
+    		}
     	}
     );
 

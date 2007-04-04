@@ -25,11 +25,10 @@ import org.araneaframework.backend.list.memorybased.expression.constant.ValueExp
 import org.araneaframework.backend.list.sqlexpr.constant.SqlValueExpression;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockValueConverter;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
-import org.araneaframework.uilib.widgets.lists.tests.tests.expression.ExpressionTests;
 
 
 public class StandardExprToSqlExprBuilderTests extends TestCase {
-	private static final Logger log = Logger.getLogger(ExpressionTests.class);
+	private static final Logger log = Logger.getLogger(StandardExprToSqlExprBuilderTests.class);
 	
 	private StandardExpressionToSqlExprBuilder builder;
 	

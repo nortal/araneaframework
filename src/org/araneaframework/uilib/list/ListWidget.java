@@ -666,8 +666,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * getting the initial item range.
 	 */
 	protected void init() throws Exception {
-		log.debug("Initilizing ListWidget.");
-
 		this.sequenceHelper = createSequenceHelper();
 
 		addEventListener("nextPage", new NextPageEventHandler());

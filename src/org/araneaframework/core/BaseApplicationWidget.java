@@ -46,7 +46,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   // CONSTANTS
   //*******************************************************************
   
-  private static final Logger log = Logger.getLogger(ApplicationWidget.class);
+  private static final Logger log = Logger.getLogger(BaseApplicationWidget.class);
   
   //*******************************************************************
   // FIELDS

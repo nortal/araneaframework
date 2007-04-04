@@ -114,6 +114,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
   }
 
   public void doFinally() {
+    super.doFinally();
     onChangePrecondition = null;
   }
 }

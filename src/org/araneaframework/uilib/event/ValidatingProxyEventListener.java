@@ -6,13 +6,12 @@ import org.araneaframework.InputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.EventListener;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
 
 public final class ValidatingProxyEventListener implements EventListener {
-  public static final Logger log = Logger.getLogger(ProxyEventListener.class);
+  public static final Logger log = Logger.getLogger(ValidatingProxyEventListener.class);
 
   private Object eventTarget;
   private FormWidget form;
