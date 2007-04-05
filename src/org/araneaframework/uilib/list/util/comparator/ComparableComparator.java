@@ -26,7 +26,7 @@ import java.util.Comparator;
 public class ComparableComparator implements Comparator, Serializable {
 	public static final ComparableComparator INSTANCE = new ComparableComparator();
 
-	private ComparableComparator() {};
+	private ComparableComparator() {}
 	
 	public int compare(Object o1, Object o2) {
 		return ((Comparable) o1).compareTo(o2);
