@@ -97,9 +97,9 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return 0;
   }
 
-  protected void renderChildrenStart(Writer out, OutputData output) throws Exception {
+  protected void renderChildrenStart(Writer out) throws Exception {
     JspUtil.writeOpenStartTag(out, "ul");
-    JspUtil.writeAttribute(out, "id", output.getScope());
+    JspUtil.writeAttribute(out, "id", getScope());
     JspUtil.writeAttribute(out, "class", "aranea-tree");
     if (!getTreeCtx().getSync()) {
       JspUtil.writeAttribute(out, "arn-tree-sync", "false");
@@ -107,8 +107,8 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     JspUtil.writeCloseStartTag_SS(out);
   }
 
-  public void renderDisplayPrefixRecursive(Writer out, OutputData output, String path, boolean current) throws Exception {
-    renderDisplayPrefix(out, output, 0, current);
+  public void renderDisplayPrefixRecursive(Writer out, boolean current) throws Exception {
+    renderDisplayPrefix(out, 0, current);
   }
 
   protected void render(OutputData output) throws Exception {

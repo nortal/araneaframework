@@ -30,6 +30,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.StandardScope;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
 
@@ -164,7 +165,7 @@ public abstract class BaseServiceRouterService extends BaseService {
     
     public Service addService(Object id, Service service) {
       try {
-        _addComponent(id, service, getChildEnvironment(id));
+        _addComponent(id, service, null, getChildEnvironment(id));
       }
       catch (Exception e) {
         throw ExceptionUtil.uncheckException(e);

@@ -215,13 +215,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
 	
 	protected void render(OutputData output) throws Exception {
 		log.debug("StandardWizardWidget render called");    
-		output.pushScope(CURRENT_PAGE_KEY);
-		try {
-			getCurrentPage()._getWidget().render(output);
-		}
-		finally {
-			output.popScope();
-		}    
+		getCurrentPage()._getWidget().render(output);
 	}
 	
 	protected void destroy() throws Exception {

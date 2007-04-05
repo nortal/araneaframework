@@ -31,28 +31,6 @@ public interface OutputData extends Extendable, Narrowable {
    * The key that can be used to retrieve OutputData (as an example a request scope attribute).
    */
   public static final String OUTPUT_DATA_KEY = "org.araneaframework.OutputData";
-
-  /**
-   * Adds the step to the scope Path of this OutputData.
-   * @param step is the next step on the Path
-   */
-  public void pushScope(Object step);
-  
-  /**
-   * Removes the last entry from the Path of this OutputData .
-   */
-  public void popScope();
-  
-  /**
-  * Returns the current Path of this InputData.
-  * @return the Path of this InputData
-  */
-  public Path getScope();
-  
-  /**
-   * Restores the scope to the passed one.
-   */
-  public void restoreScope(Path scope);
   
   /**
    * Returns the current InputData.

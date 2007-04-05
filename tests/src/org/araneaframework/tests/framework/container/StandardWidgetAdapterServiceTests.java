@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.InputData;
+import org.araneaframework.Path;
 import org.araneaframework.core.ApplicationService;
 import org.araneaframework.framework.container.StandardWidgetAdapterService;
 import org.araneaframework.mock.MockInputData;
@@ -47,7 +48,7 @@ public class StandardWidgetAdapterServiceTests extends TestCase {
     adapter._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
     
     assertTrue(widget.getUpdateCalled());
-    assertTrue(widget.getEventProcessed());
+    assertTrue(!widget.getEventProcessed());
     assertTrue(widget.getRenderCalled());
     assertTrue(widget.isProcessCalled());
 
@@ -69,8 +70,11 @@ public class StandardWidgetAdapterServiceTests extends TestCase {
   
   public void testActionPropagates() throws Exception {
     adapter = new StandardWidgetAdapterService() {
-      public boolean propagateAsAction(InputData input) {
+      protected boolean hasAction(InputData input) {
         return true;
+      }
+      protected Path getActionPath(InputData input) {
+        return null;
       }
     };
     widget = new MockEventfulStandardWidget();

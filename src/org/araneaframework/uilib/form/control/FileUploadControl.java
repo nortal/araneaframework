@@ -90,8 +90,8 @@ public class FileUploadControl extends BaseControl {
       return;
     }
 
-    if (fileUpload.getUploadedFile(request.getScope().toString()) != null) {
-      FileItem file = fileUpload.getUploadedFile(request.getScope().toString());
+    if (fileUpload.getUploadedFile(getScope().toString()) != null) {
+      FileItem file = fileUpload.getUploadedFile(getScope().toString());
       String mimeType = file.getContentType();
       
       mimeTypePermitted = permittedMimeFileTypes == null || permittedMimeFileTypes.contains(mimeType);
