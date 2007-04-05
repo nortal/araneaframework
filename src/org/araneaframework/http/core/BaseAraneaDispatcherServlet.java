@@ -43,10 +43,6 @@ import org.araneaframework.http.ServletServiceAdapterComponent;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-/**
- * @author Taimo Peelo (taimo@araneaframework.org)
- *
- */
 public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
   private static final Logger log = Logger.getLogger(BaseAraneaDispatcherServlet.class);
   private ServletServiceAdapterComponent serviceAdapter;
