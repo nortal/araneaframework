@@ -2,9 +2,6 @@ ARANEA FRAMEWORK CHANGELOG
 ---------------------------
 2007.04.06    | Aranea 1.0.7
 
-Features and Improvements
-    Tree Widget was backported from development branch                        | See #345
-
 Bugfixes
     Cleared DateTimeControl obtaining value 'Jan 01 00:00:00 EET 1970'        | See #322
     List Comparators missed equals() methods (problems with overlapRange())   | See #319
