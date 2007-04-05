@@ -3,6 +3,7 @@ package org.araneaframework.uilib.event;
 import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
 import org.araneaframework.InputData;
+import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.EventListener;
@@ -14,11 +15,11 @@ import org.araneaframework.uilib.form.reader.BeanFormReader;
 public final class ValidatingProxyEventListener implements EventListener {
   public static final Logger log = Logger.getLogger(ProxyEventListener.class);
 
-  private Object eventTarget;
+  private Widget eventTarget;
   private FormWidget form;
   private Class modelType;
 
-  public ValidatingProxyEventListener(Object eventTarget, FormWidget form, Class modelType) {
+  public ValidatingProxyEventListener(Widget eventTarget, FormWidget form, Class modelType) {
     Assert.notNullParam(form, "form");
     Assert.notNullParam(eventTarget, "eventTarget");
     Assert.notNullParam(modelType, "modelType");
@@ -28,7 +29,7 @@ public final class ValidatingProxyEventListener implements EventListener {
     this.modelType = modelType;
   }
   
-  public ValidatingProxyEventListener(Object eventTarget, BeanFormWidget form) {
+  public ValidatingProxyEventListener(Widget eventTarget, BeanFormWidget form) {
     Assert.notNullParam(form, "form");
     Assert.notNullParam(eventTarget, "eventTarget");
     
@@ -74,8 +75,7 @@ public final class ValidatingProxyEventListener implements EventListener {
     catch (NoSuchMethodException e) {/* OK */
     }
 
-    log.warn("Widget '" + eventTarget.getClass().getName() +
+    log.warn("Widget '" + eventTarget.getScope() +
         "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget)); 
-
   }
 }
