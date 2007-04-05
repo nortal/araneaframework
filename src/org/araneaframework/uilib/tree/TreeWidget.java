@@ -43,6 +43,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // * some nodes not collapsable
   // * disable concrete tree node toggling client-side when request has been
   //   submitted - response not yet arrived and processed
+  // * make sure that all methods can be called before init
 
   /**
    * Creates a new {@link TreeWidget} instance.
@@ -85,7 +86,14 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return sync;
   }
 
-  public boolean disposeChildren() {
+  /**
+   * Set if child nodes are removed and discarded when a node is closed.
+   */
+  public void setDisposeChildren(boolean disposeChildren) {
+    this.disposeChildren = disposeChildren;
+  }
+
+  public boolean isDisposeChildren() {
     return disposeChildren;
   }
 

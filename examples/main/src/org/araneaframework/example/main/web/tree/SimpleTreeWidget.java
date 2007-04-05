@@ -18,13 +18,8 @@ package org.araneaframework.example.main.web.tree;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
-import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
-import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
-import org.araneaframework.uilib.tree.TreeNodeContext;
 import org.araneaframework.uilib.tree.TreeNodeWidget;
 import org.araneaframework.uilib.tree.TreeWidget;
 
@@ -36,65 +31,29 @@ import org.araneaframework.uilib.tree.TreeWidget;
  */
 public class SimpleTreeWidget extends BaseUIWidget {
 
-	private static final Logger log = Logger.getLogger(SimpleTreeWidget.class);
+  protected void init() throws Exception {
+    setViewSelector("tree/simpleTree");
+    addWidget("tree", new TreeWidget(new SimpleTreeDataProvider()));
+  }
 
-	private TreeWidget tree;
+  public static class SimpleTreeDataProvider implements TreeDataProvider {
 
-	protected void init() throws Exception {
-		setViewSelector("tree/simpleTree");
-		tree = new TreeWidget(new SimpleTreeDataProvider(), false);
-		addWidget("tree", tree);
-	}
-
-	public static class SimpleTreeDataProvider implements TreeDataProvider {
-
-		public List getChildren(TreeNodeWidget parent) {
-			List children = new ArrayList();
-			for (int i = 0; i < 5; i++) {
-				children.add(new TreeNodeWidget(new SimpleTreeNodeWidget()));
-			}
-			return children;
-		}
-
-	}
-
-	public static class SimpleTreeNodeWidget extends BaseUIWidget {
-
-    private int counter;
-
-		protected void init() throws Exception {
-			setViewSelector("tree/simpleTreeNode");
-      putViewData("counter", new Integer(counter));
-
-      addActionListener("test", new StandardActionListener() {
-
-        public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
-          log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
-          putViewData("counter", new Integer(++counter));
-          getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
-				}
-
-      });
-
-      addActionListener("sleep", new StandardActionListener() {
-
-        public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
-          log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
-          Thread.sleep(10000);
-          getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
-        }
-
-      });
+    public List getChildren(TreeNodeWidget parent) {
+      List children = new ArrayList();
+      for (int i = 0; i < 5; i++) {
+        children.add(new TreeNodeWidget(new SimpleTreeDisplayWidget()));
+      }
+      return children;
     }
 
-		protected TreeNodeContext getTreeNodeCtx() {
-			return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
-		}
+  }
 
-		public void handleEventInvertCollapsed() throws Exception {
-			getTreeNodeCtx().invertCollapsed();
-		}
+  public static class SimpleTreeDisplayWidget extends BaseUIWidget {
 
-	}
+    protected void init() throws Exception {
+      setViewSelector("tree/simpleTreeDisplay");
+    }
+
+  }
 
 }

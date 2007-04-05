@@ -16,13 +16,13 @@
 
 package org.araneaframework.uilib.tree;
 
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -55,14 +55,37 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   private boolean collapsed = true;
   private boolean collapsedDecide = false;
-  private int nodeCount = 0;
   private Widget initDisplay;
   private List initNodes;
+  private TreeNodeWidget parentNode;
+  private int index = -1;
+  private int nextChildIndex = 0;
+  private List childNodeWrappers;
+
+  private static class ChildNodeWrapper implements Serializable {
+    
+    private TreeNodeWidget node;
+    private String widgetId;
+
+    public ChildNodeWrapper(TreeNodeWidget node, String widgetId) {
+      this.node = node;
+      this.widgetId = widgetId;
+    }
+
+    public TreeNodeWidget getNode() {
+      return node;
+    }
+
+    public String getWidgetId() {
+      return widgetId;
+    }
+
+  }
 
   /* Used by TreeWidget */
   TreeNodeWidget() {
     super();
-    this.collapsed = false;
+    collapsed = false;
   }
 
   /**
@@ -75,7 +98,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   public TreeNodeWidget(Widget display) {
     super();
     Assert.notNull(display);
-    this.initDisplay = display;
+    initDisplay = display;
   }
 
   /**
@@ -105,21 +128,24 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    */
   public TreeNodeWidget(Widget display, List nodes, boolean collapsed) {
     this(display);
-    this.initNodes = nodes;
+    initNodes = nodes;
     this.collapsed = collapsed;
   }
 
   protected void init() throws Exception {
+    Assert.notNull(parentNode, "parentNode must be set");
+    Assert.isTrue(index > -1, "index must be set");
+
     addWidget(DISPLAY_KEY, initDisplay);
     initDisplay = null;
 
-    if (this.initNodes != null) {
+    if (initNodes != null) {
       addAllNodes(initNodes);
       initNodes = null;
     }
 
     if (collapsedDecide) {
-      collapsed = getTreeCtx().disposeChildren();
+      collapsed = getTreeCtx().isDisposeChildren();
     }
 
     addActionListener(TOGGLE_ACTION, new InvertCollapsedListener());
@@ -188,14 +214,14 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public void expand() {
-    if (getTreeCtx().disposeChildren()) {
+    if (getTreeCtx().isDisposeChildren()) {
       addAllNodes(loadChildren());
     }
     collapsed = false;
   }
 
   public void collapse() {
-    if (getTreeCtx().disposeChildren()) {
+    if (getTreeCtx().isDisposeChildren()) {
       removeAllNodes();
     }
     collapsed = true;
@@ -210,38 +236,58 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public int getNodeCount() {
-    return nodeCount;
+    if (childNodeWrappers == null)
+      return 0;
+    return childNodeWrappers.size();
   }
 
   public int addNode(TreeNodeWidget node) {
     Assert.notNullParam(node, "node");
-    addWidget(Integer.toString(nodeCount), node);
-    return nodeCount++;
+    if (childNodeWrappers == null)
+      childNodeWrappers = new ArrayList();
+
+    int nodeIndex = childNodeWrappers.size();
+    String widgetId = Integer.toString(nextChildIndex++);
+
+    childNodeWrappers.add(new ChildNodeWrapper(node, widgetId));
+    node.setIndex(nodeIndex);
+    node.setParentNode(this);
+
+    addWidget(widgetId, node);
+    return nodeIndex;
   }
 
-  public void addNode(int index, TreeNodeWidget node) {
+  public void addNode(int nodeIndex, TreeNodeWidget node) {
     Assert.notNullParam(node, "node");
-    Assert.isTrue(index < getNodeCount(), "index must be less that nodeCount");
-    for (int i = getNodeCount() - 1; i >= index; i--) {
-      Widget tmpNode = getWidget(Integer.toString(i));
-      removeWidget(Integer.toString(i));
-      addWidget(Integer.toString(i + 1), tmpNode);
+    Assert.isTrue(nodeIndex >= 0 && nodeIndex < getNodeCount(), "nodeIndex must be >= 0 and less than nodeCount");
+    if (childNodeWrappers == null)
+      childNodeWrappers = new ArrayList();
+
+    String widgetId = Integer.toString(nextChildIndex++);
+
+    childNodeWrappers.add(nodeIndex, new ChildNodeWrapper(node, widgetId));
+    node.setIndex(nodeIndex);
+    node.setParentNode(this);
+
+    for (int i = nodeIndex + 1; i < childNodeWrappers.size(); i++) {
+      getNodeWrapper(i).getNode().setIndex(i);
     }
-    addWidget(Integer.toString(index), node);
-    nodeCount++;
+
+    addWidget(widgetId, node);
   }
 
-  public TreeNodeWidget removeNode(int index) {
-    Assert.isTrue(index < getNodeCount(), "index must be less that nodeCount");
-    TreeNodeWidget node = getNode(index);
-    removeWidget(Integer.toString(index));
-    nodeCount--;
-    for (int i = index; i < getNodeCount(); i++) {
-      Widget tmpNode = getWidget(Integer.toString(i + 1));
-      removeWidget(Integer.toString(i + 1));
-      addWidget(Integer.toString(i), tmpNode);
+  public TreeNodeWidget removeNode(int nodeIndex) {
+    Assert.isTrue(nodeIndex >= 0 && nodeIndex < getNodeCount(), "index must be >= 0 and less than nodeCount");
+
+    ChildNodeWrapper nodeWrapper = getNodeWrapper(nodeIndex);
+    removeWidget(nodeWrapper.getWidgetId());
+    childNodeWrappers.remove(nodeIndex);
+
+    for (int i = nodeIndex; i < childNodeWrappers.size(); i++) {
+      getNodeWrapper(i).getNode().setIndex(i);
     }
-    return node;
+
+    return nodeWrapper.getNode();
   }
 
   public void addAllNodes(List nodes) {
@@ -254,28 +300,39 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public void removeAllNodes() {
-    for (int i = 0; i < nodeCount; i++) {
-      removeWidget(Integer.toString(i));
+    if (childNodeWrappers == null)
+      return;
+
+    for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
+      ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
+      removeWidget(nodeWrapper.getWidgetId());
     }
-    nodeCount = 0;
+    childNodeWrappers.clear();
   }
 
   public Widget getDisplay() {
     return getWidget(DISPLAY_KEY);
   }
 
-  public TreeNodeWidget getNode(int index) {
-    Assert.isTrue(index >= 0 && index < nodeCount, "Index out of bounds");
-    return (TreeNodeWidget) getWidget(Integer.toString(index));
+  public TreeNodeWidget getNode(int nodeIndex) {
+    Assert.isTrue(nodeIndex >= 0 && nodeIndex < getNodeCount(), "nodeIndex out of bounds");
+    return getNodeWrapper(nodeIndex).getNode();
   }
 
+  protected ChildNodeWrapper getNodeWrapper(int nodeIndex) {
+    return (ChildNodeWrapper) childNodeWrappers.get(nodeIndex);
+  }
+
+  // returns List<TreeNodeWidget>
   public List getNodes() {
-    Map children = getChildren();
     List nodes = new ArrayList(getNodeCount());
-    for (int i = 0; i < getNodeCount(); i++) {
-      nodes.add(children.get(Integer.toString(i)));
+    if (childNodeWrappers != null) {
+      for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
+        ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
+        nodes.add(nodeWrapper.getNode());
+      }
     }
-    return nodes;
+    return Collections.unmodifiableList(nodes);
   }
 
   public boolean hasNodes() {
@@ -284,6 +341,22 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   public int getParentCount() {
     return getTreeNodeCtx().getParentCount() + 1;
+  }
+
+  public void setParentNode(TreeNodeWidget parentNode) {
+    this.parentNode = parentNode;
+  }
+
+  public TreeNodeWidget getParentNode() {
+    return parentNode;
+  }
+
+  public int getIndex() {
+    return index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
   }
 
   public void renderNode(OutputData output) throws Exception {  // Called only from display widget

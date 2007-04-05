@@ -35,8 +35,8 @@ public interface TreeContext extends Serializable {
    * Returns if action calls (by AJAX requests) to tree widget are synchronized.
    * Default is <code>true</code>. If set to <code>false</code> (in
    * TreeWidget constructor), then
-   * {@link org.araneaframework.framework.filter.StandardSynchronizingFilterService}
-   * does not synchronize calls to this <code>TreeWidget</code> and its
+   * {@link org.araneaframework.http.router.StandardHttpSessionRouterService}
+   * does not synchronize requests to this <code>TreeWidget</code> and its
    * children.
    */
   public boolean getSync();
@@ -44,6 +44,6 @@ public interface TreeContext extends Serializable {
   /**
    * Returns if child nodes are removed and discarded when a node is closed.
    */
-  boolean disposeChildren();
+  boolean isDisposeChildren();
 
 }

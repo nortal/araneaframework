@@ -38,7 +38,7 @@ public interface TreeNodeContext extends Serializable {
   /**
    * Sets collapsed state of tree node to <code>false</code>, thus showing
    * child nodes. This may trigger retrieval of child nodes using
-   * {@link TreeDataProvider} if {@link TreeContext#disposeChildren()} is
+   * {@link TreeDataProvider} if {@link TreeContext#isDisposeChildren()} is
    * <code>true</code>.
    */
   void expand();
@@ -46,7 +46,7 @@ public interface TreeNodeContext extends Serializable {
   /**
    * Sets collapsed state of tree node to <code>true</code>, thus hiding
    * child nodes. This may trigger removal of child nodes if
-   * {@link TreeContext#disposeChildren()} is <code>true</code>.
+   * {@link TreeContext#isDisposeChildren()} is <code>true</code>.
    */
   void collapse();
 
@@ -155,5 +155,15 @@ public interface TreeNodeContext extends Serializable {
    * @return number of parents in hierarchy.
    */
   int getParentCount();
+
+  /**
+   * Returns parent node of this tree node or null if called on the root node.
+   */
+  TreeNodeWidget getParentNode();
+
+  /**
+   * Returns the index this node is under its parent.
+   */
+  int getIndex();
 
 }
