@@ -48,7 +48,8 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
   private ServletServiceAdapterComponent serviceAdapter;
   
   public void init() throws ServletException {
-    serviceAdapter = buildRootComponent();    
+    serviceAdapter = buildRootComponent();
+    buildAlternateRootComponents();
 
     Environment env = new StandardEnvironment(null, getServletEnvironmentMap());
     try {
