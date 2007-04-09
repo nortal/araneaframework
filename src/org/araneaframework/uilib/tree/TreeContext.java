@@ -35,7 +35,7 @@ public interface TreeContext extends Serializable {
    * Returns if actions are used instead of events in submit links (e.g. toggle
    * button). Default is <code>false</code>.
    */
-  boolean isActions();
+  boolean useActions();
 
   /**
    * Returns if action calls (by AJAX requests) to tree widget are synchronized.
@@ -45,11 +45,11 @@ public interface TreeContext extends Serializable {
    * does not synchronize requests to this <code>TreeWidget</code> and its
    * children.
    */
-  boolean isSync();
+  boolean useSynchronizedActions();
 
   /**
    * Returns if child nodes are removed and discarded when a node is closed.
    */
-  boolean isDisposeChildren();
+  boolean removeCollapsedChildren();
 
 }

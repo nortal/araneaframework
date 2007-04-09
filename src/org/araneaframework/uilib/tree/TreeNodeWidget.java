@@ -141,10 +141,10 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
 
     if (collapsedDecide) {
-      collapsed = getTreeCtx().isDisposeChildren();
+      collapsed = getTreeCtx().removeCollapsedChildren();
     }
 
-    if (getTreeCtx().isActions()) {
+    if (getTreeCtx().useActions()) {
       addActionListener(TOGGLE_KEY, new ToggleActionListener());
     } else {
       addEventListener(TOGGLE_KEY, new ToggleEventListener());
@@ -172,8 +172,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   }
 
-  protected Environment getChildWidgetEnvironment() {
-    return new StandardEnvironment(getEnvironment(), TreeNodeContext.class, this);
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), TreeNodeContext.class, this);
   }
 
   protected TreeContext getTreeCtx() {
@@ -198,7 +198,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   public void setCollapsed(boolean collapsed) {
     this.collapsed = collapsed;
-    if (getTreeCtx().isDisposeChildren()) {
+    if (getTreeCtx().removeCollapsedChildren()) {
       if (collapsed) {
         removeAllNodes();
       } else {
@@ -317,7 +317,11 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public int getParentCount() {
-    return getParentNodeCtx().getParentCount() + 1;
+    TreeNodeContext parent = getParentNodeCtx();
+    if (parent != null) {
+      return parent.getParentCount() + 1;
+    }
+    return 0;
   }
 
   public void setParentNode(TreeNodeWidget parentNode) {
@@ -383,7 +387,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   protected void renderToggleLink(Writer out, OutputData output) throws Exception {
     JspUtil.writeOpenStartTag(out, "a");
     JspUtil.writeAttribute(out, "href", "#");
-    if (getTreeCtx().isActions()) {
+    if (getTreeCtx().useActions()) {
       JspUtil.writeAttribute(out, "onclick", "return AraneaTree.toggleNode(this);");
     } else {
       UiEvent event = new UiEvent("toggle", getScope().toString(), null);
@@ -434,7 +438,9 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   public void renderDisplayPrefixRecursive(Writer out, boolean current) throws Exception {
     TreeNodeContext parent = getParentNodeCtx();
-    parent.renderDisplayPrefixRecursive(out, false);
+    if (parent != null) {
+      parent.renderDisplayPrefixRecursive(out, false);
+    }
 
     renderDisplayPrefix(out, current);
   }

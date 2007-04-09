@@ -39,7 +39,7 @@ public interface TreeNodeContext extends Serializable {
    * Sets collapsed state of tree node. If <code>true</code>, child nodes are
    * hidden, otherwise child nodes are shown. This may trigger removal or
    * retrieval of child nodes using {@link TreeDataProvider} if
-   * {@link TreeContext#isDisposeChildren()} is <code>true</code>.
+   * {@link TreeContext#removeCollapsedChildren()} is <code>true</code>.
    */
   void setCollapsed(boolean collapsed);
 

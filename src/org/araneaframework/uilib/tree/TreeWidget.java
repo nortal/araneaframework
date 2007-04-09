@@ -33,13 +33,11 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   private static final long serialVersionUID = 1L;
 
   private TreeDataProvider dataProvider;
-  private boolean disposeChildren = true;
-  private boolean actions = false;
-  private boolean sync = true;
+  private boolean removeCollapsedChildren = true;
+  private boolean useActions = false;
+  private boolean useSynchronizedActions = true;
 
   //TODO features:
-  // * disable use of action calls (AJAX)
-  // * not show collapse/expand by TreeNodeWidgets
   // * not-dispose-children in client side
   // * some nodes not collapsable
   // * disable concrete tree node toggling client-side when request has been
@@ -62,13 +60,13 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
    * 
    * @param dataProvider
    *          tree data provider.
-   * @param actions
+   * @param useActions
    *          if actions are used instead of events in submit links. See
-   *          {@link TreeContext#isActions()}.
+   *          {@link TreeContext#useActions()}.
    */
-  public TreeWidget(TreeDataProvider dataProvider, boolean actions) {
+  public TreeWidget(TreeDataProvider dataProvider, boolean useActions) {
     this(dataProvider);
-    this.actions = actions;
+    this.useActions = useActions;
   }
 
   /**
@@ -76,16 +74,16 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
    * 
    * @param dataProvider
    *          tree data provider.
-   * @param actions
+   * @param useActions
    *          if actions are used instead of events in submit links. See
-   *          {@link TreeContext#isActions()}.
-   * @param sync
+   *          {@link TreeContext#useActions()}.
+   * @param useSynchronizedActions
    *          if AJAX requests to tree widget are synchronized. See
-   *          {@link TreeContext#isSync()}.
+   *          {@link TreeContext#useSynchronizedActions()}.
    */
-  public TreeWidget(TreeDataProvider dataProvider, boolean actions, boolean sync) {
-    this(dataProvider, actions);
-    this.sync = sync;
+  public TreeWidget(TreeDataProvider dataProvider, boolean useActions, boolean useSynchronizedActions) {
+    this(dataProvider, useActions);
+    this.useSynchronizedActions = useSynchronizedActions;
   }
 
   protected void init() throws Exception {
@@ -100,45 +98,37 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return dataProvider;
   }
 
-  public boolean isActions() {
-    return actions;
+  public boolean useActions() {
+    return useActions;
   }
 
-  public boolean isSync() {
-    return sync;
+  public boolean useSynchronizedActions() {
+    return useSynchronizedActions;
   }
 
   /**
    * Set if child nodes are removed and discarded when a node is closed.
    */
-  public void setDisposeChildren(boolean disposeChildren) {
-    this.disposeChildren = disposeChildren;
+  public void setRemoveCollapsedChildren(boolean removeCollapsedChildren) {
+    this.removeCollapsedChildren = removeCollapsedChildren;
   }
 
-  public boolean isDisposeChildren() {
-    return disposeChildren;
+  public boolean removeCollapsedChildren() {
+    return removeCollapsedChildren;
   }
 
   public Widget getDisplay() {
     return null;
   }
 
-  public int getParentCount() {
-    return 0;
-  }
-
   protected void renderChildrenStart(Writer out) throws Exception {
     JspUtil.writeOpenStartTag(out, "ul");
     JspUtil.writeAttribute(out, "id", getScope());
     JspUtil.writeAttribute(out, "class", "aranea-tree");
-    if (!getTreeCtx().isSync()) {
+    if (!getTreeCtx().useSynchronizedActions()) {
       JspUtil.writeAttribute(out, "arn-tree-sync", "false");
     }
     JspUtil.writeCloseStartTag_SS(out);
-  }
-
-  public void renderDisplayPrefixRecursive(Writer out, boolean current) throws Exception {
-    renderDisplayPrefix(out, current);
   }
 
   protected void render(OutputData output) throws Exception {
@@ -150,10 +140,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // The following methods do nothing, because the root node of the tree has no
   // display widget and therefore is always expanded.
 
-  public void expand() {
-  }
-
-  public void setCollapsed() {
+  public void setCollapsed(boolean collapsed) {
   }
 
   public void toggleCollapsed() {
