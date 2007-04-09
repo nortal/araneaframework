@@ -146,8 +146,8 @@ public class MenuWidget extends TemplateMenuWidget  {
 
       MenuItem treeMenu = sampleMenu.addMenuItem(new MenuItem("Trees"));
       treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
-      treeMenu.addMenuItem(new MenuItem("#A more complex tree", ComplexTreeWidget.class));
-      treeMenu.addMenuItem(new MenuItem("#Unsynchronized actions", UnsynchronizedTreeWidget.class));
+      treeMenu.addMenuItem(new MenuItem("Complex_Tree", ComplexTreeWidget.class));
+      treeMenu.addMenuItem(new MenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class));
     } 
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {

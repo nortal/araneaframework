@@ -24,8 +24,10 @@ import org.araneaframework.uilib.tree.TreeNodeWidget;
 import org.araneaframework.uilib.tree.TreeWidget;
 
 /**
- * Widget that shows a simple tree. Each node has five child nodes (tree is
- * infinite). Child nodes are disposed when parent node is collapsed.
+ * Widget that shows two simple trees. One tree uses events for submit links and
+ * the other uses actions (in that case only the current tree node and its
+ * children are rendered). Each node has five child nodes (tree is infinite).
+ * Child nodes are disposed when parent node is collapsed.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
@@ -33,7 +35,8 @@ public class SimpleTreeWidget extends BaseUIWidget {
 
   protected void init() throws Exception {
     setViewSelector("tree/simpleTree");
-    addWidget("tree", new TreeWidget(new SimpleTreeDataProvider()));
+    addWidget("tree1", new TreeWidget(new SimpleTreeDataProvider()));
+    addWidget("tree2", new TreeWidget(new SimpleTreeDataProvider(), true));
   }
 
   public static class SimpleTreeDataProvider implements TreeDataProvider {
@@ -44,6 +47,10 @@ public class SimpleTreeWidget extends BaseUIWidget {
         children.add(new TreeNodeWidget(new SimpleTreeDisplayWidget()));
       }
       return children;
+    }
+
+    public boolean hasChildren(TreeNodeWidget parent) {
+      return true;
     }
 
   }

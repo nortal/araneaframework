@@ -29,8 +29,9 @@ import org.araneaframework.uilib.tree.TreeNodeWidget;
 import org.araneaframework.uilib.tree.TreeWidget;
 
 /**
- * Tree, that uses unsynchronized actions. Each node has five child nodes (tree
- * is infinite). Child nodes are disposed when parent node is collapsed.
+ * Tree, that uses unsynchronized actions. Each node has five child nodes and
+ * depth of the tree is limited to five nodes. Child nodes are disposed when
+ * parent node is collapsed.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
@@ -42,7 +43,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
   protected void init() throws Exception {
     setViewSelector("tree/unsynchronizedTree");
-    tree = new TreeWidget(new UnsynchronizedTreeDataProvider(), false);
+    tree = new TreeWidget(new UnsynchronizedTreeDataProvider(), true, false);
     addWidget("tree", tree);
   }
 
@@ -54,6 +55,10 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
         children.add(new TreeNodeWidget(new UnsynchronizedTreeDisplayWidget()));
       }
       return children;
+    }
+
+    public boolean hasChildren(TreeNodeWidget parent) {
+      return parent.getParentCount() < 5;
     }
 
   }

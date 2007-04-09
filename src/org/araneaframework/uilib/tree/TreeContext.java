@@ -32,6 +32,12 @@ public interface TreeContext extends Serializable {
   TreeDataProvider getDataProvider();
 
   /**
+   * Returns if actions are used instead of events in submit links (e.g. toggle
+   * button). Default is <code>false</code>.
+   */
+  boolean isActions();
+
+  /**
    * Returns if action calls (by AJAX requests) to tree widget are synchronized.
    * Default is <code>true</code>. If set to <code>false</code> (in
    * TreeWidget constructor), then
@@ -39,7 +45,7 @@ public interface TreeContext extends Serializable {
    * does not synchronize requests to this <code>TreeWidget</code> and its
    * children.
    */
-  public boolean getSync();
+  boolean isSync();
 
   /**
    * Returns if child nodes are removed and discarded when a node is closed.

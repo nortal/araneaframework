@@ -22,6 +22,8 @@ import org.araneaframework.uilib.tree.TreeNodeWidget;
 import org.araneaframework.uilib.tree.TreeWidget;
 
 /**
+ * Tree without a data provider - nodes are added during events.
+ * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public class ComplexTreeWidget extends BaseUIWidget {
@@ -52,8 +54,8 @@ public class ComplexTreeWidget extends BaseUIWidget {
     public void handleEventAddChildren() {
       TreeNodeWidget secondNode = new TreeNodeWidget(new ComplexTreeSecondDisplayWidget());
       getTreeNodeCtx().addNode(secondNode);
-      getTreeNodeCtx().expand();
-      secondNode.expand();
+      getTreeNodeCtx().setCollapsed(false);
+      secondNode.setCollapsed(false);
       for (int i = 0; i < 4; i++) {
         secondNode.addNode(new TreeNodeWidget(new ComplexTreeThirdDisplayWidget()));
       }
@@ -72,7 +74,7 @@ public class ComplexTreeWidget extends BaseUIWidget {
     }
 
     public void handleEventInvertCollapsed() {
-      getTreeNodeCtx().invertCollapsed();
+      getTreeNodeCtx().toggleCollapsed();
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
@@ -88,7 +90,7 @@ public class ComplexTreeWidget extends BaseUIWidget {
     }
 
     public int getLevel() {
-      return getTreeNodeCtx().getParentCount() + 1;
+      return getTreeNodeCtx().getParentCount();
     }
 
     protected TreeNodeContext getTreeNodeCtx() {

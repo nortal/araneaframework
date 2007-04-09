@@ -15,7 +15,11 @@
 
 		<tui:component>
 
-			<ui:widgetInclude id="tree"/>
+			<p>Tree with events:</p>
+			<ui:widgetInclude id="tree1"/>
+
+			<p>Tree with actions:</p>
+			<ui:widgetInclude id="tree2"/>
 
 		</tui:component>
 

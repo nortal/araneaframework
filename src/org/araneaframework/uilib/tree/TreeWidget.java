@@ -34,6 +34,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
   private TreeDataProvider dataProvider;
   private boolean disposeChildren = true;
+  private boolean actions = false;
   private boolean sync = true;
 
   //TODO features:
@@ -61,12 +62,29 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
    * 
    * @param dataProvider
    *          tree data provider.
+   * @param actions
+   *          if actions are used instead of events in submit links. See
+   *          {@link TreeContext#isActions()}.
+   */
+  public TreeWidget(TreeDataProvider dataProvider, boolean actions) {
+    this(dataProvider);
+    this.actions = actions;
+  }
+
+  /**
+   * Creates a new {@link TreeWidget} instance.
+   * 
+   * @param dataProvider
+   *          tree data provider.
+   * @param actions
+   *          if actions are used instead of events in submit links. See
+   *          {@link TreeContext#isActions()}.
    * @param sync
    *          if AJAX requests to tree widget are synchronized. See
-   *          {@link TreeContext#getSync()}.
+   *          {@link TreeContext#isSync()}.
    */
-  public TreeWidget(TreeDataProvider dataProvider, boolean sync) {
-    this(dataProvider);
+  public TreeWidget(TreeDataProvider dataProvider, boolean actions, boolean sync) {
+    this(dataProvider, actions);
     this.sync = sync;
   }
 
@@ -82,7 +100,11 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return dataProvider;
   }
 
-  public boolean getSync() {
+  public boolean isActions() {
+    return actions;
+  }
+
+  public boolean isSync() {
     return sync;
   }
 
@@ -109,7 +131,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     JspUtil.writeOpenStartTag(out, "ul");
     JspUtil.writeAttribute(out, "id", output.getScope());
     JspUtil.writeAttribute(out, "class", "aranea-tree");
-    if (!getTreeCtx().getSync()) {
+    if (!getTreeCtx().isSync()) {
       JspUtil.writeAttribute(out, "arn-tree-sync", "false");
     }
     JspUtil.writeCloseStartTag_SS(out);
@@ -131,10 +153,10 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   public void expand() {
   }
 
-  public void collapse() {
+  public void setCollapsed() {
   }
 
-  public void invertCollapsed() {
+  public void toggleCollapsed() {
   }
 
 }
