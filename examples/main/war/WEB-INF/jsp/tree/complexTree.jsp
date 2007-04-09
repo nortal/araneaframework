@@ -15,7 +15,7 @@
 
 		<tui:component>
 
-			<ui:widgetInclude id="tree"/>
+			<ui:tree id="tree"/>
 
 			<p><ui:eventLinkButton eventId="addNode" labelId="#Add a top-level node to tree"/></p>
 
