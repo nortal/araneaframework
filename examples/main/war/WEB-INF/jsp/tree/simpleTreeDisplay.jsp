@@ -5,5 +5,7 @@
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
-	Foobar
+	<ui:widgetContext>
+		Foobar. <ui:eventLinkButton eventId="test" labelId="#Test"/>
+	</ui:widgetContext>
 </jsp:root>

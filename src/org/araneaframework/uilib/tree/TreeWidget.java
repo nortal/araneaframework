@@ -34,7 +34,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
   private TreeDataProvider dataProvider;
   private boolean disposeChildren = true;
-  private boolean sync = true;
+  private boolean actions = false;
 
   //TODO features:
   // * disable use of action calls (AJAX)
@@ -61,13 +61,13 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
    * 
    * @param dataProvider
    *          tree data provider.
-   * @param sync
-   *          if AJAX requests to tree widget are synchronized. See
-   *          {@link TreeContext#getSync()}.
+   * @param actions
+   *          if actions are used instead of events in submit links. See
+   *          {@link TreeContext#isActions()}.
    */
-  public TreeWidget(TreeDataProvider dataProvider, boolean sync) {
+  public TreeWidget(TreeDataProvider dataProvider, boolean actions) {
     this(dataProvider);
-    this.sync = sync;
+    this.actions = actions;
   }
 
   protected void init() throws Exception {
@@ -82,8 +82,8 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return dataProvider;
   }
 
-  public boolean getSync() {
-    return sync;
+  public boolean isActions() {
+    return actions;
   }
 
   /**
@@ -109,9 +109,6 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     JspUtil.writeOpenStartTag(out, "ul");
     JspUtil.writeAttribute(out, "id", output.getScope());
     JspUtil.writeAttribute(out, "class", "aranea-tree");
-    if (!getTreeCtx().getSync()) {
-      JspUtil.writeAttribute(out, "arn-tree-sync", "false");
-    }
     JspUtil.writeCloseStartTag_SS(out);
   }
 
@@ -131,10 +128,10 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   public void expand() {
   }
 
-  public void collapse() {
+  public void setCollapsed() {
   }
 
-  public void invertCollapsed() {
+  public void toggleCollapsed() {
   }
 
 }

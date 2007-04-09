@@ -98,19 +98,25 @@ public class StandardContainerWidget extends BaseApplicationWidget {
       super.event(eventPath, input);
     }
   }
-    
+  
   /**
    * If <code>hasAction(input)</code> returns true, action is called on the child.
    * The action path is constructed via <code>getActionPath(input)</code>.
    */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (hasAction(input)) {
-      Path actionPath = getActionPath(input);
-      log.debug("Routing action to widget '" + actionPath.toString() + "'");
-      super.action(actionPath, input, output);
+      output.pushAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY, this);
+      try {
+        Path actionPath = getActionPath(input);
+        log.debug("Routing action to widget '" + actionPath.toString() + "'");
+        super.action(actionPath, input, output);
+      }
+      finally {
+        output.popAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
+      }
     }
   }
-    
+  
   /**
    * Extracts the path from the input and returns it. This implementation uses
    * the {@link StandardContainerWidget#EVENT_PATH_KEY} parameter in the request and expects the event path to be
