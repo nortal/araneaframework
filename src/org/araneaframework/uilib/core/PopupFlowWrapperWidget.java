@@ -120,13 +120,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
 
   protected void render(OutputData output) throws Exception {
-    output.pushScope("child");
-
-    try {
-      child._getWidget().render(output);
-    } finally {
-      output.popScope();
-    }
+    child._getWidget().render(output);
   }
   
   private FlowContext getLocalFlowContext() {

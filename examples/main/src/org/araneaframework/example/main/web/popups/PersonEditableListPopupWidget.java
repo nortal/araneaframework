@@ -179,7 +179,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		
 		public void onClick() throws Exception {
 		      // get the id of updatable formelement, tricky
-		      String widgetId = getInputData().getScope().toString();
+		      String widgetId = getScope().toString();
 		      widgetId = widgetId.substring(0, widgetId.lastIndexOf('.'));
 		      widgetId = widgetId + ".name";
 		      
@@ -204,7 +204,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		
 		public void onClick() throws Exception {
 		      // get the id of updatable formelement, tricky
-		      String widgetId = getInputData().getScope().toString();
+		      String widgetId = getScope().toString();
 		      widgetId = widgetId.substring(0, widgetId.lastIndexOf('.'));
 		      widgetId = widgetId + ".name";
 		      

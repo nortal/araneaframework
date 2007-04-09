@@ -17,8 +17,6 @@
 package org.araneaframework.jsp.tag.context;
 
 import java.io.Writer;
-import java.util.StringTokenizer;
-import org.araneaframework.OutputData;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
 
 /**
@@ -32,26 +30,12 @@ import org.araneaframework.jsp.tag.uilib.WidgetTag;
 public class WidgetContextTag extends WidgetTag {
 
   public static final String CONTEXT_WIDGET_KEY = "org.araneaframework.jsp.tag.context.WidgetContextTag.CONTEXTWIDGET";
-  private OutputData output = null;
-  
-  private int pathLength = 0;
   
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
     if (id != null) {
       addContextEntry(CONTEXT_WIDGET_KEY, widget);
-
-      output = getOutputData();
-      StringTokenizer tokenizer = new StringTokenizer(id, ".");
-
-      pathLength = tokenizer.countTokens();
-      if (pathLength == -1) pathLength = 0;
-
-      for (; tokenizer.hasMoreTokens();) {
-        String token = tokenizer.nextToken();
-        output.pushScope(token);
-      }
     }    
     
     return EVAL_BODY_INCLUDE;
@@ -59,12 +43,5 @@ public class WidgetContextTag extends WidgetTag {
   
   protected int doEndTag(Writer out) throws Exception {
     return EVAL_PAGE;
-  }
-  
-  public void doFinally() {
-    for (int i = 0; i < pathLength; i++)
-      output.popScope();
-
-    super.doFinally();
   }
 }

@@ -58,21 +58,19 @@ public class CompositeConstraintTest extends TestCase {
   
   protected InputData createRequestWithText(String text1, String text2) {
     MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-    request.addParameter("form.text1", text1);
-    request.addParameter("form.text2", text2);
+    request.addParameter("text1", text1);
+    request.addParameter("text2", text2);
     return new StandardServletInputData(request);
   }
   
   protected InputData createRequestWithNumber(String number) {
     MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-    request.addParameter("form.number", number);
+    request.addParameter("number", number);
     return new StandardServletInputData(request);
   }
   
   protected void processRequest(InputData input) {
-    input.pushScope("form");
     form._getWidget().update(input);
-    input.popScope();
   }
   
   protected void processRequireAll(String text1, String text2) {

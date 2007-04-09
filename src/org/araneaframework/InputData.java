@@ -41,34 +41,13 @@ public interface InputData extends Extendable, Narrowable {
    * The key that can be used to retrieve InputData (as an example a request scope attribute).
    */
   public static final String INPUT_DATA_KEY = "org.araneaframework.InputData";
-
-  /**
-   * Returns the current Path of this InputData.
-   * @return the Path of this InputData
-   */
-  public Path getScope();
-
-  /**
-   * Adds the step to the scope Path of this InputData.
-   * @param step is the next step on the Path
-   */
-  public void pushScope(Object step);
-
-  /**
-   * Removes the last entry from the Path of this InputData. 
-   */
-  public void popScope();
   
   /**
-   * Restores the scope to the passed one.
-   */
-  public void restoreScope(Path scope);  
-
-  /**
    * Returns the data with the Path prefix.
+   * @param scope the Path prefix
    * @return a map with the data
    */
-  public Map getScopedData();
+  public Map getScopedData(Path scope);
   
   /**
    * Returns the global data of this object. Global data is not the same

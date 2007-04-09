@@ -19,7 +19,7 @@ package org.araneaframework.tests;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
-import org.araneaframework.core.EmptyPathStackException;
+import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.util.ServletUtil;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -42,9 +42,7 @@ public class StandardServletInputDataTests extends TestCase {
   }
   
   public void testNormalGetScopedData() {
-    input.pushScope("a");
-    input.pushScope("extra");
-    assertEquals("a extra bar", input.getScopedData().get("foo"));
+    assertEquals("a extra bar", input.getScopedData(new StandardPath("a.extra")).get("foo"));
   }
   
   public void testNormalGetScopedDataMultiple() {
@@ -54,14 +52,12 @@ public class StandardServletInputDataTests extends TestCase {
     request.addParameter("a.extra.foo","a extra bar");
     request.addParameter("a.extra.foo2","a extra bar2");
 
-    input.pushScope("a");
-    input.pushScope("extra");
-    assertEquals("a extra bar2", input.getScopedData().get("foo2"));
+    assertEquals("a extra bar2", input.getScopedData(new StandardPath("a.extra")).get("foo2"));
   }
   
   //empty path has to return empty scoped data
   public void testNoScopeGetScopedData() {
-    assertEquals(0,input.getScopedData().size());
+    assertEquals(0,input.getScopedData(new StandardPath("")).size());
   }
   
   public void testWrongPathGetScopedData() {
@@ -71,8 +67,7 @@ public class StandardServletInputDataTests extends TestCase {
     request.setAttribute("a.b.c","b");
     
     input = new StandardServletInputData(request);
-    input.pushScope("a");input.pushScope("b");input.pushScope("c");input.pushScope("d");
-    assertEquals(null ,input.getScopedData().get("c"));
+    assertEquals(null ,input.getScopedData(new StandardPath("a.b.c.d")).get("c"));
   }
   
   public void testNonValidPath() {
@@ -81,7 +76,7 @@ public class StandardServletInputDataTests extends TestCase {
     request.addParameter(".","c");
     request.addParameter(".","c");
     input = new StandardServletInputData(request);
-    assertEquals(null, input.getScopedData().get("."));
+    assertEquals(null, input.getScopedData(new StandardPath("")).get("."));
   }
   
   public void testChangeGlobalData() {
@@ -97,10 +92,7 @@ public class StandardServletInputDataTests extends TestCase {
   public void testChangeScopedData() {
     try {
       //valid scope
-      input.pushScope("a");
-      input.pushScope("extra");
-      
-      input.getScopedData().put("a","b");
+      input.getScopedData(new StandardPath("a.extra")).put("a","b");
       fail("Was able to modify a unmodifiable map");
     }
     catch (UnsupportedOperationException e) {
@@ -111,11 +103,7 @@ public class StandardServletInputDataTests extends TestCase {
   public void testChangeEmptyScopedData() {
     try {
       //invalid scope
-      input.pushScope("nonexistent");
-      input.pushScope("scope");
-      input.pushScope("iam");
-      
-      input.getScopedData().put("a","b");
+      input.getScopedData(new StandardPath("nonexistent.scope.iam")).put("a","b");
       fail("Was able to modify a unmodifiable map");
     }
     catch (UnsupportedOperationException e) {
@@ -131,24 +119,5 @@ public class StandardServletInputDataTests extends TestCase {
     Map map = new HashMap();
     input.extend(Map.class, map);
     assertEquals(map, input.narrow(Map.class));
-  }
-  
-  public void testPopScopeFromEmptyScope() {
-    input = new StandardServletInputData(request);
-    try {
-      input.popScope();
-      fail();
-    }
-    catch(EmptyPathStackException e) {
-      //success
-    }
-  }
-  
-  public void testPopScope() {
-    input = new StandardServletInputData(request);
-    input.pushScope("a");
-    input.pushScope("b");
-    input.popScope();
-    assertEquals("a", input.getScope().toString());
   }
 }

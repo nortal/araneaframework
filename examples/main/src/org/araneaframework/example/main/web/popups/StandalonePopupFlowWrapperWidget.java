@@ -80,12 +80,7 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 	}
 
 	protected void render(OutputData output) throws Exception {
-		output.pushScope("widget");
-		try {
-			widget._getWidget().render(output);
-		} finally {
-			output.popScope();
-		}
+		widget._getWidget().render(output);
 	}
 
 	protected FlowContext getFlowCtx() {
