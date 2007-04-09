@@ -179,7 +179,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return (TreeContext) getEnvironment().getEntry(TreeContext.class);
   }
 
-  protected TreeNodeContext getTreeNodeCtx() {
+  protected TreeNodeContext getParentNodeCtx() {
     return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
   }
 
@@ -316,7 +316,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public int getParentCount() {
-    return getTreeNodeCtx().getParentCount() + 1;
+    return getParentNodeCtx().getParentCount() + 1;
   }
 
   public void setParentNode(TreeNodeWidget parentNode) {
@@ -449,7 +449,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     int index = Integer.parseInt(path.substring(path.lastIndexOf('.') + 1));
     String parentPath = path.substring(0, path.lastIndexOf('.'));
 
-    TreeNodeContext parent = getTreeNodeCtx();
+    TreeNodeContext parent = getParentNodeCtx();
     parent.renderDisplayPrefixRecursive(out, output, parentPath, false);
 
     renderDisplayPrefix(out, output, index, current);
