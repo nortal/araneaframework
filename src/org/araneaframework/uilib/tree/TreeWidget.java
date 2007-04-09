@@ -17,13 +17,11 @@
 package org.araneaframework.uilib.tree;
 
 import java.io.Writer;
-
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -36,6 +34,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   private boolean removeCollapsedChildren = true;
   private boolean useActions = false;
   private boolean useSynchronizedActions = true;
+  private TreeRenderer renderer;
 
   //TODO features:
   // * not-dispose-children in client side
@@ -117,18 +116,16 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return removeCollapsedChildren;
   }
 
-  public Widget getDisplay() {
-    return null;
+  public void setRenderer(TreeRenderer renderer) {
+    this.renderer = renderer;
   }
 
-  protected void renderChildrenStart(Writer out) throws Exception {
-    JspUtil.writeOpenStartTag(out, "ul");
-    JspUtil.writeAttribute(out, "id", getScope());
-    JspUtil.writeAttribute(out, "class", "aranea-tree");
-    if (!getTreeCtx().useSynchronizedActions()) {
-      JspUtil.writeAttribute(out, "arn-tree-sync", "false");
-    }
-    JspUtil.writeCloseStartTag_SS(out);
+  public TreeRenderer getRenderer() {
+    return renderer;
+  }
+
+  public Widget getDisplay() {
+    return null;
   }
 
   protected void render(OutputData output) throws Exception {

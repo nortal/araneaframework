@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.tree;
 
 import java.io.Serializable;
-import java.io.Writer;
 import java.util.List;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -115,7 +114,7 @@ public interface TreeNodeContext extends Serializable {
    * @param index
    *          index of the returned child node.
    */
-  TreeNodeWidget getNode(int index);
+  TreeNodeContext getNode(int index);
 
   /**
    * Returns all child nodes of this tree node.
@@ -130,16 +129,6 @@ public interface TreeNodeContext extends Serializable {
   boolean hasNodes();
 
   /**
-   * Renders HTML before DisplayWidget's toggle link. Calls
-   * {@link TreeNodeWidget#renderDisplayPrefixRecursive} on each TreeNodeWidget,
-   * staring from TreeWidget.
-   * 
-   * @param current
-   *          if this TreeNodeWidget's DisplayWidget is about to be rendered
-   */
-  void renderDisplayPrefixRecursive(Writer out, boolean current) throws Exception;
-
-  /**
    * Returns how many parent nodes this TreeNodeWidget has. TreeWidget (root
    * node) has zero parents, it's immediate children have one parent, etc.
    * 
@@ -150,11 +139,16 @@ public interface TreeNodeContext extends Serializable {
   /**
    * Returns parent node of this tree node or null if called on the root node.
    */
-  TreeNodeWidget getParentNode();
+  TreeNodeContext getParentNode();
 
   /**
    * Returns the index this node is under its parent.
    */
   int getIndex();
+
+  /**
+   * Returns the full id of this tree node.
+   */
+  String getFullId();
 
 }

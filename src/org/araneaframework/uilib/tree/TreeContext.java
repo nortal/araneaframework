@@ -32,6 +32,11 @@ public interface TreeContext extends Serializable {
   TreeDataProvider getDataProvider();
 
   /**
+   * Returns tree renderer.
+   */
+  TreeRenderer getRenderer();
+
+  /**
    * Returns if actions are used instead of events in submit links (e.g. toggle
    * button). Default is <code>false</code>.
    */
