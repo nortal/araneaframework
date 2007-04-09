@@ -134,12 +134,10 @@ public interface TreeNodeContext extends Serializable {
    * {@link TreeNodeWidget#renderDisplayPrefixRecursive} on each TreeNodeWidget,
    * staring from TreeWidget.
    * 
-   * @param path
-   *          full Id of this TreeNodeWidget
    * @param current
    *          if this TreeNodeWidget's DisplayWidget is about to be rendered
    */
-  void renderDisplayPrefixRecursive(Writer out, OutputData output, String path, boolean current) throws Exception;
+  void renderDisplayPrefixRecursive(Writer out, boolean current) throws Exception;
 
   /**
    * Returns how many parent nodes this TreeNodeWidget has. TreeWidget (root
