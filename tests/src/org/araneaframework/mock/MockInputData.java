@@ -16,17 +16,13 @@
 
 package org.araneaframework.mock;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.NotImplementedException;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.StandardPath;
 
 /**
  * @author toomas
@@ -34,7 +30,6 @@ import org.araneaframework.core.StandardPath;
  */
 public class MockInputData implements InputData {
   private Map data;
-  private List pathPrefix;
   
   public MockInputData(Map data) {
     this();
@@ -42,51 +37,21 @@ public class MockInputData implements InputData {
   }
   
   public MockInputData() {
-    pathPrefix = new ArrayList();
     data = new HashMap();
   }
-  
-  public Path getScope() {
-    return new StandardPath(getScopePathString());
-  }
 
-  public Map getScopedData() {
-    String path = getScopePathString();
+  public Map getScopedData(Path path) {
     /*System.out.println("getScopedData");
     System.out.println("path is "+path);
     System.out.println(data);*/
-    if (data.get(path) == null) {
+    if (data.get(path.toString()) == null) {
       //System.out.println("Returning null");
       return Collections.unmodifiableMap(new HashMap());
     } 
     else {
       //System.out.println("Returning "+data.get(path));
-      return Collections.unmodifiableMap((Map)data.get(path));
+      return Collections.unmodifiableMap((Map)data.get(path.toString()));
     }
-  }
-
-  public void pushScope(Object step) {
-    pathPrefix.add(step);
-  }
-
-  public void popScope() {
-    pathPrefix.remove(pathPrefix.size()-1);
-  }
-  
-  private String getScopePathString() {
-    StringBuffer result = new StringBuffer();
-    Iterator ite = pathPrefix.iterator();
-    while (ite.hasNext()) {
-      result.append(ite.next()+".");
-    }
-    if (result.length()>0) {
-      result = new StringBuffer(result.substring(0, result.length()-1));
-    }
-    return result.toString();
-  }
-
-  public String toString() {
-    return getScopePathString();
   }
 
   public void extend(Class interfaceClass, Object implementation) {
@@ -107,10 +72,5 @@ public class MockInputData implements InputData {
     //XXX
     throw new NotImplementedException();
 	}
-  
-  public void restoreScope(Path scope) {
-    //XXX
-    throw new NotImplementedException();
-  }
 }
 

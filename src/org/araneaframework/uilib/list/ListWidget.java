@@ -915,7 +915,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 			// multi column ordering
 			log.debug("Processing Multi Column Order");    	
-			OrderInfo orderInfo = MultiOrderHelper.getOrderInfo(getOrderInfoMap(input.getScopedData()));
+			OrderInfo orderInfo = MultiOrderHelper.getOrderInfo(getOrderInfoMap(input.getScopedData(getScope().toPath())));
 
 			log.debug("Building OrderExpression");
 			propagateListDataProviderWithOrderInfo(orderInfo);

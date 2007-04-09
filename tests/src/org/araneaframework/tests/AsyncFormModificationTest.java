@@ -103,15 +103,14 @@ public class AsyncFormModificationTest extends TestCase {
 		MockHttpServletRequest validRequest = 
 	    	RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-	    validRequest.addParameter("testForm.number", notNumber);
+	    validRequest.addParameter("number", notNumber);
 	    ((FormElement) testForm.getElement("number")).rendered();
 
-	    validRequest.addParameter("testForm.text", someText);
+	    validRequest.addParameter("text", someText);
 	    ((FormElement) testForm.getElement("text")).rendered();
 
 	    // process the request
 	    StandardServletInputData input = new StandardServletInputData(validRequest);
-	    input.pushScope("testForm");
 	    testForm._getWidget().update(input);
 	    
 	    // convert

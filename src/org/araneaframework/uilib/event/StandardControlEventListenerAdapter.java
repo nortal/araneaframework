@@ -101,8 +101,7 @@ public class StandardControlEventListenerAdapter implements EventListener {
         }
     }
     else {
-      log.warn("Widget '" + input.getScope() +
-          "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"); 
+      log.warn("Cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"); 
     }    
   }
 }

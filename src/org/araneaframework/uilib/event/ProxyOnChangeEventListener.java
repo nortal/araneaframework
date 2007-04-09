@@ -18,20 +18,22 @@ package org.araneaframework.uilib.event;
 
 import java.lang.reflect.Method;
 import org.apache.log4j.Logger;
+import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class ProxyOnChangeEventListener implements OnChangeEventListener {
-	public static final Logger log = Logger.getLogger(ProxyOnChangeEventListener.class);
-	
-	protected Object eventTarget;
-	protected String eventId;
-		
-	public ProxyOnChangeEventListener(Object eventTarget, String eventId) {
-		this.eventTarget = eventTarget;
-		this.eventId = eventId;
-	}
-
+  public static final Logger log = Logger.getLogger(ProxyOnChangeEventListener.class);
+  
+  protected Widget eventTarget;
+  protected String eventId;
+  
+  public ProxyOnChangeEventListener(Widget eventTarget, String eventId) {
+    this.eventTarget = eventTarget;
+    this.eventId = eventId;
+  }
+  
   public void onChange() throws Exception {
     String eventHandlerName = "handleEvent" + eventId.substring(0, 1).toUpperCase() + eventId.substring(1);
     
@@ -49,6 +51,8 @@ public class ProxyOnChangeEventListener implements OnChangeEventListener {
       eventHandler.invoke(eventTarget, new Object[] { null });
       return;
     } catch (NoSuchMethodException e) {/*OK*/}
-    log.warn("Was unable to deliver an event to a handler, eventId "+eventId);  
+    
+    log.warn("Widget '" + eventTarget.getScope() +
+        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget)); 
   }
 }

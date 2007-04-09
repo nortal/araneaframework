@@ -56,8 +56,6 @@ public class MockUiLibUtil {
   public static void emulateHandleRequest(Widget widget, String widgetId, HttpServletRequest request) throws Exception {
     StandardServletInputData input = new StandardServletInputData(request);
     
-    input.pushScope(widgetId);
     widget._getWidget().update(input);
-    input.popScope();
   }  
 }

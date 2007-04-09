@@ -1,5 +1,12 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2007.04.06    | Aranea 1.0.7
+
+Bugfixes
+    Cleared DateTimeControl obtaining value 'Jan 01 00:00:00 EET 1970'        | See #322
+    List Comparators missed equals() methods (problems with overlapRange())   | See #319
+    Other small fixes                                                         | See change #179
+---------------------------------------------------------------------------------------------
 2007.03.16    | Aranea 1.0.6
 
 Features and Improvements
