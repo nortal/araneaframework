@@ -185,6 +185,16 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return null;
   }
 
+  protected boolean renderToggleLink() {
+    if (getTreeCtx().getDataProvider() != null) {
+      if (isCollapsed()) {
+        return getTreeCtx().getDataProvider().hasChildren(this);
+      }
+      return true;
+    }
+    return false;
+  }
+
   public boolean isCollapsed() {
     return collapsed;
   }
@@ -353,7 +363,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     Widget display = getDisplay();
     if (display != null) {  // display is null if this is root node (TreeWidget)
       renderDisplayPrefixRecursive(out);
-      if (getTreeCtx().getDataProvider() != null && getTreeCtx().getDataProvider().hasChildren(this)) {
+      if (renderToggleLink()) {
         getTreeCtx().getRenderer().renderToggleLink(out, this);
       }
       out.flush();
