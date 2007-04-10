@@ -32,7 +32,7 @@ public class ComplexTreeWidget extends BaseUIWidget {
 
   protected void init() throws Exception {
     setViewSelector("tree/complexTree");
-    tree = new TreeWidget(null);
+    tree = new TreeWidget();
     tree.setRemoveCollapsedChildren(false);
     addWidget("tree", tree);
   }
