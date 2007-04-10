@@ -10,16 +10,12 @@
 
 		<!-- Label -->
 		<tui:componentHeader>
-			<tui:componentName>Tutorial simple tree</tui:componentName>
+			<tui:componentName>Tutorial unsynchronized tree</tui:componentName>
         </tui:componentHeader>
 
 		<tui:component>
 
-			<p>Tree with events:</p>
-			<ui:tree id="tree1"/>
-
-			<p>Tree with actions:</p>
-			<ui:tree id="tree2"/>
+			<ui:tree id="tree"/>
 
 		</tui:component>
 

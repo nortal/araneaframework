@@ -10,16 +10,14 @@
 
 		<!-- Label -->
 		<tui:componentHeader>
-			<tui:componentName>Tutorial simple tree</tui:componentName>
+			<tui:componentName>Tutorial complex tree</tui:componentName>
         </tui:componentHeader>
 
 		<tui:component>
 
-			<p>Tree with events:</p>
-			<ui:tree id="tree1"/>
+			<ui:tree id="tree"/>
 
-			<p>Tree with actions:</p>
-			<ui:tree id="tree2"/>
+			<p><ui:eventLinkButton eventId="addNode" labelId="#Add a top-level node to tree"/></p>
 
 		</tui:component>
 

@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.tree;
 
 import java.io.Serializable;
-import java.io.Writer;
 import java.util.List;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -36,25 +35,18 @@ public interface TreeNodeContext extends Serializable {
   boolean isCollapsed();
 
   /**
-   * Sets collapsed state of tree node to <code>false</code>, thus showing
-   * child nodes. This may trigger retrieval of child nodes using
-   * {@link TreeDataProvider} if {@link TreeContext#disposeChildren()} is
-   * <code>true</code>.
+   * Sets collapsed state of tree node. If <code>true</code>, child nodes are
+   * hidden, otherwise child nodes are shown. This may trigger removal or
+   * retrieval of child nodes using {@link TreeDataProvider} if
+   * {@link TreeContext#removeCollapsedChildren()} is <code>true</code>.
    */
-  void expand();
-
-  /**
-   * Sets collapsed state of tree node to <code>true</code>, thus hiding
-   * child nodes. This may trigger removal of child nodes if
-   * {@link TreeContext#disposeChildren()} is <code>true</code>.
-   */
-  void collapse();
+  void setCollapsed(boolean collapsed);
 
   /**
    * Inverts collapsed state of tree node, collapsing expanded node and vice
    * versa.
    */
-  void invertCollapsed();
+  void toggleCollapsed();
 
   /**
    * Renders tree node and all of its children to specified {@link OutputData}.
@@ -122,7 +114,7 @@ public interface TreeNodeContext extends Serializable {
    * @param index
    *          index of the returned child node.
    */
-  TreeNodeWidget getNode(int index);
+  TreeNodeContext getNode(int index);
 
   /**
    * Returns all child nodes of this tree node.
@@ -137,21 +129,26 @@ public interface TreeNodeContext extends Serializable {
   boolean hasNodes();
 
   /**
-   * Renders HTML before DisplayWidget's toggle link. Calls
-   * {@link TreeNodeWidget#renderDisplayPrefixRecursive} on each TreeNodeWidget,
-   * staring from TreeWidget.
-   * 
-   * @param current
-   *          if this TreeNodeWidget's DisplayWidget is about to be rendered
-   */
-  void renderDisplayPrefixRecursive(Writer out, boolean current) throws Exception;
-
-  /**
    * Returns how many parent nodes this TreeNodeWidget has. TreeWidget (root
    * node) has zero parents, it's immediate children have one parent, etc.
    * 
    * @return number of parents in hierarchy.
    */
   int getParentCount();
+
+  /**
+   * Returns parent node of this tree node or null if called on the root node.
+   */
+  TreeNodeContext getParentNode();
+
+  /**
+   * Returns the index this node is under its parent.
+   */
+  int getIndex();
+
+  /**
+   * Returns the full id of this tree node.
+   */
+  String getFullId();
 
 }

@@ -17,13 +17,12 @@
 package org.araneaframework.uilib.tree;
 
 import java.io.Writer;
-
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -33,40 +32,34 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   private static final long serialVersionUID = 1L;
 
   private TreeDataProvider dataProvider;
-  private boolean disposeChildren = true;
-  private boolean sync = true;
+  private boolean removeCollapsedChildren = true;
+  private boolean useActions = false;
+  private boolean useSynchronizedActions = true;
+  private TreeRenderer renderer;
 
   //TODO features:
-  // * disable use of action calls (AJAX)
-  // * not show collapse/expand by TreeNodeWidgets
   // * not-dispose-children in client side
   // * some nodes not collapsable
   // * disable concrete tree node toggling client-side when request has been
   //   submitted - response not yet arrived and processed
+  // * make sure that all methods can be called before init
 
   /**
    * Creates a new {@link TreeWidget} instance.
-   * 
-   * @param dataProvider
-   *          tree data provider. Can be <code>null</code>, then nodes are
-   *          not self-openable (plus sign is not shown in front of every node).
    */
-  public TreeWidget(TreeDataProvider dataProvider) {
-    this.dataProvider = dataProvider;
+  public TreeWidget() {
   }
 
   /**
-   * Creates a new {@link TreeWidget} instance.
+   * Creates a new {@link TreeWidget} instance with a data provider. Tree nodes
+   * are self-openable (plus sign is shown in front of every node).
    * 
    * @param dataProvider
    *          tree data provider.
-   * @param sync
-   *          if AJAX requests to tree widget are synchronized. See
-   *          {@link TreeContext#getSync()}.
    */
-  public TreeWidget(TreeDataProvider dataProvider, boolean sync) {
-    this(dataProvider);
-    this.sync = sync;
+  public TreeWidget(TreeDataProvider dataProvider) {
+    Assert.notNullParam(dataProvider, "dataProvider");
+    this.dataProvider = dataProvider;
   }
 
   protected void init() throws Exception {
@@ -81,34 +74,50 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return dataProvider;
   }
 
-  public boolean getSync() {
-    return sync;
+  /**
+   * Set if actions are used instead of events in submit links. See
+   * {@link TreeContext#useActions()}.
+   */
+  public void setUseActions(boolean useActions) {
+    this.useActions = useActions;
   }
 
-  public boolean disposeChildren() {
-    return disposeChildren;
+  public boolean useActions() {
+    return useActions;
   }
 
-  public Widget getDisplay() {
-    return null;
+  /**
+   * Set if AJAX requests to tree widget are synchronized. See
+   * {@link TreeContext#useSynchronizedActions()}.
+   */
+  public void setUseSynchronizedActions(boolean useSynchronizedActions) {
+    this.useSynchronizedActions = useSynchronizedActions;
   }
 
-  public int getParentCount() {
-    return 0;
+  public boolean useSynchronizedActions() {
+    return useSynchronizedActions;
   }
 
-  protected void renderChildrenStart(Writer out) throws Exception {
-    JspUtil.writeOpenStartTag(out, "ul");
-    JspUtil.writeAttribute(out, "id", getScope());
-    JspUtil.writeAttribute(out, "class", "aranea-tree");
-    if (!getTreeCtx().getSync()) {
-      JspUtil.writeAttribute(out, "arn-tree-sync", "false");
-    }
-    JspUtil.writeCloseStartTag_SS(out);
+  /**
+   * Set if child nodes are removed and discarded when a node is closed.
+   */
+  public void setRemoveCollapsedChildren(boolean removeCollapsedChildren) {
+    this.removeCollapsedChildren = removeCollapsedChildren;
   }
 
-  public void renderDisplayPrefixRecursive(Writer out, boolean current) throws Exception {
-    renderDisplayPrefix(out, 0, current);
+  public boolean removeCollapsedChildren() {
+    return removeCollapsedChildren;
+  }
+
+  /**
+   * Set tree renderer.
+   */
+  public void setRenderer(TreeRenderer renderer) {
+    this.renderer = renderer;
+  }
+
+  public TreeRenderer getRenderer() {
+    return renderer;
   }
 
   protected void render(OutputData output) throws Exception {
@@ -120,13 +129,14 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // The following methods do nothing, because the root node of the tree has no
   // display widget and therefore is always expanded.
 
-  public void expand() {
+  public Widget getDisplay() {
+    return null;
   }
 
-  public void collapse() {
+  public void setCollapsed(boolean collapsed) {
   }
 
-  public void invertCollapsed() {
+  public void toggleCollapsed() {
   }
 
 }

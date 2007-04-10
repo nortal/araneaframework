@@ -5,24 +5,7 @@
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
-
 	<ui:widgetContext>
-
-		<!-- Label -->
-		<tui:componentHeader>
-			<tui:componentName>Tutorial simple tree</tui:componentName>
-        </tui:componentHeader>
-
-		<tui:component>
-
-			<p>Tree with events:</p>
-			<ui:tree id="tree1"/>
-
-			<p>Tree with actions:</p>
-			<ui:tree id="tree2"/>
-
-		</tui:component>
-
+		I'm a second level node. <ui:eventLinkButton eventId="invertCollapsed" labelId="#Toggle"/> my collapsed state.
 	</ui:widgetContext>
-
 </jsp:root>

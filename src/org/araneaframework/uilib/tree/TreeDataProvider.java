@@ -34,6 +34,15 @@ public interface TreeDataProvider extends Serializable {
    *          ({@link TreeWidget}) has no display widget.
    * @return list of {@link TreeNodeWidget}s.
    */
-  List getChildren(TreeNodeWidget parent);
+  List getChildren(TreeNodeContext parent);
+
+  /**
+   * Returns if the specified tree node has any children.
+   * 
+   * @param parent
+   *          tree node which will be checked for existence of child nodes.
+   * @return if the specified tree node has any children.
+   */
+  boolean hasChildren(TreeNodeContext parent);
 
 }

@@ -18,10 +18,6 @@ package org.araneaframework.example.main.web.tree;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
-import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
-import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
 import org.araneaframework.uilib.tree.TreeNodeContext;
@@ -29,72 +25,48 @@ import org.araneaframework.uilib.tree.TreeNodeWidget;
 import org.araneaframework.uilib.tree.TreeWidget;
 
 /**
- * Widget that shows a simple tree. Each node has five child nodes (tree is
- * infinite). Child nodes are disposed when parent node is collapsed.
+ * Widget that shows two simple trees. One tree uses events for submit links and
+ * the other uses actions (in that case only the current tree node and its
+ * children are rendered). Each node has five child nodes (tree is infinite).
+ * Child nodes are disposed when parent node is collapsed.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public class SimpleTreeWidget extends BaseUIWidget {
 
-	private static final Logger log = Logger.getLogger(SimpleTreeWidget.class);
+  protected void init() throws Exception {
+    setViewSelector("tree/simpleTree");
 
-	private TreeWidget tree;
+    TreeWidget tree1 = new TreeWidget(new SimpleTreeDataProvider());
+    addWidget("tree1", tree1);
 
-	protected void init() throws Exception {
-		setViewSelector("tree/simpleTree");
-		tree = new TreeWidget(new SimpleTreeDataProvider(), false);
-		addWidget("tree", tree);
-	}
+    TreeWidget tree2 = new TreeWidget(new SimpleTreeDataProvider());
+    tree2.setUseActions(true);
+    addWidget("tree2", tree2);
+  }
 
-	public static class SimpleTreeDataProvider implements TreeDataProvider {
+  public static class SimpleTreeDataProvider implements TreeDataProvider {
 
-		public List getChildren(TreeNodeWidget parent) {
-			List children = new ArrayList();
-			for (int i = 0; i < 5; i++) {
-				children.add(new TreeNodeWidget(new SimpleTreeNodeWidget()));
-			}
-			return children;
-		}
-
-	}
-
-	public static class SimpleTreeNodeWidget extends BaseUIWidget {
-
-    private int counter;
-
-		protected void init() throws Exception {
-			setViewSelector("tree/simpleTreeNode");
-      putViewData("counter", new Integer(counter));
-
-      addActionListener("test", new StandardActionListener() {
-
-        public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
-          log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
-          putViewData("counter", new Integer(++counter));
-          getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
-				}
-
-      });
-
-      addActionListener("sleep", new StandardActionListener() {
-
-        public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
-          log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
-          Thread.sleep(10000);
-          getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
-        }
-
-      });
+    public List getChildren(TreeNodeContext parent) {
+      List children = new ArrayList();
+      for (int i = 0; i < 5; i++) {
+        children.add(new TreeNodeWidget(new SimpleTreeDisplayWidget()));
+      }
+      return children;
     }
 
-		protected TreeNodeContext getTreeNodeCtx() {
-			return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
-		}
+    public boolean hasChildren(TreeNodeContext parent) {
+      return true;
+    }
 
-		public void handleEventInvertCollapsed() throws Exception {
-			getTreeNodeCtx().invertCollapsed();
-		}
+  }
 
-	}
+  public static class SimpleTreeDisplayWidget extends BaseUIWidget {
+
+    protected void init() throws Exception {
+      setViewSelector("tree/simpleTreeDisplay");
+    }
+
+  }
 
 }

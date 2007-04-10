@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.router;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -111,7 +112,7 @@ public class StandardHttpSessionRouterService extends BaseService {
   protected void doAction(Path path, InputData input, OutputData output, HttpSession sess) throws Exception {
     /*
      * Both "synchronized" and "unsynchronized" requests use the session object
-     * to synchronize critical sections dealing with locking in doActionmethod.
+     * to synchronize critical sections dealing with locking in this method.
      */
     synchronized (sess) {
       ReadWriteLock lock = (ReadWriteLock) locks.get(sess);
@@ -167,7 +168,7 @@ public class StandardHttpSessionRouterService extends BaseService {
   private synchronized Object getOrCreateSessionSyncObject(HttpSession sess) {
     Object syncObject = sess.getAttribute(SESSION_SYNC_OBJECT_KEY);
     if (syncObject == null) {
-      syncObject = new Object();
+      syncObject = new Serializable() {};
       sess.setAttribute(SESSION_SYNC_OBJECT_KEY, syncObject);
     }
     return syncObject;

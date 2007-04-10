@@ -5,24 +5,7 @@
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
-
 	<ui:widgetContext>
-
-		<!-- Label -->
-		<tui:componentHeader>
-			<tui:componentName>Tutorial simple tree</tui:componentName>
-        </tui:componentHeader>
-
-		<tui:component>
-
-			<p>Tree with events:</p>
-			<ui:tree id="tree1"/>
-
-			<p>Tree with actions:</p>
-			<ui:tree id="tree2"/>
-
-		</tui:component>
-
+		You can add some <ui:eventLinkButton eventId="addChildren" labelId="#children"/> or <ui:eventLinkButton eventId="delete" labelId="#delete"/> this node entirely.
 	</ui:widgetContext>
-
 </jsp:root>
