@@ -20,6 +20,7 @@ import java.io.Writer;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.HttpOutputData;
 
@@ -45,44 +46,20 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
   /**
    * Creates a new {@link TreeWidget} instance.
+   */
+  public TreeWidget() {
+  }
+
+  /**
+   * Creates a new {@link TreeWidget} instance with a data provider. Tree nodes
+   * are self-openable (plus sign is shown in front of every node).
    * 
    * @param dataProvider
-   *          tree data provider. Can be <code>null</code>, then nodes are
-   *          not self-openable (plus sign is not shown in front of every node).
+   *          tree data provider.
    */
   public TreeWidget(TreeDataProvider dataProvider) {
+    Assert.notNullParam(dataProvider, "dataProvider");
     this.dataProvider = dataProvider;
-  }
-
-  /**
-   * Creates a new {@link TreeWidget} instance.
-   * 
-   * @param dataProvider
-   *          tree data provider.
-   * @param useActions
-   *          if actions are used instead of events in submit links. See
-   *          {@link TreeContext#useActions()}.
-   */
-  public TreeWidget(TreeDataProvider dataProvider, boolean useActions) {
-    this(dataProvider);
-    this.useActions = useActions;
-  }
-
-  /**
-   * Creates a new {@link TreeWidget} instance.
-   * 
-   * @param dataProvider
-   *          tree data provider.
-   * @param useActions
-   *          if actions are used instead of events in submit links. See
-   *          {@link TreeContext#useActions()}.
-   * @param useSynchronizedActions
-   *          if AJAX requests to tree widget are synchronized. See
-   *          {@link TreeContext#useSynchronizedActions()}.
-   */
-  public TreeWidget(TreeDataProvider dataProvider, boolean useActions, boolean useSynchronizedActions) {
-    this(dataProvider, useActions);
-    this.useSynchronizedActions = useSynchronizedActions;
   }
 
   protected void init() throws Exception {
@@ -97,8 +74,24 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return dataProvider;
   }
 
+  /**
+   * Set if actions are used instead of events in submit links. See
+   * {@link TreeContext#useActions()}.
+   */
+  public void setUseActions(boolean useActions) {
+    this.useActions = useActions;
+  }
+
   public boolean useActions() {
     return useActions;
+  }
+
+  /**
+   * Set if AJAX requests to tree widget are synchronized. See
+   * {@link TreeContext#useSynchronizedActions()}.
+   */
+  public void setUseSynchronizedActions(boolean useSynchronizedActions) {
+    this.useSynchronizedActions = useSynchronizedActions;
   }
 
   public boolean useSynchronizedActions() {
@@ -116,16 +109,15 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return removeCollapsedChildren;
   }
 
+  /**
+   * Set tree renderer.
+   */
   public void setRenderer(TreeRenderer renderer) {
     this.renderer = renderer;
   }
 
   public TreeRenderer getRenderer() {
     return renderer;
-  }
-
-  public Widget getDisplay() {
-    return null;
   }
 
   protected void render(OutputData output) throws Exception {
@@ -136,6 +128,10 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
   // The following methods do nothing, because the root node of the tree has no
   // display widget and therefore is always expanded.
+
+  public Widget getDisplay() {
+    return null;
+  }
 
   public void setCollapsed(boolean collapsed) {
   }

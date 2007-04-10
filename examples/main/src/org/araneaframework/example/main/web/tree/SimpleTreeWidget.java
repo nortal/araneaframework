@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
+import org.araneaframework.uilib.tree.TreeNodeContext;
 import org.araneaframework.uilib.tree.TreeNodeWidget;
 import org.araneaframework.uilib.tree.TreeWidget;
 
@@ -35,13 +36,18 @@ public class SimpleTreeWidget extends BaseUIWidget {
 
   protected void init() throws Exception {
     setViewSelector("tree/simpleTree");
-    addWidget("tree1", new TreeWidget(new SimpleTreeDataProvider()));
-    addWidget("tree2", new TreeWidget(new SimpleTreeDataProvider(), true));
+
+    TreeWidget tree1 = new TreeWidget(new SimpleTreeDataProvider());
+    addWidget("tree1", tree1);
+
+    TreeWidget tree2 = new TreeWidget(new SimpleTreeDataProvider());
+    tree2.setUseActions(true);
+    addWidget("tree2", tree2);
   }
 
   public static class SimpleTreeDataProvider implements TreeDataProvider {
 
-    public List getChildren(TreeNodeWidget parent) {
+    public List getChildren(TreeNodeContext parent) {
       List children = new ArrayList();
       for (int i = 0; i < 5; i++) {
         children.add(new TreeNodeWidget(new SimpleTreeDisplayWidget()));
@@ -49,7 +55,7 @@ public class SimpleTreeWidget extends BaseUIWidget {
       return children;
     }
 
-    public boolean hasChildren(TreeNodeWidget parent) {
+    public boolean hasChildren(TreeNodeContext parent) {
       return true;
     }
 

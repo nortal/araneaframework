@@ -43,13 +43,15 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
   protected void init() throws Exception {
     setViewSelector("tree/unsynchronizedTree");
-    tree = new TreeWidget(new UnsynchronizedTreeDataProvider(), true, false);
+    tree = new TreeWidget(new UnsynchronizedTreeDataProvider());
+    tree.setUseActions(true);
+    tree.setUseSynchronizedActions(false);
     addWidget("tree", tree);
   }
 
   public static class UnsynchronizedTreeDataProvider implements TreeDataProvider {
 
-    public List getChildren(TreeNodeWidget parent) {
+    public List getChildren(TreeNodeContext parent) {
       List children = new ArrayList();
       for (int i = 0; i < 5; i++) {
         children.add(new TreeNodeWidget(new UnsynchronizedTreeDisplayWidget()));
@@ -57,7 +59,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
       return children;
     }
 
-    public boolean hasChildren(TreeNodeWidget parent) {
+    public boolean hasChildren(TreeNodeContext parent) {
       return parent.getParentCount() < 5;
     }
 
