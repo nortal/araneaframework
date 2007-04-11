@@ -17,14 +17,13 @@
 package org.araneaframework.jsp.tag.aranea;
 
 import java.io.Writer;
-import java.util.Enumeration;
-import java.util.ResourceBundle;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.araneaframework.OutputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.filter.StandardJspFilterService;
+import org.araneaframework.http.util.StringAdapterResourceBundle;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
@@ -60,25 +59,5 @@ public class AraneaRootTag extends BaseTag {
         );
     
     return EVAL_BODY_INCLUDE;
-  }
-}
-
-/**
- * Adapter resource bundle that converts all objects to string.
- */
-class StringAdapterResourceBundle extends ResourceBundle {
-  ResourceBundle bundle;
-  
-  StringAdapterResourceBundle(ResourceBundle bundle) {
-    this.bundle = bundle;
-  }
-  
-  protected Object handleGetObject(String key) {
-    Object object = bundle.getObject(key);
-    return (object != null) ? object.toString() : null;
-  } 
-  
-  public Enumeration getKeys() {
-    return bundle.getKeys();
   }
 }
