@@ -16,16 +16,29 @@
 
 package org.araneaframework.http.util;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.jstl.core.Config;
+import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.apache.log4j.Logger;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.framework.ViewPortContext;
+import org.araneaframework.framework.container.StandardContainerWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.filter.StandardJspFilterService;
+import org.araneaframework.jsp.container.UiAraneaWidgetContainer;
+import org.araneaframework.jsp.container.UiWidgetContainer;
+import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
+import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 
 /**
  * Utility methods for Aranea framework running inside a servlet container. Includes
@@ -48,12 +61,66 @@ public abstract class ServletUtil {
     if (log.isDebugEnabled())
       log.debug("Including a resource from the absolute path '" + filePath + "'");
     
-    ServletContext servletContext = 
-      (ServletContext) env.getEntry(ServletContext.class);
-    servletContext.getRequestDispatcher(filePath).include(
-        getRequest(output.getInputData()), getResponse(output));
+    Map attributeBackupMap = new HashMap();
+    HttpServletRequest req = getRequest(output.getInputData());
+    
+    /* AraneaRootTag */
+    StandardJspFilterService.JspConfiguration config = 
+      (StandardJspFilterService.JspConfiguration) output.getAttribute(JspContext.JSP_CONFIGURATION_KEY);
+    if (req.getAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".request") == null) {
+      setAttribute(req, attributeBackupMap,
+          Config.FMT_LOCALIZATION_CONTEXT + ".request",
+          new LocalizationContext(
+            new StringAdapterResourceBundle(config.getCurrentBundle()),
+            config.getCurrentLocale()
+          )
+      );
+    }
+    if (req.getAttribute(AraneaRootTag.OUTPUT_DATA_KEY) == null) {
+      setAttribute(req, attributeBackupMap, AraneaRootTag.OUTPUT_DATA_KEY, output);
+    }
+    
+    /* AraneaViewPortTag */
+    if (req.getAttribute(UiWidgetContainer.KEY) == null) {
+      StandardContainerWidget rootWidget = (StandardContainerWidget) output.getAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
+      setAttribute(req, attributeBackupMap, UiWidgetContainer.KEY, new UiAraneaWidgetContainer(rootWidget, config));
+    }
+    
+    /* AraneaSystemFormHtmlTag */
+    if (req.getAttribute(BaseSystemFormHtmlTag.ID_KEY) == null || req.getAttribute(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY) == null) {
+      Object systemFormId = output.getInputData().getGlobalData().get(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY);
+      if (systemFormId != null) {
+          setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.ID_KEY, systemFormId);
+          setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);
+      }
+    }
+    
+    ServletContext servletContext = (ServletContext) env.getEntry(ServletContext.class);
+    servletContext.getRequestDispatcher(filePath).include(req, getResponse(output));
+    
+    restoreAttributes(req, attributeBackupMap);
   }
-
+  
+  private static void setAttribute(HttpServletRequest req, Map attributeBackupMap, String name, Object value) {
+    attributeBackupMap.put(name, req.getAttribute(name));
+    if (value != null) {
+      req.setAttribute(name, value);
+    } else {
+      req.removeAttribute(name);
+    }
+  }
+  
+  private static void restoreAttributes(HttpServletRequest req, Map attributeBackupMap) {
+    for (Iterator i = attributeBackupMap.entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      if (entry.getValue() != null) {
+        req.setAttribute((String) entry.getKey(), entry.getValue());
+      } else {
+        req.removeAttribute((String) entry.getKey());
+      }
+    }
+  }
+  
   /**
   * Includes the jsp specified by file using the the request and response streams
   * of the output. The pathname specified may be relative, although it cannot extend
