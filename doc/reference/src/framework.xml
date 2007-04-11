@@ -343,13 +343,13 @@ class MyServlet extends BaseAraneaDispatcherServlet {
   <sect1 id="framework-configuration">
     <title>Framework Configuration</title>
 
-    <para>Aranea framework is assembled into a mostly-flat hirarchy using
+    <para>Aranea framework is assembled into a mostly-flat hierarchy using
     Spring beans. The default Aranea configuration is loaded by the
     <literal>AraneaSpringDispatcherServlet</literal>, but it can be overriden
     with the custom configuration in <literal>aranea-conf.xml</literal>. The
     dispatcher servlet loads the configuration in such a way that same named
     beans in <literal>aranea-conf.xml</literal> override the ones specified in
-    the default configuration. However not all beans can be safely or
+    the default configuration. However, not all beans can be safely or
     comfortably overriden, since many of them will also refer to their child
     beans.</para>
 

@@ -116,7 +116,7 @@ public class NumberControl extends EmptyStringNullableControl {
     catch (NumberFormatException e) {
       addError(
           MessageUtil.localizeAndFormat(
-          UiLibMessages.NOT_A_NUMBER, 
+          UiLibMessages.NOT_INTEGER, 
           MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));             
     }
