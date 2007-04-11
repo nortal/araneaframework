@@ -16,10 +16,10 @@
 		<tui:component>
 
 			<p>Tree with events:</p>
-			<ui:widgetInclude id="tree1"/>
+			<ui:tree id="tree1"/>
 
 			<p>Tree with actions:</p>
-			<ui:widgetInclude id="tree2"/>
+			<ui:tree id="tree2"/>
 
 		</tui:component>
 

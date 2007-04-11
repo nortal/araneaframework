@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -32,9 +33,6 @@ import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.jsp.UiEvent;
-import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -131,7 +129,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     Assert.notNull(parentNode, "parentNode must be set");
     Assert.isTrue(index > -1, "index must be set");
 
-    addWidget(DISPLAY_KEY, initDisplay);
+    addWidget(DISPLAY_KEY, initDisplay, getDisplayWidgetEnvironment());
     initDisplay = null;
 
     if (initNodes != null) {
@@ -140,10 +138,10 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
 
     if (collapsedDecide) {
-      collapsed = getTreeCtx().isDisposeChildren();
+      collapsed = getTreeCtx().removeCollapsedChildren();
     }
 
-    if (getTreeCtx().isActions()) {
+    if (getTreeCtx().useActions()) {
       addActionListener(TOGGLE_KEY, new ToggleActionListener());
     } else {
       addEventListener(TOGGLE_KEY, new ToggleEventListener());
@@ -171,16 +169,12 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   }
 
-  protected Environment getChildWidgetEnvironment() {
+  protected Environment getDisplayWidgetEnvironment() throws Exception {
     return new StandardEnvironment(getEnvironment(), TreeNodeContext.class, this);
   }
 
   protected TreeContext getTreeCtx() {
     return (TreeContext) getEnvironment().getEntry(TreeContext.class);
-  }
-
-  protected TreeNodeContext getParentNodeCtx() {
-    return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
   }
 
   // returns List<TreeNodeWidget>
@@ -191,13 +185,23 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return null;
   }
 
+  protected boolean renderToggleLink() {
+    if (getTreeCtx().getDataProvider() != null) {
+      if (isCollapsed()) {
+        return getTreeCtx().getDataProvider().hasChildren(this);
+      }
+      return true;
+    }
+    return false;
+  }
+
   public boolean isCollapsed() {
     return collapsed;
   }
 
   public void setCollapsed(boolean collapsed) {
     this.collapsed = collapsed;
-    if (getTreeCtx().isDisposeChildren()) {
+    if (getTreeCtx().removeCollapsedChildren()) {
       if (collapsed) {
         removeAllNodes();
       } else {
@@ -290,7 +294,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return getWidget(DISPLAY_KEY);
   }
 
-  public TreeNodeWidget getNode(int nodeIndex) {
+  public TreeNodeContext getNode(int nodeIndex) {
     Assert.isTrue(nodeIndex >= 0 && nodeIndex < getNodeCount(), "nodeIndex out of bounds");
     return getNodeWrapper(nodeIndex).getNode();
   }
@@ -316,14 +320,18 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public int getParentCount() {
-    return getParentNodeCtx().getParentCount() + 1;
+    TreeNodeContext parent = getParentNode();
+    if (parent != null) {
+      return parent.getParentCount() + 1;
+    }
+    return 0;
   }
 
   public void setParentNode(TreeNodeWidget parentNode) {
     this.parentNode = parentNode;
   }
 
-  public TreeNodeWidget getParentNode() {
+  public TreeNodeContext getParentNode() {
     return parentNode;
   }
 
@@ -349,14 +357,17 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   //*******************************************************************  
 
   protected void render(OutputData output) throws Exception {
+    Assert.notNull(getTreeCtx().getRenderer(), "renderer must be set");
     Writer out = ((HttpOutputData) output).getWriter();
+    String nodeFullId = output.getScope().toString();
 
     // Render display widget
     Widget display = getDisplay();
     if (display != null) {  // display is null if this is root node (TreeWidget)
-      renderDisplayPrefixRecursive(out, output, output.getScope().toString(), true);
-      if (getTreeCtx().getDataProvider() != null && getTreeCtx().getDataProvider().hasChildren(this)) {
-        renderToggleLink(out, output);
+      //renderDisplayPrefixRecursive(out, output, output.getScope().toString(), true);
+      renderDisplayPrefixRecursive(out);
+      if (renderToggleLink()) {
+        getTreeCtx().getRenderer().renderToggleLink(out, this, nodeFullId);
       }
       try {
         output.pushScope(TreeNodeWidget.DISPLAY_KEY);
@@ -369,102 +380,46 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
     // Render child nodes
     if (display == null || (!isCollapsed() && hasNodes())) {
-      renderChildrenStart(out, output);
+      if (display == null) {
+        getTreeCtx().getRenderer().renderTreeStart(out, this, nodeFullId);
+      } else {
+        getTreeCtx().getRenderer().renderChildrenStart(out, this, nodeFullId);
+      }
       if (!isCollapsed() && hasNodes()) {
         for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
           ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
           try {
             output.pushScope(nodeWrapper.getWidgetId());
             TreeNodeWidget node = nodeWrapper.getNode();
-            renderChildStart(out, output, node);
+            String childNodeFullId = output.getScope().toString();
+            getTreeCtx().getRenderer().renderChildStart(out, this, nodeFullId, node, childNodeFullId);
             out.flush();
             node.render(output);
-            renderChildEnd(out, output, node);
+            getTreeCtx().getRenderer().renderChildEnd(out, this, nodeFullId, node, childNodeFullId);
           } finally {
             output.popScope();
           }
         }
       }
-      renderChildrenEnd(out, output);
+      if (display == null) {
+        getTreeCtx().getRenderer().renderTreeEnd(out, this, nodeFullId);
+      } else {
+        getTreeCtx().getRenderer().renderChildrenEnd(out, this, nodeFullId);
+      }
     }
   }
 
-  /**
-   * Renders toggle link after {@link #renderDisplayPrefix} and before
-   * DisplayWidget. Called only if TreeDataProvider exists.
-   */
-  protected void renderToggleLink(Writer out, OutputData output) throws Exception {
-    JspUtil.writeOpenStartTag(out, "a");
-    JspUtil.writeAttribute(out, "href", "#");
-    if (getTreeCtx().isActions()) {
-      JspUtil.writeAttribute(out, "onclick", "return AraneaTree.toggleNode(this);");
-    } else {
-      UiEvent event = new UiEvent("toggle", output.getScope().toString(), null);
-      JspUtil.writeEventAttributes(out, event);
-      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+  protected void renderDisplayPrefixRecursive(Writer out) throws Exception {
+    LinkedList parents = new LinkedList();
+    TreeNodeContext parent = getParentNode();
+    while (parent != null) {
+      parents.addFirst(parent);
+      parent = parent.getParentNode();
     }
-    JspUtil.writeCloseStartTag_SS(out);
-    out.write(isCollapsed() ? "+" : "-");
-    JspUtil.writeEndTag_SS(out, "a");
-  }
-
-  /**
-   * Renders HTML after DisplayWidget and before child nodes. Called only if
-   * there are child nodes and they are not collapsed.
-   */
-  protected void renderChildrenStart(Writer out, OutputData output) throws Exception {
-    JspUtil.writeStartTag(out, "ul");
-  }
-
-  /**
-   * Renders HTML after all child nodes have been rendered. Called only if
-   * there are child nodes and they are not collapsed.
-   */
-  protected void renderChildrenEnd(Writer out, OutputData output) throws Exception {
-    JspUtil.writeEndTag(out, "ul");
-  }
-
-  /**
-   * Renders HTML immediately before each child node.
-   * @param node Child node that is about to be rendered
-   */
-  protected void renderChildStart(Writer out, OutputData output, TreeNodeWidget node) throws Exception {
-    JspUtil.writeOpenStartTag(out, "li");
-    JspUtil.writeAttribute(out, "id", output.getScope());
-    JspUtil.writeAttribute(out, "class", "aranea-tree-node");
-    JspUtil.writeCloseStartTag(out);
-  }
-
-  /**
-   * Renders HTML immediately after each child node.
-   * 
-   * @param node
-   *          child node that was just rendered
-   */
-  protected void renderChildEnd(Writer out, OutputData output, TreeNodeWidget node) throws Exception {
-    JspUtil.writeEndTag(out, "li");
-  }
-
-  public void renderDisplayPrefixRecursive(Writer out, OutputData output, String path, boolean current) throws Exception {
-    int index = Integer.parseInt(path.substring(path.lastIndexOf('.') + 1));
-    String parentPath = path.substring(0, path.lastIndexOf('.'));
-
-    TreeNodeContext parent = getParentNodeCtx();
-    parent.renderDisplayPrefixRecursive(out, output, parentPath, false);
-
-    renderDisplayPrefix(out, output, index, current);
-  }
-
-  /**
-   * Renders HTML before DisplayWidget's toggle link. Called for each
-   * TreeNodeWidget, staring from TreeWidget. Usually overridden.
-   * 
-   * @param index
-   *          this TreeNodeWidget's index as parent's child
-   * @param current
-   *          if this TreeNodeWidget's DisplayWidget is about to be rendered
-   */
-  protected void renderDisplayPrefix(Writer out, OutputData output, int index, boolean current) throws Exception {
+    for (Iterator i = parents.iterator(); i.hasNext(); ) {
+      getTreeCtx().getRenderer().renderDisplayPrefix(out, (TreeNodeContext) i.next(), false);
+    }
+    getTreeCtx().getRenderer().renderDisplayPrefix(out, this, true);
   }
 
 }
