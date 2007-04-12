@@ -24,6 +24,7 @@
 			traditional in GUIs, as an expandable tree. <emphasis>TreeWidget</emphasis> represents trees' root node, which is special 
 			in that it is not really rendered on-screen but serves as point where child nodes are attached. Child nodes of <emphasis>TreeWidget</emphasis>
 			are either attached by the programmer or acquired from associated <emphasis>TreeDataProvider</emphasis>.
+			The <emphasis>TreeWidget</emphasis> supports expanding and collapsing of all those nodes.
            </para>
            
            <para>
