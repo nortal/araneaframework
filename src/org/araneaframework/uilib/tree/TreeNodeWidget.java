@@ -138,7 +138,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
 
     if (collapsedDecide) {
-      collapsed = getTreeCtx().isRemoveCollapsedChildren();
+      collapsed = getTreeCtx().isRemoveChildrenOnCollapse();
     }
 
     if (getTreeCtx().useActions()) {
@@ -201,7 +201,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   public void setCollapsed(boolean collapsed) {
     this.collapsed = collapsed;
-    if (getTreeCtx().isRemoveCollapsedChildren()) {
+    if (getTreeCtx().isRemoveChildrenOnCollapse()) {
       if (collapsed) {
         removeAllNodes();
       } else {

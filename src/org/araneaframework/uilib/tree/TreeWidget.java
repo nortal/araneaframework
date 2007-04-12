@@ -32,7 +32,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   private static final long serialVersionUID = 1L;
 
   private TreeDataProvider dataProvider;
-  private boolean removeCollapsedChildren = true;
+  private boolean removeChildrenOnCollapse = true;
   private boolean useActions = false;
   private TreeRenderer renderer;
 
@@ -88,12 +88,12 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   /**
    * Set if child nodes are removed and discarded when a node is closed.
    */
-  public void setRemoveCollapsedChildren(boolean removeCollapsedChildren) {
-    this.removeCollapsedChildren = removeCollapsedChildren;
+  public void setRemoveChildrenOnCollapse(boolean removeCollapsedChildren) {
+    this.removeChildrenOnCollapse = removeCollapsedChildren;
   }
 
-  public boolean isRemoveCollapsedChildren() {
-    return removeCollapsedChildren;
+  public boolean isRemoveChildrenOnCollapse() {
+    return removeChildrenOnCollapse;
   }
 
   /**
