@@ -28,8 +28,7 @@ import org.araneaframework.uilib.tree.TreeRenderer;
 import org.araneaframework.uilib.tree.TreeWidget;
 
 /**
- * Tree widget tag.
- * 
+ * Tree widget tag. Uses {@link StandardTreeRenderer} for rendering the tree in HTML.
  * @author Alar Kvell (alar@araneaframework.org)
  * 
  * @jsp.tag
@@ -45,8 +44,8 @@ public class TreeTag extends BaseWidgetTag {
     super.doStartTag(out);
 
     OutputData output = getOutputData();
-
-    ((TreeWidget) widget).setRenderer(buildTreeRenderer());
+    
+    ((TreeWidget) widget).setRenderer(buildTreeRenderer((TreeContext)widget));
 
     try {
       output.pushScope(id);
@@ -64,7 +63,9 @@ public class TreeTag extends BaseWidgetTag {
    * Builds a {@link TreeRenderer} that is used to render current
    * {@link TreeWidget}. Usually overridden.
    */
-  protected TreeRenderer buildTreeRenderer() {
+  protected TreeRenderer buildTreeRenderer(TreeContext treeWidget) {
+    if (treeWidget.getRenderer() != null)
+      return treeWidget.getRenderer();
     return new StandardTreeRenderer((TreeContext) widget);
   }
 

@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.web.tree;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
@@ -33,7 +34,6 @@ import org.araneaframework.uilib.tree.TreeWidget;
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public class SimpleTreeWidget extends BaseUIWidget {
-
   protected void init() throws Exception {
     setViewSelector("tree/simpleTree");
 
@@ -62,11 +62,12 @@ public class SimpleTreeWidget extends BaseUIWidget {
   }
 
   public static class SimpleTreeDisplayWidget extends BaseUIWidget {
-
     protected void init() throws Exception {
       setViewSelector("tree/simpleTreeDisplay");
     }
 
+	public void handleEventTest() {
+    	getMessageCtx().showInfoMessage("Event test received by TreeDisplayWidget at " + new Date());
+    }
   }
-
 }

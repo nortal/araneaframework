@@ -148,7 +148,7 @@ protected init() {
       <note>
         <para>The injected bean must be an interface, as Aranea will construct
         an indirection proxy. This will ensure that the referenced object will
-        be serialiazable (and small for that matter), but will also introduce
+        be serializable (and small for that matter), but will also introduce
         a small performance penalty (we believe to be negligible next to the
         proxies of Spring itself).</para>
       </note>

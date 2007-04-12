@@ -1,0 +1,120 @@
+<!--
+  Copyright 2006 Webmedia Group Ltd.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+   http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<chapter id="trees">
+	<title>Trees</title>
+    
+    <sect1>
+       <title>TreeWidget &amp; TreeNodeWidget</title>
+           <para>
+           	<classname>org.araneaframework.uilib.tree.TreeWidget</classname> allows representation of hierarchical data in a manner that has become 
+			traditional in GUIs, as an expandable tree. <emphasis>TreeWidget</emphasis> represents trees' root node, which is special 
+			in that it is not really rendered on-screen but serves as point where child nodes are attached. Child nodes of <emphasis>TreeWidget</emphasis>
+			are either attached by the programmer or acquired from associated <emphasis>TreeDataProvider</emphasis>.
+           </para>
+           
+           <para>
+           <emphasis>TreeDataProvider</emphasis> is a simple interface with ability to return the data under given tree node.
+<programlisting role="java">public interface TreeDataProvider extends Serializable {
+  /**
+   * Returns a list of child nodes for specified parent node.
+   */
+  List&lt;TreeNodeWidget&gt; getChildren(TreeNodeContext parent);
+
+  /**
+   * Returns if the specified tree node has any children.
+   */
+  boolean hasChildren(TreeNodeContext parent);
+}</programlisting>
+           </para>
+           
+           <para>
+           	As is apparent from the definition of <emphasis>TreeDataProvider</emphasis>, descendants of the <emphasis>TreeWidget</emphasis>
+           	that are to be presented in a tree, must be of type <emphasis>TreeNodeWidget</emphasis>. <emphasis>TreeNodeWidget</emphasis>
+           	is the superclass of <emphasis>TreeWidget</emphasis> that also has child nodes and will be rendered too. Node rendering is done with
+           	display widget that is passed to <emphasis>TreeNodeWidget</emphasis> in its constructor.
+           	
+<programlisting role="java">public TreeNodeWidget(Widget display);
+public TreeNodeWidget(Widget display, List nodes);
+public TreeNodeWidget(Widget display, List nodes, boolean collapsed);
+</programlisting>
+
+			Display widget can be any widget that can render itself, it is rendered in the place of tree node instead of
+			<emphasis>TreeNodeWidget</emphasis>, which is just a data holder. Very often, display widget is <emphasis>BaseUIWidget</emphasis>
+			 which renders itself according to some JSP template.
+           	
+           	<emphasis>TreeNodeWidget</emphasis> does not accept independent <emphasis>TreeDataProvider</emphasis>, its children are acquired 
+           	from <emphasis>TreeWidget</emphasis>'s <emphasis>TreeDataProvider</emphasis>.
+           </para>
+           
+           <para>
+           		<emphasis>TreeWidget</emphasis> enriches the <emphasis>Environment</emphasis> with <emphasis>TreeContext</emphasis>
+           		and <emphasis>TreeNodeContext</emphasis>. <emphasis>TreeNodeWidget</emphasis> enriches the <emphasis>Environment</emphasis>
+           		with <emphasis>TreeNodeContext</emphasis>. Through these entries, nodes have access to parent nodes and tree root.
+           </para>
+	</sect1>
+	
+	    <sect1>
+       <title>Tree JSP tags</title>
+       
+      <sect2>
+      <title>&lt;ui:tree&gt;</title>
+      <para>Renders tree with given id.</para>
+
+      <sect3>
+        <title>Attributes</title>
+
+        <informaltable frame="topbot">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>ID of the tree widget.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+      <sect3>
+        <title>Examples</title>
+
+        <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui:tree id="simpleTree"/&gt;
+&lt;!-- nothing more required, nodes' display widgets will take care of rendering the tree nodes.&gt;
+</programlisting>
+      </sect3>
+    </sect2>
+       
+       </sect1>
+</chapter>
