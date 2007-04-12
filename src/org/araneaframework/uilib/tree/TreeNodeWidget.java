@@ -138,7 +138,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
 
     if (collapsedDecide) {
-      collapsed = getTreeCtx().removeCollapsedChildren();
+      collapsed = getTreeCtx().isRemoveCollapsedChildren();
     }
 
     if (getTreeCtx().useActions()) {
@@ -185,7 +185,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return null;
   }
 
-  protected boolean renderToggleLink() {
+  protected boolean shouldRenderToggleLink() {
     if (getTreeCtx().getDataProvider() != null) {
       if (isCollapsed()) {
         return getTreeCtx().getDataProvider().hasChildren(this);
@@ -201,7 +201,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   public void setCollapsed(boolean collapsed) {
     this.collapsed = collapsed;
-    if (getTreeCtx().removeCollapsedChildren()) {
+    if (getTreeCtx().isRemoveCollapsedChildren()) {
       if (collapsed) {
         removeAllNodes();
       } else {
@@ -366,7 +366,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     if (display != null) {  // display is null if this is root node (TreeWidget)
       //renderDisplayPrefixRecursive(out, output, output.getScope().toString(), true);
       renderDisplayPrefixRecursive(out);
-      if (renderToggleLink()) {
+      if (shouldRenderToggleLink()) {
         getTreeCtx().getRenderer().renderToggleLink(out, this, nodeFullId);
       }
       try {

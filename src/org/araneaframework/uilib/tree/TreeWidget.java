@@ -92,7 +92,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     this.removeCollapsedChildren = removeCollapsedChildren;
   }
 
-  public boolean removeCollapsedChildren() {
+  public boolean isRemoveCollapsedChildren() {
     return removeCollapsedChildren;
   }
 
