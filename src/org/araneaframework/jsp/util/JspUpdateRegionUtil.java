@@ -21,6 +21,9 @@ import java.util.Iterator;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
@@ -43,14 +46,18 @@ public class JspUpdateRegionUtil {
   }
   
   public static List getUpdateRegionLocalNames(PageContext pageContext, String updateRegions) throws JspException  {
+    String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(pageContext, ServletUtil.UIWIDGET_KEY)).getScope().toString();
+    if (uiWidgetId.indexOf(":") != -1)
+      throw new AraneaJspException("Widget id '" + uiWidgetId + "' cannot contain ':'");
+    
+    String prefix = uiWidgetId + ":";
+    String contextWidgetId = JspWidgetUtil.getContextWidgetFullId(pageContext);
+    
     List result = new ArrayList();
-    
-    String contextWidgetId = JspWidgetUtil.getContextWidgetFullId(pageContext);      
-    
     for (Iterator i = parseUpdateRegionNames(updateRegions).iterator(); i.hasNext();) {
       String regionName = (String) i.next();
       
-      result.add(NameUtil.getFullName(contextWidgetId, regionName));
+      result.add(prefix + NameUtil.getFullName(contextWidgetId, regionName));
     }
     
     return result;

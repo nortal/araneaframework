@@ -36,20 +36,22 @@ public class UpdateRegionRowsHtmlTag extends BaseUpdateRegionTag {
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
+    out.write("<!--BEGIN:" + fullId + "-->");
+    // marker that this is row update region
+    out.write("<!--BEGINROWS:" + fullId + "-->");
+		
 		JspUtil.writeOpenStartTag(out, "tbody");
 		JspUtil.writeAttribute(out, "id", fullId);
 		JspUtil.writeCloseStartTag(out);
-		out.write("<!--BEGIN:" + fullId + "-->");
-		// marker that this is row update region
-		out.write("<!--BEGINROWS:" + fullId + "-->");
-
+		
 		return EVAL_BODY_INCLUDE;
 	}
 
 	protected int doEndTag(Writer out) throws Exception {
-		out.write("<!--END:" + fullId + "-->");
 		JspUtil.writeEndTag(out, "tbody");
-
-		return super.doEndTag(out);
+		
+    out.write("<!--END:" + fullId + "-->");
+    
+    return super.doEndTag(out);
 	}
 }
