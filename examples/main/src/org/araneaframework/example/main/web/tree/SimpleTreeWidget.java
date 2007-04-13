@@ -94,10 +94,6 @@ public class SimpleTreeWidget extends BaseUIWidget {
       setViewSelector("tree/simpleTreeDisplay");
     }
 
-    public void handleEventTest() {
-      getMessageCtx().showInfoMessage("Event test received by TreeDisplayWidget at " + new Date());
-    }
-
     public String getPath() {
       return path;
     }
