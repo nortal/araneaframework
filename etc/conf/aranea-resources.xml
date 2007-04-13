@@ -6,6 +6,8 @@
 
 	<files content-type="text/javascript" group="defaultScripts">
         <file path="js/behaviour/behaviour.js"/>
+        
+    	<file path="js/prototype/prototype.js"/>
 
         <file path="js/aranea/aranea-ui.js"/>
         <file path="js/aranea/aranea-locale.js"/>
@@ -15,10 +17,6 @@
 		<file path="js/aranea/aranea-tree.js"/>
 		<file path="js/aranea/aranea-behaviour.js"/>
 		<file path="js/aranea/aranea-popups.js"/>
-        
-        <file path="js/ajaxanywhere/aa.js"/>
-
-    	<file path="js/prototype/prototype.js"/>
 
 		<file path="js/scriptaculous/controls.js"/>
 		<file path="js/scriptaculous/effects.js"/>

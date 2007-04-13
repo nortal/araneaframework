@@ -200,10 +200,10 @@ function AraneaPage() {
   this.findSubmitter = function(element, systemForm) {
     var updateRegions = this.getEventUpdateRegions(element);
 
-	if (window['ajaxanywhere/aa.js'] && updateRegions && updateRegions.length > 0)
+	if (updateRegions && updateRegions.length > 0)
 	  return new DefaultAraneaAJAXSubmitter(systemForm);
-
-	return new DefaultAraneaSubmitter(systemForm);
+	else
+	  return new DefaultAraneaSubmitter(systemForm);
   }
   
   // another submit function, takes all params that are currently possible to use.
@@ -377,13 +377,76 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   if (systemForm.transactionId) {
     systemForm.transactionId.value = "override";
   }
-  
-  window[ajaxKey].updateRegions = eval("new Array(" + updateRegions + ");");
-  window[ajaxKey].systemForm = systemForm;
-  window[ajaxKey].submitAJAX(AraneaPage.getRandomRequestId());
+
+  $(systemForm.id).request({
+    parameters: {
+      updateRegions: eval("new Array(" + updateRegions + ");"),
+      systemFormId: systemForm.id
+    },
+    onSuccess: function(transport) {
+      araneaPage().getLogger().debug('Partial rendering success');
+      var text = new Text(transport.responseText);
+      while (!text.empty()) {
+        var key = text.readLine();
+        araneaPage().getLogger().debug('Region type: "' + key + '"');
+        if (key == 'transactionId') {
+          var transactionId = text.readLine();
+          araneaPage().getSystemForm().transactionId.value = transactionId;
+        } else if (key == 'dom') {
+          var mode = text.readLine();
+          var id = text.readLine();
+          var length = text.readLine();
+          var content = text.readBytes(length);
+          if (mode == 'replace') {
+            $(id).replace(content);
+          } else {
+            araneaPage().getLogger().warn('DOM region mode "' + mode + '" is unsupported!');
+          }
+        } else {
+          araneaPage().getLogger().error('Region type: "' + key + '" is unknown!');
+        }
+      }
+
+      AraneaPage.init();
+      araneaPage().onload();
+    },
+    onFailure: function(transport) {
+      Element.update(document.body, transport.responseText);
+    }
+  });
 
   return false;
 }
+
+Text = Class.create();
+Text.prototype = {
+  initialize: function(text) {
+    this.text = text;
+  },
+
+  readLine: function() {
+    var i = this.text.indexOf("\n");
+    var line;
+    if (i == -1) {
+      line = this.text;
+      this.text = '';
+    } else {
+      line = this.text.substr(0, i);
+      this.text = this.text.substr(i + 1);
+    }
+    return line;
+  },
+
+  readBytes: function(bytes) {
+    var content = this.text.substr(0, bytes);
+    this.text = this.text.substr(bytes);
+    return content;
+  },
+
+  empty: function() {
+    return this.text.length == 0;
+  }
+};
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */
