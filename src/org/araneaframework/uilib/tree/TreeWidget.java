@@ -91,8 +91,8 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   /**
    * Set if child nodes are removed and discarded when a node is closed.
    */
-  public void setRemoveChildrenOnCollapse(boolean removeCollapsedChildren) {
-    this.removeChildrenOnCollapse = removeCollapsedChildren;
+  public void setRemoveChildrenOnCollapse(boolean removeChildrenOnCollapse) {
+    this.removeChildrenOnCollapse = removeChildrenOnCollapse;
   }
 
   public boolean isRemoveChildrenOnCollapse() {
