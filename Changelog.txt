@@ -1,6 +1,10 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
-2007.04.06    | Aranea 1.0.7
+2007.04.13    | Aranea 1.0.7
+
+Features and Improvements
+    TreeWidget was backported from Aranea stable branch                       | See #345
+    Different error message resources for NumberControl and FloatControl      | See #349
 
 Bugfixes
     Cleared DateTimeControl obtaining value 'Jan 01 00:00:00 EET 1970'        | See #322
