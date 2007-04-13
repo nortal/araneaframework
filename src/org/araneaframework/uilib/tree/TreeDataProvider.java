@@ -32,7 +32,8 @@ public interface TreeDataProvider extends Serializable {
    * @param parent
    *          tree node whose children will be returned. Root node of the tree
    *          ({@link TreeWidget}) has no display widget.
-   * @return list of {@link TreeNodeWidget}s.
+   * @return list of {@link TreeNodeWidget}s. May return <code>null</code>
+   *         instead of empty list.
    */
   List getChildren(TreeNodeContext parent);
 

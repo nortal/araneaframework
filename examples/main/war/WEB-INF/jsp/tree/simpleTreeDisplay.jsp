@@ -5,5 +5,7 @@
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
-	Foobar
+	<ui:widgetContext>
+	  <c:out value="${widget.name}"/>
+	</ui:widgetContext>
 </jsp:root>

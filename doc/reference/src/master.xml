@@ -10,6 +10,7 @@
 	<!ENTITY forms               SYSTEM "forms.xml">	
 	<!ENTITY lists               SYSTEM "lists.xml">
 	<!ENTITY javascript               SYSTEM "javascript.xml">
+	<!ENTITY trees               SYSTEM "trees.xml">
 ]>
 
 <!--
@@ -64,6 +65,7 @@
     &jsp;
     &forms;
     &lists;
+    &trees;
     &integration;
     &javascript;
 </book>

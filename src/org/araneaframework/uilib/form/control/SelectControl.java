@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.araneaframework.core.Assert;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemContainer;

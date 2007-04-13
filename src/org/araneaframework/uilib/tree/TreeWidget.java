@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.tree;
 
 import java.io.Writer;
+import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -32,7 +33,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   private static final long serialVersionUID = 1L;
 
   private TreeDataProvider dataProvider;
-  private boolean removeCollapsedChildren = true;
+  private boolean removeChildrenOnCollapse = true;
   private boolean useActions = false;
   private boolean useSynchronizedActions = true;
   private TreeRenderer renderer;
@@ -63,7 +64,9 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   }
 
   protected void init() throws Exception {
-    addAllNodes(loadChildren());
+    List children = loadChildren();
+    if (children != null)
+      addAllNodes(children);
   }
 
   public Environment getEnvironment() {
@@ -101,18 +104,19 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   /**
    * Set if child nodes are removed and discarded when a node is closed.
    */
-  public void setRemoveCollapsedChildren(boolean removeCollapsedChildren) {
-    this.removeCollapsedChildren = removeCollapsedChildren;
+  public void setRemoveChildrenOnCollapse(boolean removeChildrenOnCollapse) {
+    this.removeChildrenOnCollapse = removeChildrenOnCollapse;
   }
 
-  public boolean removeCollapsedChildren() {
-    return removeCollapsedChildren;
+  public boolean isRemoveChildrenOnCollapse() {
+    return removeChildrenOnCollapse;
   }
 
   /**
    * Set tree renderer.
    */
   public void setRenderer(TreeRenderer renderer) {
+    Assert.notNullParam(renderer, "renderer");
     this.renderer = renderer;
   }
 
@@ -129,7 +133,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // The following methods do nothing, because the root node of the tree has no
   // display widget and therefore is always expanded.
 
-  public Widget getDisplay() {
+  public Widget getDisplayWidget() {
     return null;
   }
 

@@ -56,7 +56,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private List childNodeWrappers;
 
   private static class ChildNodeWrapper implements Serializable {
-    
+
     private TreeNodeWidget node;
     private String widgetId;
 
@@ -90,7 +90,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    */
   public TreeNodeWidget(Widget display) {
     super();
-    Assert.notNull(display);
+    Assert.notNullParam(display, "display");
     initDisplay = display;
   }
 
@@ -121,6 +121,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    */
   public TreeNodeWidget(Widget display, List nodes, boolean collapsed) {
     this(display);
+    Assert.notNullParam(nodes, "nodes");
     initNodes = nodes;
     this.collapsed = collapsed;
   }
@@ -138,7 +139,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
 
     if (collapsedDecide) {
-      collapsed = getTreeCtx().removeCollapsedChildren();
+      collapsed = getTreeCtx().isRemoveChildrenOnCollapse();
     }
 
     if (getTreeCtx().useActions()) {
@@ -185,7 +186,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return null;
   }
 
-  protected boolean renderToggleLink() {
+  protected boolean shouldRenderToggleLink() {
     if (getTreeCtx().getDataProvider() != null) {
       if (isCollapsed()) {
         return getTreeCtx().getDataProvider().hasChildren(this);
@@ -201,11 +202,15 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   public void setCollapsed(boolean collapsed) {
     this.collapsed = collapsed;
-    if (getTreeCtx().removeCollapsedChildren()) {
-      if (collapsed) {
+    if (collapsed) {
+      if (getTreeCtx().isRemoveChildrenOnCollapse()) {
         removeAllNodes();
-      } else {
-        addAllNodes(loadChildren());
+      }
+    } else {
+      if (!hasNodes()) {
+        List children = loadChildren();
+        if (children != null)
+          addAllNodes(children);
       }
     }
   }
@@ -270,9 +275,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public void addAllNodes(List nodes) {
-    if (nodes == null)
-      return;
-
+    Assert.notNullParam(nodes, "nodes");
     for (Iterator i = nodes.iterator(); i.hasNext(); ) {
       addNode((TreeNodeWidget) i.next());
     }
@@ -290,7 +293,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     nextChildIndex = 0;
   }
 
-  public Widget getDisplay() {
+  public Widget getDisplayWidget() {
     return getWidget(DISPLAY_KEY);
   }
 
@@ -328,6 +331,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public void setParentNode(TreeNodeWidget parentNode) {
+    Assert.notNullParam(parentNode, "parentNode");
     this.parentNode = parentNode;
   }
 
@@ -340,6 +344,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public void setIndex(int index) {
+    Assert.isTrue(index >= 0, "index must be >= 0");
     this.index = index;
   }
 
@@ -348,6 +353,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public void renderNode(OutputData output) throws Exception {  // Called only from display widget's action
+    Assert.notNullParam(output, "output");
     render(output);
   }
 
@@ -356,15 +362,16 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   //*******************************************************************  
 
   protected void render(OutputData output) throws Exception {
-    Assert.notNull(getTreeCtx().getRenderer(), "renderer must be set");
+    TreeRenderer renderer = getTreeCtx().getRenderer();
+    Assert.notNull(renderer, "renderer must be set");
     Writer out = ((HttpOutputData) output).getWriter();
 
     // Render display widget
-    Widget display = getDisplay();
+    Widget display = getDisplayWidget();
     if (display != null) {  // display is null if this is root node (TreeWidget)
-      renderDisplayPrefixRecursive(out);
-      if (renderToggleLink()) {
-        getTreeCtx().getRenderer().renderToggleLink(out, this);
+      renderDisplayPrefixRecursive(out, renderer);
+      if (shouldRenderToggleLink()) {
+        renderer.renderToggleLink(out, this);
       }
       out.flush();
       display._getWidget().render(output);
@@ -373,29 +380,29 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     // Render child nodes
     if (display == null || (!isCollapsed() && hasNodes())) {
       if (display == null) {
-        getTreeCtx().getRenderer().renderTreeStart(out, this);
+        renderer.renderTreeStart(out, this);
       } else {
-        getTreeCtx().getRenderer().renderChildrenStart(out, this);
+        renderer.renderChildrenStart(out, this);
       }
       if (!isCollapsed() && hasNodes()) {
         for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
           ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
           TreeNodeWidget node = nodeWrapper.getNode();
-          getTreeCtx().getRenderer().renderChildStart(out, this, node);
+          renderer.renderChildStart(out, this, node);
           out.flush();
           node.render(output);
-          getTreeCtx().getRenderer().renderChildEnd(out, this, node);
+          renderer.renderChildEnd(out, this, node);
         }
       }
       if (display == null) {
-        getTreeCtx().getRenderer().renderTreeEnd(out, this);
+        renderer.renderTreeEnd(out, this);
       } else {
-        getTreeCtx().getRenderer().renderChildrenEnd(out, this);
+        renderer.renderChildrenEnd(out, this);
       }
     }
   }
 
-  protected void renderDisplayPrefixRecursive(Writer out) throws Exception {
+  protected void renderDisplayPrefixRecursive(Writer out, TreeRenderer renderer) throws Exception {
     LinkedList parents = new LinkedList();
     TreeNodeContext parent = getParentNode();
     while (parent != null) {
@@ -403,9 +410,9 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
       parent = parent.getParentNode();
     }
     for (Iterator i = parents.iterator(); i.hasNext(); ) {
-      getTreeCtx().getRenderer().renderDisplayPrefix(out, (TreeNodeContext) i.next(), false);
+      renderer.renderDisplayPrefix(out, (TreeNodeContext) i.next(), false);
     }
-    getTreeCtx().getRenderer().renderDisplayPrefix(out, this, true);
+    renderer.renderDisplayPrefix(out, this, true);
   }
 
 }

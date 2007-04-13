@@ -343,13 +343,13 @@ class MyServlet extends BaseAraneaDispatcherServlet {
   <sect1 id="framework-configuration">
     <title>Framework Configuration</title>
 
-    <para>Aranea framework is assembled into a mostly-flat hirarchy using
+    <para>Aranea framework is assembled into a mostly-flat hierarchy using
     Spring beans. The default Aranea configuration is loaded by the
     <literal>AraneaSpringDispatcherServlet</literal>, but it can be overriden
     with the custom configuration in <literal>aranea-conf.xml</literal>. The
     dispatcher servlet loads the configuration in such a way that same named
     beans in <literal>aranea-conf.xml</literal> override the ones specified in
-    the default configuration. However not all beans can be safely or
+    the default configuration. However, not all beans can be safely or
     comfortably overriden, since many of them will also refer to their child
     beans.</para>
 
@@ -1818,27 +1818,21 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis
               role="bold">Provides:</emphasis></entry>
 
-              <entry><literal>ThreadCloningContext</literal></entry>
+              <entry><literal>MountContext</literal></entry>
             </row>
-
+            
             <row>
-              <entry align="right"><emphasis role="bold">Depends
-              on:</emphasis></entry>
+              <entry align="right"><emphasis role="bold">Depends on:</emphasis></entry>
 
-              <entry><literal>ThreadContext</literal>,
-              <literal>TopServiceContext</literal></entry>
+              <entry>-</entry>
             </row>
           </tbody>
         </tgroup>
       </informaltable>
 
-      <para>Implementation of a service that clones currently running session
-      thread upon request and sends a response that redirects to cloned
-      session thread. It can be used to support "open link in new window"
-      feature in browsers. Cloning is generic and resource demanding, as whole
-      tree of session thread components is recreated. Custom applications may
-      find that they can implement some application specific cloning strategy
-      that demands less memory and processing power.</para>
+      <para>Implementation of a service that allows to &quot;mount&quot; flow components
+      to a publicly accessible URL. It is used when it is needed that some (read-only) parts of application
+      are accessible to users who are not able to enter the session-based conversation with application.</para>
 
       <informaltable>
         <tgroup cols="2">
@@ -1856,14 +1850,13 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
           <tbody>
             <row>
-              <entry>timeToLive <para><literal>java.lang.Long</literal>
-              </para></entry>
+              <entry>mounts<para><literal>java.util.Map&lt;String, MountContext.MessageFactory&gt;</literal></para></entry>
 
-              <entry>Inactivity time for cloned thread after which thread
-              router may kill the thread service. This is specified in
-              milliseconds. If unset, threads created by cloning service
-              usually live until HTTP session in which they were spawned
-              expires.</entry>
+              <entry>
+              	Keys in the map are URL prefixes under which the flow component is mapped.
+              	Values are <literal>org.araneaframework.Message</literal> factories of type <literal>MountContext.MessageFactory</literal>&mdash;producing
+              	messages that generate component hierarchy for serving wanted content.
+              </entry>	
             </row>
           </tbody>
         </tgroup>

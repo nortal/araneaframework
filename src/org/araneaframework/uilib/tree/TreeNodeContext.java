@@ -38,7 +38,7 @@ public interface TreeNodeContext extends Serializable {
    * Sets collapsed state of tree node. If <code>true</code>, child nodes are
    * hidden, otherwise child nodes are shown. This may trigger removal or
    * retrieval of child nodes using {@link TreeDataProvider} if
-   * {@link TreeContext#removeCollapsedChildren()} is <code>true</code>.
+   * {@link TreeContext#isRemoveChildrenOnCollapse()} is <code>true</code>.
    */
   void setCollapsed(boolean collapsed);
 
@@ -104,9 +104,9 @@ public interface TreeNodeContext extends Serializable {
 
   /**
    * Returns the display widget of this tree node. Root node of the tree ({@link TreeWidget})
-   * has no display widget ({@link #getDisplay()} is <code>null</code>).
+   * has no display widget ({@link #getDisplayWidget()} is <code>null</code>).
    */
-  Widget getDisplay();
+  Widget getDisplayWidget();
 
   /**
    * Returns a child node of this tree node.

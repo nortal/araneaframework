@@ -84,7 +84,7 @@ public interface TreeRenderer extends Serializable {
    * 
    * @param node
    *          parent node whose children are being rendered
-   * @param node
+   * @param childNode
    *          child node that was just rendered
    */
   void renderChildEnd(Writer out, TreeNodeContext node, TreeNodeContext childNode) throws Exception;

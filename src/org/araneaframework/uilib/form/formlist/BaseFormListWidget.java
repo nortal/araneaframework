@@ -151,8 +151,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	protected void init() throws Exception {
 		super.init();		
     
-    //XXX: the logic between lists and form lists is inconsistent
-//    processRows();    
+		processRows();    
 		resetAddForm();		
 	}
 

@@ -17,7 +17,11 @@
 package org.araneaframework.example.main.web.tree;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import javax.servlet.ServletContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
 import org.araneaframework.uilib.tree.TreeNodeContext;
@@ -27,17 +31,17 @@ import org.araneaframework.uilib.tree.TreeWidget;
 /**
  * Widget that shows two simple trees. One tree uses events for submit links and
  * the other uses actions (in that case only the current tree node and its
- * children are rendered). Each node has five child nodes (tree is infinite).
- * Child nodes are disposed when parent node is collapsed.
+ * children are rendered).
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class SimpleTreeWidget extends BaseUIWidget {
-
   protected void init() throws Exception {
     setViewSelector("tree/simpleTree");
 
     TreeWidget tree1 = new TreeWidget(new SimpleTreeDataProvider());
+    tree1.setRemoveChildrenOnCollapse(false);
     addWidget("tree1", tree1);
 
     TreeWidget tree2 = new TreeWidget(new SimpleTreeDataProvider());
@@ -45,28 +49,61 @@ public class SimpleTreeWidget extends BaseUIWidget {
     addWidget("tree2", tree2);
   }
 
-  public static class SimpleTreeDataProvider implements TreeDataProvider {
-
+  private class SimpleTreeDataProvider implements TreeDataProvider {
     public List getChildren(TreeNodeContext parent) {
       List children = new ArrayList();
-      for (int i = 0; i < 5; i++) {
-        children.add(new TreeNodeWidget(new SimpleTreeDisplayWidget()));
+
+      Iterator i = getResourceIterator(parent);
+
+      if (i == null || !i.hasNext()) {
+        return null;
       }
+
+      while (i.hasNext()) {
+        children.add(new TreeNodeWidget(new SimpleTreeDisplayWidget(i.next().toString())));
+      }
+
       return children;
     }
 
     public boolean hasChildren(TreeNodeContext parent) {
-      return true;
+      return (getChildren(parent) != null && !getChildren(parent).isEmpty());
+    }
+
+    private Iterator getResourceIterator(TreeNodeContext widget) {
+      ServletContext servletContext = (ServletContext) SimpleTreeWidget.this.getEnvironment().getEntry(ServletContext.class);
+      String path = null;
+      if (widget instanceof TreeWidget)
+        path = "/";
+      else
+        path = ((SimpleTreeDisplayWidget)widget.getDisplayWidget()).getPath();
+      Set set = servletContext.getResourcePaths(path);
+      return set != null ? set.iterator() : null;
     }
 
   }
 
   public static class SimpleTreeDisplayWidget extends BaseUIWidget {
+    private String path;
+
+    public SimpleTreeDisplayWidget(String name) {
+      this.path = name;
+    }
 
     protected void init() throws Exception {
       setViewSelector("tree/simpleTreeDisplay");
     }
 
-  }
+    public String getPath() {
+      return path;
+    }
 
+    public String getName() {
+      if (!path.endsWith("/"))
+        return path.substring(path.lastIndexOf("/") + 1);
+
+      String s = path.substring(0, path.length() - 1);
+      return s.substring(s.lastIndexOf("/"));
+    }
+  }
 }

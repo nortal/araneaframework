@@ -17,7 +17,8 @@ This folder contains scripts needed by Aranea Uilib.
 - License is MIT-style license, details at http://script.aculo.us/
 
 * prototype/*
-- http://prototype.conio.net/
+- http://www.prototypejs.org/
+- License is MIT-style license, details at http://www.prototypejs.org/license
 
 * ajaxanywhere/aa.js
 - AjaxAnywhere (http://ajaxanywhere.sourceforge.net/)

@@ -58,8 +58,8 @@ public interface ListDataProvider extends Serializable {
 
 
 	/**
-	 * This method should synchronize the list data provider data with thge storage, if any
-	 * synchronization is nessesary.
+	 * This method should synchronize the list data provider data with the storage, if any
+	 * synchronization is necessary.
 	 */
 	public void refreshData() throws Exception;
 
