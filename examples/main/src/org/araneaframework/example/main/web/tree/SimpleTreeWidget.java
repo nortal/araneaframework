@@ -43,9 +43,8 @@ public class SimpleTreeWidget extends BaseUIWidget {
     TreeWidget tree1 = new TreeWidget(new SimpleTreeDataProvider());
     tree1.setRemoveChildrenOnCollapse(false);
     addWidget("tree1", tree1);
-    
+
     TreeWidget tree2 = new TreeWidget(new SimpleTreeDataProvider());
-    
     tree2.setUseActions(true);
     addWidget("tree2", tree2);
   }
@@ -70,45 +69,45 @@ public class SimpleTreeWidget extends BaseUIWidget {
     public boolean hasChildren(TreeNodeContext parent) {
       return (getChildren(parent) != null && !getChildren(parent).isEmpty());
     }
-    
+
     private Iterator getResourceIterator(TreeNodeWidget widget) {
-    	ServletContext servletContext = (ServletContext) SimpleTreeWidget.this.getEnvironment().getEntry(ServletContext.class);
-    	String path = null;
-    	if (widget instanceof TreeWidget)
-    		path = "/";
-    	else
-    		path = ((SimpleTreeDisplayWidget)widget.getDisplay()).getPath();
-    	Set set = servletContext.getResourcePaths(path);
-    	return set != null ? set.iterator() : null;
+      ServletContext servletContext = (ServletContext) SimpleTreeWidget.this.getEnvironment().getEntry(ServletContext.class);
+      String path = null;
+      if (widget instanceof TreeWidget)
+        path = "/";
+      else
+        path = ((SimpleTreeDisplayWidget)widget.getDisplay()).getPath();
+      Set set = servletContext.getResourcePaths(path);
+      return set != null ? set.iterator() : null;
     }
 
   }
 
   public static class SimpleTreeDisplayWidget extends BaseUIWidget {
     private String path;
-    
-	public SimpleTreeDisplayWidget(String name) {
+
+    public SimpleTreeDisplayWidget(String name) {
       this.path = name;
-	}
+    }
 
     protected void init() throws Exception {
       setViewSelector("tree/simpleTreeDisplay");
     }
 
-	public void handleEventTest() {
-    	getMessageCtx().showInfoMessage("Event test received by TreeDisplayWidget at " + new Date());
+    public void handleEventTest() {
+      getMessageCtx().showInfoMessage("Event test received by TreeDisplayWidget at " + new Date());
     }
-	
-	public String getPath() {
+
+    public String getPath() {
       return path;
-	}
-	
-	public String getName() {
+    }
+
+    public String getName() {
       if (!path.endsWith("/"))
         return path.substring(path.lastIndexOf("/") + 1);
-      
+
       String s = path.substring(0, path.length() - 1);
       return s.substring(s.lastIndexOf("/"));
-	}
+    }
   }
 }
