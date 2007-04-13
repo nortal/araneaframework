@@ -45,8 +45,7 @@ public class TreeTag extends BaseWidgetTag {
 
     OutputData output = getOutputData();
     
-    if (((TreeWidget) widget).getRenderer() == null)
-    	((TreeWidget) widget).setRenderer(buildTreeRenderer((TreeContext) widget));
+    ((TreeWidget) widget).setRenderer(buildTreeRenderer((TreeContext) widget));
 
     try {
       output.pushScope(id);
