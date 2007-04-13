@@ -45,6 +45,6 @@ public interface TreeContext extends Serializable {
   /**
    * Returns if child nodes are removed and discarded when a node is closed.
    */
-  boolean removeCollapsedChildren();
+  boolean isRemoveChildrenOnCollapse();
 
 }

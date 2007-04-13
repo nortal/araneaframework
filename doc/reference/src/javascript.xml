@@ -62,8 +62,8 @@
             <title>Prototype (<ulink url="http://prototype.conio.net/">http://prototype.conio.net/</ulink>)</title>
             <para>
                Prototype is a JavaScript framework that aims to ease development of dynamic web applications. Aranea JSP
-               aims to make more use of it in the future. Currently it is included as prerequisite for some 
-               script.aculo.us scripts also included with Aranea.
+               aims to make more use of it in the future. It is a prerequisite for using Uilib's <emphasis>AutoCompleteTextControl</emphasis> 
+               and action-enabled <emphasis>TreeWidget</emphasis> components. 
             </para>
           </sect2>
           

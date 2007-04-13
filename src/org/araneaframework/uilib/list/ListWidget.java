@@ -32,6 +32,7 @@ import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
@@ -535,7 +536,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 
 	private void propagateListDataProviderWithFilter(Map filterInfo) {
-		log.debug("Building FilterExpression for ListDataProvider");
 		if (this.dataProvider != null) {
 			ListFilter filter = getListStructure().getListFilter();
 			Expression filterExpr = null;
@@ -594,7 +594,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 			this.dataProvider.refreshData();
 		}
 		catch (Exception e) {
-			throw new AraneaRuntimeException(e);
+			ExceptionUtil.uncheckException(e);
 		}		
 	}
 
@@ -614,7 +614,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		this.itemRange = itemRangeData.getItemRange();
 		this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());
-		this.sequenceHelper.validateSequence();			
+		this.sequenceHelper.validateSequence();
 	}
 
 	/**
@@ -740,7 +740,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @throws Exception 
 	 */
 	protected void destroy() throws Exception {
-		log.debug("Destroying ListWidget.");
         if (this.dataProvider != null)
         	this.dataProvider.destroy();
         
@@ -852,7 +851,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 				page = Integer.parseInt(eventParam);
 			}
 			catch (Exception e) {
-				throw new Exception("Invalid page index provided.");
+				throw new AraneaRuntimeException("Invalid page index provided.", e);
 			}
 			sequenceHelper.goToPage(page);
 		}
@@ -899,6 +898,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		propagateListDataProviderWithOrderInfo(orderInfo);		
 
+		// XXX: why is this commented code here?
 		// listDataProvider.setOrderInfo(orderInfo);   
 
 		filter();
@@ -907,17 +907,14 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected class OrderEventHandler extends StandardEventListener {
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			// single column ordering
-			log.debug("Processing Order event, with param = " + eventParam);
 			if (eventParam.length() > 0) {
 				order(eventParam);
 				return;
 			}
 
 			// multi column ordering
-			log.debug("Processing Multi Column Order");    	
 			OrderInfo orderInfo = MultiOrderHelper.getOrderInfo(getOrderInfoMap(input.getScopedData()));
 
-			log.debug("Building OrderExpression");
 			propagateListDataProviderWithOrderInfo(orderInfo);
 		}
 
@@ -938,19 +935,16 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Handles filtering.
 	 */
 	protected void filter() throws Exception {
-		log.debug("Converting and validating FilterForm");
 		if (form.convertAndValidate() && form.isStateChanged()) {
 
-			log.debug("Reading FilterInfo");
 			MapFormReader mapFormReader = new MapFormReader(form);
 			Map filterInfo = mapFormReader.getMap();
-			log.debug("FilterInfo: " + filterInfo);
 
 			propagateListDataProviderWithFilter(filterInfo);
 
 			form.markBaseState();
 			sequenceHelper.setCurrentPage(0);
-		}         
+		}
 	}
 
 	/**

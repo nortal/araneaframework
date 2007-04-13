@@ -6,6 +6,6 @@
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 	<ui:widgetContext>
-		Foobar. <ui:eventLinkButton eventId="test" labelId="#Test"/>
+	  <c:out value="${widget.name}"/>
 	</ui:widgetContext>
 </jsp:root>

@@ -1283,6 +1283,18 @@ public void handleEventMyEvent(String parameter) {
       <literal>clearGlobalEventListener()</literal>, or overridden by adding
       your own global event listener.</para>
     </sect2>
+    
+        <sect2>
+      <title>Action Listeners</title>
+       <para>Registering action listeners allows widgets to subscribe to some
+      specific user generated actions. Actions differ from events in that
+      widget lifecycle execution for whole component tree is not triggered
+      upon request&mdash;actions are just sent to the receiving widget's <emphasis>ActionListener</emphasis>, 
+      which is SOLELY responsible for generating the whole response. For rich UI components this allows a quick
+      conversations with server, without requiring full form submits and generating whole view.
+      </para>
+      
+ </sect2>
 
     <sect2 id="widgets-environment">
       <title>Environment</title>
