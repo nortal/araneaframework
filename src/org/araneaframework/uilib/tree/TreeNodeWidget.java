@@ -293,7 +293,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     nextChildIndex = 0;
   }
 
-  public Widget getDisplay() {
+  public Widget getDisplayWidget() {
     return getWidget(DISPLAY_KEY);
   }
 
@@ -369,7 +369,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     String nodeFullId = output.getScope().toString();
 
     // Render display widget
-    Widget display = getDisplay();
+    Widget display = getDisplayWidget();
     if (display != null) {  // display is null if this is root node (TreeWidget)
       //renderDisplayPrefixRecursive(out, output, output.getScope().toString(), true);
       renderDisplayPrefixRecursive(out, renderer);

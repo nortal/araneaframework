@@ -120,7 +120,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // The following methods do nothing, because the root node of the tree has no
   // display widget and therefore is always expanded.
 
-  public Widget getDisplay() {
+  public Widget getDisplayWidget() {
     return null;
   }
 

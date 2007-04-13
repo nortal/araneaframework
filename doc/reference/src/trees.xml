@@ -21,14 +21,14 @@
        <title>TreeWidget &amp; TreeNodeWidget</title>
            <para>
            	<classname>org.araneaframework.uilib.tree.TreeWidget</classname> allows representation of hierarchical data in a manner that has become 
-			traditional in GUIs, as an expandable tree. <emphasis>TreeWidget</emphasis> represents trees' root node, which is special 
-			in that it is not really rendered on-screen but serves as point where child nodes are attached. Child nodes of <emphasis>TreeWidget</emphasis>
-			are either attached by the programmer or acquired from associated <emphasis>TreeDataProvider</emphasis>.
-			The <emphasis>TreeWidget</emphasis> supports expanding and collapsing of all those nodes.
+			traditional in GUIs, as an expandable tree. <literal>TreeWidget</literal> represents trees' root node, which is special 
+			in that it is not really rendered on-screen but serves as point where child nodes are attached. Child nodes of <literal>TreeWidget</literal>
+			are either attached by the programmer or acquired from associated <literal>TreeDataProvider</literal>.
+			The <literal>TreeWidget</literal> supports expanding and collapsing of all those nodes.
            </para>
            
            <para>
-           <emphasis>TreeDataProvider</emphasis> is a simple interface with ability to return the data under given tree node.
+           <literal>TreeDataProvider</literal> is a simple interface with ability to return the data under given tree node.
 <programlisting role="java">public interface TreeDataProvider extends Serializable {
   /**
    * Returns a list of child nodes for specified parent node.
@@ -43,10 +43,10 @@
            </para>
            
            <para>
-           	As is apparent from the definition of <emphasis>TreeDataProvider</emphasis>, descendants of the <emphasis>TreeWidget</emphasis>
-           	that are to be presented in a tree, must be of type <emphasis>TreeNodeWidget</emphasis>. <emphasis>TreeNodeWidget</emphasis>
-           	is the superclass of <emphasis>TreeWidget</emphasis> that also has child nodes and will be rendered too. Node rendering is done with
-           	display widget that is passed to <emphasis>TreeNodeWidget</emphasis> in its constructor.
+           	As is apparent from the definition of <literal>TreeDataProvider</literal>, descendants of the <literal>TreeWidget</literal>
+           	that are to be presented in a tree, must be of type <literal>TreeNodeWidget</literal>. <literal>TreeNodeWidget</literal>
+           	is the superclass of <literal>TreeWidget</literal> that also has child nodes and will be rendered too. Node rendering is done with
+           	display widget that is passed to <literal>TreeNodeWidget</literal> in its constructor.
            	
 <programlisting role="java">public TreeNodeWidget(Widget display);
 public TreeNodeWidget(Widget display, List nodes);
@@ -54,17 +54,18 @@ public TreeNodeWidget(Widget display, List nodes, boolean collapsed);
 </programlisting>
 
 			Display widget can be any widget that can render itself, it is rendered in the place of tree node instead of
-			<emphasis>TreeNodeWidget</emphasis>, which is just a data holder. Very often, display widget is <emphasis>BaseUIWidget</emphasis>
+			<literal>TreeNodeWidget</literal>, which is just a data holder. Very often, display widget is <literal>BaseUIWidget</literal>
 			 which renders itself according to some JSP template.
            	
-           	<emphasis>TreeNodeWidget</emphasis> does not accept independent <emphasis>TreeDataProvider</emphasis>, its children are acquired 
-           	from <emphasis>TreeWidget</emphasis>'s <emphasis>TreeDataProvider</emphasis>.
+           	<literal>TreeNodeWidget</literal> does not accept independent <literal>TreeDataProvider</literal>, its children are acquired 
+           	from <literal>TreeWidget</literal>'s <literal>TreeDataProvider</literal>.
            </para>
            
            <para>
-           		<emphasis>TreeWidget</emphasis> enriches the <emphasis>Environment</emphasis> with <emphasis>TreeContext</emphasis>
-           		and <emphasis>TreeNodeContext</emphasis>. <emphasis>TreeNodeWidget</emphasis> enriches the <emphasis>Environment</emphasis>
-           		with <emphasis>TreeNodeContext</emphasis>. Through these entries, nodes have access to parent nodes and tree root.
+           		<literal>TreeWidget</literal> enriches the <literal>Environment</literal> with <literal>TreeContext</literal>.
+           		<literal>TreeNodeWidget</literal> enriches the <literal>Environment</literal> of its display widget
+           		with <literal>TreeNodeContext</literal>. Through these contexts display widgets have access to
+           		owning tree node and root of the tree.
            </para>
 	</sect1>
 	

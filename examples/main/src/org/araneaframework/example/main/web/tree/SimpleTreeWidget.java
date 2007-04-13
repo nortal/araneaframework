@@ -76,7 +76,7 @@ public class SimpleTreeWidget extends BaseUIWidget {
       if (widget instanceof TreeWidget)
         path = "/";
       else
-        path = ((SimpleTreeDisplayWidget)widget.getDisplay()).getPath();
+        path = ((SimpleTreeDisplayWidget)widget.getDisplayWidget()).getPath();
       Set set = servletContext.getResourcePaths(path);
       return set != null ? set.iterator() : null;
     }
