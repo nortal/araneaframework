@@ -1,3 +1,19 @@
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
 package org.araneaframework.http.filter;
 
 import java.util.HashMap;
@@ -39,28 +55,28 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget {
   }
 
   protected void render(OutputData output) throws Exception {
-    String commaSeparatedRegions = (String) output.getInputData().getGlobalData().get(UPDATE_REGIONS_KEY); 
+    String regionNames = (String) output.getInputData().getGlobalData().get(UPDATE_REGIONS_KEY); 
 
-    if(commaSeparatedRegions == null) {
+    if(regionNames == null) {
       super.render(output);
       return;
     }
 
     if (log.isDebugEnabled())
-      log.debug("Received request to update regions = " + commaSeparatedRegions);
+      log.debug("Received request to update regions = " + regionNames);
 
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     try {
-      // Parse widget and region names
-      Map widgets = getUpdateRegionWidgets(commaSeparatedRegions);
+      // Parse widget and region ids
+      Map regionIdsByWidgetId = parseRegionNames(regionNames);
 
       // Render widgets
-      Map responseRegions = getResponseRegions(widgets, arUtil, output);
+      Map regionContents = renderRegions(regionIdsByWidgetId, arUtil, output);
 
       // Write out response
       HttpOutputData httpOutput = (HttpOutputData) output;
       writeTransactionId(httpOutput);
-      writeUpdateRegions(httpOutput, responseRegions);
+      writeRegions(httpOutput, regionContents);
     }
     finally {
       arUtil.commit();
@@ -76,14 +92,14 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget {
     }
   }
 
-  protected void writeUpdateRegions(HttpOutputData httpOutput, Map responseRegions) throws Exception {
-    for (Iterator i = responseRegions.entrySet().iterator(); i.hasNext(); ) {
+  protected void writeRegions(HttpOutputData httpOutput, Map regionContents) throws Exception {
+    for (Iterator i = regionContents.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
-      String region = (String) entry.getKey();
+      String id = (String) entry.getKey();
       byte[] content = (byte[]) entry.getValue();
       httpOutput.getWriter().write("dom\n");
       httpOutput.getWriter().write("replace\n");
-      httpOutput.getWriter().write(region + "\n");
+      httpOutput.getWriter().write(id + "\n");
       httpOutput.getWriter().write(content.length + "\n");
       httpOutput.getWriter().flush();
       httpOutput.getOutputStream().write(content);
@@ -91,80 +107,83 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget {
     }
   }
 
-  protected Map getUpdateRegionWidgets(String commaSeparatedRegions) {
-    String[] fullRegions = StringUtils.split(commaSeparatedRegions, ',');
-    Map widgets = new HashMap();
-    for (int i = 0; i < fullRegions.length; i++) {
-      // Split each region name by ':' - the first part is widget id, the last part is region name
-      // Construct a Map: widgetId -> Set: region name
-      String[] widgetAndRegion = StringUtils.split(fullRegions[i], ":", 2);
-      Set regions = (Set) widgets.get(widgetAndRegion[0]);
-      if (regions == null) {
-        regions = new HashSet();
-        widgets.put(widgetAndRegion[0], regions);
+  protected Map parseRegionNames(String commaSeparatedRegionNames) {
+    String[] regionNames = StringUtils.split(commaSeparatedRegionNames, ',');
+    Map regionIdsByWidgetId = new HashMap();
+    for (int i = 0; i < regionNames.length; i++) {
+      // Split each region name by ':' - the first part is widget id, the last
+      // part is region id. Construct a Map: (widgetId -> Set: (regionId))
+      String[] widgetIdAndRegionId = StringUtils.split(regionNames[i], ":", 2);
+      Set regionIds = (Set) regionIdsByWidgetId.get(widgetIdAndRegionId[0]);
+      if (regionIds == null) {
+        regionIds = new HashSet();
+        regionIdsByWidgetId.put(widgetIdAndRegionId[0], regionIds);
       }
-      if (widgetAndRegion.length > 1) {
-        regions.add(widgetAndRegion[1]);
+      if (widgetIdAndRegionId.length > 1) {
+        regionIds.add(widgetIdAndRegionId[1]);
       } else {
-        regions.add(null);
+        // Only widgetId is present - add null value to indicate that this
+        // widget has to be fully rendered
+        regionIds.add(null);
       }
     }
 
-    removeDuplicateUpdateRegionWidgets(widgets);
+    removeOverlappingRegions(regionIdsByWidgetId);
 
-    return widgets;
+    return regionIdsByWidgetId;
   }
 
-  protected void removeDuplicateUpdateRegionWidgets(Map widgets) {
-    String masterWidget = null;
-    Set masterRegions = null;
-    for (Iterator i = widgets.entrySet().iterator(); i.hasNext(); ) {
+  protected void removeOverlappingRegions(Map regionIdsByWidgetId) {
+    String sourceWidgetId = null;
+    Set sourceRegionIds = null;
+    for (Iterator i = regionIdsByWidgetId.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
 
-      if (masterWidget == null) {
-        masterWidget = (String) entry.getKey();
-        masterRegions = (Set) entry.getValue();
+      if (sourceRegionIds == null) {
+        sourceWidgetId = (String) entry.getKey();
+        sourceRegionIds = (Set) entry.getValue();
         continue;
       }
 
-      String widget = (String) entry.getKey();
-      Set regions = (Set) entry.getValue();
-      if (widget.startsWith(masterWidget + ".")) {
-        masterRegions.addAll(regions);
+      String widgetId = (String) entry.getKey();
+      Set regionIds = (Set) entry.getValue();
+      if (widgetId.startsWith(sourceWidgetId + ".")) {
+        sourceRegionIds.addAll(regionIds);
         i.remove();
       } else {
-        masterWidget = widget;
-        masterRegions = regions;
+        sourceWidgetId = widgetId;
+        sourceRegionIds = regionIds;
       }
     }
   }
 
-  protected Map getResponseRegions(Map widgets, AtomicResponseHelper arUtil, OutputData output) throws Exception {
-    Map responseRegions = new HashMap();
-    for (Iterator i = widgets.entrySet().iterator(); i.hasNext(); ) {
+  protected Map renderRegions(Map regionIdsByWidgetId, AtomicResponseHelper arUtil, OutputData output) throws Exception {
+    Map regionContents = new HashMap();
+    for (Iterator i = regionIdsByWidgetId.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
-      String widget = (String) entry.getKey();
-      Set regions = (Set) entry.getValue();
+      String widgetId = (String) entry.getKey();
+      Set regionIds = (Set) entry.getValue();
 
-      // render a widget
-      Message renderMessage = new RenderMessage(new StandardPath(widget), output);
+      if (log.isDebugEnabled())
+        log.debug("Rendering widget " + widgetId);
+      Message renderMessage = new RenderMessage(new StandardPath(widgetId), output);
       propagate(renderMessage);
-      
 
-      if (regions.contains(null)) {
-        // at least one widget or sub-widget is rendered without updateregion comments
-        responseRegions.put(widget, arUtil.getData());
+      if (regionIds.contains(null)) {
+        // At least one widget has to be fully rendered (without updateregion
+        // comments)
+        regionContents.put(widgetId, arUtil.getData());
       } else {
-        // cut out regions by special comments
-        String source = new String(arUtil.getData(), characterEncoding);
-        for (Iterator j = regions.iterator(); j.hasNext(); ) {
-          String region = (String) j.next();
-          responseRegions.put(region, getContentById(source, region).getBytes(characterEncoding));
+        // Cut out regions by special comments
+        String widgetContent = new String(arUtil.getData(), characterEncoding);
+        for (Iterator j = regionIds.iterator(); j.hasNext(); ) {
+          String id = (String) j.next();
+          regionContents.put(id, getContentById(widgetContent, id).getBytes(characterEncoding));
         }
       }
       arUtil.rollback();
     }
-    return responseRegions;
+    return regionContents;
   }
 
   protected String getContentById(String source, String id) {
@@ -204,4 +223,3 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget {
   }
 
 }
-
