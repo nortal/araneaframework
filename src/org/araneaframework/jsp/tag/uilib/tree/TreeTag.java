@@ -45,7 +45,8 @@ public class TreeTag extends BaseWidgetTag {
 
     OutputData output = getOutputData();
     
-    ((TreeWidget) widget).setRenderer(buildTreeRenderer((TreeContext)widget));
+    if (((TreeWidget) widget).getRenderer() == null)
+    	((TreeWidget) widget).setRenderer(buildTreeRenderer((TreeContext) widget));
 
     try {
       output.pushScope(id);
@@ -64,9 +65,7 @@ public class TreeTag extends BaseWidgetTag {
    * {@link TreeWidget}. Usually overridden.
    */
   protected TreeRenderer buildTreeRenderer(TreeContext treeWidget) {
-    if (treeWidget.getRenderer() != null)
-      return treeWidget.getRenderer();
-    return new StandardTreeRenderer((TreeContext) widget);
+    return new StandardTreeRenderer(treeWidget);
   }
 
   /**
