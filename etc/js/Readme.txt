@@ -14,11 +14,11 @@ This folder contains scripts needed by Aranea Uilib.
 * scriptaculous/*
 - scripts from script.aculo.us JavaScript libraries (http://script.aculo.us/)
 - Required for using Uilib controls and tags that support autocompletion.
-- License is MIT-style license, details at http://www.prototypejs.org/license
+- License is MIT-style license, details at http://script.aculo.us/
 
 * prototype/*
 - http://www.prototypejs.org/
-- License is MIT-style license, details at http://script.aculo.us/
+- License is MIT-style license, details at http://www.prototypejs.org/license
 
 * ajaxanywhere/aa.js
 - AjaxAnywhere (http://ajaxanywhere.sourceforge.net/)
