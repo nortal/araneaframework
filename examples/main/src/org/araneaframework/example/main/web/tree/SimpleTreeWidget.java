@@ -53,7 +53,7 @@ public class SimpleTreeWidget extends BaseUIWidget {
     public List getChildren(TreeNodeContext parent) {
       List children = new ArrayList();
 
-      Iterator i = getResourceIterator((TreeNodeWidget)parent);
+      Iterator i = getResourceIterator(parent);
 
       if (i == null || !i.hasNext()) {
         return null;
@@ -70,7 +70,7 @@ public class SimpleTreeWidget extends BaseUIWidget {
       return (getChildren(parent) != null && !getChildren(parent).isEmpty());
     }
 
-    private Iterator getResourceIterator(TreeNodeWidget widget) {
+    private Iterator getResourceIterator(TreeNodeContext widget) {
       ServletContext servletContext = (ServletContext) SimpleTreeWidget.this.getEnvironment().getEntry(ServletContext.class);
       String path = null;
       if (widget instanceof TreeWidget)
