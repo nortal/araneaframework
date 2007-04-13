@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.tree;
 
 import java.io.Writer;
+import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -62,7 +63,9 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   }
 
   protected void init() throws Exception {
-    addAllNodes(loadChildren());
+    List children = loadChildren();
+    if (children != null)
+      addAllNodes(children);
   }
 
   public Environment getEnvironment() {
@@ -100,6 +103,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
    * Set tree renderer.
    */
   public void setRenderer(TreeRenderer renderer) {
+    Assert.notNullParam(renderer, "renderer");
     this.renderer = renderer;
   }
 
