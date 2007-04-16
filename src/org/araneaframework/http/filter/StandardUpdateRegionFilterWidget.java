@@ -33,6 +33,7 @@ import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
@@ -43,15 +44,20 @@ import org.araneaframework.http.util.AtomicResponseHelper;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Alar Kvell (alar@araneaframework.org)
  */
-public class StandardUpdateRegionFilterWidget extends BaseFilterWidget {
+public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implements UpdateRegionContext {
   static private final Logger log = Logger.getLogger(StandardUpdateRegionFilterWidget.class);
 
   private String characterEncoding = "UTF-8";
+  private boolean renderFullPage = false;
 
   public static final String UPDATE_REGIONS_KEY = "updateRegions";
 
   public void setCharacterEncoding(String encoding) {
     characterEncoding = encoding;
+  }
+
+  public void setRenderFullPage() {
+    renderFullPage = true;
   }
 
   protected void render(OutputData output) throws Exception {
@@ -98,7 +104,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget {
       String id = (String) entry.getKey();
       byte[] content = (byte[]) entry.getValue();
       httpOutput.getWriter().write("dom\n");
-      httpOutput.getWriter().write("replace\n");
       httpOutput.getWriter().write(id + "\n");
       httpOutput.getWriter().write(content.length + "\n");
       httpOutput.getWriter().flush();
@@ -203,7 +208,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget {
     if (log.isDebugEnabled())
       log.debug("Successfully extracted region '" + id + "' to be included in response.");
 
-    return source.substring(startIndex, endIndex + blockEnd.length());
+    return source.substring(startIndex + blockStart.length(), endIndex);
   }
 
   public static class RenderMessage extends RoutedMessage {
