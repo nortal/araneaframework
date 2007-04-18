@@ -26,6 +26,7 @@ import org.araneaframework.Widget;
  * node configuration.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.0.7
  */
 public interface TreeNodeContext extends Serializable {
 
