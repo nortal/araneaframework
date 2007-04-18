@@ -42,10 +42,10 @@ import org.araneaframework.jsp.util.JspUtil;
 public class MessagesHtmlTag extends PresentationTag {
   protected String type;
 
-  public MessagesHtmlTag() {
-    styleClass = "aranea-messages";
+  {
+    baseStyleClass = "aranea-messages";
   }
-  
+
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     return SKIP_BODY;
@@ -67,38 +67,49 @@ public class MessagesHtmlTag extends PresentationTag {
       }
     }
 
-    if (entries.size() == 0)
-      return EVAL_PAGE;
-
     /* matching messages, write them out */
+    writeMessagesStart(out, entries);
+    writeMessages(out, entries);
+    writeMessagesEnd(out, entries);
+
+    return EVAL_PAGE;
+  }
+
+  protected void writeMessagesStart(Writer out, List entries) throws Exception {
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "class", getStyleClass());
-    JspUtil.writeAttribute(out, "style", getStyle());
+    if (type != null) {
+      JspUtil.writeAttribute(out, "arn-msgs-type", type);
+    }
+    JspUtil.writeAttribute(out, "style", entries.size() == 0 ? "display: none" : getStyle());
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartTag(out);
+  }
 
-    JspUtil.writeStartTag(out, "div");
-    JspUtil.writeStartTag(out, "div");
-    JspUtil.writeStartTag(out, "div");
+  protected void writeMessagesEnd(Writer out, List entries) throws Exception {
+    JspUtil.writeEndTag(out, "div");
+  }
 
+  protected void writeMessages(Writer out, List entries) throws Exception {
     for (Iterator i = entries.iterator(); i.hasNext(); ) {
       Collection messages = (Collection) ((Map.Entry) i.next()).getValue();
 
       for (Iterator j = messages.iterator(); j.hasNext();) {
-        out.write(StringEscapeUtils.escapeHtml((String) j.next()));
+        writeMessageBody(out, (String) j.next());
         if (j.hasNext())
-          JspUtil.writeStartEndTag(out, "br");
+          writeMessageSeparator(out);
       }
       if (i.hasNext())
-        JspUtil.writeStartEndTag(out, "br");
+        writeMessageSeparator(out);
     }
+  }
 
-    JspUtil.writeEndTag(out, "div");
-    JspUtil.writeEndTag(out, "div");
-    JspUtil.writeEndTag(out, "div");
-    JspUtil.writeEndTag(out, "div");
+  protected void writeMessageBody(Writer out, String message) throws Exception {
+    out.write(StringEscapeUtils.escapeHtml(message));
+  }
 
-    return EVAL_PAGE;
+  protected void writeMessageSeparator(Writer out) throws Exception {
+    JspUtil.writeStartEndTag(out, "br");
   }
 
   /* ***********************************************************************************

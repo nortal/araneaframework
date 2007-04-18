@@ -384,13 +384,13 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       systemFormId: systemForm.id
     },
     onSuccess: function(transport) {
-      araneaPage().getLogger().debug('Partial rendering: receiver successful response');
+      araneaPage().getLogger().debug('Partial rendering: received successful response');
       Aranea.process(transport.responseText);
       AraneaPage.init();
       araneaPage().onload();
     },
     onFailure: function(transport) {
-      araneaPage().getLogger().debug('Partial rendering: receiver error response');
+      araneaPage().getLogger().debug('Partial rendering: received erroneous response');
       Element.update(document.documentElement, transport.responseText);
     }
   });
@@ -444,6 +444,7 @@ var Aranea = {
         this.regionHandlers[key].process(text);
       } else {
         araneaPage().getLogger().error('Region type: "' + key + '" is unknown!');
+        return;
       }
     }
   }
@@ -487,6 +488,39 @@ Aranea.DocumentRegionHandler.prototype = {
   }
 };
 Aranea.addRegionHandler('document', new Aranea.DocumentRegionHandler());
+
+Aranea.MessagesRegionHandler = Class.create();
+Aranea.MessagesRegionHandler.prototype = {
+  initialize: function() {
+  },
+
+  process: function(text) {
+  
+    var types = text.readLine();
+    for (int i = 0; i < types; i++) {
+      var type = text.readLine();
+      var count = text.readLine();
+      for (int j = 0; j < count; j++) {
+        var length = text.readLine();
+        var content = text.readBytes(length);
+        //TODO
+      }
+    }
+    Element.update(document.documentElement, content);
+  },
+  
+  resetRegions: function() {
+    $$('.aranea-messages').each(function(s) {
+      s.hide();
+      findContentElement(s).update();
+    });
+  },
+  
+  findContentElement: function(region) {
+    return region.down().down().down();
+  }
+};
+Aranea.addRegionHandler('messages', new Aranea.MessagesRegionHandler());
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */

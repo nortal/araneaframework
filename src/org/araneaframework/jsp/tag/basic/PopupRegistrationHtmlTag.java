@@ -22,7 +22,6 @@ import java.util.Map;
 import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -35,15 +34,10 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Registers popups present in current popupcontext for opening."
  */
 public class PopupRegistrationHtmlTag extends BaseTag {
-  public static final String POPUP_REGISTRATION_REGION  = "popupRegistrationRegion";
-	
+
   protected int doEndTag(Writer out) throws Exception {
     PopupWindowContext popupWindowContext = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
     Object popups = popupWindowContext.getPopups();
-    
-    UpdateRegionHtmlTag updateRegionTag = new UpdateRegionHtmlTag();
-    updateRegionTag.setGlobalId(POPUP_REGISTRATION_REGION);
-    registerAndExecuteStartTag(updateRegionTag);
 
     if (popups != null && !((Map)popups).isEmpty()) {
       JspUtil.writeOpenStartTag(out, "script");
@@ -55,18 +49,17 @@ public class PopupRegistrationHtmlTag extends BaseTag {
       JspUtil.writeEndTag(out, "script");
     }
 
-    executeEndTagAndUnregister(updateRegionTag);
     return super.doEndTag(out);
   }
 
   protected void addPopups(Writer out, Map popups) throws Exception {
-	for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
-	  addPopup(out, (Map.Entry)i.next());
-	}
+    for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
+      addPopup(out, (Map.Entry)i.next());
+    }
   }
 
   protected void addPopup(Writer out, Map.Entry popup) throws Exception {
-	String serviceId = (String)popup.getKey();
+    String serviceId = (String)popup.getKey();
     PopupServiceInfo serviceInfo = (PopupServiceInfo)popup.getValue();
 
     out.write("addPopup('"  + serviceId + "'");

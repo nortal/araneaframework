@@ -2,6 +2,7 @@
     xmlns:jsp="http://java.sun.com/JSP/Page" 
     xmlns:c="http://java.sun.com/jstl/core" 
     xmlns:ui="http://araneaframework.org/tag-library/standard" 
+    xmlns:tui="http://araneaframework.org/tag-library/template"
     version="1.2">
 
 	        <ui:widgetContext>	        
@@ -28,8 +29,8 @@
 	                            <ui:nbsp/>
 	
 	                             	<ui:updateRegion globalId="messages">
-		                               <ui:messages type="info"/>
-	                                   <ui:messages type="error" styleClass="msg-error"/>
+		                               <tui:messages type="info"/>
+	                                   <tui:messages type="error" styleClass="msg-error"/>
                                     </ui:updateRegion>
 	                                 <!-- Renders the menu widget itself. As MenuWidget is subclass
 	                                 	of StandardFlowContainerWidget, this means that actual
