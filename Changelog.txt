@@ -1,5 +1,10 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2007.04.19    | Aranea 1.0.8
+
+Bugfixes
+    Small 'bugfix' in 1.0.7 caused NPE on Form Lists initialization. Sorry!   | See #359
+
 2007.04.13    | Aranea 1.0.7
 
 Features and Improvements
