@@ -214,6 +214,10 @@
 		
       </ui:formList>
     </ui:list>
+    
+    <ui:form id="xx">
+    	<ui:floatInputDisplay id="sum"/>
+    </ui:form>
 
   </ui:widgetContext>		
 </jsp:root>
