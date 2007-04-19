@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.tree;
 
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeNodeContext;
 import org.araneaframework.uilib.tree.TreeNodeWidget;
@@ -26,7 +27,7 @@ import org.araneaframework.uilib.tree.TreeWidget;
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
-public class ComplexTreeWidget extends BaseUIWidget {
+public class ComplexTreeWidget extends TemplateBaseWidget {
 
   protected TreeWidget tree;
 
