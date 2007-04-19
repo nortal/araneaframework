@@ -326,7 +326,7 @@ AraneaPage.init = function() {
 AraneaPage.findSystemForm = function() {
   araneaPage().setSystemForm($A(document.getElementsByTagName('form')).find(
     function(element) {
-      return element.hasAttribute('arn-systemForm');
+      return $(element).hasAttribute('arn-systemForm');
     }
   ));
 }
@@ -495,29 +495,49 @@ Aranea.MessagesRegionHandler.prototype = {
   },
 
   process: function(text) {
-  
-    var types = text.readLine();
-    for (int i = 0; i < types; i++) {
-      var type = text.readLine();
-      var count = text.readLine();
-      for (int j = 0; j < count; j++) {
-        var length = text.readLine();
-        var content = text.readBytes(length);
-        //TODO
+    var messagesByType = text.readBytes(text.readLine()).evalJSON();
+    this.updateRegions(messagesByType);
+  },
+
+  updateRegions: function(messagesByType) {
+    $$('.aranea-messages').each((function(region) {
+      if (region.hasAttribute('arn-msgs-type')) {
+        var type = region.getAttribute('arn-msgs-type');
+        if (messagesByType[type]) {
+          var messages = messagesByType[type];
+          if (messages.size() > 0) {
+            this.showMessagesRegion(region, messages);
+            return;
+          }
+        }
+      } else {
+        var messages = messagesByType.values().flatten();
+        if (messages.size() > 0) {
+          this.showMessagesRegion(region, messages);
+          return;
+        }
       }
-    }
-    Element.update(document.documentElement, content);
+      this.hideMessagesRegion(region);
+    }).bind(this));
   },
-  
-  resetRegions: function() {
-    $$('.aranea-messages').each(function(s) {
-      s.hide();
-      findContentElement(s).update();
-    });
+
+  showMessagesRegion: function(region, messages) {
+    this.findContentElement(region).update(this.buildRegionContent(messages));
+    region.show();
+    return;
   },
-  
+
+  hideMessagesRegion: function(region) {
+    region.hide();
+    this.findContentElement(region).update();
+  },
+
   findContentElement: function(region) {
-    return region.down().down().down();
+    return region;
+  },
+
+  buildRegionContent: function(messages) {
+    return messages.invoke('escapeHTML').join('<br/>');
   }
 };
 Aranea.addRegionHandler('messages', new Aranea.MessagesRegionHandler());

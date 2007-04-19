@@ -23,12 +23,14 @@ import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.set.ListOrderedSet;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
+import org.araneaframework.http.UpdateRegionContext;
 
 /**
  * Adds a {@link org.araneaframework.framework.MessageContext} implementation to the environment that can
@@ -51,6 +53,14 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   protected Map permanentMessages;
   protected Map messages;
   
+  protected void init() throws Exception {
+    super.init();
+    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().getEntry(UpdateRegionContext.class);
+    if (updateRegionContext != null) {
+      updateRegionContext.addRegionHandler("messages", new MessagesRegionHandler());
+    }
+  }
+
   protected void update(InputData input) throws Exception {
     clearMessages();
 
@@ -165,4 +175,38 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     }
     return Collections.unmodifiableMap(messages);
   }
+
+  protected class MessagesRegionHandler implements UpdateRegionContext.RegionHandler {
+
+    public String getContent() throws Exception {
+      Map messageMap = getMessages();
+      if (messageMap == null || messageMap.isEmpty())
+        return null;
+      StringBuffer buf = new StringBuffer();
+      buf.append("{");
+      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry entry = (Map.Entry) i.next();
+        if (entry.getValue() == null) {
+          continue;
+        }
+        String type = (String) entry.getKey();
+        buf.append("'").append(StringEscapeUtils.escapeJavaScript(type)).append("':[");
+        Collection messages = (Collection) entry.getValue();
+        for (Iterator j = messages.iterator(); j.hasNext(); ) {
+          String message = (String) j.next();
+          buf.append("'").append(StringEscapeUtils.escapeJavaScript(message)).append("'");
+          if (j.hasNext())
+            buf.append(",");
+        }
+        buf.append("]");
+        if (i.hasNext())
+          buf.append(",");
+      }
+      buf.append("}");
+      buf.insert(0, buf.length() + "\n");
+      return buf.toString();
+    }
+
+  }
+
 }

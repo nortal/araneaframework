@@ -56,14 +56,14 @@ public class MessagesHtmlTag extends PresentationTag {
 
     MessageContext messageContext = (MessageContext) getEnvironment().requireEntry(MessageContext.class);
     Map messageMap = messageContext.getMessages();
-    if (messageMap == null)
-      return EVAL_PAGE;
 
     List entries = new ArrayList();
-    for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      if (type == null || ((String)entry.getKey()).equals(type)) {
-        entries.add(entry);
+    if (messageMap != null) {
+      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry entry = (Map.Entry) i.next();
+        if (type == null || ((String)entry.getKey()).equals(type)) {
+          entries.add(entry);
+        }
       }
     }
 

@@ -14,21 +14,20 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.http;
-
-import java.io.Serializable;
-
 /**
  * @author Alar Kvell (alar@araneaframework.org)
  */
-public interface UpdateRegionContext extends Serializable {
 
-  void addRegionHandler(String name, RegionHandler handler);
+var AraneaExamples = {
+};
 
-  public interface RegionHandler extends Serializable {
+AraneaExamples.MessagesRegionHandler = Class.create();
+AraneaExamples.MessagesRegionHandler.prototype = Object.extend(new Aranea.MessagesRegionHandler(), {
+  initialize: function() {
+  },
 
-    String getContent() throws Exception;
-
+  findContentElement: function(region) {
+    return region.down().down().down();
   }
-
-}
+});
+Aranea.addRegionHandler('messages', new AraneaExamples.MessagesRegionHandler());

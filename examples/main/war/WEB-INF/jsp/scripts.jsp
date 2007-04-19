@@ -13,7 +13,8 @@
 		<ui:importStyles file="css/calendar/calendar.css" media="screen"/>
 
 		<ui:importScripts/>
-		
+		<ui:importScripts group="examplesScripts"/>
+
 		<!-- Enables firebug js console logging, if firebug present -->
 		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
 		

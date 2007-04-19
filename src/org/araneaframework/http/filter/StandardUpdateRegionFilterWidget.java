@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.filter;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,11 +25,14 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
+import org.araneaframework.Environment;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.RoutedMessage;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
@@ -48,7 +52,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   static private final Logger log = Logger.getLogger(StandardUpdateRegionFilterWidget.class);
 
   private String characterEncoding = "UTF-8";
-  private boolean renderFullPage = false;
+  private Map regionHandlers = new HashMap();
 
   public static final String UPDATE_REGIONS_KEY = "updateRegions";
 
@@ -56,8 +60,14 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     characterEncoding = encoding;
   }
 
-  public void setRenderFullPage() {
-    renderFullPage = true;
+  public void addRegionHandler(String name, RegionHandler handler) {
+    Assert.notNullParam(name, "name");
+    Assert.notNullParam(handler, "handler");
+    regionHandlers.put(name, handler);
+  }
+
+  protected Environment getChildWidgetEnvironment() {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), UpdateRegionContext.class, this);
   }
 
   protected void render(OutputData output) throws Exception {
@@ -81,34 +91,47 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
       // Write out response
       HttpOutputData httpOutput = (HttpOutputData) output;
-      writeTransactionId(httpOutput);
-      writeRegions(httpOutput, regionContents);
+      PrintWriter writer = httpOutput.getWriter();
+      writeTransactionId(writer);
+      writeHandlerRegions(writer);
+      writeDomRegions(writer, regionContents);
+      writer.flush();
     }
     finally {
       arUtil.commit();
     }
   }
 
-  protected void writeTransactionId(HttpOutputData httpOutput) throws Exception {
+  protected void writeTransactionId(PrintWriter out) throws Exception {
     TransactionContext transactionContext = (TransactionContext) getEnvironment().getEntry(TransactionContext.class);
     if (transactionContext != null) {
-      httpOutput.getWriter().write("transactionId\n");
-      httpOutput.getWriter().write(transactionContext.getTransactionId() + "\n");
-      httpOutput.getWriter().flush();
+      out.write("transactionId\n");
+      out.write(transactionContext.getTransactionId() + "\n");
     }
   }
 
-  protected void writeRegions(HttpOutputData httpOutput, Map regionContents) throws Exception {
+  protected void writeHandlerRegions(PrintWriter out) throws Exception {
+    for (Iterator i = regionHandlers.entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String name = (String) entry.getKey();
+      RegionHandler handler = (RegionHandler) entry.getValue();
+      String content = handler.getContent();
+      if (content != null) {
+        out.write(name + "\n");
+        out.write(content);
+      }
+    }
+  }
+
+  protected void writeDomRegions(PrintWriter out, Map regionContents) throws Exception {
     for (Iterator i = regionContents.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
       String id = (String) entry.getKey();
-      byte[] content = (byte[]) entry.getValue();
-      httpOutput.getWriter().write("dom\n");
-      httpOutput.getWriter().write(id + "\n");
-      httpOutput.getWriter().write(content.length + "\n");
-      httpOutput.getWriter().flush();
-      httpOutput.getOutputStream().write(content);
-      httpOutput.getOutputStream().flush();
+      String content = (String) entry.getValue();
+      out.write("dom\n");
+      out.write(id + "\n");
+      out.write(content.length() + "\n");
+      out.write(content);
     }
   }
 
@@ -177,13 +200,13 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       if (regionIds.contains(null)) {
         // At least one widget has to be fully rendered (without updateregion
         // comments)
-        regionContents.put(widgetId, arUtil.getData());
+        regionContents.put(widgetId, new String(arUtil.getData(), characterEncoding));
       } else {
         // Cut out regions by special comments
         String widgetContent = new String(arUtil.getData(), characterEncoding);
         for (Iterator j = regionIds.iterator(); j.hasNext(); ) {
           String id = (String) j.next();
-          regionContents.put(id, getContentById(widgetContent, id).getBytes(characterEncoding));
+          regionContents.put(id, getContentById(widgetContent, id));
         }
       }
       arUtil.rollback();

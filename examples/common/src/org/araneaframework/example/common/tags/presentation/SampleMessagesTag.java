@@ -10,18 +10,13 @@ import org.araneaframework.jsp.util.JspUtil;
  * Message tag - show the messages in {@link MessageContext} 
  * with given type. 
  * 
- * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Alar Kvell (alar@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "messages"
  *   body-content = "empty"
  */
 public class SampleMessagesTag extends MessagesHtmlTag {
-
-  {
-    baseStyleClass = null;
-    styleClass = "aranea-messages";
-  }
 
   protected void writeMessagesStart(Writer out, List entries) throws Exception {
     super.writeMessagesStart(out, entries);
