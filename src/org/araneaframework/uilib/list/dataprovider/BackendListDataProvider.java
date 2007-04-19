@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.list.dataprovider;
 
+import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
@@ -28,6 +29,7 @@ import org.araneaframework.backend.list.model.ListQuery;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BackendListDataProvider implements ListDataProvider {
+	private static final Logger log = Logger.getLogger(BackendListDataProvider.class);
 	
 	public static final boolean USE_CACHE_BY_DEFAULT = false; 
 
@@ -126,6 +128,10 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 			query.setFilterExpression(this.filterExpr);
 			query.setOrderExpression(this.orderExpr);			
 			this.lastItemRange = getItemRange(query);
+			
+			if (log.isDebugEnabled()) {
+				log.debug("refreshing itemrange: startIdx=" + startIdx.toString() + ", count="+count.toString());
+			}
 		}
 
 		this.forceReload = false;

@@ -85,7 +85,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
         throw new AraneaRuntimeException(e);
       }
     }
-    
+
 		for (Iterator i = getRows().iterator(); i.hasNext();) {
 			Object row = i.next();
 
