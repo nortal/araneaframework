@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.sample;
 
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -24,7 +25,7 @@ import org.araneaframework.uilib.form.data.StringData;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class NameWidget extends BaseUIWidget {
+public class NameWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
   private FormWidget form;
   
