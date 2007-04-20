@@ -23,6 +23,7 @@ import java.util.List;
  * Tree data provider is used by {@link TreeWidget} to retrieve tree data.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.0.7
  */
 public interface TreeDataProvider extends Serializable {
 

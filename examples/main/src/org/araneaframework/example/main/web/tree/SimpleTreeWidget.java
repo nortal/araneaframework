@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.ServletContext;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
 import org.araneaframework.uilib.tree.TreeNodeContext;
@@ -36,7 +37,7 @@ import org.araneaframework.uilib.tree.TreeWidget;
  * @author Alar Kvell (alar@araneaframework.org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class SimpleTreeWidget extends BaseUIWidget {
+public class SimpleTreeWidget extends TemplateBaseWidget {
   protected void init() throws Exception {
     setViewSelector("tree/simpleTree");
 

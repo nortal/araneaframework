@@ -30,7 +30,8 @@ import org.araneaframework.uilib.tree.TreeWidget;
 /**
  * Tree widget tag. Uses {@link StandardTreeRenderer} for rendering the tree in HTML.
  * @author Alar Kvell (alar@araneaframework.org)
- * 
+ * @since 1.0.7
+ *  
  * @jsp.tag
  *   name = "tree"
  *   body-content = "JSP"
