@@ -16,10 +16,7 @@
 
 package org.araneaframework.example.main.web.person;
 
-import java.math.BigDecimal;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
@@ -32,7 +29,6 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
@@ -60,7 +56,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
        FormRowHandler class that will handle the different row operations. */
 		list = new EditableBeanListWidget(buildFormRowHandler(), PersonMO.class);
 		this.formList = list.getFormList();
-		
+		addWidget("list", list);
 		list.setOrderableByDefault(true);
 		list.addField("id", "#Id", false);
 		/* Filtering by fields other than ID is enabled. */
@@ -73,28 +69,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		/* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
 		list.setDataProvider(buildListDataProvider());
-		addWidget("list", list);
-
-	    FormWidget form = new FormWidget(); 
-	    addWidget("xx", form);
-	    form.addElement("sum", "#sum", new FloatControl(), new BigDecimalData(), false);
-	    form.setValueByFullName("sum", getArticlesSum()); 
-		/* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
 	}
 	
-	private BigDecimal getArticlesSum() {
-	    BigDecimal result = new BigDecimal(0); 
-	    
-	     Map rows = list.getFormList().getFormRows(); 
-	     for (Iterator it = rows.values().iterator(); it.hasNext();) { 
-	       FormRow row = (FormRow) it.next(); 
-	       PersonMO dto = (PersonMO) row.getRow(); 
-	       if (dto.getSalary() != null) { 
-	         result = result.add(dto.getSalary()); 
-	       } 
-	     } 
-	     return result; 
-	}
 
 	protected abstract ListDataProvider buildListDataProvider() throws Exception;
 	
