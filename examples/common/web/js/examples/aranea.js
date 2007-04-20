@@ -17,12 +17,11 @@
 /**
  * @author Alar Kvell (alar@araneaframework.org)
  */
-
 var AraneaExamples = {
 };
 
-AraneaExamples.MessagesRegionHandler = Class.create();
-AraneaExamples.MessagesRegionHandler.prototype = Object.extend(new Aranea.MessagesRegionHandler(), {
+AraneaExamples.MessageRegionHandler = Class.create();
+AraneaExamples.MessageRegionHandler.prototype = Object.extend(new Aranea.MessageRegionHandler(), {
   initialize: function() {
   },
 
@@ -30,4 +29,4 @@ AraneaExamples.MessagesRegionHandler.prototype = Object.extend(new Aranea.Messag
     return region.down().down().down();
   }
 });
-Aranea.addRegionHandler('messages', new AraneaExamples.MessagesRegionHandler());
+Aranea.addRegionHandler('messages', new AraneaExamples.MessageRegionHandler());
