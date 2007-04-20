@@ -47,225 +47,225 @@ import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 public class PersonEditableListPopupWidget extends TemplateBaseWidget {
-	private static final long serialVersionUID = 1L;
-	protected static final Logger log = Logger.getLogger(PersonEditableListPopupWidget.class);
-	private  IContractDAO contractDAO; 
-	
-	private MemoryBasedListDataProvider dataProvider = new DataProvider();
-	
-	private boolean usePopupFlow = true;
-	private boolean useAction = false;
+  private static final long serialVersionUID = 1L;
+  protected static final Logger log = Logger.getLogger(PersonEditableListPopupWidget.class);
+  private  IContractDAO contractDAO; 
 
-	private EditableBeanListWidget list;
-	private BeanFormListWidget formList;
-	
-	protected void init() throws Exception {
-		setViewSelector("person/popupeditableList");
-		
-		list = new EditableBeanListWidget(new PersonEditableRowHandler(), PersonMO.class);
-		this.formList = list.getFormList();
-		addWidget("list", list);
-		list.setOrderableByDefault(true);
-		list.addField("id", "#Id", false);
-		list.addField("name", "#First name").like();
-		list.addField("surname", "#Last name").like();
-		list.addField("phone", "#Phone no").like();		
-		list.addField("birthdate", "#Birthdate").range();
-		list.addField("salary", "#Salary").range();
-		list.addField("dummy", null, false);
-		
-		list.setDataProvider(dataProvider);
-	}
-	
-	protected void process() throws Exception {
-		super.process();
-	}
+  private MemoryBasedListDataProvider dataProvider = new DataProvider();
 
-	private class DataProvider extends MemoryBasedListDataProvider {
-	      private static final long serialVersionUID = 1L;
-	      private List data;
-		      
-		protected DataProvider() {
-			super(PersonMO.class);
-		}
-		public List loadData() throws Exception {
-			if (data == null)
-				data = getGeneralDAO().getAll(PersonMO.class);
-			return data;
-		}
-	}
-	
-	public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-		    private static final long serialVersionUID = 1L;
+  private boolean usePopupFlow = true;
+  private boolean useAction = false;
 
-		public Object getRowKey(Object rowData) {
-			return ((PersonMO) rowData).getId();
-		}
-		
-		public void saveValidRow(FormRow editableRow) throws Exception {
+  private EditableBeanListWidget list;
+  private BeanFormListWidget formList;
 
-		}
-		
-		public void deleteRow(Object key) throws Exception {
-			Long id = (Long) key;
-			contractDAO.removeByPersonId(id);
-			getGeneralDAO().remove(PersonMO.class, id);
-			list.getDataProvider().refreshData();
-		}
-		
-		public void addValidRow(FormWidget addForm) throws Exception {
-			PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
-			getGeneralDAO().add(rowData);
-			list.getDataProvider().refreshData();
-			formList.resetAddForm();
-		}
-		
-		public void initFormRow(FormRow editableRow, Object rowData) throws Exception {
-			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
-			addCommonFormFields(rowForm);
-			
-			FormListUtil.addButtonToRowForm("#", rowForm, new PopupListenerFactory().createListener(rowData) , "popupButton");
-			rowForm.addActionListener("testAction", new TestActionListener());
-			rowForm.writeBean(rowData);
-		}
+  protected void init() throws Exception {
+    setViewSelector("person/popupeditableList");
 
-		public void initAddForm(FormWidget addForm) throws Exception {
-			addCommonFormFields((BeanFormWidget)addForm);
-			FormListUtil.addAddButtonToAddForm("#", formList, addForm);
-		}
-		
+    list = new EditableBeanListWidget(new PersonEditableRowHandler(), PersonMO.class);
+    this.formList = list.getFormList();
+    addWidget("list", list);
+    list.setOrderableByDefault(true);
+    list.addField("id", "#Id", false);
+    list.addField("name", "#First name").like();
+    list.addField("surname", "#Last name").like();
+    list.addField("phone", "#Phone no").like();		
+    list.addField("birthdate", "#Birthdate").range();
+    list.addField("salary", "#Salary").range();
+    list.addField("dummy", null, false);
 
-		private void addCommonFormFields(BeanFormWidget form) throws Exception {
-			form.addBeanElement("name", "#First name", new TextControl(), true);
-			form.addBeanElement("surname", "#Last name", new TextControl(),  true);
-			form.addBeanElement("phone", "#Phone no", new TextControl(), false);
-			form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
-			form.addBeanElement("salary", "#Salary", new FloatControl(), false);
-		}
-	}
-	
-	private class PopupListenerFactory {
-		public OnClickEventListener createListener(Object data) {
-			if (usePopupFlow)
-				return new PopupFlowListener((PersonMO)data);
-			
-			if (useAction)
-				return new PopupClientListenerActionInvoker(PersonEditableListPopupWidget.this);
+    list.setDataProvider(dataProvider);
+  }
 
-			return new PopupClientListener(PersonEditableListPopupWidget.this);
-		}
-	}
-	
-	private class PopupFlowListener implements OnClickEventListener {
-		private PersonMO person;
-		public PopupFlowListener(PersonMO eventParam) {
-			this.person = eventParam;
-		}
+  protected void process() throws Exception {
+    super.process();
+  }
 
-		public void onClick() throws Exception {
-		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(person)); 
-		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
-		      PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), new PopupWindowProperties(), new PopupMessageFactory());
-		      getFlowCtx().start(pfw, null, new MyHandler(rowForm, person)); 
-		}
-	}
-	
-	private class PopupClientListener implements OnClickEventListener {
-		private Widget starter;
-		
-		public PopupClientListener(Widget opener) {
-			starter = opener;
-		}
-		
-		public void onClick() throws Exception {
-		      // get the id of updatable formelement, tricky
-		      String widgetId = getScope().toString();
-		      widgetId = widgetId.substring(0, widgetId.lastIndexOf('.'));
-		      widgetId = widgetId + ".name";
-		      
-		      StandalonePopupFlowWrapperWidget toStart = new StandalonePopupFlowWrapperWidget(new NameWidget());
-		      toStart.setFinishService(new ApplyReturnValueService(widgetId));
-	      
-			PopupWindowProperties p = new PopupWindowProperties();
-			p.setHeight("600");
-			p.setWidth("1000");
-			p.setScrollbars("yes");
+  private class DataProvider extends MemoryBasedListDataProvider {
+    private static final long serialVersionUID = 1L;
+    private List data;
 
-		      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, starter);
-		}
-	}
-	
-	private class PopupClientListenerActionInvoker implements OnClickEventListener {
-		private Widget starter;
-		
-		public PopupClientListenerActionInvoker(Widget opener) {
-			starter = opener;
-		}
-		
-		public void onClick() throws Exception {
-		      // get the id of updatable formelement, tricky
-		      String widgetId = getScope().toString();
-		      widgetId = widgetId.substring(0, widgetId.lastIndexOf('.'));
-		      widgetId = widgetId + ".name";
-		      
-		      StandalonePopupFlowWrapperWidget toStart = new StandalonePopupFlowWrapperWidget(new NameWidget());
-		      toStart.setFinishService(new ParentActionInvokingService(widgetId));
-	      
-			PopupWindowProperties p = new PopupWindowProperties();
-			p.setHeight("600");
-			p.setWidth("1000");
-			p.setScrollbars("yes");
+    protected DataProvider() {
+      super(PersonMO.class);
+    }
+    public List loadData() throws Exception {
+      if (data == null)
+        data = getGeneralDAO().getAll(PersonMO.class);
+      return data;
+    }
+  }
 
-		      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, starter);
-		}
-	}
-	
-	private class TestActionListener extends StandardActionListener {
-		public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
-			StringBuffer s = new StringBuffer("alert('this is a message from action that came back to haunt you, return value being: ");
-			s.append(actionParam);
-			s.append("')");
-			
-			Writer out = ((HttpOutputData) output).getWriter();
-		    out.write(s.toString());
-		}
-	}
-	
-	private class MyHandler implements FlowContext.Handler { 
-		private BeanFormWidget form; 
-		private PersonMO rowObject; 
+  public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
+    private static final long serialVersionUID = 1L;
 
-		public MyHandler(BeanFormWidget form, PersonMO rowObject) { 
-			this.form = form; 
-			this.rowObject = rowObject; 
-		}
+    public Object getRowKey(Object rowData) {
+      return ((PersonMO) rowData).getId();
+    }
 
-		public void onCancel() throws Exception {
-		}
+    public void saveValidRow(FormRow editableRow) throws Exception {
 
-		public void onFinish(Object returnValue) { 
-			rowObject.setName(returnValue.toString());
-			form.writeBean(rowObject);
-		} 
-	}
+    }
 
-	public void injectContractDAO(IContractDAO contractDAO) {
-		this.contractDAO = contractDAO;
-	}
+    public void deleteRow(Object key) throws Exception {
+      Long id = (Long) key;
+      contractDAO.removeByPersonId(id);
+      getGeneralDAO().remove(PersonMO.class, id);
+      list.getDataProvider().refreshData();
+    }
 
-	public void setUsePopupFlow(boolean b) {
-		this.usePopupFlow = b;
-	}
-	
-	public void setUseAction(boolean b) {
-		this.useAction = b;
-	}
+    public void addValidRow(FormWidget addForm) throws Exception {
+      PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
+      getGeneralDAO().add(rowData);
+      list.getDataProvider().refreshData();
+      formList.resetAddForm();
+    }
 
-	public String getTitle() {
-		if (usePopupFlow)
-			return "Server-side return";
-		if (useAction)
-			return "Client-side return calling serverside action";
-		return "Client-side return";
-	}
+    public void initFormRow(FormRow editableRow, Object rowData) throws Exception {
+      BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
+      addCommonFormFields(rowForm);
+
+      FormListUtil.addButtonToRowForm("#", rowForm, new PopupListenerFactory().createListener(rowData, rowForm) , "popupButton");
+      rowForm.addActionListener("testAction", new TestActionListener());
+      rowForm.writeBean(rowData);
+    }
+
+    public void initAddForm(FormWidget addForm) throws Exception {
+      addCommonFormFields((BeanFormWidget)addForm);
+      FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+    }
+
+
+    private void addCommonFormFields(BeanFormWidget form) throws Exception {
+      form.addBeanElement("name", "#First name", new TextControl(), true);
+      form.addBeanElement("surname", "#Last name", new TextControl(),  true);
+      form.addBeanElement("phone", "#Phone no", new TextControl(), false);
+      form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
+      form.addBeanElement("salary", "#Salary", new FloatControl(), false);
+    }
+  }
+
+  private class PopupListenerFactory {
+    public OnClickEventListener createListener(Object data, Widget w) {
+      if (usePopupFlow)
+        return new PopupFlowListener((PersonMO)data);
+
+      if (useAction)
+        return new PopupClientListenerActionInvoker(PersonEditableListPopupWidget.this, w);
+
+      return new PopupClientListener(PersonEditableListPopupWidget.this, w);
+    }
+  }
+
+  private class PopupFlowListener implements OnClickEventListener {
+    private PersonMO person;
+    public PopupFlowListener(PersonMO eventParam) {
+      this.person = eventParam;
+    }
+
+    public void onClick() throws Exception {
+      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(person)); 
+      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
+      PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), new PopupWindowProperties(), new PopupMessageFactory());
+      getFlowCtx().start(pfw, null, new MyHandler(rowForm, person)); 
+    }
+  }
+
+  private class PopupClientListener implements OnClickEventListener {
+    private Widget starter;
+    private Widget receiver;
+
+    public PopupClientListener(Widget opener, Widget receiver) {
+      starter = opener;
+      this.receiver = receiver;
+    }
+
+    public void onClick() throws Exception {
+      String widgetId = receiver.getScope().toString();
+      widgetId = widgetId + ".name";
+
+      StandalonePopupFlowWrapperWidget toStart = new StandalonePopupFlowWrapperWidget(new NameWidget());
+      toStart.setFinishService(new ApplyReturnValueService(widgetId));
+
+      PopupWindowProperties p = new PopupWindowProperties();
+      p.setHeight("600");
+      p.setWidth("1000");
+      p.setScrollbars("yes");
+
+      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, starter);
+    }
+  }
+
+  private class PopupClientListenerActionInvoker implements OnClickEventListener {
+    private Widget starter;
+    private Widget receiver;
+
+    public PopupClientListenerActionInvoker(Widget opener, Widget receiver) {
+      starter = opener;
+      this.receiver = receiver;
+    }
+
+    public void onClick() throws Exception {
+      String widgetId = receiver.getScope().toString();
+      widgetId = widgetId + ".name";
+
+      StandalonePopupFlowWrapperWidget toStart = new StandalonePopupFlowWrapperWidget(new NameWidget());
+      toStart.setFinishService(new ParentActionInvokingService(widgetId));
+
+      PopupWindowProperties p = new PopupWindowProperties();
+      p.setHeight("600");
+      p.setWidth("1000");
+      p.setScrollbars("yes");
+
+      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, starter);
+    }
+  }
+
+  private class TestActionListener extends StandardActionListener {
+    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+      StringBuffer s = new StringBuffer("alert('this is a message from action that came back to haunt you, return value being: ");
+      s.append(actionParam);
+      s.append("')");
+
+      Writer out = ((HttpOutputData) output).getWriter();
+      out.write(s.toString());
+    }
+  }
+
+  private class MyHandler implements FlowContext.Handler { 
+    private BeanFormWidget form; 
+    private PersonMO rowObject; 
+
+    public MyHandler(BeanFormWidget form, PersonMO rowObject) { 
+      this.form = form; 
+      this.rowObject = rowObject; 
+    }
+
+    public void onCancel() throws Exception {
+    }
+
+    public void onFinish(Object returnValue) { 
+      rowObject.setName(returnValue.toString());
+      form.writeBean(rowObject);
+    } 
+  }
+
+  public void injectContractDAO(IContractDAO contractDAO) {
+    this.contractDAO = contractDAO;
+  }
+
+  public void setUsePopupFlow(boolean b) {
+    this.usePopupFlow = b;
+  }
+
+  public void setUseAction(boolean b) {
+    this.useAction = b;
+  }
+
+  public String getTitle() {
+    if (usePopupFlow)
+      return "Server-side return";
+    if (useAction)
+      return "Client-side return calling serverside action";
+    return "Client-side return";
+  }
 }
