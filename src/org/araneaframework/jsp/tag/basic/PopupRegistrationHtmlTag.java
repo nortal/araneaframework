@@ -37,15 +37,15 @@ public class PopupRegistrationHtmlTag extends BaseTag {
 
   protected int doEndTag(Writer out) throws Exception {
     PopupWindowContext popupWindowContext = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-    Object popups = popupWindowContext.getPopups();
+    Map popups = popupWindowContext.getPopups();
 
-    if (popups != null && !((Map)popups).isEmpty()) {
+    if (popups != null && !popups.isEmpty()) {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
       JspUtil.writeCloseStartTag(out);
       out.write("_ap.addSystemLoadEvent(processPopups);\n");
 
-      addPopups(out, (Map)popups);
+      addPopups(out, popups);
       JspUtil.writeEndTag(out, "script");
     }
 
