@@ -69,11 +69,9 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		/* Set the provider through which list acquires its data. Exactly the same as for ordinary lists. */
 		list.setDataProvider(buildListDataProvider());
-
-		/* Get the convenient reference to BeanFormListWidget hiding inside EditableBeanListWidget. */
-		
 	}
 	
+
 	protected abstract ListDataProvider buildListDataProvider() throws Exception;
 	
 	protected abstract FormRowHandler buildFormRowHandler() throws Exception;

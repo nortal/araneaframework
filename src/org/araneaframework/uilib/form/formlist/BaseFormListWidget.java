@@ -85,7 +85,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
         throw new AraneaRuntimeException(e);
       }
     }
-    
+
 		for (Iterator i = getRows().iterator(); i.hasNext();) {
 			Object row = i.next();
 
@@ -151,7 +151,8 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	protected void init() throws Exception {
 		super.init();		
     
-		processRows();    
+		// XXX: restore the behaviour in 1.0.6. It was put back in 1.0.7 (a mistake)
+		//processRows();    
 		resetAddForm();		
 	}
 

@@ -36,6 +36,7 @@ import org.araneaframework.http.HttpOutputData;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.0.7
  */
 public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeContext {
 

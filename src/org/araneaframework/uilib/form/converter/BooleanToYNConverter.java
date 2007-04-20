@@ -19,14 +19,13 @@ package org.araneaframework.uilib.form.converter;
 import org.araneaframework.uilib.form.Converter;
 
 /**
- * Convert the <code>Boolean</code> to <code>Long</code>, true - 1, false -
- * 0 and back
+ * Convert the <code>Boolean</code> to <code>String</code>, true - "Y", false -
+ * "N" and back.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class BooleanToYNConverter extends BaseConverter {
-
   /**
    * Converts <code>Boolean</code> to <code>Y|N</code>.
    */
@@ -35,10 +34,11 @@ public class BooleanToYNConverter extends BaseConverter {
   }
 
   /**
-	 *  Converts <code>Long</code> to <code>Y|N</code>. 
+	 *  Converts <code>String</code> "Y" to <code>Boolean.TRUE</code> and 
+	 *  any other <code>String</code>, including "N" to <code>Boolean.FALSE</code>. 
 	 */
   public Object reverseConvertNotNull(Object data) {
-    return ((String) data).equals("N") ? Boolean.FALSE : Boolean.TRUE ;
+    return ((String) data).equals("Y") ? Boolean.TRUE : Boolean.FALSE;
   }
 
   /**

@@ -23,6 +23,7 @@ import java.io.Writer;
  * Tree widget renderer.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.0.7
  */
 public interface TreeRenderer extends Serializable {
 

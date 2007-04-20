@@ -23,6 +23,7 @@ import java.io.Serializable;
  * configuration.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.0.7
  */
 public interface TreeContext extends Serializable {
 

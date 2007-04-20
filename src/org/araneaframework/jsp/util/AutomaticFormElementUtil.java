@@ -177,6 +177,24 @@ public class AutomaticFormElementUtil {
   public static void setFormElementTag(FormWidget form, String formElementId, String tagName, TagAttr[] attributePairs) {
     setFormElementTag(form.getElementByFullName(formElementId), tagName, attributePairs);
   }
+  
+  /**
+   * Assigns the default editable (aka input) tags to all of the elements of the form.
+   * @param form parent form or composite element.
+   * @since 1.0.7
+   */
+  public static void setFormElementDefaultEditableTag(FormElement element) {
+    setFormElementTag(element, (String) CONTROLS_TO_EDITABLE_TAGS.get(element.getControl().getClass()));
+  }
+  
+  /**
+   * Assigns the default editable (aka input) tags to all of the elements of the form.
+   * @param form parent form or composite element.
+   * @since 1.0.7
+   */
+  public static void setFormElementDefaultDisplayTag(FormElement element) {
+    setFormElementTag(element, (String) CONTROLS_TO_DISPLAY_TAGS.get(element.getControl().getClass()));
+  }
 
   /**
    * Assigns the default editable (aka input) tags to all of the elements of the form.
@@ -190,13 +208,11 @@ public class AutomaticFormElementUtil {
       if (element instanceof FormWidget)
         setFormElementDefaultEditableTags((FormWidget) element);
       else if (element instanceof FormElement) {
-        FormElement simpleElement = (FormElement) element;
-        setFormElementTag(simpleElement,
-            (String) CONTROLS_TO_EDITABLE_TAGS.get(simpleElement.getControl().getClass()));
+        setFormElementDefaultEditableTag((FormElement)element);
       }
     }
   }
-
+  
   /**
    * Assigns the default display (aka read-only) tags to all of the elements of the form.
    * @param form parent form or composite element.
@@ -209,9 +225,7 @@ public class AutomaticFormElementUtil {
       if (element instanceof FormWidget)
         setFormElementDefaultDisplayTags((FormWidget) element);
       else if (element instanceof FormElement) {
-        FormElement simpleElement = (FormElement) element;
-        setFormElementTag(simpleElement,
-            (String) CONTROLS_TO_DISPLAY_TAGS.get(simpleElement.getControl().getClass()));
+        setFormElementDefaultDisplayTag((FormElement)element);
       }
     }
   }
