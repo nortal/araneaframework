@@ -623,8 +623,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return the current item range.
 	 */
 	public List getItemRange() {
-		if (itemRange == null)
-			refreshCurrentItemRange();
 		return this.itemRange;
 	}
 
