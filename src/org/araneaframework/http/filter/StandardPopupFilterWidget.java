@@ -18,8 +18,10 @@ package org.araneaframework.http.filter;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
@@ -42,6 +44,7 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
+import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.support.PopupWindowProperties;
 
 /**
@@ -64,7 +67,46 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   public void setThreadServiceFactory(ServiceFactory factory) {
     this.threadServiceFactory = factory;
   }
-  
+
+  protected void init() throws Exception {
+    super.init();
+    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().getEntry(UpdateRegionContext.class);
+    if (updateRegionContext != null) {
+      updateRegionContext.addRegionHandler("popups", new PopupRegionHandler());
+    }
+  }
+
+  protected class PopupRegionHandler implements UpdateRegionContext.RegionHandler {
+
+    public String getContent() throws Exception {
+      Map popups = getPopups();
+      if (popups == null || popups.isEmpty())
+        return null;
+      StandardPopupFilterWidget.this.popups = new HashMap();
+      StringBuffer buf = new StringBuffer();
+      buf.append("[");
+      for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
+        buf.append("{");
+        Map.Entry popup = (Map.Entry) i.next();
+        String serviceId = (String) popup.getKey();
+        PopupServiceInfo serviceInfo = (PopupServiceInfo) popup.getValue();
+        buf.append("'popupId':'").append(StringEscapeUtils.escapeJavaScript(serviceId)).append("',");
+        buf.append("'windowProperties':'");
+        if (serviceInfo.getPopupProperties() != null)
+          buf.append(StringEscapeUtils.escapeJavaScript(serviceInfo.getPopupProperties().toString()));
+        buf.append("',");
+        buf.append("'url':'").append(StringEscapeUtils.escapeJavaScript(serviceInfo.toURL())).append("'");
+        buf.append("}");
+        if (i.hasNext())
+          buf.append(",");
+      }
+      buf.append("]");
+      buf.insert(0, buf.length() + "\n");
+      return buf.toString();
+    }
+
+  }
+
   /* ************************************************************************************
    * PopupWindowContext interface methods
    * ************************************************************************************/
