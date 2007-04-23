@@ -19,16 +19,44 @@ package org.araneaframework.http;
 import java.io.Serializable;
 
 /**
+ * Update region filter, supporting updating of HTML page regions and sending
+ * miscellaneous data back via AJAX requests.
+ * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public interface UpdateRegionContext extends Serializable {
 
+  /**
+   * Disable updateregion filter during this request only. Already rendered data
+   * will be discarded. In client-side, transactionId will be set inconsistent
+   * and page will be forced to reload in order to perform full render.
+   */
   void disableOnce();
 
+  /**
+   * Add a handler for custom region.
+   * 
+   * @param name
+   *          handler name. Javascript handler with the same name will be called
+   *          in client-side.
+   * @param handler
+   *          handler
+   */
   void addRegionHandler(String name, RegionHandler handler);
 
+  /**
+   * A way to pass custom data back to client-side via AJAX requests.
+   */
   public interface RegionHandler extends Serializable {
 
+    /**
+     * Will be called only when updateregion filter is activated on AJAX
+     * requests.
+     * 
+     * @return content that will be passed to Javascript region handler in
+     *         client-side. If <code>null</code> is returned, then Javascript
+     *         region handler will not be called.
+     */
     String getContent() throws Exception;
 
   }

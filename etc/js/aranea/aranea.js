@@ -378,18 +378,17 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   systemForm.widgetEventPath.value = widgetId ? widgetId : "";
   systemForm.widgetEventHandler.value = eventId ? eventId : "";
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
-  if (systemForm.transactionId) {
-    systemForm.transactionId.value = "override";
-  }
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
+  Aranea.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
-      updateRegions: eval("new Array(" + updateRegions + ");"),
-      systemFormId: systemForm.id,
-      ajaxRequestId: ajaxRequestId
+      transactionId: 'override',
+      ajaxRequestId: ajaxRequestId,
+      updateRegions: updateRegions.evalJSON()
     },
     onSuccess: function(transport) {
+      Aranea.hideLoadingMessage();
       if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + "\n") {
         araneaPage().getLogger().debug('Partial rendering: received successful response');
         Aranea.processResponse(transport.responseText);
@@ -401,10 +400,14 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       }
     },
     onFailure: function(transport) {
+      Aranea.hideLoadingMessage();
       araneaPage().getLogger().debug('Partial rendering: received erroneous response');
       Element.update(document.documentElement, transport.responseText); //FIXME doesn't fully work
     },
-    onException: Aranea.handleRequestException
+    onException: function(request, exception) {
+      Aranea.hideLoadingMessage();
+      Aranea.handleRequestException(request, exception);
+    }
   });
 
   return false;

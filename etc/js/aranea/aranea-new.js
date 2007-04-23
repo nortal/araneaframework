@@ -19,6 +19,9 @@
  */
 var Aranea = {
   regionHandlers: new Hash(),
+  loadingMessageId: 'aranea-loading-message',
+  loadingMessageContent: 'Loading...',
+  loadingMessagePositionHack: false,
 
   addRegionHandler: function(key, handler) {
     this.regionHandlers[key] = handler;
@@ -41,6 +44,31 @@ var Aranea = {
 
   handleRequestException: function(request, exception) {
     throw exception;
+  },
+
+  showLoadingMessage: function() {
+    var element = $(this.loadingMessageId);
+    if (element) {
+      if (this.loadingMessagePositionHack) {
+        element.style.top = document.documentElement.scrollTop + 'px';
+      }
+      element.show();
+      return;
+    }
+    var element = Builder.node('div', {id: this.loadingMessageId}, this.loadingMessageContent);
+    document.body.appendChild(element);
+    if (element.offsetTop) {
+      this.loadingMessagePositionHack = true;
+      element.style.position = 'absolute';
+      element.style.top = document.documentElement.scrollTop + 'px';
+    }
+  },
+
+  hideLoadingMessage: function() {
+    var element = $(this.loadingMessageId);
+    if (element) {
+      element.hide();
+    }
   }
 };
 
@@ -51,7 +79,9 @@ Aranea.TransactionIdRegionHandler.prototype = {
 
   process: function(text) {
     var transactionId = text.readLine();
-    araneaPage().getSystemForm().transactionId.value = transactionId;
+    var systemForm = araneaPage().getSystemForm();
+    if (systemForm.transactionId)
+      systemForm.transactionId.value = transactionId;
   }
 };
 Aranea.addRegionHandler('transactionId', new Aranea.TransactionIdRegionHandler());
@@ -63,9 +93,16 @@ Aranea.DomRegionHandler.prototype = {
 
   process: function(text) {
     var id = text.readLine();
+    var mode = text.readLine();
     var length = text.readLine();
     var content = text.readBytes(length);
-    $(id).replace(content);
+    if (mode == 'update') {
+      $(id).update(content);
+    } else if (mode == 'replace') {
+      $(id).update(content);
+    } else {
+      araneaPage().getLogger().error('DOM region mode "' + mode + '" is unknown');
+    }
     araneaPage().addSystemLoadEvent(AraneaPage.findSystemForm);
   }
 };
@@ -73,6 +110,10 @@ Aranea.addRegionHandler('dom', new Aranea.DomRegionHandler());
 
 Aranea.MessageRegionHandler = Class.create();
 Aranea.MessageRegionHandler.prototype = {
+  regionClass: '.aranea-messages',
+  regionTypeAttribute: 'arn-msgs-type',
+  messageSeparator: '<br/>',
+
   initialize: function() {
   },
 
@@ -82,9 +123,9 @@ Aranea.MessageRegionHandler.prototype = {
   },
 
   updateRegions: function(messagesByType) {
-    $$('.aranea-messages').each((function(region) {
-      if (region.hasAttribute('arn-msgs-type')) {
-        var type = region.getAttribute('arn-msgs-type');
+    $$(this.regionClass).each((function(region) {
+      if (region.hasAttribute(this.regionTypeAttribute)) {
+        var type = region.getAttribute(this.regionTypeAttribute);
         if (messagesByType[type]) {
           var messages = messagesByType[type];
           if (messages.size() > 0) {
@@ -119,7 +160,7 @@ Aranea.MessageRegionHandler.prototype = {
   },
 
   buildRegionContent: function(messages) {
-    return messages.invoke('escapeHTML').join('<br/>');
+    return messages.invoke('escapeHTML').join(this.messageSeparator);
   }
 };
 Aranea.addRegionHandler('messages', new Aranea.MessageRegionHandler());
@@ -149,7 +190,10 @@ Aranea.ReloadRegionHandler.prototype = {
   },
 
   process: function(text) {
-    window.location.href = araneaPage().getServletURL();
+    var systemForm = araneaPage().getSystemForm();
+    if (systemForm.transactionId)
+      systemForm.transactionId.value = 'inconsistent';
+    return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
   }
 };
 Aranea.addRegionHandler('reload', new Aranea.ReloadRegionHandler());

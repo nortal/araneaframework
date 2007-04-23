@@ -17,6 +17,7 @@
 package org.araneaframework.http.filter;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -42,8 +43,8 @@ import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
- * Update region filter, supporting updating of HTML page regions. It processes received request
- * in usual way&mdash;but the response will only contain the updated regions.
+ * Update region filter, supporting updating of HTML page regions and sending
+ * miscellaneous data back via AJAX requests.
  * 
  * @author Nikita Salnikov-Tarnovski
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -159,11 +160,12 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     for (Iterator i = regionContents.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
       String id = (String) entry.getKey();
-      String content = (String) entry.getValue();
+      Region region = (Region) entry.getValue();
       out.write("dom\n");
       out.write(id + "\n");
-      out.write(content.length() + "\n");
-      out.write(content);
+      out.write(region.getMode() + "\n");
+      out.write(region.getContent().length() + "\n");
+      out.write(region.getContent());
     }
   }
 
@@ -228,24 +230,43 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
         log.debug("Rendering widget " + widgetId);
       Message renderMessage = new RenderMessage(new StandardPath(widgetId), output);
       propagate(renderMessage);
-      if (disabled)
-        return null; // Using our filter was disabled, force a reload for full render
+      if (disabled)  // Our filter was disabled during rendering this widget
+        return null; // force page to reload for full render
 
       if (regionIds.contains(null)) {
-        // At least one widget has to be fully rendered (without updateregion
-        // comments)
-        regionContents.put(widgetId, new String(arUtil.getData(), characterEncoding));
+        // At least one widget has to be fully rendered (without updateregion comments)
+        regionContents.put(widgetId, new Region(new String(arUtil.getData(), characterEncoding), "replace"));
       } else {
         // Cut out regions by special comments
         String widgetContent = new String(arUtil.getData(), characterEncoding);
         for (Iterator j = regionIds.iterator(); j.hasNext(); ) {
           String id = (String) j.next();
-          regionContents.put(id, getContentById(widgetContent, id));
+          regionContents.put(id, new Region(getContentById(widgetContent, id), "update"));
         }
       }
       arUtil.rollback();
     }
     return regionContents;
+  }
+
+  protected static class Region implements Serializable {
+
+    private String content;
+    private String mode;
+
+    public Region(String content, String mode) {
+      this.content = content;
+      this.mode = mode;
+    }
+
+    public String getContent() {
+      return content;
+    }
+
+    public String getMode() {
+      return mode;
+    }
+
   }
 
   protected String getContentById(String source, String id) {
