@@ -23,6 +23,8 @@ import java.io.Serializable;
  */
 public interface UpdateRegionContext extends Serializable {
 
+  void disableOnce();
+
   void addRegionHandler(String name, RegionHandler handler);
 
   public interface RegionHandler extends Serializable {
