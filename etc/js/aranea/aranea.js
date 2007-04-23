@@ -259,7 +259,11 @@ function AraneaPage() {
 
   this.action_6 = function(systemForm, actionId, actionTarget, actionParam, sync, actionCallback, options) {
     if (window['prototype/prototype.js']) {
-      options = Object.extend({method: 'get', onComplete: actionCallback}, options);
+      options = Object.extend({
+        method: 'get',
+        onComplete: actionCallback,
+        onException: Aranea.handleRequestException
+      }, options);
       var url = this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync);
       return new Ajax.Request(url, options);
     } else {
@@ -361,9 +365,9 @@ function DefaultAraneaAJAXSubmitter(form) {
 
   this.event = function(element) {
   // event information
-    var widgetId = araneaPage().getEventTarget(element);
-    var eventId = araneaPage().getEventId(element);
-    var eventParam = araneaPage().getEventParam(element);
+  var widgetId = araneaPage().getEventTarget(element);
+  var eventId = araneaPage().getEventId(element);
+  var eventParam = araneaPage().getEventParam(element);
   var updateRegions = araneaPage().getEventUpdateRegions(element);
 
   return this.event_5(systemForm, eventId, widgetId, eventParam, updateRegions);
@@ -378,21 +382,29 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
     systemForm.transactionId.value = "override";
   }
 
+  var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
   $(systemForm.id).request({
     parameters: {
       updateRegions: eval("new Array(" + updateRegions + ");"),
-      systemFormId: systemForm.id
+      systemFormId: systemForm.id,
+      ajaxRequestId: ajaxRequestId
     },
     onSuccess: function(transport) {
-      araneaPage().getLogger().debug('Partial rendering: received successful response');
-      Aranea.processResponse(transport.responseText);
-      AraneaPage.init();
-      araneaPage().onload();
+      if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + "\n") {
+        araneaPage().getLogger().debug('Partial rendering: received successful response');
+        Aranea.processResponse(transport.responseText);
+        AraneaPage.init();
+        araneaPage().onload();
+      } else {
+        araneaPage().getLogger().debug('Partial rendering: received erroneous response');
+        Element.update(document.documentElement, transport.responseText); //FIXME doesn't fully work
+      }
     },
     onFailure: function(transport) {
       araneaPage().getLogger().debug('Partial rendering: received erroneous response');
-      Element.update(document.documentElement, transport.responseText);
-    }
+      Element.update(document.documentElement, transport.responseText); //FIXME doesn't fully work
+    },
+    onException: Aranea.handleRequestException
   });
 
   return false;

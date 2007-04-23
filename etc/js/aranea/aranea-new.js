@@ -26,6 +26,7 @@ var Aranea = {
 
   processResponse: function(responseText) {
     var text = new Text(responseText);
+    text.readLine(); // responseId
     while (!text.empty()) {
       var key = text.readLine();
       if (this.regionHandlers[key]) {
@@ -36,6 +37,10 @@ var Aranea = {
         return;
       }
     }
+  },
+
+  handleRequestException: function(request, exception) {
+    throw exception;
   }
 };
 
@@ -65,19 +70,6 @@ Aranea.DomRegionHandler.prototype = {
   }
 };
 Aranea.addRegionHandler('dom', new Aranea.DomRegionHandler());
-
-Aranea.DocumentRegionHandler = Class.create();
-Aranea.DocumentRegionHandler.prototype = {
-  initialize: function() {
-  },
-
-  process: function(text) {
-    var length = text.readLine();
-    var content = text.readBytes(length);
-    Element.update(document.documentElement, content);
-  }
-};
-Aranea.addRegionHandler('document', new Aranea.DocumentRegionHandler());
 
 Aranea.MessageRegionHandler = Class.create();
 Aranea.MessageRegionHandler.prototype = {
@@ -150,6 +142,17 @@ Aranea.PopupRegionHandler.prototype = {
   }
 };
 Aranea.addRegionHandler('popups', new Aranea.PopupRegionHandler());
+
+Aranea.ReloadRegionHandler = Class.create();
+Aranea.ReloadRegionHandler.prototype = {
+  initialize: function() {
+  },
+
+  process: function(text) {
+    window.location.href = araneaPage().getServletURL();
+  }
+};
+Aranea.addRegionHandler('reload', new Aranea.ReloadRegionHandler());
 
 
 /*

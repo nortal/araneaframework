@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
+import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -53,11 +54,17 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   private String characterEncoding = "UTF-8";
   private Map regionHandlers = new HashMap();
+  private boolean disabled = false;
 
   public static final String UPDATE_REGIONS_KEY = "updateRegions";
+  public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
 
   public void setCharacterEncoding(String encoding) {
     characterEncoding = encoding;
+  }
+
+  public void disableOnce() {
+    disabled = true;
   }
 
   public void addRegionHandler(String name, RegionHandler handler) {
@@ -68,6 +75,11 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), UpdateRegionContext.class, this);
+  }
+
+  protected void update(InputData input) throws Exception {
+    disabled = false;
+    super.update(input);
   }
 
   protected void render(OutputData output) throws Exception {
@@ -83,23 +95,43 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     try {
-      // Parse widget and region ids
-      Map regionIdsByWidgetId = parseRegionNames(regionNames);
-
-      // Render widgets
-      Map regionContents = renderRegions(regionIdsByWidgetId, arUtil, output);
+      Map regionContents = null;
+      if (!disabled) {
+        // Parse widget and region ids
+        Map regionIdsByWidgetId = parseRegionNames(regionNames);
+        // Render widgets
+        regionContents = renderRegions(regionIdsByWidgetId, arUtil, output);
+      }
 
       // Write out response
       HttpOutputData httpOutput = (HttpOutputData) output;
       PrintWriter writer = httpOutput.getWriter();
-      writeTransactionId(writer);
-      writeHandlerRegions(writer);
-      writeDomRegions(writer, regionContents);
+      String ajaxRequestId = (String) output.getInputData().getGlobalData().get(AJAX_REQUEST_ID_KEY); 
+      writeResponseId(writer, ajaxRequestId);
+      if (disabled) {
+        if (log.isDebugEnabled())
+          log.debug("Partial rendering is disabled, forcing a reload for full render");
+        writeReload(writer);
+      } else {
+        writeTransactionId(writer);
+        writeHandlerRegions(writer);
+        writeDomRegions(writer, regionContents);
+      }
       writer.flush();
     }
     finally {
       arUtil.commit();
     }
+  }
+
+  protected void writeResponseId(PrintWriter out, String responseId) throws Exception {
+    if (responseId != null) {
+      out.write(responseId + "\n");
+    }
+  }
+
+  protected void writeReload(PrintWriter out) throws Exception {
+    out.write("reload\n");
   }
 
   protected void writeTransactionId(PrintWriter out) throws Exception {
@@ -196,6 +228,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
         log.debug("Rendering widget " + widgetId);
       Message renderMessage = new RenderMessage(new StandardPath(widgetId), output);
       propagate(renderMessage);
+      if (disabled)
+        return null; // Using our filter was disabled, force a reload for full render
 
       if (regionIds.contains(null)) {
         // At least one widget has to be fully rendered (without updateregion
