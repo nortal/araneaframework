@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-	<files content-type="text/css" group="defaultStyles">
+	<files content-type="text/css">
 		<file path="styles/_styles_global.css"/>
 		<file path="styles/_styles_screen.css"/>
 		<file path="styles/_styles_print.css"/>
