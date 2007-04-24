@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.set.ListOrderedSet;
 import org.araneaframework.Environment;
@@ -46,6 +47,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  *
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
   protected Map permanentMessages;
@@ -81,16 +83,23 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     return messageMap;
   }
   
-  /** Removes the given message from given messageMap. */
-  protected Map removeMessage(final String message, Map messageMap) {
+  /** 
+   * Removes the given <code>message</code> from given message <code>type</code> in <code>messageMap</code>. 
+   * When given <code>type</code> is <code>NULL</code>, removes the given <code>message</code> from all types. */
+  protected Map removeMessage(String type, final String message, Map messageMap) {
     Assert.notEmptyParam(message, "message");
 
     if (messageMap == null)
       return null;
 
     for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
-      Collection messages = (Collection)((Map.Entry)i.next()).getValue();
-      messages.remove(message);
+      Map.Entry next = (Map.Entry)i.next();
+      if (type == null || next.getKey().equals(type)) {
+        Collection messages = (Collection)(next).getValue();
+        messages.remove(message);
+        if (type != null) 
+          break;
+      }
     }
 
     return messageMap;
@@ -120,24 +129,55 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     messages = storeMessage(type, message, messages);
   }
 
+  public void showMessages(String type, Set messages) {
+    Assert.notNullParam(messages, "messages");
+    for (Iterator i = messages.iterator(); i.hasNext(); ) {
+      showMessage(type, (String)i.next());
+    }
+  }
+
+  public void hideMessage(String type, String message) {
+    Assert.notEmptyParam(type, "type");
+    removeMessage(type, message, messages);
+  }
+  
+  public void hideMessages(String type, Set messages) {
+    Assert.notNullParam(messages, "messages");
+    for (Iterator i = messages.iterator(); i.hasNext(); ) {
+      hideMessage(type, (String)i.next());
+    }
+  }
+
   public void showPermanentMessage(String type, final String message) {
     permanentMessages = storeMessage(type, message, permanentMessages);
   }
   
   public void hidePermanentMessage(String message) {
-    permanentMessages = removeMessage(message, permanentMessages);
+    permanentMessages = removeMessage(null, message, permanentMessages);
   }
 
   public void showErrorMessage(String message) {
     showMessage(ERROR_TYPE, message);
+  }
+  
+  public void hideErrorMessage(String message) {
+    hideMessage(ERROR_TYPE, message);    
   }
 
   public void showInfoMessage(String message) {
     showMessage(INFO_TYPE, message);
   }
   
+  public void hideInfoMessage(String message) {
+    hideMessage(INFO_TYPE, message); 
+  }
+  
   public void showWarningMessage(String message) {
     showMessage(WARNING_TYPE, message);
+  }
+  
+  public void hideWarningMessage(String message) {
+    hideMessage(WARNING_TYPE, message);
   }
   
   public void clearMessages() {

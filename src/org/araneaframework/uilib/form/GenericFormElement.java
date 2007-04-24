@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.collections.set.UnmodifiableSet;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -32,7 +33,6 @@ import org.araneaframework.uilib.form.visitor.FormElementVisitor;
  * Represents a general form element, a node in form element hierarchy.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
 
@@ -173,24 +173,37 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    */
   public boolean isEvaluated() {
   	return converted && validated;
-  }    
-
-  //*********************************************************************
-  //* OVERRIDABLE METHODS
-  //*********************************************************************
-
-  protected void process() throws Exception {
-    MessageContext msgCtx = 
-      (MessageContext) getEnvironment().getEntry(MessageContext.class);
-    
-    for (Iterator i = getErrors().iterator(); i.hasNext();) {
-      String message = (String) i.next();
-      msgCtx.showErrorMessage(message);      
-    }
-
-    super.process();
+  }
+  
+  public Set getErrors() {
+    return UnmodifiableSet.decorate(getMutableErrors());
   }
 
+  public void addError(String error) {
+    Assert.notNullParam(error, "error");
+
+    getMutableErrors().add(error);
+    getMessageContext().showMessage(MessageContext.ERROR_TYPE, error);
+  }
+
+  public void addErrors(Set errors) {
+    Assert.noNullElementsParam(errors, "errors");
+
+    getMutableErrors().addAll(errors);
+    getMessageContext().showMessages(MessageContext.ERROR_TYPE, errors);
+  }
+
+  /**
+   * Clears element errors.
+   */
+  public void clearErrors() {  
+    getMessageContext().hideMessages(MessageContext.ERROR_TYPE, getErrors());
+    errors = null;
+  }
+
+  public Object getValue() {
+    return null;
+  }
   //*********************************************************************
   //* ABSTRACT METHODS
   //*********************************************************************
@@ -213,26 +226,30 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    */
   public abstract boolean isStateChanged();
   
-	/**
-	 * Sets wether the element is disabled.
-	 * @param disabled wether the element is disabled.
-	 */
-	public abstract void setDisabled(boolean disabled);
-  
+  /**
+   * Sets wether the element is disabled.
+   * @param disabled wether the element is disabled.
+   */
+  public abstract void setDisabled(boolean disabled);
+
   /**
    * Returns whether the element is disabled.
    * @return whether the element is disabled.
    */
-	public abstract boolean isDisabled();
-    
+  public abstract boolean isDisabled();
+
   /**
    * Accepts the visitor.
    */
-	public abstract void accept(String id, FormElementVisitor visitor);
+  public abstract void accept(String id, FormElementVisitor visitor);
 	
   //*********************************************************************
   //* INTERNAL METHODS
-  //*********************************************************************  	
+  //*********************************************************************
+
+  private MessageContext getMessageContext() {
+    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+  }
     
   /**
    * Converts the element value from control to data item
@@ -256,35 +273,12 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     return isValid();
   }
   
-  public Set getErrors() {
+  protected Set getMutableErrors() {
     if (errors == null)
       errors = new HashSet();
     return errors;
   }
-  
-  public void addError(String error) {
-    Assert.notNullParam(error, "error");
-    
-    getErrors().add(error);
-  }
-  
-  public void addErrors(Set errors) {
-    Assert.noNullElementsParam(errors, "errors");
-    
-    getErrors().addAll(errors);
-  }
-  
-  /**
-   * Clears element errors.
-   */
-  public void clearErrors() {  
-    errors = null;
-  }
-  
-  public Object getValue() {
-    return null;
-  }
-  
+
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
