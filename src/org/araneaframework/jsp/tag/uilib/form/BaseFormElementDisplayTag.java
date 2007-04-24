@@ -102,8 +102,6 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
 
   public void setUpdateRegions(String updateRegions) throws JspException {}
 
-  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {}
-
   /* ***********************************************************************************
    * Control type assertion method to be used by subclasses.
    * ***********************************************************************************/  

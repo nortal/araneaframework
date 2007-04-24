@@ -385,24 +385,34 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
     parameters: {
       transactionId: 'override',
       ajaxRequestId: ajaxRequestId,
-      updateRegions: updateRegions.evalJSON()
+      updateRegions: updateRegions
     },
     onSuccess: function(transport) {
       Aranea.hideLoadingMessage();
       if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + "\n") {
-        araneaPage().getLogger().debug('Partial rendering: received successful response');
+        araneaPage().getLogger().debug('Partial rendering: received successful response'
+          + ' (' + transport.responseText.length + ' characters)'
+          + ': ' + transport.status + ' ' + transport.statusText);
         Aranea.processResponse(transport.responseText);
         AraneaPage.init();
         araneaPage().onload();
       } else {
-        araneaPage().getLogger().debug('Partial rendering: received erroneous response');
-        Element.update(document.documentElement, transport.responseText); //FIXME doesn't fully work
+        araneaPage().getLogger().debug('Partial rendering: received erroneous response'
+          + ' (' + transport.responseText.length + ' characters)'
+          + ': ' + transport.status + ' ' + transport.statusText);
+        // Doesn't work quite well for javascript and CSS, but fine for plain HTML
+        document.write(transport.responseText);
+        document.close();
       }
     },
     onFailure: function(transport) {
       Aranea.hideLoadingMessage();
-      araneaPage().getLogger().debug('Partial rendering: received erroneous response');
-      Element.update(document.documentElement, transport.responseText); //FIXME doesn't fully work
+      araneaPage().getLogger().debug('Partial rendering: received erroneous response'
+        + ' (' + transport.responseText.length + ' characters)'
+        + ': ' + transport.status + ' ' + transport.statusText);
+      // Doesn't work quite well for javascript and CSS, but fine for plain HTML
+      document.write(transport.responseText);
+      document.close();
     },
     onException: function(request, exception) {
       Aranea.hideLoadingMessage();

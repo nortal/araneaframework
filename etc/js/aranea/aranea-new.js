@@ -23,29 +23,47 @@ var Aranea = {
   loadingMessageContent: 'Loading...',
   loadingMessagePositionHack: false,
 
+  /**
+   * Add a handler that is invoked for custom data region in updateregions AJAX
+   * request. <code>process</code> function will be invoked on the handler
+   * during processing the response. Data specific to this handler will be
+   * passed as the first parameter to that function (<code>String</code>).
+   */
   addRegionHandler: function(key, handler) {
     this.regionHandlers[key] = handler;
   },
 
+  /**
+   * Process response of an updateregions AJAX request. Should be called only
+   * on successful response. Invokes region handlers.
+   */
   processResponse: function(responseText) {
     var text = new Text(responseText);
     text.readLine(); // responseId
-    while (!text.empty()) {
+    while (!text.isEmpty()) {
       var key = text.readLine();
+      var length = text.readLine();
+      var content = text.readCharacters(length);
       if (this.regionHandlers[key]) {
         araneaPage().getLogger().debug('Region type: "' + key + '"');
-        this.regionHandlers[key].process(text);
+        this.regionHandlers[key].process(content);
       } else {
         araneaPage().getLogger().error('Region type: "' + key + '" is unknown!');
-        return;
       }
     }
   },
 
+  /**
+   * Exception handler that is invoked on Ajax.Request errors.
+   */
   handleRequestException: function(request, exception) {
     throw exception;
   },
 
+  /**
+   * Create or show loading message at the top corner of the document. Called
+   * before initiating an updateregions Ajax.Request.
+   */
   showLoadingMessage: function() {
     var element = $(this.loadingMessageId);
     if (element) {
@@ -58,12 +76,17 @@ var Aranea = {
     var element = Builder.node('div', {id: this.loadingMessageId}, this.loadingMessageContent);
     document.body.appendChild(element);
     if (element.offsetTop) {
+      // IE 6 does not support 'position: fixed' CSS attribute value
       this.loadingMessagePositionHack = true;
       element.style.position = 'absolute';
       element.style.top = document.documentElement.scrollTop + 'px';
     }
   },
 
+  /**
+   * Hide loading message. Called after the completion of updateregions
+   * Ajax.Request.
+   */
   hideLoadingMessage: function() {
     var element = $(this.loadingMessageId);
     if (element) {
@@ -72,34 +95,41 @@ var Aranea = {
   }
 };
 
+/**
+ * Region handler that updates transaction id of system form.
+ */
 Aranea.TransactionIdRegionHandler = Class.create();
 Aranea.TransactionIdRegionHandler.prototype = {
   initialize: function() {
   },
 
-  process: function(text) {
-    var transactionId = text.readLine();
+  process: function(content) {
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.transactionId)
-      systemForm.transactionId.value = transactionId;
+      systemForm.transactionId.value = content;
   }
 };
 Aranea.addRegionHandler('transactionId', new Aranea.TransactionIdRegionHandler());
 
+/**
+ * Region handler that updates DOM element content.
+ */
 Aranea.DomRegionHandler = Class.create();
 Aranea.DomRegionHandler.prototype = {
   initialize: function() {
   },
 
-  process: function(text) {
-    var id = text.readLine();
-    var mode = text.readLine();
+  process: function(content) {
+    var text = new Text(content);
     var length = text.readLine();
-    var content = text.readBytes(length);
+    var properties = text.readCharacters(length).evalJSON();
+    var id = properties.id;
+    var mode = properties.mode;
+    var content = text.toString();
     if (mode == 'update') {
       $(id).update(content);
     } else if (mode == 'replace') {
-      $(id).update(content);
+      $(id).replace(content);
     } else {
       araneaPage().getLogger().error('DOM region mode "' + mode + '" is unknown');
     }
@@ -108,6 +138,9 @@ Aranea.DomRegionHandler.prototype = {
 };
 Aranea.addRegionHandler('dom', new Aranea.DomRegionHandler());
 
+/**
+ * Region handler that updates the messages area.
+ */
 Aranea.MessageRegionHandler = Class.create();
 Aranea.MessageRegionHandler.prototype = {
   regionClass: '.aranea-messages',
@@ -117,8 +150,8 @@ Aranea.MessageRegionHandler.prototype = {
   initialize: function() {
   },
 
-  process: function(text) {
-    var messagesByType = text.readBytes(text.readLine()).evalJSON();
+  process: function(content) {
+    var messagesByType = content.evalJSON();
     this.updateRegions(messagesByType);
   },
 
@@ -165,13 +198,16 @@ Aranea.MessageRegionHandler.prototype = {
 };
 Aranea.addRegionHandler('messages', new Aranea.MessageRegionHandler());
 
+/**
+ * Region handler that opens popup windows.
+ */
 Aranea.PopupRegionHandler = Class.create();
 Aranea.PopupRegionHandler.prototype = {
   initialize: function() {
   },
 
-  process: function(text) {
-    var popups = text.readBytes(text.readLine()).evalJSON();
+  process: function(content) {
+    var popups = content.evalJSON();
     this.openPopups(popups);
     araneaPage().addSystemLoadEvent(processPopups);
   },
@@ -184,12 +220,16 @@ Aranea.PopupRegionHandler.prototype = {
 };
 Aranea.addRegionHandler('popups', new Aranea.PopupRegionHandler());
 
+/**
+ * Region handler that forces a reload of the page by submitting the system
+ * form.
+ */
 Aranea.ReloadRegionHandler = Class.create();
 Aranea.ReloadRegionHandler.prototype = {
   initialize: function() {
   },
 
-  process: function(text) {
+  process: function(content) {
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.transactionId)
       systemForm.transactionId.value = 'inconsistent';
@@ -199,8 +239,13 @@ Aranea.ReloadRegionHandler.prototype = {
 Aranea.addRegionHandler('reload', new Aranea.ReloadRegionHandler());
 
 
-/*
- * Utilities
+/* ***************************************************************************
+ * UTILITIES
+ * ***************************************************************************/
+
+/**
+ * A wrapper around String that lets to read text by lines and by chunks of
+ * characters.
  */
 Text = Class.create();
 Text.prototype = {
@@ -221,13 +266,17 @@ Text.prototype = {
     return line;
   },
 
-  readBytes: function(bytes) {
-    var content = this.text.substr(0, bytes);
-    this.text = this.text.substr(bytes);
+  readCharacters: function(characters) {
+    var content = this.text.substr(0, characters);
+    this.text = this.text.substr(characters);
     return content;
   },
 
-  empty: function() {
+  isEmpty: function() {
     return this.text.length == 0;
+  },
+
+  toString: function() {
+    return this.text;
   }
 };

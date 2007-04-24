@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.set.ListOrderedSet;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.Assert;
@@ -31,6 +30,8 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.http.util.JsonArray;
+import org.araneaframework.http.util.JsonObject;
 
 /**
  * Adds a {@link org.araneaframework.framework.MessageContext} implementation to the environment that can
@@ -50,6 +51,9 @@ import org.araneaframework.http.UpdateRegionContext;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
+
+  public static final String MESSAGE_REGION_KEY = "messages";
+
   protected Map permanentMessages;
   protected Map messages;
   
@@ -57,7 +61,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     super.init();
     UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().getEntry(UpdateRegionContext.class);
     if (updateRegionContext != null) {
-      updateRegionContext.addRegionHandler("messages", new MessagesRegionHandler());
+      updateRegionContext.addRegionHandler(MESSAGE_REGION_KEY, new MessageRegionHandler());
     }
   }
 
@@ -176,35 +180,32 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     return Collections.unmodifiableMap(messages);
   }
 
-  protected class MessagesRegionHandler implements UpdateRegionContext.RegionHandler {
+  /* ************************************************************************************
+   * Internal inner classes
+   * ************************************************************************************/
+
+  protected class MessageRegionHandler implements UpdateRegionContext.RegionHandler {
 
     public String getContent() throws Exception {
       Map messageMap = getMessages();
       if (messageMap == null || messageMap.isEmpty())
         return null;
-      StringBuffer buf = new StringBuffer();
-      buf.append("{");
+
+      JsonObject messagesByType = new JsonObject();
       for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
         Map.Entry entry = (Map.Entry) i.next();
         if (entry.getValue() == null) {
           continue;
         }
         String type = (String) entry.getKey();
-        buf.append("'").append(StringEscapeUtils.escapeJavaScript(type)).append("':[");
-        Collection messages = (Collection) entry.getValue();
-        for (Iterator j = messages.iterator(); j.hasNext(); ) {
+        JsonArray messages = new JsonArray();
+        for (Iterator j = ((Collection) entry.getValue()).iterator(); j.hasNext(); ) {
           String message = (String) j.next();
-          buf.append("'").append(StringEscapeUtils.escapeJavaScript(message)).append("'");
-          if (j.hasNext())
-            buf.append(",");
+          messages.appendString(message);
         }
-        buf.append("]");
-        if (i.hasNext())
-          buf.append(",");
+        messagesByType.setProperty(type, messages.toString());
       }
-      buf.append("}");
-      buf.insert(0, buf.length() + "\n");
-      return buf.toString();
+      return messagesByType.toString();
     }
 
   }

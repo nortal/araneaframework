@@ -22,6 +22,7 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.uilib.util.NameUtil;
@@ -38,16 +39,14 @@ public class JspUpdateRegionUtil {
   	return regionName;
   }
   
-  public static List getUpdateRegionNames(PageContext pageContext, String updateRegions, String globalUpdateRegions) throws JspException {
+  public static List getUpdateRegionNames(PageContext pageContext, String updateRegions) throws JspException {
     List result = JspUpdateRegionUtil.getUpdateRegionLocalNames(pageContext, updateRegions);
-    result.addAll(JspUpdateRegionUtil.getUpdateRegionGlobalNames(pageContext, globalUpdateRegions));
-    
     return result;
   }
   
   public static List getUpdateRegionLocalNames(PageContext pageContext, String updateRegions) throws JspException  {
     String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(pageContext, ServletUtil.UIWIDGET_KEY)).getScope().toString();
-    if (uiWidgetId.indexOf(":") != -1)
+    if (uiWidgetId.indexOf(':') != -1)
       throw new AraneaJspException("Widget id '" + uiWidgetId + "' cannot contain ':'");
     
     String prefix = uiWidgetId + ":";
@@ -63,28 +62,16 @@ public class JspUpdateRegionUtil {
     return result;
   }  
   
-  public static List getUpdateRegionGlobalNames(PageContext pageContext, String globalUpdateRegions) throws JspException  {
-    List result = new ArrayList();
-    
-    for (Iterator i = parseUpdateRegionNames(globalUpdateRegions).iterator(); i.hasNext();) {
-      String regionName = (String) i.next();
-      
-      result.add(regionName);
-    }
-    
-    return result;
-  }   
-  
   public static String formatUpdateRegionsJS(List updateRegions) {
     StringBuffer result = new StringBuffer();
     
     if (updateRegions != null) {
       for (Iterator i = updateRegions.iterator(); i.hasNext();) {
         String region = (String) i.next();
+        if (region.indexOf(',') != -1)
+          throw new AraneaRuntimeException("Updateregion name '" + region + "' cannot contain ','");
         
-        result.append("'");
         result.append(region);
-        result.append("'");
         
         if (i.hasNext())
           result.append(",");

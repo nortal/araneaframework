@@ -19,6 +19,7 @@ package org.araneaframework.tests.framework.container;
 import java.util.HashMap;
 import junit.framework.TestCase;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.mock.widget.MockCallableWidget;
 
@@ -49,7 +50,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     
     assertTrue(topWidget.getDeactivateCalled());
     assertTrue(childWidget.getConfigureCalled());
-//FIXME    assertEquals(childWidget, stackWidget.getChildren().get(FlowContext.FLOW_KEY));
+    assertEquals(childWidget, stackWidget.getChildren().get(FlowContext.FLOW_KEY));
   }
   
   public void testCancelCallContract() throws Exception {
@@ -58,7 +59,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     stackWidget.cancel();
     assertTrue(childWidget.getOnCallCancelled());
     assertTrue(topWidget.getActivateCalled());
-//FIXME    assertEquals(topWidget, stackWidget.getChildren().get(FlowContext.FLOW_KEY));
+    assertEquals(topWidget, stackWidget.getChildren().get(FlowContext.FLOW_KEY));
   }
     
   public void testReturnCallContract() throws Exception {
@@ -67,7 +68,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     stackWidget.finish("returnCall");
     assertTrue("returnCall".equals(childWidget.getReturnCallReturned()));
     assertTrue(topWidget.getActivateCalled());
-//FIXME    assertEquals(topWidget, stackWidget.getChildren().get(FlowContext.FLOW_KEY));
+    assertEquals(topWidget, stackWidget.getChildren().get(FlowContext.FLOW_KEY));
   }
   
   public void testDestroyDestroysChildrenOnStack() throws Exception {

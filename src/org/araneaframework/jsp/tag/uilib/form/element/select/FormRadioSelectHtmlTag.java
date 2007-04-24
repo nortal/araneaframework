@@ -71,8 +71,6 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 			item.setValidateOnEvent(validateOnEvent ? "true" : "false");
 			if (updateRegions != null)
 			  item.setUpdateRegions(updateRegions);
-			if (globalUpdateRegions != null)
-			  item.setGlobalUpdateRegions(globalUpdateRegions);
 			item.setStyleClass(getStyleClass());
 			if (getStyle() != null) item.setStyle(getStyle());
 

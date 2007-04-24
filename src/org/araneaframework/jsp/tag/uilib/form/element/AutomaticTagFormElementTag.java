@@ -55,7 +55,6 @@ public class AutomaticTagFormElementTag extends BaseTag {
   protected String tabindex;
   protected String styleClass;
   protected String updateRegions;
-  protected String globalUpdateRegions;    
 
   protected FormWidget.ViewModel formViewModel;
 
@@ -118,8 +117,6 @@ public class AutomaticTagFormElementTag extends BaseTag {
       controlTag.setTabindex(tabindex);
     if(updateRegions != null)
       controlTag.setUpdateRegions(updateRegions);
-    if(globalUpdateRegions != null)
-      controlTag.setGlobalUpdateRegions(globalUpdateRegions);    
 
     executeStartSubtag(controlTag);
 
@@ -197,16 +194,6 @@ public class AutomaticTagFormElementTag extends BaseTag {
   public void setUpdateRegions(String updateRegions) throws JspException {
     this.updateRegions = updateRegions;
   }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
-   */
-  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-    this.globalUpdateRegions = globalUpdateRegions;
-  }    
 
   protected void initTagAttributes(Class tagClass, Object tag, Map attributes) throws Exception {
     for (Iterator i = attributes.entrySet().iterator(); i.hasNext();) {

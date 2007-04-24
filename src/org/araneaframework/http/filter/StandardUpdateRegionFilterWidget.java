@@ -27,7 +27,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -41,6 +40,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.AtomicResponseHelper;
+import org.araneaframework.http.util.JsonObject;
 
 /**
  * Update region filter, supporting updating of HTML page regions and sending
@@ -60,6 +60,10 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   public static final String UPDATE_REGIONS_KEY = "updateRegions";
   public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
 
+  public static final String RELOAD_REGION_KEY = "reload";
+  public static final String TRANSACTION_ID_REGION_KEY = "transactionId";
+  public static final String DOM_REGION_KEY = "dom";
+
   public void setCharacterEncoding(String encoding) {
     characterEncoding = encoding;
   }
@@ -78,16 +82,12 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     return new StandardEnvironment(super.getChildWidgetEnvironment(), UpdateRegionContext.class, this);
   }
 
-  protected void update(InputData input) throws Exception {
-    disabled = false;
-    super.update(input);
-  }
-
   protected void render(OutputData output) throws Exception {
     String regionNames = (String) output.getInputData().getGlobalData().get(UPDATE_REGIONS_KEY); 
 
     if(regionNames == null) {
       super.render(output);
+      disabled = false;
       return;
     }
 
@@ -112,9 +112,9 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       if (disabled) {
         if (log.isDebugEnabled())
           log.debug("Partial rendering is disabled, forcing a reload for full render");
-        writeReload(writer);
+        writeReloadRegion(writer);
       } else {
-        writeTransactionId(writer);
+        writeTransactionIdRegion(writer);
         writeHandlerRegions(writer);
         writeDomRegions(writer, regionContents);
       }
@@ -122,6 +122,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     }
     finally {
       arUtil.commit();
+      disabled = false;
     }
   }
 
@@ -131,15 +132,22 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     }
   }
 
-  protected void writeReload(PrintWriter out) throws Exception {
-    out.write("reload\n");
+  protected void writeRegion(PrintWriter out, String name, String content) throws Exception {
+    out.write(name);
+    out.write("\n");
+    out.write(Integer.toString(content.length()));
+    out.write("\n");
+    out.write(content);
   }
 
-  protected void writeTransactionId(PrintWriter out) throws Exception {
+  protected void writeReloadRegion(PrintWriter out) throws Exception {
+    out.write(RELOAD_REGION_KEY + "\n");
+  }
+
+  protected void writeTransactionIdRegion(PrintWriter out) throws Exception {
     TransactionContext transactionContext = (TransactionContext) getEnvironment().getEntry(TransactionContext.class);
     if (transactionContext != null) {
-      out.write("transactionId\n");
-      out.write(transactionContext.getTransactionId() + "\n");
+      writeRegion(out, TRANSACTION_ID_REGION_KEY, transactionContext.getTransactionId().toString());
     }
   }
 
@@ -150,8 +158,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       RegionHandler handler = (RegionHandler) entry.getValue();
       String content = handler.getContent();
       if (content != null) {
-        out.write(name + "\n");
-        out.write(content);
+        writeRegion(out, name, content);
       }
     }
   }
@@ -161,11 +168,13 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       Map.Entry entry = (Map.Entry) i.next();
       String id = (String) entry.getKey();
       Region region = (Region) entry.getValue();
-      out.write("dom\n");
-      out.write(id + "\n");
-      out.write(region.getMode() + "\n");
-      out.write(region.getContent().length() + "\n");
-      out.write(region.getContent());
+      JsonObject domObject = new JsonObject();
+      domObject.setStringProperty("id", id);
+      domObject.setStringProperty("mode", region.getMode());
+      StringBuffer buf = new StringBuffer(domObject.toString());
+      buf.insert(0, buf.length() + "\n");
+      buf.append(region.getContent());
+      writeRegion(out, DOM_REGION_KEY, buf.toString());
     }
   }
 
@@ -249,26 +258,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     return regionContents;
   }
 
-  protected static class Region implements Serializable {
-
-    private String content;
-    private String mode;
-
-    public Region(String content, String mode) {
-      this.content = content;
-      this.mode = mode;
-    }
-
-    public String getContent() {
-      return content;
-    }
-
-    public String getMode() {
-      return mode;
-    }
-
-  }
-
   protected String getContentById(String source, String id) {
     String blockStart = "<!--BEGIN:" + id + "-->";
     int startIndex = source.indexOf(blockStart);
@@ -287,6 +276,26 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       log.debug("Successfully extracted region '" + id + "' to be included in response.");
 
     return source.substring(startIndex + blockStart.length(), endIndex);
+  }
+
+  protected static class Region implements Serializable {
+
+    private String content;
+    private String mode;
+
+    public Region(String content, String mode) {
+      this.content = content;
+      this.mode = mode;
+    }
+
+    public String getContent() {
+      return content;
+    }
+
+    public String getMode() {
+      return mode;
+    }
+
   }
 
   public static class RenderMessage extends RoutedMessage {

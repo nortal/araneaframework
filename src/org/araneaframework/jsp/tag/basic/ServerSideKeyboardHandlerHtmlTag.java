@@ -33,7 +33,6 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
 public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	  protected String scope;
 	  protected String updateRegions;
-	  protected String globalUpdateRegions;
 
       protected UiUpdateEvent event = new UiUpdateEvent();
   //
@@ -89,18 +88,6 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
   public void setUpdateRegions(String updateRegions) throws JspException {
     this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
   }
-  
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
-	 */
-  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-    this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
-  }  
-  
-
 	
   /**
   * Sets the precondition, default value is <code>null</code>
@@ -118,7 +105,7 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 
-		event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions));
+		event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions));
 		String handler = createHandlerToCallEvent(pageContext, event);
 
 		// Write out.

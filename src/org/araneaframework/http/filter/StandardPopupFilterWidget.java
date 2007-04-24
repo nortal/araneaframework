@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
@@ -46,12 +45,16 @@ import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.support.PopupWindowProperties;
+import org.araneaframework.http.util.JsonArray;
+import org.araneaframework.http.util.JsonObject;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardPopupFilterWidget extends BaseFilterWidget implements PopupWindowContext {
   private static final Logger log = Logger.getLogger(StandardPopupFilterWidget.class);
+
+  public static final String POPUP_REGION_KEY = "popups";
   
   /** Maps of popups where keys are service IDs(==popup IDs) and values 
    * <code>StandardPopupFilterWidget.PopupServiceInfo</code>. Used for rendering popups.*/ 
@@ -72,39 +75,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     super.init();
     UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().getEntry(UpdateRegionContext.class);
     if (updateRegionContext != null) {
-      updateRegionContext.addRegionHandler("popups", new PopupRegionHandler());
+      updateRegionContext.addRegionHandler(POPUP_REGION_KEY, new PopupRegionHandler());
     }
-  }
-
-  protected class PopupRegionHandler implements UpdateRegionContext.RegionHandler {
-
-    public String getContent() throws Exception {
-      Map popups = getPopups();
-      if (popups == null || popups.isEmpty())
-        return null;
-      StandardPopupFilterWidget.this.popups = new HashMap();
-      StringBuffer buf = new StringBuffer();
-      buf.append("[");
-      for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
-        buf.append("{");
-        Map.Entry popup = (Map.Entry) i.next();
-        String serviceId = (String) popup.getKey();
-        PopupServiceInfo serviceInfo = (PopupServiceInfo) popup.getValue();
-        buf.append("'popupId':'").append(StringEscapeUtils.escapeJavaScript(serviceId)).append("',");
-        buf.append("'windowProperties':'");
-        if (serviceInfo.getPopupProperties() != null)
-          buf.append(StringEscapeUtils.escapeJavaScript(serviceInfo.getPopupProperties().toString()));
-        buf.append("',");
-        buf.append("'url':'").append(StringEscapeUtils.escapeJavaScript(serviceInfo.toURL())).append("'");
-        buf.append("}");
-        if (i.hasNext())
-          buf.append(",");
-      }
-      buf.append("]");
-      buf.insert(0, buf.length() + "\n");
-      return buf.toString();
-    }
-
   }
 
   /* ************************************************************************************
@@ -369,4 +341,35 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       return popupProperties;
     }
   }
+
+  /* ************************************************************************************
+   * Internal inner classes
+   * ************************************************************************************/
+
+  protected class PopupRegionHandler implements UpdateRegionContext.RegionHandler {
+
+    public String getContent() throws Exception {
+      Map popups = getPopups();
+      if (popups == null || popups.isEmpty())
+        return null;
+
+      // clear popup list
+      StandardPopupFilterWidget.this.popups = new HashMap();
+
+      JsonArray popupArray = new JsonArray();
+      for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
+        JsonObject popupObject = new JsonObject();
+        Map.Entry popup = (Map.Entry) i.next();
+        String serviceId = (String) popup.getKey();
+        PopupServiceInfo serviceInfo = (PopupServiceInfo) popup.getValue();
+        popupObject.setStringProperty("popupId", serviceId);
+        popupObject.setStringProperty("windowProperties", serviceInfo.getPopupProperties() != null ? serviceInfo.getPopupProperties().toString() : "");
+        popupObject.setStringProperty("url", serviceInfo.toURL());
+        popupArray.append(popupObject.toString());
+      }
+      return popupArray.toString();
+    }
+
+  }
+
 }
