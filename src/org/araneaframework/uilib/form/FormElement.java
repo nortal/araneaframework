@@ -328,15 +328,11 @@ public class FormElement extends GenericFormElement implements FormElementContex
         //We assume that the convertor is present, if control and data are
         // here
         newDataValue = getConverter().convert(getControl().getRawValue());
-        //TODO: remove in 1.1 final
-        getData().clean();
       }
     }
 
     if (getData() != null && isValid()) {
       getData().setValue(newDataValue);
-      //TODO: remove in 1.1 final
-      getData().clean();
     }
   }
 	
