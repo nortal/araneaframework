@@ -68,7 +68,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
 
     assertTrue(topWidget.getDeactivateCalled());
     assertTrue(childWidget.getConfigureCalled());
-    assertEquals(childWidget, stackWidget.getChildren().get(TOP_FLOW_KEY+"1"));
+    assertEquals(childWidget, stackWidget.getChildren().get(BASE_FLOW_KEY+"1"));
   }
   
   public void testCancelCallContract() throws Exception {
