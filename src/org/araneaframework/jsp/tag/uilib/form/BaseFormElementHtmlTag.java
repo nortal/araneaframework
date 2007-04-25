@@ -68,6 +68,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	protected String id;
 	protected String tabindex;
 	protected String updateRegions;
+	protected String globalUpdateRegions;  
 	
 	/* ***********************************************************************************
 	 * Start & End tags
@@ -108,7 +109,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		if (hasElementContextSpan)
             writeFormElementContextOpen(out, formFullId, derivedId, true, pageContext);
 
-		updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions);
+		updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 		
 		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.getFullFieldId());
 
@@ -183,6 +184,16 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	public void setUpdateRegions(String updateRegions) throws JspException {
 		this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
 	}
+
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
+	 */	
+	public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
+		this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
+	}  
 
 	/** 	
 	 * Id of the resource specifying the accesskey for this element.

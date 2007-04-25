@@ -32,6 +32,7 @@ import org.araneaframework.jsp.util.JspUpdateRegionUtil;
  */
 public class BaseListRowButtonTag extends BaseSimpleButtonTag {
   protected String updateRegions;
+  protected String globalUpdateRegions;  
 
   protected List updateRegionNames;
   
@@ -50,7 +51,7 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
 
     event.setParam((String) requireContextEntry(ListRowsTag.ROW_REQUEST_ID_KEY));
     event.setTarget(contextWidgetId);
-    event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions));
+    event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions));
     event.setEventPrecondition(onClickPrecondition);
     
     return result;
@@ -78,6 +79,16 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
    */
   public void setUpdateRegions(String updateRegions) throws JspException {
     this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
+   */
+  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
+    this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }
 
   public void doFinally() {

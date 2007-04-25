@@ -32,4 +32,5 @@ public interface FormElementTagInterface extends StyledTagInterface, AttributedT
 	public void setValidateOnEvent(String validateOnEvent) throws JspException;	
 	public void setTabindex(String tabindex) throws JspException;
 	public void setUpdateRegions(String updateRegions) throws JspException;
+	public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException;
 }
