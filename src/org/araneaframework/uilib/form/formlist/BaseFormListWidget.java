@@ -156,6 +156,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 		resetAddForm();		
 	}
 
+//	FIXME: process() remains
 	protected void handleProcess() throws Exception {
 		processRows();
 	}

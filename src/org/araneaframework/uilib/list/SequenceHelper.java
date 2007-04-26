@@ -69,33 +69,41 @@ public class SequenceHelper implements Serializable {
   
   private long oldItemsOnPage;
   private long oldFirstItemIndex;
+  
+  private SequenceHelper copy;
 
   /**
    * Creates the class, setting all parameters to defaults.
    */
   public SequenceHelper(ConfigurationContext configuration) {
-  	this.configuration = configuration;
-    
+    this(configuration, true);
+  }
+  
+  private SequenceHelper(ConfigurationContext configuration, boolean createCopy) {
+    this.configuration = configuration;
+
     Long confDefaultItemsOnPage = (Long) configuration.getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);  
     if (confDefaultItemsOnPage != null)
-    	defaultItemsOnPage = confDefaultItemsOnPage.longValue();
-    
+      defaultItemsOnPage = confDefaultItemsOnPage.longValue();
+
     Long confFullItemsOnPage = (Long) configuration.getEntry(ConfigurationContext.FULL_LIST_ITEMS_ON_PAGE);
     if (confFullItemsOnPage != null)
-    	fullItemsOnPage = confFullItemsOnPage.longValue();
-    
+      fullItemsOnPage = confFullItemsOnPage.longValue();
+
     Long confDefaultPagesOnBlock = (Long) configuration.getEntry(ConfigurationContext.DEFAULT_LIST_PAGES_ON_BLOCK);
     if (confDefaultPagesOnBlock != null)
-    	defaultPagesOnBlock = confDefaultPagesOnBlock.longValue();
-    
+      defaultPagesOnBlock = confDefaultPagesOnBlock.longValue();
+
     Boolean confPreserveStartingRow = (Boolean) configuration.getEntry(ConfigurationContext.LIST_PRESERVE_STARTING_ROW);
     if (confPreserveStartingRow != null)
-    	preserveStartingRow = confPreserveStartingRow.booleanValue(); 
-    
+      preserveStartingRow = confPreserveStartingRow.booleanValue(); 
+
     setItemsOnPage(defaultItemsOnPage);
     setPagesOnBlock(defaultPagesOnBlock);
-    
-    totalItemCount = Long.MAX_VALUE;    
+
+    totalItemCount = Long.MAX_VALUE;
+    if (createCopy)
+      copy = new SequenceHelper(configuration, false);
   }
 
   //*******************************************************************
@@ -340,6 +348,25 @@ public class SequenceHelper implements Serializable {
 
     return end;
   }
+  
+  
+  /**
+   * Returns whether the basic configuration that specifies which items are
+   * shown has changed since last call to this {@link SequenceHelper}'s {@link SequenceHelper#isChanged()} 
+   * method.
+   */
+  public boolean isChanged() {
+	  boolean result = 
+		  this.allItemsShown != copy.allItemsShown ||
+		  this.getItemsOnPage() != copy.getItemsOnPage() ||
+		  this.currentPage != copy.currentPage;
+	  
+	  copy.allItemsShown = this.allItemsShown;
+	  copy.setItemsOnPage(this.getItemsOnPage());
+	  copy.setCurrentPage(this.currentPage);
+
+	  return result;
+  }
 
   //*******************************************************************
   // VIEW MODEL
@@ -461,5 +488,11 @@ public class SequenceHelper implements Serializable {
 	public Long getItemsOnPage() {
 		return itemsOnPage;
 	}
+  }
+
+  public void destroy() throws Exception {
+	if (copy != null)
+		copy.destroy();
+	copy = null;
   }
 }

@@ -55,9 +55,8 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 		setViewSelector("demo/demoCheckboxList");
 
 		checkList = new EditableBeanListWidget(new DemoCheckboxListRowHandler(), DataDTO.class);
-		addWidget("checkList", checkList);
-
 		checkList.setDataProvider(new DemoCheckboxListDataProvider());
+		addWidget("checkList", checkList);
 
 		checkList.addField("booleanField", "#Boolean");
 		checkList.addField("stringField", "#String");

@@ -88,6 +88,8 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 			putViewDataOnce("askCloseConfirmation", "true");
 	}
 	
+  
+//	FIXME: process() remains
   protected void handleProcess() throws Exception {
 	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded().values());
 	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated().values());
