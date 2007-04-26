@@ -1,0 +1,172 @@
+API changes in 1.1
+------------------
+
+[Diff from 1.13.1.1 to 2.1.1.44]
+
+* Component-s know their own Id-s (added getScope method). Interface Scope and
+  its implementation StandardScope have been added. Component's init method now
+  takes Scope as its first parameter. Implementation of that was done in BaseComponent.
+* Component-s have environment now (added getEnvironment method).
+* Components' lifecycle is more strictly defined, there are three states:
+  UNBORN, ALIVE and DEAD. Resurrection cannot occur anymore, an
+  IllegalStateException is thrown. Leftover calls do not throw exceptions
+  anymore, they are silently ignored. BaseComponent implementation manages the
+  lifecycle status. In addition to the existing isInitialized method, the
+  protected methods isAlive and isDead were added to BaseComponent class.
+  Propagate does not traverse below dead Component. BaseService lets the action
+  call through only if the Component is alive.
+* Added another constructor to StandardPath class, which takes Collection as an
+  argument.
+* Deleted FLOW_KEY and CALL_STACK_KEY constants from FlowContext interface.
+  StandardFlowContainerWidget: frames have constant names (generated
+  sequentially) that are used for components ids, because component id's are
+  fixed.
+
+* Eliminated OutputData attributes: deleted pushAttribute, popAttribute,
+  getAttribute and getAttributes methods from OutputData interface (and
+  StandardServletOutputData class).
+* Eliminated OutputData and InputData scoping: deleted getScope, pushScope,
+  popScope and restoreScope methods from InputData (and
+  StandardServletInputData) and OutputData (TODO StandardServletOutputData).
+  Method getScopedData in InputData (and StandardServletInputData) now takes
+  Path as a parameter. Everything uses getScope method (from Component) instead
+  of OutputData/InputData.getScope.
+* Eliminated scopedWidgetId and formScopedFullId, they were the same as their
+  non-scoped counterparts anyway.
+* Added getContainerPath and getContextPath methods to HttpInputData interface
+  (and its implementing class StandardServletInputData).
+
+* Added ExpiringServiceContext interface (implemented by
+  BaseExpiringServiceRouterService class), in order to access serviceTTLMap
+  from BodyHtmlTag.writeKeepAliveRegistrationScripts (was previously done with
+  OutputData attributes).
+* Deleted LOCALIZATION_CONTEXT_KEY constant from LocalizationContext interface.
+* Deleted MESSAGE_KEY constant from MessageContext interface. Added getMessages
+  method to MessageContext interface (and its implementation to
+  StandardMessagingFilterWidget class) in order to access messages from
+  messages tag (was previously done with OutputData attributes, added in render
+  method of StandardMessagingFilterWidget class).
+* Deleted POPUPS_KEY constant from PopupWindowContext interface. Added
+  getPopups method to PopupWindowContext interface (and
+  StandardPopupFilterWidget class).
+* Deleted SCROLL_HANDLER_KEY constant from WindowScrollPositionContext
+  interface.
+* Deleted PATH_ARGUMENT constant from PathInfoServiceRouterService class.
+  Added getPathInfo method to PathInfoServiceContext interface (and
+  PathInfoServiceRouterService class).
+* Deleted ClientStateUtil class. Added EnvironmentUtil class, that contains
+  convenience methods for getting topServiceId and threadServiceId.
+
+* Moved constant ACTION_PATH_KEY from ... to ApplicationService interface.
+* Moved constant EVENT_PATH_KEY from ... to ApplicationWidget interface.
+
+* JSP contextAttributes from parent JSP-s are no longer accessible after
+  widgetInclude (for example, layout tags don't work across widgetInclude-s).
+* Deleted root, viewport, globalWidgetInclude JSP tags. Deleted ViewPortContext
+  interface. JSP localizationContext is set in ServletUtil.include instead of
+  root tag. //FIXME make it optional?
+* Moved AraneaRootTag.StringAdapterResourceBundle inner class into
+  ServeletUtil class. Added LOCALIZATION_CONTEXT_KEY constant to ServeletUtil
+  class.
+* Deleted StandardContainerWidget because viewport tag and ViewPortContext
+  interface do not exist anymore. Moved other functionality (about not letting
+  non-existent) events through) to StandardWidgetAdapterService class.
+* WidgetContext tag with no Id no longer has to be at the top of JSP file, this
+  is done automatically in ServletUtil.include. //FIXME eliminate no-Id use-case of WidgetContext tag?
+* Eliminated systemForm's Id. No duplicate systemform check is done in
+  server-side nor client-side. Client-side JavaScript searches for the first
+  form tag with arn-systemForm attribute.
+* Added SystemFormContext interface and its implementation
+  StandardSystemFormFilterService. Filters lower in the hierarchy (like
+  TransactionFilter and ClientStateFilter) can use it to add fields to
+  systemform, that must be written out in HTML by systemform tag.
+  StandardSystemFormFilterService adds topServiceId and threadServiceId
+  automatically, since these filters are located higher in the hierarchy.
+* Deleted JSP_CONFIGURATION_KEY constant from JspContext interface.
+* Added getSubmitCharset, getFormAction, getTagMapping, getConfiguration
+  methods to JspContext interface; moved methods the same four method
+  implementations from StandardJspFilterService.JspConfiguration inner class to
+  StandardJspFilterService class. Removed getCurrentBundle, getCurrentLocale,
+  getJspPath, getJspExtension methods from
+  StandardJspFilterService.JspConfiguration inner class and deleted the inner
+  class altogether. Thus, StandardJspFilterService doesn't depend on
+  LocalizationContext anymore.
+* There are now two ServletUtil.include methods, in addition to the old one
+  that takes Environment as a parameter, the new one takes ApplicationWidget
+  instead. When ServletUtil.include is invoked from an ApplicationWidget (as is
+  mostly the case), the new method signature should be used - then the
+  including widget is made accessible to JSP. In addition to the including
+  widget, ServletUtil.include sets the environment, JSP localization context
+  and also the same five entries that widgetContext tag did. After including
+  the JSP, the contextEntries that were set, are restored to previous values.
+* Added getEnvironment method to ServletUtil class.
+
+* getSystemForm and setSystemForm functions were added to AraneaPage instance.
+  findSystemForm function was added to AraneaPage object. It searches for the
+  first form tag with arn-systemForm attribute and calls setSystemForm. It is
+  added as a systemLoadEvent, so it is called on page load [and after
+  updateregions AJAX request???].
+* Because element-based traversing is not performed anymore, deleted
+  AraneaTraverser and removed getTraverser function from AraneaPage instance
+  (aranea.js). Moved the five getEvent* functions from AraneaTraverser to
+  AraneaPage instance.
+* Moved setSystemFormEncoding function from aranea-ui.js to AraneaPage instance
+  (aranea.js).
+* JavaScript functions related to date and time controls (fillTimeText,
+  fillTimeSelect) and scrollhandler (saveScrollCoordinates) do not take
+  systemForm as a parameter anymore (aranea-ui.js).
+* getActionSubmitURL, action and action_6 functions in AraneaPage instance take
+  sync as an additional parameter. In action and action_6 methods, the sync
+  parameter was added to the middle of the signature, not as the last
+  parameter (//TODO fix it?).
+
+
+* UpdateRegion filter is a widget filter now. UpdateRegions use partial
+  rendering (updateRegion names have widget name prefixed with ':' as
+  separator).
+* Eliminated globalUpdateRegions. Messages and popups data is sent in JSON
+  format, they have JavaScript handlers in client-side.
+
+* Deleted StandardSynchronizingFilterService, its functionality is merged into
+  StandardHttpSessionRouterService. Deleted SynchronizingContext interface.
+* Added SYNC_PARAMETER_KEY and SESSION_SYNC_OBJECT_KEY constants to
+  StandardHttpSessionRouterService class.
+* StandardHttpSessionRouterService supports unsynchronized actions - when
+  sync=false is specified as a request parameter.
+* Utility classes Mutex, ReadWriteLock, ReaderPreferenceReadWriteLock, Sync,
+  WriterPreferenceReadWriteLock have been added from
+  EDU.oswego.cs.dl.util.concurrent package.
+* StandardHttpSessionRouterService and StandardSerializingAuditFilterService
+  use a read-write lock to track the progress of action calls and to know when
+  all calls have finished so that session can be serialized.
+* StandardSerializingAuditFilterService class extends BaseFilterService
+  (previously extended BaseService and implemented FilterService).
+
+* TreeWidget supports unsynchronized actions. In client-side JavaScript,
+  unsynchronized action is made when the tree element has
+  arn-tree-sync="false" attribute (aranea-tree.js).
+* ?? renderer ??
+
+* You are able to query the next transactionId from TransactionHelper and
+  TransactionContext (added getNextTransactionId method to both).
+* StandardTransactionFilterWidget and StandardClientStateFilterWidget require
+  SystemFormContext from environment (provided by
+  StandardSystemFormFilterService).
+
+
+* Event listeners ProxyEventListener, .. take Widget as constructor parameter instead of Object.
+
+TODO diagrams of Aranea filter hierarchies, one for 1.0, other for 1.1.
+
+* Library upgrades:
+  + jakarta-regexp 1.2 -> 1.5
+  + log4j 1.2.8 -> 1.2.14
+  + commons-collections 3.1 -> 3.2
+  + commons-lang 2.1 -> 2.3
+  + commons-validator 1.3.0 -> 1.3.1
+  + commons-logging ??? -> 1.1
+  + spring ??? -> 1.2.9
+  + log4javascript 1.2 -> 1.3.1 (compressed)
+  + prototype 1.5.0_rc0 -> 1.5.0
+
+[Changes in tests not covered]
