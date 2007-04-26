@@ -262,7 +262,7 @@ function AraneaPage() {
       options = Object.extend({
         method: 'get',
         onComplete: actionCallback,
-        onException: Aranea.handleRequestException
+        onException: AraneaPage.handleRequestException
       }, options);
       var url = this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync);
       return new Ajax.Request(url, options);
@@ -380,7 +380,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
-  Aranea.showLoadingMessage();
+  AraneaPage.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
       transactionId: 'override',
@@ -388,12 +388,12 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       updateRegions: updateRegions
     },
     onSuccess: function(transport) {
-      Aranea.hideLoadingMessage();
+      AraneaPage.hideLoadingMessage();
       if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + "\n") {
         araneaPage().getLogger().debug('Partial rendering: received successful response'
           + ' (' + transport.responseText.length + ' characters)'
           + ': ' + transport.status + ' ' + transport.statusText);
-        Aranea.processResponse(transport.responseText);
+        AraneaPage.processResponse(transport.responseText);
         AraneaPage.init();
         araneaPage().onload();
       } else {
@@ -406,7 +406,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       }
     },
     onFailure: function(transport) {
-      Aranea.hideLoadingMessage();
+      AraneaPage.hideLoadingMessage();
       araneaPage().getLogger().debug('Partial rendering: received erroneous response'
         + ' (' + transport.responseText.length + ' characters)'
         + ': ' + transport.status + ' ' + transport.statusText);
@@ -415,13 +415,239 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       document.close();
     },
     onException: function(request, exception) {
-      Aranea.hideLoadingMessage();
-      Aranea.handleRequestException(request, exception);
+      AraneaPage.hideLoadingMessage();
+      AraneaPage.handleRequestException(request, exception);
     }
   });
 
   return false;
 }
+
+Object.extend(AraneaPage, {
+  regionHandlers: new Hash(),
+  loadingMessageId: 'aranea-loading-message',
+  loadingMessageContent: 'Loading...',
+  loadingMessagePositionHack: false,
+
+  /**
+   * Add a handler that is invoked for custom data region in updateregions AJAX
+   * request. <code>process</code> function will be invoked on the handler
+   * during processing the response. Data specific to this handler will be
+   * passed as the first parameter to that function (<code>String</code>).
+   */
+  addRegionHandler: function(key, handler) {
+    this.regionHandlers[key] = handler;
+  },
+
+  /**
+   * Process response of an updateregions AJAX request. Should be called only
+   * on successful response. Invokes region handlers.
+   */
+  processResponse: function(responseText) {
+    var text = new Text(responseText);
+    text.readLine(); // responseId
+    while (!text.isEmpty()) {
+      var key = text.readLine();
+      var length = text.readLine();
+      var content = text.readCharacters(length);
+      if (this.regionHandlers[key]) {
+        araneaPage().getLogger().debug('Region type: "' + key + '"');
+        this.regionHandlers[key].process(content);
+      } else {
+        araneaPage().getLogger().error('Region type: "' + key + '" is unknown!');
+      }
+    }
+  },
+
+  /**
+   * Exception handler that is invoked on Ajax.Request errors.
+   */
+  handleRequestException: function(request, exception) {
+    throw exception;
+  },
+
+  /**
+   * Create or show loading message at the top corner of the document. Called
+   * before initiating an updateregions Ajax.Request.
+   */
+  showLoadingMessage: function() {
+    var element = $(this.loadingMessageId);
+    if (element) {
+      if (this.loadingMessagePositionHack) {
+        element.style.top = document.documentElement.scrollTop + 'px';
+      }
+      element.show();
+      return;
+    }
+    var element = Builder.node('div', {id: this.loadingMessageId}, this.loadingMessageContent);
+    document.body.appendChild(element);
+    if (element.offsetTop) {
+      // IE 6 does not support 'position: fixed' CSS attribute value
+      this.loadingMessagePositionHack = true;
+      element.style.position = 'absolute';
+      element.style.top = document.documentElement.scrollTop + 'px';
+    }
+  },
+
+  /**
+   * Hide loading message. Called after the completion of updateregions
+   * Ajax.Request.
+   */
+  hideLoadingMessage: function() {
+    var element = $(this.loadingMessageId);
+    if (element) {
+      element.hide();
+    }
+  }
+});
+
+
+/**
+ * Region handler that updates transaction id of system form.
+ */
+AraneaPage.TransactionIdRegionHandler = Class.create();
+AraneaPage.TransactionIdRegionHandler.prototype = {
+  initialize: function() {
+  },
+
+  process: function(content) {
+    var systemForm = araneaPage().getSystemForm();
+    if (systemForm.transactionId)
+      systemForm.transactionId.value = content;
+  }
+};
+AraneaPage.addRegionHandler('transactionId', new AraneaPage.TransactionIdRegionHandler());
+
+/**
+ * Region handler that updates DOM element content.
+ */
+AraneaPage.DocumentRegionHandler = Class.create();
+AraneaPage.DocumentRegionHandler.prototype = {
+  initialize: function() {
+  },
+
+  process: function(content) {
+    var text = new Text(content);
+    var length = text.readLine();
+    var properties = text.readCharacters(length).evalJSON();
+    var id = properties.id;
+    var mode = properties.mode;
+    var content = text.toString();
+    if (mode == 'update') {
+      $(id).update(content);
+    } else if (mode == 'replace') {
+      $(id).replace(content);
+    } else {
+      araneaPage().getLogger().error('Document region mode "' + mode + '" is unknown');
+    }
+    araneaPage().addSystemLoadEvent(AraneaPage.findSystemForm);
+  }
+};
+AraneaPage.addRegionHandler('document', new AraneaPage.DocumentRegionHandler());
+
+/**
+ * Region handler that updates the messages area.
+ */
+AraneaPage.MessageRegionHandler = Class.create();
+AraneaPage.MessageRegionHandler.prototype = {
+  regionClass: '.aranea-messages',
+  regionTypeAttribute: 'arn-msgs-type',
+  messageSeparator: '<br/>',
+
+  initialize: function() {
+  },
+
+  process: function(content) {
+    var messagesByType = content.evalJSON();
+    this.updateRegions(messagesByType);
+  },
+
+  updateRegions: function(messagesByType) {
+    $$(this.regionClass).each((function(region) {
+      if (region.hasAttribute(this.regionTypeAttribute)) {
+        var type = region.getAttribute(this.regionTypeAttribute);
+        if (messagesByType[type]) {
+          var messages = messagesByType[type];
+          if (messages.size() > 0) {
+            this.showMessageRegion(region, messages);
+            return;
+          }
+        }
+      } else {
+        var messages = messagesByType.values().flatten();
+        if (messages.size() > 0) {
+          this.showMessageRegion(region, messages);
+          return;
+        }
+      }
+      this.hideMessageRegion(region);
+    }).bind(this));
+  },
+
+  showMessageRegion: function(region, messages) {
+    this.findContentElement(region).update(this.buildRegionContent(messages));
+    this.findDisplayElement(region).show();
+  },
+
+  hideMessageRegion: function(region) {
+    this.findDisplayElement(region).hide();
+    this.findContentElement(region).update();
+  },
+
+  findContentElement: function(region) {
+    return region;
+  },
+
+  findDisplayElement: function(region) {
+    return region;
+  },
+
+  buildRegionContent: function(messages) {
+    return messages.invoke('escapeHTML').join(this.messageSeparator);
+  }
+};
+AraneaPage.addRegionHandler('messages', new AraneaPage.MessageRegionHandler());
+
+/**
+ * Region handler that opens popup windows.
+ */
+AraneaPage.PopupRegionHandler = Class.create();
+AraneaPage.PopupRegionHandler.prototype = {
+  initialize: function() {
+  },
+
+  process: function(content) {
+    var popups = content.evalJSON();
+    this.openPopups(popups);
+    araneaPage().addSystemLoadEvent(processPopups);
+  },
+
+  openPopups: function(popups) {
+    popups.each(function(popup) {
+      addPopup(popup.popupId, popup.windowProperties, popup.url);
+    });
+  }
+};
+AraneaPage.addRegionHandler('popups', new AraneaPage.PopupRegionHandler());
+
+/**
+ * Region handler that forces a reload of the page by submitting the system
+ * form.
+ */
+AraneaPage.ReloadRegionHandler = Class.create();
+AraneaPage.ReloadRegionHandler.prototype = {
+  initialize: function() {
+  },
+
+  process: function(content) {
+    var systemForm = araneaPage().getSystemForm();
+    if (systemForm.transactionId)
+      systemForm.transactionId.value = 'inconsistent';
+    return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
+  }
+};
+AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
+
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */

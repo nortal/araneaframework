@@ -18,7 +18,7 @@
 	                    <ui:systemForm method="POST">
 							<ui:onLoadEvent event="Form.focusFirstElement(araneaPage().getSystemForm());"/>
 
-		                                        <tui:messages styleClass="msg-error"/>
+		                                        <ui:messages styleClass="msg-error"/>
 
 		                                        <ui:form id="loginForm">
 		                                        

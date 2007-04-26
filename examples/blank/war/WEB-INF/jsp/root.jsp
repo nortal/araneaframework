@@ -26,8 +26,15 @@
 				<jsp:include page="/WEB-INF/jsp/menu.jsp"/>
 				<ui:nbsp/>
 
-				<tui:messages type="info" styleClass="msg-info"/>
-				<tui:messages type="error" styleClass="msg-error"/>
+				<div class="msg-info">
+					<div>
+						<div>
+							<ui:messages type="info"/>
+						</div>
+					</div>
+				</div>
+				<ui:messages type="error" styleClass="msg-error"/>
+
 				<!-- Renders the menu widget itself. As MenuWidget is subclass
 				     of StandardFlowContainerWidget, this means that actual
 				     widget rendered here is whatever widget is on top of call

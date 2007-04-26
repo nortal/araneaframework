@@ -38,7 +38,7 @@
 		                                    	<!-- This tag will render messages of given type if they are present in current MessageContext,
 		                                    		ie message about failured login (wrong username or password).
 		                                    	-->
-		                                        <tui:messages styleClass="msg-error"/>
+		                                        <ui:messages styleClass="msg-error"/>
 		
 		                                        <!-- This is the form we added to our TemplateLoginWidget.
 			                                        Tag makes it the current form context tag and allows accessing 

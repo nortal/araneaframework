@@ -13,7 +13,6 @@
         <file path="js/aranea/aranea-ui.js"/>
         <file path="js/aranea/aranea-locale.js"/>
 		<file path="js/aranea/aranea.js"/>
-		<file path="js/aranea/aranea-new.js"/>
         <file path="js/aranea/aranea-keyboard.js"/>
 		<file path="js/aranea/aranea-util.js"/>
 		<file path="js/aranea/aranea-tree.js"/>

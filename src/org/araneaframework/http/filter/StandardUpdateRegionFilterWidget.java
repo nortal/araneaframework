@@ -31,6 +31,7 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.RoutedMessage;
 import org.araneaframework.core.StandardEnvironment;
@@ -54,6 +55,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   static private final Logger log = Logger.getLogger(StandardUpdateRegionFilterWidget.class);
 
   private String characterEncoding = "UTF-8";
+  private Map documentRegions = new HashMap();
   private Map regionHandlers = new HashMap();
   private boolean disabled = false;
 
@@ -62,7 +64,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   public static final String RELOAD_REGION_KEY = "reload";
   public static final String TRANSACTION_ID_REGION_KEY = "transactionId";
-  public static final String DOM_REGION_KEY = "dom";
+  public static final String DOCUMENT_REGION_KEY = "document";
 
   public void setCharacterEncoding(String encoding) {
     characterEncoding = encoding;
@@ -72,8 +74,14 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     disabled = true;
   }
 
+  public void addDocumentRegion(String documentRegionId, String widgetId) {
+    Assert.notEmptyParam(documentRegionId, "regionName");
+    Assert.notEmptyParam(widgetId, "widgetId");
+    documentRegions.put(documentRegionId, widgetId);
+  }
+
   public void addRegionHandler(String name, RegionHandler handler) {
-    Assert.notNullParam(name, "name");
+    Assert.notEmptyParam(name, "name");
     Assert.notNullParam(handler, "handler");
     regionHandlers.put(name, handler);
   }
@@ -86,6 +94,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     String regionNames = (String) output.getInputData().getGlobalData().get(UPDATE_REGIONS_KEY); 
 
     if(regionNames == null) {
+      documentRegions.clear();
       super.render(output);
       disabled = false;
       return;
@@ -116,7 +125,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       } else {
         writeTransactionIdRegion(writer);
         writeHandlerRegions(writer);
-        writeDomRegions(writer, regionContents);
+        writeDocumentRegions(writer, regionContents);
       }
       writer.flush();
     }
@@ -141,7 +150,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   }
 
   protected void writeReloadRegion(PrintWriter out) throws Exception {
-    out.write(RELOAD_REGION_KEY + "\n");
+    writeRegion(out, RELOAD_REGION_KEY, "");
   }
 
   protected void writeTransactionIdRegion(PrintWriter out) throws Exception {
@@ -163,40 +172,37 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     }
   }
 
-  protected void writeDomRegions(PrintWriter out, Map regionContents) throws Exception {
+  protected void writeDocumentRegions(PrintWriter out, Map regionContents) throws Exception {
     for (Iterator i = regionContents.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
       String id = (String) entry.getKey();
       Region region = (Region) entry.getValue();
-      JsonObject domObject = new JsonObject();
-      domObject.setStringProperty("id", id);
-      domObject.setStringProperty("mode", region.getMode());
-      StringBuffer buf = new StringBuffer(domObject.toString());
+      JsonObject documentObject = new JsonObject();
+      documentObject.setStringProperty("id", id);
+      documentObject.setStringProperty("mode", region.getMode());
+      StringBuffer buf = new StringBuffer(documentObject.toString());
       buf.insert(0, buf.length() + "\n");
       buf.append(region.getContent());
-      writeRegion(out, DOM_REGION_KEY, buf.toString());
+      writeRegion(out, DOCUMENT_REGION_KEY, buf.toString());
     }
   }
 
   protected Map parseRegionNames(String commaSeparatedRegionNames) {
-    String[] regionNames = StringUtils.split(commaSeparatedRegionNames, ',');
     Map regionIdsByWidgetId = new HashMap();
+
+    String[] regionNames = StringUtils.split(commaSeparatedRegionNames, ',');
     for (int i = 0; i < regionNames.length; i++) {
-      // Split each region name by ':' - the first part is widget id, the last
-      // part is region id. Construct a Map: (widgetId -> Set: (regionId))
-      String[] widgetIdAndRegionId = StringUtils.split(regionNames[i], ":", 2);
-      Set regionIds = (Set) regionIdsByWidgetId.get(widgetIdAndRegionId[0]);
+      String documentRegionId = regionNames[i];
+      String widgetId = (String) documentRegions.get(documentRegionId);
+      if (widgetId == null)
+        throw new AraneaRuntimeException("Document region id not found: " + documentRegionId);
+
+      Set regionIds = (Set) regionIdsByWidgetId.get(widgetId);
       if (regionIds == null) {
         regionIds = new HashSet();
-        regionIdsByWidgetId.put(widgetIdAndRegionId[0], regionIds);
+        regionIdsByWidgetId.put(widgetId, regionIds);
       }
-      if (widgetIdAndRegionId.length > 1) {
-        regionIds.add(widgetIdAndRegionId[1]);
-      } else {
-        // Only widgetId is present - add null value to indicate that this
-        // widget has to be fully rendered
-        regionIds.add(null);
-      }
+      regionIds.add(documentRegionId);
     }
 
     removeOverlappingRegions(regionIdsByWidgetId);
@@ -242,16 +248,11 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       if (disabled)  // Our filter was disabled during rendering this widget
         return null; // force page to reload for full render
 
-      if (regionIds.contains(null)) {
-        // At least one widget has to be fully rendered (without updateregion comments)
-        regionContents.put(widgetId, new Region(new String(arUtil.getData(), characterEncoding), "replace"));
-      } else {
-        // Cut out regions by special comments
-        String widgetContent = new String(arUtil.getData(), characterEncoding);
-        for (Iterator j = regionIds.iterator(); j.hasNext(); ) {
-          String id = (String) j.next();
-          regionContents.put(id, new Region(getContentById(widgetContent, id), "update"));
-        }
+      // Cut out regions by special comments
+      String widgetContent = new String(arUtil.getData(), characterEncoding);
+      for (Iterator j = regionIds.iterator(); j.hasNext(); ) {
+        String id = (String) j.next();
+        regionContents.put(id, new Region(getContentById(widgetContent, id), "update"));
       }
       arUtil.rollback();
     }

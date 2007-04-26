@@ -34,6 +34,17 @@ public interface UpdateRegionContext extends Serializable {
   void disableOnce();
 
   /**
+   * Notify that a document region is rendered by the specified widget. The list
+   * of document regions is cleared before every full render. Updateregion tags
+   * should always call this, so that when updateregion filter is invoked, it is
+   * known which widget to render for a particular document region.
+   * 
+   * @param documentRegionId document region id 
+   * @param widgetId id of the widget that will render the document region
+   */
+  void addDocumentRegion(String documentRegionId, String widgetId);
+
+  /**
    * Add a handler for custom region.
    * 
    * @param name
@@ -47,7 +58,7 @@ public interface UpdateRegionContext extends Serializable {
   /**
    * A way to pass custom data back to client-side via AJAX requests.
    */
-  public interface RegionHandler extends Serializable {
+  interface RegionHandler extends Serializable {
 
     /**
      * Will be called only when updateregion filter is activated on AJAX
