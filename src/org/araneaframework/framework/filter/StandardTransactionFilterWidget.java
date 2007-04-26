@@ -70,7 +70,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
       childWidget._getWidget().update(input);
     }
     else {
-      log.debug("Transaction id '" + getTransactionId() + "' not consistent for routing update().");
+      log.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing update().");
     }
   }
 
@@ -79,7 +79,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
       childWidget._getWidget().event(path, input);
     }
     else {
-      log.debug("Transaction id '" + getTransactionId() + "' not consistent for routing event().");
+      log.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing event().");
     }
   }
 

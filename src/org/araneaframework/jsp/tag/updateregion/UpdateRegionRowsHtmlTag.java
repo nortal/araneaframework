@@ -33,23 +33,23 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class UpdateRegionRowsHtmlTag extends BaseUpdateRegionTag {
 
-	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
-		
-		JspUtil.writeOpenStartTag(out, "tbody");
-		JspUtil.writeAttribute(out, "id", fullId);
-		JspUtil.writeCloseStartTag(out);
-		out.write("<!--BEGIN:" + fullId + "-->");
-		// marker that this is row update region
-		out.write("<!--BEGINROWS:" + fullId + "-->");
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
 
-		return EVAL_BODY_INCLUDE;
-	}
+    JspUtil.writeOpenStartTag(out, "tbody");
+    JspUtil.writeAttribute(out, "id", fullId);
+    JspUtil.writeCloseStartTag(out);
 
-	protected int doEndTag(Writer out) throws Exception {
-		out.write("<!--END:" + fullId + "-->");
-		JspUtil.writeEndTag(out, "tbody");
+    out.write("<!--BEGIN:" + fullId + "-->");
 
-		return super.doEndTag(out);
-	}
+    return EVAL_BODY_INCLUDE;
+  }
+
+  protected int doEndTag(Writer out) throws Exception {
+    out.write("<!--END:" + fullId + "-->");
+
+    JspUtil.writeEndTag(out, "tbody");
+
+    return super.doEndTag(out);
+  }
 }

@@ -29,6 +29,9 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
+import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.http.util.JsonArray;
+import org.araneaframework.http.util.JsonObject;
 
 /**
  * Adds a {@link org.araneaframework.framework.MessageContext} implementation to the environment that can
@@ -48,9 +51,20 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
+
+  public static final String MESSAGE_REGION_KEY = "messages";
+
   protected Map permanentMessages;
   protected Map messages;
   
+  protected void init() throws Exception {
+    super.init();
+    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().getEntry(UpdateRegionContext.class);
+    if (updateRegionContext != null) {
+      updateRegionContext.addRegionHandler(MESSAGE_REGION_KEY, new MessageRegionHandler());
+    }
+  }
+
   protected void update(InputData input) throws Exception {
     clearMessages();
 
@@ -165,4 +179,35 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     }
     return Collections.unmodifiableMap(messages);
   }
+
+  /* ************************************************************************************
+   * Internal inner classes
+   * ************************************************************************************/
+
+  protected class MessageRegionHandler implements UpdateRegionContext.RegionHandler {
+
+    public String getContent() throws Exception {
+      Map messageMap = getMessages();
+      if (messageMap == null || messageMap.isEmpty())
+        return null;
+
+      JsonObject messagesByType = new JsonObject();
+      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry entry = (Map.Entry) i.next();
+        if (entry.getValue() == null) {
+          continue;
+        }
+        String type = (String) entry.getKey();
+        JsonArray messages = new JsonArray();
+        for (Iterator j = ((Collection) entry.getValue()).iterator(); j.hasNext(); ) {
+          String message = (String) j.next();
+          messages.appendString(message);
+        }
+        messagesByType.setProperty(type, messages.toString());
+      }
+      return messagesByType.toString();
+    }
+
+  }
+
 }
