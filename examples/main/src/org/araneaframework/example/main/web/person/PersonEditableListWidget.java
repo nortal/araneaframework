@@ -95,8 +95,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
       protected DataProvider() {
 				super(PersonMO.class);
 			}
-			public List loadData() throws Exception {		
-        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			public List loadData() throws Exception {
 				return getGeneralDAO().getAll(PersonMO.class);
 			}
 		}
