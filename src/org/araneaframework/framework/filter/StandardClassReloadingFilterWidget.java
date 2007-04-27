@@ -58,9 +58,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
     ClassLoader cl = newClassLoader();
     Class childClass = cl.loadClass(childClassName);
 
-    child = new RelocatableDecorator((Widget) childClass.newInstance());
-    child._getComponent().init(getEnvironment());    
-    _getComposite().attach("c", child);
+    addWidget("c", new RelocatableDecorator((Widget) childClass.newInstance()));
   }
   
   private ClassLoader newClassLoader() throws MalformedURLException {
