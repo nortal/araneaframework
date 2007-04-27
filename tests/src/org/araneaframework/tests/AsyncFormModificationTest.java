@@ -51,7 +51,7 @@ public class AsyncFormModificationTest extends TestCase {
 	
 	/* Test that replacing inited FormElement's Data changes FormElement's value to Data's value.
 	 * After that, make sure that Control sees the same value (meaning that asynchronous form 
-	 * modifications work, no process() needed). */
+	 * modifications work). */
 	public void testSetValue_3() throws Exception {
 		String value = "newvalue";
 		Data data = new StringData();
@@ -120,11 +120,8 @@ public class AsyncFormModificationTest extends TestCase {
 	    String simpleValue = ((FloatControl.ViewModel) ((BaseControl)testForm.getControlByFullName("number")).getViewModel()).getSimpleValue();
 	    assertEquals(notNumber, simpleValue);
 	    
-	    // see that process() does not cause right to go wrong
-	    testForm._getWidget().process();
-	    
 	    // this is not true (because of legacy code in StringArrayRequestControl.process())
-	    // assertEquals(someText, testForm.getControlByFullName("text").getRawValue());
+	    assertEquals(someText, testForm.getControlByFullName("text").getRawValue());
 
 	    simpleValue = ((FloatControl.ViewModel) ((BaseControl)testForm.getControlByFullName("number")).getViewModel()).getSimpleValue();
 	    assertEquals(notNumber, simpleValue);

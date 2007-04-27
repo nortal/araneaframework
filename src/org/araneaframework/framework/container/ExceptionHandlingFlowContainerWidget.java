@@ -83,12 +83,6 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
       handleEvent(input);
   }
   
-  protected void process() throws Exception {
-    if (exception == null)
-      super.process();
-    else handleProcess();
-  }
-  
   protected void render(OutputData output) throws Exception {
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     

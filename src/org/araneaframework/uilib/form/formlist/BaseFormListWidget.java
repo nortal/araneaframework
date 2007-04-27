@@ -72,20 +72,19 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 		this.model = model;
 	}
   
-  protected List getRows() {
+  private List getRows() {
+    try {
+      rows = model.getRows();
+    }
+    catch (Exception e) {
+      throw new AraneaRuntimeException(e);
+    }
+
     return rows;
   }
 
 	public void processRows() {
-    if (model != null) {
-      try {
-        rows = model.getRows();
-      }
-      catch (Exception e) {
-        throw new AraneaRuntimeException(e);
-      }
-    }
-
+		getRows();
 		for (Iterator i = getRows().iterator(); i.hasNext();) {
 			Object row = i.next();
 
@@ -156,11 +155,6 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 		resetAddForm();		
 	}
 
-//	FIXME: process() remains
-	protected void handleProcess() throws Exception {
-		processRows();
-	}
-
 	/** Used to build instance of FormWidget belonging to this list. */
 	protected abstract FormWidget buildAddForm() throws Exception;
 
@@ -216,7 +210,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	 * @param key row key.
 	 */
 	public void deleteRow(Object key) throws Exception {
-		Set rowsToDelete = new HashSet();		
+		Set rowsToDelete = new HashSet(1);		
 
 		rowsToDelete.add(key);
 		formRows.remove(key);
@@ -268,7 +262,9 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 		protected Map editableRows = new HashMap();
 		protected List rows;
 
-		public ViewModel() {			
+		public ViewModel() {
+			// FIXME: TODO: tie the formrows and model rows  early
+			processRows();
 			for (Iterator i = BaseFormListWidget.this.formRows.entrySet().iterator(); i.hasNext();) {
 				Map.Entry ent = (Map.Entry) i.next();
 

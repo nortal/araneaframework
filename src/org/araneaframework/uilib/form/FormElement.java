@@ -245,17 +245,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
     if (!path.hasNext() && !isDisabled() && !isIgnoreEvents())
       getControl()._getWidget().event(path, input);
   }
-
-  /**
-   * Copies the value from data item to control if data item is valid.
-   */
-  protected void process() throws Exception {
-    if (getControl() != null) {
-      getControl()._getWidget().process();
-    }
-    
-    super.process();    
-  }
   
   protected void handleAction(InputData input, OutputData output) throws Exception {
     update(input);

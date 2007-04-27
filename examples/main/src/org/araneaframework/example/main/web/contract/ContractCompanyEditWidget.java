@@ -38,6 +38,7 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
 
 	public void setCompany(CompanyMO company) {
 		this.company = company;
+		putViewData("company", company);
 	}
 
 	protected void init() throws Exception {
@@ -46,16 +47,12 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
     addEventListener("chooseCompany", new ProxyEventListener(this));
   }
   
-  protected void process() {
-    putViewData("company", company);
-  }
-  
   public void handleEventChooseCompany(String eventParameter) throws Exception {
 	  getFlowCtx().start(new CompanyListWidget(false), null, new FlowContext.Handler() {
 		      private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {
 			  Long id = (Long) returnValue;
-			  company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);
+			  setCompany((CompanyMO) getGeneralDAO().getById(CompanyMO.class, id));
 			  log.debug("Company with id of " + id + " set to this contract");
 		  }
 		  public void onCancel() throws Exception {

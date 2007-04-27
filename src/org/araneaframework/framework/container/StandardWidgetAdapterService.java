@@ -39,7 +39,6 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
    * <ul>
    * <il><code>update(input)</code></il>
    * <il><code>event(path, input)</code></il>
-   * <il><code>process()</code></il>
    * </ul> 
    * are called on the child, if not then just <code>render(output).</code>
    */
@@ -52,7 +51,7 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
    }
    else {
      if (log.isDebugEnabled())
-       log.debug("Translating action() call to widget update()/event()/process()/render() calls.");
+       log.debug("Translating action() call to widget update()/event()/render() calls.");
      
      childWidget._getWidget().update(input);
      if (hasEvent(input)) {
@@ -61,7 +60,6 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
          log.debug("Routing event to widget '" + eventPath.toString() + "'");
        childWidget._getWidget().event(eventPath, input);
      }
-     childWidget._getWidget().process();
      childWidget._getWidget().render(output);
    }
   }

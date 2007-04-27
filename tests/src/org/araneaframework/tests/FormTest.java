@@ -174,7 +174,6 @@ public class FormTest extends TestCase {
     // Test in lifecycle order, without calling event and render.
     testForm._getWidget().update(input);
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
-    testForm._getWidget().process();
     testForm._getWidget().render(new MockOutputData());
     
     Date reqDate = (new SimpleDateFormat("dd.MM.yyyy hh:mm")).parse("11.10.2015 01:01");
@@ -427,8 +426,6 @@ public class FormTest extends TestCase {
 	selectElement.rendered();
 	
 	testForm._getComponent().init(null, new MockEnvironment());
-	// if this is not called, Control value is never set and test fails
-	testForm._getWidget().process();
 	
     MockHttpServletRequest almostEmptyRequest = 
     	RequestUtil.markSubmitted(new MockHttpServletRequest());

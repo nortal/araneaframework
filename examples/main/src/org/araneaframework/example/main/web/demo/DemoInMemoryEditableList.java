@@ -90,11 +90,6 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 		else
 			putViewDataOnce("askCloseConfirmation", "true");
 	}
-	
-  protected void render(OutputData output) throws Exception {
-
-	super.render(output);
-  }
   
   public class FeedBackProvidingListener implements OnClickEventListener {
 	public void onClick() throws Exception {

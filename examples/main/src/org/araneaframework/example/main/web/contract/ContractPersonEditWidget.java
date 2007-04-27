@@ -38,6 +38,8 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
 
 	public void setPerson(PersonMO person) {
 		this.person = person;
+		putViewData("person", person);
+		log.debug("Person with id of " + person.getId() + " set to this contract");
 	}
 
 	protected void init() throws Exception {
@@ -45,22 +47,17 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
     setViewSelector("contract/contractPersonEdit");
   }
   
-  protected void process() {
-    putViewData("person", person);
-  }
-  
 	public void handleEventChoosePerson(String eventParameter) throws Exception {
-	    PersonListWidget newFlow = new PersonListWidget(false);
-	    newFlow.setSelectOnly(true);
-	    getFlowCtx().start(newFlow, null, new FlowContext.Handler() {
-				        private static final long serialVersionUID = 1L;
-        public void onFinish(Object returnValue) throws Exception {
-					Long id = (Long) returnValue;
-					person = (PersonMO) getGeneralDAO().getById(PersonMO.class, id);
-					log.debug("Person with id of " + id + " set to this contract");
-	      }
-	      public void onCancel() throws Exception {
-	      }
-	    });
+		PersonListWidget newFlow = new PersonListWidget(false);
+		newFlow.setSelectOnly(true);
+		getFlowCtx().start(newFlow, null, new FlowContext.Handler() {
+			private static final long serialVersionUID = 1L;
+			public void onFinish(Object returnValue) throws Exception {
+				Long id = (Long) returnValue;
+				setPerson((PersonMO) getGeneralDAO().getById(PersonMO.class, id));
+			}
+			public void onCancel() throws Exception {
+			}
+		});
 	}
 }
