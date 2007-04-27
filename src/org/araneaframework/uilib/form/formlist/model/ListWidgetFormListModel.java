@@ -29,9 +29,11 @@ public class ListWidgetFormListModel implements FormListModel {
     this.listWidget = listWidget;
   }
 
-  public List getRows() {
-    listWidget.refresh();
+  public List getRows() {    
     return listWidget.getItemRange();
   }
-
+  
+  public void refresh() throws Exception {
+    listWidget.refresh();
+  }
 }
