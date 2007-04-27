@@ -191,10 +191,10 @@ public class TypeHelper implements Serializable {
 	
 	/**
 	 * Returns whether the basic configuration that specifies which items are
-	 * shown has changed since last call to this {@link TypeHelper}'s {@link TypeHelper#isChanged()} 
+	 * shown has changed since last call to this {@link TypeHelper}'s {@link TypeHelper#checkChanged()} 
 	 * method.
 	 */
-	public boolean isChanged() {
+	public boolean checkChanged() {
 		boolean result = changed;
 		changed = false;
 		return result;

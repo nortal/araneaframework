@@ -635,7 +635,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return the current item range.
 	 */
 	public List getItemRange() {
-		if (itemRange == null || this.isChanged() || sequenceHelper.isChanged() || typeHelper.isChanged() || filterHelper.isChanged()) {
+		if (itemRange == null || this.checkChanged() || sequenceHelper.checkChanged() || typeHelper.checkChanged() || filterHelper.checkChanged()) {
 			refreshCurrentItemRange();
 		}
 
@@ -767,9 +767,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
         
         if (this.typeHelper != null)
         	this.typeHelper.destroy();
-        
-        if (this.sequenceHelper != null)
-        	this.sequenceHelper.destroy();
 	}
 
 	/**
@@ -993,7 +990,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		}
 	}
 	
-	protected boolean isChanged() {
+	protected boolean checkChanged() {
 		boolean result = changed;
 		changed = false;
 		return result;

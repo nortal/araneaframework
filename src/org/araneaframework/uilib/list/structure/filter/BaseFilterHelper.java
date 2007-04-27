@@ -379,10 +379,10 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	
 	/**
 	 * Returns whether the basic configuration that specifies which items are
-	 * shown has changed since last call to this {@link BaseFilterHelper}'s {@link BaseFilterHelper#isChanged()} 
+	 * shown has changed since last call to this {@link BaseFilterHelper}'s {@link BaseFilterHelper#checkChanged()} 
 	 * method.
 	 */
-	public boolean isChanged() {
+	public boolean checkChanged() {
 		boolean result = changed;
 		changed = false;
 		return result;
