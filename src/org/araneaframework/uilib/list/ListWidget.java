@@ -601,7 +601,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		}
 		catch (Exception e) {
 			ExceptionUtil.uncheckException(e);
-		}		
+		}
+		fireChange();
 	}
 
 	/**

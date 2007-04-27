@@ -18,11 +18,14 @@ package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.araneaframework.OutputData;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -88,14 +91,19 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 			putViewDataOnce("askCloseConfirmation", "true");
 	}
 	
-  
-//	FIXME: process() remains
-  protected void handleProcess() throws Exception {
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded().values());
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated().values());
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Deleted: " + inMemoryHelper.getDeleted());
+  protected void render(OutputData output) throws Exception {
+
+	super.render(output);
   }
   
+  public class FeedBackProvidingListener implements OnClickEventListener {
+	public void onClick() throws Exception {
+		DemoInMemoryEditableList.this.getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded().values());
+		DemoInMemoryEditableList.this.getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated().values());
+		DemoInMemoryEditableList.this.getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Deleted: " + inMemoryHelper.getDeleted());
+	}
+  }
+
 	public class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
 		    private static final long serialVersionUID = 1L;
 
@@ -129,8 +137,10 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
 			addCommonFormFields(rowForm);
 
-			FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getKey());
-			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+			ButtonControl saveButton = FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+			saveButton.addOnClickEventListener(new FeedBackProvidingListener());
+			ButtonControl deleteButton = FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+			deleteButton.addOnClickEventListener(new FeedBackProvidingListener());
 
 			rowForm.writeBean(row);
 			editableRow.getForm().markBaseState();
@@ -139,7 +149,8 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 		public void initAddForm(FormWidget addForm) throws Exception {
 			addCommonFormFields(addForm);
 
-			FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+			ButtonControl addButton=FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+			addButton.addOnClickEventListener(new FeedBackProvidingListener());
 		}
 
 		private void addCommonFormFields(FormWidget form) throws Exception {

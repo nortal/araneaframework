@@ -29,10 +29,12 @@ import org.araneaframework.uilib.form.control.ButtonControl;
  */
 public class FormListUtil {
 
-	public static void addButtonToRowForm(String labelId, FormWidget rowForm, OnClickEventListener listener, String elementName) throws Exception {
+	public static ButtonControl addButtonToRowForm(String labelId, FormWidget rowForm, OnClickEventListener listener, String elementName) throws Exception {
 		ButtonControl button = new ButtonControl();
 		button.addOnClickEventListener(listener);
 		rowForm.addElement(elementName, labelId, button, null, false);
+		
+		return button;
 	}
 
 	/**
@@ -45,8 +47,8 @@ public class FormListUtil {
 	 * @param key row key.
 	 * @throws Exception 
 	 */
-	public static void addSaveButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
-		addButtonToRowForm(labelId, rowForm, new ButtonSaveOnClickEventListener(key, editableRows), "save");
+	public static ButtonControl addSaveButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
+		return addButtonToRowForm(labelId, rowForm, new ButtonSaveOnClickEventListener(key, editableRows), "save");
 	}
 	
 	/**
@@ -59,8 +61,8 @@ public class FormListUtil {
 	 * @param key row key.
 	 * @throws Exception 
 	 */
-	public static void addDeleteButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
-		addButtonToRowForm(labelId, rowForm, new ButtonDeleteOnClickEventListener(key, editableRows), "delete");
+	public static ButtonControl addDeleteButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
+		return addButtonToRowForm(labelId, rowForm, new ButtonDeleteOnClickEventListener(key, editableRows), "delete");
 	}
 	
 	/**
@@ -73,8 +75,8 @@ public class FormListUtil {
 	 * @param key row key.
 	 * @throws Exception 
 	 */
-	public static void addOpenCloseButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
-		addButtonToRowForm(labelId, rowForm, new ButtonOpenCloseOnClickEventListener(key, editableRows), "openClose");
+	public static ButtonControl addOpenCloseButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
+		return addButtonToRowForm(labelId, rowForm, new ButtonOpenCloseOnClickEventListener(key, editableRows), "openClose");
 	}	
 	
 	
@@ -89,8 +91,8 @@ public class FormListUtil {
 	 * @param key row key.
 	 * @throws Exception 
 	 */
-	public static void addEditSaveButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
-		addButtonToRowForm(labelId, rowForm, new ButtonEditSaveOnClickEventListener(key, editableRows), "editSave");
+	public static ButtonControl addEditSaveButtonToRowForm(String labelId, BaseFormListWidget editableRows, FormWidget rowForm, Object key) throws Exception {
+		return addButtonToRowForm(labelId, rowForm, new ButtonEditSaveOnClickEventListener(key, editableRows), "editSave");
 	}
 	
 	/**
@@ -102,8 +104,8 @@ public class FormListUtil {
 	 * @param addForm add form.
 	 * @throws Exception 
 	 */
-	public static void addAddButtonToAddForm(String labelId, BaseFormListWidget editableRows, FormWidget addForm) throws Exception {
-		addButtonToRowForm(labelId, addForm, new ButtonAddOnClickEventListener(editableRows, addForm), "add");
+	public static ButtonControl addAddButtonToAddForm(String labelId, BaseFormListWidget editableRows, FormWidget addForm) throws Exception {
+		return addButtonToRowForm(labelId, addForm, new ButtonAddOnClickEventListener(editableRows, addForm), "add");
 	}		
 	
 	/**
