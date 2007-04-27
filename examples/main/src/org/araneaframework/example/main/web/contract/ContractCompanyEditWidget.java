@@ -38,7 +38,6 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
 
 	public void setCompany(CompanyMO company) {
 		this.company = company;
-		putViewData("company", company);
 	}
 
 	protected void init() throws Exception {

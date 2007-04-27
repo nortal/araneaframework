@@ -46,8 +46,6 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
   // CONSTRUCTOR 
   public TemplateMenuWidget(Widget topWidget) throws Exception {
     super(topWidget);
-    
-    putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
 
   protected void init() throws Exception {
@@ -59,18 +57,6 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
     form.addWidget("langSelect", langSelect);
 
     createLangSelect();
-  }
-
-
-  public void selectMenuItem(String menuItemPath) throws Exception {
-    final Widget newFlow = menu.selectMenuItem(menuItemPath);
-
-    reset(new EnvironmentAwareCallback() {
-      public void call(org.araneaframework.Environment env) throws Exception {
-        if (newFlow != null)
-          start(newFlow, null, null);
-      }
-    });
   }
 
   public void createLangSelect() throws Exception {

@@ -15,7 +15,4 @@ public class MapFormListModel implements FormListModel {
   public List getRows() {
     return new ArrayList(map.values());
   }
-  
-  public void refresh() throws Exception {
-  }
 }

@@ -38,7 +38,6 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
 
 	public void setPerson(PersonMO person) {
 		this.person = person;
-		putViewData("person", person);
 		log.debug("Person with id of " + person.getId() + " set to this contract");
 	}
 

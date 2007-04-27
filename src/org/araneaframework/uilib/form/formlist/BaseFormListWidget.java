@@ -164,9 +164,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 
 	protected void init() throws Exception {
 		super.init();		
-    
-		// XXX: restore the behaviour in 1.0.6. It was put back in 1.0.7 (a mistake)
-		//processRows();    
+
 		resetAddForm();		
 	}
 
