@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import java.util.Collection;
 import java.util.Iterator;
 import org.araneaframework.uilib.form.Constraint;
 
@@ -31,6 +32,23 @@ import org.araneaframework.uilib.form.Constraint;
  */
 public class AndConstraint extends BaseCompositeConstraint {
   private boolean lazy = false;
+  
+  public AndConstraint() {}
+  
+  /**
+   * @since 1.0.9
+   */
+  public AndConstraint(Constraint constraint) {
+    super(constraint);
+  }
+  
+  /**
+   * @param constraints Collection&lt;Constraint&gt;
+   * @since 1.0.9
+   */
+  public AndConstraint(Collection constraints) {
+    super(constraints);
+  }
 
   /**
    * Checks that all contained constraits are satisfied.

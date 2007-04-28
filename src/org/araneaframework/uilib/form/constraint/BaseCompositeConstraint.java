@@ -17,9 +17,11 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.Environment;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Constraint;
 
 
@@ -31,6 +33,22 @@ import org.araneaframework.uilib.form.Constraint;
  */
 public abstract class BaseCompositeConstraint extends BaseConstraint {
   protected List constraints = new ArrayList();
+  
+  public BaseCompositeConstraint() {}
+  
+  /**
+   * @since 1.0.9
+   */
+  public BaseCompositeConstraint(Constraint constraint) {
+    addConstraint(constraint);
+  }
+  
+  /**
+   * @since 1.0.9
+   */
+  public BaseCompositeConstraint(Collection constraints) {
+    addConstraints(constraints);
+  }
 
   /**
 	 * Adds a contained constraint.
@@ -41,6 +59,19 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
 	 */
   public BaseCompositeConstraint addConstraint(Constraint constraint) {
     constraints.add(constraint);
+    return this;
+  }
+  
+  /**
+   * Adds contained constraints from supplied Collection.
+   * 
+   * @param constraints Collection&lt;Constraint&gt;
+   * @return this composite constraint
+   * @since 1.0.9
+   */
+  public BaseCompositeConstraint addConstraints(Collection constraints) {
+    Assert.notNullParam(constraints, "constraints");
+    this.constraints.addAll(constraints);
     return this;
   }
 
