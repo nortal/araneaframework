@@ -57,6 +57,7 @@ public class NameUtil {
    * 
    * @param fullName the full name.
    * @return full prefix of the full name.
+   * @since 1.0.9
    */
   public static String getLongestPrefix(String fullName) {
     int dotIndex = fullName.lastIndexOf(".");
@@ -69,6 +70,7 @@ public class NameUtil {
    * 
    * @param fullName the full name.
    * @return full prefix of the full name.
+   * @since 1.0.9
    */
   public static String getShortestSuffix(String fullName) {
     int dotIndex = fullName.lastIndexOf(".");

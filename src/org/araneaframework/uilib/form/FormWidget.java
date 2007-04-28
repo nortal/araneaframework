@@ -172,10 +172,10 @@ public class FormWidget extends GenericFormElement {
       NestedFormUtil.addElement(this, id, element);
     } else {
       elements.put(id, element);
+
+      if (isInitialized())
+        addWidget(id, element);
     }
-    
-    if (isInitialized())
-      addWidget(id, element);
   }
 
   /**
