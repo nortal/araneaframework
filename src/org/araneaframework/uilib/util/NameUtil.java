@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.util;
 
-import java.io.Serializable;
 
 /**
  * This class is a general helper, which is used throughout UiLib to parse <code>String</code>s like
@@ -25,7 +24,7 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class NameUtil implements Serializable {
+public class NameUtil {
 
   /**
    * Returns the fullname concatenated from the <code>prefix</code>
@@ -52,6 +51,30 @@ public class NameUtil implements Serializable {
     return (dotIndex == -1 ? fullName : fullName.substring(0, dotIndex));
   }
   
+  /**
+   * Returns the full prefix of given full name. That is, the part before 
+   * the last dot, or NULL when fullName is not nested).
+   * 
+   * @param fullName the full name.
+   * @return full prefix of the full name.
+   */
+  public static String getLongestPrefix(String fullName) {
+    int dotIndex = fullName.lastIndexOf(".");
+    return (dotIndex == -1 ? null : fullName.substring(0, dotIndex));
+  }
+
+  /**
+   * Returns the shortest suffix of given full name. That is, the part after 
+   * the last dot, or fullName when fullName is not nested).
+   * 
+   * @param fullName the full name.
+   * @return full prefix of the full name.
+   */
+  public static String getShortestSuffix(String fullName) {
+    int dotIndex = fullName.lastIndexOf(".");
+    return (dotIndex == -1 ? fullName : fullName.substring(dotIndex+1, fullName.length()));
+  }
+
   /**
    * Returns suffix of the fullname(suffix is part after the first 
    * dot, or an empty <code>String</code> if full name 

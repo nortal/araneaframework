@@ -24,6 +24,7 @@ import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.InvalidFormElementNameException;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
+import org.araneaframework.uilib.list.util.NestedFormUtil;
 import org.araneaframework.uilib.util.NameUtil;
 
 
@@ -86,27 +87,14 @@ public class FormWidget extends GenericFormElement {
     Assert.notEmptyParam(id, "id");
     Assert.notEmptyParam(afterId, "afterId");
     Assert.notNullParam(element, "element");
+    Assert.isTrue(id.indexOf(".") == -1, "addElementAfter() does not accept nested 'id' parameter..");
+
+    FormWidget form = NestedFormUtil.getDeepestForm(afterId, this);
     
-    LinkedMap newElements = new LinkedMap();  
-      
-    if (!getElements().containsKey(afterId))
-    	throw new AraneaRuntimeException("The element '" + afterId + "' does not exist!");
-    
-    for (Iterator i = elements.entrySet().iterator(); i.hasNext();) {
-        Map.Entry entry = (Map.Entry) i.next();
-        
-        newElements.put(entry.getKey(), entry.getValue());
-        if (entry.getKey().equals(afterId)) {
-          newElements.put(id, element);
-        }
-    }
-    
-    if (isInitialized())
-      addWidget(id, element);
-      
-    elements = newElements;
+    // form is now the actual form to add element into
+    form.addFlatElementAfter(id, element, NameUtil.getShortestSuffix(afterId));
   }
-  
+
   /**
    * Adds a contained element with given id before the element with specified id.
    * Should be only used in RARE cases where internal order of elements matters for some reason.
@@ -119,23 +107,54 @@ public class FormWidget extends GenericFormElement {
     Assert.notEmptyParam(id, "id");
     Assert.notEmptyParam(beforeId, "beforeId");
     Assert.notNullParam(element, "element");
+    Assert.isTrue(id.indexOf(".") == -1, "addElementBefore() does not accept nested 'id' parameter.");
     
-    LinkedMap newElements = new LinkedMap();  
+    FormWidget form = NestedFormUtil.getDeepestForm(beforeId, this);
     
-    if (!elements.containsKey(beforeId))
-    	throw new AraneaRuntimeException("The element '" + beforeId + "' does not exist!");
-      
+    // form is now the actual form to add element into
+    form.addFlatElementBefore(id, element, NameUtil.getShortestSuffix(beforeId));
+  }
+
+  private void addFlatElementAfter(String id, GenericFormElement element, String afterId) throws Exception {
+    Assert.isTrue(afterId.indexOf(".") == -1, "addFlatElementAfter() method does not accept nested 'afterId'");
+    LinkedMap newElements = new LinkedMap();
+
+    if (!getElements().containsKey(afterId))
+      throw new AraneaRuntimeException("The element '" + afterId + "' does not exist!");
+
     for (Iterator i = elements.entrySet().iterator(); i.hasNext();) {
-        Map.Entry entry = (Map.Entry) i.next();
-        
-        if (entry.getKey().equals(beforeId))
-            newElements.put(id, element);
-        newElements.put(entry.getKey(), entry.getValue());
+      Map.Entry entry = (Map.Entry) i.next();
+
+      newElements.put(entry.getKey(), entry.getValue());
+      if (entry.getKey().equals(afterId)) {
+        newElements.put(id, element);
+      }
     }
-      
+
     if (isInitialized())
       addWidget(id, element);
-    
+
+    elements = newElements;
+  }
+
+  private void addFlatElementBefore(String id, GenericFormElement element, String beforeId) {
+	Assert.isTrue(beforeId.indexOf(".") == -1, "addFlatElementBefore() method does not accept nested 'afterId'");
+    LinkedMap newElements = new LinkedMap();  
+
+    if (!elements.containsKey(beforeId))
+      throw new AraneaRuntimeException("The element '" + beforeId + "' does not exist!");
+
+    for (Iterator i = elements.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+
+      if (entry.getKey().equals(beforeId))
+        newElements.put(id, element);
+      newElements.put(entry.getKey(), entry.getValue());
+    }
+
+    if (isInitialized())
+      addWidget(id, element);
+
     elements = newElements;
   }
   
@@ -149,7 +168,11 @@ public class FormWidget extends GenericFormElement {
     Assert.notEmptyParam(id, "id");
     Assert.notNullParam(element, "element");
     
-    elements.put(id, element);
+    if (id.indexOf(".") != -1) {
+      NestedFormUtil.addElement(this, id, element);
+    } else {
+      elements.put(id, element);
+    }
     
     if (isInitialized())
       addWidget(id, element);
