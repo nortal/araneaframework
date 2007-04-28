@@ -16,11 +16,12 @@
 
 package org.araneaframework.uilib.form;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.collections.set.UnmodifiableSet;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -175,21 +176,20 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   }
   
   public Set getErrors() {
-    return UnmodifiableSet.decorate(getMutableErrors());
+    return Collections.unmodifiableSet(getMutableErrors()); 
   }
 
   public void addError(String error) {
-    Assert.notNullParam(error, "error");
+    Assert.notEmptyParam(error, "error");
 
     getMutableErrors().add(error);
     getMessageContext().showMessage(MessageContext.ERROR_TYPE, error);
   }
 
   public void addErrors(Set errors) {
-    Assert.noNullElementsParam(errors, "errors");
-
-    getMutableErrors().addAll(errors);
-    getMessageContext().showMessages(MessageContext.ERROR_TYPE, errors);
+    Assert.notNullParam(errors, "errors");
+    for (Iterator i = errors.iterator(); i.hasNext(); )
+      addError((String) i.next());
   }
 
   /**

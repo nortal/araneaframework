@@ -101,10 +101,11 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
 	public class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
 		    private static final long serialVersionUID = 1L;
+		    private FeedBackProvidingListener listener = new FeedBackProvidingListener();
 
-    public Object getRowKey(Object row) {
-			return ((DataDTO) row).getId();
-		}
+	    public Object getRowKey(Object row) {
+				return ((DataDTO) row).getId();
+			}
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
@@ -133,9 +134,10 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 			addCommonFormFields(rowForm);
 
 			ButtonControl saveButton = FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getKey());
-			saveButton.addOnClickEventListener(new FeedBackProvidingListener());
+			FeedBackProvidingListener listener = new FeedBackProvidingListener();
+			saveButton.addOnClickEventListener(listener);
 			ButtonControl deleteButton = FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getKey());
-			deleteButton.addOnClickEventListener(new FeedBackProvidingListener());
+			deleteButton.addOnClickEventListener(listener);
 
 			rowForm.writeBean(row);
 			editableRow.getForm().markBaseState();
@@ -145,7 +147,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 			addCommonFormFields(addForm);
 
 			ButtonControl addButton=FormListUtil.addAddButtonToAddForm("#", formList, addForm);
-			addButton.addOnClickEventListener(new FeedBackProvidingListener());
+			addButton.addOnClickEventListener(listener);
 		}
 
 		private void addCommonFormFields(FormWidget form) throws Exception {

@@ -220,8 +220,10 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************  	
   
   protected void update(InputData input) throws Exception {
-    setIgnoreEvents(true);
-    if (isDisabled() || !isRendered()) return;
+    if (isDisabled() || !isRendered()) {
+    	setIgnoreEvents(true);
+    	return;
+    }
     setIgnoreEvents(false);
 
     super.update(input);

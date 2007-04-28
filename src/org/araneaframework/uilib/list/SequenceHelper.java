@@ -276,7 +276,7 @@ public class SequenceHelper implements Serializable {
   	fireChange();
   }
   
-  protected boolean getAllItemsShown(boolean allItemsShown) {
+  protected boolean getAllItemsShown() {
     return this.allItemsShown;
   }
 

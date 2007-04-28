@@ -86,7 +86,7 @@ public class TypeHelper implements Serializable {
 	}
 
 	public void setLocale(Locale locale) {
-		if (!locale.equals(this.locale))
+		if (locale.equals(this.locale))
 			return;
 
 		this.locale = locale;

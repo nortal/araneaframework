@@ -65,7 +65,7 @@ public class DisplayControl extends BaseControl {
      * Takes an outer class snapshot.     
      */    
     public ViewModel() {
-      //XXX: hack emultiong process()
+      //XXX: hack emulating process()
       innerData = DisplayControl.this.value;
       this.value = innerData;
     }       
