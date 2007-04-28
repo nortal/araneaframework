@@ -42,16 +42,17 @@ import org.araneaframework.http.util.EncodingUtil;
 public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget {
   private static final Logger log = Logger.getLogger(StandardClientStateFilterWidget.class);
 
-  private Buffer digestSet = new CircularFifoBuffer(10);
-
   /**
    * Global parameter key for the client state form input.
    */
   public static final String CLIENT_STATE = "clientState";
+
   /**
    * Global parameter key for the version of the client state form input.
    */
   public static final String CLIENT_STATE_VERSION = "clientStateVersion";
+
+  private Buffer digestSet = new CircularFifoBuffer(10);
 
   private boolean compress = false;
 
