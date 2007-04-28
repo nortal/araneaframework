@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.core.StandardServletInputData;
-import org.araneaframework.mock.MockInputData;
+import org.araneaframework.mock.MockHttpInputData;
 import org.araneaframework.mock.MockOutputData;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.util.RequestUtil;
@@ -174,7 +174,6 @@ public class FormTest extends TestCase {
     // Test in lifecycle order, without calling event and render.
     testForm._getWidget().update(input);
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
-    testForm._getWidget().process();
     testForm._getWidget().render(new MockOutputData());
     
     Date reqDate = (new SimpleDateFormat("dd.MM.yyyy hh:mm")).parse("11.10.2015 01:01");
@@ -400,8 +399,9 @@ public class FormTest extends TestCase {
      
     Map data = new HashMap();
     data.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, "onClicked");
-    MockInputData input = new MockInputData(data);
-     
+    MockHttpInputData input = new MockHttpInputData(data);
+    
+    ((FormElement) testForm.getElement("myButton"))._getWidget().update(input);
     testForm._getWidget().event(new StandardPath("myButton"), input);
     
     assertTrue("Event succeeded", eventsWork);
@@ -427,8 +427,6 @@ public class FormTest extends TestCase {
 	selectElement.rendered();
 	
 	testForm._getComponent().init(null, new MockEnvironment());
-	// if this is not called, Control value is never set and test fails
-	testForm._getWidget().process();
 	
     MockHttpServletRequest almostEmptyRequest = 
     	RequestUtil.markSubmitted(new MockHttpServletRequest());

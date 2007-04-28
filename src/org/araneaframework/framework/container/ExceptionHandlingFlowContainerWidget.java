@@ -91,12 +91,6 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
       handleEvent(input);
   }
   
-  protected void process() throws Exception {
-    if (exception == null)
-      super.process();
-    else handleProcess();
-  }
-  
   protected void propagate(Message message) throws Exception {
     try {
       super.propagate(message);

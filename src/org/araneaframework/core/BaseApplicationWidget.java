@@ -216,27 +216,10 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     } 
   }
   
-  protected void process() throws Exception {
-    handleProcess();
-    
-    Iterator ite = (new HashMap(getChildren())).keySet().iterator();
-    while(ite.hasNext()) {
-      Widget child = (Widget)getChildren().get(ite.next());
-      if (child != null) {
-      child._getWidget().process();
-    }
-  }
-  }
-  
   /**
    * Callback called when <code>update(InputData)</code> is invoked.
    */
   protected void handleUpdate(InputData input) throws Exception {}
-  
-  /**
-   * Callback called when <code>process()</code> is invoked.
-   */
-  protected void handleProcess() throws Exception {}
   
   /**
    * Calls the respective listeners. 

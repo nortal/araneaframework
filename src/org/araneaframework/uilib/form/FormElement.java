@@ -51,6 +51,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   protected String label;
   
   private boolean rendered = false;
+  private boolean ignoreEvents = true;
   
   protected boolean mandatory = false;
   protected boolean disabled;
@@ -219,7 +220,11 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //*********************************************************************  	
   
   protected void update(InputData input) throws Exception {
-    if (isDisabled() || !isRendered()) return;
+    if (isDisabled() || !isRendered()) {
+    	setIgnoreEvents(true);
+    	return;
+    }
+    setIgnoreEvents(false);
 
     super.update(input);
     
@@ -228,44 +233,26 @@ public class FormElement extends GenericFormElement implements FormElementContex
       //Read the control
       getControl()._getWidget().update(input);
     }
-  }
-
-  protected void handleProcess() throws Exception {
-    super.handleProcess();
-	this.rendered = false;
+    
+    rendered = false;
   }
 	  
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (!isDisabled() && isRendered())
+    if (!isDisabled() && isRendered()) {
       super.action(path, input, output);
+    }
   }
 
   protected void event(Path path, InputData input) throws Exception {
-    if (!path.hasNext() && !isDisabled() && isRendered())
+    if (!path.hasNext() && !isDisabled() && !isIgnoreEvents())
       getControl()._getWidget().event(path, input);
-  }
-
-  /**
-   * Copies the value from data item to control if data item is valid.
-   */
-  protected void process() throws Exception {
-    if (getControl() != null) {
-      getControl()._getWidget().process();
-    }
-    
-    super.process();    
   }
   
   protected void handleAction(InputData input, OutputData output) throws Exception {
-    //TODO: is it really this way?
     update(input);
+    this.rendered = true;
     if (control != null)
       control._getService().action(null, input, output);
-    // render state should not be updated on action
-    boolean savedRenderState = this.rendered;
-    process();
-    //XXX: better place to put rendering state reset instead of process()?
-    this.rendered = savedRenderState;
   }
   
   public Environment getConstraintEnvironment() {
@@ -300,7 +287,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
     
     if (getControl() != null) 
       getControl()._getComponent().init(getScope(), getEnvironment());
-    
+
     runInitEvents();
   }
   
@@ -328,15 +315,11 @@ public class FormElement extends GenericFormElement implements FormElementContex
         //We assume that the convertor is present, if control and data are
         // here
         newDataValue = getConverter().convert(getControl().getRawValue());
-        //TODO: remove in 1.1 final
-        getData().clean();
       }
     }
 
     if (getData() != null && isValid()) {
       getData().setValue(newDataValue);
-      //TODO: remove in 1.1 final
-      getData().clean();
     }
   }
 	
@@ -378,7 +361,15 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	  public void rendered() {
 	    this.rendered = true;
 	  }
-	
+
+    protected boolean isIgnoreEvents() {
+      return ignoreEvents;
+    }
+
+    protected void setIgnoreEvents(boolean ignoreEvents) {
+      this.ignoreEvents = ignoreEvents;
+    }
+  
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    

@@ -102,7 +102,6 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		public void onFinish(Object returnValue) throws Exception {
 			InvisibleElementFormWidget widget = new InvisibleElementFormWidget((String)returnValue);
 			getFlowCtx().replace(widget, null);
-			widget._getWidget().process();
 		}
 	}
 }

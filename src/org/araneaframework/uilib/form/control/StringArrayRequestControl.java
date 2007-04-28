@@ -86,7 +86,6 @@ public abstract class StringArrayRequestControl extends BaseControl {
       value = null;
   }
 
-
   /**
    * Checks that the mandatory is satisfied, and if the value is not <code>null</code> calls the
    * {@link #validateNotNull()}method.
@@ -115,14 +114,6 @@ public abstract class StringArrayRequestControl extends BaseControl {
    */
   public Object getViewModel() {
     return new ViewModel();
-  }
-
-  /**
-   * Copies the value to inner data (output value) if control is valid.
-   */
-  protected void process() throws Exception {
-    //XXX: i am keeping this only b/c it was here before change_153 (async form mods) 
-    value = null;
   }
   
   //*********************************************************************

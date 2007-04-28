@@ -20,7 +20,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.araneaframework.Environment;
@@ -66,19 +65,25 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	// Map<String,String> - custom labels for fields
 	private Map labels = new HashMap();
 	
+	private boolean changed = true;
+	
 	/**
 	 * Constructs a {@link BaseFilterHelper}.
 	 * 
 	 * @param list list.
 	 */
 	public BaseFilterHelper(ListWidget list) {
+		this(list, true);
+	}
+	
+	private BaseFilterHelper(ListWidget list, boolean createCopy) {
 		Validate.notNull(list);
 		this.list = list;
 	}
 	
 	public void init(Environment env) throws Exception {}
 	
-	public void destroy() throws Exception {}	
+	public void destroy() throws Exception {}
 	
 	public void addInitEvent(Event event) {
 		this.list.addInitEvent(event);
@@ -99,7 +104,11 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @param ignoreCase whether to ignore case.
 	 */
 	protected void _setIgnoreCase(boolean ignoreCase) {
-		getTypeHelper().setIgnoreCase(ignoreCase);
+		TypeHelper helper = getTypeHelper();
+		if (helper.isIgnoreCase() != ignoreCase) {
+			getTypeHelper().setIgnoreCase(ignoreCase);
+			fireChange();
+		}
 	}
 
 	/**
@@ -135,10 +144,13 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	/**
 	 * Sets the current strickness behaivor.
 	 * 
-	 * @param stirct whether new filters should be strict.
+	 * @param strict whether new filters should be strict.
 	 */
-	protected void _setStrict(boolean stirct) {
-		this.strict = stirct;
+	protected void _setStrict(boolean strict) {
+		if (strict != this.strict) {
+			this.strict = strict;
+			fireChange();
+		}
 	}
 
 	// General
@@ -191,6 +203,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 */
 	protected void _addCustomLabel(String fieldId, String labelId) {
 		this.labels.put(fieldId, labelId);
+		fireChange();
 	}
 	/**
 	 * Retrieves label for the specified field. If there are now custom label
@@ -233,6 +246,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 */
 	protected void _addFieldType(String fieldId, Class type) {
 		getTypeHelper().addFieldType(fieldId, type);
+		fireChange();
 	}
 	/**
 	 * Retrieves type for the specified field.
@@ -269,6 +283,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 */
 	public void addCustomComparator(String fieldId, Comparator comp) {
 		getTypeHelper().addCustomComparator(fieldId, comp);
+		fireChange();
 	}
 	/**
 	 * Retrieves comparator for the specified field. This just proxies the call
@@ -356,5 +371,20 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 */
 	public String getFieldIdFromHighValueId(String highValueId) {
 		return StringUtils.substringBeforeLast(highValueId, HIGH_SUFFIX);
+	}
+	
+	protected void fireChange() {
+		changed = true;
+	}
+	
+	/**
+	 * Returns whether the basic configuration that specifies which items are
+	 * shown has changed since last call to this {@link BaseFilterHelper}'s {@link BaseFilterHelper#checkChanged()} 
+	 * method.
+	 */
+	public boolean checkChanged() {
+		boolean result = changed;
+		changed = false;
+		return result;
 	}
 }

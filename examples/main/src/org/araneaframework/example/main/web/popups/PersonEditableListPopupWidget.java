@@ -77,10 +77,6 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     list.setDataProvider(dataProvider);
   }
 
-  protected void process() throws Exception {
-    super.process();
-  }
-
   private class DataProvider extends MemoryBasedListDataProvider {
     private static final long serialVersionUID = 1L;
     private List data;

@@ -49,20 +49,4 @@ public class FormListWidget extends BaseFormListWidget {
 	protected FormWidget buildAddForm(){
 		return new FormWidget();
 	}
-
-	protected void addFormRow(Object newRow) {
-		FormWidget rowForm = buildAddForm();
-		String rowFormId = "rowForm" + rowFormCounter++;
-		FormRow newEditableRow = new FormRow(this, formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
-
-		addWidget(rowFormId, rowForm);
-		try {
-			formRowHandler.initFormRow(newEditableRow, newRow);
-		}
-		catch (Exception e) {
-			throw ExceptionUtil.uncheckException(e);
-		}     		
-
-		formRows.put(formRowHandler.getRowKey(newRow), newEditableRow);
-	}
 }

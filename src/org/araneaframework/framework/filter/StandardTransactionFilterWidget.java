@@ -28,7 +28,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.framework.util.TransactionHelper;
 
 /**
- * Filters <code>update(InputData)</code>, <code>event(Path, InputData)</code>, <code>process()</code> and
+ * Filters <code>update(InputData)</code>, <code>event(Path, InputData)</code> and
  * <code>render(OutputData)</code> based on the transaction id. If the transaction id is consistent, the mentionend
  * actions get called on the child service, otherwise they do not.
  * 
@@ -80,15 +80,6 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     }
     else {
       log.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing event().");
-    }
-  }
-
-  protected void process() throws Exception {
-    if (isConsistent()) {
-      childWidget._getWidget().process();
-    }
-    else {
-      log.debug("Transaction id '" + getTransactionId() + "' not consistent for routing process().");
     }
   }
 

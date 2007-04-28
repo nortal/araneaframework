@@ -36,9 +36,6 @@ public class Data implements java.io.Serializable, FormElementAware {
   protected String type;
   protected Class typeClass;
   
-  /** @deprecated do not use */
-  protected boolean dirty = false;
-  
   protected Object value;  
   protected Object markedBaseValue;
   
@@ -106,23 +103,6 @@ public class Data implements java.io.Serializable, FormElementAware {
   
   public String toString() {
     return "Data: [Type = " + getValueType() + "; Value = " + value + "]";
-  }
-  
-  /**
-   * Marks the {@link Data} non-dirty.
-   * @deprecated not used anymore, do not call
-   */
-  public void clean() {
-    dirty = false;
-  }
-  
-  /**
-   * Returns whether {@link Data} value has been set by calling {@link #setValue(Object)}.
-   * @return whether {@link Data} value has been set by calling {@link #setValue(Object)}.
-   * @deprecated not used anymore, do not call, always returns <code>false</code>
-   */
-  public boolean isDirty() {
-    return dirty;
   }
   
   /**
