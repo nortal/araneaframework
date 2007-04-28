@@ -19,6 +19,7 @@ package org.araneaframework.tests;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
@@ -39,6 +40,7 @@ import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
+import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -48,6 +50,7 @@ import org.araneaframework.uilib.form.converter.StringToLongConverter;
 import org.araneaframework.uilib.form.converter.TimestampToDateConverter;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.DateData;
+import org.araneaframework.uilib.form.data.IntegerData;
 import org.araneaframework.uilib.form.data.LongData;
 import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.support.DisplayItem;
@@ -441,6 +444,43 @@ public class FormTest extends TestCase {
     assertTrue(
     		"Test form disabled select element with assigned value must be valid after reading from request.", 
     		testForm.convertAndValidate());
+  }
+  
+  /** Test that form addElement methods accept hierarchical ids creating subforms on demand */
+  public void testHierarchicalSubformCreation() throws Exception {
+	  FormWidget form = new FormWidget();
+	  FormElement element = form.addElement("1.2", "dummyLabel", new CheckboxControl(),  new BooleanData(), false);
+	  
+	  assertTrue("Created element should be accessible", form.getElementByFullName("1.2").equals(element));
+	  assertTrue("Subform should have been created", form.getElement("1") instanceof FormWidget);
+	  
+	  // flat addElementAfter after nested form
+	  FormElement afterElement = form.createElement("dumbLabel", new TextControl(), new StringData(), false);
+	  form.addElementAfter("after", afterElement, "1");
+	  
+	  Iterator iterator = form.getElements().values().iterator();
+	  assertTrue("First should be the first nested form", iterator.next() instanceof FormWidget);
+	  assertTrue("Second should be the 'afterElement'", iterator.next().equals(afterElement));
+	  assertTrue("Should be no more elements in that form", !iterator.hasNext());
+	  
+	  // addElementAfter with nested afterid is supported
+	  FormElement nestedAfterElement = form.createElement("dumbdumbLabel", new TextControl(), new StringData(), false);
+	  form.addElementAfter("3", nestedAfterElement, "1.2");
+	  
+	  iterator = form.getSubFormByFullName("1").getElements().values().iterator();
+	  assertTrue("First should be the first 'element'", element.equals(iterator.next()));
+	  assertTrue("Second should be the 'nestedAfterElement'", nestedAfterElement.equals(iterator.next()));
+	  
+	  // addElementAfter with nested id is not supported
+	  boolean failure = false;
+	  try {
+	  	FormElement nextElement = form.createElement("dumbLabel", new NumberControl(), new IntegerData(), false);
+	  	form.addElementAfter("x.y", nextElement, "1");
+	  } catch (Exception e) {
+		failure = true;
+      }
+
+	  assertTrue("addElementAfter() with nested added element id is not supported", failure);
   }
   
   /**

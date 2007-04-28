@@ -4,7 +4,7 @@ ARANEA FRAMEWORK CHANGELOG
 
 Bugfixes
     'Bugfix' in 1.0.7 often caused NPE on Form Lists initialization. Sorry!   | See #359
-
+---------------------------------------------------------------------------------------------
 2007.04.13    | Aranea 1.0.7
 
 Features and Improvements
@@ -22,7 +22,7 @@ Features and Improvements
     "ant run-app-*" targets now work when using Ant 1.7                       | See #320
     AraneaPage.(action & action_6) take Ajax.Request options as parameters    | See change #170
     FormSelectDisplayHtmlTag output can be optionally wrapped                 | See #324
-    All distribution .jar files now include claseses' source code             | See #327
+    All distribution .jar files now include classes' source code              | See #327
 
 Bugfixes
     FileUpload Control now produces error messages when file size limit is    |

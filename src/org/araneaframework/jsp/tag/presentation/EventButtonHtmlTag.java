@@ -52,7 +52,7 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeEventAttributes(out, event);
 
     if (disabled != null) 
-      out.write(" disabled ");
+      out.write(" disabled=\"disabled\" ");
 
     if (event.getId() != null) {
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
