@@ -76,7 +76,7 @@ API changes in 1.1
   BaseTag.hideGlobalContextEntries method. Afterwards, they are restored, by
   calling BaseTag.restoreGlobalContextEntries method.
 * Also added getEnvironment, getContextWidget and getContextWidgetFullId
-  methods to BaseTag class. //FIXME make addGlobalContextEntry (-> set?) and resetGlobalContextEntries private?
+  methods to BaseTag class.
   Deleted static method getWidgetFromContext and renamed
   getContextWidgetFromContext method to getContextWidget in JspWidgetUtil
   class.
@@ -87,12 +87,12 @@ API changes in 1.1
 * Moved AraneaRootTag.StringAdapterResourceBundle inner class into
   ServeletUtil class. Added LOCALIZATION_CONTEXT_KEY constant to ServeletUtil
   class. JSP localizationContext is set in ServletUtil.include instead of root
-  tag. //FIXME make it optional?
+  tag (if Aranea's LocalizationContext is accessible from environment).
 * Deleted StandardContainerWidget because viewport tag and ViewPortContext
   interface do not exist anymore. Moved other functionality (about not letting
   non-existent) events through) to StandardWidgetAdapterService class.
 * WidgetContext tag with no Id no longer has to be at the top of JSP file, this
-  is done automatically in ServletUtil.include. //FIXME eliminate no-Id use-case of WidgetContext tag?
+  is done automatically in ServletUtil.include method.
 * Added CONTEXT_WIDGET_KEY constant to WidgetContextTag class. Instead of
   pushing/popping the scope of OutputData, the current contextwidget is stored
   in a contextentry. Deleted contextWidgetId field from BaseFormElementHtmlTag
@@ -138,27 +138,6 @@ API changes in 1.1
   "fe-span-${fullFormElementId}". Deleted static method generateId from
   BaseFormElementHtmlTag class.
 
-JavaScript:
-* getSystemForm and setSystemForm functions were added to AraneaPage instance.
-  findSystemForm function was added to AraneaPage object. It searches for the
-  first form tag with arn-systemForm attribute and calls setSystemForm. It is
-  added as a systemLoadEvent, so it is called on page load [and after
-  updateregions AJAX request???].
-* Because element-based traversing is not performed anymore, deleted
-  AraneaTraverser and removed getTraverser function from AraneaPage instance
-  (aranea.js). Moved the five getEvent* functions from AraneaTraverser to
-  AraneaPage instance.
-* Moved setFormEncoding function from aranea-ui.js to AraneaPage instance
-  (aranea.js) and renamed it to setSystemFormEncoding.
-* JavaScript functions related to date and time controls (fillTimeText,
-  fillTimeSelect) and scrollhandler (saveScrollCoordinates) do not take
-  systemForm as a parameter anymore (aranea-ui.js).
-* getActionSubmitURL, action and action_6 functions in AraneaPage instance take
-  sync as an additional parameter. In action and action_6 methods, the sync
-  parameter was added to the middle of the signature, not as the last
-  parameter (//TODO fix it?).
-
-
 * UpdateRegion filter is a widget filter now. UpdateRegions use partial
   rendering (updateRegion names have widget name prefixed with ':' as
   separator).
@@ -197,11 +176,41 @@ JavaScript:
   SystemFormContext from environment (provided by
   StandardSystemFormFilterService).
 
-
 * Event listeners ProxyEventListener, ProxyOnChangeEventListener,
   ProxyOnClickEventListener and ValidatingProxyEventListener take Widget as
   constructor parameter instead of Object. Also, the eventTarget field is of
   type Widget.
+
+JavaScript:
+* getSystemForm and setSystemForm functions were added to AraneaPage instance.
+  findSystemForm function was added to AraneaPage object. It searches for the
+  first form tag with arn-systemForm attribute and calls setSystemForm. It is
+  added as a systemLoadEvent, so it is called on page load [and after
+  updateregions AJAX request???].
+* Because element-based traversing is not performed anymore, deleted
+  AraneaTraverser and removed getTraverser function from AraneaPage instance
+  (aranea.js). Moved the five getEvent* functions from AraneaTraverser to
+  AraneaPage instance.
+* Moved setFormEncoding function from aranea-ui.js to AraneaPage instance
+  (aranea.js) and renamed it to setSystemFormEncoding.
+* JavaScript functions related to date and time controls (fillTimeText,
+  fillTimeSelect) and scrollhandler (saveScrollCoordinates) do not take
+  systemForm as a parameter anymore (aranea-ui.js).
+* getActionSubmitURL, action and action_6 functions in AraneaPage instance take
+  sync as an additional parameter. It was added as the last parameter, so it
+  can be safely omitted -- the default behaviour on the absence of this
+  parameter is to make a synchronized request.
+* Removed AjaxAnywhere dependency, aa.js
+* Added builder.js from script.aculo.us.
+
+Configuration and other files:
+* Added aranea.css, which contains style definitions for Aranea's AJAX loading
+  message.
+* Moved araneaUpdateRegionFilter from araneaThreadFilters to
+  araneaWidgetFilters in default-aranea-conf.xml
+
+Examples:
+
 
 TODO diagrams of Aranea filter hierarchies, one for 1.0, other for 1.1.
 
@@ -214,6 +223,8 @@ TODO diagrams of Aranea filter hierarchies, one for 1.0, other for 1.1.
   + commons-logging ??? -> 1.1
   + spring ??? -> 1.2.9
   + log4javascript 1.2 -> 1.3.1 (compressed)
-  + prototype 1.5.0_rc0 -> 1.5.0
+  + prototype 1.5.0_rc0 -> 1.5.1
+  + scriptaculous ??? -> 1.7.1_beta2
+  + tiny_mce 2.0.6.1 -> 2.1.0
 
 [Changes in tests not covered]
