@@ -72,7 +72,7 @@ var AraneaTree = {
 		var sync = !tree.hasAttribute('arn-tree-sync') || tree.getAttribute('arn-tree-sync').toLowerCase() != 'false';
 		var fullActionTarget = scopedActionTarget ? treeNode.id + '.' + scopedActionTarget : treeNode.id;
 		var actionCallback = this.getUpdateFunction(treeNode.id, onComplete);
-		araneaPage().action(tree, actionId, fullActionTarget, actionParam, sync, actionCallback, options);
+		araneaPage().action(tree, actionId, fullActionTarget, actionParam, actionCallback, options, sync);
 		return false;
 	},
 

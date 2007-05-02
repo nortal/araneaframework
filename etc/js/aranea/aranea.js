@@ -252,12 +252,12 @@ function AraneaPage() {
     return url;
   }
 
-  this.action = function(element, actionId, actionTarget, actionParam, sync, actionCallback, options) {
+  this.action = function(element, actionId, actionTarget, actionParam, actionCallback, options, sync) {
     var systemForm = this.getSystemForm();
-    return this.action_6(systemForm, actionId, actionTarget, actionParam, sync, actionCallback, options);
+    return this.action_6(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync);
   }
 
-  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, sync, actionCallback, options) {
+  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync) {
     if (window['prototype/prototype.js']) {
       options = Object.extend({
         method: 'get',
