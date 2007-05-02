@@ -143,7 +143,7 @@ public interface TreeNodeContext extends Serializable {
   TreeNodeContext getParentNode();
 
   /**
-   * Returns the index this node is under its parent.
+   * Returns the index this node has under its parent.
    */
   int getIndex();
 
