@@ -20,7 +20,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.framework.LocalizationContext;
@@ -45,6 +44,7 @@ public class TypeHelper implements Serializable {
 	private Map types = new HashMap();
 	
 	private boolean initialized = false;
+	private boolean changed = true;
 	
 	public void init(Environment env) throws Exception {
 		if (locale == null) {
@@ -58,6 +58,7 @@ public class TypeHelper implements Serializable {
 			}
 		}
 		initialized = true;
+		fireChange();
 	}
 	
 	private boolean isInitialized() {
@@ -71,7 +72,10 @@ public class TypeHelper implements Serializable {
 	}
 
 	public void setIgnoreCase(boolean ignoreCase) {
+		if (this.ignoreCase == ignoreCase)
+			return;
 		this.ignoreCase = ignoreCase;
+		fireChange();
 	}
 
 	public Locale getLocale() {
@@ -82,7 +86,11 @@ public class TypeHelper implements Serializable {
 	}
 
 	public void setLocale(Locale locale) {
+		if (locale.equals(this.locale))
+			return;
+
 		this.locale = locale;
+		fireChange();
 	}
 		
 	// List fields
@@ -112,6 +120,7 @@ public class TypeHelper implements Serializable {
 	
 	public void addFieldType(String fieldId, Class type) {
 		this.types.put(fieldId, type);
+		fireChange();
 	}
 	
 	/**
@@ -129,11 +138,14 @@ public class TypeHelper implements Serializable {
 	}
 	
 	public Class removeFieldType(String fieldId) {
-		return (Class) this.types.remove(fieldId);
+		Class result = (Class) this.types.remove(fieldId);
+		fireChange();
+		return result;
 	}
 
 	public void addCustomComparator(String fieldId, Comparator comp) {
 		this.comparators.put(fieldId, comp);
+		fireChange();
 	}
 	
 	public Comparator getCustomComparator(String fieldId) {
@@ -141,7 +153,9 @@ public class TypeHelper implements Serializable {
 	}
 		
 	public Comparator removeCustomComparator(String fieldId) {
-		return (Comparator) this.comparators.remove(fieldId);
+		Comparator result = (Comparator) this.comparators.remove(fieldId);
+		fireChange();
+		return result;
 	}
 	
 	// Comparator
@@ -169,5 +183,20 @@ public class TypeHelper implements Serializable {
 	}	
 	protected boolean isTrueFirst() {
 		return ComparatorFactory.TRUE_FIRST_BY_DEFAULT;
+	}
+	
+	protected void fireChange() {
+		changed = true;
+	}
+	
+	/**
+	 * Returns whether the basic configuration that specifies which items are
+	 * shown has changed since last call to this {@link TypeHelper}'s {@link TypeHelper#checkChanged()} 
+	 * method.
+	 */
+	public boolean checkChanged() {
+		boolean result = changed;
+		changed = false;
+		return result;
 	}
 }

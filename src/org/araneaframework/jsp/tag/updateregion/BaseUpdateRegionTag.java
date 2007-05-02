@@ -18,8 +18,12 @@ package org.araneaframework.jsp.tag.updateregion;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Base tag for tags that allow defining updatable regions within HTML page.
@@ -48,7 +52,11 @@ public class BaseUpdateRegionTag extends BaseTag {
     if (fullId == null)
     	fullId = contextWidgetId.length() > 0 ? (contextWidgetId + "." + id) : id;
 
-    return EVAL_BODY_INCLUDE;    
+    String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(pageContext, ServletUtil.UIWIDGET_KEY)).getScope().toString();
+    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().requireEntry(UpdateRegionContext.class);
+    updateRegionContext.addDocumentRegion(fullId, uiWidgetId);
+
+    return EVAL_BODY_INCLUDE;
   }
 
   /**

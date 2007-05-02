@@ -18,6 +18,7 @@ package org.araneaframework.framework;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A context for adding messages to a central pool of messages for later 
@@ -38,6 +39,7 @@ import java.util.Map;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface MessageContext extends Serializable {
   
@@ -61,6 +63,29 @@ public interface MessageContext extends Serializable {
    * Message is cleared after the user sees it once.
    */
   public void showMessage(String type, String message);
+  
+  /**
+   * Shows <code>messages</code> of given <code>type</code> to the user. 
+   * Messages are cleared after the user sees them once.
+   * 
+   * @param messages Set&lt;String&gt;
+   * @since 1.1
+   */
+  public void showMessages(String type, Set messages);
+  
+  /**
+   * Removes a message <code>message</code> of type <code>type</code>. 
+   * @since 1.1
+   */
+  public void hideMessage(String type, String message);
+  
+  /**
+   * Removes messages <code>message</code> of type <code>type</code>. 
+   * @param messages Set&lt;String&gt;
+   * 
+   * @since 1.1
+   */
+  public void hideMessages(String type, Set messages);
 
   /**
    * Shows an error message to the user.
@@ -68,14 +93,32 @@ public interface MessageContext extends Serializable {
   public void showErrorMessage(String message);
   
   /**
+   * Hides an error message from user.
+   * @since 1.1
+   */
+  public void hideErrorMessage(String message);
+  
+  /**
    * Shows a warning message to the user.
    */
-  public void showWarningMessage(String message);  
+  public void showWarningMessage(String message);
+
+  /**
+   * Hides an error message from user.
+   * @since 1.1
+   */
+  public void hideWarningMessage(String message);
 
   /**
    * Shows an informative message to the user.
    */
   public void showInfoMessage(String message);
+  
+  /**
+   * Hides an error message from user.
+   * @since 1.1
+   */
+  public void hideInfoMessage(String message);
   
   /**
    * Clears all non-permanent messages.

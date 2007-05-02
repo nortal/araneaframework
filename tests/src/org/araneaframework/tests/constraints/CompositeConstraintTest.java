@@ -50,10 +50,13 @@ public class CompositeConstraintTest extends TestCase {
     form.addElement("text1", textInput1);
     form.addElement("text2", textInput2);
     form.addElement("number", numberInput);
+    MockLifeCycle.begin(form, new MockEnvironment());
+  }
+
+  protected void markElementsRendered() {
     textInput1.rendered();
     textInput2.rendered();
     numberInput.rendered();
-    MockLifeCycle.begin(form, new MockEnvironment());
   }
   
   protected InputData createRequestWithText(String text1, String text2) {
@@ -70,6 +73,7 @@ public class CompositeConstraintTest extends TestCase {
   }
   
   protected void processRequest(InputData input) {
+    markElementsRendered();
     form._getWidget().update(input);
   }
   
@@ -134,6 +138,7 @@ public class CompositeConstraintTest extends TestCase {
     assertFalse("Should be invalid as number does not fall into valid ranges.", form.convertAndValidate());
     
     processRequest(createRequestWithNumber("150"));
+    numberInput.getValue();
     assertTrue("Should be valid as number is in valid range.", form.convertAndValidate());
 
     processRequest(createRequestWithNumber("872"));

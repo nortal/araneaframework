@@ -33,7 +33,6 @@ import org.araneaframework.framework.FilterWidget;
  * <li><code>action(Path, InputData, OutputData)</code></li>
  * <li><code>update(InputData)</code></li>
  * <li><code>event(Path, InputData)</code></li>
- * <li><code>process()</code></li>
  * <li><code>render(OutputData)</code></li>
  * </ul>
  * and does the filtering by allowing the action to be invoked on the child or not. This class is a
@@ -87,11 +86,7 @@ public class BaseFilterWidget extends BaseWidget  implements FilterWidget {
   protected void event(Path path, InputData input) throws Exception {
     this.childWidget._getWidget().event(path, input);
   }
-  
-  protected void process() throws Exception {
-    this.childWidget._getWidget().process();
-  }
-  
+
   protected void render(OutputData output) throws Exception {
     this.childWidget._getWidget().render(output);
   }

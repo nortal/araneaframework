@@ -27,9 +27,7 @@ import java.io.Serializable;
  * as InputData.
  * <br><br>
  * If an event is routed to this widget, <code>event(Path, InputData)</code> is invoked.
- * <br><br>
- * A request ends with <code>process</code> signaling that now only <code>process()</code>
- * can be called within this request.
+ * <br>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -53,16 +51,7 @@ public interface Widget extends Service, Serializable {
      * @throws Exception
      */
     public void event(Path path, InputData input);
-    
-    /**
-     * Signals the component that the widget is in post-processing state meaning
-     * <code>render(OuputData)</code> will only be called from now on. It does not mean that
-     * <code>update(InputData)</code> and <code>event(Path, InputData)</code> have 
-     * been called already (although this is the usual case) but it means, they won't
-     * be called for sure anymore.
-     */
-    public void process();
-    
+
     /**
      * Widget outputs its graphical representation to OutputData. This method is
      * idempotent and thus can be called mupltiple times.

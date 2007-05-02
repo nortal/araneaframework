@@ -48,10 +48,6 @@ public class MockEventfulStandardWidget extends BaseApplicationWidget {
     this.input = input;
   }
   
-  public void process() throws Exception{
-    this.processCalled = true;
-  }
-  
   public void event(Path path, InputData input) throws Exception {
     eventProcessed = true;
     this.path = path;

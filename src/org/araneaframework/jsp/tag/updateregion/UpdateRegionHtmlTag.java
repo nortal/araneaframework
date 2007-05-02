@@ -34,7 +34,7 @@ import org.araneaframework.jsp.util.JspUtil;
 public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
+    
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "id",  fullId);
     JspUtil.writeCloseStartTag(out);
@@ -45,7 +45,8 @@ public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
   }    
   
   protected int doEndTag(Writer out) throws Exception {
-	out.write("<!--END:" + fullId + "-->");
+    out.write("<!--END:" + fullId + "-->");
+    
     JspUtil.writeEndTag(out, "span");
     
     return super.doEndTag(out);

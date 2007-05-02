@@ -36,6 +36,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     
     menu = buildMenu();
     addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionListener());
+    putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
   
   protected void init() throws Exception {

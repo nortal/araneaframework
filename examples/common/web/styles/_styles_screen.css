@@ -81,12 +81,12 @@ div.login div.a { padding: 10px 15px 0 15px; border: 1px solid #e4e4e4; border-t
 div.login label { clear: left; display: block; float: left; padding: 3px 0 2px 0; width: 72px; }
 
 /* standard presentation tags */
-div.aranea-messages { background: url(../gfx/i37.gif); border-bottom: 10px solid #FFF; color: #939800; }
-div.aranea-messages a { color: #c30005; }
-div.aranea-messages div { background: url(../gfx/i38.gif) 100% 0 no-repeat; }
-div.aranea-messages div div { background: url(../gfx/i40.gif) 100% 100% no-repeat; }
-div.aranea-messages div div div { background: url(../gfx/i39.gif) 0 100% no-repeat; padding: 10px 15px; }
-* html div.aranea-messages div div div { height: 1px; }
+div.msg-info { background: url(../gfx/i37.gif); border-bottom: 10px solid #FFF; color: #939800; }
+div.msg-info a { color: #c30005; }
+div.msg-info div { background: url(../gfx/i38.gif) 100% 0 no-repeat; }
+div.msg-info div div { background: url(../gfx/i40.gif) 100% 100% no-repeat; }
+div.msg-info div div div { background: url(../gfx/i39.gif) 0 100% no-repeat; padding: 10px 15px; }
+* html div.msg-info div div div { height: 1px; }
 
 /* Messages */
 

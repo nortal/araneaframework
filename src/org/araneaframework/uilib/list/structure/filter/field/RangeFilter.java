@@ -73,8 +73,8 @@ public abstract class RangeFilter extends BaseRangeFilter {
 	}
 	
 	public static void addToForm(FilterContext ctx, String lowId, String highId, FormElement lowElement, FormElement highElement) throws Exception {
-		NestedFormUtil.addElement(ctx.getForm(), lowId, lowElement);
-		NestedFormUtil.addElement(ctx.getForm(), highId, highElement);
+		ctx.getForm().addElement(lowId, lowElement);
+		ctx.getForm().addElement(highId, highElement);
 		FormUtil.addConstraint(ctx.getForm(),
 				new RangeConstraint(lowElement, highElement, true));
 	}

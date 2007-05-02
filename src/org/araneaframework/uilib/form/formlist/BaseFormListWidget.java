@@ -17,7 +17,6 @@
 
 package org.araneaframework.uilib.form.formlist;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,6 +26,7 @@ import java.util.Set;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
@@ -47,7 +47,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 
 	protected FormRowHandler formRowHandler;	
 	protected Map formRows = new LinkedMap();
-  protected List rows = new ArrayList();
+
 
 	protected int rowFormCounter = 0;
 
@@ -72,35 +72,29 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 		this.model = model;
 	}
   
-  protected List getRows() {
-    return rows;
-  }
-
-	public void processRows() {
-    if (model != null) {
-      try {
-        rows = model.getRows();
-      }
-      catch (Exception e) {
-        throw new AraneaRuntimeException(e);
-      }
+  private List getRows() {
+    try {
+      return model.getRows();
     }
-
-		for (Iterator i = getRows().iterator(); i.hasNext();) {
-			Object row = i.next();
-
-			if (formRows.get(formRowHandler.getRowKey(row)) == null)
-				addFormRow(row);
-			else
-				((FormRow) formRows.get(formRowHandler.getRowKey(row))).setRow(row);
-		}   
-	}
+    catch (Exception e) {
+      throw new AraneaRuntimeException(e);
+    }
+  }
 
 	/**
 	 * Returns <code>Map&lt;Object key, EditableRow&gt;</code> of initialized editable rows.
 	 * @return <code>Map&lt;Object key, EditableRow&gt;</code> of initialized editable rows.
 	 */
 	public Map getFormRows() {
+    for (Iterator i = getRows().iterator(); i.hasNext();) {
+      Object row = i.next();
+
+      if (formRows.get(formRowHandler.getRowKey(row)) == null)
+        addFormRow(row);
+      else
+        ((FormRow) formRows.get(formRowHandler.getRowKey(row))).setRow(row);
+    }      
+    
 		return formRows;
 	}
 
@@ -118,7 +112,7 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	 * @return editable row corresponding to the row key.
 	 */
 	public FormRow getFormRow(Object key) {
-		return (FormRow) formRows.get(key);
+		return (FormRow) getFormRows().get(key);
 	}
 
 	/**
@@ -146,18 +140,32 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	/**
 	 * Creates and adds an editable row from a usual row object.
 	 */
-	protected abstract void addFormRow(Object newRow); 
+  protected void addFormRow(Object newRow) {
+    FormWidget rowForm;
+    try {
+      rowForm = buildAddForm();
+    }
+    catch (Exception e1) {
+      throw ExceptionUtil.uncheckException(e1);
+    }
+    String rowFormId = "rowForm" + rowFormCounter++;
+    FormRow newEditableRow = new FormRow(this, formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
+
+    addWidget(rowFormId, rowForm);
+    try {
+      formRowHandler.initFormRow(newEditableRow, newRow);
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }         
+
+    formRows.put(formRowHandler.getRowKey(newRow), newEditableRow);
+  }
 
 	protected void init() throws Exception {
 		super.init();		
-    
-		// XXX: restore the behaviour in 1.0.6. It was put back in 1.0.7 (a mistake)
-		//processRows();    
-		resetAddForm();		
-	}
 
-	protected void handleProcess() throws Exception {
-		processRows();
+		resetAddForm();		
 	}
 
 	/** Used to build instance of FormWidget belonging to this list. */
@@ -170,88 +178,124 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	/**
 	 * Saves all editable rows.
 	 */
-	public void saveAllRows() throws Exception {
+	public void saveAllRows() {
 		Map rowsToSave = new HashMap();
 
-		for (Iterator i = formRows.values().iterator(); i.hasNext();) {
+		for (Iterator i = getFormRows().values().iterator(); i.hasNext();) {
 			FormRow editableRow = (FormRow) i.next();
 			rowsToSave.put(editableRow.getKey(), editableRow);
 		}
-
-		formRowHandler.saveRows(rowsToSave);
+    
+    try {
+      formRowHandler.saveRows(rowsToSave);      
+    }
+    catch (Exception e1) {
+      throw ExceptionUtil.uncheckException(e1);
+    }
 	}
 
 	/**
 	 * Saves all editable rows that correspond to the current usual rows.
 	 */
-	public void saveCurrentRows() throws Exception {
+	public void saveCurrentRows()  {
 		Map rowsToSave = new HashMap();
 
 		for (Iterator i = getRows().iterator(); i.hasNext();) {
 			Object row = i.next();
 
-			FormRow editableRow = (FormRow) formRows.get(formRowHandler.getRowKey(row));
+			FormRow editableRow = (FormRow) getFormRows().get(formRowHandler.getRowKey(row));
 			rowsToSave.put(editableRow.getKey(), editableRow);
 		}
-
-		formRowHandler.saveRows(rowsToSave);
+    
+    try {
+      formRowHandler.saveRows(rowsToSave);      
+    }
+    catch (Exception e1) {
+      throw ExceptionUtil.uncheckException(e1);
+    }
 	}	
 
 	/**
 	 * Saves row specified by key.
 	 * @param key row key.
 	 */
-	public void saveRow(Object key) throws Exception {
+	public void saveRow(Object key) {
 		Map rowsToSave = new HashMap();
 
-		FormRow editableRow = (FormRow) formRows.get(key);
+		FormRow editableRow = (FormRow) getFormRows().get(key);
 		rowsToSave.put(editableRow.getKey(), editableRow);
 
-		formRowHandler.saveRows(rowsToSave);
+    try {
+      formRowHandler.saveRows(rowsToSave);      
+    }
+    catch (Exception e1) {
+      throw ExceptionUtil.uncheckException(e1);
+    }
 	}		
 
 	/**
 	 * Deletes row specified by key.
 	 * @param key row key.
 	 */
-	public void deleteRow(Object key) throws Exception {
-		Set rowsToDelete = new HashSet();		
+	public void deleteRow(Object key) {
+		Set rowsToDelete = new HashSet(1);		
 
 		rowsToDelete.add(key);
-		formRows.remove(key);
-
-		formRowHandler.deleteRows(rowsToDelete);
+    getFormRows().remove(key);
+    
+    try {
+      formRowHandler.deleteRows(rowsToDelete);
+    }
+    catch (Exception e1) {
+      throw ExceptionUtil.uncheckException(e1);
+    }		
 	}	
 
 	/**
 	 * Adds row from given form.
 	 * @param addForm add form.
 	 */
-	public void addRow(FormWidget addForm) throws Exception {
-		formRowHandler.addRow(addForm);
+	public void addRow(FormWidget addForm){		    
+    try {
+      formRowHandler.addRow(addForm);
+    }
+    catch (Exception e1) {
+      throw ExceptionUtil.uncheckException(e1);
+    } 
 	}		
 
 	/**
 	 * Opens or closes the row specified by the key.
 	 * @param key row key.
 	 */
-	public void openCloseRow(Object key) throws Exception {
-		FormRow currentRow = (FormRow) formRows.get(key);		
-		formRowHandler.openOrCloseRow(currentRow);
+	public void openCloseRow(Object key) {
+		FormRow currentRow = (FormRow) getFormRows().get(key);
+    
+    try {
+      formRowHandler.openOrCloseRow(currentRow);
+    }
+    catch (Exception e1) {
+      throw ExceptionUtil.uncheckException(e1);
+    } 		
 	}
 
-	public void resetAddForm() throws Exception {    
-		FormWidget addForm = buildAddForm();
-		addWidget("addForm", addForm);   
-		formRowHandler.initAddForm(addForm);		
+	public void resetAddForm() {    
+	  try {
+	    FormWidget addForm = buildAddForm();
+	    addWidget("addForm", addForm);   
+	    formRowHandler.initAddForm(addForm);  
+	  }
+	  catch (Exception e1) {
+	    throw ExceptionUtil.uncheckException(e1);
+	  } 
 	}
 
-	public void resetFormRow(Object key) throws Exception {
-		formRows.remove(key);
+	public void resetFormRow(Object key) {
+    getFormRows().remove(key);
 	}
 
-	public void resetFormRows() throws Exception {
-		formRows.clear();
+	public void resetFormRows() {
+    getFormRows().clear();
 	}
 
 
@@ -267,8 +311,8 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 		protected Map editableRows = new HashMap();
 		protected List rows;
 
-		public ViewModel() {			
-			for (Iterator i = BaseFormListWidget.this.formRows.entrySet().iterator(); i.hasNext();) {
+		public ViewModel() {
+			for (Iterator i = BaseFormListWidget.this.getFormRows().entrySet().iterator(); i.hasNext();) {
 				Map.Entry ent = (Map.Entry) i.next();
 
 				editableRows.put(ent.getKey(), ((FormRow)ent.getValue()).getViewModel());

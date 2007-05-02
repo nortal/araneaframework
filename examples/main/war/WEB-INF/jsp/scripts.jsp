@@ -10,10 +10,10 @@
 		<ui:importStyles file="styles/_styles_new.css" media="screen" />
 		<ui:importStyles file="styles/_styles_screen.css" media="screen"/>
 		<ui:importStyles file="styles/_styles_print.css" media="print" />
-		<ui:importStyles file="css/calendar/calendar.css" media="screen"/>
+		<ui:importStyles group="defaultStyles" media="screen"/>
 
 		<ui:importScripts/>
-		
+
 		<!-- Enables firebug js console logging, if firebug present -->
 		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
 		

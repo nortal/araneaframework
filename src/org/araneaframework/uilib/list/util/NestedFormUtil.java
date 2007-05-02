@@ -17,13 +17,13 @@
 package org.araneaframework.uilib.list.util;
 
 import java.io.Serializable;
-
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
+import org.araneaframework.uilib.util.NameUtil;
 
 /**
  * {@link FormWidget} and {@link BeanFormWidget} <code>addElement</code> methods
@@ -255,5 +255,17 @@ public class NestedFormUtil {
 		}
 
 		return adder.addFormElement(form, fullId);
+	}
+	
+	/**
+	 * Returns the deepest subform on given path of given form.
+	 * @return deepest subform on given path of given form
+	 * @since 1.0.9
+	 */
+	public static FormWidget getDeepestForm(String path, FormWidget form) {
+		if (path.indexOf(".") != -1) {
+			form = form.getSubFormByFullName(NameUtil.getLongestPrefix(path));
+		}
+		return form;
 	}
 }

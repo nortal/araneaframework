@@ -50,8 +50,10 @@ public abstract class RoutedMessage implements Message {
       return;
     
     //Before named hierarchy
-    if (id == null)
+    if (id == null) {
       component._getComponent().propagate(this);
+      return;
+    }
     
     //Routing to next
     if (path.getNext().equals(id)) {
