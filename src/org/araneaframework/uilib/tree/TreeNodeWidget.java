@@ -372,7 +372,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     // Render display widget
     Widget display = getDisplayWidget();
     if (display != null) {  // display is null if this is root node (TreeWidget)
-      //renderDisplayPrefixRecursive(out, output, output.getScope().toString(), true);
       renderDisplayPrefixRecursive(out, renderer);
       if (shouldRenderToggleLink()) {
         renderer.renderToggleLink(out, this, nodeFullId);
