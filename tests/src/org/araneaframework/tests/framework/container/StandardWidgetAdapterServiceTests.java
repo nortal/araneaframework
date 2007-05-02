@@ -50,7 +50,6 @@ public class StandardWidgetAdapterServiceTests extends TestCase {
     assertTrue(widget.getUpdateCalled());
     assertTrue(!widget.getEventProcessed());
     assertTrue(widget.getRenderCalled());
-    assertTrue(widget.isProcessCalled());
 
     assertFalse(widget.getActionCalled());
   }
@@ -65,7 +64,6 @@ public class StandardWidgetAdapterServiceTests extends TestCase {
     assertFalse(widget.getUpdateCalled());
     assertFalse(widget.getEventProcessed());
     assertFalse(widget.getRenderCalled());
-    assertFalse(widget.isProcessCalled());
   }
   
   public void testActionPropagates() throws Exception {

@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.list;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -100,6 +101,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected Map requestIdToRow = new HashMap();
 	
 	private List initEvents = new ArrayList();
+	
+	private boolean changed = true;
 
 	//*********************************************************************
 	//* CONSTRUCTOR
@@ -590,20 +593,27 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Forces the list data provider to refresh the data.
 	 */
 	public void refresh() {
+		if (this.dataProvider == null)
+			throw new IllegalStateException("DataProvider was NULL in ListWidget.refresh().");
+
 		try {
 			this.dataProvider.refreshData();
 		}
 		catch (Exception e) {
 			ExceptionUtil.uncheckException(e);
-		}		
+		}
+		fireChange();
 	}
 
 	/**
 	 * Refreshes the current item range, reloading the shown items.
 	 */
 	public void refreshCurrentItemRange() {
-		ListItemsData itemRangeData;
+		if (this.dataProvider == null)
+			throw new IllegalStateException("DataProvider was NULL in ListWidget.refreshCurrentItemRange().");
 
+		ListItemsData itemRangeData;
+		
 		try {
 			itemRangeData = this.dataProvider.getItemRange(new Long(this.sequenceHelper
 					.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
@@ -615,6 +625,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		this.itemRange = itemRangeData.getItemRange();
 		this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());
 		this.sequenceHelper.validateSequence();
+		
+		makeRequestIdToRowMapping();
 	}
 
 	/**
@@ -623,6 +635,10 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return the current item range.
 	 */
 	public List getItemRange() {
+		if (itemRange == null || this.checkChanged() || sequenceHelper.checkChanged() || typeHelper.checkChanged() || filterHelper.checkChanged()) {
+			refreshCurrentItemRange();
+		}
+
 		return this.itemRange;
 	}
 
@@ -762,19 +778,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public Object getViewModel() throws Exception {
 		return new ViewModel();
 	}
-
-	protected void handleProcess() throws Exception {
-		if (this.dataProvider != null) {
-			refreshCurrentItemRange();
-
-			//Making the requestId to row mapping
-			requestIdToRow.clear();
-			for (ListIterator i = itemRange.listIterator(); i.hasNext();) {
-				Object row = i.next();                  
-				requestIdToRow.put(Integer.toString(i.previousIndex()), row);
-			}
-		}
-	}  
 
 	//*******************************************************************
 	// EVENT HANDLERS
@@ -930,6 +933,21 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 			return orderInfoMap;
 		}
 	}
+	
+	
+	/**
+	 * Creates mapping between rows and request ids.
+	 */
+	protected void makeRequestIdToRowMapping() {
+		if (this.dataProvider == null)
+			return;
+
+		requestIdToRow.clear();
+		for (ListIterator i = itemRange.listIterator(); i.hasNext();) {
+			Object row = i.next();
+			requestIdToRow.put(Integer.toString(i.previousIndex()), row);
+		}
+	}
 
 	/**
 	 * Handles filtering.
@@ -944,6 +962,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 			form.markBaseState();
 			sequenceHelper.setCurrentPage(0);
+			
+			fireChange();
 		}
 	}
 
@@ -952,8 +972,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	protected void clearFilter() {
 		clearForm(form);
-		propagateListDataProviderWithFilter(new HashMap());
+		propagateListDataProviderWithFilter(Collections.EMPTY_MAP);
 		sequenceHelper.setCurrentPage(0);
+		fireChange();
 	}
 
 	protected static void clearForm(FormWidget compositeFormElement) {
@@ -967,6 +988,16 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 				clearForm((FormWidget) element);
 			}
 		}
+	}
+	
+	protected boolean checkChanged() {
+		boolean result = changed;
+		changed = false;
+		return result;
+	}
+	
+	protected void fireChange() {
+		changed = true;
 	}
 
 	protected class FilterEventHandler implements OnClickEventListener {

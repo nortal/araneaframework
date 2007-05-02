@@ -98,7 +98,6 @@ public class WidgetTest extends TestCase {
     validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
     
     MockUiLibUtil.emulateHandleRequest(currentWidget, "testForm", validRequest);
-    currentWidget._getWidget().process();
 
     assertTrue(((StringArrayRequestControl.ViewModel) testForm.getControlByFullName("myCheckBox")._getViewable().getViewModel()).getSimpleValue().equals("true"));
     assertTrue(((StringArrayRequestControl.ViewModel) testForm.getControlByFullName("myLongText")._getViewable().getViewModel()).getSimpleValue().equals("108"));

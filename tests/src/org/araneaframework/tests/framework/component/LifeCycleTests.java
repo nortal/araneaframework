@@ -83,7 +83,6 @@ public class LifeCycleTests extends TestCase {
 
 		w._getWidget().update(new MockInputData());
 		w._getWidget().event(null, new MockInputData());
-		w._getWidget().process();
 		w._getWidget().render(new MockOutputData());
 	}
 }

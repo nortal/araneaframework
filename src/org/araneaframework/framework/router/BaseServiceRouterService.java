@@ -30,7 +30,6 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.StandardScope;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
 

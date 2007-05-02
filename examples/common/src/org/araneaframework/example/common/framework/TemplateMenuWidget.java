@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.example.common.framework;
 
@@ -46,39 +46,17 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
   // CONSTRUCTOR 
   public TemplateMenuWidget(Widget topWidget) throws Exception {
     super(topWidget);
-    
-    menu = buildMenu();
-    addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
-    putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
-  
+
   protected void init() throws Exception {
-	super.init();
-	
-	form = new FormWidget();
-	langSelect = FormUtil.createElement("#", new SelectControl(), new StringData(), false);
-	addWidget("form", form);
-	form.addWidget("langSelect", langSelect);
+    super.init();
 
-	createLangSelect();
-  }
-  
-  // MENU SELECTION LISTENER
-  private class ItemSelectionHandler extends StandardEventListener {
-    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
-      TemplateMenuWidget.this.selectMenuItem(eventParam);
-    }
-  }
+    form = new FormWidget();
+    langSelect = FormUtil.createElement("#", new SelectControl(), new StringData(), false);
+    addWidget("form", form);
+    form.addWidget("langSelect", langSelect);
 
-  public void selectMenuItem(String menuItemPath) throws Exception {
-    final Widget newFlow = menu.selectMenuItem(menuItemPath);
-    
-    reset(new EnvironmentAwareCallback() {
-      public void call(org.araneaframework.Environment env) throws Exception {
-        if (newFlow != null)
-          start(newFlow, null, null);
-      }
-    });
+    createLangSelect();
   }
 
   public void createLangSelect() throws Exception {
@@ -88,7 +66,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
       public void onChange() throws Exception {
         if (langSelect.convertAndValidate()) {
           String lang = (String) langSelect.getValue();
-          
+
           getL10nCtx().setLocale(new Locale(lang, ""));
           ((SelectControl)langSelect.getControl()).clearItems();
           ((SelectControl)langSelect.getControl()).addItems(getLocales());
@@ -112,7 +90,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
   protected LocalizationContext getL10nCtx() {
     return (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
   }
-	
+
   // returns the name of currently running flow class, 
   // so that its source could be located and shown to user
   public String getFlowClassName() {
@@ -136,7 +114,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
 
     return result;
   }
-  
+
   /**
    * Method that must be implemented to build the menu.
    * @return built menu.

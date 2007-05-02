@@ -48,12 +48,6 @@ public class DisplayControl extends BaseControl {
   public Object getViewModel() {
     return new ViewModel();
   }
-  
-  protected void process() throws Exception {
-    innerData = value;
-    
-    super.process();    
-  }
 
   //*********************************************************************
   //* VIEW MODEL
@@ -71,6 +65,8 @@ public class DisplayControl extends BaseControl {
      * Takes an outer class snapshot.     
      */    
     public ViewModel() {
+      //XXX: hack emulating process()
+      innerData = DisplayControl.this.value;
       this.value = innerData;
     }       
     

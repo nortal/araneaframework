@@ -60,10 +60,6 @@ public class MockEventfulBaseWidget extends BaseWidget {
     actionCalled = true;
   }
   
-  protected void process() {
-    processCalled = true;
-  }
-  
   public void destroy() throws Exception {
     destroyCalled = true;
   }
@@ -82,10 +78,6 @@ public class MockEventfulBaseWidget extends BaseWidget {
 
   public boolean isUpdateCalled() {
     return updateCalled;
-  }
-
-  public boolean isProcessCalled() {
-    return processCalled;
   }
   
   public boolean getDestroyCalled() {

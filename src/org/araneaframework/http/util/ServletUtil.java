@@ -49,7 +49,9 @@ import org.araneaframework.jsp.tag.uilib.WidgetTag;
 public abstract class ServletUtil {
 	
   private static final Logger log = Logger.getLogger(ServletUtil.class);
-  
+
+  public static final String UIWIDGET_KEY = "org.araneaframework.http.util.ServletUtil.UIWIDGET";
+
   /**
    * Includes the jsp specified by filePath using the the request and response streams
    * of the output. The pathname must begin with a "/" and is interpreted as relative to
@@ -79,6 +81,7 @@ public abstract class ServletUtil {
     Map attributeBackupMap = new HashMap();
     HttpServletRequest req = getRequest(output.getInputData());
     if (widget != null) {
+      setAttribute(req, attributeBackupMap, UIWIDGET_KEY, widget);
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
       String fullId = widget.getScope().toString();
       ApplicationWidget.WidgetViewModel viewModel = (ApplicationWidget.WidgetViewModel) widget._getViewable().getViewModel();
@@ -87,6 +90,7 @@ public abstract class ServletUtil {
       setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_MODEL_KEY, viewModel);
       setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_DATA_KEY, viewModel.getData());
     } else {
+      setAttribute(req, attributeBackupMap, UIWIDGET_KEY, null);
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, null);
       setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_KEY, null);
       setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_ID_KEY, null);

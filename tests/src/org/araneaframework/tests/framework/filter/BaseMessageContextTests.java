@@ -110,6 +110,40 @@ public abstract class BaseMessageContextTests extends TestCase {
     assertTrue("There must be THREE error messages", ((Collection)errorMessages).size() == 3);
   }
   
+  // test that message hiding works
+  public void testMessageHiding() throws Exception {
+    msgCtx.showInfoMessage("infomessage");
+    msgCtx.showWarningMessage("warningmessage");
+    msgCtx.showErrorMessage("errormessage");
+
+    msgCtx.hideInfoMessage("infomessage");
+    msgCtx.hideWarningMessage("warningmessage");
+    msgCtx.hideErrorMessage("errormessage");
+    
+    Map messages = msgCtx.getMessages();
+
+    Object infoMessages = messages.get(MessageContext.INFO_TYPE);
+    Object warningMessages = messages.get(MessageContext.WARNING_TYPE);
+    Object errorMessages = messages.get(MessageContext.ERROR_TYPE);
+
+    assertTrue("infoMessages must be in java.util.Collection", infoMessages instanceof Collection);
+    assertTrue("warningMessages must be in java.util.Collection", warningMessages instanceof Collection);
+    assertTrue("errorMessages must be in java.util.Collection", errorMessages instanceof Collection);
+    
+    assertTrue("infoMessages must be empty", ((Collection)infoMessages).isEmpty());
+    assertTrue("warningMessages must be empty", ((Collection)warningMessages).isEmpty());
+    assertTrue("errorMessages must be empty", ((Collection)errorMessages).isEmpty());
+    
+    // also test that only messages of given type are hidden (cleared)
+    msgCtx.showInfoMessage("simplemessage");
+    msgCtx.hideWarningMessage("simplemessage");
+
+    infoMessages = messages.get(MessageContext.INFO_TYPE);
+    warningMessages = messages.get(MessageContext.WARNING_TYPE);
+
+    assertTrue("Info message must be present, since only warning was hidden", !((Collection)infoMessages).isEmpty());
+  }
+  
   // test that hiding of permanent messages works
   public void testPermanentMessageHiding() throws Exception {
     msgCtx.showPermanentMessage(MessageContext.ERROR_TYPE, "permanent message");

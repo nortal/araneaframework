@@ -15,6 +15,7 @@
 **/
 package org.araneaframework.example.main.web.misc;
 
+import org.araneaframework.OutputData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
@@ -23,6 +24,8 @@ import org.araneaframework.example.main.TemplateBaseWidget;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class AjaxRequestErrorWidget extends TemplateBaseWidget {
+  private boolean renderError = false;
+
   public void init() throws Exception {
     setViewSelector("misc/ajaxError");
     addEventListener("error", new ProxyEventListener(this));
@@ -31,6 +34,10 @@ public class AjaxRequestErrorWidget extends TemplateBaseWidget {
   public void handleEventError() {
     throw new AraneaRuntimeException("Error while while responding to AJAX event.");
   }
+
+  public void handleEventRenderError() {
+    renderError = true;
+  }
   
   public void handleEventFirst() {
     getMessageCtx().showInfoMessage("At first everything is well.");
@@ -38,5 +45,13 @@ public class AjaxRequestErrorWidget extends TemplateBaseWidget {
   
   public void handleEventSecond() {
     getMessageCtx().showInfoMessage("Still ok.");
+  }
+
+  protected void render(OutputData output) throws Exception {
+    if (renderError) {
+      renderError = false;
+      throw new AraneaRuntimeException("Error while while rendering AJAX request.");
+    }
+    super.render(output);
   }
 }

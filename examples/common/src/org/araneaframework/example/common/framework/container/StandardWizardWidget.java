@@ -32,7 +32,7 @@ import org.araneaframework.uilib.core.BaseUIWidget;
 /**
  * This widget may contain other widgets (called pages) as children.
  * It routes init() and event() to all of its children
- * and process() and render() to only current active child.
+ * and render() to only current active child.
  * 
  * It recieves following events:
  * 1. eventId: "goto", eventParam: pageIndex.
@@ -169,7 +169,6 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
 				&& _getChildren().containsKey(CURRENT_PAGE_KEY)) {
 			_getChildren().remove(CURRENT_PAGE_KEY);
 		}
-		page._getComponent().destroy();
 	}
 	
 	// getters
@@ -219,8 +218,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
 	}
 	
 	protected void destroy() throws Exception {
-		clearPages();		
-		super.destroy();
+		clearPages();
 	}
 	
 	/*

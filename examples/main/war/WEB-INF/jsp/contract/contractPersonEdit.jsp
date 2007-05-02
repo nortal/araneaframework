@@ -10,8 +10,8 @@
 		
 		<p>
 			<jsp:text>Person: </jsp:text>
-			<c:if test="${viewData.person != null}">
-				<c:out value="${viewData.person.name} ${viewData.person.surname}"/>
+			<c:if test="${widget.person != null}">
+				<c:out value="${widget.person.name} ${widget.person.surname}"/>
 			</c:if>
 			<ui:eventButton eventId="choosePerson" labelId="#Choose"/>			
 		</p>

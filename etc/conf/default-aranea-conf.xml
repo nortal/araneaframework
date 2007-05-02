@@ -86,7 +86,6 @@
         <ref bean="araneaThreadCloningFilter"/>
         <ref bean="araneaMountPointFilter"/>
         <ref bean="araneaContinuationFilter"/> 
-        <ref bean="araneaUpdateRegionFilter"/>
         <ref bean="araneaResponseHeaderFilter"/>
         <ref bean="araneaSystemFormFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
@@ -112,6 +111,7 @@
       <list>      
         <ref bean="araneaRedirectingFilter"/>        
         <ref bean="araneaTransactionFilter"/>
+        <ref bean="araneaUpdateRegionFilter"/>
         <ref bean="araneaMessagingFilter"/>
         <ref bean="araneaEnvContextFilter"/>
         <ref bean="araneaPopupFilter"/>
@@ -235,16 +235,8 @@
     singleton="false">
   </bean>
   
-  	<bean class="org.araneaframework.http.filter.StandardUpdateRegionFilterService" 
+  	<bean class="org.araneaframework.http.filter.StandardUpdateRegionFilterWidget" 
     id="araneaUpdateRegionFilter" singleton="false">
-    <property name="existingRegions">
-      <list>
-        <value>messages</value>
-        <value>popupRegistrationRegion</value>
-        <value>focus</value>
-        <value>scrolling</value>
-      </list>
-    </property>
   </bean>  
   
   <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>

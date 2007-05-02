@@ -55,8 +55,6 @@ public class FormElementTest extends TestCase {
 
 		sfe.getData().setValue(new Long(110));
 
-		sfe._getWidget().process();
-
 		assertEquals("The textbox must have the data item value!",
 				((StringArrayRequestControl.ViewModel) sfe.getControl()
 						._getViewable().getViewModel()).getSimpleValue(), "110");

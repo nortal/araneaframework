@@ -95,28 +95,6 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
     assertFalse(child.isEventCalled());
   }
   
-  public void testConsistentKeyRoutesProcess() throws Exception {
-    Long key = ((Long)trans.getTransactionId());
-    
-    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, key.toString());
-    StandardServletInputData input = new StandardServletInputData(req);
-    trans._getWidget().update(input);
-    
-    trans._getWidget().process();
-    assertTrue(child.isProcessCalled());    
-  }
-  
-  public void testInConsistentKeyDoesntRouteProcess() throws Exception {    
-    long key = ((Long)trans.getTransactionId()).longValue();
-    
-    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, (key+1)+"");
-    StandardServletInputData input = new StandardServletInputData(req);
-    trans._getWidget().update(input);
-    
-    trans._getWidget().process();
-    assertFalse(child.isProcessCalled());
-  }
-  
   public void testDestroyChild() throws Exception {
     trans._getComponent().destroy();
     assertTrue(child.getDestroyCalled());

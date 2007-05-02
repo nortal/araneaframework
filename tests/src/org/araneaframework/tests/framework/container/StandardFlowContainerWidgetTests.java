@@ -16,10 +16,11 @@
 
 package org.araneaframework.tests.framework.container;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import junit.framework.TestCase;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.FlowContext;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.mock.widget.MockCallableWidget;
 
@@ -34,6 +35,23 @@ public class StandardFlowContainerWidgetTests extends TestCase {
   private MockCallableWidget childWidget2;
   private StandardEnvironment env;
   
+  private static String BASE_FLOW_KEY; 
+  private static String TOP_FLOW_KEY;
+  
+  static  {
+	  try {
+		  Field f = StandardFlowContainerWidget.class.getDeclaredField("BASE_FLOW_KEY");
+		  f.setAccessible(true);
+		  BASE_FLOW_KEY = (String) f.get(new StandardFlowContainerWidget());
+		  
+		  Field g = StandardFlowContainerWidget.class.getDeclaredField("TOP_FLOW_KEY");
+		  g.setAccessible(true);
+		  TOP_FLOW_KEY = (String) g.get(new StandardFlowContainerWidget());
+	  } catch (Exception e) {
+		ExceptionUtil.uncheckException(e);
+	}
+  }
+  
   public void setUp() throws Exception {    
     topWidget = new MockCallableWidget();
     childWidget = new MockCallableWidget();
@@ -47,10 +65,10 @@ public class StandardFlowContainerWidgetTests extends TestCase {
   
   public void testCallingContract() throws Exception {
     stackWidget.start(childWidget, childWidget.getConfigurator(), childWidget.getHandler());
-    
+
     assertTrue(topWidget.getDeactivateCalled());
     assertTrue(childWidget.getConfigureCalled());
-    assertEquals(childWidget, stackWidget.getChildren().get(FlowContext.FLOW_KEY));
+    assertEquals(childWidget, stackWidget.getChildren().get(BASE_FLOW_KEY+"1"));
   }
   
   public void testCancelCallContract() throws Exception {
@@ -59,7 +77,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     stackWidget.cancel();
     assertTrue(childWidget.getOnCallCancelled());
     assertTrue(topWidget.getActivateCalled());
-    assertEquals(topWidget, stackWidget.getChildren().get(FlowContext.FLOW_KEY));
+    assertEquals(topWidget, stackWidget.getChildren().get(TOP_FLOW_KEY));
   }
     
   public void testReturnCallContract() throws Exception {
@@ -68,7 +86,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     stackWidget.finish("returnCall");
     assertTrue("returnCall".equals(childWidget.getReturnCallReturned()));
     assertTrue(topWidget.getActivateCalled());
-    assertEquals(topWidget, stackWidget.getChildren().get(FlowContext.FLOW_KEY));
+    assertEquals(topWidget, stackWidget.getChildren().get(TOP_FLOW_KEY));
   }
   
   public void testDestroyDestroysChildrenOnStack() throws Exception {
