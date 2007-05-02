@@ -45,7 +45,7 @@ public class StandardSystemFormFilterService extends BaseFilterService implement
   }
 
   public void addField(String key, String value) {
-    Assert.notNullParam(key, "key");
+    Assert.notEmptyParam(key, "key");
     Assert.notNullParam(value, "value");
     fields.put(key, value);
   }
