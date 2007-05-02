@@ -51,6 +51,7 @@ public abstract class ServletUtil {
   private static final Logger log = Logger.getLogger(ServletUtil.class);
 
   public static final String UIWIDGET_KEY = "org.araneaframework.http.util.ServletUtil.UIWIDGET";
+  public static final String LOCALIZATION_CONTEXT_KEY = Config.FMT_LOCALIZATION_CONTEXT + ".request";
 
   /**
    * Includes the jsp specified by filePath using the the request and response streams
@@ -172,10 +173,10 @@ public abstract class ServletUtil {
     return (Environment) req.getAttribute(Environment.ENVIRONMENT_KEY);
   }
 
-  public static final String LOCALIZATION_CONTEXT_KEY = Config.FMT_LOCALIZATION_CONTEXT + ".request";
-
   public static javax.servlet.jsp.jstl.fmt.LocalizationContext buildLocalizationContext(Environment env) {
-    LocalizationContext localizationContext = (LocalizationContext) env.requireEntry(LocalizationContext.class);
+    LocalizationContext localizationContext = (LocalizationContext) env.getEntry(LocalizationContext.class);
+    if (localizationContext == null)
+      return null;
     return new javax.servlet.jsp.jstl.fmt.LocalizationContext(
       new StringAdapterResourceBundle(localizationContext.getResourceBundle()),
       localizationContext.getLocale()
