@@ -5,7 +5,8 @@ API changes in 1.1
 
 * Component-s know their own Id-s (added getScope method). Interface Scope and
   its implementation StandardScope have been added. Component's init method now
-  takes Scope as its first parameter. Implementation of that was done in BaseComponent.
+  takes Scope as its first parameter. Implementation of that was done in
+  BaseComponent.
 * Component-s have environment now (added getEnvironment method).
 * Components' lifecycle is more strictly defined, there are three states:
   UNBORN, ALIVE and DEAD. Resurrection cannot occur anymore, an
@@ -13,14 +14,16 @@ API changes in 1.1
   anymore, they are silently ignored. BaseComponent implementation manages the
   lifecycle status. In addition to the existing isInitialized method, the
   protected methods isAlive and isDead were added to BaseComponent class.
-  Propagate does not traverse below dead Component. BaseService lets the action
-  call through only if the Component is alive.
+  Propagate call does not traverse below dead Component. BaseService lets the
+  action call through only if the Component is alive. The convertInternal
+  method in FormElement class runs the conversion and addInitEvent method in
+  FormElement and ListWidget classes run the event only if the element/widget
+  is alive.
 * Added another constructor to StandardPath class, which takes Collection as an
   argument.
 * Deleted FLOW_KEY and CALL_STACK_KEY constants from FlowContext interface.
-  StandardFlowContainerWidget: frames have constant names (generated
-  sequentially) that are used for components ids, because component id's are
-  fixed.
+  StandardFlowContainerWidget: frames have fixed names (generated sequentially)
+  that are used for components ids, because component id's are fixed.
 
 * Eliminated OutputData attributes: deleted pushAttribute, popAttribute,
   getAttribute and getAttributes methods from OutputData interface (and
@@ -31,8 +34,11 @@ API changes in 1.1
   Method getScopedData in InputData (and StandardServletInputData) now takes
   Path as a parameter. Everything uses getScope method (from Component) instead
   of OutputData/InputData.getScope.
-* Eliminated scopedWidgetId and formScopedFullId, they were the same as their
-  non-scoped counterparts anyway.
+* Eliminated scopedWidgetId, scopedFullId and formScopedFullId, they were the
+  same as their non-scoped counterparts anyway. Deleted WIDGET_SCOPED_ID_KEY
+  constant from WidgetTag class and FORM_SCOPED_FULL_ID_KEY from FormTag class.
+  Deleted scopedFullId field from BaseWidgetTag class. Deleted formScopedFullId
+  field and getScopedFullFieldId method from BaseFormElementHtmlTag class.
 * Added getContainerPath and getContextPath methods to HttpInputData interface
   (and its implementing class StandardServletInputData).
 
@@ -44,13 +50,15 @@ API changes in 1.1
 * Deleted MESSAGE_KEY constant from MessageContext interface. Added getMessages
   method to MessageContext interface (and its implementation to
   StandardMessagingFilterWidget class) in order to access messages from
-  messages tag (was previously done with OutputData attributes, added in render
-  method of StandardMessagingFilterWidget class).
+  MessagesHtmlTag class (was previously done with OutputData attributes, which
+  were added in render method of StandardMessagingFilterWidget class).
 * Deleted POPUPS_KEY constant from PopupWindowContext interface. Added
   getPopups method to PopupWindowContext interface (and
-  StandardPopupFilterWidget class).
+  StandardPopupFilterWidget class) in order to access popup windows from
+  PopupRegistrationHtmlTag class.
 * Deleted SCROLL_HANDLER_KEY constant from WindowScrollPositionContext
-  interface.
+  interface. WindowScrollPositionContext, used by
+  ScrollHandlerRegistrationHtmlTag class, is now accessible from environment.
 * Deleted PATH_ARGUMENT constant from PathInfoServiceRouterService class.
   Added getPathInfo method to PathInfoServiceContext interface (and
   PathInfoServiceRouterService class).
@@ -58,24 +66,49 @@ API changes in 1.1
   convenience methods for getting topServiceId and threadServiceId.
 
 * Moved constant ACTION_PATH_KEY from ... to ApplicationService interface.
-* Moved constant EVENT_PATH_KEY from ... to ApplicationWidget interface.
+* Moved constant EVENT_PATH_KEY from StandardContainerWidget class to
+  ApplicationWidget interface.
 
 * JSP contextAttributes from parent JSP-s are no longer accessible after
   widgetInclude (for example, layout tags don't work across widgetInclude-s).
-* Deleted root, viewport, globalWidgetInclude JSP tags. Deleted ViewPortContext
-  interface. JSP localizationContext is set in ServletUtil.include instead of
-  root tag. //FIXME make it optional?
+  They are deliberatly removed from PageContext in all widgetInclude-like tags
+  (WidgetIncludeTag, TreeTag, WizardBodyTag) before calling render, by calling
+  BaseTag.hideGlobalContextEntries method. Afterwards, they are restored, by
+  calling BaseTag.restoreGlobalContextEntries method.
+* Also added getEnvironment, getContextWidget and getContextWidgetFullId
+  methods to BaseTag class. //FIXME make addGlobalContextEntry (-> set?) and resetGlobalContextEntries private?
+  Deleted static method getWidgetFromContext and renamed
+  getContextWidgetFromContext method to getContextWidget in JspWidgetUtil
+  class.
+* Deleted AraneaRootTag, AraneaViewPortTag, GlobalWidgetIncludeTag classes.
+  Deleted ViewPortContext and UiWidgetContainer interfaces and
+  UiAraneaWidgetContainer class. Deleted static method getContainer from
+  JspWidgetCallUtil class. Deleted container field from BaseWidgetTag class.
 * Moved AraneaRootTag.StringAdapterResourceBundle inner class into
   ServeletUtil class. Added LOCALIZATION_CONTEXT_KEY constant to ServeletUtil
-  class.
+  class. JSP localizationContext is set in ServletUtil.include instead of root
+  tag. //FIXME make it optional?
 * Deleted StandardContainerWidget because viewport tag and ViewPortContext
   interface do not exist anymore. Moved other functionality (about not letting
   non-existent) events through) to StandardWidgetAdapterService class.
 * WidgetContext tag with no Id no longer has to be at the top of JSP file, this
   is done automatically in ServletUtil.include. //FIXME eliminate no-Id use-case of WidgetContext tag?
+* Added CONTEXT_WIDGET_KEY constant to WidgetContextTag class. Instead of
+  pushing/popping the scope of OutputData, the current contextwidget is stored
+  in a contextentry. Deleted contextWidgetId field from BaseFormElementHtmlTag
+  class.
 * Eliminated systemForm's Id. No duplicate systemform check is done in
   server-side nor client-side. Client-side JavaScript searches for the first
-  form tag with arn-systemForm attribute.
+  form tag with arn-systemForm attribute. Removed systemFormId field from
+  BaseSimpleButtonTag and BaseFormElementHtmlTag classes. The
+  get*OnChangePrecondition methods in BaseFormDateTimeInputHtmlTag class and
+  fillXJSCallConstructor method in FormDateTimeInputHtmlTag and
+  FormTimeInputHtmlTag classes and writeHourSelect and staticFillXJSCall
+  methods in FormTimeInputHtmlTag class do not take systemFormId as an argument
+  any more. The constructACUrl and constructServiceParameter methods in
+  FormAutoCompleteTextInputHtmlTag class and static method
+  getSubmitScriptForEvent in JspWidgetCallUtil class do not take systemFormId
+  as an argument any more.
 * Added SystemFormContext interface and its implementation
   StandardSystemFormFilterService. Filters lower in the hierarchy (like
   TransactionFilter and ClientStateFilter) can use it to add fields to
@@ -100,7 +133,12 @@ API changes in 1.1
   and also the same five entries that widgetContext tag did. After including
   the JSP, the contextEntries that were set, are restored to previous values.
 * Added getEnvironment method to ServletUtil class.
+* The SPAN HTML tag surrounding a formelement does not have a random id any
+  more (due to non-preservable contextattributes). The id is in the form of
+  "fe-span-${fullFormElementId}". Deleted static method generateId from
+  BaseFormElementHtmlTag class.
 
+JavaScript:
 * getSystemForm and setSystemForm functions were added to AraneaPage instance.
   findSystemForm function was added to AraneaPage object. It searches for the
   first form tag with arn-systemForm attribute and calls setSystemForm. It is
@@ -110,8 +148,8 @@ API changes in 1.1
   AraneaTraverser and removed getTraverser function from AraneaPage instance
   (aranea.js). Moved the five getEvent* functions from AraneaTraverser to
   AraneaPage instance.
-* Moved setSystemFormEncoding function from aranea-ui.js to AraneaPage instance
-  (aranea.js).
+* Moved setFormEncoding function from aranea-ui.js to AraneaPage instance
+  (aranea.js) and renamed it to setSystemFormEncoding.
 * JavaScript functions related to date and time controls (fillTimeText,
   fillTimeSelect) and scrollhandler (saveScrollCoordinates) do not take
   systemForm as a parameter anymore (aranea-ui.js).
@@ -143,9 +181,15 @@ API changes in 1.1
   (previously extended BaseService and implemented FilterService).
 
 * TreeWidget supports unsynchronized actions. In client-side JavaScript,
-  unsynchronized action is made when the tree element has
-  arn-tree-sync="false" attribute (aranea-tree.js).
-* ?? renderer ??
+  unsynchronized action is made when the tree HTML element has
+  arn-tree-sync="false" attribute (aranea-tree.js) That attribute is written
+  out in TreeTag.StandardTreeRenderer.renderTreeStart method. Added
+  useSynchronizedActions method to TreeContext interface and TreeWidget class,
+  added setUseSynchronizedActions method to TreeWidget class.
+* The render* methods in TreeRenderer interface and
+  TreeTag.StandardTreeRenderer class do not take nodeFullId nor childNodeFullId
+  as arguments any more.
+* Added getFullId method to TreeNodeContext interface and TreeNodeWidget class.
 
 * You are able to query the next transactionId from TransactionHelper and
   TransactionContext (added getNextTransactionId method to both).
@@ -154,7 +198,10 @@ API changes in 1.1
   StandardSystemFormFilterService).
 
 
-* Event listeners ProxyEventListener, .. take Widget as constructor parameter instead of Object.
+* Event listeners ProxyEventListener, ProxyOnChangeEventListener,
+  ProxyOnClickEventListener and ValidatingProxyEventListener take Widget as
+  constructor parameter instead of Object. Also, the eventTarget field is of
+  type Widget.
 
 TODO diagrams of Aranea filter hierarchies, one for 1.0, other for 1.1.
 
