@@ -149,13 +149,13 @@ public class StandardHttpSessionRouterService extends BaseService {
           }
         }
         finally {
-          locks.remove(sess);
+          locks.remove(sess); // XXX why do we remove the lock? why not do lock.writeLock().release();
         }        
       }
     }
   }
   
-  public void propagate(Message message, InputData input, OutputData output) {
+  public void propagate(Message message, InputData input, OutputData output) { // XXX who uses this method?
     HttpSession sess = ServletUtil.getRequest(input).getSession();
     
     RelocatableService service = getOrCreateSessionService(sess);
@@ -169,7 +169,7 @@ public class StandardHttpSessionRouterService extends BaseService {
     Object syncObject = sess.getAttribute(SESSION_SYNC_OBJECT_KEY);
     if (syncObject == null) {
       syncObject = new Serializable() {};
-      sess.setAttribute(SESSION_SYNC_OBJECT_KEY, syncObject);
+      sess.setAttribute(SESSION_SYNC_OBJECT_KEY, syncObject); // XXX why do we store this object in session? why not keep it in a synchronized map?
     }
     return syncObject;
   }
