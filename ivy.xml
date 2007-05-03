@@ -23,7 +23,11 @@
   	
   	<dependency org="taglibs" rev="1.0.6" name="standard"/>
   	<dependency org="servletapi" rev="2.3" name="servletapi"/>
-<!--  	<dependency org="javax.j2ee" rev="1.4" name="j2ee"/>-->
+  	<!-- XXX: for some reason, ivy cannot fetch j2ee!! 
+  			inconsistent module descriptor file found in 'http://www.ibiblio.org/maven2/javax/j2ee/j2ee/1.4/j2ee-1.4.pom': 
+  			bad organisation: expected='javax.j2ee' found='javax'
+  	-->
+    <!-- dependency org="javax.j2ee" rev="1.4" name="j2ee"/ -->
 
 	<!-- "buildtime" -->
 
