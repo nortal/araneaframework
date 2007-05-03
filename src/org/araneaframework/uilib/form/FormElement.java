@@ -362,10 +362,16 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	    this.rendered = true;
 	  }
 
+    /**
+     * @since 1.1
+     */
     protected boolean isIgnoreEvents() {
       return ignoreEvents;
     }
 
+    /**
+     * @since 1.1
+     */
     protected void setIgnoreEvents(boolean ignoreEvents) {
       this.ignoreEvents = ignoreEvents;
     }

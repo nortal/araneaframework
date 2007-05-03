@@ -50,6 +50,8 @@ public interface TreeContext extends Serializable {
    * {@link org.araneaframework.http.router.StandardHttpSessionRouterService}
    * does not synchronize requests to this <code>TreeWidget</code> and its
    * children.
+   * 
+   * @since 1.1
    */
   boolean useSynchronizedActions();
 

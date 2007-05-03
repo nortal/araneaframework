@@ -21,6 +21,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * since SystemFormContext is usually located below them in the hierarchy.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.1
  */
 public class StandardSystemFormFilterService extends BaseFilterService implements SystemFormContext {
 
@@ -45,7 +46,7 @@ public class StandardSystemFormFilterService extends BaseFilterService implement
   }
 
   public void addField(String key, String value) {
-    Assert.notNullParam(key, "key");
+    Assert.notEmptyParam(key, "key");
     Assert.notNullParam(value, "value");
     fields.put(key, value);
   }

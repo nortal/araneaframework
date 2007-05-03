@@ -76,5 +76,8 @@ public interface PopupWindowContext extends Serializable {
    */
   public Widget getOpener();
   
+  /**
+   * @since 1.1
+   */
   public Map getPopups();
 }

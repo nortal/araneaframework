@@ -17,10 +17,10 @@
 package org.araneaframework;
 
 import java.util.Map;
+import org.araneaframework.http.HttpInputData;
 
 /**
- * A map of maps with specific getters. The current position or scope in the top map
- * is maintained by a path.
+ * Provides access to request parameters.
  * 
  * <p>
  * InputData has 2 types of getters
@@ -28,10 +28,10 @@ import java.util.Map;
  *  <li>Scoped data - data that depends on the current scope</li>
  *  <li>Global data - data which isn't aware of scoping</li>
  * </ul>
- * Map is used to distinguish data meant for different Components in a Composite. As Components
- * can be structured hierarchically the pushScope and getScope of InputData are used to determine
- * the path of data needed from the InputData.
  * </p>
+ * 
+ * @see HttpInputData
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

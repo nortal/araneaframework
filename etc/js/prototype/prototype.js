@@ -1,4 +1,4 @@
-/*  Prototype JavaScript framework, version 1.5.1_rc3
+/*  Prototype JavaScript framework, version 1.5.1
  *  (c) 2005-2007 Sam Stephenson
  *
  *  Prototype is freely distributable under the terms of an MIT-style license.
@@ -7,7 +7,7 @@
 /*--------------------------------------------------------------------------*/
 
 var Prototype = {
-  Version: '1.5.1_rc3',
+  Version: '1.5.1',
 
   Browser: {
     IE:     !!(window.attachEvent && !window.opera),
@@ -109,7 +109,7 @@ Function.prototype.bind = function() {
 Function.prototype.bindAsEventListener = function(object) {
   var __method = this, args = $A(arguments), object = args.shift();
   return function(event) {
-    return __method.apply(object, [( event || window.event)].concat(args).concat($A(arguments)));
+    return __method.apply(object, [event || window.event].concat(args));
   }
 }
 
@@ -436,8 +436,7 @@ Template.prototype = {
   }
 }
 
-var $break    = new Object();
-var $continue = new Object();
+var $break = {}, $continue = new Error('"throw $continue" is deprecated, use "return" instead');
 
 var Enumerable = {
   each: function(iterator) {
@@ -1796,6 +1795,7 @@ Element._attributeTranslations = {
   Object.extend(this, {
     href: this._getAttr,
     src:  this._getAttr,
+    type: this._getAttr,
     disabled: this._flag,
     checked:  this._flag,
     readonly: this._flag,
@@ -1830,6 +1830,18 @@ Element.hasAttribute = function(element, attribute) {
 
 Element.addMethods = function(methods) {
   var F = Prototype.BrowserFeatures, T = Element.Methods.ByTag;
+
+  if (!methods) {
+    Object.extend(Form, Form.Methods);
+    Object.extend(Form.Element, Form.Element.Methods);
+    Object.extend(Element.Methods.ByTag, {
+      "FORM":     Object.clone(Form.Methods),
+      "INPUT":    Object.clone(Form.Element.Methods),
+      "SELECT":   Object.clone(Form.Element.Methods),
+      "TEXTAREA": Object.clone(Form.Element.Methods)
+    });
+  }
+
   if (arguments.length == 2) {
     var tagName = methods;
     methods = arguments[1];
@@ -2251,7 +2263,7 @@ Object.extend(Selector, {
     tagName:      /^\s*(\*|[\w\-]+)(\b|$)?/,
     id:           /^#([\w\-\*]+)(\b|$)/,
     className:    /^\.([\w\-\*]+)(\b|$)/,
-    pseudo:       /^:((first|last|nth|nth-last|only)(-child|-of-type)|empty|checked|(en|dis)abled|not)(\((.*?)\))?(\b|$|\s)/,
+    pseudo:       /^:((first|last|nth|nth-last|only)(-child|-of-type)|empty|checked|(en|dis)abled|not)(\((.*?)\))?(\b|$|\s|(?=:))/,
     attrPresence: /^\[([\w]+)\]/,
     attr:         /\[((?:[\w-]*:)?[\w-]+)\s*(?:([!^$*~|]?=)\s*((['"])([^\]]*?)\4|([^'"][^\]]*?)))?\]/
   },
@@ -2702,8 +2714,6 @@ Form.Methods = {
   }
 }
 
-Object.extend(Form, Form.Methods);
-
 /*--------------------------------------------------------------------------*/
 
 Form.Element = {
@@ -2772,18 +2782,10 @@ Form.Element.Methods = {
   }
 }
 
-Object.extend(Form.Element, Form.Element.Methods);
-Object.extend(Element.Methods.ByTag, {
-  "FORM":     Object.clone(Form.Methods),
-  "INPUT":    Object.clone(Form.Element.Methods),
-  "SELECT":   Object.clone(Form.Element.Methods),
-  "TEXTAREA": Object.clone(Form.Element.Methods)
-});
-
 /*--------------------------------------------------------------------------*/
 
 var Field = Form.Element;
-var $F = Form.Element.getValue;
+var $F = Form.Element.Methods.getValue;
 
 /*--------------------------------------------------------------------------*/
 

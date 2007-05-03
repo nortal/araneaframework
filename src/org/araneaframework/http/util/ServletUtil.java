@@ -50,7 +50,10 @@ public abstract class ServletUtil {
 	
   private static final Logger log = Logger.getLogger(ServletUtil.class);
 
+  /** @since 1.1 */
   public static final String UIWIDGET_KEY = "org.araneaframework.http.util.ServletUtil.UIWIDGET";
+  /** @since 1.1 */
+  public static final String LOCALIZATION_CONTEXT_KEY = Config.FMT_LOCALIZATION_CONTEXT + ".request";
 
   /**
    * Includes the jsp specified by filePath using the the request and response streams
@@ -69,6 +72,8 @@ public abstract class ServletUtil {
    * is used.
    * 
    * Widget is made available to JSP, so contextWidget tag can be used.
+   * 
+   * @since 1.1
    */
   public static void include(String filePath, ApplicationWidget widget, OutputData output) throws Exception {
     include(filePath, widget.getEnvironment(), output, widget);
@@ -168,14 +173,16 @@ public abstract class ServletUtil {
     return (HttpOutputData) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
   }
   
+  /** @since 1.1 */
   public static Environment getEnvironment(ServletRequest req) {
     return (Environment) req.getAttribute(Environment.ENVIRONMENT_KEY);
   }
 
-  public static final String LOCALIZATION_CONTEXT_KEY = Config.FMT_LOCALIZATION_CONTEXT + ".request";
-
+  /** @since 1.1 */
   public static javax.servlet.jsp.jstl.fmt.LocalizationContext buildLocalizationContext(Environment env) {
-    LocalizationContext localizationContext = (LocalizationContext) env.requireEntry(LocalizationContext.class);
+    LocalizationContext localizationContext = (LocalizationContext) env.getEntry(LocalizationContext.class);
+    if (localizationContext == null)
+      return null;
     return new javax.servlet.jsp.jstl.fmt.LocalizationContext(
       new StringAdapterResourceBundle(localizationContext.getResourceBundle()),
       localizationContext.getLocale()
@@ -184,6 +191,8 @@ public abstract class ServletUtil {
 
   /**
    * Adapter resource bundle that converts all objects to string.
+   * 
+   * @since 1.1
    */
   public static class StringAdapterResourceBundle extends ResourceBundle {
     protected ResourceBundle bundle;

@@ -34,6 +34,8 @@ public interface ApplicationService extends ApplicationComponent, Service, Compo
 
   /**
    * The key of the path of the action in the request.
+   * 
+   * @since 1.1
    */
   public static final String ACTION_PATH_KEY = "widgetActionPath";
 

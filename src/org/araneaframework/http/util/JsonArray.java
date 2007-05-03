@@ -24,6 +24,7 @@ import org.araneaframework.core.Assert;
  * An ordered list of values in JSON data-interchange format.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.1
  */
 public class JsonArray implements Serializable {
 

@@ -24,6 +24,7 @@ import org.araneaframework.framework.TopServiceContext;
  * Utility class for getting system form's fields from environment.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.1
  */
 public abstract class EnvironmentUtil {
   

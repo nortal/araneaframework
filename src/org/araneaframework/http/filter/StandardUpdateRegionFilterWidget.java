@@ -50,6 +50,7 @@ import org.araneaframework.http.util.JsonObject;
  * @author Nikita Salnikov-Tarnovski
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.1
  */
 public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implements UpdateRegionContext {
   static private final Logger log = Logger.getLogger(StandardUpdateRegionFilterWidget.class);

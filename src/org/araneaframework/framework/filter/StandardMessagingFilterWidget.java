@@ -54,6 +54,7 @@ import org.araneaframework.http.util.JsonObject;
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
 
+  /** @since 1.1 */
   public static final String MESSAGE_REGION_KEY = "messages";
 
   protected Map permanentMessages;
@@ -224,6 +225,9 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
    * Internal inner classes
    * ************************************************************************************/
 
+  /**
+   * @since 1.1
+   */
   protected class MessageRegionHandler implements UpdateRegionContext.RegionHandler {
 
     public String getContent() throws Exception {

@@ -25,11 +25,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
-import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.NoCurrentInputDataSetException;
 import org.araneaframework.core.NoSuchNarrowableException;
-import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.HttpOutputData;
 
 /**
@@ -41,8 +39,6 @@ import org.araneaframework.http.HttpOutputData;
 public class StandardServletOutputData implements HttpOutputData {
   private HttpServletRequest req;
   private HttpServletResponse res;
-  
-  private StringBuffer scopeBuf = new StringBuffer();
   
   private Map extensions = new HashMap();
   
@@ -57,37 +53,6 @@ public class StandardServletOutputData implements HttpOutputData {
     this.res = response;
     
     extend(HttpServletResponse.class, res);
-  }
-
-  public Path getScope() {
-    return new StandardPath(scopeBuf.toString());
-  }
-
-  public void pushScope(Object step) {
-    Assert.isInstanceOfParam(String.class, step, "step");
-    Assert.notEmptyParam((String) step, "step");
-    
-    if (scopeBuf.length()>0) {
-      scopeBuf.append("."+step);
-    }
-    else {
-      scopeBuf.append(step);
-    }
-  }
-
-  public void popScope() {
-    if (scopeBuf.toString().lastIndexOf(".") != -1) {
-      scopeBuf.setLength(scopeBuf.toString().lastIndexOf("."));
-    }
-    else {
-      scopeBuf.setLength(0);
-    }
-  }
-  
-  public void restoreScope(Path scope) {
-    Assert.notNullParam(scope, "scope");
-    
-    scopeBuf = new StringBuffer(scope.toString());
   }
 
   public void extend(Class interfaceClass, Object implementation) {

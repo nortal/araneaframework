@@ -56,6 +56,8 @@ public class StandardHttpSessionRouterService extends BaseService {
   
   /**
    * The synchronization parameter key in the request.
+   *
+   * @since 1.1
    */
   public static final String SYNC_PARAMETER_KEY = "sync";
   
@@ -66,6 +68,8 @@ public class StandardHttpSessionRouterService extends BaseService {
   
   /**
    * The key of the synchronization object in the session.
+   *
+   * @since 1.1
    */
   public static final String SESSION_SYNC_OBJECT_KEY = "sessionSyncObject";
   
@@ -109,6 +113,9 @@ public class StandardHttpSessionRouterService extends BaseService {
     }
   }
   
+  /**
+   * @since 1.1
+   */
   protected void doAction(Path path, InputData input, OutputData output, HttpSession sess) throws Exception {
     /*
      * Both "synchronized" and "unsynchronized" requests use the session object
@@ -149,13 +156,13 @@ public class StandardHttpSessionRouterService extends BaseService {
           }
         }
         finally {
-          locks.remove(sess);
+          locks.remove(sess); // XXX why do we remove the lock? why not do lock.writeLock().release();
         }        
       }
     }
   }
   
-  public void propagate(Message message, InputData input, OutputData output) {
+  public void propagate(Message message, InputData input, OutputData output) { // XXX who uses this method?
     HttpSession sess = ServletUtil.getRequest(input).getSession();
     
     RelocatableService service = getOrCreateSessionService(sess);
@@ -169,7 +176,7 @@ public class StandardHttpSessionRouterService extends BaseService {
     Object syncObject = sess.getAttribute(SESSION_SYNC_OBJECT_KEY);
     if (syncObject == null) {
       syncObject = new Serializable() {};
-      sess.setAttribute(SESSION_SYNC_OBJECT_KEY, syncObject);
+      sess.setAttribute(SESSION_SYNC_OBJECT_KEY, syncObject); // XXX why do we store this object in session? why not keep it in a synchronized map?
     }
     return syncObject;
   }

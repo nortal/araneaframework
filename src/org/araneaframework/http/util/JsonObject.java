@@ -24,6 +24,7 @@ import org.araneaframework.core.Assert;
  * A collection of name/value pairs in JSON data-interchange format.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.1
  */
 public class JsonObject implements Serializable {
 

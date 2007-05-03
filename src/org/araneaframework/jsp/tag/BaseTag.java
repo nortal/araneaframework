@@ -197,7 +197,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
       attributeBackupMap.put(key, currentAttribute);
 
     // Set new value
-    addGlobalContextEntry(key, value);
+    setGlobalContextEntry(key, value);
     if (value != null)
       pageContext.setAttribute(key, value, PageContext.REQUEST_SCOPE);
     else
@@ -313,14 +313,23 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
     return ServletUtil.getOutputData(pageContext.getRequest());
   }
 
+  /**
+   * @since 1.1
+   */
   protected Environment getEnvironment() throws JspException {
     return ServletUtil.getEnvironment(pageContext.getRequest());
   }
 
+  /**
+   * @since 1.1
+   */
   protected ApplicationWidget getContextWidget() {
     return JspWidgetUtil.getContextWidget(pageContext);
   }
 
+  /**
+   * @since 1.1
+   */
   protected String getContextWidgetFullId() {
     return JspWidgetUtil.getContextWidgetFullId(pageContext);
   }
@@ -371,7 +380,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
       for(Iterator j = attributeBackupMap.entrySet().iterator(); j.hasNext();) {
         Map.Entry entry2 = (Map.Entry)j.next();
         Object oldAttribute = entry2.getValue();
-        addGlobalContextEntry((String)entry2.getKey(), oldAttribute);
+        setGlobalContextEntry((String)entry2.getKey(), oldAttribute);
         if (oldAttribute != null)
           pageContext.setAttribute((String)entry2.getKey(), oldAttribute, scope);
         else
@@ -384,10 +393,10 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   }
 
   /* ***********************************************************************************
-   * Hiding and restoring contextentries when widgetInclude is done
+   * Hiding and restoring contextentries when a child widget is rendered
    * ***********************************************************************************/
 
-  protected void addGlobalContextEntry(String key, Object value) {
+  private void setGlobalContextEntry(String key, Object value) {
     if (hiddenContextEntries != null) {
       hiddenContextEntries = null;
       throw new AraneaRuntimeException("ContextEntries were not restored properly");
@@ -402,18 +411,23 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
           globalContextEntries = new HashSet();
           addContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY, globalContextEntries);
           // Hide contextentries that are set in ServletUtil.include
+          globalContextEntries.add(ServletUtil.UIWIDGET_KEY);
           globalContextEntries.add(WidgetContextTag.CONTEXT_WIDGET_KEY);
           globalContextEntries.add(Environment.ENVIRONMENT_KEY);
           globalContextEntries.add(WidgetTag.WIDGET_KEY);
           globalContextEntries.add(WidgetTag.WIDGET_ID_KEY);
           globalContextEntries.add(WidgetTag.WIDGET_VIEW_MODEL_KEY);
           globalContextEntries.add(WidgetTag.WIDGET_VIEW_DATA_KEY);
+          //XXX also hide ServletUtil.LOCALIZATION_CONTEXT_KEY ?
         }
       }
       globalContextEntries.add(key);
     }
   }
 
+  /**
+   * @since 1.1
+   */
   protected void hideGlobalContextEntries(PageContext pageContext) {
     if (globalContextEntries == null)
       globalContextEntries = (Set) getContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY);
@@ -434,6 +448,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
     }
   }
 
+  /**
+   * @since 1.1
+   */
   protected void restoreGlobalContextEntries(PageContext pageContext) {
     if (hiddenContextEntries == null)
       return;
@@ -444,7 +461,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
     hiddenContextEntries = null;
   }
 
-  protected void resetGlobalContextEntries() {
+  private void resetGlobalContextEntries() {
     if (globalContextEntries != null) {
       globalContextEntries = null;
     }

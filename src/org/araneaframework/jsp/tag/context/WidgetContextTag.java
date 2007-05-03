@@ -29,14 +29,20 @@ import org.araneaframework.jsp.tag.uilib.WidgetTag;
  */
 public class WidgetContextTag extends WidgetTag {
 
+  /** @since 1.1 */
   public static final String CONTEXT_WIDGET_KEY = "org.araneaframework.jsp.tag.context.WidgetContextTag.CONTEXTWIDGET";
   
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
+    
+    /*
+     * XXX id == null usage is deprecated -- you no longer need to put a
+     * <widgetContext> tag without an id at the top of your JSP.
+     */
+    
     if (id != null) {
       addContextEntry(CONTEXT_WIDGET_KEY, widget);
-    }    
+    }
     
     return EVAL_BODY_INCLUDE;
   }

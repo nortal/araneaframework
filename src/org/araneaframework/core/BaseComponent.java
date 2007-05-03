@@ -128,6 +128,8 @@ public abstract class BaseComponent implements Component {
   
   /**
    * Sets the environment of this BaseComponent to environment. 
+   * 
+   * @since 1.1
    */
   protected void _setScope(Scope scope) {
     this.scope = scope;
@@ -164,6 +166,9 @@ public abstract class BaseComponent implements Component {
     incCallCount();
   }
   
+  /**
+   * @since 1.1
+   */
   protected synchronized void _strictStartCall() throws IllegalStateException {
 	_strictCheckCall();
 	incCallCount();
@@ -210,6 +215,7 @@ public abstract class BaseComponent implements Component {
    * Checks if this component is currently alive. 
    * This is strict check that disallows leftover calls to dead components.
    * @throws IllegalStateException when component is unborn or dead
+   * @since 1.1
    */
   protected void _strictCheckCall() throws IllegalStateException {
 	if (!isAlive()) {
@@ -250,6 +256,8 @@ public abstract class BaseComponent implements Component {
   /**
    * Adds a child component to this component with the key and initilizes it with the
    * specified Environment env. 
+   * 
+   * @since 1.1
    */
   protected void _addComponent(Object key, Component component, Scope scope, Environment env){
     Assert.notNull(this, key, 

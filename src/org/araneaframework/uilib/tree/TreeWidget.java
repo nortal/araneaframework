@@ -93,6 +93,8 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   /**
    * Set if AJAX requests to tree widget are synchronized. See
    * {@link TreeContext#useSynchronizedActions()}.
+   * 
+   * @since 1.1
    */
   public void setUseSynchronizedActions(boolean useSynchronizedActions) {
     this.useSynchronizedActions = useSynchronizedActions;

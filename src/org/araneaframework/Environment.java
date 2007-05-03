@@ -35,6 +35,8 @@ public interface Environment extends Serializable {
   
   /**
    * The key that can be used to retrieve Environment (as an example a request scope attribute).
+   * 
+   * @since 1.1
    */
   public static final String ENVIRONMENT_KEY = "org.araneaframework.Environment";
   

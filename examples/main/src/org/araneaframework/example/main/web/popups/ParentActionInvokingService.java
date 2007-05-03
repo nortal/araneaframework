@@ -44,7 +44,7 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ServletUtil.getResponse(output);
 		String script = 
-			    "if (window.opener) { window.opener.araneaPage().action(document.getElementById('" + widgetId  + "'), 'testAction', '" + widgetId.substring(0, widgetId.lastIndexOf('.')) + "' , '" + value + "', true, window.opener['tehcallback']);  }" +
+			    "if (window.opener) { window.opener.araneaPage().action(document.getElementById('" + widgetId  + "'), 'testAction', '" + widgetId.substring(0, widgetId.lastIndexOf('.')) + "' , '" + value + "', window.opener['tehcallback']);  }" +
 			    "closeWindow(50);";
 
 		String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);

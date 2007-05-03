@@ -16,12 +16,14 @@
 
 package org.araneaframework;
 
+import org.araneaframework.http.HttpOutputData;
+
 
 /**
- * A map of attributes with a scope. As OutputData is passed to different methods
- * of BaseApplicationComponent and derivates, the scope helps the components understand
- * where they are located in the greater hirearchy. 
- *  
+ * Provides access to {@link InputData}.
+ * 
+ * @see HttpOutputData
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

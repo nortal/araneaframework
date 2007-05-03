@@ -373,6 +373,9 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 		return StringUtils.substringBeforeLast(highValueId, HIGH_SUFFIX);
 	}
 	
+  /** 
+   * @since 1.1
+   */
 	protected void fireChange() {
 		changed = true;
 	}
@@ -381,6 +384,8 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * Returns whether the basic configuration that specifies which items are
 	 * shown has changed since last call to this {@link BaseFilterHelper}'s {@link BaseFilterHelper#checkChanged()} 
 	 * method.
+   * 
+   * @since 1.1
 	 */
 	public boolean checkChanged() {
 		boolean result = changed;

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
 	<files content-type="text/javascript">
-		<file path="js/tiny_mce/plugins/searchreplace/jscripts/search.js"/>
-		<file path="js/tiny_mce/plugins/searchreplace/jscripts/replace.js"/>
 		<file path="js/tiny_mce/plugins/searchreplace/langs/en.js"/>
+		<file path="js/tiny_mce/plugins/searchreplace/jscripts/searchreplace.js"/>
 		<file path="js/tiny_mce/plugins/searchreplace/editor_plugin_src.js"/>
 		<file path="js/tiny_mce/plugins/searchreplace/editor_plugin.js"/>
 		<file path="js/tiny_mce/plugins/zoom/editor_plugin_src.js"/>
@@ -44,6 +43,7 @@
 		<file path="js/tiny_mce/plugins/layer/editor_plugin_src.js"/>
 		<file path="js/tiny_mce/plugins/layer/editor_plugin.js"/>
 		<file path="js/tiny_mce/plugins/preview/langs/en.js"/>
+		<file path="js/tiny_mce/plugins/preview/jscripts/embed.js"/>
 		<file path="js/tiny_mce/plugins/preview/editor_plugin.js"/>
 		<file path="js/tiny_mce/plugins/preview/editor_plugin_src.js"/>
 		<file path="js/tiny_mce/plugins/noneditable/editor_plugin_src.js"/>
@@ -63,9 +63,6 @@
 		<file path="js/tiny_mce/plugins/flash/langs/en.js"/>
 		<file path="js/tiny_mce/plugins/flash/editor_plugin_src.js"/>
 		<file path="js/tiny_mce/plugins/flash/editor_plugin.js"/>
-		<file path="js/tiny_mce/plugins/_template/langs/en.js"/>
-		<file path="js/tiny_mce/plugins/_template/editor_plugin_src.js"/>
-		<file path="js/tiny_mce/plugins/_template/editor_plugin.js"/>
 		<file path="js/tiny_mce/plugins/paste/jscripts/pastetext.js"/>
 		<file path="js/tiny_mce/plugins/paste/jscripts/pasteword.js"/>
 		<file path="js/tiny_mce/plugins/paste/langs/en.js"/>
@@ -87,6 +84,38 @@
 		<file path="js/tiny_mce/plugins/save/langs/en.js"/>
 		<file path="js/tiny_mce/plugins/save/editor_plugin_src.js"/>
 		<file path="js/tiny_mce/plugins/save/editor_plugin.js"/>
+		<file path="js/tiny_mce/plugins/bbcode/editor_plugin_src.js"/>
+		<file path="js/tiny_mce/plugins/bbcode/editor_plugin.js"/>
+		<file path="js/tiny_mce/plugins/devkit/editor_plugin_src.js"/>
+		<file path="js/tiny_mce/plugins/devkit/editor_plugin.js"/>
+		<file path="js/tiny_mce/plugins/devkit/jscripts/devkit.js"/>
+		<file path="js/tiny_mce/plugins/devkit/jscripts/diff.js"/>
+		<file path="js/tiny_mce/plugins/devkit/langs/en.js"/>
+		<file path="js/tiny_mce/plugins/media/editor_plugin.js"/>
+		<file path="js/tiny_mce/plugins/media/editor_plugin_src.js"/>
+		<file path="js/tiny_mce/plugins/media/jscripts/embed.js"/>
+		<file path="js/tiny_mce/plugins/media/jscripts/media.js"/>
+		<file path="js/tiny_mce/plugins/media/langs/en.js"/>
+		<file path="js/tiny_mce/plugins/nonbreaking/editor_plugin.js"/>
+		<file path="js/tiny_mce/plugins/nonbreaking/editor_plugin_src.js"/>
+		<file path="js/tiny_mce/plugins/nonbreaking/langs/en.js"/>
+		<file path="js/tiny_mce/plugins/template/editor_plugin.js"/>
+		<file path="js/tiny_mce/plugins/template/editor_plugin_src.js"/>
+		<file path="js/tiny_mce/plugins/template/jscripts/template.js"/>
+		<file path="js/tiny_mce/plugins/template/langs/en.js"/>
+		<file path="js/tiny_mce/plugins/visualchars/editor_plugin.js"/>
+		<file path="js/tiny_mce/plugins/visualchars/editor_plugin_src.js"/>
+		<file path="js/tiny_mce/plugins/visualchars/langs/en.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/editor_plugin.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/editor_plugin_src.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/jscripts/abbr.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/jscripts/acronym.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/jscripts/attributes.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/jscripts/cite.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/jscripts/del.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/jscripts/element_common.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/jscripts/ins.js"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/langs/en.js"/>
 		<file path="js/tiny_mce/themes/simple/editor_template_src.js"/>
 		<file path="js/tiny_mce/themes/simple/editor_template.js"/>
 		<file path="js/tiny_mce/themes/advanced/jscripts/source_editor.js"/>
@@ -137,6 +166,16 @@
 		<file path="js/tiny_mce/plugins/inlinepopups/css/inlinepopup.css"/>
 		<file path="js/tiny_mce/plugins/advlink/css"/>
 		<file path="js/tiny_mce/plugins/advlink/css/advlink.css"/>
+		<file path="js/tiny_mce/plugins/devkit/css/devkit_ui.css"/>
+		<file path="js/tiny_mce/plugins/devkit/css/devkit.css"/>
+		<file path="js/tiny_mce/plugins/fullscreen/css/page.css"/>
+		<file path="js/tiny_mce/plugins/media/css/content.css"/>
+		<file path="js/tiny_mce/plugins/media/css/media.css"/>
+		<file path="js/tiny_mce/plugins/searchreplace/css/searchreplace.css"/>
+		<file path="js/tiny_mce/plugins/template/css/template.css"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/css/attributes.css"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/css/popup.css"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/css/xhtmlxtras.css"/>
 		<file path="js/tiny_mce/themes/simple/css"/>
 		<file path="js/tiny_mce/themes/simple/css/editor_content.css"/>
 		<file path="js/tiny_mce/themes/simple/css/editor_ui.css"/>
@@ -146,11 +185,14 @@
 		<file path="js/tiny_mce/themes/advanced/css/editor_content.css"/>
 		<file path="js/tiny_mce/themes/advanced/css/editor_ui.css"/>
 		<file path="js/tiny_mce/themes/advanced/css/editor_popup.css"/>
+		<file path="js/tiny_mce/themes/advanced/css/colorpicker.css"/>
 	</files>
 	
 	<files content-type="image/gif">
 		<file path="js/tiny_mce/plugins/searchreplace/images/replace.gif"/>
 		<file path="js/tiny_mce/plugins/searchreplace/images/search.gif"/>
+		<file path="js/tiny_mce/plugins/searchreplace/images/replace_all_button_bg.gif"/>
+		<file path="js/tiny_mce/plugins/searchreplace/images/replace_button_bg.gif"/>
 		<file path="js/tiny_mce/plugins/contextmenu/images/spacer.gif"/>
 		<file path="js/tiny_mce/plugins/directionality/images/rtl.gif"/>
 		<file path="js/tiny_mce/plugins/directionality/images/ltr.gif"/>
@@ -193,17 +235,20 @@
 		<file path="js/tiny_mce/plugins/layer/images/absolute.gif"/>
 		<file path="js/tiny_mce/plugins/layer/images/backward.gif"/>
 		<file path="js/tiny_mce/plugins/layer/images/forward.gif"/>
+		<file path="js/tiny_mce/plugins/layer/images/insertlayer.gif"/>
+		<file path="js/tiny_mce/plugins/layer/images/movebackward.gif"/>
+		<file path="js/tiny_mce/plugins/layer/images/moveforward.gif"/>
 		<file path="js/tiny_mce/plugins/preview/images/preview.gif"/>
 		<file path="js/tiny_mce/plugins/iespell/images/iespell.gif"/>
 		<file path="js/tiny_mce/plugins/style/images/apply_button_bg.gif"/>
 		<file path="js/tiny_mce/plugins/style/images/style_info.gif"/>
+		<file path="js/tiny_mce/plugins/style/images/styleprops.gif"/>
 		<file path="js/tiny_mce/plugins/fullpage/images/fullpage.gif"/>
 		<file path="js/tiny_mce/plugins/fullpage/images/move_down.gif"/>
 		<file path="js/tiny_mce/plugins/fullpage/images/move_up.gif"/>
 		<file path="js/tiny_mce/plugins/fullpage/images/add.gif"/>
 		<file path="js/tiny_mce/plugins/fullpage/images/remove.gif"/>
 		<file path="js/tiny_mce/plugins/flash/images/flash.gif"/>
-		<file path="js/tiny_mce/plugins/_template/images/template.gif"/>
 		<file path="js/tiny_mce/plugins/paste/images/pasteword.gif"/>
 		<file path="js/tiny_mce/plugins/paste/images/pastetext.gif"/>
 		<file path="js/tiny_mce/plugins/paste/images/selectall.gif"/>
@@ -214,6 +259,25 @@
 		<file path="js/tiny_mce/plugins/inlinepopups/images/spacer.gif"/>
 		<file path="js/tiny_mce/plugins/inlinepopups/images/window_resize.gif"/>
 		<file path="js/tiny_mce/plugins/save/images/save.gif"/>
+		<file path="js/tiny_mce/plugins/devkit/images/flip_down.gif"/>
+		<file path="js/tiny_mce/plugins/devkit/images/flip_up.gif"/>
+		<file path="js/tiny_mce/plugins/media/images/flash.gif"/>
+		<file path="js/tiny_mce/plugins/media/images/media.gif"/>
+		<file path="js/tiny_mce/plugins/media/images/quicktime.gif"/>
+		<file path="js/tiny_mce/plugins/media/images/realmedia.gif"/>
+		<file path="js/tiny_mce/plugins/media/images/shockwave.gif"/>
+		<file path="js/tiny_mce/plugins/media/images/windowsmedia.gif"/>
+		<file path="js/tiny_mce/plugins/nonbreaking/images/nonbreaking.gif"/>
+		<file path="js/tiny_mce/plugins/template/images/template.gif"/>
+		<file path="js/tiny_mce/plugins/visualchars/images/visualchars.gif"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/images/abbr.gif"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/images/acronym.gif"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/images/attribs.gif"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/images/cite.gif"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/images/date_time.gif"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/images/del.gif"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/images/ins.gif"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/images/remove_button_bg.gif"/>
 		<file path="js/tiny_mce/themes/simple/images/underline_ru.gif"/>
 		<file path="js/tiny_mce/themes/simple/images/bold.gif"/>
 		<file path="js/tiny_mce/themes/simple/images/numlist.gif"/>
@@ -306,9 +370,11 @@
 		<file path="js/tiny_mce/themes/advanced/docs/en/images/insert_table_window.gif"/>
 	</files>
 	
+	<files content-type="image/jpeg">
+		<file path="js/tiny_mce/themes/advanced/images/colors.jpg"/>
+	</files>
+	
 	<files content-type="text/html">
-		<file path="js/tiny_mce/plugins/searchreplace/replace.htm"/>
-		<file path="js/tiny_mce/plugins/searchreplace/search.htm"/>
 		<file path="js/tiny_mce/plugins/advhr/rule.htm"/>
 		<file path="js/tiny_mce/plugins/emotions/emotions.htm"/>
 		<file path="js/tiny_mce/plugins/table/cell.htm"/>
@@ -320,12 +386,22 @@
 		<file path="js/tiny_mce/plugins/fullpage/fullpage.htm"/>
 		<file path="js/tiny_mce/plugins/fullpage/blank.htm"/>
 		<file path="js/tiny_mce/plugins/flash/flash.htm"/>
-		<file path="js/tiny_mce/plugins/_template/popup.htm"/>
 		<file path="js/tiny_mce/plugins/paste/pastetext.htm"/>
 		<file path="js/tiny_mce/plugins/paste/blank.htm"/>
 		<file path="js/tiny_mce/plugins/paste/pasteword.htm"/>
 		<file path="js/tiny_mce/plugins/fullscreen/fullscreen.htm"/>
 		<file path="js/tiny_mce/plugins/advlink/link.htm"/>
+		<file path="js/tiny_mce/plugins/devkit/devkit.htm"/>
+		<file path="js/tiny_mce/plugins/media/media.htm"/>
+		<file path="js/tiny_mce/plugins/searchreplace/searchreplace.htm"/>
+		<file path="js/tiny_mce/plugins/template/blank.htm"/>
+		<file path="js/tiny_mce/plugins/template/template.htm"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/abbr.htm"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/acronym.htm"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/attributes.htm"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/cite.htm"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/del.htm"/>
+		<file path="js/tiny_mce/plugins/xhtmlxtras/ins.htm"/>
 		<file path="js/tiny_mce/themes/advanced/docs/en/about.htm"/>
 		<file path="js/tiny_mce/themes/advanced/docs/en/index.htm"/>
 		<file path="js/tiny_mce/themes/advanced/docs/en/create_accessible_content.htm"/>
