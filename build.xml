@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="build-all" name="Aranea"> 
+<project 
+	xmlns:ivy="antlib:org.apache.ivy.ant"
+	basedir="." 
+	default="build" 
+	name="Aranea" > 
+
 	<description>
 		Code build script.
 	</description>
@@ -8,16 +13,7 @@
 	<property name="project.title" value="Aranea Web Framework"/>
 	<property name="project.version" value="${araneaframework.version} (Build ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>
 	
-	<!--Set the classpath-->
-	<path id="classpath">
-		<fileset dir="lib" includes="**/*.jar"/>
-	</path>
-	
-	<taskdef
-		name="webdoclet"
-		classname="xdoclet.modules.web.WebDocletTask"
-		classpathref="classpath"
-	/>
+	<property name="lib.dir" value="lib"/>
 	
 	<!-- Clean up build system results -->
 	<target name="clean-all" depends="clean"  description="Clean up build system results">
@@ -35,11 +31,31 @@
 		<delete dir="dist" failonerror="false"/>
 	</target>
 	
+	<target name="fetch-libs" depends="init-ivy">
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"/>
+	</target>
+	
 	<!-- Initialize the build system -->
 	<target name="init">
 		<mkdir dir="build" />
+		<path id="classpath">
+			<fileset dir="${lib.dir}/default/" includes="*.jar"/>
+			<fileset dir="${lib.dir}/j2ee/" includes="*.jar"/>
+		</path>
 	</target>
 	
+	<target name='init-ivy'>
+		<path id="ivy.lib.path">
+	      <fileset dir="lib/ivy" includes="*.jar"/>
+		</path>
+
+	 	<taskdef resource='fr/jayasoft/ivy/ant/antlib.xml'
+	             uri='antlib:fr.jayasoft.ivy.ant'
+	             classpathref='ivy.lib.path'/>
+		
+		<ivy:configure file="ivysettings.xml" />
+	</target>
+
 	<!-- Build the code -->
 	<target name="build" depends="tld, jar" description="Build the code">
 	</target>
@@ -62,6 +78,12 @@
 	<target name="tld" depends="tld-check,init" unless="tld-check.uptodate">	
 		<mkdir dir="build/tmp/presentation/META-INF" />
 		
+		<taskdef
+			name="webdoclet"
+			classname="xdoclet.modules.web.WebDocletTask"
+			classpathref="classpath"
+		/>
+
 		<webdoclet destdir="build/tmp/presentation/META-INF">
 			<fileset 
 				dir="src" includes="**/*Tag.java"/>

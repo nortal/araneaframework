@@ -19,12 +19,6 @@
 		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
 	</path>
 	
-	<taskdef
-		name="webdoclet"
-		classname="xdoclet.modules.web.WebDocletTask"
-		classpathref="classpath"
-	/>
-	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
 		<delete dir="war/WEB-INF/classes" failonerror="false"/>

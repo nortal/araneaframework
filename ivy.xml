@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module 
+	version="1.3" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
+
+  <info organisation="org.araneaframework" module="aranea" revision="1.1M1">
+  	<license name="APL 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+  </info>
+
+  <!-- <configurations></configurations> -->
+  <!--  <publications></publications>-->
+
+  <dependencies>
+  	<!-- "required" -->
+  	<dependency org="commons-collections" rev="3.2" name="commons-collections"/>
+  	<dependency org="commons-el" rev="1.0" name="commons-el"/>
+  	<dependency org="commons-lang" rev="2.3" name="commons-lang"/>
+  	<dependency org="commons-validator" rev="1.3.1" name="commons-validator"/>
+  	<dependency org="jakarta-regexp" rev="1.4" name="jakarta-regexp"/>
+  	<dependency org="log4j" rev="1.2.14" name="log4j"/>
+  	<dependency org="springframework" rev="1.2.6" name="spring"/>
+  	
+  	<dependency org="taglibs" rev="1.0.6" name="standard"/>
+  	<!-- dependency org="servletapi" rev="2.3" name="servletapi"/ -->
+  	<!-- XXX: for some reason, ivy cannot fetch j2ee!! 
+  			inconsistent module descriptor file found in 'http://www.ibiblio.org/maven2/javax/j2ee/j2ee/1.4/j2ee-1.4.pom': 
+  			bad organisation: expected='javax.j2ee' found='javax'
+  	-->
+    <!-- dependency org="javax.j2ee" rev="1.4" name="j2ee"/ -->
+
+	<!-- "buildtime" -->
+
+	<dependency org="asm" rev="2.2.1" name="asm"/>
+	<dependency org="asm" rev="1.5.3" name="asm-attrs"/>
+	
+	<dependency org="xdoclet" rev="1.2.3" name="xdoclet"/>
+	<dependency org="xdoclet" rev="1.2.3" name="xdoclet-web-module"/>
+	<dependency org="xdoclet" rev="1.2.3" name="xdoclet-hibernate-module"/>
+	<dependency org="xdoclet" rev="1.2.3" name="xdoclet-xdoclet-module"/>
+	<dependency org="xdoclet" rev="1.1" name="xjavadoc"/>
+	
+	<dependency org="cobertura" rev="1.7" name="cobertura"/>
+	<dependency org="commons-logging" rev="1.1" name="commons-logging"/>
+	<dependency org="oro" rev="2.0.8" name="oro"/>
+
+	<dependency org="javancss" rev="28.49" name="javancss"/>
+	<dependency org="javancss" rev="28.49" name="jhbasic"/>	
+	<dependency org="javancss" rev="28.49" name="ccl"/>
+	
+	<dependency org="junit" rev="3.8.1" name="junit"/>
+	<dependency org="springframework" rev="1.2.6" name="spring-mock"/>
+	
+    <dependency org="jstl" rev="1.0.3" name="jstl"/>
+	<dependency org="xml-apis" rev="1.3.04" name="xml-apis"/>
+	
+	<!-- "optional" -->
+	<dependency org="base64" rev="1.0" name="base64"/>
+	<dependency org="commons-fileupload" rev="1.2" name="commons-fileupload"/>
+	<dependency org="commons-io" rev="1.3" name="commons-io"/>
+	<dependency org="xstream" rev="1.2" name="xstream"/>
+	
+  </dependencies>
+
+<!--  <conflicts></conflicts>-->
+</ivy-module>
