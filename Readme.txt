@@ -68,5 +68,5 @@ Documentation can be found in the "doc" directory.
 BUILDING THE DISTRIBUTION
   If you have downloaded the official distribution, 'ant build' will do.
   If you have checked out the source code from repository, then you need
-  to fetch the libraries before building, execute 'ant fetch-libs -lib lib/ivy/*.jar'
+  to fetch the libraries before building, execute 'ant fetch-libs -lib lib/ivy'
   followed by 'ant build'.
