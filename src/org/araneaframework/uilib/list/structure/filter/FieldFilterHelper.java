@@ -84,10 +84,10 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	/**
 	 * Sets the current strickness behaivor.
 	 * 
-	 * @param stirct whether new filters should be strict.
+	 * @param strict whether new filters should be strict.
 	 */
-	public FieldFilterHelper setStrict(boolean stirct) {
-		super._setStrict(stirct);
+	public FieldFilterHelper setStrict(boolean strict) {
+		super._setStrict(strict);
 		return this;
 	}
 	
