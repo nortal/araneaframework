@@ -4,14 +4,14 @@ API changes in 1.1
 [Diff from 1.14.1.1 to 2.1.1.47]
 
 Core:
-* Component-s know their own Id-s (added getScope method). Interface Scope and
-  its implementation StandardScope have been added. Component's init method now
+* Component-s know their own Id-s (accessible with getScope() method). Interface Scope and
+  its implementation StandardScope have been added. Component's init() method now
   takes Scope as its first parameter. Implementation of that was done in
   BaseComponent.
-* Component-s have environment now (added getEnvironment method).
+* Component-s have accessible environment now (added getEnvironment() method).
 * Components' lifecycle is more strictly defined, there are three states:
   UNBORN, ALIVE and DEAD. Resurrection cannot occur anymore, an
-  IllegalStateException is thrown. Leftover calls do not throw exceptions
+  IllegalStateException will be thrown. Leftover calls do not throw exceptions
   anymore, they are silently ignored. BaseComponent implementation manages the
   lifecycle status. In addition to the existing isInitialized method, the
   protected methods isAlive and isDead were added to BaseComponent class.
@@ -20,12 +20,12 @@ Core:
   method in FormElement class runs the conversion and addInitEvent method in
   FormElement and ListWidget classes run the event only if the element/widget
   is alive.
-* Eliminated process call from widget's lifecycle. Deleted process method from
+* Eliminated process() method from widget's lifecycle. Deleted process() method from
   Widget interface and BaseWidget, BaseWidget.WidgetImpl,
   BaseApplicationWidget, ExceptionHandlingFlowContainerWidget,
   BaseFilterWidget, StandardTransactionFilterWidget, FormElement,
   GenericFormElement, BaseControl.WidgetImpl, DisplayControl,
-  StringArrayRequestControl classes. Deleted handleProcess method from
+  StringArrayRequestControl classes. Deleted handleProcess() method from
   BaseApplicationWidget, FormElement, BaseFormListWidget, ListWidget classes.
 * Added another constructor to StandardPath class, which takes Collection as an
   argument.
@@ -35,7 +35,7 @@ Core:
 * Eliminated OutputData attributes: deleted pushAttribute, popAttribute,
   getAttribute and getAttributes methods from OutputData interface (and
   StandardServletOutputData class).
-* Eliminated OutputData and InputData scoping: deleted getScope, pushScope,
+* Eliminated OutputData and InputData scoping: deleted getScope(), pushScope(),
   popScope and restoreScope methods from InputData (and
   StandardServletInputData) and OutputData (TODO StandardServletOutputData).
   Method getScopedData in InputData (and StandardServletInputData) now takes
@@ -62,7 +62,7 @@ Services and filters:
   were added in render method of StandardMessagingFilterWidget class).
 * Added showMessages, hideMessages, hideMessage, hideErrorMessage,
   hideWarningMessage and hideInfoMessage methods to MessageContext interface
-  and StandardMessagingFilterWidget class.
+  and its implementation StandardMessagingFilterWidget class.
 * Deleted POPUPS_KEY constant from PopupWindowContext interface. Added
   getPopups method to PopupWindowContext interface (and
   StandardPopupFilterWidget class) in order to access popup windows from
@@ -216,17 +216,18 @@ TreeWidget:
 * Added getFullId method to TreeNodeContext interface and TreeNodeWidget class.
 
 Forms:
-* Deleted deprecated "dirty" field, clean and isDirty methods from Data class.
-* Added isIgnoreEvents and setIgnoreEvents methods to FormElement class. //TODO ...
+* Deleted deprecated "dirty" field, clean() and isDirty() methods from Data class.
+* Added isIgnoreEvents and setIgnoreEvents methods to FormElement class. 
+  FormElement ignores events when it is disabled or was not rendered. 
 * Removed processRows method from BaseFormListWidget class. Removed addFormRow
-  method from BeanFormListWidget and FormListWidget classes.
-* Added addFlatElementAfter and addFlatElementBefore methods to FormWidget
-  class.
-* Added getMutableErrors method to GenericFormElement class. //TODO what changed in adding error messages in form elements / controls?
+  method from BeanFormListWidget and FormListWidget classes -- they moved to
+  BaseFormListWidget.
+* Added getMutableErrors method to GenericFormElement class. 
 * Added makeRequestIdToRowMapping method to ListWidget class. Added
   getAllItemsShown method to SequenceHelper class. Added checkChanged and
   fireChange methods to ListWidget, SequenceHelper, TypeHelper and BaseFilterHelper classes.
-* The add*ButtonToRowForm methods in FormListUtil class now return
+  ListWidget getItemRange() method acts lazily.
+* The add*ButtonToRowForm methods in FormListUtil class now return added
   ButtonControl.
 * Added getLongestPrefix and getShortestSuffix static methods to NameUtil
   class.
@@ -236,7 +237,6 @@ Forms:
   constructor parameter instead of Object. Also, the eventTarget field is of
   type Widget.
 //TODO something more about changes in forms and such?
-//TODO something about [Base]MenuWidget? removed some duplication with mainexample code?
 
 JavaScript:
 * Added getSystemForm and setSystemForm functions to AraneaPage instance.
