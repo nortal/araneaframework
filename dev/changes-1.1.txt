@@ -216,7 +216,8 @@ TreeWidget:
 * Added getFullId method to TreeNodeContext interface and TreeNodeWidget class.
 
 Forms:
-* Deleted deprecated "dirty" field, clean() and isDirty() methods from Data class.
+* Deleted deprecated "dirty" field, clean() and isDirty() methods from Data
+  class.
 * Added isIgnoreEvents and setIgnoreEvents methods to FormElement class. 
   FormElement ignores events when it is disabled or was not rendered. 
 * Removed processRows method from BaseFormListWidget class. Removed addFormRow
@@ -225,7 +226,8 @@ Forms:
 * Added getMutableErrors method to GenericFormElement class. 
 * Added makeRequestIdToRowMapping method to ListWidget class. Added
   getAllItemsShown method to SequenceHelper class. Added checkChanged and
-  fireChange methods to ListWidget, SequenceHelper, TypeHelper and BaseFilterHelper classes.
+  fireChange methods to ListWidget, SequenceHelper, TypeHelper and
+  BaseFilterHelper classes.
   ListWidget getItemRange() method acts lazily.
 * The add*ButtonToRowForm methods in FormListUtil class now return added
   ButtonControl.
@@ -236,7 +238,6 @@ Forms:
   ProxyOnClickEventListener and ValidatingProxyEventListener take Widget as
   constructor parameter instead of Object. Also, the eventTarget field is of
   type Widget.
-//TODO something more about changes in forms and such?
 
 JavaScript:
 * Added getSystemForm and setSystemForm functions to AraneaPage instance.
