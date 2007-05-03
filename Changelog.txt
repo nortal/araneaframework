@@ -2,7 +2,18 @@ ARANEA FRAMEWORK CHANGELOG
 ---------------------------
 2007.05.03    | Aranea 1.1-M1
 
-Many changes, see dev/changes-1.1.txt
+Features and Improvements
+    Widget's know their name (accessible with getScope() method)              | See #7
+    Real partial rendering support                                            | See #227
+    FormWidget addElement() method accepts hierarchial ids                    | See #171
+    Widget process() lifecycle method was removed (broke OO-encapsulation)    | See #367
+    Widget actions support real unsynchronized access (through session router)| See #319 
+    
+Bugfixes
+    Enforced component lifecycle (no resurrections)                           | See #321
+    Returning from init() method of widget wrapped in PopupFlowWidget failed  | See #312
+ 
+    Much more detailed changelog is available from SVN repo (dev/changes-1.1.txt)
 ---------------------------------------------------------------------------------------------
 2007.04.20    | Aranea 1.0.8
 
