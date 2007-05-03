@@ -45,11 +45,6 @@
 		</fileset>
 	</path>
 
-	<taskdef
-		name="webdoclet"
-		classname="xdoclet.modules.web.WebDocletTask"
-		classpathref="classpath"
-	/> 
 	<!-- Initializes defaults -->
 	<target name="init">
 	</target>
@@ -97,6 +92,12 @@
 	
 	<target name="tld" depends="tld-check,init" unless="tld-check.uptodate">	
 		<mkdir dir="build/tld/META-INF" />
+		
+		<taskdef
+			name="webdoclet"
+			classname="xdoclet.modules.web.WebDocletTask"
+			classpathref="classpath"
+		/> 
 		
 		<webdoclet destdir="build/tld/META-INF"
 			force="false"
