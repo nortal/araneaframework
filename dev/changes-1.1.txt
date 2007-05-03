@@ -1,7 +1,7 @@
 API changes in 1.1
 ------------------
 
-[Diff from 1.13.1.1 to 2.1.1.44]
+[Diff from 1.14.1.1 to 2.1.1.47]
 
 * Component-s know their own Id-s (added getScope method). Interface Scope and
   its implementation StandardScope have been added. Component's init method now
@@ -19,6 +19,13 @@ API changes in 1.1
   method in FormElement class runs the conversion and addInitEvent method in
   FormElement and ListWidget classes run the event only if the element/widget
   is alive.
+* Eliminated process call from widget's lifecycle. Deleted process method from
+  Widget interface and BaseWidget, BaseWidget.WidgetImpl,
+  BaseApplicationWidget, ExceptionHandlingFlowContainerWidget,
+  BaseFilterWidget, StandardTransactionFilterWidget, FormElement,
+  GenericFormElement, BaseControl.WidgetImpl, DisplayControl,
+  StringArrayRequestControl classes. Deleted handleProcess method from
+  BaseApplicationWidget, FormElement, BaseFormListWidget, ListWidget classes.
 * Added another constructor to StandardPath class, which takes Collection as an
   argument.
 * Deleted FLOW_KEY and CALL_STACK_KEY constants from FlowContext interface.
@@ -52,6 +59,9 @@ API changes in 1.1
   StandardMessagingFilterWidget class) in order to access messages from
   MessagesHtmlTag class (was previously done with OutputData attributes, which
   were added in render method of StandardMessagingFilterWidget class).
+* Added showMessages, hideMessages, hideMessage, hideErrorMessage,
+  hideWarningMessage and hideInfoMessage methods to MessageContext interface
+  and StandardMessagingFilterWidget class.
 * Deleted POPUPS_KEY constant from PopupWindowContext interface. Added
   getPopups method to PopupWindowContext interface (and
   StandardPopupFilterWidget class) in order to access popup windows from
@@ -97,6 +107,9 @@ API changes in 1.1
   pushing/popping the scope of OutputData, the current contextwidget is stored
   in a contextentry. Deleted contextWidgetId field from BaseFormElementHtmlTag
   class.
+* Added UIWIDGET_KEY constant to ServletUtil class. The including widget is
+  registered as a contextattribute in ServletUtil.include method under this
+  key.
 * Eliminated systemForm's Id. No duplicate systemform check is done in
   server-side nor client-side. Client-side JavaScript searches for the first
   form tag with arn-systemForm attribute. Removed systemFormId field from
@@ -138,11 +151,33 @@ API changes in 1.1
   "fe-span-${fullFormElementId}". Deleted static method generateId from
   BaseFormElementHtmlTag class.
 
-* UpdateRegion filter is a widget filter now. UpdateRegions use partial
-  rendering (updateRegion names have widget name prefixed with ':' as
-  separator).
+* UpdateRegion filter is a widget filter now: renamed
+  StandardUpdateRegionFilterService class to StandardUpdateRegionFilterWidget.
+  UpdateRegions use partial rendering, BaseUpdateRegionTag.doStartTag method
+  registers the region name and renderable widget Id in the filter.
 * Eliminated globalUpdateRegions. Messages and popups data is sent in JSON
   format, they have JavaScript handlers in client-side.
+* Updateregion names in arn-updrgns HTML tag are no longer quoted, they are
+  just comma-separated (see JspUpdateRegionUtil.formatUpdateRegionsJS method).
+* Added UpdateRegionContext interface.
+* ExceptionHandlingFlowContainerWidget class also overrides propagate method to
+  catch exceptions from that. When an exception is handled in
+  handleWidgetException method, UpdateRegionContext.disableOnce method is
+  called in order to force browser to reload the page if it was an AJAX
+  request.
+* Added MESSAGE_REGION_KEY constant and MessageRegionHandler inner class to
+  StandardMessagingFilterWidget class. On initialization, an instance of this
+  inner class is registered as a region handler under the name of the constant.
+* Added POPUP_REGION_KEY constant and PopupRegionHandler inner class to
+  StandardPopupFilterWidget class. On initialization, an instance of this inner
+  class is registered as a region handler under the name of the constant.
+* Added JsonArray and JsonObject utility classes.
+* Deleted POPUP_REGISTRATION_REGION constant from PopupRegistrationHtmlTag class.
+* MessagesHtmlTag writes out just one DIV instead of four. A DIV is always
+  written out, even if there are no messages. The style class "aranea-messages"
+  cannot be overriden by setStyleClass. Separated the writing into multiple
+  methods for easier overriding.
+* UpdateRegionRowsHtmlTag does not write BEGINROWS comment any more.
 
 * Deleted StandardSynchronizingFilterService, its functionality is merged into
   StandardHttpSessionRouterService. Deleted SynchronizingContext interface.
@@ -181,12 +216,23 @@ API changes in 1.1
   constructor parameter instead of Object. Also, the eventTarget field is of
   type Widget.
 
+* Deleted deprecated "dirty" field, clean and isDirty methods from Data class.
+* Added isIgnoreEvents and setIgnoreEvents methods to FormElement class. //TODO ...
+* Added addFlatElementAfter and addFlatElementBefore methods to FormWidget
+  class.
+* Added getMutableErrors method to GenericFormElement class. //TODO what changed in adding error messages in form elements / controls?
+* The add*ButtonToRowForm methods in FormListUtil class now return
+  ButtonControl.
+* Added getLongestPrefix and getShortestSuffix static methods to NameUtil
+  class.
+//TODO something more about changes in forms and such?
+
 JavaScript:
-* getSystemForm and setSystemForm functions were added to AraneaPage instance.
-  findSystemForm function was added to AraneaPage object. It searches for the
-  first form tag with arn-systemForm attribute and calls setSystemForm. It is
-  added as a systemLoadEvent, so it is called on page load [and after
-  updateregions AJAX request???].
+* Added getSystemForm and setSystemForm functions to AraneaPage instance.
+  Added findSystemForm function to AraneaPage object. It searches for the first
+  form tag with arn-systemForm attribute and calls setSystemForm. It is added
+  as a systemLoadEvent, so it is called on page load and after
+  updateregions AJAX request.
 * Because element-based traversing is not performed anymore, deleted
   AraneaTraverser and removed getTraverser function from AraneaPage instance
   (aranea.js). Moved the five getEvent* functions from AraneaTraverser to
@@ -195,13 +241,26 @@ JavaScript:
   (aranea.js) and renamed it to setSystemFormEncoding.
 * JavaScript functions related to date and time controls (fillTimeText,
   fillTimeSelect) and scrollhandler (saveScrollCoordinates) do not take
-  systemForm as a parameter anymore (aranea-ui.js).
+  systemForm as a parameter any more (aranea-ui.js).
 * getActionSubmitURL, action and action_6 functions in AraneaPage instance take
   sync as an additional parameter. It was added as the last parameter, so it
   can be safely omitted -- the default behaviour on the absence of this
   parameter is to make a synchronized request.
-* Removed AjaxAnywhere dependency, aa.js
+* Removed dependency on AjaxAnywhere, deleted aa.js. Updateregions
+  functionality uses Prototype library now.
 * Added builder.js from script.aculo.us.
+* Added handleRequestException function to AraneaPage. Exceptions from action
+  and AJAX submit (updateregions) are handled by it.
+* Added addRegionHandler function to AraneaPage. It can be used to register
+  handlers for data regions coming from AJAX responses. Added
+  TransactionIdRegionHandler, DocumentRegionHandler, MessageRegionHandler,
+  PopupRegionHandler and ReloadRegionHandler classes to AraneaPage. An instance
+  of each of them is also registered as region handler.
+* Added processResponse function to AraneaPage.
+* Added showLoadingMessage and hideLoadingMessage functions to AraneaPage.
+  These are called to show and hide the loading message before starting and
+  after completing the AJAX submit (updateregions).
+* Added Text class to aranea-util.js.
 
 Configuration and other files:
 * Added aranea.css, which contains style definitions for Aranea's AJAX loading
@@ -210,7 +269,7 @@ Configuration and other files:
   araneaWidgetFilters in default-aranea-conf.xml
 
 Examples:
-
+//TODO
 
 TODO diagrams of Aranea filter hierarchies, one for 1.0, other for 1.1.
 
