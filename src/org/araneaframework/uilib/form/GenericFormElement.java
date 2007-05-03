@@ -173,6 +173,35 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   public boolean isEvaluated() {
   	return converted && validated;
   }    
+  
+  public Set getErrors() {
+    if (errors == null)
+      errors = new HashSet();
+    return errors;
+  }
+  
+  public void addError(String error) {
+    Assert.notNullParam(error, "error");
+    
+    getErrors().add(error);
+  }
+  
+  public void addErrors(Set errors) {
+    Assert.noNullElementsParam(errors, "errors");
+    
+    getErrors().addAll(errors);
+  }
+  
+  /**
+   * Clears element errors.
+   */
+  public void clearErrors() {  
+    errors = null;
+  }
+  
+  public Object getValue() {
+    return null;
+  }
 
   //*********************************************************************
   //* OVERRIDABLE METHODS
@@ -253,35 +282,6 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     }
 
     return isValid();
-  }
-  
-  public Set getErrors() {
-    if (errors == null)
-      errors = new HashSet();
-    return errors;
-  }
-  
-  public void addError(String error) {
-    Assert.notNullParam(error, "error");
-    
-    getErrors().add(error);
-  }
-  
-  public void addErrors(Set errors) {
-    Assert.noNullElementsParam(errors, "errors");
-    
-    getErrors().addAll(errors);
-  }
-  
-  /**
-   * Clears element errors.
-   */
-  public void clearErrors() {  
-    errors = null;
-  }
-  
-  public Object getValue() {
-    return null;
   }
   
   //*********************************************************************
