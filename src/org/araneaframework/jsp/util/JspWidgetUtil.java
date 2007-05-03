@@ -27,6 +27,9 @@ import org.araneaframework.jsp.tag.context.WidgetContextTag;
  */
 public abstract class JspWidgetUtil {
 
+  /**
+   * @since 1.1
+   */
   public static ApplicationWidget getContextWidget(PageContext pageContext) {
     return (ApplicationWidget) pageContext.getRequest().getAttribute(WidgetContextTag.CONTEXT_WIDGET_KEY);
   }

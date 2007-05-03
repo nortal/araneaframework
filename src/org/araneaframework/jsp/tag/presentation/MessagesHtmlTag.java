@@ -75,6 +75,9 @@ public class MessagesHtmlTag extends PresentationTag {
     return EVAL_PAGE;
   }
 
+  /**
+   * @since 1.1
+   */
   protected void writeMessagesStart(Writer out, List entries) throws Exception {
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "class", getStyleClass());
@@ -86,10 +89,16 @@ public class MessagesHtmlTag extends PresentationTag {
     JspUtil.writeCloseStartTag(out);
   }
 
+  /**
+   * @since 1.1
+   */
   protected void writeMessagesEnd(Writer out, List entries) throws Exception {
     JspUtil.writeEndTag(out, "div");
   }
 
+  /**
+   * @since 1.1
+   */
   protected void writeMessages(Writer out, List entries) throws Exception {
     for (Iterator i = entries.iterator(); i.hasNext(); ) {
       Collection messages = (Collection) ((Map.Entry) i.next()).getValue();
@@ -104,10 +113,16 @@ public class MessagesHtmlTag extends PresentationTag {
     }
   }
 
+  /**
+   * @since 1.1
+   */
   protected void writeMessageBody(Writer out, String message) throws Exception {
     out.write(StringEscapeUtils.escapeHtml(message));
   }
 
+  /**
+   * @since 1.1
+   */
   protected void writeMessageSeparator(Writer out) throws Exception {
     JspUtil.writeStartEndTag(out, "br");
   }

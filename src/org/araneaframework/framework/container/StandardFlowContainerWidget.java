@@ -394,6 +394,9 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       return widget;
     }
     
+    /**
+     * @since 1.1
+     */
     public String getName() {
       return name;
     }

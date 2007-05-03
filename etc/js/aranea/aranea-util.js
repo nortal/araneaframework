@@ -60,6 +60,8 @@ function setElementAttr(elementStr, attrName, attrValue) {
 /**
  * A wrapper around String that lets to read text by lines and by chunks of
  * characters.
+ *
+ * @since 1.1
  */
 Text = Class.create();
 Text.prototype = {

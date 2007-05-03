@@ -109,9 +109,12 @@ function AraneaPage() {
   this.setSubmitted = function() { submitted = true; }
   
   var systemForm = null;
+  /** @since 1.1 */
   this.getSystemForm = function() { return systemForm; }
+  /** @since 1.1 */
   this.setSystemForm = function(_systemForm) { systemForm = _systemForm; }
 
+  /** @since 1.1 */
   this.setSystemFormEncoding = function(encoding) {
     this.addSystemLoadEvent(function() {
       systemForm.enctype = encoding;
@@ -119,18 +122,23 @@ function AraneaPage() {
     });
   }
 
+  /** @since 1.1 */
   this.getEventTarget = function(element) {
     return element.getAttribute('arn-trgtwdgt');
   }
+  /** @since 1.1 */
   this.getEventId = function(element) {
     return element.getAttribute('arn-evntId');
   }
+  /** @since 1.1 */
   this.getEventParam = function(element) {
     return element.getAttribute('arn-evntPar');
   }
+  /** @since 1.1 */
   this.getEventUpdateRegions = function(element) {
     return element.getAttribute('arn-updrgns');
   }
+  /** @since 1.1 */
   this.getEventPreCondition = function(element) {
     return element.getAttribute('arn-evntCond');
   }
@@ -327,6 +335,7 @@ AraneaPage.getRandomRequestId = function() {
 AraneaPage.init = function() {
   araneaPage().addSystemLoadEvent(Behaviour.apply);
 }
+/** @since 1.1 */
 AraneaPage.findSystemForm = function() {
   araneaPage().setSystemForm($A(document.getElementsByTagName('form')).find(
     function(element) {
@@ -424,9 +433,15 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
 }
 
 Object.extend(AraneaPage, {
+  /* Private fields */
   regionHandlers: new Hash(),
   loadingMessageId: 'aranea-loading-message',
+
+  /* Public fields */
+
+  /** @since 1.1 */
   loadingMessageContent: 'Loading...',
+  /** @since 1.1 */
   loadingMessagePositionHack: false,
 
   /**
@@ -434,6 +449,8 @@ Object.extend(AraneaPage, {
    * request. <code>process</code> function will be invoked on the handler
    * during processing the response. Data specific to this handler will be
    * passed as the first parameter to that function (<code>String</code>).
+   *
+   * @since 1.1
    */
   addRegionHandler: function(key, handler) {
     this.regionHandlers[key] = handler;
@@ -442,6 +459,8 @@ Object.extend(AraneaPage, {
   /**
    * Process response of an updateregions AJAX request. Should be called only
    * on successful response. Invokes region handlers.
+   *
+   * @since 1.1
    */
   processResponse: function(responseText) {
     var text = new Text(responseText);
@@ -461,6 +480,8 @@ Object.extend(AraneaPage, {
 
   /**
    * Exception handler that is invoked on Ajax.Request errors.
+   *
+   * @since 1.1
    */
   handleRequestException: function(request, exception) {
     throw exception;
@@ -469,6 +490,8 @@ Object.extend(AraneaPage, {
   /**
    * Create or show loading message at the top corner of the document. Called
    * before initiating an updateregions Ajax.Request.
+   *
+   * @since 1.1
    */
   showLoadingMessage: function() {
     var element = $(this.loadingMessageId);
@@ -492,6 +515,8 @@ Object.extend(AraneaPage, {
   /**
    * Hide loading message. Called after the completion of updateregions
    * Ajax.Request.
+   *
+   * @since 1.1
    */
   hideLoadingMessage: function() {
     var element = $(this.loadingMessageId);
@@ -504,6 +529,8 @@ Object.extend(AraneaPage, {
 
 /**
  * Region handler that updates transaction id of system form.
+ *
+ * @since 1.1
  */
 AraneaPage.TransactionIdRegionHandler = Class.create();
 AraneaPage.TransactionIdRegionHandler.prototype = {
@@ -520,6 +547,8 @@ AraneaPage.addRegionHandler('transactionId', new AraneaPage.TransactionIdRegionH
 
 /**
  * Region handler that updates DOM element content.
+ *
+ * @since 1.1
  */
 AraneaPage.DocumentRegionHandler = Class.create();
 AraneaPage.DocumentRegionHandler.prototype = {
@@ -547,6 +576,8 @@ AraneaPage.addRegionHandler('document', new AraneaPage.DocumentRegionHandler());
 
 /**
  * Region handler that updates the messages area.
+ *
+ * @since 1.1
  */
 AraneaPage.MessageRegionHandler = Class.create();
 AraneaPage.MessageRegionHandler.prototype = {
@@ -610,6 +641,8 @@ AraneaPage.addRegionHandler('messages', new AraneaPage.MessageRegionHandler());
 
 /**
  * Region handler that opens popup windows.
+ *
+ * @since 1.1
  */
 AraneaPage.PopupRegionHandler = Class.create();
 AraneaPage.PopupRegionHandler.prototype = {
@@ -633,6 +666,8 @@ AraneaPage.addRegionHandler('popups', new AraneaPage.PopupRegionHandler());
 /**
  * Region handler that forces a reload of the page by submitting the system
  * form.
+ *
+ * @since 1.1
  */
 AraneaPage.ReloadRegionHandler = Class.create();
 AraneaPage.ReloadRegionHandler.prototype = {

@@ -7,6 +7,7 @@ import java.util.Map;
  * Stores system form fields that will be written out in &lt;ui:systemForm&gt; tag.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.1
  */
 public interface SystemFormContext extends Serializable {
 

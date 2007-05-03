@@ -29,6 +29,7 @@ import org.araneaframework.jsp.tag.uilib.WidgetTag;
  */
 public class WidgetContextTag extends WidgetTag {
 
+  /** @since 1.1 */
   public static final String CONTEXT_WIDGET_KEY = "org.araneaframework.jsp.tag.context.WidgetContextTag.CONTEXTWIDGET";
   
   public int doStartTag(Writer out) throws Exception {

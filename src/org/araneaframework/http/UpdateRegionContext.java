@@ -23,6 +23,7 @@ import java.io.Serializable;
  * miscellaneous data back via AJAX requests.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.1
  */
 public interface UpdateRegionContext extends Serializable {
 

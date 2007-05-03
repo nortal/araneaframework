@@ -937,6 +937,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	
 	/**
 	 * Creates mapping between rows and request ids.
+   * 
+   * @since 1.1
 	 */
 	protected void makeRequestIdToRowMapping() {
 		if (this.dataProvider == null)
@@ -990,12 +992,18 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		}
 	}
 	
+  /** 
+   * @since 1.1
+   */
 	protected boolean checkChanged() {
 		boolean result = changed;
 		changed = false;
 		return result;
 	}
 	
+  /** 
+   * @since 1.1
+   */
 	protected void fireChange() {
 		changed = true;
 	}

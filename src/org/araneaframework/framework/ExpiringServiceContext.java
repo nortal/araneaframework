@@ -25,6 +25,7 @@ import java.util.Map;
  * services whose lifetime has expired only when servicing request.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.1
  */
 public interface ExpiringServiceContext extends Serializable {
 

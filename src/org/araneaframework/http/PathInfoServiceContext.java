@@ -27,5 +27,6 @@ import org.araneaframework.framework.ManagedServiceContext;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface PathInfoServiceContext extends ManagedServiceContext, Serializable {
+  /** @since 1.1 */
   String getPathInfo();
 }

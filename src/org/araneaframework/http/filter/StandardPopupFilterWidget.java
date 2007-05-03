@@ -54,6 +54,7 @@ import org.araneaframework.http.util.JsonObject;
 public class StandardPopupFilterWidget extends BaseFilterWidget implements PopupWindowContext {
   private static final Logger log = Logger.getLogger(StandardPopupFilterWidget.class);
 
+  /** @since 1.1 */
   public static final String POPUP_REGION_KEY = "popups";
   
   /** Maps of popups where keys are service IDs(==popup IDs) and values 
@@ -346,6 +347,9 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
    * Internal inner classes
    * ************************************************************************************/
 
+  /**
+   * @since 1.1
+   */
   protected class PopupRegionHandler implements UpdateRegionContext.RegionHandler {
 
     public String getContent() throws Exception {

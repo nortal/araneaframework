@@ -67,7 +67,9 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
   /**
    * Extracts the path from the input and returns it. This implementation uses
    * the {@link StandardContainerWidget#EVENT_PATH_KEY} parameter in the request and expects the event path to be
-   * a dot-separated string. 
+   * a dot-separated string.
+   * 
+   * @since 1.1
    */
   protected Path getEventPath(InputData input) {
     return new StandardPath((String) input.getGlobalData().get(ApplicationWidget.EVENT_PATH_KEY));
@@ -75,6 +77,8 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
   
   /**
    * Returns true if the request contains an event.
+   * 
+   * @since 1.1
    */
   protected boolean hasEvent(InputData input) {
     return input.getGlobalData().get(ApplicationWidget.EVENT_PATH_KEY) != null;
@@ -84,6 +88,8 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
    * Extracts the path from the input and returns it. This implementation uses
    * the {@link StandardContainerWidget#ACTION_PATH_KEY} parameter in the request and expects the action path to be
    * a dot-separated string. 
+   * 
+   * @since 1.1
    */
   protected Path getActionPath(InputData input) {
     return new StandardPath((String) input.getGlobalData().get(ApplicationService.ACTION_PATH_KEY));
@@ -91,6 +97,8 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
   
   /**
    * Returns true if the request contains an action.
+   * 
+   * @since 1.1
    */
   protected boolean hasAction(InputData input) {
     return input.getGlobalData().get(ApplicationService.ACTION_PATH_KEY) != null;

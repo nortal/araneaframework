@@ -276,6 +276,9 @@ public class SequenceHelper implements Serializable {
   	fireChange();
   }
   
+  /** 
+   * @since 1.1
+   */
   protected boolean getAllItemsShown() {
     return this.allItemsShown;
   }
@@ -356,6 +359,8 @@ public class SequenceHelper implements Serializable {
    * Returns whether the basic configuration that specifies which items are
    * shown has changed since last call to this {@link SequenceHelper}'s {@link SequenceHelper#checkChanged()} 
    * method.
+   * 
+   * @since 1.1
    */
   public boolean checkChanged() {
 	  boolean result = changed;
@@ -485,6 +490,9 @@ public class SequenceHelper implements Serializable {
 	}
   }
   
+  /** 
+   * @since 1.1
+   */
   protected void fireChange() {
     changed = true;
   }

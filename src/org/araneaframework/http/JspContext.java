@@ -30,12 +30,16 @@ public interface JspContext extends Serializable {
   /** @since 1.0.1 */
   public String getJspExtension();
 
+  /** @since 1.1 */
   public String getSubmitCharset();
 
+  /** @since 1.1 */
   public String getFormAction();
 
+  /** @since 1.1 */
   public Map getTagMapping(String uri);
 
+  /** @since 1.1 */
   public ConfigurationContext getConfiguration();
 
 }

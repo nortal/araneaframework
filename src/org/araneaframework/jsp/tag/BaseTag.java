@@ -313,14 +313,23 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
     return ServletUtil.getOutputData(pageContext.getRequest());
   }
 
+  /**
+   * @since 1.1
+   */
   protected Environment getEnvironment() throws JspException {
     return ServletUtil.getEnvironment(pageContext.getRequest());
   }
 
+  /**
+   * @since 1.1
+   */
   protected ApplicationWidget getContextWidget() {
     return JspWidgetUtil.getContextWidget(pageContext);
   }
 
+  /**
+   * @since 1.1
+   */
   protected String getContextWidgetFullId() {
     return JspWidgetUtil.getContextWidgetFullId(pageContext);
   }
@@ -416,6 +425,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
     }
   }
 
+  /**
+   * @since 1.1
+   */
   protected void hideGlobalContextEntries(PageContext pageContext) {
     if (globalContextEntries == null)
       globalContextEntries = (Set) getContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY);
@@ -436,6 +448,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
     }
   }
 
+  /**
+   * @since 1.1
+   */
   protected void restoreGlobalContextEntries(PageContext pageContext) {
     if (hiddenContextEntries == null)
       return;

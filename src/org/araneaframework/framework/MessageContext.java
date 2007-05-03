@@ -151,7 +151,7 @@ public interface MessageContext extends Serializable {
    * Returns all messages as a Map. The keys
    * of the Map are the different message types encountered so far and under the keys
    * are the messages in a Collection.
-   *<p>
+   * <p>
    * A child service should do as follows to access the messages
    * <pre>
    * <code>
@@ -163,7 +163,9 @@ public interface MessageContext extends Serializable {
    * </pre>
    * The map could be null if this service was not used. The collection is null if no messages of
    * that type been added to the messages. 
-   *</p>
+   * </p>
+   * 
+   * @since 1.1
    */
   public Map getMessages();
 }

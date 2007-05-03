@@ -56,6 +56,8 @@ public class StandardHttpSessionRouterService extends BaseService {
   
   /**
    * The synchronization parameter key in the request.
+   *
+   * @since 1.1
    */
   public static final String SYNC_PARAMETER_KEY = "sync";
   
@@ -66,6 +68,8 @@ public class StandardHttpSessionRouterService extends BaseService {
   
   /**
    * The key of the synchronization object in the session.
+   *
+   * @since 1.1
    */
   public static final String SESSION_SYNC_OBJECT_KEY = "sessionSyncObject";
   
@@ -109,6 +113,9 @@ public class StandardHttpSessionRouterService extends BaseService {
     }
   }
   
+  /**
+   * @since 1.1
+   */
   protected void doAction(Path path, InputData input, OutputData output, HttpSession sess) throws Exception {
     /*
      * Both "synchronized" and "unsynchronized" requests use the session object

@@ -175,6 +175,9 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   	return converted && validated;
   }
   
+  /**
+   * Since 1.1 this returns an immutable Set.
+   */
   public Set getErrors() {
     return Collections.unmodifiableSet(getMutableErrors()); 
   }
@@ -272,6 +275,9 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     return isValid();
   }
   
+  /**
+   * @since 1.1
+   */
   protected Set getMutableErrors() {
     if (errors == null)
       errors = new HashSet();

@@ -69,6 +69,9 @@ public class StandardPath implements Path {
   }
   
   
+  /**
+   * @since 1.1
+   */
   public StandardPath(Collection fullPath) {
     path.addAll(fullPath);
   }
