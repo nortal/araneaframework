@@ -64,3 +64,9 @@ Documentation can be found in the "doc" directory.
 	doc/tutorial is a tutorial/intro to Aranea Web Framework
 	doc/reference includes the reference manual.
 	doc/javadoc includes the javadoc
+
+BUILDING THE DISTRIBUTION
+  If you have downloaded the official distribution, 'ant build' will do.
+  If you have checked out the source code from repository, then you need
+  to fetch the libraries before building, execute 'ant fetch-libs -lib lib/ivy/lib/ivy/*.jar'
+  followed by 'ant build'.
