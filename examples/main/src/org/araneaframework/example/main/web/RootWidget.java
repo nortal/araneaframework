@@ -48,7 +48,7 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 	}
 
 	protected Environment getChildWidgetEnvironment() throws Exception {
-		return new StandardEnvironment(getEnvironment(), SecurityContext.class, this);
+		return new StandardEnvironment(super.getChildWidgetEnvironment(), SecurityContext.class, this);
 	}
 
 	public boolean hasPrivilege(String privilege) {
