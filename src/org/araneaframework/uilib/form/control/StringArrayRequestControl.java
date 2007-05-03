@@ -86,7 +86,6 @@ public abstract class StringArrayRequestControl extends BaseControl {
       value = null;
   }
 
-
   /**
    * Checks that the mandatory is satisfied, and if the value is not <code>null</code> calls the
    * {@link #validateNotNull()}method.
