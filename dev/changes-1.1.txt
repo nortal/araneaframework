@@ -3,6 +3,7 @@ API changes in 1.1
 
 [Diff from 1.14.1.1 to 2.1.1.47]
 
+Core:
 * Component-s know their own Id-s (added getScope method). Interface Scope and
   its implementation StandardScope have been added. Component's init method now
   takes Scope as its first parameter. Implementation of that was done in
@@ -31,7 +32,6 @@ API changes in 1.1
 * Deleted FLOW_KEY and CALL_STACK_KEY constants from FlowContext interface.
   StandardFlowContainerWidget: frames have fixed names (generated sequentially)
   that are used for components ids, because component id's are fixed.
-
 * Eliminated OutputData attributes: deleted pushAttribute, popAttribute,
   getAttribute and getAttributes methods from OutputData interface (and
   StandardServletOutputData class).
@@ -49,6 +49,7 @@ API changes in 1.1
 * Added getContainerPath and getContextPath methods to HttpInputData interface
   (and its implementing class StandardServletInputData).
 
+Services and filters:
 * Added ExpiringServiceContext interface (implemented by
   BaseExpiringServiceRouterService class), in order to access serviceTTLMap
   from BodyHtmlTag.writeKeepAliveRegistrationScripts (was previously done with
@@ -74,11 +75,17 @@ API changes in 1.1
   PathInfoServiceRouterService class).
 * Deleted ClientStateUtil class. Added EnvironmentUtil class, that contains
   convenience methods for getting topServiceId and threadServiceId.
-
-* Moved constant ACTION_PATH_KEY from ... to ApplicationService interface.
+* Moved constant ACTION_PATH_KEY from StandardContainerWidget to
+  ApplicationService interface.
 * Moved constant EVENT_PATH_KEY from StandardContainerWidget class to
   ApplicationWidget interface.
+* You are able to query the next transactionId from TransactionHelper and
+  TransactionContext (added getNextTransactionId method to both).
+* StandardTransactionFilterWidget and StandardClientStateFilterWidget require
+  SystemFormContext from environment (provided by
+  StandardSystemFormFilterService).
 
+JSP:
 * JSP contextAttributes from parent JSP-s are no longer accessible after
   widgetInclude (for example, layout tags don't work across widgetInclude-s).
   They are deliberatly removed from PageContext in all widgetInclude-like tags
@@ -151,6 +158,7 @@ API changes in 1.1
   "fe-span-${fullFormElementId}". Deleted static method generateId from
   BaseFormElementHtmlTag class.
 
+Partial rendering:
 * UpdateRegion filter is a widget filter now: renamed
   StandardUpdateRegionFilterService class to StandardUpdateRegionFilterWidget.
   UpdateRegions use partial rendering, BaseUpdateRegionTag.doStartTag method
@@ -179,6 +187,7 @@ API changes in 1.1
   methods for easier overriding.
 * UpdateRegionRowsHtmlTag does not write BEGINROWS comment any more.
 
+Synchronization:
 * Deleted StandardSynchronizingFilterService, its functionality is merged into
   StandardHttpSessionRouterService. Deleted SynchronizingContext interface.
 * Added SYNC_PARAMETER_KEY and SESSION_SYNC_OBJECT_KEY constants to
@@ -194,6 +203,7 @@ API changes in 1.1
 * StandardSerializingAuditFilterService class extends BaseFilterService
   (previously extended BaseService and implemented FilterService).
 
+TreeWidget:
 * TreeWidget supports unsynchronized actions. In client-side JavaScript,
   unsynchronized action is made when the tree HTML element has
   arn-tree-sync="false" attribute (aranea-tree.js) That attribute is written
@@ -205,27 +215,28 @@ API changes in 1.1
   as arguments any more.
 * Added getFullId method to TreeNodeContext interface and TreeNodeWidget class.
 
-* You are able to query the next transactionId from TransactionHelper and
-  TransactionContext (added getNextTransactionId method to both).
-* StandardTransactionFilterWidget and StandardClientStateFilterWidget require
-  SystemFormContext from environment (provided by
-  StandardSystemFormFilterService).
-
-* Event listeners ProxyEventListener, ProxyOnChangeEventListener,
-  ProxyOnClickEventListener and ValidatingProxyEventListener take Widget as
-  constructor parameter instead of Object. Also, the eventTarget field is of
-  type Widget.
-
+Forms:
 * Deleted deprecated "dirty" field, clean and isDirty methods from Data class.
 * Added isIgnoreEvents and setIgnoreEvents methods to FormElement class. //TODO ...
+* Removed processRows method from BaseFormListWidget class. Removed addFormRow
+  method from BeanFormListWidget and FormListWidget classes.
 * Added addFlatElementAfter and addFlatElementBefore methods to FormWidget
   class.
 * Added getMutableErrors method to GenericFormElement class. //TODO what changed in adding error messages in form elements / controls?
+* Added makeRequestIdToRowMapping method to ListWidget class. Added
+  getAllItemsShown method to SequenceHelper class. Added checkChanged and
+  fireChange methods to ListWidget, SequenceHelper, TypeHelper and BaseFilterHelper classes.
 * The add*ButtonToRowForm methods in FormListUtil class now return
   ButtonControl.
 * Added getLongestPrefix and getShortestSuffix static methods to NameUtil
   class.
+* Added getDeepestForm static method to NestedFormUtil class.
+* Event listeners ProxyEventListener, ProxyOnChangeEventListener,
+  ProxyOnClickEventListener and ValidatingProxyEventListener take Widget as
+  constructor parameter instead of Object. Also, the eventTarget field is of
+  type Widget.
 //TODO something more about changes in forms and such?
+//TODO something about [Base]MenuWidget? removed some duplication with mainexample code?
 
 JavaScript:
 * Added getSystemForm and setSystemForm functions to AraneaPage instance.
@@ -269,21 +280,26 @@ Configuration and other files:
   araneaWidgetFilters in default-aranea-conf.xml
 
 Examples:
-//TODO
+* Messageregion has three DIV tags in root.jsp. "aranea-messages" CSS class is
+  used in JavaScript for lookup purpose, styles are applied in aranea.css to
+  this class.
+* Added "Unsynchronized actions" example under Trees.
+* Added "Error on render" button to Error on AJAX demo.
+* Added "Open immediately returning interactive popup" button to Popups demo.
 
-TODO diagrams of Aranea filter hierarchies, one for 1.0, other for 1.1.
-
-* Library upgrades:
+Library upgrades:
   + jakarta-regexp 1.2 -> 1.5
   + log4j 1.2.8 -> 1.2.14
   + commons-collections 3.1 -> 3.2
   + commons-lang 2.1 -> 2.3
   + commons-validator 1.3.0 -> 1.3.1
-  + commons-logging ??? -> 1.1
-  + spring ??? -> 1.2.9
+  + commons-logging 1.0.4 -> 1.1
+  + spring 1.2.8 -> 1.2.9
   + log4javascript 1.2 -> 1.3.1 (compressed)
   + prototype 1.5.0_rc0 -> 1.5.1
   + scriptaculous ??? -> 1.7.1_beta2
   + tiny_mce 2.0.6.1 -> 2.1.0
+
+//TODO diagrams of Aranea filter hierarchies, one for 1.0, other for 1.1.
 
 [Changes in tests not covered]
