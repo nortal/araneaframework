@@ -33,5 +33,4 @@ public class ListWidgetFormListModel implements FormListModel {
     listWidget.refresh();
     return listWidget.getItemRange();
   }
-
 }

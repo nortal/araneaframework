@@ -30,8 +30,8 @@ import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import javax.servlet.ServletContext;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.jsp.engine.xml.ParserUtils;
 import org.araneaframework.jsp.engine.xml.TreeNode;
@@ -265,7 +265,7 @@ public class TldLocationsCache {
 
         try {
             is = ctxt.getResourceAsStream(WEB_XML);
-            if (is == null && log.isEnabledFor(Priority.WARN)) {
+            if (is == null && log.isEnabledFor(Level.WARN)) {
                 log.warn("jsp.error.internal.filenotfound" + WEB_XML);
             }
 

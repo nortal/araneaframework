@@ -20,7 +20,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.araneaframework.Environment;
@@ -135,10 +134,10 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	/**
 	 * Sets the current strickness behaivor.
 	 * 
-	 * @param stirct whether new filters should be strict.
+	 * @param strict whether new filters should be strict.
 	 */
-	protected void _setStrict(boolean stirct) {
-		this.strict = stirct;
+	protected void _setStrict(boolean strict) {
+		this.strict = strict;
 	}
 
 	// General

@@ -13,5 +13,4 @@ public class ListFormListModel implements FormListModel {
   public List getRows() {
     return list;
   }
-
 }
