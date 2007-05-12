@@ -31,7 +31,7 @@
 		<delete dir="dist" failonerror="false"/>
 	</target>
 	
-	<target name="fetch-libs" depends="init-ivy">
+	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
 		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"/>
 	</target>
 	
@@ -44,14 +44,14 @@
 		</path>
 	</target>
 	
-	<target name='init-ivy'>
+	<target name="init-ivy">
 		<path id="ivy.lib.path">
 	      <fileset dir="lib/ivy" includes="*.jar"/>
 		</path>
 
-	 	<taskdef resource='fr/jayasoft/ivy/ant/antlib.xml'
-	             uri='antlib:fr.jayasoft.ivy.ant'
-	             classpathref='ivy.lib.path'/>
+	 	<taskdef resource="org/apache/ivy/ant/antlib.xml"
+	             uri="antlib:org.apache.ivy.ant"
+	             classpathref="ivy.lib.path"/>
 		
 		<ivy:configure file="ivysettings.xml" />
 	</target>
