@@ -2,6 +2,7 @@
 <resources>
 	<files content-type="text/css" group="defaultStyles">
 		<file path="css/aranea/aranea.css"/>
+		<file path="css/modalbox/modalbox.css"/>
 		<file path="css/calendar/calendar.css"/>
 	</files>
 
@@ -22,6 +23,8 @@
 		<file path="js/scriptaculous/builder.js"/>
 		<file path="js/scriptaculous/effects.js"/>
 		<file path="js/scriptaculous/controls.js"/>
+
+		<file path="js/modalbox/modalbox.js"/>
 
 		<file path="js/calendar/calendar.js"/>
 		<file path="js/calendar/calendar-en.js"/>

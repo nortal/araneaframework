@@ -184,7 +184,9 @@ function AraneaPage() {
     if (this.isSubmitted() || !this.isLoaded())
     return false;
     
-  var systemForm = this.getSystemForm();
+    var systemForm = $(element).ancestors().find(function(element) {
+    	return element.tagName.toLowerCase() == 'form' && element.hasAttribute('arn-systemForm');
+    });
     var preCondition = this.getEventPreCondition(element);
 
     if (preCondition) {
@@ -206,6 +208,10 @@ function AraneaPage() {
    * submit methods.
    */
   this.findSubmitter = function(element, systemForm) {
+	if (systemForm.hasClassName('aranea-overlay')) {
+		return new DefaultAraneaOverlaySubmitter(systemForm);
+	}
+
     var updateRegions = this.getEventUpdateRegions(element);
 
   if (updateRegions && updateRegions.length > 0)
@@ -367,6 +373,44 @@ DefaultAraneaSubmitter.prototype.event_4 = function(systemForm, eventId, widgetI
   systemForm.submit();
 
   return false;
+}
+
+function DefaultAraneaOverlaySubmitter(form) {
+  var systemForm = form;
+
+  this.event = function(element) {
+    // event information
+    var widgetId = araneaPage().getEventTarget(element);
+    var eventId = araneaPage().getEventId(element);
+    var eventParam = araneaPage().getEventParam(element);
+
+    systemForm.widgetEventPath.value = widgetId ? widgetId : "";
+    systemForm.widgetEventHandler.value = eventId ? eventId : "";
+    systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+
+    araneaPage().setSubmitted();
+
+   	Modalbox.show(
+   	  'foobar',
+   	  systemForm.readAttribute('action') + '?overlay',
+   	  {
+   	    method: 'post',
+   	    params: systemForm.serialize(true),
+   	    overlayClose: false,
+   	    width: 800,
+   	    afterLoad: function(transport) {
+   	      if (transport.responseText == '') {
+   	        //Modalbox.hide();
+            var systemForm = araneaPage().getSystemForm();
+            if (systemForm.transactionId)
+              systemForm.transactionId.value = 'override';
+            return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
+   	      }
+        }
+   	  }
+   	);
+   	return false;
+  }
 }
 
 function DefaultAraneaAJAXSubmitter(form) {

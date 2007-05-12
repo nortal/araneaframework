@@ -106,7 +106,7 @@
    
   <bean id="araneaWidgetFilters" singleton="false" 
     class="org.araneaframework.framework.filter.StandardFilterChainWidget">
-    <property name="childWidget" ref="araneaRootFlowContainer"/>
+    <property name="childWidget" ref="araneaOverlayContainer"/>
     <property name="filterChain">
       <list>      
         <ref bean="araneaRedirectingFilter"/>        
@@ -132,9 +132,16 @@
     </property>
   </bean>
   
+   <bean class="org.araneaframework.framework.container.OverlayContainerWidget" id="araneaOverlayContainer" singleton="false">
+     <property name="main" ref="araneaRootFlowContainer"/>
+     <property name="overlay" ref="araneaOverlayRootContainer"/>
+   </bean>
+
    <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="araneaRootFlowContainer" singleton="false">
      <property name="top" ref="araneaApplicationStart"/>
    </bean>
+
+   <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="araneaOverlayRootContainer" singleton="false"/>
    
    <!-- ########## ARANEA FILTERS ########## -->
   

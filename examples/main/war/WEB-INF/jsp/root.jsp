@@ -24,6 +24,7 @@
 				<ui:systemForm method="POST">
 					<ui:registerScrollHandler/>
 					<ui:registerPopups/>
+					<ui:registerOverlay/>
 	
 					<!-- Renders the menu on top of the screen -->
 					<jsp:include page="/WEB-INF/jsp/mainlayout/menu.jsp"/>
