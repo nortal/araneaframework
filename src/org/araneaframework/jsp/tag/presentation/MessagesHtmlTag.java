@@ -129,6 +129,7 @@ public class MessagesHtmlTag extends PresentationTag {
     JspUtil.writeStartEndTag(out, "br");
   }
   
+  /** @since 1.1 */
   protected String getDivId() {
     return this.divId;
   }
