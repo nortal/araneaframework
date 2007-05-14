@@ -41,6 +41,7 @@ import org.araneaframework.jsp.util.JspUtil;
 
 public class MessagesHtmlTag extends PresentationTag {
   protected String type;
+  protected String divId;
 
   {
     baseStyleClass = "aranea-messages";
@@ -80,6 +81,7 @@ public class MessagesHtmlTag extends PresentationTag {
    */
   protected void writeMessagesStart(Writer out, List entries) throws Exception {
     JspUtil.writeOpenStartTag(out, "div");
+    JspUtil.writeAttribute(out, "divId", getDivId());
     JspUtil.writeAttribute(out, "class", getStyleClass());
     if (type != null) {
       JspUtil.writeAttribute(out, "arn-msgs-type", type);
@@ -126,6 +128,11 @@ public class MessagesHtmlTag extends PresentationTag {
   protected void writeMessageSeparator(Writer out) throws Exception {
     JspUtil.writeStartEndTag(out, "br");
   }
+  
+  /** @since 1.1 */
+  protected String getDivId() {
+    return this.divId;
+  }
 
   /* ***********************************************************************************
    * Tag attributes
@@ -139,5 +146,17 @@ public class MessagesHtmlTag extends PresentationTag {
    */
   public void setType(String type) throws JspException {
     this.type = (String) evaluate("type", type, String.class);
+  }
+  
+  /**
+   * @jsp.attribute
+   * type = "java.lang.String"
+   * required = "false"
+   * description = "Sets the ID of the HTML &lt;DIV&gt; inside which the messages are rendered."
+   * 
+   * @since 1.1
+   */
+  public void setDivId(String divId) throws JspException {
+    this.divId = (String) evaluate("divId", divId, String.class);
   }
 }

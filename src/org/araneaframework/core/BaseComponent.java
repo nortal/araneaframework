@@ -107,15 +107,15 @@ public abstract class BaseComponent implements Component {
   /**
    * Returns true, if the BaseComponent has been initialized. 
    */
-  protected boolean isInitialized() {
+  public boolean isInitialized() {
     return state != UNBORN;
   } 
   
-  protected boolean isAlive() {
+  public boolean isAlive() {
     return state == ALIVE;
   }
   
-  protected boolean isDead() {
+  public boolean isDead() {
     return state == DEAD;
   }
   
