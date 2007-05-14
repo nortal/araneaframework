@@ -586,7 +586,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected void propagateListDataProviderWithOrderInfo(OrderInfo orderInfo) {
 		ListOrder order = getListStructure().getListOrder();
 		ComparatorExpression orderExpr = order != null ? order.buildComparatorExpression(orderInfo) : null;
-		this.dataProvider.setOrderExpression(orderExpr);			
+		this.dataProvider.setOrderExpression(orderExpr);
+		
+		fireChange();
 	}
 
 	/**
