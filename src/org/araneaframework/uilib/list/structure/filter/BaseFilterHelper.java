@@ -157,7 +157,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @return the global configuration context.
 	 */
 	public ConfigurationContext getConfiguration() {
-		return this.list.getConfiguration();
+		return (ConfigurationContext) this.list.getEnvironment().getEntry(ConfigurationContext.class);
 	}
 
 	/**

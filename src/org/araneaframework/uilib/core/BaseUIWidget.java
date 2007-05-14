@@ -49,28 +49,28 @@ public class BaseUIWidget extends BaseApplicationWidget {
     this.viewSelector = viewSelector;
   }  
   
-  public ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
+  protected ConfigurationContext getConfiguration() {
+    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
   }
   
   protected FlowContext getFlowCtx() {
-    return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
+    return (FlowContext) getEnvironment().getEntry(FlowContext.class);
   }
   
   protected MessageContext getMessageCtx() {
-    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+    return (MessageContext) getEnvironment().getEntry(MessageContext.class);
   }
   
   protected LocalizationContext getL10nCtx() {
-    return (LocalizationContext) getEnvironment().requireEntry(LocalizationContext.class);
+    return (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
   }
   
   protected MountContext getMountCtx() {
-    return (MountContext) getEnvironment().requireEntry(MountContext.class);
+    return (MountContext) getEnvironment().getEntry(MountContext.class);
   }
   
   protected BeanFactory getBeanFactory() {
-    return (BeanFactory) getEnvironment().requireEntry(BeanFactory.class);
+    return (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
   }
   
   /**
