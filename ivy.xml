@@ -58,9 +58,17 @@
 	<dependency org="base64" rev="1.0" name="base64"/>
 	<dependency org="commons-fileupload" rev="1.2" name="commons-fileupload"/>
 	<dependency org="commons-io" rev="1.3" name="commons-io"/>
-	<dependency org="xstream" rev="1.2" name="xstream"/>
+	<dependency org="xstream" rev="1.2" name="xstream"/>	
 	
   </dependencies>
-
+  
+  <exclude>
+     <rule module="avalon-framework" conf="default"/>
+     <rule module="portlet-api" conf="default"/>
+     <rule module="servlet-api" conf="default"/>
+     <rule module="servletapi" conf="default"/>
+     <rule module="ant" conf="default"/>
+  </exclude>
+  
 <!--  <conflicts></conflicts>-->
 </ivy-module>
