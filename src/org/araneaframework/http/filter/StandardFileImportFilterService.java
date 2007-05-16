@@ -27,7 +27,8 @@ import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -43,7 +44,7 @@ import org.araneaframework.http.util.URLUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 */
 public class StandardFileImportFilterService  extends BaseFilterService {
-	private static final Logger log = Logger.getLogger(StandardFileImportFilterService.class);
+	private static final Log log = LogFactory.getLog(StandardFileImportFilterService.class);
 	private static boolean isInitialized = false;
 	private static ExternalResource resources;
 	private long cacheHoldingTime = 3600000;

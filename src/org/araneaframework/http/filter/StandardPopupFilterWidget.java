@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -52,7 +53,7 @@ import org.araneaframework.http.util.JsonObject;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardPopupFilterWidget extends BaseFilterWidget implements PopupWindowContext {
-  private static final Logger log = Logger.getLogger(StandardPopupFilterWidget.class);
+  private static final Log log = LogFactory.getLog(StandardPopupFilterWidget.class);
 
   /** @since 1.1 */
   public static final String POPUP_REGION_KEY = "popups";

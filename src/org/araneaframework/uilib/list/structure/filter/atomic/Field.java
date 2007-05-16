@@ -16,7 +16,6 @@
 package org.araneaframework.uilib.list.structure.filter.atomic;
 
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.uilib.list.util.ExpressionUtil;

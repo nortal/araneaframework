@@ -1,7 +1,8 @@
 package org.araneaframework.uilib.event;
 
 import java.lang.reflect.Method;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
@@ -12,7 +13,7 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
 
 public final class ValidatingProxyEventListener implements EventListener {
-  public static final Logger log = Logger.getLogger(ValidatingProxyEventListener.class);
+  public static final Log log = LogFactory.getLog(ValidatingProxyEventListener.class);
 
   private Widget eventTarget;
   private FormWidget form;

@@ -17,7 +17,8 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.example.main.TemplateBaseWidget;
@@ -41,7 +42,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 
 public abstract class PersonEditableListWidget extends TemplateBaseWidget {
-	protected static final Logger log = Logger.getLogger(PersonEditableListWidget.class);
+	protected static final Log log = LogFactory.getLog(PersonEditableListWidget.class);
 	private  IContractDAO contractDAO; 
 	/* Editable list. */ 
 	private EditableBeanListWidget list;

@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.structure.order;
 
 import java.util.Comparator;
-
 import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.VariableComparatorExpression;

@@ -15,10 +15,10 @@
 **/
 
 package org.araneaframework.example.main.web.tree;
-
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardActionListener;
@@ -37,7 +37,7 @@ import org.araneaframework.uilib.tree.TreeWidget;
  */
 public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
-  private static final Logger log = Logger.getLogger(UnsynchronizedTreeWidget.class);
+  private static final Log log = LogFactory.getLog(UnsynchronizedTreeWidget.class);
 
   private TreeWidget tree;
 

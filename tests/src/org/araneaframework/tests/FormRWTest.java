@@ -19,7 +19,8 @@ package org.araneaframework.tests;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.TestVO;
 import org.araneaframework.uilib.form.FormWidget;
@@ -40,7 +41,7 @@ import org.araneaframework.uilib.form.reader.MapFormWriter;
  */
 public class FormRWTest extends TestCase {
 
-  private static Logger log = Logger.getLogger(FormRWTest.class);
+  private static final Log log = LogFactory.getLog(FormRWTest.class);
 
   private FormWidget makeVoForm() throws Exception {
 

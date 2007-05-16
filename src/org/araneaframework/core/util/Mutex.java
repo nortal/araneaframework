@@ -13,6 +13,8 @@
 
 package org.araneaframework.core.util;
 
+import java.util.concurrent.Semaphore;
+
 /**
  * A simple non-reentrant mutual exclusion lock.
  * The lock is free upon construction. Each acquire gets the

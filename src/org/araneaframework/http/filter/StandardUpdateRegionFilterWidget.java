@@ -24,7 +24,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.Message;
@@ -53,7 +54,7 @@ import org.araneaframework.http.util.JsonObject;
  * @since 1.1
  */
 public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implements UpdateRegionContext {
-  static private final Logger log = Logger.getLogger(StandardUpdateRegionFilterWidget.class);
+  static private final Log log = LogFactory.getLog(StandardUpdateRegionFilterWidget.class);
 
   private String characterEncoding = "UTF-8";
   private Map documentRegions = new HashMap();

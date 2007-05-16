@@ -18,7 +18,8 @@ package org.araneaframework.framework.filter;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -36,7 +37,7 @@ import org.araneaframework.http.util.AtomicResponseHelper;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardContinuationFilterService extends BaseFilterService implements ContinuationManagerContext, ContinuationContext{
-  private static final Logger log = Logger.getLogger(StandardContinuationFilterService.class);  
+  private static final Log log = LogFactory.getLog(StandardContinuationFilterService.class);  
   
   private Service continuation;
   

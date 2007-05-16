@@ -17,7 +17,8 @@
 package org.araneaframework.uilib.widgets.lists.tests.tests;
 
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.expression.StandardExpressionToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -28,7 +29,7 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
 
 public class StandardExprToSqlExprBuilderTests extends TestCase {
-	private static final Logger log = Logger.getLogger(StandardExprToSqlExprBuilderTests.class);
+	private static final Log log = LogFactory.getLog(StandardExprToSqlExprBuilderTests.class);
 	
 	private StandardExpressionToSqlExprBuilder builder;
 	

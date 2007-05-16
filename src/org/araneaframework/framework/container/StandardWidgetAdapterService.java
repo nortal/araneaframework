@@ -16,7 +16,8 @@
 
 package org.araneaframework.framework.container;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -31,7 +32,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardWidgetAdapterService extends BaseFilterWidget {
-  private static final Logger log = Logger.getLogger(StandardWidgetAdapterService.class);
+  private static final Log log = LogFactory.getLog(StandardWidgetAdapterService.class);
   
   /**
    * If <code>propagateAsAction(InputData)</code> returns true then the action is

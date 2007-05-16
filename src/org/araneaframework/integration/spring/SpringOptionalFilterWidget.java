@@ -19,14 +19,15 @@ package org.araneaframework.integration.spring;
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.framework.FilterWidget;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 public class SpringOptionalFilterWidget extends BaseFilterWidget {
-  private static final Logger log = Logger.getLogger(SpringOptionalFilterWidget.class);
+  private static final Log log = LogFactory.getLog(SpringOptionalFilterWidget.class);
   
   private String beanId;
   

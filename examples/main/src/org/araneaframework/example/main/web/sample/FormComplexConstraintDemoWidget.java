@@ -16,7 +16,8 @@
 
 package org.araneaframework.example.main.web.sample;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.form.FormWidget;
@@ -33,7 +34,7 @@ import org.araneaframework.uilib.form.data.StringData;
  */
 public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
-  private static final Logger log = Logger.getLogger(FormComplexConstraintDemoWidget.class);
+  private static final Log log = LogFactory.getLog(FormComplexConstraintDemoWidget.class);
   private FormWidget searchForm;
   
   protected void init() throws Exception {

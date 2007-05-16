@@ -17,8 +17,8 @@
 package org.araneaframework.example.main.web.company;
 
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.CompanyMO;
@@ -36,7 +36,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
  */
 public class CompanyListWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
-  protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
+  protected static final Log log = LogFactory.getLog(CompanyListWidget.class);
   private BeanListWidget list;
   private boolean editMode = true;
   

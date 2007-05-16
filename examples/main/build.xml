@@ -85,7 +85,7 @@
 		</copy>
 
 		<copy todir="war/WEB-INF/classes">
-			<fileset dir=".." includes="log4j.xml"/>
+			<fileset dir=".." includes="log4j.xml,commons-logging.properties"/>
 		</copy>
 		<copy todir="war/src/">
 			<fileset dir="src" includes="**/*"/>

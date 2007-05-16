@@ -18,7 +18,8 @@ package org.araneaframework.uilib.widgets.lists.tests.tests.sqlexpr;
 
 import java.util.Arrays;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.sqlexpr.SqlBracketsExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlIsNullExpression;
 import org.araneaframework.backend.list.sqlexpr.logical.SqlNotExpression;
@@ -30,8 +31,7 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockSqlStringExpressio
 
 
 public class SqlSingleExpressionTests extends TestCase {
-	private static final Logger log = Logger
-			.getLogger(SqlSingleExpressionTests.class);
+	private static final Log log = LogFactory.getLog(SqlSingleExpressionTests.class);
 
 	public void testSqlNotExpression() {
 		log.debug("Testing SqlNotExpression");

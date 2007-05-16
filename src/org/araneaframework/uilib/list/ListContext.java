@@ -16,7 +16,6 @@
 package org.araneaframework.uilib.list;
 
 import java.util.Comparator;
-
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.util.Event;
 

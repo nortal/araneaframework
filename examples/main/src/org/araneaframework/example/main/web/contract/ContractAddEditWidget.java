@@ -16,7 +16,8 @@
 
 package org.araneaframework.example.main.web.contract;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Widget;
 import org.araneaframework.example.common.framework.container.StandardWizardWidget;
 import org.araneaframework.example.common.framework.context.WizardContext;
@@ -33,7 +34,7 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
 	
 	  private static final long serialVersionUID = 1L;
 
-  private static final Logger log = Logger.getLogger(ContractAddEditWidget.class);
+  private static final Log log = LogFactory.getLog(ContractAddEditWidget.class);
 	
 	private Long id = null;
 	private ContractCompanyEditWidget company;

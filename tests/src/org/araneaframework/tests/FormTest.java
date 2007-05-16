@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.core.StandardServletInputData;
@@ -63,7 +64,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
  */
 public class FormTest extends TestCase {
 
-  private static Logger log = Logger.getLogger(FormTest.class);
+  private static final Log log = LogFactory.getLog(FormTest.class);
 
   boolean eventsWork = false;
   

@@ -18,9 +18,7 @@ package org.araneaframework.example.common.tags.example.component;
 
 import java.io.Writer;
 import java.util.Iterator;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;

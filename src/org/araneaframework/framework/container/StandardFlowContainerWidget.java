@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -47,7 +48,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
-  private static final Logger log = Logger.getLogger(StandardFlowContainerWidget.class);
+  private static final Log log = LogFactory.getLog(StandardFlowContainerWidget.class);
   
   private static final String BASE_FLOW_KEY = "f";
   private static final String TOP_FLOW_KEY = BASE_FLOW_KEY + 0;

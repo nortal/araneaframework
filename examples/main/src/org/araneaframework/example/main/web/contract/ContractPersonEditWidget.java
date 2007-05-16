@@ -16,7 +16,8 @@
 
 package org.araneaframework.example.main.web.contract;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.web.person.PersonListWidget;
@@ -29,7 +30,7 @@ import org.araneaframework.framework.FlowContext;
 public class ContractPersonEditWidget extends TemplateBaseWidget {
 	
 	  private static final long serialVersionUID = 1L;
-  private static final Logger log = Logger.getLogger(ContractPersonEditWidget.class);
+  private static final Log log = LogFactory.getLog(ContractPersonEditWidget.class);
 	private PersonMO person = null;
 
   public PersonMO getPerson() {
