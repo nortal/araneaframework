@@ -57,13 +57,11 @@ public class ContractViewWidget extends TemplateBaseWidget {
 	}
 
 	public void handleEventViewCompany(String eventParameter) throws Exception {
-		getFlowCtx().start(
-				new CompanyViewWidget(contract.getCompany().getId()), null, null);
+		getFlowCtx().start(new CompanyViewWidget(contract.getCompany().getId()));
 	}
 
 	public void handleEventViewPerson(String eventParameter) throws Exception {
-		getFlowCtx().start(
-				new PersonViewWidget(contract.getPerson().getId()), null, null);
+		getFlowCtx().start(new PersonViewWidget(contract.getPerson().getId()));
 	}
 
 	public void handleEventReturn(String eventParameter) throws Exception {

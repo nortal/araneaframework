@@ -33,7 +33,7 @@ public class ExamplePersonMountMessageFactory implements MessageFactory {
         new BroadcastMessage() {
           protected void execute(Component component) throws Exception {
             if (component instanceof MenuWidget) {
-              ((MenuWidget) component).start(new PersonAddEditWidget(new Long(suffix)), null, null);
+              ((MenuWidget) component).start(new PersonAddEditWidget(new Long(suffix)));
             }
           }
         }

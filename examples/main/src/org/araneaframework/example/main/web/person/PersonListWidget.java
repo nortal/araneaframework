@@ -90,7 +90,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
-		getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler() {
+		getFlowCtx().start(new PersonAddEditWidget(), new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
 			public void onFinish(Object returnValue) throws Exception {
@@ -118,7 +118,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		if (!selectOnly) {
 			PersonViewWidget newFlow = new PersonViewWidget(id);
-			getFlowCtx().start(newFlow, null, null);
+			getFlowCtx().start(newFlow);
 		} else {
 			getFlowCtx().finish(id);
 		}
@@ -128,7 +128,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		PersonAddEditWidget newFlow = new PersonAddEditWidget(id);
 
-		getFlowCtx().start(newFlow, null, new FlowContext.Handler() {
+		getFlowCtx().start(newFlow, new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
 			public void onFinish(Object returnValue) throws Exception {

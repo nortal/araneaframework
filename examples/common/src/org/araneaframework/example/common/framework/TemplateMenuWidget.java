@@ -76,7 +76,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
     reset(new EnvironmentAwareCallback() {
       public void call(org.araneaframework.Environment env) throws Exception {
         if (newFlow != null)
-          start(newFlow, null, null);
+          start(newFlow);
       }
     });
   }

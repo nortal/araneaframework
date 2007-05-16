@@ -52,7 +52,7 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
 	public void handleEventChoosePerson(String eventParameter) throws Exception {
 	    PersonListWidget newFlow = new PersonListWidget(false);
 	    newFlow.setSelectOnly(true);
-	    getFlowCtx().start(newFlow, null, new FlowContext.Handler() {
+	    getFlowCtx().start(newFlow, new FlowContext.Handler() {
 				        private static final long serialVersionUID = 1L;
         public void onFinish(Object returnValue) throws Exception {
 					Long id = (Long) returnValue;
