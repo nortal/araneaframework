@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -58,15 +59,15 @@ public class TcdAndTldMerger {
 		
 		System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
 
-		String firstTLD = args[0], secondTLD = args[1], outputTLD = args[2];
+		String tcdName = args[0], tldName = args[1], outputTLD = args[2];
 		
-		File firstFile = new File(firstTLD);
-		InputStream first = firstFile.exists() ? new FileInputStream(firstTLD) : TcdAndTldMerger.class.getClassLoader().getResourceAsStream(firstTLD);
+		File firstFile = new File(tcdName);
+		InputStream first = firstFile.exists() ? new FileInputStream(tcdName) : TcdAndTldMerger.class.getClassLoader().getResourceAsStream(tcdName);
 
-		File second = new File(secondTLD);
+		File second = new File(tldName);
 		
 		if (!second.exists() || !second.canRead()) {
-			System.err.println(secondTLD + " unreadable.");
+			System.err.println(tldName + " unreadable.");
 			System.exit(1);
 		}
 		
@@ -129,7 +130,7 @@ public class TcdAndTldMerger {
 				 }
 			 }
 		 }
-		 
+
 		Source input = new DOMSource(sDoc);
 		OutputStream ostream = new FileOutputStream(output);
 		Result out = new StreamResult(ostream);
@@ -138,7 +139,21 @@ public class TcdAndTldMerger {
 		
 		try {
 			Transformer idTransformer = xformFactory.newTransformer();
+			
+			if (sDoc.getDoctype() != null){
+				String publicValue = (sDoc.getDoctype().getPublicId());
+				idTransformer.setOutputProperty(
+						OutputKeys.DOCTYPE_PUBLIC, publicValue
+				);
+
+				String systemValue = (sDoc.getDoctype().getSystemId());
+				idTransformer.setOutputProperty(
+						OutputKeys.DOCTYPE_SYSTEM, systemValue
+				);
+			}
+
 			idTransformer.transform(input, out);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
