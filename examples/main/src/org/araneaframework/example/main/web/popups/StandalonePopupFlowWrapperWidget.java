@@ -33,6 +33,7 @@ import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.URLUtil;
@@ -139,11 +140,23 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 		return getFlowCtx().isNested();
 	}
 
+	public void replace(Widget flow) {
+		replace(flow, null);
+	}
+
 	public void replace(Widget flow, Configurator configurator) {
 	}
 
 	public void reset(EnvironmentAwareCallback callback) {
 		throw new IllegalStateException();
+	}
+
+	public void start(Widget flow, Handler handler) {
+		start(flow, null, handler);
+	}
+
+	public void start(Widget flow) {
+		start(flow, null, null);
 	}
 
 	public void start(Widget flow, Configurator configurator, Handler handler) {
