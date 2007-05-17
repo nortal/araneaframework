@@ -17,14 +17,15 @@
 package org.araneaframework.uilib.event;
 
 import java.lang.reflect.Method;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class ProxyOnChangeEventListener implements OnChangeEventListener {
-  public static final Logger log = Logger.getLogger(ProxyOnChangeEventListener.class);
+  public static final Log log = LogFactory.getLog(ProxyOnChangeEventListener.class);
   
   protected Widget eventTarget;
   protected String eventId;

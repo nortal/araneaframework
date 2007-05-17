@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
@@ -39,7 +40,7 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardLocalizationFilterService extends BaseFilterService implements LocalizationContext {
-  private static final Logger log = Logger.getLogger(StandardLocalizationFilterService.class);
+  private static final Log log = LogFactory.getLog(StandardLocalizationFilterService.class);
   private String resourceBundleName;
   private Locale currentLocale;
 

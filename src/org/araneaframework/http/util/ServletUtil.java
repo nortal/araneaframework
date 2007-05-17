@@ -26,7 +26,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.jstl.core.Config;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -48,7 +49,7 @@ import org.araneaframework.jsp.tag.uilib.WidgetTag;
  */
 public abstract class ServletUtil {
 	
-  private static final Logger log = Logger.getLogger(ServletUtil.class);
+  private static final Log log = LogFactory.getLog(ServletUtil.class);
 
   /** @since 1.1 */
   public static final String UIWIDGET_KEY = "org.araneaframework.http.util.ServletUtil.UIWIDGET";

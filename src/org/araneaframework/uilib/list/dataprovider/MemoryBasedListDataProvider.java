@@ -23,7 +23,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.memorybased.BeanVariableResolver;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -45,7 +46,7 @@ import org.araneaframework.backend.list.model.ListItemsData;
  */
 public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 
-	private static final Logger log = Logger.getLogger(MemoryBasedListDataProvider.class);
+	private static final Log log = LogFactory.getLog(MemoryBasedListDataProvider.class);
 	
 	// *******************************************************************
 	// FIELDS

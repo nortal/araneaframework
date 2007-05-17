@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -46,7 +47,7 @@ import org.araneaframework.http.util.URLUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardThreadCloningFilterService extends BaseFilterService implements ThreadCloningContext {
-  private static final Logger log = Logger.getLogger(StandardThreadCloningFilterService.class);
+  private static final Log log = LogFactory.getLog(StandardThreadCloningFilterService.class);
   private Long timeToLive;
   private boolean initializeChildren = true;
 

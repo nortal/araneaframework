@@ -21,7 +21,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.util.BeanMapper;
 
 /**
@@ -32,7 +33,7 @@ import org.araneaframework.backend.util.BeanMapper;
  */
 public abstract class BaseBean implements Serializable, Cloneable {
 
-	private static Logger log = Logger.getLogger(BaseBean.class);
+	private static final Log log = LogFactory.getLog(BaseBean.class);
 
 	//*******************************************************************
 	// FIELDS

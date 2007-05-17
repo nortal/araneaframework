@@ -30,7 +30,8 @@ import java.util.Map.Entry;
 import javax.sql.DataSource;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.helper.builder.compexpr.StandardCompExprToSqlExprBuilder;
@@ -65,7 +66,7 @@ import org.araneaframework.uilib.list.util.converter.DummyConverter;
  */
 public abstract class ListSqlHelper {
 
-	protected static final Logger log = Logger.getLogger(ListSqlHelper.class);
+	protected static final Log log = LogFactory.getLog(ListSqlHelper.class);
 
 	protected static final Long DEFAULT_RANGE_START = new Long(0);
 

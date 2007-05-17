@@ -17,7 +17,8 @@
 package org.araneaframework.core;
 
 import java.lang.reflect.Method;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
 
@@ -25,7 +26,7 @@ import org.araneaframework.Widget;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class ProxyEventListener implements EventListener {
-  public static final Logger log = Logger.getLogger(ProxyEventListener.class);
+  public static final Log log = LogFactory.getLog(ProxyEventListener.class);
 
   protected Widget eventTarget;
 

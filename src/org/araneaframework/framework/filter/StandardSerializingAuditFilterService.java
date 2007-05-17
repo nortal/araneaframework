@@ -22,7 +22,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -45,7 +46,7 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardSerializingAuditFilterService extends BaseFilterService {
-  private static final Logger log = Logger.getLogger(StandardSerializingAuditFilterService.class);
+  private static final Log log = LogFactory.getLog(StandardSerializingAuditFilterService.class);
   
   private String testXmlSessionPath;
 

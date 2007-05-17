@@ -21,7 +21,8 @@ import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.http.support.CachingEntityResolver;
 import org.w3c.dom.Comment;
@@ -183,7 +184,7 @@ public class ParserUtils {
 class MyErrorHandler implements ErrorHandler {
 
     // Logger
-    private static final Logger log = Logger.getLogger(MyErrorHandler.class);
+    private static final Log log = LogFactory.getLog(MyErrorHandler.class);
 
     public void warning(SAXParseException ex) throws SAXException {
         if (log.isDebugEnabled())

@@ -17,7 +17,8 @@
 package org.araneaframework.framework.filter;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -35,7 +36,7 @@ import org.araneaframework.http.util.AtomicResponseHelper;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardCriticalExceptionHandlingFilterService extends BaseFilterService {
-  private static final Logger log = Logger.getLogger(StandardCriticalExceptionHandlingFilterService.class);
+  private static final Log log = LogFactory.getLog(StandardCriticalExceptionHandlingFilterService.class);
   private ExceptionHandlerFactory factory;
   
   /**

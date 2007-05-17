@@ -4,7 +4,8 @@
 package org.araneaframework.http.support;
 
 import java.io.InputStream;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.http.core.Constants;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -16,7 +17,7 @@ public class CachingEntityResolver implements EntityResolver {
   private CachingEntityResolver() {}
   
   // Logger
-  private static final Logger log = Logger.getLogger(CachingEntityResolver.class);
+  private static final Log log = LogFactory.getLog(CachingEntityResolver.class);
 
   public InputSource resolveEntity(String publicId, String systemId)
   throws SAXException {   

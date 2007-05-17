@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -70,7 +71,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static final Logger log = Logger.getLogger(ListWidget.class);
+	protected static final Log log = LogFactory.getLog(ListWidget.class);
 
 	//*******************************************************************
 	// FIELDS
