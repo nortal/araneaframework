@@ -32,6 +32,7 @@ import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupWindowContext;
@@ -62,8 +63,20 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     addWidget("child", child);
   }
 
+  public void start(Widget flow, Handler handler) {
+    start(flow, null, handler);
+  }
+
+  public void start(Widget flow) {
+    start(flow, null, null);
+  }
+
   public void start(Widget flow, Configurator configurator, Handler handler) {
     getLocalFlowContext().start(flow, configurator, handler);
+  }
+  
+  public void replace(Widget flow) {
+    replace(flow, null);
   }
 
   public void replace(Widget flow, Configurator configurator) {

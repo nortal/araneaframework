@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="build-all" name="Aranea"> 
+<project basedir="." default="build" name="Aranea"> 
 	<description>
 		Code build script.
 	</description>
@@ -130,14 +130,23 @@
 		</javac>
 	</target>
 	
-	<target name="jar" depends="compile,tld">
+	<target name="make-manifest">
+		<mkdir dir="build/tmp/"/>
+		<manifest file="build/tmp/MANIFEST.MF" id="aranea-manifest">
+			<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
+			<attribute name="Implementation-Title" value="${project.title}"/>
+			<attribute name="Implementation-Version" value="${project.version}"/>
+		</manifest>
+	</target>
+	
+	<target name="jar" depends="compile,tld,make-manifest">
 		<mkdir dir="dist" />
 		<mkdir dir="dist/modules" />
 		<mkdir dir="dist/integration" />
 		
 		<!-- MODULES -->
 		
-		<jar destfile="dist/modules/aranea-core.jar" compress="true">
+		<jar destfile="dist/modules/aranea-core.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/*"/>
 			</fileset>
@@ -145,15 +154,9 @@
 			<fileset dir="src">
 				<include name="org/araneaframework/core/**/*"/>
 			</fileset>
-			
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${project.version}"/>
-			</manifest>
 		</jar>
 		
-		<jar destfile="dist/modules/aranea-framework.jar" compress="true">
+		<jar destfile="dist/modules/aranea-framework.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/framework/**/*"/>												
 			</fileset>
@@ -161,15 +164,9 @@
 			<fileset dir="src">
 				<include name="org/araneaframework/framework/**/*"/>
 			</fileset>
-			
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${project.version}"/>
-			</manifest>
 		</jar>		
 		
-		<jar destfile="dist/modules/aranea-http.jar" compress="true">
+		<jar destfile="dist/modules/aranea-http.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">							
 			  <include name="org/araneaframework/http/**/*"/>						
 			</fileset>
@@ -177,15 +174,9 @@
 			<fileset dir="src">
 				<include name="org/araneaframework/http/**/*"/>
 			</fileset>
-						
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${project.version}"/>
-			</manifest>
 		</jar>			
 		
-		<jar destfile="dist/modules/aranea-backend.jar" compress="true">
+		<jar destfile="dist/modules/aranea-backend.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/backend/**/*"/>			
 			</fileset>
@@ -193,15 +184,9 @@
 			<fileset dir="src">
 				<include name="org/araneaframework/backend/**/*"/>
 			</fileset>
-			
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${project.version}"/>
-			</manifest>
 		</jar>
 		
-		<jar destfile="dist/modules/aranea-uilib.jar" compress="true">
+		<jar destfile="dist/modules/aranea-uilib.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
@@ -209,16 +194,10 @@
 			<fileset dir="src">
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
-      	<fileset dir="etc" includes="resource/**/*"/>  
-
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${project.version}"/>
-			</manifest>
+	      	<fileset dir="etc" includes="resource/**/*"/>  
 		</jar>	
 		
-		<jar destfile="dist/modules/aranea-jsp.jar" compress="true">
+		<jar destfile="dist/modules/aranea-jsp.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/**/*"/>			
 				<exclude name="org/araneaframework/jsp/engine/**/*"/>			
@@ -233,15 +212,9 @@
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
-
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${project.version}"/>
-			</manifest>
 		</jar>	
 		
-		<jar destfile="dist/modules/aranea-jsp-engine.jar" compress="true">
+		<jar destfile="dist/modules/aranea-jsp-engine.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/engine/**/*"/>		        
 			</fileset>
@@ -251,17 +224,11 @@
 			</fileset>
 
 			<fileset dir="etc" includes="cache/**/*"/>      
-			
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${project.version}"/>
-			</manifest>
 		</jar>					
 		
 		<!-- INTEGRATION -->
 		
-		<jar destfile="dist/integration/aranea-integration-spring.jar" compress="true">
+		<jar destfile="dist/integration/aranea-integration-spring.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/integration/spring/**/*"/>			
 			</fileset>
@@ -271,17 +238,11 @@
 			</fileset>
 			
 			<fileset dir="etc" includes="conf/**/*"/>
-			
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${project.version}"/>
-			</manifest>
 		</jar>	
 	
 		<!-- ALL-IN-ONE -->
 		
-		<jar destfile="dist/aranea.jar" compress="true" >
+		<jar destfile="dist/aranea.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/**/*"/>	
 			</fileset>
@@ -292,12 +253,6 @@
 			<fileset dir="etc" excludes="build/,src/"/>
 
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
-
-			<manifest>
-				<attribute name="Main-Class" value="org.araneaframework.AraneaVersion"/>								
-				<attribute name="Implementation-Title" value="${project.title}"/>
-				<attribute name="Implementation-Version" value="${project.version}"/>
-			</manifest>
 		</jar>	
 	</target>
 	

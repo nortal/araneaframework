@@ -166,7 +166,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 		      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(person)); 
 		      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
 		      PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), new PopupWindowProperties(), new PopupMessageFactory());
-		      getFlowCtx().start(pfw, null, new MyHandler(rowForm, person)); 
+		      getFlowCtx().start(pfw, new MyHandler(rowForm, person)); 
 		}
 	}
 	

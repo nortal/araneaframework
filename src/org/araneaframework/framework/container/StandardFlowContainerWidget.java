@@ -36,6 +36,7 @@ import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.FlowContext.Handler;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -87,6 +88,14 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     this.top = topWidget;
   }
 
+  public void start(Widget flow) {
+    start(flow, null, null);
+  }
+
+  public void start(Widget flow, Handler handler) {
+    start(flow, null, handler);
+  }
+
   public void start(Widget flow, Configurator configurator, Handler handler) {
     Assert.notNullParam(flow, "flow");
     
@@ -113,7 +122,11 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       }
     }    
   }
-  
+
+  public void replace(Widget flow) {
+    replace(flow, null);
+  }
+
   public void replace(Widget flow, Configurator configurator) {
     Assert.notNullParam(flow, "flow");
     

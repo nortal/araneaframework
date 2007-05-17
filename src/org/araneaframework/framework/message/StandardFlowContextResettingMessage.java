@@ -63,7 +63,7 @@ public class StandardFlowContextResettingMessage implements Message {
       public void call(Environment env) throws Exception {
         FlowContext f = (FlowContext)env.getEntry(FlowContext.class);
         if (flow != null)
-          f.start(flow, null, null);
+          f.start(flow);
       }
     });
   }

@@ -19,14 +19,15 @@ package org.araneaframework.buildutil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -36,8 +37,8 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.xerces.dom.DocumentImpl;
 import org.apache.xerces.dom.NodeImpl;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -58,15 +59,15 @@ public class TcdAndTldMerger {
 		
 		System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
 
-		String firstTLD = args[0], secondTLD = args[1], outputTLD = args[2];
+		String tcdName = args[0], tldName = args[1], outputTLD = args[2];
 		
-		File firstFile = new File(firstTLD);
-		InputStream first = firstFile.exists() ? new FileInputStream(firstTLD) : TcdAndTldMerger.class.getClassLoader().getResourceAsStream(firstTLD);
+		File firstFile = new File(tcdName);
+		InputStream first = firstFile.exists() ? new FileInputStream(tcdName) : TcdAndTldMerger.class.getClassLoader().getResourceAsStream(tcdName);
 
-		File second = new File(secondTLD);
+		File second = new File(tldName);
 		
 		if (!second.exists() || !second.canRead()) {
-			System.err.println(secondTLD + " unreadable.");
+			System.err.println(tldName + " unreadable.");
 			System.exit(1);
 		}
 		
@@ -129,16 +130,32 @@ public class TcdAndTldMerger {
 				 }
 			 }
 		 }
-		 
+
 		Source input = new DOMSource(sDoc);
 		OutputStream ostream = new FileOutputStream(output);
 		Result out = new StreamResult(ostream);
 
 		TransformerFactory xformFactory = TransformerFactory.newInstance();
-		
+
 		try {
 			Transformer idTransformer = xformFactory.newTransformer();
+			
+			if (sDoc.getDoctype() != null){
+				String publicValue = (sDoc.getDoctype().getPublicId());
+				idTransformer.setOutputProperty(
+						OutputKeys.DOCTYPE_PUBLIC, publicValue
+				);
+
+				String systemValue = (sDoc.getDoctype().getSystemId());
+				idTransformer.setOutputProperty(
+						OutputKeys.DOCTYPE_SYSTEM, systemValue
+				);
+				
+				idTransformer.setOutputProperty(OutputKeys.INDENT, "yes" );
+			}
+			
 			idTransformer.transform(input, out);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

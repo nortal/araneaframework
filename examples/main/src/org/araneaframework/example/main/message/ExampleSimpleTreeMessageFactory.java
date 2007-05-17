@@ -33,7 +33,7 @@ public class ExampleSimpleTreeMessageFactory implements MessageFactory {
         new BroadcastMessage() {
           protected void execute(Component component) throws Exception {
             if (component instanceof MenuWidget) {
-              ((MenuWidget) component).start(new SimpleTreeWidget(), null, null);
+              ((MenuWidget) component).start(new SimpleTreeWidget());
             }
           }
         }
