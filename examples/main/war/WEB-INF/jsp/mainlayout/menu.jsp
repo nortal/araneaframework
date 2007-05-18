@@ -37,11 +37,12 @@
                         </div>
                     </c:forEach>
                     
-                    <div class="item">
-                    	<ui:form id="form">
-	                    	<ui:select id="langSelect"/>
-                    	</ui:form>
-                    </div>
+<!--                    TODO:put back-->
+<!--                    <div class="item">-->
+<!--                    	<ui:form id="form">-->
+<!--	                    	<ui:select id="langSelect"/>-->
+<!--                    	</ui:form>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>

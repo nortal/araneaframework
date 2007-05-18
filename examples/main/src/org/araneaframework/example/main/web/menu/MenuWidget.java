@@ -40,6 +40,7 @@ import org.araneaframework.example.main.web.demo.DemoMultiSelect;
 import org.araneaframework.example.main.web.demo.DemoOnChangeListenersWidget;
 import org.araneaframework.example.main.web.demo.DemoRadioSelect;
 import org.araneaframework.example.main.web.demo.DemoRichTextForm;
+import org.araneaframework.example.main.web.demo.NewSelectDemoWidget;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.misc.AjaxRequestErrorWidget;
@@ -91,6 +92,8 @@ public class MenuWidget extends TemplateMenuWidget  {
 	
 	protected MenuItem buildMenu() throws Exception {
 		MenuItem result = new MenuItem();
+		
+		result.addMenuItem(new MenuItem("#Ultimate", NewSelectDemoWidget.class));
 		
 		result.addMenuItem(null, new MenuItem("Management")); {
 			result.addMenuItem("Management", new MenuItem("Persons"));
