@@ -50,27 +50,27 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }  
   
   protected ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    return (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
   }
   
   protected FlowContext getFlowCtx() {
-    return (FlowContext) getEnvironment().getEntry(FlowContext.class);
+    return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
   }
   
   protected MessageContext getMessageCtx() {
-    return (MessageContext) getEnvironment().getEntry(MessageContext.class);
+    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
   }
   
   protected LocalizationContext getL10nCtx() {
-    return (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+    return (LocalizationContext) getEnvironment().requireEntry(LocalizationContext.class);
   }
   
   protected MountContext getMountCtx() {
-    return (MountContext) getEnvironment().getEntry(MountContext.class);
+    return (MountContext) getEnvironment().requireEntry(MountContext.class);
   }
   
   protected BeanFactory getBeanFactory() {
-    return (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
+    return (BeanFactory) getEnvironment().requireEntry(BeanFactory.class);
   }
   
   /**
