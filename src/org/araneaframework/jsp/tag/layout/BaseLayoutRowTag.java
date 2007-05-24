@@ -40,8 +40,8 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    requireContextEntry(RowClassProvider.KEY);
-    requireContextEntry(CellClassProvider.KEY);
+    getContextEntry(RowClassProvider.KEY);
+    getContextEntry(CellClassProvider.KEY);
 
     cellIter = cellClasses != null ? (ResettableIterator)new LoopingIterator(cellClasses) : new NullIterator();
     if (cellClasses != null)
@@ -56,7 +56,8 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
 
   public String getStyleClass() throws JspException {
     cellIter.reset();
-    String result = ((RowClassProvider)requireContextEntry(RowClassProvider.KEY)).getRowClass();
+    RowClassProvider rowClassProvider = (RowClassProvider)getContextEntry(RowClassProvider.KEY);
+    String result = rowClassProvider != null? rowClassProvider.getRowClass():null;
     result = (result != null && result.length() == 0) ? null : result;
 
     String superStyleClass = super.getStyleClass();
