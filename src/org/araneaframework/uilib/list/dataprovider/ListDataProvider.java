@@ -94,9 +94,12 @@ public interface ListDataProvider extends Serializable {
 	 */
 	public ListItemsData getAllItems() throws Exception;
 	
+	/** @since 1.1 */
 	public void addDataUpdateListener(DataUpdateListener listener);
+	/** @since 1.1 */
 	public void removeDataUpdateListener(DataUpdateListener listener);
 
+	/** @since 1.1 */
 	interface DataUpdateListener extends Serializable {
 		public void onDataUpdate();
 	}

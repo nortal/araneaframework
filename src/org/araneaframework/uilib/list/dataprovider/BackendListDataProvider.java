@@ -99,6 +99,7 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 		notifyDataChangeListeners();
 	}
 
+	/** @since 1.1 */
 	protected void forceReload() {
 		this.forceReload = true;
 	}
@@ -152,6 +153,7 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 		return this.lastItemRange;
 	}
 	
+	/** @since 1.1 */
 	protected void notifyDataChangeListeners() {
 		for (Iterator i = dataUpdateListeners.iterator(); i.hasNext(); ) {
 			DataUpdateListener listener = (DataUpdateListener) i.next();

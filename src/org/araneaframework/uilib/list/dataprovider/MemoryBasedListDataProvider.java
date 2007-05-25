@@ -200,6 +200,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 		notifyDataChangeListeners();
 	}
 	
+	/** @since 1.1 */
 	protected void notifyDataChangeListeners() {
 		for (Iterator i = dataUpdateListeners.iterator(); i.hasNext(); ) {
 			DataUpdateListener listener = (DataUpdateListener) i.next();
