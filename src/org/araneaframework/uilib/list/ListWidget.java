@@ -166,6 +166,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		if (isInitialized()) {			
 			initDataProvider();
 		}
+
+		fireChange();
 	}
 
 	/**
