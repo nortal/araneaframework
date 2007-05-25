@@ -19,14 +19,9 @@ package org.araneaframework.example.common.framework;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import org.araneaframework.EnvironmentAwareCallback;
-import org.araneaframework.InputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.core.BaseMenuWidget;
-import org.araneaframework.uilib.core.MenuContext;
-import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -41,15 +36,10 @@ import org.araneaframework.uilib.support.DisplayItem;
 public abstract class TemplateMenuWidget extends BaseMenuWidget {
   private FormWidget form;
   private FormElement langSelect;
-  protected MenuItem menu;
 
   // CONSTRUCTOR 
   public TemplateMenuWidget(Widget topWidget) throws Exception {
     super(topWidget);
-    
-    menu = buildMenu();
-    addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionHandler());
-    putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
   
   protected void init() throws Exception {
@@ -61,24 +51,6 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
 	form.addWidget("langSelect", langSelect);
 
 	createLangSelect();
-  }
-  
-  // MENU SELECTION LISTENER
-  private class ItemSelectionHandler extends StandardEventListener {
-    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
-      TemplateMenuWidget.this.selectMenuItem(eventParam);
-    }
-  }
-
-  public void selectMenuItem(String menuItemPath) throws Exception {
-    final Widget newFlow = menu.selectMenuItem(menuItemPath);
-    
-    reset(new EnvironmentAwareCallback() {
-      public void call(org.araneaframework.Environment env) throws Exception {
-        if (newFlow != null)
-          start(newFlow);
-      }
-    });
   }
 
   public void createLangSelect() throws Exception {
@@ -136,10 +108,4 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
 
     return result;
   }
-  
-  /**
-   * Method that must be implemented to build the menu.
-   * @return built menu.
-   */
-  protected abstract MenuItem buildMenu() throws Exception;
 }

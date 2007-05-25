@@ -513,7 +513,19 @@ public class FormTest extends TestCase {
     
     assertTrue("An exception must be thrown if wrong element name is given!", result == null);
   }
-
+  
+  
+  /**
+   * Tests that uninitialized form conversion works (that should be a no-op)
+   */
+  public void testUnInitializedFormConversion() throws Exception {
+	  FormWidget form = new FormWidget();
+	  form.addElement("elementName", "labelId", new TextControl(), new StringData(), true);
+	  
+	  // should succeed
+	  form.convert();
+  }
+  
   private class TestOnClickEventHandler implements OnClickEventListener {
 
     public void onClick() {
