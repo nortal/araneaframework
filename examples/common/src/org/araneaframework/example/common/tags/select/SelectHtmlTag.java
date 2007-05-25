@@ -16,11 +16,13 @@ package org.araneaframework.example.common.tags.select;
  * limitations under the License.
  **/
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.example.select.SelectControl;
+import org.araneaframework.example.select.model.OptionModel;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
@@ -80,24 +82,27 @@ public class SelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartTag(out);
 
-    // Write items
-    String selectedValue = viewModel.getSimpleValue();
     
-    Map optionModelMap = viewModel.getOptionModel().getOptionModelMap();
+    OptionModel optionModel = viewModel.getOptionModel();
+    Map optionGroupMap = optionModel.getOptionGroupMap();
+    
+    // write items
+    String selectedValue = viewModel.getSimpleValue();
+    writeOptions(out, optionModel, selectedValue);
+    
+    for(Iterator i = optionGroupMap.entrySet().iterator(); i.hasNext();) {
+    	Map.Entry entry = (Map.Entry)i.next();
+    	OptionModel.OptionGroup optionGroup = (org.araneaframework.example.select.model.OptionModel.OptionGroup) entry.getValue();
+    	
+    	String encodedLabel = optionGroup.getGroupLabelEncoder() == null ? optionGroup.getGroupLabel() : optionGroup.getGroupLabelEncoder().getDisplay(optionGroup.getGroupLabel()) ;
+    	
+		JspUtil.writeOpenStartTag(out, "optgroup");
+		JspUtil.writeAttribute(out, "label", encodedLabel);
+		JspUtil.writeCloseStartTag_SS(out);
+    	
+		writeOptions(out, optionGroup.getOptionModel(), selectedValue);
 
-    for(Iterator i = optionModelMap.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry)i.next();
-        String value = viewModel.getOptionModel().getValueEncoder().getValue(entry.getValue());
-        String label = viewModel.getOptionModel().getDisplayEncoder().getDisplay(entry.getValue());
-
-        JspUtil.writeOpenStartTag(out, "option");      
-        JspUtil.writeAttribute(out, "value", value != null ? value : "");
-        if ((value == null && selectedValue == null) ||              
-            (value != null && value.equals(selectedValue)))
-          JspUtil.writeAttribute(out, "selected", "true");
-        JspUtil.writeCloseStartTag_SS(out);
-        JspUtil.writeEscaped(out, label);
-        JspUtil.writeEndTag(out, "option");
+		JspUtil.writeEndTag_SS(out, "optgroup");
     }
 
     // Close tag
@@ -106,6 +111,28 @@ public class SelectHtmlTag extends BaseFormElementHtmlTag {
     // Continue
     super.doEndTag(out);
     return EVAL_PAGE;  
+  }
+
+  /**
+ * @since 1.1
+ */
+protected void writeOptions(Writer out, OptionModel optionModel,String selectedValue) throws IOException {
+	  Map optionModelMap = optionModel.getOptionModelMap();
+	  
+	  for(Iterator i = optionModelMap.entrySet().iterator(); i.hasNext();) {
+		  Map.Entry entry = (Map.Entry)i.next();
+		  String value = optionModel.getValueEncoder().getValue(entry.getValue());
+		  String label = optionModel.getDisplayEncoder().getDisplay(entry.getValue());
+
+		  JspUtil.writeOpenStartTag(out, "option");
+		  JspUtil.writeAttribute(out, "value", value != null ? value : "");
+		  if ((value == null && selectedValue == null) ||              
+				  (value != null && value.equals(selectedValue)))
+			  JspUtil.writeAttribute(out, "selected", "true");
+		  JspUtil.writeCloseStartTag_SS(out);
+		  JspUtil.writeEscaped(out, label);
+		  JspUtil.writeEndTag(out, "option");
+	  }
   }
 
   /* ***********************************************************************************

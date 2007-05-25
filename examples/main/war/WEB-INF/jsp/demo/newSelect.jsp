@@ -28,11 +28,23 @@
 							<ui:cell width="25%"/>
 						</ui:formElement>
 					</ui:row>
-
+					
+					<ui:row>
+						<ui:formElement id="groupedPersonSelect">
+							<ui:cell width="25%"/>
+							<ui:cell styleClass="name">
+								<ui:label />
+							</ui:cell>
+							<ui:cell>
+								<tui:select />
+							</ui:cell>
+							<ui:cell width="25%"/>
+						</ui:formElement>
+					</ui:row>
 				</tui:componentForm>
 				
 				<tui:componentActions>
-					<ui:eventButton labelId="#EVENT"/>
+					<ui:eventButton labelId="#EVENT" eventId="submit"/>
 				</tui:componentActions>
 
 			</tui:component>

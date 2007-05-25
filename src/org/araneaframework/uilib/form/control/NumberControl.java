@@ -136,7 +136,7 @@ public class NumberControl extends EmptyStringNullableControl {
    * 
    */
   protected void validateNotNull() {    
-    if (minValue != null && maxValue != null && ((((BigInteger) value).compareTo(minValue) == -1) || ((BigInteger) value).compareTo(maxValue) == 1)) {      
+    if (minValue != null && maxValue != null && ((((BigInteger) getRawValue()).compareTo(minValue) == -1) || ((BigInteger) getRawValue()).compareTo(maxValue) == 1)) {      
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.NUMBER_NOT_BETWEEN, 
@@ -147,7 +147,7 @@ public class NumberControl extends EmptyStringNullableControl {
           },          
           getEnvironment()));     
     }      
-    else if (minValue != null && ((BigInteger) value).compareTo(minValue) == -1) {      
+    else if (minValue != null && ((BigInteger) getRawValue()).compareTo(minValue) == -1) {      
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.NUMBER_NOT_GREATER, 
@@ -157,7 +157,7 @@ public class NumberControl extends EmptyStringNullableControl {
           },          
           getEnvironment()));    
     }    
-    else if (maxValue != null && ((BigInteger) value).compareTo(maxValue) == 1) {      
+    else if (maxValue != null && ((BigInteger) getRawValue()).compareTo(maxValue) == 1) {      
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.NUMBER_NOT_LESS, 

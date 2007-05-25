@@ -193,7 +193,7 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
   
   
    protected void validateNotNull() {
-     if (isMandatory() && ((Collection)value).isEmpty()) {
+     if (isMandatory() && ((Collection)getRawValue()).isEmpty()) {
 	      addError(
 	              MessageUtil.localizeAndFormat(
 	              UiLibMessages.MANDATORY_FIELD, 

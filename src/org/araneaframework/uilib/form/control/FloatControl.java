@@ -206,7 +206,7 @@ public class FloatControl extends EmptyStringNullableControl {
 	 */
 	protected void validateNotNull() {
 		// minimum and maximum permitted values
-		if (minValue != null && maxValue != null && ((((BigDecimal) value).compareTo(minValue) == -1) || ((BigDecimal) value).compareTo(maxValue) == 1)) {
+		if (minValue != null && maxValue != null && ((((BigDecimal) getRawValue()).compareTo(minValue) == -1) || ((BigDecimal) getRawValue()).compareTo(maxValue) == 1)) {
 			addError(
 					MessageUtil.localizeAndFormat(
 							UiLibMessages.NUMBER_NOT_BETWEEN, 
@@ -217,7 +217,7 @@ public class FloatControl extends EmptyStringNullableControl {
 							},          
 							getEnvironment()));           
 		}      
-		else if (minValue != null && ((BigDecimal) value).compareTo(minValue) == -1) {      
+		else if (minValue != null && ((BigDecimal) getRawValue()).compareTo(minValue) == -1) {      
 			addError(
 					MessageUtil.localizeAndFormat(
 							UiLibMessages.NUMBER_NOT_GREATER, 
@@ -227,7 +227,7 @@ public class FloatControl extends EmptyStringNullableControl {
 							},          
 							getEnvironment()));       
 		}    
-		else if (maxValue != null && ((BigDecimal) value).compareTo(maxValue) == 1) {
+		else if (maxValue != null && ((BigDecimal) getRawValue()).compareTo(maxValue) == 1) {
 			addError(
 					MessageUtil.localizeAndFormat(
 							UiLibMessages.NUMBER_NOT_LESS, 
@@ -239,7 +239,7 @@ public class FloatControl extends EmptyStringNullableControl {
 		}
 		
 		// maximum permitted scale
-		if (maxScale != null && ((BigDecimal) value).scale() > maxScale.intValue()) {
+		if (maxScale != null && ((BigDecimal) getRawValue()).scale() > maxScale.intValue()) {
 			addError(
 					MessageUtil.localizeAndFormat(
 							UiLibMessages.SCALE_NOT_LESS, 

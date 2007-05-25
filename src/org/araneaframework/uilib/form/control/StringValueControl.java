@@ -91,7 +91,7 @@ public abstract class StringValueControl extends EmptyStringNullableControl {
    * Checks that the value (<code>String</code>) length is between the given values.
    */
   protected void validateNotNull() {   
-    if (minLength != null && ((String) value).length() < minLength.longValue()) {      
+    if (minLength != null && ((String) getRawValue()).length() < minLength.longValue()) {      
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.STRING_TOO_SHORT, 
@@ -100,7 +100,7 @@ public abstract class StringValueControl extends EmptyStringNullableControl {
           getEnvironment()));        
     }
     
-    if (maxLength != null && ((String) value).length() > maxLength.longValue()) {  
+    if (maxLength != null && ((String) getRawValue()).length() > maxLength.longValue()) {  
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.STRING_TOO_LONG, 

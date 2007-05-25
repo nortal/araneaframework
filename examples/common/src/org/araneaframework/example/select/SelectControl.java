@@ -48,7 +48,7 @@ public class SelectControl extends StringValueControl {
 	//*********************************************************************  	
 
 
-	/**w
+	/**
 	 * Controls that the value submitted by the user is found in the select
 	 * items list. 
 	 */
@@ -95,10 +95,21 @@ public class SelectControl extends StringValueControl {
 
 		return parameterValue;
 	}
+	
+	
 
 	//*********************************************************************
 	//* VIEW MODEL
 	//*********************************************************************    
+
+	public Object getRawValue() {
+		//XXX: rethink
+		return super.getRawValue();
+	}
+
+	public String getRawValueType() {
+		return "Object";
+	}
 
 	/**
 	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -116,6 +127,11 @@ public class SelectControl extends StringValueControl {
 
 		public OptionModel getOptionModel() {
 			return optionModel;
+		}
+
+		public String getSimpleValue() {
+			// XXX: which option group?????
+			return SelectControl.this.optionModel.getValueEncoder().getValue(SelectControl.this.getRawValue());
 		}
 	}  
 }

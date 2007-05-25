@@ -2,17 +2,21 @@ package org.araneaframework.example.select.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.bidimap.TreeBidiMap;
 
 public class StandardOptionModel implements OptionModel {
-	private Collection options;
+	private Map options;
+	private Map optionGroups;
+	
 	private ValueEncoder valueEncoder;
 	private DisplayEncoder displayEncoder;
 	
 	{
-		options = new ArrayList();
+		options = createMap();
 	}
 
 	public StandardOptionModel() {
@@ -22,24 +26,55 @@ public class StandardOptionModel implements OptionModel {
 
 	public StandardOptionModel(Collection options) {
 		this();
-		//assert serializable
-		this.options.addAll(options);
+		//TODO: assert serializable??
+		addOptions(options);
 	}
 	
-	public boolean addOption(Object option) {
-		return options.add(option);
+	public void addOption(Object option) {
+		this.options.put(getValueEncoder().getValue(option), option);
 	}
 
-	public boolean addOptions(Collection options) {
-		return this.options.addAll(options);
+	public void addOptions(Collection options) {
+		for (Iterator i = options.iterator();i.hasNext();) {
+			addOption(i.next());
+		}
 	}
 	
+	public boolean hasOption(Object option) {
+		Object key = ((TreeBidiMap)options).getKey(option);
+		return options.containsValue(option);
+	}
+
+	public void addSubOptionGroup(String groupLabel, DisplayEncoder groupLabelEncoder, OptionModel groupOptionModel) {
+		if (optionGroups == null)
+			optionGroups = createMap();
+
+		optionGroups.put(groupLabel, new StandardOptionGroup(groupLabel, groupLabelEncoder, groupOptionModel));
+	}
+	
+	public void removeSubOptionGroup(String groupLabel) {
+		if (optionGroups != null)
+			optionGroups.remove(groupLabel);
+	}
+	
+	public Map getOptionGroupMap() {
+		return optionGroups != null ? Collections.unmodifiableMap(optionGroups) : Collections.EMPTY_MAP;
+	}
+
 	public void setDisplayEncoder(DisplayEncoder displayEncoder) {
 		this.displayEncoder = displayEncoder;
 	}
 	
 	public void setValueEncoder(ValueEncoder valueEncoder) {
 		this.valueEncoder = valueEncoder;
+		
+		Map old = options;
+		options = createMap();
+		addOptions(old.values());
+	}
+
+	private Map createMap() {
+		return new TreeBidiMap();
 	}
 	
 	public void setValueAndDisplayEncoder(ValueAndDisplayEncoder encoder) {
@@ -47,9 +82,9 @@ public class StandardOptionModel implements OptionModel {
 		setValueEncoder(encoder);
 	}
 
-	public void setOptions(Collection options) {
-		this.options = options;
-	}
+//	public void setOptions(Collection options) {
+//		this.options = options;
+//	}
 
 	public DisplayEncoder getDisplayEncoder() {
 		return displayEncoder;
@@ -60,23 +95,47 @@ public class StandardOptionModel implements OptionModel {
 	}
 
 	public boolean removeOption(Object option) {
-		return options.remove(option);
+		return this.options.remove(getValueEncoder().getValue(option)) != null;
 	}
 
-	public boolean removeOptions(Collection options) {
-		return this.options.removeAll(options);
+	public void removeOptions(Collection options) {
+		for (Iterator i = options.iterator();i.hasNext();) {
+			removeOption(i.next());
+		}
 	}
 	
 	public Map getOptionModelMap() {
-		Map result = new LinkedMap();
-		for (Iterator i = options.iterator(); i.hasNext();) {
-			Object object = i.next();
-			result.put(getValueEncoder().getValue(object), object);
-		}
-		
-		return result;
+		return Collections.unmodifiableMap(this.options);
+	}
+	
+	public Object getValue() {
+		return null;
 	}
 
+	public void setValue(Object option) {
+		boolean valueSet = false;
+		
+		List optionModels = new ArrayList(1+optionGroups.size());
+		optionModels.add(this);
+		
+		for (Iterator i = optionGroups.values().iterator(); i.hasNext(); ) {
+			OptionGroup optionGroup = (OptionGroup)i.next();
+			optionModels.add(optionGroup.getOptionModel());
+		}
+
+		for (Iterator i = optionModels.iterator(); i.hasNext() && !valueSet;) {
+			OptionModel model = (OptionModel) i.next();
+			if (model.hasOption(option)) {
+				valueSet = true;
+				model.setValue(option);
+			}
+		}
+		
+		if (!valueSet)
+			throw new IllegalArgumentException("Given option is not contained by this model.");
+	}
+
+	// TODO: visibility?
 	protected static class BasicDisplayEncoder implements DisplayEncoder {
 		private static final long serialVersionUID = 1L;
 
@@ -85,11 +144,37 @@ public class StandardOptionModel implements OptionModel {
 		}
 	}
 	
+	// TODO: visibility?
 	protected static class BasicValueEncoder implements ValueEncoder {
 		private static final long serialVersionUID = 1L;
 
 		public String getValue(Object o) {
-			return o.toString();
+			return String.valueOf(o.hashCode());
+		}
+	}
+	
+	// TODO: visibility?
+	public static class StandardOptionGroup implements OptionGroup {
+		private static final long serialVersionUID = 1L;
+		
+		private String groupLabel;
+		private DisplayEncoder groupLabelEncoder;
+		private OptionModel optionModel;
+		
+		public StandardOptionGroup(String groupLabel, DisplayEncoder groupLabelEncoder, OptionModel optionModel) {
+			this.groupLabel = groupLabel;
+			this.groupLabelEncoder = groupLabelEncoder;
+			this.optionModel = optionModel;
+		}
+
+		public String getGroupLabel() {
+			return groupLabel;
+		}
+		public DisplayEncoder getGroupLabelEncoder() {
+			return groupLabelEncoder;
+		}
+		public OptionModel getOptionModel() {
+			return optionModel;
 		}
 	}
 }

@@ -78,6 +78,9 @@ public interface Control extends Widget, Viewable, FormElementAware {
    */
   public void validate();
   
+  /** @since 1.1 */
+  public boolean isDisabled();
+  
   /**
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */

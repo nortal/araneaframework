@@ -37,7 +37,6 @@ import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.framework.FlowContext.Handler;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.

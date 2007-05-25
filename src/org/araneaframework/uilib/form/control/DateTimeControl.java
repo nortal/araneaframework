@@ -176,12 +176,13 @@ public class DateTimeControl extends BaseControl {
 
     //Reading control data
     if (getFormElementCtx().isValid() && isRead()) {
-      value = addTimeToDate(
+      setRawValue(
+      addTimeToDate(
           (Timestamp) dateControl.getRawValue(), 
-          (Timestamp) timeControl.getRawValue());
+          (Timestamp) timeControl.getRawValue()));
     }
     else {
-      value = null;
+    	setRawValue(null);
     }
   }
   
