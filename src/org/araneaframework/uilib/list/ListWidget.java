@@ -104,6 +104,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	private List initEvents = new ArrayList();
 	
 	private boolean changed = true;
+	private DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
 
 	//*********************************************************************
 	//* CONSTRUCTOR
@@ -156,7 +157,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @throws Exception 
 	 */
 	public void setDataProvider(ListDataProvider dataProvider) throws Exception {
+		if (this.dataProvider != null)
+			this.dataProvider.removeDataUpdateListener(dataProviderDataUpdateListener);
+
 		this.dataProvider = dataProvider;
+		this.dataProvider.addDataUpdateListener(dataProviderDataUpdateListener);
+
 		if (isInitialized()) {			
 			initDataProvider();
 		}
@@ -1021,7 +1027,13 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		public void onClick() throws Exception {
 			clearFilter();
 		}
-	}	
+	}
+	
+	protected class DataProviderDataUpdateListener implements ListDataProvider.DataUpdateListener {
+		public void onDataUpdate() {
+			fireChange();
+		}
+	}
 
 	//*********************************************************************
 	//* VIEW MODEL
