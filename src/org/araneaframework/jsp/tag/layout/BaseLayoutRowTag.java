@@ -39,9 +39,6 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
-    getContextEntry(RowClassProvider.KEY);
-    getContextEntry(CellClassProvider.KEY);
 
     cellIter = cellClasses != null ? (ResettableIterator)new LoopingIterator(cellClasses) : new NullIterator();
     if (cellClasses != null)
