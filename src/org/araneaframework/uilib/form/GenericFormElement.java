@@ -141,12 +141,15 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * Converts the element value from control to data item
    */
   public void convert()  throws Exception {
-    clearErrors();
+    converted = false;  
+    validated = false;
     
-  	converted = false;  
-  	validated = false;
-  	
-  	convertInternal();
+    if (!isAlive())
+      return;
+
+    clearErrors();
+
+    convertInternal();
   	
   	converted = isValid();
   }
