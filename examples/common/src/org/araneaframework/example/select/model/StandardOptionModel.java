@@ -3,6 +3,7 @@ package org.araneaframework.example.select.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +75,7 @@ public class StandardOptionModel implements OptionModel {
 	}
 
 	private Map createMap() {
-		return new TreeBidiMap();
+		return new HashMap();
 	}
 	
 	public void setValueAndDisplayEncoder(ValueAndDisplayEncoder encoder) {

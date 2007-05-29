@@ -104,6 +104,7 @@ public class SelectControl extends StringValueControl {
 
 	public Object getRawValue() {
 		//XXX: rethink
+//		//optionModel.getValue();
 		return super.getRawValue();
 	}
 

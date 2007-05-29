@@ -8,11 +8,13 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IGeneralDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.select.SelectControl;
+import org.araneaframework.example.select.StraightSelectControl;
 import org.araneaframework.example.select.model.StandardOptionModel;
 import org.araneaframework.example.select.model.OptionModel.ValueAndDisplayEncoder;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.data.ObjectData;
+import org.araneaframework.uilib.form.data.StringData;
 
 public class NewSelectDemoWidget extends TemplateBaseWidget {
 	private static final long serialVersionUID = 1L;
@@ -30,6 +32,8 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 		personSelectControl.getModel().setValueAndDisplayEncoder(new X());
 		
 		form = new FormWidget();
+		form.addElement("tstelement", "#noalble", new StraightSelectControl(), new  StringData(), false);
+		
 		personSelect = form.createElement("#Persons", personSelectControl, new ObjectData(), false);
 		
 		List noBirthDate = generalDAO.getAll(PersonMO.class);
@@ -64,6 +68,7 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 		
 		form.addElement("personSelect", personSelect);
 		form.addElement("groupedPersonSelect", groupedPersonSelect);
+
 		addWidget("form", form);
 	}
 	
@@ -83,6 +88,10 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 		}
 
 		public String getValue(Object o) {
+			if (o == null)
+				return null;
+			
+			//XXX what
 			return ((PersonMO)o).getId().toString();
 		}
 	}

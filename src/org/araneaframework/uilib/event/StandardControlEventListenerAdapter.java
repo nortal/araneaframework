@@ -45,7 +45,7 @@ public class StandardControlEventListenerAdapter implements EventListener {
    */
   public void addOnChangeEventListener(OnChangeEventListener onChangeEventListener) {
     if (onChangeEventListeners == null)
-      onChangeEventListeners = new ArrayList();
+      onChangeEventListeners = new ArrayList(1);
     onChangeEventListeners.add(onChangeEventListener);
   }
   
@@ -70,7 +70,7 @@ public class StandardControlEventListenerAdapter implements EventListener {
    */
   public void addOnClickEventListener(OnClickEventListener onClickEventListener) {
     if (onClickEventListeners == null)
-      onClickEventListeners = new ArrayList();
+      onClickEventListeners = new ArrayList(1);
     onClickEventListeners.add(onClickEventListener);
   }
   
