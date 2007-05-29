@@ -141,8 +141,8 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 			query.setOrderExpression(this.orderExpr);			
 			this.lastItemRange = getItemRange(query);
 			
-			if (log.isDebugEnabled()) {
-				log.debug("refreshing itemrange: startIdx=" + startIdx.toString() + ", count="+count.toString());
+			if (log.isTraceEnabled()) {
+				log.trace("Refreshing itemrange: startIdx=" + String.valueOf(startIdx) + ", count=" + String.valueOf(count));
 			}
 		}
 
