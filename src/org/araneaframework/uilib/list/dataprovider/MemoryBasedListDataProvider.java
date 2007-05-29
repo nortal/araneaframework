@@ -20,8 +20,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,8 +47,8 @@ import org.araneaframework.backend.list.model.ListItemsData;
  * 
  */
 public abstract class MemoryBasedListDataProvider implements ListDataProvider {
-
 	private static final Log log = LogFactory.getLog(MemoryBasedListDataProvider.class);
+	private Set dataUpdateListeners = new HashSet(1);
 	
 	// *******************************************************************
 	// FIELDS
@@ -169,6 +171,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 		} else {
 			this.currentOrder = null;
 		}
+		notifyDataChangeListeners();
 	}
 
 	/**
@@ -182,6 +185,7 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 		} else {
 			this.currentFilter = null;
 		}
+		notifyDataChangeListeners();
 	}
 
 	/**
@@ -192,6 +196,24 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 		this.allData = loadData();
 		this.doFilter = true;
 		this.doOrder = true;
+		
+		notifyDataChangeListeners();
+	}
+	
+	/** @since 1.1 */
+	protected void notifyDataChangeListeners() {
+		for (Iterator i = dataUpdateListeners.iterator(); i.hasNext(); ) {
+			DataUpdateListener listener = (DataUpdateListener) i.next();
+			listener.onDataUpdate();
+		}
+	}
+	
+	public void addDataUpdateListener(DataUpdateListener listener) {
+		dataUpdateListeners.add(listener);
+	}
+
+	public void removeDataUpdateListener(DataUpdateListener listener) {
+		dataUpdateListeners.remove(listener);
 	}
 
 	// *********************************************************************

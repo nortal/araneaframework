@@ -81,7 +81,7 @@ public class MessagesHtmlTag extends PresentationTag {
    */
   protected void writeMessagesStart(Writer out, List entries) throws Exception {
     JspUtil.writeOpenStartTag(out, "div");
-    JspUtil.writeAttribute(out, "divId", getDivId());
+    JspUtil.writeAttribute(out, "id", getDivId());
     JspUtil.writeAttribute(out, "class", getStyleClass());
     if (type != null) {
       JspUtil.writeAttribute(out, "arn-msgs-type", type);

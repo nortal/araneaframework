@@ -16,6 +16,9 @@
 
 package org.araneaframework.uilib.list.dataprovider;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -31,6 +34,7 @@ import org.araneaframework.backend.list.model.ListQuery;
  */
 public abstract class BackendListDataProvider implements ListDataProvider {
 	private static final Log log = LogFactory.getLog(BackendListDataProvider.class);
+	private Set dataUpdateListeners = new HashSet(1);
 	
 	public static final boolean USE_CACHE_BY_DEFAULT = false; 
 
@@ -42,7 +46,7 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 
 	protected ListItemsData lastItemRange;
 
-	protected boolean forceReload = false;
+	private boolean forceReload = false;
 	protected boolean useCache = USE_CACHE_BY_DEFAULT;
 
 	/**
@@ -74,7 +78,8 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 	public void setFilterExpression(Expression filterExpr) {
 		this.filterExpr = filterExpr;
 
-		this.forceReload = true;
+		forceReload();
+		notifyDataChangeListeners();
 	}
 
 	/**
@@ -82,14 +87,20 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 	 */
 	public void setOrderExpression(ComparatorExpression orderExpr) {
 		this.orderExpr = orderExpr;
-
-		this.forceReload = true;
+		forceReload();
+		notifyDataChangeListeners();
 	}
 
 	/**
 	 * Empty.
 	 */
 	public void refreshData() throws Exception {
+		forceReload();
+		notifyDataChangeListeners();
+	}
+
+	/** @since 1.1 */
+	protected void forceReload() {
 		this.forceReload = true;
 	}
 
@@ -130,8 +141,8 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 			query.setOrderExpression(this.orderExpr);			
 			this.lastItemRange = getItemRange(query);
 			
-			if (log.isDebugEnabled()) {
-				log.debug("refreshing itemrange: startIdx=" + startIdx.toString() + ", count="+count.toString());
+			if (log.isTraceEnabled()) {
+				log.trace("Refreshing itemrange: startIdx=" + String.valueOf(startIdx) + ", count=" + String.valueOf(count));
 			}
 		}
 
@@ -141,7 +152,23 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 
 		return this.lastItemRange;
 	}
+	
+	/** @since 1.1 */
+	protected void notifyDataChangeListeners() {
+		for (Iterator i = dataUpdateListeners.iterator(); i.hasNext(); ) {
+			DataUpdateListener listener = (DataUpdateListener) i.next();
+			listener.onDataUpdate();
+		}
+	}
+	
+	public void addDataUpdateListener(DataUpdateListener listener) {
+		dataUpdateListeners.add(listener);
+	}
 
+	public void removeDataUpdateListener(DataUpdateListener listener) {
+		dataUpdateListeners.remove(listener);
+	}
+	
 	/**
 	 * This method should be overidden to return a range of items from the list data.
 	 * 
