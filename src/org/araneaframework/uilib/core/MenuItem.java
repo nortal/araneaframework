@@ -42,8 +42,6 @@ public class MenuItem implements Serializable {
 
   /** Indicates whether the menuitem is in selected state. */
   private boolean selected;
-  /** Indicates whether the menuitem serves as holder for others. */
-  private boolean holder;
 
   /** Submenu of this <code>MenuItem</code> (may exist only when this <code>MenuItem</code> is a holder. */
   private Map subMenu;
@@ -56,7 +54,6 @@ public class MenuItem implements Serializable {
    */
   public MenuItem() {
     this.label = null;
-    this.holder = true;
   }
 
   /**
@@ -66,7 +63,6 @@ public class MenuItem implements Serializable {
   public MenuItem(String label) {
     checkLabelLegality(label);
     this.label = label;
-    this.holder = true;
   }
 
   /**
@@ -107,8 +103,6 @@ public class MenuItem implements Serializable {
    * @throws UnsupportedOperationException if this <code>MenuItem</code> is not a holder.
    */
   private void addSubMenuItem(MenuItem item) throws UnsupportedOperationException {
-    if (!holder)
-      throw new UnsupportedOperationException("Menu items can only be added into holders.");
     if (subMenu == null)
       subMenu = new LinkedMap();
     subMenu.put(item.getLabel(), item);
@@ -202,8 +196,15 @@ public class MenuItem implements Serializable {
     return label;
   }
 
+  
+  /**
+   * Since Aranea 1.0.9 all menu items are considered holders.
+   * Before that, only items which were not associated with flows were considered holders.
+   * @return true
+   * @deprecated
+   */
   public boolean isHolder() {
-    return holder;
+    return true;
   }
 
   public boolean isSelected() {

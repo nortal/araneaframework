@@ -85,4 +85,12 @@ public class FormElementTest extends TestCase {
 		assertNull(form.getElement("nonexistant"));
 		assertNull(form.getElement("really.nonexistant"));
 	}
+	
+	  public void testUnInitializedFormElementConversion() throws Exception {
+		  FormWidget form = new FormWidget();
+		  FormElement element = form.createElement( "labelId", new TextControl(), new StringData(), true);
+		  
+		  // should succeed
+		  element.convert();
+	  }
 }

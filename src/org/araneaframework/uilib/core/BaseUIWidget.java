@@ -50,7 +50,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
     this.viewSelector = viewSelector;
   }  
   
-  public ConfigurationContext getConfiguration() {
+  protected ConfigurationContext getConfiguration() {
     return (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
   }
   
