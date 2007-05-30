@@ -9,6 +9,7 @@ import org.araneaframework.example.main.business.data.IGeneralDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.select.SelectControl;
 import org.araneaframework.example.select.StraightSelectControl;
+import org.araneaframework.example.select.StraightTextControl;
 import org.araneaframework.example.select.model.StandardOptionModel;
 import org.araneaframework.example.select.model.OptionModel.ValueAndDisplayEncoder;
 import org.araneaframework.uilib.form.FormElement;
@@ -32,7 +33,8 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 		personSelectControl.getModel().setValueAndDisplayEncoder(new X());
 		
 		form = new FormWidget();
-		form.addElement("tstelement", "#noalble", new StraightSelectControl(), new  StringData(), false);
+		//form.addElement("tstelement", "#noalble", new StraightSelectControl(), new  StringData(), false);
+		form.addElement("nt", "#new text", new StraightTextControl(), new StringData(), null, true);
 		
 		personSelect = form.createElement("#Persons", personSelectControl, new ObjectData(), false);
 		
@@ -62,12 +64,15 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 		StandardOptionModel optionModel = new StandardOptionModel();
 		optionModel.addSubOptionGroup("#NoBirthDate", null, noBDayModel);
 		optionModel.addSubOptionGroup("#WithBirthDate", null, withBDayModel);
-		
+			
 		groupedPersonSelect = form.createElement("#Persons", new SelectControl(optionModel), new ObjectData(), false);
 		((SelectControl)groupedPersonSelect.getControl()).getModel().setValueAndDisplayEncoder(new X());
 		
-		form.addElement("personSelect", personSelect);
-		form.addElement("groupedPersonSelect", groupedPersonSelect);
+//		form.addElement("personSelect", personSelect);
+//		form.addElement("groupedPersonSelect", groupedPersonSelect);
+		
+		personSelect.setDisabled(true);
+		groupedPersonSelect.setDisabled(true);
 
 		addWidget("form", form);
 	}
@@ -77,9 +82,9 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventSubmit() throws Exception {
-		form.convert();
+		//form.convert();
 		
-		getMessageCtx().showInfoMessage(new ReflectionToStringBuilder(groupedPersonSelect.getValue()).toString());
+		//getMessageCtx().showInfoMessage(new ReflectionToStringBuilder(groupedPersonSelect.getValue()).toString());
 	}
 	
 	private static class X implements ValueAndDisplayEncoder {

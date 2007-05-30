@@ -16,27 +16,41 @@
 			<tui:component>
 
 				<tui:componentForm>
-					<ui:row>
-						<ui:formElement id="personSelect">
-							<ui:cell width="25%"/>
-							<ui:cell styleClass="name">
-								<ui:label />
-							</ui:cell>
-							<ui:cell>
-								<tui:select />
-							</ui:cell>
-							<ui:cell width="25%"/>
-						</ui:formElement>
-					</ui:row>
+<!--					<ui:row>-->
+<!--						<ui:formElement id="personSelect">-->
+<!--							<ui:cell width="25%"/>-->
+<!--							<ui:cell styleClass="name">-->
+<!--								<ui:label />-->
+<!--							</ui:cell>-->
+<!--							<ui:cell>-->
+<!--								<tui:select />-->
+<!--							</ui:cell>-->
+<!--							<ui:cell width="25%"/>-->
+<!--						</ui:formElement>-->
+<!--					</ui:row>-->
+<!--					-->
+<!--					<ui:row>-->
+<!--						<ui:formElement id="groupedPersonSelect">-->
+<!--							<ui:cell width="25%"/>-->
+<!--							<ui:cell styleClass="name">-->
+<!--								<ui:label />-->
+<!--							</ui:cell>-->
+<!--							<ui:cell>-->
+<!--								<tui:select />-->
+<!--							</ui:cell>-->
+<!--							<ui:cell width="25%"/>-->
+<!--						</ui:formElement>-->
+<!--					</ui:row>-->
+					
 					
 					<ui:row>
-						<ui:formElement id="groupedPersonSelect">
+						<ui:formElement id="nt">
 							<ui:cell width="25%"/>
 							<ui:cell styleClass="name">
 								<ui:label />
 							</ui:cell>
 							<ui:cell>
-								<tui:select />
+								<tui:textInput />
 							</ui:cell>
 							<ui:cell width="25%"/>
 						</ui:formElement>
