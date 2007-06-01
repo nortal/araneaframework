@@ -17,9 +17,9 @@ import org.araneaframework.uilib.form.FormElementContext;
 
 public class StraightBaseControl extends BaseApplicationWidget implements Control  {
 	private FormElementContext formElementContext;
-	
-	private transient Collection fromRequest;
 
+	private transient Collection clientValue;
+	
 	private Object value;
 
 
@@ -40,7 +40,7 @@ public class StraightBaseControl extends BaseApplicationWidget implements Contro
 
 	protected void update(InputData input) throws Exception {
 		if (!isDisabled())
-			fromRequest = getControlReader().readValue(this, input);
+			clientValue = getControlReader().readValue(this, input);
 		
 		super.update(input);
 	}
@@ -97,6 +97,12 @@ public class StraightBaseControl extends BaseApplicationWidget implements Contro
 
 	public void setRawValue(Object value) {
 		this.value = value;
+		if (value instanceof Collection) {
+			clientValue = (Collection) value;
+		} else {
+			clientValue.clear();
+			clientValue.add(value);
+		}
 	}
 
 	public void convertAndValidate() {
