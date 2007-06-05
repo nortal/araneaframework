@@ -52,12 +52,16 @@ public class StandardServletInputData implements HttpInputData {
   private StringBuffer path;
   private LinkedList pathPrefixes = new LinkedList();
   
+  private String servletPath;
+  
   /**
    * Constructs a StandardServletInputData from the request. 
    * @param request
    */
   public StandardServletInputData(HttpServletRequest request) {
     Assert.notNullParam(request, "request");
+    
+    servletPath = request.getServletPath();
     
     setRequest(request);
     extend(HttpServletRequest.class, req);
@@ -153,12 +157,12 @@ public class StandardServletInputData implements HttpInputData {
     url.append(":");
     url.append(req.getServerPort());
     url.append(req.getContextPath());
-    url.append(req.getServletPath());
+    url.append(servletPath);
     return url.toString();
   }
   
   public String getContainerPath() {
-    return req.getServletPath();
+    return servletPath;
   }
   
   public String getContextURL() {
