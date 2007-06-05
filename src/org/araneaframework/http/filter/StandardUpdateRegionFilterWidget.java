@@ -32,7 +32,6 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.RoutedMessage;
 import org.araneaframework.core.StandardEnvironment;
@@ -196,8 +195,10 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     for (int i = 0; i < regionNames.length; i++) {
       String documentRegionId = regionNames[i];
       String widgetId = (String) documentRegions.get(documentRegionId);
-      if (widgetId == null)
-        throw new AraneaRuntimeException("Document region id not found: " + documentRegionId);
+      if (widgetId == null) {
+        log.warn("Document region id not found: " + documentRegionId);
+        continue;
+      }
 
       Set regionIds = (Set) regionIdsByWidgetId.get(widgetId);
       if (regionIds == null) {
@@ -254,7 +255,12 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String widgetContent = new String(arUtil.getData(), characterEncoding);
       for (Iterator j = regionIds.iterator(); j.hasNext(); ) {
         String id = (String) j.next();
-        regionContents.put(id, new Region(getContentById(widgetContent, id), "update"));
+        String content = getContentById(widgetContent, id);
+        if (content == null) {
+          log.warn("Document region '" + id + "' not found on rendering of widget '" + widgetId + "'");
+          continue;
+        }
+        regionContents.put(id, new Region(content, "update"));
       }
       arUtil.rollback();
     }
@@ -266,7 +272,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     int startIndex = source.indexOf(blockStart);
 
     if(startIndex == -1)
-      return "";
+      return null;
 
     String blockEnd = "<!--END:" + id + "-->";
 
