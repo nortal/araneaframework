@@ -434,15 +434,18 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
 
 Object.extend(AraneaPage, {
   /* Private fields */
+  loadingMessagePositionHack: false,
+  receivedRegionCounters: null,
   regionHandlers: new Hash(),
-  loadingMessageId: 'aranea-loading-message',
 
   /* Public fields */
 
   /** @since 1.1 */
   loadingMessageContent: 'Loading...',
   /** @since 1.1 */
-  loadingMessagePositionHack: false,
+  loadingMessageId: 'aranea-loading-message',
+  /** @since 1.1 */
+  reloadOnNoDocumentRegions: false,
 
   /**
    * Add a handler that is invoked for custom data region in updateregions AJAX
@@ -465,15 +468,29 @@ Object.extend(AraneaPage, {
   processResponse: function(responseText) {
     var text = new Text(responseText);
     text.readLine(); // responseId
+    this.receivedRegionCounters = new Hash();
     while (!text.isEmpty()) {
       var key = text.readLine();
       var length = text.readLine();
       var content = text.readCharacters(length);
+      if (this.receivedRegionCounters[key]) {
+        this.receivedRegionCounters[key]++;
+      } else {
+        this.receivedRegionCounters[key] = 1;
+      }
       if (this.regionHandlers[key]) {
-        araneaPage().getLogger().debug('Region type: "' + key + '"');
+        araneaPage().getLogger().debug('Region type: "' + key + '", length ' + length + ' chars');
         this.regionHandlers[key].process(content);
       } else {
         araneaPage().getLogger().error('Region type: "' + key + '" is unknown!');
+      }
+    }
+    if (this.reloadOnNoDocumentRegions && !this.receivedRegionCounters['document']) {
+      araneaPage().getLogger().debug('No document regions were received, forcing a reload of the page');
+      if (this.regionHandlers['reload']) {
+        this.regionHandlers['reload'].process();
+      } else {
+        araneaPage().getLogger().error('No handler is registered for "reload" region, unable to force page reload!');
       }
     }
   },
@@ -581,8 +598,13 @@ AraneaPage.addRegionHandler('document', new AraneaPage.DocumentRegionHandler());
  */
 AraneaPage.MessageRegionHandler = Class.create();
 AraneaPage.MessageRegionHandler.prototype = {
+  /* Public fields */
+
+  /** @since 1.1 */
   regionClass: '.aranea-messages',
+  /** @since 1.1 */
   regionTypeAttribute: 'arn-msgs-type',
+  /** @since 1.1 */
   messageSeparator: '<br/>',
 
   initialize: function() {
