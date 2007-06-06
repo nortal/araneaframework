@@ -46,12 +46,12 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
   /**
    * Global parameter key for the client state form input.
    */
-  public static final String CLIENT_STATE = "clientState";
+  public static final String CLIENT_STATE = "araClientState";
 
   /**
    * Global parameter key for the version of the client state form input.
    */
-  public static final String CLIENT_STATE_VERSION = "clientStateVersion";
+  public static final String CLIENT_STATE_VERSION = "araClientStateVersion";
 
   private Buffer digestSet = new CircularFifoBuffer(10);
 

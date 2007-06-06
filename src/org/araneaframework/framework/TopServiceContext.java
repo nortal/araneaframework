@@ -28,6 +28,6 @@ public interface TopServiceContext extends ManagedServiceContext, Serializable {
   /**
    * The key of the top-service's id in the request.
    */
-  public static final String TOP_SERVICE_KEY = "topServiceId";
+  public static final String TOP_SERVICE_KEY = "araTopServiceId";
   public static final String KEEPALIVE_KEY = "topServiceKeepAlive";
 }
