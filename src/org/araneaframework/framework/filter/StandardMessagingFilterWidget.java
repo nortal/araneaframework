@@ -231,23 +231,22 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   protected class MessageRegionHandler implements UpdateRegionContext.RegionHandler {
 
     public String getContent() throws Exception {
-      Map messageMap = getMessages();
-      if (messageMap == null || messageMap.isEmpty())
-        return null;
-
       JsonObject messagesByType = new JsonObject();
-      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
-        Map.Entry entry = (Map.Entry) i.next();
-        if (entry.getValue() == null) {
-          continue;
+      Map messageMap = getMessages();
+      if (messageMap != null) {
+        for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+          Map.Entry entry = (Map.Entry) i.next();
+          if (entry.getValue() == null) {
+            continue;
+          }
+          String type = (String) entry.getKey();
+          JsonArray messages = new JsonArray();
+          for (Iterator j = ((Collection) entry.getValue()).iterator(); j.hasNext(); ) {
+            String message = (String) j.next();
+            messages.appendString(message);
+          }
+          messagesByType.setProperty(type, messages.toString());
         }
-        String type = (String) entry.getKey();
-        JsonArray messages = new JsonArray();
-        for (Iterator j = ((Collection) entry.getValue()).iterator(); j.hasNext(); ) {
-          String message = (String) j.next();
-          messages.appendString(message);
-        }
-        messagesByType.setProperty(type, messages.toString());
       }
       return messagesByType.toString();
     }
