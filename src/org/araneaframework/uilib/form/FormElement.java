@@ -25,7 +25,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.core.Renderable;
+import org.araneaframework.framework.core.RenderStateAware;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -39,7 +39,7 @@ import org.araneaframework.uilib.util.Event;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class FormElement extends GenericFormElement implements FormElementContext, Renderable {
+public class FormElement extends GenericFormElement implements FormElementContext, RenderStateAware {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -356,13 +356,9 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	  public void rendered() {
 	    this.rendered = true;
 	  }
-	  
-	  
-	  /**
-	   * Marks status of this {@link GenericFormElement} rendered.
-	   */
-    public void notRendered() {
-		this.rendered = false;
+
+	public void setRendered(boolean rendered) {
+		this.rendered = rendered;
 	}
 
 	/**
