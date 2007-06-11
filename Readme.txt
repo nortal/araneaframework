@@ -1,5 +1,5 @@
 *****************************************
-* THE ARANEA FRAMEWORK, release 1.0.8   *
+* THE ARANEA FRAMEWORK, release 1.0.9   *
 *    http://www.araneaframework.org/    *
 *****************************************
 
