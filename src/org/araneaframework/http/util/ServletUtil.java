@@ -77,7 +77,7 @@ public abstract class ServletUtil {
    * @since 1.1
    */
   public static void include(String filePath, ApplicationWidget widget, OutputData output) throws Exception {
-    include(filePath, widget.getEnvironment(), output, widget);
+    include(filePath, widget.getChildEnvironment(), output, widget);
   }
 
   private static void include(String filePath, Environment env, OutputData output, ApplicationWidget widget) throws Exception {
