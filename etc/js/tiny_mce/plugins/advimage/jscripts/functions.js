@@ -239,12 +239,8 @@ function setAttrib(elm, attrib, value) {
 			attrib = "className";
 
 		eval('elm.' + attrib + "=value;");
-	} else {
-		if (attrib == 'class')
-			elm.className = '';
-
+	} else
 		elm.removeAttribute(attrib);
-	}
 }
 
 function makeAttrib(attrib, value) {
@@ -478,18 +474,18 @@ function showPreviewImage(src, start) {
 	if (src == "")
 		elm.innerHTML = "";
 	else
-		elm.innerHTML = '<img id="previewImg" src="' + src + '" border="0" onload="updateImageData(' + start + ');" onerror="resetImageData();" />'
+		elm.innerHTML = '<img id="previewImg" src="' + src + '" border="0" onload="updateImageData();" onerror="resetImageData();" />'
 }
 
-function updateImageData(start) {
+function updateImageData() {
 	var formObj = document.forms[0];
 
 	preloadImg = document.getElementById('previewImg');
 
-	if (!start && formObj.width.value == "")
+	if (formObj.width.value == "")
 		formObj.width.value = preloadImg.width;
 
-	if (!start && formObj.height.value == "")
+	if (formObj.height.value == "")
 		formObj.height.value = preloadImg.height;
 
 	updateStyle();

@@ -127,15 +127,7 @@ var TinyMCE_FullPagePlugin = {
 				break;
 
 			case "get_from_editor":
-				if (inst.fullpageTopContent && !tinyMCE.getParam("fullpage_hide_in_source_view", false)) {
-					content = content.replace(/(\s)?mce\_[a-z_]+\=[^\s>]+(\s|\>)/i, ''); // Remove internal stuff
-					content = inst.fullpageTopContent + content + "\n</body>\n</html>";
-				}
-
-				break;
-
-			case "submit_content":
-				if (inst.fullpageTopContent && tinyMCE.getParam("fullpage_hide_in_source_view", false))
+				if (inst.fullpageTopContent)
 					content = inst.fullpageTopContent + content + "\n</body>\n</html>";
 
 				break;
