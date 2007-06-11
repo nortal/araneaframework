@@ -14,6 +14,6 @@ public class NotRenderedMessage extends BroadcastMessage {
   
   protected void execute(Component component) throws Exception {
     if (component instanceof RenderStateAware) {
-      ((RenderStateAware) component).setRendered(false);    }
+      ((RenderStateAware) component)._setRendered(false);    }
   }
 }

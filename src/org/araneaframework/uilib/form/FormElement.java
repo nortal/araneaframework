@@ -354,13 +354,13 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	   * Marks status of this {@link FormElement} rendered.
 	   */
 	  public void rendered() {
-	    setRendered(true);
+	    _setRendered(true);
 	  }
 
 	/**
 	 * @since 1.1
 	 */
-	public void setRendered(boolean rendered) {
+	public void _setRendered(boolean rendered) {
 		this.rendered = rendered;
 	}
 

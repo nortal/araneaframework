@@ -9,6 +9,15 @@ import java.io.Serializable;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface RenderStateAware extends Serializable {
+	/**
+	 * Returns the render state of implementing class(component).
+	 * @return render state of implementing class(component)
+	 */
 	boolean isRendered();
-	void setRendered(boolean rendered);
+
+	/**
+	 * Only use when you really know what you are doing.
+	 * @param rendered
+	 */
+	void _setRendered(boolean rendered);
 }
