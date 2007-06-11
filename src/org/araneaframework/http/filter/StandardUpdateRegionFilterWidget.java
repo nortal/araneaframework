@@ -245,8 +245,20 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
       if (log.isDebugEnabled())
         log.debug("Rendering widget " + widgetId);
-      Message renderMessage = new RenderMessage(new StandardPath(widgetId), output);
+      
+      // acquires the path to renderable widget
+      StandardPath widgetPath = new StandardPath(widgetId);
+      
+      // send a message to identify the component to be rendered 
+      ComponentLocatorMessage componentLocatorMessage = new ComponentLocatorMessage(widgetPath);
+      propagate(componentLocatorMessage);
+      // send a message to renderable component that resets the render state of Renderable components
+      NotRenderedMessage.INSTANCE.send(null, componentLocatorMessage.getComponent());
+
+      // send a message that renders the identified component
+      Message renderMessage = new RenderMessage(widgetPath, output);
       propagate(renderMessage);
+
       if (disabled)  // Our filter was disabled during rendering this widget
         return null; // force page to reload for full render
 
@@ -299,6 +311,22 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       return mode;
     }
 
+  }
+  
+  public static class ComponentLocatorMessage extends RoutedMessage {
+    private Component component = null;
+    
+    public ComponentLocatorMessage(Path path) {
+      super(path);
+    }
+
+    protected void execute(Component component) throws Exception {
+      this.component = component;
+    }
+
+    public Component getComponent() {
+      return this.component;
+    }
   }
 
   public static class RenderMessage extends RoutedMessage {
