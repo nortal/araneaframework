@@ -65,6 +65,8 @@ public class TreeTag extends BaseWidgetTag {
    * {@link TreeWidget}. Usually overridden.
    */
   protected TreeRenderer buildTreeRenderer(TreeContext treeWidget) {
+    if (treeWidget.getRenderer() != null)
+      return treeWidget.getRenderer();
     return new StandardTreeRenderer(treeWidget);
   }
 
