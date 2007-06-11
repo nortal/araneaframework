@@ -1,5 +1,18 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+
+2007.06.12    | Aranea 1.0.9
+
+Features and Improvements
+    FormWidget addElement methods accept hierarchical element identifiers     | See #171
+    Convenience constructors added to composite constraints                   | See change #370
+    Convenience start() methods added to FlowContext                          | See #391
+    MenuItem allows starting new flows from MenuItem 'holders'                | See change #395
+
+Bugfixes
+    <ui:link> did not work due to attached javascript                         | See #399
+    <ui:tree> did not honor renderer set by TreeWidget.setRetrender()         | See #357
+---------------------------------------------------------------------------------------------
 2007.04.20    | Aranea 1.0.8
 
 Bugfixes
