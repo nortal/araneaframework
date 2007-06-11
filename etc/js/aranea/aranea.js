@@ -256,7 +256,6 @@ function AraneaPage() {
       url += '&serviceActionParameter=' + actionParam;
     if (sync != undefined && !sync)
       url += '&sync=false';
-    url += '&systemFormId=' + systemForm.id;
     return url;
   }
 
@@ -479,7 +478,7 @@ Object.extend(AraneaPage, {
         this.receivedRegionCounters[key] = 1;
       }
       if (this.regionHandlers[key]) {
-        araneaPage().getLogger().debug('Region type: "' + key + '", length ' + length + ' chars');
+        araneaPage().getLogger().debug('Region type: "' + key + '" (' + length + ' characters)');
         this.regionHandlers[key].process(content);
       } else {
         araneaPage().getLogger().error('Region type: "' + key + '" is unknown!');
@@ -512,21 +511,14 @@ Object.extend(AraneaPage, {
    */
   showLoadingMessage: function() {
     var element = $(this.loadingMessageId);
-    if (element) {
-      if (this.loadingMessagePositionHack) {
-        element.style.top = document.documentElement.scrollTop + 'px';
-      }
-      element.show();
-      return;
+    if (!element) {
+      element = this.buildLoadingMessage();
+      if (!element) return;
+      document.body.appendChild(element);
+      element = $(element);
     }
-    var element = Builder.node('div', {id: this.loadingMessageId}, this.loadingMessageContent);
-    document.body.appendChild(element);
-    if (element.offsetTop) {
-      // IE 6 does not support 'position: fixed' CSS attribute value
-      this.loadingMessagePositionHack = true;
-      element.style.position = 'absolute';
-      element.style.top = document.documentElement.scrollTop + 'px';
-    }
+    this.positionLoadingMessage(element);
+    element.show();
   },
 
   /**
@@ -539,6 +531,35 @@ Object.extend(AraneaPage, {
     var element = $(this.loadingMessageId);
     if (element) {
       element.hide();
+    }
+  },
+
+  /**
+   * Build loading message. Called when an existing message element is not
+   * found.
+   *
+   * @since 1.1
+   */
+  buildLoadingMessage: function() {
+    return Builder.node('div', {id: this.loadingMessageId}, this.loadingMessageContent);
+  },
+
+  /**
+   * Perform positioning of loading message (if needed in addition to CSS).
+   * Called before making the message element visible. This implementation
+   * provides workaround for IE 6, which doesn't support
+   * <code>position: fixed</code> CSS attribute; the element is manually
+   * positioned at the top of the document. If you don't need this, overwrite
+   * this with an empty function:
+   * <code>AraneaPage.positionLoadingMessage = Prototype.emptyFunction;</code>
+   *
+   * @since 1.1
+   */
+  positionLoadingMessage: function(element) {
+    if (this.loadingMessagePositionHack || element.offsetTop) {
+      this.loadingMessagePositionHack = true;
+      element.style.position = 'absolute';
+      element.style.top = document.documentElement.scrollTop + 'px';
     }
   }
 });
