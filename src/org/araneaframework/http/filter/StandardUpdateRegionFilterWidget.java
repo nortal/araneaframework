@@ -245,18 +245,15 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
       if (log.isDebugEnabled())
         log.debug("Rendering widget " + widgetId);
-      
-      // acquires the path to renderable widget
-      StandardPath widgetPath = new StandardPath(widgetId);
-      
+
       // send a message to identify the component to be rendered 
-      ComponentLocatorMessage componentLocatorMessage = new ComponentLocatorMessage(widgetPath);
+      ComponentLocatorMessage componentLocatorMessage = new ComponentLocatorMessage(new StandardPath(widgetId));
       propagate(componentLocatorMessage);
       // send a message to renderable component that resets the render state of Renderable components
       NotRenderedMessage.INSTANCE.send(null, componentLocatorMessage.getComponent());
 
       // send a message that renders the identified component
-      Message renderMessage = new RenderMessage(widgetPath, output);
+      Message renderMessage = new RenderMessage(new StandardPath(widgetId), output);
       propagate(renderMessage);
 
       if (disabled)  // Our filter was disabled during rendering this widget
