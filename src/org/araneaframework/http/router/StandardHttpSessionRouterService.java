@@ -60,7 +60,7 @@ public class StandardHttpSessionRouterService extends BaseService {
    *
    * @since 1.1
    */
-  public static final String SYNC_PARAMETER_KEY = "sync";
+  public static final String SYNC_PARAMETER_KEY = "araSync";
   
   /**
    * The key of the service in the session.

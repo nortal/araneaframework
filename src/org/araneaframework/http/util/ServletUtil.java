@@ -79,13 +79,24 @@ public abstract class ServletUtil {
   public static void include(String filePath, ApplicationWidget widget, OutputData output) throws Exception {
     include(filePath, widget.getChildEnvironment(), output, widget);
   }
-
+    
+  public static void include(String filePath, ApplicationWidget widget, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    include(filePath, widget, widget.getChildEnvironment(), req, res);
+  }
+  
+  public static void include(String filePath, Environment env, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    include(filePath, null, env, req, res);
+  }
+  
   private static void include(String filePath, Environment env, OutputData output, ApplicationWidget widget) throws Exception {
+    include(filePath, widget, env, getRequest(output.getInputData()), getResponse(output));
+  }
+  
+  private static void include(String filePath, ApplicationWidget widget, Environment env, HttpServletRequest req, HttpServletResponse res) throws Exception {
     if (log.isDebugEnabled())
       log.debug("Including a resource from the absolute path '" + filePath + "'");
 
     Map attributeBackupMap = new HashMap();
-    HttpServletRequest req = getRequest(output.getInputData());
     if (widget != null) {
       setAttribute(req, attributeBackupMap, UIWIDGET_KEY, widget);
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
@@ -107,10 +118,11 @@ public abstract class ServletUtil {
     setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(env));
 
     ServletContext servletContext = (ServletContext) env.requireEntry(ServletContext.class);
-    servletContext.getRequestDispatcher(filePath).include(getRequest(output.getInputData()), getResponse(output));
+    servletContext.getRequestDispatcher(filePath).include(req, res);
 
     restoreAttributes(req, attributeBackupMap);
   }
+
 
   private static void setAttribute(HttpServletRequest req, Map attributeBackupMap, String name, Object value) {
     attributeBackupMap.put(name, req.getAttribute(name));

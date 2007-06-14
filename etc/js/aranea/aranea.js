@@ -237,25 +237,25 @@ function AraneaPage() {
       return new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   }
 
-  this.getSubmitURL = function(topServiceId, threadServiceId, transactionId) {
+  this.getSubmitURL = function(topServiceId, threadServiceId, araTransactionId) {
     var url = this.encodeURL(this.getServletURL());
-    url += '?transactionId=' + transactionId;
+    url += '?araTransactionId=' + araTransactionId;
     if (topServiceId) 
-      url += '&topServiceId=' + topServiceId;
+      url += '&araTopServiceId=' + topServiceId;
     if (threadServiceId) 
-      url += '&threadServiceId=' + threadServiceId;
+      url += '&araThreadServiceId=' + threadServiceId;
     return url;
   }
 
   this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync) {
-    var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value, 'override');
-    url += '&widgetActionPath=' + actionTarget;
+    var url = this.getSubmitURL(systemForm.araTopServiceId.value, systemForm.araThreadServiceId.value, 'override');
+    url += '&araServiceActionPath=' + actionTarget;
     if (actionId)
-      url += '&serviceActionHandler=' + actionId;
+      url += '&araServiceActionHandler=' + actionId;
     if (actionParam)
-      url += '&serviceActionParameter=' + actionParam;
+      url += '&araServiceActionParameter=' + actionParam;
     if (sync != undefined && !sync)
-      url += '&sync=false';
+      url += '&araSync=false';
     return url;
   }
 
@@ -357,9 +357,9 @@ function DefaultAraneaSubmitter(form) {
 }
 
 DefaultAraneaSubmitter.prototype.event_4 = function(systemForm, eventId, widgetId, eventParam) {
-  systemForm.widgetEventPath.value = widgetId ? widgetId : "";
-  systemForm.widgetEventHandler.value = eventId ? eventId : "";
-  systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+  systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
+  systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
+  systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
 
   araneaPage().setSubmitted();
 
@@ -383,15 +383,15 @@ function DefaultAraneaAJAXSubmitter(form) {
 }
 
 DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
-  systemForm.widgetEventPath.value = widgetId ? widgetId : "";
-  systemForm.widgetEventHandler.value = eventId ? eventId : "";
-  systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+  systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
+  systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
+  systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
   AraneaPage.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
-      transactionId: 'override',
+      araTransactionId: 'override',
       ajaxRequestId: ajaxRequestId,
       updateRegions: updateRegions
     },
@@ -577,8 +577,8 @@ AraneaPage.TransactionIdRegionHandler.prototype = {
 
   process: function(content) {
     var systemForm = araneaPage().getSystemForm();
-    if (systemForm.transactionId)
-      systemForm.transactionId.value = content;
+    if (systemForm.araTransactionId)
+      systemForm.araTransactionId.value = content;
   }
 };
 AraneaPage.addRegionHandler('transactionId', new AraneaPage.TransactionIdRegionHandler());
@@ -719,8 +719,8 @@ AraneaPage.ReloadRegionHandler.prototype = {
 
   process: function(content) {
     var systemForm = araneaPage().getSystemForm();
-    if (systemForm.transactionId)
-      systemForm.transactionId.value = 'inconsistent';
+    if (systemForm.araTransactionId)
+      systemForm.araTransactionId.value = 'inconsistent';
     return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
   }
 };
