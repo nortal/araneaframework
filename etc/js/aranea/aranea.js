@@ -542,7 +542,7 @@ AraneaPage.TransactionIdRegionHandler.prototype = {
       systemForm.araTransactionId.value = content;
   }
 };
-AraneaPage.addRegionHandler('araTransactionId', new AraneaPage.TransactionIdRegionHandler());
+AraneaPage.addRegionHandler('transactionId', new AraneaPage.TransactionIdRegionHandler());
 
 /**
  * Region handler that updates DOM element content.
