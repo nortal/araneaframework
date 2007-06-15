@@ -309,7 +309,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
             will do more with them than just passing the calls to one of them.
             A typical example is the <emphasis>widget container</emphasis>
             service which translates <literal>action()</literal> calls into
-            widget <literal>update()/event()/process()/render()</literal>
+            widget <literal>update()/event()/render()</literal>
             cycle.</para>
           </listitem>
         </varlistentry>
