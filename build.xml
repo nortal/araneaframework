@@ -370,7 +370,7 @@
 			</fileset>     
 		</copy>
 		
-		<property name="distname" value="araneaframework-${araneaframework.version}"/>
+		<property name="distname" value="aranea-mvc-${araneaframework.version}"/>
 		<zip destfile="dist/${distname}.zip">
 				<zipfileset dir="build/tmp/dist" prefix="${distname}"/>
 		</zip>
