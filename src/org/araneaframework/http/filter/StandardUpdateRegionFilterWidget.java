@@ -33,6 +33,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.RoutedMessage;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
@@ -40,6 +41,7 @@ import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.http.util.AtomicResponseHelper;
 import org.araneaframework.http.util.JsonObject;
 
@@ -57,7 +59,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   private String characterEncoding = "UTF-8";
   private Map documentRegions = new HashMap();
-  private Map regionHandlers = new HashMap();
   private boolean disabled = false;
 
   public static final String UPDATE_REGIONS_KEY = "updateRegions";
@@ -79,12 +80,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     Assert.notEmptyParam(documentRegionId, "regionName");
     Assert.notEmptyParam(widgetId, "widgetId");
     documentRegions.put(documentRegionId, widgetId);
-  }
-
-  public void addRegionHandler(String name, RegionHandler handler) {
-    Assert.notEmptyParam(name, "name");
-    Assert.notNullParam(handler, "handler");
-    regionHandlers.put(name, handler);
   }
 
   protected Environment getChildWidgetEnvironment() {
@@ -162,11 +157,12 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   }
 
   protected void writeHandlerRegions(PrintWriter out) throws Exception {
-    for (Iterator i = regionHandlers.entrySet().iterator(); i.hasNext(); ) {
+    UpdateRegionGatherMessage regionGatherMessage = new UpdateRegionGatherMessage();
+    propagate(regionGatherMessage);
+    for (Iterator i = regionGatherMessage.getRegions().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
       String name = (String) entry.getKey();
-      RegionHandler handler = (RegionHandler) entry.getValue();
-      String content = handler.getContent();
+      String content = (String) entry.getValue();
       if (content != null) {
         writeRegion(out, name, content);
       }
@@ -326,7 +322,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   public static class ComponentLocatorMessage extends RoutedMessage {
 
-    private Component component = null;
+    private Component component;
 
     public ComponentLocatorMessage(Path path) {
       super(path);
@@ -353,6 +349,32 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     protected void execute(Component component) throws Exception {
       ((Widget) component)._getWidget().render(output);
       ((HttpOutputData) output).getWriter().flush();
+    }
+
+  }
+
+  public static class UpdateRegionGatherMessage extends BroadcastMessage {
+
+    private Map regions = new HashMap();
+
+    protected void execute(Component component) throws Exception {
+      if (component instanceof UpdateRegionProvider) {
+        Map newRegions = ((UpdateRegionProvider) component).getRegions();
+        if (newRegions != null && !newRegions.isEmpty()) {
+          if (log.isWarnEnabled()) {
+            Set duplicateRegions = new HashSet(newRegions.keySet());
+            duplicateRegions.retainAll(regions.keySet());
+            if (duplicateRegions.size() > 0) {
+              log.warn("UpdateRegionProvider '" + (component.getScope() != null ? component.getScope().toString() : component.getClass().getName()) + "' overwrites previously added regions: " + duplicateRegions.toString());
+            }
+          }
+          regions.putAll(newRegions);
+        }
+      }
+    }
+
+    public Map getRegions() {
+      return regions;
     }
 
   }
