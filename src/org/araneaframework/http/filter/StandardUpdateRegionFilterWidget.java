@@ -102,7 +102,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     }
 
     if (log.isDebugEnabled())
-      log.debug("Received request to update regions = " + regionNames);
+      log.debug("Received request to update regions '" + regionNames + "'");
 
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     try {
@@ -196,7 +196,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String documentRegionId = regionNames[i];
       String widgetId = (String) documentRegions.get(documentRegionId);
       if (widgetId == null) {
-        log.warn("Document region id not found: " + documentRegionId);
+        if (log.isWarnEnabled())
+          log.warn("Document region '" + documentRegionId + "' not found");
         continue;
       }
 
@@ -245,11 +246,17 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       Set regionIds = (Set) entry.getValue();
 
       if (log.isDebugEnabled())
-        log.debug("Rendering widget " + widgetId);
+        log.debug("Rendering widget '" + widgetId + "'");
 
       // send a message to identify the component to be rendered 
       ComponentLocatorMessage componentLocatorMessage = new ComponentLocatorMessage(new StandardPath(widgetId));
       propagate(componentLocatorMessage);
+      if (componentLocatorMessage.getComponent() == null) {
+        if (log.isWarnEnabled())
+          log.warn("Widget '" + widgetId + "' not found, skipping rendering");
+        continue;
+      }
+
       // send a message to renderable component that resets the render state of Renderable components
       NotRenderedMessage.INSTANCE.send(null, componentLocatorMessage.getComponent());
 
@@ -266,7 +273,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
         String id = (String) j.next();
         String content = getContentById(widgetContent, id);
         if (content == null) {
-          log.warn("Document region '" + id + "' not found on rendering of widget '" + widgetId + "'");
+          if (log.isWarnEnabled())
+            log.warn("Document region '" + id + "' not found on rendering of widget '" + widgetId + "'");
           continue;
         }
         regionContents.put(id, new Region(content, "update"));
@@ -296,7 +304,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     return source.substring(startIndex + blockStart.length(), endIndex);
   }
 
-  protected static class Region implements Serializable {
+  public static class Region implements Serializable {
 
     private String content;
     private String mode;
@@ -315,10 +323,11 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     }
 
   }
-  
+
   public static class ComponentLocatorMessage extends RoutedMessage {
+
     private Component component = null;
-    
+
     public ComponentLocatorMessage(Path path) {
       super(path);
     }
