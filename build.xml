@@ -121,8 +121,8 @@
 	</target>	
 	
 	<target name="compile-etc" depends="init">
-		<mkdir dir="build/tmp/classes"/>
-		<javac destdir="build/tmp/classes"
+		<mkdir dir="build/classes"/>
+		<javac destdir="build/classes"
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
