@@ -54,15 +54,24 @@ public class TcdAndTldMerger {
 	public static void main(String[] args) throws Exception {
 		if (args.length != 3) {
 			System.err.println("USAGE: TCD TLD outputTLD");
+			System.err.println("If TCD is not found from file system, it is searched from classpath.");
+			System.err.println("TLD and outputTLD may be the same, though it is not recommended.");
+			System.err.println("This utility depends on xerces XML parser.");
+			System.err.println("Tag classes referenced by TCD and/or TLD must all be available on classpath.");
 			System.exit(1);
 		}
 		
-		System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+		//System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
 
 		String tcdName = args[0], tldName = args[1], outputTLD = args[2];
 		
 		File firstFile = new File(tcdName);
 		InputStream first = firstFile.exists() ? new FileInputStream(tcdName) : TcdAndTldMerger.class.getClassLoader().getResourceAsStream(tcdName);
+		
+		if (first == null) {
+			System.err.println(tcdName + " was not found from filesystem or classpath.");
+			System.exit(1);
+		}
 
 		File second = new File(tldName);
 		

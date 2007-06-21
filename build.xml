@@ -15,6 +15,8 @@
 	
 	<property name="lib.dir" value="lib"/>
 	
+	<property name="ivy.settings.file" value="ivysettings.xml"/>
+	
 	<!-- Clean up build system results -->
 	<target name="clean-all" depends="clean"  description="Clean up build system results">
 		<ant dir="examples/common" target="clean" inheritall="false"/>
@@ -53,7 +55,7 @@
 	             uri="antlib:org.apache.ivy.ant"
 	             classpathref="ivy.lib.path"/>
 		
-		<ivy:configure file="ivysettings.xml" />
+		<ivy:configure file="${ivy.settings.file}" />
 	</target>
 
 	<!-- Build the code -->
@@ -119,8 +121,8 @@
 	</target>	
 	
 	<target name="compile-etc" depends="init">
-		<mkdir dir="build/tmp/classes"/>
-		<javac destdir="build/tmp/classes"
+		<mkdir dir="build/classes"/>
+		<javac destdir="build/classes"
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
@@ -332,13 +334,10 @@
 				<include name="tests/**/*"/>
 				<include name="lib/**/*"/>
 				<include name="build.xml"/>
-				<include name="License.txt"/>
-				<include name="Notice.txt"/>
-				<include name="Readme.txt"/>
-				<include name="Changelog.txt"/>
+				<include name="License.txt,Notice.txt,Readme.txt,Changelog.txt"/>
+				<include name="ivy*"/>
 				<include name="version.properties"/>
 
-				<exclude name="CVS/**/*"/>
 				<exclude name="**/*lck"/>
 			</fileset>     
 		</copy> 
@@ -371,7 +370,7 @@
 			</fileset>     
 		</copy>
 		
-		<property name="distname" value="araneaframework-${araneaframework.version}"/>
+		<property name="distname" value="aranea-mvc-${araneaframework.version}"/>
 		<zip destfile="dist/${distname}.zip">
 				<zipfileset dir="build/tmp/dist" prefix="${distname}"/>
 		</zip>

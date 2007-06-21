@@ -1,4 +1,6 @@
 <ivysettings>
+        <properties file="version.properties"/>
+  
 		<property 
 			name="ibiblio-maven2-pattern"
 			value="[organisation]/[module]/[revision]/[artifact]-[revision].[type]" />

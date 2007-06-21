@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
 
-  <info organisation="org.araneaframework" module="aranea" revision="1.1M1">
+  <info organisation="org.araneaframework" module="aranea" revision="${araneaframework.version}">
   	<license name="APL 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html"/>
   </info>
 
