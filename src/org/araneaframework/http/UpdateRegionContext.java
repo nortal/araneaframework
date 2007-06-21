@@ -45,32 +45,4 @@ public interface UpdateRegionContext extends Serializable {
    */
   void addDocumentRegion(String documentRegionId, String widgetId);
 
-  /**
-   * Add a handler for custom region.
-   * 
-   * @param name
-   *          handler name. Javascript handler with the same name will be called
-   *          in client-side.
-   * @param handler
-   *          handler
-   */
-  void addRegionHandler(String name, RegionHandler handler);
-
-  /**
-   * A way to pass custom data back to client-side via AJAX requests.
-   */
-  interface RegionHandler extends Serializable {
-
-    /**
-     * Will be called only when updateregion filter is activated on AJAX
-     * requests.
-     * 
-     * @return content that will be passed to Javascript region handler in
-     *         client-side. If <code>null</code> is returned, then Javascript
-     *         region handler will not be called.
-     */
-    String getContent() throws Exception;
-
-  }
-
 }
