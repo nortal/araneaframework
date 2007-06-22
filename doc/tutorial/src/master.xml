@@ -279,20 +279,7 @@ public void handleEventBypass() throws Exception {
   xmlns:c="http://java.sun.com/jstl/core" 
   xmlns:ui="http://araneaframework.org/tag-library/template" version="1.2"&gt;
   &lt;jsp:directive.page contentType="text/html; charset=UTF-8"/&gt;
-    
-  &lt;!-- This tag should always be the root of any Aranea template JSP. 
-  Its main function is to allow JSP access the controller. --&gt;
-  &lt;ui:root&gt;
-    &lt;!-- This tag should be immediately under the ui:root tag for any application that uses widgets. 
-         It allows widgets to be rendered and included. --&gt;
-    &lt;ui:viewPort&gt;
-      &lt;!-- This tag should generally be the root of every widget JSP. It makes the widget view model 
-      accessible as an EL variable. It can also be used to render a descendant widget in the same JSP 
-      with the current widget. In the latter case you should set the id attribute to the identifier path 
-      of the descendent widget in question. Note that all widget-related tags inside of this tag will 
-      assume that the widget in question is their parent or ancestor (that is all the identifier pathes 
-      will start from it). --&gt;
-      &lt;ui:widgetContext&gt;
+
         &lt;html&gt;
           &lt;head&gt;
             &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
@@ -360,9 +347,6 @@ public void handleEventBypass() throws Exception {
           
           &lt;/ui:body&gt;        
         &lt;/html&gt;
-      &lt;/ui:widgetContext&gt;
-    &lt;/ui:viewPort&gt;
-  &lt;/ui:root&gt;
 &lt;/jsp:root&gt;</programlisting>
     </sect2>
 

@@ -314,7 +314,7 @@
 	<target name="run-tests" depends="init, build" description="Run the junit tests">
 		<ant target="run-tests" dir="tests"/>
 	</target>
-	
+
 	<target name="dist" description="Builds downloadable distribution.">		
 		<mkdir dir="build/tmp/dist"/>
 
@@ -334,7 +334,7 @@
 				<include name="tests/**/*"/>
 				<include name="lib/**/*"/>
 				<include name="build.xml"/>
-				<include name="License.txt,Notice.txt,Readme.txt,Changelog.txt"/>
+				<include name="*.txt"/>
 				<include name="ivy*"/>
 				<include name="version.properties"/>
 
