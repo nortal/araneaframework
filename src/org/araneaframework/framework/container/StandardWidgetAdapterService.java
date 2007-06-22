@@ -67,7 +67,7 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
   
   /**
    * Extracts the path from the input and returns it. This implementation uses
-   * the {@link StandardContainerWidget#EVENT_PATH_KEY} parameter in the request and expects the event path to be
+   * the {@link ApplicationWidget#EVENT_PATH_KEY} parameter in the request and expects the event path to be
    * a dot-separated string.
    * 
    * @since 1.1
@@ -87,7 +87,7 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
   
   /**
    * Extracts the path from the input and returns it. This implementation uses
-   * the {@link StandardContainerWidget#ACTION_PATH_KEY} parameter in the request and expects the action path to be
+   * the {@link ApplicationService#ACTION_PATH_KEY} parameter in the request and expects the action path to be
    * a dot-separated string. 
    * 
    * @since 1.1

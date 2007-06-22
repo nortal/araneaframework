@@ -1,5 +1,17 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2007.06.22    | Aranea 1.1-M3
+
+Features and Improvements
+    Aranea specific request parameters got prefixes ('araTransactionId', ...) | See
+    There were some name clashes otherwise in integration projects.           |     change #414	
+    TcdAndTldMerger is bundled inside aranea.jar                              | See #434
+    Some minor documentation updates                                          | See change #426, #448
+
+Bugfixes
+    Update regions caused NPE sometimes when active flow was ended in request | See #432
+    Demos->Advanced->Advanced popups last component did not work              | See #424 
+---------------------------------------------------------------------------------------------
 2007.06.12    | Aranea 1.1-M2
 
 Features and Improvements
