@@ -15,9 +15,6 @@
 		<fileset dir="../dist" includes="**/*.jar"/>
 	</path>
 	
-	<!-- Define the task -->
-	<taskdef classpathref="classpath" resource="tasks.properties" />
-	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
 		<delete dir="build" failonerror="false"/>
