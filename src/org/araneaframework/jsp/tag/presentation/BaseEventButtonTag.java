@@ -77,7 +77,8 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Event parameter." 
+   *   description = "Event parameter."
+   *   rtexprvalue = "true"
    */
   public void setEventParam(String eventParam) throws JspException {
 	event.setParam((String)evaluate("eventParam", eventParam, String.class));

@@ -36,9 +36,9 @@ public class BaseSimpleButtonTag extends PresentationTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    if (labelId != null)
+    if (labelId != null && labelId.length()>0)
       localizedLabel = JspUtil.getResourceString(pageContext, labelId);
-
+    localizedLabel = labelId;
     contextWidgetId = getContextWidgetFullId();
 
     return EVAL_BODY_INCLUDE;    
@@ -62,7 +62,8 @@ public class BaseSimpleButtonTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Id of button label." 
+   *   description = "Id of button label."
+   *   rtexprvalue = "true" 
    */
   public void setLabelId(String labelId) throws JspException {
     this.labelId = (String)evaluate("labelId", labelId, String.class);
