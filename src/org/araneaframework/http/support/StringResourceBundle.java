@@ -27,7 +27,7 @@ public class StringResourceBundle extends ResourceBundle {
   }
 
   protected Object handleGetObject(String key) {
-    if (key.charAt(0) == '#') 
+    if (key.length()> 0 && key.charAt(0) == '#') 
       return key.substring(1);
     else return null;      
   }
