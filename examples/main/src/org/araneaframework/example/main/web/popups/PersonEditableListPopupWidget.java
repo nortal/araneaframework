@@ -110,7 +110,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
 
     public void addValidRow(FormWidget addForm) throws Exception {
-      PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
+      PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).writeToBean(new PersonMO()));
       getGeneralDAO().add(rowData);
       list.getDataProvider().refreshData();
       formList.resetAddForm();

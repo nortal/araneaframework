@@ -20,15 +20,13 @@ import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 public class StringResourceBundle extends ResourceBundle {
-
 	public Enumeration getKeys() {
 		return null;
 	}
 
-	protected Object handleGetObject(String key) {
-		if (key.length() > 1 && key.charAt(0) == '#')
-			return key.substring(1);
-		else
-			return null;
-	}
+  protected Object handleGetObject(String key) {
+	if (key.length() > 1 && key.charAt(0) == '#')
+      return key.substring(1);
+	return null;
+  }
 }
