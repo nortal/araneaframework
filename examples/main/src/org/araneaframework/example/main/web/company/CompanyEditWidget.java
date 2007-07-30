@@ -58,7 +58,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
 
     if (id != null) {
       CompanyMO company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);   
-      form.writeBean(company);
+      form.readFromBean(company);
     }
 
     addWidget("form", form);
@@ -68,7 +68,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
     if (form.convertAndValidate()) {
       CompanyMO company = id != null ? (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id) : new CompanyMO();
 
-      company = (CompanyMO) form.readBean(company);
+      company = (CompanyMO) form.writeToBean(company);
 
       if (id != null) {
         getGeneralDAO().edit(company);
