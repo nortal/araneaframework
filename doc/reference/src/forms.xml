@@ -84,7 +84,7 @@ protected void init() {
   personForm.addBeanElement("phone", "#Phone no", new TextControl(), true);
   ...
   person = lookupPersonService().getSomePerson();
-  personForm.writeBean(person);
+  personForm.readFromBean(person);
   ...
 }
 ...
@@ -135,9 +135,9 @@ protected void init() {
             <listitem>
                The line 
 
-              <literal>personForm.writeBean(person)</literal>
+              <literal>personForm.readFromBean(person)</literal>
 
-               writes the data in the JavaBean properties to the corresponding form fields. 
+               reads the data from JavaBean properties to the corresponding form fields. 
             </listitem>
           </varlistentry>
         </variablelist></para>
@@ -149,7 +149,7 @@ protected void init() {
       <programlisting role="java">...
 private void handleEventSave() {
   if (personForm.convertAndValidate()) {
-   personForm.readBean(person);
+   personForm.writeToBean(person);
    ...
    lookupPersonService()().savePerson(person);
   }
@@ -3494,7 +3494,7 @@ public void initAddForm(FormWidget addForm) throws Exception {
 
       <programlisting role="java">...
 public void addValidRow(FormWidget addForm) throws Exception {
-  Person person = (Person) (((BeanFormWidget)addForm).readBean(new Person()));
+  Person person = (Person) (((BeanFormWidget)addForm).writeToBean(new Person()));
   //We want to save changes immediately
   person = lookupPersonService.addPerson(person);
   data.add(person.getId(), person);
@@ -3521,7 +3521,7 @@ public void initFormRow(FormRow formRow, Object rowData) throws Exception {
   FormListUtil.addEditSaveButtonToRowForm("#", formList, form, getRowKey(rowData));
   FormListUtil.addDeleteButtonToRowForm("#", formList, form, getRowKey(rowData));
 
-  form.writeBean(rowData);
+  form.readFromBean(rowData);
 }
 ...</programlisting>
 
@@ -3534,7 +3534,7 @@ public void initFormRow(FormRow formRow, Object rowData) throws Exception {
       <programlisting role="java">...
 public void saveValidRow(FormRow formRow) throws Exception {
   BeanFormWidget form = (BeanFormWidget) formRow.getForm();
-  Person person = (Person) form.readBean(data.get(formRow.getKey()));
+  Person person = (Person) form.writeToBean(data.get(formRow.getKey()));
 
   lookupPersonService().save(rowData);
   data.put(person.getId(), person);

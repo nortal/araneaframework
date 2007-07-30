@@ -21,15 +21,13 @@ import java.util.ResourceBundle;
 
 
 public class StringResourceBundle extends ResourceBundle {
-
   public Enumeration getKeys() {
     return null;
   }
 
   protected Object handleGetObject(String key) {
-    if (key.charAt(0) == '#') 
+	if (key.charAt(0) == '#' && key.length() > 1)
       return key.substring(1);
-    else return null;      
+	return null;
   }
-
 }
