@@ -38,7 +38,8 @@ public class BaseSimpleButtonTag extends PresentationTag {
 
     if (labelId != null && labelId.length()>0)
       localizedLabel = JspUtil.getResourceString(pageContext, labelId);
-    localizedLabel = labelId;
+    else
+    	localizedLabel = labelId;
     contextWidgetId = getContextWidgetFullId();
 
     return EVAL_BODY_INCLUDE;    
