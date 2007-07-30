@@ -1,6 +1,17 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
 
+2007.07.30    | Aranea 1.0.10
+
+Features and Improvements
+    TcdAndTldMerger utility is now part of aranea.jar (previously in etc/src) | See #434
+    BeanFormWidget has two new methods: readFromBean() - acts as              |
+    @deprecated writeBean() and writeToBean() which acts like                 | See #447
+    @deprecated readBean(). readBean() and writeBean() to be removed in 1.1-M4|                                                   |
+
+Bugfixes
+    BeanFormWidget readBean() (now writeToBean) destroyed content of subforms | See #420
+---------------------------------------------------------------------------------------------
 2007.06.12    | Aranea 1.0.9
 
 Features and Improvements

@@ -809,9 +809,9 @@ public void handleEventTestSimpleForm() throws Exception {
           <literal>Data</literal> when adding <literal>FormElements</literal>
           to form is no longer needed as it is determined from model class.
           Also <literal>BeanFormWidget's</literal>
-          <literal>readBean()</literal> and <literal>writeBean(Object
-          beanClass)</literal> methods allow programmer to read and write all
-          form fields conveniently.</para>
+          <literal>readFromBean()</literal> and <literal>writeToBean(Object
+          bean)</literal> methods allow programmer to read and write all
+          bean fields conveniently.</para>
 
           <programlisting role="java">public class PersonAddEditWidget extends TemplateBaseWidget {
   /* The ID field of the person data model, only has value if object has already
@@ -872,7 +872,7 @@ public void handleEventTestSimpleForm() throws Exception {
       /* fetch the person with given ID from database */
       PersonMO person = (PersonMO) getGeneralDAO().getById(PersonMO.class, personId);
       /* and fill the form with current person data */
-      form.writeBean(person);
+      form.readFromBean(person);
     } /* otherwise we have no data and all form fields are initially left blank */
 
     return form;
@@ -884,7 +884,7 @@ public void handleEventTestSimpleForm() throws Exception {
       // get the current person data (retrieved from database by getGeneralDAO() in case person already has assigned ID); 
       PersonMO person = personId != null ? (PersonMO) getGeneralDAO().getById(PersonMO.class, personId) : new PersonMO();
       // read the application user supplied data from form into model object.
-      person = (PersonMO) form.readBean(person);
+      person = (PersonMO) form.writeToBean(person);
       
       if (editMode) {
         // updates person object in database
@@ -1432,7 +1432,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
        * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
        * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
        * we can cast the return type accordingly. */
-      PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).readBean(new PersonMO());
+      PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).writeToBean(new PersonMO());
       rowData.setId((Long) editableRow.getKey());
       
       // Save modified object.
@@ -1449,7 +1449,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
     
     // Implementation of method that should save ADDED rows which data passes validation.
     public void addValidRow(FormWidget addForm) throws Exception {
-      PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
+      PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).writeToBean(new PersonMO()));
       getGeneralDAO().add(rowData);
       // this callback must be made here!
       formList.resetAddForm();
@@ -1470,7 +1470,7 @@ form.addBeanElement("name.surname", "#Surname", new TextControl(), true);
       /* A button that deletes this row and its data (calls deleteRow()). */
       FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
 
-      rowForm.writeBean(rowData);
+      rowForm.readFromBean(rowData);
     }
     
     // Called to initialize a blank row meant for adding new records.
