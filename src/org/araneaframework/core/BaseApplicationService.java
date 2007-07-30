@@ -55,6 +55,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   // FIELDS
   //*******************************************************************
   private Map actionListeners;
+  //XXX strange field (c)Nikem
   private Map viewData;
 
 //*******************************************************************

@@ -18,15 +18,16 @@ package org.araneaframework.http.support;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.util.ClassLoaderUtil;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
@@ -82,20 +83,30 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
 
         log.debug("Reloading localization data from property file '" + propertyFile + "'.");
 
-        Properties result = new Properties();
-        result.load(new FileInputStream(propertyURL.getFile()));   
-        
-        loadData(result);
-
-        lastReloadTime = System.currentTimeMillis();
-        lastModified = propertyFile.lastModified();
+        FileInputStream fileInputStream = null;
+        try {
+          Properties result = new Properties();
+          fileInputStream = new FileInputStream(propertyURL.getFile());
+          result.load(fileInputStream);   
+          loadData(result);
+          
+          lastReloadTime = System.currentTimeMillis();
+          lastModified = propertyFile.lastModified();
+          
+        } finally {
+          if(fileInputStream != null) {
+            try {
+              fileInputStream.close();
+            } catch (IOException ex) {
+              log.error("Unable to close file input stream.", ex);
+            }
+            
+          }
+        }
       }
     }
-    catch (RuntimeException re) {
-      throw re;
-    }
     catch (Exception e) {
-      throw new NestableRuntimeException(e);
+      throw ExceptionUtil.uncheckException(e);
     }
   }
   

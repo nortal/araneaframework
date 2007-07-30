@@ -72,8 +72,8 @@ public abstract class BaseBean implements Serializable, Cloneable {
 		for (Iterator i = voFields.iterator(); i.hasNext();) {
 			String field = (String) i.next();
 			result.append(field);
-			result.append("=");
-			result.append("" + beanMapper.getFieldValue(this, field));
+			result.append('=');
+			result.append(beanMapper.getFieldValue(this, field));
 			result.append("; ");
 		}
 		return result.toString();
@@ -121,7 +121,7 @@ public abstract class BaseBean implements Serializable, Cloneable {
 	 * 
 	 * @return clone of this object.
 	 */
-	public Object clone() {
+	public Object clone() { // NOPMD by nikem on 29.07.07 16:32
 		try {
 			return super.clone();
 		}
@@ -163,7 +163,7 @@ public abstract class BaseBean implements Serializable, Cloneable {
 			return true;
 		}
 		catch (NoSuchMethodException ex) {
-			log.debug(ex);
+			log.debug("No getter found, not marking field as changed", ex);
 			return false;
 		}
 	}

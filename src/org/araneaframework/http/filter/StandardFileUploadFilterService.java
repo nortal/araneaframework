@@ -218,7 +218,7 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   private static class MultipartWrapper extends HttpServletRequestWrapper {
-    Map parameters = new HashMap();
+    private Map parameters = new HashMap();
 
     public MultipartWrapper(HttpServletRequest req, Map parameterLists) throws Exception {
       super(req);

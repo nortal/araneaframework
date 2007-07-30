@@ -44,9 +44,11 @@ public class SqlLikeUtil {
 	 * </p>
 	 * 
 	 * @param mask mask in custom format.
-	 * @param config configuration that holds mask custom format and behaivor.
+	 * @param config configuration that holds mask custom format and behavior.
 	 * @param escapeChar escape character for SQL syntax.
 	 * @return the mask in standard format.
+	 * 
+	 * TODO document this method properly (c) Nikem
 	 */
 	public static String convertMask(String mask, LikeConfiguration config, String escapeChar) {
 		if (mask == null) {

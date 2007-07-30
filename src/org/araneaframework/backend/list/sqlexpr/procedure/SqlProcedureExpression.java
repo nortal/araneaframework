@@ -33,7 +33,7 @@ public class SqlProcedureExpression extends SqlMultiExpression {
 
 	public String toSqlString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append(this.name).append("(");
+		sb.append(this.name).append('(');
 		for (Iterator i = this.children.iterator(); i.hasNext();) {
 			SqlExpression expr = (SqlExpression) i.next();
 			sb.append(expr.toSqlString());
@@ -41,7 +41,7 @@ public class SqlProcedureExpression extends SqlMultiExpression {
 				sb.append(", ");
 			}
 		}
-		sb.append(")");
+		sb.append(')');
 		return sb.toString();
 	}
 }

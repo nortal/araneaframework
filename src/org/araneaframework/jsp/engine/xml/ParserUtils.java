@@ -52,15 +52,15 @@ public class ParserUtils {
     /**
      * An error handler for use when parsing XML documents.
      */
-    static ErrorHandler errorHandler = new MyErrorHandler();
+    private static ErrorHandler errorHandler = new MyErrorHandler();
 
     /**
      * An entity resolver for use when parsing XML documents.
      */
-    static EntityResolver entityResolver = CachingEntityResolver.getInstance();
+    private static EntityResolver entityResolver = CachingEntityResolver.getInstance();
 
     // Turn off for JSP 2.0 until switch over to using xschema.
-    public static boolean validating = false;
+    public final static boolean validating = false;
 
 
     // --------------------------------------------------------- Public Methods

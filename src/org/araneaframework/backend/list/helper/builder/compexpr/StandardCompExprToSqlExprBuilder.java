@@ -38,7 +38,7 @@ import org.araneaframework.uilib.list.util.comparator.StringComparator;
 
 public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuilder {
 	
-	static final Log log = LogFactory.getLog(StandardCompExprToSqlExprBuilder.class);
+	private static final Log log = LogFactory.getLog(StandardCompExprToSqlExprBuilder.class);
 	
 	protected VariableResolver mapper;
 
@@ -79,7 +79,7 @@ public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuild
 		}
 	}
 	
-	SqlExpression translateVariableComparatorInternal(VariableComparatorExpression compExpr) {
+	private SqlExpression translateVariableComparatorInternal(VariableComparatorExpression compExpr) {
 		SqlExpression temp = new SqlStringExpression(resolveVariable(compExpr));
 		Comparator comparator = compExpr.getComparator();
 		if (comparator instanceof NullComparator) {

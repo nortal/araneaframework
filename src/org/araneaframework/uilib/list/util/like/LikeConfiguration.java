@@ -22,6 +22,8 @@ import java.io.Serializable;
  * Like filter configuration.
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * 
+ * TODO document this class properly (c) Nikem
  */
 public class LikeConfiguration implements Serializable {
 	

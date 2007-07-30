@@ -1,5 +1,5 @@
 <ivysettings>
-        <properties file="version.properties"/>
+        <properties file="${ivy.conf.dir}/version.properties"/>
   
 		<property 
 			name="ibiblio-maven2-pattern"

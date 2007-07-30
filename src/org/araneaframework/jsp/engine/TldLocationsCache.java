@@ -313,7 +313,7 @@ public class TldLocationsCache {
             if (is != null) {
                 try {
                     is.close();
-                } catch (Throwable t) {}
+                } catch (Exception t) {}
             }
         }
     }
@@ -355,7 +355,7 @@ public class TldLocationsCache {
                     if (stream != null) {
                         try {
                             stream.close();
-                        } catch (Throwable t) {
+                        } catch (Exception t) {
                             // do nothing
                         }
                     }
@@ -367,7 +367,7 @@ public class TldLocationsCache {
                 if (jarFile != null) {
                     try {
                         jarFile.close();
-                    } catch (Throwable t) {
+                    } catch (Exception t) {
                         // ignore
                     }
                 }
@@ -381,7 +381,7 @@ public class TldLocationsCache {
                 if (jarFile != null) {
                     try {
                         jarFile.close();
-                    } catch (Throwable t) {
+                    } catch (Exception t) {
                         // ignore
                     }
                 }
@@ -416,7 +416,7 @@ public class TldLocationsCache {
                     if (stream != null) {
                         try {
                             stream.close();
-                        } catch (Throwable t) {
+                        } catch (Exception t) {
                             // do nothing
                         }
                     }

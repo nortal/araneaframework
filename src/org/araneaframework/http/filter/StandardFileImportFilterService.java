@@ -54,7 +54,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 	public static final String OVERRIDE_PREFIX = "override";
 	public static final String FILE_IMPORTER_NAME = "fileimporter";
 	
-	synchronized static void initialize(ServletContext context) {
+	private synchronized static void initialize(ServletContext context) {
 		if (!isInitialized) {
 			ExternalResourceInitializer initializer = new ExternalResourceInitializer();
 			resources = initializer.getResources(context);
@@ -83,7 +83,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 		if (fileName == null) {
 			fileName = uri.substring(FILE_IMPORTER_NAME.length() + 1);
 			
-			if (fileName.indexOf(".") == -1) {
+			if (fileName.indexOf('.') == -1) {
 				groupName = fileName;
 				fileName = null;
 			}

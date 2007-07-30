@@ -53,7 +53,6 @@ public class VariableComparatorExpression implements ComparatorExpression,
 	public int compare(VariableResolver resolver1, VariableResolver resolver2) {
 		Object value1 = resolver1.resolve(this);
 		Object value2 = resolver2.resolve(this);
-		int result = this.comparator.compare(value1, value2);		
-		return result;
+		return this.comparator.compare(value1, value2);
 	}
 }

@@ -218,7 +218,7 @@ public abstract class ListSqlHelper {
 	
 	/**
 	 * Adds a converter for a filter/order expression value. The converter is
-	 * used by auomatic SQL query creation according to the filter/order
+	 * used by automatic SQL query creation according to the filter/order
 	 * expressions. 
 	 *  
 	 * @param value
@@ -677,8 +677,8 @@ public abstract class ListSqlHelper {
 	 * To use more complex query, use {@link #setSqlQuery(String)} method.
 	 * </p>
 	 * <p>
-	 * The constrcuted SQL query format is following
-	 * (LQ = <ocde>ListQuery</code>):<br/>
+	 * The constructed SQL query format is following
+	 * (LQ = <code>ListQuery</code>):<br/>
 	 * SELECT (fromSql) [WHERE (customWhereSql) AND (LQ filter conditions)]
 	 * [ORDER BY (customOrderbySql), (LQ order conditions)]
 	 * </p>
@@ -713,7 +713,7 @@ public abstract class ListSqlHelper {
 		} else {
 			sb.append(" WHERE (");
 			sb.append(customWhereSql);
-			sb.append(")");
+			sb.append(')');
 			sb.append(getDatabaseFilterWith(" AND ", ""));
 		}
 		if (customWhereSql == null) {

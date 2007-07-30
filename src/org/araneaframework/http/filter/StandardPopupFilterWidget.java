@@ -174,7 +174,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     try {
       getServiceCtx(ThreadContext.class).close(id);
     } catch (Exception e) {
-      log.warn("Attempt to close registered popup service with ID '" + id + "' has failed with exception : ." + e);
+      log.warn("Attempt to close registered popup service with ID '" + id + "' has failed with exception.", e);
       return false;
     } finally {
       allPopups.remove(id);

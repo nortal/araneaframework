@@ -38,9 +38,9 @@ public abstract class SqlComparableExpression implements SqlExpression {
 	public String toSqlString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(this.expr1.toSqlString());
-		sb.append(" ");
+		sb.append(' ');
 		sb.append(getOperator());
-		sb.append(" ");
+		sb.append(' ');
 		sb.append(this.expr2.toSqlString());
 		return sb.toString();
 	}

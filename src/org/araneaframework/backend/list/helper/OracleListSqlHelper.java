@@ -54,7 +54,7 @@ public class OracleListSqlHelper extends ListSqlHelper {
 	}
 
 	protected SqlStatement getRangeSqlStatement() {
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer(500);
 		sb.append("SELECT * FROM ("
 				+ "SELECT rownum listRowNum, listItemData.* FROM (");
 		sb.append(this.statement.getQuery());

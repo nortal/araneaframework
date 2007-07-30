@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Set;
 import org.araneaframework.Environment;
 
+//TODO Add Javadoc
 public interface FormElementContext extends Serializable {
   // TODO: isInitialized(), getControl(), getConverter() ?
   public boolean isValid();

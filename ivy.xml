@@ -61,13 +61,13 @@
 	
   </dependencies>
   
-  <exclude>
+  <!--exclude>
      <rule module="avalon-framework" conf="default"/>
      <rule module="portlet-api" conf="default"/>
      <rule module="servlet-api" conf="default"/>
      <rule module="servletapi" conf="default"/>
      <rule module="ant" conf="default"/>
-  </exclude>
+  </exclude-->
   
 <!--  <conflicts></conflicts>-->
 </ivy-module>

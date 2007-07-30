@@ -86,8 +86,6 @@ public class JspWriterImpl extends JspWriter {
         this.bufferSize=sz;
     }
     
-    /** Package-level access
-     */
     void recycle() {
         flushed = false;
         closed = false;

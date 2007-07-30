@@ -142,7 +142,7 @@ public class PageContextImpl extends PageContext implements VariableResolver {
       }
     }
     catch (IOException ex) {
-      log.warn("Internal error flushing the buffer in release()");
+      log.warn("Internal error flushing the buffer in release()", ex);
     }
 
     servlet = null;
