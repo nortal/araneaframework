@@ -360,11 +360,11 @@
 				<include name="ivy*"/>
 				<include name="version.properties"/>
 
+				<exclude name="ivyrep.properties"/>
 				<exclude name="**/*lck"/>
 			</fileset>     
 		</copy>
-		
-		<delete file="build/tmp/dist/ivyrep.properties"/>
+
 		<touch file="build/tmp/dist/ivyrep.properties"/>
 
 		<antcall target="build-all"/>
