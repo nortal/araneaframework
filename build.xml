@@ -14,6 +14,9 @@
 	<property name="project.version" value="${araneaframework.version} (Build ver-${version.stage}_${version.milestone}_${version.submilestone}_${version.version})"/>
 	
 	<property name="lib.dir" value="lib"/>
+	<property name="dist.dir" value="dist"/>
+
+	<property name="distname" value="aranea-mvc-${araneaframework.version}"/>
 	
 	<property name="ivy.settings.file" value="ivysettings.xml"/>
 	
@@ -30,11 +33,30 @@
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
 		<delete dir="build" failonerror="false"/>
-		<delete dir="dist" failonerror="false"/>
+		<delete dir="${dist.dir}" failonerror="false"/>
 	</target>
 	
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
 		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"/>
+	</target>
+	
+	<!-- internal target for publishing milestones and releases to araneaframework ivy repository -->
+	<target name="publish" depends="clean-all,init-ivy,build">
+		<ivy:resolve/>
+		
+		<mkdir dir="publishtmp"/>
+		<copydir dest="publishtmp" src="${dist.dir}" includes="**/*.jar" flatten="true"/>
+		
+		<ivy:publish
+			artifactspattern="publishtmp/[artifact].[ext]"
+			revision="${araneaframework.version}" 
+			pubrevision="${araneaframework.version}" 
+			status="${araneaframework.status}"
+			resolver="repository"
+			overwrite="true"
+		/>
+		
+		<delete dir="publishtmp"/>
 	</target>
 	
 	<!-- Initialize the build system -->
@@ -164,13 +186,13 @@
 	</target>
 	
 	<target name="jar" depends="compile,tld,make-manifest">
-		<mkdir dir="dist" />
-		<mkdir dir="dist/modules" />
-		<mkdir dir="dist/integration" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/modules" />
+		<mkdir dir="${dist.dir}/integration" />
 		
 		<!-- MODULES -->
 		
-		<jar destfile="dist/modules/aranea-core.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
+		<jar destfile="${dist.dir}/modules/aranea-core.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/*"/>
 			</fileset>
@@ -180,7 +202,7 @@
 			</fileset>
 		</jar>
 		
-		<jar destfile="dist/modules/aranea-framework.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
+		<jar destfile="${dist.dir}/modules/aranea-framework.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/framework/**/*"/>												
 			</fileset>
@@ -190,7 +212,7 @@
 			</fileset>
 		</jar>		
 		
-		<jar destfile="dist/modules/aranea-http.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
+		<jar destfile="${dist.dir}/modules/aranea-http.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">							
 			  <include name="org/araneaframework/http/**/*"/>						
 			</fileset>
@@ -200,7 +222,7 @@
 			</fileset>
 		</jar>			
 		
-		<jar destfile="dist/modules/aranea-backend.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
+		<jar destfile="${dist.dir}/modules/aranea-backend.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/backend/**/*"/>			
 			</fileset>
@@ -210,7 +232,7 @@
 			</fileset>
 		</jar>
 		
-		<jar destfile="dist/modules/aranea-uilib.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
+		<jar destfile="${dist.dir}/modules/aranea-uilib.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/uilib/**/*"/>			
 			</fileset>
@@ -221,7 +243,7 @@
 	      	<fileset dir="etc" includes="resource/**/*"/>  
 		</jar>	
 		
-		<jar destfile="dist/modules/aranea-jsp.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
+		<jar destfile="${dist.dir}/modules/aranea-jsp.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/**/*"/>			
 				<exclude name="org/araneaframework/jsp/engine/**/*"/>			
@@ -238,7 +260,7 @@
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 		</jar>	
 		
-		<jar destfile="dist/modules/aranea-jsp-engine.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
+		<jar destfile="${dist.dir}/modules/aranea-jsp-engine.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/engine/**/*"/>		        
 			</fileset>
@@ -252,7 +274,7 @@
 		
 		<!-- INTEGRATION -->
 		
-		<jar destfile="dist/integration/aranea-integration-spring.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
+		<jar destfile="${dist.dir}/integration/aranea-integration-spring.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/integration/spring/**/*"/>			
 			</fileset>
@@ -266,7 +288,7 @@
 	
 		<!-- ALL-IN-ONE -->
 		
-		<jar destfile="dist/aranea.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
+		<jar destfile="${dist.dir}/aranea.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 			  <include name="org/araneaframework/**/*"/>	
 			</fileset>
@@ -281,25 +303,25 @@
 	</target>
 	
 	<target name="javadoc">
-		<mkdir dir="dist/doc/javadoc/" />
+		<mkdir dir="${dist.dir}/doc/javadoc/" />
 		<javadoc 
 			classpathref="classpath"
 			encoding="UTF8"
 			docencoding="UTF8"
 			packagenames="org.araneaframework.*" 
 			sourcepath="src"
-			destdir="dist/doc/javadoc/">
+			destdir="${dist.dir}/doc/javadoc/">
 			<tag name="jsp.tag" enabled="false" casesensitive="false"/>
 			<tag name="jsp.attribute" enabled="false" casesensitive="false"/>
 		</javadoc>
 	</target>
 	
 	<target name="javadoc-zip">
-		<mkdir dir="dist/doc/javadoc/" />
-		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="dist/doc/javadoc/"/>
+		<mkdir dir="${dist.dir}/doc/javadoc/" />
+		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="${dist.dir}/doc/javadoc/"/>
 		
-		<zip destfile="dist/doc/javadoc.zip">
-			<zipfileset dir="dist/doc/javadoc" prefix="javadoc"/>
+		<zip destfile="${dist.dir}/doc/javadoc.zip">
+			<zipfileset dir="${dist.dir}/doc/javadoc" prefix="javadoc"/>
 		</zip>
 	</target>
 	
@@ -322,7 +344,7 @@
 		<ant dir="doc/reference" target="clean" inheritall="false"/>
 		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
 		<ant dir="doc/intro" target="clean" inheritall="false"/>
-		<mkdir dir="dist"/>
+		<mkdir dir="${dist.dir}"/>
 
 		<copy todir="build/tmp/dist">
 			<fileset dir=".">
@@ -338,9 +360,12 @@
 				<include name="ivy*"/>
 				<include name="version.properties"/>
 
+				<exclude name="ivyrep.properties"/>
 				<exclude name="**/*lck"/>
 			</fileset>     
-		</copy> 
+		</copy>
+
+		<touch file="build/tmp/dist/ivyrep.properties"/>
 
 		<antcall target="build-all"/>
 		<ant dir="doc/reference" target="clean" inheritall="false"/>
@@ -351,13 +376,13 @@
 		<mkdir dir="build/tmp/dist/dist"/>    
 
 		<copy todir="build/tmp/dist/dist">
-			<fileset dir="dist">
+			<fileset dir="${dist.dir}">
 				<include name="**/*.jar"/>
 			</fileset>     
 		</copy>     
 
 		<copy todir="build/tmp/dist">
-			<fileset dir="dist">
+			<fileset dir="${dist.dir}">
 				<include name="doc/**/*"/>
 			</fileset>     
 		</copy>
@@ -369,9 +394,8 @@
 				<include name="*"/>
 			</fileset>     
 		</copy>
-		
-		<property name="distname" value="aranea-mvc-${araneaframework.version}"/>
-		<zip destfile="dist/${distname}.zip">
+
+		<zip destfile="${dist.dir}/${distname}.zip">
 				<zipfileset dir="build/tmp/dist" prefix="${distname}"/>
 		</zip>
 	</target>

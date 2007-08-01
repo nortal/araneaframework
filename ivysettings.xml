@@ -1,6 +1,7 @@
 <ivysettings>
         <properties file="version.properties"/>
-  
+        <properties file="ivyrep.properties"/>
+
 		<property 
 			name="ibiblio-maven2-pattern"
 			value="[organisation]/[module]/[revision]/[artifact]-[revision].[type]" />
@@ -30,5 +31,10 @@
     				pattern="${ibiblio-maven2-pattern}"
     				m2compatible="true"/>
     		</chain>
+    		
+    		 <filesystem name="repository" checkmodified="true">
+                <ivy pattern="${aranea.ivy.repository}/[organisation]/[module]/[revision]/ivy-[revision].xml"/>
+                <artifact pattern="${aranea.ivy.repository}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+            </filesystem>
         </resolvers>
 </ivysettings>
