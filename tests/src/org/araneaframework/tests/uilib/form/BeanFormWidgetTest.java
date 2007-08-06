@@ -103,7 +103,7 @@ public class BeanFormWidgetTest extends TestCase {
 	}
 
 	// tests that bean fields that are not tied to BeanFormWidget elements
-	// are not modified when writing hierarchical form into hierarcical bean
+	// are not modified when writing hierarchical form into hierarchical bean
 	public void testHierarchicalBeanWrite() throws Exception {
 		form = makeHierarchicalBeanForm();
 		form._getComponent().init(new MockEnvironment());
