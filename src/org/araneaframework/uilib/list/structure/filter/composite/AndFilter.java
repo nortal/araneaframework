@@ -18,7 +18,6 @@ package org.araneaframework.uilib.list.structure.filter.composite;
 
 import java.util.Iterator;
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.LaxyExpressionIterator;
 import org.araneaframework.uilib.list.structure.filter.MultiFilter;

@@ -18,8 +18,8 @@ package org.araneaframework.framework.router;
 
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
@@ -32,7 +32,6 @@ import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
-import org.araneaframework.http.util.ClientStateUtil;
 
 /**
  * A router service consists of multiple child services, they form a service map.
@@ -41,7 +40,7 @@ import org.araneaframework.http.util.ClientStateUtil;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class BaseServiceRouterService extends BaseService {
-  private static final Logger log = Logger.getLogger(BaseServiceRouterService.class);
+  private static final Log log = LogFactory.getLog(BaseServiceRouterService.class);
   
   private Map serviceMap;
   protected Object defaultServiceId;
@@ -71,7 +70,7 @@ public abstract class BaseServiceRouterService extends BaseService {
     Iterator ite = serviceMap.entrySet().iterator();
     while(ite.hasNext()) {
       Map.Entry entry = (Map.Entry) ite.next();
-      _addComponent(entry.getKey(), (Service) entry.getValue(), getChildEnvironment(entry.getKey()));
+      _addComponent(entry.getKey(), (Service) entry.getValue(), getScope(), getChildEnvironment(entry.getKey()));
     }
     // free extra references
     serviceMap = null;
@@ -97,18 +96,9 @@ public abstract class BaseServiceRouterService extends BaseService {
     		"Router found current service id to be null, which means that it could not be " +
     		"read from request and default value is not defined too.");
 
-    ClientStateUtil.put((String)getServiceKey(), currentServiceId.toString(), output);
-    
     if (_getChildren().containsKey(currentServiceId)) {
-      output.pushAttribute(getServiceKey(), currentServiceId);
-      
-      try {
-        log.debug("Routing action to service '"+currentServiceId+"' under router '" + getClass().getName() + "'");
-        ((Service) _getChildren().get(currentServiceId))._getService().action(path, input, output);
-      }
-      finally {
-        output.popAttribute(getServiceKey());
-      }
+      log.debug("Routing action to service '"+currentServiceId+"' under router '" + getClass().getName() + "'");
+      ((Service) _getChildren().get(currentServiceId))._getService().action(path, input, output);
     }
     else {
       throw new NoSuchServiceException("Service '" + currentServiceId +"' was not found under router '" + getClass().getName() + "'!");
@@ -174,7 +164,7 @@ public abstract class BaseServiceRouterService extends BaseService {
     
     public Service addService(Object id, Service service) {
       try {
-        _addComponent(id, service, getChildEnvironment(id));
+        _addComponent(id, service, null, getChildEnvironment(id));
       }
       catch (Exception e) {
         throw ExceptionUtil.uncheckException(e);
@@ -184,7 +174,7 @@ public abstract class BaseServiceRouterService extends BaseService {
     
     public Service addService(Object id, Service service, Long timeToLive) {
       Service result = addService(id, service);
-      if (log.isEnabledFor(Level.WARN)) {
+      if (log.isWarnEnabled()) {
         log.warn(getClass().getName() + 
         		".addService(Object id, Service service, Long timeToLive) ignores timeToLive attribute." +
         		"Just addService(Object id, Service service) should be used.");

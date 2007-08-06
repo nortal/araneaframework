@@ -25,7 +25,7 @@ import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.util.ClientStateUtil;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.BaseTag;
 
@@ -57,10 +57,9 @@ public class ServiceActionUrlTag extends BaseTag {
   }
 
   protected String getWidgetActionUrl() throws JspException {
-    Map state = (Map) getOutputData().getAttribute(ClientStateUtil.SYSTEM_FORM_STATE);
     Map m = new HashMap();
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-    m.put(TopServiceContext.TOP_SERVICE_KEY, state.get(TopServiceContext.TOP_SERVICE_KEY));
+    m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
     m.put(ThreadContext.THREAD_SERVICE_KEY, id);
     return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(((HttpInputData) getOutputData().getInputData()).getContainerURL(), m));
   }

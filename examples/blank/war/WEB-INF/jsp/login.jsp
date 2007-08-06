@@ -6,8 +6,6 @@
     version="1.2">
     <jsp:directive.page contentType="text/html; charset=UTF-8"/>
 
-    <ui:root>
-        <ui:viewPort>
             <ui:widgetContext>
                 <html>
                     <head>
@@ -18,7 +16,7 @@
 
                     <ui:body>
 	                    <ui:systemForm method="POST">
-							<ui:onLoadEvent event="Form.focusFirstElement(document.forms['${systemFormId}']);"/>
+							<ui:onLoadEvent event="Form.focusFirstElement(araneaPage().getSystemForm());"/>
 
 		                                        <ui:messages styleClass="msg-error"/>
 
@@ -68,6 +66,4 @@
 
                 </html>
             </ui:widgetContext>
-        </ui:viewPort>
-    </ui:root>
 </jsp:root>

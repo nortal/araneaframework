@@ -18,7 +18,8 @@ package org.araneaframework.backend.list.helper.builder.expression;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -28,7 +29,7 @@ import org.araneaframework.backend.list.memorybased.Expression;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class BaseExpressionToSqlExprBuilder implements ExpressionToSqlExprBuilder {
-	private static final Logger log = Logger.getLogger(BaseExpressionToSqlExprBuilder.class);
+	private static final Log log = LogFactory.getLog(BaseExpressionToSqlExprBuilder.class);
 	
 	private Map translators = new HashMap();
 	

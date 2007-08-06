@@ -52,7 +52,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     super.doStartTag(out);
 
     // Prepare
-    String name = this.getScopedFullFieldId();
+    String name = this.getFullFieldId();
 
     JspUtil.writeOpenStartTag(out, renderMode.equals(FormButtonHtmlTag.RENDER_BUTTON) ? FormButtonHtmlTag.RENDER_BUTTON : FormButtonHtmlTag.RENDER_INPUT);
 

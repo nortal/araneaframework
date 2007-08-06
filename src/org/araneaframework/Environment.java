@@ -32,6 +32,14 @@ import org.araneaframework.core.NoSuchEnvironmentEntryException;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Environment extends Serializable {
+  
+  /**
+   * The key that can be used to retrieve Environment (as an example a request scope attribute).
+   * 
+   * @since 1.1
+   */
+  public static final String ENVIRONMENT_KEY = "org.araneaframework.Environment";
+  
   /**
    * Returns the entry with the specified key from this Environment. 
    * Returns null if the entry is not present in the environment.

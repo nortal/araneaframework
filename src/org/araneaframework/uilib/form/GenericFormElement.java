@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -140,12 +141,15 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * Converts the element value from control to data item
    */
   public void convert()  throws Exception {
-    clearErrors();
+    converted = false;  
+    validated = false;
     
-  	converted = false;  
-  	validated = false;
-  	
-  	convertInternal();
+    if (!isAlive())
+      return;
+
+    clearErrors();
+
+    convertInternal();
   	
   	converted = isValid();
   }
@@ -172,53 +176,39 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    */
   public boolean isEvaluated() {
   	return converted && validated;
-  }    
+  }
   
+  /**
+   * Since 1.1 this returns an immutable Set.
+   */
   public Set getErrors() {
-    if (errors == null)
-      errors = new HashSet();
-    return errors;
+    return Collections.unmodifiableSet(getMutableErrors()); 
   }
-  
+
   public void addError(String error) {
-    Assert.notNullParam(error, "error");
-    
-    getErrors().add(error);
+    Assert.notEmptyParam(error, "error");
+
+    getMutableErrors().add(error);
+    getMessageContext().showMessage(MessageContext.ERROR_TYPE, error);
   }
-  
+
   public void addErrors(Set errors) {
-    Assert.noNullElementsParam(errors, "errors");
-    
-    getErrors().addAll(errors);
+    Assert.notNullParam(errors, "errors");
+    for (Iterator i = errors.iterator(); i.hasNext(); )
+      addError((String) i.next());
   }
-  
+
   /**
    * Clears element errors.
    */
   public void clearErrors() {  
+    getMessageContext().hideMessages(MessageContext.ERROR_TYPE, getErrors());
     errors = null;
   }
-  
+
   public Object getValue() {
     return null;
   }
-
-  //*********************************************************************
-  //* OVERRIDABLE METHODS
-  //*********************************************************************
-
-  protected void process() throws Exception {
-    MessageContext msgCtx = 
-      (MessageContext) getEnvironment().getEntry(MessageContext.class);
-    
-    for (Iterator i = getErrors().iterator(); i.hasNext();) {
-      String message = (String) i.next();
-      msgCtx.showErrorMessage(message);      
-    }
-
-    super.process();
-  }
-
   //*********************************************************************
   //* ABSTRACT METHODS
   //*********************************************************************
@@ -241,26 +231,30 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    */
   public abstract boolean isStateChanged();
   
-	/**
-	 * Sets wether the element is disabled.
-	 * @param disabled wether the element is disabled.
-	 */
-	public abstract void setDisabled(boolean disabled);
-  
+  /**
+   * Sets wether the element is disabled.
+   * @param disabled wether the element is disabled.
+   */
+  public abstract void setDisabled(boolean disabled);
+
   /**
    * Returns whether the element is disabled.
    * @return whether the element is disabled.
    */
-	public abstract boolean isDisabled();
-    
+  public abstract boolean isDisabled();
+
   /**
    * Accepts the visitor.
    */
-	public abstract void accept(String id, FormElementVisitor visitor);
+  public abstract void accept(String id, FormElementVisitor visitor);
 	
   //*********************************************************************
   //* INTERNAL METHODS
-  //*********************************************************************  	
+  //*********************************************************************
+
+  private MessageContext getMessageContext() {
+    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+  }
     
   /**
    * Converts the element value from control to data item
@@ -284,6 +278,15 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     return isValid();
   }
   
+  /**
+   * @since 1.1
+   */
+  protected Set getMutableErrors() {
+    if (errors == null)
+      errors = new HashSet();
+    return errors;
+  }
+
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    

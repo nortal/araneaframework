@@ -17,18 +17,23 @@
 package org.araneaframework.framework.filter;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.set.ListOrderedSet;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
+import org.araneaframework.http.UpdateRegionProvider;
+import org.araneaframework.http.util.JsonArray;
+import org.araneaframework.http.util.JsonObject;
 
 /**
  * Adds a {@link org.araneaframework.framework.MessageContext} implementation to the environment that can
@@ -46,11 +51,16 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  *
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
+public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext, UpdateRegionProvider {
+
+  /** @since 1.1 */
+  public static final String MESSAGE_REGION_KEY = "messages";
+
   protected Map permanentMessages;
   protected Map messages;
-  
+
   protected void update(InputData input) throws Exception {
     clearMessages();
 
@@ -61,40 +71,6 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     return new StandardEnvironment(getEnvironment(), MessageContext.class, this);
   }
   
-  /**
-   * Adds all the messages to the output as Map under the key 
-   * {@link org.araneaframework.framework.MessageContext#MESSAGE_KEY}. The keys
-   * of the Map are the different message types encountered so far and under the keys
-   * are the messages in a Collection.
-   *<p>
-   * A child service should do as follows to access the messages
-   * <pre>
-   * <code>
-   * ...
-   * Map map = output.getAttribute(MESSAGE_KEY);
-   * Collection list = (Collection)map.get(MessageContext.ERROR_TYPE); // collection contains all the error messages
-   * </code>
-   * </pre>
-   * The map could be null if this service was not used. The collection is null if no messages of
-   * that type been added to the messages. 
-   *</p>
-   */
-  protected void render(OutputData output) throws Exception {
-    if (permanentMessages != null) {
-      // add permanent messages to-one time messages for rendering
-      messages = addPermanentMessages(messages);
-    }
-
-    output.pushAttribute(MessageContext.MESSAGE_KEY, messages);
-
-    try {
-      super.render(output);
-    }
-    finally {
-      output.popAttribute(MessageContext.MESSAGE_KEY);
-    }
-  }
-
   /** Stores message of given type in given messageMap (created if <code>null</code> at invocation). */
   protected Map storeMessage(final String type, final String message, Map messageMap) {
     Assert.notEmptyParam(type, "type");
@@ -115,16 +91,23 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     return messageMap;
   }
   
-  /** Removes the given message from given messageMap. */
-  protected Map removeMessage(final String message, Map messageMap) {
+  /** 
+   * Removes the given <code>message</code> from given message <code>type</code> in <code>messageMap</code>. 
+   * When given <code>type</code> is <code>NULL</code>, removes the given <code>message</code> from all types. */
+  protected Map removeMessage(String type, final String message, Map messageMap) {
     Assert.notEmptyParam(message, "message");
 
     if (messageMap == null)
       return null;
 
     for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
-      Collection messages = (Collection)((Map.Entry)i.next()).getValue();
-      messages.remove(message);
+      Map.Entry next = (Map.Entry)i.next();
+      if (type == null || next.getKey().equals(type)) {
+        Collection messages = (Collection)(next).getValue();
+        messages.remove(message);
+        if (type != null) 
+          break;
+      }
     }
 
     return messageMap;
@@ -154,24 +137,55 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     messages = storeMessage(type, message, messages);
   }
 
+  public void showMessages(String type, Set messages) {
+    Assert.notNullParam(messages, "messages");
+    for (Iterator i = messages.iterator(); i.hasNext(); ) {
+      showMessage(type, (String)i.next());
+    }
+  }
+
+  public void hideMessage(String type, String message) {
+    Assert.notEmptyParam(type, "type");
+    removeMessage(type, message, messages);
+  }
+  
+  public void hideMessages(String type, Set messages) {
+    Assert.notNullParam(messages, "messages");
+    for (Iterator i = messages.iterator(); i.hasNext(); ) {
+      hideMessage(type, (String)i.next());
+    }
+  }
+
   public void showPermanentMessage(String type, final String message) {
     permanentMessages = storeMessage(type, message, permanentMessages);
   }
   
   public void hidePermanentMessage(String message) {
-    permanentMessages = removeMessage(message, permanentMessages);
+    permanentMessages = removeMessage(null, message, permanentMessages);
   }
 
   public void showErrorMessage(String message) {
     showMessage(ERROR_TYPE, message);
+  }
+  
+  public void hideErrorMessage(String message) {
+    hideMessage(ERROR_TYPE, message);    
   }
 
   public void showInfoMessage(String message) {
     showMessage(INFO_TYPE, message);
   }
   
+  public void hideInfoMessage(String message) {
+    hideMessage(INFO_TYPE, message); 
+  }
+  
   public void showWarningMessage(String message) {
     showMessage(WARNING_TYPE, message);
+  }
+  
+  public void hideWarningMessage(String message) {
+    hideMessage(WARNING_TYPE, message);
   }
   
   public void clearMessages() {
@@ -188,4 +202,46 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     clearMessages();
     clearPermanentMessages();
   }
+
+  public Map getMessages() {
+    if (permanentMessages != null) {
+      // add permanent messages to-one time messages for rendering
+      messages = addPermanentMessages(messages);
+    }
+    if (messages == null) {
+      return null;
+    }
+    return Collections.unmodifiableMap(messages);
+  }
+
+  /* ************************************************************************************
+   * Internal inner classes
+   * ************************************************************************************/
+
+  /**
+   * @since 1.1
+   */
+  public Map getRegions() throws Exception {
+    JsonObject messagesByType = new JsonObject();
+    Map messageMap = getMessages();
+    if (messageMap != null) {
+      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry entry = (Map.Entry) i.next();
+        if (entry.getValue() == null) {
+          continue;
+        }
+        String type = (String) entry.getKey();
+        JsonArray messages = new JsonArray();
+        for (Iterator j = ((Collection) entry.getValue()).iterator(); j.hasNext(); ) {
+          String message = (String) j.next();
+          messages.appendString(message);
+        }
+        messagesByType.setProperty(type, messages.toString());
+      }
+    }
+    Map regions = new HashMap();
+    regions.put(MESSAGE_REGION_KEY, messagesByType.toString());
+    return regions;
+  }
+
 }

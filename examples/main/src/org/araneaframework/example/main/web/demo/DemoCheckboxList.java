@@ -55,9 +55,8 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 		setViewSelector("demo/demoCheckboxList");
 
 		checkList = new EditableBeanListWidget(new DemoCheckboxListRowHandler(), DataDTO.class);
-		addWidget("checkList", checkList);
-
 		checkList.setDataProvider(new DemoCheckboxListDataProvider());
+		addWidget("checkList", checkList);
 
 		checkList.addField("booleanField", "#Boolean");
 		checkList.addField("stringField", "#String");
@@ -88,7 +87,7 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 
 		public void initFormRow(FormRow editableRow, Object row) throws Exception {
 			((BeanFormWidget)editableRow.getForm()).addBeanElement("booleanField", "#Boolean field", new CheckboxControl(), true);
-			((BeanFormWidget)editableRow.getForm()).writeBean(row);
+			((BeanFormWidget)editableRow.getForm()).readFromBean(row);
 		}
 	}
 

@@ -79,6 +79,15 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new PopupMessageFactory());
 		getFlowCtx().start(pfw, new SampleHandler());
 	}
+	
+	public void handleEventOpenImmediatelyReturningCustomFlow() throws Exception {
+		PopupWindowProperties p = new PopupWindowProperties();
+		p.setHeight("600");
+		p.setWidth("1000");
+		p.setScrollbars("yes");
+		PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(true), p, new PopupMessageFactory());
+		getFlowCtx().start(pfw, null, new SampleHandler());
+	}
 
 	public void handleEventEndFlow() {
 		getFlowCtx().finish("Funky end for SamplePopupWidget!");
@@ -93,7 +102,6 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		public void onFinish(Object returnValue) throws Exception {
 			InvisibleElementFormWidget widget = new InvisibleElementFormWidget((String)returnValue);
 			getFlowCtx().replace(widget, null);
-			widget._getWidget().process();
 		}
 	}
 }

@@ -51,7 +51,7 @@ public class PersonViewWidget extends TemplateBaseWidget {
 		personForm.addBeanElement("phone", "#Phone no", new DisplayControl(), true);
 		personForm.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
 		personForm.addBeanElement("salary", "#Salary", new FloatControl(), false);
-		personForm.writeBean(getGeneralDAO().getById(PersonMO.class, personId));
+		personForm.readFromBean(getGeneralDAO().getById(PersonMO.class, personId));
 
 		addWidget("personForm", personForm);
 	}

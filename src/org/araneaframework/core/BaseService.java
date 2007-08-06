@@ -43,10 +43,13 @@ public abstract class BaseService extends BaseComponent implements Service {
       Assert.notNullParam(this, output, "output");
       
       _startCall();
+      
       currentInputData = input;
       currentOutputData = output;
       try {
-        BaseService.this.action(path, input, output);
+        if (isAlive()) {
+          BaseService.this.action(path, input, output);
+        }
       }
       catch (Exception e) {
         try {

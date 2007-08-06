@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -48,7 +49,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
-  private static final Logger log = Logger.getLogger(StandardFlowContainerWidget.class);
+  private static final Log log = LogFactory.getLog(StandardFlowContainerWidget.class);
+  
+  private static final String BASE_FLOW_KEY = "f";
+  private static final String TOP_FLOW_KEY = BASE_FLOW_KEY + 0;
   
   //*******************************************************************
   // FIELDS
@@ -98,20 +102,21 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
   public void start(Widget flow, Configurator configurator, Handler handler) {
     Assert.notNullParam(flow, "flow");
-    
-    CallFrame frame = makeCallFrame(flow, configurator, handler);
+
+    CallFrame previous = callStack.size() == 0 ? null : (CallFrame) callStack.getFirst();
+    CallFrame frame = makeCallFrame(flow, configurator, handler, previous);
     
     if (log.isDebugEnabled())
       log.debug("Starting flow '" + flow.getClass().getName() +"'");
     
-    if (_getChildren().get(FlowContext.FLOW_KEY) != null) {
-      ((Widget) getChildren().get(FlowContext.FLOW_KEY))._getComponent().disable();
-      _getChildren().remove(FlowContext.FLOW_KEY);
+    if (previous != null && _getChildren().get(previous.getName()) != null) {
+      ((Widget) getChildren().get(previous.getName()))._getComponent().disable();
+      _getChildren().remove(previous.getName());
     }
     
     callStack.addFirst(frame);
     
-    addWidget(FlowContext.FLOW_KEY, flow);
+    addWidget(frame.getName(), flow);
 
     if (configurator != null) {
       try {
@@ -131,17 +136,17 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     Assert.notNullParam(flow, "flow");
     
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
-    CallFrame frame = makeCallFrame(flow, configurator, previousFrame.getHandler());
+    CallFrame frame = makeCallFrame(flow, configurator, previousFrame.getHandler(), previousFrame);
     
     if (log.isDebugEnabled())
       log.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + 
         "' with flow '" + flow.getClass().getName() + "'");
     
-    removeWidget(FlowContext.FLOW_KEY);
+    removeWidget(previousFrame.getName());
     
     callStack.addFirst(frame);    
     
-    addWidget(FlowContext.FLOW_KEY, flow);
+    addWidget(frame.getName(), flow);
     
     if (configurator != null) {
       try {
@@ -163,10 +168,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     if (log.isDebugEnabled())
       log.debug("Finishing flow '" + previousFrame.getWidget().getClass().getName() + "'");
     
-    removeWidget(FlowContext.FLOW_KEY);
+    removeWidget(previousFrame.getName());
     if (frame != null) {
-      _getChildren().put(FlowContext.FLOW_KEY, frame.getWidget());
-      ((Component) getChildren().get(FlowContext.FLOW_KEY))._getComponent().enable();
+      _getChildren().put(frame.getName(), frame.getWidget());
+      ((Component) getChildren().get(frame.getName()))._getComponent().enable();
     }
     
     if (previousFrame.getHandler() != null) {
@@ -189,10 +194,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     if (log.isDebugEnabled())
       log.debug("Cancelling flow '" + previousFrame.getWidget().getClass().getName() + "'");
     
-    removeWidget(FlowContext.FLOW_KEY);
+    removeWidget(previousFrame.getName());
     if (frame != null) {
-      _getChildren().put(FlowContext.FLOW_KEY, frame.getWidget());    
-      ((Component) getChildren().get(FlowContext.FLOW_KEY))._getComponent().enable();
+      _getChildren().put(frame.getName(), frame.getWidget());    
+      ((Component) getChildren().get(frame.getName()))._getComponent().enable();
     }
     
     if (previousFrame.getHandler() != null) try {
@@ -255,8 +260,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     for (Iterator i = callStack.iterator(); i.hasNext();) {
       CallFrame frame = (CallFrame) i.next();
       
-      _getChildren().put(FlowContext.FLOW_KEY, frame.getWidget());
-      removeWidget(FlowContext.FLOW_KEY);
+      _getChildren().put(frame.getName(), frame.getWidget());
+      removeWidget(frame.getName());
     }
     
     callStack.clear();
@@ -305,21 +310,9 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     //Don't render empty callstack
     if (getCallStack().size() == 0) return; 
     
-    output.pushAttribute(FlowContext.CALL_STACK_KEY, callStack);
-      
-    try {          
-      output.pushScope(FlowContext.FLOW_KEY);
-      
-      try {   
-        getWidget(FlowContext.FLOW_KEY)._getWidget().render(output);
-      } 
-      finally {
-        output.popScope();
-      }
-    }
-    finally {       
-      output.popAttribute(FlowContext.CALL_STACK_KEY);
-    }
+    CallFrame frame = (CallFrame) callStack.getFirst();
+    
+    getWidget(frame.getName())._getWidget().render(output);
   }
   
   private void refreshGlobalEnvironment() {
@@ -349,8 +342,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   /**
    * Returns a new CallFrame constructed of the callable, configurator and handler.
    */
-  protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler handler) {
-    return new CallFrame(callable, configurator, handler);
+  protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler handler, CallFrame previous) {
+    return new CallFrame(callable, configurator, handler, previous);
   }
   
   //*******************************************************************
@@ -365,16 +358,16 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       while (i.hasNext() && callStack.size() > currentDepth) {
         CallFrame frame = (CallFrame) i.next();
         
-        _getChildren().put(FlowContext.FLOW_KEY, frame.getWidget());
-        removeWidget(FlowContext.FLOW_KEY);
+        _getChildren().put(frame.getName(), frame.getWidget());
+        removeWidget(frame.getName());
         
         i.remove();
       }
       
       if (callStack.size() > 0) {
         CallFrame frame = (CallFrame) callStack.getFirst();
-        _getChildren().put(FlowContext.FLOW_KEY, frame.getWidget());
-        ((Component) getChildren().get(FlowContext.FLOW_KEY))._getComponent().enable();
+        _getChildren().put(frame.getName(), frame.getWidget());
+        ((Component) getChildren().get(frame.getName()))._getComponent().enable();
       }
 
       callback.call(getChildWidgetEnvironment());
@@ -386,14 +379,21 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
    * a call frame. Class is used internally.
    */
   protected static class CallFrame implements Serializable {
-    Widget widget;
-    Configurator configurator;
-    Handler handler;
+    private Widget widget;
+    private Configurator configurator;
+    private Handler handler;
+    private String name;
     
-    protected CallFrame(Widget widget, Configurator configurator, Handler handler) {
+    protected CallFrame(Widget widget, Configurator configurator, Handler handler, CallFrame previous) {
       this.configurator = configurator;
       this.handler = handler;
       this.widget = widget;
+      
+      if (previous == null)
+        name = TOP_FLOW_KEY;
+      else {
+        name = BASE_FLOW_KEY + (Integer.parseInt(previous.getName().substring(BASE_FLOW_KEY.length())) + 1);
+      }
     }
 
     public Configurator getConfigurator() {
@@ -408,6 +408,13 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       return widget;
     }
     
+    /**
+     * @since 1.1
+     */
+    public String getName() {
+      return name;
+    }
+
     public String toString() {
       return widget.getClass().getName();
     }

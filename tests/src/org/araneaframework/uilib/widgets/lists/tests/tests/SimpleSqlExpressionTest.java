@@ -18,7 +18,8 @@ package org.araneaframework.uilib.widgets.lists.tests.tests;
 
 import java.util.Arrays;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.helper.builder.expression.StandardExpressionToSqlExprBuilder;
@@ -38,8 +39,7 @@ import org.araneaframework.uilib.list.util.converter.BooleanToStringConverter;
 
 
 public class SimpleSqlExpressionTest extends TestCase {
-	private static final Logger log = Logger
-			.getLogger(SimpleSqlExpressionTest.class);
+	private static final Log log = LogFactory.getLog(SimpleSqlExpressionTest.class);
 
 	public void testSqlExpressionBuilder() throws ExpressionEvaluationException {
 		// build expression

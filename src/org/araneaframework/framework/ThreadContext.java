@@ -34,6 +34,6 @@ public interface ThreadContext extends ManagedServiceContext, Serializable {
   /**
   * The key of the thread-service's id in the request.
   */
-  public static final String THREAD_SERVICE_KEY = "threadServiceId";
-  public static final String KEEPALIVE_KEY = "threadServiceKeepAlive";
+  public static final String THREAD_SERVICE_KEY = "araThreadServiceId";
+  public static final String KEEPALIVE_KEY = "araThreadServiceKeepAlive";
 }

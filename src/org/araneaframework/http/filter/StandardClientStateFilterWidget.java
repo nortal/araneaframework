@@ -21,15 +21,16 @@ import java.util.Arrays;
 import net.iharder.base64.Base64;
 import org.apache.commons.collections.Buffer;
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.framework.FilterWidget;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
-import org.araneaframework.http.util.ClientStateUtil;
 import org.araneaframework.http.util.EncodingUtil;
 
 /**
@@ -40,17 +41,17 @@ import org.araneaframework.http.util.EncodingUtil;
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
  */
 public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget {
-  private static final Logger log = Logger.getLogger(StandardClientStateFilterWidget.class);
+  private static final Log log = LogFactory.getLog(StandardClientStateFilterWidget.class);
 
   /**
    * Global parameter key for the client state form input.
    */
-  public static final String CLIENT_STATE = "clientState";
+  public static final String CLIENT_STATE = "araClientState";
 
   /**
    * Global parameter key for the version of the client state form input.
    */
-  public static final String CLIENT_STATE_VERSION = "clientStateVersion";
+  public static final String CLIENT_STATE_VERSION = "araClientStateVersion";
 
   private Buffer digestSet = new CircularFifoBuffer(10);
 
@@ -86,14 +87,17 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
 
     log.debug("Serialized client state size: " + base64.length());
 
-    ClientStateUtil.put(CLIENT_STATE, base64, output);
-
     byte[] lastDigest = EncodingUtil.buildDigest(base64.getBytes());
 
-    ClientStateUtil.put(CLIENT_STATE_VERSION, Base64.encodeBytes(lastDigest, Base64.DONT_BREAK_LINES), output);
+    String clientStateVersion = Base64.encodeBytes(lastDigest, Base64.DONT_BREAK_LINES);
     digestSet.add(new Digest(lastDigest));
 
     ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
+
+    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
+    systemFormContext.addField(CLIENT_STATE, base64);
+    systemFormContext.addField(CLIENT_STATE_VERSION, clientStateVersion);
+ 
     super.render(output);
 
     childWidget = null;

@@ -16,7 +16,8 @@
 
 package org.araneaframework.example.main.web.company;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
@@ -30,7 +31,7 @@ import org.araneaframework.uilib.form.control.TextControl;
  */
 public class CompanyEditWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
-  private static final Logger log = Logger.getLogger(CompanyEditWidget.class);
+  private static final Log log = LogFactory.getLog(CompanyEditWidget.class);
   private Long id = null;
   private BeanFormWidget form;
 
@@ -58,7 +59,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
 
     if (id != null) {
       CompanyMO company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);   
-      form.writeBean(company);
+      form.readFromBean(company);
     }
 
     addWidget("form", form);
@@ -68,7 +69,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
     if (form.convertAndValidate()) {
       CompanyMO company = id != null ? (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id) : new CompanyMO();
 
-      company = (CompanyMO) form.readBean(company);
+      company = (CompanyMO) form.writeToBean(company);
 
       if (id != null) {
         getGeneralDAO().edit(company);

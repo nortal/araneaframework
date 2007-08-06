@@ -19,13 +19,9 @@ package org.araneaframework.example.common.tags.example.component;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.OutputData;
-import org.araneaframework.http.HttpInputData;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.PresentationTag;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspScriptUtil;
 import org.araneaframework.jsp.util.JspUtil;
@@ -64,7 +60,6 @@ public class ComponentListFooterTag extends PresentationTag {
 
   public final static String DEFAULT_NO_DATA_STRING_ID = "list.info.noData";
 
-  protected String systemFormId;
   protected String listId;
 
   protected String numberStyleClass = "nr";
@@ -84,9 +79,6 @@ public class ComponentListFooterTag extends PresentationTag {
 
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
-    // Get system form id 
-    systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
 
     // Get list data
     listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
@@ -262,10 +254,5 @@ public class ComponentListFooterTag extends PresentationTag {
     result.setId(SHOW_ALL_EVENT_ID);
     result.setTarget(listId);
     return result;
-  }
-  
-  public StringBuffer getRequestURL() throws JspException {
-    OutputData output = (OutputData) requireContextEntry(AraneaRootTag.OUTPUT_DATA_KEY);
-    return new StringBuffer(((HttpInputData)output.getInputData()).getContainerURL());
   }
 }

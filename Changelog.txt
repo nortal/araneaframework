@@ -1,17 +1,60 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2007.06.22    | Aranea 1.1-M3
 
-2007.06.12    | Aranea 1.0.9
+Features and Improvements
+    Aranea specific request parameters got prefixes ('araTransactionId', ...) | See
+    There were some name clashes otherwise in integration projects.           |     change #414	
+    TcdAndTldMerger is bundled inside aranea.jar                              | See #434
+    Some minor documentation updates                                          | See change #426, #448
+
+Bugfixes
+    Update regions caused NPE sometimes when active flow was ended in request | See #432
+    Demos->Advanced->Advanced popups last component did not work              | See #424 
+---------------------------------------------------------------------------------------------
+2007.06.12    | Aranea 1.1-M2
 
 Features and Improvements
     FormWidget addElement methods accept hierarchical element identifiers     | See #171
     Convenience constructors added to composite constraints                   | See change #370
     Convenience start() methods added to FlowContext                          | See #391
     MenuItem allows starting new flows from MenuItem 'holders'                | See change #395
+    <ui:messages> tag allows setting HTML div id ('divId' attribute)          | See #384
+    Component interface now includes isAlive() method                         | See #382
+    Framework does not depend on Log4j anymore (uses commons-logging)         | See #377
+    Bundled TinyMCE was upgraded to 2.1.1.1                                   | See change #418
+    Bundled script.aculo.us scripts were upgraded to 1.7.1_beta3              | See change #418
 
 Bugfixes
     <ui:link> did not work due to attached javascript                         | See #399
     <ui:tree> did not honor renderer set by TreeWidget.setRetrender()         | See #357
+    List ordering broke in 1.1-M1 every now and then                          | See #389
+    ListWidget broke when ListDataProvider was used directly                  | See #402
+    Convert on uninitialized FormElement's threw NPE (incompatible with 1.0)  | See #400
+    BackendListDataProvider threw NPE when logging was activated              | See #403
+    Exception was thrown when requested to update nonexisting updateregion    | See #406
+    Messages were not updated on client side when they disappeared on server  | See #416
+    FormElement's outside updateregions ignored subsequent request after      | See 
+    partial rendering                                                         |     #411
+---------------------------------------------------------------------------------------------
+2007.05.03    | Aranea 1.1-M1
+
+Features and Improvements
+    Widgets know their name (accessible with getScope() method)               | See #7
+    Real partial rendering support                                            | See #227
+    Widget actions support real unsynchronized access (through session router)| See #319 
+    Widget process() lifecycle method was removed (broke OO-encapsulation)    | See #367
+    FormWidget addElement() method accepts hierarchial ids                    | See #171
+
+    Visibility of context attributes in JSP tags was reduced to containing    |
+    widget only                                                               | See change #339
+    Removed ui:root, ui:viewport, ui:globalWidgetInclude tags                 |
+
+Bugfixes
+    Enforced component lifecycle (no resurrections)                           | See #321
+    Returning from init() method of widget wrapped in PopupFlowWidget failed  | See #312
+
+    Much more detailed changelog is available from SVN repo (dev/changes-1.1.txt)
 ---------------------------------------------------------------------------------------------
 2007.04.20    | Aranea 1.0.8
 

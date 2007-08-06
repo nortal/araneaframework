@@ -87,7 +87,7 @@ public class DemoEmbeddedDisplayableEditableList extends TemplateBaseWidget {
 		}
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).readBean(new DataDTO());
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).writeToBean(new DataDTO());
 			rowData.setId((Long) editableRow.getKey());
 			data.put(editableRow.getKey(), rowData);
 
@@ -101,7 +101,7 @@ public class DemoEmbeddedDisplayableEditableList extends TemplateBaseWidget {
 		public void addValidRow(FormWidget addForm) throws Exception {
 			lastId = new Long(lastId.longValue() + 1);
 
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).readBean(new DataDTO());
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).writeToBean(new DataDTO());
 			rowData.setId(lastId);
 
 			data.put(lastId, rowData);
@@ -117,7 +117,7 @@ public class DemoEmbeddedDisplayableEditableList extends TemplateBaseWidget {
 			FormListUtil.addEditSaveButtonToRowForm("#", editableRows, rowForm, getRowKey(row));
 			FormListUtil.addDeleteButtonToRowForm("#", editableRows, rowForm, getRowKey(row));
 			
-			rowForm.writeBean(row);      
+			rowForm.readFromBean(row);      
       
       rowForm.addWidget("embeddedFormList", new DemoDisplayableEditableList());
 		}

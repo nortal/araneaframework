@@ -17,6 +17,7 @@
 /**
  * Utility functions.
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Alar Kvell (alar@araneaframework.org)
  */
  
 // b/c braindead IE: The NAME attribute cannot be set at run time on elements dynamically 
@@ -55,5 +56,45 @@ function setElementAttr(elementStr, attrName, attrValue) {
     el.setAttribute(attrName, attrValue);
   }
 }
+
+/**
+ * A wrapper around String that lets to read text by lines and by chunks of
+ * characters.
+ *
+ * @since 1.1
+ */
+Text = Class.create();
+Text.prototype = {
+  initialize: function(text) {
+    this.text = text;
+  },
+
+  readLine: function() {
+    var i = this.text.indexOf("\n");
+    var line;
+    if (i == -1) {
+      line = this.text;
+      this.text = '';
+    } else {
+      line = this.text.substr(0, i);
+      this.text = this.text.substr(i + 1);
+    }
+    return line;
+  },
+
+  readCharacters: function(characters) {
+    var content = this.text.substr(0, characters);
+    this.text = this.text.substr(characters);
+    return content;
+  },
+
+  isEmpty: function() {
+    return this.text.length == 0;
+  },
+
+  toString: function() {
+    return this.text;
+  }
+};
 
 window['aranea-util.js'] = true;

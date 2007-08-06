@@ -17,6 +17,8 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A context for adding messages to a central pool of messages for later 
@@ -37,9 +39,9 @@ import java.io.Serializable;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface MessageContext extends Serializable {
-  public static final String MESSAGE_KEY = "org.araneaframework.framework.MessageContext.MESSAGES";
   
   /**
    * A message type indicating its an error message. 
@@ -61,6 +63,29 @@ public interface MessageContext extends Serializable {
    * Message is cleared after the user sees it once.
    */
   public void showMessage(String type, String message);
+  
+  /**
+   * Shows <code>messages</code> of given <code>type</code> to the user. 
+   * Messages are cleared after the user sees them once.
+   * 
+   * @param messages Set&lt;String&gt;
+   * @since 1.1
+   */
+  public void showMessages(String type, Set messages);
+  
+  /**
+   * Removes a message <code>message</code> of type <code>type</code>. 
+   * @since 1.1
+   */
+  public void hideMessage(String type, String message);
+  
+  /**
+   * Removes messages <code>message</code> of type <code>type</code>. 
+   * @param messages Set&lt;String&gt;
+   * 
+   * @since 1.1
+   */
+  public void hideMessages(String type, Set messages);
 
   /**
    * Shows an error message to the user.
@@ -68,14 +93,32 @@ public interface MessageContext extends Serializable {
   public void showErrorMessage(String message);
   
   /**
+   * Hides an error message from user.
+   * @since 1.1
+   */
+  public void hideErrorMessage(String message);
+  
+  /**
    * Shows a warning message to the user.
    */
-  public void showWarningMessage(String message);  
+  public void showWarningMessage(String message);
+
+  /**
+   * Hides an error message from user.
+   * @since 1.1
+   */
+  public void hideWarningMessage(String message);
 
   /**
    * Shows an informative message to the user.
    */
   public void showInfoMessage(String message);
+  
+  /**
+   * Hides an error message from user.
+   * @since 1.1
+   */
+  public void hideInfoMessage(String message);
   
   /**
    * Clears all non-permanent messages.
@@ -103,4 +146,26 @@ public interface MessageContext extends Serializable {
    * Clears all messages (both permanent and usual).
    */  
   public void clearAllMessages();
+  
+  /**
+   * Returns all messages as a Map. The keys
+   * of the Map are the different message types encountered so far and under the keys
+   * are the messages in a Collection.
+   * <p>
+   * A child service should do as follows to access the messages
+   * <pre>
+   * <code>
+   * ...
+   * MessageContext msgCtx = (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+   * Map map = msgCtx.getMessages();
+   * Collection list = (Collection) map.get(MessageContext.ERROR_TYPE); // collection contains all the error messages
+   * </code>
+   * </pre>
+   * The map could be null if this service was not used. The collection is null if no messages of
+   * that type been added to the messages. 
+   * </p>
+   * 
+   * @since 1.1
+   */
+  public Map getMessages();
 }

@@ -17,15 +17,29 @@
 package org.araneaframework.http;
 
 import java.io.Serializable;
+import java.util.Map;
+import org.araneaframework.uilib.ConfigurationContext;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface JspContext extends Serializable {
-  public static final String JSP_CONFIGURATION_KEY = "org.araneaframework.http.JspContext";
 
   public String getJspPath();
 
   /** @since 1.0.1 */
   public String getJspExtension();
+
+  /** @since 1.1 */
+  public String getSubmitCharset();
+
+  /** @since 1.1 */
+  public String getFormAction();
+
+  /** @since 1.1 */
+  public Map getTagMapping(String uri);
+
+  /** @since 1.1 */
+  public ConfigurationContext getConfiguration();
+
 }

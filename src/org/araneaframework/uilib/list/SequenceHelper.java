@@ -53,7 +53,7 @@ public class SequenceHelper implements Serializable {
   protected ConfigurationContext configuration;
   
   //Whether user has expanded the whole list.
-  protected boolean allItemsShown = false;
+  private boolean allItemsShown = false;
 
   private long currentPage = 0;
   private long totalItemCount;
@@ -69,33 +69,35 @@ public class SequenceHelper implements Serializable {
   
   private long oldItemsOnPage;
   private long oldFirstItemIndex;
+  
+  private boolean changed = true;
 
   /**
    * Creates the class, setting all parameters to defaults.
    */
   public SequenceHelper(ConfigurationContext configuration) {
-  	this.configuration = configuration;
-    
+    this.configuration = configuration;
+
     Long confDefaultItemsOnPage = (Long) configuration.getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);  
     if (confDefaultItemsOnPage != null)
-    	defaultItemsOnPage = confDefaultItemsOnPage.longValue();
-    
+      defaultItemsOnPage = confDefaultItemsOnPage.longValue();
+
     Long confFullItemsOnPage = (Long) configuration.getEntry(ConfigurationContext.FULL_LIST_ITEMS_ON_PAGE);
     if (confFullItemsOnPage != null)
-    	fullItemsOnPage = confFullItemsOnPage.longValue();
-    
+      fullItemsOnPage = confFullItemsOnPage.longValue();
+
     Long confDefaultPagesOnBlock = (Long) configuration.getEntry(ConfigurationContext.DEFAULT_LIST_PAGES_ON_BLOCK);
     if (confDefaultPagesOnBlock != null)
-    	defaultPagesOnBlock = confDefaultPagesOnBlock.longValue();
-    
+      defaultPagesOnBlock = confDefaultPagesOnBlock.longValue();
+
     Boolean confPreserveStartingRow = (Boolean) configuration.getEntry(ConfigurationContext.LIST_PRESERVE_STARTING_ROW);
     if (confPreserveStartingRow != null)
-    	preserveStartingRow = confPreserveStartingRow.booleanValue(); 
-    
+      preserveStartingRow = confPreserveStartingRow.booleanValue(); 
+
     setItemsOnPage(defaultItemsOnPage);
     setPagesOnBlock(defaultPagesOnBlock);
-    
-    totalItemCount = Long.MAX_VALUE;    
+
+    totalItemCount = Long.MAX_VALUE;
   }
 
   //*******************************************************************
@@ -107,6 +109,7 @@ public class SequenceHelper implements Serializable {
    */
   public void setItemsOnPage(long itemsOnPage) {
     this.itemsOnPage = itemsOnPage;
+    fireChange();
   }
   
   /**
@@ -124,6 +127,7 @@ public class SequenceHelper implements Serializable {
    */
   public void setPagesOnBlock(long pagesOnBlock) {
     this.pagesOnBlock = pagesOnBlock;
+    fireChange();
   }
 
   /**
@@ -141,6 +145,8 @@ public class SequenceHelper implements Serializable {
   		this.currentPage = currentPage;
     
     firstItemIndex = this.currentPage * itemsOnPage;
+    
+    fireChange();
   }
 
   /**
@@ -267,9 +273,16 @@ public class SequenceHelper implements Serializable {
 
   protected void setAllItemsShown(boolean allItemsShown) {
   	this.allItemsShown = allItemsShown;
+  	fireChange();
   }
   
-  
+  /** 
+   * @since 1.1
+   */
+  protected boolean getAllItemsShown() {
+    return this.allItemsShown;
+  }
+
   /**
    * Gets how many pages are there in the list.
    * 
@@ -339,6 +352,20 @@ public class SequenceHelper implements Serializable {
     }
 
     return end;
+  }
+  
+  
+  /**
+   * Returns whether the basic configuration that specifies which items are
+   * shown has changed since last call to this {@link SequenceHelper}'s {@link SequenceHelper#checkChanged()} 
+   * method.
+   * 
+   * @since 1.1
+   */
+  public boolean checkChanged() {
+	  boolean result = changed;
+	  changed = false;
+	  return result;
   }
 
   //*******************************************************************
@@ -461,5 +488,12 @@ public class SequenceHelper implements Serializable {
 	public Long getItemsOnPage() {
 		return itemsOnPage;
 	}
+  }
+  
+  /** 
+   * @since 1.1
+   */
+  protected void fireChange() {
+    changed = true;
   }
 }

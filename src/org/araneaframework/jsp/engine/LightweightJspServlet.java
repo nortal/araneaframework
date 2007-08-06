@@ -23,7 +23,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.http.core.Constants;
 import org.araneaframework.http.support.CachingEntityResolver;
@@ -39,7 +40,7 @@ import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 public class LightweightJspServlet extends HttpServlet {
-  private static final Logger log = Logger.getLogger(LightweightJspServlet.class);
+  private static final Log log = LogFactory.getLog(LightweightJspServlet.class);
 
   // URI -> Map<TagInfo>
   private Map taglibs = new HashMap();

@@ -20,7 +20,6 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.framework.TransactionContext;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -39,10 +38,7 @@ public class MockEventfulStandardWidget extends BaseApplicationWidget {
   private transient OutputData output;
   private transient Path path;
   
-  private Long transactionId;
-  
   public void render(OutputData output) {
-    transactionId = (Long)output.getAttribute(TransactionContext.TRANSACTION_ID_KEY);
     
     this.renderCalled = true;
   }
@@ -50,10 +46,6 @@ public class MockEventfulStandardWidget extends BaseApplicationWidget {
   public void update(InputData input) throws Exception {
     this.updateCalled = true;
     this.input = input;
-  }
-  
-  public void process() throws Exception{
-    this.processCalled = true;
   }
   
   public void event(Path path, InputData input) throws Exception {
@@ -117,9 +109,5 @@ public class MockEventfulStandardWidget extends BaseApplicationWidget {
 
   public void setEventProcessed(boolean eventProcessed) {
     this.eventProcessed = eventProcessed;
-  }
-
-  public Long getTransactionId() {
-    return transactionId;
   }
 }

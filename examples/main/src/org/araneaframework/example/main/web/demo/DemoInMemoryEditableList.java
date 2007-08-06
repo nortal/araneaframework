@@ -21,8 +21,10 @@ import java.util.List;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -87,23 +89,26 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 		else
 			putViewDataOnce("askCloseConfirmation", "true");
 	}
-	
-  protected void handleProcess() throws Exception {
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded().values());
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated().values());
-	  getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Deleted: " + inMemoryHelper.getDeleted());
-  }
   
+  public class FeedBackProvidingListener implements OnClickEventListener {
+	public void onClick() throws Exception {
+		DemoInMemoryEditableList.this.getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Added: " + inMemoryHelper.getAdded().values());
+		DemoInMemoryEditableList.this.getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Updated: " + inMemoryHelper.getUpdated().values());
+		DemoInMemoryEditableList.this.getMessageCtx().showMessage(MessageContext.INFO_TYPE, "Deleted: " + inMemoryHelper.getDeleted());
+	}
+  }
+
 	public class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
 		    private static final long serialVersionUID = 1L;
+		    private FeedBackProvidingListener listener = new FeedBackProvidingListener();
 
-    public Object getRowKey(Object row) {
-			return ((DataDTO) row).getId();
-		}
+	    public Object getRowKey(Object row) {
+				return ((DataDTO) row).getId();
+			}
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).readBean(editableRow.getRow()); 
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).writeToBean(editableRow.getRow()); 
 
 			//Saving data
 			inMemoryHelper.update(editableRow.getKey(), rowData);
@@ -116,7 +121,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 		}
 
 		public void addValidRow(FormWidget addForm) throws Exception {
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).readBean(new DataDTO()); 
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).writeToBean(new DataDTO()); 
 
 			inMemoryHelper.add(rowData);
 		}
@@ -127,17 +132,21 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
 			addCommonFormFields(rowForm);
 
-			FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getKey());
-			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+			ButtonControl saveButton = FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+			FeedBackProvidingListener listener = new FeedBackProvidingListener();
+			saveButton.addOnClickEventListener(listener);
+			ButtonControl deleteButton = FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+			deleteButton.addOnClickEventListener(listener);
 
-			rowForm.writeBean(row);
+			rowForm.readFromBean(row);
 			editableRow.getForm().markBaseState();
 		}
 
 		public void initAddForm(FormWidget addForm) throws Exception {
 			addCommonFormFields(addForm);
 
-			FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+			ButtonControl addButton=FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+			addButton.addOnClickEventListener(listener);
 		}
 
 		private void addCommonFormFields(FormWidget form) throws Exception {

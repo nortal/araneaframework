@@ -17,19 +17,22 @@
 package org.araneaframework.uilib.event;
 
 import java.lang.reflect.Method;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.araneaframework.Widget;
+import org.araneaframework.core.Assert;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class ProxyOnClickEventListener implements OnClickEventListener {
-  public static final Logger log = Logger.getLogger(ProxyOnClickEventListener.class);
+  public static final Log log = LogFactory.getLog(ProxyOnClickEventListener.class);
 
-  protected Object eventTarget;
+  protected Widget eventTarget;
 
   protected String eventId;
 
-  public ProxyOnClickEventListener(Object eventTarget, String eventId) {
+  public ProxyOnClickEventListener(Widget eventTarget, String eventId) {
     this.eventTarget = eventTarget;
     this.eventId = eventId;
   }
@@ -56,7 +59,7 @@ public class ProxyOnClickEventListener implements OnClickEventListener {
     catch (NoSuchMethodException e) {/* OK */
     }
     
-    log.warn("Widget '" + eventTarget.getClass().getName() +
-        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"); 
+    log.warn("Widget '" + eventTarget.getScope() +
+        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget)); 
   }
 }

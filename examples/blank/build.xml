@@ -61,7 +61,7 @@
 		</copy>
 
 		<copy todir="war/WEB-INF/classes">
-			<fileset dir=".." includes="log4j.xml"/>
+			<fileset dir=".." includes="log4j.xml,commons-logging.properties"/>
 		</copy>
 	</target>
 	

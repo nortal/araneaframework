@@ -18,7 +18,11 @@ package org.araneaframework.tests.framework.component;
 
 import junit.framework.TestCase;
 import org.araneaframework.Component;
+import org.araneaframework.core.BroadcastMessage;
+import org.araneaframework.mock.MockInputData;
+import org.araneaframework.mock.MockOutputData;
 import org.araneaframework.mock.core.MockBaseComponent;
+import org.araneaframework.mock.core.MockBaseWidget;
 import org.araneaframework.tests.mock.MockEnvironment;
 
 /**
@@ -30,15 +34,55 @@ public class LifeCycleTests extends TestCase {
 	public void testPermantentDeath() throws Exception {
 		MockBaseComponent c = new MockBaseComponent();
 		
-		c._getComponent().init(new MockEnvironment());
+		c._getComponent().init(null, new MockEnvironment());
 		c._getComponent().destroy();
 		
 		try {
-			c._getComponent().init(new MockEnvironment());
+			c._getComponent().init(null, new MockEnvironment());
 
 			fail("Attempted to reanimate destroyed Component -- exception should have occured.");
 		} catch (Exception e) {
             // good
 		}
+	}
+	
+	// invalid leftover calls are those that activate the methods that directly 
+	// depend on request or response
+	public void testInvalidLeftOverCalls() throws Exception {
+		MockBaseWidget w = new MockBaseWidget();
+		w._getComponent().init(null, new MockEnvironment());
+		w._getComponent().destroy();
+		
+		try {
+			w._getComponent().destroy();
+			fail("Double destroy() is prohibited.");
+		} catch (IllegalStateException e) {
+			// fine
+		}
+	}
+	
+	// all leftover calls are considered valid 
+	public void testValidLeftOverCalls() throws Exception {
+		MockBaseWidget w = new MockBaseWidget();
+		w._getComponent().init(null, new MockEnvironment());
+		w._getComponent().destroy();
+		
+		w._getComponent().propagate(new BroadcastMessage() {
+				protected void execute(Component component) throws Exception {
+					return;
+				}
+			});
+		
+		w.addComponent("new", new MockBaseWidget());
+		w.removeComponent("new");
+
+		w._getComponent().disable();
+		w._getComponent().enable();
+		
+		w._getService().action(null, new MockInputData(), new MockOutputData());
+
+		w._getWidget().update(new MockInputData());
+		w._getWidget().event(null, new MockInputData());
+		w._getWidget().render(new MockOutputData());
 	}
 }

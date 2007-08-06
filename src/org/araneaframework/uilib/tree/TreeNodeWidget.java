@@ -349,14 +349,13 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     this.index = index;
   }
 
+  public String getFullId() {
+    return getScope().toString();
+  }
+
   public void renderNode(OutputData output) throws Exception {  // Called only from display widget's action
     Assert.notNullParam(output, "output");
-    output.popScope();
-    try {
-      render(output);
-    } finally {
-      output.pushScope(DISPLAY_KEY);
-    }
+    render(output);
   }
 
   //*******************************************************************
@@ -367,51 +366,39 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     TreeRenderer renderer = getTreeCtx().getRenderer();
     Assert.notNull(renderer, "renderer must be set");
     Writer out = ((HttpOutputData) output).getWriter();
-    String nodeFullId = output.getScope().toString();
 
     // Render display widget
     Widget display = getDisplayWidget();
     if (display != null) {  // display is null if this is root node (TreeWidget)
       renderDisplayPrefixRecursive(out, renderer);
       if (shouldRenderToggleLink()) {
-        renderer.renderToggleLink(out, this, nodeFullId);
+        renderer.renderToggleLink(out, this);
       }
-      try {
-        output.pushScope(TreeNodeWidget.DISPLAY_KEY);
-        out.flush();
-        display._getWidget().render(output);
-      } finally {
-        output.popScope();
-      }
+      out.flush();
+      display._getWidget().render(output);
     }
 
     // Render child nodes
     if (display == null || (!isCollapsed() && hasNodes())) {
       if (display == null) {
-        renderer.renderTreeStart(out, this, nodeFullId);
+        renderer.renderTreeStart(out, this);
       } else {
-        renderer.renderChildrenStart(out, this, nodeFullId);
+        renderer.renderChildrenStart(out, this);
       }
       if (!isCollapsed() && hasNodes()) {
         for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
           ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
-          try {
-            output.pushScope(nodeWrapper.getWidgetId());
-            TreeNodeWidget node = nodeWrapper.getNode();
-            String childNodeFullId = output.getScope().toString();
-            renderer.renderChildStart(out, this, nodeFullId, node, childNodeFullId);
-            out.flush();
-            node.render(output);
-            renderer.renderChildEnd(out, this, nodeFullId, node, childNodeFullId);
-          } finally {
-            output.popScope();
-          }
+          TreeNodeWidget node = nodeWrapper.getNode();
+          renderer.renderChildStart(out, this, node);
+          out.flush();
+          node.render(output);
+          renderer.renderChildEnd(out, this, node);
         }
       }
       if (display == null) {
-        renderer.renderTreeEnd(out, this, nodeFullId);
+        renderer.renderTreeEnd(out, this);
       } else {
-        renderer.renderChildrenEnd(out, this, nodeFullId);
+        renderer.renderChildrenEnd(out, this);
       }
     }
   }

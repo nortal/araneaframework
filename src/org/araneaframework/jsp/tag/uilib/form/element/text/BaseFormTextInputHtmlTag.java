@@ -78,7 +78,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
   }
 
   protected void writeTextInput(Writer out, String inputType, boolean writeValue, Map customAttributes) throws Exception {
-    String name = this.getScopedFullFieldId();
+    String name = this.getFullFieldId();
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
 
     // Write

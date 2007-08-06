@@ -19,7 +19,6 @@ package org.araneaframework.uilib.list.structure.filter.advanced;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.backend.list.memorybased.expression.LaxyExpressionIterator;
@@ -32,7 +31,6 @@ import org.araneaframework.uilib.list.structure.filter.atomic.Field;
 import org.araneaframework.uilib.list.structure.filter.atomic.Value;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
-import org.araneaframework.uilib.list.util.NestedFormUtil;
 
 
 public abstract class SqlFunctionFilter extends BaseFilter {

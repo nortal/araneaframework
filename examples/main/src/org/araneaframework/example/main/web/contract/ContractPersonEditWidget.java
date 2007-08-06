@@ -16,7 +16,8 @@
 
 package org.araneaframework.example.main.web.contract;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.web.person.PersonListWidget;
@@ -29,7 +30,7 @@ import org.araneaframework.framework.FlowContext;
 public class ContractPersonEditWidget extends TemplateBaseWidget {
 	
 	  private static final long serialVersionUID = 1L;
-  private static final Logger log = Logger.getLogger(ContractPersonEditWidget.class);
+  private static final Log log = LogFactory.getLog(ContractPersonEditWidget.class);
 	private PersonMO person = null;
 
   public PersonMO getPerson() {
@@ -38,6 +39,7 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
 
 	public void setPerson(PersonMO person) {
 		this.person = person;
+		log.debug("Person with id of " + person.getId() + " set to this contract");
 	}
 
 	protected void init() throws Exception {
@@ -45,22 +47,17 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
     setViewSelector("contract/contractPersonEdit");
   }
   
-  protected void process() {
-    putViewData("person", person);
-  }
-  
 	public void handleEventChoosePerson(String eventParameter) throws Exception {
-	    PersonListWidget newFlow = new PersonListWidget(false);
-	    newFlow.setSelectOnly(true);
-	    getFlowCtx().start(newFlow, new FlowContext.Handler() {
-				        private static final long serialVersionUID = 1L;
-        public void onFinish(Object returnValue) throws Exception {
-					Long id = (Long) returnValue;
-					person = (PersonMO) getGeneralDAO().getById(PersonMO.class, id);
-					log.debug("Person with id of " + id + " set to this contract");
-	      }
-	      public void onCancel() throws Exception {
-	      }
-	    });
+		PersonListWidget newFlow = new PersonListWidget(false);
+		newFlow.setSelectOnly(true);
+		getFlowCtx().start(newFlow, new FlowContext.Handler() {
+			private static final long serialVersionUID = 1L;
+			public void onFinish(Object returnValue) throws Exception {
+				Long id = (Long) returnValue;
+				setPerson((PersonMO) getGeneralDAO().getById(PersonMO.class, id));
+			}
+			public void onCancel() throws Exception {
+			}
+		});
 	}
 }

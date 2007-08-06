@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.sample;
 
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
@@ -28,8 +27,19 @@ import org.araneaframework.uilib.form.data.StringData;
 public class NameWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
   private FormWidget form;
+  private boolean returnGoo = false;
+  
+  public NameWidget() {
+  }
+
+  public NameWidget(boolean doGoo) {
+	  returnGoo = doGoo;
+  }
   
   protected void init() throws Exception {
+    if (returnGoo)
+    	getFlowCtx().finish("Goo");
+    
 	setViewSelector("sample/nameForm");
 
 	form = new FormWidget();

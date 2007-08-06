@@ -50,29 +50,31 @@ public class CompositeConstraintTest extends TestCase {
     form.addElement("text1", textInput1);
     form.addElement("text2", textInput2);
     form.addElement("number", numberInput);
+    MockLifeCycle.begin(form, new MockEnvironment());
+  }
+
+  protected void markElementsRendered() {
     textInput1.rendered();
     textInput2.rendered();
     numberInput.rendered();
-    MockLifeCycle.begin(form, new MockEnvironment());
   }
   
   protected InputData createRequestWithText(String text1, String text2) {
     MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-    request.addParameter("form.text1", text1);
-    request.addParameter("form.text2", text2);
+    request.addParameter("text1", text1);
+    request.addParameter("text2", text2);
     return new StandardServletInputData(request);
   }
   
   protected InputData createRequestWithNumber(String number) {
     MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
-    request.addParameter("form.number", number);
+    request.addParameter("number", number);
     return new StandardServletInputData(request);
   }
   
   protected void processRequest(InputData input) {
-    input.pushScope("form");
+    markElementsRendered();
     form._getWidget().update(input);
-    input.popScope();
   }
   
   protected void processRequireAll(String text1, String text2) {
@@ -136,6 +138,7 @@ public class CompositeConstraintTest extends TestCase {
     assertFalse("Should be invalid as number does not fall into valid ranges.", form.convertAndValidate());
     
     processRequest(createRequestWithNumber("150"));
+    numberInput.getValue();
     assertTrue("Should be valid as number is in valid range.", form.convertAndValidate());
 
     processRequest(createRequestWithNumber("872"));

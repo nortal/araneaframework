@@ -36,6 +36,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   private TreeDataProvider dataProvider;
   private boolean removeChildrenOnCollapse = true;
   private boolean useActions = false;
+  private boolean useSynchronizedActions = true;
   private TreeRenderer renderer;
 
   //TODO features:
@@ -87,6 +88,20 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
   public boolean useActions() {
     return useActions;
+  }
+
+  /**
+   * Set if AJAX requests to tree widget are synchronized. See
+   * {@link TreeContext#useSynchronizedActions()}.
+   * 
+   * @since 1.1
+   */
+  public void setUseSynchronizedActions(boolean useSynchronizedActions) {
+    this.useSynchronizedActions = useSynchronizedActions;
+  }
+
+  public boolean useSynchronizedActions() {
+    return useSynchronizedActions;
   }
 
   /**

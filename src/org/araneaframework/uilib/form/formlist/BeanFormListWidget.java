@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form.formlist;
 
-import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 
@@ -65,25 +64,6 @@ public class BeanFormListWidget extends BaseFormListWidget {
 	//*******************************************************************
 	// PROTECTED METHODS
 	//*******************************************************************		
-
-	/**
-	 * Creates and adds an editable row from a usual row object.
-	 */
-	protected void addFormRow(Object newRow) {
-		BeanFormWidget rowForm = (BeanFormWidget) buildAddForm();
-		String rowFormId = "rowForm" + rowFormCounter++;
-		FormRow newEditableRow = new FormRow(this, formRowHandler.getRowKey(newRow), newRow, rowFormId, rowForm, true);
-
-		addWidget(rowFormId, rowForm);
-		try {
-			formRowHandler.initFormRow(newEditableRow, newRow);
-		}
-		catch (Exception e) {
-			throw ExceptionUtil.uncheckException(e);
-		}     		
-
-		formRows.put(formRowHandler.getRowKey(newRow), newEditableRow);
-	}
 
 	protected FormWidget buildAddForm(){
 		return new BeanFormWidget(beanClass);

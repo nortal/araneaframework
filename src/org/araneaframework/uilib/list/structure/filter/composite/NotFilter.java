@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.structure.filter.composite;
 
 import java.util.Map;
-
 import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.list.structure.ListFilter;

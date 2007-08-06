@@ -23,7 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
@@ -40,7 +41,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  *
  */
 public abstract class BaseApplicationService extends BaseService implements ApplicationService {
-  private static final Logger log = Logger.getLogger(BaseApplicationService.class);
+  private static final Log log = LogFactory.getLog(BaseApplicationService.class);
   //*******************************************************************    
   // CONSTANTS   
   //*******************************************************************    
@@ -321,21 +322,12 @@ public abstract class BaseApplicationService extends BaseService implements Appl
       
       Service service = (Service)getChildren().get(next);
       if (service == null) {
-        log.warn("Service '" + input.getScope()+ 
+        log.warn("Service '" + getScope() +
             "' could not deliver action as child '" + next + "' was not found!" + Assert.thisToString(this));  
         return;
       }
       
-      try {
-        input.pushScope(next);
-        output.pushScope(next);
-        
-        service._getService().action(path, input, output);
-      }
-      finally {
-        input.popScope();
-        output.popScope();
-      }
+      service._getService().action(path, input, output);
     }
     else {
       handleAction(input, output);
@@ -349,7 +341,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     Object actionId = getActionId(input);    
     
     if (actionId == null) {
-      log.warn("Service '" + input.getScope() +
+      log.warn("Service '" + getScope() +
           "' cannot deliver action for a null action id!" + Assert.thisToString(this));  
       return;
     }
@@ -367,7 +359,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
       return;
     }
     
-    log.warn("Service '" + input.getScope() +
+    log.warn("Service '" + getScope() +
       "' cannot deliver action as no action listeners were registered for action id '" + actionId + "'!"  + Assert.thisToString(this));  
   }
 }

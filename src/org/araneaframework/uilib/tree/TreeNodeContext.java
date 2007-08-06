@@ -147,4 +147,11 @@ public interface TreeNodeContext extends Serializable {
    */
   int getIndex();
 
+  /**
+   * Returns the full id of this tree node.
+   * 
+   * @since 1.1
+   */
+  String getFullId();
+
 }

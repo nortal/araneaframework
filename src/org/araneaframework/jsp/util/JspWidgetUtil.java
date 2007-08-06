@@ -17,67 +17,29 @@
 package org.araneaframework.jsp.util;
 
 import java.util.StringTokenizer;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
-import org.araneaframework.uilib.util.NameUtil;
+import org.araneaframework.jsp.tag.context.WidgetContextTag;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class JspWidgetUtil {
-    public static String getContextWidgetFullId(PageContext pageContext) throws JspException  {
-      return getWidgetFullIdFromContext(null, pageContext);
-    }
-  
-	public static String getWidgetFullIdFromContext(String widgetId, PageContext pageContext) throws JspException {
-		//Get widget id and view model from context
-    OutputData output = 
-      (OutputData) pageContext.getRequest().getAttribute(
-          OutputData.OUTPUT_DATA_KEY);
-		
-		//Widget name given
-		if (widgetId != null)
-			return NameUtil.getFullName(output.getScope().toString(), widgetId);
-		//Current widget
-		else
-			return output.getScope().toString();
-	}
-	
-    public static ApplicationWidget getContextWidgetFromContext(PageContext pageContext) throws JspException  {
-      return getWidgetFromContext(null, pageContext);
-    }    
-    
-	public static ApplicationWidget getWidgetFromContext(String widgetId, PageContext pageContext) throws JspException {
-      UiWidgetContainer container = 
-        (UiWidgetContainer) JspUtil.requireContextEntry(pageContext,
-            UiWidgetContainer.KEY);
-      
-      String widgetFullId = getWidgetFullIdFromContext(widgetId, pageContext);
-      
-			return JspWidgetUtil.traverseToWidget(container, widgetFullId);
-			
-	}
-	
-	public static ApplicationWidget traverseToWidget(UiWidgetContainer container, String path) throws AraneaJspException {
-		String pathStart = NameUtil.getNamePrefix(path);
-		String pathEnd = NameUtil.getNameSuffix(path);
-		
-        ApplicationWidget widget = (ApplicationWidget) container.getWidgets().get(pathStart);
-		if (widget == null)
-			throw new AraneaJspException("Failed to traverse to widget with path '" + path + "' because widget '" + pathStart + "' was not found");
-				
-		if (!"".equals(pathEnd)) 
-			widget = traverseToSubWidget(widget, pathEnd);
-		
-		return widget;
-	}
-	
+
+  /**
+   * @since 1.1
+   */
+  public static ApplicationWidget getContextWidget(PageContext pageContext) {
+    return (ApplicationWidget) pageContext.getRequest().getAttribute(WidgetContextTag.CONTEXT_WIDGET_KEY);
+  }
+
+  public static String getContextWidgetFullId(PageContext pageContext) {
+    return getContextWidget(pageContext).getScope().toString();
+  }
+
 	public static ApplicationWidget traverseToSubWidget(ApplicationWidget root, String path) throws AraneaJspException {		
-      ApplicationWidget widget = root;
+    ApplicationWidget widget = root;
 		
     if ("".equals(path))
       throw new AraneaJspException("Trying to traverse to a widget with an empty path!");
