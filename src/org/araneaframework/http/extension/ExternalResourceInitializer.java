@@ -26,7 +26,8 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -44,7 +45,7 @@ import org.xml.sax.XMLReader;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class ExternalResourceInitializer {
-	private static final Logger log = Logger.getLogger(ExternalResourceInitializer.class);
+	private static final Log log = LogFactory.getLog(ExternalResourceInitializer.class);
 	
 	/**
 	 * Framework application main configuration file.

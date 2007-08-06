@@ -53,8 +53,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
 
     // Get form data    
     formViewModel = (FormWidget.ViewModel)requireContextEntry(FormTag.FORM_VIEW_MODEL_KEY);
-    FormWidget form = 
-      (FormWidget)JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
+    FormWidget form = (FormWidget)requireContextEntry(FormTag.FORM_KEY);
 
     //In case the tag is in formElement tag
     derivedId = id;

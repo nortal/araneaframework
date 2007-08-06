@@ -21,7 +21,6 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.http.filter.StandardJspFilterService;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
@@ -46,10 +45,9 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 	}
 
 	protected int doEndTag(Writer out) throws Exception {   
-		ApplicationWidget widget = JspWidgetUtil.getWidgetFromContext(widgetId, pageContext);
+    ApplicationWidget widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), widgetId);
 		
 		WidgetContextTag widgetContextTag = new WidgetContextTag();
-		
 		registerSubtag(widgetContextTag);
 		widgetContextTag.setId(widgetId);
 		executeStartSubtag(widgetContextTag);
@@ -57,18 +55,18 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 		OutputData output = getOutputData();
 		
 		try {
+      hideGlobalContextEntries(pageContext);
 			if (page == null) {
 				out.flush();
 				widget._getWidget().render(output);
 			}
 			else {
-				StandardJspFilterService.JspConfiguration config = 
-			        (StandardJspFilterService.JspConfiguration) output.getAttribute(
-			            JspContext.JSP_CONFIGURATION_KEY);
+				JspContext config = (JspContext) getEnvironment().requireEntry(JspContext.class);
 				JspUtil.include(pageContext, config.getJspPath() + "/" + page);
 			}
 		}
-		finally {		
+		finally {
+      restoreGlobalContextEntries(pageContext);
 			executeEndTagAndUnregister(widgetContextTag);
 		}
 		

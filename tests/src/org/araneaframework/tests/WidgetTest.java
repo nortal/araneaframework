@@ -18,6 +18,7 @@ package org.araneaframework.tests;
 
 import junit.framework.TestCase;
 import org.araneaframework.Widget;
+import org.araneaframework.core.StandardScope;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockUiLibUtil;
 import org.araneaframework.tests.util.RequestUtil;
@@ -68,7 +69,7 @@ public class WidgetTest extends TestCase {
     mySelect.addItem(new DisplayItem("3", "three"));
     mySelect.addItem(new DisplayItem("4", "four"));
     
-    testForm._getComponent().init(new MockEnvironment());
+    testForm._getComponent().init(new StandardScope("testForm", null), new MockEnvironment());
 
     return testForm;
   }
@@ -97,7 +98,6 @@ public class WidgetTest extends TestCase {
     validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
     
     MockUiLibUtil.emulateHandleRequest(currentWidget, "testForm", validRequest);
-    currentWidget._getWidget().process();
 
     assertTrue(((StringArrayRequestControl.ViewModel) testForm.getControlByFullName("myCheckBox")._getViewable().getViewModel()).getSimpleValue().equals("true"));
     assertTrue(((StringArrayRequestControl.ViewModel) testForm.getControlByFullName("myLongText")._getViewable().getViewModel()).getSimpleValue().equals("108"));

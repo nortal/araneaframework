@@ -33,7 +33,7 @@ public interface TreeRenderer extends Serializable {
    * @param node
    *          tree node that is being rendered
    */
-  void renderTreeStart(Writer out, TreeNodeContext node, String nodeFullId) throws Exception;
+  void renderTreeStart(Writer out, TreeNodeContext node) throws Exception;
 
   /**
    * Renders HTML in the end of the whole tree.
@@ -41,7 +41,7 @@ public interface TreeRenderer extends Serializable {
    * @param node
    *          tree node that is being rendered
    */
-  void renderTreeEnd(Writer out, TreeNodeContext node, String nodeFullId) throws Exception;
+  void renderTreeEnd(Writer out, TreeNodeContext node) throws Exception;
 
   /**
    * Renders toggle link after display prefix and before DisplayWidget. Called
@@ -50,7 +50,7 @@ public interface TreeRenderer extends Serializable {
    * @param node
    *          tree node that is being rendered
    */
-  void renderToggleLink(Writer out, TreeNodeContext node, String nodeFullId) throws Exception;
+  void renderToggleLink(Writer out, TreeNodeContext node) throws Exception;
 
   /**
    * Renders HTML after DisplayWidget and before child nodes. Called only if
@@ -59,7 +59,7 @@ public interface TreeRenderer extends Serializable {
    * @param node
    *          tree node that is being rendered
    */
-  void renderChildrenStart(Writer out, TreeNodeContext node, String nodeFullId) throws Exception;
+  void renderChildrenStart(Writer out, TreeNodeContext node) throws Exception;
 
   /**
    * Renders HTML after all child nodes have been rendered. Called only if there
@@ -68,7 +68,7 @@ public interface TreeRenderer extends Serializable {
    * @param node
    *          tree node that is being rendered
    */
-  void renderChildrenEnd(Writer out, TreeNodeContext node, String nodeFullId) throws Exception;
+  void renderChildrenEnd(Writer out, TreeNodeContext node) throws Exception;
 
   /**
    * Renders HTML immediately before each child node.
@@ -78,7 +78,7 @@ public interface TreeRenderer extends Serializable {
    * @param childNode
    *          child node that is about to be rendered
    */
-  void renderChildStart(Writer out, TreeNodeContext node, String nodeFullId, TreeNodeContext childNode, String childNodeFullId) throws Exception;
+  void renderChildStart(Writer out, TreeNodeContext node, TreeNodeContext childNode) throws Exception;
 
   /**
    * Renders HTML immediately after each child node.
@@ -88,7 +88,7 @@ public interface TreeRenderer extends Serializable {
    * @param childNode
    *          child node that was just rendered
    */
-  void renderChildEnd(Writer out, TreeNodeContext node, String nodeFullId, TreeNodeContext childNode, String childNodeFullId) throws Exception;
+  void renderChildEnd(Writer out, TreeNodeContext node, TreeNodeContext childNode) throws Exception;
 
   /**
    * Renders HTML before DisplayWidget's toggle link. Called for each

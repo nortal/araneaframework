@@ -61,7 +61,7 @@ public class BaseFilterService extends BaseService implements FilterService{
   protected void init() throws Exception {
     Assert.notNull(this, childService, "Filter cannot have a null child!");
     
-	  childService._getComponent().init(getChildEnvironment());
+	  childService._getComponent().init(getScope(), getChildEnvironment());
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {

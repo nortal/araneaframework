@@ -85,7 +85,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 			/* fetch the person with given ID from database */
 			PersonMO person = (PersonMO) getGeneralDAO().getById(PersonMO.class, personId);
 			/* and fill the form with current person data */
-			form.writeBean(person);
+			form.readFromBean(person);
 		} /* otherwise we have no data and all form fields are initially left blank */
 
 		return form;
@@ -97,7 +97,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 			// get the current person data (retrieved from database by getGeneralDAO() in case person already has assigned ID); 
 			PersonMO person = personId != null ? (PersonMO) getGeneralDAO().getById(PersonMO.class, personId) : new PersonMO();
 			// read the application user supplied data from form into model object.
-			person = (PersonMO) form.readBean(person);
+			person = (PersonMO) form.writeToBean(person);
 			
 			if (editMode) {
 				// updates person object in database

@@ -32,7 +32,8 @@ import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -52,7 +53,7 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFileUploadFilterService extends BaseFilterService implements FileUploadContext {
-  private static final Logger log = Logger.getLogger(StandardFileUploadFilterService.class);
+  private static final Log log = LogFactory.getLog(StandardFileUploadFilterService.class);
 
   private static boolean commonsFileUploadPresent = true;
 

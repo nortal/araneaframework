@@ -16,29 +16,27 @@
 
 package org.araneaframework.http.util;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.jstl.core.Config;
-import javax.servlet.jsp.jstl.fmt.LocalizationContext;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.framework.ViewPortContext;
-import org.araneaframework.framework.container.StandardContainerWidget;
+import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.JspContext;
-import org.araneaframework.http.filter.StandardJspFilterService;
-import org.araneaframework.jsp.container.UiAraneaWidgetContainer;
-import org.araneaframework.jsp.container.UiWidgetContainer;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
+import org.araneaframework.jsp.tag.context.WidgetContextTag;
+import org.araneaframework.jsp.tag.uilib.WidgetTag;
 
 /**
  * Utility methods for Aranea framework running inside a servlet container. Includes
@@ -47,10 +45,17 @@ import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Alar Kvell (alar@araneaframework.org)
  */
 public abstract class ServletUtil {
-  private static final Logger log = Logger.getLogger(ServletUtil.class);
-  
+	
+  private static final Log log = LogFactory.getLog(ServletUtil.class);
+
+  /** @since 1.1 */
+  public static final String UIWIDGET_KEY = "org.araneaframework.http.util.ServletUtil.UIWIDGET";
+  /** @since 1.1 */
+  public static final String LOCALIZATION_CONTEXT_KEY = Config.FMT_LOCALIZATION_CONTEXT + ".request";
+
   /**
    * Includes the jsp specified by filePath using the the request and response streams
    * of the output. The pathname must begin with a "/" and is interpreted as relative to
@@ -58,49 +63,67 @@ public abstract class ServletUtil {
    * is used.
    */
   public static void include(String filePath, Environment env, OutputData output) throws Exception {
-    if (log.isDebugEnabled())
-      log.debug("Including a resource from the absolute path '" + filePath + "'");
-    
-    Map attributeBackupMap = new HashMap();
-    HttpServletRequest req = getRequest(output.getInputData());
-    
-    /* AraneaRootTag */
-    StandardJspFilterService.JspConfiguration config = 
-      (StandardJspFilterService.JspConfiguration) output.getAttribute(JspContext.JSP_CONFIGURATION_KEY);
-    if (req.getAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".request") == null) {
-      setAttribute(req, attributeBackupMap,
-          Config.FMT_LOCALIZATION_CONTEXT + ".request",
-          new LocalizationContext(
-            new StringAdapterResourceBundle(config.getCurrentBundle()),
-            config.getCurrentLocale()
-          )
-      );
-    }
-    if (req.getAttribute(AraneaRootTag.OUTPUT_DATA_KEY) == null) {
-      setAttribute(req, attributeBackupMap, AraneaRootTag.OUTPUT_DATA_KEY, output);
-    }
-    
-    /* AraneaViewPortTag */
-    if (req.getAttribute(UiWidgetContainer.KEY) == null) {
-      StandardContainerWidget rootWidget = (StandardContainerWidget) output.getAttribute(ViewPortContext.VIEW_PORT_WIDGET_KEY);
-      setAttribute(req, attributeBackupMap, UiWidgetContainer.KEY, new UiAraneaWidgetContainer(rootWidget, config));
-    }
-    
-    /* AraneaSystemFormHtmlTag */
-    if (req.getAttribute(BaseSystemFormHtmlTag.ID_KEY) == null || req.getAttribute(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY) == null) {
-      Object systemFormId = output.getInputData().getGlobalData().get(BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY);
-      if (systemFormId != null) {
-          setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.ID_KEY, systemFormId);
-          setAttribute(req, attributeBackupMap, BaseSystemFormHtmlTag.SYSTEM_FORM_ID_KEY, systemFormId);
-      }
-    }
-    
-    ServletContext servletContext = (ServletContext) env.getEntry(ServletContext.class);
-    servletContext.getRequestDispatcher(filePath).include(req, getResponse(output));
-    
-    restoreAttributes(req, attributeBackupMap);
+    include(filePath, env, output, null);
   }
   
+  /**
+   * Includes the jsp specified by filePath using the the request and response streams
+   * of the output. The pathname must begin with a "/" and is interpreted as relative to
+   * the current context root. The context root in the env under the key ServletContext.class
+   * is used.
+   * 
+   * Widget is made available to JSP, so contextWidget tag can be used.
+   * 
+   * @since 1.1
+   */
+  public static void include(String filePath, ApplicationWidget widget, OutputData output) throws Exception {
+    include(filePath, widget.getChildEnvironment(), output, widget);
+  }
+    
+  public static void include(String filePath, ApplicationWidget widget, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    include(filePath, widget, widget.getChildEnvironment(), req, res);
+  }
+  
+  public static void include(String filePath, Environment env, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    include(filePath, null, env, req, res);
+  }
+  
+  private static void include(String filePath, Environment env, OutputData output, ApplicationWidget widget) throws Exception {
+    include(filePath, widget, env, getRequest(output.getInputData()), getResponse(output));
+  }
+  
+  private static void include(String filePath, ApplicationWidget widget, Environment env, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    if (log.isDebugEnabled())
+      log.debug("Including a resource from the absolute path '" + filePath + "'");
+
+    Map attributeBackupMap = new HashMap();
+    if (widget != null) {
+      setAttribute(req, attributeBackupMap, UIWIDGET_KEY, widget);
+      setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
+      String fullId = widget.getScope().toString();
+      ApplicationWidget.WidgetViewModel viewModel = (ApplicationWidget.WidgetViewModel) widget._getViewable().getViewModel();
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_KEY, widget);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_ID_KEY, fullId);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_MODEL_KEY, viewModel);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_DATA_KEY, viewModel.getData());
+    } else {
+      setAttribute(req, attributeBackupMap, UIWIDGET_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_ID_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_MODEL_KEY, null);
+      setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_VIEW_DATA_KEY, null);
+    }
+    setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
+    setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(env));
+
+    ServletContext servletContext = (ServletContext) env.requireEntry(ServletContext.class);
+    servletContext.getRequestDispatcher(filePath).include(req, res);
+
+    restoreAttributes(req, attributeBackupMap);
+  }
+
+
   private static void setAttribute(HttpServletRequest req, Map attributeBackupMap, String name, Object value) {
     attributeBackupMap.put(name, req.getAttribute(name));
     if (value != null) {
@@ -122,11 +145,11 @@ public abstract class ServletUtil {
   }
   
   /**
-  * Includes the jsp specified by file using the the request and response streams
-  * of the output. The pathname specified may be relative, although it cannot extend
-  * outside the current servlet context. If the path begins with a "/" it is interpreted
-  * as relative to the current context root. 
-  */
+   * Includes the jsp specified by file using the the request and response streams
+   * of the output. The pathname specified may be relative, although it cannot extend
+   * outside the current servlet context. If the path begins with a "/" it is interpreted
+   * as relative to the current context root. 
+   */
   public static void includeRelative(String filePath, Environment env, OutputData output) throws Exception {
     log.debug("Including a resource from the relative path '" + filePath + "'");
     
@@ -162,4 +185,43 @@ public abstract class ServletUtil {
   public static HttpOutputData getOutputData(ServletRequest req) {
     return (HttpOutputData) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
   }
+  
+  /** @since 1.1 */
+  public static Environment getEnvironment(ServletRequest req) {
+    return (Environment) req.getAttribute(Environment.ENVIRONMENT_KEY);
+  }
+
+  /** @since 1.1 */
+  public static javax.servlet.jsp.jstl.fmt.LocalizationContext buildLocalizationContext(Environment env) {
+    LocalizationContext localizationContext = (LocalizationContext) env.getEntry(LocalizationContext.class);
+    if (localizationContext == null)
+      return null;
+    return new javax.servlet.jsp.jstl.fmt.LocalizationContext(
+      new StringAdapterResourceBundle(localizationContext.getResourceBundle()),
+      localizationContext.getLocale()
+    );
+  }
+
+  /**
+   * Adapter resource bundle that converts all objects to string.
+   * 
+   * @since 1.1
+   */
+  public static class StringAdapterResourceBundle extends ResourceBundle {
+    protected ResourceBundle bundle;
+    
+    public StringAdapterResourceBundle(ResourceBundle bundle) {
+      this.bundle = bundle;
+    }
+    
+    protected Object handleGetObject(String key) {
+      Object object = bundle.getObject(key);
+      return (object != null) ? object.toString() : null;
+    } 
+    
+    public Enumeration getKeys() {
+      return bundle.getKeys();
+    }
+  }
+
 }

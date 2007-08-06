@@ -16,10 +16,11 @@
 
 package org.araneaframework.tests.framework.filter;
 
-import java.util.HashMap;
+import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.filter.StandardTransactionFilterWidget;
 import org.araneaframework.http.core.StandardServletInputData;
@@ -42,7 +43,7 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
     child = new MockEventfulBaseWidget();
     trans = new StandardTransactionFilterWidget();
     trans.setChildWidget(child);
-    trans._getComponent().init(new StandardEnvironment(null, new HashMap()));
+    trans._getComponent().init(null, new StandardEnvironment(null, SystemFormContext.class, new MockSystemFormFilterService()));
     
     resp = new MockHttpServletResponse();
     req = new MockHttpServletRequest();
@@ -94,30 +95,16 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
     assertFalse(child.isEventCalled());
   }
   
-  public void testConsistentKeyRoutesProcess() throws Exception {
-    Long key = ((Long)trans.getTransactionId());
-    
-    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, key.toString());
-    StandardServletInputData input = new StandardServletInputData(req);
-    trans._getWidget().update(input);
-    
-    trans._getWidget().process();
-    assertTrue(child.isProcessCalled());    
-  }
-  
-  public void testInConsistentKeyDoesntRouteProcess() throws Exception {    
-    long key = ((Long)trans.getTransactionId()).longValue();
-    
-    req.addParameter(TransactionContext.TRANSACTION_ID_KEY, (key+1)+"");
-    StandardServletInputData input = new StandardServletInputData(req);
-    trans._getWidget().update(input);
-    
-    trans._getWidget().process();
-    assertFalse(child.isProcessCalled());
-  }
-  
   public void testDestroyChild() throws Exception {
     trans._getComponent().destroy();
     assertTrue(child.getDestroyCalled());
+  }
+  
+  protected static class MockSystemFormFilterService implements SystemFormContext {
+    public void addField(String key, String value) {
+    }
+    public Map getFields() {
+      return null;
+    }
   }
 }

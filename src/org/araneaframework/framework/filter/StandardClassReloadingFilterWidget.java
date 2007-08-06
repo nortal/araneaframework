@@ -30,7 +30,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import javax.servlet.ServletContext;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -43,7 +44,7 @@ import org.araneaframework.core.util.ClassLoaderUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
-  private static final Logger log = Logger.getLogger(StandardClassReloadingFilterWidget.class);
+  private static final Log log = LogFactory.getLog(StandardClassReloadingFilterWidget.class);
   
   private String childClassName;
   private RelocatableWidget child;
@@ -87,16 +88,10 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
   }
   
   protected void render(OutputData output) throws Exception {
-    try {
-      output.pushScope("c");
-      child._getWidget().render(output);
-    }
-    finally {
-      output.popScope();
-    }
+    child._getWidget().render(output);
   }
   
-  private  Serializable deepCopy(ClassLoader cl, Serializable original) throws Exception {
+  private Serializable deepCopy(ClassLoader cl, Serializable original) throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
     ObjectOutputStream out = new ObjectOutputStream(baos);
     try {

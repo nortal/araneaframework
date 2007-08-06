@@ -1,5 +1,5 @@
 *****************************************
-* THE ARANEA FRAMEWORK, release 1.0.9   *
+* THE ARANEA FRAMEWORK, release 1.1-M3  *
 *    http://www.araneaframework.org/    *
 *****************************************
 
@@ -64,3 +64,9 @@ Documentation can be found in the "doc" directory.
 	doc/tutorial is a tutorial/intro to Aranea Web Framework
 	doc/reference includes the reference manual.
 	doc/javadoc includes the javadoc
+
+BUILDING THE DISTRIBUTION
+  If you have downloaded the official distribution, 'ant build' will do.
+  If you have checked out the source code from repository, then you need
+  to fetch the libraries before building, execute 'ant fetch-libs -lib lib/ivy'
+  followed by 'ant build'.

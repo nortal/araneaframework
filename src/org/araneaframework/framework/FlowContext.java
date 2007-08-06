@@ -33,16 +33,6 @@ import org.araneaframework.core.ApplicationWidget;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FlowContext extends Serializable {
-  /**
-   * The key of the callable child.
-   */
-  public static final String FLOW_KEY = "f";
-
-  /**
-   * The key used for the CallStack in the OutputData attribute set.
-   */
-  public static final String CALL_STACK_KEY = "org.araneaframework.framework.FlowContext.CALL_STACK";
-
   /** 
    * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 
    * {@link #cancel()}.

@@ -30,7 +30,6 @@ import org.araneaframework.core.util.ExceptionUtil;
  * <ul>
  * <li>update(InputData) - update the state of the widget with the data in InputData</li>
  *  <li>event(Path, InputData) - handling a event</li>
- *  <li>process() - postprocessing</li>
  *  <li>render(OutputData) - rendering this Widget to OutputData</li>
  * </ul>
  * </p>
@@ -92,24 +91,6 @@ public abstract class BaseWidget extends BaseService implements Widget {
       }
     }
     
-    public void process() {
-      _startCall();
-      try {
-        BaseWidget.this.process();
-      }
-      catch (Exception e) {
-        try {
-          handleWidgetException(e);
-        }
-        catch (Exception e2) {
-          ExceptionUtil.uncheckException(e2);
-        }
-      }
-      finally {
-        _endCall();
-      }
-    }
-    
     public void render(OutputData output) {
       Assert.notNullParam(this, output, "output");
       
@@ -140,7 +121,6 @@ public abstract class BaseWidget extends BaseService implements Widget {
   // Callbacks
   protected void update(InputData input) throws Exception {}
   protected void event(Path path, InputData input) throws Exception {}
-  protected void process() throws Exception {}
   protected void render(OutputData output) throws Exception {}
   
   protected InputData getInputData() {

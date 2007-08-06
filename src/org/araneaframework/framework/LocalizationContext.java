@@ -31,10 +31,6 @@ import java.util.ResourceBundle;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface LocalizationContext extends Serializable {
-  /**
-   * The key under which this {@link org.araneaframework.framework.LocalizationContext} is registered under OutputData.
-   */
-  public static final String LOCALIZATION_CONTEXT_KEY = "org.araneaframework.framework.LocalizationContext";
 
   /**
    * Returns the current session locale.

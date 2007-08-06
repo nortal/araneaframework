@@ -16,6 +16,7 @@
 
 package org.araneaframework.core;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
@@ -65,6 +66,14 @@ public class StandardPath implements Path {
    */
   public boolean hasNext() {
     return path.size() > 0;
+  }
+  
+  
+  /**
+   * @since 1.1
+   */
+  public StandardPath(Collection fullPath) {
+    path.addAll(fullPath);
   }
   
   /**

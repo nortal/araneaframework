@@ -28,17 +28,14 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiEvent;
-import org.araneaframework.jsp.container.UiWidgetContainer;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
-import org.araneaframework.jsp.tag.aranea.AraneaRootTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.basic.ElementHtmlTag;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.tag.layout.support.CellClassProvider;
 import org.araneaframework.jsp.tag.layout.support.RowClassProvider;
 import org.araneaframework.jsp.tag.uilib.form.FormElementTag;
@@ -55,7 +52,6 @@ import org.araneaframework.jsp.tag.uilib.list.formlist.FormListTag;
 public class JspUtil {
   private static final Map attributeErrorMap = new HashMap();  
   static {
-    attributeErrorMap.put(AraneaRootTag.OUTPUT_DATA_KEY, "&lt;ui:root&gt; tag expected, but not found!");
     attributeErrorMap.put(AttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
     attributeErrorMap.put(PresentationTag.ATTRIBUTED_TAG_KEY, null);
 
@@ -66,7 +62,6 @@ public class JspUtil {
 
     attributeErrorMap.put(FormElementTag.ID_KEY, "&lt;ui:formElement&gt; tag expected, but not found!  Make sure that form element and control tags either have an 'id' or are used inside &lt;ui:formElement&gt; tag.");
 
-    attributeErrorMap.put(FormTag.FORM_SCOPED_FULL_ID_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element and control tags are used inside &lt;ui:form&gt; tag.");
     attributeErrorMap.put(FormTag.FORM_VIEW_MODEL_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element and control tags are used inside &lt;ui:form&gt; tag.");
     attributeErrorMap.put(FormTag.FORM_FULL_ID_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element and control tags are used inside &lt;ui:form&gt; tag.");		
     attributeErrorMap.put(FormTag.FORM_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element and control tags are used inside &lt;ui:form&gt; tag.");
@@ -77,8 +72,6 @@ public class JspUtil {
     attributeErrorMap.put(ListTag.LIST_VIEW_MODEL_KEY, "&lt;ui:list&gt; tag expected, but not found! Make sure list tags is used inside &lt;ui:list&gt; tag.");
     attributeErrorMap.put(ListTag.LIST_ID_KEY, "&lt;ui:list&gt; tag expected, but not found!  Make sure list tags is used inside &lt;ui:list&gt; tag.");
     attributeErrorMap.put(ListRowsTag.ROW_REQUEST_ID_KEY, "&lt;ui:listRows&gt; or another list rows tag expected, but not found!");	
-    attributeErrorMap.put(BaseSystemFormHtmlTag.ID_KEY, "&lt;ui:systemForm&gt; tag expected, but not found! Make sure your tags are surrounded by &lt;ui:systemForm&gt;.");
-    attributeErrorMap.put(UiWidgetContainer.KEY, "&lt;ui:viewPort&gt; or another widget container tag expected, but not found!");
   }
 
   /**
@@ -111,7 +104,7 @@ public class JspUtil {
   }
 
   public static LocalizationContext getLocalizationContext(PageContext pageContext) {
-  	return (LocalizationContext)Config.get(pageContext, Config.FMT_LOCALIZATION_CONTEXT, PageContext.REQUEST_SCOPE);
+    return (LocalizationContext) pageContext.getRequest().getAttribute(ServletUtil.LOCALIZATION_CONTEXT_KEY);
   }
   
   /**
@@ -401,7 +394,7 @@ public class JspUtil {
   /**
    * Read attribute value from request scope.  
    */
-  public static Object getContextEntry(PageContext pageContext, String key) throws JspException {
+  public static Object getContextEntry(PageContext pageContext, String key) {
     return pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
   }
   

@@ -19,8 +19,8 @@ package org.araneaframework.example.main.web.list;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.GeneralMO;
 import org.araneaframework.uilib.list.BeanListWidget;
@@ -31,7 +31,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 	  private static final long serialVersionUID = 1L;
 
-  protected static final Logger log = Logger.getLogger(SimpleSubBeanListWidget.class);
+  protected static final Log log = LogFactory.getLog(SimpleSubBeanListWidget.class);
 	
 	private ListWidget list;
 	

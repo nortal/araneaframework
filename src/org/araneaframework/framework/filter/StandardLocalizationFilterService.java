@@ -22,11 +22,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
-import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ClassLoaderUtil;
@@ -42,7 +40,7 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardLocalizationFilterService extends BaseFilterService implements LocalizationContext {
-  private static final Logger log = Logger.getLogger(StandardLocalizationFilterService.class);
+  private static final Log log = LogFactory.getLog(StandardLocalizationFilterService.class);
   private String resourceBundleName;
   private Locale currentLocale;
 
@@ -84,7 +82,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   }
 
   protected void init() throws Exception {
-    childService._getComponent().init(getChildEnvironment());
+    childService._getComponent().init(getScope(), getChildEnvironment());
   }
   
   /** 
@@ -129,16 +127,5 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     }
     
     return MessageFormat.format(message, args);
-  }
-
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-	output.pushAttribute(LOCALIZATION_CONTEXT_KEY, this);
-	
-	try {
-		super.action(path, input, output);
-	}
-	finally {
-		output.popAttribute(LOCALIZATION_CONTEXT_KEY);
-	}
   }
 }

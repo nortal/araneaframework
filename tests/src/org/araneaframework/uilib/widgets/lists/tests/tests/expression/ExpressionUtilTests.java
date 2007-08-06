@@ -18,17 +18,16 @@ package org.araneaframework.uilib.widgets.lists.tests.tests.expression;
 
 import java.util.Collections;
 import java.util.List;
-
 import junit.framework.TestCase;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockExpression;
 
 
 public class ExpressionUtilTests extends TestCase {
-	private static final Logger log = Logger.getLogger(ExpressionUtilTests.class);
+	private static final Log log = LogFactory.getLog(ExpressionUtilTests.class);
 	
 	public static final String EMPTY_STRING = ""; 
 	public static final String NOT_EMPTY_STRING = "string";

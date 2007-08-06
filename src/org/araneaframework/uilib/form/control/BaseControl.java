@@ -178,10 +178,10 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   }
 
   protected class WidgetImpl extends BaseWidget.WidgetImpl {
-    public void process() {
-      super.process();
-      isReadFromRequest = false;
-    }
+    public void update(InputData input) {
+    	isReadFromRequest = false;
+		super.update(input);
+	}
   }
 
   //*********************************************************************

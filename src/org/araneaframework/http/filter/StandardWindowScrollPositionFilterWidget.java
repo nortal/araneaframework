@@ -18,7 +18,6 @@ package org.araneaframework.http.filter;
 
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.WindowScrollPositionContext;
@@ -60,16 +59,5 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
     windowScrollY = (String) input.getGlobalData().get(WINDOW_SCROLL_Y_KEY);
 
     super.update(input);
-  }
-  
-  protected void render(OutputData output) throws Exception {
-    output.pushAttribute(SCROLL_HANDLER_KEY, this);
-    
-    try {
-      super.render(output);
-    }
-    finally {
-      output.popAttribute(SCROLL_HANDLER_KEY);
-    }
   }
 }

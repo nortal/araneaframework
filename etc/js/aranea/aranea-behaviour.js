@@ -41,17 +41,17 @@ function setCloningUrl(el) {
 	var eventParam = el.getAttribute('arn-evntPar');
 	var eventTarget = el.getAttribute('arn-trgtwdgt');
 
-	var systemForm = araneaPage().getTraverser().findSurroundingSystemForm(el);
+	var systemForm = araneaPage().getSystemForm();
 
-    var url = araneaPage().getSubmitURL(systemForm['topServiceId'].value, systemForm['threadServiceId'].value, 'override');
-    url += "&pleaseClone=true";
+    var url = araneaPage().getSubmitURL(systemForm['araTopServiceId'].value, systemForm['araThreadServiceId'].value, 'override');
+    url += "&araPleaseClone=true";
 
     if (eventId)
-      url += "&widgetEventHandler=" + eventId;
+      url += "&araWidgetEventHandler=" + eventId;
     if (eventParam)  
-      url += "&widgetEventParameter=" + eventParam;
+      url += "&araWidgetEventParameter=" + eventParam;
     if (eventTarget)
-      url += "&widgetEventPath="+ eventTarget;
+      url += "&araWidgetEventPath="+ eventTarget;
       
     el['href'] = url;
 }

@@ -26,7 +26,6 @@ import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
-import org.araneaframework.jsp.tag.form.BaseSystemFormHtmlTag;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -44,10 +43,7 @@ import org.araneaframework.uilib.form.FormWidget;
 public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface {
 	public final static String COUNTER_KEY = "org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag.KEY";
 
-	protected String contextWidgetId;
-	protected String systemFormId;
 	protected String formFullId;
-	protected String formScopedFullId;
 	
 	protected FormWidget.ViewModel formViewModel;
 	protected FormElement.ViewModel formElementViewModel;
@@ -81,14 +77,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);    
 
-		//Get context widget id
-		contextWidgetId = JspWidgetUtil.getContextWidgetFullId(pageContext);	
-
-		// Get system form id 
-		systemFormId = (String)requireContextEntry(BaseSystemFormHtmlTag.ID_KEY);
-
 		// Get form data		
-		formScopedFullId = (String)requireContextEntry(FormTag.FORM_SCOPED_FULL_ID_KEY);
 		formFullId = (String)requireContextEntry(FormTag.FORM_FULL_ID_KEY);
 		formViewModel = (FormWidget.ViewModel)requireContextEntry(FormTag.FORM_VIEW_MODEL_KEY);
 		FormWidget form = (FormWidget)requireContextEntry(FormTag.FORM_KEY);
@@ -104,7 +93,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		fe.rendered();
 
 		formElementViewModel = 
-			(FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+			(FormElement.ViewModel) fe._getViewable().getViewModel();   
 
 		// Get control	
 		controlViewModel = (formElementViewModel).getControl();
@@ -118,11 +107,11 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		if (accessKey != null && accessKey.length() != 1) accessKey = null;
 
 		if (hasElementContextSpan)
-            writeFormElementContextOpen(out, formScopedFullId, derivedId, true, pageContext);
+            writeFormElementContextOpen(out, formFullId, derivedId, true, pageContext);
 
 		updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 		
-		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.getScopedFullFieldId());
+		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.getFullFieldId());
 
 		// Continue
 		return EVAL_BODY_INCLUDE;		
@@ -221,13 +210,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
 	/**
 	 * Computes field name.
-	 */
-	protected String getScopedFullFieldId() {
-		return formScopedFullId + "." + derivedId;
-	}
-
-	/**
-	 * Computes field name.
 	 */	
 	protected String getFullFieldId() {
 		return formFullId + "." + derivedId;
@@ -254,8 +236,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 
 	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
-		//  Enclose the element in a <span id=somerandomid>
-		String spanId = "fe-span-" + generateId(pageContext);
+		//  Enclose the element in a <span id=someuniqueid>
+		String spanId = "fe-span-" + fullFormId + "." + elementId;
 
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "id", spanId);
@@ -281,21 +263,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 	public static void writeFormElementContextClose(Writer out) throws IOException{
 		JspUtil.writeEndTag_SS(out, "span");
-	}
-
-	/**
-	 * Generates an id, that is unique in PageContext.REQUEST_SCOPE.
-	 * @param pageContext
-	 * @return generated id
-	 */
-	public static Long generateId(PageContext pageContext){
-		Long counter = (Long)pageContext.getAttribute(COUNTER_KEY, PageContext.REQUEST_SCOPE);
-		if (counter == null)
-			counter = new Long(0);
-		else
-			counter = new Long(counter.longValue() + 1);
-		pageContext.setAttribute(COUNTER_KEY, counter, PageContext.REQUEST_SCOPE);
-		return counter;
 	}
 
 	/**

@@ -17,10 +17,10 @@
 package org.araneaframework;
 
 import java.util.Map;
+import org.araneaframework.http.HttpInputData;
 
 /**
- * A map of maps with specific getters. The current position or scope in the top map
- * is maintained by a path.
+ * Provides access to request parameters.
  * 
  * <p>
  * InputData has 2 types of getters
@@ -28,10 +28,10 @@ import java.util.Map;
  *  <li>Scoped data - data that depends on the current scope</li>
  *  <li>Global data - data which isn't aware of scoping</li>
  * </ul>
- * Map is used to distinguish data meant for different Components in a Composite. As Components
- * can be structured hierarchically the pushScope and getScope of InputData are used to determine
- * the path of data needed from the InputData.
  * </p>
+ * 
+ * @see HttpInputData
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
@@ -41,34 +41,13 @@ public interface InputData extends Extendable, Narrowable {
    * The key that can be used to retrieve InputData (as an example a request scope attribute).
    */
   public static final String INPUT_DATA_KEY = "org.araneaframework.InputData";
-
-  /**
-   * Returns the current Path of this InputData.
-   * @return the Path of this InputData
-   */
-  public Path getScope();
-
-  /**
-   * Adds the step to the scope Path of this InputData.
-   * @param step is the next step on the Path
-   */
-  public void pushScope(Object step);
-
-  /**
-   * Removes the last entry from the Path of this InputData. 
-   */
-  public void popScope();
   
   /**
-   * Restores the scope to the passed one.
-   */
-  public void restoreScope(Path scope);  
-
-  /**
    * Returns the data with the Path prefix.
+   * @param scope the Path prefix
    * @return a map with the data
    */
-  public Map getScopedData();
+  public Map getScopedData(Path scope);
   
   /**
    * Returns the global data of this object. Global data is not the same

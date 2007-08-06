@@ -19,12 +19,6 @@
 		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
 	</path>
 	
-	<taskdef
-		name="webdoclet"
-		classname="xdoclet.modules.web.WebDocletTask"
-		classpathref="classpath"
-	/>
-	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
 		<delete dir="war/WEB-INF/classes" failonerror="false"/>
@@ -54,7 +48,7 @@
 			<fileset file="../../examples/common/dist/aranea-examples-common.jar"/>							
 		</copy>
 		<copy todir="war/WEB-INF/classes">
-			<fileset dir=".." includes="log4j.xml"/>
+			<fileset dir=".." includes="log4j.xml,commons-logging.properties"/>
 		</copy>
 	</target>
 	

@@ -17,7 +17,8 @@
 package org.araneaframework.tests;
 
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.tests.mock.MockConfiguration;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.ConverterNotFoundException;
@@ -30,7 +31,7 @@ import org.araneaframework.uilib.form.converter.ConverterFactory;
  */
 public class FormConverterTest extends TestCase {
   
-  private static Logger log = Logger.getLogger(FormConverterTest.class);
+  private static final Log log = LogFactory.getLog(FormConverterTest.class);
   
   public void testConverterNotFound() throws Exception {    
     

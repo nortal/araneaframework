@@ -16,7 +16,8 @@
 
 package org.araneaframework.core;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Message;
 import org.araneaframework.Path;
@@ -27,7 +28,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class RoutedMessage implements Message {
-  private static final Logger log = Logger.getLogger(RoutedMessage.class);
+  private static final Log log = LogFactory.getLog(RoutedMessage.class);
   
   private Path path;
   private String destination;

@@ -21,12 +21,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
 import org.araneaframework.Message;
 import org.araneaframework.Relocatable;
+import org.araneaframework.Scope;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
@@ -40,13 +42,18 @@ public abstract class BaseComponent implements Component {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private static final Logger log = Logger.getLogger(BaseComponent.class);
+  private static final Log log = LogFactory.getLog(BaseComponent.class);
   
   private Environment environment;
+  private Scope scope;
   private Map children;
   private Map disabledChildren;
   
-  private Boolean nullIfInited = Boolean.FALSE;
+  private static final byte UNBORN = 1;
+  private static final byte ALIVE = 2;
+  private static final byte DEAD = 3;
+  
+  private byte state = UNBORN;
   
   private transient int callCount = 0;
   private transient int reentrantCallCount = 0;
@@ -90,22 +97,43 @@ public abstract class BaseComponent implements Component {
   /**
    * Returns the Environment of this BaseComponent.
    */
-  protected Environment getEnvironment() {
+  public Environment getEnvironment() {
     return environment;
+  }
+  
+  public Scope getScope() {
+    return scope;
   }
   
   /**
    * Returns true, if the BaseComponent has been initialized. 
    */
-  protected boolean isInitialized() {
-    return nullIfInited == null;
+  public boolean isInitialized() {
+    return state != UNBORN;
   } 
+  
+  public boolean isAlive() {
+    return state == ALIVE;
+  }
+  
+  public boolean isDead() {
+    return state == DEAD;
+  }
   
   /**
    * Sets the environment of this BaseComponent to environment. 
    */
-  protected void _setEnvironment(Environment env) {
+  protected synchronized void _setEnvironment(Environment env) {
     this.environment = env;
+  }
+  
+  /**
+   * Sets the environment of this BaseComponent to environment. 
+   * 
+   * @since 1.1
+   */
+  protected void _setScope(Scope scope) {
+    this.scope = scope;
   }
 
   /**
@@ -138,6 +166,14 @@ public abstract class BaseComponent implements Component {
     _checkCall();
     incCallCount();
   }
+  
+  /**
+   * @since 1.1
+   */
+  protected synchronized void _strictStartCall() throws IllegalStateException {
+	_strictCheckCall();
+	incCallCount();
+  }
 
   /**
    * Decrements the call count. Wakes up all threads that are waiting on
@@ -166,12 +202,26 @@ public abstract class BaseComponent implements Component {
   }
 
   /**
-   * Checks if this component is initialized. If not, throws IllegalStateException.
+   * Checks if this component was initialized. If not, throws IllegalStateException.
+   * This is relatively loose check, allowing leftover calls to dead components.
+   * @throws IllegalStateException when component has never been initialized
    */
   protected void _checkCall() throws IllegalStateException {
     if (!isInitialized()) {
-      throw new IllegalStateException("Component '" + getClass().getName() + "' has not been initialized!");
+      throw new IllegalStateException("Component '" + getClass().getName() + "' was never initialized!");
     }
+  }
+  
+  /**
+   * Checks if this component is currently alive. 
+   * This is strict check that disallows leftover calls to dead components.
+   * @throws IllegalStateException when component is unborn or dead
+   * @since 1.1
+   */
+  protected void _strictCheckCall() throws IllegalStateException {
+	if (!isAlive()) {
+	  throw new IllegalStateException("Component '" + getClass().getName() + "' is not alive!");
+	}
   }
   
   /**
@@ -201,6 +251,16 @@ public abstract class BaseComponent implements Component {
    * specified Environment env. 
    */
   protected void _addComponent(Object key, Component component, Environment env){
+    _addComponent(key, component, new StandardScope(key, getScope()), env);
+  }
+  
+  /**
+   * Adds a child component to this component with the key and initilizes it with the
+   * specified Environment env. 
+   * 
+   * @since 1.1
+   */
+  protected void _addComponent(Object key, Component component, Scope scope, Environment env){
     Assert.notNull(this, key, 
         "Cannot add a component of class '" + (component == null ? null : component.getClass())+ "' under a null key!");
     //Only Strings are supported by this implementation
@@ -219,8 +279,8 @@ public abstract class BaseComponent implements Component {
     // component should be in place since during init the 
     // component might be overridden.
     _getChildren().put(key, component);
-    component._getComponent().init(env);
-  }
+    component._getComponent().init(scope, env);
+  }  
   
   /**
    * Removes the childcomponent with the specified key from the children and calls destroy on it.
@@ -309,7 +369,7 @@ public abstract class BaseComponent implements Component {
   protected void _propagate(Message message) {
     Assert.notNullParam(this, message, "message");
     
-    if (children == null)
+    if (children == null || isDead())
       return;
     
     Iterator ite = (new HashMap(_getChildren())).keySet().iterator();
@@ -362,12 +422,13 @@ public abstract class BaseComponent implements Component {
   //component implementation
   protected class ComponentImpl implements Component.Interface {
     
-    public synchronized void init(Environment env) {
+    public synchronized void init(Scope scope, Environment env) {
       Assert.notNull(this, env, "Environment cannot be null!");
       Assert.isTrue(this, !isInitialized(), "Cannot initialize the component more than once!");
-            
+
+      BaseComponent.this._setScope(scope);
       BaseComponent.this._setEnvironment(env);
-      nullIfInited = null;
+      state = ALIVE;
       try {
         BaseComponent.this.init();
       }
@@ -378,7 +439,8 @@ public abstract class BaseComponent implements Component {
     
     public void destroy(){     
       _startWaitingCall();
-      
+      _strictCheckCall();
+
       try {
         /* XXX synch logic a bit weird. 
          * Second call to destroy should fail, not wait. */
@@ -399,7 +461,7 @@ public abstract class BaseComponent implements Component {
           
           BaseComponent.this.destroy();
         }
-        nullIfInited = Boolean.FALSE;   
+        state = DEAD;
       }
       catch (Exception e) {
         ExceptionUtil.uncheckException(e);

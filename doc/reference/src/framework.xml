@@ -309,7 +309,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
             will do more with them than just passing the calls to one of them.
             A typical example is the <emphasis>widget container</emphasis>
             service which translates <literal>action()</literal> calls into
-            widget <literal>update()/event()/process()/render()</literal>
+            widget <literal>update()/event()/render()</literal>
             cycle.</para>
           </listitem>
         </varlistentry>
@@ -629,7 +629,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
                 <entry align="right"><emphasis role="bold">Java
                 class:</emphasis></entry>
 
-                <entry><literal>StandardUpdateRegionFilterService</literal></entry>
+                <entry><literal>StandardUpdateRegionFilterWidget</literal></entry>
               </row>
 
               <row>
@@ -643,7 +643,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
                 <entry align="right"><emphasis
                 role="bold">Provides:</emphasis></entry>
 
-                <entry>-</entry>
+                <entry><literal>UpdateRegionContext</literal></entry>
               </row>
 
               <row>
@@ -656,11 +656,11 @@ class MyServlet extends BaseAraneaDispatcherServlet {
           </tgroup>
         </informaltable></para>
 
-      <para>When serving AJAX requests made with AjaxAnywhere (see <xref
-      linkend="ajaxanywhere" />), extracts from the initial response these
-      page regions that need to be updated (request includes the names of
-      these regions), then modifies the response to include just these regions
-      (not the whole page).</para>
+      <para>When framework receives an event(request) that has <emphasis>update region</emphasis> parameters defined,
+      this filter is activated and takes care that only the smallest renderable unit that defines 
+      named <emphasis>update region</emphasis> is actually rendered. Generated response also contains only 
+      the rendered content of particular component(s) that needed to be rendered for updating the regions.
+      </para>
 
       <informaltable>
         <tgroup cols="2">
@@ -684,22 +684,15 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry>The character encoding for responses served by this
               filter, default being "UTF-8".</entry>
             </row>
-
-            <row>
-              <entry>existingRegions <para>
-              <literal>java.util.List&lt;String&gt;</literal></para></entry>
-
-              <entry>When the filter is activated, it tries to extract
-              specified regions from response, even if they were not
-              explicitly asked to be updated in request. This is useful for
-              always updating some common page regions (feedback message
-              regions etc). Some default region names that should be updated
-              when AJAX request is made are <literal>messages</literal>,
-              <literal>popupRegistrationRegion</literal>.</entry>
-            </row>
           </tbody>
         </tgroup>
       </informaltable>
+      
+      <emphasis>
+        Notes: In Aranea 1.1 this filter has changed from <literal>Service</literal> to
+        <literal>Widget</literal>. Also, the configuration parameter <literal>existingRegions</literal>
+        only exists in 1.0 branch (TODO: elaborate why? (imho it should remain anyway)).
+      </emphasis>
     </sect2>
 
     <sect2 id="araneaEnvContextFilter">
@@ -1426,52 +1419,6 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
 
-    <sect2 id="araneaSynchronizingFilter">
-      <title>Synchronization Filter</title>
-
-      <informaltable frame="topbot">
-        <tgroup cols="2">
-          <colspec colwidth="1*" />
-
-          <colspec colwidth="3*" />
-
-          <tbody>
-            <row>
-              <entry align="right"><emphasis role="bold">Java
-              class:</emphasis></entry>
-
-              <entry><literal>StandardSynchronizingFilterService</literal></entry>
-            </row>
-
-            <row>
-              <entry align="right"><emphasis role="bold">Default configuration
-              name:</emphasis></entry>
-
-              <entry><literal>araneaSynchronizingFilter</literal></entry>
-            </row>
-
-            <row>
-              <entry align="right"><emphasis
-              role="bold">Provides:</emphasis></entry>
-
-              <entry><literal>SynchronizingContext</literal></entry>
-            </row>
-
-            <row>
-              <entry align="right"><emphasis role="bold">Depends
-              on:</emphasis></entry>
-
-              <entry>-</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
-
-      <para>Synchronizes the calls to its child widget. Enriches environment
-      with <literal>SynchronizingContext</literal> (which is just marker
-      interface).</para>
-    </sect2>
-
     <sect2 id="araneaThreadCloningFilter">
       <title>Browser Window Cloning Filter</title>
 
@@ -1587,7 +1534,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis role="bold">Depends
               on:</emphasis></entry>
 
-              <entry>-</entry>
+              <entry><literal>SystemFormContext</literal></entry>
             </row>
           </tbody>
         </tgroup>
@@ -1744,7 +1691,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis role="bold">Depends
               on:</emphasis></entry>
 
-              <entry>-</entry>
+              <entry><literal>SystemFormContext</literal></entry>
             </row>
           </tbody>
         </tgroup>

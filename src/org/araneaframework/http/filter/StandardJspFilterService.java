@@ -20,23 +20,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
-import org.araneaframework.Path;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.support.CachingEntityResolver;
@@ -49,7 +44,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
-  private static final Logger log = Logger.getLogger(StandardJspFilterService.class);
+  private static final Log log = LogFactory.getLog(StandardJspFilterService.class);
 
   // URI -> Map<TagInfo>
   private Map taglibs = new HashMap();
@@ -57,8 +52,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   private String submitCharset;
   private String jspPath = "/WEB-INF/jsp";
   private String jspExtension = ".jsp";
-  
-  private LocalizationContext loc;
   
   // Spring injection parameters  
   public void setSubmitCharset(String submitCharset) {
@@ -81,59 +74,24 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     return jspExtension;
   }
 
-  protected void init() throws Exception {
-    super.init();
-
-    loc = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+  public String getSubmitCharset() {
+    return submitCharset;
+  }
+  
+  public String getFormAction() {
+    return ((ServletConfig) getEnvironment().requireEntry(ServletConfig.class)).getServletContext().getServletContextName();
+  }
+  
+  public Map getTagMapping(String uri){
+    return getTagMap(uri);
+  }
+  
+  public ConfigurationContext getConfiguration() {
+    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
   }
   
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(getEnvironment(), JspContext.class, this);
-  }
-  
- protected void action(Path path, InputData input, OutputData output) throws Exception {
-    output.pushAttribute(JspContext.JSP_CONFIGURATION_KEY, new JspConfiguration());
-    
-    try {
-      super.action(path, input, output);
-    }
-    finally {
-      output.popAttribute(JspContext.JSP_CONFIGURATION_KEY);
-    }
-  }
-  
-  public class JspConfiguration implements JspContext {
-    public String getSubmitCharset() {
-      return submitCharset;
-    }
-    
-    public String getFormAction() {
-      return ((ServletConfig) getEnvironment().getEntry(ServletConfig.class)).getServletContext().getServletContextName();
-    }
-    
-    public ResourceBundle getCurrentBundle() {
-      return loc.getResourceBundle();
-    }
-    
-    public Locale getCurrentLocale() {
-      return loc.getLocale();
-    }
-    
-    public Map getTagMapping(String uri){
-      return getTagMap(uri);
-    }
-    
-    public ConfigurationContext getConfiguration() {
-      return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
-    }
-    
-    public String getJspPath() {
-      return jspPath;
-    }
-
-    public String getJspExtension() {
-      return jspExtension;
-    }
   }
   
   public Map getTagMap(String uri) {

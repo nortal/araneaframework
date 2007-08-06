@@ -19,10 +19,11 @@ package org.araneaframework.uilib.list;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class MultiOrderHelper {
-	private static final Logger log = Logger.getLogger(MultiOrderHelper.class);
+	private static final Log log = LogFactory.getLog(MultiOrderHelper.class);
 
 	public static OrderInfo getOrderInfo(Map orderInfoMap) {
 		Map fieldOrders = new TreeMap();

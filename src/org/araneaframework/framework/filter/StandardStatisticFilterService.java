@@ -16,7 +16,8 @@
 
 package org.araneaframework.framework.filter;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -31,7 +32,7 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardStatisticFilterService extends BaseFilterService {
-  private static final Logger log = Logger.getLogger(StandardStatisticFilterService.class);
+  private static final Log log = LogFactory.getLog(StandardStatisticFilterService.class);
   private String message;
 
   public void setMessage(String message) {

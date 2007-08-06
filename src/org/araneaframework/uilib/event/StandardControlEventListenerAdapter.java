@@ -19,7 +19,8 @@ package org.araneaframework.uilib.event;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.core.EventListener;
 
@@ -32,7 +33,7 @@ import org.araneaframework.core.EventListener;
  */
 public class StandardControlEventListenerAdapter implements EventListener {
   
-  private static final Logger log = Logger.getLogger(StandardControlEventListenerAdapter.class);
+  private static final Log log = LogFactory.getLog(StandardControlEventListenerAdapter.class);
 
   private Collection onClickEventListeners;
   private Collection onChangeEventListeners;
@@ -101,8 +102,7 @@ public class StandardControlEventListenerAdapter implements EventListener {
         }
     }
     else {
-      log.warn("Widget '" + input.getScope() +
-          "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"); 
+      log.warn("Cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"); 
     }    
   }
 }

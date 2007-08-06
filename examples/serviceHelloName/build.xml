@@ -20,12 +20,6 @@
 		<pathelement location="${env.ANT_HOME}/lib/ant.jar" />
 	</path>
 	
-	<taskdef
-		name="webdoclet"
-		classname="xdoclet.modules.web.WebDocletTask"
-		classpathref="classpath"
-	/>
-	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
 		<delete dir="war/WEB-INF/classes" failonerror="false"/>

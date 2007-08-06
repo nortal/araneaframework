@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.util.ClassLoaderUtil;
+import org.araneaframework.http.JspContext;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.support.FormElementViewSelector;
 import org.araneaframework.jsp.support.TagInfo;
@@ -29,7 +30,6 @@ import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.uilib.form.FormElementTag;
 import org.araneaframework.jsp.tag.uilib.form.FormElementTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.FormTag;
-import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
@@ -89,7 +89,8 @@ public class AutomaticTagFormElementTag extends BaseTag {
     if(viewSelector == null)
       throw new JspException("The form element view selector was not passed!.");
     
-    Map tagMapping = JspWidgetCallUtil.getContainer(pageContext).getTagMapping(pageContext, viewSelector.getUri());
+    JspContext config = (JspContext) getEnvironment().requireEntry(JspContext.class);
+    Map tagMapping = config.getTagMapping(viewSelector.getUri());
     
     if(tagMapping == null)
       throw new JspException("The tag mapping was not found!.");

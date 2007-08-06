@@ -52,7 +52,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("TextareaControl");    
     
-    String name = this.getScopedFullFieldId();     
+    String name = this.getFullFieldId();     
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
     
     JspUtil.writeOpenStartTag(out, "textarea");

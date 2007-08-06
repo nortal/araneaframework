@@ -31,7 +31,7 @@ public interface TransactionContext extends Serializable {
   /**
    * The key in the request, under which is the transaction id.
    */
-  public static final String TRANSACTION_ID_KEY = "transactionId";
+  public static final String TRANSACTION_ID_KEY = "araTransactionId";
   
   /**
    * The key in the request that indicates situation where transaction id
@@ -48,4 +48,10 @@ public interface TransactionContext extends Serializable {
    * Returns the transaction id of the current request.
    */
   public Object getTransactionId();
+  
+  /**
+   * Returns the transaction id expected in the next request.
+   * @since 1.1
+   */
+  public Long getNextTransactionId();
 }

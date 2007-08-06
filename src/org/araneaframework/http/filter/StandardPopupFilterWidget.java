@@ -16,10 +16,13 @@
 
 package org.araneaframework.http.filter;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -41,13 +44,19 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
+import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.http.support.PopupWindowProperties;
+import org.araneaframework.http.util.JsonArray;
+import org.araneaframework.http.util.JsonObject;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class StandardPopupFilterWidget extends BaseFilterWidget implements PopupWindowContext {
-  private static final Logger log = Logger.getLogger(StandardPopupFilterWidget.class);
+public class StandardPopupFilterWidget extends BaseFilterWidget implements PopupWindowContext, UpdateRegionProvider {
+  private static final Log log = LogFactory.getLog(StandardPopupFilterWidget.class);
+
+  /** @since 1.1 */
+  public static final String POPUP_REGION_KEY = "popups";
   
   /** Maps of popups where keys are service IDs(==popup IDs) and values 
    * <code>StandardPopupFilterWidget.PopupServiceInfo</code>. Used for rendering popups.*/ 
@@ -63,7 +72,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   public void setThreadServiceFactory(ServiceFactory factory) {
     this.threadServiceFactory = factory;
   }
-  
+
   /* ************************************************************************************
    * PopupWindowContext interface methods
    * ************************************************************************************/
@@ -181,6 +190,10 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return this.opener;
   }
   
+  public Map getPopups() {
+    return Collections.unmodifiableMap(popups);
+  }
+  
   /* ************************************************************************************
    * Widget methods
    * ************************************************************************************/
@@ -209,15 +222,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
    * into output under the key {@link org.araneaframework.http.PopupWindowContext}.POPUPS_KEY
    */
   protected void render(OutputData output) throws Exception {
-    output.pushAttribute(POPUPS_KEY, popups);
-
-    try {
-      super.render(output);
-    }
-    finally {
-      output.popAttribute(POPUPS_KEY);
-    }
-
+    super.render(output);
     popups = new HashMap();
   }
   
@@ -330,4 +335,36 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       return popupProperties;
     }
   }
+
+  /* ************************************************************************************
+   * Internal inner classes
+   * ************************************************************************************/
+
+  /**
+   * @since 1.1
+   */
+  public Map getRegions() throws Exception {
+    Map popups = getPopups();
+    if (popups == null || popups.isEmpty())
+      return null;
+
+    // clear popup list
+    this.popups = new HashMap();
+
+    JsonArray popupArray = new JsonArray();
+    for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
+      JsonObject popupObject = new JsonObject();
+      Map.Entry popup = (Map.Entry) i.next();
+      String serviceId = (String) popup.getKey();
+      PopupServiceInfo serviceInfo = (PopupServiceInfo) popup.getValue();
+      popupObject.setStringProperty("popupId", serviceId);
+      popupObject.setStringProperty("windowProperties", serviceInfo.getPopupProperties() != null ? serviceInfo.getPopupProperties().toString() : "");
+      popupObject.setStringProperty("url", serviceInfo.toURL());
+      popupArray.append(popupObject.toString());
+    }
+    Map regions = new HashMap();
+    regions.put(POPUP_REGION_KEY, popupArray.toString());
+    return regions;
+  }
+
 }

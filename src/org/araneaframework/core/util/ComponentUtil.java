@@ -19,6 +19,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.araneaframework.Component;
 import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.StandardScope;
 
 /**
  * This utility class contains methods for managing Aranea components.
@@ -43,13 +44,13 @@ public abstract class ComponentUtil {
   public static void addListenerComponent(ApplicationComponent target, Component listener) {
     Assert.notNullParam(target, "target");
     Assert.notNullParam(listener, "listener");
-    
-    listener._getComponent().init(target.getChildEnvironment());
            
     String key = LISTENER_KEY;    
     while (target._getComposite().getChildren().get(key) != null) {
       key = LISTENER_KEY + RandomUtils.nextLong();
     }
+    
+    listener._getComponent().init(new StandardScope(key, target.getScope()), target.getChildEnvironment());
     
     target._getComposite().attach(key, listener);    
   }

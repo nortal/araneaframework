@@ -57,6 +57,7 @@ import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
 import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
 import org.araneaframework.example.main.web.tree.SimpleTreeWidget;
+import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.support.FlowCreator;
@@ -144,11 +145,12 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem(new MenuItem("Lists"));
       sampleMenu.addMenuItem("Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
       sampleMenu.addMenuItem("Lists", new MenuItem("Multi_List", MultiListWidget.class));
-      
+
       MenuItem treeMenu = sampleMenu.addMenuItem(new MenuItem("Trees"));
       treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
       treeMenu.addMenuItem(new MenuItem("Complex_Tree", ComplexTreeWidget.class));
-    }
+      treeMenu.addMenuItem(new MenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class));
+    } 
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
       errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
@@ -168,6 +170,6 @@ public class MenuWidget extends TemplateMenuWidget  {
     }        
     putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
     
-    ServletUtil.include("/WEB-INF/jsp/menuError.jsp", getEnvironment(), output);
+    ServletUtil.include("/WEB-INF/jsp/menuError.jsp", this, output);
   }
 }

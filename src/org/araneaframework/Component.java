@@ -40,6 +40,16 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Component extends Serializable {
+  /** @since 1.1 */
+  public Environment getEnvironment();
+
+  /** @since 1.1 */
+  public Scope getScope();
+  
+  /**
+   * Returns true iff this component has been initialized and is not destroyed. 
+   * @since 1.1 */
+  public boolean isAlive();
   
   /**
    * The factory method returning the implementation of the Component.
@@ -54,10 +64,11 @@ public interface Component extends Serializable {
     
     /**
      * Initializes this Component with the specified Environment.
+     * @param scope TODO
      * @param env the Environment of this Component
      */
-    public void init(Environment env);
-    
+    public void init(Scope scope, Environment env);
+
     /**
      * Destroys this Component.
      */

@@ -24,7 +24,6 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
-import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
@@ -44,17 +43,17 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ServletUtil.getResponse(output);
 		String script = 
-			    "if (window.opener) { window.opener.araneaPage().action(document.getElementById('" + widgetId  + "'), 'testAction', '" + widgetId.substring(0, widgetId.lastIndexOf('.')) + "' , '" + value + "', window.opener['tehcallback']);  }" +
-			    "closeWindow(50);";
-		
-		String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);
+		  "if (window.opener) { window.opener.setTimeout(\"" +
+		    "araneaPage().action(document.getElementById('" + widgetId  + "'), 'testAction', '" + widgetId.substring(0, widgetId.lastIndexOf('.')) + "' , '" + value + "', window['tehcallback']);" +
+		  "\", 0); }" +
+		  "window.close();";
+
 		String responseStr = 
 			"<html>" +
 			  "<head>" +
-			    "<script type=\"text/javascript\" src=\"" + scriptSrc + "\"></script>" +
+			    "<script type=\"text/javascript\">"+ script +"</script>" +
 			  "</head>" +
 			  "<body>" + 
-			    "<script type=\"text/javascript\">"+ script +"</script>" +
 			  "</body>" +
 			"</html>";
 

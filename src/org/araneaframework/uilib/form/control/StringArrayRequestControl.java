@@ -69,7 +69,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * {@link #fromRequestParameters(String[])}to read the control from request.
    */
   protected void readFromRequest(HttpInputData request) {
-    String parameterValues[] = request.getParameterValues(request.getScope().toString());
+    String parameterValues[] = request.getParameterValues(getScope().toString());
     innerData = preprocessRequestParameters(parameterValues);
     isReadFromRequest = innerData != null;
   }
@@ -114,14 +114,6 @@ public abstract class StringArrayRequestControl extends BaseControl {
    */
   public Object getViewModel() {
     return new ViewModel();
-  }
-
-  /**
-   * Copies the value to inner data (output value) if control is valid.
-   */
-  protected void process() throws Exception {
-    //XXX: i am keeping this only b/c it was here before change_153 (async form mods) 
-    value = null;
   }
   
   //*********************************************************************

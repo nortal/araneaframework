@@ -17,8 +17,6 @@
 package org.araneaframework.jsp.tag.context;
 
 import java.io.Writer;
-import java.util.StringTokenizer;
-import org.araneaframework.OutputData;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
 
 /**
@@ -31,37 +29,25 @@ import org.araneaframework.jsp.tag.uilib.WidgetTag;
  */
 public class WidgetContextTag extends WidgetTag {
 
-  private OutputData output = null;
-  
-  private int pathLength = 0;
+  /** @since 1.1 */
+  public static final String CONTEXT_WIDGET_KEY = "org.araneaframework.jsp.tag.context.WidgetContextTag.CONTEXTWIDGET";
   
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
-    output = getOutputData();
+    
+    /*
+     * XXX id == null usage is deprecated -- you no longer need to put a
+     * <widgetContext> tag without an id at the top of your JSP.
+     */
+    
     if (id != null) {
-      StringTokenizer tokenizer = new StringTokenizer(id, ".");
-
-      pathLength = tokenizer.countTokens();
-      if (pathLength == -1) pathLength = 0;
-
-      for (; tokenizer.hasMoreTokens();) {
-        String token = tokenizer.nextToken();
-        output.pushScope(token);
-      }
-    }    
+      addContextEntry(CONTEXT_WIDGET_KEY, widget);
+    }
     
     return EVAL_BODY_INCLUDE;
   }
   
   protected int doEndTag(Writer out) throws Exception {
     return EVAL_PAGE;
-  }
-  
-  public void doFinally() {
-    for (int i = 0; i < pathLength; i++)
-      output.popScope();
-
-    super.doFinally();
   }
 }

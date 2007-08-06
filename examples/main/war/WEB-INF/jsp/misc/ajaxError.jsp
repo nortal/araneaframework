@@ -10,6 +10,8 @@
 		<ui:eventButton labelId="#First" eventId="first" updateRegions="ajaxErrorDemo"/>
 		<ui:eventButton labelId="#Second" eventId="second" updateRegions="ajaxErrorDemo"/>
 		<ui:newLine/>
-		<ui:eventLinkButton labelId="#Error" eventId="error" updateRegions="ajaxErrorDemo"/>
+		<ui:eventLinkButton labelId="#Error on event" eventId="error" updateRegions="ajaxErrorDemo"/>
+		<ui:newLine/>
+		<ui:eventLinkButton labelId="#Error on render" eventId="renderError" updateRegions="ajaxErrorDemo"/>
 	</ui:updateRegion>
 </jsp:root>

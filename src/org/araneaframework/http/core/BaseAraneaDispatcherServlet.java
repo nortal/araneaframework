@@ -26,7 +26,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.AraneaVersion;
 import org.araneaframework.Environment;
 import org.araneaframework.core.StandardEnvironment;
@@ -44,7 +45,7 @@ import org.araneaframework.http.ServletServiceAdapterComponent;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
-  private static final Logger log = Logger.getLogger(BaseAraneaDispatcherServlet.class);
+  private static final Log log = LogFactory.getLog(BaseAraneaDispatcherServlet.class);
   private ServletServiceAdapterComponent serviceAdapter;
   
   public void init() throws ServletException {
@@ -53,7 +54,7 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
 
     Environment env = new StandardEnvironment(null, getServletEnvironmentMap());
     try {
-      serviceAdapter._getComponent().init(env);
+      serviceAdapter._getComponent().init(null, env);
     } 
     catch (Exception e) {
       log.info("Unable to start " + AraneaVersion.getTitle() + " " + AraneaVersion.getVersion(), e);

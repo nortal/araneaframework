@@ -17,19 +17,23 @@
 package org.araneaframework.framework.container;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
+import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget {
-  private static final Logger log = Logger.getLogger(ExceptionHandlingFlowContainerWidget.class);
+  private static final Log log = LogFactory.getLog(ExceptionHandlingFlowContainerWidget.class);
   
   protected Exception exception;  
   
@@ -68,6 +72,11 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
       log.error("Critical exception occured: ", ExceptionUtils.getRootCause(e));
     else
       log.error("Critical exception occured: ", e);
+    
+    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().getEntry(UpdateRegionContext.class);
+    if (updateRegionContext != null) {
+      updateRegionContext.disableOnce();
+    }
   }
   
   protected void update(InputData input) throws Exception {
@@ -83,10 +92,17 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
       handleEvent(input);
   }
   
-  protected void process() throws Exception {
-    if (exception == null)
-      super.process();
-    else handleProcess();
+  protected void propagate(Message message) throws Exception {
+    try {
+      super.propagate(message);
+    } catch (Exception e) {
+      try {
+        handleWidgetException(e);
+      }
+      catch (Exception e2) {
+        ExceptionUtil.uncheckException(e2);
+      }
+    }
   }
   
   protected void render(OutputData output) throws Exception {

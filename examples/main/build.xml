@@ -19,12 +19,6 @@
 		<pathelement location="${env.ANT_HOME}/lib/ant.jar" />
 	</path>
 	
-	<taskdef
-		name="webdoclet"
-		classname="xdoclet.modules.web.WebDocletTask"
-		classpathref="classpath"
-	/>
-	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
         <delete dir="war/WEB-INF/classes" failonerror="false"/>
@@ -45,12 +39,13 @@
 		<fileset dir="../lib/hibernate" includes="*.jar" />
 	</path>
 	
-	<taskdef name="hibernatedoclet" classname="xdoclet.modules.hibernate.HibernateDocletTask">
-		<classpath refid="classpath" />
-	</taskdef>
+
 		
 	<!-- Creates Hibernate mappings from Xdoclet -->	
 	<target name="xdoclet.hibernate" depends="init" description="Creates Hibernate mappings from Java files (Xdoclet)">
+		<taskdef name="hibernatedoclet" classname="xdoclet.modules.hibernate.HibernateDocletTask">
+			<classpath refid="classpath" />
+		</taskdef>
 		<hibernatedoclet destdir="war/WEB-INF/classes/mappings" excludedtags="@version,@author,@todo"
 			force="false" mergedir="war/WEB-INF" verbose="true">
 			<fileset dir="src">
@@ -90,7 +85,7 @@
 		</copy>
 
 		<copy todir="war/WEB-INF/classes">
-			<fileset dir=".." includes="log4j.xml"/>
+			<fileset dir=".." includes="log4j.xml,commons-logging.properties"/>
 		</copy>
 		<copy todir="war/src/">
 			<fileset dir="src" includes="**/*"/>

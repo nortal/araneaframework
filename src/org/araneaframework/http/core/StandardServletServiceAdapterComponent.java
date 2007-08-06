@@ -61,7 +61,7 @@ implements ServletServiceAdapterComponent {
 	private static final ThreadLocal localOutput = new ThreadLocal();
 
 	protected void init() throws Exception {
-		childService._getComponent().init(new BaseEnvironment() {
+		childService._getComponent().init(getScope(), new BaseEnvironment() {
 
 			public Object getEntry(Object key) {
 				if (InputData.class.equals(key))

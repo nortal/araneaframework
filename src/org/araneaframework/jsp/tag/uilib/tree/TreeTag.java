@@ -49,12 +49,12 @@ public class TreeTag extends BaseWidgetTag {
     ((TreeWidget) widget).setRenderer(buildTreeRenderer((TreeContext) widget));
 
     try {
-      output.pushScope(id);
+      hideGlobalContextEntries(pageContext);
       out.flush();
       widget._getWidget().render(output);
     }
     finally {
-      output.popScope();
+      restoreGlobalContextEntries(pageContext);
     }
 
     return EVAL_PAGE;
@@ -87,24 +87,27 @@ public class TreeTag extends BaseWidgetTag {
       return tree;
     }
 
-    public void renderTreeStart(Writer out, TreeNodeContext node, String nodeFullId) throws Exception {
+    public void renderTreeStart(Writer out, TreeNodeContext node) throws Exception {
       JspUtil.writeOpenStartTag(out, "ul");
-      JspUtil.writeAttribute(out, "id", nodeFullId);
+      JspUtil.writeAttribute(out, "id", node.getFullId());
       JspUtil.writeAttribute(out, "class", "aranea-tree");
+      if (!getTree().useSynchronizedActions()) {
+        JspUtil.writeAttribute(out, "arn-tree-sync", "false");
+      }
       JspUtil.writeCloseStartTag_SS(out);
     }
 
-    public void renderTreeEnd(Writer out, TreeNodeContext node, String nodeFullId) throws Exception {
+    public void renderTreeEnd(Writer out, TreeNodeContext node) throws Exception {
       JspUtil.writeEndTag(out, "ul");
     }
 
-    public void renderToggleLink(Writer out, TreeNodeContext node, String nodeFullId) throws Exception {
+    public void renderToggleLink(Writer out, TreeNodeContext node) throws Exception {
       JspUtil.writeOpenStartTag(out, "a");
       JspUtil.writeAttribute(out, "href", "#");
       if (getTree().useActions()) {
         JspUtil.writeAttribute(out, "onclick", "return AraneaTree.toggleNode(this);");
       } else {
-        UiEvent event = new UiEvent("toggle", nodeFullId, null);
+        UiEvent event = new UiEvent("toggle", node.getFullId(), null);
         JspUtil.writeEventAttributes(out, event);
         JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
       }
@@ -113,22 +116,22 @@ public class TreeTag extends BaseWidgetTag {
       JspUtil.writeEndTag_SS(out, "a");
     }
 
-    public void renderChildrenStart(Writer out, TreeNodeContext node, String nodeFullId) throws Exception {
+    public void renderChildrenStart(Writer out, TreeNodeContext node) throws Exception {
       JspUtil.writeStartTag(out, "ul");
     }
 
-    public void renderChildrenEnd(Writer out, TreeNodeContext node, String nodeFullId) throws Exception {
+    public void renderChildrenEnd(Writer out, TreeNodeContext node) throws Exception {
       JspUtil.writeEndTag(out, "ul");
     }
 
-    public void renderChildStart(Writer out, TreeNodeContext node, String nodeFullId, TreeNodeContext childNode, String childNodeFullId) throws Exception {
+    public void renderChildStart(Writer out, TreeNodeContext node, TreeNodeContext childNode) throws Exception {
       JspUtil.writeOpenStartTag(out, "li");
-      JspUtil.writeAttribute(out, "id", childNodeFullId);
+      JspUtil.writeAttribute(out, "id", childNode.getFullId());
       JspUtil.writeAttribute(out, "class", "aranea-tree-node");
       JspUtil.writeCloseStartTag(out);
     }
 
-    public void renderChildEnd(Writer out, TreeNodeContext node, String nodeFullId, TreeNodeContext childNode, String childNodeFullId) throws Exception {
+    public void renderChildEnd(Writer out, TreeNodeContext node, TreeNodeContext childNode) throws Exception {
       JspUtil.writeEndTag(out, "li");
     }
 

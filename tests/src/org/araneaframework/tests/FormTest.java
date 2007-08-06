@@ -22,11 +22,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.core.StandardServletInputData;
-import org.araneaframework.mock.MockInputData;
+import org.araneaframework.mock.MockHttpInputData;
 import org.araneaframework.mock.MockOutputData;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.util.RequestUtil;
@@ -63,7 +64,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
  */
 public class FormTest extends TestCase {
 
-  private static Logger log = Logger.getLogger(FormTest.class);
+  private static final Log log = LogFactory.getLog(FormTest.class);
 
   boolean eventsWork = false;
   
@@ -94,7 +95,7 @@ public class FormTest extends TestCase {
     mySelect.addItem(new DisplayItem("3", "three"));
     mySelect.addItem(new DisplayItem("4", "four"));
     
-    testForm._getComponent().init(new MockEnvironment());
+    testForm._getComponent().init(null, new MockEnvironment());
 
     return testForm;
   }
@@ -155,34 +156,29 @@ public class FormTest extends TestCase {
     MockHttpServletRequest validRequest = 
     	RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-    validRequest.addParameter("testForm.myCheckBox", (String) null);
+    validRequest.addParameter("myCheckBox", (String) null);
     ((FormElement) testForm.getElement("myCheckBox")).rendered();
 
-    validRequest.addParameter("testForm.myLongText", "108");
+    validRequest.addParameter("myLongText", "108");
     ((FormElement) testForm.getElement("myLongText")).rendered();
     
     ((FormElement) testForm.getElement("myDateTime")).rendered();
-    validRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
-    validRequest.addParameter("testForm.myDateTime.time", "01:01");
+    validRequest.addParameter("myDateTime.date", "11.10.2015");
+    validRequest.addParameter("myDateTime.time", "01:01");
 
     (((FormElement) ((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
-    validRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    validRequest.addParameter("hierarchyTest.myTextarea", "blah");
 
     (((FormElement) ((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
-    validRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    validRequest.addParameter("hierarchyTest.mySelect", "2");
 
     //Trying to read from a valid request
     StandardServletInputData input = new StandardServletInputData(validRequest);
     
-    input.pushScope("testForm");
-
     // Test in lifecycle order, without calling event and render.
     testForm._getWidget().update(input);
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
-    testForm._getWidget().process();
     testForm._getWidget().render(new MockOutputData());
-
-    input.popScope();
     
     Date reqDate = (new SimpleDateFormat("dd.MM.yyyy hh:mm")).parse("11.10.2015 01:01");
 
@@ -219,19 +215,18 @@ public class FormTest extends TestCase {
     MockHttpServletRequest invalidRequest =
     	RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-    invalidRequest.addParameter("testForm.myCheckBox", "ksjf");
+    invalidRequest.addParameter("myCheckBox", "ksjf");
     ((FormElement) testForm.getElement("myCheckBox")).rendered();
 
     ((FormElement) testForm.getElement("myDateTime")).rendered();
-    invalidRequest.addParameter("testForm.myDateTime.date", "HA-HA");
-    invalidRequest.addParameter("testForm.myDateTime.time", "BLAH");
+    invalidRequest.addParameter("myDateTime.date", "HA-HA");
+    invalidRequest.addParameter("myDateTime.time", "BLAH");
 
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
-    invalidRequest.addParameter("testForm.hierarchyTest.myTextarea", "");    
+    invalidRequest.addParameter("hierarchyTest.myTextarea", "");    
 
     //Testing that invalid requests are read right
     StandardServletInputData input = new StandardServletInputData(invalidRequest);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
     
     assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
@@ -247,15 +242,14 @@ public class FormTest extends TestCase {
     MockHttpServletRequest mandatoryMissingRequest =
     	RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-    mandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
-    mandatoryMissingRequest.addParameter("testForm.myLongText", "108");
-    mandatoryMissingRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
-    mandatoryMissingRequest.addParameter("testForm.myDateTime.time", "01:01");
-    mandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    mandatoryMissingRequest.addParameter("myCheckBox", "true");
+    mandatoryMissingRequest.addParameter("myLongText", "108");
+    mandatoryMissingRequest.addParameter("myDateTime.date", "11.10.2015");
+    mandatoryMissingRequest.addParameter("myDateTime.time", "01:01");
+    mandatoryMissingRequest.addParameter("hierarchyTest.mySelect", "2");
 
     //Testing that mandatory items are processed right
     StandardServletInputData input = new StandardServletInputData(mandatoryMissingRequest);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
     
     assertTrue("Test form must not be valid after reading from request", !testForm.convertAndValidate());
@@ -271,20 +265,19 @@ public class FormTest extends TestCase {
     MockHttpServletRequest notMandatoryMissingRequest =
     	RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-    notMandatoryMissingRequest.addParameter("testForm.myCheckBox", (String) null);
+    notMandatoryMissingRequest.addParameter("myCheckBox", (String) null);
     ((FormElement)testForm.getElement("myCheckBox")).rendered();
 
-    notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
+    notMandatoryMissingRequest.addParameter("myLongText", "108");
     ((FormElement)testForm.getElement("myLongText")).rendered();
 
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    notMandatoryMissingRequest.addParameter("hierarchyTest.myTextarea", "blah");
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
 
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "3");
+    notMandatoryMissingRequest.addParameter("hierarchyTest.mySelect", "3");
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
 
     StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
     
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());
@@ -299,18 +292,18 @@ public class FormTest extends TestCase {
     MockHttpServletRequest notMandatoryMissingRequest =
     	RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-    notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
+    notMandatoryMissingRequest.addParameter("myCheckBox", "true");
     ((FormElement)testForm.getElement("myCheckBox")).rendered();
 
-    notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
+    notMandatoryMissingRequest.addParameter("myLongText", "108");
     ((FormElement)testForm.getElement("myLongText")).rendered();
     
     ((FormElement)testForm.getElement("myDateTime")).rendered();
-    notMandatoryMissingRequest.addParameter("testForm.myDateTime", (String) null);
+    notMandatoryMissingRequest.addParameter("myDateTime", (String) null);
 
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    notMandatoryMissingRequest.addParameter("hierarchyTest.myTextarea", "blah");
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    notMandatoryMissingRequest.addParameter("hierarchyTest.mySelect", "2");
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
 
     // create helper
@@ -319,9 +312,7 @@ public class FormTest extends TestCase {
         groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
 
     StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
-    input.popScope();
 
     groupHelper.setActiveGroup("active");
 
@@ -338,19 +329,19 @@ public class FormTest extends TestCase {
     MockHttpServletRequest notMandatoryMissingRequest = 
     	RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-    notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
+    notMandatoryMissingRequest.addParameter("myCheckBox", "true");
     ((FormElement)testForm.getElement("myCheckBox")).rendered();
     
-    notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
+    notMandatoryMissingRequest.addParameter("myLongText", "108");
     ((FormElement)testForm.getElement("myLongText")).rendered();
     
     ((FormElement)testForm.getElement("myDateTime")).rendered();
-    notMandatoryMissingRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
-    notMandatoryMissingRequest.addParameter("testForm.myDateTime.time", "01:01");
+    notMandatoryMissingRequest.addParameter("myDateTime.date", "11.10.2015");
+    notMandatoryMissingRequest.addParameter("myDateTime.time", "01:01");
     
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    notMandatoryMissingRequest.addParameter("hierarchyTest.myTextarea", "blah");
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    notMandatoryMissingRequest.addParameter("hierarchyTest.mySelect", "2");
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
 
     // create helper
@@ -359,9 +350,7 @@ public class FormTest extends TestCase {
     testForm.getElement("myDateTime").setConstraint(groupedConstraint);
 
     StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
-    input.popScope();
     
     groupHelper.setActiveGroup("active");
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());       
@@ -377,19 +366,19 @@ public class FormTest extends TestCase {
     MockHttpServletRequest notMandatoryMissingRequest = 
     	RequestUtil.markSubmitted(new MockHttpServletRequest());
 
-    notMandatoryMissingRequest.addParameter("testForm.myCheckBox", "true");
+    notMandatoryMissingRequest.addParameter("myCheckBox", "true");
     ((FormElement)testForm.getElement("myCheckBox")).rendered();
     
-    notMandatoryMissingRequest.addParameter("testForm.myLongText", "108");
+    notMandatoryMissingRequest.addParameter("myLongText", "108");
     ((FormElement)testForm.getElement("myLongText")).rendered();
     
     ((FormElement)testForm.getElement("myDateTime")).rendered();
-    notMandatoryMissingRequest.addParameter("testForm.myDateTime.date", "11.10.2015");
-    notMandatoryMissingRequest.addParameter("testForm.myDateTime.time", "01:01");
+    notMandatoryMissingRequest.addParameter("myDateTime.date", "11.10.2015");
+    notMandatoryMissingRequest.addParameter("myDateTime.time", "01:01");
     
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.myTextarea", "blah");
+    notMandatoryMissingRequest.addParameter("hierarchyTest.myTextarea", "blah");
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("myTextarea"))).rendered();
-    notMandatoryMissingRequest.addParameter("testForm.hierarchyTest.mySelect", "2");
+    notMandatoryMissingRequest.addParameter("hierarchyTest.mySelect", "2");
     (((FormElement)((FormWidget)testForm.getElement("hierarchyTest")).getElement("mySelect"))).rendered();
 
     // create helper
@@ -397,9 +386,7 @@ public class FormTest extends TestCase {
     testForm.getElement("myDateTime").setConstraint(groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
     
     StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
-    input.popScope();
     
     assertTrue("Test form must be valid after reading from request", testForm.convertAndValidate());       
   }
@@ -416,8 +403,9 @@ public class FormTest extends TestCase {
      
     Map data = new HashMap();
     data.put(ApplicationWidget.EVENT_HANDLER_ID_KEY, "onClicked");
-    MockInputData input = new MockInputData(data);
-     
+    MockHttpInputData input = new MockHttpInputData(data);
+    
+    ((FormElement) testForm.getElement("myButton"))._getWidget().update(input);
     testForm._getWidget().event(new StandardPath("myButton"), input);
     
     assertTrue("Event succeeded", eventsWork);
@@ -442,9 +430,7 @@ public class FormTest extends TestCase {
 	selectElement.setDisabled(true);
 	selectElement.rendered();
 	
-	testForm._getComponent().init(new MockEnvironment());
-	// if this is not called, Control value is never set and test fails
-	testForm._getWidget().process();
+	testForm._getComponent().init(null, new MockEnvironment());
 	
     MockHttpServletRequest almostEmptyRequest = 
     	RequestUtil.markSubmitted(new MockHttpServletRequest());
@@ -453,9 +439,7 @@ public class FormTest extends TestCase {
     
     StandardServletInputData input = new StandardServletInputData(almostEmptyRequest);
     
-    input.pushScope("testForm");
     testForm._getWidget().update(input);
-    input.popScope();
 
     testForm.getValueByFullName("select");
     assertTrue(

@@ -534,7 +534,7 @@ myEvent.send(null, rootComponent);
     will contain the submitted parameters with no dots in them and
     <emphasis>scoped data</emphasis> will contain the parameters prefixed with
     the current component scope string.</para>
-
+<!--
     <para>The main function of <literal>OutputData</literal> is to propagate
     attributes that are used when delegating rendering to a templating engine
     or by children to access some general information during rendering. The
@@ -588,7 +588,7 @@ myEvent.send(null, rootComponent);
         </tbody>
       </tgroup>
     </informaltable>
-
+-->
     <para>Finally, as <literal>InputData</literal> and
     <literal>OutputData</literal> are typically connected, they can be
     retrieved from the other <literal>*Data</literal> structure using
@@ -997,7 +997,6 @@ if (fileUploadExt.uploadSucceeded()) {
   public interface Interface extends Serializable {
     public void update(InputData data) throws Exception;
     public void event(Path path, InputData input) throws Exception;
-    public void process() throws Exception;
     public void render(OutputData output) throws Exception;
   } 
 }</programlisting></para>
@@ -1032,33 +1031,13 @@ if (fileUploadExt.uploadSucceeded()) {
         <listitem>
            
 
-          <literal>process()</literal>
-
-           —this method is called on all the widgets in the hierarchy. It allows widgets to process the result of 
-
-          <literal>event()</literal>
-
-           and 
-
-          <literal>update()</literal>
-
-           calls before rendering. 
-        </listitem>
-
-        <listitem>
-           
-
           <literal>render()</literal>
 
            —the way this method is called depends on how widgets are rendered (see 
 
           <xref linkend="components-render" />
 
-           ). It may be called only after 
-
-          <literal>process()</literal>
-
-           and may be called more than once (or not at all) during one request-response cycle. 
+           ). It may be called more than once (or not at all) during one request-response cycle. 
         </listitem>
       </orderedlist></para>
 
@@ -1332,18 +1311,13 @@ msgCtx.showInfoMessage("Hello world!");</programlisting></para>
       <literal>BaseApplicationWidget</literal> has the following methods that
       may be overridden to allow this processing:</para>
 
-      <para><programlisting role="java">protected void handleUpdate(InputData input) throws Exception {}
-protected void handleProcess() throws Exception {}</programlisting></para>
+      <para><programlisting role="java">protected void handleUpdate(InputData input) throws Exception {}</programlisting></para>
 
       <para><literal>handleUpdate()</literal> is called before event listeners
       are notified and allows to read and save request data preparing it for
       the event. More importantly, this method is called even when no event is
       sent to the current widget allowing one to submit some data to any
-      widget. <literal>handleProcess()</literal> is called after the event
-      listeners are notified and again is called event if current widgets
-      receives no events at all. It allows to prepare the widget for
-      rendering, post-processing the request results without concern whether
-      or not events have been delivered.</para>
+      widget.</para>
     </sect2>
 
     <sect2>
