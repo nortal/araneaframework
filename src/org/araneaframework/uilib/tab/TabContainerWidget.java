@@ -1,0 +1,86 @@
+package org.araneaframework.uilib.tab;
+
+import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.Environment;
+import org.araneaframework.Widget;
+import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.core.StandardEnvironment;
+
+public class TabContainerWidget extends BaseApplicationWidget implements TabContext{
+
+  public final static String SELECTED_TAB_KEY = "selected";
+  private LinkedMap tabs = new LinkedMap();
+  private Tab selectedTab;
+  
+  public Tab getSelectedTab() {
+    return selectedTab;
+  }
+  
+  public Widget getSelectedWidget() {
+    return getWidget(SELECTED_TAB_KEY);
+  }
+  
+  public Tab selectTab(String id) {
+    if(StringUtils.isEmpty(id)) {
+      this.selectedTab = null;
+      removeWidget(SELECTED_TAB_KEY);
+      return null;
+    }
+    
+    Tab tab = (Tab) tabs.get(id);
+    if(tab == null) {
+      throw new IllegalArgumentException("There is no tab with id " + id);
+    }
+    Widget widgetToSelect = tab.createWidget();
+    addWidget(SELECTED_TAB_KEY, widgetToSelect);
+    this.selectedTab = tab;
+    return this.selectedTab;
+  }
+  
+  public void addTab(Tab tab) {
+    if(tab == null) {
+      throw new IllegalArgumentException("Cannot add null tab!");
+    }
+    if(tabs.containsValue(tab)) {
+      throw new IllegalArgumentException("Such tab already exists!");
+    }
+    tabs.put(tab.getId(), tab);
+  }
+  
+  public Tab removeTab(String id) {
+    Tab removedTab = (Tab) tabs.remove(id);
+    if (selectedTab != null && id.equals(selectedTab.getId())) {
+      selectTab(null);
+    }
+    return removedTab;
+  }
+
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), TabContext.class, this);
+  }
+
+  protected void init() throws Exception {
+    if (this.tabs.size() == 0) {
+      throw new IllegalStateException("No tabs defined!");
+    }
+    
+    selectTab((String) this.tabs.get(0));
+    
+    setGlobalEventListener(new ProxyEventListener(this));
+  }
+
+  protected void destroy() throws Exception {
+    selectTab(null);
+    super.destroy();
+  }
+  
+  public void handleEventSelect(String tabId) {
+    selectTab(tabId);
+  }
+
+  public LinkedMap getTabs() {
+    return new LinkedMap(tabs);
+  }
+}
