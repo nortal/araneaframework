@@ -3,6 +3,14 @@ package org.araneaframework.uilib.tab;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Widget;
 
+/**
+ * Interfaces representing some set of tabs, which are displayed to the user.
+ * User can select one tab at time. Each tab is responsible for a creation of a widget, that should be 
+ * displayed when that tab is selected.
+ *  
+ * @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
+ *
+ */
 public interface TabContext {
 
   /**

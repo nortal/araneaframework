@@ -8,6 +8,21 @@ import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.core.StandardEnvironment;
 
+/**
+ * This widget encapsulates one or more tabs. When one tab is selected
+ * then that tab returns a widget that should be displayed. That widget is
+ * added using {@link #SELECTED_TAB_KEY} identifier.
+ * <p/>
+ * All tabs should be added to this container prior to this widget {@link #init()} method, which means
+ * prior to executing {@link #addWidget(Object, Widget)} method with this widget.
+ * <p/>
+ * Custom components should include this widget, not extend it.
+ * 
+ * @see TabContext for public API
+ * 
+ * @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
+ *
+ */
 public class TabContainerWidget extends BaseApplicationWidget implements TabContext{
 
   public final static String SELECTED_TAB_KEY = "selected";
