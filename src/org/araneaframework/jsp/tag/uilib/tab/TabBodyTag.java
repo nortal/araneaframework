@@ -16,9 +16,7 @@
 package org.araneaframework.jsp.tag.uilib.tab;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.include.WidgetIncludeTag;
-import org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag;
 import org.araneaframework.uilib.tab.TabContainerWidget;
 
 /** 
@@ -31,18 +29,9 @@ import org.araneaframework.uilib.tab.TabContainerWidget;
  */
 public class TabBodyTag extends WidgetIncludeTag {
 
-  private static final String TAB_BODY_UPDATE_REGION_ID = "tab-body";
-  
-  private UpdateRegionHtmlTag updateRegion;
-
   protected int doStartTag(Writer out) throws Exception {   
     String tabContainerId = (String) requireContextEntry(TabContainerTag.TABS_CONTAINER_KEY);
     setId(tabContainerId + "." + TabContainerWidget.SELECTED_TAB_KEY);
-    
-    updateRegion = new UpdateRegionHtmlTag();
-    registerSubtag(updateRegion);
-    updateRegion.setId(TAB_BODY_UPDATE_REGION_ID);
-    executeStartSubtag(updateRegion);
     
     super.doStartTag(out);
     
@@ -52,7 +41,6 @@ public class TabBodyTag extends WidgetIncludeTag {
   protected int doEndTag(Writer out) throws Exception {
     super.doEndTag(out);
     
-    executeEndTagAndUnregister(updateRegion);
     return EVAL_PAGE;
   }
 }
