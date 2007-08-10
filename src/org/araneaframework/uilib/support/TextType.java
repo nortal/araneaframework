@@ -19,12 +19,11 @@ package org.araneaframework.uilib.support;
 import java.io.Serializable;
 import org.apache.commons.lang.enums.Enum;
 
-
 /**
  * Specifies the text type for {@link org.araneaframework.uilib.form.control.TextControl}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * @deprecated this has no effect. Use {@link org.araneaframework.uilib.form.control.FilteredTextControl} instead.
  */
 public class TextType extends Enum implements Serializable {
 
