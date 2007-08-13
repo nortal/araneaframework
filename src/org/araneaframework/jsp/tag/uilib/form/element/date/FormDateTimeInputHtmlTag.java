@@ -8,6 +8,7 @@ import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -193,6 +194,10 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   protected void writeTimeInput(Writer out, String name, String value,
       String label, Long size, boolean disabled) throws Exception {
     DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel) controlViewModel);
+
+    if (viewModel.getTimeViewModel().getCharacterFilter() != null) {
+    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getTimeViewModel().getCharacterFilter());
+	}
 	  
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "id", name + ".time");
@@ -245,6 +250,11 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 			DateControl.ViewModel viewModel) throws Exception {
 		DateTimeControl.ViewModel dateTimeViewModel = ((DateTimeControl.ViewModel) controlViewModel);
 		// Write input tag
+		
+	    if (dateTimeViewModel.getDateViewModel().getCharacterFilter() != null) {
+	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, dateTimeViewModel.getDateViewModel().getCharacterFilter());
+		}
+		
 		JspUtil.writeOpenStartTag(out, "input");
 		if (!StringUtils.isBlank(id)) JspUtil.writeAttribute(out, "id", id);
 		JspUtil.writeAttribute(out, "name", name);

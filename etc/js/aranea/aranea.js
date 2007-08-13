@@ -405,4 +405,8 @@ _ap = new AraneaPage();
 function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 
+/* Aranea object which provides namespace for objects created/needed by different modules. 
+ * @since 1.0.11 */
+var Aranea = {};
+
 window['aranea.js'] = true;

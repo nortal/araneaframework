@@ -20,6 +20,7 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.FileImportUtil;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DateControl;
@@ -78,6 +79,10 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			String styleClass,
 			String accessKey,      
 			DateControl.ViewModel viewModel) throws Exception {
+	    if (viewModel.getCharacterFilter() != null) {
+	      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getCharacterFilter());
+	    }
+
 		// Write input tag
 		JspUtil.writeOpenStartTag(out, "input");
 		if (!StringUtils.isBlank(id)) JspUtil.writeAttribute(out, "id", id);
@@ -196,6 +201,10 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
       String styleClass,
 			String accessKey,
 			TimeControl.ViewModel viewModel) throws Exception {
+	    if (viewModel.getCharacterFilter() != null) {
+	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getCharacterFilter());
+		}
+
 		// Write input tag
 		JspUtil.writeOpenStartTag(out, "input");
 		if (!StringUtils.isBlank(id)) JspUtil.writeAttribute(out, "id", id);

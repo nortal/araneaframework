@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.control;
 
 import java.math.BigDecimal;
+import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
@@ -37,8 +38,8 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class FloatControl extends EmptyStringNullableControl {
-
+public class FloatControl extends EmptyStringNullableControl implements FilteredInputControl {
+	private String characterFilter;
 	private BigDecimal minValue;
 	private BigDecimal maxValue;
 	private Integer maxScale;
@@ -131,7 +132,14 @@ public class FloatControl extends EmptyStringNullableControl {
 	public String getRawValueType() {
 		return "BigDecimal";
 	}
+	
+	public String getCharacterFilter() {
+		return characterFilter;
+	}
 
+	public void setCharacterFilter(String characterFilter) {
+		this.characterFilter = characterFilter;
+	}
 	//*********************************************************************
 	//* INTERNAL METHODS
 	//*********************************************************************  	
@@ -268,7 +276,7 @@ public class FloatControl extends EmptyStringNullableControl {
 	 * 
 	 */
 	public class ViewModel extends StringArrayRequestControl.ViewModel {
-
+		private String characterFilter;
 		private BigDecimal maxValue;
 		private BigDecimal minValue;
 		private Integer maxScale;
@@ -280,6 +288,7 @@ public class FloatControl extends EmptyStringNullableControl {
 			this.maxValue = FloatControl.this.getMaxValue();
 			this.minValue = FloatControl.this.getMinValue();
 			this.maxScale = FloatControl.this.getMaxScale();
+			this.characterFilter = FloatControl.this.getCharacterFilter();
 		}       
 
 		/**
@@ -304,6 +313,10 @@ public class FloatControl extends EmptyStringNullableControl {
 		 */
 		public Integer getMaxScale() {
 			return maxScale;
+		}
+		
+		public String getCharacterFilter() {
+			return this.characterFilter;
 		}
 	}
 }

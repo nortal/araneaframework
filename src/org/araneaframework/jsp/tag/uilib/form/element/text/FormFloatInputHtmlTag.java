@@ -17,6 +17,10 @@
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+import org.araneaframework.jsp.AraneaAttributes;
+import org.araneaframework.uilib.form.control.FloatControl;
 
 /**
  * Standard number float form element tag.
@@ -35,7 +39,13 @@ public class FormFloatInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("FloatControl");
 
-    writeTextInput(out, "text");
+    FloatControl.ViewModel viewModel = ((FloatControl.ViewModel)controlViewModel);
+
+    Map attributes = new HashMap();
+    if (viewModel.getCharacterFilter() != null) {
+      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getCharacterFilter());
+    }
+    writeTextInput(out, "text", true, attributes);
 
     super.doEndTag(out);
     return EVAL_PAGE;

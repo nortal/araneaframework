@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.support.TextType;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -27,7 +28,8 @@ import org.araneaframework.uilib.util.ValidationUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class TextControl extends StringValueControl {
+public class TextControl extends StringValueControl implements FilteredInputControl {
+  private String characterFilter;
   protected TextType textType = TextType.TEXT;
   
   /**
@@ -87,10 +89,16 @@ public class TextControl extends StringValueControl {
     this.textType = textType;
   }
   
+  public String getCharacterFilter() {
+    return characterFilter;
+  }
+
+  public void setCharacterFilter(String characterFilter) {
+    this.characterFilter = characterFilter;
+  }
   //*********************************************************************
   //* INTERNAL INTERFACE
   //*********************************************************************  	
-	
   /**
    * In case text control type is other than {@link TextType#TEXT} makes custom checks. 
    */
@@ -138,14 +146,19 @@ public class TextControl extends StringValueControl {
    */
   public class ViewModel extends StringValueControl.ViewModel {
     protected String textType;
+    protected String characterFilter;
     
     protected ViewModel() {
-      this.textType = TextControl.this.textType.getName();      
+      this.textType = TextControl.this.textType.getName();
+      this.characterFilter = TextControl.this.characterFilter;
     }
     
     public String getTextType() {
       return textType;
     }
 
+    public String getCharacterFilter() {
+      return characterFilter;
+    }
   }
 }

@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.text;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.uilib.form.control.TextControl;
 
 /**
@@ -41,6 +42,9 @@ public class FormTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     // Write
     Map attributes = new HashMap();
     attributes.put("maxLength", viewModel.getMaxLength());
+    if (viewModel.getCharacterFilter() != null) {
+      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getCharacterFilter());
+    }
     writeTextInput(out, "text", true, attributes);
 
     // Continue

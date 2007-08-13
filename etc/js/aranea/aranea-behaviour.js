@@ -37,80 +37,113 @@ function setFormElementContext(el) {
 }
 
 function setCloningUrl(el) {
-    var eventId = el.getAttribute('arn-evntId');
-	var eventParam = el.getAttribute('arn-evntPar');
-	var eventTarget = el.getAttribute('arn-trgtwdgt');
+  var eventId = el.getAttribute('arn-evntId');
+  var eventParam = el.getAttribute('arn-evntPar');
+  var eventTarget = el.getAttribute('arn-trgtwdgt');
 
-	var systemForm = araneaPage().getTraverser().findSurroundingSystemForm(el);
+  var systemForm = araneaPage().getTraverser().findSurroundingSystemForm(el);
 
-    var url = araneaPage().getSubmitURL(systemForm['topServiceId'].value, systemForm['threadServiceId'].value, 'override');
-    url += "&pleaseClone=true";
+  var url = araneaPage().getSubmitURL(systemForm['topServiceId'].value, systemForm['threadServiceId'].value, 'override');
+  url += "&pleaseClone=true";
 
-    if (eventId)
-      url += "&widgetEventHandler=" + eventId;
-    if (eventParam)  
-      url += "&widgetEventParameter=" + eventParam;
-    if (eventTarget)
-      url += "&widgetEventPath="+ eventTarget;
+  if (eventId)
+    url += "&widgetEventHandler=" + eventId;
+  if (eventParam)  
+    url += "&widgetEventParameter=" + eventParam;
+  if (eventTarget)
+    url += "&widgetEventPath="+ eventTarget;
       
-    el['href'] = url;
+  el['href'] = url;
+}
+
+
+
+function onChangeFunction(evnt) {
+  var text = el.value;
+  var i = 0;
+  while (i < text.length) {
+    if (filter.indexOf(text.substring(i, i+1)) == -1) {
+      text = text.substring(0, i) + text.substring(i+1, text.length);
+    } else {
+       i++;
+    }
+  }
+
+  el.value = text;
+}
+
+function applyCharacterFilter(el) {
+  var filter = el.getAttribute('arn-charFilter');
+  if (filter) {
+    Event.observe(el, "keydown", getKeyboardInputFilterFunction(filter));
+    if (!Prototype.Browser.IE) {
+      Event.observe(el, "keypress", getKeyboardInputFilterFunction(filter));
+    } else {
+      el.attachEvent('onkeypress', function() { getKeyboardInputFilterFunction(filter)(window.event); });
+    }
+  }
 }
 
 var aranea_rules = {
   'a.aranea-link-button' : function(el) {
-  	setCloningUrl(el);
+    setCloningUrl(el);
   },
   
   'a.aranea-link' : function(el) {
-  	setCloningUrl(el);
+    setCloningUrl(el);
   },
 
   'input.aranea-text' : function(el) {
-  	setFormElementContext(el);
+  	applyCharacterFilter(el);
+    setFormElementContext(el);
   },
 
   'input.aranea-number' : function(el) {
-  	setFormElementContext(el);
+    applyCharacterFilter(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-float' : function(el) {
-  	setFormElementContext(el);
+  	applyCharacterFilter(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-time' : function(el) {
-  	setFormElementContext(el);
+  	applyCharacterFilter(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-date' : function(el) {
-  	setFormElementContext(el);
+  	applyCharacterFilter(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-checkbox' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
 
   'select.aranea-multi-select' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-multi-checkbox' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-radio' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
 
   'select.aranea-select' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-file-upload' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
 
   'textarea.aranea-textarea' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   }
 };
 

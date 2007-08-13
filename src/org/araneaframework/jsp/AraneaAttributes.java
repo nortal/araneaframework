@@ -36,4 +36,8 @@ public abstract class AraneaAttributes {
      public static final String UPDATE_REGIONS = "arn-updrgns";
      public static final String CONDITION = "arn-evntCond";
   }
+  
+  public interface FilteredInputControl {
+	  public static final String CHARACTER_FILTER = org.araneaframework.uilib.form.FilteredInputControl.CHARACTER_FILTER_ATTRIBUTE;
+  }
 }

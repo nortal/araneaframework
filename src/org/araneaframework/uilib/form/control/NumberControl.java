@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.control;
 
 import java.math.BigInteger;
+import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
@@ -28,8 +29,8 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class NumberControl extends EmptyStringNullableControl {
-  
+public class NumberControl extends EmptyStringNullableControl implements FilteredInputControl {
+  private String characterFilter;
   private BigInteger minValue;
   private BigInteger maxValue;
 
@@ -90,6 +91,14 @@ public class NumberControl extends EmptyStringNullableControl {
    */
   public String getRawValueType() {
     return "BigInteger";
+  }
+  
+  public String getCharacterFilter() {
+    return characterFilter;
+  }
+
+  public void setCharacterFilter(String characterFilter) {
+    this.characterFilter = characterFilter;
   }
   
   //*********************************************************************
@@ -186,7 +195,7 @@ public class NumberControl extends EmptyStringNullableControl {
    * 
    */
   public class ViewModel extends StringArrayRequestControl.ViewModel {
-
+    private String characterFilter;
     private BigInteger maxValue;
     private BigInteger minValue;
     
@@ -196,6 +205,7 @@ public class NumberControl extends EmptyStringNullableControl {
     public ViewModel() {
       this.maxValue = NumberControl.this.getMaxValue();
       this.minValue = NumberControl.this.getMinValue();
+      this.characterFilter = NumberControl.this.getCharacterFilter();
     }       
     
     /**
@@ -212,6 +222,10 @@ public class NumberControl extends EmptyStringNullableControl {
      */
     public BigInteger getMinValue() {
       return this.minValue;
-    } 
+    }
+
+    public String getCharacterFilter() {
+      return characterFilter;
+    }
   }  
 }

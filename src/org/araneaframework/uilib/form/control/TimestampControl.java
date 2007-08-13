@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form.control;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
@@ -30,7 +31,7 @@ import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class TimestampControl extends EmptyStringNullableControl {
+public abstract class TimestampControl extends EmptyStringNullableControl implements FilteredInputControl {
   
   //*********************************************************************
   // FIELDS
@@ -43,6 +44,8 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
   protected String dateTimeOutputPattern;
 
   protected boolean confOverridden = false;
+  
+  private String characterFilter;
   
   //*********************************************************************
   // CONSTRUCTORS
@@ -58,7 +61,14 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
     this.dateTimeOutputPattern = defaultOutputFormat;
   }  
 
-  
+  public String getCharacterFilter() {
+    return characterFilter;
+  }
+
+  public void setCharacterFilter(String characterFilter) {
+    this.characterFilter = characterFilter;
+  }
+
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
@@ -123,16 +133,22 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
   
   public class ViewModel extends EmptyStringNullableControl.ViewModel {
     private String dateTimeOutputPattern;
+    private String characterFilter;
     
     /**
      * Takes an outer class snapshot.     
      */
     public ViewModel() {
       this.dateTimeOutputPattern = TimestampControl.this.dateTimeOutputPattern;
+      this.characterFilter = TimestampControl.this.getCharacterFilter();
     }
     
     public SimpleDateFormat getCurrentSimpleDateTimeFormat() {
       return new SimpleDateFormat(dateTimeOutputPattern);
+    }
+    
+    public String getCharacterFilter() {
+      return this.characterFilter;
     }
   }
 }

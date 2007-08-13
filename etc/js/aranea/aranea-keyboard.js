@@ -128,8 +128,6 @@
    }
  }
  
- 
- 
  /**
   * Invokes all handlers registered for given keycode and with matching elementprefix.
   * if a handler returns false, the remaining handlers are not invoked
@@ -153,5 +151,53 @@
   * This variable will hold the handlers for the Keypress event.
   */
  var uiKeypressHandlerRegistry = new UiHandlerRegistry();
- 
+
+var aranea_keyboardinputfilter_last_keydown_keycode = null;
+/** 
+ * Returns the function that stops received keyboard event 
+ * propagation if the input was not allowed by filter. 
+ * @since 1.0.11 */
+function getKeyboardInputFilterFunction(filter) {
+  var f = function(kev) {
+  	araneaPage().getLogger().debug(kev.type + " detected!" + "event.charCode="+kev.charCode+", event.keyCode="+kev.keyCode+".");
+  	araneaPage().getLogger().debug("ctrlKey="+kev.ctrlKey + " altKey="+kev.altKey + " kev.metaKey=" + kev.metaKey);
+  	if (kev.type == "keydown") {
+      aranea_keyboardinputfilter_last_keydown_keycode = kev.keycode;
+      return true;
+  	}
+    
+    if (kev.ctrlKey) 
+      return; // Does this mess with AltGr on some browsers?
+  	
+    var charcode = kev.charCode;
+    araneaPage().getLogger().debug("Handling keypress. Last keydown code=" + aranea_keyboardinputfilter_last_keydown_keycode + ". event.charCode="+charcode+", event.keyCode="+kev.keyCode+". Active filter="+filter);
+  
+    // if charcode is present, we assume it to be correct (at the time of writing this
+    // only gecko based browsers seem to set the charcode properly).
+    if (charcode) {
+      var ch = String.fromCharCode(charcode);
+      if (filter.indexOf(ch) == -1) {
+        Event.stop(kev);
+      }
+      return;
+    } else if (Prototype.Browser.Gecko) {
+      /* when charcode was not set in gecko, we are dealing with 
+         some special key that should be just let through */
+      return true;
+    }
+
+    var lastkeycode = aranea_keyboardinputfilter_last_keydown_keycode;
+    var keycode = kev.keyCode;
+
+    var ch = String.fromCharCode(keycode);
+    araneaPage().debug("No charcode. Falling back to keycode which will be assumed to be the charcode. Detected char '"+ch+"'");
+    if (filter.indexOf(ch) == -1) {
+      Event.stop(kev);
+      return;
+    }
+  }
+
+  return f;
+}
+
 window['aranea-keyboard.js'] = true;
