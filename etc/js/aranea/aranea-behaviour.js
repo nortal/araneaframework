@@ -56,6 +56,14 @@ function setCloningUrl(el) {
     el['href'] = url;
 }
 
+function setToolTip(el){
+	var toolTip = el.getAttribute("arn-toolTip");
+	if(!toolTip) return;
+	
+	el.onmouseover=function(event) { return aranea_showTooltip(toolTip, el, event);};
+	el.onmouseout=function() { aranea_hideTooltip(); };
+}
+
 var aranea_rules = {
   'a.aranea-link-button' : function(el) {
   	setCloningUrl(el);
@@ -111,6 +119,10 @@ var aranea_rules = {
 
   'textarea.aranea-textarea' : function(el) {
   	setFormElementContext(el);
+  },
+  
+  'div.aranea-tabs div div a' : function(el) {
+		setToolTip(el);
   }
 };
 

@@ -132,7 +132,7 @@ var ie4=document.all
 var ns6=document.getElementById&&!document.all
 
 if (ie4||ns6) {
-	document.write('<div id="dHTMLToolTip" class="tooltip"><Table border=0 cellspacing=0 cellpadding=0><TR><TD></TD></TR></TABLE></div>');
+	document.write('<div id="dHTMLToolTip" class="aranea-tooltip"><Table border=0 cellspacing=0 cellpadding=0><TR><TD></TD></TR></TABLE></div>');
 }
 
 function aranea_getposOffset(what, offsettype){

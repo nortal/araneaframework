@@ -8,6 +8,7 @@
  */
 package org.araneaframework.jsp.tag.uilib.tab;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +32,8 @@ public class TabContainerTag extends BaseWidgetTag {
   public static final String TABS_CONTAINER_UPDATE_REGION_ID = "tab-container";
   public static final String TABS_CONTAINER_KEY = "tabContainerId";
 
-  private static final String TAB_STYLE_SELECTED = "item-active";
-  private static final String TAB_STYLE_NORMAL = "item";
-  private static final String TAB_STYLE_DISABLED = "item-passive";
+  private static final String TAB_STYLE_SELECTED = "active";
+  private static final String TAB_STYLE_DISABLED = "passive";
 
   protected UpdateRegionHtmlTag updateRegion;
 
@@ -49,7 +49,7 @@ public class TabContainerTag extends BaseWidgetTag {
 
     // start div class tabs
     JspUtil.writeOpenStartTag(out, "div");
-    JspUtil.writeAttribute(out, "class", "tabs");
+    JspUtil.writeAttribute(out, "class", "aranea-tabs");
     JspUtil.writeCloseStartTag(out);
 
     final TabContext tabContext = (TabContext) widget;
@@ -60,7 +60,9 @@ public class TabContainerTag extends BaseWidgetTag {
       final boolean selected = tab.equals(selectedTab);
 
       JspUtil.writeOpenStartTag(out, "div");
-      JspUtil.writeAttribute(out, "class", getTabStyle(tab.isEnabled(), selected));
+      
+      writeStyleAttribute(out, tab, selected);
+      
       JspUtil.writeCloseStartTag(out);
       JspUtil.writeStartTag(out, "div");
 
@@ -70,7 +72,7 @@ public class TabContainerTag extends BaseWidgetTag {
       JspUtil.writeEndTag(out, "div");
     }
 
-    out.write("<div class=\"clear1\">&nbsp;</div>");
+    out.write("<div class=\"aranea-clear\">&nbsp;</div>");
     out.write("</div>");// tabs
 
     return EVAL_BODY_INCLUDE;
@@ -81,11 +83,15 @@ public class TabContainerTag extends BaseWidgetTag {
     return EVAL_PAGE;
   }
 
-  private static String getTabStyle(final boolean enabled, final boolean selected) {
-    if (selected) {
-      return TAB_STYLE_SELECTED;
+  private void writeStyleAttribute(final Writer out, final Tab tab, final boolean selected) throws IOException {
+    if(selected) {
+      JspUtil.writeAttribute(out, "class", TAB_STYLE_SELECTED);
+      return;
+    } 
+    if (!tab.isEnabled()) {
+      JspUtil.writeAttribute(out, "class", TAB_STYLE_DISABLED);
+      return;
     }
-    return enabled ? TAB_STYLE_NORMAL : TAB_STYLE_DISABLED;
   }
 
   protected void writeEventButtonTag(final Writer out, final Tab tab) throws Exception {
@@ -107,16 +113,9 @@ public class TabContainerTag extends BaseWidgetTag {
       JspUtil.writeEventAttributes(out, event);
 
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
-      out.write(JspWidgetCallUtil.getSubmitScriptForEvent());
 
       if (tab.getTooltip() != null) {
-        JspUtil.writeAttribute(out,
-                               "onMouseOver",
-                               "if (typeof(aranea_showTooltip) == \"function\") aranea_showTooltip('"
-                                   + JspUtil.getResourceString(pageContext, tab.getTooltip()) + "', this, event)");
-        JspUtil.writeAttribute(out,
-                               "onMouseOut",
-                               "if (typeof(aranea_hideTooltip) == \"function\") aranea_hideTooltip()");
+        JspUtil.writeAttribute(out, "arn-toolTip", JspUtil.getResourceString(pageContext, tab.getTooltip()));
       }
 
       JspUtil.writeCloseStartTag_SS(out);

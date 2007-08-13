@@ -122,15 +122,17 @@ div.autocompletediv ul li {
 	cursor:pointer;
 }
 
-div.tabs div.item { background: url(../gfx/bg14.gif) no-repeat; float: left; margin-top: 2px; } 
-div.tabs div.item div { background: url(../gfx/bg17.gif) right top no-repeat; }
-div.tabs div.item div A { color: #1F476E; }
-div.tabs div.item-active { background: url(../gfx/bg15.gif) no-repeat; float: left; margin-top: 2px; }
-div.tabs div.item-active div { background: url(../gfx/bg16.gif) right top no-repeat; }
-div.tabs div.item-active div A { color: #1F476E; }
-div.tabs div.item-passive { background: url(../gfx/bg18.gif) no-repeat; float: left; margin-top: 2px; }
-div.tabs div.item-passive div { background: url(../gfx/bg19.gif) right top no-repeat; }
-div.tabs div.item-passive div A { color: #aaaaaa; }
-div.tabs A { display: block; padding: 5px 15px 5px 15px; }
+div.aranea-tabs div { background: url(../gfx/bg14.gif) no-repeat; float: left; margin-top: 2px; } 
+div.aranea-tabs div div { background: url(../gfx/bg17.gif) right top no-repeat; }
+div.aranea-tabs div div A { color: #1F476E; }
+div.aranea-tabs div.active { background: url(../gfx/bg15.gif) no-repeat; float: left; margin-top: 2px; }
+div.aranea-tabs div.active div { background: url(../gfx/bg16.gif) right top no-repeat; }
+div.aranea-tabs div.active div A { color: #1F476E; }
+div.aranea-tabs div.passive { background: url(../gfx/bg18.gif) no-repeat; float: left; margin-top: 2px; }
+div.aranea-tabs div.passive div { background: url(../gfx/bg19.gif) right top no-repeat; }
+div.aranea-tabs div.passive div A { color: #aaaaaa; }
+div.aranea-tabs A { display: block; padding: 5px 15px 5px 15px; }
 
-div.clear1 { clear: both; font-size: 1px; line-height: 0px; float: none !important; line-width: 0px; width: 0px; }
+div.aranea-clear { clear: both; font-size: 1px; line-height: 0px; float: none !important; line-width: 0px; width: 0px; }
+
+.aranea-tooltip { border: 1px solid #E2D787; padding: 4px; background: #FDFCF7; color: #7C6E0C; font-size: 10px; position: absolute; visibility:hidden}

@@ -16,7 +16,9 @@ public class DemoTabWidget extends BaseUIWidget {
     setViewSelector("tab/tab");
     
     TabContainerWidget containerWidget = new TabContainerWidget();
-    containerWidget.addTab(new WidgetTab("ajax", "#Ajax error widget", AjaxRequestErrorWidget.class));
+    WidgetTab ajaxTab = new WidgetTab("ajax", "#Ajax error widget", AjaxRequestErrorWidget.class);
+    ajaxTab.setTooltip("#Ajaxt tab Tooltip");
+    containerWidget.addTab(ajaxTab);
     containerWidget.addTab(new WidgetTab("event", "#Event error widget", EventErrorWidget.class));
     containerWidget.addTab(new WidgetTab("redirect", "#Redirecting widget", RedirectingWidget.class));
     containerWidget.addTab(new SimpleTab("multi", "#Multi Select demo"));
