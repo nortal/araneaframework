@@ -49,6 +49,7 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
+    JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeEventAttributes(out, event);
 
     if (disabled != null) 
