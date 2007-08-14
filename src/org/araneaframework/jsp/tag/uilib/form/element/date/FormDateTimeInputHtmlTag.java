@@ -195,8 +195,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       String label, Long size, boolean disabled) throws Exception {
     DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel) controlViewModel);
 
-    if (viewModel.getTimeViewModel().getCharacterFilter() != null) {
-    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getTimeViewModel().getCharacterFilter());
+    if (viewModel.getTimeViewModel().getInputFilter() != null) {
+    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getTimeViewModel().getInputFilter().getCharacterFilter());
 	}
 	  
     JspUtil.writeOpenStartTag(out, "input");
@@ -251,8 +251,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		DateTimeControl.ViewModel dateTimeViewModel = ((DateTimeControl.ViewModel) controlViewModel);
 		// Write input tag
 		
-	    if (dateTimeViewModel.getDateViewModel().getCharacterFilter() != null) {
-	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, dateTimeViewModel.getDateViewModel().getCharacterFilter());
+	    if (dateTimeViewModel.getDateViewModel().getInputFilter() != null) {
+	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, dateTimeViewModel.getDateViewModel().getInputFilter().getCharacterFilter());
 		}
 		
 		JspUtil.writeOpenStartTag(out, "input");

@@ -48,10 +48,10 @@
 
 				</tui:componentForm>
 
-				<!-- pure design tag -->
+				<!-- 
 				<tui:componentActions>
-					<ui:basicButton onclick="alert(Aranea.BrowserInfo.toString())" labelId="#DoitNOw"/>
 				</tui:componentActions>
+				 -->
 			</tui:component>
 
 		</ui:form>

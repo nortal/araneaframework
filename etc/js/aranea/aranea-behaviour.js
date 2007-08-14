@@ -56,27 +56,11 @@ function setCloningUrl(el) {
   el['href'] = url;
 }
 
-
-
-function onChangeFunction(evnt) {
-  var text = el.value;
-  var i = 0;
-  while (i < text.length) {
-    if (filter.indexOf(text.substring(i, i+1)) == -1) {
-      text = text.substring(0, i) + text.substring(i+1, text.length);
-    } else {
-       i++;
-    }
-  }
-
-  el.value = text;
-}
-
 function applyCharacterFilter(el) {
   var filter = el.getAttribute('arn-charFilter');
   if (filter) {
     Event.observe(el, "keydown", getKeyboardInputFilterFunction(filter));
-    if (!Prototype.Browser.IE) {
+    if (!Prototype.Browser.IE && !Prototype.Browser.Opera) {
       Event.observe(el, "keypress", getKeyboardInputFilterFunction(filter));
     } else {
       el.attachEvent('onkeypress', function() { getKeyboardInputFilterFunction(filter)(window.event); });

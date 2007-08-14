@@ -79,8 +79,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			String styleClass,
 			String accessKey,      
 			DateControl.ViewModel viewModel) throws Exception {
-	    if (viewModel.getCharacterFilter() != null) {
-	      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getCharacterFilter());
+	    if (viewModel.getInputFilter() != null) {
+	      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
 	    }
 
 		// Write input tag
@@ -201,8 +201,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
       String styleClass,
 			String accessKey,
 			TimeControl.ViewModel viewModel) throws Exception {
-	    if (viewModel.getCharacterFilter() != null) {
-	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getCharacterFilter());
+	    if (viewModel.getInputFilter() != null) {
+	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
 		}
 
 		// Write input tag

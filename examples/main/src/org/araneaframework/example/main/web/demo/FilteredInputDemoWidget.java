@@ -14,45 +14,47 @@
  * limitations under the License.
 **/
 
-
 package org.araneaframework.example.main.web.demo;
 
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class FilteredInputDemoWidget extends TemplateBaseWidget {
-	private FormWidget form;
-	
-	  /**
-	   * Builds the form.
-	   */
-	  protected void init() throws Exception {
-		setViewSelector("demo/filteredInput");
+  private FormWidget form;
+  
+  /**
+   * Builds the form.
+   */
+  protected void init() throws Exception {
+    setViewSelector("demo/filteredInput");
 
-	    // creation of new form
-		form = new FormWidget();
+      // creation of new form
+    form = new FormWidget();
+    
+    final InputFilter inputFilter = new InputFilter();
 
-		final TextControl filter = new TextControl();
-		final TextControl filtered = new TextControl();
-		filter.addOnChangeEventListener(new OnChangeEventListener() {
-			public void onChange() throws Exception {
-				form.convert();
-				filtered.setCharacterFilter((String)form.getValueByFullName("filter"));
-				form.setValueByFullName("filtered", null);
-			}
-		});
-		
-		form.addElement("filter", "demo.filteredinput.filterchars", filter, new StringData(), false);
-		form.addElement("filtered", "demo.filteredinput.input", filtered, new StringData(), false);
+    final TextControl filter = new TextControl();
+    final TextControl filtered = new TextControl();
+    filtered.setInputFilter(inputFilter);
+    filter.addOnChangeEventListener(new OnChangeEventListener() {
+      public void onChange() throws Exception {
+        form.convert();
+        inputFilter.setCharacterFilter((String)form.getValueByFullName("filter"));
+        form.setValueByFullName("filtered", null);
+      }
+    });
+    
+    form.addElement("filter", "demo.filteredinput.filterchars", filter, new StringData(), false);
+    form.addElement("filtered", "demo.filteredinput.input", filtered, new StringData(), false);
 
-	    // the usual, add the created widget to main widget.
-		addWidget("form", form);
-	  }
-
+      // the usual, add the created widget to main widget.
+    addWidget("form", form);
+  }
 }

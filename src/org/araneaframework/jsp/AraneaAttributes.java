@@ -37,7 +37,8 @@ public abstract class AraneaAttributes {
      public static final String CONDITION = "arn-evntCond";
   }
   
+  /** @since 1.0.11 */
   public interface FilteredInputControl {
-	  public static final String CHARACTER_FILTER = org.araneaframework.uilib.form.FilteredInputControl.CHARACTER_FILTER_ATTRIBUTE;
+	  public static final String CHARACTER_FILTER = org.araneaframework.uilib.form.control.inputfilter.InputFilter.CHARACTER_FILTER_ATTRIBUTE;
   }
 }

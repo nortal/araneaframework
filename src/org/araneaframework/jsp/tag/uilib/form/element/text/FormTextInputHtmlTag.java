@@ -42,8 +42,8 @@ public class FormTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     // Write
     Map attributes = new HashMap();
     attributes.put("maxLength", viewModel.getMaxLength());
-    if (viewModel.getCharacterFilter() != null) {
-      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getCharacterFilter());
+    if (viewModel.getInputFilter() != null) {
+      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
     }
     writeTextInput(out, "text", true, attributes);
 

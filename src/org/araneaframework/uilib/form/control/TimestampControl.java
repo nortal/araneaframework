@@ -18,7 +18,9 @@ package org.araneaframework.uilib.form.control;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FilteredInputControl;
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
@@ -45,7 +47,7 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
 
   protected boolean confOverridden = false;
   
-  private String characterFilter;
+  private InputFilter inputFilter;
   
   //*********************************************************************
   // CONSTRUCTORS
@@ -61,12 +63,14 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
     this.dateTimeOutputPattern = defaultOutputFormat;
   }  
 
-  public String getCharacterFilter() {
-    return characterFilter;
+  /** @since 1.0.11 */
+  public InputFilter getInputFilter() {
+    return inputFilter;
   }
 
-  public void setCharacterFilter(String characterFilter) {
-    this.characterFilter = characterFilter;
+  /** @since 1.0.11 */
+  public void setInputFilter(InputFilter inputFilter) {
+    this.inputFilter = inputFilter;
   }
 
   //*********************************************************************
@@ -94,6 +98,15 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
         dateTimeInputPattern,
         getEnvironment()));          
     
+    if (parameterValue != null && getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
+    	addError(
+    		MessageUtil.localizeAndFormat(
+    		getInputFilter().getInvalidInputMessage(), 
+    		MessageUtil.localize(getLabel(), getEnvironment()), 
+    		getInputFilter().getCharacterFilter(), 
+    		getEnvironment()));
+    }
+
     return null;
   }
   
@@ -133,22 +146,22 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
   
   public class ViewModel extends EmptyStringNullableControl.ViewModel {
     private String dateTimeOutputPattern;
-    private String characterFilter;
+    private InputFilter inputFilter;
     
     /**
      * Takes an outer class snapshot.     
      */
     public ViewModel() {
       this.dateTimeOutputPattern = TimestampControl.this.dateTimeOutputPattern;
-      this.characterFilter = TimestampControl.this.getCharacterFilter();
+      this.inputFilter = TimestampControl.this.getInputFilter();
     }
     
     public SimpleDateFormat getCurrentSimpleDateTimeFormat() {
       return new SimpleDateFormat(dateTimeOutputPattern);
     }
     
-    public String getCharacterFilter() {
-      return this.characterFilter;
+    public InputFilter getInputFilter() {
+      return this.inputFilter;
     }
   }
 }

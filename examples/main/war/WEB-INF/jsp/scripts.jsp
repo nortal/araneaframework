@@ -26,7 +26,7 @@
 			  araneaPage().setDefaultLogger();
 			}
 		</script>
-        asd -->
+        -->
 
 		<ui:richTextAreaInit>
 			<ui:attribute name="theme" value="advanced"/>

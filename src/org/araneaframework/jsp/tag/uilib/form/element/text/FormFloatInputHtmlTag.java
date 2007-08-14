@@ -42,8 +42,8 @@ public class FormFloatInputHtmlTag extends BaseFormTextInputHtmlTag {
     FloatControl.ViewModel viewModel = ((FloatControl.ViewModel)controlViewModel);
 
     Map attributes = new HashMap();
-    if (viewModel.getCharacterFilter() != null) {
-      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getCharacterFilter());
+    if (viewModel.getInputFilter() != null) {
+      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
     }
     writeTextInput(out, "text", true, attributes);
 

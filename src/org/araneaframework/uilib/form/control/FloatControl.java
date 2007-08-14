@@ -17,7 +17,9 @@
 package org.araneaframework.uilib.form.control;
 
 import java.math.BigDecimal;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FilteredInputControl;
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
@@ -39,7 +41,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class FloatControl extends EmptyStringNullableControl implements FilteredInputControl {
-	private String characterFilter;
+	private InputFilter inputFilter;
 	private BigDecimal minValue;
 	private BigDecimal maxValue;
 	private Integer maxScale;
@@ -133,12 +135,14 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 		return "BigDecimal";
 	}
 	
-	public String getCharacterFilter() {
-		return characterFilter;
+	/** @since 1.0.11 */
+	public InputFilter getInputFilter() {
+		return inputFilter;
 	}
 
-	public void setCharacterFilter(String characterFilter) {
-		this.characterFilter = characterFilter;
+	/** @since 1.0.11 */
+	public void setInputFilter(InputFilter inputFilter) {
+		this.inputFilter = inputFilter;
 	}
 	//*********************************************************************
 	//* INTERNAL METHODS
@@ -169,6 +173,15 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 							MessageUtil.localize(getLabel(), getEnvironment()),
 							getEnvironment()));          
 		}
+		
+	    if (getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
+	    	addError(
+	    		MessageUtil.localizeAndFormat(
+	    		getInputFilter().getInvalidInputMessage(), 
+	    		MessageUtil.localize(getLabel(), getEnvironment()), 
+	    		getInputFilter().getCharacterFilter(), 
+	    		getEnvironment()));
+	    }
 
 		return result;
 	}
@@ -276,7 +289,7 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 	 * 
 	 */
 	public class ViewModel extends StringArrayRequestControl.ViewModel {
-		private String characterFilter;
+		private InputFilter inputFilter;
 		private BigDecimal maxValue;
 		private BigDecimal minValue;
 		private Integer maxScale;
@@ -288,7 +301,7 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 			this.maxValue = FloatControl.this.getMaxValue();
 			this.minValue = FloatControl.this.getMinValue();
 			this.maxScale = FloatControl.this.getMaxScale();
-			this.characterFilter = FloatControl.this.getCharacterFilter();
+			this.inputFilter = FloatControl.this.getInputFilter();
 		}       
 
 		/**
@@ -315,8 +328,8 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 			return maxScale;
 		}
 		
-		public String getCharacterFilter() {
-			return this.characterFilter;
+		public InputFilter getInputFilter() {
+			return this.inputFilter;
 		}
 	}
 }

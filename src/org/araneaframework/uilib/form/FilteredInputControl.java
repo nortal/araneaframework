@@ -1,5 +1,5 @@
 /**
- * Copyright 2006 Webmedia Group Ltd.
+ * Copyright 2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
 
 package org.araneaframework.uilib.form;
 
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
+
 /**
- * {@link Control} that allows entering only characters specified
- * by <code>filter</code>.
+ * {@link Control} that allows specifying {@link InputFilter} 
+ * for restricting the end-user input into a field.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.0.11
  */
 public interface FilteredInputControl extends Control {
-  /** Custom HTML attribute for defining filter applied to input field. */
-  String CHARACTER_FILTER_ATTRIBUTE = "arn-charFilter";
-  String CHAR_FILTER_NUMBER = "0123456789";
-  
-  void setCharacterFilter(String characterFilter);
-  String getCharacterFilter();
+  public InputFilter getInputFilter();
+  public void setInputFilter(InputFilter inputFilter);
 }

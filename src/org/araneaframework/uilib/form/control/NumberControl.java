@@ -17,7 +17,9 @@
 package org.araneaframework.uilib.form.control;
 
 import java.math.BigInteger;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FilteredInputControl;
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
@@ -30,7 +32,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  */
 public class NumberControl extends EmptyStringNullableControl implements FilteredInputControl {
-  private String characterFilter;
+  private InputFilter inputFilter;
   private BigInteger minValue;
   private BigInteger maxValue;
 
@@ -93,12 +95,14 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
     return "BigInteger";
   }
   
-  public String getCharacterFilter() {
-    return characterFilter;
+  /** @since 1.0.11 */
+  public InputFilter getInputFilter() {
+    return inputFilter;
   }
-
-  public void setCharacterFilter(String characterFilter) {
-    this.characterFilter = characterFilter;
+  
+  /** @since 1.0.11 */
+  public void setInputFilter(InputFilter inputFilter) {
+    this.inputFilter = inputFilter;
   }
   
   //*********************************************************************
@@ -128,6 +132,15 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
           UiLibMessages.NOT_INTEGER, 
           MessageUtil.localize(getLabel(), getEnvironment()),
           getEnvironment()));             
+    }
+    
+    if (getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
+    	addError(
+    		MessageUtil.localizeAndFormat(
+    		getInputFilter().getInvalidInputMessage(), 
+    		MessageUtil.localize(getLabel(), getEnvironment()), 
+    		getInputFilter().getCharacterFilter(), 
+    		getEnvironment()));
     }
     
     return result;
@@ -175,7 +188,7 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
               maxValue.toString(),
           },          
           getEnvironment()));  
-    }    
+    }
   }
   
   /**
@@ -195,7 +208,7 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
    * 
    */
   public class ViewModel extends StringArrayRequestControl.ViewModel {
-    private String characterFilter;
+    private InputFilter inputFilter;
     private BigInteger maxValue;
     private BigInteger minValue;
     
@@ -205,7 +218,7 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
     public ViewModel() {
       this.maxValue = NumberControl.this.getMaxValue();
       this.minValue = NumberControl.this.getMinValue();
-      this.characterFilter = NumberControl.this.getCharacterFilter();
+      this.inputFilter = NumberControl.this.getInputFilter();
     }       
     
     /**
@@ -224,8 +237,8 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
       return this.minValue;
     }
 
-    public String getCharacterFilter() {
-      return characterFilter;
+    public InputFilter getInputFilter() {
+      return inputFilter;
     }
   }  
 }

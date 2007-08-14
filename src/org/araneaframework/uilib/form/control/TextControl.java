@@ -16,7 +16,9 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FilteredInputControl;
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.TextType;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -29,7 +31,7 @@ import org.araneaframework.uilib.util.ValidationUtil;
  * 
  */
 public class TextControl extends StringValueControl implements FilteredInputControl {
-  private String characterFilter;
+  private InputFilter inputFilter;
   protected TextType textType = TextType.TEXT;
   
   /**
@@ -89,12 +91,14 @@ public class TextControl extends StringValueControl implements FilteredInputCont
     this.textType = textType;
   }
   
-  public String getCharacterFilter() {
-    return characterFilter;
+  /** @since 1.0.11 */
+  public InputFilter getInputFilter() {
+    return inputFilter;
   }
 
-  public void setCharacterFilter(String characterFilter) {
-    this.characterFilter = characterFilter;
+  /** @since 1.0.11 */
+  public void setInputFilter(InputFilter inputFilter) {
+    this.inputFilter = inputFilter;
   }
   //*********************************************************************
   //* INTERNAL INTERFACE
@@ -126,6 +130,15 @@ public class TextControl extends StringValueControl implements FilteredInputCont
             getEnvironment()));             
       }  
     }
+    
+    if (getInputFilter() != null && !StringUtils.containsOnly((String)value, getInputFilter().getCharacterFilter())) {
+    	addError(
+    		MessageUtil.localizeAndFormat(
+    		getInputFilter().getInvalidInputMessage(), 
+    		MessageUtil.localize(getLabel(), getEnvironment()), 
+    		getInputFilter().getCharacterFilter(), 
+    		getEnvironment()));
+    }
   }	  
 	
 	/**
@@ -146,19 +159,19 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    */
   public class ViewModel extends StringValueControl.ViewModel {
     protected String textType;
-    protected String characterFilter;
+    protected InputFilter inputFilter;
     
     protected ViewModel() {
       this.textType = TextControl.this.textType.getName();
-      this.characterFilter = TextControl.this.characterFilter;
+      this.inputFilter = TextControl.this.getInputFilter();
     }
     
     public String getTextType() {
       return textType;
     }
 
-    public String getCharacterFilter() {
-      return characterFilter;
+    public InputFilter getInputFilter() {
+      return inputFilter;
     }
   }
 }
