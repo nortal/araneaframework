@@ -18,7 +18,6 @@ package org.araneaframework.uilib.list.util;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-
 import org.apache.commons.collections.comparators.NullComparator;
 import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.Expression;

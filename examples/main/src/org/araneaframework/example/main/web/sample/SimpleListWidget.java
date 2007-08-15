@@ -19,8 +19,8 @@ package org.araneaframework.example.main.web.sample;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.TestVO;
 import org.araneaframework.uilib.list.ListWidget;
@@ -32,7 +32,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 public class SimpleListWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
 
-  private static final Logger log = Logger.getLogger(SimpleListWidget.class);
+  private static final Log log = LogFactory.getLog(SimpleListWidget.class);
 
   protected ListWidget simpleList;
     

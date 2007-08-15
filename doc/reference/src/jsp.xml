@@ -1397,6 +1397,14 @@
                 go server side or not. If left unspecified, this is considered
                 to be <literal>true</literal>.</entry>
               </row>
+              
+               <row>
+                <entry>tabindex</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
@@ -2701,7 +2709,62 @@ public class DummyTag extends BaseTag {
       lot of memory unless resources are deallocated.</para>
     </sect2>
 
-     
+         <sect2 id="tagattributeinheritance">
+      <title>Inheriting tag attributes from base tags.</title>
+      <para>
+      	Custom tags extending Aranea tags are able to accept all supertag attributes,
+      	but these must be also defined in TLD, otherwise the JSP containers
+      	will complain. As some base tags may be abstract, information about
+      	their attributes cannot be deduced from Aranea JSP standard TLD. 
+      	To address this problem, Aranea distribution does the following: 
+      	aranea.jar and aranea-jsp.jar include the file META-INF/aranea-standard.tcd
+      	(<emphasis>TCD</emphasis> stands for <emphasis>Tag Class Descriptor</emphasis>)
+      	which includes the attribute information for all Aranea Standard JSP classes.
+      	To make use of this information, one first generates TLD for custom tag classes and then
+      	merges the TCD information into it. It is done with <literal>org.araneaframework.buildutil.TcdAndTldMerger</literal>
+      	utility included in aranea.jar (since 1.0.10, previously it had to be compiled separately after downloading distribution).
+      	All custom compiled tag classes as well as Aranea JSP tag classes must be available on classpath when using this utility.
+      </para>
+      
+      <para>
+        Example of using the <literal>TcdAndTldMerger</literal> utility:
+      </para>
+      
+      <para>
+<programlisting role="xml"><![CDATA[<target name="tld">
+  <!-- generate TLD without parent attribute information -->
+  <webdoclet destdir="somedir" force="false" >
+    <fileset dir="${src.dir}" includes="**/*Tag.java"/>
+
+    <jsptaglib validatexml="true"
+      shortName="shortName"
+      filename="filename.tld"
+      uri="customuri"
+      description="description"
+    />
+  </webdoclet>
+
+  <!-- invoke the TcdAndTldMerger utility -->
+  <java classname="org.araneaframework.buildutil.TcdAndTldMerger" fork="true">
+    <arg value="META-INF/aranea-standard.tcd"/>    <!-- Tag class descriptor to merge with -->
+    <arg value="somedir/filename.tld"/>            <!-- Source TLD -->
+    <arg value="somedir/filename.tld"/>            <!-- Destination TLD -->
+    <classpath>
+    <path refid="araneaclasspath"/>
+      <path refid="compiledcustomtagclasses"/>
+      <path refid="varia">
+    </classpath>
+  </java>
+
+</target>]]></programlisting>
+      </para>
+      
+      <para>
+      When running given target, one should see messages similar to following:
+<programlisting role="java"><![CDATA[8 attributes for 'custom.RandomTag' found from 'org.araneaframework.jsp.tag.presentation.PresentationTag'.]]>
+</programlisting>
+</para>
+      </sect2>
 
     <sect2>
       <title>Widgets and events</title>

@@ -16,7 +16,8 @@
 
 package org.araneaframework.framework.container;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -34,7 +35,7 @@ public class StandardContainerService extends BaseFilterService {
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
-  private static final Logger log = Logger.getLogger(StandardContainerService.class);
+  private static final Log log = LogFactory.getLog(StandardContainerService.class);
   /**
    * The key of the action path parameter in the request.
    */

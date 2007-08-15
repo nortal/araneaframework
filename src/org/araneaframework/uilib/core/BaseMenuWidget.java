@@ -60,7 +60,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     reset(new EnvironmentAwareCallback() {
       public void call(org.araneaframework.Environment env) throws Exception {
         if (newFlow != null)
-          start(newFlow, null, null);
+          start(newFlow);
       }
     });
   }

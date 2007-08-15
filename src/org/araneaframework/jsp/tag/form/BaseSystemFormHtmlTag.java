@@ -124,5 +124,5 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
    * ***********************************************************************************/
 
   protected abstract String getAcceptCharset();
-  protected abstract String getFormAction();
+  protected abstract String getFormAction() throws JspException;
 }

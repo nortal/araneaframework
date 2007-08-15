@@ -25,6 +25,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.core.RenderStateAware;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -38,7 +39,7 @@ import org.araneaframework.uilib.util.Event;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class FormElement extends GenericFormElement implements FormElementContext {
+public class FormElement extends GenericFormElement implements FormElementContext, RenderStateAware {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -233,8 +234,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
       //Read the control
       getControl()._getWidget().update(input);
     }
-    
-    rendered = false;
   }
 	  
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -250,7 +249,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
   
   protected void handleAction(InputData input, OutputData output) throws Exception {
     update(input);
-    this.rendered = true;
     if (control != null)
       control._getService().action(null, input, output);
   }
@@ -300,9 +298,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * Uses {@link BaseConverter}to convert the {@link BaseControl}value to the {@link Data}value.
    */
   protected void convertInternal() {
-    if (!isAlive())
-      return;
-    
     Object newDataValue = null;
 
     //There is only point to convert and set the data if it is present
@@ -356,13 +351,20 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	  }
 	  
 	  /**
-	   * Marks status of this {@link GenericFormElement} rendered.
+	   * Marks status of this {@link FormElement} rendered.
 	   */
 	  public void rendered() {
-	    this.rendered = true;
+	    _setRendered(true);
 	  }
 
-    /**
+	/**
+	 * @since 1.1
+	 */
+	public void _setRendered(boolean rendered) {
+		this.rendered = rendered;
+	}
+
+	/**
      * @since 1.1
      */
     protected boolean isIgnoreEvents() {

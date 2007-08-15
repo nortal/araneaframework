@@ -16,7 +16,8 @@
 
 package org.araneaframework.framework.container;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -31,7 +32,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardWidgetAdapterService extends BaseFilterWidget {
-  private static final Logger log = Logger.getLogger(StandardWidgetAdapterService.class);
+  private static final Log log = LogFactory.getLog(StandardWidgetAdapterService.class);
   
   /**
    * If <code>propagateAsAction(InputData)</code> returns true then the action is
@@ -66,7 +67,7 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
   
   /**
    * Extracts the path from the input and returns it. This implementation uses
-   * the {@link StandardContainerWidget#EVENT_PATH_KEY} parameter in the request and expects the event path to be
+   * the {@link ApplicationWidget#EVENT_PATH_KEY} parameter in the request and expects the event path to be
    * a dot-separated string.
    * 
    * @since 1.1
@@ -86,7 +87,7 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
   
   /**
    * Extracts the path from the input and returns it. This implementation uses
-   * the {@link StandardContainerWidget#ACTION_PATH_KEY} parameter in the request and expects the action path to be
+   * the {@link ApplicationService#ACTION_PATH_KEY} parameter in the request and expects the action path to be
    * a dot-separated string. 
    * 
    * @since 1.1

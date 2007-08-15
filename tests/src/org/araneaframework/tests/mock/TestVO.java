@@ -19,7 +19,8 @@ package org.araneaframework.tests.mock;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.util.BeanMapper;
 
 
@@ -32,7 +33,7 @@ import org.araneaframework.backend.util.BeanMapper;
  */
 public class TestVO implements Serializable, Cloneable {
 
-  private static Logger log = Logger.getLogger(TestVO.class);
+  private static final Log log = LogFactory.getLog(TestVO.class);
 
   /**
    * Private VoMapper, used for <code>toString</code> and <code>equals</code> methods.

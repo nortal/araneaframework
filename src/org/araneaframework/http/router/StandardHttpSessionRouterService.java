@@ -21,7 +21,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
@@ -47,7 +48,7 @@ public class StandardHttpSessionRouterService extends BaseService {
   
   private static final long serialVersionUID = 1L;
   
-  private static final Logger log = Logger.getLogger(StandardHttpSessionRouterService.class);
+  private static final Log log = LogFactory.getLog(StandardHttpSessionRouterService.class);
   
   /**
    * The destroy parameter key in the request.
@@ -59,7 +60,7 @@ public class StandardHttpSessionRouterService extends BaseService {
    *
    * @since 1.1
    */
-  public static final String SYNC_PARAMETER_KEY = "sync";
+  public static final String SYNC_PARAMETER_KEY = "araSync";
   
   /**
    * The key of the service in the session.

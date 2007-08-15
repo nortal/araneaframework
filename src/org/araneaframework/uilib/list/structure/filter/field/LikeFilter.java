@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.structure.filter.field;
 
 import java.util.Map;
-
 import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -28,7 +27,6 @@ import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
-import org.araneaframework.uilib.list.util.NestedFormUtil;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 

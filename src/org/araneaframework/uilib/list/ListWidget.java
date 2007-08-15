@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -70,7 +71,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 	private static final long serialVersionUID = 1L;
 
-	protected static final Logger log = Logger.getLogger(ListWidget.class);
+	protected static final Log log = LogFactory.getLog(ListWidget.class);
 
 	//*******************************************************************
 	// FIELDS
@@ -103,6 +104,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	private List initEvents = new ArrayList();
 	
 	private boolean changed = true;
+	private DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
 
 	//*********************************************************************
 	//* CONSTRUCTOR
@@ -155,10 +157,17 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @throws Exception 
 	 */
 	public void setDataProvider(ListDataProvider dataProvider) throws Exception {
+		if (this.dataProvider != null)
+			this.dataProvider.removeDataUpdateListener(dataProviderDataUpdateListener);
+
 		this.dataProvider = dataProvider;
+		this.dataProvider.addDataUpdateListener(dataProviderDataUpdateListener);
+
 		if (isInitialized()) {			
 			initDataProvider();
 		}
+
+		fireChange();
 	}
 
 	/**
@@ -586,7 +595,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected void propagateListDataProviderWithOrderInfo(OrderInfo orderInfo) {
 		ListOrder order = getListStructure().getListOrder();
 		ComparatorExpression orderExpr = order != null ? order.buildComparatorExpression(orderInfo) : null;
-		this.dataProvider.setOrderExpression(orderExpr);			
+		this.dataProvider.setOrderExpression(orderExpr);
+		
+		fireChange();
 	}
 
 	/**
@@ -1018,7 +1029,13 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		public void onClick() throws Exception {
 			clearFilter();
 		}
-	}	
+	}
+	
+	protected class DataProviderDataUpdateListener implements ListDataProvider.DataUpdateListener {
+		public void onDataUpdate() {
+			fireChange();
+		}
+	}
 
 	//*********************************************************************
 	//* VIEW MODEL

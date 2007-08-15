@@ -243,26 +243,25 @@ function AraneaPage() {
       return new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   }
 
-  this.getSubmitURL = function(topServiceId, threadServiceId, transactionId) {
+  this.getSubmitURL = function(topServiceId, threadServiceId, araTransactionId) {
     var url = this.encodeURL(this.getServletURL());
-    url += '?transactionId=' + transactionId;
+    url += '?araTransactionId=' + araTransactionId;
     if (topServiceId) 
-      url += '&topServiceId=' + topServiceId;
+      url += '&araTopServiceId=' + topServiceId;
     if (threadServiceId) 
-      url += '&threadServiceId=' + threadServiceId;
+      url += '&araThreadServiceId=' + threadServiceId;
     return url;
   }
 
   this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync) {
-    var url = this.getSubmitURL(systemForm.topServiceId.value, systemForm.threadServiceId.value, 'override');
-    url += '&widgetActionPath=' + actionTarget;
+    var url = this.getSubmitURL(systemForm.araTopServiceId.value, systemForm.araThreadServiceId.value, 'override');
+    url += '&araServiceActionPath=' + actionTarget;
     if (actionId)
-      url += '&serviceActionHandler=' + actionId;
+      url += '&araServiceActionHandler=' + actionId;
     if (actionParam)
-      url += '&serviceActionParameter=' + actionParam;
+      url += '&araServiceActionParameter=' + actionParam;
     if (sync != undefined && !sync)
-      url += '&sync=false';
-    url += '&systemFormId=' + systemForm.id;
+      url += '&araSync=false';
     return url;
   }
 
@@ -364,9 +363,9 @@ function DefaultAraneaSubmitter(form) {
 }
 
 DefaultAraneaSubmitter.prototype.event_4 = function(systemForm, eventId, widgetId, eventParam) {
-  systemForm.widgetEventPath.value = widgetId ? widgetId : "";
-  systemForm.widgetEventHandler.value = eventId ? eventId : "";
-  systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+  systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
+  systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
+  systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
 
   araneaPage().setSubmitted();
 
@@ -431,15 +430,15 @@ function DefaultAraneaAJAXSubmitter(form) {
 }
 
 DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
-  systemForm.widgetEventPath.value = widgetId ? widgetId : "";
-  systemForm.widgetEventHandler.value = eventId ? eventId : "";
-  systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+  systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
+  systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
+  systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
   AraneaPage.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
-      transactionId: 'override',
+      araTransactionId: 'override',
       ajaxRequestId: ajaxRequestId,
       updateRegions: updateRegions
     },
@@ -481,15 +480,18 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
 
 Object.extend(AraneaPage, {
   /* Private fields */
+  loadingMessagePositionHack: false,
+  receivedRegionCounters: null,
   regionHandlers: new Hash(),
-  loadingMessageId: 'aranea-loading-message',
 
   /* Public fields */
 
   /** @since 1.1 */
   loadingMessageContent: 'Loading...',
   /** @since 1.1 */
-  loadingMessagePositionHack: false,
+  loadingMessageId: 'aranea-loading-message',
+  /** @since 1.1 */
+  reloadOnNoDocumentRegions: false,
 
   /**
    * Add a handler that is invoked for custom data region in updateregions AJAX
@@ -512,15 +514,29 @@ Object.extend(AraneaPage, {
   processResponse: function(responseText) {
     var text = new Text(responseText);
     text.readLine(); // responseId
+    this.receivedRegionCounters = new Hash();
     while (!text.isEmpty()) {
       var key = text.readLine();
       var length = text.readLine();
       var content = text.readCharacters(length);
+      if (this.receivedRegionCounters[key]) {
+        this.receivedRegionCounters[key]++;
+      } else {
+        this.receivedRegionCounters[key] = 1;
+      }
       if (this.regionHandlers[key]) {
-        araneaPage().getLogger().debug('Region type: "' + key + '"');
+        araneaPage().getLogger().debug('Region type: "' + key + '" (' + length + ' characters)');
         this.regionHandlers[key].process(content);
       } else {
         araneaPage().getLogger().error('Region type: "' + key + '" is unknown!');
+      }
+    }
+    if (this.reloadOnNoDocumentRegions && !this.receivedRegionCounters['document']) {
+      araneaPage().getLogger().debug('No document regions were received, forcing a reload of the page');
+      if (this.regionHandlers['reload']) {
+        this.regionHandlers['reload'].process();
+      } else {
+        araneaPage().getLogger().error('No handler is registered for "reload" region, unable to force page reload!');
       }
     }
   },
@@ -542,21 +558,14 @@ Object.extend(AraneaPage, {
    */
   showLoadingMessage: function() {
     var element = $(this.loadingMessageId);
-    if (element) {
-      if (this.loadingMessagePositionHack) {
-        element.style.top = document.documentElement.scrollTop + 'px';
-      }
-      element.show();
-      return;
+    if (!element) {
+      element = this.buildLoadingMessage();
+      if (!element) return;
+      document.body.appendChild(element);
+      element = $(element);
     }
-    var element = Builder.node('div', {id: this.loadingMessageId}, this.loadingMessageContent);
-    document.body.appendChild(element);
-    if (element.offsetTop) {
-      // IE 6 does not support 'position: fixed' CSS attribute value
-      this.loadingMessagePositionHack = true;
-      element.style.position = 'absolute';
-      element.style.top = document.documentElement.scrollTop + 'px';
-    }
+    this.positionLoadingMessage(element);
+    element.show();
   },
 
   /**
@@ -569,6 +578,35 @@ Object.extend(AraneaPage, {
     var element = $(this.loadingMessageId);
     if (element) {
       element.hide();
+    }
+  },
+
+  /**
+   * Build loading message. Called when an existing message element is not
+   * found.
+   *
+   * @since 1.1
+   */
+  buildLoadingMessage: function() {
+    return Builder.node('div', {id: this.loadingMessageId}, this.loadingMessageContent);
+  },
+
+  /**
+   * Perform positioning of loading message (if needed in addition to CSS).
+   * Called before making the message element visible. This implementation
+   * provides workaround for IE 6, which doesn't support
+   * <code>position: fixed</code> CSS attribute; the element is manually
+   * positioned at the top of the document. If you don't need this, overwrite
+   * this with an empty function:
+   * <code>AraneaPage.positionLoadingMessage = Prototype.emptyFunction;</code>
+   *
+   * @since 1.1
+   */
+  positionLoadingMessage: function(element) {
+    if (this.loadingMessagePositionHack || element.offsetTop) {
+      this.loadingMessagePositionHack = true;
+      element.style.position = 'absolute';
+      element.style.top = document.documentElement.scrollTop + 'px';
     }
   }
 });
@@ -586,8 +624,8 @@ AraneaPage.TransactionIdRegionHandler.prototype = {
 
   process: function(content) {
     var systemForm = araneaPage().getSystemForm();
-    if (systemForm.transactionId)
-      systemForm.transactionId.value = content;
+    if (systemForm.araTransactionId)
+      systemForm.araTransactionId.value = content;
   }
 };
 AraneaPage.addRegionHandler('transactionId', new AraneaPage.TransactionIdRegionHandler());
@@ -628,8 +666,13 @@ AraneaPage.addRegionHandler('document', new AraneaPage.DocumentRegionHandler());
  */
 AraneaPage.MessageRegionHandler = Class.create();
 AraneaPage.MessageRegionHandler.prototype = {
+  /* Public fields */
+
+  /** @since 1.1 */
   regionClass: '.aranea-messages',
+  /** @since 1.1 */
   regionTypeAttribute: 'arn-msgs-type',
+  /** @since 1.1 */
   messageSeparator: '<br/>',
 
   initialize: function() {
@@ -723,8 +766,8 @@ AraneaPage.ReloadRegionHandler.prototype = {
 
   process: function(content) {
     var systemForm = araneaPage().getSystemForm();
-    if (systemForm.transactionId)
-      systemForm.transactionId.value = 'inconsistent';
+    if (systemForm.araTransactionId)
+      systemForm.araTransactionId.value = 'inconsistent';
     return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
   }
 };
@@ -737,5 +780,9 @@ _ap = new AraneaPage();
 function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);
+
+/* Aranea object which provides namespace for objects created/needed by different modules. 
+ * @since 1.0.11 */
+var Aranea = {};
 
 window['aranea.js'] = true;

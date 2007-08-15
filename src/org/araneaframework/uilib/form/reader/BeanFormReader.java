@@ -97,7 +97,14 @@ public class BeanFormReader {
       else if (element instanceof FormWidget) {
         if (beanMapper.isWritable(elementId)) {
           BeanFormReader subVoReader = new BeanFormReader((FormWidget) element);
-          beanMapper.setFieldValue(vo, elementId, subVoReader.getBean(beanMapper.getFieldType(elementId)));
+          Object subBean = beanMapper.getFieldValue(vo, elementId);
+          
+          if (subBean == null) {
+        	  subBean = subVoReader.getBean(beanMapper.getFieldType(elementId));
+        	  beanMapper.setFieldValue(vo, elementId, subBean);
+          } else {
+        	  subVoReader.readFormBean(subBean);
+          }
         }
       }
       else if (element instanceof BaseFormListWidget) {

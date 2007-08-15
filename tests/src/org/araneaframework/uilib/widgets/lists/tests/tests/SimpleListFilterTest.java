@@ -20,10 +20,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-
 import junit.framework.TestCase;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.helper.builder.expression.StandardExpressionToSqlExprBuilder;
@@ -42,8 +41,7 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockFilterContext;
 
 
 public class SimpleListFilterTest extends TestCase {
-	private static final Logger log = Logger
-			.getLogger(SimpleListFilterTest.class);
+	private static final Log log = LogFactory.getLog(SimpleListFilterTest.class);
 
 	public void testListFilterBuilder() throws ExpressionEvaluationException {
 		FilterContext ctx = new MockFilterContext() {

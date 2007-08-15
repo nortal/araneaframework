@@ -17,7 +17,6 @@ package org.araneaframework.uilib.list.util;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
-
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;

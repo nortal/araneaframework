@@ -21,7 +21,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
@@ -42,8 +43,7 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class StandardWizardWidget extends BaseUIWidget implements WizardContext {
-	
-	private static final Logger log = Logger.getLogger(StandardWizardWidget.class);
+	private static final Log log = LogFactory.getLog(StandardWizardWidget.class);
 	
 	public static final String CURRENT_PAGE_KEY = "currentPage";
 	

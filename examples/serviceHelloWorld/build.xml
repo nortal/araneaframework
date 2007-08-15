@@ -48,7 +48,7 @@
 			<fileset file="../../examples/common/dist/aranea-examples-common.jar"/>							
 		</copy>
 		<copy todir="war/WEB-INF/classes">
-			<fileset dir=".." includes="log4j.xml"/>
+			<fileset dir=".." includes="log4j.xml,commons-logging.properties"/>
 		</copy>
 	</target>
 	

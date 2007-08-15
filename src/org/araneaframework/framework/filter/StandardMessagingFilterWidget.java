@@ -18,6 +18,7 @@ package org.araneaframework.framework.filter;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,7 +31,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
-import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.http.util.JsonArray;
 import org.araneaframework.http.util.JsonObject;
 
@@ -52,21 +53,13 @@ import org.araneaframework.http.util.JsonObject;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
+public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext, UpdateRegionProvider {
 
   /** @since 1.1 */
   public static final String MESSAGE_REGION_KEY = "messages";
 
   protected Map permanentMessages;
   protected Map messages;
-  
-  protected void init() throws Exception {
-    super.init();
-    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().getEntry(UpdateRegionContext.class);
-    if (updateRegionContext != null) {
-      updateRegionContext.addRegionHandler(MESSAGE_REGION_KEY, new MessageRegionHandler());
-    }
-  }
 
   protected void update(InputData input) throws Exception {
     clearMessages();
@@ -228,14 +221,10 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   /**
    * @since 1.1
    */
-  protected class MessageRegionHandler implements UpdateRegionContext.RegionHandler {
-
-    public String getContent() throws Exception {
-      Map messageMap = getMessages();
-      if (messageMap == null || messageMap.isEmpty())
-        return null;
-
-      JsonObject messagesByType = new JsonObject();
+  public Map getRegions() throws Exception {
+    JsonObject messagesByType = new JsonObject();
+    Map messageMap = getMessages();
+    if (messageMap != null) {
       for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
         Map.Entry entry = (Map.Entry) i.next();
         if (entry.getValue() == null) {
@@ -249,9 +238,10 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
         }
         messagesByType.setProperty(type, messages.toString());
       }
-      return messagesByType.toString();
     }
-
+    Map regions = new HashMap();
+    regions.put(MESSAGE_REGION_KEY, messagesByType.toString());
+    return regions;
   }
 
 }

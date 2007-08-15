@@ -118,7 +118,6 @@
 			<arg value="build/tld/META-INF/temporary-template.tld"/>
 			<classpath>
 				<path refid="classpath"/> 
-				<pathelement location="../../build/tmp/classes"/>
 				<pathelement location="build/classes"/>
 			</classpath>
 		</java>

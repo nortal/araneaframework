@@ -21,7 +21,8 @@ import java.util.Arrays;
 import net.iharder.base64.Base64;
 import org.apache.commons.collections.Buffer;
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -40,17 +41,17 @@ import org.araneaframework.http.util.EncodingUtil;
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
  */
 public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget {
-  private static final Logger log = Logger.getLogger(StandardClientStateFilterWidget.class);
+  private static final Log log = LogFactory.getLog(StandardClientStateFilterWidget.class);
 
   /**
    * Global parameter key for the client state form input.
    */
-  public static final String CLIENT_STATE = "clientState";
+  public static final String CLIENT_STATE = "araClientState";
 
   /**
    * Global parameter key for the version of the client state form input.
    */
-  public static final String CLIENT_STATE_VERSION = "clientStateVersion";
+  public static final String CLIENT_STATE_VERSION = "araClientStateVersion";
 
   private Buffer digestSet = new CircularFifoBuffer(10);
 

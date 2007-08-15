@@ -17,8 +17,8 @@
 package org.araneaframework.example.main.web.contract;
 
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.framework.FlowContext;
@@ -36,7 +36,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 public class ContractListWidget extends TemplateBaseWidget {
 	  private static final long serialVersionUID = 1L;
 
-  protected static final Logger log = Logger.getLogger(ContractListWidget.class);
+  protected static final Log log = LogFactory.getLog(ContractListWidget.class);
 	
 	private ListWidget list;
 	
@@ -67,7 +67,6 @@ public class ContractListWidget extends TemplateBaseWidget {
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
 		getFlowCtx().start(new ContractAddEditWidget(), 
-				null, 
 				new FlowContext.Handler() {
 					          private static final long serialVersionUID = 1L;
           public void onFinish(Object returnValue) throws Exception {
@@ -89,7 +88,7 @@ public class ContractListWidget extends TemplateBaseWidget {
 	
 	public void handleEventEdit(String eventParameter) throws Exception {
 		Long id = ((ContractMO) this.list.getRowFromRequestId(eventParameter)).getId();
-		getFlowCtx().start(new ContractAddEditWidget(id), null, null);
+		getFlowCtx().start(new ContractAddEditWidget(id));
 	}
 	
 	public void handleEventCancel(String eventParameter) throws Exception {

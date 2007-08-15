@@ -18,7 +18,8 @@ package org.araneaframework.uilib.widgets.lists.tests.tests.sqlexpr;
 
 import java.util.Arrays;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlEqualsExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlGreaterThanExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlLikeExpression;
@@ -27,8 +28,7 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockSqlStringExpressio
 
 
 public class SqlDualExpressionTests extends TestCase {
-	private static final Logger log = Logger
-			.getLogger(SqlDualExpressionTests.class);
+	private static final Log log = LogFactory.getLog(SqlDualExpressionTests.class);
 
 	public void testSqlEqualsExpression() {
 		log.debug("Testing SqlEqualsExpression");

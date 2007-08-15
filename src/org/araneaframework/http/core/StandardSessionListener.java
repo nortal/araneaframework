@@ -19,7 +19,8 @@ package org.araneaframework.http.core;
 import java.util.HashMap;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.router.StandardHttpSessionRouterService;
@@ -30,7 +31,7 @@ import org.araneaframework.http.router.StandardHttpSessionRouterService;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardSessionListener implements HttpSessionListener {
-  public static final Logger log = Logger.getLogger(StandardSessionListener.class);
+  public static final Log log = LogFactory.getLog(StandardSessionListener.class);
   
   public void sessionCreated(HttpSessionEvent sessEvent) {
     log.debug("Session '"+sessEvent.getSession().getId()+"' created");

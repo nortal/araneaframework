@@ -1807,6 +1807,14 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
                 go server side or not. If left unspecified this is set to
                 <literal>return true;</literal>.</entry>
               </row>
+              
+              <row>
+                <entry>tabindex</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
@@ -1887,6 +1895,13 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
                 <entry>Precondition for deciding whether onclick event should
                 go server side or not. If left unspecified this is set to
                 <literal>return true;</literal>.</entry>
+              </row>
+              <row>
+                <entry>tabindex</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</entry>
               </row>
             </tbody>
           </tgroup>

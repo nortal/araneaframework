@@ -16,7 +16,8 @@
 
 package org.araneaframework.framework.filter;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -35,7 +36,7 @@ import org.araneaframework.framework.util.TransactionHelper;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardTransactionFilterWidget extends BaseFilterWidget implements TransactionContext {
-  private static final Logger log = Logger.getLogger(StandardTransactionFilterWidget.class);
+  private static final Log log = LogFactory.getLog(StandardTransactionFilterWidget.class);
 
   private TransactionHelper transHelper;
 

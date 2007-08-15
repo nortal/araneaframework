@@ -22,7 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -42,7 +43,7 @@ import org.araneaframework.framework.ManagedServiceContext;
  */
 public abstract class BaseExpiringServiceRouterService extends BaseServiceRouterService implements ExpiringServiceContext {
 
-  private static final Logger log = Logger.getLogger(BaseExpiringServiceRouterService.class);
+  private static final Log log = LogFactory.getLog(BaseExpiringServiceRouterService.class);
   private Map timeCapsules;
   private Map serviceTTLMap;
   

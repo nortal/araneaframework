@@ -47,6 +47,11 @@ public interface Component extends Serializable {
   public Scope getScope();
   
   /**
+   * Returns true iff this component has been initialized and is not destroyed. 
+   * @since 1.1 */
+  public boolean isAlive();
+  
+  /**
    * The factory method returning the implementation of the Component.
    * @return the implementation of the Component.
    */
