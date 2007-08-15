@@ -391,15 +391,18 @@ function DefaultAraneaOverlaySubmitter(form) {
     araneaPage().setSubmitted();
 
    	Modalbox.show(
-   	  'foobar',
    	  systemForm.readAttribute('action') + '?overlay',
    	  {
    	    method: 'post',
    	    params: systemForm.serialize(true),
    	    overlayClose: false,
    	    width: 800,
-   	    afterLoad: function(transport) {
-   	      if (transport.responseText == '') {
+   	    slideDownDuration: .0,
+   	    slideUpDuration: .0,
+   	    overlayDuration: .0,
+   	    resizeDuration: .0,
+   	    afterLoad: function(content) {
+   	      if (content == '') {
    	        //Modalbox.hide();
             var systemForm = araneaPage().getSystemForm();
             if (systemForm.transactionId)
