@@ -55,6 +55,7 @@ import org.araneaframework.example.main.web.sample.SampleActionFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
+import org.araneaframework.example.main.web.tab.DemoTabWidget;
 import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
 import org.araneaframework.example.main.web.tree.SimpleTreeWidget;
 import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
@@ -150,6 +151,9 @@ public class MenuWidget extends TemplateMenuWidget  {
       treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
       treeMenu.addMenuItem(new MenuItem("Complex_Tree", ComplexTreeWidget.class));
       treeMenu.addMenuItem(new MenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class));
+      
+      sampleMenu.addMenuItem(new MenuItem("Tabs"));
+      sampleMenu.addMenuItem("Tabs", new MenuItem("Tabs_Demo", DemoTabWidget.class));
     } 
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {

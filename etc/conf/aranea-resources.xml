@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-	<files content-type="text/css" group="defaultStyles">
-		<file path="css/aranea/aranea.css"/>
-		<file path="css/calendar/calendar.css"/>
-	</files>
+  <files content-type="text/css" group="defaultStyles">
+    <file path="css/aranea/aranea.css" />
+    <file path="css/calendar/calendar.css" />
+  </files>
 
-	<files content-type="text/javascript" group="defaultScripts">
-        <file path="js/behaviour/behaviour.js"/>
-        
-    	<file path="js/prototype/prototype.js"/>
+  <files content-type="text/javascript" group="defaultScripts">
+    <file path="js/behaviour/behaviour.js" />
 
-        <file path="js/aranea/aranea-ui.js"/>
-        <file path="js/aranea/aranea-locale.js"/>
-		<file path="js/aranea/aranea.js"/>
-        <file path="js/aranea/aranea-keyboard.js"/>
-		<file path="js/aranea/aranea-util.js"/>
-		<file path="js/aranea/aranea-tree.js"/>
-		<file path="js/aranea/aranea-behaviour.js"/>
-		<file path="js/aranea/aranea-popups.js"/>
+    <file path="js/prototype/prototype.js" />
 
-		<file path="js/scriptaculous/builder.js"/>
-		<file path="js/scriptaculous/effects.js"/>
-		<file path="js/scriptaculous/controls.js"/>
+    <file path="js/aranea/aranea-ui.js" />
+    <file path="js/aranea/aranea-locale.js" />
+    <file path="js/aranea/aranea.js" />
+    <file path="js/aranea/aranea-keyboard.js" />
+    <file path="js/aranea/aranea-util.js" />
+    <file path="js/aranea/aranea-tree.js" />
+    <file path="js/aranea/aranea-behaviour.js" />
+    <file path="js/aranea/aranea-popups.js" />
+    <file path="js/aranea/aranea-tooltip.js" />
 
-		<file path="js/calendar/calendar.js"/>
-		<file path="js/calendar/calendar-en.js"/>
-		<file path="js/calendar/calendar-setup.js"/>
-	</files>
-    
-    <files content-type="text/javascript" group="debugScripts">
-        <file path="js/log4javascript/log4javascript.js"/>
-    </files>
+    <file path="js/scriptaculous/builder.js" />
+    <file path="js/scriptaculous/effects.js" />
+    <file path="js/scriptaculous/controls.js" />
 
-	<files content-type="image/gif">
-		<file path="gfx/ico_calendar.gif"/>
-	</files>
+    <file path="js/calendar/calendar.js" />
+    <file path="js/calendar/calendar-en.js" />
+    <file path="js/calendar/calendar-setup.js" />
+  </files>
+
+  <files content-type="text/javascript" group="debugScripts">
+    <file path="js/log4javascript/log4javascript.js" />
+  </files>
+
+  <files content-type="image/gif">
+    <file path="gfx/ico_calendar.gif" />
+  </files>
 </resources>
