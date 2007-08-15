@@ -192,7 +192,9 @@ function getKeyboardInputFilterFunction(filter) {
     var ch = String.fromCharCode(keycode);
     araneaPage().debug("No charcode. Falling back to keycode which will be assumed to be the charcode. Detected char '"+ch+"'");
     if (filter.indexOf(ch) == -1) {
-      Event.stop(kev);
+      if (keycode != 8 && keycode != 13) {
+        Event.stop(kev);
+      }
       return;
     }
   }

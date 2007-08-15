@@ -1,5 +1,5 @@
 /**
- * Copyright 2006 Webmedia Group Ltd.
+ * Copyright 2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,6 @@ public class InputFilter implements Serializable {
 	private String characterFilter;
 	private String invalidInputCustomMessage;
 
-
-	
 	public String getCharacterFilter() {
 		return characterFilter;
 	}
