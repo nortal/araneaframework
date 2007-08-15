@@ -1,5 +1,5 @@
 /**
- * Copyright 2006 Webmedia Group Ltd.
+ * Copyright 2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.http.support;
+package org.araneaframework.uilib.form.control.inputfilter;
 
-import java.util.Enumeration;
-import java.util.ResourceBundle;
-
-
-public class StringResourceBundle extends ResourceBundle {
-  public Enumeration getKeys() {
-    return null;
-  }
-
-  protected Object handleGetObject(String key) {
-	if (key.length() > 0 && key.charAt(0) == '#')
-      return key.substring(1);
-	return null;
-  }
+/**
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ * 
+ * @since 1.0.11
+ */
+public class NumberInputFilter extends InputFilter {
+	public static final String NUMBERS = "0123456789";
+	
+	{
+		setCharacterFilter(NUMBERS);
+	}
 }
