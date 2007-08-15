@@ -19,12 +19,10 @@ package org.araneaframework.uilib.support;
 import java.io.Serializable;
 import org.apache.commons.lang.enums.Enum;
 
-
 /**
  * Specifies the text type for {@link org.araneaframework.uilib.form.control.TextControl}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class TextType extends Enum implements Serializable {
 
@@ -45,10 +43,8 @@ public class TextType extends Enum implements Serializable {
    * E-mail.
    */
   public final static TextType EMAIL = new TextType("EMAIL");  
-  
-  
+
   private TextType(String textType) {
     super(textType);
   }
-  
 }

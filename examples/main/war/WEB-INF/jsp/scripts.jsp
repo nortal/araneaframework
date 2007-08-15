@@ -20,7 +20,11 @@
 		<!-- Enables stand-alone javascript logging
 		<ui:importScripts group="debugScripts"/>
 		<script type="text/javascript">
-			araneaPage().setDefaultLogger();
+			if (window.console) {
+			  araneaPage().setFirebugLogger();
+			} else if (window['log4javascript/log4javascript.js']) {
+			  araneaPage().setDefaultLogger();
+			}
 		</script>
         -->
 

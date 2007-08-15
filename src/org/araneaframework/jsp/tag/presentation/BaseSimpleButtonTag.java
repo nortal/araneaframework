@@ -32,6 +32,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
   protected String contextWidgetId;
   protected String localizedLabel;
   protected String onClickPrecondition;
+  protected String tabindex;
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -76,5 +77,16 @@ public class BaseSimpleButtonTag extends PresentationTag {
    */
   public void setOnClickPrecondition(String onClickPrecondition) throws JspException {
     this.onClickPrecondition = (String) evaluate("onClickPrecondition", onClickPrecondition, String.class);
+  }
+  
+  /**
+   * @since 1.0.11
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "HTML tabindex for the element."
+   */	
+  public void setTabindex(String tabindex) throws JspException {
+    this.tabindex = (String)evaluateNotNull("tabindex", tabindex, String.class);
   }
 }

@@ -37,92 +37,109 @@ function setFormElementContext(el) {
 }
 
 function setCloningUrl(el) {
-    var eventId = el.getAttribute('arn-evntId');
-	var eventParam = el.getAttribute('arn-evntPar');
-	var eventTarget = el.getAttribute('arn-trgtwdgt');
+  var eventId = el.getAttribute('arn-evntId');
+  var eventParam = el.getAttribute('arn-evntPar');
+  var eventTarget = el.getAttribute('arn-trgtwdgt');
 
-	var systemForm = araneaPage().getSystemForm();
+  var systemForm = araneaPage().getSystemForm();
 
-    var url = araneaPage().getSubmitURL(systemForm['araTopServiceId'].value, systemForm['araThreadServiceId'].value, 'override');
-    url += "&araPleaseClone=true";
+  var url = araneaPage().getSubmitURL(systemForm['araTopServiceId'].value, systemForm['araThreadServiceId'].value, 'override');
+  url += "&araPleaseClone=true";
 
-    if (eventId)
-      url += "&araWidgetEventHandler=" + eventId;
-    if (eventParam)  
-      url += "&araWidgetEventParameter=" + eventParam;
-    if (eventTarget)
-      url += "&araWidgetEventPath="+ eventTarget;
+  if (eventId)
+    url += "&araWidgetEventHandler=" + eventId;
+  if (eventParam)  
+    url += "&araWidgetEventParameter=" + eventParam;
+  if (eventTarget)
+    url += "&araWidgetEventPath="+ eventTarget;
       
-    el['href'] = url;
+  el['href'] = url;
+}
+
+function applyCharacterFilter(el) {
+  var filter = el.getAttribute('arn-charFilter');
+  if (filter) {
+    Event.observe(el, "keydown", getKeyboardInputFilterFunction(filter));
+    if (!Prototype.Browser.IE && !Prototype.Browser.Opera) {
+      Event.observe(el, "keypress", getKeyboardInputFilterFunction(filter));
+    } else {
+      el.attachEvent('onkeypress', function() { getKeyboardInputFilterFunction(filter)(window.event); });
+    }
+  }
 }
 
 function setToolTip(el){
-	var toolTip = el.getAttribute("arn-toolTip");
-	if(!toolTip) return;
+  var toolTip = el.getAttribute("arn-toolTip");
+  if (!toolTip) return;
 	
-	el.onmouseover=function(event) { return aranea_showTooltip(toolTip, el, event);};
-	el.onmouseout=function() { aranea_hideTooltip(); };
+  el.onmouseover=function(event) { return aranea_showTooltip(toolTip, el, event);};
+  el.onmouseout=function() { aranea_hideTooltip(); };
 }
 
 var aranea_rules = {
   'a.aranea-link-button' : function(el) {
-  	setCloningUrl(el);
+    setCloningUrl(el);
   },
   
   'a.aranea-link' : function(el) {
-  	setCloningUrl(el);
+    setCloningUrl(el);
   },
 
   'input.aranea-text' : function(el) {
-  	setFormElementContext(el);
+    applyCharacterFilter(el);
+    setFormElementContext(el);
   },
 
   'input.aranea-number' : function(el) {
-  	setFormElementContext(el);
+    applyCharacterFilter(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-float' : function(el) {
-  	setFormElementContext(el);
+    applyCharacterFilter(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-time' : function(el) {
-  	setFormElementContext(el);
+    applyCharacterFilter(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-date' : function(el) {
-  	setFormElementContext(el);
+    applyCharacterFilter(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-checkbox' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
 
   'select.aranea-multi-select' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-multi-checkbox' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-radio' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
 
   'select.aranea-select' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
   
   'input.aranea-file-upload' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
 
   'textarea.aranea-textarea' : function(el) {
-  	setFormElementContext(el);
+    setFormElementContext(el);
   },
   
   'a.aranea-tab-link' : function(el) {
-		setToolTip(el);
+    setToolTip(el);
   }
 };
 
