@@ -19,8 +19,8 @@ package org.araneaframework.uilib.list.structure.order;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.MultiComparatorExpression;
@@ -34,7 +34,7 @@ public class MultiFieldOrder implements ListOrder {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = Logger.getLogger(MultiFieldOrder.class);
+	private static final Log log = LogFactory.getLog(MultiFieldOrder.class);
 	
 	protected Map orders = new HashMap();
 

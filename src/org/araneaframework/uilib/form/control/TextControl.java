@@ -16,6 +16,9 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.uilib.form.FilteredInputControl;
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.TextType;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -27,7 +30,8 @@ import org.araneaframework.uilib.util.ValidationUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class TextControl extends StringValueControl {
+public class TextControl extends StringValueControl implements FilteredInputControl {
+  private InputFilter inputFilter;
   protected TextType textType = TextType.TEXT;
   
   /**
@@ -87,10 +91,18 @@ public class TextControl extends StringValueControl {
     this.textType = textType;
   }
   
+  /** @since 1.0.11 */
+  public InputFilter getInputFilter() {
+    return inputFilter;
+  }
+
+  /** @since 1.0.11 */
+  public void setInputFilter(InputFilter inputFilter) {
+    this.inputFilter = inputFilter;
+  }
   //*********************************************************************
   //* INTERNAL INTERFACE
   //*********************************************************************  	
-	
   /**
    * In case text control type is other than {@link TextType#TEXT} makes custom checks. 
    */
@@ -118,6 +130,15 @@ public class TextControl extends StringValueControl {
             getEnvironment()));             
       }  
     }
+    
+    if (getInputFilter() != null && !StringUtils.containsOnly((String)value, getInputFilter().getCharacterFilter())) {
+    	addError(
+    		MessageUtil.localizeAndFormat(
+    		getInputFilter().getInvalidInputMessage(), 
+    		MessageUtil.localize(getLabel(), getEnvironment()), 
+    		getInputFilter().getCharacterFilter(), 
+    		getEnvironment()));
+    }
   }	  
 	
 	/**
@@ -138,14 +159,19 @@ public class TextControl extends StringValueControl {
    */
   public class ViewModel extends StringValueControl.ViewModel {
     protected String textType;
+    protected InputFilter inputFilter;
     
     protected ViewModel() {
-      this.textType = TextControl.this.textType.getName();      
+      this.textType = TextControl.this.textType.getName();
+      this.inputFilter = TextControl.this.getInputFilter();
     }
     
     public String getTextType() {
       return textType;
     }
 
+    public InputFilter getInputFilter() {
+      return inputFilter;
+    }
   }
 }

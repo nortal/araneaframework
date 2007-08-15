@@ -19,7 +19,8 @@ package org.araneaframework.framework.filter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
 
@@ -29,7 +30,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardContextMapFilterWidget extends BaseFilterWidget {
-  private static final Logger log = Logger.getLogger(StandardContextMapFilterWidget.class);
+  private static final Log log = LogFactory.getLog(StandardContextMapFilterWidget.class);
   
   private Map contexts = new HashMap();
   

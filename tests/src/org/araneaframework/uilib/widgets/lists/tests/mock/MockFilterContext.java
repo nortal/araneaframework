@@ -17,7 +17,6 @@ package org.araneaframework.uilib.widgets.lists.tests.mock;
 
 import java.util.Comparator;
 import java.util.Locale;
-
 import org.araneaframework.tests.mock.MockConfiguration;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.FormElement;

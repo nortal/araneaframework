@@ -17,7 +17,6 @@ package org.araneaframework.uilib.list.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-
 import org.apache.commons.lang.Validate;
 import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.Control;

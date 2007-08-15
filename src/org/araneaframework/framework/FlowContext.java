@@ -33,6 +33,20 @@ import org.araneaframework.core.ApplicationWidget;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FlowContext extends Serializable {
+  /** 
+   * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 
+   * {@link #cancel()}.
+   * @since 1.0.9
+   */
+  public void start(Widget flow);
+
+  /**
+   * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 
+   * {@link #cancel()}. {@link Handler} allows to receive notification, when the subflow ends execution.
+   * @since 1.0.9
+   */
+  public void start(Widget flow, Handler handler);
+  
   /**
    * Starts a new nested subflow, that can be configured using the configurator. Current flow becomes inactive
    * untils subflow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification,
@@ -43,6 +57,13 @@ public interface FlowContext extends Serializable {
   /**
    * Destroys the current flow and starts a new one. When the new flow will end execution it will return control
    * to the caller of the current flow (if there is one). 
+   */
+  public void replace(Widget flow);
+  
+  /**
+   * Destroys the current flow and starts a new one. When the new flow will end execution it will return control
+   * to the caller of the current flow (if there is one). Started subflow can be configured using the configurator.
+   * @since 1.0.9 
    */
   public void replace(Widget flow, Configurator configurator);
 

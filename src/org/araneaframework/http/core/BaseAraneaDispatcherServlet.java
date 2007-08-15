@@ -26,7 +26,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.AraneaVersion;
 import org.araneaframework.Environment;
 import org.araneaframework.core.StandardEnvironment;
@@ -44,7 +45,7 @@ import org.araneaframework.http.ServletServiceAdapterComponent;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
-  private static final Logger log = Logger.getLogger(BaseAraneaDispatcherServlet.class);
+  private static final Log log = LogFactory.getLog(BaseAraneaDispatcherServlet.class);
   private ServletServiceAdapterComponent serviceAdapter;
   
   public void init() throws ServletException {

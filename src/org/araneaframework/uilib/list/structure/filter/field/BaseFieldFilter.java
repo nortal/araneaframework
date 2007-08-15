@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.structure.filter.field;
 
 import java.util.Map;
-
 import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;

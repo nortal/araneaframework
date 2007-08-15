@@ -23,7 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
@@ -46,7 +47,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   // CONSTANTS
   //*******************************************************************
   
-  private static final Logger log = Logger.getLogger(BaseApplicationWidget.class);
+  private static final Log log = LogFactory.getLog(BaseApplicationWidget.class);
   
   //*******************************************************************
   // FIELDS

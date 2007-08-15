@@ -41,6 +41,7 @@ public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
     JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
+    JspUtil.writeAttribute(out, "tabindex", tabindex);
 
     if (event.getId() != null) {
       JspUtil.writeEventAttributes(out, event);

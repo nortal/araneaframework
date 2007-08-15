@@ -65,7 +65,7 @@ public class PopupMessageFactory implements MessageFactory, Serializable {
 
 		protected void execute(Component component) throws Exception {
 			FlowContext fCtx = (FlowContext) component;
-			fCtx.start(new RootWidget(flow), null, null);
+			fCtx.start(new RootWidget(flow));
 		}
 	}
 }

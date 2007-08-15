@@ -18,14 +18,14 @@ package org.araneaframework.uilib.widgets.lists.tests.tests.sqlexpr;
 
 import java.util.Arrays;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlValueExpression;
 
 
 public class SqlExpressionTests extends TestCase {
-	private static final Logger log = Logger
-			.getLogger(SqlExpressionTests.class);
+	private static final Log log = LogFactory.getLog(SqlExpressionTests.class);
 
 	public void setUp() {
 		// reserved

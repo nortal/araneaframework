@@ -17,8 +17,8 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
@@ -41,7 +41,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 	
 	private static final long serialVersionUID = 1L;
 
-	protected static final Logger log = Logger.getLogger(PersonListWidget.class);
+	protected static final Log log = LogFactory.getLog(PersonListWidget.class);
 	
 	private boolean editMode = false;
 	private boolean selectOnly = false;

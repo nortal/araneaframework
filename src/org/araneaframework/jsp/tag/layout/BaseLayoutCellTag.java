@@ -29,13 +29,12 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
   protected boolean overrideLayout = true;
 
   protected int doStartTag(Writer out) throws Exception {
-    requireContextEntry(CellClassProvider.KEY);
-
     return EVAL_BODY_INCLUDE;
   }
 
   public String getStyleClass() throws JspException {
-    String result = ((CellClassProvider)requireContextEntry(CellClassProvider.KEY)).getCellClass();
+    CellClassProvider cellClassProvider = (CellClassProvider)getContextEntry(CellClassProvider.KEY);
+    String result = cellClassProvider != null ? cellClassProvider.getCellClass() : null;
     result = (result != null && result.length() == 0) ? null : result;
     
     String superStyleClass = super.getStyleClass();

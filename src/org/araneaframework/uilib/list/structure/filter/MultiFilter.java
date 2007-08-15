@@ -19,7 +19,6 @@ package org.araneaframework.uilib.list.structure.filter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.araneaframework.Environment;
 import org.araneaframework.uilib.list.structure.ListFilter;
 

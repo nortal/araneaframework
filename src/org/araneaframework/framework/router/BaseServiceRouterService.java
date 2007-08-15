@@ -18,8 +18,8 @@ package org.araneaframework.framework.router;
 
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
@@ -40,7 +40,7 @@ import org.araneaframework.framework.ManagedServiceContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class BaseServiceRouterService extends BaseService {
-  private static final Logger log = Logger.getLogger(BaseServiceRouterService.class);
+  private static final Log log = LogFactory.getLog(BaseServiceRouterService.class);
   
   private Map serviceMap;
   protected Object defaultServiceId;
@@ -174,7 +174,7 @@ public abstract class BaseServiceRouterService extends BaseService {
     
     public Service addService(Object id, Service service, Long timeToLive) {
       Service result = addService(id, service);
-      if (log.isEnabledFor(Level.WARN)) {
+      if (log.isWarnEnabled()) {
         log.warn(getClass().getName() + 
         		".addService(Object id, Service service, Long timeToLive) ignores timeToLive attribute." +
         		"Just addService(Object id, Service service) should be used.");

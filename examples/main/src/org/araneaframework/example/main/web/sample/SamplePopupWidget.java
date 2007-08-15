@@ -77,7 +77,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		p.setWidth("1000");
 		p.setScrollbars("yes");
 		PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), p, new PopupMessageFactory());
-		getFlowCtx().start(pfw, null, new SampleHandler());
+		getFlowCtx().start(pfw, new SampleHandler());
 	}
 	
 	public void handleEventOpenImmediatelyReturningCustomFlow() throws Exception {

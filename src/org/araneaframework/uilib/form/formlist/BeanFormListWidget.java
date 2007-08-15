@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form.formlist;
 
-import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 

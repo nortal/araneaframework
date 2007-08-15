@@ -17,7 +17,8 @@
 package org.araneaframework.framework.container;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
@@ -32,7 +33,7 @@ import org.araneaframework.http.util.AtomicResponseHelper;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget {
-  private static final Logger log = Logger.getLogger(ExceptionHandlingFlowContainerWidget.class);
+  private static final Log log = LogFactory.getLog(ExceptionHandlingFlowContainerWidget.class);
   
   protected Exception exception;  
   

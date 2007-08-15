@@ -17,7 +17,8 @@
 package org.araneaframework.backend.list.helper.builder.compexpr;
 
 import java.util.Comparator;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.CompExprToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -37,7 +38,7 @@ import org.araneaframework.uilib.list.util.comparator.StringComparator;
 
 public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuilder {
 	
-	static final Logger log = Logger.getLogger(StandardCompExprToSqlExprBuilder.class);
+	static final Log log = LogFactory.getLog(StandardCompExprToSqlExprBuilder.class);
 	
 	protected VariableResolver mapper;
 

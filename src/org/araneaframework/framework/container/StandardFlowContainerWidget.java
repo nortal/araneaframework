@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -36,6 +37,7 @@ import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.FlowContext.Handler;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -47,7 +49,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
-  private static final Logger log = Logger.getLogger(StandardFlowContainerWidget.class);
+  private static final Log log = LogFactory.getLog(StandardFlowContainerWidget.class);
   
   private static final String BASE_FLOW_KEY = "f";
   private static final String TOP_FLOW_KEY = BASE_FLOW_KEY + 0;
@@ -90,6 +92,14 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     this.top = topWidget;
   }
 
+  public void start(Widget flow) {
+    start(flow, null, null);
+  }
+
+  public void start(Widget flow, Handler handler) {
+    start(flow, null, handler);
+  }
+
   public void start(Widget flow, Configurator configurator, Handler handler) {
     Assert.notNullParam(flow, "flow");
 
@@ -117,7 +127,11 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       }
     }    
   }
-  
+
+  public void replace(Widget flow) {
+    replace(flow, null);
+  }
+
   public void replace(Widget flow, Configurator configurator) {
     Assert.notNullParam(flow, "flow");
     

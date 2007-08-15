@@ -75,20 +75,22 @@ public class DateControl extends TimestampControl {
   //*********************************************************************  	
 
   protected void init() throws Exception {
-    super.init();
+	  super.init();
 
 
-    if (!confOverridden) {
-      ConfigurationContext confCtx = 
-        (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
-      
-      String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_DATE_FORMAT);    
-      if (confFormat != null) dateTimeInputPattern = confFormat;
+	  if (!confOverridden) {
+		  ConfigurationContext confCtx = 
+			  (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
 
-      String confOutputFormat = (String) confCtx.getEntry(ConfigurationContext.DEFAULT_DATE_OUTPUT_FORMAT);    
-      if (confOutputFormat != null) 
-        dateTimeOutputPattern = confOutputFormat;
-    }
+		  if (confCtx != null) {
+			  String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_DATE_FORMAT);    
+			  if (confFormat != null) dateTimeInputPattern = confFormat;
+
+			  String confOutputFormat = (String) confCtx.getEntry(ConfigurationContext.DEFAULT_DATE_OUTPUT_FORMAT);    
+			  if (confOutputFormat != null) 
+				  dateTimeOutputPattern = confOutputFormat;
+		  }
+	  }
   }	 
   
 	protected Object fromRequest(String parameterValue) {

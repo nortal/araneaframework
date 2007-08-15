@@ -18,8 +18,8 @@ package org.araneaframework.example.main.web.popups;
 
 import java.io.Writer;
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -48,7 +48,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
-  protected static final Logger log = Logger.getLogger(PersonEditableListPopupWidget.class);
+  protected static final Log log = LogFactory.getLog(PersonEditableListPopupWidget.class);
   private  IContractDAO contractDAO; 
 
   private MemoryBasedListDataProvider dataProvider = new DataProvider();
@@ -110,7 +110,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
 
     public void addValidRow(FormWidget addForm) throws Exception {
-      PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
+      PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).writeToBean(new PersonMO()));
       getGeneralDAO().add(rowData);
       list.getDataProvider().refreshData();
       formList.resetAddForm();

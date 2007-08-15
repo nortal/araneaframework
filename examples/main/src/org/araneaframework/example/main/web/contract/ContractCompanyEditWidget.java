@@ -16,7 +16,8 @@
 
 package org.araneaframework.example.main.web.contract;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
@@ -29,7 +30,7 @@ import org.araneaframework.framework.FlowContext;
  */
 public class ContractCompanyEditWidget extends TemplateBaseWidget {
 	  private static final long serialVersionUID = 1L;
-  private static final Logger log = Logger.getLogger(ContractCompanyEditWidget.class);
+  private static final Log log = LogFactory.getLog(ContractCompanyEditWidget.class);
 	private CompanyMO company = null;
 
   public CompanyMO getCompany() {
@@ -47,7 +48,7 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
   }
   
   public void handleEventChooseCompany(String eventParameter) throws Exception {
-	  getFlowCtx().start(new CompanyListWidget(false), null, new FlowContext.Handler() {
+	  getFlowCtx().start(new CompanyListWidget(false), new FlowContext.Handler() {
 		      private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {
 			  Long id = (Long) returnValue;

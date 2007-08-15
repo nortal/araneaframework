@@ -19,7 +19,8 @@ package org.araneaframework.backend.list.helper;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -31,7 +32,7 @@ import org.apache.log4j.Logger;
  * 
  */
 public class DbUtil {
-	private static Logger log = Logger.getLogger(DbUtil.class);
+	private static final Log log = LogFactory.getLog(DbUtil.class);
 
 	private DbUtil() {
 		// static methods only - hide constructor

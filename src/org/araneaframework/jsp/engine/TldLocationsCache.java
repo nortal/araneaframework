@@ -30,8 +30,8 @@ import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import javax.servlet.ServletContext;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.jsp.engine.xml.ParserUtils;
 import org.araneaframework.jsp.engine.xml.TreeNode;
@@ -72,7 +72,7 @@ import org.araneaframework.jsp.engine.xml.TreeNode;
 public class TldLocationsCache {
 
     // Logger
-    private static final Logger log = Logger.getLogger(TldLocationsCache.class);
+    private static final Log log = LogFactory.getLog(TldLocationsCache.class);
 
     /**
      * The types of URI one may specify for a tag library
@@ -265,7 +265,7 @@ public class TldLocationsCache {
 
         try {
             is = ctxt.getResourceAsStream(WEB_XML);
-            if (is == null && log.isEnabledFor(Level.WARN)) {
+            if (is == null && log.isWarnEnabled()) {
                 log.warn("jsp.error.internal.filenotfound" + WEB_XML);
             }
 

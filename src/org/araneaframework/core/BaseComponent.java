@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
@@ -41,7 +42,7 @@ public abstract class BaseComponent implements Component {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private static final Logger log = Logger.getLogger(BaseComponent.class);
+  private static final Log log = LogFactory.getLog(BaseComponent.class);
   
   private Environment environment;
   private Scope scope;
@@ -107,15 +108,15 @@ public abstract class BaseComponent implements Component {
   /**
    * Returns true, if the BaseComponent has been initialized. 
    */
-  protected boolean isInitialized() {
+  public boolean isInitialized() {
     return state != UNBORN;
   } 
   
-  protected boolean isAlive() {
+  public boolean isAlive() {
     return state == ALIVE;
   }
   
-  protected boolean isDead() {
+  public boolean isDead() {
     return state == DEAD;
   }
   

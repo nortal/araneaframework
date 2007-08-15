@@ -18,14 +18,12 @@ package org.araneaframework.uilib.list.structure.filter.field;
 
 import java.util.Comparator;
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
-import org.araneaframework.uilib.list.util.NestedFormUtil;
 import org.araneaframework.uilib.util.Event;
 
 

@@ -88,7 +88,7 @@ public class DemoFormList extends TemplateBaseWidget {
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).readBean(new DataDTO()); 
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).writeToBean(new DataDTO()); 
 			rowData.setId((Long) editableRow.getKey());
 
 			//Saving data
@@ -103,7 +103,7 @@ public class DemoFormList extends TemplateBaseWidget {
 		public void addValidRow(FormWidget addForm) throws Exception {
 			lastId = new Long(lastId.longValue() + 1);
 
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).readBean(new DataDTO());
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).writeToBean(new DataDTO());
 			rowData.setId(lastId);
 
 			data.put(lastId, rowData);
@@ -118,7 +118,7 @@ public class DemoFormList extends TemplateBaseWidget {
 			FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, getRowKey(row));
 			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(row));
 
-			rowForm.writeBean(row);
+			rowForm.readFromBean(row);
 		}
 
 		public void initAddForm(FormWidget addForm) throws Exception {

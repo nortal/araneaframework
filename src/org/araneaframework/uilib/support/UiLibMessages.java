@@ -45,4 +45,6 @@ public class UiLibMessages {
   public static final String NOT_AN_EMAIL = "uilib.form.email.notanemail";
   public static final String LOW_OF = "uilib.list.filter.low";
   public static final String HIGH_OF = "uilib.list.filter.high";
+  /** @since 1.0.11 */
+  public static final String INPUT_FILTER_NOT_MATCHED = "uilib.form.control.inputfilter.nonmatch";
 }

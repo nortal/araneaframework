@@ -17,8 +17,8 @@
 package org.araneaframework.example.main.web.company;
 
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.CompanyMO;
@@ -36,7 +36,7 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
  */
 public class CompanyListWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
-  protected static final Logger log = Logger.getLogger(CompanyListWidget.class);
+  protected static final Log log = LogFactory.getLog(CompanyListWidget.class);
   private BeanListWidget list;
   private boolean editMode = true;
   
@@ -80,7 +80,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
   }
 
   public void handleEventAdd(String eventParameter) throws Exception {
-    getFlowCtx().start(new CompanyEditWidget(), null, new FlowContext.Handler() {
+    getFlowCtx().start(new CompanyEditWidget(), new FlowContext.Handler() {
       private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {
         log.debug("Company added with Id of " + returnValue + " sucessfully");
@@ -104,7 +104,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     log.debug("Company selected with Id of " + id);
     if (editMode)
-      getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
+      getFlowCtx().start(new CompanyEditWidget(id), new FlowContext.Handler() {
 	        private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {
 	        log.debug("Company added with Id of " + returnValue + " sucessfully");
@@ -120,7 +120,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
   public void handleEventEdit(String eventParameter) throws Exception {
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     log.debug("Company selected with Id of " + id);
-    getFlowCtx().start(new CompanyEditWidget(id), null, new FlowContext.Handler() {
+    getFlowCtx().start(new CompanyEditWidget(id), new FlowContext.Handler() {
 	      private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {
 	        log.debug("Company added with Id of " + returnValue + " sucessfully");

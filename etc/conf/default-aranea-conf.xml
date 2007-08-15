@@ -85,9 +85,9 @@
       <list>
         <ref bean="araneaThreadCloningFilter"/>
         <ref bean="araneaMountPointFilter"/>
-        <ref bean="araneaContinuationFilter"/> 
         <ref bean="araneaResponseHeaderFilter"/>
         <ref bean="araneaSystemFormFilter"/>
+        <ref bean="araneaContinuationFilter"/> 
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
           <property name="beanId" value="araneaCustomThreadFilters"/>
         </bean>
@@ -112,6 +112,7 @@
         <ref bean="araneaRedirectingFilter"/>        
         <ref bean="araneaTransactionFilter"/>
         <ref bean="araneaUpdateRegionFilter"/>
+        <ref bean="araneaRenderStatusResettingFilter"/>
         <ref bean="araneaMessagingFilter"/>
         <ref bean="araneaEnvContextFilter"/>
         <ref bean="araneaPopupFilter"/>
@@ -244,6 +245,10 @@
   
   	<bean class="org.araneaframework.http.filter.StandardUpdateRegionFilterWidget" 
     id="araneaUpdateRegionFilter" singleton="false">
+  </bean>  
+  
+  <bean class="org.araneaframework.framework.filter.StandardRenderStatusResettingFilterWidget" 
+    id="araneaRenderStatusResettingFilter" singleton="false">
   </bean>  
   
   <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>

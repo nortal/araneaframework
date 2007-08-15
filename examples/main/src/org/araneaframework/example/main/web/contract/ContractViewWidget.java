@@ -16,7 +16,8 @@
 
 package org.araneaframework.example.main.web.contract;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.example.main.web.company.CompanyViewWidget;
@@ -32,8 +33,7 @@ public class ContractViewWidget extends TemplateBaseWidget {
 
 	  private static final long serialVersionUID = 1L;
 
-  private static final Logger log = Logger
-			.getLogger(ContractViewWidget.class);
+  private static final Log log = LogFactory.getLog(ContractViewWidget.class);
 
 	private Long id = null;
 
@@ -57,13 +57,11 @@ public class ContractViewWidget extends TemplateBaseWidget {
 	}
 
 	public void handleEventViewCompany(String eventParameter) throws Exception {
-		getFlowCtx().start(
-				new CompanyViewWidget(contract.getCompany().getId()), null, null);
+		getFlowCtx().start(new CompanyViewWidget(contract.getCompany().getId()));
 	}
 
 	public void handleEventViewPerson(String eventParameter) throws Exception {
-		getFlowCtx().start(
-				new PersonViewWidget(contract.getPerson().getId()), null, null);
+		getFlowCtx().start(new PersonViewWidget(contract.getPerson().getId()));
 	}
 
 	public void handleEventReturn(String eventParameter) throws Exception {

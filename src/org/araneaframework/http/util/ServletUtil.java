@@ -26,7 +26,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.jstl.core.Config;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -48,7 +49,7 @@ import org.araneaframework.jsp.tag.uilib.WidgetTag;
  */
 public abstract class ServletUtil {
 	
-  private static final Logger log = Logger.getLogger(ServletUtil.class);
+  private static final Log log = LogFactory.getLog(ServletUtil.class);
 
   /** @since 1.1 */
   public static final String UIWIDGET_KEY = "org.araneaframework.http.util.ServletUtil.UIWIDGET";
@@ -76,15 +77,26 @@ public abstract class ServletUtil {
    * @since 1.1
    */
   public static void include(String filePath, ApplicationWidget widget, OutputData output) throws Exception {
-    include(filePath, widget.getEnvironment(), output, widget);
+    include(filePath, widget.getChildEnvironment(), output, widget);
   }
-
+    
+  public static void include(String filePath, ApplicationWidget widget, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    include(filePath, widget, widget.getChildEnvironment(), req, res);
+  }
+  
+  public static void include(String filePath, Environment env, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    include(filePath, null, env, req, res);
+  }
+  
   private static void include(String filePath, Environment env, OutputData output, ApplicationWidget widget) throws Exception {
+    include(filePath, widget, env, getRequest(output.getInputData()), getResponse(output));
+  }
+  
+  private static void include(String filePath, ApplicationWidget widget, Environment env, HttpServletRequest req, HttpServletResponse res) throws Exception {
     if (log.isDebugEnabled())
       log.debug("Including a resource from the absolute path '" + filePath + "'");
 
     Map attributeBackupMap = new HashMap();
-    HttpServletRequest req = getRequest(output.getInputData());
     if (widget != null) {
       setAttribute(req, attributeBackupMap, UIWIDGET_KEY, widget);
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
@@ -106,10 +118,11 @@ public abstract class ServletUtil {
     setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(env));
 
     ServletContext servletContext = (ServletContext) env.requireEntry(ServletContext.class);
-    servletContext.getRequestDispatcher(filePath).include(getRequest(output.getInputData()), getResponse(output));
+    servletContext.getRequestDispatcher(filePath).include(req, res);
 
     restoreAttributes(req, attributeBackupMap);
   }
+
 
   private static void setAttribute(HttpServletRequest req, Map attributeBackupMap, String name, Object value) {
     attributeBackupMap.put(name, req.getAttribute(name));

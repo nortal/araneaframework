@@ -40,6 +40,7 @@ import org.araneaframework.example.main.web.demo.DemoMultiSelect;
 import org.araneaframework.example.main.web.demo.DemoOnChangeListenersWidget;
 import org.araneaframework.example.main.web.demo.DemoRadioSelect;
 import org.araneaframework.example.main.web.demo.DemoRichTextForm;
+import org.araneaframework.example.main.web.demo.FilteredInputDemoWidget;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.misc.AjaxRequestErrorWidget;
@@ -55,6 +56,7 @@ import org.araneaframework.example.main.web.sample.SampleActionFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
+import org.araneaframework.example.main.web.tab.DemoTabWidget;
 import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
 import org.araneaframework.example.main.web.tree.SimpleTreeWidget;
 import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
@@ -130,6 +132,8 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Advanced_Popup", DemoAdvancedPopupUsageWidget.class));
       advDemos.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
+      advDemos.addMenuItem(new MenuItem("demo_filteredinput", FilteredInputDemoWidget.class));
+      
       advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));
       advDemos.addMenuItem(new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
       
@@ -150,6 +154,9 @@ public class MenuWidget extends TemplateMenuWidget  {
       treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
       treeMenu.addMenuItem(new MenuItem("Complex_Tree", ComplexTreeWidget.class));
       treeMenu.addMenuItem(new MenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class));
+      
+      sampleMenu.addMenuItem(new MenuItem("Tabs"));
+      sampleMenu.addMenuItem("Tabs", new MenuItem("Tabs_Demo", DemoTabWidget.class));
     } 
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
