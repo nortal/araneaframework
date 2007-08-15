@@ -73,9 +73,6 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
     if(tab == null) {
       throw new IllegalArgumentException("Cannot add null tab!");
     }
-    if(tabs.containsValue(tab)) {
-      throw new IllegalArgumentException("Such tab already exists!");
-    }
     tabs.put(tab.getId(), tab);
   }
   
@@ -92,11 +89,9 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
   }
 
   protected void init() throws Exception {
-    if (this.tabs.size() == 0) {
-      throw new IllegalStateException("No tabs defined!");
+    if(this.tabs != null && this.tabs.size() > 0) {
+      selectTab((String) this.tabs.get(0));
     }
-    
-    selectTab((String) this.tabs.get(0));
     
     setGlobalEventListener(new ProxyEventListener(this));
   }

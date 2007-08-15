@@ -34,6 +34,7 @@ public class TabContainerTag extends BaseWidgetTag {
 
   private static final String TAB_STYLE_SELECTED = "active";
   private static final String TAB_STYLE_DISABLED = "passive";
+  private static final String TAB_LINK_STYLE = "aranea-tab-link";
 
   protected UpdateRegionHtmlTag updateRegion;
 
@@ -105,6 +106,7 @@ public class TabContainerTag extends BaseWidgetTag {
 
       JspUtil.writeOpenStartTag(out, "a");
       JspUtil.writeAttribute(out, "href", "javascript:");
+      JspUtil.writeAttribute(out, "class", TAB_LINK_STYLE);
 
       List updateRegionNames = new ArrayList();
       updateRegionNames.add(NameUtil.getFullName(fullId,TABS_CONTAINER_UPDATE_REGION_ID));

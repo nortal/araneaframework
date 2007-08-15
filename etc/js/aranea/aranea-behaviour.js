@@ -121,7 +121,7 @@ var aranea_rules = {
   	setFormElementContext(el);
   },
   
-  'div.aranea-tabs div div a' : function(el) {
+  'a.aranea-tab-link' : function(el) {
 		setToolTip(el);
   }
 };

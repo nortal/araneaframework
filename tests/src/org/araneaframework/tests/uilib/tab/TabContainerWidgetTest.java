@@ -16,12 +16,7 @@ public class TabContainerWidgetTest extends TestCase {
   }
 
   public void testCreateWidgetWithNoTab() throws Exception {
-    try {
-      MockLifeCycle.begin(widget);
-      fail("Cannot initialize TabWidgetContainer without any tabs.");
-    } catch (IllegalStateException ex) {
-      assertTrue(true);
-    }
+    MockLifeCycle.begin(widget);
 
     widget = new TabContainerWidget();
     widget.addTab(new TabTest.Tab("id1", "label1"));
@@ -29,7 +24,32 @@ public class TabContainerWidgetTest extends TestCase {
 
   }
 
-  public void testSelectTab() throws Exception {
+  public void testSelectedTabInEmptyWidget() {
+    MockLifeCycle.begin(widget);
+    assertNull(widget.getSelectedTab());
+  }
+
+  public void testAddSelectInit() {
+    widget.addTab(new TabTest.Tab("id1", "label1"));
+    TabTest.Tab tab2 = new TabTest.Tab("id2", "label2");
+    widget.addTab(tab2);
+    widget.addTab(new TabTest.Tab("id3", "label3"));
+
+    try {
+      widget.selectTab("id2");
+      fail("We cannot select tabs prior to initialization container widget");
+    } catch (IllegalStateException ex) {
+      assertTrue(true);
+    }
+    
+    MockLifeCycle.begin(widget);
+    Tab selectedTab = widget.selectTab("id2");
+    assertEquals("id2", widget.getSelectedTab().getId());
+    assertEquals(selectedTab, widget.getSelectedTab());
+    assertEquals(selectedTab, tab2);
+  }
+
+  public void testAddInitSelect() throws Exception {
     widget.addTab(new TabTest.Tab("id1", "label1"));
     widget.addTab(new TabTest.Tab("id2", "label2"));
     widget.addTab(new TabTest.Tab("id3", "label3"));
@@ -49,6 +69,9 @@ public class TabContainerWidgetTest extends TestCase {
     assertNull(widget.getSelectedTab());
     assertNull(selectTab);
 
+  }
+
+  public void testSelectNonExistingTab() {
     try {
       widget.selectTab("id10");
       fail("Cannot select non-existing tab!");
@@ -56,8 +79,23 @@ public class TabContainerWidgetTest extends TestCase {
       assertTrue(true);
     }
 
+    widget.addTab(new TabTest.Tab("id2", "label2"));
+    try {
+      widget.selectTab("id10");
+      fail("Cannot select non-existing tab!");
+    } catch (IllegalArgumentException ex) {
+      assertTrue(true);
+    }
+
+    MockLifeCycle.begin(widget);
+    try {
+      widget.selectTab("id10");
+      fail("Cannot select non-existing tab!");
+    } catch (IllegalArgumentException ex) {
+      assertTrue(true);
+    }
   }
-  
+
   public void testAddTab() {
     try {
       widget.addTab(null);
@@ -68,12 +106,8 @@ public class TabContainerWidgetTest extends TestCase {
 
     widget.addTab(new TabTest.Tab("id1", "label1"));
 
-    try {
-      widget.addTab(new TabTest.Tab("id1", "label1"));
-      fail("Such tab already exists");
-    } catch (IllegalArgumentException ex) {
-      assertTrue(true);
-    }
+    widget.addTab(new TabTest.Tab("id1", "label1"));
+    assertEquals(1, widget.getTabs().size());
   }
 
   public void testRemoveTab() throws Exception {
@@ -103,28 +137,27 @@ public class TabContainerWidgetTest extends TestCase {
     widget.addTab(new TabTest.Tab("id3", "label3"));
 
     MockLifeCycle.begin(widget);
-    
+
     widget.handleEventSelect("id1");
     assertEquals("id1", widget.getSelectedTab().getId());
 
     widget.handleEventSelect("id1");
     assertEquals("id1", widget.getSelectedTab().getId());
-    
+
     widget.handleEventSelect("id3");
     assertEquals("id3", widget.getSelectedTab().getId());
-    
+
     widget.handleEventSelect("");
     assertNull(widget.getSelectedTab());
-    
+
     try {
       widget.handleEventSelect("id5");
       fail("No such tab to select");
-    }
-    catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ex) {
       assertTrue(true);
     }
   }
-  
+
   public void testLifeCycle() {
     widget.addTab(new TabTest.Tab("id1", "label1"));
     widget.addTab(new TabTest.Tab("id2", "label2"));
@@ -147,10 +180,10 @@ public class TabContainerWidgetTest extends TestCase {
 
     Map tabs = widget.getTabs();
     assertEquals(3, tabs.size());
-    
+
     tabs.put("qq1", "wwww1");
     tabs.put("qq2", "wwww2");
-    
+
     tabs = widget.getTabs();
     assertEquals(3, tabs.size());
     assertNull(tabs.get("qq1"));
