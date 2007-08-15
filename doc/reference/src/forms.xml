@@ -927,7 +927,7 @@ private void handleEventSave() {
 
               <entry><emphasis>no</emphasis></entry>
 
-              <entry>HTML tabindex for the element.</entry>
+              <entry>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</entry>
             </row>
 
             <row>
@@ -1082,8 +1082,8 @@ private void handleEventSave() {
 
     <!--  UI:FORMELEMENT -->
 
-    <sect2>
-      <title id="uiFormElementTag">&lt;ui:formElement&gt;</title>
+    <sect2 id="uiFormElementTag">
+      <title>&lt;ui:formElement&gt;</title>
 
       <para>Specifies form element context for inner tags. Must be surrounded
       by &lt;ui:form&gt; tag. Form element view model, id and value are made
@@ -1422,8 +1422,7 @@ private void handleEventSave() {
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
 
       <sect3>
@@ -1495,7 +1494,7 @@ private void handleEventSave() {
           </tgroup>
         </informaltable>
 
-        <emphasis>Has all common form element rendering attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -1727,8 +1726,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
 
       <sect3>
@@ -1815,8 +1813,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+		<emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -1908,8 +1905,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -1989,8 +1985,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -2069,8 +2064,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -2196,7 +2190,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Has all common form element rendering attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
 
       <sect3>
@@ -2330,9 +2324,7 @@ el.click();</programlisting>
 
         <title>Attributes</title>
 
-         
-
-        <emphasis>Has all common form element rendering attributes.</emphasis>
+        <emphasis>See <xref linkend="common-formelement-attributes"/>.</emphasis>
 
          However, rendered tag is not visible to end-user, thus using any attributes is mostly pointless. 
       </sect3>
@@ -2385,8 +2377,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+       <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -2417,7 +2408,7 @@ el.click();</programlisting>
       <sect3>
         <title>Attributes</title>
 
-        <emphasis>Has all common form element rendering attributes.</emphasis>
+        <emphasis>See <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
 
       <sect3>
@@ -2481,8 +2472,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+		<emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -2560,8 +2550,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -2658,8 +2647,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -2735,8 +2723,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -2804,9 +2791,8 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
-      </sect3>
+		<emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
+         </sect3>
     </sect2>
 
     <!-- MULTISELECTDISPLAY -->
@@ -2922,7 +2908,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Has all common form element rendering attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -2984,7 +2970,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Has all common form element rendering attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -3120,8 +3106,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Also has all common form element rendering
-        attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -3172,7 +3157,7 @@ el.click();</programlisting>
           </tgroup>
         </informaltable>
 
-        <emphasis>Has all common form element rendering attributes.</emphasis>
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 
@@ -3368,7 +3353,7 @@ el.click();</programlisting>
       <sect3>
         <title>Attributes</title>
 
-        <emphasis>Has all common form element rendering attributes.</emphasis>
+        <emphasis>See <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
 
       <sect3>

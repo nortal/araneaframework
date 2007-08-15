@@ -1,5 +1,5 @@
 /**
- * Copyright 2006 Webmedia Group Ltd.
+ * Copyright 2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,21 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+**/
 
-package org.araneaframework.http.support;
+package org.araneaframework.uilib.form;
 
-import java.util.Enumeration;
-import java.util.ResourceBundle;
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 
-public class StringResourceBundle extends ResourceBundle {
-	public Enumeration getKeys() {
-		return null;
-	}
-
-  protected Object handleGetObject(String key) {
-	if (key.length() > 0 && key.charAt(0) == '#')
-      return key.substring(1);
-	return null;
-  }
+/**
+ * {@link Control} that allows specifying {@link InputFilter} 
+ * for restricting the end-user input into a field.
+ * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.0.11
+ */
+public interface FilteredInputControl extends Control {
+  public InputFilter getInputFilter();
+  public void setInputFilter(InputFilter inputFilter);
 }
