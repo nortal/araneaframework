@@ -4,6 +4,7 @@
     <file path="css/aranea/aranea.css" />
     <file path="css/calendar/calendar.css" />
     <file path="css/modalbox/modalbox.css"/>
+    <file path="css/prototip/prototip.css"/>
   </files>
 
   <files content-type="text/javascript" group="defaultScripts">
@@ -19,7 +20,6 @@
     <file path="js/aranea/aranea-tree.js" />
     <file path="js/aranea/aranea-behaviour.js" />
     <file path="js/aranea/aranea-popups.js" />
-    <file path="js/aranea/aranea-tooltip.js" />
 
     <file path="js/scriptaculous/builder.js" />
     <file path="js/scriptaculous/effects.js" />
@@ -30,6 +30,7 @@
     <file path="js/calendar/calendar-setup.js" />
 
     <file path="js/modalbox/modalbox.js"/>
+    <file path="js/prototip/prototip.js"/>
   </files>
 
   <files content-type="text/javascript" group="debugScripts">

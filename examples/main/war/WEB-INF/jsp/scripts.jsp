@@ -6,11 +6,12 @@
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
 	version="1.2">
 	
+		<ui:importStyles group="defaultStyles" media="screen"/>
+
 		<ui:importStyles file="styles/_styles_global.css" media="all"/>
 		<ui:importStyles file="styles/_styles_new.css" media="screen" />
 		<ui:importStyles file="styles/_styles_screen.css" media="screen"/>
 		<ui:importStyles file="styles/_styles_print.css" media="print" />
-		<ui:importStyles group="defaultStyles" media="screen"/>
 
 		<ui:importScripts/>
 

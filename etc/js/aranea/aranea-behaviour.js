@@ -71,9 +71,8 @@ function applyCharacterFilter(el) {
 function setToolTip(el){
   var toolTip = el.getAttribute("arn-toolTip");
   if (!toolTip) return;
-	
-  el.onmouseover=function(event) { return aranea_showTooltip(toolTip, el, event);};
-  el.onmouseout=function() { aranea_hideTooltip(); };
+
+  new Tip(el, toolTip)
 }
 
 var aranea_rules = {
