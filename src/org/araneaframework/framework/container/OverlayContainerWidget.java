@@ -33,7 +33,7 @@ import org.araneaframework.framework.OverlayContext;
  */
 public class OverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
 
-  private static final String OVERLAY_REQUEST_KEY = "overlay";
+  private static final String OVERLAY_REQUEST_KEY = "araOverlay";
 
   private static final String MAIN_CHILD_KEY = "m";
   private static final String OVERLAY_CHILD_KEY = "o";

@@ -383,14 +383,14 @@ function DefaultAraneaOverlaySubmitter(form) {
     var eventId = araneaPage().getEventId(element);
     var eventParam = araneaPage().getEventParam(element);
 
-    systemForm.widgetEventPath.value = widgetId ? widgetId : "";
-    systemForm.widgetEventHandler.value = eventId ? eventId : "";
-    systemForm.widgetEventParameter.value = eventParam ? eventParam : "";
+    systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
+    systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
+    systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
 
     araneaPage().setSubmitted();
 
    	Modalbox.show(
-   	  systemForm.readAttribute('action') + '?overlay',
+   	  systemForm.readAttribute('action') + '?araOverlay',
    	  {
    	    method: 'post',
    	    params: systemForm.serialize(true),

@@ -39,7 +39,7 @@ public class OverlayRegistrationHtmlTag extends BaseTag {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
       JspUtil.writeCloseStartTag(out);
-      out.write("_ap.addClientLoadEvent(function() {Modalbox.show(_ap.getSubmitURL(_ap.getSystemForm().topServiceId.value, _ap.getSystemForm().threadServiceId.value, 'override') + '&overlay', {overlayClose: false, width: 800});});\n");
+      out.write("_ap.addClientLoadEvent(function() {Modalbox.show(_ap.getSubmitURL(_ap.getSystemForm().araTopServiceId.value, _ap.getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay', {overlayClose: false, width: 800});});\n");
       JspUtil.writeEndTag(out, "script");
     }
 

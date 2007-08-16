@@ -173,10 +173,10 @@ Modalbox.Methods = {
 				else new Ajax.Request( this.content, { method: this.options.method.toLowerCase(), parameters: this.options.params, 
 						onComplete: function(transport) {
 							var response = new String(transport.responseText);
+							this._insertContent(transport.responseText.stripScripts());
 							response.extractScripts().map(function(script) { 
 								return eval(script.replace("<!--", "").replace("// -->", ""));
 							}.bind(window));
-							this._insertContent(transport.responseText.stripScripts());
 						}.bind(this)
 					});
 					
@@ -344,16 +344,17 @@ Modalbox.Methods = {
 	_setWidth: function () { //Set size
 		Element.setStyle(this.MBwindow, {width: this.options.width + "px", height: this.options.height + "px"});
 	},
-	
-	_setPosition: function () {
-		this.MBwindow.style.left = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px";
-	},
+
+    _setPosition: function () {
+    	this.MBwindow.style.left = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px";
+		this.MBwindow.style.top = Math.round((Element.getHeight(document.body) - Element.getHeight(this.MBwindow)) / 2 ) + "px";
+    }, 
 	
 	_setWidthAndPosition: function () {
 		this._setWidth();
 		this._setPosition();
 	},
-	
+
 	_getScrollTop: function () { //From: http://www.quirksmode.org/js/doctypes.html
 		var theTop;
 		if (document.documentElement && document.documentElement.scrollTop)
