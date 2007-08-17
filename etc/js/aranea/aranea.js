@@ -387,8 +387,6 @@ function DefaultAraneaOverlaySubmitter(form) {
     systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
     systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
 
-    araneaPage().setSubmitted();
-
    	Modalbox.show(
    	  systemForm.readAttribute('action') + '?araOverlay',
    	  {
