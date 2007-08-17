@@ -6,6 +6,8 @@ All rights reserved.
  
 VERSION 1.5.4
 Last Modified: 07/16/2007
+
+This file has been modified for use in Aranea project.
 */
 
 if (!window.Modalbox)
@@ -46,9 +48,10 @@ Modalbox.Methods = {
 			this.MBframe = Builder.node("div", {id: "MB_frame"}, [
 				this.MBheader = Builder.node("div", {id: "MB_header"}, [
 					this.MBcaption = Builder.node("div", {id: "MB_caption"}),
+					/*
 					this.MBclose = Builder.node("a", {id: "MB_close", title: this.options.closeString, href: "#"}, [
 						Builder.build("<span>&times;</span>"),
-					]),
+					]), */
 				]),
 				this.MBcontent = Builder.node("div", {id: "MB_content"}, [
 					this.MBloading = Builder.node("div", {id: "MB_loading"}, this.options.loadingString),
@@ -229,33 +232,33 @@ Modalbox.Methods = {
 	activate: function(options){
 		this.setOptions(options);
 		this.active = true;
-		Event.observe(this.MBclose, "click", this.close);
-		if(this.options.overlayClose) Event.observe(this.MBoverlay, "click", this.hide);
-		Element.show(this.MBclose);
+		//Event.observe(this.MBclose, "click", this.close);
+		//if(this.options.overlayClose) Event.observe(this.MBoverlay, "click", this.hide);
+		//Element.show(this.MBclose);
 		if(this.options.inactiveFade) new Effect.Appear(this.MBwindow, {duration: this.options.slideUpDuration});
 	},
 	
 	deactivate: function(options) {
 		this.setOptions(options);
 		this.active = false;
-		Event.stopObserving(this.MBclose, "click", this.close);
+		//Event.stopObserving(this.MBclose, "click", this.close);
 		if(this.options.overlayClose) Event.stopObserving(this.MBoverlay, "click", this.hide);
-		Element.hide(this.MBclose);
+		//Element.hide(this.MBclose);
 		if(this.options.inactiveFade) new Effect.Fade(this.MBwindow, {duration: this.options.slideUpDuration, to: .75});
 	},
 	
 	_initObservers: function(){
-		Event.observe(this.MBclose, "click", this.close);
+		//Event.observe(this.MBclose, "click", this.close);
 		if(this.options.overlayClose) Event.observe(this.MBoverlay, "click", this.hide);
 		Event.observe(document, "keypress", Modalbox.kbdHandler );
 	},
 	
 	_removeObservers: function(){
-		Event.stopObserving(this.MBclose, "click", this.close);
+		//Event.stopObserving(this.MBclose, "click", this.close);
 		if(this.options.overlayClose) Event.stopObserving(this.MBoverlay, "click", this.hide);
 		Event.stopObserving(document, "keypress", Modalbox.kbdHandler );
 	},
-	
+
 	_loadAfterResize: function() {
 		this._setWidth();
 		this._setPosition();
@@ -263,16 +266,20 @@ Modalbox.Methods = {
 	},
 	
 	_moveFocus: function() { // Setting focus to be looped inside current MB
+		/* http://code.google.com/p/modalbox/issues/detail?id=109
 		if(this.focusableElements.length > 0)
 			this.focusableElements.first().focus(); // Focus on first focusable element except close button
 		else
 			$("MB_close").focus(); // If no focusable elements exist focus on close button
+		*/
 	},
 	
 	_findFocusableElements: function(){ // Collect form elements or links from MB content
+		/* http://code.google.com/p/modalbox/issues/detail?id=109
 		return $A($("MB_content").descendants()).findAll(function(node){
 			return (["INPUT", "TEXTAREA", "SELECT", "A", "BUTTON"].include(node.tagName));
-		});
+		}); */
+		return new Array();		
 	},
 	
 	kbdHandler: function(e) {
@@ -283,10 +290,12 @@ Modalbox.Methods = {
 					Event.stop(e);
 					this._moveFocus();  // Find last element in MB to handle event on it. If no elements found, uses close ModalBox button
 				}
-			break;			
+			break;
+			/* We may not let just hide overlay, Aranea must manage everything (or made aware of) everything.
 			case Event.KEY_ESC:
 				if(this.active) this._hide(e);
 			break;
+			*/
 			case 32:
 				this._preventScroll(e);
 			break;
