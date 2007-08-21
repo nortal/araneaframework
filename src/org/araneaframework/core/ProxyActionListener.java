@@ -66,8 +66,12 @@ public class ProxyActionListener implements ActionListener {
     } catch (NoSuchMethodException e) {/*OK*/}
 
     if (log.isEnabledFor(Priority.WARN)) {
-      log.warn("Widget '" + ((org.araneaframework.Component)actionTarget).getScope() +
-        "' cannot deliver action as no action listeners were registered for the action id '" + actionId + "'!" + Assert.thisToString(actionTarget));
+      StringBuffer logMessage = new StringBuffer().append("Widget").append(actionTarget instanceof org.araneaframework.Component ? 
+    		  " '"+((org.araneaframework.Component)actionTarget).getScope() + "'" :
+    		  "");
+      logMessage.append(" cannot deliver action as no action listeners were registered for the action id '");
+      logMessage.append(actionId).append("'!").append(Assert.thisToString(actionTarget));
+      log.warn(logMessage);
     }
   }
 

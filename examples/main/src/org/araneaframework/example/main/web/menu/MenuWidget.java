@@ -41,6 +41,7 @@ import org.araneaframework.example.main.web.demo.DemoOnChangeListenersWidget;
 import org.araneaframework.example.main.web.demo.DemoRadioSelect;
 import org.araneaframework.example.main.web.demo.DemoRichTextForm;
 import org.araneaframework.example.main.web.demo.FilteredInputDemoWidget;
+import org.araneaframework.example.main.web.demo.ModalDialogDemoWidget;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.misc.AjaxRequestErrorWidget;
@@ -136,6 +137,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       
       advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));
       advDemos.addMenuItem(new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
+      advDemos.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
       
       MenuItem formListMenu = sampleMenu.addMenuItem(new MenuItem("Form_Lists"));
       formListMenu.addMenuItem(new MenuItem("Display_Form", DemoDisplayForm.class));

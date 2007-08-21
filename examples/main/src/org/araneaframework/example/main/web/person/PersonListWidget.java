@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
-import org.araneaframework.example.main.web.OverlayRootWidget;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.uilib.list.BeanListWidget;
@@ -92,7 +91,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
-    getOverlayCtx().getFlowCtx().start(new OverlayRootWidget(new PersonAddEditWidget()), null, new FlowContext.Handler() {
+		getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
 			public void onFinish(Object returnValue) throws Exception {
@@ -120,7 +119,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		if (!selectOnly) {
 			PersonViewWidget newFlow = new PersonViewWidget(id);
-      getOverlayCtx().getFlowCtx().start(new OverlayRootWidget(newFlow), null, null);
+		getFlowCtx().start(newFlow, null, null);
 		} else {
 			getFlowCtx().finish(id);
 		}
@@ -130,7 +129,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		PersonAddEditWidget newFlow = new PersonAddEditWidget(id);
 
-    getOverlayCtx().getFlowCtx().start(new OverlayRootWidget(newFlow), null, new FlowContext.Handler() {
+		getFlowCtx().start(newFlow, new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
 			public void onFinish(Object returnValue) throws Exception {
@@ -161,9 +160,5 @@ public class PersonListWidget extends TemplateBaseWidget {
   
   public void injectContractDAO(IContractDAO contractDAO) {
     this.contractDAO = contractDAO;
-  }
-  
-  public OverlayContext getOverlayCtx() {
-    return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
   }
 }

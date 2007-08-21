@@ -23,6 +23,7 @@ var Tips = {
 
     this.tips = this.tips.reject(function(t) { return t==tip; });
     tip.deactivate();
+    tip.hideTip();
     if(tip.tooltip) tip.wrapper.remove();
     if(tip.underlay) tip.underlay.remove();
   }
@@ -279,3 +280,14 @@ Function.prototype.safeBind = function() {
     return __method.apply(object, args.concat($A(arguments)));
   }
 }
+
+if (araneaPage && typeof araneaPage == "function") {
+  araneaPage().addSubmitCallback(
+    function() {
+  	  // Tips.tips.all(function(tip){ tip.tooltip.hide(); })
+  	  Tips.tips.all(function(tip){ Tips.remove(tip.element); })
+    }
+  );
+}
+
+window['prototip/prototip.js'] = true;
