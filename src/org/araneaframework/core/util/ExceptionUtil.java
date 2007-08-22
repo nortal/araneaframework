@@ -33,7 +33,7 @@ public abstract class ExceptionUtil {
    * 
    * @param e exception
    * 
-   * @return nothing really, just rethrows suitable <code>Exception</code>
+   * @return nothing really, just rethrows suitable <code>RuntimeException</code>
    */
   public static RuntimeException uncheckException(Exception e) {
     Assert.notNullParam(e, "e");
@@ -42,5 +42,21 @@ public abstract class ExceptionUtil {
       throw (RuntimeException) e;
     
     throw new NestableRuntimeException(e);
+  }
+  
+  /**
+   * Unchecks the exception by rethrowing
+   * unchecked exceptions and wrapping checked exceptions inside 
+   * <code>NestableRuntimeException</code>.
+   * @param message
+   * @param e exception
+   * 
+   * @return nothing really, just rethrows suitable <code>RuntimeException</code>
+   * 
+   * @since 1.0.11
+   */
+  public static RuntimeException uncheckException(String message, Exception e) {
+    Assert.notNullParam(e, "e");
+    throw new NestableRuntimeException(message, e);
   }
 }

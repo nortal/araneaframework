@@ -130,7 +130,7 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 			this.lastItemRange = getItemRange(query);
 			
 			if (log.isDebugEnabled()) {
-				log.debug("refreshing itemrange: startIdx=" + startIdx.toString() + ", count="+count.toString());
+				log.debug("refreshing itemrange: startIdx=" + String.valueOf(startIdx) + ", count=" + String.valueOf(count));
 			}
 		}
 
