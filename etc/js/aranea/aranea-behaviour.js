@@ -20,12 +20,13 @@
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 function setFormElementContext(el) {
-  var span = el.parentNode;
+	var span = el.parentNode;
   do {
     if (span.tagName && span.tagName.toUpperCase() == 'SPAN')
-	  break;
+    	break;
     span = span.parentNode;
   } while (span);
+  
 
   if (span && span.tagName && span.tagName.toUpperCase() == 'SPAN' && el.name) {
     if (document.addEventListener) { // Moz
@@ -34,6 +35,18 @@ function setFormElementContext(el) {
       span.onkeydown=function() { return uiHandleKeypress(event, el.name); };
     }
   }
+  
+}
+
+function setFormElementValidation(el){
+	var ajaxValidationHandler = new AraneaPage.AjaxValidationHandler(el);
+	var elId = el.getAttribute("id");
+	var actionValidate = function(event) {
+		extraParams = new Hash();
+		extraParams[elId] = el.value;
+		araneaPage().action(el, 'validate', elId, el.value, ajaxValidationHandler.callback.bind(ajaxValidationHandler), null, null, extraParams);
+	}
+	Event.observe(elId, 'change', actionValidate);
 }
 
 function setCloningUrl(el) {
@@ -88,26 +101,37 @@ var aranea_rules = {
   'input.aranea-text' : function(el) {
     applyCharacterFilter(el);
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
 
   'input.aranea-number' : function(el) {
     applyCharacterFilter(el);
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
   
   'input.aranea-float' : function(el) {
     applyCharacterFilter(el);
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
   
   'input.aranea-time' : function(el) {
     applyCharacterFilter(el);
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
   
   'input.aranea-date' : function(el) {
     applyCharacterFilter(el);
     setFormElementContext(el);
+    setFormElementValidation(el);
+  },
+  
+  'input.aranea-date-time' : function(el) {
+    applyCharacterFilter(el);
+    setFormElementContext(el);
+    setFormElementValidation(el);
   },
   
   'input.aranea-checkbox' : function(el) {
@@ -136,6 +160,7 @@ var aranea_rules = {
 
   'textarea.aranea-textarea' : function(el) {
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
   
   'a.aranea-tab-link' : function(el) {

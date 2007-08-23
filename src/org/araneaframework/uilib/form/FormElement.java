@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form;
 
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,8 +25,13 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.RenderStateAware;
+import org.araneaframework.framework.filter.StandardMessagingFilterWidget;
+import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -249,6 +255,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   
   protected void handleAction(InputData input, OutputData output) throws Exception {
     update(input);
+    super.handleAction(input, output);
     if (control != null)
       control._getService().action(null, input, output);
   }
@@ -287,6 +294,24 @@ public class FormElement extends GenericFormElement implements FormElementContex
       getControl()._getComponent().init(getScope(), getEnvironment());
 
     runInitEvents();
+    
+    addActionListener("validate", new StandardActionListener() {
+      public void processAction(Object actionId, String actionParam, InputData input, OutputData output)
+          throws Exception {
+        boolean valid = convertAndValidate();
+        Writer out = ((HttpOutputData) output).getWriter();
+        out.write(String.valueOf(valid) + "\n");
+        MessageContext messageContext = (MessageContext) getEnvironment().getEntry(MessageContext.class);
+        if(messageContext != null && (messageContext instanceof UpdateRegionProvider)) {
+          UpdateRegionProvider messageRegion = (UpdateRegionProvider) messageContext;
+          String messageRegionContent = (String) messageRegion.getRegions().get(StandardMessagingFilterWidget.MESSAGE_REGION_KEY);
+
+          out.write(messageRegionContent);
+        }
+      }
+    });
+    
+
   }
   
   protected void destroy() throws Exception {

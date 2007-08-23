@@ -229,15 +229,18 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		writeFormElementContextOpen(out, fullFormId, elementId, true, pageContext);
 	}
 	
+  public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
+    writeFormElementContextOpen(out, fullFormId, elementId, isPresent, pageContext, "fe-span-");
+  }
 	/** 
 	 * Write a span with random id around the element, and register this span with javascript 
-	 * (done by external behaviour scripts, span functions as keyboard handler).
+	 * (done by external behavior scripts, span functions as keyboard handler).
 	 * Default implementation does not use any parameters except <code>Writer</code> and <code>PageContext</code>.
 	 */
 
-	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
+	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext, String idPrefix) throws Exception{
 		//  Enclose the element in a <span id=someuniqueid>
-		String spanId = "fe-span-" + fullFormId + "." + elementId;
+		String spanId = idPrefix + fullFormId + "." + elementId;
 
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "id", spanId);

@@ -247,7 +247,7 @@ function AraneaPage() {
     return url;
   }
 
-  this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync) {
+  this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync, extraParams) {
     var url = this.getSubmitURL(systemForm.araTopServiceId.value, systemForm.araThreadServiceId.value, 'override');
     url += '&araServiceActionPath=' + actionTarget;
     if (actionId)
@@ -256,22 +256,25 @@ function AraneaPage() {
       url += '&araServiceActionParameter=' + actionParam;
     if (sync != undefined && !sync)
       url += '&araSync=false';
+      
+    url += '&' + $H(extraParams).toQueryString();
+    
     return url;
   }
 
-  this.action = function(element, actionId, actionTarget, actionParam, actionCallback, options, sync) {
+  this.action = function(element, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
     var systemForm = this.getSystemForm();
-    return this.action_6(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync);
+    return this.action_6(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams);
   }
 
-  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync) {
+  this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
     if (window['prototype/prototype.js']) {
       options = Object.extend({
         method: 'get',
         onComplete: actionCallback,
         onException: AraneaPage.handleRequestException
       }, options);
-      var url = this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync);
+      var url = this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync, extraParams);
       return new Ajax.Request(url, options);
     } else {
       araneaPage().getLogger().warn("Prototype library not accessible, action call cannot be made.");
@@ -726,6 +729,74 @@ AraneaPage.ReloadRegionHandler.prototype = {
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
 
+AraneaPage.AjaxValidationHandler = Class.create();
+AraneaPage.AjaxValidationHandler.prototype = {
+	el: null,
+	
+  initialize: function(el) {
+  	this.el = el;
+  },
+  
+	callback: function(request, response) {
+		if (request.status != 200) {
+			alert(request.responseText);	// Very ugly
+			return;
+		}
+		
+	  if(request.responseText){
+      var text = new Text(request.responseText);
+   		var valid = text.readLine(); // responseId
+	  
+	    AraneaPage.regionHandlers['messages'].process(text.toString());
+
+			var td = this.getParentElement(this.el, "TD", "inpt");
+			if(td == null){
+				td = this.getParentElement(this.el, "TD");
+			}
+			var labelSpan = $('label-' + this.el.getAttribute("id"));
+			if(labelSpan){
+				var label = this.getParentElement(labelSpan, "TD");
+			}
+	  
+			if(valid != "true"){
+	        oldClass = td.getAttribute("class");
+	        td.setAttribute("class", oldClass + " error");
+	        if(label){
+		        oldClass = label.getAttribute("class");
+		        label.setAttribute("class", oldClass + " error");
+	        }
+			} else {
+	      oldClass = td.getAttribute("class");
+	      td.setAttribute("class", oldClass.replace("error", "", "g"));
+	      if(label){
+		      oldClass = label.getAttribute("class");
+		      label.setAttribute("class", oldClass.replace("error", "", "g"));
+	      }
+			}
+			
+		}
+	},
+	
+	getParentElement: function(el, type, class) {
+		var returnElement = null;
+    if (el.tagName && el.tagName.toUpperCase() == type) {
+    	returnElement = el;
+    }
+    if(class && el.getAttribute("class") && el.getAttribute("class").indexOf(class) == -1){
+    	returnElement = null;
+    }
+    if(returnElement != null){
+    	return returnElement;
+    }
+    
+		var el = el.parentNode;
+	  do {
+	    if (el.tagName && el.tagName.toUpperCase() == type && (!class || el.getAttribute("class") && el.getAttribute("class").indexOf(class) > -1))
+	    	return el;
+	    el = el.parentNode;
+	  } while (el);
+	}
+};
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */
