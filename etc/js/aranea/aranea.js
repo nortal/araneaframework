@@ -745,7 +745,7 @@ AraneaPage.AjaxValidationHandler.prototype = {
 		
 	  if(request.responseText){
       var text = new Text(request.responseText);
-   		var valid = text.readLine(); // responseId
+   		var valid = text.readLine(); // was validation successful?
 	  
 	    AraneaPage.regionHandlers['messages'].process(text.toString());
 

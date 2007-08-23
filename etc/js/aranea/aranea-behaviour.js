@@ -128,12 +128,6 @@ var aranea_rules = {
     setFormElementValidation(el);
   },
   
-  'input.aranea-date-time' : function(el) {
-    applyCharacterFilter(el);
-    setFormElementContext(el);
-    setFormElementValidation(el);
-  },
-  
   'input.aranea-checkbox' : function(el) {
     setFormElementContext(el);
   },
