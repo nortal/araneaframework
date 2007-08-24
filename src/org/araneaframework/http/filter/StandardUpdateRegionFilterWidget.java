@@ -162,6 +162,9 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     for (Iterator i = regionGatherMessage.getRegions().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
       String name = (String) entry.getKey();
+      if(log.isDebugEnabled()) {
+        log.debug("Updating handler region : " + name);
+      }
       String content = (String) entry.getValue();
       if (content != null) {
         writeRegion(out, name, content);

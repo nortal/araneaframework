@@ -120,6 +120,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     
     Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the control before it can be initialized! " +
         "Make sure that the control is associated with a form element!");
+    
   }
   
   protected void action(Path path, InputData input, OutputData output) throws Exception {

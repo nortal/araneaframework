@@ -136,7 +136,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
       // Find surrounding form's id
       String formId = (String)JspUtil.requireContextEntry(pageContext, FormTag.FORM_FULL_ID_KEY);
       // XXX: even if formElementContext JS should be invoked when writing label, formelement should not be marked as present
-      BaseFormElementHtmlTag.writeFormElementContextOpen(out, formId, formElementId, false, pageContext);
+      BaseFormElementHtmlTag.writeFormElementContextOpen(out, formId, formElementId, false, pageContext, "label-");
       fullFormElementId = formId + "." + formElementId;
     }
 
