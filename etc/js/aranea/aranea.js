@@ -24,7 +24,7 @@ function AraneaStore() {
 
   this.add = function(object) {
     var len = objects.length;
-  objects[len] = object;
+    objects[len] = object;
   }
   
   this.clear = function() {

@@ -43,7 +43,7 @@ public class MenuItem implements Serializable {
   /** Indicates whether the menuitem is in selected state. */
   private boolean selected;
 
-  /** Submenu of this <code>MenuItem</code> (may exist only when this <code>MenuItem</code> is a holder. */
+  /** Submenu of this <code>MenuItem</code>. */
   private Map subMenu;
 
   /* **************************************************************************************************
