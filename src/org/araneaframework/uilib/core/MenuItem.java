@@ -100,9 +100,8 @@ public class MenuItem implements Serializable {
   /**
    * Adds a menu item to submenu of this <code>MenuItem</code>.
    * @param item menu item to add into submenu of this <code>MenuItem</code>.
-   * @throws UnsupportedOperationException if this <code>MenuItem</code> is not a holder.
    */
-  private void addSubMenuItem(MenuItem item) throws UnsupportedOperationException {
+  private void addSubMenuItem(MenuItem item) {
     if (subMenu == null)
       subMenu = new LinkedMap();
     subMenu.put(item.getLabel(), item);
