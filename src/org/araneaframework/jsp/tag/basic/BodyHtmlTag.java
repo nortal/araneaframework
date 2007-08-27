@@ -27,6 +27,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 
 /**
  * Aranea HTML body tag. 
@@ -101,6 +102,7 @@ public class BodyHtmlTag extends PresentationTag {
     writeServletURLScript(out);
     writeLocaleScript(out);
     writeKeepAliveRegistrationScripts(out);
+    writeAjaxValidationScript(out);
 
     writeAdditionalAfterBodyStartScripts(out);
 
@@ -164,6 +166,14 @@ public class BodyHtmlTag extends PresentationTag {
     out.write("'));");
   }
   
+  
+  /** Writes script that configures client-side ajax validation of forms. */
+  protected void writeAjaxValidationScript(Writer out) throws JspException, IOException {
+    String ajaxValidation = (String) getConfiguration().getEntry(ConfigurationContext.AJAX_FORM_VALIDATION);
+    if("false".equals(ajaxValidation)) {
+      out.write("_ap.setAjaxValidation(false);");
+    }
+  }
   /**
    * Writes the scripts immediately following the closing of &lt;body&gt; tag.
    */
@@ -178,13 +188,13 @@ public class BodyHtmlTag extends PresentationTag {
   }
   
   /**
-   * Called before closing the script tag immidiately following the HTML &lt;body&gt; start, use for
+   * Called before closing the script tag immediately following the HTML &lt;body&gt; start, use for
    * additional client-side page (AraneaPage) initialization.
    */
   protected void writeAdditionalAfterBodyStartScripts(Writer out) throws Exception {}
   
   /**
-   * Called before closing the script tag immidiately following the HTML &lt;body&gt; start, use for
+   * Called before closing the script tag immediately following the HTML &lt;body&gt; start, use for
    * additional client-side page (AraneaPage) initialization.
    */
   protected void writeAdditionalAfterBodyEndScripts(Writer out) throws Exception {

@@ -32,7 +32,6 @@ import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
@@ -293,8 +292,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   //
 
   protected ConfigurationContext getConfiguration() throws JspException {
-    JspContext config = (JspContext) getEnvironment().getEntry(JspContext.class);
-    return config.getConfiguration();
+    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
   }
 
   /**

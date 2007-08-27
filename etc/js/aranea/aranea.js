@@ -237,18 +237,22 @@ function AraneaPage() {
       return new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   }
 
-  this.getSubmitURL = function(topServiceId, threadServiceId, araTransactionId) {
+  this.getSubmitURL = function(topServiceId, threadServiceId, araTransactionId, extraParams) {
     var url = this.encodeURL(this.getServletURL());
     url += '?araTransactionId=' + araTransactionId;
     if (topServiceId) 
       url += '&araTopServiceId=' + topServiceId;
     if (threadServiceId) 
       url += '&araThreadServiceId=' + threadServiceId;
+  
+  	if(extraParams)    
+     url += '&' + $H(extraParams).toQueryString();
+      
     return url;
   }
 
   this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync, extraParams) {
-    var url = this.getSubmitURL(systemForm.araTopServiceId.value, systemForm.araThreadServiceId.value, 'override');
+    var url = this.getSubmitURL(systemForm.araTopServiceId.value, systemForm.araThreadServiceId.value, 'override', extraParams);
     url += '&araServiceActionPath=' + actionTarget;
     if (actionId)
       url += '&araServiceActionHandler=' + actionId;
@@ -257,8 +261,6 @@ function AraneaPage() {
     if (sync != undefined && !sync)
       url += '&araSync=false';
       
-    url += '&' + $H(extraParams).toQueryString();
-    
     return url;
   }
 
@@ -307,6 +309,14 @@ function AraneaPage() {
   this.clearKeepAlives = function() {
     keepAliveTimers.forEach(function(timer) {clearInterval(timer);});
   }
+  
+  /**
+   *	Whether this application should use ajax form validation.
+   */
+  var ajaxValidation = true;
+  this.getAjaxValidation = function() { return ajaxValidation; }
+  this.setAjaxValidation = function(useAjax) { ajaxValidation = Boolean(useAjax); }
+  
 }
 
 /* Returns a default keepalive function -- to make periodical requests to expiring thread

@@ -295,22 +295,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 
     runInitEvents();
     
-    addActionListener("validate", new StandardActionListener() {
-      public void processAction(Object actionId, String actionParam, InputData input, OutputData output)
-          throws Exception {
-        boolean valid = convertAndValidate();
-        Writer out = ((HttpOutputData) output).getWriter();
-        out.write(String.valueOf(valid) + "\n");
-        MessageContext messageContext = (MessageContext) getEnvironment().getEntry(MessageContext.class);
-        if(messageContext != null && (messageContext instanceof UpdateRegionProvider)) {
-          UpdateRegionProvider messageRegion = (UpdateRegionProvider) messageContext;
-          String messageRegionContent = (String) messageRegion.getRegions().get(StandardMessagingFilterWidget.MESSAGE_REGION_KEY);
-
-          out.write(messageRegionContent);
-        }
-      }
-    });
-    
+    addActionListener("validate", new ValidationActionListener());
 
   }
   
@@ -407,6 +392,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   //* VIEW MODEL
   //*********************************************************************    
   
+
   /**
    * Represents a simple form element view model.
    * 
@@ -465,4 +451,21 @@ public class FormElement extends GenericFormElement implements FormElementContex
       return this.value;
     }
   }
+  
+  private final class ValidationActionListener extends StandardActionListener {
+    public void processAction(Object actionId, String actionParam, InputData input, OutputData output)
+        throws Exception {
+      boolean valid = convertAndValidate();
+      Writer out = ((HttpOutputData) output).getWriter();
+      out.write(String.valueOf(valid) + "\n");
+      MessageContext messageContext = (MessageContext) getEnvironment().getEntry(MessageContext.class);
+      if(messageContext != null && (messageContext instanceof UpdateRegionProvider)) {
+        UpdateRegionProvider messageRegion = (UpdateRegionProvider) messageContext;
+        String messageRegionContent = (String) messageRegion.getRegions().get(StandardMessagingFilterWidget.MESSAGE_REGION_KEY);
+
+        out.write(messageRegionContent);
+      }
+    }
+  }
+  
 }
