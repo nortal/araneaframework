@@ -52,12 +52,6 @@
     </property>
   </bean> 
   
-    <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false">
-      <property name="confEntries">
-        <map>
-          <entry key="uilib.widgets.forms.AjaxValidation" value="falsex"></entry>
-        </map>
-      </property>
-    </bean>
+  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
   
 </beans>
