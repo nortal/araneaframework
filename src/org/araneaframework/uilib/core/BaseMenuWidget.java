@@ -71,11 +71,11 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    */
   protected abstract MenuItem buildMenu() throws Exception;
   
-  public MenuItem getMenu() throws Exception {
+  public MenuItem getMenu() {
     return menu;
   }
 
-  public void setMenu(MenuItem menu) throws Exception {
+  public void setMenu(MenuItem menu) {
     this.menu = menu;
   }
 }
