@@ -39,6 +39,8 @@ function setFormElementContext(el) {
 }
 
 function setFormElementValidation(el){
+	if(!araneaPage().getAjaxValidation())	return;
+	
 	var ajaxValidationHandler = new AraneaPage.AjaxValidationHandler(el);
 	var elId = el.getAttribute("id");
 	var actionValidate = function(event) {

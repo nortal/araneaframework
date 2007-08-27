@@ -88,6 +88,11 @@ public interface ConfigurationContext extends Serializable {
   public static final String LIKE_CONFIGURATION = "uilib.widgets.lists.LikeConfiguration";
   
   /**
+   * This property should be set to <code>false</code> if application doesn't want to use ajax validation of the forms.
+   */
+  public static final String AJAX_FORM_VALIDATION = "uilib.widgets.forms.AjaxValidation";
+  
+  /**
    * Returns a configuration entry with given name.
    */
   public Object getEntry(String entryName);
