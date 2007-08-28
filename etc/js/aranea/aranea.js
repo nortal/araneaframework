@@ -24,7 +24,7 @@ function AraneaStore() {
 
   this.add = function(object) {
     var len = objects.length;
-  objects[len] = object;
+    objects[len] = object;
   }
   
   this.clear = function() {
@@ -335,6 +335,19 @@ AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAli
       araneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");
     }
   };
+}
+
+/** Searches for widget marker around the given element. */
+AraneaPage.findWidgetMarker = function(element) {
+  var ancestors = $(element).ancestors();
+  for (var i = 0; i < ancestors.length; i++) {
+  	var ancestor = ancestors[i];
+  	var marker = ancestor.classNames().find(function(name) {
+      return (name == 'widgetMarker')
+    });
+    if (marker) return ancestor;
+  }
+  return null;
 }
 
 // Random request id generator. Sent only with AA ajax requests.

@@ -38,7 +38,7 @@
 */   
 
 var Behaviour = {
-	list : new Array,
+	list : new Array(),
 	
 	register : function(sheet){
 		Behaviour.list.push(sheet);
@@ -51,7 +51,8 @@ var Behaviour = {
 	},
 	
 	apply : function(){
-		for (h=0;sheet=Behaviour.list[h];h++){
+		var sheet = null;
+		for (var h=0;sheet=Behaviour.list[h];h++){
 			for (selector in sheet){
 				list = document.getElementsBySelector(selector);
 				
