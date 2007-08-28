@@ -71,9 +71,9 @@ public class JsonObject implements Serializable {
     buf.append(StringEscapeUtils.escapeJavaScript(name));
     buf.append('"');
     buf.append(':');
-    buf.append('"');
+    if (value != null) buf.append('"');
     buf.append(StringEscapeUtils.escapeJavaScript(String.valueOf(value)));
-    buf.append('"');
+    if (value != null) buf.append('"');
   }
 
   /**

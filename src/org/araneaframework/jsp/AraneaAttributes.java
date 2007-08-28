@@ -27,6 +27,8 @@ public abstract class AraneaAttributes {
 	
   /** Attribute identifying Aranea system form */
   public static final String SYSTEM_FORM = "arn-systemForm";
+  /** Attribute attached to Aranea component markers for identification of component. */
+  public static final String WIDGET_ID = "arn-widgetId";
 
   /** Event related non-standard HTML tag attributes */
   public interface Event {

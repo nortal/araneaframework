@@ -324,6 +324,19 @@ AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAli
   };
 }
 
+/** Searches for widget marker around the given element. */
+AraneaPage.findWidgetMarker = function(element) {
+  var ancestors = $(element).ancestors();
+  for (var i = 0; i < ancestors.length; i++) {
+  	var ancestor = ancestors[i];
+  	var marker = ancestor.classNames().find(function(name) {
+      return (name == 'widgetMarker')
+    });
+    if (marker) return ancestor;
+  }
+  return null;
+}
+
 // Random request id generator. Sent only with AA ajax requests.
 // Currently only purpose of it is easier debugging (identifying requests).
 AraneaPage.getRandomRequestId = function() {

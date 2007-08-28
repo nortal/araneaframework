@@ -7,28 +7,16 @@
 
 	<!-- Component starts here -->
 	<ui:widgetContext>
-
-        <!-- Set the form context, the form we will be rendering here. 
-            We cannot as simply (using non-qualified names) refer to form 
-            elements unless we define the form context here. -->
+	
+		<ui:widgetMarker id="simpleForm">
 		<ui:form id="simpleForm">
 
-			<!-- Now, these are the first custom tags in template application. They do
-			     nothing particularly interesting, just set up the HTML DIV element
-			     containing the component header -->
 			<tui:componentHeader>
-				<tui:componentName>Tutorial first form</tui:componentName>
+				<tui:componentName>Widget with context menu</tui:componentName>
 			</tui:componentHeader>
 
-			<!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
 			<tui:component>
-			
-				<!-- Custom tag, but more interesting that previous tags. It derives from
-                     LayoutHtmlTag tag and allows putting row tags inside of it. 
-                     Attribute rowClasses defines the styleClass attribute for rows inserted under 
-                     componentForm here, cellClasses does the same for cells. These classes are repeating
-                     e.g first cell in a row is with styleClass "name", second with "inpt", and third
-                     cell again has styleClass "name". In HTML, this tag creates a TABLE. -->
+
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
 					<!-- As we can insert rows now, we do just that. -->
@@ -36,18 +24,12 @@
 						<!-- ... we can insert cells too! As we defined componentForm rowClass 
 							to be cols4  we should insert 4 cells here... -->
 						<ui:cell>
-							<!-- label is formelement centric tag. As we are inside the form 
-							already, we provide it with form element id and corresponding 
-							form element label will be shown -->
+
 							<ui:label id="checkbox1" />
 						</ui:cell>
 
 						<ui:cell>
-							<!-- This is another approach to providing information about
-								form element that tag should apply to - instead providing
-								form element id to every single tag, tags could be enclosed
-								inside single formElement tag.
-							 -->
+
 							<ui:formElement id="checkbox1">
 								<!-- will draw a checkbox tied to form element with id "checkbox1" -->
 								<ui:checkbox/>
@@ -121,7 +103,10 @@
 				</tui:componentActions>
 			</tui:component>
 
+			<ui:contextMenu id="simpleForm.ctxMenu"/>
+
 		</ui:form>
+		</ui:widgetMarker>
 
 	</ui:widgetContext>
 </jsp:root>

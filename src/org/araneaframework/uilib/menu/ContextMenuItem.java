@@ -1,3 +1,19 @@
+/**
+ * Copyright 2007 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+**/
+
 package org.araneaframework.uilib.menu;
 
 import java.io.Serializable;
@@ -57,6 +73,8 @@ public class ContextMenuItem implements Serializable {
 			jsonObject.setStringProperty("target", menuEntry.getTarget() != null ? menuEntry.getTarget().getScope().toString() : "null");
 			jsonObject.setStringProperty("type", menuEntry.getHappeningType());
 			jsonObject.setStringProperty("id", menuEntry.getHappeningId().toString());
+			String param = menuEntry.getHappeningParam();
+			jsonObject.setStringProperty("param", param != null ? param : "");
 		} 
 		if (subMenu != null) {
 			jsonObject.setProperty("submenu", menuMapToJsonArray(subMenu).toString());
@@ -82,15 +100,17 @@ public class ContextMenuItem implements Serializable {
 		private Widget target = null;
 		protected Object happeningId = null;
 		protected String happeningType = null;
+		protected String happeningParam = null;
 		
 		protected ContextMenuEntry(Object happeningId, String happeningType) {
 			this.happeningId = happeningId;
 			this.happeningType = happeningType;
 		}
 		
-		protected ContextMenuEntry(Object happeningId, String happeningType, Widget target) {
+		protected ContextMenuEntry(Object happeningId, String happeningType, Widget target, String happeningParam) {
 			this(happeningId, happeningType);
 			this.target = target;
+			this.happeningParam = happeningParam;
 		}
 
 		public Object getHappeningId() {
@@ -101,20 +121,24 @@ public class ContextMenuItem implements Serializable {
 			return happeningType;
 		}
 
+		public String getHappeningParam() {
+			return happeningParam;
+		}
+
 		public Widget getTarget() {
 			return target;
 		}
 	}
 	
 	public static class ContextMenuActionEntry extends ContextMenuEntry {
-		public ContextMenuActionEntry(Object actionId, Widget target) {
-			super(actionId, ACTION, target);
+		public ContextMenuActionEntry(Object actionId, Widget target, String actionParam) {
+			super(actionId, ACTION, target, actionParam);
 		}
 	}
 
 	public static class ContextMenuEventEntry extends ContextMenuEntry {
-		public ContextMenuEventEntry(Object eventId, Widget target) {
-			super(eventId, EVENT, target);
+		public ContextMenuEventEntry(Object eventId, Widget target, String eventParam) {
+			super(eventId, EVENT, target, eventParam);
 		}
 	}
 }
