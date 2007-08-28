@@ -1,0 +1,110 @@
+/* ================================================================ 
+This copyright notice must be untouched at all times.
+
+The original version of this stylesheet and the associated (x)html
+is available at http://www.cssplay.co.uk/menus/flyout_4level.html
+Copyright (c) 2005-2007 Stu Nicholls. All rights reserved.
+This stylesheet and the associated (x)html may be modified in any 
+way to fit your requirements.
+=================================================================== */
+.aranea-contextmenu-class {
+	height:150px;
+	font-size:90%;
+	margin:0px 0 0px 0px; /* this page only */
+	position:absolute;
+}
+
+/* remove all the bullets, borders and padding from the default list styling */
+.aranea-contextmenu-class ul {
+	position:relative;
+	z-index:500;
+	padding:0;
+	margin:0;
+	list-style-type:none;
+	width:150px;
+}
+/* style the list items */
+.aranea-contextmenu-class li {
+	background:#d4d8bd url(fileimporter/gfx/contextmenu/shade.gif);
+	height:26px;
+	/* for IE7 */
+	float:left;
+}
+.aranea-contextmenu-class li.sub {background:#d4d8bd url(fileimporter/gfx/contextmenu/sub.gif) no-repeat right center;} 
+
+/* get rid of the table */
+.aranea-contextmenu-class table {position:absolute; border-collapse:collapse; top:0; left:0; z-index:100; font-size:1em;}
+
+/* style the links */
+.aranea-contextmenu-class a, .aranea-contextmenu-class a:visited {
+	display:block; 
+	text-decoration:none;
+	height:25px;
+	line-height:25px;
+	width:149px;
+	color:#000;
+	text-indent:5px;
+	border:1px solid #fff;
+	border-width:0 1px 1px 1px;
+}
+/* hack for IE5.5 */
+* html .aranea-contextmenu-class a, * html .aranea-contextmenu-class a:visited {width:150px; w\idth:149px;}
+/* style the link hover */
+* html .aranea-contextmenu-class a:hover {color:#efa; background:#aa7; position:relative;}
+
+.aranea-contextmenu-class li:hover {position:relative;}
+
+/* For accessibility of the top level menu when tabbing */
+.aranea-contextmenu-class a:active, .aranea-contextmenu-class a:focus {color:#efa; background:#aa7;}
+
+/* retain the hover colors for each sublevel IE7 and Firefox etc */
+.aranea-contextmenu-class li:hover > a {color:#efa; background:#aa7;}
+ 
+/* hide the sub levels and give them a positon absolute so that they take up no room */
+.aranea-contextmenu-class li ul {
+	visibility:hidden;
+	position:absolute;
+	top:-30px;
+	/* set up the overlap (minus the overrun) */
+	left:100px;
+	/* set up the overrun area */
+	padding:30px;
+	/* this is for IE to make it interpret the overrrun padding */
+	background:transparent url(fileimporter/gfx/contextmenu/transparent.gif);
+}
+
+/* for browsers that understand this is all you need for the flyouts */
+.aranea-contextmenu-class li:hover > ul {visibility:visible;}
+
+
+/* for IE5.5 and IE6 you need to style each level hover */
+
+/* keep the third level+ hidden when you hover on first level link */
+.aranea-contextmenu-class ul a:hover ul ul{
+	visibility:hidden;
+}
+/* keep the fourth level+ hidden when you hover on second level link */
+.aranea-contextmenu-class ul a:hover ul a:hover ul ul{
+	visibility:hidden;
+}
+/* keep the fifth level hidden when you hover on third level link */
+.aranea-contextmenu-class ul a:hover ul a:hover ul a:hover ul ul{
+	visibility:hidden;
+}
+
+/* make the second level visible when hover on first level link */
+.aranea-contextmenu-class ul a:hover ul {
+	visibility:visible;
+}
+/* make the third level visible when you hover over second level link */
+.aranea-contextmenu-class ul a:hover ul a:hover ul{ 
+	visibility:visible;
+}
+/* make the fourth level visible when you hover over third level link */
+.aranea-contextmenu-class ul a:hover ul a:hover ul a:hover ul { 
+	visibility:visible;
+}
+/* make the fifth level visible when you hover over fourth level link */
+.aranea-contextmenu-class ul a:hover ul a:hover ul a:hover ul a:hover ul { 
+	visibility:visible;
+}
