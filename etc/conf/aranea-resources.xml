@@ -20,6 +20,7 @@
     <file path="js/aranea/aranea-tree.js" />
     <file path="js/aranea/aranea-behaviour.js" />
     <file path="js/aranea/aranea-popups.js" />
+    <file path="js/aranea/aranea-modalbox.js" />
 
     <file path="js/scriptaculous/builder.js" />
     <file path="js/scriptaculous/effects.js" />

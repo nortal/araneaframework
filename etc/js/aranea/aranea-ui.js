@@ -119,15 +119,4 @@ function scrollToCoordinates(x, y) {
 	window.scrollTo(x, y);
 }
 
-// TODO: move into Aranea namespace and make aranea-modalbox.js ?
-function aranea_showModalBox() {
-	Modalbox.show(
-		_ap.getSubmitURL(_ap.getSystemForm().araTopServiceId.value, _ap.getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay', 
-		{
-			overlayClose: false, 
-			width: 800
-		}
-	);
-}
-
 window['aranea-ui.js'] = true;
