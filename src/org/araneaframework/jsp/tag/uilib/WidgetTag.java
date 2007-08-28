@@ -50,6 +50,6 @@ public class WidgetTag extends BaseWidgetTag {
      addContextEntry(WIDGET_VIEW_DATA_KEY, viewModel.getData());
      
      // Continue
-     return EVAL_BODY_INCLUDE;    
+     return SKIP_BODY;    
   }
 }

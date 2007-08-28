@@ -33,6 +33,9 @@ import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.form.data.StringData;
+import org.araneaframework.uilib.menu.ContextMenuItem;
+import org.araneaframework.uilib.menu.ContextMenuWidget;
+import org.araneaframework.uilib.menu.ContextMenuItem.ContextMenuEventEntry;
 
 
 /**
@@ -87,6 +90,16 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     
     // the usual, add the created widget to main widget.
 	addWidget("simpleForm", simpleForm);
+	
+	ContextMenuItem menu = new ContextMenuItem();
+	menu.addMenuItem(new ContextMenuItem("#label", new ContextMenuEventEntry("testSimpleForm", this)));
+	
+	ContextMenuItem subMenu = menu.addMenuItem(new ContextMenuItem("subbbb"));
+	subMenu.addMenuItem(new ContextMenuItem("#noway", new ContextMenuEventEntry("testSimpleForm", this)));
+	
+	ContextMenuWidget contextMenuWidget = new ContextMenuWidget(menu);
+
+	simpleForm.addWidget("ctxMenu", contextMenuWidget);
   }
 
   /**

@@ -121,6 +121,8 @@
 				</tui:componentActions>
 			</tui:component>
 
+			<ui:contextMenu id="simpleForm.ctxMenu"/>
+
 		</ui:form>
 
 	</ui:widgetContext>
