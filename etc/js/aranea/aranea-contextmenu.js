@@ -16,6 +16,7 @@
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.1
  */
 
 Aranea.ContextMenuHTMLBuilder={};

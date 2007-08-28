@@ -27,7 +27,10 @@ public abstract class AraneaAttributes {
 	
   /** Attribute identifying Aranea system form */
   public static final String SYSTEM_FORM = "arn-systemForm";
-  /** Attribute attached to Aranea component markers for identification of component. */
+  /**
+   * Attribute attached to Aranea component markers for identification of component. 
+   * @since 1.1
+   * */
   public static final String WIDGET_ID = "arn-widgetId";
 
   /** Event related non-standard HTML tag attributes */
@@ -41,6 +44,6 @@ public abstract class AraneaAttributes {
   
   /** @since 1.0.11 */
   public interface FilteredInputControl {
-	  public static final String CHARACTER_FILTER = org.araneaframework.uilib.form.control.inputfilter.InputFilter.CHARACTER_FILTER_ATTRIBUTE;
+    public static final String CHARACTER_FILTER = org.araneaframework.uilib.form.control.inputfilter.InputFilter.CHARACTER_FILTER_ATTRIBUTE;
   }
 }

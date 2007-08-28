@@ -25,6 +25,7 @@ import org.araneaframework.jsp.util.JspUtil;
  * the content belongs.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.1
  * @jsp.tag
  *   name = "widgetMarker"
  *   body-content = "JSP"
