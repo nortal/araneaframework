@@ -45,7 +45,8 @@ public class LinkButtonHtmlTag extends BaseButtonTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "href", "javascript:");
-    JspUtil.writeAttribute(out, "onclick", onclick);    
+    JspUtil.writeAttribute(out, "onclick", onclick);
+    JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeCloseStartTag_SS(out);
 
     return EVAL_BODY_INCLUDE;    

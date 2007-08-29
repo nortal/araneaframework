@@ -127,7 +127,7 @@ public class Data implements java.io.Serializable, FormElementAware {
    */
   public void restoreBaseState() {
     // TODO: maybe deep copy?
-    value = markedBaseValue;
+    setValue(markedBaseValue);
   }
   
   /**
