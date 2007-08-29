@@ -16,16 +16,23 @@
 
 package org.araneaframework.framework;
 
-import java.io.Serializable;
+import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.Widget;
+import org.araneaframework.framework.FlowContext.Configurator;
+import org.araneaframework.framework.FlowContext.Handler;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
  */
-public interface OverlayContext extends Serializable {
-
-  FlowContext getFlowCtx();
-
+public interface OverlayContext {
   boolean isOverlayActive();
 
+  /** FlowContext delegate methods */
+  void replace(Widget flow, Configurator configurator);
+  void replace(Widget flow);
+  void reset(EnvironmentAwareCallback callback);
+  void start(Widget flow, Configurator configurator, Handler handler);
+  void start(Widget flow, Handler handler);
+  void start(Widget flow);
 }

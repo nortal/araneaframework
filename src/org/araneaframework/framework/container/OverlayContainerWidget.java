@@ -17,6 +17,7 @@
 package org.araneaframework.framework.container;
 
 import org.araneaframework.Environment;
+import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -24,9 +25,10 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.framework.FlowContext.Configurator;
+import org.araneaframework.framework.FlowContext.Handler;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -49,12 +51,8 @@ public class OverlayContainerWidget extends BaseApplicationWidget implements Ove
     this.overlay = overlay;
   }
 
-  public FlowContext getFlowCtx() {
-    return (FlowContext) overlay;
-  }
-
   public boolean isOverlayActive() {
-    return getFlowCtx().isNested();
+    return overlay.isNested();
   }
 
   protected Environment getChildWidgetEnvironment() throws Exception {
@@ -99,4 +97,28 @@ public class OverlayContainerWidget extends BaseApplicationWidget implements Ove
       main._getWidget().render(output);
   }
 
+  // FlowContext methods
+  public void replace(Widget flow) {
+    overlay.replace(flow);
+  }
+
+  public void replace(Widget flow, Configurator configurator) {
+    overlay.replace(flow, configurator);
+  }
+
+  public void reset(EnvironmentAwareCallback callback) {
+    overlay.reset(callback);
+  }
+
+  public void start(Widget flow, Configurator configurator, Handler handler) {
+    overlay.start(flow, configurator, handler);
+  }
+
+  public void start(Widget flow, Handler handler) {
+    overlay.start(flow, handler);
+  }
+
+  public void start(Widget flow) {
+    overlay.start(flow);
+  }
 }
