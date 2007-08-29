@@ -16,6 +16,7 @@
 
 package example;
 
+import javax.servlet.ServletContext;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -23,7 +24,8 @@ import org.araneaframework.core.BaseService;
 import org.araneaframework.http.util.ServletUtil;
 
 public class NameService extends BaseService {
-  protected void action(Path path, InputData input, OutputData output) throws Exception {        
-    ServletUtil.include("/WEB-INF/name.jsp", getEnvironment(), output);
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    ServletContext servletContext = (ServletContext) getEnvironment().getEntry(ServletContext.class);
+    servletContext.getRequestDispatcher("/WEB-INF/name.jsp").include(ServletUtil.getRequest(input), ServletUtil.getResponse(output));
   }
 }
