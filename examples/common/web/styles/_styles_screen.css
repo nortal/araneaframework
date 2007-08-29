@@ -2,8 +2,9 @@ body { background: #f4f4f4 url(../gfx/i02.gif) 77px 0 repeat-x; }
 
 /* Tooltip */
 
-#tooltip { display: none; position: absolute; width: 150px; }
-#tooltipInner { padding: 10px; }
+.tooltip { width: 150px; color: #fff;}
+.tooltip .title { background: #A61001; font: italic 17px Georgia, serif; padding: 5px;}
+.tooltip .content { background: #C61001; font: 11px Arial, Helvetica, sans-serif; padding: 5px;} 
 
 /* Main framework */
 
@@ -135,4 +136,3 @@ div.aranea-tabs A { display: block; padding: 5px 15px 5px 15px; }
 
 div.aranea-clear { clear: both; font-size: 1px; line-height: 0px; float: none !important; line-width: 0px; width: 0px; }
 
-.aranea-tooltip { border: 1px solid #E2D787; padding: 4px; background: #FDFCF7; color: #7C6E0C; font-size: 10px; position: absolute; visibility:hidden}

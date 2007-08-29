@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.core.ProxyActionListener;
 import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.HttpOutputData;
@@ -46,7 +47,6 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
   private FormElement bigTotal;
 
   protected void init() throws Exception {
-    super.init();
     setViewSelector("sample/sampleActionForm");
 
     form = new FormWidget();
@@ -83,15 +83,14 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
       }
     });
 
-    addActionListener("vatChange", new StandardActionListener() {
-      private static final long serialVersionUID = 1L;
-      public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
-        // TODO numberFormatException handling
-        vat.setValue(round2(new BigDecimal(actionParam)));
-        calculate();
-        writeFields(output);
-      }
-    });
+    addActionListener("vatChange", new ProxyActionListener(this));
+  }
+
+  public void handleActionVatChange(String actionParam) throws Exception {
+    // TODO numberFormatException handling
+    vat.setValue(round2(new BigDecimal(actionParam)));
+    calculate();
+    writeFields(getOutputData());
   }
 
   protected void calculate() {

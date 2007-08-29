@@ -184,7 +184,9 @@ function AraneaPage() {
     if (this.isSubmitted() || !this.isLoaded())
     return false;
     
-  var systemForm = this.getSystemForm();
+    var systemForm = $(element).ancestors().find(function(element) {
+    	return element.tagName.toLowerCase() == 'form' && element.hasAttribute('arn-systemForm');
+    });
     var preCondition = this.getEventPreCondition(element);
 
     if (preCondition) {
@@ -206,6 +208,10 @@ function AraneaPage() {
    * submit methods.
    */
   this.findSubmitter = function(element, systemForm) {
+	if (systemForm.hasClassName('aranea-overlay')) {
+		return new DefaultAraneaOverlaySubmitter(systemForm);
+	}
+
     var updateRegions = this.getEventUpdateRegions(element);
 
   if (updateRegions && updateRegions.length > 0)
@@ -392,6 +398,45 @@ DefaultAraneaSubmitter.prototype.event_4 = function(systemForm, eventId, widgetI
   systemForm.submit();
 
   return false;
+}
+
+function DefaultAraneaOverlaySubmitter(form) {
+  var systemForm = form;
+
+  this.event = function(element) {
+    // event information
+    var widgetId = araneaPage().getEventTarget(element);
+    var eventId = araneaPage().getEventId(element);
+    var eventParam = araneaPage().getEventParam(element);
+
+    systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
+    systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
+    systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
+
+   	Modalbox.show(
+   	  systemForm.readAttribute('action') + '?araOverlay',
+   	  {
+   	    method: 'post',
+   	    params: systemForm.serialize(true),
+   	    overlayClose: false,
+   	    width: 800,
+   	    slideDownDuration: .0,
+   	    slideUpDuration: .0,
+   	    overlayDuration: .0,
+   	    resizeDuration: .0,
+   	    afterLoad: function(content) {
+   	      if (content == '') {
+   	        //Modalbox.hide();
+            var systemForm = araneaPage().getSystemForm();
+            if (systemForm.transactionId)
+              systemForm.transactionId.value = 'override';
+            return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
+   	      }
+        }
+   	  }
+   	);
+   	return false;
+  }
 }
 
 function DefaultAraneaAJAXSubmitter(form) {

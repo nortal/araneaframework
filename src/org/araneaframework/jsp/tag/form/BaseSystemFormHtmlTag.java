@@ -38,6 +38,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
   protected String derivedId = null;
   protected String method = null;
   protected String enctype = null;
+  protected String styleClass = null;
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -53,6 +54,8 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     JspUtil.writeAttribute(out, "enctype", enctype);
     JspUtil.writeAttribute(out, "accept-charset", getAcceptCharset());
     JspUtil.writeAttribute(out, "action", ((HttpServletResponse)pageContext.getResponse()).encodeURL(getFormAction()));
+    if (styleClass != null)
+      JspUtil.writeAttribute(out, "class", styleClass);
     JspUtil.writeAttribute(out, "style", "margin: 0px");
     JspUtil.writeAttribute(out, "onsubmit", "return false;");
     JspUtil.writeAttribute(out, "arn-systemForm", "true");
@@ -104,6 +107,16 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
    */
   public void setEnctype(String enctype) throws JspException {
     this.enctype = (String)evaluate("enctype", enctype, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false" 
+   *   description = "CSS class for tag"
+   */
+  public void setStyleClass(String styleClass) throws JspException {
+    this.styleClass = (String) evaluate("styleClass", styleClass, String.class);
   }
 
   /* ***********************************************************************************

@@ -38,9 +38,10 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionListener());
     putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
-  
+
   protected void init() throws Exception {
 	super.init();
+	setFinishable(false);
   }
 
   protected Environment getChildWidgetEnvironment() throws Exception {
