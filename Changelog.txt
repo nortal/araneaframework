@@ -1,5 +1,25 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2007.08.31    | Aranea 1.1-M4
+
+Features and Improvements
+	setInputFilter() method has been added to various Controls                | See #486
+    ProxyActionListener was added (analogous to ProxyEventListener)           | See #490
+    All Aranea JSP <ui:*button> tags now recognize 'tabindex' attribute       | See #473
+    New ListItemsData constructor -- ListItemsData(List itemRange, Long count)| See #494
+    Bundled Prototype JS library was upgraded from 1.5.1 -> 1.5.1.1           | See #489
+   
+Bugfixes
+    BeanFormWidget writeToBean (old readBean()) destroying content of subform | See #420
+    FormWidget restoreBaseState() did not work correctly                      | See #507
+    Rare NPE in ListSqlHelper.getDatabase(Filter|Order)Params was removed     | See #249
+    examples/serviceHelloName had stopped working                             | See #510
+    
+Deprecation & API changes
+    BeanFormWidget.readFromBean() replaces deprecated writeBean().            | See 
+    BeanFormWidget.writeToBean() replaces deprecated readBean().              |   #447
+    We are sorry that old methods were named so confusingly unintuitively.    | & #474
+---------------------------------------------------------------------------------------------
 2007.06.22    | Aranea 1.1-M3
 
 Features and Improvements
