@@ -28,6 +28,7 @@ public class BaseButtonTag extends PresentationTag {
   protected String id = null;
   protected String labelId = null;
   protected String onclick = null;
+  protected String tabindex;
 
   /* ***********************************************************************************
    * Tag attributes
@@ -61,5 +62,16 @@ public class BaseButtonTag extends PresentationTag {
    */
   public void setOnclick(String onclick) throws JspException {
     this.onclick = (String)evaluate("onclick", onclick, String.class);
+  }
+  
+  /**
+   * @since 1.0.11
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "HTML tabindex for the button."
+   */	
+  public void setTabindex(String tabindex) throws JspException {
+    this.tabindex = (String)evaluateNotNull("tabindex", tabindex, String.class);
   }
 }

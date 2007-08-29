@@ -1,6 +1,20 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2007.08.31    | Aranea 1.0.11
 
+Features and Improvements
+    New ListItemsData constructor -- ListItemsData(List itemRange, Long count)| See #494
+    All Aranea JSP <ui:*button> tags now recognize 'tabindex' attribute       | See #473
+    Bundled Prototype JS library was upgraded from 1.5.0_rc0 to 1.5.1.1       | See #489
+    ProxyActionListener was added (analogous to ProxyEventListener)           | See #490
+    setInputFilter() method has been added to various Controls                | See #486
+
+Bugfixes
+    BackendListDataProvider sometimes threw NPE when log level was >= DEBUG   | See #403
+    FormWidget restoreBaseState() did not work (since 1.0.?)                  | See #507
+    Rare NPE in ListSqlHelper.getDatabase(Filter|Order)Params was removed     | See #249
+    examples/serviceHelloName had stopped working                             | See #510
+---------------------------------------------------------------------------------------------
 2007.07.30    | Aranea 1.0.10
 
 Features and Improvements

@@ -58,6 +58,7 @@ public class ButtonHtmlTag extends BaseButtonTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "onclick", onclick);
+    JspUtil.writeAttribute(out, "tabindex", tabindex);
     if (labelId != null && renderMode.equals(ButtonHtmlTag.RENDER_INPUT)) {
       JspUtil.writeAttribute(out, "value", JspUtil.getResourceString(pageContext, labelId));      
     }

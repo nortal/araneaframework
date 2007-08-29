@@ -1309,7 +1309,7 @@ public abstract class ListSqlHelper {
 	}
 	
 	private static List getSqlParams(SqlExpression expr) {
-		return expr != null ? Arrays.asList(expr.getValues()) : new ArrayList();
+		return (expr != null && expr.getValues() != null)? Arrays.asList(expr.getValues()) : new ArrayList();
 	}
 	
 	/**
