@@ -30,8 +30,8 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class RootWidget extends BaseUIWidget implements SecurityContext {
-	  private static final long serialVersionUID = 1L;
-  private MenuWidget menuWidget;
+	private static final long serialVersionUID = 1L;
+	private MenuWidget menuWidget;
 	private Widget topWidget;
 
 	public RootWidget() {}
@@ -45,6 +45,8 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 		topWidget = null;
 		addWidget("menu", menuWidget);
 		setViewSelector("root");
+
+		menuWidget.selectMenuItem("Aranea_1_1");
 	}
 
 	protected Environment getChildWidgetEnvironment() throws Exception {

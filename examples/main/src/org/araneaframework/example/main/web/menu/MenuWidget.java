@@ -22,6 +22,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
+import org.araneaframework.example.main.release.ReleaseWidget;
 import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
@@ -94,6 +95,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 	
 	protected MenuItem buildMenu() throws Exception {
 		MenuItem result = new MenuItem();
+		MenuItem araneaMenu = result.addMenuItem(null, new MenuItem("Aranea_1_1", ReleaseWidget.class));
 		
 		result.addMenuItem(null, new MenuItem("Management")); {
 			result.addMenuItem("Management", new MenuItem("Persons"));
