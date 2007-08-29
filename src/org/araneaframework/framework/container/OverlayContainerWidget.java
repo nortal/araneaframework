@@ -25,6 +25,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
 
 /**
@@ -32,20 +33,19 @@ import org.araneaframework.framework.OverlayContext;
  * @since 1.1
  */
 public class OverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
-
   private static final String OVERLAY_REQUEST_KEY = "araOverlay";
 
   private static final String MAIN_CHILD_KEY = "m";
   private static final String OVERLAY_CHILD_KEY = "o";
 
   private Widget main;
-  private Widget overlay;
+  private FlowContextWidget overlay;
 
   public void setMain(Widget main) {
     this.main = main;
   }
 
-  public void setOverlay(Widget overlay) {
+  public void setOverlay(FlowContextWidget overlay) {
     this.overlay = overlay;
   }
 
@@ -65,7 +65,6 @@ public class OverlayContainerWidget extends BaseApplicationWidget implements Ove
     super.init();
     Assert.notNull(main);
     Assert.notNull(overlay);
-    Assert.isInstanceOf(FlowContext.class, overlay, "Overlay Widget must implement FlowContext interface");
     addWidget(MAIN_CHILD_KEY, main);
     addWidget(OVERLAY_CHILD_KEY, overlay);
   }

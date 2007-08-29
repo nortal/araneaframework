@@ -37,6 +37,7 @@ import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.FlowContextWidget;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -44,7 +45,7 @@ import org.araneaframework.framework.FlowContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class StandardFlowContainerWidget extends BaseApplicationWidget implements FlowContext {
+public class StandardFlowContainerWidget extends BaseApplicationWidget implements FlowContextWidget {
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************

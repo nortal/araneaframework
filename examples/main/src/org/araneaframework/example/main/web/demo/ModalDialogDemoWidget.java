@@ -88,9 +88,6 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 	  }
 	  
 	  public void handleEventNextFlow() throws Exception {
-//	    if (getOverlayCtx().isOverlayActive())
-//	      handleEventNextFlowOverlay();
-//	    else
 	      getFlowCtx().start(new ModalDialogDemoWidget());
 	  }
 	  

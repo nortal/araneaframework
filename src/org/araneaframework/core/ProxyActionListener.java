@@ -17,8 +17,8 @@
 package org.araneaframework.core;
 
 import java.lang.reflect.Method;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 
@@ -28,8 +28,8 @@ import org.araneaframework.OutputData;
  * @since 1.0.11
  */
 public class ProxyActionListener implements ActionListener {
-  public static final Logger log = Logger.getLogger(ProxyActionListener.class);
-	
+  public static final Log log = LogFactory.getLog(ProxyActionListener.class);
+
   protected Object actionTarget;
 
   public ProxyActionListener(Object actionTarget) {
@@ -60,12 +60,12 @@ public class ProxyActionListener implements ActionListener {
       if (log.isDebugEnabled()) {
         log.debug("Calling method '" + actionHandlerName + "(String)' of class '" + actionTarget.getClass().getName() + "'.");
       }
-      actionHandler.invoke(actionTarget, new Object[] { actionParameter });                
+      actionHandler.invoke(actionTarget, new Object[] { actionParameter });
 
       return;
     } catch (NoSuchMethodException e) {/*OK*/}
 
-    if (log.isEnabledFor(Priority.WARN)) {
+    if (log.isWarnEnabled()) {
       StringBuffer logMessage = new StringBuffer().append("Widget").append(actionTarget instanceof org.araneaframework.Component ? 
     		  " '"+((org.araneaframework.Component)actionTarget).getScope() + "'" :
     		  "");

@@ -29,10 +29,10 @@ import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
-import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupWindowContext;
@@ -48,7 +48,7 @@ import org.araneaframework.http.util.URLUtil;
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class PopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContext {
+public class PopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContextWidget {
   protected Widget child;
 
   public PopupFlowWrapperWidget(Widget child) {

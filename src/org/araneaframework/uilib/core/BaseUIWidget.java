@@ -26,6 +26,7 @@ import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.MountContext;
+import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -72,6 +73,10 @@ public class BaseUIWidget extends BaseApplicationWidget {
   
   protected BeanFactory getBeanFactory() {
     return (BeanFactory) getEnvironment().requireEntry(BeanFactory.class);
+  }
+  
+  protected OverlayContext getOverlayCtx() {
+    return (OverlayContext) getEnvironment().getEntry(OverlayContext.class);
   }
   
   /**

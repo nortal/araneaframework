@@ -41,6 +41,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   
   protected void init() throws Exception {
 	super.init();
+	setFinishable(false);
   }
 
   protected Environment getChildWidgetEnvironment() throws Exception {
