@@ -1866,6 +1866,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
           <colspec colwidth="3*" />
 
           <tbody>
+            <!-- TODO: this is not true anymore, araneaRootFlowContainer
+            is ordinary StandardFlowContainerWidget -->
             <row>
               <entry align="right"><emphasis role="bold">Java
               class:</emphasis></entry>
