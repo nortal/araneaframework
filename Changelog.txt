@@ -13,6 +13,7 @@ Bugfixes
     BackendListDataProvider sometimes threw NPE when log level was >= DEBUG   | See #403
     FormWidget restoreBaseState() did not work (since 1.0.?)                  | See #507
     Rare NPE in ListSqlHelper.getDatabase(Filter|Order)Params was removed     | See #249
+    examples/serviceHelloName had stopped working                             | See #510
 ---------------------------------------------------------------------------------------------
 2007.07.30    | Aranea 1.0.10
 
