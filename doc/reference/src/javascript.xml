@@ -59,7 +59,7 @@
           </sect2>
           
           <sect2>
-            <title>Prototype (<ulink url="http://prototype.conio.net/">http://prototype.conio.net/</ulink>)</title>
+            <title>Prototype (<ulink url="http://www.prototypejs.org/">http://www.prototypejs.org/</ulink>)</title>
             <para>
                Prototype is a JavaScript framework that aims to ease development of dynamic web applications. Aranea JSP
                aims to make more use of it in the future. It is a prerequisite for using Uilib's <emphasis>AutoCompleteTextControl</emphasis> 
