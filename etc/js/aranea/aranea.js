@@ -652,6 +652,7 @@ AraneaPage.TransactionIdRegionHandler.prototype = {
       systemForm.araTransactionId.value = content;
   }
 };
+AraneaPage.addRegionHandler('transactionId', new AraneaPage.TransactionIdRegionHandler());
 
 /**
  * Region handler that updates DOM element content.
@@ -836,65 +837,6 @@ AraneaPage.AjaxValidationRegionHandler.prototype = {
   }
 }
 AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.AjaxValidationRegionHandler());
-
-
-/**
- * Background form validation callback handler.
- *
- * @since 1.1
- */
-AraneaPage.AjaxValidationHandler = Class.create();
-AraneaPage.AjaxValidationHandler.prototype = {
-  el: null,
-
-  initialize: function(el) {
-    this.el = el;
-  },
-  
-  callback: function(request, response) {
-    if (request.status != 200) {
-      alert(request.responseText);	// Very ugly
-      return;
-    }
-
-    if(request.responseText) {
-      var text = new Text(request.responseText);
-      var valid = text.readLine(); // was validation successful?
-      AraneaPage.processResponse(request.responseText);
-
-      var inputSpan = this.getParentSpan(this.el);
-      var labelSpan = this.getLabelSpan(this.el);
-
-      // TODO: allow this to be customizable
-      if(valid != "true"){
-        if (inputSpan) inputSpan.addClassName("error");
-        if (labelSpan) labelSpan.addClassName("error");
-      } else {
-        if (inputSpan) inputSpan.removeClassName("error");
-        if (labelSpan) labelSpan.removeClassName("error");
-      }	
-    }
-  },
-  
-  getParentSpan: function(formelement) {
-    if (formelement.id)
-      return $('fe-span-' + formelement.id);
-    return null;
-  },
-  
-  getLabelSpan: function(formelement) {
-  	if (formelement.id)
-      return $('label-' + formelement.id);
-    return null;
-  },
-
-  getParentElement: function(el, tagName, className) {
-    var x = function(element) { return element.tagName.toUpperCase() == tagName.toUpperCase(); };
-    var y = function(element) { return x(element) && Element.hasClassName(element, className); };
-  	var filter = className ? y : x;
-    return $(el).ancestors().find(filter);
-  }
-};
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */
