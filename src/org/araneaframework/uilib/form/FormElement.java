@@ -294,8 +294,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 
     runInitEvents();
     
-    addActionListener("validate", new ValidationActionListener());
-
+    addActionListener("validate", new FormElementValidationActionListener(this));
   }
   
   protected void destroy() throws Exception {
@@ -450,25 +449,4 @@ public class FormElement extends GenericFormElement implements FormElementContex
       return this.value;
     }
   }
-  
-  private final class ValidationActionListener extends StandardActionListener {
-    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
-      boolean valid = convertAndValidate();
-      Writer out = ((HttpOutputData) output).getWriter();
-      out.write(String.valueOf(valid) + "\n");
-      MessageContext messageContext = (MessageContext) getEnvironment().getEntry(MessageContext.class);
-      if(messageContext != null && (messageContext instanceof UpdateRegionProvider)) {
-          UpdateRegionProvider messageRegion = (UpdateRegionProvider) messageContext;
-
-          // TODO: general mechanism for writing out UpdateRegion's from actions  
-          String messageRegionContent = (String)  messageRegion.getRegions().get(MessageContext.MESSAGE_REGION_KEY).toString();
-          out.write(MessageContext.MESSAGE_REGION_KEY);
-          out.write("\n");
-          out.write(Integer.toString(messageRegionContent.length()));
-          out.write("\n");
-          out.write(messageRegionContent);
-      }
-    }
-  }
-  
 }

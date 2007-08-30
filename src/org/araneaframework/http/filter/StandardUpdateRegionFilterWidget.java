@@ -61,7 +61,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   private Map documentRegions = new HashMap();
   private boolean disabled = false;
 
-  public static final String UPDATE_REGIONS_KEY = "updateRegions";
   public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
 
   public static final String RELOAD_REGION_KEY = "reload";
@@ -87,7 +86,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   }
 
   protected void render(OutputData output) throws Exception {
-    String regionNames = (String) output.getInputData().getGlobalData().get(UPDATE_REGIONS_KEY); 
+    String regionNames = (String) output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY); 
 
     if(regionNames == null) {
       documentRegions.clear();

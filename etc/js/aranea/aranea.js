@@ -652,7 +652,6 @@ AraneaPage.TransactionIdRegionHandler.prototype = {
       systemForm.araTransactionId.value = content;
   }
 };
-AraneaPage.addRegionHandler('transactionId', new AraneaPage.TransactionIdRegionHandler());
 
 /**
  * Region handler that updates DOM element content.
@@ -797,6 +796,48 @@ AraneaPage.ReloadRegionHandler.prototype = {
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
 
+AraneaPage.AjaxValidationRegionHandler = Class.create();
+AraneaPage.AjaxValidationRegionHandler.prototype = {
+  initialize: function() {},
+
+  process: function(content) {
+  	var result = content.evalJSON();
+  	var formelement = $(result.formElementId);
+
+    var inputSpan = this.getParentSpan(formelement);
+    var labelSpan = this.getLabelSpan(formelement);
+
+    if(result.valid){
+      if (inputSpan) inputSpan.removeClassName("error");
+      if (labelSpan) labelSpan.removeClassName("error");
+    } else {
+      if (inputSpan) inputSpan.addClassName("error");
+      if (labelSpan) labelSpan.addClassName("error");
+    }
+  },
+
+  getParentSpan: function(formelement) {
+    if (formelement.id)
+      return $('fe-span-' + formelement.id);
+    return null;
+  },
+  
+  getLabelSpan: function(formelement) {
+  	if (formelement.id)
+      return $('label-' + formelement.id);
+    return null;
+  },
+
+  getParentElement: function(el, tagName, className) {
+    var x = function(element) { return element.tagName.toUpperCase() == tagName.toUpperCase(); };
+    var y = function(element) { return x(element) && Element.hasClassName(element, className); };
+  	var filter = className ? y : x;
+    return $(el).ancestors().find(filter);
+  }
+}
+AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.AjaxValidationRegionHandler());
+
+
 /**
  * Background form validation callback handler.
  *
@@ -821,21 +862,32 @@ AraneaPage.AjaxValidationHandler.prototype = {
       var valid = text.readLine(); // was validation successful?
       AraneaPage.processResponse(request.responseText);
 
-      var td = this.getParentElement(this.el, "TD", "inpt");
-      td = td ? td : this.getParentElement(this.el, "TD");
-      var labelSpan = $('label-' + this.el.getAttribute("id"));
-      var lbl = labelSpan ? this.getParentElement(labelSpan, "TD") : null;
+      var inputSpan = this.getParentSpan(this.el);
+      var labelSpan = this.getLabelSpan(this.el);
 
+      // TODO: allow this to be customizable
       if(valid != "true"){
-        if (td) td.addClassName("error");
-        if (lbl) lbl.addClassName("error");
+        if (inputSpan) inputSpan.addClassName("error");
+        if (labelSpan) labelSpan.addClassName("error");
       } else {
-        if (td) td.removeClassName("error");
-        if (lbl) lbl.removeClassName("error");
+        if (inputSpan) inputSpan.removeClassName("error");
+        if (labelSpan) labelSpan.removeClassName("error");
       }	
     }
   },
-	
+  
+  getParentSpan: function(formelement) {
+    if (formelement.id)
+      return $('fe-span-' + formelement.id);
+    return null;
+  },
+  
+  getLabelSpan: function(formelement) {
+  	if (formelement.id)
+      return $('label-' + formelement.id);
+    return null;
+  },
+
   getParentElement: function(el, tagName, className) {
     var x = function(element) { return element.tagName.toUpperCase() == tagName.toUpperCase(); };
     var y = function(element) { return x(element) && Element.hasClassName(element, className); };
