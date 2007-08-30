@@ -258,7 +258,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		JspUtil.writeOpenStartTag(out, "input");
 		if (!StringUtils.isBlank(id)) JspUtil.writeAttribute(out, "id", id);
 		JspUtil.writeAttribute(out, "name", name);
-		JspUtil.writeAttribute(out, "class", getStyleClass());
+		JspUtil.writeAttribute(out, "class", styleClass);
 		JspUtil.writeAttribute(out, "style", getStyle());
 		JspUtil.writeAttribute(out, "type", "text");
 		JspUtil.writeAttribute(out, "value", value);	
