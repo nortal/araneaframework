@@ -799,71 +799,72 @@ AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
 
 AraneaPage.AjaxValidationHandler = Class.create();
 AraneaPage.AjaxValidationHandler.prototype = {
-	el: null,
-	
+  el: null,
+
   initialize: function(el) {
-  	this.el = el;
+    this.el = el;
   },
   
-	callback: function(request, response) {
-		if (request.status != 200) {
-			alert(request.responseText);	// Very ugly
-			return;
-		}
+  callback: function(request, response) {
+    if (request.status != 200) {
+      alert(request.responseText);	// Very ugly
+      return;
+    }
 		
-	  if(request.responseText){
+    if(request.responseText){
       var text = new Text(request.responseText);
-   		var valid = text.readLine(); // was validation successful?
+      var valid = text.readLine(); // was validation successful?
 	  
-	    AraneaPage.regionHandlers['messages'].process(text.toString());
+      AraneaPage.regionHandlers['messages'].process(text.toString());
 
-			var td = this.getParentElement(this.el, "TD", "inpt");
-			if(td == null){
-				td = this.getParentElement(this.el, "TD");
-			}
-			var labelSpan = $('label-' + this.el.getAttribute("id"));
-			if(labelSpan){
-				var label = this.getParentElement(labelSpan, "TD");
-			}
+      var td = this.getParentElement(this.el, "TD", "inpt");
+      if(td == null){
+        td = this.getParentElement(this.el, "TD");
+      }
+      var labelSpan = $('label-' + this.el.getAttribute("id"));
+      if(labelSpan){
+        var label = this.getParentElement(labelSpan, "TD");
+      }
 	  
-			if(valid != "true"){
+      if(valid != "true"){
 	        oldClass = td.getAttribute("class");
 	        td.setAttribute("class", oldClass + " error");
 	        if(label){
 		        oldClass = label.getAttribute("class");
 		        label.setAttribute("class", oldClass + " error");
 	        }
-			} else {
+      } else {
 	      oldClass = td.getAttribute("class");
 	      td.setAttribute("class", oldClass.replace("error", "", "g"));
 	      if(label){
 		      oldClass = label.getAttribute("class");
 		      label.setAttribute("class", oldClass.replace("error", "", "g"));
 	      }
-			}
-			
-		}
-	},
+      }	
+    }
+  },
 	
-	getParentElement: function(el, type, class) {
-		var returnElement = null;
+  getParentElement: function(el, type, className) {
+    var returnElement = null;
     if (el.tagName && el.tagName.toUpperCase() == type) {
-    	returnElement = el;
+      returnElement = el;
     }
-    if(class && el.getAttribute("class") && el.getAttribute("class").indexOf(class) == -1){
-    	returnElement = null;
+
+    if(className && el.getAttribute("class") && el.getAttribute("class").indexOf(className) == -1){
+      returnElement = null;
     }
+
     if(returnElement != null){
-    	return returnElement;
+      return returnElement;
     }
     
-		var el = el.parentNode;
-	  do {
-	    if (el.tagName && el.tagName.toUpperCase() == type && (!class || el.getAttribute("class") && el.getAttribute("class").indexOf(class) > -1))
-	    	return el;
-	    el = el.parentNode;
-	  } while (el);
-	}
+    var el = el.parentNode;
+    do {
+      if (el.tagName && el.tagName.toUpperCase() == type && (!className || el.getAttribute("class") && el.getAttribute("class").indexOf(className) > -1))
+        return el;
+      el = el.parentNode;
+    } while (el);
+  }
 };
 
 /* Initialize new Aranea page.  */
