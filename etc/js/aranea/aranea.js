@@ -209,15 +209,15 @@ function AraneaPage() {
    */
   this.findSubmitter = function(element, systemForm) {
 	if (systemForm.hasClassName('aranea-overlay')) {
-		return new DefaultAraneaOverlaySubmitter(systemForm);
+      return new DefaultAraneaOverlaySubmitter(systemForm);
 	}
 
     var updateRegions = this.getEventUpdateRegions(element);
 
-  if (updateRegions && updateRegions.length > 0)
-    return new DefaultAraneaAJAXSubmitter(systemForm);
-  else
-    return new DefaultAraneaSubmitter(systemForm);
+    if (updateRegions && updateRegions.length > 0)
+      return new DefaultAraneaAJAXSubmitter(systemForm);
+    else
+      return new DefaultAraneaSubmitter(systemForm);
   }
   
   // another submit function, takes all params that are currently possible to use.

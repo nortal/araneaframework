@@ -76,7 +76,7 @@ function applyCharacterFilter(el) {
 }
 
 function setToolTip(el){
-  var toolTip = el.getAttribute("arn-toolTip");
+  var toolTip = $(el).getAttribute("arn-toolTip");
   if (!toolTip) return;
 
   new Tip(el, toolTip);
