@@ -1,6 +1,7 @@
 package org.araneaframework.tests.uilib.form;
 
 import junit.framework.TestCase;
+import org.araneaframework.core.StandardScope;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.NumberControl;
@@ -80,7 +81,7 @@ public class BeanFormWidgetTest extends TestCase {
 	
 	public void testFlatBeanWrite() throws Exception {
 		form = makeFlatBeanForm();
-		form._getComponent().init(new MockEnvironment());
+		form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
 		
 		form.setValueByFullName("a", new Integer(100));
 		form.setValueByFullName("s", "newString");
@@ -93,7 +94,7 @@ public class BeanFormWidgetTest extends TestCase {
 	
 	public void testFlatBeanRead() throws Exception {
 		form = makeFlatBeanForm();
-		form._getComponent().init(new MockEnvironment());
+		form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
 
 		FlatBean bean = makeFlatBean(234, "aaac");
 		form.readFromBean(bean);
@@ -106,7 +107,7 @@ public class BeanFormWidgetTest extends TestCase {
 	// are not modified when writing hierarchical form into hierarchical bean
 	public void testHierarchicalBeanWrite() throws Exception {
 		form = makeHierarchicalBeanForm();
-		form._getComponent().init(new MockEnvironment());
+		form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
 		
 		form.setValueByFullName("a", new Integer(100));
 		form.setValueByFullName("s", "newString");
