@@ -29,7 +29,6 @@ import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.RenderStateAware;
-import org.araneaframework.framework.filter.StandardMessagingFilterWidget;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -453,17 +452,21 @@ public class FormElement extends GenericFormElement implements FormElementContex
   }
   
   private final class ValidationActionListener extends StandardActionListener {
-    public void processAction(Object actionId, String actionParam, InputData input, OutputData output)
-        throws Exception {
+    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
       boolean valid = convertAndValidate();
       Writer out = ((HttpOutputData) output).getWriter();
       out.write(String.valueOf(valid) + "\n");
       MessageContext messageContext = (MessageContext) getEnvironment().getEntry(MessageContext.class);
       if(messageContext != null && (messageContext instanceof UpdateRegionProvider)) {
-        UpdateRegionProvider messageRegion = (UpdateRegionProvider) messageContext;
-        String messageRegionContent = (String) messageRegion.getRegions().get(StandardMessagingFilterWidget.MESSAGE_REGION_KEY);
+          UpdateRegionProvider messageRegion = (UpdateRegionProvider) messageContext;
 
-        out.write(messageRegionContent);
+          // TODO: general mechanism for writing out UpdateRegion's from actions  
+          String messageRegionContent = (String)  messageRegion.getRegions().get(MessageContext.MESSAGE_REGION_KEY).toString();
+          out.write(MessageContext.MESSAGE_REGION_KEY);
+          out.write("\n");
+          out.write(Integer.toString(messageRegionContent.length()));
+          out.write("\n");
+          out.write(messageRegionContent);
       }
     }
   }

@@ -253,7 +253,7 @@ function AraneaPage() {
   
   	if(extraParams)    
      url += '&' + $H(extraParams).toQueryString();
-      
+
     return url;
   }
 
@@ -443,13 +443,13 @@ function DefaultAraneaAJAXSubmitter(form) {
   var systemForm = form;
 
   this.event = function(element) {
-  // event information
-  var widgetId = araneaPage().getEventTarget(element);
-  var eventId = araneaPage().getEventId(element);
-  var eventParam = araneaPage().getEventParam(element);
-  var updateRegions = araneaPage().getEventUpdateRegions(element);
+    // event information
+    var widgetId = araneaPage().getEventTarget(element);
+    var eventId = araneaPage().getEventId(element);
+    var eventParam = araneaPage().getEventParam(element);
+    var updateRegions = araneaPage().getEventUpdateRegions(element);
 
-  return this.event_5(systemForm, eventId, widgetId, eventParam, updateRegions);
+    return this.event_5(systemForm, eventId, widgetId, eventParam, updateRegions);
   }
 }
 
@@ -719,7 +719,7 @@ AraneaPage.MessageRegionHandler.prototype = {
           }
         }
       } else {
-        var messages = messagesByType.values().flatten();
+        var messages = $H(messagesByType).values().flatten();
         if (messages.size() > 0) {
           this.showMessageRegion(region, messages);
           return;
@@ -797,6 +797,11 @@ AraneaPage.ReloadRegionHandler.prototype = {
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
 
+/**
+ * Background form validation callback handler.
+ *
+ * @since 1.1
+ */
 AraneaPage.AjaxValidationHandler = Class.create();
 AraneaPage.AjaxValidationHandler.prototype = {
   el: null,
@@ -810,60 +815,32 @@ AraneaPage.AjaxValidationHandler.prototype = {
       alert(request.responseText);	// Very ugly
       return;
     }
-		
-    if(request.responseText){
+
+    if(request.responseText) {
       var text = new Text(request.responseText);
       var valid = text.readLine(); // was validation successful?
-	  
-      AraneaPage.regionHandlers['messages'].process(text.toString());
+      AraneaPage.processResponse(request.responseText);
 
       var td = this.getParentElement(this.el, "TD", "inpt");
-      if(td == null){
-        td = this.getParentElement(this.el, "TD");
-      }
+      td = td ? td : this.getParentElement(this.el, "TD");
       var labelSpan = $('label-' + this.el.getAttribute("id"));
-      if(labelSpan){
-        var label = this.getParentElement(labelSpan, "TD");
-      }
-	  
+      var lbl = labelSpan ? this.getParentElement(labelSpan, "TD") : null;
+
       if(valid != "true"){
-	        oldClass = td.getAttribute("class");
-	        td.setAttribute("class", oldClass + " error");
-	        if(label){
-		        oldClass = label.getAttribute("class");
-		        label.setAttribute("class", oldClass + " error");
-	        }
+        if (td) td.addClassName("error");
+        if (lbl) lbl.addClassName("error");
       } else {
-	      oldClass = td.getAttribute("class");
-	      td.setAttribute("class", oldClass.replace("error", "", "g"));
-	      if(label){
-		      oldClass = label.getAttribute("class");
-		      label.setAttribute("class", oldClass.replace("error", "", "g"));
-	      }
+        if (td) td.removeClassName("error");
+        if (lbl) lbl.removeClassName("error");
       }	
     }
   },
 	
-  getParentElement: function(el, type, className) {
-    var returnElement = null;
-    if (el.tagName && el.tagName.toUpperCase() == type) {
-      returnElement = el;
-    }
-
-    if(className && el.getAttribute("class") && el.getAttribute("class").indexOf(className) == -1){
-      returnElement = null;
-    }
-
-    if(returnElement != null){
-      return returnElement;
-    }
-    
-    var el = el.parentNode;
-    do {
-      if (el.tagName && el.tagName.toUpperCase() == type && (!className || el.getAttribute("class") && el.getAttribute("class").indexOf(className) > -1))
-        return el;
-      el = el.parentNode;
-    } while (el);
+  getParentElement: function(el, tagName, className) {
+    var x = function(element) { return element.tagName.toUpperCase() == tagName.toUpperCase(); };
+    var y = function(element) { return x(element) && Element.hasClassName(element, className); };
+  	var filter = className ? y : x;
+    return $(el).ancestors().find(filter);
   }
 };
 

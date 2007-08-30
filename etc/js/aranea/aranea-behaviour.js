@@ -20,32 +20,24 @@
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 function setFormElementContext(el) {
-	var span = el.parentNode;
-  do {
-    if (span.tagName && span.tagName.toUpperCase() == 'SPAN')
-    	break;
-    span = span.parentNode;
-  } while (span);
-  
+  var span = $(el).ancestors().find(function(element) {
+  	return element.tagName.toUpperCase() == 'SPAN';
+  });
 
-  if (span && span.tagName && span.tagName.toUpperCase() == 'SPAN' && el.name) {
-    if (document.addEventListener) { // Moz
-      span.onkeydown=function(event) { return uiHandleKeypress(event, el.name); };
-    } else {
-      span.onkeydown=function() { return uiHandleKeypress(event, el.name); };
-    }
+  if (span && el.name) {
+    Event.observe(span, 'keydown', function(ev) { return uiHandleKeypress(ev, el.name);});
   }
-  
 }
 
 function setFormElementValidation(el){
-	if(!araneaPage().getAjaxValidation())	return;
-	
+	if(!araneaPage().getAjaxValidation())
+	  return;
+
 	var ajaxValidationHandler = new AraneaPage.AjaxValidationHandler(el);
 	var elId = el.getAttribute("id");
 	var actionValidate = function(event) {
-		extraParams = new Hash();
-		extraParams[elId] = el.value;
+        extraParams = new Hash()
+        extraParams[elId] = el.value;
 		araneaPage().action(el, 'validate', elId, el.value, ajaxValidationHandler.callback.bind(ajaxValidationHandler), null, null, extraParams);
 	}
 	Event.observe(elId, 'change', actionValidate);
@@ -87,7 +79,7 @@ function setToolTip(el){
   var toolTip = el.getAttribute("arn-toolTip");
   if (!toolTip) return;
 
-  new Tip(el, toolTip)
+  new Tip(el, toolTip);
 }
 
 var aranea_rules = {
