@@ -20,30 +20,11 @@
  */
 
 function AraneaStore() {
-  var objects = new Array();
-
-  this.add = function(object) {
-    var len = objects.length;
-    objects[len] = object;
-  }
-  
-  this.clear = function() {
-    objects = new Array();
-  }
-  
-  this.length = function() {
-    return objects.length;
-  }
-
-  this.getContents = function() {
-    return objects;
-  }
-  
-  this.forEach = function(f) {
-    for(var i = 0; i < objects.length; i++) {
-      f(objects[i]);
-    }
-  }
+  var result = $A(null);
+  result.add = result.push;
+  result.getContents = function() { return this; };
+  result.forEach = result.each;
+  return result;
 }
 
 function AraneaEventStore() {
