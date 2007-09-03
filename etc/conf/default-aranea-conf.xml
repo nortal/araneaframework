@@ -138,7 +138,7 @@
      <property name="overlay" ref="araneaOverlayRootContainer"/>
    </bean>
 
-   <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="araneaRootFlowContainer" singleton="false">
+   <bean class="org.araneaframework.framework.container.RootFlowContainerWidget" id="araneaRootFlowContainer" singleton="false">
      <property name="top" ref="araneaApplicationStart"/>
    </bean>
 
