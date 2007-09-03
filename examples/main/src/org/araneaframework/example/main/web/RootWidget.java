@@ -42,11 +42,12 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 
 	protected void init() throws Exception {
 		menuWidget = new MenuWidget(topWidget);
-		topWidget = null;
 		addWidget("menu", menuWidget);
 		setViewSelector("root");
-
-		menuWidget.selectMenuItem("Aranea_1_1");
+		
+		if (topWidget == null)
+			menuWidget.selectMenuItem("Aranea_1_1");
+		topWidget = null;
 	}
 
 	protected Environment getChildWidgetEnvironment() throws Exception {

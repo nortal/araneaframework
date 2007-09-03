@@ -372,7 +372,7 @@ public abstract class BaseComponent implements Component {
     if (children == null || isDead())
       return;
     
-    Iterator ite = (new HashMap(_getChildren())).keySet().iterator();
+    Iterator ite = (new LinkedMap(_getChildren())).keySet().iterator();
     while(ite.hasNext()) {
       Object key = ite.next();
 
