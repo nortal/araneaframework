@@ -20,7 +20,7 @@
  */
 
 function AraneaStore() {
-  var result = $A(null);
+  var result = $A();
   result.add = result.push;
   result.getContents = function() { return this; };
   result.forEach = result.each;
@@ -30,6 +30,7 @@ function AraneaStore() {
 function AraneaEventStore() {
   var araneaEventStore = function() {
     var processEvent = function(event) {
+      _ap.debug(Object.inspect(event));
       if (typeof event != "function") {
         event;
       } else {
@@ -138,7 +139,13 @@ function AraneaPage() {
   this.addClientLoadEvent = function(event) { clientLoadEvents.add(event); }
   this.addSystemUnLoadEvent = function(event) { systemUnLoadEvents.add(event); }
 
-  this.onload = function() { systemLoadEvents.execute(); this.setLoaded(true); clientLoadEvents.execute(); }
+  this.onload = function() { 
+    this.debug('System load events executing.\n'); 
+    systemLoadEvents.execute(); 
+    this.setLoaded(true); 
+    this.debug('Client load events executing.\n'); 
+    clientLoadEvents.execute(); 
+  }
   this.onunload = function() { systemUnLoadEvents.execute(); }
   
   // General callbacks executed before each form submit.
