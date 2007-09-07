@@ -20,17 +20,35 @@
  */
 
 function AraneaStore() {
-  var result = $A();
-  result.add = result.push;
-  result.getContents = function() { return this; };
-  result.forEach = result.each;
-  return result;
+  var objects = new Array();
+  this.add = function(object) {
+    var len = objects.length;
+    objects[len] = object;
+  }   
+      
+  this.clear = function() {   
+    objects = new Array();   
+  }   
+      
+  this.length = function() {   
+    return objects.length;   
+  }   
+      
+  this.getContents = function() {   
+    return objects;   
+  }   
+      
+  this.forEach = function(f) {   
+    for(var i = 0; i < objects.length; i++) {   
+      f(objects[i]);   
+    }   
+  }
 }
 
 function AraneaEventStore() {
   var araneaEventStore = function() {
     var processEvent = function(event) {
-      _ap.debug(Object.inspect(event));
+      araneaPage().debug(Object.inspect(event));
       if (typeof event != "function") {
         event;
       } else {
@@ -68,8 +86,19 @@ function AraneaPage() {
   
   /* Logger that outputs javascript logging messages. */
   var dummyLogger = new function() { var dummy = function() {}; this.trace = dummy; this.debug = dummy; this.info = dummy; this.warn = dummy; this.error = dummy; this.fatal = dummy;};
-  var firebugLogger = window.console ? new function() { this.trace = window.console.debug; this.debug = window.console.debug; this.info = window.console.info; this.warn = window.console.warn; this.error = window.console.error; this.fatal = window.console.error;} : dummyLogger;
-  var logger = dummyLogger;
+  var safariLogger = (window.console && window.console.log) ? new function() {
+  	  var f = window.console.log;
+  	  this.trace = f; this.debug = f; this.info = f; this.warn = f; this.error = f; this.fatal = f;
+    } : dummyLogger;
+  var firebugLogger = (window.console && window.console.debug) ? new function() {
+  	  this.trace = window.console.debug; 
+  	  this.debug = window.console.debug; 
+  	  this.info = window.console.info; 
+  	  this.warn = window.console.warn; 
+  	  this.error = window.console.error; 
+  	  this.fatal = window.console.error;
+  	} : safariLogger;
+  var logger = log4javascript.getDefaultLogger();
   this.setDummyLogger = function() { logger = dummyLogger; }
   this.setDefaultLogger = function() { 
     if (window['log4javascript/log4javascript.js'])
@@ -135,8 +164,8 @@ function AraneaPage() {
   
   submitCallbacks = new Object();
 
-  this.addSystemLoadEvent = function(event) { systemLoadEvents.add(event); }
-  this.addClientLoadEvent = function(event) { clientLoadEvents.add(event); }
+  this.addSystemLoadEvent = function(event) { this.debug("Added system load event: " + Object.inspect(event)); systemLoadEvents.add(event); }
+  this.addClientLoadEvent = function(event) { this.debug("Added client load event: " + Object.inspect(event)); clientLoadEvents.add(event); }
   this.addSystemUnLoadEvent = function(event) { systemUnLoadEvents.add(event); }
 
   this.onload = function() { 
