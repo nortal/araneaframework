@@ -33,7 +33,7 @@ function setFormElementValidation(el){
 	if(!araneaPage().getAjaxValidation())
 	  return;
 
-	var ajaxValidationHandler = new AraneaPage.AjaxValidationHandler(el);
+	var ajaxValidationHandler = new AraneaPage.AjaxValidationRegionHandler(el);
 	var elId = el.getAttribute("id");
 	var actionValidate = function(event) {
         extraParams = new Hash()
