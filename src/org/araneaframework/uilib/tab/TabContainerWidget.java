@@ -36,9 +36,8 @@ import org.araneaframework.core.StandardEnvironment;
  * @see TabContext for public API
  * 
  * @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
- *
  */
-public class TabContainerWidget extends BaseApplicationWidget implements TabContext{
+public class TabContainerWidget extends BaseApplicationWidget implements TabContext {
 
   public final static String SELECTED_TAB_KEY = "selected";
   private LinkedMap tabs = new LinkedMap();
@@ -92,7 +91,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
     if(this.tabs != null && this.tabs.size() > 0) {
       selectTab((String) this.tabs.get(0));
     }
-    
+
     setGlobalEventListener(new ProxyEventListener(this));
   }
 

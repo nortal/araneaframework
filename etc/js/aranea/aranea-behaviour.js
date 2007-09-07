@@ -36,10 +36,10 @@ function setFormElementValidation(el){
 	var ajaxValidationHandler = new AraneaPage.AjaxValidationRegionHandler(el);
 	var elId = el.getAttribute("id");
 	var actionValidate = function(event) {
-        extraParams = new Hash()
+        extraParams = new Hash();
         extraParams[elId] = el.value;
 		araneaPage().action(el, 'validate', elId, el.value, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, extraParams);
-	}
+	};
 	Event.observe(elId, 'change', actionValidate);
 }
 
