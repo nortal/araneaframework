@@ -58,7 +58,7 @@ public class BeanFormWidget extends FormWidget {
     return new Data(type);
   }
   
-  public BeanFormWidget addBeanSubForm(String id) throws Exception {
+  public BeanFormWidget addBeanSubForm(String id) {
     if (!beanMapper.isReadable(id))
       throw new AraneaRuntimeException("Could not infer type for bean subform '" + id + "'!");
 
@@ -67,11 +67,11 @@ public class BeanFormWidget extends FormWidget {
     return result;
   }
   
-  public FormElement addBeanElement(String elementName, String labelId, Control control, boolean mandatory) throws Exception {
+  public FormElement addBeanElement(String elementName, String labelId, Control control, boolean mandatory) {
     return super.addElement(elementName, labelId, control, inferDataType(elementName, mandatory), mandatory);
   }  
   
-  public FormElement addBeanElement(String elementName, String labelId, Control control, Object initialValue, boolean mandatory) throws Exception {
+  public FormElement addBeanElement(String elementName, String labelId, Control control, Object initialValue, boolean mandatory) {
     return super.addElement(elementName, labelId, control, inferDataType(elementName, mandatory), initialValue, mandatory);
   }
   

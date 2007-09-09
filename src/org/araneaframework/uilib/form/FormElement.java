@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form;
 
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,12 +24,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.RenderStateAware;
-import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -139,7 +134,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * @param control {@link Control}.
    * @throws Exception 
    */
-  public void setControl(Control control) throws Exception {
+  public void setControl(Control control) {
     Assert.notNullParam(control, "control");
     
     this.control = control;
