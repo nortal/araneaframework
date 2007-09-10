@@ -1,4 +1,4 @@
-package org.araneaframework.example.main.web.demo;
+package org.araneaframework.example.main.release.demos;
 
 import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
@@ -32,7 +32,7 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 	   * Builds the form.
 	   */
 	  protected void init() throws Exception {
-		setViewSelector("demo/modalDialog");
+		setViewSelector("release/demos/modalDialog");
 
 		form = new FormWidget();
 
