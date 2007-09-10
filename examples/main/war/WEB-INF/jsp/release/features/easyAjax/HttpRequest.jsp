@@ -30,26 +30,26 @@
 						</ui:formElement>
 					</ui:row>
 
-						<c:if test="${not empty form.elements['concreteBeastControl']}">
-							<ui:row>
-								<ui:formElement id="selectedBeastDesc">
-									<ui:cell colspan="2" styleClass="wrap-centered" width="50%">
-										<ui:textDisplay/>
-									</ui:cell>
-								</ui:formElement>
-			
-								<ui:formElement id="concreteBeastControl">
-									<ui:cell styleClass="centered-name">
-										<ui:label />
-									</ui:cell>
-									<ui:cell>
-										<!-- Render MultiSelectControl with checkboxes. 
-										     Instead ui:multiSelect could be used ... -->
-										<ui:checkboxMultiSelect type="vertical" />
-									</ui:cell>
-								</ui:formElement>
-							</ui:row>
-						</c:if>
+					<c:if test="${not empty form.elements['concreteBeastControl']}">
+						<ui:row>
+							<ui:formElement id="selectedBeastDesc">
+								<ui:cell colspan="2" styleClass="wrap-centered" width="50%">
+									<ui:textDisplay/>
+								</ui:cell>
+							</ui:formElement>
+		
+							<ui:formElement id="concreteBeastControl">
+								<ui:cell styleClass="centered-name">
+									<ui:label />
+								</ui:cell>
+								<ui:cell>
+									<!-- Render MultiSelectControl with checkboxes. 
+									     Instead ui:multiSelect could be used ... -->
+									<ui:checkboxMultiSelect type="vertical" />
+								</ui:cell>
+							</ui:formElement>
+						</ui:row>
+					</c:if>
 
 				</tui:componentForm>
 
