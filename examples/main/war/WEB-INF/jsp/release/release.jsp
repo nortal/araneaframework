@@ -75,7 +75,7 @@ police patrol monitoring application that needed very fast responses.
        What needs to be done to migrate from Aranea 1.0 -&gt; 1.1? 
     </h2>
     <p>
-    	Take a look at the migration guide. If it leaves some your questions unanswered, turn to our
+    	Take a look at the migration guide. If it should leave you with some unanswered questions, turn to our
     	<a href="http://forum.araneaframework.org">forums</a> for support.
     </p>
 

@@ -23,6 +23,7 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
+import org.araneaframework.example.main.release.features.EasyAJAXUpdateRegionsWidget;
 import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
@@ -98,6 +99,11 @@ public class MenuWidget extends TemplateMenuWidget  {
 		MenuItem result = new MenuItem();
 		MenuItem araneaMenu = result.addMenuItem(null, new MenuItem("Aranea_1_1", ReleaseWidget.class));
 		
+		// Aranea 1.1 features/demos
+		araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
+		
+		
+		// "Management"
 		result.addMenuItem(null, new MenuItem("Management")); {
 			result.addMenuItem("Management", new MenuItem("Persons"));
 			// example use of simple FlowCreator
