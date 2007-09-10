@@ -100,12 +100,14 @@ public class MenuWidget extends TemplateMenuWidget  {
 		MenuItem araneaMenu = result.addMenuItem(null, new MenuItem("Aranea_1_1", ReleaseWidget.class));
 		
 		// Aranea 1.1 features/demos
+		araneaMenu.addMenuItem(new MenuItem("Context_Menus", DemoContextMenuWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("List", SimpleListWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
-		araneaMenu.addMenuItem(new MenuItem("Context_Menus", DemoContextMenuWidget.class));
+
 		
 		// "Management"
 		result.addMenuItem(null, new MenuItem("Management")); {

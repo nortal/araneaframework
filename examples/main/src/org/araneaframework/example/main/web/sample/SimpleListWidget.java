@@ -18,11 +18,13 @@ package org.araneaframework.example.main.web.sample;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.TestVO;
+import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
@@ -39,9 +41,10 @@ public class SimpleListWidget extends TemplateBaseWidget {
   protected void init() throws Exception {
 	setViewSelector("sample/simpleList");
 	
-	simpleList = new ListWidget();
+	simpleList = new BeanListWidget(TestVO.class);
 	addWidget("simpleList", simpleList);
 	simpleList.setDataProvider(new SimpleListDataProvider());
+	simpleList.setOrderableByDefault(true);
 	simpleList.addField("booleanValue", "#Boolean");
 	simpleList.addField("stringValue", "#String");
 	simpleList.addField("longValue", "#Long");
@@ -60,7 +63,8 @@ public class SimpleListWidget extends TemplateBaseWidget {
         TestVO test1 = new TestVO();
         test1.setId(new Long(1 + i));
         test1.setBooleanValue(Boolean.TRUE);
-        test1.setStringValue("Strange");
+
+        test1.setStringValue(new Locale("en", Locale.getISOCountries()[i]).getDisplayCountry(Locale.ENGLISH));
         test1.setLongValue(new Long(rnd.nextLong() % 100));
         data.add(test1);
     
