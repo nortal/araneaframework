@@ -8,9 +8,20 @@ import org.araneaframework.example.main.web.demo.DemoComplexForm;
  */
 public class EasyAJAXUpdateRegionsWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
-		addWidget("1", new DemoComplexForm());
-		addWidget("2", new DemoComplexForm());
-
-		setViewSelector("release/features/easyAjaxUpdateRegions");
+		addWidget("1", new EasyAjaxDemoWidget("release/features/easyAjax/HttpRequest"));
+		addWidget("2", new EasyAjaxDemoWidget("release/features/easyAjax/XMLHttpRequest"));
+	}
+	
+	private static class EasyAjaxDemoWidget extends DemoComplexForm {
+		private String customViewSelector;
+		
+		public EasyAjaxDemoWidget(String customViewSelector) {
+			this.customViewSelector = customViewSelector;
+		}
+		
+		protected void init() throws Exception {
+			super.init();
+			setViewSelector(customViewSelector);
+		}
 	}
 }
