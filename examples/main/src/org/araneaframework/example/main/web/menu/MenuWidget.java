@@ -24,6 +24,7 @@ import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
+import org.araneaframework.example.main.release.demos.DemoContextMenuWidget;
 import org.araneaframework.example.main.release.demos.DemoTabWidget;
 import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
 import org.araneaframework.example.main.release.demos.SimpleTreeWidget;
@@ -35,7 +36,6 @@ import org.araneaframework.example.main.web.contract.ContractListWidget;
 import org.araneaframework.example.main.web.demo.DemoAutomaticFormElement;
 import org.araneaframework.example.main.web.demo.DemoCheckboxList;
 import org.araneaframework.example.main.web.demo.DemoComplexForm;
-import org.araneaframework.example.main.web.demo.DemoContextMenuWidget;
 import org.araneaframework.example.main.web.demo.DemoDisplayForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
 import org.araneaframework.example.main.web.demo.DemoEmbeddedDisplayableEditableList;
@@ -105,6 +105,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		araneaMenu.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("Context_Menus", DemoContextMenuWidget.class));
 		
 		// "Management"
 		result.addMenuItem(null, new MenuItem("Management")); {
@@ -138,7 +139,7 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("Simple", new MenuItem("MultiSelect", DemoMultiSelect.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("RadioSelect", DemoRadioSelect.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("demo_automaticForm_title", DemoAutomaticFormElement.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("Context_Menus", DemoContextMenuWidget.class));
+
       
       MenuItem advDemos = sampleMenu.addMenuItem(new MenuItem("Advanced"));
       sampleMenu.addMenuItem("Advanced", new MenuItem("File_Upload", DemoFileUpload.class));

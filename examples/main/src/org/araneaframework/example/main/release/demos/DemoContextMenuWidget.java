@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.web.demo;
+package org.araneaframework.example.main.release.demos;
 
 import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
@@ -48,7 +48,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
    * Builds the form.
    */
   protected void init() throws Exception {
-    setViewSelector("demo/demoContextMenu");
+    setViewSelector("release/demos/demoContextMenu");
 
     simpleForm = new FormWidget();
 
