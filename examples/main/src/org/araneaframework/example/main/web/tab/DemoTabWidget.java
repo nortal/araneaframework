@@ -2,7 +2,6 @@ package org.araneaframework.example.main.web.tab;
 
 import org.araneaframework.Widget;
 import org.araneaframework.example.main.web.demo.DemoMultiSelect;
-import org.araneaframework.example.main.web.misc.EventErrorWidget;
 import org.araneaframework.example.main.web.misc.RedirectingWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.uilib.core.BaseUIWidget;
@@ -18,10 +17,10 @@ public class DemoTabWidget extends BaseUIWidget {
     WidgetTab ajaxTab = new WidgetTab("simpleform", "Simple_Form", SimpleFormWidget.class);
     ajaxTab.setTooltip("#Ajaxt tab Tooltip");
     containerWidget.addTab(ajaxTab);
-    containerWidget.addTab(new WidgetTab("event", "#Event error widget", EventErrorWidget.class));
+    containerWidget.addTab(new WidgetTab("simpleForm", "#Simple Form Widget", SimpleFormWidget.class));
     containerWidget.addTab(new WidgetTab("redirect", "#Redirecting widget", RedirectingWidget.class));
     containerWidget.addTab(new SimpleTab("multi", "#Multi Select demo"));
-    
+
     addWidget("tabContainer", containerWidget);
   }
   
@@ -33,6 +32,5 @@ public class DemoTabWidget extends BaseUIWidget {
     public Widget createWidget() {
       return new DemoMultiSelect();
     }
-    
   }
 }

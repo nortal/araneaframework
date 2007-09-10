@@ -49,7 +49,7 @@ function AraneaStore() {
 function AraneaEventStore() {
   var araneaEventStore = function() {
     var processEvent = function(event) {
-      araneaPage().debug(Object.inspect(event));
+      araneaPage().getLogger().trace(Object.inspect(event));
       if (typeof event != "function") {
         event;
       } else {
@@ -166,15 +166,15 @@ function AraneaPage() {
   
   submitCallbacks = new Object();
 
-  this.addSystemLoadEvent = function(event) { this.debug("Added system load event: " + Object.inspect(event)); systemLoadEvents.add(event); };
-  this.addClientLoadEvent = function(event) { this.debug("Added client load event: " + Object.inspect(event)); clientLoadEvents.add(event); };
-  this.addSystemUnLoadEvent = function(event) { systemUnLoadEvents.add(event); };
+  this.addSystemLoadEvent = function(event) { systemLoadEvents.add(event); }
+  this.addClientLoadEvent = function(event) { clientLoadEvents.add(event); }
+  this.addSystemUnLoadEvent = function(event) { systemUnLoadEvents.add(event); }
 
   this.onload = function() { 
-    this.debug('System load events executing.\n'); 
-    systemLoadEvents.execute(); 
-    this.setLoaded(true); 
-    this.debug('Client load events executing.\n'); 
+    logger.trace('System load events executing.\n'); 
+    systemLoadEvents.execute();
+    this.setLoaded(true);
+    logger.trace('Client load events executing.\n'); 
     clientLoadEvents.execute(); 
   };
   this.onunload = function() { systemUnLoadEvents.execute(); };
