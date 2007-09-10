@@ -22,7 +22,7 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
   private FormWidget form;
   
   public void init() throws Exception {
-    setViewSelector("demo/demoAutoCompletion");
+    setViewSelector("release/demos/demoAutoCompletion");
     form = new FormWidget();
     
     AutoCompleteTextControl actc = new AutoCompleteTextControl();
