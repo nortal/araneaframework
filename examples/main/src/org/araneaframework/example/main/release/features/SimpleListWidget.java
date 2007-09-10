@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.web.sample;
+package org.araneaframework.example.main.release.features;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class SimpleListWidget extends TemplateBaseWidget {
   protected ListWidget simpleList;
     
   protected void init() throws Exception {
-	setViewSelector("sample/simpleList");
+	setViewSelector("release/features/simpleList");
 	
 	simpleList = new BeanListWidget(TestVO.class);
 	addWidget("simpleList", simpleList);
