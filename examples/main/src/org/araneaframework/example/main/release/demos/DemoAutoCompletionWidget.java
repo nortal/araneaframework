@@ -1,4 +1,4 @@
-package org.araneaframework.example.main.web.demo;
+package org.araneaframework.example.main.release.demos;
 
 import java.io.Serializable;
 import java.util.ArrayList;

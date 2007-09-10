@@ -23,12 +23,12 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
+import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.release.features.EasyAJAXUpdateRegionsWidget;
 import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
-import org.araneaframework.example.main.web.demo.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.web.demo.DemoAutomaticFormElement;
 import org.araneaframework.example.main.web.demo.DemoCheckboxList;
 import org.araneaframework.example.main.web.demo.DemoComplexForm;
@@ -66,7 +66,6 @@ import org.araneaframework.example.main.web.tree.SimpleTreeWidget;
 import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.MenuItem;
-import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
 import org.araneaframework.uilib.support.FlowCreator;
 
 /**
