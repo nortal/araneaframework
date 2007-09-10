@@ -10,7 +10,7 @@ public class EasyAJAXUpdateRegionsWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
 		addWidget("1", new DemoComplexForm());
 		addWidget("2", new DemoComplexForm());
-		
+
 		setViewSelector("release/features/easyAjaxUpdateRegions");
 	}
 }
