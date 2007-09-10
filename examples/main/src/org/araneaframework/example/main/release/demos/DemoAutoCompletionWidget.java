@@ -74,7 +74,7 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
         allSuggestions.add(new Locale(language, (String)i.next()).getDisplayCountry(locCtxProvider.getL10nCtx().getLocale()));
       }
     }
-    
+
     private boolean isLanguageChanged() {
       return !language.equals(locCtxProvider.getL10nCtx().getLocale().getLanguage());
     }

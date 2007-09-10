@@ -24,6 +24,7 @@ import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
+import org.araneaframework.example.main.release.demos.SimpleTreeWidget;
 import org.araneaframework.example.main.release.features.EasyAJAXUpdateRegionsWidget;
 import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
@@ -62,7 +63,6 @@ import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
 import org.araneaframework.example.main.web.tab.DemoTabWidget;
 import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
-import org.araneaframework.example.main.web.tree.SimpleTreeWidget;
 import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.MenuItem;
@@ -102,6 +102,8 @@ public class MenuWidget extends TemplateMenuWidget  {
 		// Aranea 1.1 features/demos
 		araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
+		
 		
 		// "Management"
 		result.addMenuItem(null, new MenuItem("Management")); {
@@ -142,7 +144,6 @@ public class MenuWidget extends TemplateMenuWidget  {
       sampleMenu.addMenuItem("Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Advanced_Popup", DemoAdvancedPopupUsageWidget.class));
-      advDemos.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
       advDemos.addMenuItem(new MenuItem("demo_filteredinput", FilteredInputDemoWidget.class));
       
       advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));

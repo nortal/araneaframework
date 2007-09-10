@@ -21,7 +21,7 @@
     	</p>
 
     <h2>
-		What pre-built components and ready-to-use featurs does Aranea 1.1 offer me?
+		What pre-built components and ready-to-use features does Aranea 1.1 offer me?
     </h2>
     <p>
     	Commented demos of Aranea 1.1 features and components can be accessed by using side-menu links. 

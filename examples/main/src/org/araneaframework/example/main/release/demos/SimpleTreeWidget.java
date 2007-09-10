@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.web.tree;
+package org.araneaframework.example.main.release.demos;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,7 +38,7 @@ import org.araneaframework.uilib.tree.TreeWidget;
  */
 public class SimpleTreeWidget extends TemplateBaseWidget {
   protected void init() throws Exception {
-    setViewSelector("tree/simpleTree");
+    setViewSelector("release/demos/tree/simpleTree");
 
     TreeWidget tree1 = new TreeWidget(new SimpleTreeDataProvider());
     tree1.setRemoveChildrenOnCollapse(false);
@@ -91,7 +91,7 @@ public class SimpleTreeWidget extends TemplateBaseWidget {
     }
 
     protected void init() throws Exception {
-      setViewSelector("tree/simpleTreeDisplay");
+      setViewSelector("release/demos/tree/simpleTreeDisplay");
     }
 
     public String getPath() {
