@@ -24,6 +24,7 @@ import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
+import org.araneaframework.example.main.release.demos.DemoTabWidget;
 import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
 import org.araneaframework.example.main.release.demos.SimpleTreeWidget;
 import org.araneaframework.example.main.release.features.EasyAJAXUpdateRegionsWidget;
@@ -61,7 +62,6 @@ import org.araneaframework.example.main.web.sample.SampleActionFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleListWidget;
-import org.araneaframework.example.main.web.tab.DemoTabWidget;
 import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
 import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
 import org.araneaframework.http.util.ServletUtil;
@@ -103,6 +103,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
 		
 		// "Management"
@@ -166,9 +167,6 @@ public class MenuWidget extends TemplateMenuWidget  {
       treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
       treeMenu.addMenuItem(new MenuItem("Complex_Tree", ComplexTreeWidget.class));
       treeMenu.addMenuItem(new MenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class));
-      
-      sampleMenu.addMenuItem(new MenuItem("Tabs"));
-      sampleMenu.addMenuItem("Tabs", new MenuItem("Tabs_Demo", DemoTabWidget.class));
     } 
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
