@@ -60,7 +60,7 @@
 	<target name="war" depends="build" description="Build the ready-to-deploy war archive">
 		<mkdir dir="dist"/>
 		<war destfile="dist/aranea-template-app.war" webxml="war/WEB-INF/web.xml">
-			<lib dir="war/WEB-INF/lib" excludes="jasper*"/>
+			<lib dir="war/WEB-INF/lib" excludes="jasper*,jsp-api*,j2ee.jar,ivy*.jar,xdoclet*.jar,xjavadoc.jar"/>
 			<classes dir="war/WEB-INF/classes"/>
 			<zipfileset dir="war/WEB-INF" includes="*" excludes="web.xml,jetty-web.xml" prefix="WEB-INF"/>
 			<zipfileset dir="war/WEB-INF/jsp" prefix="WEB-INF/jsp"/>
