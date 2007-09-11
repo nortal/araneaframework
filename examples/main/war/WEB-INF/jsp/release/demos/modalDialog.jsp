@@ -7,28 +7,29 @@
 
 	<!-- Component starts here -->
 	<ui:widgetContext>
-
-        <!-- Set the form context, the form we will be rendering here. 
-            We cannot as simply (using non-qualified names) refer to form 
-            elements unless we define the form context here. -->
 		<ui:form id="form">
 
-			<!-- Now, these are the first custom tags in template application. They do
-			     nothing particularly interesting, just set up the HTML DIV element
-			     containing the component header -->
 			<tui:componentHeader>
-				<tui:componentName>Tutorial first form</tui:componentName>
+				<tui:componentName>Modal dialog demo</tui:componentName>
 			</tui:componentHeader>
 
 			<!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
 			<tui:component>
-			
-				<!-- Custom tag, but more interesting that previous tags. It derives from
-                     LayoutHtmlTag tag and allows putting row tags inside of it. 
-                     Attribute rowClasses defines the styleClass attribute for rows inserted under 
-                     componentForm here, cellClasses does the same for cells. These classes are repeating
-                     e.g first cell in a row is with styleClass "name", second with "inpt", and third
-                     cell again has styleClass "name". In HTML, this tag creates a TABLE. -->
+				 <p>
+		      		There are times when one needs to prevent users from wandering around in parallel usecases, 
+		      		shooting themselves in the foot at the go. Aranea provides a way to present all fully-functional Aranea 
+		      		components in modal dialogs (aka <i>overlay</i>), allowing user to complete a parallel usecase or just respond
+		      		to an alert. This avoids the need to open additional browser windows that are often blocked by modern 
+		      		browsers or might just go unnoticed by user. 
+			    </p>
+			    
+			    <p>
+			    	Start another identical widget by clicking on a "Start next" or "Start next in overlay" buttons. Once
+			    	the modal dialog (overlay mode) is activated, both buttons will act identically. When overlay completes (this 
+			    	will happen when "Return to previous" button is used in activated overlay where there are no more flows
+			    	that are running inside overlay), user is returned to main usecase.
+			    </p>
+
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
 					<!-- As we can insert rows now, we do just that. -->
@@ -36,18 +37,10 @@
 						<!-- ... we can insert cells too! As we defined componentForm rowClass 
 							to be cols4  we should insert 4 cells here... -->
 						<ui:cell>
-							<!-- label is formelement centric tag. As we are inside the form 
-							already, we provide it with form element id and corresponding 
-							form element label will be shown -->
 							<ui:label id="checkbox1" />
 						</ui:cell>
 
 						<ui:cell>
-							<!-- This is another approach to providing information about
-								form element that tag should apply to - instead providing
-								form element id to every single tag, tags could be enclosed
-								inside single formElement tag.
-							 -->
 							<ui:formElement id="checkbox1">
 								<!-- will draw a checkbox tied to form element with id "checkbox1" -->
 								<ui:checkbox/>
@@ -59,7 +52,6 @@
 						</ui:cell>
 
 						<ui:cell>
-							<!-- As "textbox1" is TextControl, we choose the corresponding tag to render it -->
 							<ui:textInput id="textbox1"/>
 						</ui:cell>
 					</ui:row>
@@ -115,12 +107,14 @@
 
 				<!-- pure design tag -->
 				<tui:componentActions>
+					<ui:eventButton eventId="nextFlow" labelId="#Start next"/>
+					<ui:eventButton eventId="nextFlowOverlay" labelId="#Start next in overlay"/>
 					<ui:formElement id="button">
 						<ui:button/>
 					</ui:formElement>
-					<ui:eventButton eventId="nextFlow" labelId="#next"/>
-					<ui:eventButton eventId="nextFlowOverlay" labelId="#nextOverlay"/>
-					<ui:eventButton eventId="return" labelId="#return"/>
+					<c:if test="${widget.nested}">
+						<ui:eventButton eventId="return" labelId="#Return to previous"/>
+					</c:if>
 				</tui:componentActions>
 			</tui:component>
 

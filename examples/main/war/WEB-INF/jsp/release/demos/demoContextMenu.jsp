@@ -17,6 +17,17 @@
 
 			<tui:component>
 
+				<p>
+                  It is possible to customize the right-click contextmenu of your application. You can attach the customized contextmenu
+                  to page, list, form input field<ui:entity code="mdash"/>to any component that might need it. 
+			    </p>
+			    
+			    <p>
+			    	Right-click anywhere inside this component to open a customized context-menu with one sublevel. 
+			    </p>
+		
+			    <br/>
+
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
 					<!-- As we can insert rows now, we do just that. -->
