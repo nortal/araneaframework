@@ -23,6 +23,7 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
+import org.araneaframework.example.main.release.demos.ComboTextInputDemoWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.release.demos.DemoContextMenuWidget;
 import org.araneaframework.example.main.release.demos.DemoTabWidget;
@@ -107,6 +108,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		araneaMenu.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("ComboTextInput", ComboTextInputDemoWidget.class));
 
 		// "Management"
 		result.addMenuItem(null, new MenuItem("Management")); {

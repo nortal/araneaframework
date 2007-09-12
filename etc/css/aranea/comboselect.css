@@ -1,0 +1,79 @@
+BODY {
+	margin: 0;
+	padding: 20px;
+}
+BODY, TH, TD, INPUT, SELECT {
+	color: #333;
+	font: 11px Arial, Helvetica, sans-serif;
+}
+TABLE {
+	border-collapse: collapse;
+}
+TABLE TH,
+TABLE TD {
+	padding: .4em .8em;
+	border: 1px solid #ddd;
+	background: #f5f5f5;
+	text-align: left;
+}
+LABEL {
+	cursor: pointer;
+}
+
+INPUT.selectBoxInput,
+IMG.selectBoxArrow {
+	vertical-align: middle;
+}
+IMG.selectBoxArrow {
+	cursor: pointer;
+}
+
+.selectBoxArrow {
+	float: left;
+	position: absolute;
+	right: 1px;
+	width: 16px;
+	height: 16px;
+	margin-top: 1px;
+}
+.selectBoxInput {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 16px;
+	padding-left: 1px;
+	border: 0;
+}
+.selectBox {
+	border-style: solid;
+	border-width: 2px 1px 1px 2px;
+	border-color: #606060 #d4d0c8 #d4d0c8 #606060;
+	height: 18px;
+}
+.selectBoxOptionContainer {
+	position: absolute;
+	left: -2px;
+	top: 18px;
+	z-index: 1000;
+	height: 100px;
+	background: #fff;
+	border: 1px solid #f61901;
+	border: 1px solid;
+	border-color: #b2b2b2 #000 #000 #b2b2b2;
+	visibility: hidden;
+	overflow: auto;
+}
+.selectBoxIframe {
+	position: absolute;
+	z-index: 999;
+	border: 0;
+	background: #fff;
+}
+.selectBoxAnOption {
+	font: 11px Arial, Helvetica, sans-serif;
+	line-height: 15px;
+	cursor: default;
+	margin: 1px;
+	overflow: hidden;
+	white-space: nowrap;
+}

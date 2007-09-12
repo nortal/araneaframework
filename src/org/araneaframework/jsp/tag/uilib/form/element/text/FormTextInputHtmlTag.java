@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.text;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.uilib.form.control.TextControl;
 
@@ -30,26 +31,36 @@ import org.araneaframework.uilib.form.control.TextControl;
  * @jsp.tag
  *   name = "textInput"
  *   body-content = "JSP"
- *   description = "Form text input field, represents UiLib "TextControl"."
+ *   description = "Form text input field, represents UiLib &quot;TextControl&quot;."
  */
 public class FormTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected int doEndTag(Writer out) throws Exception {
-    // Type check
-    assertControlType("TextControl");
+    assertType();
 
     TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
 
     // Write
-    Map attributes = new HashMap();
-    attributes.put("maxLength", viewModel.getMaxLength());
-    if (viewModel.getInputFilter() != null) {
-      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
-    }
+    Map attributes = getCustomAttributes(viewModel);
     writeTextInput(out, "text", true, attributes);
 
     // Continue
     super.doEndTag(out);
     return EVAL_PAGE;
+  }
+
+  /** @since 1.1 */
+  protected void assertType() throws JspException {
+    assertControlType("TextControl");
+  }
+
+  /** @since 1.1 */
+  protected Map getCustomAttributes(TextControl.ViewModel viewModel) {
+    Map attributes = new HashMap();
+    attributes.put("maxLength", viewModel.getMaxLength());
+    if (viewModel.getInputFilter() != null) {
+      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
+    }
+    return attributes;
   }
 }
 
