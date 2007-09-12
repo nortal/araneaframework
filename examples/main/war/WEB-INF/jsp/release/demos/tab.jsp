@@ -6,5 +6,11 @@
 	<ui:tabContainer id="tabContainer">
 		<ui:tabBody/>
 	</ui:tabContainer>
+
+	<p>
+		When user has lots of power, it is sometimes nice to lay this power out in a logically separated way.
+		The tab widget that enjoys wide popularity in all sorts of UI interfaces provides clean
+		approach to do just that.
+	</p>
 	
 </jsp:root>
