@@ -25,6 +25,7 @@ import java.util.Set;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 
@@ -131,7 +132,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    * @return whether the element is valid.
    */
-  public boolean convertAndValidate() throws Exception  {
+  public boolean convertAndValidate() {
     convert();
     return validate();
   }  
@@ -140,18 +141,22 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /**
    * Converts the element value from control to data item
    */
-  public void convert()  throws Exception {
-    converted = false;  
-    validated = false;
-    
-    if (!isAlive())
-      return;
+  public void convert() {
+    try {
+      converted = false;  
+      validated = false;
+		
+      if (!isAlive())
+        return;
 
-    clearErrors();
+      clearErrors();
 
-    convertInternal();
-  	
-  	converted = isValid();
+      convertInternal();
+		
+      converted = isValid();
+	} catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+	}
   }
     
   
@@ -159,15 +164,21 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * Validates the element.
    * 
    * @return whether the element is valid.
-   * @throws Exception 
    */
-  public boolean validate() throws Exception {
-  	validated = false;  	  	
+  public boolean validate() {
+    boolean valid = false;
+    try {
+  	  validated = false;  	  	
   	
-  	boolean valid = validateInternal();
+  	  valid = validateInternal();
     
-  	validated = valid;  	
-  	return valid;
+  	  validated = valid;
+  	  return valid;
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
+
+    return valid;
   }
   
   /**

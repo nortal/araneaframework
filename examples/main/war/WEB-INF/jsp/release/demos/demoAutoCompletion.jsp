@@ -13,6 +13,18 @@
       </tui:componentHeader>
 
       <tui:component>
+      	<p>
+      		It is well known fact that users do not know what they really want. With input suggestions, you can help
+      		them to overcome their initial cluelessness and maybe learn correct spelling of long words :)
+	    </p>
+	        
+	    <p>
+	       When you type at least one character in input field below, browser will ask the server for suggested completions
+	       (which in this case are country names). User is by no means tied to suggested inputs though, 'Mägi-Karabahh'
+	       is as feasible input to below text-field as any other.
+	    </p>
+
+	    <br/>
       
         <tui:componentForm>
 

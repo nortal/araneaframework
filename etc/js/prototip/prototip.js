@@ -282,12 +282,12 @@ Function.prototype.safeBind = function() {
 }
 
 if (araneaPage && typeof araneaPage == "function") {
-  araneaPage().addSubmitCallback(
-    function() {
-  	  // Tips.tips.all(function(tip){ tip.tooltip.hide(); })
-  	  Tips.tips.all(function(tip){ Tips.remove(tip.element); })
-    }
-  );
+  var clearTips = function() {
+    Tips.tips.all(function(tip){ Tips.remove(tip.element); })
+  };
+
+  araneaPage().addSubmitCallback(clearTips);
+  Ajax.Responders.register({ onCreate: clearTips });
 }
 
 window['prototip/prototip.js'] = true;

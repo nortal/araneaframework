@@ -23,15 +23,21 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
+import org.araneaframework.example.main.release.demos.ComboTextInputDemoWidget;
+import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
+import org.araneaframework.example.main.release.demos.DemoContextMenuWidget;
+import org.araneaframework.example.main.release.demos.DemoTabWidget;
+import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
+import org.araneaframework.example.main.release.demos.SimpleTreeWidget;
+import org.araneaframework.example.main.release.features.EasyAJAXUpdateRegionsWidget;
+import org.araneaframework.example.main.release.features.SimpleListWidget;
 import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
-import org.araneaframework.example.main.web.demo.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.web.demo.DemoAutomaticFormElement;
 import org.araneaframework.example.main.web.demo.DemoCheckboxList;
 import org.araneaframework.example.main.web.demo.DemoComplexForm;
-import org.araneaframework.example.main.web.demo.DemoContextMenuWidget;
 import org.araneaframework.example.main.web.demo.DemoDisplayForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
 import org.araneaframework.example.main.web.demo.DemoEmbeddedDisplayableEditableList;
@@ -43,7 +49,6 @@ import org.araneaframework.example.main.web.demo.DemoOnChangeListenersWidget;
 import org.araneaframework.example.main.web.demo.DemoRadioSelect;
 import org.araneaframework.example.main.web.demo.DemoRichTextForm;
 import org.araneaframework.example.main.web.demo.FilteredInputDemoWidget;
-import org.araneaframework.example.main.web.demo.ModalDialogDemoWidget;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
 import org.araneaframework.example.main.web.misc.AjaxRequestErrorWidget;
@@ -58,10 +63,7 @@ import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidg
 import org.araneaframework.example.main.web.sample.SampleActionFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
-import org.araneaframework.example.main.web.sample.SimpleListWidget;
-import org.araneaframework.example.main.web.tab.DemoTabWidget;
 import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
-import org.araneaframework.example.main.web.tree.SimpleTreeWidget;
 import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.MenuItem;
@@ -98,6 +100,17 @@ public class MenuWidget extends TemplateMenuWidget  {
 		MenuItem result = new MenuItem();
 		MenuItem araneaMenu = result.addMenuItem(null, new MenuItem("Aranea_1_1", ReleaseWidget.class));
 		
+		// Aranea 1.1 features/demos
+		araneaMenu.addMenuItem(new MenuItem("Context_Menus", DemoContextMenuWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("List", SimpleListWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoTabWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("ComboTextInput", ComboTextInputDemoWidget.class));
+
+		// "Management"
 		result.addMenuItem(null, new MenuItem("Management")); {
 			result.addMenuItem("Management", new MenuItem("Persons"));
 			// example use of simple FlowCreator
@@ -123,25 +136,22 @@ public class MenuWidget extends TemplateMenuWidget  {
     MenuItem sampleMenu = result.addMenuItem(new MenuItem("Demos")); {
       sampleMenu.addMenuItem(new MenuItem("Simple"));
       sampleMenu.addMenuItem("Simple", new MenuItem("Simple_Form", SimpleFormWidget.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("Simple_List", SimpleListWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Popup_Example", SamplePopupWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("MultiSelect", DemoMultiSelect.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("RadioSelect", DemoRadioSelect.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("demo_automaticForm_title", DemoAutomaticFormElement.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("Context_Menus", DemoContextMenuWidget.class));
+
       
       MenuItem advDemos = sampleMenu.addMenuItem(new MenuItem("Advanced"));
       sampleMenu.addMenuItem("Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Advanced_Popup", DemoAdvancedPopupUsageWidget.class));
-      advDemos.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
       advDemos.addMenuItem(new MenuItem("demo_filteredinput", FilteredInputDemoWidget.class));
       
       advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));
       advDemos.addMenuItem(new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
-      advDemos.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
       
       MenuItem formListMenu = sampleMenu.addMenuItem(new MenuItem("Form_Lists"));
       formListMenu.addMenuItem(new MenuItem("Display_Form", DemoDisplayForm.class));
@@ -160,9 +170,6 @@ public class MenuWidget extends TemplateMenuWidget  {
       treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
       treeMenu.addMenuItem(new MenuItem("Complex_Tree", ComplexTreeWidget.class));
       treeMenu.addMenuItem(new MenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class));
-      
-      sampleMenu.addMenuItem(new MenuItem("Tabs"));
-      sampleMenu.addMenuItem("Tabs", new MenuItem("Tabs_Demo", DemoTabWidget.class));
     } 
     
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {

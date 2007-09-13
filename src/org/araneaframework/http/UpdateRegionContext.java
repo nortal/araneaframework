@@ -26,6 +26,10 @@ import java.io.Serializable;
  * @since 1.1
  */
 public interface UpdateRegionContext extends Serializable {
+  /**
+   * The request key for update regions that should be processed by this {@link UpdateRegionContext}.
+   */
+  public static final String UPDATE_REGIONS_KEY = "updateRegions";
 
   /**
    * Disable updateregion filter during this request only. Already rendered data

@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form;
 
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,13 +24,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.RenderStateAware;
-import org.araneaframework.framework.filter.StandardMessagingFilterWidget;
-import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -140,7 +134,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * @param control {@link Control}.
    * @throws Exception 
    */
-  public void setControl(Control control) throws Exception {
+  public void setControl(Control control) {
     Assert.notNullParam(control, "control");
     
     this.control = control;
@@ -295,8 +289,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 
     runInitEvents();
     
-    addActionListener("validate", new ValidationActionListener());
-
+    addActionListener("validate", new FormElementValidationActionListener(this));
   }
   
   protected void destroy() throws Exception {
@@ -451,21 +444,4 @@ public class FormElement extends GenericFormElement implements FormElementContex
       return this.value;
     }
   }
-  
-  private final class ValidationActionListener extends StandardActionListener {
-    public void processAction(Object actionId, String actionParam, InputData input, OutputData output)
-        throws Exception {
-      boolean valid = convertAndValidate();
-      Writer out = ((HttpOutputData) output).getWriter();
-      out.write(String.valueOf(valid) + "\n");
-      MessageContext messageContext = (MessageContext) getEnvironment().getEntry(MessageContext.class);
-      if(messageContext != null && (messageContext instanceof UpdateRegionProvider)) {
-        UpdateRegionProvider messageRegion = (UpdateRegionProvider) messageContext;
-        String messageRegionContent = (String) messageRegion.getRegions().get(StandardMessagingFilterWidget.MESSAGE_REGION_KEY);
-
-        out.write(messageRegionContent);
-      }
-    }
-  }
-  
 }

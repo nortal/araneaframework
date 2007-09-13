@@ -14,7 +14,7 @@
  * limitations under the License.
 **/
 
-package org.araneaframework.example.main.web.demo;
+package org.araneaframework.example.main.release.demos;
 
 import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
@@ -48,7 +48,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
    * Builds the form.
    */
   protected void init() throws Exception {
-    setViewSelector("demo/demoContextMenu");
+    setViewSelector("release/demos/demoContextMenu");
 
     simpleForm = new FormWidget();
 
@@ -74,10 +74,10 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
     addWidget("simpleForm", simpleForm);
 
     ContextMenuItem menu = new ContextMenuItem();
-    menu.addMenuItem(new ContextMenuItem("#label", new ContextMenuEventEntry("testSimpleForm", this, null)));
+    menu.addMenuItem(new ContextMenuItem("Submit", new ContextMenuEventEntry("testSimpleForm", this, null)));
 
-    ContextMenuItem subMenu = menu.addMenuItem(new ContextMenuItem("subbbb"));
-    subMenu.addMenuItem(new ContextMenuItem("#noway", new ContextMenuEventEntry("testSimpleForm", this, "xyz")));
+    ContextMenuItem subMenu = menu.addMenuItem(new ContextMenuItem("Submenu"));
+    subMenu.addMenuItem(new ContextMenuItem("Submit from submenu", new ContextMenuEventEntry("testSimpleForm", this, "xyz")));
 
     ContextMenuWidget contextMenuWidget = new ContextMenuWidget(menu);
 

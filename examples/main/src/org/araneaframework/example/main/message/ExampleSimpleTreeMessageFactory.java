@@ -22,8 +22,8 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.SeriesMessage;
+import org.araneaframework.example.main.release.demos.SimpleTreeWidget;
 import org.araneaframework.example.main.web.menu.MenuWidget;
-import org.araneaframework.example.main.web.tree.SimpleTreeWidget;
 import org.araneaframework.framework.MountContext.MessageFactory;
 
 public class ExampleSimpleTreeMessageFactory implements MessageFactory {

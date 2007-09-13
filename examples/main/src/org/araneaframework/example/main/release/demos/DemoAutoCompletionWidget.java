@@ -1,4 +1,4 @@
-package org.araneaframework.example.main.web.demo;
+package org.araneaframework.example.main.release.demos;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
   private FormWidget form;
   
   public void init() throws Exception {
-    setViewSelector("demo/demoAutoCompletion");
+    setViewSelector("release/demos/demoAutoCompletion");
     form = new FormWidget();
     
     AutoCompleteTextControl actc = new AutoCompleteTextControl();
@@ -74,7 +74,7 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
         allSuggestions.add(new Locale(language, (String)i.next()).getDisplayCountry(locCtxProvider.getL10nCtx().getLocale()));
       }
     }
-    
+
     private boolean isLanguageChanged() {
       return !language.equals(locCtxProvider.getL10nCtx().getLocale().getLanguage());
     }

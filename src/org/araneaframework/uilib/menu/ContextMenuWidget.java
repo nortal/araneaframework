@@ -27,7 +27,7 @@ public class ContextMenuWidget extends BaseApplicationWidget {
 	public ContextMenuWidget(ContextMenuItem menu) {
 		this.menu = menu;
 	}
-	
+
 	public ContextMenuItem getMenu() {
 		return this.menu;
 	}

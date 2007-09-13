@@ -22,6 +22,10 @@ This folder contains scripts needed by Aranea Uilib.
 - http://www.nickstakenburg.com/projects/prototip/
 - Creative Commons Attribution 3.0 License
 
+* modalbox/*
+- http://okonet.ru/projects/modalbox/
+- MIT license
+
 * prototype/*
 - http://www.prototypejs.org/
 - License is MIT-style license, details at http://www.prototypejs.org/license

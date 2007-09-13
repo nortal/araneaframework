@@ -25,42 +25,43 @@ function AraneaStore() {
   this.add = function(object) {
     var len = objects.length;
     objects[len] = object;
-  }
-  
+  };
+      
   this.clear = function() {
-    objects = new Array();
-  }
-  
-  this.length = function() {
-    return objects.length;
-  }
+    objects = new Array();   
+  };
+      
+  this.length = function() {   
+    return objects.length;   
+  };
+      
+  this.getContents = function() {   
+    return objects;   
+  };
 
-  this.getContents = function() {
-    return objects;
-  }
-  
-  this.forEach = function(f) {
-    for(var i = 0; i < objects.length; i++) {
-      f(objects[i]);
-    }
-  }
+  this.forEach = function(f) {   
+    for(var i = 0; i < objects.length; i++) {   
+      f(objects[i]);   
+    }   
+  };
 }
 
 function AraneaEventStore() {
   var araneaEventStore = function() {
     var processEvent = function(event) {
+      araneaPage().getLogger().trace(Object.inspect(event));
       if (typeof event != "function") {
         event;
       } else {
         event();
       }
-    }
+    };
 
     this.execute = function() {
       this.forEach(processEvent);
       this.clear();
-    }
-  }
+    };
+  };
   
   araneaEventStore.prototype = new AraneaStore();
   return new araneaEventStore();
@@ -72,47 +73,59 @@ function AraneaPage() {
   /* URL of aranea dispatcher servlet serving current page. 
    * This is by default set by Aranea JSP ui:body tag. */ 
   var servletURL = null;
-  this.getServletURL = function() { return servletURL; }
-  this.setServletURL = function(url) { servletURL = new String(url); }
+  this.getServletURL = function() { return servletURL; };
+  this.setServletURL = function(url) { servletURL = new String(url); };
 
   /* If servlet URL is not enough for some purposes, encoding function should be overwritten. */
-  this.encodeURL = function(url) { return url; }
+  this.encodeURL = function(url) { return url; };
 
   /* Indicates whether the page is completely loaded or not. Page is considered to 
    * be loaded when all system onload events have completed execution. */
   var loaded = false;
-  this.isLoaded = function() { return loaded; }
-  this.setLoaded = function(b) { if (typeof b == "boolean") { loaded = b; } }
+  this.isLoaded = function() { return loaded; };
+  this.setLoaded = function(b) { if (typeof b == "boolean") { loaded = b; } };
   
   /* Logger that outputs javascript logging messages. */
   var dummyLogger = new function() { var dummy = function() {}; this.trace = dummy; this.debug = dummy; this.info = dummy; this.warn = dummy; this.error = dummy; this.fatal = dummy;};
-  var firebugLogger = window.console ? new function() { this.trace = window.console.debug; this.debug = window.console.debug; this.info = window.console.info; this.warn = window.console.warn; this.error = window.console.error; this.fatal = window.console.error;} : dummyLogger;
+  var safariLogger = (window.console && window.console.log) ? new function() {
+  	  var f = window.console.log;
+  	  this.trace = f; this.debug = f; this.info = f; this.warn = f; this.error = f; this.fatal = f;
+    } : dummyLogger;
+  var firebugLogger = (window.console && window.console.debug) ? new function() {
+  	  this.trace = window.console.debug; 
+  	  this.debug = window.console.debug; 
+  	  this.info = window.console.info; 
+  	  this.warn = window.console.warn; 
+  	  this.error = window.console.error; 
+  	  this.fatal = window.console.error;
+  	} : safariLogger;
   var logger = dummyLogger;
-  this.setDummyLogger = function() { logger = dummyLogger; }
+  this.setDummyLogger = function() { logger = dummyLogger; };
   this.setDefaultLogger = function() { 
-    if (window['log4javascript/log4javascript.js'])
+    if (window['log4javascript/log4javascript.js']) {
       logger = log4javascript.getDefaultLogger();
-  }
-  this.setFirebugLogger = function() { this.setLogger(firebugLogger); }
-  this.setLogger = function(theLogger) { logger = theLogger; }
-  this.getLogger = function() { return logger; }
+    }
+  };
+  this.setFirebugLogger = function() { this.setLogger(firebugLogger); };
+  this.setLogger = function(theLogger) { logger = theLogger; };
+  this.getLogger = function() { return logger; };
   
   /* locale - should be used only for server-side reported locale */
   var locale = new AraneaLocale("", "");
-  this.getLocale = function() { return locale; }
-  this.setLocale = function(loc) { locale = loc; }
+  this.getLocale = function() { return locale; };
+  this.setLocale = function(loc) { locale = loc; };
 
   /* Indicates whether some form on page is (being) submitted already
    * by traditional HTTP request. */
   var submitted = false;
-  this.isSubmitted = function() { return submitted; }
-  this.setSubmitted = function() { submitted = true; }
+  this.isSubmitted = function() { return submitted; };
+  this.setSubmitted = function() { submitted = true; };
   
   var systemForm = null;
   /** @since 1.1 */
-  this.getSystemForm = function() { return systemForm; }
+  this.getSystemForm = function() { return systemForm; };
   /** @since 1.1 */
-  this.setSystemForm = function(_systemForm) { systemForm = _systemForm; }
+  this.setSystemForm = function(_systemForm) { systemForm = _systemForm; };
 
   /** @since 1.1 */
   this.setSystemFormEncoding = function(encoding) {
@@ -120,28 +133,28 @@ function AraneaPage() {
       systemForm.enctype = encoding;
       systemForm.encoding = encoding; // IE
     });
-  }
+  };
 
   /** @since 1.1 */
   this.getEventTarget = function(element) {
     return element.getAttribute('arn-trgtwdgt');
-  }
+  };
   /** @since 1.1 */
   this.getEventId = function(element) {
     return element.getAttribute('arn-evntId');
-  }
+  };
   /** @since 1.1 */
   this.getEventParam = function(element) {
     return element.getAttribute('arn-evntPar');
-  }
+  };
   /** @since 1.1 */
   this.getEventUpdateRegions = function(element) {
     return element.getAttribute('arn-updrgns');
-  }
+  };
   /** @since 1.1 */
   this.getEventPreCondition = function(element) {
     return element.getAttribute('arn-evntCond');
-  }
+  };
 
   /** Timer that executes keepalive calls, if any. */
   var keepAliveTimers = new AraneaStore();
@@ -157,28 +170,37 @@ function AraneaPage() {
   this.addClientLoadEvent = function(event) { clientLoadEvents.add(event); }
   this.addSystemUnLoadEvent = function(event) { systemUnLoadEvents.add(event); }
 
-  this.onload = function() { systemLoadEvents.execute(); this.setLoaded(true); clientLoadEvents.execute(); }
-  this.onunload = function() { systemUnLoadEvents.execute(); }
+  this.onload = function() { 
+    logger.trace('System load events executing.\n'); 
+    systemLoadEvents.execute();
+    this.setLoaded(true);
+    logger.trace('Client load events executing.\n'); 
+    clientLoadEvents.execute(); 
+  };
+  this.onunload = function() { systemUnLoadEvents.execute(); };
   
   // General callbacks executed before each form submit.
   this.addSubmitCallback = function(callback) {
     this.addSystemFormSubmitCallback('callbacks', callback);
-  }
+  };
 
   // General callbacks executed before each submit of the specified system form.
   this.addSystemFormSubmitCallback = function(systemFormId, callback) {
-    if (!submitCallbacks[systemFormId])
-    submitCallbacks[systemFormId] = new AraneaEventStore();
+    if (!submitCallbacks[systemFormId]) {
+      submitCallbacks[systemFormId] = new AraneaEventStore();
+    }
     submitCallbacks[systemFormId].add(callback);
-  }
+  };
 
   this.executeCallbacks = function(systemFormId) {
-    if (submitCallbacks['callbacks'])
-    submitCallbacks['callbacks'].execute();
-    
-  if (submitCallbacks[systemFormId])
-    submitCallbacks[systemFormId].execute();
-  }
+    if (submitCallbacks['callbacks']) {
+      submitCallbacks['callbacks'].execute();
+    }
+
+    if (submitCallbacks[systemFormId]) {
+      submitCallbacks[systemFormId].execute();
+    }
+  };
   
   this.event = function(element) {
     if (this.isSubmitted() || !this.isLoaded())
@@ -201,7 +223,7 @@ function AraneaPage() {
     }
 
     return (this.findSubmitter(element, systemForm)).event(element);
-  }
+  };
 
   /** 
    * This function can be overwritten to support additional
@@ -209,22 +231,23 @@ function AraneaPage() {
    */
   this.findSubmitter = function(element, systemForm) {
 	if (systemForm.hasClassName('aranea-overlay')) {
-		return new DefaultAraneaOverlaySubmitter(systemForm);
+      return new DefaultAraneaOverlaySubmitter(systemForm);
 	}
 
     var updateRegions = this.getEventUpdateRegions(element);
 
-  if (updateRegions && updateRegions.length > 0)
-    return new DefaultAraneaAJAXSubmitter(systemForm);
-  else
-    return new DefaultAraneaSubmitter(systemForm);
-  }
+    if (updateRegions && updateRegions.length > 0)
+      return new DefaultAraneaAJAXSubmitter(systemForm);
+    else
+      return new DefaultAraneaSubmitter(systemForm);
+  };
   
   // another submit function, takes all params that are currently possible to use.
   // TODO: get rid of duplicated logic from: submit() and findSubmitter()
   this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
-    if (this.isSubmitted() || !this.isLoaded())
-    return false;
+    if (this.isSubmitted() || !this.isLoaded()) {
+      return false;
+    }
 
     if (eventPrecondition) {
       var f = new Function(eventPrecondition);
@@ -241,7 +264,7 @@ function AraneaPage() {
       return new DefaultAraneaAJAXSubmitter().event_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
     else
       return new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
-  }
+  };
 
   this.getSubmitURL = function(topServiceId, threadServiceId, araTransactionId, extraParams) {
     var url = this.encodeURL(this.getServletURL());
@@ -253,9 +276,9 @@ function AraneaPage() {
   
   	if(extraParams)    
      url += '&' + $H(extraParams).toQueryString();
-      
+
     return url;
-  }
+  };
 
   this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync, extraParams) {
     var url = this.getSubmitURL(systemForm.araTopServiceId.value, systemForm.araThreadServiceId.value, 'override', extraParams);
@@ -268,12 +291,12 @@ function AraneaPage() {
       url += '&araSync=false';
       
     return url;
-  }
+  };
 
   this.action = function(element, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
     var systemForm = this.getSystemForm();
     return this.action_6(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams);
-  }
+  };
 
   this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
     if (window['prototype/prototype.js']) {
@@ -287,11 +310,11 @@ function AraneaPage() {
     } else {
       araneaPage().getLogger().warn("Prototype library not accessible, action call cannot be made.");
     }
-  }
+  };
 
   this.debug = function(message) {
     this.getLogger().debug(message);
-  }
+  };
   
   /** 
    * Provides preferred way of overriding AraneaPage object functions. 
@@ -301,7 +324,7 @@ function AraneaPage() {
   this.override = function(functionName, f) {
     this.getLogger().info("AraneaPage." +functionName + " was overriden.");
     this[functionName] = f;
-  }
+  };
   
   /** 
    * Adds keepalive function f that is executed periodically after time 
@@ -309,20 +332,19 @@ function AraneaPage() {
    */
   this.addKeepAlive = function(f, time) {
     keepAliveTimers.add(setInterval(f, time));
-  }
+  };
 
   /** Clears/removes all registered keepalive functions. */
   this.clearKeepAlives = function() {
     keepAliveTimers.forEach(function(timer) {clearInterval(timer);});
-  }
+  };
   
   /**
    *	Whether this application should use ajax form validation.
    */
   var ajaxValidation = true;
-  this.getAjaxValidation = function() { return ajaxValidation; }
-  this.setAjaxValidation = function(useAjax) { ajaxValidation = Boolean(useAjax); }
-  
+  this.getAjaxValidation = function() { return ajaxValidation; };
+  this.setAjaxValidation = function(useAjax) { ajaxValidation = Boolean(useAjax); };
 }
 
 /* Returns a default keepalive function -- to make periodical requests to expiring thread
@@ -341,7 +363,7 @@ AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAli
       araneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");
     }
   };
-}
+};
 
 /** Searches for widget marker around the given element. */
 AraneaPage.findWidgetMarker = function(element) {
@@ -349,23 +371,25 @@ AraneaPage.findWidgetMarker = function(element) {
   for (var i = 0; i < ancestors.length; i++) {
   	var ancestor = ancestors[i];
   	var marker = ancestor.classNames().find(function(name) {
-      return (name == 'widgetMarker')
+      return (name == 'widgetMarker');
     });
-    if (marker) return ancestor;
+    if (marker) { 
+      return ancestor; 
+    }
   }
   return null;
-}
+};
 
 // Random request id generator. Sent only with AA ajax requests.
 // Currently only purpose of it is easier debugging (identifying requests).
 AraneaPage.getRandomRequestId = function() {
   return Math.round(100000*Math.random());
-}
+};
 
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   araneaPage().addSystemLoadEvent(Behaviour.apply);
-}
+};
 /** @since 1.1 */
 AraneaPage.findSystemForm = function() {
   araneaPage().setSystemForm($A(document.getElementsByTagName('form')).find(
@@ -373,7 +397,7 @@ AraneaPage.findSystemForm = function() {
       return $(element).hasAttribute('arn-systemForm');
     }
   ));
-}
+};
 
 function DefaultAraneaSubmitter(form) {
   var systemForm = form;
@@ -385,7 +409,7 @@ function DefaultAraneaSubmitter(form) {
     var eventParam = araneaPage().getEventParam(element);
     
     return this.event_4(systemForm, eventId, widgetId, eventParam);
-  }
+  };
 }
 
 DefaultAraneaSubmitter.prototype.event_4 = function(systemForm, eventId, widgetId, eventParam) {
@@ -398,7 +422,7 @@ DefaultAraneaSubmitter.prototype.event_4 = function(systemForm, eventId, widgetI
   systemForm.submit();
 
   return false;
-}
+};
 
 function DefaultAraneaOverlaySubmitter(form) {
   var systemForm = form;
@@ -420,10 +444,10 @@ function DefaultAraneaOverlaySubmitter(form) {
    	    params: systemForm.serialize(true),
    	    overlayClose: false,
    	    width: 800,
-   	    slideDownDuration: .0,
-   	    slideUpDuration: .0,
-   	    overlayDuration: .0,
-   	    resizeDuration: .0,
+   	    slideDownDuration: 0.0,
+   	    slideUpDuration: 0.0,
+   	    overlayDuration: 0.0,
+   	    resizeDuration: 0.0,
    	    afterLoad: function(content) {
    	      if (content == '') {
    	        //Modalbox.hide();
@@ -436,21 +460,21 @@ function DefaultAraneaOverlaySubmitter(form) {
    	  }
    	);
    	return false;
-  }
+  };
 }
 
 function DefaultAraneaAJAXSubmitter(form) {
   var systemForm = form;
 
   this.event = function(element) {
-  // event information
-  var widgetId = araneaPage().getEventTarget(element);
-  var eventId = araneaPage().getEventId(element);
-  var eventParam = araneaPage().getEventParam(element);
-  var updateRegions = araneaPage().getEventUpdateRegions(element);
+    // event information
+    var widgetId = araneaPage().getEventTarget(element);
+    var eventId = araneaPage().getEventId(element);
+    var eventParam = araneaPage().getEventParam(element);
+    var updateRegions = araneaPage().getEventUpdateRegions(element);
 
-  return this.event_5(systemForm, eventId, widgetId, eventParam, updateRegions);
-  }
+    return this.event_5(systemForm, eventId, widgetId, eventParam, updateRegions);
+  };
 }
 
 DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
@@ -468,17 +492,20 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
     },
     onSuccess: function(transport) {
       AraneaPage.hideLoadingMessage();
+      var logmsg = "";
       if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + "\n") {
-        araneaPage().getLogger().debug('Partial rendering: received successful response'
-          + ' (' + transport.responseText.length + ' characters)'
-          + ': ' + transport.status + ' ' + transport.statusText);
+        logmsg += 'Partial rendering: received successful response';
+        logmsg += ' (' + transport.responseText.length + ' characters)';
+        logmsg += ': ' + transport.status + ' ' + transport.statusText;
+        araneaPage().getLogger().debug(logmsg);
         AraneaPage.processResponse(transport.responseText);
         AraneaPage.init();
         araneaPage().onload();
       } else {
-        araneaPage().getLogger().debug('Partial rendering: received erroneous response'
-          + ' (' + transport.responseText.length + ' characters)'
-          + ': ' + transport.status + ' ' + transport.statusText);
+        logmsg += 'Partial rendering: received erroneous response';
+        logmsg += ' (' + transport.responseText.length + ' characters)';
+        logmsg += ': ' + transport.status + ' ' + transport.statusText;
+        araneaPage().getLogger().debug(logmsg);
         // Doesn't work quite well for javascript and CSS, but fine for plain HTML
         document.write(transport.responseText);
         document.close();
@@ -486,9 +513,10 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
     },
     onFailure: function(transport) {
       AraneaPage.hideLoadingMessage();
-      araneaPage().getLogger().debug('Partial rendering: received erroneous response'
-        + ' (' + transport.responseText.length + ' characters)'
-        + ': ' + transport.status + ' ' + transport.statusText);
+      logmsg += 'Partial rendering: received erroneous response';
+      logmsg += ' (' + transport.responseText.length + ' characters)';
+      logmsg += ': ' + transport.status + ' ' + transport.statusText;
+      araneaPage().getLogger().debug(logmsg);
       // Doesn't work quite well for javascript and CSS, but fine for plain HTML
       document.write(transport.responseText);
       document.close();
@@ -500,7 +528,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   });
 
   return false;
-}
+};
 
 Object.extend(AraneaPage, {
   /* Private fields */
@@ -670,11 +698,11 @@ AraneaPage.DocumentRegionHandler.prototype = {
     var properties = text.readCharacters(length).evalJSON();
     var id = properties.id;
     var mode = properties.mode;
-    var content = text.toString();
+    var domContentString = text.toString();
     if (mode == 'update') {
-      $(id).update(content);
+      $(id).update(domContentString);
     } else if (mode == 'replace') {
-      $(id).replace(content);
+      $(id).replace(domContentString);
     } else {
       araneaPage().getLogger().error('Document region mode "' + mode + '" is unknown');
     }
@@ -709,17 +737,18 @@ AraneaPage.MessageRegionHandler.prototype = {
 
   updateRegions: function(messagesByType) {
     $$(this.regionClass).each((function(region) {
+      var messages = null;
       if (region.hasAttribute(this.regionTypeAttribute)) {
         var type = region.getAttribute(this.regionTypeAttribute);
         if (messagesByType[type]) {
-          var messages = messagesByType[type];
+          messages = messagesByType[type];
           if (messages.size() > 0) {
             this.showMessageRegion(region, messages);
             return;
           }
         }
       } else {
-        var messages = messagesByType.values().flatten();
+        messages = $H(messagesByType).values().flatten();
         if (messages.size() > 0) {
           this.showMessageRegion(region, messages);
           return;
@@ -797,74 +826,46 @@ AraneaPage.ReloadRegionHandler.prototype = {
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
 
-AraneaPage.AjaxValidationHandler = Class.create();
-AraneaPage.AjaxValidationHandler.prototype = {
-	el: null,
-	
-  initialize: function(el) {
-  	this.el = el;
+AraneaPage.AjaxValidationRegionHandler = Class.create();
+AraneaPage.AjaxValidationRegionHandler.prototype = {
+  initialize: function() {},
+
+  process: function(content) {
+  	var result = content.evalJSON();
+  	var formelement = $(result.formElementId);
+
+    var inputSpan = this.getParentSpan(formelement);
+    var labelSpan = this.getLabelSpan(formelement);
+
+    if(result.valid){
+      if (inputSpan) inputSpan.removeClassName("error");
+      if (labelSpan) labelSpan.removeClassName("error");
+    } else {
+      if (inputSpan) inputSpan.addClassName("error");
+      if (labelSpan) labelSpan.addClassName("error");
+    }
+  },
+
+  getParentSpan: function(formelement) {
+    if (formelement.id)
+      return $('fe-span-' + formelement.id);
+    return null;
   },
   
-	callback: function(request, response) {
-		if (request.status != 200) {
-			alert(request.responseText);	// Very ugly
-			return;
-		}
-		
-	  if(request.responseText){
-      var text = new Text(request.responseText);
-   		var valid = text.readLine(); // was validation successful?
-	  
-	    AraneaPage.regionHandlers['messages'].process(text.toString());
+  getLabelSpan: function(formelement) {
+  	if (formelement.id)
+      return $('label-' + formelement.id);
+    return null;
+  },
 
-			var td = this.getParentElement(this.el, "TD", "inpt");
-			if(td == null){
-				td = this.getParentElement(this.el, "TD");
-			}
-			var labelSpan = $('label-' + this.el.getAttribute("id"));
-			if(labelSpan){
-				var label = this.getParentElement(labelSpan, "TD");
-			}
-	  
-			if(valid != "true"){
-	        oldClass = td.getAttribute("class");
-	        td.setAttribute("class", oldClass + " error");
-	        if(label){
-		        oldClass = label.getAttribute("class");
-		        label.setAttribute("class", oldClass + " error");
-	        }
-			} else {
-	      oldClass = td.getAttribute("class");
-	      td.setAttribute("class", oldClass.replace("error", "", "g"));
-	      if(label){
-		      oldClass = label.getAttribute("class");
-		      label.setAttribute("class", oldClass.replace("error", "", "g"));
-	      }
-			}
-			
-		}
-	},
-	
-	getParentElement: function(el, type, class) {
-		var returnElement = null;
-    if (el.tagName && el.tagName.toUpperCase() == type) {
-    	returnElement = el;
-    }
-    if(class && el.getAttribute("class") && el.getAttribute("class").indexOf(class) == -1){
-    	returnElement = null;
-    }
-    if(returnElement != null){
-    	return returnElement;
-    }
-    
-		var el = el.parentNode;
-	  do {
-	    if (el.tagName && el.tagName.toUpperCase() == type && (!class || el.getAttribute("class") && el.getAttribute("class").indexOf(class) > -1))
-	    	return el;
-	    el = el.parentNode;
-	  } while (el);
-	}
+  getParentElement: function(el, tagName, className) {
+    var x = function(element) { return element.tagName.toUpperCase() == tagName.toUpperCase(); };
+    var y = function(element) { return x(element) && Element.hasClassName(element, className); };
+  	var filter = className ? y : x;
+    return $(el).ancestors().find(filter);
+  }
 };
+AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.AjaxValidationRegionHandler());
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */

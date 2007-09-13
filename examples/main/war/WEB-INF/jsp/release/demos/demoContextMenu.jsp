@@ -7,28 +7,27 @@
 
 	<!-- Component starts here -->
 	<ui:widgetContext>
+	
+		<ui:widgetMarker id="simpleForm">
+		<ui:form id="simpleForm">
 
-        <!-- Set the form context, the form we will be rendering here. 
-            We cannot as simply (using non-qualified names) refer to form 
-            elements unless we define the form context here. -->
-		<ui:form id="form">
-
-			<!-- Now, these are the first custom tags in template application. They do
-			     nothing particularly interesting, just set up the HTML DIV element
-			     containing the component header -->
 			<tui:componentHeader>
-				<tui:componentName>Tutorial first form</tui:componentName>
+				<tui:componentName>Widget with context menu</tui:componentName>
 			</tui:componentHeader>
 
-			<!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
 			<tui:component>
-			
-				<!-- Custom tag, but more interesting that previous tags. It derives from
-                     LayoutHtmlTag tag and allows putting row tags inside of it. 
-                     Attribute rowClasses defines the styleClass attribute for rows inserted under 
-                     componentForm here, cellClasses does the same for cells. These classes are repeating
-                     e.g first cell in a row is with styleClass "name", second with "inpt", and third
-                     cell again has styleClass "name". In HTML, this tag creates a TABLE. -->
+
+				<p>
+                  It is possible to customize the right-click contextmenu of your application. You can attach the customized contextmenu
+                  to page, list, form input field<ui:entity code="mdash"/>to any component that might need it. 
+			    </p>
+			    
+			    <p>
+			    	Right-click anywhere inside this component to open a customized context-menu with one sublevel. 
+			    </p>
+		
+			    <br/>
+
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
 					<!-- As we can insert rows now, we do just that. -->
@@ -36,18 +35,12 @@
 						<!-- ... we can insert cells too! As we defined componentForm rowClass 
 							to be cols4  we should insert 4 cells here... -->
 						<ui:cell>
-							<!-- label is formelement centric tag. As we are inside the form 
-							already, we provide it with form element id and corresponding 
-							form element label will be shown -->
+
 							<ui:label id="checkbox1" />
 						</ui:cell>
 
 						<ui:cell>
-							<!-- This is another approach to providing information about
-								form element that tag should apply to - instead providing
-								form element id to every single tag, tags could be enclosed
-								inside single formElement tag.
-							 -->
+
 							<ui:formElement id="checkbox1">
 								<!-- will draw a checkbox tied to form element with id "checkbox1" -->
 								<ui:checkbox/>
@@ -118,13 +111,13 @@
 					<ui:formElement id="button">
 						<ui:button/>
 					</ui:formElement>
-					<ui:eventButton eventId="nextFlow" labelId="#next"/>
-					<ui:eventButton eventId="nextFlowOverlay" labelId="#nextOverlay"/>
-					<ui:eventButton eventId="return" labelId="#return"/>
 				</tui:componentActions>
 			</tui:component>
 
+			<ui:contextMenu id="simpleForm.ctxMenu"/>
+
 		</ui:form>
+		</ui:widgetMarker>
 
 	</ui:widgetContext>
 </jsp:root>

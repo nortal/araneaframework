@@ -18,6 +18,7 @@ package org.araneaframework.example.main.web.demo;
 
 import java.lang.reflect.Method;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.Control;

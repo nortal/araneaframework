@@ -53,11 +53,7 @@ import org.araneaframework.http.util.JsonObject;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext, UpdateRegionProvider {
-
-  /** @since 1.1 */
-  public static final String MESSAGE_REGION_KEY = "messages";
-
+public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
   protected Map permanentMessages;
   protected Map messages;
 
@@ -239,8 +235,8 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
         messagesByType.setProperty(type, messages.toString());
       }
     }
-    Map regions = new HashMap();
-    regions.put(MESSAGE_REGION_KEY, messagesByType.toString());
+    Map regions = new HashMap(1);
+    regions.put(MessageContext.MESSAGE_REGION_KEY, messagesByType.toString());
     return regions;
   }
 

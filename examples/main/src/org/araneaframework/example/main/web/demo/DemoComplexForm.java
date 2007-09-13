@@ -65,7 +65,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 				   where numbers are expected, length and content constraints are met)
 				   we usually also validate data before using it for anything. */
 				if (complexForm.convertAndValidate()) {
-					DemoComplexForm.this.getMessageCtx().showInfoMessage("Value in multiselect has changed to " + (String)beastSelectionControl.getRawValue() + ".");
+					// DemoComplexForm.this.getMessageCtx().showInfoMessage("Value in multiselect has changed to " + (String)beastSelectionControl.getRawValue() + ".");
 					// get the value from control (aka what beast was selected).
 					String selectedBeast = (String)beastSelectionControl.getRawValue();
 	

@@ -83,7 +83,7 @@ public class FormWidget extends GenericFormElement {
    * @param element added element
    * @param afterId element id after which contained element should be added
    */
-  public void addElementAfter(String id, GenericFormElement element, String afterId) throws Exception {
+  public void addElementAfter(String id, GenericFormElement element, String afterId) {
     Assert.notEmptyParam(id, "id");
     Assert.notEmptyParam(afterId, "afterId");
     Assert.notNullParam(element, "element");
@@ -103,7 +103,7 @@ public class FormWidget extends GenericFormElement {
    * @param element added element
    * @param beforeId element id before which contained element should be added
    */
-  public void addElementBefore(String id, GenericFormElement element, String beforeId) throws Exception {
+  public void addElementBefore(String id, GenericFormElement element, String beforeId) {
     Assert.notEmptyParam(id, "id");
     Assert.notEmptyParam(beforeId, "beforeId");
     Assert.notNullParam(element, "element");
@@ -115,7 +115,7 @@ public class FormWidget extends GenericFormElement {
     form.addFlatElementBefore(id, element, NameUtil.getShortestSuffix(beforeId));
   }
 
-  private void addFlatElementAfter(String id, GenericFormElement element, String afterId) throws Exception {
+  private void addFlatElementAfter(String id, GenericFormElement element, String afterId) {
     Assert.isTrue(afterId.indexOf(".") == -1, "addFlatElementAfter() method does not accept nested 'afterId'");
     LinkedMap newElements = new LinkedMap();
 
@@ -164,7 +164,7 @@ public class FormWidget extends GenericFormElement {
    * @param element contained element.
    * @param id element id
    */
-  public void addElement(String id, GenericFormElement element) throws Exception {
+  public void addElement(String id, GenericFormElement element) {
     Assert.notEmptyParam(id, "id");
     Assert.notNullParam(element, "element");
     
@@ -180,9 +180,8 @@ public class FormWidget extends GenericFormElement {
 
   /**
    * Removes a contained element by its name.
-   * @throws Exception 
    */
-  public void removeElement(String id) throws Exception {
+  public void removeElement(String id) {
     Assert.notEmptyParam(id, "id");
 
     elements.remove(id);
@@ -275,7 +274,7 @@ public class FormWidget extends GenericFormElement {
    * 
    * @return created subform
    */
-  public FormWidget addSubForm(String id) throws Exception {
+  public FormWidget addSubForm(String id) {
     Assert.notEmptyParam(id, "id");
     
   	FormWidget result = new FormWidget();
@@ -293,7 +292,7 @@ public class FormWidget extends GenericFormElement {
    * @param mandatory whether the element must be filled in
    * @return {@link FormElement} with given configuration
    */
-  public FormElement createElement(String labelId, Control control, Data data, Object initialValue, boolean mandatory) throws Exception {
+  public FormElement createElement(String labelId, Control control, Data data, Object initialValue, boolean mandatory) {
     if (data != null)
       data.setValue(initialValue);
     return createElement(labelId, control, data, mandatory); 
@@ -309,7 +308,7 @@ public class FormWidget extends GenericFormElement {
    * @param mandatory whether the element must be present in request.
    * @return {@link FormElement} with given configuration
    */
-  public FormElement createElement(String labelId, Control control, Data data, boolean mandatory) throws Exception {
+  public FormElement createElement(String labelId, Control control, Data data, boolean mandatory) {
     Assert.notNullParam(control, "control");
     
     FormElement result = new FormElement();
@@ -333,7 +332,7 @@ public class FormWidget extends GenericFormElement {
    * @param data the type of data.
    * @param mandatory whether the element must be present in request.
    */
-  public FormElement addElement(String elementName, String labelId, Control control, Data data, boolean mandatory) throws Exception {
+  public FormElement addElement(String elementName, String labelId, Control control, Data data, boolean mandatory) {
   	FormElement result = createElement(labelId, control, data, mandatory);
     addElement(elementName, result);
     return result;
@@ -348,7 +347,7 @@ public class FormWidget extends GenericFormElement {
    * @param data the type of data.
    * @param mandatory whether the element must be present in request.
    */
-  public FormElement addElement(String elementName, String labelId, Control control, Data data, Object initialValue, boolean mandatory) throws Exception {
+  public FormElement addElement(String elementName, String labelId, Control control, Data data, Object initialValue, boolean mandatory) {
   	FormElement result = createElement(labelId, control, data, initialValue, mandatory);
     addElement(elementName, result);
     return result;

@@ -3,7 +3,7 @@
 
 <beans>
   <bean id="araneaApplicationStart"
-    class="org.araneaframework.example.main.web.LoginWidget"
+    class="org.araneaframework.example.main.web.RootWidget"
     singleton="false"/>
   
   <bean class="org.araneaframework.http.filter.StandardMountingFilterService" 

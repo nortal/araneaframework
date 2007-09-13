@@ -24,6 +24,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.web.RootWidget;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.RootFlowContext;
 import org.araneaframework.uilib.core.PopupFlowWidget.MessageFactory;
 
 /**
@@ -50,7 +51,7 @@ public class PopupMessageFactory implements MessageFactory, Serializable {
 		}
 		
 		public final void send(Object id, Component component){
-			if (!(component instanceof FlowContext)) {
+			if (!(component instanceof RootFlowContext)) {
 				component._getComponent().propagate(this);
 			}
 			else {

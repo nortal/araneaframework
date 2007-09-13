@@ -1,4 +1,4 @@
-package org.araneaframework.example.main.web.demo;
+package org.araneaframework.example.main.release.demos;
 
 import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
@@ -25,14 +25,21 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class ModalDialogDemoWidget extends TemplateBaseWidget {
-	  private static final long serialVersionUID = 1L;
-	  private FormWidget form;
-	  
+   private static final long serialVersionUID = 1L;
+   private FormWidget form;
+   private boolean nested = false;
+   
+   public ModalDialogDemoWidget() {}
+   
+   private ModalDialogDemoWidget(boolean isNested) {
+     this.nested = isNested;
+   }
+
 	  /**
 	   * Builds the form.
 	   */
 	  protected void init() throws Exception {
-		setViewSelector("demo/modalDialog");
+		setViewSelector("release/demos/modalDialog");
 
 		form = new FormWidget();
 
@@ -56,7 +63,7 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 	    ButtonControl button = new ButtonControl();
 		button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
 		// add the button to form. As the button does not hold any value, Data will be null.
-		form.addElement("button", "#Button", button, null, false);
+		form.addElement("button", "#Submit the form", button, null, false);
 	    
 	    // the usual, add the created widget to main widget.
 		addWidget("form", form);
@@ -84,15 +91,20 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 	  }
 	  
 	  public void handleEventNextFlowOverlay() throws Exception {
-	    getOverlayCtx().start(new OverlayRootWidget(new StandardFlowContainerWidget(new ModalDialogDemoWidget())));
+	    getOverlayCtx().start(new OverlayRootWidget(new StandardFlowContainerWidget(new ModalDialogDemoWidget(true))));
 	  }
 	  
 	  public void handleEventNextFlow() throws Exception {
-	      getFlowCtx().start(new ModalDialogDemoWidget());
+	      getFlowCtx().start(new ModalDialogDemoWidget(true));
 	  }
 	  
 	  public void handleEventReturn() throws Exception {
-	    getFlowCtx().cancel();
+        if (isNested())
+        	getFlowCtx().cancel();
+	  }
+
+	  public boolean isNested() {
+		  return nested;
 	  }
 	  
 	  public OverlayContext getOverlayCtx() {
