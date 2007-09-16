@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp;
 
+import org.araneaframework.uilib.ConfigurationContext;
+
 /**
  * Non-standard-HTML attributes added to specific HTML tags to define
  * Aranea event and content model information.
@@ -46,4 +48,10 @@ public abstract class AraneaAttributes {
   public interface FilteredInputControl {
     public static final String CHARACTER_FILTER = org.araneaframework.uilib.form.control.inputfilter.InputFilter.CHARACTER_FILTER_ATTRIBUTE;
   }
+  
+  /**
+   * This attribute will be present on the form elements whose validation differs from the default
+   * (default is set with {@link ConfigurationContext} entry {@link ConfigurationContext#SEAMLESS_BACKGROUND_FORM_VALIDATION}.
+   * @since 1.1 */
+  public static final String BACKGROUND_VALIDATION_ATTRIBUTE = "arn-bgValidate";
 }

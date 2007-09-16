@@ -291,14 +291,17 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     Object actionId = getActionId(input);    
     
     if (actionId == null) {
-      log.warn("Service '" + getScope() +
-          "' cannot deliver action for a null action id!" + Assert.thisToString(this));  
+      if (log.isWarnEnabled()) {
+         log.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
+      }
       return;
     }
     
     List listener = actionListeners == null ? null : (List)actionListeners.get(actionId);  
-    
-    log.debug("Delivering action '" + actionId +"' to service '" + getClass() + "'");
+
+    if (log.isTraceEnabled()) {
+      log.trace("Delivering action '" + actionId +"' to service '" + getClass() + "'");
+    }
     
     if (listener != null && listener.size() > 0) {
       Iterator ite = (new ArrayList(listener)).iterator();
@@ -308,9 +311,11 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       
       return;
     }
-    
-    log.warn("Service '" + getScope() +
-      "' cannot deliver action as no action listeners were registered for action id '" + actionId + "'!"  + Assert.thisToString(this));  
+
+    if (log.isWarnEnabled()) {
+      log.warn("Service '" + getScope() +
+        "' cannot deliver action as no action listeners were registered for action id '" + actionId + "'!"  + Assert.thisToString(this));
+    }
   }
   
   /**

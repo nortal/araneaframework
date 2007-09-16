@@ -30,15 +30,17 @@ function setFormElementContext(el) {
 }
 
 function setFormElementValidation(el){
-	if(!araneaPage().getAjaxValidation())
+	if(!araneaPage().getBackgroundValidation() && !($(el).hasAttribute('arn-bgValidate')))
 	  return;
 
-	var ajaxValidationHandler = new AraneaPage.AjaxValidationRegionHandler(el);
+    if (($(el).hasAttribute('arn-bgValidate')) &&  (($(el).getAttribute('arn-bgValidate')) != 'true'))
+      return;
+
 	var elId = el.getAttribute("id");
 	var actionValidate = function(event) {
         extraParams = new Hash();
         extraParams[elId] = el.value;
-		araneaPage().action(el, 'validate', elId, el.value, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, extraParams);
+		araneaPage().action(el, 'bgValidate', elId, el.value, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, extraParams);
 	};
 	Event.observe(elId, 'change', actionValidate);
 }

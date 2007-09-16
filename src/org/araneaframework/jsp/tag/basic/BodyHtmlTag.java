@@ -165,15 +165,14 @@ public class BodyHtmlTag extends PresentationTag {
     out.write(locale.getCountry());
     out.write("'));");
   }
-  
-  
-  /** Writes script that configures client-side ajax validation of forms. */
+
+  /** Writes script that configures client-side ajax validation of forms. 
+   * @since 1.1 */
   protected void writeAjaxValidationScript(Writer out) throws JspException, IOException {
-    String ajaxValidation = (String) getConfiguration().getEntry(ConfigurationContext.AJAX_FORM_VALIDATION);
-    if("false".equals(ajaxValidation)) {
-      out.write("_ap.setAjaxValidation(false);");
-    }
+    Boolean validationEnabled = (Boolean) getConfiguration().getEntry(ConfigurationContext.SEAMLESS_BACKGROUND_FORM_VALIDATION);
+    out.write("_ap.setBackgroundValidation(" + String.valueOf(validationEnabled) +");");
   }
+
   /**
    * Writes the scripts immediately following the closing of &lt;body&gt; tag.
    */

@@ -339,12 +339,10 @@ function AraneaPage() {
     keepAliveTimers.forEach(function(timer) {clearInterval(timer);});
   };
   
-  /**
-   *	Whether this application should use ajax form validation.
-   */
-  var ajaxValidation = true;
-  this.getAjaxValidation = function() { return ajaxValidation; };
-  this.setAjaxValidation = function(useAjax) { ajaxValidation = Boolean(useAjax); };
+  /** Whether this application should use ajax form validation. */
+  var ajaxValidation = false;
+  this.getBackgroundValidation = function() { return ajaxValidation; };
+  this.setBackgroundValidation = function(useAjax) { ajaxValidation = Boolean(useAjax); };
 }
 
 /* Returns a default keepalive function -- to make periodical requests to expiring thread
@@ -826,8 +824,8 @@ AraneaPage.ReloadRegionHandler.prototype = {
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
 
-AraneaPage.AjaxValidationRegionHandler = Class.create();
-AraneaPage.AjaxValidationRegionHandler.prototype = {
+AraneaPage.FormBackgroundValidationRegionHandler = Class.create();
+AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
   initialize: function() {},
 
   process: function(content) {
@@ -865,7 +863,7 @@ AraneaPage.AjaxValidationRegionHandler.prototype = {
     return $(el).ancestors().find(filter);
   }
 };
-AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.AjaxValidationRegionHandler());
+AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgroundValidationRegionHandler());
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */
