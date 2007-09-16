@@ -288,14 +288,16 @@ public class FormElement extends GenericFormElement implements FormElementContex
       getControl()._getComponent().init(getScope(), getEnvironment());
 
     runInitEvents();
-    
-    addActionListener("validate", new FormElementValidationActionListener(this));
+
+    if (seamlessValidationEnabled()) {
+      enableBackgroundValidation();
+    }
   }
-  
+
   protected void destroy() throws Exception {
     if (getControl() != null) 
       getControl()._getComponent().destroy();
-  }	  
+  }
 
   /**
    * Uses {@link BaseConverter}to convert the {@link BaseControl}value to the {@link Data}value.
@@ -380,7 +382,17 @@ public class FormElement extends GenericFormElement implements FormElementContex
     protected void setIgnoreEvents(boolean ignoreEvents) {
       this.ignoreEvents = ignoreEvents;
     }
-  
+
+    /** @since 1.1 */
+    public void enableBackgroundValidation() {
+      clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
+      addActionListener(SEAMLESS_VALIDATION_ACTION_ID, new FormElementValidationActionListener(this));
+    }
+
+    /** @since 1.1 */
+    public void disableBackgroundValidation() {
+      clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
+    }
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    

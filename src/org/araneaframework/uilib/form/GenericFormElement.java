@@ -27,6 +27,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 
 
@@ -36,6 +37,8 @@ import org.araneaframework.uilib.form.visitor.FormElementVisitor;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
+  /** @since 1.1 */
+  protected static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
 
   //*******************************************************************
   // FIELDS
@@ -298,6 +301,14 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     return errors;
   }
 
+  /** @since 1.1 */
+  protected boolean seamlessValidationEnabled() {
+    ConfigurationContext cc = (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    Boolean b = (Boolean) cc.getEntry(ConfigurationContext.SEAMLESS_BACKGROUND_FORM_VALIDATION);
+
+    return b == null ? false : b.booleanValue();
+  }
+
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
@@ -309,16 +320,16 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel{
-    
     private Map properties;
 
     /**
      * Takes a outer class snapshot.     
      */
     public ViewModel() {
-      this.properties = GenericFormElement.this.properties;
+      Map m  = GenericFormElement.this.properties;
+      this.properties = m == null ? m : Collections.unmodifiableMap(m);
     }
-    
+
     /**
      * Returns form element properties.
      * @return form element properties.

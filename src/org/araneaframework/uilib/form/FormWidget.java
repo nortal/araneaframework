@@ -18,11 +18,14 @@ package org.araneaframework.uilib.form;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.InvalidFormElementNameException;
+import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
+import org.araneaframework.uilib.form.formlist.FormRow;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
 import org.araneaframework.uilib.util.NameUtil;
@@ -34,12 +37,11 @@ import org.araneaframework.uilib.util.NameUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormWidget extends GenericFormElement {
-
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-
   protected LinkedMap elements = new LinkedMap();
+  protected Boolean backgroundValidation = null;
 
   //*********************************************************************
   //* PUBLIC METHODS
@@ -197,7 +199,7 @@ public class FormWidget extends GenericFormElement {
   public Map getElements() {
     return new LinkedMap(elements);
   }
-  
+
   /**
    * Calls {@link GenericFormElement#convert()} for all contained elements.
    */
@@ -438,15 +440,37 @@ public class FormWidget extends GenericFormElement {
   }
   
   //*********************************************************************
+  //* BACKGROUND FORM VALIDATION SETTINGS
+  //*********************************************************************
+  /** @since 1.1 */
+  public void enableBackgroundValidation() {
+    this.backgroundValidation = Boolean.TRUE;
+  }
+  
+  /** @since 1.1 */
+  public void disableBackgroundValidation() {
+    this.backgroundValidation = Boolean.FALSE;
+  }
+
+  //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
 	
   protected void init() throws Exception {
     super.init();
     
+    if (backgroundValidation == null) {
+      backgroundValidation = Boolean.valueOf(seamlessValidationEnabled());
+    }
+
     for (Iterator i = getElements().entrySet().iterator(); i.hasNext();) {
       Map.Entry element = (Map.Entry) i.next();
       addWidget(element.getKey(), (Widget) element.getValue());
+
+      if (backgroundValidation.booleanValue())
+    	  enableBackgroundValidation();
+      else
+    	  disableBackgroundValidation();
     }
   }
   

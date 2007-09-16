@@ -72,6 +72,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.addElement("time", "common.time", new TimeControl(), new DateData(), false);
     simpleForm.addElement("date", "common.date", new DateControl(), new DateData(), false);
     simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
+    simpleForm.getElementByFullName("number").enableBackgroundValidation();
     // require the number input field to be filled. It could have been achieved already
     // on formelement creation by setting mandatory attribute to true
     simpleForm.getElement("number").setConstraint(new NotEmptyConstraint());
