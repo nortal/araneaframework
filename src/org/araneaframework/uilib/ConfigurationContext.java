@@ -17,6 +17,9 @@
 package org.araneaframework.uilib;
 
 import java.io.Serializable;
+import org.araneaframework.core.ActionListener;
+import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormWidget;
 
 /**
  * Configuration context for Uilib widgets. Defined constants
@@ -88,10 +91,13 @@ public interface ConfigurationContext extends Serializable {
   public static final String LIKE_CONFIGURATION = "uilib.widgets.lists.LikeConfiguration";
   
   /**
-   * This property should be set to <code>false</code> if application doesn't want to use ajax validation of the forms.
+   * This <code>java.lang.Boolean</code> property should be set to <code>true</code> if application wants all forms to 
+   * be validated on-the-fly. Validation is done by invoking server-side {@link ActionListener}'s that perform the 
+   * validation. When this is set to <code>false</code>, programmer has to enable action validation for 
+   * {@link FormWidget}/{@link FormElement} which should be validated on-the-fly. When {@link ConfigurationContext} does
+   * not include entry corresponding to this property, this is assumed to be false.
    */
-  public static final String AJAX_FORM_VALIDATION = "uilib.widgets.forms.AjaxValidation";
-  
+  public static final String SEAMLESS_BACKGROUND_FORM_VALIDATION = "uilib.widgets.forms.seamless.validation";
   /**
    * Returns a configuration entry with given name.
    */
