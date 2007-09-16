@@ -92,12 +92,15 @@ public interface ConfigurationContext extends Serializable {
   
   /**
    * This <code>java.lang.Boolean</code> property should be set to <code>true</code> if application wants all forms to 
-   * be validated on-the-fly. Validation is done by invoking server-side {@link ActionListener}'s that perform the 
-   * validation. When this is set to <code>false</code>, programmer has to enable action validation for 
+   * be validated on-the-fly. Validation is done by invoking server-side {@link ActionListener}s that perform the 
+   * validation. When this is set to <code>false</code>, programmer can manually enable action validation for those
    * {@link FormWidget}/{@link FormElement} which should be validated on-the-fly. When {@link ConfigurationContext} does
-   * not include entry corresponding to this property, this is assumed to be false.
+   * not include entry corresponding to this property, it defaults to <code>false</code>.
+   *
+   * @since 1.1
    */
   public static final String SEAMLESS_BACKGROUND_FORM_VALIDATION = "uilib.widgets.forms.seamless.validation";
+
   /**
    * Returns a configuration entry with given name.
    */
