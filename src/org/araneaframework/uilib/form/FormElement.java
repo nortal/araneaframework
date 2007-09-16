@@ -393,10 +393,10 @@ public class FormElement extends GenericFormElement implements FormElementContex
     public void disableBackgroundValidation() {
       clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
     }
+
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
-  
 
   /**
    * Represents a simple form element view model.
