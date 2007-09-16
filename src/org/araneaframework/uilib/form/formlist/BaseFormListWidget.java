@@ -82,8 +82,8 @@ public abstract class BaseFormListWidget extends GenericFormElement {
   }
 
 	/**
-	 * Returns <code>Map&lt;Object key, EditableRow&gt;</code> of initialized editable rows.
-	 * @return <code>Map&lt;Object key, EditableRow&gt;</code> of initialized editable rows.
+	 * Returns <code>Map&lt;Object key, FormRow&gt;</code> of initialized editable rows.
+	 * @return <code>Map&lt;Object key, FormRow&gt;</code> of initialized editable rows.
 	 */
 	public Map getFormRows() {
     for (Iterator i = getRows().iterator(); i.hasNext();) {
