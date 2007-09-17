@@ -26,13 +26,16 @@ import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.RenderStateAware;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.Event;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
@@ -289,7 +292,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
 
     runInitEvents();
 
-    if (seamlessValidationEnabled()) {
+    if (ConfigurationContextUtil.isBackgroundFormValidationEnabled(
+    		UilibEnvironmentUtil.getConfigurationContext(getEnvironment()))) {
       enableBackgroundValidation();
     }
   }

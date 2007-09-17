@@ -18,17 +18,19 @@ package org.araneaframework.uilib.form;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.apache.commons.collections.map.LinkedMap;
+import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.InvalidFormElementNameException;
-import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
-import org.araneaframework.uilib.form.formlist.FormRow;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.NameUtil;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 
 /**
@@ -42,10 +44,35 @@ public class FormWidget extends GenericFormElement {
   //*******************************************************************
   protected LinkedMap elements = new LinkedMap();
   protected Boolean backgroundValidation = null;
+  
+  
+  //*********************************************************************
+  //* INTERNAL METHODS
+  //*********************************************************************  	
+	
+  protected void init() throws Exception {
+    super.init();
+    
+    if (backgroundValidation == null) {
+      backgroundValidation = Boolean.valueOf(
+    		  ConfigurationContextUtil.isBackgroundFormValidationEnabled(
+    		    		UilibEnvironmentUtil.getConfigurationContext(getEnvironment()))
+    		  );
+    }
 
+    for (Iterator i = getElements().entrySet().iterator(); i.hasNext();) {
+      Map.Entry element = (Map.Entry) i.next();
+      addWidget(element.getKey(), (Widget) element.getValue());
+    }
+  }
+  
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
+
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), ConfigurationContext.class, new FormConfigurationContext());
+  }
 
   public void clearErrors() {
 	  super.clearErrors();
@@ -452,26 +479,15 @@ public class FormWidget extends GenericFormElement {
     this.backgroundValidation = Boolean.FALSE;
   }
 
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
-	
-  protected void init() throws Exception {
-    super.init();
-    
-    if (backgroundValidation == null) {
-      backgroundValidation = Boolean.valueOf(seamlessValidationEnabled());
-    }
+  /** @since 1.1 */
+  protected class FormConfigurationContext implements ConfigurationContext {
+	private static final long serialVersionUID = 1L;
 
-    for (Iterator i = getElements().entrySet().iterator(); i.hasNext();) {
-      Map.Entry element = (Map.Entry) i.next();
-      addWidget(element.getKey(), (Widget) element.getValue());
-
-      if (backgroundValidation.booleanValue())
-    	  enableBackgroundValidation();
-      else
-    	  disableBackgroundValidation();
-    }
+	public Object getEntry(String entryName) {
+      if (entryName.equals(SEAMLESS_BACKGROUND_FORM_VALIDATION))
+        return FormWidget.this.backgroundValidation;
+      return UilibEnvironmentUtil.getConfigurationContext(getEnvironment()).getEntry(entryName);
+	}
   }
   
   /**
@@ -481,7 +497,7 @@ public class FormWidget extends GenericFormElement {
   public Object getViewModel() {
     return new ViewModel();
   }
-	
+  
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************  
@@ -493,8 +509,6 @@ public class FormWidget extends GenericFormElement {
    * 
    */
   public class ViewModel extends GenericFormElement.ViewModel {
-    
-
     /**
      * Returns the <code>Map</code> with element views.
      * @return the <code>Map</code> with element views.

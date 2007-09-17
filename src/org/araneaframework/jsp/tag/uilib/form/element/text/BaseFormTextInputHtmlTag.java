@@ -24,7 +24,9 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 
 
 /**
@@ -92,6 +94,8 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeAttribute(out, "value", viewModel.getSimpleValue());
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
+    
+    ConfigurationContextUtil.isBackgroundFormValidationEnabled(cctx);
 
     for (Iterator i = customAttributes.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry attribute = (Map.Entry) i.next();
