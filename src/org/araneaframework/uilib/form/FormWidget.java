@@ -27,9 +27,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.uilib.InvalidFormElementNameException;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.NameUtil;
-import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 
 /**
@@ -454,16 +452,6 @@ public class FormWidget extends GenericFormElement implements FormContext {
   		throw new InvalidFormElementNameException(fullName);
   	
   	el.getData().setValue(value);
-  }
-  
-  //*********************************************************************
-  //* BACKGROUND FORM VALIDATION SETTINGS
-  //*********************************************************************
-  /** @since 1.1 */
-  public boolean isBackgroundValidation() {
-    if (this.backgroundValidation == null)
-      return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
-    return this.backgroundValidation.booleanValue();
   }
 
   /**

@@ -210,14 +210,6 @@ public class FormElement extends GenericFormElement implements FormElementContex
   public void setMandatory(boolean mandatory) {
     this.mandatory = mandatory;
   }
-  
-  /** @since 1.1 */
-  public boolean isBackgroundValidation() {
-    if (this.backgroundValidation == null) {
-      return ((FormContext) getEnvironment().getEntry(FormContext.class)).isBackgroundValidation();
-    }
-    return this.backgroundValidation.booleanValue();
-  }
 
   //*********************************************************************
   //* INTERNAL METHODS
@@ -253,7 +245,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   protected void handleAction(InputData input, OutputData output) throws Exception {
     update(input);
     super.handleAction(input, output);
-    if (control != null)
+    if (control != null && !getActionId(input).equals(SEAMLESS_VALIDATION_ACTION_ID))
       control._getService().action(null, input, output);
   }
   

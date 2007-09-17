@@ -18,6 +18,7 @@ package org.araneaframework.uilib.list;
 
 import java.io.Serializable;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 
 /**
  * This class incapsulates all the information and behavior connected with the moving through the list pages. That is
@@ -78,7 +79,8 @@ public class SequenceHelper implements Serializable {
   public SequenceHelper(ConfigurationContext configuration) {
     this.configuration = configuration;
 
-    Long confDefaultItemsOnPage = (Long) configuration.getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);  
+    Long confDefaultItemsOnPage = ConfigurationContextUtil.getDefaultListItemsOnPage(configuration);
+
     if (confDefaultItemsOnPage != null)
       defaultItemsOnPage = confDefaultItemsOnPage.longValue();
 

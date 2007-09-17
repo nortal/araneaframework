@@ -102,6 +102,9 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
 		}
 		
+	    if (this.backgroundValidation)
+          JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
+		
 		JspUtil.writeAttributes(out, attributes);    
 		JspUtil.writeCloseStartEndTag_SS(out);
 		
@@ -221,6 +224,9 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		else if (events && viewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
 		}
+		
+	    if (backgroundValidation)
+          JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
 		
 		JspUtil.writeAttributes(out, attributes);
 		JspUtil.writeCloseStartEndTag_SS(out);

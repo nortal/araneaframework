@@ -28,4 +28,9 @@ public abstract class ConfigurationContextUtil {
     Boolean b = (Boolean) cctx.getEntry(ConfigurationContext.SEAMLESS_BACKGROUND_FORM_VALIDATION);
     return b == null ? false : b.booleanValue();
   }
+  
+  public static Long getDefaultListItemsOnPage(ConfigurationContext cctx) {
+    Long l = (Long) cctx.getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);
+    return l;
+  }
 }

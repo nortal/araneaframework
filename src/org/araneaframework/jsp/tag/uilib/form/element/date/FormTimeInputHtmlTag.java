@@ -7,6 +7,7 @@ import java.util.Calendar;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -146,6 +147,9 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
+    
+    if (backgroundValidation)
+      JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
 
     if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
         JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");

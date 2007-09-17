@@ -25,9 +25,7 @@ import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
 
 
 /**

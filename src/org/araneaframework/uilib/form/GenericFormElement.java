@@ -63,12 +63,6 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     super.init();
     if (constraint != null)
       constraint.setEnvironment(getConstraintEnvironment());
-
-    if (backgroundValidation == null) {
-      backgroundValidation = Boolean.valueOf(
-      	ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()))
-      );
-    }
   }
 
   /**
@@ -243,8 +237,15 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     this.backgroundValidation = Boolean.FALSE;
   }
   
+  /** @since 1.1 */
   public boolean isBackgroundValidation() {
-    return false;
+    if (this.backgroundValidation == null) {
+      FormContext fctx = ((FormContext) getEnvironment().getEntry(FormContext.class));
+      if (fctx != null)
+        return fctx.isBackgroundValidation();
+      return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+    }
+    return this.backgroundValidation.booleanValue();
   }
   //*********************************************************************
   //* ABSTRACT METHODS
