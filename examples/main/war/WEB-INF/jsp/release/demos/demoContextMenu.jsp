@@ -12,28 +12,25 @@
 		<ui:form id="simpleForm">
 
 			<tui:componentHeader>
-				<tui:componentName>Widget with context menu</tui:componentName>
+				<tui:componentName><fmt:message key="context.menu.compheader"/></tui:componentName>
 			</tui:componentHeader>
 
 			<tui:component>
 
 				<p>
-                  It is possible to customize the right-click contextmenu of your application. You can attach the customized contextmenu
-                  to page, list, form input field<ui:entity code="mdash"/>to any component that might need it. 
+					<fmt:message key="context.menu.intro"/>
 			    </p>
 			    
 			    <p>
-			    	Right-click anywhere inside this component to open a customized context-menu with one sublevel. 
+			    	
 			    </p>
 		
 			    <br/>
 
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
-					<!-- As we can insert rows now, we do just that. -->
 					<ui:row>
-						<!-- ... we can insert cells too! As we defined componentForm rowClass 
-							to be cols4  we should insert 4 cells here... -->
+
 						<ui:cell>
 
 							<ui:label id="checkbox1" />
@@ -42,7 +39,6 @@
 						<ui:cell>
 
 							<ui:formElement id="checkbox1">
-								<!-- will draw a checkbox tied to form element with id "checkbox1" -->
 								<ui:checkbox/>
 							</ui:formElement>
 						</ui:cell>
@@ -52,21 +48,18 @@
 						</ui:cell>
 
 						<ui:cell>
-							<!-- As "textbox1" is TextControl, we choose the corresponding tag to render it -->
 							<ui:textInput id="textbox1"/>
 						</ui:cell>
 					</ui:row>
 
-					<!-- another row, and we just keep on going until all form elements have been described. -->
 					<ui:row>
 						<ui:formElement id="dateTime">
 							<ui:cell>
-							    <!-- "dateTime" label -->
 								<ui:label />
 							</ui:cell>
 
 							<ui:cell>
-          						<!-- "dateTime" input field -->
+   
 								<ui:dateTimeInput/>
 							</ui:cell>
 						</ui:formElement>

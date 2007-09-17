@@ -35,7 +35,9 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
     	new OnChangeEventListener() {
     		public void onChange() throws Exception {
     			form.convertAndValidate();
-    			getMessageCtx().showInfoMessage("Changed, value is " + form.getValueByFullName("acinput") );
+    			getMessageCtx().showInfoMessage(
+    					t("release.ac.onchangetext") +" " + form.getValueByFullName("acinput") 
+    			);
     		}
     	}
     );
@@ -47,7 +49,7 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
   
   public void handleEventTest() throws Exception {
     if (form.convertAndValidate()) {
-      getMessageCtx().showInfoMessage("Country submitted: " + form.getValueByFullName("acinput"));
+    	getMessageCtx().showInfoMessage(t("release.ac.submitvalid") +" " + form.getValueByFullName("acinput")); 
     }
   }
   

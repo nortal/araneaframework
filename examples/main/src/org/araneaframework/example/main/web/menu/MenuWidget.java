@@ -107,11 +107,11 @@ public class MenuWidget extends TemplateMenuWidget  {
 		araneaMenu.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("List", SimpleListWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("Seamless_Validation", SeamlessFormValidationDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("ComboTextInput", ComboTextInputDemoWidget.class));
-		araneaMenu.addMenuItem(new MenuItem("Seamless_Validation", SeamlessFormValidationDemoWidget.class));
-
+		
 		// "Management"
 		result.addMenuItem(null, new MenuItem("Management")); {
 			result.addMenuItem("Management", new MenuItem("Persons"));

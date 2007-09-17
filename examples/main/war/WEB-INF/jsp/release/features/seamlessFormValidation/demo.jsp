@@ -6,19 +6,23 @@
 	version="1.2">
 
 	<ui:widgetContext>
-		<ui:list id="simpleList">
-			<!-- Label -->
+		<ui:form id="form1">
 			<tui:componentHeader>
-				<tui:componentName>Simple List w/ paging&amp;sorting support</tui:componentName>
+				<tui:componentName><fmt:message key="seamless.bg.form"/></tui:componentName>
 	        </tui:componentHeader>
-	        
+
 			<tui:component>
 
-			<!-- Sequence -->
-			<tui:componentListFooter/>
-
 			</tui:component>
-		</ui:list>
-	</ui:widgetContext>
+		</ui:form>
 
+		<tui:componentHeader>
+			<tui:componentName><fmt:message key="seamless.withoutbg.form"/></tui:componentName>
+	     </tui:componentHeader>
+
+		<tui:component>
+
+		</tui:component>
+		
+	</ui:widgetContext>
 </jsp:root>

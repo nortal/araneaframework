@@ -7,24 +7,22 @@
 
 	<ui:widgetContext>
 		<ui:list id="simpleList">
-		
+
 			<!-- Label -->
 			<tui:componentHeader>
-				<tui:componentName>Simple List w/ paging&amp;sorting support</tui:componentName>
+				<tui:componentName>
+					<fmt:message key="simple.list.sort.page"/>
+				</tui:componentName>
 	        </tui:componentHeader>
 	        
 			<tui:component>
 				
 			<p>
-	        	Creating read-only list from a bunch of model objects is really easy. Developer just declares the class
-	        	of the model objects and the fields that should be shown and
-	        	<a href="http://www.araneaframework.org/docs/1.1/javadoc/org/araneaframework/uilib/list/BeanListWidget.html">BeanListWidget</a>
-	        	takes care of the rest<ui:entity code="mdash"/>paging and sorting are provided without any additional code.
+				<fmt:message key="simple.list.rolistintro"/>
 	        </p>
 	        
 	        <p>
-	        	You can try out the sorting by clicking on the list header names and paging by using the navigation bar
-	        	at the list bottom.
+	        	<fmt:message key="simple.list.howtonavigate"/>
 	        </p>
 	        <br/>
 
