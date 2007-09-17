@@ -17,9 +17,6 @@
 package org.araneaframework.uilib;
 
 import java.io.Serializable;
-import org.araneaframework.core.ActionListener;
-import org.araneaframework.uilib.form.FormElement;
-import org.araneaframework.uilib.form.FormWidget;
 
 /**
  * Configuration context for Uilib widgets. Defined constants
@@ -92,9 +89,9 @@ public interface ConfigurationContext extends Serializable {
   
   /**
    * This <code>java.lang.Boolean</code> property should be set to <code>true</code> if application wants all forms to 
-   * be validated on-the-fly. Validation is done by invoking server-side {@link ActionListener}s that perform the 
+   * be validated on-the-fly. Validation is done by invoking server-side {@link org.araneaframework.core.ActionListener}s that perform the 
    * validation. When this is set to <code>false</code>, programmer can manually enable action validation for those
-   * {@link FormWidget}/{@link FormElement} which should be validated on-the-fly. When {@link ConfigurationContext} does
+   * {@link org.araneaframework.uilib.form.FormWidget}/{@link  org.araneaframework.uilib.form.FormElement} which should be validated on-the-fly. When {@link ConfigurationContext} does
    * not include entry corresponding to this property, it defaults to <code>false</code>.
    *
    * @since 1.1

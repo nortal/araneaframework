@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.1
  */
 public interface FormContext extends Serializable {
   public boolean isBackgroundValidation();
