@@ -30,6 +30,7 @@ import org.araneaframework.example.main.release.demos.DemoTabWidget;
 import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
 import org.araneaframework.example.main.release.demos.SimpleTreeWidget;
 import org.araneaframework.example.main.release.features.EasyAJAXUpdateRegionsWidget;
+import org.araneaframework.example.main.release.features.SeamlessFormValidationDemoWidget;
 import org.araneaframework.example.main.release.features.SimpleListWidget;
 import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
@@ -109,6 +110,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("ComboTextInput", ComboTextInputDemoWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("Seamless_Validation", SeamlessFormValidationDemoWidget.class));
 
 		// "Management"
 		result.addMenuItem(null, new MenuItem("Management")); {
