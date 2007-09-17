@@ -130,6 +130,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		formViewModel = null;
 		formElementViewModel = null;
 		controlViewModel = null;
+		backgroundValidation = false;
 	}
 
 	/* ***********************************************************************************

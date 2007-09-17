@@ -25,6 +25,8 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.TimeControl;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 
 /**
@@ -102,7 +104,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
 		}
 		
-	    if (this.backgroundValidation)
+	    if (this.backgroundValidation && 
+	    		!ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment())))
           JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
 		
 		JspUtil.writeAttributes(out, attributes);    

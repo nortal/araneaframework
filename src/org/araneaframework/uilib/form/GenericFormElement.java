@@ -40,7 +40,7 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
   /** @since 1.1 */
-  protected static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
+  public static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
 
   //*******************************************************************
   // FIELDS

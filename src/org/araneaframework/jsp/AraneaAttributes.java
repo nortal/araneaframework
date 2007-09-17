@@ -50,8 +50,8 @@ public abstract class AraneaAttributes {
   }
   
   /**
-   * This attribute will be present on the form elements whose validation differs from the default
-   * (default is set with {@link ConfigurationContext} entry {@link ConfigurationContext#SEAMLESS_BACKGROUND_FORM_VALIDATION}.
+   * This attribute will be present on the form elements whose which should be validated on-the-fly.
+   * (Default is set with {@link ConfigurationContext} entry {@link ConfigurationContext#SEAMLESS_BACKGROUND_FORM_VALIDATION}.
    * @since 1.1 */
   public static final String BACKGROUND_VALIDATION_ATTRIBUTE = "arn-bgValidate";
 }
