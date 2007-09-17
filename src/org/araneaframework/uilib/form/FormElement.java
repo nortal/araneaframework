@@ -26,16 +26,13 @@ import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.RenderStateAware;
-import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.Event;
-import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
@@ -214,11 +211,14 @@ public class FormElement extends GenericFormElement implements FormElementContex
     this.mandatory = mandatory;
   }
   
-  //*********************************************************************
-  //* OVERRIDABLE METHODS
-  //*********************************************************************
+  /** @since 1.1 */
+  public boolean isBackgroundValidation() {
+    if (this.backgroundValidation == null) {
+      return ((FormContext) getEnvironment().getEntry(FormContext.class)).isBackgroundValidation();
+    }
+    return this.backgroundValidation.booleanValue();
+  }
 
-  
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
@@ -291,11 +291,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
       getControl()._getComponent().init(getScope(), getEnvironment());
 
     runInitEvents();
-
-    if (ConfigurationContextUtil.isBackgroundFormValidationEnabled(
-    		UilibEnvironmentUtil.getConfigurationContext(getEnvironment()))) {
-      enableBackgroundValidation();
-    }
+    addActionListener(SEAMLESS_VALIDATION_ACTION_ID, new FormElementValidationActionListener(this));
   }
 
   protected void destroy() throws Exception {
@@ -374,6 +370,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	}
 
 	/**
+	 * When this returns true, 
      * @since 1.1
      */
     protected boolean isIgnoreEvents() {
@@ -381,23 +378,12 @@ public class FormElement extends GenericFormElement implements FormElementContex
     }
 
     /**
+     * When set 
      * @since 1.1
      */
     protected void setIgnoreEvents(boolean ignoreEvents) {
       this.ignoreEvents = ignoreEvents;
     }
-
-    /** @since 1.1 */
-    public void enableBackgroundValidation() {
-      clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
-      addActionListener(SEAMLESS_VALIDATION_ACTION_ID, new FormElementValidationActionListener(this));
-    }
-
-    /** @since 1.1 */
-    public void disableBackgroundValidation() {
-      clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
-    }
-
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    

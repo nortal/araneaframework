@@ -574,5 +574,4 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     
     getActionListeners().remove(actionId);
   }
-
 }

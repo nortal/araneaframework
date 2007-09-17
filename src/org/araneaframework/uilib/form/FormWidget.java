@@ -24,7 +24,6 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.InvalidFormElementNameException;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
@@ -38,14 +37,12 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class FormWidget extends GenericFormElement {
+public class FormWidget extends GenericFormElement implements FormContext {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
   protected LinkedMap elements = new LinkedMap();
-  protected Boolean backgroundValidation = null;
-  
-  
+
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
@@ -53,13 +50,6 @@ public class FormWidget extends GenericFormElement {
   protected void init() throws Exception {
     super.init();
     
-    if (backgroundValidation == null) {
-      backgroundValidation = Boolean.valueOf(
-    		  ConfigurationContextUtil.isBackgroundFormValidationEnabled(
-    		    		UilibEnvironmentUtil.getConfigurationContext(getEnvironment()))
-    		  );
-    }
-
     for (Iterator i = getElements().entrySet().iterator(); i.hasNext();) {
       Map.Entry element = (Map.Entry) i.next();
       addWidget(element.getKey(), (Widget) element.getValue());
@@ -71,7 +61,7 @@ public class FormWidget extends GenericFormElement {
   //*********************************************************************
 
   protected Environment getChildWidgetEnvironment() throws Exception {
-    return new StandardEnvironment(super.getChildWidgetEnvironment(), ConfigurationContext.class, new FormConfigurationContext());
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), FormContext.class, this);
   }
 
   public void clearErrors() {
@@ -470,26 +460,12 @@ public class FormWidget extends GenericFormElement {
   //* BACKGROUND FORM VALIDATION SETTINGS
   //*********************************************************************
   /** @since 1.1 */
-  public void enableBackgroundValidation() {
-    this.backgroundValidation = Boolean.TRUE;
-  }
-  
-  /** @since 1.1 */
-  public void disableBackgroundValidation() {
-    this.backgroundValidation = Boolean.FALSE;
+  public boolean isBackgroundValidation() {
+    if (this.backgroundValidation == null)
+      return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+    return this.backgroundValidation.booleanValue();
   }
 
-  /** @since 1.1 */
-  protected class FormConfigurationContext implements ConfigurationContext {
-	private static final long serialVersionUID = 1L;
-
-	public Object getEntry(String entryName) {
-      if (entryName.equals(SEAMLESS_BACKGROUND_FORM_VALIDATION))
-        return FormWidget.this.backgroundValidation;
-      return UilibEnvironmentUtil.getConfigurationContext(getEnvironment()).getEntry(entryName);
-	}
-  }
-  
   /**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.

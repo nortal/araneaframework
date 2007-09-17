@@ -29,6 +29,8 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 
 /**
@@ -48,7 +50,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   protected Map properties;
   
   protected boolean converted = false;
-  protected boolean validated = false;  
+  protected boolean validated = false;
+  protected Boolean backgroundValidation = null;
   
   private Set errors;
   
@@ -60,9 +63,15 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     super.init();
     if (constraint != null)
       constraint.setEnvironment(getConstraintEnvironment());
+
+    if (backgroundValidation == null) {
+      backgroundValidation = Boolean.valueOf(
+      	ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()))
+      );
+    }
   }
 
-/**
+  /**
    * Returns all properties of the element as a map (string -&gt; string).
    * 
    * @return all properties as a map.
@@ -222,6 +231,20 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
 
   public Object getValue() {
     return null;
+  }
+
+  /** @since 1.1 */
+  public void enableBackgroundValidation() {
+    this.backgroundValidation = Boolean.TRUE;
+  }
+  
+  /** @since 1.1 */
+  public void disableBackgroundValidation() {
+    this.backgroundValidation = Boolean.FALSE;
+  }
+  
+  public boolean isBackgroundValidation() {
+    return false;
   }
   //*********************************************************************
   //* ABSTRACT METHODS
