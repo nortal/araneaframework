@@ -15,15 +15,14 @@
 
 			<!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
 			<tui:component>
-				 <p>
-					<fmt:message key="modal.demo.intro"/>
-			    </p>
-			    
+				<c:if test="${!widget.nested}">
+					 <p>
+						<fmt:message key="modal.demo.intro"/>
+				    </p>
+			    </c:if>
+
 			    <p>
-			    	Start another identical widget by clicking on a "Start next" or "Start next in overlay" buttons. Once
-			    	the modal dialog (overlay mode) is activated, both buttons will act identically. When overlay completes (this 
-			    	will happen when "Return to previous" button is used in activated overlay where there are no more flows
-			    	that are running inside overlay), user is returned to main usecase.
+					<fmt:message key="modal.demo.howto"/>
 			    </p>
 
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
@@ -103,13 +102,13 @@
 
 				<!-- pure design tag -->
 				<tui:componentActions>
-					<ui:eventButton eventId="nextFlow" labelId="#Start next"/>
-					<ui:eventButton eventId="nextFlowOverlay" labelId="#Start next in overlay"/>
+					<ui:eventButton eventId="nextFlow" labelId="modal.demo.startnext"/>
+					<ui:eventButton eventId="nextFlowOverlay" labelId="modal.demo.startnextoverlay"/>
 					<ui:formElement id="button">
 						<ui:button/>
 					</ui:formElement>
 					<c:if test="${widget.nested}">
-						<ui:eventButton eventId="return" labelId="#Return to previous"/>
+						<ui:eventButton eventId="return" labelId="modal.demo.previous"/>
 					</c:if>
 				</tui:componentActions>
 			</tui:component>
