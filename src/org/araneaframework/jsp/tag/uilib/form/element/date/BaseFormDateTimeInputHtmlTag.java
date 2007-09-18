@@ -103,14 +103,19 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		else if (events && viewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
 		}
-		
+
+		// validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
+		if (!viewModel.isOnChangeEventRegistered() && backgroundValidation) {
+			JspUtil.writeAttribute(out, "onchange", "aranea_formElementValidationActionCall(this)");
+		}
+
 	    if (this.backgroundValidation && 
 	    		!ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment())))
           JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
-		
+
 		JspUtil.writeAttributes(out, attributes);    
 		JspUtil.writeCloseStartEndTag_SS(out);
-		
+
 		if (!disabled) {
 
 			JspUtil.writeOpenStartTag(out, "a");

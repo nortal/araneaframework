@@ -17,6 +17,8 @@
 package org.araneaframework.uilib.form.control;
 
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.support.UiLibMessages;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class represents a {@link org.araneaframework.uilib.form.control.TimestampControl}, that holds only time - that is
@@ -58,10 +60,6 @@ public class TimeControl extends TimestampControl {
 		return "Timestamp";
 	}
 	
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
-	
 	public void init() throws Exception {
 		super.init();
 		if (!confOverridden) {
@@ -78,5 +76,18 @@ public class TimeControl extends TimestampControl {
 			} 
 		}
 	}
-
+	
+	  //*********************************************************************
+	  //* INTERNAL METHODS
+	  //*********************************************************************  	
+	
+	/** @since 1.1 */ 
+  protected void addWrongTimeFormatError() {
+	addError(
+        MessageUtil.localizeAndFormat(
+        UiLibMessages.WRONG_TIME_FORMAT, 
+        MessageUtil.localize(getLabel(), getEnvironment()),
+        dateTimeInputPattern,
+        getEnvironment()));
+  }
 }

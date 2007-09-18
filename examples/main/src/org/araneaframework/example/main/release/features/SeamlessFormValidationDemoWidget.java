@@ -1,8 +1,11 @@
 package org.araneaframework.example.main.release.features;
 
+import org.araneaframework.InputData;
+import org.araneaframework.core.EventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
+import org.araneaframework.uilib.form.control.TimeControl;
 import org.araneaframework.uilib.form.data.DateData;
 
 /**
@@ -18,8 +21,15 @@ public class SeamlessFormValidationDemoWidget extends TemplateBaseWidget {
 	}
 
 	private FormWidget buildFormWidget() {
-		FormWidget form = new FormWidget();
+		final FormWidget form = new FormWidget();
 		form.addElement("futureDate", "seamless.appointmentdate", new DateControl(), new DateData(), true);
+		form.addElement("time", "seamless.appointmenttime", new TimeControl(), new DateData(), true);
+
+		form.addEventListener("dummy", new EventListener() {
+			public void processEvent(Object eventId, InputData input) throws Exception {
+				form.convertAndValidate();
+			}
+		});
 		return form;
 	}
 }

@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.ISBNValidator;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
@@ -97,6 +98,15 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     JspUtil.writeStartTag_SS(out, "script");
     out.write(getTimeSelectScript(name+".select2", minute, 60));
+    
+    if (!disabled && backgroundValidation) {
+    	String s = name + ".select2";
+    	String es = "$('" + s + "')";
+    	String ns =  "$('" + name + "')";
+    	String vcall = "aranea_formElementValidationActionCall(" + ns + ");";
+    	out.write("Event.observe(" + es + ", 'change', function(event) {" + vcall + "});");
+    }
+    
     JspUtil.writeEndTag_SS(out, "script");
 
     JspUtil.writeEndTag_SS(out, "select");
@@ -120,6 +130,15 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     JspUtil.writeStartTag_SS(out, "script");
     out.write(getTimeSelectScript(name+".select1", hour, 24));
+    
+    if (!disabled && backgroundValidation) {
+    	String s = name + ".select1";
+    	String es = "$('" + name + "')";
+    	String ns =  "$('" + s + "')";
+    	String vcall = "aranea_formElementValidationActionCall(" + es + ");";
+    	out.write("Event.observe(" + ns + ", 'change', function(event) {" + vcall + "});");
+    }
+    
     JspUtil.writeEndTag_SS(out, "script");
     
     JspUtil.writeEndTag_SS(out, "select");
@@ -157,6 +176,11 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     	event.setEventPrecondition(getTimeInputOnChangePrecondition(name));
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
+    }
+    
+    // validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
+    if (!viewModel.isOnChangeEventRegistered() && !disabled && backgroundValidation) {
+    	JspUtil.writeAttribute(out, "onchange", "aranea_formElementValidationActionCall(this)");
     }
 
     StringBuffer onBlur = new StringBuffer();

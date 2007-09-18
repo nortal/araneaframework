@@ -12,16 +12,33 @@
 		     </tui:componentHeader>
 	
 			<tui:component>
+				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 				<ui:row>
 					<ui:formElement id="futureDate">
 						<ui:cell>
 							<ui:label/>
 						</ui:cell>
-						<ui:cell>
+						<ui:cell colspan="3">
 							<ui:dateInput/>								
 						</ui:cell>
 					</ui:formElement>
 				</ui:row>
+
+				<ui:row>
+					<ui:formElement id="time">
+						<ui:cell>
+							<ui:label/>
+						</ui:cell>
+						<ui:cell colspan="3">
+							<ui:timeInput/>								
+						</ui:cell>
+					</ui:formElement>
+				</ui:row>
+				</tui:componentForm>
+				
+				<tui:componentActions>
+					<ui:eventButton labelId="common.Submit" eventId="dummy" eventTarget="${formFullId}"/>
+				</tui:componentActions>
 			</tui:component>
 		</ui:form>
 	
@@ -31,16 +48,34 @@
 	        </tui:componentHeader>
 
 			<tui:component>
-				<ui:row>
-					<ui:formElement id="futureDate">
-						<ui:cell>
-							<ui:label/>
-						</ui:cell>
-						<ui:cell>
-							<ui:dateInput/>								
-						</ui:cell>
-					</ui:formElement>
-				</ui:row>
+				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
+					<ui:row>
+						<ui:formElement id="futureDate">
+							<ui:cell>
+								<ui:label/>
+							</ui:cell>
+							<ui:cell colspan="3">
+								<ui:dateInput/>								
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
+	
+					<ui:row>
+						<ui:formElement id="time">
+							<ui:cell>
+								<ui:label/>
+							</ui:cell>
+							<ui:cell colspan="3">
+								<ui:timeInput/>								
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
+	
+
+				</tui:componentForm>
+				<tui:componentActions>
+					<ui:eventButton labelId="common.Submit" eventId="dummy" eventTarget="${formFullId}"/>
+				</tui:componentActions>
 			</tui:component>
 		</ui:form>
 

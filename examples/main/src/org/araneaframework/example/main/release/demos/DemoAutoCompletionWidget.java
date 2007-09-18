@@ -42,7 +42,7 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
     	}
     );
 
-    form.addElement("acinput", "#Country", actc, new StringData(), false);
+    form.addElement("acinput", "common.Country", actc, new StringData(), false);
 
     addWidget("testform", form);
   }

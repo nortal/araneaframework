@@ -91,12 +91,7 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
     	return new Timestamp(result.getDate().getTime());
     }
     
-    addError(
-        MessageUtil.localizeAndFormat(
-        UiLibMessages.WRONG_DATE_FORMAT, 
-        MessageUtil.localize(getLabel(), getEnvironment()),
-        dateTimeInputPattern,
-        getEnvironment()));          
+    addWrongTimeFormatError();
     
     if (parameterValue != null && getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
     	addError(
@@ -109,7 +104,17 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
 
     return null;
   }
-  
+
+  /** @since 1.1 */ 
+  protected void addWrongTimeFormatError() {
+	addError(
+        MessageUtil.localizeAndFormat(
+        UiLibMessages.WRONG_DATE_FORMAT, 
+        MessageUtil.localize(getLabel(), getEnvironment()),
+        dateTimeInputPattern,
+        getEnvironment()));
+  }
+
   /**
    * Used by {@link TimestampControl#fromRequest(String)} to convert value
    * read from request to a <code>Date</code> in default <code>TimeZone</code>
