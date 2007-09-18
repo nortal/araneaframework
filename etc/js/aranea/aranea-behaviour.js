@@ -36,6 +36,7 @@ function aranea_formElementValidationActionCall(el) {
   araneaPage().action(el, 'bgValidate', elId, el.value, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, extraParams);
 }
 
+/** @since 1.1 */
 function setFormElementValidation(el){
   if(!araneaPage().getBackgroundValidation() && !($(el).hasAttribute('arn-bgValidate')))
     return;
