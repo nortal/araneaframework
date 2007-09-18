@@ -8,21 +8,41 @@
 	<ui:widgetContext>
 		<ui:form id="form1">
 			<tui:componentHeader>
+				<tui:componentName><fmt:message key="seamless.withoutbg.form"/></tui:componentName>
+		     </tui:componentHeader>
+	
+			<tui:component>
+				<ui:row>
+					<ui:formElement id="futureDate">
+						<ui:cell>
+							<ui:label/>
+						</ui:cell>
+						<ui:cell>
+							<ui:dateInput/>								
+						</ui:cell>
+					</ui:formElement>
+				</ui:row>
+			</tui:component>
+		</ui:form>
+	
+		<ui:form id="form2">
+			<tui:componentHeader>
 				<tui:componentName><fmt:message key="seamless.bg.form"/></tui:componentName>
 	        </tui:componentHeader>
 
 			<tui:component>
-
+				<ui:row>
+					<ui:formElement id="futureDate">
+						<ui:cell>
+							<ui:label/>
+						</ui:cell>
+						<ui:cell>
+							<ui:dateInput/>								
+						</ui:cell>
+					</ui:formElement>
+				</ui:row>
 			</tui:component>
 		</ui:form>
 
-		<tui:componentHeader>
-			<tui:componentName><fmt:message key="seamless.withoutbg.form"/></tui:componentName>
-	     </tui:componentHeader>
-
-		<tui:component>
-
-		</tui:component>
-		
 	</ui:widgetContext>
 </jsp:root>

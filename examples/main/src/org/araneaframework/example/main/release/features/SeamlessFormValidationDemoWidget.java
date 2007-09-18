@@ -12,13 +12,14 @@ public class SeamlessFormValidationDemoWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
 		setViewSelector("release/features/seamlessFormValidation/demo");
 		addWidget("form1", buildFormWidget());
+		FormWidget f2 = buildFormWidget();
+		f2.enableBackgroundValidation();
+		addWidget("form2", f2);
 	}
 
 	private FormWidget buildFormWidget() {
 		FormWidget form = new FormWidget();
-		
-		form.addElement("dateAfterToday", "#Mandator", new DateControl(), new DateData(), true);
-		
+		form.addElement("futureDate", "seamless.appointmentdate", new DateControl(), new DateData(), true);
 		return form;
 	}
 }
