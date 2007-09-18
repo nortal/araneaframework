@@ -10,17 +10,13 @@
 		<ui:form id="form">
 
 			<tui:componentHeader>
-				<tui:componentName>Modal dialog demo</tui:componentName>
+				<tui:componentName><fmt:message key="modal.demo.title"/></tui:componentName>
 			</tui:componentHeader>
 
 			<!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
 			<tui:component>
 				 <p>
-		      		There are times when one needs to prevent users from wandering around in parallel usecases, 
-		      		shooting themselves in the foot at the go. Aranea provides a way to present all fully-functional Aranea 
-		      		components in modal dialogs (aka <i>overlay</i>), allowing user to complete a parallel usecase or just respond
-		      		to an alert. This avoids the need to open additional browser windows that are often blocked by modern 
-		      		browsers or might just go unnoticed by user. 
+					<fmt:message key="modal.demo.intro"/>
 			    </p>
 			    
 			    <p>

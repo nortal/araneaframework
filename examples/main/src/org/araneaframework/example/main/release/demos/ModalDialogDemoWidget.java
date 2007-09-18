@@ -35,79 +35,61 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
      this.nested = isNested;
    }
 
-	  /**
-	   * Builds the form.
-	   */
-	  protected void init() throws Exception {
-		setViewSelector("release/demos/modalDialog");
+  /**
+   * Builds the form.
+   */
+  protected void init() throws Exception {
+	setViewSelector("release/demos/modalDialog");
 
-		form = new FormWidget();
+	form = new FormWidget();
 
-	    FormElement el = form.createElement("#Textbox", new TextControl(), new StringData(), false);
-	    form.addElement("textbox1", el);
-	    
-	    // and here we add form elements to form without the extra step taken previously. 
-	    form.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
-	    form.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
-	    form.addElement("time", "common.time", new TimeControl(), new DateData(), false);
-	    form.addElement("date", "common.date", new DateControl(), new DateData(), false);
-	    form.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
-	    // require the number input field to be filled. It could have been achieved already
-	    // on formelement creation by setting mandatory attribute to true
-	    form.getElement("number").setConstraint(new NotEmptyConstraint());
-	    // sets initial value of form element
-	    form.setValueByFullName("dateTime", new Date());
+    FormElement el = form.createElement("common.Textbox", new TextControl(), new StringData(), false);
+    form.addElement("textbox1", el);
 
-		// now we construct a button, that is also Control. Reason why we cannot just add it
-	    // to form is obvious, we want to add a specific listener to button before.
-	    ButtonControl button = new ButtonControl();
-		button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
-		// add the button to form. As the button does not hold any value, Data will be null.
-		form.addElement("button", "#Submit the form", button, null, false);
-	    
-	    // the usual, add the created widget to main widget.
-		addWidget("form", form);
-	  }
+    form.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
+    form.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
+    form.addElement("time", "common.time", new TimeControl(), new DateData(), false);
+    form.addElement("date", "common.date", new DateControl(), new DateData(), false);
+    form.addElement("number", "common.float", new FloatControl(), new BigDecimalData(), false);
+    // require the number input field to be filled. It could have been achieved already
+    // on formelement creation by setting mandatory attribute to true
+    form.getElement("number").setConstraint(new NotEmptyConstraint());
+    // sets initial value of form element
+    form.setValueByFullName("dateTime", new Date());
 
-	  /**
-	   * A test action, invoked when button is pressed. It adds the values of 
-	   * formelements to message context, and they end up at the top of user screen
-	   * at the end of the request.
-	   */
-	  public void handleEventTestSimpleForm() throws Exception {
-	    // if form is not invalid, do not try to show form element values 
-	    // (error messages are added automatically to the messagecontext 
-	    // though, user will not be without feedback)
-	    if (form.convertAndValidate()) {
-	    	// long way to check form element value ...
-	    	getMessageCtx().showInfoMessage("Checkbox value is: " + ((FormElement) form.getElement("checkbox1")).getData().getValue());
-	    	// and a shorter one
-	    	getMessageCtx().showInfoMessage("Textbox value is: " + form.getValueByFullName("textbox1"));
-	    	getMessageCtx().showInfoMessage("DateTime value is: " + form.getValueByFullName("dateTime"));
-	    	getMessageCtx().showInfoMessage("Time value is: " + form.getValueByFullName("time"));
-	    	getMessageCtx().showInfoMessage("Date value is: " + form.getValueByFullName("date"));
-	    	getMessageCtx().showInfoMessage("Number value is: " + form.getValueByFullName("number"));
-	    }
-	  }
-	  
-	  public void handleEventNextFlowOverlay() throws Exception {
-	    getOverlayCtx().start(new OverlayRootWidget(new StandardFlowContainerWidget(new ModalDialogDemoWidget(true))));
-	  }
-	  
-	  public void handleEventNextFlow() throws Exception {
-	      getFlowCtx().start(new ModalDialogDemoWidget(true));
-	  }
-	  
-	  public void handleEventReturn() throws Exception {
-        if (isNested())
-        	getFlowCtx().cancel();
-	  }
+	// now we construct a button, that is also Control. Reason why we cannot just add it
+    // to form is obvious, we want to add a specific listener to button before.
+    ButtonControl button = new ButtonControl();
+	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
+	// add the button to form. As the button does not hold any value, Data will be null.
+	form.addElement("button", "common.Submit", button, null, false);
+    
+    // the usual, add the created widget to main widget.
+	addWidget("form", form);
+  }
 
-	  public boolean isNested() {
-		  return nested;
-	  }
-	  
-	  public OverlayContext getOverlayCtx() {
-	    return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
-	  }
+  public void handleEventTestSimpleForm() throws Exception {
+    form.convertAndValidate();
+  }
+  
+  public void handleEventNextFlowOverlay() throws Exception {
+    getOverlayCtx().start(new OverlayRootWidget(new StandardFlowContainerWidget(new ModalDialogDemoWidget(true))));
+  }
+  
+  public void handleEventNextFlow() throws Exception {
+      getFlowCtx().start(new ModalDialogDemoWidget(true));
+  }
+  
+  public void handleEventReturn() throws Exception {
+    if (isNested())
+    	getFlowCtx().cancel();
+  }
+
+  public boolean isNested() {
+	  return nested;
+  }
+  
+  public OverlayContext getOverlayCtx() {
+    return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
+  }
 }
