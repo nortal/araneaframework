@@ -17,6 +17,7 @@
 package org.araneaframework.http.util;
 
 import org.araneaframework.Environment;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 
@@ -27,7 +28,6 @@ import org.araneaframework.framework.TopServiceContext;
  * @since 1.1
  */
 public abstract class EnvironmentUtil {
-  
   public static Object getTopServiceId(Environment env) {
     TopServiceContext topServiceContext = (TopServiceContext) env.getEntry(TopServiceContext.class);
     if (topServiceContext == null)
@@ -50,5 +50,14 @@ public abstract class EnvironmentUtil {
   public static Object requireThreadServiceId(Environment env) {
     ThreadContext threadContext = (ThreadContext) env.requireEntry(ThreadContext.class);
     return threadContext.getCurrentId();
+  }
+  
+  // THESE ARE NOT CONNECTED TO SYSTEM FORM
+  public static LocalizationContext getLocalizationContext(Environment env) {
+    return (LocalizationContext)env.getEntry(LocalizationContext.class);
+  }
+  
+  public static LocalizationContext requireLocalizationContext(Environment env) {
+    return (LocalizationContext)env.requireEntry(LocalizationContext.class);
   }
 }
