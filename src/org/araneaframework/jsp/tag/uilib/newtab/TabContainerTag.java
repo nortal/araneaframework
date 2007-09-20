@@ -19,9 +19,12 @@ import org.araneaframework.uilib.newtab.TabWidget;
 /**
  * @jsp.tag 
  *  name = "newtabContainer" 
- * 	body-content =  "empty" 
+ * 	body-content =  "JSP" 
  *  description = "Displays all tabs of the current tab container"
- *
+ *  
+ *  @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
+ *  @author Taimo Peelo (taimo@araneaframework.org)
+ *  
  *  @since 1.1
  */
 public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface {
@@ -29,6 +32,9 @@ public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface
 	protected String styleClass = null;
 	protected String baseStyleClass = "aranea-tabs";
 	
+	/** Context entry key for {@link TabContainerWidget} rendered by this tag. */
+	public static final String TAB_CONTAINER_WIDGET = "tabContainerWidget";
+
     public static final String TAB_CLASS_SELECTED = "aranea-active-tab";
     public static final String TAB_CLASS_PASSIVE = null;
     public static final String TAB_CLASS_DISABLED = "aranea-disabled-tab";
@@ -38,13 +44,13 @@ public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		Assert.isInstanceOf(TabContainerWidget.class, widget, "<ui:tabContainer> must be used only for referring to TabContainerWidget");
-		return SKIP_BODY;
-	}
-	
-	protected int doEndTag(Writer out) throws Exception {
+		addContextEntry(TAB_CONTAINER_WIDGET, widget);
+		
+		// WRITE OUT TABS
 		writeTabsDivStart(out);
 
 		TabContainerWidget tabContainerWidget = (TabContainerWidget) widget;
+		// TODO: better
 		Collection tabs = CollectionUtils.select(tabContainerWidget.getChildren().values(), new InstanceofPredicate(TabWidget.class));
 
 		for (Iterator i = tabs.iterator(); i.hasNext();) {
@@ -61,7 +67,8 @@ public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface
 		writeClearanceDiv(out);
 		
 		writeTabsDivEnd(out);
-		return super.doEndTag(out);
+		
+		return EVAL_BODY_INCLUDE;
 	}
 	
 	protected void writeClearanceDiv(Writer out) throws Exception {
@@ -99,7 +106,7 @@ public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface
 
 	protected String getTabStyleClass(TabWidget tabwidget) {
 		return 
-		tabwidget.isActive() ?
+		tabwidget.isSelected() ?
 				TAB_CLASS_SELECTED : tabwidget.isTabDisabled() ?
 								TAB_CLASS_DISABLED : TAB_CLASS_PASSIVE;
 	}

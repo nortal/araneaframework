@@ -8,7 +8,7 @@
    </appender>
 
    <category name="org.araneaframework" additivity="false">
-	    <priority value="DEBUG"/>
+	    <priority value="ALL"/>
       <appender-ref ref="CONSOLE"/>
    </category>
    

@@ -4,7 +4,7 @@
 	xmlns:tui="http://araneaframework.org/tag-library/template" version="1.2">
 
 	<ui:newtabContainer id="tabContainer">
-		
+		<ui:newtabBody/>
 	</ui:newtabContainer>
 
 	<p>

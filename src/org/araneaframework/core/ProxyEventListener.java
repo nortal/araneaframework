@@ -66,7 +66,7 @@ public class ProxyEventListener implements EventListener {
       StringBuffer logMessage = new StringBuffer().append("ProxyEventListener").append(eventTarget instanceof org.araneaframework.Component ? 
       		  " '"+((org.araneaframework.Component)eventTarget).getScope() + "'" :
       		  "");
-      logMessage.append(" cannot deliver action as no action listeners were registered for the event id '");
+      logMessage.append(" cannot deliver event as no event listeners were registered for the event id '");
       logMessage.append(eventId).append("'!").append(Assert.thisToString(eventTarget));
       log.warn(logMessage);
     }

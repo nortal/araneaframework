@@ -17,11 +17,13 @@ public class DemoNewTabWidget extends TemplateBaseWidget {
 	    
 	    TabContainerWidget containerWidget = new TabContainerWidget();
 	    addWidget("tabContainer", containerWidget);
-
+	    
 	    containerWidget.addWidget("randomWidget", new DemoComplexForm());
 	    containerWidget.addWidget("1", new TabWidget("#Simple Form Widget 1", new SimpleFormWidget()));
 	    containerWidget.addWidget("2", new TabWidget("#Simple Form Widget 2", new SimpleFormWidget()));
 	    containerWidget.addWidget("3", new TabWidget("#Redirecting widget", new RedirectingWidget()));
 	    containerWidget.addWidget("4", new TabWidget("#Multi Select demo", new DemoMultiSelect()));
+	    
+	    containerWidget.removeWidget("1");
 	}
 }
