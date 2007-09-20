@@ -149,7 +149,7 @@ function createEditableSelect(dest)
 	var optionDiv = document.createElement('DIV');
 	optionDiv.id = 'selectBoxOptions' + selectBoxIds;
 	optionDiv.className='selectBoxOptionContainer';
-	optionDiv.style.width = div.offsetWidth-2 + 'px';
+	optionDiv.style.width = div.offsetWidth + 'px'; // -2
 	div.appendChild(optionDiv);
 
 /*
@@ -172,7 +172,7 @@ function createEditableSelect(dest)
 			anOption.innerHTML = options[no];
 			anOption.className='selectBoxAnOption';
 			anOption.onclick = selectOptionValue;
-			anOption.style.width = optionDiv.style.width.replace('px','') - 2 + 'px';
+			anOption.style.width = optionDiv.style.width.replace('px','') + 'px'; // -2
 			anOption.onmouseover = highlightSelectBoxOption;
 			optionDiv.appendChild(anOption);
 			optionsTotalHeight = optionsTotalHeight + anOption.offsetHeight;

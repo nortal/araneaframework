@@ -7,28 +7,23 @@
 	version="1.2">
   <ui:widgetContext>
 
-    <h1>Welcome to Aranea-MVC 1.1!</h1>
-    
-    <h2>
-    	About
-    </h2>
-    	<p>
-    	 Aranea is an Open-Source Web platform written in Java. This application consists of several examples 
-    	 built with Aranea Uilib and Aranea JSP tag library.
-    	 
-    	 Visit <a href="http://www.araneaframework.org/?pid=about">Aranea home page</a> for detailed information
-    	 about goals of Aranea project.
-    	</p>
+    <h1><fmt:message key="aranea.welcome"/></h1>
 
     <h2>
-		What pre-built components and ready-to-use features does Aranea 1.1 offer me?
+    	<fmt:message key="aranea.About.title"/>
+    </h2>
+    	<p>
+			<fmt:message key="aranea.about"/>
+    	</p>
+    <h2>
+		<fmt:message key="aranea.what.title"/>
     </h2>
     <p>
-    	Commented demos of Aranea 1.1 features and components can be accessed by using side-menu links. 
+    	<fmt:message key="aranea.what.how"/>
     </p>
 
     <h2>
-       What's new in Aranea 1.1?
+    	<fmt:message key="aranea.whatsnew"/>
     </h2>
     	<p>Here we shortly comment on high-level modifications/features that we believe make Aranea 1.1 &gt; 1.0</p>
     	<ul>

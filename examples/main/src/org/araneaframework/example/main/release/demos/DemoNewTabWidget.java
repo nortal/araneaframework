@@ -24,6 +24,6 @@ public class DemoNewTabWidget extends TemplateBaseWidget {
 	    containerWidget.addWidget("3", new TabWidget("#Redirecting widget", new RedirectingWidget()));
 	    containerWidget.addWidget("4", new TabWidget("#Multi Select demo", new DemoMultiSelect()));
 	    
-	    containerWidget.removeWidget("1");
+	    //containerWidget.removeWidget("1");
 	}
 }

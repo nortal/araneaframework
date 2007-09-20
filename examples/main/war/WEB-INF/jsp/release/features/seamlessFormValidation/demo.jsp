@@ -7,6 +7,14 @@
 
 	<ui:widgetContext>
 		<ui:form id="form1">
+			<p>
+				<fmt:message key="seamless.intro"/>
+			</p>
+		
+			<p>
+				<fmt:message key="seamless.howto"/>
+			</p>
+		
 			<tui:componentHeader>
 				<tui:componentName><fmt:message key="seamless.withoutbg.form"/></tui:componentName>
 		     </tui:componentHeader>
@@ -70,7 +78,6 @@
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
-	
 
 				</tui:componentForm>
 				<tui:componentActions>

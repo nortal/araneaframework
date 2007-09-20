@@ -27,6 +27,8 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
 	protected Map tabs = new LinkedMap();
 	protected TabWidget selected;
+
+	protected boolean dying = false;
 	
 	protected Environment getChildWidgetEnvironment() throws Exception {
 		Map entries = new HashMap(2);
@@ -79,8 +81,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	public TabWidget registerTab(TabWidget tabWidget) {
 		boolean first = tabs.isEmpty();
 		TabWidget result = (TabWidget) tabs.put(tabWidget.getScope().getId().toString(), tabWidget);
-		if (first)
-			selectFirst();
+		if (first && !dying) selectFirst();
 
 		return result;
 	}
@@ -92,7 +93,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 		TabWidget result = (TabWidget) tabs.remove(tabWidget.getScope().getId().toString());
 		if (result == selected) {
 			selected = null;
-			selectFirst();
+			if (!dying) selectFirst();
 		}
 
 		return result;
@@ -140,6 +141,11 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 		public synchronized void init(Scope scope, Environment env) {
 			super.init(scope, env);
 			addEventListener(TAB_SELECT_EVENT_ID, new SelectionEventListener());
+		}
+
+		public void destroy() {
+			dying = true;
+			super.destroy();
 		}
 	}
 }
