@@ -27,7 +27,6 @@ import org.araneaframework.example.main.release.demos.ComboTextInputDemoWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.release.demos.DemoContextMenuWidget;
 import org.araneaframework.example.main.release.demos.DemoNewTabWidget;
-import org.araneaframework.example.main.release.demos.DemoTabWidget;
 import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
 import org.araneaframework.example.main.release.demos.SimpleTreeWidget;
 import org.araneaframework.example.main.release.features.EasyAJAXUpdateRegionsWidget;
@@ -109,8 +108,8 @@ public class MenuWidget extends TemplateMenuWidget  {
 		araneaMenu.addMenuItem(new MenuItem("List", SimpleListWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Seamless_Validation", SeamlessFormValidationDemoWidget.class));
-		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoTabWidget.class));
-		araneaMenu.addMenuItem(new MenuItem("#TEMPTABS", DemoNewTabWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoNewTabWidget.class));
+		//araneaMenu.addMenuItem(new MenuItem("#TEMPTABS", DemoNewTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("ComboTextInput", ComboTextInputDemoWidget.class));
 		
