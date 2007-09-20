@@ -1,7 +1,9 @@
 package org.araneaframework.uilib.newtab;
 
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
@@ -17,6 +19,18 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardEventListener;
 
 /**
+ * This class represents a UI widget that contains tabs ({@link TabWidget})s.
+ * Only one tab can be selected (active) at a time, such tab is specified with {@link #selectTab(String)}.
+ * When on creation the selected tab is not specified, the first tab is marked as selected.
+ *
+ * Tabs are added with {@link #addWidget(Object, org.araneaframework.Widget)}, removed
+ * with {@link #removeWidget(Object)} and disabled (user cannot select them) with {@link #disableWidget(Object)}.
+ * Note that only added {@link TabWidget}s are actually treated (and rendered by Aranea JSP tags) as tabs, 
+ * other children are accepted but the developer needs to handle their rendering.
+ * 
+ * By default tabs preserve the addition order and are also presented in that order. When this {@link TabContainerWidget}
+ * has a {@link Comparator} set, it will sort and present the tabs in an order specified by that {@link Comparator}.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
@@ -25,13 +39,14 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	
 	public static final String TAB_SELECT_EVENT_ID = "activateTab";
 
-	protected Map tabs = new LinkedMap();
+	protected Map tabs;
 	protected TabWidget selected;
 
-	protected boolean dying = false;
+	/** This is just to make sure that we do not initialize ANY tabs after destroying process has already begun. */
+	protected transient boolean dying = false;
 	
 	protected Environment getChildWidgetEnvironment() throws Exception {
-		Map entries = new HashMap(2);
+		Map entries = new LinkedMap(2);
 		entries.put(TabContainerContext.class, this);
 		entries.put(TabRegistrationContext.class, this);
 		return new StandardEnvironment(super.getChildWidgetEnvironment(), entries);
@@ -47,14 +62,20 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	/* ********************************************
 	 * TabContainerContext IMPL
 	 **********************************************/
+	
+	public TabContainerWidget() {
+		tabs = new LinkedMap();
+	}
+	
+	public TabContainerWidget(Comparator comparator) {
+		tabs = new TreeMap(comparator);
+	}
+
 	public TabWidget getSelectedTab() {
 		return selected;
 	}
 
 	public TabWidget selectTab(String id) {
-		if (selected != null)
-			selected.disableTab();
-			
 		if (!StringUtils.isEmpty(id)) {
 			selected = (TabWidget) tabs.get(id);
 			selected.enableTab();

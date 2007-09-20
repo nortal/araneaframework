@@ -23,6 +23,7 @@ public class TabWidget extends BaseApplicationWidget {
 	protected String labelId;
 	protected Widget labelWidget;
 	protected Widget tabContentWidget;
+	protected boolean disabled = false;
 
 	protected TabWidget(Widget tabContentWidget) {
 		this.tabContentWidget = tabContentWidget;
@@ -44,6 +45,7 @@ public class TabWidget extends BaseApplicationWidget {
 	}
 
 	protected void enableTab() {
+		disabled = false;
 		if (_getDisabledChildren().containsKey(CONTENT_WIDGET_KEY)) {
 			enableWidget(CONTENT_WIDGET_KEY);
 		} else if (!_getChildren().containsKey(CONTENT_WIDGET_KEY)) {
@@ -52,7 +54,8 @@ public class TabWidget extends BaseApplicationWidget {
 	}
 
 	protected void disableTab() {
-		if (_getChildren().containsKey(CONTENT_WIDGET_KEY))
+		disabled = true;
+		if (_getDisabledChildren().containsKey(CONTENT_WIDGET_KEY))
 			disableWidget(CONTENT_WIDGET_KEY);
 	}
 
@@ -70,7 +73,7 @@ public class TabWidget extends BaseApplicationWidget {
 	}
 
 	public boolean isTabDisabled() {
-		return _getDisabledChildren().containsKey(getScope().getId());
+		return disabled;
 	}
 	
 	public boolean isSelected() {

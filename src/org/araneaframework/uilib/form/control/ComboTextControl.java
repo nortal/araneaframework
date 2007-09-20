@@ -16,22 +16,37 @@
 
 package org.araneaframework.uilib.form.control;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
- * This is an input field combined with Select&mdash;arrow with selection options is
- * defined somewhere.
+ * This is an input field combined with Select&mdash;it allows end-user to enter text
+ * into it or select some predefined value from provided list. Predefined inputs are
+ * by default sorted by natural order, custom comparator may be set when needed.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 public class ComboTextControl extends TextControl {
-	private List inputs = new ArrayList();
+	private TreeSet inputs;
+	
+	public ComboTextControl() {
+		inputs = new TreeSet();
+	}
+	
+	public ComboTextControl(Comparator comparator) {
+		inputs = new TreeSet();
+	}
 
 	public void addPredefinedInput(String s) {
 		inputs.add(s);
+	}
+
+	public void addPredefinedInputs(Collection c) {
+		inputs.addAll(c);
 	}
 
 	public Object getViewModel() {
@@ -39,13 +54,13 @@ public class ComboTextControl extends TextControl {
 	}
 	
     public class ViewModel extends TextControl.ViewModel {
-    	private List inputs;
-    	
+    	private SortedSet inputs;
+
     	protected ViewModel() {
-    		this.inputs = Collections.unmodifiableList(ComboTextControl.this.inputs);
+    		this.inputs = Collections.unmodifiableSortedSet(ComboTextControl.this.inputs);
     	}
     	
-    	public List getPredefinedInputs() {
+    	public Collection getPredefinedInputs() {
     		return this.inputs;
     	}
     }
