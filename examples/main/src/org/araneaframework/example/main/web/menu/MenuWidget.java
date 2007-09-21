@@ -31,6 +31,7 @@ import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
 import org.araneaframework.example.main.release.demos.SimpleTreeWidget;
 import org.araneaframework.example.main.release.features.EasyAJAXUpdateRegionsWidget;
 import org.araneaframework.example.main.release.features.SeamlessFormValidationDemoWidget;
+import org.araneaframework.example.main.release.features.SimpleInMemoryEditableList;
 import org.araneaframework.example.main.release.features.SimpleListWidget;
 import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
@@ -106,6 +107,7 @@ public class MenuWidget extends TemplateMenuWidget  {
 		araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("List", SimpleListWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("SimpleEditableList", SimpleInMemoryEditableList.class));
 		araneaMenu.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Seamless_Validation", SeamlessFormValidationDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoNewTabWidget.class));
