@@ -7,69 +7,89 @@
 		<tui:componentHeader>
 			<tui:componentName>In memory editable List demo</tui:componentName>
 		</tui:componentHeader>
-		<tui:component>
 
+		<ui:list id="list">
+			<ui:formList>
+			<tui:component>
+			
 			<tui:componentList>
-				<ui:formList id="editableList">
+
+				
 					<ui:formListRows>
 						<ui:row>
-							<ui:cell styleClass="center">
-								<ui:checkbox id="booleanField" />
-							</ui:cell>
-							<ui:formElement id="stringField">
-								<ui:cell>
-									<ui:textInput/>
-								</ui:cell>
-							</ui:formElement>
-							<ui:formElement id="longField">
-								<ui:cell>
-									<ui:numberInput/>
-								</ui:cell>
-							</ui:formElement>
+							<c:choose>
+								<c:when test="${formRow.open}">
+									<ui:formElement id="forename">
+										<ui:cell styleClass="right">
+											<ui:textInput styleClass="right"/>
+										</ui:cell>
+									</ui:formElement>
+									<ui:formElement id="surname">
+										<ui:cell>
+											<ui:textInput />
+										</ui:cell>
+									</ui:formElement>
+									<ui:formElement id="sex">
+										<ui:cell>
+											<ui:textInput/>
+										</ui:cell>
+									</ui:formElement>
+								</c:when>
+								<c:otherwise>
+									<ui:cell styleClass="right">
+										<c:out value="${row.forename}" />
+									</ui:cell>
+									<ui:cell>
+										<c:out value="${row.surname}" />
+									</ui:cell>
+									<ui:cell>
+										<c:out value="${row.sex}" />
+									</ui:cell>
+								</c:otherwise>
+							</c:choose>
 							<ui:cell width="0">
-								<ui:linkButton id="save" showLabel="false">
+								<ui:linkButton id="editSave" showLabel="false">
 									<tui:image code="buttonChange" />
 								</ui:linkButton>
-								<ui:linkButton id="delete" showLabel="false">
-									<tui:image code="buttonDelete" />
-								</ui:linkButton>
+
+								<c:if test="${formRow.open}">
+									<ui:linkButton id="delete" showLabel="false">
+										<tui:image code="buttonDelete" />
+									</ui:linkButton>
+								</c:if>
 							</ui:cell>
 						</ui:row>
 					</ui:formListRows>
+
 					<ui:formListAddForm>
 						<ui:row>
 							<ui:cell styleClass="center">
-								<ui:checkbox id="booleanField" />
+								<ui:textInput id="forename" />
 							</ui:cell>
-							<ui:formElement id="stringField">
+							<ui:formElement id="surname">
 								<ui:cell>
 									<ui:textInput size="40" />
 								</ui:cell>
 							</ui:formElement>
-							<ui:formElement id="longField">
+							<ui:formElement id="sex">
 								<ui:cell>
-									<ui:numberInput size="5" />
+									<ui:textInput size="5" />
 								</ui:cell>
 							</ui:formElement>
 							<ui:cell width="0">
 								<ui:linkButton id="add" showLabel="false">
-									<tui:image code="add" />
+									<tui:image code="buttonAdd" />
 								</ui:linkButton>
 							</ui:cell>
 						</ui:row>
 					</ui:formListAddForm>
-				</ui:formList>
+				
 			</tui:componentList>
-
-			<tui:componentActions>
-				<ui:eventButton labelId="#Test" eventId="test" />
-				<c:if test="${viewData.askCloseConfirmation == 'true'}">
-					<ui:onLoadEvent
-						event="if (confirm('Do you wish to lose unsaved changes?')) araneaPage().event_6(araneaPage().getSystemForm(), 'close', '${widgetId}', 'true', null, null);"/>
-				</c:if>
-				<ui:eventButton labelId="#Close" eventId="close" />
-			</tui:componentActions>
-
+			
+			<tui:componentListFooter/>
 		</tui:component>
+		
+		</ui:formList>
+		</ui:list>
 	</ui:widgetContext>
 </jsp:root>
