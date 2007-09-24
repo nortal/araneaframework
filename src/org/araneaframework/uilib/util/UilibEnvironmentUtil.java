@@ -19,6 +19,10 @@ package org.araneaframework.uilib.util;
 import org.araneaframework.Environment;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.core.MenuContext;
+import org.araneaframework.uilib.form.FormContext;
+import org.araneaframework.uilib.tree.TreeContext;
+import org.araneaframework.uilib.tree.TreeNodeContext;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -27,5 +31,21 @@ import org.araneaframework.uilib.ConfigurationContext;
 public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
 	public static ConfigurationContext getConfigurationContext(Environment env) {
 		return (ConfigurationContext) env.getEntry(ConfigurationContext.class);
+	}
+	
+	public static FormContext getFormContext(Environment env) {
+		return (FormContext) env.getEntry(FormContext.class);
+	}
+	
+	public static TreeContext getTreeContext(Environment env) {
+		return (TreeContext) env.getEntry(TreeContext.class);
+	}
+	
+	public static TreeNodeContext getTreeNodeContext(Environment env) {
+		return (TreeNodeContext) env.getEntry(TreeNodeContext.class);
+	}
+	
+	public static MenuContext getMenuContext(Environment env) {
+		return (MenuContext) env.getEntry(MenuContext.class);
 	}
 }

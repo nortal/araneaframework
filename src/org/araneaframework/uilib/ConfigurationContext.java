@@ -96,7 +96,7 @@ public interface ConfigurationContext extends Serializable {
    *
    * @since 1.1
    */
-  public static final String SEAMLESS_BACKGROUND_FORM_VALIDATION = "uilib.widgets.forms.seamless.validation";
+  public static final String BACKGROUND_FORM_VALIDATION = "uilib.widgets.forms.seamless.validation";
 
   /**
    * Returns a configuration entry with given name.

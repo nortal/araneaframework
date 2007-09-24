@@ -226,17 +226,12 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   public Object getValue() {
     return null;
   }
+  
+  /** @since 1.1 */
+  public void setBackgroundValidation(boolean b) {
+    this.backgroundValidation = Boolean.valueOf(b);
+  }
 
-  /** @since 1.1 */
-  public void enableBackgroundValidation() {
-    this.backgroundValidation = Boolean.TRUE;
-  }
-  
-  /** @since 1.1 */
-  public void disableBackgroundValidation() {
-    this.backgroundValidation = Boolean.FALSE;
-  }
-  
   /** @since 1.1 */
   public boolean isBackgroundValidation() {
     if (this.backgroundValidation == null) {
@@ -323,14 +318,6 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     if (errors == null)
       errors = new HashSet();
     return errors;
-  }
-
-  /** @since 1.1 */
-  protected boolean seamlessValidationEnabled() {
-    ConfigurationContext cc = (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
-    Boolean b = (Boolean) cc.getEntry(ConfigurationContext.SEAMLESS_BACKGROUND_FORM_VALIDATION);
-
-    return b == null ? false : b.booleanValue();
   }
 
   //*********************************************************************

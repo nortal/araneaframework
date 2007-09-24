@@ -161,6 +161,7 @@ var aranea_rules = {
   
   'a.aranea-tab-link' : function(el) {
     setToolTip(el);
+    setCloningUrl(el);
   }
 };
 

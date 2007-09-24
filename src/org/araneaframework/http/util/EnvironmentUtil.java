@@ -22,7 +22,7 @@ import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 
 /**
- * Utility class that provides some shortcuts for accessing some {@link Environment} entries.
+ * Utility class that provides shortcuts for accessing some {@link Environment} entries.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1

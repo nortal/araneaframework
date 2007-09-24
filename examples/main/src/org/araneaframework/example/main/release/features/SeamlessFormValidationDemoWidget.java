@@ -16,7 +16,7 @@ public class SeamlessFormValidationDemoWidget extends TemplateBaseWidget {
 		setViewSelector("release/features/seamlessFormValidation/demo");
 		addWidget("form1", buildFormWidget());
 		FormWidget f2 = buildFormWidget();
-		f2.enableBackgroundValidation();
+		f2.setBackgroundValidation(true);
 		addWidget("form2", f2);
 	}
 

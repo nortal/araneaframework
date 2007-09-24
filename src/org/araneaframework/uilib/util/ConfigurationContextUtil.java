@@ -25,7 +25,7 @@ public abstract class ConfigurationContextUtil {
   private ConfigurationContextUtil() {}
   
   public static boolean isBackgroundFormValidationEnabled(ConfigurationContext cctx) {
-    Boolean b = (Boolean) cctx.getEntry(ConfigurationContext.SEAMLESS_BACKGROUND_FORM_VALIDATION);
+    Boolean b = (Boolean) cctx.getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
     return b == null ? false : b.booleanValue();
   }
   

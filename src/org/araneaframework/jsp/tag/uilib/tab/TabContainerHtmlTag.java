@@ -1,3 +1,19 @@
+/**
+ * Copyright 2007 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+
 package org.araneaframework.jsp.tag.uilib.tab;
 
 import java.io.Writer;
@@ -6,8 +22,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.jsp.JspException;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.functors.InstanceofPredicate;
 import org.araneaframework.core.Assert;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -61,8 +75,8 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 		writeTabsDivStart(out);
 
 		TabContainerWidget tabContainerWidget = (TabContainerWidget) widget;
-		// TODO: better
-		Collection tabs = CollectionUtils.select(tabContainerWidget.getChildren().values(), new InstanceofPredicate(TabWidget.class));
+
+		Collection tabs = tabContainerWidget.getTabs().values();
 
 		for (Iterator i = tabs.iterator(); i.hasNext();) {
 			TabWidget tabwidget = (TabWidget) i.next();
@@ -116,9 +130,9 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 	        JspUtil.writeEndTag(out, "a");
 	      } else {
 	        JspUtil.writeOpenStartTag(out, "a");
-	        JspUtil.writeAttribute(out, "href", "#"); //TODO: support for open in new window?
+	        JspUtil.writeAttribute(out, "href", "#");
 	        JspUtil.writeAttribute(out, "class", TAB_LINK_CLASS);
-	        
+
 	        UiUpdateEvent event;
 	        if (registerUpdateRegions) {
 	        	List updateRegionNames = new ArrayList(1);
