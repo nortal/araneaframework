@@ -1,4 +1,4 @@
-package org.araneaframework.uilib.newtab;
+package org.araneaframework.uilib.tab;
 
 import java.io.Serializable;
 

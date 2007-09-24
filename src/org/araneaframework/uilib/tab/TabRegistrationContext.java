@@ -1,4 +1,4 @@
-package org.araneaframework.uilib.newtab;
+package org.araneaframework.uilib.tab;
 
 public interface TabRegistrationContext {
 	/** Invoked by {@link TabWidget} when it is initialized. */
